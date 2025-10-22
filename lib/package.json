@@ -1,6 +1,7 @@
 {
     "name": "openapi-zod-client",
     "version": "1.18.3",
+    "type": "module",
     "repository": {
         "type": "git",
         "url": "https://github.com/astahmer/openapi-zod-client.git"
@@ -10,12 +11,12 @@
     "module": "dist/openapi-zod-client.esm.js",
     "homepage": "https://github.com/astahmer/openapi-zod-client",
     "bin": {
-        "openapi-zod-client": "./bin.js"
+        "openapi-zod-client": "./bin.cjs"
     },
     "scripts": {
         "test": "vitest",
         "test:ci": "vitest run",
-        "lint:ts": "tsc --noEmit",
+        "lint:ts": "tsc --noEmit --project tsconfig.lint.json",
         "lint": "eslint --cache --format=pretty",
         "lint:fix": "eslint --cache --format=pretty --fix"
     },
@@ -63,7 +64,7 @@
         ]
     },
     "files": [
-        "bin.js",
+        "bin.cjs",
         "src",
         "dist",
         "cli",
