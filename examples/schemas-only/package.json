@@ -6,7 +6,7 @@
         "gen:schemas-only": "openapi-zod-client ../petstore.yaml -o ./petstore-schemas.ts -t ./schemas-only.hbs -p ./prettier-custom.json --export-schemas"
     },
     "devDependencies": {
-        "typescript": "^4.8.4"
+        "typescript": "^5"
     },
     "dependencies": {
         "@apidevtools/swagger-parser": "^10.1.0",
