@@ -16,8 +16,8 @@
         "test": "vitest",
         "test:ci": "vitest run",
         "lint:ts": "tsc --noEmit",
-        "lint": "eslint -c .eslintrc.build.js './src/**/*.ts' --cache --format=pretty",
-        "lint:fix": "eslint -c .eslintrc.build.js './src/**/*.ts' --cache --format=pretty --fix"
+        "lint": "eslint --cache --format=pretty",
+        "lint:fix": "eslint --cache --format=pretty --fix"
     },
     "license": "ISC",
     "dependencies": {
@@ -37,6 +37,7 @@
         "zod": "^3.19.1"
     },
     "devDependencies": {
+        "@eslint/js": "^9.38.0",
         "@types/degit": "^2.8.3",
         "@types/fs-extra": "^9.0.13",
         "@types/js-yaml": "^4.0.5",
@@ -47,9 +48,12 @@
         "degit": "^2.8.4",
         "eslint": "^9.38.0",
         "eslint-formatter-pretty": "^7.0.0",
+        "eslint-plugin-sonarjs": "^3.0.5",
+        "eslint-plugin-unicorn": "^61.0.2",
         "fast-glob": "^3.2.12",
         "type-fest": "^2.19.0",
         "typescript": "^5",
+        "typescript-eslint": "^8.46.2",
         "vitest": "^3.2.4"
     },
     "preconstruct": {
