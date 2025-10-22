@@ -1,4 +1,8 @@
 packages:
-  - "lib"
-  - "playground"
-  - "examples/*"
+  - lib
+  - playground
+  - examples/*
+
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver
