@@ -1,0 +1,4 @@
+{
+    "cSpell.words": ["apidevtools", "iconify", "petstore", "preconstruct", "Stahmer"],
+    "typescript.tsdk": "node_modules/typescript/lib"
+}
