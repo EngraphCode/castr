@@ -45,8 +45,7 @@ export const getTypescriptFromOpenApi = ({
     meta: inheritedMeta,
     ctx,
     options,
-}:
-TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
+}: TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
     const meta = {} as TsConversionArgs["meta"];
     const isInline = !inheritedMeta?.name;
 

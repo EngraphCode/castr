@@ -1,7 +1,7 @@
 /**
  * Pure helper functions for converting OpenAPI schemas to TypeScript types
  * Extracted from openApiToTypescript.ts to reduce cognitive complexity
- * 
+ *
  * Each function has a single responsibility and is < 50 lines
  */
 
@@ -60,10 +60,7 @@ export function handleReferenceObject(
  * Handles primitive type enums, returning union types
  * Rejects invalid enums (non-string type with string values)
  */
-export function handlePrimitiveEnum(
-    schema: SchemaObject,
-    schemaType: PrimitiveType
-): t.TypeDefinitionObject | null {
+export function handlePrimitiveEnum(schema: SchemaObject, schemaType: PrimitiveType): t.TypeDefinitionObject | null {
     if (!schema.enum) return null;
 
     // Invalid: non-string type with string enum values
@@ -82,10 +79,7 @@ export function handlePrimitiveEnum(
  * Handles basic primitive types (string, number, boolean)
  * Returns the appropriate TypeScript type, with null union if nullable
  */
-export function handleBasicPrimitive(
-    schemaType: PrimitiveType,
-    isNullable: boolean
-): t.TypeDefinitionObject {
+export function handleBasicPrimitive(schemaType: PrimitiveType, isNullable: boolean): t.TypeDefinitionObject {
     let baseType: t.TypeDefinitionObject;
 
     if (schemaType === "string") baseType = t.string();
@@ -98,21 +92,14 @@ export function handleBasicPrimitive(
 /**
  * Wraps a type in readonly if the option is enabled
  */
-export function maybeWrapReadonly(
-    type: t.TypeDefinitionObject,
-    shouldBeReadonly: boolean
-): t.TypeDefinitionObject {
+export function maybeWrapReadonly(type: t.TypeDefinitionObject, shouldBeReadonly: boolean): t.TypeDefinitionObject {
     return shouldBeReadonly ? t.readonly(type) : type;
 }
 
 /**
  * Determines if a property is required in an object schema
  */
-export function isPropertyRequired(
-    propName: string,
-    schema: SchemaObject,
-    isPartial: boolean
-): boolean {
+export function isPropertyRequired(propName: string, schema: SchemaObject, isPartial: boolean): boolean {
     return Boolean(isPartial ? true : schema.required?.includes(propName));
 }
 
@@ -197,10 +184,7 @@ export function convertSchemasToTypes<T>(
 /**
  * Adds null to a union type if nullable flag is true
  */
-export function addNullToUnionIfNeeded(
-    type: t.TypeDefinitionObject,
-    isNullable: boolean
-): t.TypeDefinitionObject {
+export function addNullToUnionIfNeeded(type: t.TypeDefinitionObject, isNullable: boolean): t.TypeDefinitionObject {
     return isNullable ? t.union([type, t.reference("null")]) : type;
 }
 
@@ -208,10 +192,7 @@ export function addNullToUnionIfNeeded(
  * Converts a single property schema to a TypeScript type
  * Handles circular references by converting string types to references
  */
-export function convertPropertyType(
-    propType: unknown,
-    ctx: { resolver?: unknown } | undefined
-): t.TypeDefinition {
+export function convertPropertyType(propType: unknown, ctx: { resolver?: unknown } | undefined): t.TypeDefinition {
     if (typeof propType === "string") {
         if (!ctx) {
             throw new Error("Context is required for circular $ref (recursive schemas)");
@@ -371,4 +352,3 @@ export function handleTypeArray(
     }
     return t.union(typeDefs);
 }
-

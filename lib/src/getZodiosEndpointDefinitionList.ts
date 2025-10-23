@@ -18,15 +18,9 @@ import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
 import { isReferenceObject } from "./isReferenceObject.js";
 import { makeSchemaResolver } from "./makeSchemaResolver.js";
 import { getZodChain, getZodSchema } from "./openApiToZod.js";
-import { getSchemaComplexity } from "./schema-complexity.js";
 import type { TemplateContext } from "./template-context.js";
-import {
-    asComponentSchema,
-    normalizeString,
-    pathParamToVariableName,
-    pathToVariableName,
-    replaceHyphenatedPath,
-} from "./utils.js";
+import { getSchemaVarName } from "./zodiosEndpoint.helpers.js";
+import { asComponentSchema, pathParamToVariableName, pathToVariableName, replaceHyphenatedPath } from "./utils.js";
 
 const voidSchema = "z.void()";
 
@@ -107,88 +101,8 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
     }
 
     const complexityThreshold = options?.complexityThreshold ?? 4;
-    const getZodVarName = (input: CodeMeta, fallbackName?: string) => {
-        const result = input.toString();
-
-        // special value, inline everything (= no variable used)
-        if (complexityThreshold === -1) {
-            if (input.ref) {
-                const zodSchema = ctx.zodSchemaByName[result];
-                if (!zodSchema) {
-                    throw new Error(`Zod schema not found for ref: ${result}`);
-                }
-                return zodSchema;
-            }
-            return result;
-        }
-
-        if ((result.startsWith("z.") || input.ref === undefined) && fallbackName) {
-            // result is simple enough that it doesn't need to be assigned to a variable
-            if (input.complexity < complexityThreshold) {
-                return result;
-            }
-
-            const safeName = normalizeString(fallbackName);
-
-            // if schema is already assigned to a variable, re-use that variable name
-            if (!options?.exportAllNamedSchemas && ctx.schemaByName[result]) {
-                return ctx.schemaByName[result];
-            }
-
-            // result is complex and would benefit from being re-used
-            let formattedName = safeName;
-
-            // iteratively add suffix number to prevent overwriting
-            let reuseCount = 1;
-            let isVarNameAlreadyUsed = false;
-            while ((isVarNameAlreadyUsed = Boolean(ctx.zodSchemaByName[formattedName]))) {
-                if (isVarNameAlreadyUsed) {
-                    if (options?.exportAllNamedSchemas && ctx.schemasByName?.[result]?.includes(formattedName)) {
-                        return formattedName;
-                    } else if (ctx.zodSchemaByName[formattedName] === safeName) {
-                        return formattedName;
-                    } else {
-                        reuseCount += 1;
-                        formattedName = `${safeName}__${reuseCount}`;
-                    }
-                }
-            }
-
-            ctx.zodSchemaByName[formattedName] = result;
-            ctx.schemaByName[result] = formattedName;
-
-            if (options?.exportAllNamedSchemas && ctx.schemasByName) {
-                ctx.schemasByName[result] = (ctx.schemasByName[result] ?? []).concat(formattedName);
-            }
-
-            return formattedName;
-        }
-
-        // result is a reference to another schema
-        let schema = ctx.zodSchemaByName[result];
-        if (!schema && input.ref) {
-            const refInfo = ctx.resolver.resolveRef(input.ref);
-            schema = ctx.zodSchemaByName[refInfo.name];
-        }
-
-        if (input.ref && schema) {
-            const complexity = getSchemaComplexity({ current: 0, schema: ctx.resolver.getSchemaByRef(input.ref) });
-
-            // ref result is simple enough that it doesn't need to be assigned to a variable
-            if (complexity < complexityThreshold) {
-                const zodSchema = ctx.zodSchemaByName[result];
-                if (!zodSchema) {
-                    throw new Error(`Zod schema not found for ref: ${result}`);
-                }
-                return zodSchema;
-            }
-
-            return result;
-        }
-
-        console.log({ ref: input.ref, fallbackName, result });
-        throw new Error("Invalid ref: " + input.ref);
-    };
+    const getZodVarName = (input: CodeMeta, fallbackName?: string) =>
+        getSchemaVarName(input, ctx, complexityThreshold, fallbackName, { exportAllNamedSchemas: options?.exportAllNamedSchemas });
 
     const defaultStatusBehavior = options?.defaultStatusBehavior ?? "spec-compliant";
 

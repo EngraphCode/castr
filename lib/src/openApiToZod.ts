@@ -360,7 +360,7 @@ const getZodChainableDefault = (schema: SchemaObject): string => {
     if (schema.default !== undefined) {
         const defaultValue: unknown = schema.default;
         const value: string | number = match(schema.type)
-            .with("number", "integer", () => {
+            .with("number", "integer", (): string | number => {
                 if (typeof defaultValue === "number") return defaultValue;
                 if (typeof defaultValue === "string") return unwrapQuotesIfNeeded(defaultValue);
                 return JSON.stringify(defaultValue);
