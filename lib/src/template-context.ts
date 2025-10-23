@@ -40,7 +40,7 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
         if (!code) {
             throw new Error(`Zod schema not found for name: ${schemaName}`);
         }
-        
+
         // Try to resolve the schema name to get its ref
         // The schema might not be in byNormalized yet if it hasn't been accessed via getSchemaByRef
         let ref: string | undefined;
@@ -50,7 +50,7 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
             // Schema not yet resolved, try constructing the ref
             ref = asComponentSchema(schemaName);
         }
-        
+
         const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
         if (isCircular) {
             data.circularTypeByName[schemaName] = true;
@@ -198,7 +198,7 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
                     } catch {
                         resolvedRef = asComponentSchema(schemaName);
                     }
-                    
+
                     depsGraphs.deepDependencyGraph[resolvedRef]?.forEach((transitiveRef) => {
                         const transitiveSchemaName = result.resolver.resolveRef(transitiveRef)?.normalized;
                         if (!transitiveSchemaName) return;

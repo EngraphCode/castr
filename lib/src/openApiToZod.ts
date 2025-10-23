@@ -3,6 +3,11 @@ import { match } from "ts-pattern";
 
 import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta.js";
 import { CodeMeta } from "./CodeMeta.js";
+import {
+    generateNonStringEnumZodCode,
+    generateStringEnumZodCode,
+    shouldEnumBeNever,
+} from "./enumHelpers.js";
 import { isReferenceObject } from "./isReferenceObject.js";
 import type { TemplateContext } from "./template-context.js";
 import { escapeControlCharacters, isPrimitiveType, wrapWithQuotesIfNeeded } from "./utils.js";
@@ -175,46 +180,18 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
     const schemaType = schema.type ? (schema.type.toLowerCase() as NonNullable<typeof schema.type>) : undefined;
     if (schemaType && isPrimitiveType(schemaType)) {
         if (schema.enum) {
+            // Handle string enums
             if (schemaType === "string") {
-                if (schema.enum.length === 1) {
-                    const value: unknown = schema.enum[0];
-                    const safeValue = typeof value === "string" ? value : JSON.stringify(value);
-                    const valueString = value === null ? "null" : `"${safeValue}"`;
-                    return code.assign(`z.literal(${valueString})`);
-                }
-
-                return code.assign(
-                    `z.enum([${schema.enum
-                        .map((value) => {
-                            if (value === null) return "null";
-                            const safeValue = typeof value === "string" ? value : JSON.stringify(value);
-                            return `"${safeValue}"`;
-                        })
-                        .join(", ")}])`
-                );
+                return code.assign(generateStringEnumZodCode(schema.enum));
             }
 
-            if (schema.enum.some((e) => typeof e === "string")) {
+            // Non-string enums with string values are invalid
+            if (shouldEnumBeNever(schemaType, schema.enum)) {
                 return code.assign("z.never()");
             }
 
-            if (schema.enum.length === 1) {
-                const value: unknown = schema.enum[0];
-                let safeValue: string | number;
-                if (value === null) {
-                    safeValue = "null";
-                } else if (typeof value === "number") {
-                    safeValue = value;
-                } else {
-                    safeValue = JSON.stringify(value);
-                }
-                return code.assign(`z.literal(${safeValue})`);
-            }
-
-            return code.assign(
-                // eslint-disable-next-line sonarjs/no-nested-template-literals
-                `z.union([${schema.enum.map((value) => `z.literal(${value === null ? "null" : value})`).join(", ")}])`
-            );
+            // Handle number/integer enums
+            return code.assign(generateNonStringEnumZodCode(schema.enum));
         }
 
         return code.assign(
