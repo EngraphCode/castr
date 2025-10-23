@@ -7,18 +7,35 @@
         "url": "https://github.com/astahmer/openapi-zod-client.git"
     },
     "author": "Alexandre Stahmer <alexandre.stahmer@gmail.com>",
-    "main": "dist/openapi-zod-client.cjs.js",
-    "module": "dist/openapi-zod-client.esm.js",
+    "main": "dist/openapi-zod-client.cjs",
+    "module": "dist/openapi-zod-client.js",
+    "types": "dist/openapi-zod-client.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/openapi-zod-client.d.ts",
+            "import": "./dist/openapi-zod-client.js",
+            "require": "./dist/openapi-zod-client.cjs"
+        },
+        "./cli": {
+            "types": "./dist/cli.d.ts",
+            "import": "./dist/cli.js",
+            "require": "./dist/cli.cjs"
+        }
+    },
     "homepage": "https://github.com/astahmer/openapi-zod-client",
     "bin": {
         "openapi-zod-client": "./bin.cjs"
     },
     "scripts": {
-        "test": "vitest",
-        "test:ci": "vitest run",
-        "lint:ts": "tsc --noEmit --project tsconfig.lint.json",
-        "lint": "eslint --cache --format=pretty",
-        "lint:fix": "eslint --cache --format=pretty --fix"
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "type-check": "tsc --noEmit --project tsconfig.lint.json",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "license": "ISC",
     "dependencies": {
@@ -52,16 +69,11 @@
         "eslint-plugin-sonarjs": "^3.0.5",
         "eslint-plugin-unicorn": "^61.0.2",
         "fast-glob": "^3.2.12",
+        "tsup": "^8.5.0",
         "type-fest": "^2.19.0",
         "typescript": "^5",
         "typescript-eslint": "^8.46.2",
         "vitest": "^3.2.4"
-    },
-    "preconstruct": {
-        "entrypoints": [
-            "index.ts",
-            "cli.ts"
-        ]
     },
     "files": [
         "bin.cjs",

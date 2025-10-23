@@ -1,13 +1,12 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
 import { t, ts } from "tanu";
-import type { TypeDefinition, TypeDefinitionObject } from "tanu/dist/type";
 
-import { isReferenceObject } from "./isReferenceObject";
-import type { DocumentResolver } from "./makeSchemaResolver";
-import type { TemplateContext } from "./template-context";
-import { wrapWithQuotesIfNeeded } from "./utils";
-import { inferRequiredSchema } from "./inferRequiredOnly";
-import generateJSDocArray from "./generateJSDocArray";
+import { isReferenceObject } from "./isReferenceObject.js";
+import type { DocumentResolver } from "./makeSchemaResolver.js";
+import type { TemplateContext } from "./template-context.js";
+import { wrapWithQuotesIfNeeded } from "./utils.js";
+import { inferRequiredSchema } from "./inferRequiredOnly.js";
+import generateJSDocArray from "./generateJSDocArray.js";
 
 type TsConversionArgs = {
     schema: SchemaObject | ReferenceObject;
@@ -30,7 +29,7 @@ type MaybeWrapReadOnlyType =
               | number
               | bigint
               | boolean
-              | TypeDefinitionObject
+              | t.TypeDefinitionObject
               | ts.TypeNode
               | ts.TypeAliasDeclaration
               | ts.InterfaceDeclaration
@@ -53,7 +52,7 @@ export const getTypescriptFromOpenApi = ({
     ctx,
     options,
 }: // eslint-disable-next-line sonarjs/cognitive-complexity
-TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
+TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
     const meta = {} as TsConversionArgs["meta"];
     const isInline = !inheritedMeta?.name;
 
@@ -69,7 +68,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
     }
 
     let canBeWrapped = !isInline;
-    const getTs = (): ts.Node | TypeDefinitionObject | string => {
+    const getTs = (): ts.Node | t.TypeDefinitionObject | string => {
         if (isReferenceObject(schema)) {
             if (!ctx?.visitedsRefs || !ctx?.resolver) throw new Error("Context is required for OpenAPI $ref");
 
@@ -113,7 +112,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
                         ctx,
                         meta,
                         options,
-                    }) as TypeDefinition
+                    }) as t.TypeDefinition
             );
 
             return schema.nullable ? t.union([...types, t.reference("null")]) : t.union(types);
@@ -129,7 +128,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
             }
 
             const types = schema.oneOf.map(
-                (prop) => getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as TypeDefinition
+                (prop) => getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition
             );
 
             return schema.nullable ? t.union([...types, t.reference("null")]) : t.union(types);
@@ -143,7 +142,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
 
             const oneOf = t.union(
                 schema.anyOf.map(
-                    (prop) => getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as TypeDefinition
+                    (prop) => getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition
                 )
             );
 
@@ -161,7 +160,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
                 inferRequiredSchema(schema);
 
             const types = noRequiredOnlyAllof.map((prop) => {
-                const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as TypeDefinition;
+                const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition;
                 ctx?.resolver && patchRequiredSchemaInLoop(prop, ctx.resolver);
                 return type;
             });
@@ -173,7 +172,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
                         ctx,
                         meta,
                         options,
-                    }) as TypeDefinition
+                    }) as t.TypeDefinition
                 );
             }
 
@@ -209,7 +208,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
                     ctx,
                     meta,
                     options,
-                }) as TypeDefinition;
+                }) as t.TypeDefinition;
                 if (typeof arrayOfType === "string") {
                     if (!ctx) throw new Error("Context is required for circular $ref (recursive schemas)");
                     arrayOfType = t.reference(arrayOfType);
@@ -275,7 +274,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
                         ctx,
                         meta,
                         options,
-                    }) as TypeDefinition;
+                    }) as t.TypeDefinition;
                     if (typeof propType === "string") {
                         if (!ctx) throw new Error("Context is required for circular $ref (recursive schemas)");
                         // TODO Partial ?
@@ -325,7 +324,7 @@ TsConversionArgs): ts.Node | TypeDefinitionObject | string => {
     }
 
     return canBeWrapped
-        ? wrapTypeIfInline({ isInline, name: inheritedMeta?.name, typeDef: tsResult as TypeDefinition })
+        ? wrapTypeIfInline({ isInline, name: inheritedMeta?.name, typeDef: tsResult as t.TypeDefinition })
         : tsResult;
 };
 

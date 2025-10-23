@@ -1,7 +1,7 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { getZodiosEndpointDefinitionList } from "./getZodiosEndpointDefinitionList";
+import { getZodiosEndpointDefinitionList } from "./getZodiosEndpointDefinitionList.js";
 
 const baseDoc = {
     openapi: "3.0.3",
@@ -1129,75 +1129,78 @@ test("petstore.yaml", async () => {
 
 test("getZodiosEndpointDefinitionList should return responses if options.withAllResponses is true", () => {
     expect(
-        getZodiosEndpointDefinitionList({
-            ...baseDoc,
-            components: { schemas: { Pet: schemas.Pet, Category: schemas.Category, Tag: schemas.Tag } },
-            paths: {
-                "/pet/findByStatus": {
-                    get: {
-                        tags: ["pet"],
-                        summary: "Finds Pets by status",
-                        description: "Multiple status values can be provided with comma separated strings",
-                        operationId: "findPetsByStatus",
-                        responses: {
-                            "200": {
-                                description: "successful operation",
-                                content: {
-                                    "application/json": {
-                                        schema: {
-                                            type: "array",
-                                            items: {
-                                                $ref: "#/components/schemas/Pet",
+        getZodiosEndpointDefinitionList(
+            {
+                ...baseDoc,
+                components: { schemas: { Pet: schemas.Pet, Category: schemas.Category, Tag: schemas.Tag } },
+                paths: {
+                    "/pet/findByStatus": {
+                        get: {
+                            tags: ["pet"],
+                            summary: "Finds Pets by status",
+                            description: "Multiple status values can be provided with comma separated strings",
+                            operationId: "findPetsByStatus",
+                            responses: {
+                                "200": {
+                                    description: "successful operation",
+                                    content: {
+                                        "application/json": {
+                                            schema: {
+                                                type: "array",
+                                                items: {
+                                                    $ref: "#/components/schemas/Pet",
+                                                },
                                             },
                                         },
                                     },
                                 },
-                            },
-                            "400": {
-                                description: "Invalid status value",
-                                content: {
-                                    "application/json": {
-                                        schema: {
-                                            type: "string",
+                                "400": {
+                                    description: "Invalid status value",
+                                    content: {
+                                        "application/json": {
+                                            schema: {
+                                                type: "string",
+                                            },
                                         },
                                     },
                                 },
-                            },
-                            "500": {
-                                description: "Network error",
+                                "500": {
+                                    description: "Network error",
+                                },
                             },
                         },
                     },
-                },
-                "/pet/findByTags": {
-                    get: {
-                        tags: ["pet"],
-                        summary: "Finds Pets by tags",
-                        description:
-                            "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
-                        operationId: "findPetsByTags",
-                        responses: {
-                            "200": {
-                                description: "successful operation",
-                                content: {
-                                    "application/json": {
-                                        schema: {
-                                            type: "array",
-                                            items: {
-                                                $ref: "#/components/schemas/Pet",
+                    "/pet/findByTags": {
+                        get: {
+                            tags: ["pet"],
+                            summary: "Finds Pets by tags",
+                            description:
+                                "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+                            operationId: "findPetsByTags",
+                            responses: {
+                                "200": {
+                                    description: "successful operation",
+                                    content: {
+                                        "application/json": {
+                                            schema: {
+                                                type: "array",
+                                                items: {
+                                                    $ref: "#/components/schemas/Pet",
+                                                },
                                             },
                                         },
                                     },
                                 },
-                            },
-                            "400": {
-                                description: "Invalid tag value",
+                                "400": {
+                                    description: "Invalid tag value",
+                                },
                             },
                         },
                     },
                 },
             },
-        }, { withAllResponses: true })
+            { withAllResponses: true }
+        )
     ).toMatchInlineSnapshot(`
       {
           "deepDependencyGraph": {

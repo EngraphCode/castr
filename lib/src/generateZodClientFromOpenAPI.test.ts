@@ -1,9 +1,9 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import type { OpenAPIObject, SchemasObject } from "openapi3-ts";
 import { beforeAll, describe, expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI";
-import { getZodClientTemplateContext } from "./template-context";
-import { pathToVariableName } from "./utils";
+import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI.js";
+import { getZodClientTemplateContext } from "./template-context.js";
+import { pathToVariableName } from "./utils.js";
 
 let openApiDoc: OpenAPIObject;
 beforeAll(async () => {
@@ -1967,7 +1967,7 @@ describe("generateZodClientFromOpenAPI", () => {
                 withAlias: (path: string, method: string, operation) =>
                     path === "/pet"
                         ? method + "CustomPet"
-                        : operation?.operationId ?? method + pathToVariableName(path || "/noPath"),
+                        : (operation?.operationId ?? method + pathToVariableName(path || "/noPath")),
             },
         });
         expect(prettyOutput).toMatchInlineSnapshot(`
@@ -4003,9 +4003,9 @@ test("with optional, partial, all required objects", async () => {
     `);
 });
 
-test('getZodClientTemplateContext with allReadonly', async () => {
+test("getZodClientTemplateContext with allReadonly", async () => {
     const result = getZodClientTemplateContext(openApiDoc, {
-        allReadonly: true
+        allReadonly: true,
     });
     expect(result).toMatchInlineSnapshot(`
       {

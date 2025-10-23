@@ -1,7 +1,7 @@
 import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
 import { get } from "pastable/server";
 
-import { normalizeString } from "./utils";
+import { normalizeString } from "./utils.js";
 
 const autocorrectRef = (ref: string) => (ref[1] === "/" ? ref : "#/" + ref.slice(1));
 

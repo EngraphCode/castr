@@ -3,15 +3,15 @@ import { sortBy, sortListFromRefArray, sortObjKeysFromArray } from "pastable/ser
 import { ts } from "tanu";
 import { match } from "ts-pattern";
 
-import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph";
-import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList";
-import { getZodiosEndpointDefinitionList } from "./getZodiosEndpointDefinitionList";
-import type { TsConversionContext } from "./openApiToTypescript";
-import { getTypescriptFromOpenApi } from "./openApiToTypescript";
-import { getZodSchema } from "./openApiToZod";
-import { topologicalSort } from "./topologicalSort";
-import { asComponentSchema, normalizeString } from "./utils";
-import type { CodeMetaData } from "./CodeMeta";
+import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
+import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
+import { getZodiosEndpointDefinitionList } from "./getZodiosEndpointDefinitionList.js";
+import type { TsConversionContext } from "./openApiToTypescript.js";
+import { getTypescriptFromOpenApi } from "./openApiToTypescript.js";
+import { getZodSchema } from "./openApiToZod.js";
+import { topologicalSort } from "./topologicalSort.js";
+import { asComponentSchema, normalizeString } from "./utils.js";
+import type { CodeMetaData } from "./CodeMeta.js";
 
 const file = ts.createSourceFile("", "", ts.ScriptTarget.ESNext, true);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });

@@ -13,20 +13,20 @@ import type { ObjectLiteral } from "pastable";
 import { match, P } from "ts-pattern";
 import { sync } from "whence";
 
-import type { CodeMeta, ConversionTypeContext } from "./CodeMeta";
-import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph";
-import { isReferenceObject } from "./isReferenceObject";
-import { makeSchemaResolver } from "./makeSchemaResolver";
-import { getZodChain, getZodSchema } from "./openApiToZod";
-import { getSchemaComplexity } from "./schema-complexity";
-import type { TemplateContext } from "./template-context";
+import type { CodeMeta, ConversionTypeContext } from "./CodeMeta.js";
+import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
+import { isReferenceObject } from "./isReferenceObject.js";
+import { makeSchemaResolver } from "./makeSchemaResolver.js";
+import { getZodChain, getZodSchema } from "./openApiToZod.js";
+import { getSchemaComplexity } from "./schema-complexity.js";
+import type { TemplateContext } from "./template-context.js";
 import {
     asComponentSchema,
     normalizeString,
     pathParamToVariableName,
     pathToVariableName,
     replaceHyphenatedPath,
-} from "./utils";
+} from "./utils.js";
 
 const voidSchema = "z.void()";
 
@@ -262,7 +262,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                     const paramCode = getZodSchema({
                         schema: paramSchema ?? {},
                         ctx,
-                        meta: { isRequired: paramItem.in === "path" ? true : paramItem.required ?? false },
+                        meta: { isRequired: paramItem.in === "path" ? true : (paramItem.required ?? false) },
                         options,
                     });
 
@@ -466,7 +466,7 @@ const allowedParamMediaTypes = [
 ] as const;
 const isAllowedParamMediaTypes = (
     mediaType: string
-): mediaType is typeof allowedParamMediaTypes[number] | `application/${string}json${string}` | `text/${string}` =>
+): mediaType is (typeof allowedParamMediaTypes)[number] | `application/${string}json${string}` | `text/${string}` =>
     (mediaType.includes("application/") && mediaType.includes("json")) ||
     allowedParamMediaTypes.includes(mediaType as any) ||
     mediaType.includes("text/");

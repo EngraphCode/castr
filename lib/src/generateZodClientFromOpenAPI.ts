@@ -5,10 +5,10 @@ import { capitalize, pick } from "pastable/server";
 import type { Options } from "prettier";
 import { match } from "ts-pattern";
 
-import { getHandlebars } from "./getHandlebars";
-import { maybePretty } from "./maybePretty";
-import type { TemplateContext } from "./template-context";
-import { getZodClientTemplateContext } from "./template-context";
+import { getHandlebars } from "./getHandlebars.js";
+import { maybePretty } from "./maybePretty.js";
+import type { TemplateContext } from "./template-context.js";
+import { getZodClientTemplateContext } from "./template-context.js";
 
 type GenerateZodClientFromOpenApiArgs<TOptions extends TemplateContext["options"] = TemplateContext["options"]> = {
     openApiDoc: OpenAPIObject;
@@ -38,8 +38,8 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
         ? undefined extends TOptions["groupStrategy"]
             ? string
             : TOptions["groupStrategy"] extends "none" | "tag" | "method"
-            ? string
-            : Record<string, string>
+              ? string
+              : Record<string, string>
         : string
 > => {
     const data = getZodClientTemplateContext(openApiDoc, options);
@@ -72,7 +72,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
 
         const indexSource = await fs.readFile(path.join(__dirname, "../src/templates/grouped-index.hbs"), "utf8");
         const indexTemplate = hbs.compile(indexSource);
-        const indexOutput = maybePretty(indexTemplate({ groupNames }), prettierConfig);
+        const indexOutput = await maybePretty(indexTemplate({ groupNames }), prettierConfig);
         outputByGroupName["__index"] = indexOutput;
 
         if (willWriteToFile) {
@@ -84,7 +84,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
         const commonSchemaNames = [...(data.commonSchemaNames ?? [])];
 
         if (commonSchemaNames.length > 0) {
-            const commonOutput = maybePretty(
+            const commonOutput = await maybePretty(
                 commonTemplate({
                     schemas: pick(data.schemas, commonSchemaNames),
                     types: pick(data.types, commonSchemaNames),
@@ -108,7 +108,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
                     apiClientName: `${capitalize(groupName)}Api`,
                 },
             });
-            const prettyGroupOutput = maybePretty(groupOutput, prettierConfig);
+            const prettyGroupOutput = await maybePretty(groupOutput, prettierConfig);
             outputByGroupName[groupName] = prettyGroupOutput;
 
             if (willWriteToFile) {
@@ -121,7 +121,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
     }
 
     const output = template({ ...data, options: { ...options, apiClientName: options?.apiClientName ?? "api" } });
-    const prettyOutput = maybePretty(output, prettierConfig);
+    const prettyOutput = await maybePretty(output, prettierConfig);
 
     if (willWriteToFile) {
         await fs.writeFile(distPath, prettyOutput);

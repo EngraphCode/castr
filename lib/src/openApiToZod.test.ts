@@ -1,9 +1,9 @@
 import type { SchemaObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { getZodSchema } from "./openApiToZod";
-import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta";
-import { makeSchemaResolver } from "./makeSchemaResolver";
-import { asComponentSchema } from "./utils";
+import { getZodSchema } from "./openApiToZod.js";
+import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta.js";
+import { makeSchemaResolver } from "./makeSchemaResolver.js";
+import { asComponentSchema } from "./utils.js";
 
 const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData | undefined) =>
@@ -161,8 +161,8 @@ test("getSchemaAsZodString", () => {
                                     type: "string",
                                 },
                             },
-                        }
-                    ]
+                        },
+                    ],
                 },
                 {
                     type: "object",
@@ -180,11 +180,10 @@ test("getSchemaAsZodString", () => {
                                 },
                             },
                         },
-                    ]
-                }
+                    ],
+                },
             ],
             discriminator: { propertyName: "type" },
-
         })
     ).toMatchInlineSnapshot(`
     "
@@ -226,7 +225,7 @@ test("getSchemaAsZodString", () => {
                                 },
                             },
                         },
-                    ]
+                    ],
                 },
                 {
                     type: "object",
@@ -257,13 +256,14 @@ test("getSchemaAsZodString", () => {
                                 },
                             },
                         },
-                    ]
-                }
+                    ],
+                },
             ],
             discriminator: { propertyName: "type" },
-
         })
-    ).toMatchInlineSnapshot('"z.union([z.object({ type: z.literal("a"), a: z.string() }).passthrough().and(z.object({ type: z.literal("c"), c: z.string() }).passthrough()), z.object({ type: z.literal("b"), b: z.string() }).passthrough().and(z.object({ type: z.literal("d"), d: z.string() }).passthrough())])"');
+    ).toMatchInlineSnapshot(
+        '"z.union([z.object({ type: z.literal("a"), a: z.string() }).passthrough().and(z.object({ type: z.literal("c"), c: z.string() }).passthrough()), z.object({ type: z.literal("b"), b: z.string() }).passthrough().and(z.object({ type: z.literal("d"), d: z.string() }).passthrough())])"'
+    );
 
     expect(
         getSchemaAsZodString({
@@ -272,9 +272,7 @@ test("getSchemaAsZodString", () => {
                 anyOfExample: { anyOf: [{ type: "string" }, { type: "number" }] },
             },
         })
-    ).toMatchInlineSnapshot(
-        '"z.object({ anyOfExample: z.union([z.string(), z.number()]) }).partial().passthrough()"'
-    );
+    ).toMatchInlineSnapshot('"z.object({ anyOfExample: z.union([z.string(), z.number()]) }).partial().passthrough()"');
 
     expect(
         getSchemaAsZodString({

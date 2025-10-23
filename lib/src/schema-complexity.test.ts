@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 
 import type { SchemaObject } from "openapi3-ts";
-import { getSchemaComplexity } from "./schema-complexity";
+import { getSchemaComplexity } from "./schema-complexity.js";
 
 const getComplexity = (schema: SchemaObject) => getSchemaComplexity({ schema: schema, current: 0 });
 
@@ -254,7 +254,7 @@ test("getSchemaComplexity", async () => {
                 },
             },
         })
-    ).toMatchInlineSnapshot('14');
+    ).toMatchInlineSnapshot("14");
 
     expect(getComplexity({ type: "string", enum: ["aaa", "bbb", "ccc"] })).toMatchInlineSnapshot("2");
     expect(getComplexity({ type: "number", enum: [1, 2, 3, null] })).toMatchInlineSnapshot("2");

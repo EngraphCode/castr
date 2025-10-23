@@ -2,9 +2,9 @@ import SwaggerParser from "@apidevtools/swagger-parser";
 import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
 import { get } from "pastable/server";
 import { expect, test } from "vitest";
-import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph";
-import { topologicalSort } from "./topologicalSort";
-import { asComponentSchema } from "./utils";
+import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
+import { topologicalSort } from "./topologicalSort.js";
+import { asComponentSchema } from "./utils.js";
 
 test("petstore.yaml", async () => {
     const openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;

@@ -1,12 +1,12 @@
 import { isSchemaObject, type ReferenceObject, type SchemaObject } from "openapi3-ts";
 import { match } from "ts-pattern";
 
-import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta";
-import { CodeMeta } from "./CodeMeta";
-import { isReferenceObject } from "./isReferenceObject";
-import type { TemplateContext } from "./template-context";
-import { escapeControlCharacters, isPrimitiveType, wrapWithQuotesIfNeeded } from "./utils";
-import { inferRequiredSchema } from "./inferRequiredOnly";
+import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta.js";
+import { CodeMeta } from "./CodeMeta.js";
+import { isReferenceObject } from "./isReferenceObject.js";
+import type { TemplateContext } from "./template-context.js";
+import { escapeControlCharacters, isPrimitiveType, wrapWithQuotesIfNeeded } from "./utils.js";
+import { inferRequiredSchema } from "./inferRequiredOnly.js";
 
 type ConversionArgs = {
     schema: SchemaObject | ReferenceObject;
@@ -95,8 +95,8 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
             return code.assign(`
                 z.discriminatedUnion("${propertyName}", [${schema.oneOf
-                .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
-                .join(", ")}])
+                    .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
+                    .join(", ")}])
             `);
         }
 
@@ -114,20 +114,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
         const types = schema.anyOf
             .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
-            .map((type) => {
-                let isObject = true;
-
-                if ("type" in type.schema) {
-                    if (Array.isArray(type.schema.type)) {
-                        isObject = false;
-                    } else {
-                        const schemaType = type.schema.type.toLowerCase() as NonNullable<typeof schema.type>;
-                        isObject = !isPrimitiveType(schemaType);
-                    }
-                }
-
-                return type.toString();
-            })
+            .map((type) => type.toString())
             .join(", ");
 
         return code.assign(`z.union([${types}])`);
@@ -213,15 +200,11 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
     if (schemaType === "array") {
         if (schema.items) {
             return code.assign(
-                `z.array(${
-                    getZodSchema({ schema: schema.items, ctx, meta, options }).toString()
-                }${
-                    getZodChain({
-                        schema: schema.items as SchemaObject,
-                        meta: { ...meta, isRequired: true },
-                        options,
-                    })
-                })${readonly}`
+                `z.array(${getZodSchema({ schema: schema.items, ctx, meta, options }).toString()}${getZodChain({
+                    schema: schema.items as SchemaObject,
+                    meta: { ...meta, isRequired: true },
+                    options,
+                })})${readonly}`
             );
         }
 
@@ -262,8 +245,8 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                     isRequired: isPartial
                         ? true
                         : hasRequiredArray
-                        ? schema.required?.includes(prop)
-                        : options?.withImplicitRequiredProps,
+                          ? schema.required?.includes(prop)
+                          : options?.withImplicitRequiredProps,
                     name: prop,
                 } as CodeMetaData;
 

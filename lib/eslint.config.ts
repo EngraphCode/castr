@@ -58,10 +58,12 @@ export default defineConfig(
             ],
 
             // Unicorn rules (matching old config intent)
-            "unicorn/prefer-module": "off", // CommonJS is used in this project
             "unicorn/no-array-reduce": "off",
             "unicorn/no-null": "off",
             "unicorn/prefer-top-level-await": "off",
+            "unicorn/filename-case": "off",
+            "unicorn/prevent-abbreviations": "off",
+            "unicorn/no-array-for-each": "off",
 
             // Sonarjs complexity - adjusted from default
             "sonarjs/cognitive-complexity": ["warn", 30],

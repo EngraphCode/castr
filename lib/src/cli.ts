@@ -2,13 +2,13 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import SwaggerParser from "@apidevtools/swagger-parser";
-import cac from "cac";
+import { cac } from "cac";
 import type { OpenAPIObject } from "openapi3-ts";
 import { safeJSONParse } from "pastable/server";
 import { resolveConfig } from "prettier";
 
-import { toBoolean } from "./utils";
-import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI";
+import { toBoolean } from "./utils.js";
+import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI.js";
 
 const cli = cac("openapi-zod-client");
 const packageJson = safeJSONParse(readFileSync(resolve(__dirname, "../../package.json"), "utf8"));
@@ -62,7 +62,7 @@ cli.command("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
         "Use strict validation for objects so we don't allow unknown keys. Defaults to false.",
         { default: false }
     )
-    .action(async (input, options) => {
+    .action(async (input: string, options: any) => {
         console.log("Retrieving OpenAPI document from", input);
         const openApiDoc = (await SwaggerParser.bundle(input)) as OpenAPIObject;
         const prettierConfig = await resolveConfig(options.prettier || "./");
