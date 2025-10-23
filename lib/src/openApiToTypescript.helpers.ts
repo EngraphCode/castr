@@ -183,3 +183,24 @@ export function wrapTypeIfNeeded(
     return typeDef as ts.Node;
 }
 
+/**
+ * Converts an array of schemas to TypeScript types
+ * Used by oneOf, anyOf, allOf composition handlers
+ */
+export function convertSchemasToTypes<T>(
+    schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+    convertFn: (schema: SchemaObject | ReferenceObject) => T
+): T[] {
+    return schemas.map((schema) => convertFn(schema));
+}
+
+/**
+ * Adds null to a union type if nullable flag is true
+ */
+export function addNullToUnionIfNeeded(
+    type: t.TypeDefinitionObject,
+    isNullable: boolean
+): t.TypeDefinitionObject {
+    return isNullable ? t.union([type, t.reference("null")]) : type;
+}
+

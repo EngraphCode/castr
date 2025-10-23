@@ -8,6 +8,8 @@ import { wrapWithQuotesIfNeeded } from "./utils.js";
 import { inferRequiredSchema } from "./inferRequiredOnly.js";
 import generateJSDocArray from "./generateJSDocArray.js";
 import {
+    addNullToUnionIfNeeded,
+    convertSchemasToTypes,
     createAdditionalPropertiesSignature,
     handleBasicPrimitive,
     handlePrimitiveEnum,
@@ -70,17 +72,16 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
                 });
             }
 
-            const types = schema.type.map(
-                (prop) =>
-                    getTypescriptFromOpenApi({
-                        schema: { ...schema, type: prop },
-                        ctx,
-                        meta,
-                        options,
-                    }) as t.TypeDefinition
+            const types = convertSchemasToTypes(
+                schema.type.map((type) => ({ ...schema, type })),
+                (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
             );
 
-            return schema.nullable ? t.union([...types, t.reference("null")]) : t.union(types);
+            if (schema.nullable) {
+                return t.union([...types, t.reference("null")]);
+            }
+
+            return t.union(types);
         }
 
         if (schema.type === "null") {
@@ -92,11 +93,15 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
                 return getTypescriptFromOpenApi({ schema: schema.oneOf[0]!, ctx, meta, options });
             }
 
-            const types = schema.oneOf.map(
-                (prop) => getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition
+            const types = convertSchemasToTypes(schema.oneOf, (s) =>
+                getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
             );
 
-            return schema.nullable ? t.union([...types, t.reference("null")]) : t.union(types);
+            if (schema.nullable) {
+                return t.union([...types, t.reference("null")]);
+            }
+
+            return t.union(types);
         }
 
         // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
@@ -105,17 +110,19 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
                 return getTypescriptFromOpenApi({ schema: schema.anyOf[0]!, ctx, meta, options });
             }
 
-            const oneOf = t.union(
-                schema.anyOf.map(
-                    (prop) => getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition
-                )
+            const types = convertSchemasToTypes(schema.anyOf, (s) =>
+                getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
             );
 
+            const oneOf = t.union(types);
             const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), options?.allReadonly ?? false);
 
-            return schema.nullable
-                ? t.union([oneOf, arrayOfOneOf, t.reference("null")])
-                : t.union([oneOf, arrayOfOneOf]);
+            const unionParts = [oneOf, arrayOfOneOf];
+            if (schema.nullable) {
+                unionParts.push(t.reference("null"));
+            }
+
+            return t.union(unionParts);
         }
 
         if (schema.allOf) {
@@ -126,7 +133,7 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
             const { patchRequiredSchemaInLoop, noRequiredOnlyAllof, composedRequiredSchema } =
                 inferRequiredSchema(schema);
 
-            const types = noRequiredOnlyAllof.map((prop) => {
+            const types = convertSchemasToTypes(noRequiredOnlyAllof, (prop) => {
                 const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition;
                 ctx?.resolver && patchRequiredSchemaInLoop(prop, ctx.resolver);
                 return type;
@@ -143,7 +150,8 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
                 );
             }
 
-            return schema.nullable ? t.union([t.intersection(types), t.reference("null")]) : t.intersection(types);
+            const intersection = t.intersection(types);
+            return schema.nullable ? t.union([intersection, t.reference("null")]) : intersection;
         }
 
         const schemaType = schema.type ? (schema.type.toLowerCase() as NonNullable<typeof schema.type>) : undefined;

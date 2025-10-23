@@ -236,13 +236,13 @@ test("getSchemaAsTsString", () => {
     ).toMatchInlineSnapshot('"(string | number) | Array<string | number> | null"');
     expect(
         getSchemaAsTsString({ nullable: true, oneOf: [{ type: "string" }, { type: "number" }] })
-    ).toMatchInlineSnapshot('"string | number | null"');
+    ).toMatchInlineSnapshot(`"string | number | null"`);
     expect(
         getSchemaAsTsString(
             { nullable: true, oneOf: [{ type: "string" }, { type: "number" }] },
             { name: "StringOrNumber" }
         )
-    ).toMatchInlineSnapshot('"export type StringOrNumber = string | number | null;"');
+    ).toMatchInlineSnapshot(`"export type StringOrNumber = string | number | null;"`);
 
     expect(
         getSchemaAsTsString({ nullable: true, allOf: [{ type: "string" }, { type: "number" }] })
@@ -842,14 +842,14 @@ test("getSchemaAsTsString with readonly", () => {
     ).toMatchInlineSnapshot('"(string | number) | Readonly<Array<string | number>> | null"');
     expect(
         getSchemaAsTsString({ nullable: true, oneOf: [{ type: "string" }, { type: "number" }] }, undefined, options)
-    ).toMatchInlineSnapshot('"string | number | null"');
+    ).toMatchInlineSnapshot(`"string | number | null"`);
     expect(
         getSchemaAsTsString(
             { nullable: true, oneOf: [{ type: "string" }, { type: "number" }] },
             { name: "StringOrNumber" },
             options
         )
-    ).toMatchInlineSnapshot('"export type StringOrNumber = string | number | null;"');
+    ).toMatchInlineSnapshot(`"export type StringOrNumber = string | number | null;"`);
 
     expect(
         getSchemaAsTsString({ nullable: true, allOf: [{ type: "string" }, { type: "number" }] }, undefined, options)

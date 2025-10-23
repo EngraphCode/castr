@@ -30,7 +30,15 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
     if (options?.shouldExportAllSchemas) {
         Object.entries(docSchemas).forEach(([name, schema]) => {
             if (!result.zodSchemaByName[name]) {
-                result.zodSchemaByName[name] = getZodSchema({ schema, ctx: result, options }).toString();
+                const schemaArgs = { schema, ctx: result, options };
+                const zodSchema = getZodSchema(schemaArgs);
+                const zodSchemaString = zodSchema.toString();
+                if (!zodSchemaString) {
+                    throw new Error(
+                        `Could not get Zod schema string for schema: ${name}, with value: ${JSON.stringify(schema)}`
+                    );
+                }
+                result.zodSchemaByName[name] = zodSchemaString;
             }
         });
     }

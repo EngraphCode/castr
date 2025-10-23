@@ -198,4 +198,3 @@ describe("openApiToTypescript.helpers", () => {
         });
     });
 });
-
