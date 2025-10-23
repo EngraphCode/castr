@@ -1,8 +1,8 @@
 # Lint Triage - Type Safety Focused
 
-## Current Status: 270 Problems (213 errors, 57 warnings)
+## Current Status: 260 Problems (203 errors, 57 warnings)
 
-**After removing unicorn rules** (too strict)
+**After removing unicorn rules and adding no-unsafe-argument to test rules**
 
 ---
 
@@ -164,11 +164,11 @@ The ESLint config already has relaxed rules for tests (lines 66-81).
 
 | Priority                  | Count   | Action                                                 |
 | ------------------------- | ------- | ------------------------------------------------------ |
-| 🔴 Critical (Type Safety) | 197     | **Fix in extracted files (~50), baseline rest (~147)** |
+| 🔴 Critical (Type Safety) | 187     | **Fix in extracted files (~50), baseline rest (~137)** |
 | 🟡 High (Dead Code)       | 9       | **Fix all**                                            |
 | 🟢 Medium (Code Quality)  | 27      | Baseline as tech debt                                  |
 | 🔵 Low (Style)            | 38      | Baseline as tech debt                                  |
-| **TOTAL**                 | **270** | **Fix ~60, baseline ~210**                             |
+| **TOTAL**                 | **260** | **Fix ~60, baseline ~200**                             |
 
 ---
 
