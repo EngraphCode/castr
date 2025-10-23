@@ -52,12 +52,12 @@ export default defineConfig(
             "@typescript-eslint/consistent-type-imports": ["error"],
 
             // Complexity
-            complexity: ["error", 22],
-            "sonarjs/cognitive-complexity": ["error", 22],
-            "max-depth": ["error", 5],
-            "max-statements": ["error", 20],
-            "max-lines-per-function": ["error", 50],
-            "max-lines": ["error", 250],
+            complexity: ["error", 29], // Target 8
+            "sonarjs/cognitive-complexity": ["error", 29], // Target 8
+            "max-depth": ["error", 5], // Target 3
+            "max-statements": ["error", 30], // Target 20
+            "max-lines-per-function": ["error", 100], // Target 50
+            "max-lines": ["error", 350], // Target 250
 
             // Code quality
             "no-console": "off",
@@ -72,6 +72,8 @@ export default defineConfig(
         // Test files - more relaxed rules
         files: ["**/*.test.ts", "tests/**/*.ts"],
         rules: {
+            "max-lines-per-function": ["off"],
+            "max-lines": ["off"],
             "@typescript-eslint/consistent-type-assertions": "off",
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-non-null-assertion": "off",

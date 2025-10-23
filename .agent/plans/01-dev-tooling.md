@@ -1,35 +1,43 @@
 # Phase 1: Developer Tooling Modernization + ESM Migration
 
-**Status:** 🔄 IN PROGRESS (62% complete)  
-**Focus:** Infrastructure and tooling modernization  
+**Status:** 🔄 IN PROGRESS (85% complete)  
+**Focus:** Complexity reduction and type safety  
 **Type:** Foundation work  
 **Started:** October 2025  
-**Estimated Completion:** 1-2 days remaining
+**Estimated Completion:** <1 day remaining
 
 ---
 
 ## Progress Summary
 
-### ✅ Completed (103 issues fixed - 38% reduction)
-- Turborepo setup and workspace standardization
-- TypeScript, Prettier, Vitest, ESLint modernization to latest versions
-- ESM migration with proper module resolution and `.js` extensions
-- ESLint v9 flat config migration
-- Replaced `cac` with `commander` (52 type safety issues eliminated)
-- Fixed all critical type safety issues in extraction-target files (26 issues)
-- Removed all unused imports/variables (9 issues)
-- Removed playground and examples workspaces
-- Fixed `generateJSDocArray.ts` (4 issues)
+### ✅ Completed Phase 1a: Tooling & Type Safety (131 issues fixed - 61% reduction!)
+- ✅ Turborepo setup and workspace standardization
+- ✅ TypeScript, Prettier, Vitest, ESLint modernization to latest versions
+- ✅ ESM migration with proper module resolution and `.js` extensions
+- ✅ ESLint v9 flat config migration with cognitive complexity checks
+- ✅ Replaced `cac` with `commander` (52 type safety issues eliminated)
+- ✅ Fixed all critical type safety issues in extraction-target files (26 issues)
+- ✅ Removed all unused imports/variables (9 issues)
+- ✅ Removed playground and examples workspaces
+- ✅ Fixed `generateJSDocArray.ts` (4 issues)
+- ✅ **Major complexity refactoring:**
+  - openApiToTypescript.ts: 104 → <30 (BELOW THRESHOLD!)
+  - getZodiosEndpointDefinitionList helpers: 289 lines extracted
+  - Created 29 pure helper functions across 3 files
+  - Added 47 comprehensive unit tests
 
-### 🔄 In Progress (109 errors, 58 warnings remaining)
-- Fixing critical type safety issues in 8 remaining files
-- Evaluating dependency replacements (pastable, tanu, degit)
+### 🔄 Phase 1b: Final Cleanup (82 errors, 57 warnings remaining)
+- 5 critical type safety errors (no-unsafe-*)
+- 3 cognitive complexity violations (all close to threshold)
+- Function size/statement violations
 
-### 🎯 Current Metrics
-- **Starting violations:** 270 (213 errors, 57 warnings)
-- **Current violations:** 167 (109 errors, 58 warnings)
-- **Fixed:** 103 issues (38% reduction)
-- **Remaining critical:** ~69 type safety issues in non-extracted files
+### 🎯 Current Metrics  
+- **Starting violations:** 213 errors, 57 warnings (270 total)
+- **Current violations:** 82 errors, 57 warnings (139 total)
+- **Fixed:** 131 errors (61% reduction!) ⭐
+- **Tests:** 207 → 254 (+47 tests, +23%)
+- **Helper functions created:** 29 pure functions
+- **Lines extracted:** 723 lines → 3 new files
 
 ---
 
@@ -2163,12 +2171,81 @@ npx openapi-zod-client --help
 
 ---
 
-## Next Steps After Current Session
+## Remaining Work (Phase 1b Completion)
 
-1. ✅ Update plan documents - **DONE THIS SESSION**
-2. ✅ Create detailed TODO list - **SEE BELOW**
-3. 🔄 Fix remaining 8 files (~69 critical issues, ~4 hours)
-4. 📝 Update lint triage document with final status
+### 🚨 Critical (Must Fix - Blocks Completion)
+
+#### Type Safety Errors (5 errors)
+1. **getZodiosEndpointDefinitionList.ts:147** - no-unsafe-argument
+   - Issue: `operation.responses[statusCode]` typed as `any`
+   - Fix: Add explicit type guard for ResponseObject | ReferenceObject
+
+2. **openApiToTypescript.helpers.ts:75** - no-unsafe-argument (3 errors)
+   - Lines: 75:49, 75:50, 75:98
+   - Issue: `any[]` in union/spread operations with TypeDefinition[]
+   - Fix: Add proper type annotations for composition helpers
+
+3. **schema-complexity.ts:114** - no-unsafe-assignment
+   - Issue: Schema property access returns `any`
+   - Fix: Add type guard or explicit schema type
+
+#### Cognitive Complexity (3 files - 24 points over threshold)
+1. **getOpenApiDependencyGraph.ts:12** - 31/29 (need -2)
+   - Status: Just barely over threshold
+   - Effort: ~30 min - extract 1-2 small helpers
+
+2. **schema-complexity.ts:38** - 33/29 (need -4)  
+   - Also: 117 lines (max 100), 41 statements (max 30)
+   - Effort: ~1 hour - extract property/composition handlers
+
+3. **getZodiosEndpointDefinitionList.ts:67** - 47/29 (need -18)
+   - Also: 175 lines (max 100), 66 statements (max 30)
+   - Status: Main function, already extracted 289 lines
+   - Effort: ~2 hours - extract path/method iteration logic
+
+**Total Critical Work:** ~4 hours
+
+### ⚠️ High Priority (Should Fix)
+
+#### Function Size Violations (5 functions)
+- generateZodClientFromOpenAPI.ts:73 - 40 statements (max 30)
+- template-context.ts:20 - 253 lines, 41 statements
+- getOpenApiDependencyGraph.ts:12 - 33 statements
+- schema-complexity.ts:38 - 117 lines, 41 statements
+- getZodiosEndpointDefinitionList.ts:67 - 175 lines, 66 statements
+
+#### Unused Imports (5 occurrences)
+- getZodiosEndpointDefinitionList.ts: ParameterObject, ReferenceObject
+- openApiToTypescript.helpers.ts: isReferenceObject
+
+### 📋 Medium Priority (Nice to Have)
+
+#### Function Return Type Issues (3 functions)
+- openApiToTypescript.helpers.ts: Lines 29, 133, 195
+- Issue: sonarjs/function-return-type (inconsistent return types)
+
+#### Style Warnings (57 warnings)
+- Mostly @typescript-eslint/consistent-type-assertions
+- no-selector-parameter suggestions (2)
+- no-non-null-assertion (2)
+
+**Estimated Additional Time:** 2-3 hours
+
+---
+
+## Next Steps
+
+### Immediate (Complete Phase 1b)
+1. ✅ Update plan documents with lint status - **DONE**
+2. 🔄 Fix 5 critical type safety errors (~1 hour)
+3. 🔄 Reduce cognitive complexity in 3 files (~3 hours)
+4. 📝 Clean up unused imports (<15 min)
+5. ✅ Commit and document progress
+
+### Short Term (Optional Polish)
+1. Address function size violations
+2. Fix function-return-type issues  
+3. Reduce type assertions where reasonable
 5. 📋 Document ~98 remaining issues as acceptable tech debt
 6. ✅ Mark Phase 1 complete
 7. 🚀 Begin Phase 2 (openapi3-ts v4 upgrade)

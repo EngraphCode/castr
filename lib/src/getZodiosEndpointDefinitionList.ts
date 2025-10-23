@@ -1,5 +1,12 @@
 import type { ZodiosEndpointDefinition } from "@zodios/core";
-import type { OpenAPIObject, OperationObject, ParameterObject, PathItemObject, ResponseObject, ReferenceObject } from "openapi3-ts";
+import type {
+    OpenAPIObject,
+    OperationObject,
+    ParameterObject,
+    PathItemObject,
+    ResponseObject,
+    ReferenceObject,
+} from "openapi3-ts";
 import type { ObjectLiteral } from "pastable";
 import { match, P } from "ts-pattern";
 
@@ -104,7 +111,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
             const parameters = Object.values({
                 ...parametersMap,
                 ...getParametersMap(operation.parameters ?? []),
-            }) as Array<ParameterObject | ReferenceObject>;
+            });
             const operationName = getOperationAlias(path, method, operation);
             let endpointDefinition: EndpointDefinitionWithRefs = {
                 method: method as EndpointDefinitionWithRefs["method"],
@@ -135,7 +142,13 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
             }
 
             for (const statusCode in operation.responses) {
-                const result = processResponse(statusCode, operation.responses[statusCode], ctx, getZodVarName, options);
+                const result = processResponse(
+                    statusCode,
+                    operation.responses[statusCode],
+                    ctx,
+                    getZodVarName,
+                    options
+                );
 
                 if (result.responseEntry && endpointDefinition.responses !== undefined) {
                     endpointDefinition.responses.push(result.responseEntry);
