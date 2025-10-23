@@ -47,9 +47,11 @@ export function getSchemaComplexity({
 
     if (Array.isArray(schema.type)) {
         if (schema.type.length === 1) {
+            const firstType = schema.type[0];
+            if (!firstType) return current;
             return (
                 complexityByComposite("oneOf") +
-                getSchemaComplexity({ current, schema: { ...schema, type: schema.type[0]! } })
+                getSchemaComplexity({ current, schema: { ...schema, type: firstType } })
             );
         }
 

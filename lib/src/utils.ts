@@ -11,7 +11,7 @@ export function normalizeString(text: string) {
         .trim() // Remove whitespace from both sides of a string (optional)
         .replaceAll(/\s+/g, "_") // Replace spaces with _
         .replaceAll(/-+/g, "_") // Replace - with _
-        .replaceAll(/[^\w\-]+/g, "_") // Remove all non-word chars
+        .replaceAll(/[^\w-]+/g, "_") // Remove all non-word chars
         .replaceAll(/--+/g, "-"); // Replace multiple - with single -
 }
 
@@ -33,7 +33,7 @@ const prefixStringStartingWithNumberIfNeeded = (str: string) => {
 };
 
 const pathParamWithBracketsRegex = /({\w+})/g;
-const wordPrecededByNonWordCharacter = /[^\w\-]+/g;
+const wordPrecededByNonWordCharacter = /[^\w-]+/g;
 
 export const pathParamToVariableName = (name: string) => {
     // Replace all underscores with # to preserve them when doing snakeToCamel

@@ -38,9 +38,11 @@ export class CodeMeta {
             this.ref = schema.$ref;
         }
 
-        // @ts-expect-error
-        this.meta = { ...meta };
-        this.meta.referencedBy = [...(meta?.referencedBy ?? [])];
+        // Initialize meta with required fields, using spread for optional fields
+        this.meta = {
+            ...meta,
+            referencedBy: [...(meta?.referencedBy ?? [])],
+        };
 
         if (this.ref) {
             this.meta.referencedBy.push(this);
@@ -50,7 +52,8 @@ export class CodeMeta {
     get codeString(): string {
         if (this.code) return this.code;
 
-        return this.ctx ? this.ctx.resolver.resolveRef(this.ref!).normalized : this.ref!;
+        if (!this.ref) return "";
+        return this.ctx ? this.ctx.resolver.resolveRef(this.ref).normalized : this.ref;
     }
 
     get complexity(): number {
