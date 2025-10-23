@@ -1,10 +1,15 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
-import { getSum } from "pastable/server";
+import { getSum } from "pastable";
 import { match } from "ts-pattern";
 
 import { isReferenceObject } from "./isReferenceObject.js";
 import type { PrimitiveType } from "./utils.js";
 import { isPrimitiveType } from "./utils.js";
+import {
+    calculateCompositionComplexity,
+    calculatePropertiesComplexity,
+    calculateTypeArrayComplexity,
+} from "./schema-complexity.helpers.js";
 
 type CompositeType = "oneOf" | "anyOf" | "allOf" | "enum" | "array" | "empty-object" | "object" | "record";
 const complexityByType = (schema: SchemaObject & { type: PrimitiveType }) => {
@@ -46,20 +51,7 @@ export function getSchemaComplexity({
     if (isReferenceObject(schema)) return current + 2;
 
     if (Array.isArray(schema.type)) {
-        if (schema.type.length === 1) {
-            const firstType = schema.type[0];
-            if (!firstType) return current;
-            return (
-                complexityByComposite("oneOf") +
-                getSchemaComplexity({ current, schema: { ...schema, type: firstType } })
-            );
-        }
-
-        return (
-            current +
-            complexityByComposite("oneOf") +
-            getSum(schema.type.map((prop) => getSchemaComplexity({ current: 0, schema: { ...schema, type: prop } })))
-        );
+        return calculateTypeArrayComplexity(schema.type, schema, current, complexityByComposite, getSchemaComplexity);
     }
 
     if (schema.type === "null") {
@@ -67,40 +59,16 @@ export function getSchemaComplexity({
     }
 
     if (schema.oneOf) {
-        if (schema.oneOf.length === 1) {
-            return complexityByComposite("oneOf") + getSchemaComplexity({ current, schema: schema.oneOf[0] });
-        }
-
-        return (
-            current +
-            complexityByComposite("oneOf") +
-            getSum(schema.oneOf.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
-        );
+        return calculateCompositionComplexity(schema.oneOf, "oneOf", current, complexityByComposite, getSchemaComplexity);
     }
 
     // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
     if (schema.anyOf) {
-        if (schema.anyOf.length === 1) {
-            return complexityByComposite("anyOf") + getSchemaComplexity({ current, schema: schema.anyOf[0] });
-        }
-
-        return (
-            current +
-            complexityByComposite("anyOf") +
-            getSum(schema.anyOf.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
-        );
+        return calculateCompositionComplexity(schema.anyOf, "anyOf", current, complexityByComposite, getSchemaComplexity);
     }
 
     if (schema.allOf) {
-        if (schema.allOf.length === 1) {
-            return complexityByComposite("allOf") + getSchemaComplexity({ current, schema: schema.allOf[0] });
-        }
-
-        return (
-            current +
-            complexityByComposite("allOf") +
-            getSum(schema.allOf.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
-        );
+        return calculateCompositionComplexity(schema.allOf, "allOf", current, complexityByComposite, getSchemaComplexity);
     }
 
     if (!schema.type) return current;
@@ -138,13 +106,7 @@ export function getSchemaComplexity({
         }
 
         if (schema.properties) {
-            const props = Object.values(schema.properties);
-
-            return (
-                current +
-                complexityByComposite("object") +
-                getSum(props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
-            );
+            return calculatePropertiesComplexity(schema.properties, current, complexityByComposite, getSchemaComplexity);
         }
 
         return complexityByComposite("empty-object") + getSchemaComplexity({ current, schema: undefined });
