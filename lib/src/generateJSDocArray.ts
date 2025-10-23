@@ -1,39 +1,64 @@
 import type { SchemaObject } from "openapi3-ts";
 
+type MappingValue = string | string[] | undefined;
+
 export default function generateJSDocArray(schema: SchemaObject, withTypesAndFormat = false): string[] {
     const comments: string[] = [];
 
-    const mapping = {
-        description: (value: string) => `${value}`,
-        example: (value: any) => `@example ${JSON.stringify(value)}`,
-        examples: (value: any[]) =>
-            value.map((example, index) => `@example Example ${index + 1}: ${JSON.stringify(example)}`),
-        deprecated: (value: boolean) => (value ? "@deprecated" : ""),
-        default: (value: any) => `@default ${JSON.stringify(value)}`,
-        externalDocs: (value: { url: string }) => `@see ${value.url}`,
-        // Additional attributes that depend on `withTypesAndFormat`
-        type: withTypesAndFormat
-            ? (value: string | string[]) => `@type {${Array.isArray(value) ? value.join("|") : value}}`
-            : undefined,
-        format: withTypesAndFormat ? (value: string) => `@format ${value}` : undefined,
-        minimum: (value: number) => `@minimum ${value}`,
-        maximum: (value: number) => `@maximum ${value}`,
-        minLength: (value: number) => `@minLength ${value}`,
-        maxLength: (value: number) => `@maxLength ${value}`,
-        pattern: (value: string) => `@pattern ${value}`,
-        enum: (value: string[]) => `@enum ${value.join(", ")}`,
-    };
-
-    Object.entries(mapping).forEach(([key, mappingFunction]) => {
-        const schemaValue = schema[key as keyof SchemaObject];
-        if (schemaValue !== undefined && mappingFunction) {
-            const result = mappingFunction(schemaValue);
+    // Helper to safely add a comment from a schema property
+    const addComment = (key: keyof SchemaObject, formatter: (value: unknown) => MappingValue): void => {
+        const value: unknown = schema[key];
+        if (value !== undefined) {
+            const result = formatter(value);
             if (Array.isArray(result)) {
                 result.forEach((subResult) => comments.push(subResult));
             } else if (result) {
                 comments.push(result);
             }
         }
+    };
+
+    // Process each schema property
+    addComment("description", (value) => String(value));
+    addComment("example", (value) => `@example ${JSON.stringify(value)}`);
+    addComment("examples", (value) => {
+        if (Array.isArray(value)) {
+            return value.map((example, index) => `@example Example ${index + 1}: ${JSON.stringify(example)}`);
+        }
+        return undefined;
+    });
+    addComment("deprecated", (value) => (value ? "@deprecated" : ""));
+    addComment("default", (value) => `@default ${JSON.stringify(value)}`);
+    addComment("externalDocs", (value) => {
+        if (value && typeof value === "object" && "url" in value) {
+            return `@see ${(value as { url: string }).url}`;
+        }
+        return undefined;
+    });
+
+    if (withTypesAndFormat) {
+        addComment("type", (value) => {
+            if (typeof value === "string") {
+                return `@type {${value}}`;
+            }
+            if (Array.isArray(value)) {
+                return `@type {${value.join("|")}}`;
+            }
+            return undefined;
+        });
+        addComment("format", (value) => (typeof value === "string" ? `@format ${value}` : undefined));
+    }
+
+    addComment("minimum", (value) => `@minimum ${String(value)}`);
+    addComment("maximum", (value) => `@maximum ${String(value)}`);
+    addComment("minLength", (value) => `@minLength ${String(value)}`);
+    addComment("maxLength", (value) => `@maxLength ${String(value)}`);
+    addComment("pattern", (value) => `@pattern ${String(value)}`);
+    addComment("enum", (value) => {
+        if (Array.isArray(value)) {
+            return `@enum ${value.join(", ")}`;
+        }
+        return undefined;
     });
 
     // Add a space line after description if there are other comments
