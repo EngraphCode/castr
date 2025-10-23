@@ -11,6 +11,7 @@
         "test": "echo 'Example - no tests' && exit 0",
         "gen:basic": "tsx ./petstore-generator.ts"
     },
+    "packageManager": "pnpm@10.19.0",
     "devDependencies": {
         "openapi3-ts": "3.0.2",
         "tsx": "^4",
