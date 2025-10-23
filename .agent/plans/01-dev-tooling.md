@@ -1801,19 +1801,21 @@ requiring explicit file extensions for relative imports."
 **Current State:** Unknown - tests not yet run after ESM migration
 
 **Required Actions:**
+
 ```bash
 # Run in lib workspace
 pnpm test
 
 # Expected issues:
 # - Import path errors (.js extensions)
-# - ESM/CJS compatibility issues  
+# - ESM/CJS compatibility issues
 # - Snapshot mismatches
 # - Async/await issues from prettier changes
 # - Type assertion issues from tanu changes
 ```
 
 **Must achieve:**
+
 - [ ] All 68 test files pass
 - [ ] No skipped tests
 - [ ] No test errors
@@ -1827,6 +1829,7 @@ pnpm test
 **Current State:** Examples have standardized scripts but not verified
 
 **Required Actions:**
+
 ```bash
 # Test each example
 cd examples/basic && pnpm gen:basic
@@ -1841,6 +1844,7 @@ cd examples/export-schemas-and-types-directly && pnpm gen:schemas-directly
 ```
 
 **Must achieve:**
+
 - [ ] All 3 examples generate successfully
 - [ ] Generated code is syntactically valid
 - [ ] Generated TypeScript compiles
@@ -1853,11 +1857,12 @@ cd examples/export-schemas-and-types-directly && pnpm gen:schemas-directly
 **Current State:** Some deps updated, full audit not run
 
 **Required Actions:**
+
 ```bash
 # Check for outdated dependencies
 pnpm -r outdated
 
-# Check for security vulnerabilities  
+# Check for security vulnerabilities
 pnpm audit
 
 # Update any outdated dependencies
@@ -1865,6 +1870,7 @@ pnpm audit
 ```
 
 **Must achieve:**
+
 - [ ] `pnpm -r outdated` shows no updates available
 - [ ] `pnpm audit` shows 0 vulnerabilities
 - [ ] No deprecated packages in use
@@ -1877,6 +1883,7 @@ pnpm audit
 **Current State:** Build works, but end-to-end not tested
 
 **Required Actions:**
+
 ```bash
 # Build and test CLI
 pnpm --filter lib build
@@ -1893,6 +1900,7 @@ pnpm --filter lib build
 ```
 
 **Must achieve:**
+
 - [ ] CLI executable works
 - [ ] Can process OpenAPI 3.0 specs
 - [ ] Generated output is valid and usable
