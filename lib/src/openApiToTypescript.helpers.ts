@@ -204,3 +204,64 @@ export function addNullToUnionIfNeeded(
     return isNullable ? t.union([type, t.reference("null")]) : type;
 }
 
+/**
+ * Converts a single property schema to a TypeScript type
+ * Handles circular references by converting string types to references
+ */
+export function convertPropertyType(
+    propType: unknown,
+    ctx: { resolver?: unknown } | undefined
+): t.TypeDefinition {
+    if (typeof propType === "string") {
+        if (!ctx) {
+            throw new Error("Context is required for circular $ref (recursive schemas)");
+        }
+        return t.reference(propType);
+    }
+    return propType as t.TypeDefinition;
+}
+
+/**
+ * Converts object properties to TypeScript property definitions
+ * Returns an object mapping property names to their types
+ */
+export function convertObjectProperties(
+    properties: Record<string, SchemaObject | ReferenceObject>,
+    schema: SchemaObject,
+    isPartial: boolean,
+    convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
+    ctx: { resolver?: unknown } | undefined
+): Record<string, t.TypeDefinition> {
+    return Object.fromEntries(
+        Object.entries(properties).map(([prop, propSchema]) => {
+            const rawPropType = convertSchema(propSchema);
+            const propType = convertPropertyType(rawPropType, ctx);
+            const isRequired = isPropertyRequired(prop, schema, isPartial);
+            const finalType = isRequired ? propType : t.optional(propType);
+            return [wrapWithQuotesIfNeeded(prop), finalType];
+        })
+    );
+}
+
+/**
+ * Handles array schema conversion with proper readonly wrapping
+ */
+export function handleArraySchema(
+    schema: SchemaObject,
+    shouldWrapReadonly: boolean,
+    convertSchema: (schema: SchemaObject) => unknown,
+    ctx: { resolver?: unknown } | undefined
+): t.TypeDefinitionObject {
+    let arrayOfType: t.TypeDefinition;
+
+    if (schema.items) {
+        const rawType = convertSchema(schema.items);
+        arrayOfType = convertPropertyType(rawType, ctx);
+    } else {
+        arrayOfType = t.any();
+    }
+
+    const wrappedArray = maybeWrapReadonly(t.array(arrayOfType), shouldWrapReadonly);
+    return schema.nullable ? t.union([wrappedArray, t.reference("null")]) : wrappedArray;
+}
+

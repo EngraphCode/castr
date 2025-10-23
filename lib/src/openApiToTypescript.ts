@@ -9,13 +9,14 @@ import { inferRequiredSchema } from "./inferRequiredOnly.js";
 import generateJSDocArray from "./generateJSDocArray.js";
 import {
     addNullToUnionIfNeeded,
+    convertObjectProperties,
     convertSchemasToTypes,
     createAdditionalPropertiesSignature,
+    handleArraySchema,
     handleBasicPrimitive,
     handlePrimitiveEnum,
     handleReferenceObject,
     isPrimitiveType,
-    isPropertyRequired,
     maybeWrapReadonly,
     resolveAdditionalPropertiesType,
     wrapTypeIfNeeded,
@@ -165,26 +166,12 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
         }
 
         if (schemaType === "array") {
-            let arrayOfType: t.TypeDefinition;
-
-            if (schema.items) {
-                arrayOfType = getTypescriptFromOpenApi({
-                    schema: schema.items,
-                    ctx,
-                    meta,
-                    options,
-                }) as t.TypeDefinition;
-
-                if (typeof arrayOfType === "string") {
-                    if (!ctx) throw new Error("Context is required for circular $ref (recursive schemas)");
-                    arrayOfType = t.reference(arrayOfType);
-                }
-            } else {
-                arrayOfType = t.any();
-            }
-
-            const wrappedArray = maybeWrapReadonly(t.array(arrayOfType), options?.allReadonly ?? false);
-            return schema.nullable ? t.union([wrappedArray, t.reference("null")]) : wrappedArray;
+            return handleArraySchema(
+                schema,
+                options?.allReadonly ?? false,
+                (items) => getTypescriptFromOpenApi({ schema: items, ctx, meta, options }),
+                ctx
+            );
         }
 
         if (schemaType === "object" || schema.properties || schema.additionalProperties) {
@@ -209,23 +196,12 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
             }
 
             // Convert properties
-            const props = Object.fromEntries(
-                Object.entries(schema.properties).map(([prop, propSchema]) => {
-                    let propType = getTypescriptFromOpenApi({
-                        schema: propSchema,
-                        ctx,
-                        meta,
-                        options,
-                    }) as t.TypeDefinition;
-
-                    if (typeof propType === "string") {
-                        if (!ctx) throw new Error("Context is required for circular $ref (recursive schemas)");
-                        propType = t.reference(propType);
-                    }
-
-                    const isRequired = isPropertyRequired(prop, schema, isPartial);
-                    return [wrapWithQuotesIfNeeded(prop), isRequired ? propType : t.optional(propType)];
-                })
+            const props = convertObjectProperties(
+                schema.properties,
+                schema,
+                isPartial,
+                (propSchema) => getTypescriptFromOpenApi({ schema: propSchema, ctx, meta, options }),
+                ctx
             );
 
             // Combine props with additionalProperties if present
