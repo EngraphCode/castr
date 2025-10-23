@@ -51,8 +51,13 @@ export default defineConfig(
             "@typescript-eslint/no-unused-vars": ["error"],
             "@typescript-eslint/consistent-type-imports": ["error"],
 
-            // Sonarjs complexity - adjusted from default
-            "sonarjs/cognitive-complexity": ["error", 30],
+            // Complexity
+            complexity: ["error", 22],
+            "sonarjs/cognitive-complexity": ["error", 22],
+            "max-depth": ["error", 5],
+            "max-statements": ["error", 20],
+            "max-lines-per-function": ["error", 50],
+            "max-lines": ["error", 250],
 
             // Code quality
             "no-console": "off",

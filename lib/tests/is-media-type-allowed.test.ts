@@ -55,7 +55,7 @@ test("is-media-type-allowed", () => {
               "parameters": [],
               "path": "/unusual-ref-format",
               "requestFormat": "json",
-              "response": "z.number()",
+              "response": "z.string()",
           },
       ]
     `);

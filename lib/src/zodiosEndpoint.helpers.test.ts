@@ -95,7 +95,7 @@ describe("zodiosEndpoint.helpers", () => {
                 exportAllNamedSchemas: true,
             });
 
-            expect(ctx.schemasByName!["z.object(...)"]).toEqual(["Pet"]);
+            expect(ctx.schemasByName["z.object(...)"]).toEqual(["Pet"]);
         });
 
         it("should append to existing schemasByName array", () => {
@@ -110,7 +110,7 @@ describe("zodiosEndpoint.helpers", () => {
                 exportAllNamedSchemas: true,
             });
 
-            expect(ctx.schemasByName!["z.object(...)"]).toEqual(["Pet", "Pet2"]);
+            expect(ctx.schemasByName["z.object(...)"]).toEqual(["Pet", "Pet2"]);
         });
     });
 

@@ -42,7 +42,7 @@ export function handleReferenceObject(
     }
 
     // Resolve the actual schema if not yet resolved
-    let result = ctx.nodeByRef[schema.$ref];
+    const result = ctx.nodeByRef[schema.$ref];
     if (!result) {
         const actualSchema = ctx.resolver.getSchemaByRef(schema.$ref);
         if (!actualSchema) {

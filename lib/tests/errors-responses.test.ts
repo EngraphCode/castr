@@ -205,6 +205,14 @@ it("determines which status are considered errors-responses", async () => {
                 .passthrough(),
             },
             {
+              status: 404,
+              description: \`Not found\`,
+              schema: z
+                .object({ is400: z.boolean(), nested: Nested })
+                .partial()
+                .passthrough(),
+            },
+            {
               status: 500,
               description: \`Internal server error\`,
               schema: z.string(),
@@ -262,6 +270,14 @@ it("determines which status are considered errors-responses", async () => {
             {
               status: 400,
               description: \`Bad request\`,
+              schema: z
+                .object({ is400: z.boolean(), nested: Nested })
+                .partial()
+                .passthrough(),
+            },
+            {
+              status: 404,
+              description: \`Not found\`,
               schema: z
                 .object({ is400: z.boolean(), nested: Nested })
                 .partial()

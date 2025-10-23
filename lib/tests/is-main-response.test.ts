@@ -50,7 +50,7 @@ it("determines which one is-main-response", async () => {
           method: "get",
           path: "/example",
           requestFormat: "json",
-          response: z.number(),
+          response: z.object({ str: z.string(), nb: z.number() }).passthrough(),
         },
       ]);
 
