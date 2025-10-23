@@ -110,9 +110,7 @@ describe("enumHelpers", () => {
         });
 
         it("should generate z.enum for multiple string values", () => {
-            expect(generateStringEnumZodCode(["active", "inactive"])).toBe(
-                'z.enum(["active", "inactive"])'
-            );
+            expect(generateStringEnumZodCode(["active", "inactive"])).toBe('z.enum(["active", "inactive"])');
         });
 
         it("should handle null in multi-value enums", () => {
@@ -142,9 +140,7 @@ describe("enumHelpers", () => {
         });
 
         it("should generate z.union for multiple number values", () => {
-            expect(generateNonStringEnumZodCode([1, 2, 3])).toBe(
-                "z.union([z.literal(1), z.literal(2), z.literal(3)])"
-            );
+            expect(generateNonStringEnumZodCode([1, 2, 3])).toBe("z.union([z.literal(1), z.literal(2), z.literal(3)])");
         });
 
         it("should handle null in multi-value enums", () => {
@@ -160,9 +156,7 @@ describe("enumHelpers", () => {
         });
 
         it("should handle floating point numbers", () => {
-            expect(generateNonStringEnumZodCode([1.5, 2.7])).toBe(
-                "z.union([z.literal(1.5), z.literal(2.7)])"
-            );
+            expect(generateNonStringEnumZodCode([1.5, 2.7])).toBe("z.union([z.literal(1.5), z.literal(2.7)])");
         });
     });
 
@@ -191,4 +185,3 @@ describe("enumHelpers", () => {
         });
     });
 });
-
