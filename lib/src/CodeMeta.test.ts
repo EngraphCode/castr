@@ -199,7 +199,8 @@ describe("CodeMeta", () => {
             const schema: SchemaObject = { type: "string" };
             const meta = new CodeMeta(schema);
 
-            expect(() => meta.inherit(undefined)).not.toThrow();
+            // inherit() accepts optional parent parameter
+            expect(() => meta.inherit()).not.toThrow();
         });
 
         it("should return self for chaining", () => {

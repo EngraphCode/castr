@@ -89,4 +89,3 @@ export function generateNonStringEnumZodCode(enumValues: unknown[]): string {
         .join(", ");
     return `z.union([${literals}])`;
 }
-
