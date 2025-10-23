@@ -17,11 +17,7 @@ const file = ts.createSourceFile("", "", ts.ScriptTarget.ESNext, true);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, node, file);
 
-export const getZodClientTemplateContext = (
-    openApiDoc: OpenAPIObject,
-    options?: TemplateContext["options"]
-     
-) => {
+export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?: TemplateContext["options"]) => {
     const result = getZodiosEndpointDefinitionList(openApiDoc, options);
     const data = makeTemplateContext();
 
@@ -58,7 +54,7 @@ export const getZodClientTemplateContext = (
         const ctx: TsConversionContext = { nodeByRef: {}, resolver: result.resolver, visitedsRefs: {} };
 
         // Specifically check isCircular if shouldExportAllTypes is false. Either should cause shouldGenerateType to be true.
-         
+
         const shouldGenerateType = options?.shouldExportAllTypes || isCircular;
         const schemaName = shouldGenerateType ? result.resolver.resolveRef(ref).normalized : undefined;
         if (shouldGenerateType && schemaName && !data.types[schemaName]) {
@@ -347,7 +343,7 @@ export type TemplateContextOptions = {
      *
      * @default "none"
      */
-    groupStrategy?: TemplateContextGroupStrategy;
+    groupStrategy?: TemplateContextGroupStrategy | undefined;
     /**
      * schema complexity threshold to determine which one (using less than `<` operator) should be assigned to a variable
      * tl;dr higher means more schemas will be inlined (rather than assigned to a variable)

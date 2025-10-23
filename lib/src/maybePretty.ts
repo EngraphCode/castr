@@ -5,7 +5,7 @@ import parserTypescript from "prettier/parser-typescript";
 
 export async function maybePretty(input: string, options?: Options | null): Promise<string> {
     try {
-        return await prettier.format(input.trim(), { parser: "typescript", plugins: [parserTypescript], ...options });
+        return prettier.format(input.trim(), { parser: "typescript", plugins: [parserTypescript], ...options });
     } catch {
         return input; // assume it's invalid syntax and ignore
     }

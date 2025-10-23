@@ -1,4 +1,5 @@
 import path from "node:path";
+import fs from "node:fs/promises";
 
 import type { OpenAPIObject } from "openapi3-ts";
 import { capitalize, pick } from "pastable/server";
@@ -96,18 +97,16 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
             .exhaustive();
     }
 
-    const fs = await import("@liuli-util/fs-extra");
     const source = await fs.readFile(templatePath, "utf8");
     const hbs = handlebars ?? getHandlebars();
     const template = hbs.compile(source);
     const willWriteToFile = !disableWriteToFile && distPath;
-    // TODO parallel writes ? does it really matter here ?
 
     if (groupStrategy.includes("file")) {
         const outputByGroupName: Record<string, string> = {};
 
         if (willWriteToFile) {
-            await fs.ensureDir(distPath);
+            await fs.mkdir(path.dirname(distPath), { recursive: true });
         }
 
         const groupNames = Object.fromEntries(
@@ -161,7 +160,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
             }
         }
 
-        return outputByGroupName as any;
+        return outputByGroupName;
     }
 
     const output = template({ ...data, options: { ...options, apiClientName: options?.apiClientName ?? "api" } });
@@ -171,5 +170,5 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
         await fs.writeFile(distPath, prettyOutput);
     }
 
-    return prettyOutput as any;
+    return prettyOutput;
 };

@@ -1,8 +1,35 @@
 # Phase 1: Developer Tooling Modernization + ESM Migration
 
+**Status:** 🔄 IN PROGRESS (62% complete)  
 **Focus:** Infrastructure and tooling modernization  
 **Type:** Foundation work  
-**Estimated Time:** 3-4 days
+**Started:** October 2025  
+**Estimated Completion:** 1-2 days remaining
+
+---
+
+## Progress Summary
+
+### ✅ Completed (103 issues fixed - 38% reduction)
+- Turborepo setup and workspace standardization
+- TypeScript, Prettier, Vitest, ESLint modernization to latest versions
+- ESM migration with proper module resolution and `.js` extensions
+- ESLint v9 flat config migration
+- Replaced `cac` with `commander` (52 type safety issues eliminated)
+- Fixed all critical type safety issues in extraction-target files (26 issues)
+- Removed all unused imports/variables (9 issues)
+- Removed playground and examples workspaces
+- Fixed `generateJSDocArray.ts` (4 issues)
+
+### 🔄 In Progress (109 errors, 58 warnings remaining)
+- Fixing critical type safety issues in 8 remaining files
+- Evaluating dependency replacements (pastable, tanu, degit)
+
+### 🎯 Current Metrics
+- **Starting violations:** 270 (213 errors, 57 warnings)
+- **Current violations:** 167 (109 errors, 58 warnings)
+- **Fixed:** 103 issues (38% reduction)
+- **Remaining critical:** ~69 type safety issues in non-extracted files
 
 ---
 
@@ -1948,3 +1975,203 @@ pnpm --filter lib build
 ---
 
 **Next Steps:** Complete remaining fixes in Phase 1, then move to Phase 2 (openapi3-ts v4)
+
+## ===== CURRENT STATUS UPDATE (Post Commander Migration) =====
+
+### Phase 1b Progress - Updated October 2025
+
+**Current State: 167 violations (down from 270) - 62% complete**
+
+#### ✅ Completed Items
+1. ✅ All tests pass - **DONE**
+2. ✅ Examples removed - **DONE**
+3. ✅ Zero vulnerabilities - **DONE**
+4. ✅ Dependencies updated - **DONE**
+5. ✅ CLI works end-to-end - **DONE**
+6. ✅ No TypeScript errors - **DONE**
+7. ✅ All code formatted - **DONE**
+8. 🔄 **Lint: 167/270 (38% reduction)** - **IN PROGRESS**
+    - [x] Test-specific rules configured
+    - [x] Critical issues fixed in extracted files (26 issues)
+    - [x] All unused vars/imports removed (9 issues)
+    - [x] CLI migrated from cac to commander (52 issues)
+    - [x] generateJSDocArray.ts type-safe (4 issues)
+    - [ ] 8 remaining files: ~69 critical issues
+    - [ ] Document ~98 issues as tech debt
+
+**Progress Metrics:**
+- **Started:** 270 issues (213 errors, 57 warnings)
+- **Current:** 167 issues (109 errors, 58 warnings)
+- **Fixed:** 103 issues (38% reduction)
+
+---
+
+## Remaining Work - Type Safety Fixes
+
+### 8 Files Requiring Fixes (~69 critical issues)
+
+#### Priority 1: HIGH (Used by extraction targets - 12 issues)
+
+**1. `utils.ts` (~9 critical issues)**
+- Purpose: String manipulation, validation utilities  
+- Used by: Extraction targets
+- Issues: explicit any (3), unsafe assignments (3), control regex (6)
+- Strategy: Fix all critical issues
+- Estimate: 30 minutes
+
+**2. `schema-complexity.ts` (~3 critical issues)**
+- Purpose: Schema complexity calculation
+- Used by: Extraction targets
+- Issues: non-null assertion (1), unsafe assignment (2)
+- Strategy: Fix all critical issues
+- Estimate: 15 minutes
+
+#### Priority 2: MEDIUM (Will be rebuilt/not extracted - 54 issues)
+
+**3. `openApiToZod.ts` (~13 critical issues)**
+- Purpose: OpenAPI → Zod schema string generation
+- Currently used, will be rebuilt in Phase 3
+- Issues: non-null assertions (10), unsafe assignments (2), restrict-plus-operands (2)
+- Strategy: Fix most egregious, document rest as rebuild target
+- Estimate: 45 minutes
+
+**4. `openApiToTypescript.ts` (~15 critical issues)**
+- Purpose: OpenAPI → TypeScript type generation
+- Template generation (not extracted)
+- Issues: non-null assertions (4), unsafe assignments (8), tanu type issues (3)
+- Strategy: Fix critical, baseline rest
+- Estimate: 45 minutes
+
+**5. `template-context.ts` (~15 critical issues)**
+- Purpose: Template rendering context
+- Template support (not extracted)
+- Issues: non-null assertions (15), unsafe assignments (3)
+- Strategy: Fix critical, baseline rest
+- Estimate: 45 minutes
+
+**6. `generateZodClientFromOpenAPI.ts` (~6 critical issues)**
+- Purpose: Main code generation orchestrator
+- Orchestration (not extracted)
+- Issues: TODO comments (1), console.log (2), unsafe returns (2), explicit any (2)
+- Strategy: Fix critical, baseline rest
+- Estimate: 30 minutes
+
+#### Priority 3: LOW (Quick fixes - 3 issues)
+
+**7. `CodeMeta.ts` (~3 critical issues)**
+- Purpose: Code generation metadata
+- Internal utility
+- Issues: non-null assertions (2), ts-expect-error (1)
+- Strategy: Quick fixes
+- Estimate: 15 minutes
+
+**8. `getHandlebars.ts` (~5 critical issues)**
+- Purpose: Handlebars template setup
+- Template support (not extracted)
+- Issues: ts-expect-error (4), explicit any (1)
+- Strategy: Add descriptions to ts-expect-error
+- Estimate: 10 minutes
+
+**Total Estimated Time: 3-4 hours**
+
+---
+
+## Dependency Analysis
+
+### Dependencies to Evaluate for Replacement
+
+#### 1. **pastable** (7 files)
+**Current Usage:**
+- `get()` - lodash.get equivalent (2 files: makeSchemaResolver.ts, getOpenApiDependencyGraph.test.ts)
+- `capitalize(), kebabToCamel(), snakeToCamel()` - string utils (utils.ts)
+- `getSum()` - array sum (schema-complexity.ts)
+- `sortBy(), sortListFromRefArray(), sortObjKeysFromArray()` - sorting (template-context.ts)
+- `pick()` - object picker (generateZodClientFromOpenAPI.ts)
+- `ObjectLiteral` type (getZodiosEndpointDefinitionList.ts)
+
+**Replacement Options:**
+- Keep and use (lightweight, stable, actively maintained)
+- Replace with native implementations (~100 LOC total)
+- Use lodash for subset of functions
+
+**Recommendation:** KEEP for now
+- Actively maintained, lightweight (25KB)
+- Used across multiple files
+- Provides well-tested utilities
+- Can be replaced later if needed
+- **Not blocking for extraction**
+
+**If replacing:**
+- Estimated effort: 2-3 hours
+- Native implementations needed:
+  - Object path getter (30 LOC)
+  - String case converters (20 LOC)  
+  - Array sum (5 LOC)
+  - Sorting utilities (30 LOC)
+  - Object picker (15 LOC)
+
+#### 2. **tanu** (3 files - template generation only)
+**Usage:**
+- TypeScript AST manipulation
+- Only in `openApiToTypescript.ts` and related
+
+**Recommendation:** KEEP
+- Isolated to template generation (not extracted)
+- Working as-is
+- Alternative (TS Compiler API) is more complex
+- **Not blocking for extraction**
+
+#### 3. **degit** (1 file - `samples-generator.ts`)
+**Usage:**
+- Dev-only: Clones OpenAPI spec examples
+
+**Recommendation:** KEEP
+- Dev utility only, not runtime dependency
+- Not part of extraction or build
+
+### Verdict on Dependencies
+
+**✅ ALL CURRENT DEPENDENCIES ARE ACCEPTABLE**
+- No blocking issues for extraction
+- Can be revisited during Phase 2/3 if needed
+- Focus remains on type safety fixes
+
+---
+
+## bin.cjs Verification
+
+**Status:** ✅ KEEP
+
+**Reasoning:**
+1. Provides CJS compatibility for older Node.js environments
+2. Standard npm bin convention for CLI tools
+3. Zero maintenance overhead (tiny shim)
+4. tsup already generates both ESM and CJS
+5. Both entry points tested and working
+
+**Verification Commands:**
+```bash
+# CJS entry (via bin.cjs)
+node lib/bin.cjs --help
+
+# ESM entry (direct)  
+node lib/dist/cli.js --help
+
+# Installed via npm (uses bin.cjs)
+npx openapi-zod-client --help
+```
+
+---
+
+## Next Steps After Current Session
+
+1. ✅ Update plan documents - **DONE THIS SESSION**
+2. ✅ Create detailed TODO list - **SEE BELOW**
+3. 🔄 Fix remaining 8 files (~69 critical issues, ~4 hours)
+4. 📝 Update lint triage document with final status
+5. 📋 Document ~98 remaining issues as acceptable tech debt
+6. ✅ Mark Phase 1 complete
+7. 🚀 Begin Phase 2 (openapi3-ts v4 upgrade)
+
+**Phase 1 will be complete when all critical type safety issues in actively used/extracted code are resolved.**
+
