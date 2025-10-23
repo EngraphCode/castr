@@ -1,6 +1,5 @@
 packages:
     - lib
-    - examples/*
 
 onlyBuiltDependencies:
     - esbuild

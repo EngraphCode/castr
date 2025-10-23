@@ -25,6 +25,50 @@ type GenerateZodClientFromOpenApiArgs<TOptions extends TemplateContext["options"
     | { distPath: string; disableWriteToFile?: false }
 );
 
+/**
+ * Generate a Zod client from an OpenAPI specification.
+ *
+ * @example Basic usage (programmatic)
+ * ```typescript
+ * import SwaggerParser from "@apidevtools/swagger-parser";
+ * import { generateZodClientFromOpenAPI } from "openapi-zod-client";
+ * import { resolveConfig } from "prettier";
+ *
+ * const openApiDoc = await SwaggerParser.parse("./openapi.yaml");
+ * const prettierConfig = await resolveConfig("./");
+ *
+ * const result = await generateZodClientFromOpenAPI({
+ *   openApiDoc,
+ *   distPath: "./api-client.ts",
+ *   prettierConfig,
+ * });
+ * ```
+ *
+ * @example With options
+ * ```typescript
+ * const result = await generateZodClientFromOpenAPI({
+ *   openApiDoc,
+ *   distPath: "./api-client.ts",
+ *   options: {
+ *     withAlias: true,
+ *     baseUrl: "https://api.example.com",
+ *     exportSchemas: true,
+ *   },
+ * });
+ * ```
+ *
+ * @example With custom template
+ * ```typescript
+ * const result = await generateZodClientFromOpenAPI({
+ *   openApiDoc,
+ *   distPath: "./schemas.ts",
+ *   templatePath: "./custom-template.hbs",
+ *   options: {
+ *     exportSchemas: true,
+ *   },
+ * });
+ * ```
+ */
 export const generateZodClientFromOpenAPI = async <TOptions extends TemplateContext["options"]>({
     openApiDoc,
     distPath,

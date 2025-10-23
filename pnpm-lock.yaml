@@ -37,63 +37,6 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  examples/basic:
-    dependencies:
-      '@apidevtools/swagger-parser':
-        specifier: ^12.1.0
-        version: 12.1.0(openapi-types@12.1.3)
-      '@zodios/core':
-        specifier: ^10.3.1
-        version: 10.9.6(axios@1.12.2)(zod@3.25.76)
-      openapi-zod-client:
-        specifier: workspace:^1.0.0
-        version: link:../../lib
-      zod:
-        specifier: ^3.19.1
-        version: 3.25.76
-    devDependencies:
-      openapi3-ts:
-        specifier: 3.0.2
-        version: 3.0.2
-      tsx:
-        specifier: ^4
-        version: 4.20.6
-      typescript:
-        specifier: ^5
-        version: 5.9.3
-
-  examples/export-schemas-and-types-directly:
-    dependencies:
-      '@apidevtools/swagger-parser':
-        specifier: ^12.1.0
-        version: 12.1.0(openapi-types@12.1.3)
-      openapi-zod-client:
-        specifier: workspace:*
-        version: link:../../lib
-      zod:
-        specifier: ^3.19.1
-        version: 3.25.76
-    devDependencies:
-      typescript:
-        specifier: ^5
-        version: 5.9.3
-
-  examples/schemas-only:
-    dependencies:
-      '@apidevtools/swagger-parser':
-        specifier: ^12.1.0
-        version: 12.1.0(openapi-types@12.1.3)
-      openapi-zod-client:
-        specifier: workspace:^1.0.0
-        version: link:../../lib
-      zod:
-        specifier: ^3.19.1
-        version: 3.25.76
-    devDependencies:
-      typescript:
-        specifier: ^5
-        version: 5.9.3
-
   lib:
     dependencies:
       '@apidevtools/swagger-parser':
@@ -1968,9 +1911,6 @@ packages:
 
   openapi-types@12.1.3:
     resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
-
-  openapi3-ts@3.0.2:
-    resolution: {integrity: sha512-KF/06OkQPFSr9A+oadYYC3cIj8TZlzonREkQYFqx8i+wLllAxm6Bp8Fizo3jWXeIxZj/7V5LKtuNN/GxueWtcw==}
 
   openapi3-ts@3.1.0:
     resolution: {integrity: sha512-1qKTvCCVoV0rkwUh1zq5o8QyghmwYPuhdvtjv1rFjuOnJToXhQyF8eGjNETQ8QmGjr9Jz/tkAKLITIl2s7dw3A==}
@@ -4482,10 +4422,6 @@ snapshots:
   object-assign@4.1.1: {}
 
   openapi-types@12.1.3: {}
-
-  openapi3-ts@3.0.2:
-    dependencies:
-      yaml: 2.8.1
 
   openapi3-ts@3.1.0:
     dependencies:

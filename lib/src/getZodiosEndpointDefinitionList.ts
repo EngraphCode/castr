@@ -30,6 +30,43 @@ import {
 
 const voidSchema = "z.void()";
 
+/**
+ * Extract endpoint definitions with runtime Zod schemas from an OpenAPI specification.
+ *
+ * This function returns an array of endpoint definitions where each endpoint includes:
+ * - Method, path, and description
+ * - Parameters with runtime Zod schemas
+ * - Response and error schemas
+ *
+ * **Note:** This is the primary function for extracting runtime validation schemas.
+ *
+ * @example Basic usage
+ * ```typescript
+ * import SwaggerParser from "@apidevtools/swagger-parser";
+ * import { getZodiosEndpointDefinitionList } from "openapi-zod-client";
+ *
+ * const openApiDoc = await SwaggerParser.parse("./openapi.yaml");
+ * const endpoints = getZodiosEndpointDefinitionList(openApiDoc);
+ *
+ * // Each endpoint contains runtime Zod schemas:
+ * endpoints.forEach(endpoint => {
+ *   console.log(endpoint.method, endpoint.path);
+ *   endpoint.parameters?.forEach(param => {
+ *     // param.schema is a runtime Zod schema object
+ *     const validated = param.schema.parse(inputData);
+ *   });
+ * });
+ * ```
+ *
+ * @example With options
+ * ```typescript
+ * const endpoints = getZodiosEndpointDefinitionList(openApiDoc, {
+ *   withAlias: true,
+ *   exportSchemas: true,
+ *   complexityThreshold: 3,
+ * });
+ * ```
+ */
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: TemplateContext["options"]) => {
     const resolver = makeSchemaResolver(doc);

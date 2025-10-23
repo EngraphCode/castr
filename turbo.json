@@ -3,28 +3,30 @@
     "ui": "stream",
     "tasks": {
         "build": {
+            "cache": false,
             "dependsOn": ["^build"],
             "outputs": ["dist/**", ".next/**", "out/**"]
         },
-        "format": {
-            "dependsOn": ["build"],
-            "outputs": [],
-            "cache": false
-        },
-        "format:check": {
+        "type-check": {
+            "cache": false,
             "dependsOn": ["build"],
             "outputs": []
         },
-        "type-check": {
-            "dependsOn": ["format"],
+        "format": {
+            "cache": false,
+            "outputs": []
+        },
+        "format:check": {
+            "cache": false,
             "outputs": []
         },
         "lint": {
-            "dependsOn": ["type-check"],
+            "cache": false,
             "outputs": []
         },
         "test": {
-            "dependsOn": ["lint"],
+            "cache": false,
+
             "outputs": ["coverage/**"]
         },
         "dev": {

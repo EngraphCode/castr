@@ -1,11 +1,15 @@
 import { z } from "zod";
 
 {{#if types}}
-{{#each types}}
-export {{{this}}}
-{{/each}}
+    {{#each types}}
+        export
+        {{{this}}}
+    {{/each}}
 {{/if}}
 
 {{#each schemas}}
-export const {{@key}} = {{{this}}};
+    export const
+    {{@key}}
+    =
+    {{{this}}};
 {{/each}}
