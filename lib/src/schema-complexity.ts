@@ -20,7 +20,7 @@ const complexityByType = (schema: SchemaObject & { type: PrimitiveType }) => {
         .otherwise(() => 0);
 };
 
-const complexityByComposite = (from?: CompositeType  ) => {
+const complexityByComposite = (from?: CompositeType) => {
     if (!from) return 0;
 
     return match(from)

@@ -398,6 +398,111 @@ describe("samples-generator", async () => {
             return new Zodios(baseUrl, endpoints, options);
           }
           ",
+              "v3.0/uspto.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+          import { z } from "zod";
+
+          const dataSetList = z
+            .object({
+              total: z.number().int(),
+              apis: z.array(
+                z
+                  .object({
+                    apiKey: z.string(),
+                    apiVersionNumber: z.string(),
+                    apiUrl: z.string(),
+                    apiDocumentationUrl: z.string(),
+                  })
+                  .partial()
+                  .passthrough(),
+              ),
+            })
+            .partial()
+            .passthrough();
+          const perform_search_Body = z
+            .object({
+              criteria: z.string().default("*:*"),
+              start: z.number().int().optional().default(0),
+              rows: z.number().int().optional().default(100),
+            })
+            .passthrough();
+
+          export const schemas = {
+            dataSetList,
+            perform_search_Body,
+          };
+
+          const endpoints = makeApi([
+            {
+              method: "get",
+              path: "/",
+              requestFormat: "json",
+              response: dataSetList,
+            },
+            {
+              method: "get",
+              path: "/:dataset/:version/fields",
+              description: \`This GET API returns the list of all the searchable field names that are in the oa_citations. Please see the &#x27;fields&#x27; attribute which returns an array of field names. Each field or a combination of fields can be searched using the syntax options shown below.\`,
+              requestFormat: "json",
+              parameters: [
+                {
+                  name: "dataset",
+                  type: "Path",
+                  schema: z.string(),
+                },
+                {
+                  name: "version",
+                  type: "Path",
+                  schema: z.string(),
+                },
+              ],
+              response: z.string(),
+              errors: [
+                {
+                  status: 404,
+                  description: \`The combination of dataset name and version is not found in the system or it is not published yet to be consumed by public.\`,
+                  schema: z.string(),
+                },
+              ],
+            },
+            {
+              method: "post",
+              path: "/:dataset/:version/records",
+              description: \`This API is based on Solr/Lucene Search. The data is indexed using SOLR. This GET API returns the list of all the searchable field names that are in the Solr Index. Please see the &#x27;fields&#x27; attribute which returns an array of field names. Each field or a combination of fields can be searched using the Solr/Lucene Syntax. Please refer https://lucene.apache.org/core/3_6_2/queryparsersyntax.html#Overview for the query syntax. List of field names that are searchable can be determined using above GET api.\`,
+              requestFormat: "form-url",
+              parameters: [
+                {
+                  name: "body",
+                  type: "Body",
+                  schema: perform_search_Body,
+                },
+                {
+                  name: "version",
+                  type: "Path",
+                  schema: z.string().default("v1"),
+                },
+                {
+                  name: "dataset",
+                  type: "Path",
+                  schema: z.string().default("oa_citations"),
+                },
+              ],
+              response: z.array(z.record(z.object({}).partial().passthrough())),
+              errors: [
+                {
+                  status: 404,
+                  description: \`No matching record found for the given criteria.\`,
+                  schema: z.void(),
+                },
+              ],
+            },
+          ]);
+
+          export const api = new Zodios(endpoints);
+
+          export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+            return new Zodios(baseUrl, endpoints, options);
+          }
+          ",
               "v3.1/non-oauth-scopes.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 

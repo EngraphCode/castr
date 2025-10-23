@@ -36,10 +36,21 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
     }
 
     const wrapWithLazyIfNeeded = (schemaName: string) => {
-        const [code, ref] = [result.zodSchemaByName[schemaName], result.resolver.resolveSchemaName(schemaName)?.ref];
+        const code = result.zodSchemaByName[schemaName];
         if (!code) {
             throw new Error(`Zod schema not found for name: ${schemaName}`);
         }
+        
+        // Try to resolve the schema name to get its ref
+        // The schema might not be in byNormalized yet if it hasn't been accessed via getSchemaByRef
+        let ref: string | undefined;
+        try {
+            ref = result.resolver.resolveSchemaName(schemaName)?.ref;
+        } catch {
+            // Schema not yet resolved, try constructing the ref
+            ref = asComponentSchema(schemaName);
+        }
+        
         const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
         if (isCircular) {
             data.circularTypeByName[schemaName] = true;
@@ -180,22 +191,27 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
                         group.schemas[schemaName] = schema;
                     }
 
-                    const resolvedRef = result.resolver.resolveSchemaName(schemaName)?.ref;
-                    depsGraphs.deepDependencyGraph[resolvedRef]?.forEach(
-                        (transitiveRef) => {
-                            const transitiveSchemaName = result.resolver.resolveRef(transitiveRef)?.normalized;
-                            if (!transitiveSchemaName) return;
-                            addDependencyIfNeeded(transitiveSchemaName);
-                            const transitiveType = data.types[transitiveSchemaName];
-                            if (transitiveType) {
-                                group.types[transitiveSchemaName] = transitiveType;
-                            }
-                            const transitiveSchema = data.schemas[transitiveSchemaName];
-                            if (transitiveSchema) {
-                                group.schemas[transitiveSchemaName] = transitiveSchema;
-                            }
+                    // Try to resolve the schema name, fallback to constructing ref
+                    let resolvedRef: string | undefined;
+                    try {
+                        resolvedRef = result.resolver.resolveSchemaName(schemaName)?.ref;
+                    } catch {
+                        resolvedRef = asComponentSchema(schemaName);
+                    }
+                    
+                    depsGraphs.deepDependencyGraph[resolvedRef]?.forEach((transitiveRef) => {
+                        const transitiveSchemaName = result.resolver.resolveRef(transitiveRef)?.normalized;
+                        if (!transitiveSchemaName) return;
+                        addDependencyIfNeeded(transitiveSchemaName);
+                        const transitiveType = data.types[transitiveSchemaName];
+                        if (transitiveType) {
+                            group.types[transitiveSchemaName] = transitiveType;
                         }
-                    );
+                        const transitiveSchema = data.schemas[transitiveSchemaName];
+                        if (transitiveSchema) {
+                            group.schemas[transitiveSchemaName] = transitiveSchema;
+                        }
+                    });
                 });
             }
         }
@@ -270,12 +286,13 @@ const getOriginalPathWithBrackets = (path: string) => path.replaceAll(originalPa
 //
 // This is because when using `sortObjKeysFromArray`, the string array needs to be exactly the same
 // like the object keys. Otherwise, the object keys won't be re-ordered.
-const getPureSchemaNames = (fullSchemaNames: string[]) => fullSchemaNames.map((name) => {
-    const parts = name.split("/");
-    const lastPart = parts.at(-1);
-    if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
-    return lastPart;
-});
+const getPureSchemaNames = (fullSchemaNames: string[]) =>
+    fullSchemaNames.map((name) => {
+        const parts = name.split("/");
+        const lastPart = parts.at(-1);
+        if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
+        return lastPart;
+    });
 
 export type TemplateContext = {
     schemas: Record<string, string>;

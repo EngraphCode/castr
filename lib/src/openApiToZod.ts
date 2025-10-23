@@ -184,11 +184,13 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                 }
 
                 return code.assign(
-                    `z.enum([${schema.enum.map((value) => {
-                        if (value === null) return "null";
-                        const safeValue = typeof value === "string" ? value : JSON.stringify(value);
-                        return `"${safeValue}"`;
-                    }).join(", ")}])`
+                    `z.enum([${schema.enum
+                        .map((value) => {
+                            if (value === null) return "null";
+                            const safeValue = typeof value === "string" ? value : JSON.stringify(value);
+                            return `"${safeValue}"`;
+                        })
+                        .join(", ")}])`
                 );
             }
 
@@ -248,9 +250,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
         const additionalPropsDefaultValue =
             options?.additionalPropertiesDefaultValue === undefined ? true : options?.additionalPropertiesDefaultValue;
         const additionalProps =
-            schema.additionalProperties == null
-                ? additionalPropsDefaultValue
-                : schema.additionalProperties;
+            schema.additionalProperties == null ? additionalPropsDefaultValue : schema.additionalProperties;
         const additionalPropsSchema = additionalProps === false ? "" : ".passthrough()";
 
         if (typeof schema.additionalProperties === "object" && Object.keys(schema.additionalProperties).length > 0) {
@@ -295,7 +295,11 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                 }
 
                 const propZodSchema = getZodSchema({ schema: propSchema, ctx, meta: propMetadata, options });
-                const propChain = getZodChain({ schema: propActualSchema as SchemaObject, meta: propMetadata, options });
+                const propChain = getZodChain({
+                    schema: propActualSchema as SchemaObject,
+                    meta: propMetadata,
+                    options,
+                });
                 const propCode = `${propZodSchema.toString()}${propChain}`;
 
                 return [prop, propCode];

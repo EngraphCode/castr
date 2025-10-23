@@ -69,18 +69,18 @@ export type PrimitiveType = (typeof primitiveTypeList)[number];
 
 export const escapeControlCharacters = (str: string): string => {
     return str
-        .replaceAll('\t', String.raw`\t`) // U+0009
-        .replaceAll('\n', String.raw`\n`) // U+000A
-        .replaceAll('\r', String.raw`\r`) // U+000D
+        .replaceAll("\t", String.raw`\t`) // U+0009
+        .replaceAll("\n", String.raw`\n`) // U+000A
+        .replaceAll("\r", String.raw`\r`) // U+000D
         .replaceAll(/([\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\uFFFE\uFFFF])/g, (_m, p1) => {
             const dec: number = p1.codePointAt();
             const hex: string = dec.toString(16);
             // eslint-disable-next-line sonarjs/no-nested-template-literals
-            if (dec <= 0xFF) return `\\x${`00${hex}`.slice(-2)}`;
+            if (dec <= 0xff) return `\\x${`00${hex}`.slice(-2)}`;
             // eslint-disable-next-line sonarjs/no-nested-template-literals
             return `\\u${`0000${hex}`.slice(-4)}`;
         })
-        .replaceAll('/', String.raw`\/`);
+        .replaceAll("/", String.raw`\/`);
 };
 
 export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean) =>
