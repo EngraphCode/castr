@@ -9,9 +9,9 @@ import { inferRequiredSchema } from "./inferRequiredOnly.js";
 import generateJSDocArray from "./generateJSDocArray.js";
 import {
     addNullToUnionIfNeeded,
+    buildObjectType,
     convertObjectProperties,
     convertSchemasToTypes,
-    createAdditionalPropertiesSignature,
     handleArraySchema,
     handleBasicPrimitive,
     handlePrimitiveEnum,
@@ -19,6 +19,7 @@ import {
     isPrimitiveType,
     maybeWrapReadonly,
     resolveAdditionalPropertiesType,
+    wrapObjectTypeForOutput,
     wrapTypeIfNeeded,
 } from "./openApiToTypescript.helpers.js";
 
@@ -184,18 +185,11 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
             const isPartial = !schema.required?.length;
             const shouldWrapReadonly = options?.allReadonly ?? false;
 
-            // Handle additionalProperties
-            let additionalProperties;
             const additionalPropertiesType = resolveAdditionalPropertiesType(
                 schema.additionalProperties,
                 (additionalSchema) => getTypescriptFromOpenApi({ schema: additionalSchema, ctx, meta, options })
             );
 
-            if (additionalPropertiesType) {
-                additionalProperties = createAdditionalPropertiesSignature(additionalPropertiesType);
-            }
-
-            // Convert properties
             const props = convertObjectProperties(
                 schema.properties,
                 schema,
@@ -204,24 +198,9 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
                 ctx
             );
 
-            // Combine props with additionalProperties if present
-            const objectType = additionalProperties ? t.intersection([props, additionalProperties]) : props;
+            const finalType = buildObjectType(props, additionalPropertiesType, shouldWrapReadonly);
 
-            // Wrap with readonly if needed
-            const finalType = maybeWrapReadonly(objectType, shouldWrapReadonly);
-
-            // Handle inline vs named types
-            if (isInline) {
-                return isPartial ? t.reference("Partial", [finalType]) : finalType;
-            }
-
-            if (!inheritedMeta?.name) {
-                throw new Error("Name is required to convert an object schema to a type reference");
-            }
-
-            return isPartial
-                ? t.type(inheritedMeta.name, t.reference("Partial", [finalType]))
-                : t.type(inheritedMeta.name, finalType);
+            return wrapObjectTypeForOutput(finalType, isPartial, isInline, inheritedMeta?.name);
         }
 
         if (!schemaType) return t.unknown();

@@ -265,3 +265,42 @@ export function handleArraySchema(
     return schema.nullable ? t.union([wrappedArray, t.reference("null")]) : wrappedArray;
 }
 
+/**
+ * Builds the final object type by combining properties and additional properties
+ */
+export function buildObjectType(
+    props: Record<string, t.TypeDefinition>,
+    additionalPropertiesType: t.TypeDefinition | undefined,
+    shouldWrapReadonly: boolean
+): t.TypeDefinitionObject {
+    let additionalProperties;
+    if (additionalPropertiesType) {
+        additionalProperties = createAdditionalPropertiesSignature(additionalPropertiesType);
+    }
+
+    const objectType = additionalProperties ? t.intersection([props, additionalProperties]) : props;
+    return maybeWrapReadonly(objectType, shouldWrapReadonly);
+}
+
+/**
+ * Wraps an object type as Partial if needed, handling both inline and named types
+ */
+export function wrapObjectTypeForOutput(
+    finalType: t.TypeDefinitionObject,
+    isPartial: boolean,
+    isInline: boolean,
+    name: string | undefined
+): t.TypeDefinitionObject | ts.Node {
+    const wrappedType = isPartial ? t.reference("Partial", [finalType]) : finalType;
+
+    if (isInline) {
+        return wrappedType;
+    }
+
+    if (!name) {
+        throw new Error("Name is required to convert an object schema to a type reference");
+    }
+
+    return t.type(name, wrappedType);
+}
+
