@@ -3,6 +3,6 @@
     "compilerOptions": {
         "noEmit": true
     },
-    "include": ["lib/**/*.ts", "playground/**/*.ts", "examples/**/*.ts", "test/**/*.ts", "src/**/*.ts", "**/*.ts"],
+    "include": ["lib/**/*.ts", "examples/**/*.ts", "test/**/*.ts", "src/**/*.ts", "**/*.ts"],
     "exclude": ["node_modules", "dist"]
 }

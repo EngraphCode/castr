@@ -1,6 +1,5 @@
 packages:
   - lib
-  - playground
   - examples/*
 
 onlyBuiltDependencies:
