@@ -449,7 +449,10 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
             if (options?.endpointDefinitionRefiner) {
                 // Refine the endpoint definition, in case consumer wants to add some specific fields
                 // to be rendered in the Handlebars template.
-                endpointDefinition = options.endpointDefinitionRefiner(endpointDefinition, operation);
+                const refined = options.endpointDefinitionRefiner(endpointDefinition, operation);
+                if (refined) {
+                    endpointDefinition = refined;
+                }
             }
 
             endpoints.push(endpointDefinition);
@@ -525,7 +528,6 @@ function pick<T extends ObjectLiteral, K extends keyof T>(obj: T, paths: K[]): P
 
     Object.keys(obj).forEach((key) => {
         if (!paths.includes(key as K)) return;
-        // @ts-expect-error - Dynamic key assignment requires cast, but is type-safe due to K extends keyof T constraint
         result[key as K] = obj[key as K];
     });
 

@@ -101,17 +101,22 @@ program
     .action(async (input: string, options: CliOptions) => {
         console.log("Retrieving OpenAPI document from", input);
         // SwaggerParser uses its own OpenAPI types, cast to openapi3-ts types
-        const openApiDoc = await SwaggerParser.bundle(input) as unknown as OpenAPIObject;
+        const openApiDoc = (await SwaggerParser.bundle(input)) as unknown as OpenAPIObject;
         const prettierConfig = await resolveConfig(options.prettier ?? "./");
         const distPath = options.output ?? input + ".client.ts";
         const withAlias = toBoolean(options.withAlias, true);
         const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
 
         // Parse and validate CLI options
-        const groupStrategy = options.groupStrategy as "none" | "tag" | "method" | "tag-file" | "method-file" | undefined;
-        const complexityThreshold = options.complexityThreshold !== undefined 
-            ? parseInt(options.complexityThreshold, 10) 
-            : undefined;
+        const groupStrategy = options.groupStrategy as
+            | "none"
+            | "tag"
+            | "method"
+            | "tag-file"
+            | "method-file"
+            | undefined;
+        const complexityThreshold =
+            options.complexityThreshold !== undefined ? parseInt(options.complexityThreshold, 10) : undefined;
         const defaultStatusBehavior = options.defaultStatus as "spec-compliant" | "auto-correct" | undefined;
 
         // Build generation options (for exactOptionalPropertyTypes: only include defined values)

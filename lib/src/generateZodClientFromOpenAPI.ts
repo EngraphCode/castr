@@ -78,15 +78,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
     options,
     disableWriteToFile,
     handlebars,
-}: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<
-    TOptions extends NonNullable<TemplateContext["options"]>
-        ? undefined extends TOptions["groupStrategy"]
-            ? string
-            : TOptions["groupStrategy"] extends "none" | "tag" | "method"
-              ? string
-              : Record<string, string>
-        : string
-> => {
+}: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<string | Record<string, string>> => {
     const data = getZodClientTemplateContext(openApiDoc, options);
     const groupStrategy = options?.groupStrategy ?? "none";
 
