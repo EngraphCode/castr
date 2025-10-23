@@ -63,7 +63,7 @@ test("array-oneOf-discriminated-union", async () => {
         z.discriminatedUnion("type", [
           z.object({ type: z.literal("a") }).passthrough(),
           z.object({ type: z.literal("b") }).passthrough(),
-        ])
+        ]),
       );
 
       export const schemas = {

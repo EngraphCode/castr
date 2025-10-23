@@ -96,7 +96,9 @@ test("description-in-zod", async () => {
               schema: z
                 .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
                 .describe(
-                  \`baz\nmultiline\ndescription\`
+                  \`baz
+      multiline
+      description\`,
                 )
                 .optional(),
             },

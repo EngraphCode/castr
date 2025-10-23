@@ -324,9 +324,9 @@ test("getSchemaAsTsString", () => {
         )
     ).toMatchInlineSnapshot(`
       "export type Category = {
-    propNumber: number | null;
-    propString: string | null;
-    propBoolean: boolean | null;
+          propNumber: number | null;
+          propString: string | null;
+          propBoolean: boolean | null;
       };"
     `);
 });
@@ -940,9 +940,9 @@ test("getSchemaAsTsString with readonly", () => {
         )
     ).toMatchInlineSnapshot(`
       "export type Category = Readonly<{
-    propNumber: number | null;
-    propString: string | null;
-    propBoolean: boolean | null;
+          propNumber: number | null;
+          propString: string | null;
+          propBoolean: boolean | null;
       }>;"
     `);
 });

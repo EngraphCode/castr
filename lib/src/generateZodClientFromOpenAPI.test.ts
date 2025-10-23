@@ -3931,7 +3931,7 @@ test("with optional, partial, all required objects", async () => {
             partial: PartialObject.optional(),
             optionalProp: z.string().optional(),
           })
-          .passthrough()
+          .passthrough(),
       );
       const Nested2: z.ZodType<Nested2> = z.lazy(() =>
         z
@@ -3941,7 +3941,7 @@ test("with optional, partial, all required objects", async () => {
             circularToRoot: Root2.optional(),
             requiredProp: z.string(),
           })
-          .passthrough()
+          .passthrough(),
       );
 
       export const schemas = {

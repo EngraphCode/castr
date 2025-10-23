@@ -1420,7 +1420,7 @@ test("group-strategy with complex schemas + split files", async () => {
             friends: z.array(User),
           })
           .partial()
-          .passthrough()
+          .passthrough(),
       );
       export const Country = z.lazy(() =>
         z
@@ -1431,7 +1431,7 @@ test("group-strategy with complex schemas + split files", async () => {
             store_list: z.array(Store),
           })
           .partial()
-          .passthrough()
+          .passthrough(),
       );
       export const Store = z.lazy(() =>
         z
@@ -1443,7 +1443,7 @@ test("group-strategy with complex schemas + split files", async () => {
             owner: User,
           })
           .partial()
-          .passthrough()
+          .passthrough(),
       );
       ",
           "__index": "export { PetApi } from "./pet";

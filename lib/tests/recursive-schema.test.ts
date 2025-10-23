@@ -137,10 +137,10 @@ describe("recursive-schema", () => {
           }>;
 
           const Middle: z.ZodType<Middle> = z.lazy(() =>
-            z.object({ user: User }).partial().passthrough()
+            z.object({ user: User }).partial().passthrough(),
           );
           const User: z.ZodType<User> = z.lazy(() =>
-            z.object({ name: z.string(), middle: Middle }).partial().passthrough()
+            z.object({ name: z.string(), middle: Middle }).partial().passthrough(),
           );
 
           export const schemas = {
@@ -507,7 +507,7 @@ describe("recursive-schema", () => {
                 circle: z.array(Friend),
               })
               .partial()
-              .passthrough()
+              .passthrough(),
           );
           const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
             z
@@ -518,7 +518,7 @@ describe("recursive-schema", () => {
                 bestFriend: Friend,
               })
               .partial()
-              .passthrough()
+              .passthrough(),
           );
 
           export const schemas = {
@@ -654,13 +654,13 @@ describe("recursive-schema", () => {
                 in_playlists: z.array(Playlist),
               })
               .partial()
-              .passthrough()
+              .passthrough(),
           );
           const Playlist: z.ZodType<Playlist> = z.lazy(() =>
             z
               .object({ name: z.string(), author: Author, songs: z.array(Song) })
               .partial()
-              .passthrough()
+              .passthrough(),
           );
 
           export const schemas = {
