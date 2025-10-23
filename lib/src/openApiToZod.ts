@@ -256,11 +256,14 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                     propIsRequired = options?.withImplicitRequiredProps;
                 }
 
+                // Build metadata, only including isRequired if defined (exactOptionalPropertyTypes)
                 const propMetadata: CodeMetaData = {
                     ...meta,
-                    isRequired: propIsRequired,
                     name: prop,
                 };
+                if (propIsRequired !== undefined) {
+                    propMetadata.isRequired = propIsRequired;
+                }
 
                 let propActualSchema = propSchema;
 
@@ -284,7 +287,10 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
             properties =
                 "{ " +
-                propsMap.map(([prop, propSchema]) => `${wrapWithQuotesIfNeeded(prop)}: ${propSchema}`).join(", ") +
+                propsMap
+                    .filter((entry): entry is [string, string] => entry[0] !== undefined)
+                    .map(([prop, propSchema]) => `${wrapWithQuotesIfNeeded(prop)}: ${propSchema}`)
+                    .join(", ") +
                 " }";
         }
 
