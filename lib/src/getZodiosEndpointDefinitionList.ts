@@ -1,5 +1,5 @@
 import type { ZodiosEndpointDefinition } from "@zodios/core";
-import type { OpenAPIObject, OperationObject, PathItemObject, ResponseObject } from "openapi3-ts";
+import type { OpenAPIObject, OperationObject, PathItemObject } from "openapi3-ts";
 import type { ObjectLiteral } from "pastable";
 import { match, P } from "ts-pattern";
 
@@ -9,15 +9,8 @@ import { isReferenceObject } from "./isReferenceObject.js";
 import { makeSchemaResolver } from "./makeSchemaResolver.js";
 import type { TemplateContext } from "./template-context.js";
 import { getSchemaVarName } from "./zodiosEndpoint.helpers.js";
-import {
-    processDefaultResponse,
-    processParameter,
-    processRequestBody,
-    processResponse,
-} from "./zodiosEndpoint.operation.helpers.js";
-import { asComponentSchema, pathToVariableName, replaceHyphenatedPath } from "./utils.js";
-
-const voidSchema = "z.void()";
+import { processOperation } from "./zodiosEndpoint.path.helpers.js";
+import { asComponentSchema, pathToVariableName } from "./utils.js";
 
 /**
  * Extract endpoint definitions with runtime Zod schemas from an OpenAPI specification.
@@ -106,104 +99,28 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                 ...getParametersMap(operation.parameters ?? []),
             });
             const operationName = getOperationAlias(path, method, operation);
-            let endpointDefinition: EndpointDefinitionWithRefs = {
-                method: method as EndpointDefinitionWithRefs["method"],
-                path: replaceHyphenatedPath(path),
-                ...(options?.withAlias && { alias: operationName }),
-                description: operation.description,
-                requestFormat: "json",
-                parameters: [],
-                errors: [],
-                response: "",
-            };
 
-            const bodyResult = processRequestBody(operation, ctx, operationName, getZodVarName, options);
-            if (bodyResult) {
-                endpointDefinition.requestFormat = bodyResult.requestFormat;
-                endpointDefinition.parameters.push(bodyResult.parameter);
+            const result = processOperation({
+                path,
+                method,
+                operation,
+                operationName,
+                parameters,
+                ctx,
+                getZodVarName,
+                defaultStatusBehavior,
+                options,
+            });
+
+            endpoints.push(result.endpoint);
+
+            if (result.ignoredFallback) {
+                ignoredFallbackResponse.push(result.ignoredFallback);
             }
 
-            for (const param of parameters) {
-                const paramDef = processParameter(param, ctx, getZodVarName, options);
-                if (paramDef) {
-                    endpointDefinition.parameters.push(paramDef);
-                }
+            if (result.ignoredGeneric) {
+                ignoredGenericError.push(result.ignoredGeneric);
             }
-
-            if (options?.withAllResponses) {
-                endpointDefinition.responses = [];
-            }
-
-            for (const statusCode in operation.responses) {
-                const responseObj = operation.responses[statusCode];
-                if (!responseObj) continue;
-                
-                const result = processResponse(
-                    statusCode,
-                    responseObj as ResponseObject,
-                    ctx,
-                    getZodVarName,
-                    options
-                );
-
-                if (result.responseEntry && endpointDefinition.responses !== undefined) {
-                    endpointDefinition.responses.push(result.responseEntry);
-                }
-
-                if (result.mainResponse && !endpointDefinition.response) {
-                    endpointDefinition.response = result.mainResponse;
-                    if (!endpointDefinition.description && result.mainResponseDescription) {
-                        endpointDefinition.description = result.mainResponseDescription;
-                    }
-                }
-
-                if (result.error) {
-                    endpointDefinition.errors.push(result.error);
-                }
-            }
-
-            // use `default` as fallback for `response` undeclared responses
-            if (operation.responses?.default) {
-                const defaultResult = processDefaultResponse(
-                    operation.responses.default as ResponseObject,
-                    ctx,
-                    getZodVarName,
-                    Boolean(endpointDefinition.response),
-                    defaultStatusBehavior,
-                    options
-                );
-
-                if (defaultResult.mainResponse) {
-                    endpointDefinition.response = defaultResult.mainResponse;
-                }
-
-                if (defaultResult.error) {
-                    endpointDefinition.errors.push(defaultResult.error);
-                }
-
-                if (defaultResult.shouldIgnoreFallback) {
-                    ignoredFallbackResponse.push(operationName);
-                }
-
-                if (defaultResult.shouldIgnoreGeneric) {
-                    ignoredGenericError.push(operationName);
-                }
-            }
-
-            if (!endpointDefinition.response) {
-                endpointDefinition.response = voidSchema;
-            }
-
-            if (options?.endpointDefinitionRefiner) {
-                // Refine the endpoint definition, in case consumer wants to add some specific fields
-                // to be rendered in the Handlebars template.
-                const refined = options.endpointDefinitionRefiner(endpointDefinition, operation);
-                if (refined) {
-                    endpointDefinition = refined;
-                }
-            }
-
-            endpoints.push(endpointDefinition);
         }
     }
 
