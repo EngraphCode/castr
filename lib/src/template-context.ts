@@ -59,7 +59,7 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
         // Specifically check isCircular if shouldExportAllTypes is false. Either should cause shouldGenerateType to be true.
 
         const shouldGenerateType = options?.shouldExportAllTypes || isCircular;
-        const schemaName = shouldGenerateType ? result.resolver.resolveRef(ref).normalized : undefined;
+        const schemaName = shouldGenerateType ? result.resolver.resolveRef(ref)?.normalized : undefined;
         if (shouldGenerateType && schemaName && !data.types[schemaName]) {
             const node = getTypescriptFromOpenApi({
                 schema: result.resolver.getSchemaByRef(ref),
@@ -71,7 +71,8 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
             data.emittedType[schemaName] = true;
 
             for (const depRef of depsGraphs.deepDependencyGraph[ref] ?? []) {
-                const depSchemaName = result.resolver.resolveRef(depRef).normalized;
+                const depSchemaName = result.resolver.resolveRef(depRef)?.normalized;
+                if (!depSchemaName) continue;
                 const isDepCircular = depsGraphs.deepDependencyGraph[depRef]?.has(depRef);
 
                 if (!isDepCircular && !data.types[depSchemaName]) {
@@ -93,10 +94,14 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
         }
     }
 
-    // TODO
-    const schemaOrderedByDependencies = topologicalSort(depsGraphs.deepDependencyGraph).map(
-        (ref) => result.resolver.resolveRef(ref).ref
-    );
+    // NOTE: Topological sort ensures schemas are ordered by their dependencies
+    const schemaOrderedByDependencies = topologicalSort(depsGraphs.deepDependencyGraph).map((ref) => {
+        const resolved = result.resolver.resolveRef(ref);
+        if (!resolved) {
+            throw new Error(`Schema not found for $ref: ${ref}`);
+        }
+        return resolved.ref;
+    });
     data.schemas = sortObjKeysFromArray(data.schemas, schemaOrderedByDependencies);
 
     const groupStrategy = options?.groupStrategy ?? "none";
@@ -109,13 +114,17 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
 
         if (groupStrategy !== "none") {
             const operationPath = getOriginalPathWithBrackets(endpoint.path);
-            const pathItemObject: PathItemObject = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
-            if (!pathItemObject) {
+            const pathItemObject: unknown = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
+            if (!pathItemObject || typeof pathItemObject !== "object") {
                 console.warn("Missing path", endpoint.path);
                 return;
             }
 
-            const operation = pathItemObject[endpoint.method]!;
+            const operation = (pathItemObject as PathItemObject)[endpoint.method];
+            if (!operation) {
+                console.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
+                return;
+            }
             const baseName = match(groupStrategy)
                 .with("tag", "tag-file", () => operation.tags?.[0] ?? "Default")
                 .with("method", "method-file", () => endpoint.method)
@@ -133,36 +142,58 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
                 dependenciesByGroupName.set(groupName, new Set());
             }
 
-            const dependencies = dependenciesByGroupName.get(groupName)!;
+            const dependencies = dependenciesByGroupName.get(groupName);
+            if (!dependencies) {
+                throw new Error(`Dependencies not found for group: ${groupName}`);
+            }
 
             const addDependencyIfNeeded = (schemaName: string) => {
                 if (!schemaName) return;
                 if (schemaName.startsWith("z.")) return;
                 // Sometimes the schema includes a chain that should be removed from the dependency
                 const [normalizedSchemaName] = schemaName.split(".");
-                dependencies.add(normalizedSchemaName!);
+                if (normalizedSchemaName) {
+                    dependencies.add(normalizedSchemaName);
+                }
             };
 
             addDependencyIfNeeded(endpoint.response);
             endpoint.parameters.forEach((param) => addDependencyIfNeeded(param.schema));
             endpoint.errors.forEach((param) => addDependencyIfNeeded(param.schema));
-            dependencies.forEach((schemaName) => (group.schemas[schemaName] = data.schemas[schemaName]!));
+            dependencies.forEach((schemaName) => {
+                const schema = data.schemas[schemaName];
+                if (schema) {
+                    group.schemas[schemaName] = schema;
+                }
+            });
 
             // reduce types/schemas for each group using prev computed deep dependencies
             if (groupStrategy.includes("file")) {
                 [...dependencies].forEach((schemaName) => {
-                    if (data.types[schemaName]) {
-                        group.types[schemaName] = data.types[schemaName]!;
+                    const schemaType = data.types[schemaName];
+                    if (schemaType) {
+                        group.types[schemaName] = schemaType;
                     }
 
-                    group.schemas[schemaName] = data.schemas[schemaName]!;
+                    const schema = data.schemas[schemaName];
+                    if (schema) {
+                        group.schemas[schemaName] = schema;
+                    }
 
-                    depsGraphs.deepDependencyGraph[result.resolver.resolveSchemaName(schemaName)?.ref]?.forEach(
+                    const resolvedRef = result.resolver.resolveSchemaName(schemaName)?.ref;
+                    depsGraphs.deepDependencyGraph[resolvedRef]?.forEach(
                         (transitiveRef) => {
-                            const transitiveSchemaName = result.resolver.resolveRef(transitiveRef).normalized;
+                            const transitiveSchemaName = result.resolver.resolveRef(transitiveRef)?.normalized;
+                            if (!transitiveSchemaName) return;
                             addDependencyIfNeeded(transitiveSchemaName);
-                            group.types[transitiveSchemaName] = data.types[transitiveSchemaName]!;
-                            group.schemas[transitiveSchemaName] = data.schemas[transitiveSchemaName]!;
+                            const transitiveType = data.types[transitiveSchemaName];
+                            if (transitiveType) {
+                                group.types[transitiveSchemaName] = transitiveType;
+                            }
+                            const transitiveSchema = data.schemas[transitiveSchemaName];
+                            if (transitiveSchema) {
+                                group.schemas[transitiveSchemaName] = transitiveSchema;
+                            }
                         }
                     );
                 });
@@ -182,21 +213,25 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
 
         const commonSchemaNames = new Set<string>();
         Object.keys(data.endpointsGroups).forEach((groupName) => {
-            const group = data.endpointsGroups[groupName]!;
+            const group = data.endpointsGroups[groupName];
+            if (!group) return;
             group.imports = {};
 
-            const groupSchemas = {} as Record<string, string>;
-            const groupTypes = {} as Record<string, string>;
+            const groupSchemas: Record<string, string> = {};
+            const groupTypes: Record<string, string> = {};
             Object.entries(group.schemas).forEach(([name, schema]) => {
                 const count = dependenciesCount.get(name) ?? 0;
                 if (count >= 1) {
-                    group.imports![name] = "common";
+                    if (group.imports) {
+                        group.imports[name] = "common";
+                    }
                     commonSchemaNames.add(name);
                 } else {
                     groupSchemas[name] = schema;
 
-                    if (group.types[name]) {
-                        groupTypes[name] = group.types[name]!;
+                    const groupType = group.types[name];
+                    if (groupType) {
+                        groupTypes[name] = groupType;
                     }
                 }
             });
@@ -235,7 +270,12 @@ const getOriginalPathWithBrackets = (path: string) => path.replaceAll(originalPa
 //
 // This is because when using `sortObjKeysFromArray`, the string array needs to be exactly the same
 // like the object keys. Otherwise, the object keys won't be re-ordered.
-const getPureSchemaNames = (fullSchemaNames: string[]) => fullSchemaNames.map((name) => name.split("/").at(-1)!);
+const getPureSchemaNames = (fullSchemaNames: string[]) => fullSchemaNames.map((name) => {
+    const parts = name.split("/");
+    const lastPart = parts.at(-1);
+    if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
+    return lastPart;
+});
 
 export type TemplateContext = {
     schemas: Record<string, string>;
