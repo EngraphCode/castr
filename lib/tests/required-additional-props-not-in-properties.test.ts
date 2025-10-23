@@ -7,13 +7,13 @@ test("required-additional-props-not-in-properties", () => {
             schema: {
                 properties: {
                     name: {
-                        type: "string"
+                        type: "string",
                     },
                     email: {
-                        type: "string"
+                        type: "string",
                     },
                 },
-                required: ['name', 'email', 'phone'],
+                required: ["name", "email", "phone"],
             },
         })
     ).toMatchInlineSnapshot('"z.object({ name: z.string(), email: z.string() }).passthrough()"');

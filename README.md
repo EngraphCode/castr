@@ -6,11 +6,11 @@
 
 Generates a [zodios](https://github.com/ecyrbe/zodios) (_typescript http client with zod validation_) from a (json/yaml) [OpenAPI spec](https://github.com/OAI/OpenAPI-Specification) **(or just use the generated schemas/endpoints/etc !)**
 
--   can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
--   or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
+- can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
+- or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
 
--   client typesafety and runtime validation using [zodios](https://github.com/ecyrbe/zodios)
--   tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas)
+- client typesafety and runtime validation using [zodios](https://github.com/ecyrbe/zodios)
+- tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas)
 
 # Why this exists
 
@@ -24,19 +24,19 @@ If you do have control on your API/back-end, you should probably use a RPC-like 
 
 # Comparison vs typed-openapi
 
--   `openapi-zod-client` is a CLI that generates a [zodios](https://www.zodios.org/) API client (typescript http client with zod validation), currently using axios as http client
--   [`typed-openapi`](https://github.com/astahmer/typed-openapi) is a CLI/library that generates a headless (bring your own fetcher : fetch, axios, ky, etc...) Typescript API client from an OpenAPI spec, that can output schemas as either just TS types (providing instant suggestions in your IDE) or different runtime validation schemas (zod, typebox, arktype, valibot, io-ts, yup)
+- `openapi-zod-client` is a CLI that generates a [zodios](https://www.zodios.org/) API client (typescript http client with zod validation), currently using axios as http client
+- [`typed-openapi`](https://github.com/astahmer/typed-openapi) is a CLI/library that generates a headless (bring your own fetcher : fetch, axios, ky, etc...) Typescript API client from an OpenAPI spec, that can output schemas as either just TS types (providing instant suggestions in your IDE) or different runtime validation schemas (zod, typebox, arktype, valibot, io-ts, yup)
 
 # Usage
 
 with local install:
 
--   `pnpm i -D openapi-zod-client`
--   `pnpm openapi-zod-client "./input/file.json" -o "./output/client.ts"`
+- `pnpm i -D openapi-zod-client`
+- `pnpm openapi-zod-client "./input/file.json" -o "./output/client.ts"`
 
 or directly (no install)
 
--   `pnpx openapi-zod-client "./input/file.yaml" -o "./output/client.ts"`
+- `pnpx openapi-zod-client "./input/file.yaml" -o "./output/client.ts"`
 
 # auto-generated doc
 
@@ -71,7 +71,7 @@ Options:
   --implicit-required               When true, will make all properties of an object required by default (rather than the current opposite), unless an explicitly `required` array is set
   --with-deprecated                 when true, will keep deprecated endpoints in the api output
   --with-description                when true, will add z.describe(xxx)
-  --with-docs                       when true, will add jsdoc comments to generated types 
+  --with-docs                       when true, will add jsdoc comments to generated types
   --group-strategy                  groups endpoints by a given strategy, possible values are: 'none' | 'tag' | 'method' | 'tag-file' | 'method-file'
   --complexity-threshold            schema complexity threshold to determine which one (using less than `<` operator) should be assigned to a variable
   --default-status                  when defined as `auto-correct`, will automatically use `default` as fallback for `response` when no status code was declared
@@ -91,8 +91,8 @@ You can pass a custom [handlebars](https://handlebarsjs.com/) template and/or a 
 
 ## When using the CLI
 
--   `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
--   `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
+- `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
+- `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
 
 You can pass an expression that will be safely evaluted (thanks to [whence](https://github.com/jonschlinkert/whence/)) and works like `validateStatus` from axios to determine which OpenAPI `ResponseItem` should be picked as the main one for the `ZodiosEndpoint["response"]` and which ones will be added to the `ZodiosEndpoint["errors"]` array.
 
@@ -100,18 +100,18 @@ Exemple: `--success-expr "status >= 200 && status < 300"`
 
 ## Tips
 
--   You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-client ./input.yaml` will generate a `./input.yaml.ts` file
--   Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
-    `pnpx openapi-zod-client https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
+- You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-client ./input.yaml` will generate a `./input.yaml.ts` file
+- Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
+  `pnpx openapi-zod-client https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
 
--   Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-client` could help
--   If you only need a few portions of your OpenAPI spec (i.e. only using a few endpoints from the [GitHub REST API OpenAPI Spec](https://github.com/OAI/OpenAPI-Specification)), consider using [openapi-endpoint-trimmer](https://github.com/aacitelli/openapi-endpoint-trimmer) to trim unneeded paths from your spec first. It supports prefix-based omitting of paths, helping significantly cut down on the length of your output types file, which generally improves editor speed and compilation times.
+- Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-client` could help
+- If you only need a few portions of your OpenAPI spec (i.e. only using a few endpoints from the [GitHub REST API OpenAPI Spec](https://github.com/OAI/OpenAPI-Specification)), consider using [openapi-endpoint-trimmer](https://github.com/aacitelli/openapi-endpoint-trimmer) to trim unneeded paths from your spec first. It supports prefix-based omitting of paths, helping significantly cut down on the length of your output types file, which generally improves editor speed and compilation times.
 
 ## Example
 
--   You can check an example [input](./examples/petstore.yaml) (the petstore example when you open/reset [editor.swagger.io](https://editor.swagger.io/)) and [output](./examples/basic/petstore-client.ts)
--   there's also [an example of a programmatic usage](./examples/basic/petstore-generator.ts)
--   or you can check the tests in the `src` folder which are mostly just inline snapshots of the outputs
+- You can check an example [input](./examples/petstore.yaml) (the petstore example when you open/reset [editor.swagger.io](https://editor.swagger.io/)) and [output](./examples/basic/petstore-client.ts)
+- there's also [an example of a programmatic usage](./examples/basic/petstore-generator.ts)
+- or you can check the tests in the `src` folder which are mostly just inline snapshots of the outputs
 
 # tl;dr
 
@@ -291,8 +291,8 @@ export function createApiClient(baseUrl: string) {
 
 # TODO
 
--   handle OA `prefixItems` -> output `z.tuple`
--   rm unused (=never referenced) variables from output
+- handle OA `prefixItems` -> output `z.tuple`
+- rm unused (=never referenced) variables from output
 
 # Caveats
 
@@ -302,8 +302,8 @@ You can do so by using the official Swagger Editor: https://editor.swagger.io/ u
 
 ## Contributing:
 
--   A `.node-version` file has been provided in the repository root, use your preferred Node.js manager which [supports](https://github.com/shadowspawn/node-version-usage#supporting-products) the standard to manage the development Node.js environment
--   The monorepo supports [corepack](https://nodejs.org/api/corepack.html), follow the linked instructions to locally install the development package manager (i.e. [pnpm](https://pnpm.io/))
+- A `.node-version` file has been provided in the repository root, use your preferred Node.js manager which [supports](https://github.com/shadowspawn/node-version-usage#supporting-products) the standard to manage the development Node.js environment
+- The monorepo supports [corepack](https://nodejs.org/api/corepack.html), follow the linked instructions to locally install the development package manager (i.e. [pnpm](https://pnpm.io/))
 
 ```bash
 > pnpm install

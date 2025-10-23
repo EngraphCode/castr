@@ -13,7 +13,7 @@ test("resolve-ref-responses", () => {
                         operationId: "getExample",
                         responses: {
                             "200": {
-                                $ref: "#/components/responses/ExampleResponse"
+                                $ref: "#/components/responses/ExampleResponse",
                             },
                         },
                     },
@@ -24,8 +24,8 @@ test("resolve-ref-responses", () => {
                     ExampleResponse: {
                         description: "example response",
                         content: { "application/json": { schema: { type: "string" } } },
-                    }
-                }
+                    },
+                },
             },
         })
     ).toMatchInlineSnapshot(`

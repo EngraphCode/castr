@@ -9,39 +9,41 @@ describe("file group strategy with multi-props object as query parameter", async
         openapi: "3.0.1",
         info: {
             version: "v1",
-            title: "file group strategy with multi-props object as query parameter"
+            title: "file group strategy with multi-props object as query parameter",
         },
         paths: {
             "/api/v1/test": {
                 post: {
-                    parameters: [{
-                        name: "req",
-                        in: "query",
-                        required: true,
-                        schema: {
-                            required: ["prop1", "prop2"],
-                            type: "object",
-                            properties: {
-                                "prop1": { "type": "integer", "format": "int32" },
-                                "prop2": { "type": "integer", "format": "int32" }
-                            }
-                        }
-                    }],
+                    parameters: [
+                        {
+                            name: "req",
+                            in: "query",
+                            required: true,
+                            schema: {
+                                required: ["prop1", "prop2"],
+                                type: "object",
+                                properties: {
+                                    prop1: { type: "integer", format: "int32" },
+                                    prop2: { type: "integer", format: "int32" },
+                                },
+                            },
+                        },
+                    ],
                     responses: {
                         200: {
-                            description: "OK"
-                        }
-                    }
-                }
-            }
-        }
+                            description: "OK",
+                        },
+                    },
+                },
+            },
+        },
     };
 
     const runTest = async (groupStrategy: TemplateContextGroupStrategy): Promise<void> => {
         const output = await generateZodClientFromOpenAPI({
             disableWriteToFile: true,
             openApiDoc,
-            options: { groupStrategy }
+            options: { groupStrategy },
         });
 
         const expectedIndex = `    "__index": "export { ${groupStrategy === "method-file" ? "PostApi" : "DefaultApi"} } from "./${groupStrategy === "method-file" ? "post" : "Default"}";\n",`;
@@ -79,9 +81,10 @@ export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
   return new Zodios(baseUrl, endpoints, options);
 }\n",`;
 
-        const expected = groupStrategy === "method-file"
-          ? `{\n${expectedIndex}\n${expectedApi}\n}`
-          : `{\n${expectedApi}\n${expectedIndex}\n}`;
+        const expected =
+            groupStrategy === "method-file"
+                ? `{\n${expectedIndex}\n${expectedApi}\n}`
+                : `{\n${expectedApi}\n${expectedIndex}\n}`;
 
         expect(output).toMatchInlineSnapshot(expected);
     };

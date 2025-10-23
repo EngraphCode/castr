@@ -21,8 +21,8 @@ test("additionalPropertiesDefaultValue-option", () => {
                 },
             },
             options: {
-                additionalPropertiesDefaultValue: true
-            }
+                additionalPropertiesDefaultValue: true,
+            },
         })
     ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
     expect(
@@ -34,8 +34,8 @@ test("additionalPropertiesDefaultValue-option", () => {
                 },
             },
             options: {
-                additionalPropertiesDefaultValue: { type: "number" }
-            }
+                additionalPropertiesDefaultValue: { type: "number" },
+            },
         })
     ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
     expect(
@@ -47,9 +47,8 @@ test("additionalPropertiesDefaultValue-option", () => {
                 },
             },
             options: {
-                additionalPropertiesDefaultValue: false
-            }
+                additionalPropertiesDefaultValue: false,
+            },
         })
     ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial()"');
-
 });

@@ -65,7 +65,7 @@ type SingleType = Exclude<SchemaObject["type"], any[] | undefined>;
 export const isPrimitiveType = (type: SingleType): type is PrimitiveType => primitiveTypeList.includes(type as any);
 
 const primitiveTypeList = ["string", "number", "integer", "boolean", "null"] as const;
-export type PrimitiveType = typeof primitiveTypeList[number];
+export type PrimitiveType = (typeof primitiveTypeList)[number];
 
 export const escapeControlCharacters = (str: string): string => {
     return str
@@ -83,7 +83,8 @@ export const escapeControlCharacters = (str: string): string => {
         .replace(/\//g, "\\/");
 };
 
-export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean) => match(value)
-    .with(P.string.regex(/^false$/i), false, () => false)
-    .with(P.string.regex(/^true$/i), true, () => true)
-    .otherwise(() => defaultValue);
+export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean) =>
+    match(value)
+        .with(P.string.regex(/^false$/i), false, () => false)
+        .with(P.string.regex(/^true$/i), true, () => true)
+        .otherwise(() => defaultValue);

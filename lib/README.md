@@ -4,11 +4,11 @@
 
 Generates a [zodios](https://github.com/ecyrbe/zodios) (_typescript http client with zod validation_) from a (json/yaml) [OpenAPI spec](https://github.com/OAI/OpenAPI-Specification) **(or just use the generated schemas/endpoints/etc !)**
 
--   can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
--   or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
+- can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
+- or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
 
--   client typesafety using [zodios](https://github.com/ecyrbe/zodios)
--   tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas)
+- client typesafety using [zodios](https://github.com/ecyrbe/zodios)
+- tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas)
 
 # Why this exists
 
@@ -24,12 +24,12 @@ please just use [tRPC](https://github.com/trpc/trpc) or alternatives ([zodios](h
 
 with local install:
 
--   `pnpm i -D openapi-zod-client`
--   `pnpm openapi-zod-client "./input/file.json" -o "./output/client.ts"`
+- `pnpm i -D openapi-zod-client`
+- `pnpm openapi-zod-client "./input/file.json" -o "./output/client.ts"`
 
 or directly (no install)
 
--   `pnpx openapi-zod-client "./input/file.yaml" -o "./output/client.ts"`
+- `pnpx openapi-zod-client "./input/file.yaml" -o "./output/client.ts"`
 
 # auto-generated doc
 
@@ -76,8 +76,8 @@ You can pass a custom [handlebars](https://handlebarsjs.com/) template and/or a 
 
 ## When using the CLI
 
--   `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
--   `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
+- `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
+- `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
 
 You can pass an expression that will be safely evaluted (thanks to [whence](https://github.com/jonschlinkert/whence/)) and works like `validateStatus` from axios to determine which OpenAPI `ResponseItem` should be picked as the main one for the `ZodiosEndpoint["response"]` and which ones will be added to the `ZodiosEndpoint["errors"]` array.
 
@@ -85,17 +85,17 @@ Exemple: `--success-expr "status >= 200 && status < 300"`
 
 ## Tips
 
--   You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-client ./input.yaml` will generate a `./input.yaml.ts` file
--   Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
-    `pnpx openapi-zod-client https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
+- You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-client ./input.yaml` will generate a `./input.yaml.ts` file
+- Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
+  `pnpx openapi-zod-client https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
 
--   Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-client` could help
+- Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-client` could help
 
 ## Example
 
--   You can check an example [input](./examples/petstore.yaml) (the petstore example when you open/reset [editor.swagger.io](https://editor.swagger.io/)) and [output](./examples/basic/petstore-client.ts)
--   there's also [an example of a programmatic usage](./examples/basic/petstore-generator.ts)
--   or you can check the tests in the `src` folder which are mostly just inline snapshots of the outputs
+- You can check an example [input](./examples/petstore.yaml) (the petstore example when you open/reset [editor.swagger.io](https://editor.swagger.io/)) and [output](./examples/basic/petstore-client.ts)
+- there's also [an example of a programmatic usage](./examples/basic/petstore-generator.ts)
+- or you can check the tests in the `src` folder which are mostly just inline snapshots of the outputs
 
 # tl;dr
 
@@ -275,8 +275,8 @@ export function createApiClient(baseUrl: string) {
 
 # TODO
 
--   handle OA `prefixItems` -> output `z.tuple`
--   rm unused (=never referenced) variables from output
+- handle OA `prefixItems` -> output `z.tuple`
+- rm unused (=never referenced) variables from output
 
 # Caveats
 
@@ -284,6 +284,6 @@ NOT tested/expected to work with OpenAPI before v3, please migrate your specs to
 
 ## Contributing:
 
--   `pnpm i && pnpm gen`
+- `pnpm i && pnpm gen`
 
 if you fix an edge case please make a dedicated minimal reproduction test in the [`tests`](./tests) folder so that it doesn't break in future versions

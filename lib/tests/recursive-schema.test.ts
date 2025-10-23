@@ -321,7 +321,9 @@ describe("recursive-schema", () => {
                 },
                 ctx,
             })
-        ).toMatchInlineSnapshot('"z.object({ recursiveUser: UserWithFriends, basic: z.number() }).partial().passthrough()"');
+        ).toMatchInlineSnapshot(
+            '"z.object({ recursiveUser: UserWithFriends, basic: z.number() }).partial().passthrough()"'
+        );
         expect(ctx).toMatchInlineSnapshot(`
           {
               "resolver": {

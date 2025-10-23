@@ -18,5 +18,7 @@ test("use-union-only-when-multiple-choices", () => {
                 },
             },
         })
-    ).toMatchInlineSnapshot('"z.object({ singleOneOf: z.string(), multipleOneOf: z.union([z.string(), z.number()]), singleAnyOf: z.string(), multipleAnyOf: z.union([z.string(), z.number()]), singleAllOf: z.string(), multipleAllOf: z.string().and(z.number()) }).partial().passthrough()"');
+    ).toMatchInlineSnapshot(
+        '"z.object({ singleOneOf: z.string(), multipleOneOf: z.union([z.string(), z.number()]), singleAnyOf: z.string(), multipleAnyOf: z.union([z.string(), z.number()]), singleAllOf: z.string(), multipleAllOf: z.string().and(z.number()) }).partial().passthrough()"'
+    );
 });
