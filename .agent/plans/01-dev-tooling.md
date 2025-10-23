@@ -1930,13 +1930,14 @@ pnpm --filter lib build
 6. ✅ No TypeScript errors - **DONE**
 7. ✅ All code formatted with Prettier - **DONE**
 8. ⚠️ **Lint: 270 issues triaged** (see `.agent/LINT_TRIAGE.md`)
-   - [x] Unicorn rules removed (too strict)
-   - [ ] Tests excluded from linting (68 files)
-   - [ ] Critical type safety issues fixed in extracted files (~50 issues)
-   - [ ] Dead code removed (9 unused vars/imports)
-   - [ ] Remaining ~210 issues baselined as tech debt
+    - [x] Unicorn rules removed (too strict)
+    - [ ] Tests excluded from linting (68 files)
+    - [ ] Critical type safety issues fixed in extracted files (~50 issues)
+    - [ ] Dead code removed (9 unused vars/imports)
+    - [ ] Remaining ~210 issues baselined as tech debt
 
 **Lint Triage Summary:**
+
 - 🔴 CRITICAL (197): Fix ~50 in extracted files, baseline ~147 in non-extracted
 - 🟡 HIGH (9): Fix all (unused vars/imports)
 - 🟢 MEDIUM (27): Baseline as tech debt

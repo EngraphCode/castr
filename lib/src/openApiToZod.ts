@@ -133,7 +133,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
             return zodSchema;
         });
 
-        if (composedRequiredSchema.required.length) {
+        if (composedRequiredSchema.required.length > 0) {
             types.push(
                 getZodSchema({
                     schema: composedRequiredSchema,
@@ -162,7 +162,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                     return code.assign(`z.literal(${valueString})`);
                 }
 
-                // eslint-disable-next-line sonarjs/no-nested-template-literals
+                 
                 return code.assign(
                     `z.enum([${schema.enum.map((value) => (value === null ? "null" : `"${value}"`)).join(", ")}])`
                 );
@@ -214,7 +214,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
     if (schemaType === "object" || schema.properties || schema.additionalProperties) {
         // additional properties default to true if additionalPropertiesDefaultValue not provided
         const additionalPropsDefaultValue =
-            options?.additionalPropertiesDefaultValue !== undefined ? options?.additionalPropertiesDefaultValue : true;
+            options?.additionalPropertiesDefaultValue === undefined ? true : options?.additionalPropertiesDefaultValue;
         const additionalProps =
             schema.additionalProperties === null || schema.additionalProperties === undefined
                 ? additionalPropsDefaultValue
@@ -244,9 +244,9 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                     ...meta,
                     isRequired: isPartial
                         ? true
-                        : hasRequiredArray
+                        : (hasRequiredArray
                           ? schema.required?.includes(prop)
-                          : options?.withImplicitRequiredProps,
+                          : options?.withImplicitRequiredProps),
                     name: prop,
                 } as CodeMetaData;
 
@@ -305,7 +305,7 @@ export const getZodChain = ({ schema, meta, options }: ZodChainArgs) => {
     const output = chains
         .concat(
             getZodChainablePresence(schema, meta),
-            options?.withDefaultValues !== false ? getZodChainableDefault(schema) : []
+            options?.withDefaultValues === false ? [] : getZodChainableDefault(schema)
         )
         .filter(Boolean)
         .join(".");
@@ -355,7 +355,7 @@ const formatPatternIfNeeded = (pattern: string) => {
 
     pattern = escapeControlCharacters(pattern);
 
-    return pattern.includes("\\u") || pattern.includes("\\p") ? `/${pattern}/u` : `/${pattern}/`;
+    return pattern.includes(String.raw`\u`) || pattern.includes(String.raw`\p`) ? `/${pattern}/u` : `/${pattern}/`;
 };
 
 const getZodChainableStringValidations = (schema: SchemaObject) => {

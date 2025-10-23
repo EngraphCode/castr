@@ -99,7 +99,7 @@ cli.command("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
         console.log(`Done generating <${distPath}> !`);
     });
 
-cli.version(packageJson.version!);
+cli.version(packageJson.version);
 cli.help();
 
 cli.parse();

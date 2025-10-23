@@ -125,7 +125,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
 
             // if schema is already assigned to a variable, re-use that variable name
             if (!options?.exportAllNamedSchemas && ctx.schemaByName[result]) {
-                return ctx.schemaByName[result]!;
+                return ctx.schemaByName[result];
             }
 
             // result is complex and would benefit from being re-used
@@ -190,7 +190,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
         const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
 
         for (const method in pathItem) {
-            const operation = pathItem[method as keyof typeof pathItem] as OperationObject | undefined;
+            const operation = pathItem[method as keyof typeof pathItem];
             if (!operation) continue;
             if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
 
@@ -293,7 +293,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                     paramSchema = paramSchema
                         ? (isReferenceObject(paramSchema)
                               ? ctx.resolver.getSchemaByRef(paramSchema.$ref)
-                              : paramSchema)!
+                              : paramSchema)
                         : {};
 
                     const paramCode = getZodSchema({

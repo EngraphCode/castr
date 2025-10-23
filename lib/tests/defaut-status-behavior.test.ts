@@ -1,6 +1,6 @@
 import { getZodClientTemplateContext, getZodiosEndpointDefinitionList } from "../src";
 import { expect, test } from "vitest";
-import { OpenAPIObject } from "openapi3-ts";
+import { type OpenAPIObject } from "openapi3-ts";
 
 test("defaut-status-behavior", () => {
     const doc: OpenAPIObject = {

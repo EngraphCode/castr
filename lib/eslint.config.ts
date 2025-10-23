@@ -3,7 +3,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { configs as tsEslintConfigs } from "typescript-eslint";
 import { configs as sonarjsConfigs } from "eslint-plugin-sonarjs";
-import unicorn from "eslint-plugin-unicorn";
 import eslint from "@eslint/js";
 
 const baseDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -17,9 +16,6 @@ export default defineConfig(
 
     // Sonarjs recommended rules for code complexity and quality
     sonarjsConfigs.recommended,
-
-    // Unicorn recommended rules
-    unicorn.configs.recommended,
 
     {
         // Global language options for TypeScript
@@ -40,43 +36,30 @@ export default defineConfig(
         // Main rules for all TypeScript files
         files: ["**/*.ts"],
         rules: {
-            // TypeScript rules
-            "@typescript-eslint/no-explicit-any": "warn",
-            "@typescript-eslint/explicit-module-boundary-types": "off",
-            "@typescript-eslint/no-non-null-assertion": "warn",
-            "@typescript-eslint/no-unused-vars": [
+            // Consistency rules
+            "@typescript-eslint/consistent-type-assertions": [
                 "warn",
                 {
-                    argsIgnorePattern: "^_",
-                    varsIgnorePattern: "^_",
-                    caughtErrorsIgnorePattern: "^_",
+                    assertionStyle: "never",
                 },
             ],
-            "@typescript-eslint/consistent-type-imports": [
-                "error",
-                { prefer: "type-imports", fixStyle: "inline-type-imports" },
-            ],
-
-            // Unicorn rules (matching old config intent)
-            "unicorn/no-array-reduce": "off",
-            "unicorn/no-null": "off",
-            "unicorn/prefer-top-level-await": "off",
-            "unicorn/filename-case": "off",
-            "unicorn/prevent-abbreviations": "off",
-            "unicorn/no-array-for-each": "off",
+            // TypeScript rules
+            "@typescript-eslint/no-explicit-any": "error",
+            "@typescript-eslint/explicit-module-boundary-types": "off",
+            "@typescript-eslint/no-non-null-assertion": "error",
+            "no-unused-vars": "off",
+            "@typescript-eslint/no-unused-vars": ["error"],
+            "@typescript-eslint/consistent-type-imports": ["error"],
 
             // Sonarjs complexity - adjusted from default
-            "sonarjs/cognitive-complexity": ["warn", 30],
+            "sonarjs/cognitive-complexity": ["error", 30],
 
             // Code quality
-            "no-console": "warn",
+            "no-console": "error",
             "no-debugger": "error",
-            "no-empty": ["error", { allowEmptyCatch: true }],
+            "no-empty": ["error"],
             "prefer-const": "error",
             "no-var": "error",
-
-            // Allow eslint-disable comments
-            "no-warning-comments": "off",
         },
     },
 
@@ -84,23 +67,17 @@ export default defineConfig(
         // Test files - more relaxed rules
         files: ["**/*.test.ts", "tests/**/*.ts"],
         rules: {
+            "@typescript-eslint/consistent-type-assertions": "off",
             "@typescript-eslint/no-explicit-any": "off",
             "@typescript-eslint/no-non-null-assertion": "off",
             "@typescript-eslint/no-unsafe-assignment": "off",
             "@typescript-eslint/no-unsafe-member-access": "off",
+            "@typescript-eslint/no-unsafe-argument": "off",
             "@typescript-eslint/no-unsafe-call": "off",
             "@typescript-eslint/no-unsafe-return": "off",
             "sonarjs/cognitive-complexity": "off",
             "sonarjs/no-duplicate-string": "off",
             "no-console": "off",
-        },
-    },
-
-    {
-        // src/index.ts - export file, allow unused variables
-        files: ["src/index.ts"],
-        rules: {
-            "@typescript-eslint/no-unused-vars": "off",
         },
     }
 );

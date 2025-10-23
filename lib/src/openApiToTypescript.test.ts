@@ -1,4 +1,4 @@
-import { getTypescriptFromOpenApi, TsConversionContext } from "./openApiToTypescript.js";
+import { getTypescriptFromOpenApi, type TsConversionContext } from "./openApiToTypescript.js";
 
 import type { SchemaObject, SchemasObject } from "openapi3-ts";
 import { ts } from "tanu";
@@ -639,10 +639,10 @@ test("getSchemaAsTsString with readonly", () => {
             options
         )
     ).toMatchInlineSnapshot(`
-          "export type BasicObject = Partial<Readonly<{
-              str: string;
-          }>>;"
-        `);
+      "export type BasicObject = Partial<Readonly<{
+          str: string;
+      }>>;"
+    `);
     expect(
         getSchemaAsTsString(
             { type: "object", properties: { str: { type: "string" }, nb: { type: "number" } } },

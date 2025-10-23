@@ -14,5 +14,5 @@ test("regex-with-escapes", () => {
                 },
             },
         })
-    ).toMatchInlineSnapshot('"z.object({ str: z.string().regex(/^\\/$/) }).partial().passthrough()"');
+    ).toMatchInlineSnapshot(String.raw`"z.object({ str: z.string().regex(/^\/$/) }).partial().passthrough()"`);
 });

@@ -1,6 +1,6 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import type { OpenAPIObject } from "openapi3-ts";
-import { Options, resolveConfig } from "prettier";
+import { type Options, resolveConfig } from "prettier";
 import { getZodClientTemplateContext } from "../src/template-context";
 import { getHandlebars } from "../src/getHandlebars";
 import { maybePretty } from "../src/maybePretty";
@@ -19,7 +19,7 @@ beforeAll(async () => {
 });
 
 describe("samples-generator", async () => {
-    const samplesPath = path.resolve(pkgRoot, "../", "./samples/v3\\.*/**/*.yaml");
+    const samplesPath = path.resolve(pkgRoot, "../", String.raw`./samples/v3\.*/**/*.yaml`);
     const list = fg.sync([samplesPath]);
 
     const template = getHandlebars().compile(readFileSync("./src/templates/default.hbs", "utf8"));

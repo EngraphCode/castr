@@ -6,7 +6,7 @@ import { makeSchemaResolver } from "./makeSchemaResolver.js";
 import { asComponentSchema } from "./utils.js";
 
 const makeSchema = (schema: SchemaObject) => schema;
-const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData | undefined) =>
+const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData  ) =>
     getZodSchema({ schema: makeSchema(schema), meta }).toString();
 
 test("getSchemaAsZodString", () => {
@@ -186,9 +186,9 @@ test("getSchemaAsZodString", () => {
             discriminator: { propertyName: "type" },
         })
     ).toMatchInlineSnapshot(`
-    "
-                    z.discriminatedUnion("type", [z.object({ type: z.literal("a"), a: z.string() }).passthrough(), z.object({ type: z.literal("b"), b: z.string() }).passthrough()])
-                "
+      "
+                      z.discriminatedUnion("type", [z.object({ type: z.literal("a"), a: z.string() }).passthrough(), z.object({ type: z.literal("b"), b: z.string() }).passthrough()])
+                  "
     `);
 
     // returns z.union, when allOf has multiple objects

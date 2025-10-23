@@ -1,4 +1,4 @@
-import { SchemasObject } from "openapi3-ts";
+import { type SchemasObject } from "openapi3-ts";
 import { expect, it } from "vitest";
 import { generateZodClientFromOpenAPI } from "../src";
 

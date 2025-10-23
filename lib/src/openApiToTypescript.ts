@@ -51,7 +51,7 @@ export const getTypescriptFromOpenApi = ({
     meta: inheritedMeta,
     ctx,
     options,
-}: // eslint-disable-next-line sonarjs/cognitive-complexity
+}:  
 TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
     const meta = {} as TsConversionArgs["meta"];
     const isInline = !inheritedMeta?.name;

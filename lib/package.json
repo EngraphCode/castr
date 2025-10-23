@@ -66,13 +66,12 @@
         "eslint": "^9.38.0",
         "eslint-formatter-pretty": "^7.0.0",
         "eslint-plugin-sonarjs": "^3.0.5",
-        "eslint-plugin-unicorn": "^61.0.2",
         "fast-glob": "^3.2.12",
         "tsup": "^8.5.0",
         "type-fest": "^5.1.0",
         "typescript": "^5",
         "typescript-eslint": "^8.46.2",
-        "vitest": "^3.2.4"
+        "vitest": "^4.0.1"
     },
     "files": [
         "bin.cjs",

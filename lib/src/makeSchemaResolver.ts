@@ -27,11 +27,11 @@ export const makeSchemaResolver = (doc: OpenAPIObject) => {
         const split = correctRef.split("/");
 
         // "#/components/schemas/Something.jsonld" -> #/components/schemas
-        const path = split.slice(1, -1).join("/")!;
+        const path = split.slice(1, -1).join("/");
         const map = get(doc, path.replace("#/", "").replace("#", "").replaceAll("/", ".")) ?? ({} as any);
 
         // "#/components/schemas/Something.jsonld" -> "Something.jsonld"
-        const name = split[split.length - 1]!;
+        const name = split.at(-1)!;
         const normalized = normalizeString(name);
 
         nameByRef.set(correctRef, normalized);

@@ -20,7 +20,7 @@ const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, no
 export const getZodClientTemplateContext = (
     openApiDoc: OpenAPIObject,
     options?: TemplateContext["options"]
-    // eslint-disable-next-line sonarjs/cognitive-complexity
+     
 ) => {
     const result = getZodiosEndpointDefinitionList(openApiDoc, options);
     const data = makeTemplateContext();
@@ -58,7 +58,7 @@ export const getZodClientTemplateContext = (
         const ctx: TsConversionContext = { nodeByRef: {}, resolver: result.resolver, visitedsRefs: {} };
 
         // Specifically check isCircular if shouldExportAllTypes is false. Either should cause shouldGenerateType to be true.
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+         
         const shouldGenerateType = options?.shouldExportAllTypes || isCircular;
         const schemaName = shouldGenerateType ? result.resolver.resolveRef(ref).normalized : undefined;
         if (shouldGenerateType && schemaName && !data.types[schemaName]) {
@@ -127,7 +127,7 @@ export const getZodClientTemplateContext = (
                 data.endpointsGroups[groupName] = makeEndpointTemplateContext();
             }
 
-            const group = data.endpointsGroups[groupName]!;
+            const group = data.endpointsGroups[groupName];
             group.endpoints.push(endpoint);
 
             if (!dependenciesByGroupName.has(groupName)) {
@@ -206,7 +206,7 @@ export const getZodClientTemplateContext = (
             group.types = groupTypes;
         });
         data.commonSchemaNames = new Set(
-            sortListFromRefArray(Array.from(commonSchemaNames), getPureSchemaNames(schemaOrderedByDependencies))
+            sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
         );
     }
 

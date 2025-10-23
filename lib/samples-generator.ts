@@ -20,6 +20,6 @@ emitter.clone("./samples").then(() => {
     spawnSync("rm -rf ./samples/v2.0", { shell: true });
     console.log("removed v2.0 swagger samples");
 
-    const jsonList = fg.sync(["./samples/v3\\.*/**/*.json"]);
+    const jsonList = fg.sync([String.raw`./samples/v3\.*/**/*.json`]);
     jsonList.forEach((jsonPath) => unlinkSync(jsonPath));
 });
