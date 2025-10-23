@@ -39,7 +39,7 @@
     },
     "license": "ISC",
     "dependencies": {
-        "@apidevtools/swagger-parser": "^10.1.0",
+        "@apidevtools/swagger-parser": "^12.1.0",
         "@liuli-util/fs-extra": "^0.1.0",
         "@zodios/core": "^10.3.1",
         "axios": "^1.6.0",
@@ -49,7 +49,7 @@
         "openapi3-ts": "3.1.0",
         "pastable": "^2.2.1",
         "prettier": "^3.6.2",
-        "tanu": "^0.1.13",
+        "tanu": "^0.2.0",
         "ts-pattern": "^5.0.1",
         "whence": "^2.0.0",
         "zod": "^3.19.1"
@@ -57,10 +57,9 @@
     "devDependencies": {
         "@eslint/js": "^9.38.0",
         "@types/degit": "^2.8.3",
-        "@types/fs-extra": "^9.0.13",
+        "@types/fs-extra": "^11.0.4",
         "@types/js-yaml": "^4.0.5",
-        "@types/node": "^20",
-        "@types/prettier": "^2.7.1",
+        "@types/node": "^24.9.1",
         "@typescript-eslint/eslint-plugin": "^8.46.2",
         "@typescript-eslint/parser": "^8.46.2",
         "degit": "^2.8.4",
@@ -70,7 +69,7 @@
         "eslint-plugin-unicorn": "^61.0.2",
         "fast-glob": "^3.2.12",
         "tsup": "^8.5.0",
-        "type-fest": "^2.19.0",
+        "type-fest": "^5.1.0",
         "typescript": "^5",
         "typescript-eslint": "^8.46.2",
         "vitest": "^3.2.4"

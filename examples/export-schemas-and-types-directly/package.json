@@ -15,7 +15,7 @@
         "typescript": "^5"
     },
     "dependencies": {
-        "@apidevtools/swagger-parser": "^10.1.0",
+        "@apidevtools/swagger-parser": "^12.1.0",
         "openapi-zod-client": "workspace:*",
         "zod": "^3.19.1"
     }
