@@ -112,7 +112,14 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
 
         // special value, inline everything (= no variable used)
         if (complexityThreshold === -1) {
-            return input.ref ? ctx.zodSchemaByName[result]! : result;
+            if (input.ref) {
+                const zodSchema = ctx.zodSchemaByName[result];
+                if (!zodSchema) {
+                    throw new Error(`Zod schema not found for ref: ${result}`);
+                }
+                return zodSchema;
+            }
+            return result;
         }
 
         if ((result.startsWith("z.") || input.ref === undefined) && fallbackName) {
@@ -169,7 +176,11 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
 
             // ref result is simple enough that it doesn't need to be assigned to a variable
             if (complexity < complexityThreshold) {
-                return ctx.zodSchemaByName[result]!;
+                const zodSchema = ctx.zodSchemaByName[result];
+                if (!zodSchema) {
+                    throw new Error(`Zod schema not found for ref: ${result}`);
+                }
+                return zodSchema;
             }
 
             return result;
@@ -194,10 +205,10 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
             if (!operation) continue;
             if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
 
-            const parameters = Object.entries({
+            const parameters = Object.values({
                 ...parametersMap,
                 ...getParametersMap(operation.parameters ?? []),
-            }).map(([_id, param]) => param);
+            });
             const operationName = getOperationAlias(path, method, operation);
             let endpointDefinition: EndpointDefinitionWithRefs = {
                 method: method as EndpointDefinitionWithRefs["method"],
@@ -238,7 +249,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                     endpointDefinition.parameters.push({
                         name: "body",
                         type: "Body",
-                        description: requestBody.description!,
+                        description: requestBody.description ?? "",
                         schema:
                             getZodVarName(bodyCode, operationName + "_Body") +
                             getZodChain({
@@ -277,7 +288,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                         // this fallback is needed to autofix openapi docs that put the $ref in the wrong place
                         // (it should be in the mediaTypeObject.schema, not in the mediaTypeObject itself)
                         // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#style-values (just above this anchor)
-                        // @ts-expect-error
+                        // @ts-expect-error - OpenAPI spec violations: some docs incorrectly place $ref at mediaTypeObject level instead of mediaTypeObject.schema
                         paramSchema = mediaTypeObject?.schema ?? mediaTypeObject;
                     } else {
                         paramSchema = isReferenceObject(paramItem.schema)
@@ -377,7 +388,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                         }
                     } else if (statusCode !== "default" && isErrorStatus(status)) {
                         endpointDefinition.errors.push({
-                            schema: schemaString as any,
+                            schema: schemaString,
                             status,
                             description: responseItem.description,
                         });
@@ -414,7 +425,7 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
                     if (defaultStatusBehavior === "auto-correct") {
                         if (endpointDefinition.response) {
                             endpointDefinition.errors.push({
-                                schema: schemaString as any,
+                                schema: schemaString,
                                 status: "default",
                                 description: responseItem.description,
                             });
@@ -483,15 +494,15 @@ const getParametersMap = (parameters: NonNullable<PathItemObject["parameters"]>)
 const allowedPathInValues = ["query", "header", "path"] as Array<ParameterObject["in"]>;
 
 export type EndpointDefinitionWithRefs = Omit<
-    ZodiosEndpointDefinition<any>,
+    ZodiosEndpointDefinition<unknown>,
     "response" | "parameters" | "errors" | "description"
 > & {
     response: string;
     description?: string | undefined;
     parameters: Array<
-        Omit<Required<ZodiosEndpointDefinition<any>>["parameters"][number], "schema"> & { schema: string }
+        Omit<Required<ZodiosEndpointDefinition<unknown>>["parameters"][number], "schema"> & { schema: string }
     >;
-    errors: Array<Omit<Required<ZodiosEndpointDefinition<any>>["errors"][number], "schema"> & { schema: string }>;
+    errors: Array<Omit<Required<ZodiosEndpointDefinition<unknown>>["errors"][number], "schema"> & { schema: string }>;
     responses?: Array<{ statusCode: string; schema: string; description?: string }>;
 };
 
@@ -505,7 +516,7 @@ const isAllowedParamMediaTypes = (
     mediaType: string
 ): mediaType is (typeof allowedParamMediaTypes)[number] | `application/${string}json${string}` | `text/${string}` =>
     (mediaType.includes("application/") && mediaType.includes("json")) ||
-    allowedParamMediaTypes.includes(mediaType as any) ||
+    allowedParamMediaTypes.includes(mediaType as (typeof allowedParamMediaTypes)[number]) ||
     mediaType.includes("text/");
 
 /** Pick given properties in object */
@@ -514,8 +525,8 @@ function pick<T extends ObjectLiteral, K extends keyof T>(obj: T, paths: K[]): P
 
     Object.keys(obj).forEach((key) => {
         if (!paths.includes(key as K)) return;
-        // @ts-expect-error
-        result[key] = obj[key];
+        // @ts-expect-error - Dynamic key assignment requires cast, but is type-safe due to K extends keyof T constraint
+        result[key as K] = obj[key as K];
     });
 
     return result;

@@ -52,13 +52,17 @@ export const getOpenApiDependencyGraph = (
 
         if (schema.type === "array") {
             if (!schema.items) return;
-            return void visit(schema.items, fromRef);
+            visit(schema.items, fromRef);
+            return;
         }
 
         if (schema.type === "object" || schema.properties || schema.additionalProperties) {
             if (schema.properties) {
                 for (const property in schema.properties) {
-                    visit(schema.properties[property]!, fromRef);
+                    const propSchema = schema.properties[property];
+                    if (propSchema) {
+                        visit(propSchema, fromRef);
+                    }
                 }
             }
 
@@ -80,7 +84,10 @@ export const getOpenApiDependencyGraph = (
         }
 
         const visit = (dep: string) => {
-            deepDependencyGraph[ref]!.add(dep);
+            const currentGraph = deepDependencyGraph[ref];
+            if (currentGraph) {
+                currentGraph.add(dep);
+            }
             if (refsDependencyGraph[dep] && ref !== dep) {
                 refsDependencyGraph[dep].forEach((transitive) => {
                     if (visitedsDeepRefs[ref + "__" + transitive]) return;

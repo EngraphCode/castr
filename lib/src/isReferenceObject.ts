@@ -11,6 +11,6 @@ import type { ReferenceObject } from "openapi3-ts";
  *
  * @param obj The value to check.
  */
-export function isReferenceObject(obj: any): obj is ReferenceObject {
+export function isReferenceObject(obj: unknown): obj is ReferenceObject {
     return obj != null && Object.prototype.hasOwnProperty.call(obj, "$ref");
 }

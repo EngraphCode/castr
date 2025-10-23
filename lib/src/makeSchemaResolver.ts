@@ -28,10 +28,15 @@ export const makeSchemaResolver = (doc: OpenAPIObject) => {
 
         // "#/components/schemas/Something.jsonld" -> #/components/schemas
         const path = split.slice(1, -1).join("/");
-        const map = get(doc, path.replace("#/", "").replace("#", "").replaceAll("/", ".")) ?? ({} as any);
+        const retrieved = get(doc, path.replace("#/", "").replace("#", "").replaceAll("/", "."));
+        const map: Record<string, SchemaObject> =
+            retrieved && typeof retrieved === "object" ? (retrieved as Record<string, SchemaObject>) : {};
 
         // "#/components/schemas/Something.jsonld" -> "Something.jsonld"
-        const name = split.at(-1)!;
+        const name = split.at(-1);
+        if (!name) {
+            throw new Error(`Invalid $ref: ${ref} (no name found in split path)`);
+        }
         const normalized = normalizeString(name);
 
         nameByRef.set(correctRef, normalized);
@@ -42,13 +47,29 @@ export const makeSchemaResolver = (doc: OpenAPIObject) => {
         byNormalized.set(infos.normalized, infos);
 
         // doc.components.schemas["Something.jsonld"]
-        return map[name] as SchemaObject;
+        const schema = map[name];
+        if (!schema) {
+            throw new Error(`Schema not found for $ref: ${ref}`);
+        }
+        return schema;
     };
 
     return {
         getSchemaByRef,
-        resolveRef: (ref: string) => byRef.get(autocorrectRef(ref))!,
-        resolveSchemaName: (normalized: string) => byNormalized.get(normalized)!,
+        resolveRef: (ref: string) => {
+            const resolved = byRef.get(autocorrectRef(ref));
+            if (!resolved) {
+                throw new Error(`Unable to resolve $ref: ${ref}`);
+            }
+            return resolved;
+        },
+        resolveSchemaName: (normalized: string) => {
+            const resolved = byNormalized.get(normalized);
+            if (!resolved) {
+                throw new Error(`Unable to resolve schema name: ${normalized}`);
+            }
+            return resolved;
+        },
     };
 };
 
