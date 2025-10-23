@@ -1,12 +1,5 @@
 import type { ZodiosEndpointDefinition } from "@zodios/core";
-import type {
-    OpenAPIObject,
-    OperationObject,
-    ParameterObject,
-    PathItemObject,
-    ResponseObject,
-    ReferenceObject,
-} from "openapi3-ts";
+import type { OpenAPIObject, OperationObject, PathItemObject, ResponseObject } from "openapi3-ts";
 import type { ObjectLiteral } from "pastable";
 import { match, P } from "ts-pattern";
 
@@ -142,9 +135,12 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
             }
 
             for (const statusCode in operation.responses) {
+                const responseObj = operation.responses[statusCode];
+                if (!responseObj) continue;
+                
                 const result = processResponse(
                     statusCode,
-                    operation.responses[statusCode],
+                    responseObj as ResponseObject,
                     ctx,
                     getZodVarName,
                     options

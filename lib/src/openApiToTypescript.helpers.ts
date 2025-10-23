@@ -8,7 +8,6 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
 import { t, ts } from "tanu";
 
-import { isReferenceObject } from "./isReferenceObject.js";
 import type { TsConversionContext } from "./openApiToTypescript.js";
 import { wrapWithQuotesIfNeeded } from "./utils.js";
 
@@ -70,9 +69,12 @@ export function handlePrimitiveEnum(schema: SchemaObject, schemaType: PrimitiveT
 
     // Separate null values from other values
     const hasNull = schema.enum.includes(null);
-    const withoutNull = schema.enum.filter((f) => f !== null);
+    const withoutNull = schema.enum.filter((f) => f !== null) as Array<string | number | boolean>;
 
-    return schema.nullable || hasNull ? t.union([...withoutNull, t.reference("null")]) : t.union(withoutNull);
+    if (schema.nullable || hasNull) {
+        return t.union([...withoutNull, t.reference("null")] as t.TypeDefinition[]);
+    }
+    return t.union(withoutNull as unknown as t.TypeDefinition[]);
 }
 
 /**
@@ -298,9 +300,9 @@ export function handleOneOf(
         return convertSchema(schemas[0]!) as t.TypeDefinitionObject;
     }
 
-    const types = convertSchemasToTypes(schemas, convertSchema);
+    const types: t.TypeDefinition[] = convertSchemasToTypes(schemas, convertSchema);
     if (isNullable) {
-        return t.union([...types, t.reference("null")]);
+        return t.union([...types, t.reference("null")] as t.TypeDefinition[]);
     }
     return t.union(types);
 }
@@ -319,11 +321,11 @@ export function handleAnyOf(
         return convertSchema(schemas[0]!) as t.TypeDefinitionObject;
     }
 
-    const types = convertSchemasToTypes(schemas, convertSchema);
+    const types: t.TypeDefinition[] = convertSchemasToTypes(schemas, convertSchema);
     const oneOf = t.union(types);
     const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), shouldWrapReadonly);
 
-    const unionParts = [oneOf, arrayOfOneOf];
+    const unionParts: t.TypeDefinition[] = [oneOf, arrayOfOneOf];
     if (isNullable) {
         unionParts.push(t.reference("null"));
     }
@@ -345,10 +347,10 @@ export function handleTypeArray(
     }
 
     const typeSchemas = types.map((type) => ({ ...schema, type }));
-    const typeDefs = convertSchemasToTypes(typeSchemas, convertSchema);
+    const typeDefs: t.TypeDefinition[] = convertSchemasToTypes(typeSchemas, convertSchema);
 
     if (isNullable) {
-        return t.union([...typeDefs, t.reference("null")]);
+        return t.union([...typeDefs, t.reference("null")] as t.TypeDefinition[]);
     }
     return t.union(typeDefs);
 }

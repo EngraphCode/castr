@@ -111,7 +111,7 @@ export function getSchemaComplexity({
                 current +
                 complexityByType(schema as SchemaObject & { type: PrimitiveType }) +
                 complexityByComposite("enum") +
-                getSum(schema.enum.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
+                getSum(schema.enum.map((prop: unknown) => getSchemaComplexity({ current: 0, schema: prop })))
             );
         }
 
