@@ -11,6 +11,7 @@
 ## Progress Summary
 
 ### ✅ Completed Phase 1a: Tooling & Type Safety (131 issues fixed - 61% reduction!)
+
 - ✅ Turborepo setup and workspace standardization
 - ✅ TypeScript, Prettier, Vitest, ESLint modernization to latest versions
 - ✅ ESM migration with proper module resolution and `.js` extensions
@@ -21,17 +22,19 @@
 - ✅ Removed playground and examples workspaces
 - ✅ Fixed `generateJSDocArray.ts` (4 issues)
 - ✅ **Major complexity refactoring:**
-  - openApiToTypescript.ts: 104 → <30 (BELOW THRESHOLD!)
-  - getZodiosEndpointDefinitionList helpers: 289 lines extracted
-  - Created 29 pure helper functions across 3 files
-  - Added 47 comprehensive unit tests
+    - openApiToTypescript.ts: 104 → <30 (BELOW THRESHOLD!)
+    - getZodiosEndpointDefinitionList helpers: 289 lines extracted
+    - Created 29 pure helper functions across 3 files
+    - Added 47 comprehensive unit tests
 
 ### 🔄 Phase 1b: Final Cleanup (82 errors, 57 warnings remaining)
-- 5 critical type safety errors (no-unsafe-*)
+
+- 5 critical type safety errors (no-unsafe-\*)
 - 3 cognitive complexity violations (all close to threshold)
 - Function size/statement violations
 
-### 🎯 Current Metrics  
+### 🎯 Current Metrics
+
 - **Starting violations:** 213 errors, 57 warnings (270 total)
 - **Current violations:** 82 errors, 57 warnings (139 total)
 - **Fixed:** 131 errors (61% reduction!) ⭐
@@ -1991,6 +1994,7 @@ pnpm --filter lib build
 **Current State: 167 violations (down from 270) - 62% complete**
 
 #### ✅ Completed Items
+
 1. ✅ All tests pass - **DONE**
 2. ✅ Examples removed - **DONE**
 3. ✅ Zero vulnerabilities - **DONE**
@@ -2008,6 +2012,7 @@ pnpm --filter lib build
     - [ ] Document ~98 issues as tech debt
 
 **Progress Metrics:**
+
 - **Started:** 270 issues (213 errors, 57 warnings)
 - **Current:** 167 issues (109 errors, 58 warnings)
 - **Fixed:** 103 issues (38% reduction)
@@ -2021,13 +2026,15 @@ pnpm --filter lib build
 #### Priority 1: HIGH (Used by extraction targets - 12 issues)
 
 **1. `utils.ts` (~9 critical issues)**
-- Purpose: String manipulation, validation utilities  
+
+- Purpose: String manipulation, validation utilities
 - Used by: Extraction targets
 - Issues: explicit any (3), unsafe assignments (3), control regex (6)
 - Strategy: Fix all critical issues
 - Estimate: 30 minutes
 
 **2. `schema-complexity.ts` (~3 critical issues)**
+
 - Purpose: Schema complexity calculation
 - Used by: Extraction targets
 - Issues: non-null assertion (1), unsafe assignment (2)
@@ -2037,6 +2044,7 @@ pnpm --filter lib build
 #### Priority 2: MEDIUM (Will be rebuilt/not extracted - 54 issues)
 
 **3. `openApiToZod.ts` (~13 critical issues)**
+
 - Purpose: OpenAPI → Zod schema string generation
 - Currently used, will be rebuilt in Phase 3
 - Issues: non-null assertions (10), unsafe assignments (2), restrict-plus-operands (2)
@@ -2044,6 +2052,7 @@ pnpm --filter lib build
 - Estimate: 45 minutes
 
 **4. `openApiToTypescript.ts` (~15 critical issues)**
+
 - Purpose: OpenAPI → TypeScript type generation
 - Template generation (not extracted)
 - Issues: non-null assertions (4), unsafe assignments (8), tanu type issues (3)
@@ -2051,6 +2060,7 @@ pnpm --filter lib build
 - Estimate: 45 minutes
 
 **5. `template-context.ts` (~15 critical issues)**
+
 - Purpose: Template rendering context
 - Template support (not extracted)
 - Issues: non-null assertions (15), unsafe assignments (3)
@@ -2058,6 +2068,7 @@ pnpm --filter lib build
 - Estimate: 45 minutes
 
 **6. `generateZodClientFromOpenAPI.ts` (~6 critical issues)**
+
 - Purpose: Main code generation orchestrator
 - Orchestration (not extracted)
 - Issues: TODO comments (1), console.log (2), unsafe returns (2), explicit any (2)
@@ -2067,6 +2078,7 @@ pnpm --filter lib build
 #### Priority 3: LOW (Quick fixes - 3 issues)
 
 **7. `CodeMeta.ts` (~3 critical issues)**
+
 - Purpose: Code generation metadata
 - Internal utility
 - Issues: non-null assertions (2), ts-expect-error (1)
@@ -2074,6 +2086,7 @@ pnpm --filter lib build
 - Estimate: 15 minutes
 
 **8. `getHandlebars.ts` (~5 critical issues)**
+
 - Purpose: Handlebars template setup
 - Template support (not extracted)
 - Issues: ts-expect-error (4), explicit any (1)
@@ -2089,7 +2102,9 @@ pnpm --filter lib build
 ### Dependencies to Evaluate for Replacement
 
 #### 1. **pastable** (7 files)
+
 **Current Usage:**
+
 - `get()` - lodash.get equivalent (2 files: makeSchemaResolver.ts, getOpenApiDependencyGraph.test.ts)
 - `capitalize(), kebabToCamel(), snakeToCamel()` - string utils (utils.ts)
 - `getSum()` - array sum (schema-complexity.ts)
@@ -2098,11 +2113,13 @@ pnpm --filter lib build
 - `ObjectLiteral` type (getZodiosEndpointDefinitionList.ts)
 
 **Replacement Options:**
+
 - Keep and use (lightweight, stable, actively maintained)
 - Replace with native implementations (~100 LOC total)
 - Use lodash for subset of functions
 
 **Recommendation:** KEEP for now
+
 - Actively maintained, lightweight (25KB)
 - Used across multiple files
 - Provides well-tested utilities
@@ -2110,36 +2127,44 @@ pnpm --filter lib build
 - **Not blocking for extraction**
 
 **If replacing:**
+
 - Estimated effort: 2-3 hours
 - Native implementations needed:
-  - Object path getter (30 LOC)
-  - String case converters (20 LOC)  
-  - Array sum (5 LOC)
-  - Sorting utilities (30 LOC)
-  - Object picker (15 LOC)
+    - Object path getter (30 LOC)
+    - String case converters (20 LOC)
+    - Array sum (5 LOC)
+    - Sorting utilities (30 LOC)
+    - Object picker (15 LOC)
 
 #### 2. **tanu** (3 files - template generation only)
+
 **Usage:**
+
 - TypeScript AST manipulation
 - Only in `openApiToTypescript.ts` and related
 
 **Recommendation:** KEEP
+
 - Isolated to template generation (not extracted)
 - Working as-is
 - Alternative (TS Compiler API) is more complex
 - **Not blocking for extraction**
 
 #### 3. **degit** (1 file - `samples-generator.ts`)
+
 **Usage:**
+
 - Dev-only: Clones OpenAPI spec examples
 
 **Recommendation:** KEEP
+
 - Dev utility only, not runtime dependency
 - Not part of extraction or build
 
 ### Verdict on Dependencies
 
 **✅ ALL CURRENT DEPENDENCIES ARE ACCEPTABLE**
+
 - No blocking issues for extraction
 - Can be revisited during Phase 2/3 if needed
 - Focus remains on type safety fixes
@@ -2151,6 +2176,7 @@ pnpm --filter lib build
 **Status:** ✅ KEEP
 
 **Reasoning:**
+
 1. Provides CJS compatibility for older Node.js environments
 2. Standard npm bin convention for CLI tools
 3. Zero maintenance overhead (tiny shim)
@@ -2158,11 +2184,12 @@ pnpm --filter lib build
 5. Both entry points tested and working
 
 **Verification Commands:**
+
 ```bash
 # CJS entry (via bin.cjs)
 node lib/bin.cjs --help
 
-# ESM entry (direct)  
+# ESM entry (direct)
 node lib/dist/cli.js --help
 
 # Installed via npm (uses bin.cjs)
@@ -2176,38 +2203,41 @@ npx openapi-zod-client --help
 ### 🚨 Critical (Must Fix - Blocks Completion)
 
 #### Type Safety Errors (5 errors)
+
 1. **getZodiosEndpointDefinitionList.ts:147** - no-unsafe-argument
-   - Issue: `operation.responses[statusCode]` typed as `any`
-   - Fix: Add explicit type guard for ResponseObject | ReferenceObject
+    - Issue: `operation.responses[statusCode]` typed as `any`
+    - Fix: Add explicit type guard for ResponseObject | ReferenceObject
 
 2. **openApiToTypescript.helpers.ts:75** - no-unsafe-argument (3 errors)
-   - Lines: 75:49, 75:50, 75:98
-   - Issue: `any[]` in union/spread operations with TypeDefinition[]
-   - Fix: Add proper type annotations for composition helpers
+    - Lines: 75:49, 75:50, 75:98
+    - Issue: `any[]` in union/spread operations with TypeDefinition[]
+    - Fix: Add proper type annotations for composition helpers
 
 3. **schema-complexity.ts:114** - no-unsafe-assignment
-   - Issue: Schema property access returns `any`
-   - Fix: Add type guard or explicit schema type
+    - Issue: Schema property access returns `any`
+    - Fix: Add type guard or explicit schema type
 
 #### Cognitive Complexity (3 files - 24 points over threshold)
-1. **getOpenApiDependencyGraph.ts:12** - 31/29 (need -2)
-   - Status: Just barely over threshold
-   - Effort: ~30 min - extract 1-2 small helpers
 
-2. **schema-complexity.ts:38** - 33/29 (need -4)  
-   - Also: 117 lines (max 100), 41 statements (max 30)
-   - Effort: ~1 hour - extract property/composition handlers
+1. **getOpenApiDependencyGraph.ts:12** - 31/29 (need -2)
+    - Status: Just barely over threshold
+    - Effort: ~30 min - extract 1-2 small helpers
+
+2. **schema-complexity.ts:38** - 33/29 (need -4)
+    - Also: 117 lines (max 100), 41 statements (max 30)
+    - Effort: ~1 hour - extract property/composition handlers
 
 3. **getZodiosEndpointDefinitionList.ts:67** - 47/29 (need -18)
-   - Also: 175 lines (max 100), 66 statements (max 30)
-   - Status: Main function, already extracted 289 lines
-   - Effort: ~2 hours - extract path/method iteration logic
+    - Also: 175 lines (max 100), 66 statements (max 30)
+    - Status: Main function, already extracted 289 lines
+    - Effort: ~2 hours - extract path/method iteration logic
 
 **Total Critical Work:** ~4 hours
 
 ### ⚠️ High Priority (Should Fix)
 
 #### Function Size Violations (5 functions)
+
 - generateZodClientFromOpenAPI.ts:73 - 40 statements (max 30)
 - template-context.ts:20 - 253 lines, 41 statements
 - getOpenApiDependencyGraph.ts:12 - 33 statements
@@ -2215,16 +2245,19 @@ npx openapi-zod-client --help
 - getZodiosEndpointDefinitionList.ts:67 - 175 lines, 66 statements
 
 #### Unused Imports (5 occurrences)
+
 - getZodiosEndpointDefinitionList.ts: ParameterObject, ReferenceObject
 - openApiToTypescript.helpers.ts: isReferenceObject
 
 ### 📋 Medium Priority (Nice to Have)
 
 #### Function Return Type Issues (3 functions)
+
 - openApiToTypescript.helpers.ts: Lines 29, 133, 195
 - Issue: sonarjs/function-return-type (inconsistent return types)
 
 #### Style Warnings (57 warnings)
+
 - Mostly @typescript-eslint/consistent-type-assertions
 - no-selector-parameter suggestions (2)
 - no-non-null-assertion (2)
@@ -2236,6 +2269,7 @@ npx openapi-zod-client --help
 ## Next Steps
 
 ### Immediate (Complete Phase 1b)
+
 1. ✅ Update plan documents with lint status - **DONE**
 2. 🔄 Fix 5 critical type safety errors (~1 hour)
 3. 🔄 Reduce cognitive complexity in 3 files (~3 hours)
@@ -2243,12 +2277,12 @@ npx openapi-zod-client --help
 5. ✅ Commit and document progress
 
 ### Short Term (Optional Polish)
+
 1. Address function size violations
-2. Fix function-return-type issues  
+2. Fix function-return-type issues
 3. Reduce type assertions where reasonable
-5. 📋 Document ~98 remaining issues as acceptable tech debt
-6. ✅ Mark Phase 1 complete
-7. 🚀 Begin Phase 2 (openapi3-ts v4 upgrade)
+4. 📋 Document ~98 remaining issues as acceptable tech debt
+5. ✅ Mark Phase 1 complete
+6. 🚀 Begin Phase 2 (openapi3-ts v4 upgrade)
 
 **Phase 1 will be complete when all critical type safety issues in actively used/extracted code are resolved.**
-
