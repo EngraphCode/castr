@@ -331,7 +331,7 @@ test("CodeMeta with missing ref", () => {
             }),
             ctx,
         })
-    ).toThrowErrorMatchingInlineSnapshot(`[Error: Schema Example not found]`);
+    ).toThrowErrorMatchingInlineSnapshot(`[Error: Schema not found for $ref: Example]`);
 });
 
 test("CodeMeta with ref", () => {

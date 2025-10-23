@@ -160,7 +160,7 @@ test("getZodClientTemplateContext", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "z.instanceof(File)",
                           "type": "Body",
@@ -243,7 +243,7 @@ test("getZodClientTemplateContext", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "Order",
                           "type": "Body",
@@ -400,7 +400,7 @@ test("getZodClientTemplateContext", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "z.array(User)",
                           "type": "Body",
@@ -4155,7 +4155,7 @@ test("getZodClientTemplateContext with allReadonly", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "z.instanceof(File)",
                           "type": "Body",
@@ -4238,7 +4238,7 @@ test("getZodClientTemplateContext with allReadonly", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "Order",
                           "type": "Body",
@@ -4395,7 +4395,7 @@ test("getZodClientTemplateContext with allReadonly", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "z.array(User).readonly()",
                           "type": "Body",

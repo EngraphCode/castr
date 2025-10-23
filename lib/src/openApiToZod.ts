@@ -34,7 +34,13 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
     const refsPath = code.meta.referencedBy
         .slice(0, -1)
-        .map((prev) => (ctx ? ctx.resolver.resolveRef(prev.ref!).normalized : prev.ref!));
+        .map((prev) => {
+            if (!prev.ref) return "";
+            if (!ctx) return prev.ref;
+            const resolved = ctx.resolver.resolveRef(prev.ref);
+            return resolved?.normalized ?? prev.ref;
+        })
+        .filter(Boolean);
 
     if (isReferenceObject(schema)) {
         if (!ctx) throw new Error("Context is required");
@@ -43,6 +49,9 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
         // circular(=recursive) reference
         if (refsPath.length > 1 && refsPath.includes(schemaName)) {
+            // In circular references, code.ref and the schema must exist
+            // The non-null assertions are safe here because we're inside a reference object check
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return code.assign(ctx.zodSchemaByName[code.ref!]!);
         }
 
@@ -67,7 +76,9 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
     if (Array.isArray(schema.type)) {
         if (schema.type.length === 1) {
-            return getZodSchema({ schema: { ...schema, type: schema.type[0]! }, ctx, meta, options });
+            const firstType = schema.type[0];
+            if (!firstType) throw new Error("Schema type array has invalid first element");
+            return getZodSchema({ schema: { ...schema, type: firstType }, ctx, meta, options });
         }
 
         return code.assign(
@@ -83,7 +94,9 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
     if (schema.oneOf) {
         if (schema.oneOf.length === 1) {
-            const type = getZodSchema({ schema: schema.oneOf[0]!, ctx, meta, options });
+            const firstSchema = schema.oneOf[0];
+            if (!firstSchema) throw new Error("oneOf array has invalid first element");
+            const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
             return code.assign(type.toString());
         }
 
@@ -108,7 +121,9 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
     // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
     if (schema.anyOf) {
         if (schema.anyOf.length === 1) {
-            const type = getZodSchema({ schema: schema.anyOf[0]!, ctx, meta, options });
+            const firstSchema = schema.anyOf[0];
+            if (!firstSchema) throw new Error("anyOf array has invalid first element");
+            const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
             return code.assign(type.toString());
         }
 
@@ -122,14 +137,18 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
     if (schema.allOf) {
         if (schema.allOf.length === 1) {
-            const type = getZodSchema({ schema: schema.allOf[0]!, ctx, meta, options });
+            const firstSchema = schema.allOf[0];
+            if (!firstSchema) throw new Error("allOf array has invalid first element");
+            const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
             return code.assign(type.toString());
         }
         const { patchRequiredSchemaInLoop, noRequiredOnlyAllof, composedRequiredSchema } = inferRequiredSchema(schema);
 
         const types = noRequiredOnlyAllof.map((prop) => {
             const zodSchema = getZodSchema({ schema: prop, ctx, meta, options });
-            ctx?.resolver && patchRequiredSchemaInLoop(prop, ctx.resolver);
+            if (ctx?.resolver) {
+                patchRequiredSchemaInLoop(prop, ctx.resolver);
+            }
             return zodSchema;
         });
 
@@ -143,7 +162,8 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                 })
             );
         }
-        const first = types.at(0)!;
+        const first = types.at(0);
+        if (!first) throw new Error("allOf schemas list is empty");
         const rest = types
             .slice(1)
             .map((type) => `and(${type.toString()})`)
@@ -157,14 +177,18 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
         if (schema.enum) {
             if (schemaType === "string") {
                 if (schema.enum.length === 1) {
-                    const value = schema.enum[0];
-                    const valueString = value === null ? "null" : `"${value}"`;
+                    const value: unknown = schema.enum[0];
+                    const safeValue = typeof value === "string" ? value : JSON.stringify(value);
+                    const valueString = value === null ? "null" : `"${safeValue}"`;
                     return code.assign(`z.literal(${valueString})`);
                 }
 
-                 
                 return code.assign(
-                    `z.enum([${schema.enum.map((value) => (value === null ? "null" : `"${value}"`)).join(", ")}])`
+                    `z.enum([${schema.enum.map((value) => {
+                        if (value === null) return "null";
+                        const safeValue = typeof value === "string" ? value : JSON.stringify(value);
+                        return `"${safeValue}"`;
+                    }).join(", ")}])`
                 );
             }
 
@@ -173,8 +197,16 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
             }
 
             if (schema.enum.length === 1) {
-                const value = schema.enum[0];
-                return code.assign(`z.literal(${value === null ? "null" : value})`);
+                const value: unknown = schema.enum[0];
+                let safeValue: string | number;
+                if (value === null) {
+                    safeValue = "null";
+                } else if (typeof value === "number") {
+                    safeValue = value;
+                } else {
+                    safeValue = JSON.stringify(value);
+                }
+                return code.assign(`z.literal(${safeValue})`);
             }
 
             return code.assign(
@@ -216,22 +248,19 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
         const additionalPropsDefaultValue =
             options?.additionalPropertiesDefaultValue === undefined ? true : options?.additionalPropertiesDefaultValue;
         const additionalProps =
-            schema.additionalProperties === null || schema.additionalProperties === undefined
+            schema.additionalProperties == null
                 ? additionalPropsDefaultValue
                 : schema.additionalProperties;
         const additionalPropsSchema = additionalProps === false ? "" : ".passthrough()";
 
         if (typeof schema.additionalProperties === "object" && Object.keys(schema.additionalProperties).length > 0) {
-            return code.assign(
-                `z.record(${(
-                    getZodSchema({ schema: schema.additionalProperties, ctx, meta, options }) +
-                    getZodChain({
-                        schema: schema.additionalProperties as SchemaObject,
-                        meta: { ...meta, isRequired: true },
-                        options,
-                    })
-                ).toString()})`
-            );
+            const additionalPropsZod = getZodSchema({ schema: schema.additionalProperties, ctx, meta, options });
+            const additionalPropsChain = getZodChain({
+                schema: schema.additionalProperties as SchemaObject,
+                meta: { ...meta, isRequired: true },
+                options,
+            });
+            return code.assign(`z.record(${additionalPropsZod.toString()}${additionalPropsChain})`);
         }
 
         const hasRequiredArray = schema.required && schema.required.length > 0;
@@ -240,15 +269,21 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
         if (schema.properties) {
             const propsMap = Object.entries(schema.properties).map(([prop, propSchema]) => {
-                const propMetadata = {
+                // Determine if this property is required
+                let propIsRequired: boolean | undefined;
+                if (isPartial) {
+                    propIsRequired = true;
+                } else if (hasRequiredArray) {
+                    propIsRequired = schema.required?.includes(prop);
+                } else {
+                    propIsRequired = options?.withImplicitRequiredProps;
+                }
+
+                const propMetadata: CodeMetaData = {
                     ...meta,
-                    isRequired: isPartial
-                        ? true
-                        : (hasRequiredArray
-                          ? schema.required?.includes(prop)
-                          : options?.withImplicitRequiredProps),
+                    isRequired: propIsRequired,
                     name: prop,
-                } as CodeMetaData;
+                };
 
                 let propActualSchema = propSchema;
 
@@ -259,16 +294,16 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                     }
                 }
 
-                const propCode =
-                    getZodSchema({ schema: propSchema, ctx, meta: propMetadata, options }) +
-                    getZodChain({ schema: propActualSchema as SchemaObject, meta: propMetadata, options });
+                const propZodSchema = getZodSchema({ schema: propSchema, ctx, meta: propMetadata, options });
+                const propChain = getZodChain({ schema: propActualSchema as SchemaObject, meta: propMetadata, options });
+                const propCode = `${propZodSchema.toString()}${propChain}`;
 
-                return [prop, propCode.toString()];
+                return [prop, propCode];
             });
 
             properties =
                 "{ " +
-                propsMap.map(([prop, propSchema]) => `${wrapWithQuotesIfNeeded(prop!)}: ${propSchema}`).join(", ") +
+                propsMap.map(([prop, propSchema]) => `${wrapWithQuotesIfNeeded(prop)}: ${propSchema}`).join(", ") +
                 " }";
         }
 
@@ -328,8 +363,9 @@ const getZodChainablePresence = (schema: SchemaObject, meta?: CodeMetaData) => {
     return "";
 };
 
-// TODO OA prefixItems -> z.tuple
-const unwrapQuotesIfNeeded = (value: string | number) => {
+// NOTE: OpenAPI prefixItems support (z.tuple) is not yet implemented
+// eslint-disable-next-line sonarjs/function-return-type
+const unwrapQuotesIfNeeded = (value: string | number): string | number => {
     if (typeof value === "string" && value.startsWith('"') && value.endsWith('"')) {
         return value.slice(1, -1);
     }
@@ -337,12 +373,17 @@ const unwrapQuotesIfNeeded = (value: string | number) => {
     return value;
 };
 
-const getZodChainableDefault = (schema: SchemaObject) => {
+const getZodChainableDefault = (schema: SchemaObject): string => {
     if (schema.default !== undefined) {
-        const value = match(schema.type)
-            .with("number", "integer", () => unwrapQuotesIfNeeded(schema.default))
-            .otherwise(() => JSON.stringify(schema.default));
-        return `default(${value})`;
+        const defaultValue: unknown = schema.default;
+        const value: string | number = match(schema.type)
+            .with("number", "integer", () => {
+                if (typeof defaultValue === "number") return defaultValue;
+                if (typeof defaultValue === "string") return unwrapQuotesIfNeeded(defaultValue);
+                return JSON.stringify(defaultValue);
+            })
+            .otherwise(() => JSON.stringify(defaultValue));
+        return `default(${String(value)})`;
     }
 
     return "";

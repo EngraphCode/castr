@@ -126,7 +126,7 @@ test("getZodiosEndpointDefinitionList /store/order", () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "Order",
                           "type": "Body",
@@ -846,7 +846,7 @@ test("petstore.yaml", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "z.instanceof(File)",
                           "type": "Body",
@@ -887,7 +887,7 @@ test("petstore.yaml", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "Order",
                           "type": "Body",
@@ -971,7 +971,7 @@ test("petstore.yaml", async () => {
                   "method": "post",
                   "parameters": [
                       {
-                          "description": undefined,
+                          "description": "",
                           "name": "body",
                           "schema": "z.array(User)",
                           "type": "Body",

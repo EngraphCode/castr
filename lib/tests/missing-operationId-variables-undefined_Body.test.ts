@@ -34,7 +34,7 @@ test("missing operationId outputs variables['undefined_Body']", () => {
               "method": "put",
               "parameters": [
                   {
-                      "description": undefined,
+                      "description": "",
                       "name": "body",
                       "schema": "z.string()",
                       "type": "Body",
