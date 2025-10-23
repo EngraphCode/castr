@@ -1,4 +1,4 @@
-import { getZodClientTemplateContext, getZodiosEndpointDefinitionList } from "../src";
+import { getZodClientTemplateContext } from "../src";
 import { expect, test } from "vitest";
 import { type OpenAPIObject } from "openapi3-ts";
 

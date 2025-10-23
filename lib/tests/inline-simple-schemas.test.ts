@@ -1,6 +1,6 @@
 import { type OpenAPIObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src";
+import { generateZodClientFromOpenAPI } from "../src";
 
 test("inline-simple-schemas", async () => {
     const openApiDoc: OpenAPIObject = {

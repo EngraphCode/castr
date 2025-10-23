@@ -1,8 +1,8 @@
 # Lint Triage - Type Safety Focused
 
-## Current Status: 260 Problems (203 errors, 57 warnings)
+## Current Status: 234 Problems (178 errors, 56 warnings)
 
-**After removing unicorn rules and adding no-unsafe-argument to test rules**
+**After removing unicorn rules, adding no-unsafe-argument to test rules, and fixing 26 critical issues in extracted files**
 
 ---
 
@@ -162,13 +162,13 @@ The ESLint config already has relaxed rules for tests (lines 66-81).
 
 ## Summary
 
-| Priority                  | Count   | Action                                                 |
-| ------------------------- | ------- | ------------------------------------------------------ |
-| 🔴 Critical (Type Safety) | 187     | **Fix in extracted files (~50), baseline rest (~137)** |
-| 🟡 High (Dead Code)       | 9       | **Fix all**                                            |
-| 🟢 Medium (Code Quality)  | 27      | Baseline as tech debt                                  |
-| 🔵 Low (Style)            | 38      | Baseline as tech debt                                  |
-| **TOTAL**                 | **260** | **Fix ~60, baseline ~200**                             |
+| Priority                  | Count   | Action                                          |
+| ------------------------- | ------- | ----------------------------------------------- |
+| 🔴 Critical (Type Safety) | 161     | **✅ Fixed 26 in extracted files, ~135 remain** |
+| 🟡 High (Dead Code)       | 9       | **Fix all**                                     |
+| 🟢 Medium (Code Quality)  | 27      | Baseline as tech debt                           |
+| 🔵 Low (Style)            | 38      | Baseline as tech debt                           |
+| **TOTAL**                 | **234** | **Fix dead code (~9), baseline ~225**           |
 
 ---
 
@@ -177,13 +177,13 @@ The ESLint config already has relaxed rules for tests (lines 66-81).
 **Lint must pass with:**
 
 - [x] Test-specific rules configured (appropriate relaxed rules for tests)
-- [ ] Critical type safety issues fixed in extracted files:
-    - [ ] `getZodiosEndpointDefinitionList.ts`
-    - [ ] `makeSchemaResolver.ts`
-    - [ ] `getOpenApiDependencyGraph.ts`
-    - [ ] `isReferenceObject.ts`
-- [ ] All unused vars/imports removed
-- [ ] Remaining ~210 issues documented as tech debt (not blocking)
+- [x] Critical type safety issues fixed in extracted files:
+    - [x] `getZodiosEndpointDefinitionList.ts` - Fixed 15 critical issues
+    - [x] `makeSchemaResolver.ts` - Fixed 7 critical issues
+    - [x] `getOpenApiDependencyGraph.ts` - Fixed 3 critical issues
+    - [x] `isReferenceObject.ts` - Fixed 1 critical issue
+- [ ] All unused vars/imports removed (9 remaining in test files)
+- [x] Remaining ~225 issues documented as tech debt (not blocking)
 
 **Then proceed to Phase 2** (openapi3-ts v4)
 
