@@ -36,7 +36,10 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
     }
 
     const wrapWithLazyIfNeeded = (schemaName: string) => {
-        const [code, ref] = [result.zodSchemaByName[schemaName]!, result.resolver.resolveSchemaName(schemaName)?.ref];
+        const [code, ref] = [result.zodSchemaByName[schemaName], result.resolver.resolveSchemaName(schemaName)?.ref];
+        if (!code) {
+            throw new Error(`Zod schema not found for name: ${schemaName}`);
+        }
         const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
         if (isCircular) {
             data.circularTypeByName[schemaName] = true;
@@ -352,7 +355,7 @@ export type TemplateContextOptions = {
      *
      * @default 4
      */
-    complexityThreshold?: number;
+    complexityThreshold?: number | undefined;
     /**
      * when defined as "auto-correct", will automatically use `default` as fallback for `response` when no status code was declared
      *
@@ -363,13 +366,13 @@ export type TemplateContextOptions = {
      *
      * @default "spec-compliant"
      */
-    defaultStatusBehavior?: "spec-compliant" | "auto-correct";
-    willSuppressWarnings?: boolean;
+    defaultStatusBehavior?: "spec-compliant" | "auto-correct" | undefined;
+    willSuppressWarnings?: boolean | undefined;
     /**
      * when true, will add z.describe(xxx)
      * @see https://github.com/astahmer/openapi-zod-client/pull/143
      */
-    withDescription?: boolean;
+    withDescription?: boolean | undefined;
     /**
      * A function to refine the default endpoint definition. Mostly useful for adding fields from OperationObject
      * that aren't defined yet in the default definition.
@@ -377,37 +380,37 @@ export type TemplateContextOptions = {
     endpointDefinitionRefiner?: (
         defaultDefinition: EndpointDefinitionWithRefs,
         operation: OperationObject
-    ) => EndpointDefinitionWithRefs;
+    ) => EndpointDefinitionWithRefs | undefined;
 
     /**
      * When true, all generated objects and arrays will be readonly.
      */
-    allReadonly?: boolean;
+    allReadonly?: boolean | undefined;
 
     /**
      * When true, all generated zod objects will be strict - meaning no unknown keys will be allowed
      */
-    strictObjects?: boolean;
+    strictObjects?: boolean | undefined;
 
     /**
      * Set default value when additionalProperties is not provided. Default to true.
      */
-    additionalPropertiesDefaultValue?: boolean | SchemaObject;
+    additionalPropertiesDefaultValue?: boolean | SchemaObject | undefined;
 
     /**
      * When true, returns a "responses" array with all responses (both success and errors)
      */
-    withAllResponses?: boolean;
+    withAllResponses?: boolean | undefined;
 
     /**
      * When true, prevents using the exact same name for the same type
      * For example, if 2 schemas have the same type, but different names, export each as separate schemas
      * If 2 schemas have the same name but different types, export subsequent names with numbers appended
      */
-    exportAllNamedSchemas?: boolean;
+    exportAllNamedSchemas?: boolean | undefined;
 
     /**
      * A function that runs in the schema conversion process to refine the schema before it's converted to a Zod schema.
      */
-    schemaRefiner?: <T extends SchemaObject | ReferenceObject>(schema: T, parentMeta?: CodeMetaData) => T;
+    schemaRefiner?: <T extends SchemaObject | ReferenceObject>(schema: T, parentMeta?: CodeMetaData) => T | undefined;
 };

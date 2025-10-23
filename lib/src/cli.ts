@@ -107,32 +107,49 @@ program
         const withAlias = toBoolean(options.withAlias, true);
         const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
 
-        await generateZodClientFromOpenAPI({
+        // Parse and validate CLI options
+        const groupStrategy = options.groupStrategy as "none" | "tag" | "method" | "tag-file" | "method-file" | undefined;
+        const complexityThreshold = options.complexityThreshold !== undefined 
+            ? parseInt(options.complexityThreshold, 10) 
+            : undefined;
+        const defaultStatusBehavior = options.defaultStatus as "spec-compliant" | "auto-correct" | undefined;
+
+        // Build generation options (for exactOptionalPropertyTypes: only include defined values)
+        const generationOptions: Record<string, unknown> = {
+            withAlias,
+            additionalPropertiesDefaultValue,
+        };
+
+        if (options.baseUrl) generationOptions["baseUrl"] = options.baseUrl;
+        if (options.apiClientName) generationOptions["apiClientName"] = options.apiClientName;
+        if (options.errorExpr) generationOptions["isErrorStatus"] = options.errorExpr;
+        if (options.successExpr) generationOptions["isMainResponseStatus"] = options.successExpr;
+        if (options.exportSchemas) generationOptions["shouldExportAllSchemas"] = options.exportSchemas;
+        if (options.exportTypes) generationOptions["shouldExportAllTypes"] = options.exportTypes;
+        if (options.mediaTypeExpr) generationOptions["isMediaTypeAllowed"] = options.mediaTypeExpr;
+        if (options.implicitRequired) generationOptions["withImplicitRequiredProps"] = options.implicitRequired;
+        if (options.withDeprecated) generationOptions["withDeprecatedEndpoints"] = options.withDeprecated;
+        if (options.withDocs) generationOptions["withDocs"] = options.withDocs;
+        if (groupStrategy) generationOptions["groupStrategy"] = groupStrategy;
+        if (complexityThreshold !== undefined) generationOptions["complexityThreshold"] = complexityThreshold;
+        if (defaultStatusBehavior) generationOptions["defaultStatusBehavior"] = defaultStatusBehavior;
+        if (options.withDescription) generationOptions["withDescription"] = options.withDescription;
+        if (options.allReadonly) generationOptions["allReadonly"] = options.allReadonly;
+        if (options.strictObjects) generationOptions["strictObjects"] = options.strictObjects;
+
+        // Build generation args (only include defined properties)
+        // Using Record<string, unknown> to dynamically build options from CLI
+        // Type assertion is safe because we're matching the expected structure
+        const generationArgs: Record<string, unknown> = {
             openApiDoc,
             distPath,
-            prettierConfig,
-            templatePath: options.template,
-            options: {
-                withAlias,
-                baseUrl: options.baseUrl,
-                apiClientName: options.apiClientName,
-                isErrorStatus: options.errorExpr,
-                isMainResponseStatus: options.successExpr,
-                shouldExportAllSchemas: options.exportSchemas,
-                shouldExportAllTypes: options.exportTypes,
-                isMediaTypeAllowed: options.mediaTypeExpr,
-                withImplicitRequiredProps: options.implicitRequired,
-                withDeprecatedEndpoints: options.withDeprecated,
-                withDocs: options.withDocs,
-                groupStrategy: options.groupStrategy,
-                complexityThreshold: options.complexityThreshold,
-                defaultStatusBehavior: options.defaultStatus,
-                withDescription: options.withDescription,
-                allReadonly: options.allReadonly,
-                strictObjects: options.strictObjects,
-                additionalPropertiesDefaultValue,
-            },
-        });
+            options: generationOptions,
+        };
+
+        if (prettierConfig) generationArgs["prettierConfig"] = prettierConfig;
+        if (options.template) generationArgs["templatePath"] = options.template;
+
+        await generateZodClientFromOpenAPI(generationArgs as Parameters<typeof generateZodClientFromOpenAPI>[0]);
         console.log(`Done generating <${distPath}> !`);
     });
 
