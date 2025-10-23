@@ -304,3 +304,71 @@ export function wrapObjectTypeForOutput(
     return t.type(name, wrappedType);
 }
 
+/**
+ * Handles oneOf composition by creating a union type
+ * Returns single schema directly if only one item
+ */
+export function handleOneOf(
+    schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+    isNullable: boolean,
+    convertSchema: (schema: SchemaObject | ReferenceObject) => t.TypeDefinition
+): t.TypeDefinitionObject {
+    if (schemas.length === 1) {
+        return convertSchema(schemas[0]!) as t.TypeDefinitionObject;
+    }
+
+    const types = convertSchemasToTypes(schemas, convertSchema);
+    if (isNullable) {
+        return t.union([...types, t.reference("null")]);
+    }
+    return t.union(types);
+}
+
+/**
+ * Handles anyOf composition by creating union of value OR array
+ * Special OpenAPI semantic: T | T[]
+ */
+export function handleAnyOf(
+    schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+    isNullable: boolean,
+    shouldWrapReadonly: boolean,
+    convertSchema: (schema: SchemaObject | ReferenceObject) => t.TypeDefinition
+): t.TypeDefinitionObject {
+    if (schemas.length === 1) {
+        return convertSchema(schemas[0]!) as t.TypeDefinitionObject;
+    }
+
+    const types = convertSchemasToTypes(schemas, convertSchema);
+    const oneOf = t.union(types);
+    const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), shouldWrapReadonly);
+
+    const unionParts = [oneOf, arrayOfOneOf];
+    if (isNullable) {
+        unionParts.push(t.reference("null"));
+    }
+
+    return t.union(unionParts);
+}
+
+/**
+ * Handles array of types (OpenAPI 3.1 feature) by creating a union
+ */
+export function handleTypeArray(
+    types: ReadonlyArray<string>,
+    schema: SchemaObject,
+    isNullable: boolean,
+    convertSchema: (schema: SchemaObject) => t.TypeDefinition
+): t.TypeDefinitionObject {
+    if (types.length === 1) {
+        return convertSchema({ ...schema, type: types[0]! }) as t.TypeDefinitionObject;
+    }
+
+    const typeSchemas = types.map((type) => ({ ...schema, type }));
+    const typeDefs = convertSchemasToTypes(typeSchemas, convertSchema);
+
+    if (isNullable) {
+        return t.union([...typeDefs, t.reference("null")]);
+    }
+    return t.union(typeDefs);
+}
+

@@ -12,10 +12,13 @@ import {
     buildObjectType,
     convertObjectProperties,
     convertSchemasToTypes,
+    handleAnyOf,
     handleArraySchema,
     handleBasicPrimitive,
+    handleOneOf,
     handlePrimitiveEnum,
     handleReferenceObject,
+    handleTypeArray,
     isPrimitiveType,
     maybeWrapReadonly,
     resolveAdditionalPropertiesType,
@@ -65,25 +68,12 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
         }
 
         if (Array.isArray(schema.type)) {
-            if (schema.type.length === 1) {
-                return getTypescriptFromOpenApi({
-                    schema: { ...schema, type: schema.type[0]! },
-                    ctx,
-                    meta,
-                    options,
-                });
-            }
-
-            const types = convertSchemasToTypes(
-                schema.type.map((type) => ({ ...schema, type })),
+            return handleTypeArray(
+                schema.type,
+                schema,
+                schema.nullable ?? false,
                 (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
             );
-
-            if (schema.nullable) {
-                return t.union([...types, t.reference("null")]);
-            }
-
-            return t.union(types);
         }
 
         if (schema.type === "null") {
@@ -91,40 +81,21 @@ TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
         }
 
         if (schema.oneOf) {
-            if (schema.oneOf.length === 1) {
-                return getTypescriptFromOpenApi({ schema: schema.oneOf[0]!, ctx, meta, options });
-            }
-
-            const types = convertSchemasToTypes(schema.oneOf, (s) =>
-                getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
+            return handleOneOf(
+                schema.oneOf,
+                schema.nullable ?? false,
+                (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
             );
-
-            if (schema.nullable) {
-                return t.union([...types, t.reference("null")]);
-            }
-
-            return t.union(types);
         }
 
         // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
         if (schema.anyOf) {
-            if (schema.anyOf.length === 1) {
-                return getTypescriptFromOpenApi({ schema: schema.anyOf[0]!, ctx, meta, options });
-            }
-
-            const types = convertSchemasToTypes(schema.anyOf, (s) =>
-                getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
+            return handleAnyOf(
+                schema.anyOf,
+                schema.nullable ?? false,
+                options?.allReadonly ?? false,
+                (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
             );
-
-            const oneOf = t.union(types);
-            const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), options?.allReadonly ?? false);
-
-            const unionParts = [oneOf, arrayOfOneOf];
-            if (schema.nullable) {
-                unionParts.push(t.reference("null"));
-            }
-
-            return t.union(unionParts);
         }
 
         if (schema.allOf) {
