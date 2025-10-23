@@ -34,6 +34,7 @@ export function stringEnumValueToZodCode(value: unknown): string {
  * Converts a non-string enum value to a Zod literal value
  * Handles null, numbers, and complex values
  */
+// eslint-disable-next-line sonarjs/function-return-type
 export function nonStringEnumValueToZodLiteral(value: unknown): string | number {
     if (value === null) {
         return "null";
@@ -80,7 +81,12 @@ export function generateNonStringEnumZodCode(enumValues: unknown[]): string {
         return `z.literal(${safeValue})`;
     }
 
-    const literals = enumValues.map((value) => `z.literal(${value === null ? "null" : value})`).join(", ");
+    const literals = enumValues
+        .map((value) => {
+            const safeValue = nonStringEnumValueToZodLiteral(value);
+            return `z.literal(${safeValue})`;
+        })
+        .join(", ");
     return `z.union([${literals}])`;
 }
 
