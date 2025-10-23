@@ -136,32 +136,32 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
             }
 
             // result is complex and would benefit from being re-used
-            let formatedName = safeName;
+            let formattedName = safeName;
 
             // iteratively add suffix number to prevent overwriting
             let reuseCount = 1;
             let isVarNameAlreadyUsed = false;
-            while ((isVarNameAlreadyUsed = Boolean(ctx.zodSchemaByName[formatedName]))) {
+            while ((isVarNameAlreadyUsed = Boolean(ctx.zodSchemaByName[formattedName]))) {
                 if (isVarNameAlreadyUsed) {
-                    if (options?.exportAllNamedSchemas && ctx.schemasByName?.[result]?.includes(formatedName)) {
-                        return formatedName;
-                    } else if (ctx.zodSchemaByName[formatedName] === safeName) {
-                        return formatedName;
+                    if (options?.exportAllNamedSchemas && ctx.schemasByName?.[result]?.includes(formattedName)) {
+                        return formattedName;
+                    } else if (ctx.zodSchemaByName[formattedName] === safeName) {
+                        return formattedName;
                     } else {
                         reuseCount += 1;
-                        formatedName = `${safeName}__${reuseCount}`;
+                        formattedName = `${safeName}__${reuseCount}`;
                     }
                 }
             }
 
-            ctx.zodSchemaByName[formatedName] = result;
-            ctx.schemaByName[result] = formatedName;
+            ctx.zodSchemaByName[formattedName] = result;
+            ctx.schemaByName[result] = formattedName;
 
             if (options?.exportAllNamedSchemas && ctx.schemasByName) {
-                ctx.schemasByName[result] = (ctx.schemasByName[result] ?? []).concat(formatedName);
+                ctx.schemasByName[result] = (ctx.schemasByName[result] ?? []).concat(formattedName);
             }
 
-            return formatedName;
+            return formattedName;
         }
 
         // result is a reference to another schema
@@ -302,9 +302,9 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
 
                     // resolve ref if needed, and fallback to default (unknown) value if needed
                     paramSchema = paramSchema
-                        ? (isReferenceObject(paramSchema)
-                              ? ctx.resolver.getSchemaByRef(paramSchema.$ref)
-                              : paramSchema)
+                        ? isReferenceObject(paramSchema)
+                            ? ctx.resolver.getSchemaByRef(paramSchema.$ref)
+                            : paramSchema
                         : {};
 
                     const paramCode = getZodSchema({

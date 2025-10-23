@@ -1,4 +1,14 @@
 {
-    "cSpell.words": ["apidevtools", "iconify", "pastable", "petstore", "preconstruct", "sonarjs", "Stahmer", "zodios"],
+    "cSpell.words": [
+        "apidevtools",
+        "iconify",
+        "pastable",
+        "petstore",
+        "preconstruct",
+        "sonarjs",
+        "Stahmer",
+        "tanu",
+        "zodios"
+    ],
     "typescript.tsdk": "node_modules/typescript/lib"
 }

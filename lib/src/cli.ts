@@ -2,18 +2,54 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import SwaggerParser from "@apidevtools/swagger-parser";
-import { cac } from "cac";
+import { Command } from "commander";
 import type { OpenAPIObject } from "openapi3-ts";
-import { safeJSONParse } from "pastable/server";
 import { resolveConfig } from "prettier";
 
 import { toBoolean } from "./utils.js";
 import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI.js";
 
-const cli = cac("openapi-zod-client");
-const packageJson = safeJSONParse(readFileSync(resolve(__dirname, "../../package.json"), "utf8"));
+interface CliOptions {
+    output?: string;
+    template?: string;
+    prettier?: string;
+    baseUrl?: string;
+    withAlias?: boolean;
+    apiClientName?: string;
+    errorExpr?: string;
+    successExpr?: string;
+    mediaTypeExpr?: string;
+    exportSchemas?: boolean;
+    exportTypes?: boolean;
+    implicitRequired?: boolean;
+    withDeprecated?: boolean;
+    withDocs?: boolean;
+    withDescription?: boolean;
+    groupStrategy?: string;
+    complexityThreshold?: string;
+    defaultStatus?: string;
+    allReadonly?: boolean;
+    strictObjects?: boolean;
+    additionalPropsDefaultValue?: boolean;
+}
 
-cli.command("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
+function getPackageVersion(): string {
+    try {
+        const packageJsonContent = readFileSync(resolve(__dirname, "../../package.json"), "utf8");
+        const parsed = JSON.parse(packageJsonContent) as { version?: unknown };
+        return typeof parsed.version === "string" ? parsed.version : "0.0.0";
+    } catch {
+        return "0.0.0";
+    }
+}
+
+const program = new Command();
+
+program
+    .name("openapi-zod-client")
+    .description("Generate a Zodios API client from an OpenAPI specification")
+    .version(getPackageVersion())
+    .argument("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
     .option("-o, --output <path>", "Output path for the zodios api client ts file (defaults to `<input>.client.ts`)")
     .option(
         "-t, --template <path>",
@@ -21,8 +57,8 @@ cli.command("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
     )
     .option("-p, --prettier <path>", "Prettier config path that will be used to format the output client file")
     .option("-b, --base-url <url>", "Base url for the api")
-    .option("--no-with-alias", "With alias as api client methods")
-    .option("-a, --with-alias", "With alias as api client methods", { default: true })
+    .option("--no-with-alias", "Disable alias as api client methods")
+    .option("-a, --with-alias", "With alias as api client methods", true)
     .option(
         "--api-client-name <name>",
         "when using the default `template.hbs`, allow customizing the `export const {apiClientName}`"
@@ -39,34 +75,35 @@ cli.command("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
     .option("--with-description", "when true, will add z.describe(xxx)")
     .option("--with-docs", "when true, will add jsdoc comments to generated types")
     .option(
-        "--group-strategy",
+        "--group-strategy <strategy>",
         "groups endpoints by a given strategy, possible values are: 'none' | 'tag' | 'method' | 'tag-file' | 'method-file'"
     )
     .option(
-        "--complexity-threshold",
+        "--complexity-threshold <number>",
         "schema complexity threshold to determine which one (using less than `<` operator) should be assigned to a variable"
     )
     .option(
-        "--default-status",
+        "--default-status <behavior>",
         "when defined as `auto-correct`, will automatically use `default` as fallback for `response` when no status code was declared"
     )
     .option("--all-readonly", "when true, all generated objects and arrays will be readonly")
     .option("--export-types", "When true, will defined types for all object schemas in `#/components/schemas`")
     .option(
-        "--additional-props-default-value",
+        "--additional-props-default-value [value]",
         "Set default value when additionalProperties is not provided. Default to true.",
-        { default: true }
+        true
     )
     .option(
-        "--strict-objects",
+        "--strict-objects [value]",
         "Use strict validation for objects so we don't allow unknown keys. Defaults to false.",
-        { default: false }
+        false
     )
-    .action(async (input: string, options: any) => {
+    .action(async (input: string, options: CliOptions) => {
         console.log("Retrieving OpenAPI document from", input);
-        const openApiDoc = (await SwaggerParser.bundle(input)) as OpenAPIObject;
-        const prettierConfig = await resolveConfig(options.prettier || "./");
-        const distPath = options.output || input + ".client.ts";
+        // SwaggerParser uses its own OpenAPI types, cast to openapi3-ts types
+        const openApiDoc = await SwaggerParser.bundle(input) as unknown as OpenAPIObject;
+        const prettierConfig = await resolveConfig(options.prettier ?? "./");
+        const distPath = options.output ?? input + ".client.ts";
         const withAlias = toBoolean(options.withAlias, true);
         const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
 
@@ -99,7 +136,4 @@ cli.command("<input>", "path/url to OpenAPI/Swagger document as json/yaml")
         console.log(`Done generating <${distPath}> !`);
     });
 
-cli.version(packageJson.version);
-cli.help();
-
-cli.parse();
+program.parse();

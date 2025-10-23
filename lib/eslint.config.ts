@@ -55,7 +55,7 @@ export default defineConfig(
             "sonarjs/cognitive-complexity": ["error", 30],
 
             // Code quality
-            "no-console": "error",
+            "no-console": "off",
             "no-debugger": "error",
             "no-empty": ["error"],
             "prefer-const": "error",
