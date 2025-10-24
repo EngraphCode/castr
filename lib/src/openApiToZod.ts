@@ -20,11 +20,21 @@ type ConversionArgs = {
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
-// At this point have we narrowed schema to be a valid schema object and non-null, or could it be null, or could it be a reference object?
+/**
+ * Convert an OpenAPI Schema to a Zod schema
+ *
+ * Per OAS 3.0+ spec: A Schema is always an object (possibly empty), never null.
+ * The 'nullable' property indicates the VALUE can be null, not the schema itself.
+ */
 export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, options }: ConversionArgs): CodeMeta {
-    // Can't a schema object legitimately be null in the OpenAPI spec
+    // Per OpenAPI spec: Schema is always an object, never null
+    // Empty schema {} is valid and represents "any value" (z.unknown())
     if (!$schema) {
-        throw new Error($schema === null ? "Schema is null (not sure this is wrong)" : "Schema is required");
+        throw new Error(
+            $schema === null
+                ? "Invalid OpenAPI specification: Schema cannot be null. Use 'nullable: true' to indicate null values."
+                : "Schema is required"
+        );
     }
 
     const schema = options?.schemaRefiner?.($schema, inheritedMeta) ?? $schema;

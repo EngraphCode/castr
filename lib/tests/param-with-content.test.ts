@@ -26,7 +26,10 @@ test("param-with-content", async () => {
                         {
                             name: "wrong param",
                             in: "query",
-                            content: { "*/*": { $ref: "#/components/schemas/test2" } },
+                            content: {
+                                // CORRECT: $ref is inside the schema property
+                                "*/*": { schema: { $ref: "#/components/schemas/test2" } },
+                            },
                         },
                         {
                             name: "Accept-Language",

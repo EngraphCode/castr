@@ -150,9 +150,17 @@ export function processParameter(
             throw new Error(`No content with media type for param ${paramItem.name}: ${matchingMediaType}`);
         }
 
-        // Fallback for OpenAPI spec violations where $ref is at wrong level
-        // @ts-expect-error - OpenAPI spec violations: some docs incorrectly place $ref at mediaTypeObject level
-        paramSchema = mediaTypeObject?.schema ?? mediaTypeObject;
+        // Per OAS 3.0 spec: MediaType.schema must be Schema | Reference
+        // $ref should be inside the schema property, not at the MediaType level
+        if (!mediaTypeObject.schema) {
+            throw new Error(
+                `Invalid OpenAPI specification: mediaTypeObject for parameter "${paramItem.name}" ` +
+                    `must have a 'schema' property. Found ${Object.keys(mediaTypeObject).join(", ")}. ` +
+                    `See: https://spec.openapis.org/oas/v3.0.3#media-type-object`
+            );
+        }
+
+        paramSchema = mediaTypeObject.schema;
     } else if (paramItem.schema) {
         paramSchema = isReferenceObject(paramItem.schema)
             ? ctx.resolver.getSchemaByRef(paramItem.schema.$ref)
