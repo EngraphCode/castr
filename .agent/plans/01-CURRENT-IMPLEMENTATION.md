@@ -561,10 +561,22 @@ Tasks MUST be executed in this order due to dependencies:
 
 ### 1.9 Zodios-Free Template Strategy with Full Validation (ENGRAPH-OPTIMIZED)
 
-**Status:** Pending  
+**Status:** 🔄 IN PROGRESS (Phase B Complete - TDD Red ✅)  
 **Priority:** MEDIUM-HIGH (Engraph SDK critical feature)  
-**Estimated Time:** 6-8 hours (enhanced scope)  
+**Estimated Time:** 6-10 hours (enhanced scope)  
 **Dependencies:** None (can be done anytime)
+
+**Progress:**
+
+- ✅ 1.9.0 - Pre-flight check (quality gates verified)
+- ✅ 1.9.1 - Phase A: Document & Design (TEMPLATE_STRATEGY.md in progress)
+- ✅ 1.9.2 - Phase B: Write 12 failing tests (TDD Red - **12/14 tests FAILING** ✅)
+- ⏳ 1.9.3 - Phase C: Implement template
+- ⏳ 1.9.4 - Phase C: Add CLI flags
+- ⏳ 1.9.5 - Phase C: Update options handling
+- ⏳ 1.9.6 - Phase D: Run tests (TDD Green)
+- ⏳ 1.9.7 - Phase E: Documentation
+- ⏳ 1.9.8 - Final validation & commit
 
 **Acceptance Criteria:**
 
@@ -587,7 +599,142 @@ Tasks MUST be executed in this order due to dependencies:
 - [ ] Examples added for each template use case (including Engraph pattern)
 - [ ] Programmatic API documented for advanced usage
 
-**Implementation Steps (TDD Approach):**
+---
+
+## Detailed Sub-Task Breakdown
+
+### 1.9.0 Pre-flight Check ✅ COMPLETE
+
+**Status:** Complete  
+**Time Taken:** 10 minutes  
+**TDD Phase:** Setup
+
+**Completed Activities:**
+
+- ✅ Verified all quality gates passing (format, build, type-check, test)
+- ✅ Reviewed existing template structure (default.hbs, schemas-only.hbs, grouped.hbs)
+- ✅ Understood template context data structure
+- ✅ Updated vitest.config.ts to support subdirectory tests (`src/**/*.test.ts`)
+
+**Outcome:** Ready to proceed with TDD implementation
+
+---
+
+### 1.9.1 Phase A: Document & Design ✅ IN PROGRESS
+
+**Status:** Partially Complete  
+**Priority:** HIGH  
+**Estimated Time:** 30 minutes  
+**Dependencies:** Task 1.9.0 complete
+
+**Acceptance Criteria:**
+
+- [ ] TEMPLATE_STRATEGY.md document created
+- [ ] All 5 existing templates documented (purpose, use case, dependencies)
+- [ ] New template structure designed with clear sections
+- [ ] Data requirements identified
+- [ ] Design matches examples in TASK_1.9_ENGRAPH_ENHANCEMENTS.md
+
+**Implementation Steps:**
+
+1. **Create `.agent/analysis/TEMPLATE_STRATEGY.md`:**
+    - Document existing templates (default, grouped, grouped-common, grouped-index, schemas-only)
+    - Document when to use each template
+    - Design new template structure with 5 sections:
+        1. Schemas (like schemas-only.hbs)
+        2. Endpoints with full validation
+        3. Validation helpers (optional, --with-validation-helpers)
+        4. Schema registry builder (optional, --with-schema-registry)
+        5. MCP tools (always included)
+
+2. **Identify data requirements from template context:**
+    - `schemas` - All Zod schema definitions
+    - `endpoints` - Array of endpoint metadata with:
+        - `method`, `path`, `operationId`, `description`
+        - `parameters` - Array grouped by type (Path, Query, Header, Body)
+        - `responses` - All response schemas by status code
+    - `withValidationHelpers` - Boolean flag
+    - `withSchemaRegistry` - Boolean flag
+
+**Validation Steps:**
+
+- [ ] TEMPLATE_STRATEGY.md exists and is comprehensive
+- [ ] Design covers all required features
+- [ ] Data structure understood
+
+---
+
+### 1.9.2 Phase B: Write ALL 12 Failing Tests FIRST ✅ COMPLETE
+
+**Status:** ✅ Complete  
+**Priority:** CRITICAL (TDD Red Phase)  
+**Time Taken:** 1.5 hours  
+**Dependencies:** Task 1.9.1 complete
+
+**Acceptance Criteria:**
+
+- [x] ✅ Test file created: `lib/src/templates/schemas-with-metadata.test.ts`
+- [x] ✅ All 14 test cases written (12 feature tests + 2 negative tests)
+- [x] ✅ Tests use proper OpenAPI spec fixtures
+- [x] ✅ Tests assert correct output structure
+- [x] ✅ **12/14 tests FAIL** when first run (TDD Red - proves tests work)
+- [x] ✅ 2/14 tests PASS (correctly test absence of features)
+- [x] ✅ Tests follow RULES.md standards (test behavior, not implementation)
+- [x] ✅ vitest.config.ts updated to find subdirectory tests
+
+**Test Coverage:**
+
+1. ✅ Should generate schemas without Zodios import (FAILING ❌)
+2. ✅ Should export schemas object with all schemas (FAILING ❌)
+3. ✅ Should export endpoints array directly without makeApi (FAILING ❌)
+4. ✅ Should generate MCP-compatible tool definitions (FAILING ❌)
+5. ✅ Should work with --no-client CLI flag (FAILING ❌)
+6. ✅ Should generate full request validation schemas (FAILING ❌)
+7. ✅ Should generate full response validation including errors (FAILING ❌)
+8. ✅ Should generate validation helpers when flag is enabled (FAILING ❌)
+9. ✅ Should NOT generate validation helpers when flag is disabled (PASSING ✅)
+10. ✅ Should generate schema registry builder when flag is enabled (FAILING ❌)
+11. ✅ Should NOT generate schema registry builder when flag is disabled (PASSING ✅)
+12. ✅ Should generate STRICT types with NO 'any' (FAILING ❌)
+13. ✅ Should generate FAIL-FAST validation using .parse() (FAILING ❌)
+14. ✅ Should generate STRICT schemas with .strict() by default (FAILING ❌)
+
+**Validation:**
+
+```bash
+cd /Users/jim/code/personal/openapi-zod-client/lib
+pnpm test -- --run src/templates/schemas-with-metadata.test.ts
+# Result: 12 FAILING, 2 PASSING ✅ TDD Red Phase Success
+```
+
+**Outcome:** Ready for implementation phase (TDD Green)
+
+---
+
+### 1.9.3 Phase C: Implement schemas-with-metadata.hbs Template ⏳ PENDING
+
+**Status:** Pending  
+**Priority:** CRITICAL (TDD Green Phase)  
+**Estimated Time:** 2-3 hours  
+**Dependencies:** Tasks 1.9.0, 1.9.1, 1.9.2 complete
+
+**Acceptance Criteria:**
+
+- [ ] Template file created: `lib/src/templates/schemas-with-metadata.hbs`
+- [ ] Template generates schemas WITHOUT Zodios import
+- [ ] Template exports `schemas` object with all schemas
+- [ ] Template exports `endpoints` array with full metadata
+- [ ] Template generates full request validation (path, query, header, body)
+- [ ] Template generates full response validation (all status codes)
+- [ ] Template conditionally generates validation helpers (`{{#if withValidationHelpers}}`)
+- [ ] Template conditionally generates schema registry builder (`{{#if withSchemaRegistry}}`)
+- [ ] Template always generates MCP tools
+- [ ] Generated code uses STRICT types (no `any`, only `unknown`)
+- [ ] Generated code uses `.strict()` for objects
+- [ ] Generated code uses `.parse()` (fail-fast)
+- [ ] At least 8 of the 12 failing tests now pass
+
+**Implementation Steps:**
 
 **Phase A: Document & Design (30 mins)**
 
@@ -1577,13 +1724,343 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
+### 1.9.4 Phase C: Add CLI Flags Support ⏳ PENDING
+
+**Status:** Pending  
+**Priority:** HIGH  
+**Estimated Time:** 30 minutes  
+**Dependencies:** Task 1.9.3 complete
+
+**Acceptance Criteria:**
+
+- [ ] CLI accepts `--template schemas-with-metadata`
+- [ ] CLI accepts `--no-client` flag (uses schemas-with-metadata)
+- [ ] CLI accepts `--with-validation-helpers` flag
+- [ ] CLI accepts `--with-schema-registry` flag
+- [ ] Flags pass options to generation function
+- [ ] `--help` shows new options
+
+**Implementation Steps:**
+
+1. **Update `lib/src/cli.ts`:**
+
+    ```typescript
+    program
+        .option("--template <name>", "Template: default | grouped | schemas-only | schemas-with-metadata")
+        .option("--no-client", "Skip HTTP client (uses schemas-with-metadata)")
+        .option("--with-validation-helpers", "Generate validateRequest/validateResponse functions")
+        .option("--with-schema-registry", "Generate buildSchemaRegistry helper");
+
+    // In action handler:
+    const options = {
+        template: program.opts().template,
+        noClient: program.opts().noClient === true,
+        withValidationHelpers: program.opts().withValidationHelpers === true,
+        withSchemaRegistry: program.opts().withSchemaRegistry === true,
+    };
+    ```
+
+**Validation Steps:**
+
+- [ ] `--help` lists all new flags
+- [ ] Each flag works correctly
+- [ ] Flag combinations work
+
+---
+
+### 1.9.5 Phase C: Update generateZodClientFromOpenAPI Options ⏳ PENDING
+
+**Status:** Pending  
+**Priority:** HIGH  
+**Estimated Time:** 20 minutes  
+**Dependencies:** Task 1.9.4 complete
+
+**Acceptance Criteria:**
+
+- [ ] `GenerateZodClientFromOpenAPIOptions` type includes new options
+- [ ] `noClient` option switches template to `schemas-with-metadata`
+- [ ] New options passed to template context
+- [ ] Type-safe option handling
+
+**Implementation Steps:**
+
+1. **Update `lib/src/template-context.types.ts`:**
+
+    ```typescript
+    export interface GenerateZodClientFromOpenAPIOptions {
+        // ...existing options
+        noClient?: boolean;
+        withValidationHelpers?: boolean;
+        withSchemaRegistry?: boolean;
+    }
+    ```
+
+2. **Update `lib/src/generateZodClientFromOpenAPI.ts`:**
+
+    ```typescript
+    if (options.noClient && !options.template) {
+        options.template = "schemas-with-metadata";
+    }
+
+    const context = {
+        // ...existing context
+        withValidationHelpers: options.withValidationHelpers ?? false,
+        withSchemaRegistry: options.withSchemaRegistry ?? false,
+    };
+    ```
+
+**Validation Steps:**
+
+- [ ] TypeScript compiles with no errors
+- [ ] `noClient: true` uses schemas-with-metadata template
+- [ ] Options reach template context correctly
+
+---
+
+### 1.9.6 Phase D: Run Tests (TDD Green Phase) ⏳ PENDING
+
+**Status:** Pending  
+**Priority:** CRITICAL  
+**Estimated Time:** 30 minutes (debugging if needed)  
+**Dependencies:** Tasks 1.9.3, 1.9.4, 1.9.5 complete
+
+**Acceptance Criteria:**
+
+- [ ] **ALL 14 tests PASS** (12 that were failing + 2 that were passing)
+- [ ] No test modifications needed (tests drove implementation)
+- [ ] Full test suite still passes (no regressions)
+- [ ] Tests run: **311 total** (297 existing + 14 new)
+
+**Implementation Steps:**
+
+1. **Run new tests:**
+
+    ```bash
+    cd /Users/jim/code/personal/openapi-zod-client/lib
+    pnpm test -- --run src/templates/schemas-with-metadata.test.ts
+    ```
+
+    Expected: **14/14 PASS** ✅
+
+2. **If tests fail, debug:**
+    - Check template syntax errors
+    - Verify option handling
+    - Check generated output matches expectations
+    - Use focused test runs to isolate issues
+
+3. **Run full test suite:**
+    ```bash
+    pnpm test -- --run
+    ```
+    Expected: **311 tests PASS** (297 existing + 14 new)
+
+**Validation Steps:**
+
+- [ ] All new tests pass
+- [ ] No existing tests broken
+- [ ] Generated code matches test expectations
+- [ ] TDD Green phase complete ✅
+
+---
+
+### 1.9.7 Phase E: Update Documentation ⏳ PENDING
+
+**Status:** Pending  
+**Priority:** MEDIUM  
+**Estimated Time:** 1-2 hours  
+**Dependencies:** Task 1.9.6 complete
+
+**Acceptance Criteria:**
+
+- [ ] README.md updated with template comparison table
+- [ ] Template usage examples added
+- [ ] CLI flag documentation complete
+- [ ] TEMPLATE_STRATEGY.md finalized
+- [ ] Example usage file created (`lib/examples/mcp-tools-usage.ts`)
+
+**Implementation Steps:**
+
+1. **Update `README.md`:**
+    - Add template comparison table (5 templates)
+    - Add usage examples for each template
+    - Document new CLI flags
+    - Add Engraph use case example
+
+2. **Create `lib/examples/mcp-tools-usage.ts`:**
+    - Example of using schemas-with-metadata template
+    - Example of validateRequest/validateResponse helpers
+    - Example of schema registry builder
+    - Example of MCP tool integration
+
+3. **Finalize `.agent/analysis/TEMPLATE_STRATEGY.md`:**
+    - All 5 templates documented
+    - Use case for each
+    - Migration guide from Zodios to non-Zodios
+    - Design decisions documented
+
+**Validation Steps:**
+
+- [ ] README has template comparison table
+- [ ] Usage examples are clear and accurate
+- [ ] Examples compile and run
+- [ ] Documentation is comprehensive
+
+---
+
+### 1.9.8 Final: Quality Gate Validation & Commit ⏳ PENDING
+
+**Status:** Pending  
+**Priority:** CRITICAL  
+**Estimated Time:** 30 minutes  
+**Dependencies:** All previous tasks complete
+
+**Acceptance Criteria:**
+
+- [ ] All quality gates pass
+- [ ] No lint errors introduced
+- [ ] All tests pass (311 total)
+- [ ] Generated code is valid TypeScript
+- [ ] Commit message follows standards
+- [ ] All files properly formatted
+
+**Implementation Steps:**
+
+1. **Run full quality gate:**
+
+    ```bash
+    cd /Users/jim/code/personal/openapi-zod-client
+    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+    ```
+
+    Expected: **ALL PASS** ✅
+
+2. **Check for lint errors:**
+
+    ```bash
+    cd lib
+    pnpm lint
+    ```
+
+    Expected: No NEW errors (baseline: 146 issues)
+
+3. **Manual smoke tests:**
+
+    ```bash
+    # Test 1: Basic generation
+    lib/bin/openapi-zod-client samples/v3.0/petstore.yaml -o /tmp/petstore-meta.ts --template schemas-with-metadata
+
+    # Test 2: With helpers
+    lib/bin/openapi-zod-client samples/v3.0/petstore.yaml -o /tmp/petstore-helpers.ts --no-client --with-validation-helpers
+
+    # Test 3: Full Engraph setup
+    lib/bin/openapi-zod-client samples/v3.0/petstore.yaml -o /tmp/petstore-full.ts --no-client --with-validation-helpers --with-schema-registry
+
+    # Verify compilation
+    npx tsc /tmp/petstore-full.ts --noEmit --strict
+    ```
+
+4. **Commit changes:**
+    ```bash
+    git add -A
+    git commit -m "feat: Add schemas-with-metadata template (Engraph-optimized)
+    ```
+
+Implements Task 1.9 - Zodios-free template with full validation.
+
+✨ New Template: schemas-with-metadata.hbs
+
+- Generates Zod schemas + endpoint metadata WITHOUT Zodios
+- Full request validation (path, query, header, body)
+- Full response validation (success + all error responses)
+- Optional validation helpers (--with-validation-helpers)
+- Optional schema registry builder (--with-schema-registry)
+- MCP-ready tool definitions
+
+🎯 Strict Types & Fail-Fast:
+
+- NO 'any' types (uses 'unknown')
+- Uses .strict() for objects (reject unknown keys)
+- Uses .parse() for fail-fast validation
+- Const assertions for literal types
+- JSDoc with @throws annotations
+
+🚀 CLI Flags Added:
+
+- --template schemas-with-metadata
+- --no-client (alias for schemas-with-metadata)
+- --with-validation-helpers
+- --with-schema-registry
+
+✅ For Engraph:
+
+- Eliminates 60+ lines of string manipulation (74% code reduction)
+- Removes type assertion
+- Type-safe validation out of the box
+
+🧪 Tests: 14 comprehensive tests (TDD)
+
+- Written FIRST, implementation SECOND
+- All passing (311 total tests)
+
+📝 Documentation:
+
+- README updated with template comparison
+- Examples added (lib/examples/mcp-tools-usage.ts)
+- Programmatic API documented
+
+Closes Task 1.9"
+
+````
+
+**Validation Steps:**
+- [ ] Quality gates all green
+- [ ] No new lint errors
+- [ ] Tests pass (311/311)
+- [ ] Generated code compiles
+- [ ] Commit message follows standards
+- [ ] All files properly formatted
+
+---
+
+## Task 1.9 Summary
+
+**Total Estimated Time:** 6-10 hours
+**Complexity:** Medium-High
+**Impact:** High (Engraph SDK critical feature)
+
+**Completion Status:**
+- ✅ 1.9.0 - Pre-flight check (COMPLETE)
+- ✅ 1.9.1 - Phase A: Document & Design (IN PROGRESS)
+- ✅ 1.9.2 - Phase B: Write failing tests (COMPLETE - TDD Red ✅)
+- ⏳ 1.9.3 - Phase C: Implement template (PENDING)
+- ⏳ 1.9.4 - Phase C: Add CLI flags (PENDING)
+- ⏳ 1.9.5 - Phase C: Update options (PENDING)
+- ⏳ 1.9.6 - Phase D: Run tests (PENDING - TDD Green)
+- ⏳ 1.9.7 - Phase E: Documentation (PENDING)
+- ⏳ 1.9.8 - Final validation (PENDING)
+
+**Key Deliverables:**
+1. New template: `schemas-with-metadata.hbs`
+2. 14 comprehensive tests (TDD approach)
+3. CLI flags: --no-client, --with-validation-helpers, --with-schema-registry
+4. Updated documentation and examples
+5. All quality gates passing
+
+**Impact for Engraph:**
+- 74% code reduction (115 lines → ~30 lines)
+- 90% less regex manipulation (60+ lines → 0)
+- 100% elimination of type assertions
+- Type-safe validation out of the box
+
+---
+
 ## 2. Dependency Updates
 
 ### 2.1 Update openapi3-ts (v3 → v4.5.0)
 
-**Status:** Pending  
-**Priority:** CRITICAL (must do before other work)  
-**Estimated Time:** 4-6 hours  
+**Status:** Pending
+**Priority:** CRITICAL (must do before other work)
+**Estimated Time:** 4-6 hours
 **Dependencies:** Task 1.6 complete
 
 **Acceptance Criteria:**
@@ -1598,54 +2075,54 @@ Tasks MUST be executed in this order due to dependencies:
 
 1. **Create feature branch:**
 
-    ```bash
-    git checkout -b feat/update-openapi3-ts-v4
-    ```
+ ```bash
+ git checkout -b feat/update-openapi3-ts-v4
+ ```
 
 2. **Update dependency:**
 
-    ```bash
-    cd lib
-    pnpm update openapi3-ts@4.5.0
-    ```
+ ```bash
+ cd lib
+ pnpm update openapi3-ts@4.5.0
+ ```
 
 3. **Run type-check and document errors:**
 
-    ```bash
-    pnpm type-check 2>&1 | tee ../agent/analysis/openapi3-ts-v4-errors.txt
-    ```
+ ```bash
+ pnpm type-check 2>&1 | tee ../agent/analysis/openapi3-ts-v4-errors.txt
+ ```
 
 4. **Fix errors systematically:**
-    - Group errors by file
-    - Fix one file at a time
-    - Run type-check after each file
-    - Document any API changes
+ - Group errors by file
+ - Fix one file at a time
+ - Run type-check after each file
+ - Document any API changes
 
 5. **Update imports if needed:**
-    - Check if import paths changed
-    - Check if type names changed
-    - Update accordingly
+ - Check if import paths changed
+ - Check if type names changed
+ - Update accordingly
 
 6. **Strengthen types:**
-    - Use new v4 types where available
-    - Replace any custom types with v4 equivalents
-    - Add type guards if v4 provides them
+ - Use new v4 types where available
+ - Replace any custom types with v4 equivalents
+ - Add type guards if v4 provides them
 
 7. **Run tests:**
 
-    ```bash
-    pnpm test -- --run
-    ```
+ ```bash
+ pnpm test -- --run
+ ```
 
 8. **Fix test failures:**
-    - Update test expectations if API changed
-    - Ensure no functionality changed
+ - Update test expectations if API changed
+ - Ensure no functionality changed
 
 9. **Commit:**
-    ```bash
-    git add -A
-    git commit -m "feat: update openapi3-ts to v4.5.0
-    ```
+ ```bash
+ git add -A
+ git commit -m "feat: update openapi3-ts to v4.5.0
+ ```
 
 Breaking changes addressed:
 
@@ -1661,6 +2138,7 @@ All type checks passing"
 ````
 
 **Validation Steps:**
+
 1. `pnpm type-check` exits 0
 2. `pnpm test -- --run` exits 0 (297 tests)
 3. `pnpm build` succeeds
@@ -1669,10 +2147,11 @@ All type checks passing"
 
 **Rollback Plan:**
 If issues are severe:
+
 ```bash
 git checkout main
 cd lib && pnpm install openapi3-ts@^3
-````
+```
 
 **Output:**
 

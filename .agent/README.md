@@ -77,45 +77,50 @@
 ### Living Documents (Update Regularly)
 
 **`context/context.md`** ⭐⭐⭐
+
 - **Purpose:** Single source of truth for current project state
 - **Contains:**
-  - Current status & quality gates
-  - Progress summary (Phase 1 complete, Phase 2 in progress)
-  - Dependency versions & strategy
-  - Next priorities
-  - Links to all other docs
+    - Current status & quality gates
+    - Progress summary (Phase 1 complete, Phase 2 in progress)
+    - Dependency versions & strategy
+    - Next priorities
+    - Links to all other docs
 - **Update:** After every significant change or decision
 
 **`plans/01-CURRENT-IMPLEMENTATION.md`** ⭐⭐
+
 - **Purpose:** Detailed task breakdown for current phase (Phase 2)
 - **Contains:**
-  - 12 tasks with acceptance criteria, implementation steps, validation
-  - Task dependencies and execution order
-  - Embedded TODO list (15 items)
+    - 12 tasks with acceptance criteria, implementation steps, validation
+    - Task dependencies and execution order
+    - Embedded TODO list (15 items)
 - **Update:** Mark tasks complete as you finish them
 
 ### Strategic Documents (Reference)
 
 **`plans/00-STRATEGIC-PLAN.md`** ⭐⭐
+
 - **Purpose:** High-level strategic overview
 - **Contains:**
-  - All 4 phases with timelines
-  - Strategic principles from RULES.md
-  - Comprehensive dependency analysis
-  - Risk management
-  - Success criteria
+    - All 4 phases with timelines
+    - Strategic principles from RULES.md
+    - Comprehensive dependency analysis
+    - Risk management
+    - Success criteria
 - **Update:** When phase transitions or strategic decisions made
 
 **`RULES.md`** ⭐⭐⭐
+
 - **Purpose:** Coding standards and best practices
 - **Contains:**
-  - Testing standards (7 principles)
-  - Code quality standards
-  - TypeScript best practices
-  - Type safety requirements
+    - Testing standards (7 principles)
+    - Code quality standards
+    - TypeScript best practices
+    - Type safety requirements
 - **Follow:** Always! Every line of code must adhere
 
 **`DEFINITION_OF_DONE.md`**
+
 - **Purpose:** Script to validate all quality gates
 - **Run:** Before every commit
 - **Must pass:** format, build, type-check, test
@@ -123,11 +128,13 @@
 ### Reference Documents
 
 **`adr/` (12 Architecture Decision Records)**
+
 - Document all major architectural decisions
 - Provide context for why decisions were made
 - Reference when similar situations arise
 
 **`reference/reference.eslint.config.ts`**
+
 - Target repository's ESLint configuration
 - Goal: Achieve full compliance
 - Note: `assertionStyle: "never"` = zero type assertions required
@@ -153,6 +160,7 @@
 ### Current Phase
 
 **Phase 2:** Type Safety & Dependencies (2-3 weeks)
+
 - Update openapi3-ts (v3 → v4.5.0)
 - Update zod (v3 → v4.1.12)
 - Replace pastable (with lodash-es + custom)
@@ -204,9 +212,10 @@ All must pass (lint is exception for now, but check for new issues).
 
 ## 🔗 External References
 
-**Target Repository:** engraph-monorepo  
+**Target Repository:** engraph-monorepo
 
 **Key Requirements:**
+
 - OpenAPI 3.1+ support
 - Latest dependencies (verified Oct 24, 2025)
 - Zero security vulnerabilities
@@ -231,6 +240,7 @@ All must pass (lint is exception for now, but check for new issues).
 ## 📊 Progress Tracking
 
 ### Phase 1: Foundation (✅ COMPLETE)
+
 - Modernized tooling
 - Established standards
 - Created comprehensive documentation
@@ -238,16 +248,19 @@ All must pass (lint is exception for now, but check for new issues).
 - 297 tests passing
 
 ### Phase 2: Type Safety & Dependencies (🔄 IN PROGRESS)
+
 - Investigation tasks pending
 - Implementation tasks ready
 - Estimated: 2-3 weeks
 
 ### Phase 3: Quality & Testing (⏳ PLANNED)
+
 - Stryker mutation testing
 - Full ESLint compliance
 - handlebars evaluation
 
 ### Phase 4: Extraction Preparation (⏳ PLANNED)
+
 - Final audit & documentation
 - Ready for porting to target repo
 
@@ -257,5 +270,3 @@ All must pass (lint is exception for now, but check for new issues).
 
 **Last Updated:** October 24, 2025  
 **Commit:** 866dcc8 (plans complete)
-
-

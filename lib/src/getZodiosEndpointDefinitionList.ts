@@ -49,7 +49,7 @@ import { asComponentSchema, pathToVariableName } from "./utils.js";
  * });
  * ```
  */
- 
+
 export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: TemplateContext["options"]) => {
     const resolver = makeSchemaResolver(doc);
     const graphs = getOpenApiDependencyGraph(

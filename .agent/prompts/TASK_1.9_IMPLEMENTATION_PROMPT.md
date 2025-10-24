@@ -1,4 +1,4 @@
-# Task 1.9: Zodios-Free Template Strategy (Engraph-Optimized)
+# Task 1.9: Zodios-Free Template Strategy
 
 **Prompt for fresh chat with no prior context**
 
@@ -6,7 +6,7 @@
 
 ## 🎯 Your Mission
 
-Implement a new Handlebars template called `schemas-with-metadata.hbs` that generates Zod schemas and endpoint metadata **WITHOUT** the Zodios HTTP client library. This template is optimized for the Engraph SDK use case, which needs full request/response validation but doesn't want the HTTP client functionality.
+Implement a new Handlebars template called `schemas-with-metadata.hbs` that generates Zod schemas and endpoint metadata **WITHOUT** the Zodios HTTP client library. This template is optimized for a specific SDK use case, which needs full request/response validation but doesn't want the HTTP client functionality.
 
 **Key Requirement:** This MUST follow **Test-Driven Development (TDD)** - write ALL tests FIRST, see them fail, THEN implement.
 

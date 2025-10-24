@@ -167,7 +167,7 @@ export const endpoints = [
 /**
  * Validates request parameters against endpoint schema.
  * STRICT: Throws ZodError on invalid input (fail-fast).
- * 
+ *
  * @throws {ZodError} If validation fails
  */
 export function validateRequest<T extends (typeof endpoints)[number]>(
@@ -197,7 +197,7 @@ export function validateRequest<T extends (typeof endpoints)[number]>(
 /**
  * Validates response data against endpoint schema for given status code.
  * STRICT: Throws ZodError on invalid response (fail-fast).
- * 
+ *
  * @throws {ZodError} If validation fails
  * @throws {Error} If no schema defined for status code
  */
@@ -224,18 +224,18 @@ export function validateResponse<T extends (typeof endpoints)[number], S extends
  */
 export function buildSchemaRegistry<T extends Record<string, z.ZodSchema>>(
     rawSchemas: T,
-    options?: { 
+    options?: {
         rename?: (key: string) => string;
     }
 ): Record<string, z.ZodSchema> {
     const rename = options?.rename ?? ((key: string) => key.replace(/[^A-Za-z0-9_]/g, "_"));
     const result: Record<string, z.ZodSchema> = {};
-    
+
     for (const [key, value] of Object.entries(rawSchemas)) {
         const sanitized = rename(key);
         result[sanitized] = value;
     }
-    
+
     return result;
 }
 
@@ -249,7 +249,7 @@ export function buildSchemaRegistry<T extends Record<string, z.ZodSchema>>(
 export const mcpTools = endpoints.map((endpoint) => ({
     name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, "_")}`,
     description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
-    
+
     // ✅ STRICT: Input schema combines all parameter types
     // Note: Only includes fields that exist (no empty objects)
     inputSchema: z.object({
@@ -258,7 +258,7 @@ export const mcpTools = endpoints.map((endpoint) => ({
         ...(endpoint.request.headers ? { headers: endpoint.request.headers } : {}),
         ...(endpoint.request.body ? { body: endpoint.request.body } : {}),
     }),
-    
+
     // ✅ STRICT: Output schema from OpenAPI spec
     // Falls back to z.unknown() ONLY if no success response defined
     outputSchema: endpoint.responses[200]?.schema || endpoint.responses[201]?.schema || z.unknown(),
@@ -272,50 +272,54 @@ export const mcpTools = endpoints.map((endpoint) => ({
 **All generated Zod schemas follow these rules:**
 
 1. **No `.passthrough()`** unless explicitly required by OpenAPI spec
-   - Default: `.strict()` for objects (reject unknown keys)
-   - Only use `.passthrough()` if `additionalProperties: true`
+    - Default: `.strict()` for objects (reject unknown keys)
+    - Only use `.passthrough()` if `additionalProperties: true`
 
 2. **No loose types**
-   - ❌ `z.any()` - NEVER used
-   - ✅ `z.unknown()` - Only when OpenAPI spec has no schema
-   - ✅ Specific types whenever possible
+    - ❌ `z.any()` - NEVER used
+    - ✅ `z.unknown()` - Only when OpenAPI spec has no schema
+    - ✅ Specific types whenever possible
 
 3. **Explicit optionality**
-   - Required fields: `z.string()` (no `.optional()`)
-   - Optional fields: `z.string().optional()`
-   - Nullable fields: `z.string().nullable()` or `z.string().nullish()`
+    - Required fields: `z.string()` (no `.optional()`)
+    - Optional fields: `z.string().optional()`
+    - Nullable fields: `z.string().nullable()` or `z.string().nullish()`
 
 4. **Validation constraints preserved**
-   - `minLength`, `maxLength` → `.min()`, `.max()`
-   - `pattern` → `.regex()`
-   - `minimum`, `maximum` → `.min()`, `.max()`
-   - `format` → appropriate Zod types (`.uuid()`, `.email()`, `.url()`, etc.)
+    - `minLength`, `maxLength` → `.min()`, `.max()`
+    - `pattern` → `.regex()`
+    - `minimum`, `maximum` → `.min()`, `.max()`
+    - `format` → appropriate Zod types (`.uuid()`, `.email()`, `.url()`, etc.)
 
 5. **Discriminated unions for oneOf/anyOf**
-   - Use `z.discriminatedUnion()` when possible
-   - Fall back to `z.union()` only when no discriminator
+    - Use `z.discriminatedUnion()` when possible
+    - Fall back to `z.union()` only when no discriminator
 
 6. **Fail-fast parsing**
-   - All validation uses `.parse()` (throws on failure)
-   - No `.safeParse()` in generated helpers (user can call it if needed)
+    - All validation uses `.parse()` (throws on failure)
+    - No `.safeParse()` in generated helpers (user can call it if needed)
 
 **Example:**
 
 ```typescript
 // ✅ STRICT: Required field, exact type, format validation
-export const UserSchema = z.object({
-    id: z.string().uuid(),
-    email: z.string().email(),
-    name: z.string().min(1).max(100),
-    age: z.number().int().min(0).max(150).optional(),
-}).strict(); // ❌ Reject unknown properties
+export const UserSchema = z
+    .object({
+        id: z.string().uuid(),
+        email: z.string().email(),
+        name: z.string().min(1).max(100),
+        age: z.number().int().min(0).max(150).optional(),
+    })
+    .strict(); // ❌ Reject unknown properties
 
 // ❌ LOOSE (we don't generate this):
-export const UserSchema = z.object({
-    id: z.any(), // NO!
-    email: z.string(),
-    // ... other fields
-}).passthrough(); // NO! (unless additionalProperties: true)
+export const UserSchema = z
+    .object({
+        id: z.any(), // NO!
+        email: z.string(),
+        // ... other fields
+    })
+    .passthrough(); // NO! (unless additionalProperties: true)
 ```
 
 ---
@@ -578,12 +582,12 @@ mcpTools.forEach((tool) => {
 | Phase                         | Duration    | Description                                                                |
 | ----------------------------- | ----------- | -------------------------------------------------------------------------- |
 | **Design & Documentation**    | 0.5 hours   | Document current templates, design new output                              |
-| **Write Failing Tests (TDD)** | 1.5-2 hours | 8 comprehensive tests for Engraph features                                     |
+| **Write Failing Tests (TDD)** | 1.5-2 hours | 8 comprehensive tests for Engraph features                                 |
 | **Implement Template**        | 2-3 hours   | Create schemas-with-metadata.hbs                                           |
 | **Validation Helpers**        | 1-2 hours   | validateRequest/validateResponse functions                                 |
 | **Schema Registry**           | 0.5-1 hour  | buildSchemaRegistry helper                                                 |
 | **CLI Integration**           | 0.5-1 hour  | Add flags (--no-client, --with-validation-helpers, --with-schema-registry) |
-| **Documentation**             | 1-2 hours   | README, examples, Engraph migration guide                                      |
+| **Documentation**             | 1-2 hours   | README, examples, Engraph migration guide                                  |
 
 ---
 
