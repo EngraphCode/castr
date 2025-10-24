@@ -11,6 +11,7 @@ The project used `cac` (Command And Conquer) as its CLI framework. While `cac` i
 ### The Problem
 
 **Issues with `cac`:**
+
 1. **Poor TypeScript support**: 52 type errors in CLI code
 2. **Weak typing**: Options typed as `any`
 3. **No IntelliSense**: IDE couldn't provide autocomplete
@@ -18,10 +19,10 @@ The project used `cac` (Command And Conquer) as its CLI framework. While `cac` i
 5. **Documentation**: Sparse, TypeScript examples lacking
 
 **Example type issues:**
+
 ```typescript
 // ❌ With cac: No type safety
-cli
-    .command("generate <input>")
+cli.command("generate <input>")
     .option("--output <path>", "Output path")
     .action((input, options) => {
         // options is 'any' - no type safety!
@@ -32,27 +33,27 @@ cli
 ### Alternatives Considered
 
 1. **`cac`** (Current)
-   - ❌ Poor TypeScript support
-   - ✅ Very lightweight (3.8kb)
-   - ❌ Weak community
+    - ❌ Poor TypeScript support
+    - ✅ Very lightweight (3.8kb)
+    - ❌ Weak community
 
 2. **`commander`**
-   - ✅ Excellent TypeScript support
-   - ✅ Strong typing with generics
-   - ✅ Widely used (30M+ weekly downloads)
-   - ✅ Active maintenance
-   - ⚠️ Slightly larger (7kb)
+    - ✅ Excellent TypeScript support
+    - ✅ Strong typing with generics
+    - ✅ Widely used (30M+ weekly downloads)
+    - ✅ Active maintenance
+    - ⚠️ Slightly larger (7kb)
 
 3. **`yargs`**
-   - ✅ Good TypeScript support
-   - ⚠️ More complex API
-   - ⚠️ Larger bundle size
-   - ⚠️ Overkill for our needs
+    - ✅ Good TypeScript support
+    - ⚠️ More complex API
+    - ⚠️ Larger bundle size
+    - ⚠️ Overkill for our needs
 
 4. **`clipanion`**
-   - ✅ Modern, TypeScript-first
-   - ⚠️ Different paradigm (class-based)
-   - ⚠️ Less familiar to team
+    - ✅ Modern, TypeScript-first
+    - ⚠️ Different paradigm (class-based)
+    - ⚠️ Less familiar to team
 
 ## Decision
 
@@ -75,10 +76,7 @@ import { Command } from "commander";
 const program = new Command();
 
 // ✅ Type-safe option parsing
-program
-    .name("openapi-zod-client")
-    .description("Generate Zod schemas from OpenAPI specs")
-    .version(version);
+program.name("openapi-zod-client").description("Generate Zod schemas from OpenAPI specs").version(version);
 
 program
     .command("generate")
@@ -110,12 +108,12 @@ program.parse();
 ✅ **Better DX**: IDE autocomplete and error detection  
 ✅ **Maintainability**: Well-documented, stable API  
 ✅ **Future-proof**: Active development, large community  
-✅ **Familiar**: Similar API to many popular CLI tools  
+✅ **Familiar**: Similar API to many popular CLI tools
 
 ### Negative
 
 ⚠️ **Bundle size**: +3.2kb compared to `cac` (7kb vs 3.8kb)  
-⚠️ **Migration effort**: Required rewriting CLI setup (minimal, ~1 hour)  
+⚠️ **Migration effort**: Required rewriting CLI setup (minimal, ~1 hour)
 
 ### Mitigation
 
@@ -131,8 +129,7 @@ import cac from "cac";
 
 const cli = cac("openapi-zod-client");
 
-cli
-    .command("<input>", "Generate client")
+cli.command("<input>", "Generate client")
     .option("--output <path>", "Output path")
     .action((input, options) => {
         // options: any ❌
@@ -151,10 +148,7 @@ import { Command } from "commander";
 
 const program = new Command();
 
-program
-    .name("openapi-zod-client")
-    .version(version)
-    .description("Generate Zod schemas from OpenAPI specs");
+program.name("openapi-zod-client").version(version).description("Generate Zod schemas from OpenAPI specs");
 
 program
     .command("generate")
@@ -198,9 +192,7 @@ program
     .command("generate")
     .argument("<input>", "Input spec")
     .addOption(
-        new Option("-f, --format <type>", "Output format")
-            .choices(["typescript", "javascript"])
-            .default("typescript")
+        new Option("-f, --format <type>", "Output format").choices(["typescript", "javascript"]).default("typescript")
     )
     .action((input, options) => {
         // options.format is "typescript" | "javascript"
@@ -210,11 +202,13 @@ program
 ## Quality Impact
 
 **Before (with `cac`):**
+
 - 52 TypeScript errors in CLI code
 - `options: any` throughout
 - No IDE support
 
 **After (with `commander`):**
+
 - 0 TypeScript errors in CLI code ✅
 - Fully typed options
 - Full IDE IntelliSense ✅
@@ -232,5 +226,3 @@ program
 ## Commits
 
 - Phase 1a: CLI modernization commit
-
-

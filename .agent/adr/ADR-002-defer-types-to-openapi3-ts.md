@@ -23,12 +23,13 @@ The original codebase had custom type definitions that duplicated library types:
 type PrimitiveType = "string" | "number" | "integer" | "boolean" | "null";
 type SingleType = Exclude<SchemaObject["type"], unknown[] | undefined>;
 
-function handleItems(items: SchemaObject): Result { 
+function handleItems(items: SchemaObject): Result {
     // ❌ Actually receives SchemaObject | ReferenceObject!
 }
 ```
 
 This led to several issues:
+
 - **Type mismatches**: Our types diverged from actual library types
 - **Maintenance burden**: Had to keep custom types in sync with library updates
 - **Complexity**: Unnecessary type gymnastics with `Exclude<>`, `Extract<>`, etc.
@@ -49,6 +50,7 @@ This led to several issues:
 ### When Custom Types Are Acceptable
 
 Custom types are OK when:
+
 - Representing **domain-specific concepts** not in libraries
 - **Aggregating multiple library concepts** meaningfully (with justification)
 - Creating **helper types** that genuinely simplify (must document why)
@@ -84,6 +86,7 @@ export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaT
 ```
 
 This pattern ensures:
+
 - ✅ Compiler validates literals match library types at compile time
 - ✅ Type guard actually narrows from `unknown` (real type narrowing)
 - ✅ Refactoring safety: library type changes break our code visibly
@@ -146,13 +149,13 @@ function isPrimitive(type: SchemaObject["type"]): boolean {
 ✅ **Simplicity**: Less code, less complexity  
 ✅ **Correctness**: Can't claim narrower types than reality  
 ✅ **Refactoring safety**: Type changes in libraries cause visible breaks  
-✅ **Team alignment**: Everyone uses the same type definitions  
+✅ **Team alignment**: Everyone uses the same type definitions
 
 ### Negative
 
 ⚠️ **Union types**: May need to handle `SchemaObject | ReferenceObject` in more places  
 ⚠️ **Less control**: Can't "fix" library type issues without upstream changes  
-⚠️ **Learning curve**: Team must learn library type structures  
+⚠️ **Learning curve**: Team must learn library type structures
 
 ### Mitigation
 
@@ -225,5 +228,3 @@ function resolveAdditionalPropertiesType(
 ## Commit
 
 - `ac70bdc` refactor: use library types, proper type guards
-
-

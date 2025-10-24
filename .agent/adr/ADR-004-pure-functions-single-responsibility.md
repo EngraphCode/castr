@@ -11,12 +11,14 @@ During Phase 1b of modernization, we addressed cognitive complexity violations i
 ### The Problem
 
 **Before:**
+
 - `openApiToTypescript.ts`: **104 complexity** (main function)
 - `getZodiosEndpointDefinitionList.ts`: **47 complexity**, 175-line function
 - `schema-complexity.ts`: **33 complexity**
 - `getOpenApiDependencyGraph.ts`: **31 complexity**
 
 Large functions with multiple responsibilities:
+
 ```typescript
 // ❌ 175 lines, does everything
 export function getZodiosEndpointDefinitionList(api: OpenAPIObject, ...) {
@@ -33,11 +35,13 @@ export function getZodiosEndpointDefinitionList(api: OpenAPIObject, ...) {
 ### Forces at Play
 
 **For large functions:**
+
 - Everything in one place
 - No function call overhead
 - "Simple" to understand the flow
 
 **Against large functions:**
+
 - Hard to test (need full OpenAPI document)
 - High cognitive load
 - Difficult to reuse logic
@@ -91,7 +95,7 @@ module-name.test.ts         # Integration tests
 // ❌ 175 lines, complexity 47
 export function getZodiosEndpointDefinitionList(api: OpenAPIObject, ...) {
     const endpoints: Endpoint[] = [];
-    
+
     Object.entries(api.paths ?? {}).forEach(([path, pathItem]) => {
         Object.entries(pathItem ?? {}).forEach(([method, operation]) => {
             // 30 lines: parameter processing
@@ -102,26 +106,26 @@ export function getZodiosEndpointDefinitionList(api: OpenAPIObject, ...) {
                 const paramSchema = param.schema ? ... : ...;
                 // validate, transform, etc.
             });
-            
+
             // 40 lines: request body processing
             if (operation.requestBody) {
                 // extract schema
                 // validate content type
                 // process schema
             }
-            
+
             // 50 lines: response processing
             Object.entries(operation.responses ?? {}).forEach(([status, response]) => {
                 // extract response schema
                 // handle multiple content types
                 // process errors
             });
-            
+
             // 30 lines: build endpoint definition
             endpoints.push({...});
         });
     });
-    
+
     return endpoints;
 }
 ```
@@ -132,14 +136,14 @@ export function getZodiosEndpointDefinitionList(api: OpenAPIObject, ...) {
 // ✅ Main function: 26 lines, complexity < 10
 export function getZodiosEndpointDefinitionList(api: OpenAPIObject, ...): Endpoint[] {
     const endpoints: Endpoint[] = [];
-    
+
     Object.entries(api.paths ?? {}).forEach(([path, pathItem]) => {
         const operations = extractOperations(path, pathItem);
         operations.forEach(op => {
             endpoints.push(processOperation(op, ctx));
         });
     });
-    
+
     return endpoints;
 }
 
@@ -186,13 +190,13 @@ lib/src/zodiosEndpoint.helpers.test.ts         # 20 unit tests
 ✅ **Debugging**: Easier to isolate and fix issues  
 ✅ **Complexity**: Reduced from 104+47+33+31 → all < 30  
 ✅ **Confidence**: +47 unit tests prove behavior  
-✅ **Onboarding**: New developers understand faster  
+✅ **Onboarding**: New developers understand faster
 
 ### Negative
 
 ⚠️ **More files**: 6 new helper files created  
 ⚠️ **Navigation**: Need to jump between files  
-⚠️ **Abstraction**: Need to understand the decomposition  
+⚠️ **Abstraction**: Need to understand the decomposition
 
 ### Mitigation
 
@@ -205,12 +209,12 @@ lib/src/zodiosEndpoint.helpers.test.ts         # 20 unit tests
 
 ### Complexity Reductions
 
-| File | Before | After | Reduction |
-|------|--------|-------|-----------|
-| openApiToTypescript.ts | 104 | < 30 | 74+ points |
-| getZodiosEndpointDefinitionList.ts | 47 | < 30 | 17+ points |
-| schema-complexity.ts | 33 | < 30 | 3+ points |
-| getOpenApiDependencyGraph.ts | 31 | < 30 | 1+ points |
+| File                               | Before | After | Reduction  |
+| ---------------------------------- | ------ | ----- | ---------- |
+| openApiToTypescript.ts             | 104    | < 30  | 74+ points |
+| getZodiosEndpointDefinitionList.ts | 47     | < 30  | 17+ points |
+| schema-complexity.ts               | 33     | < 30  | 3+ points  |
+| getOpenApiDependencyGraph.ts       | 31     | < 30  | 1+ points  |
 
 ### Test Coverage
 
@@ -241,5 +245,3 @@ lib/src/zodiosEndpoint.helpers.test.ts         # 20 unit tests
 ## Commit
 
 - Multiple commits during Phase 1b refactoring
-
-

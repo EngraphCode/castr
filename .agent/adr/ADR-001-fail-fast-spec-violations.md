@@ -14,6 +14,7 @@ When processing OpenAPI specifications, we encountered various malformed or spec
 ### The Problem
 
 Real-world OpenAPI specs sometimes violate the official specification due to:
+
 - Manual editing errors
 - Tooling bugs
 - Misunderstanding of the spec
@@ -22,11 +23,13 @@ Real-world OpenAPI specs sometimes violate the official specification due to:
 ### Forces at Play
 
 **For lenient handling:**
+
 - Users might appreciate "it just works"
 - Reduces friction in adoption
 - Allows processing imperfect specs
 
 **Against lenient handling:**
+
 - Hides real problems in API specifications
 - Creates unpredictable behavior
 - Makes debugging harder
@@ -36,41 +39,44 @@ Real-world OpenAPI specs sometimes violate the official specification due to:
 ### Example Cases
 
 1. **`MediaType.$ref` at wrong level:**
-   ```typescript
-   // ❌ WRONG (spec violation)
-   parameter: {
-     content: {
-       "*/*": { $ref: "#/components/schemas/test2" }
-     }
-   }
-   
-   // ✅ CORRECT (per OAS spec lines 603-615)
-   parameter: {
-     content: {
-       "*/*": { 
-         schema: { $ref: "#/components/schemas/test2" }
-       }
-     }
-   }
-   ```
+
+    ```typescript
+    // ❌ WRONG (spec violation)
+    parameter: {
+      content: {
+        "*/*": { $ref: "#/components/schemas/test2" }
+      }
+    }
+
+    // ✅ CORRECT (per OAS spec lines 603-615)
+    parameter: {
+      content: {
+        "*/*": {
+          schema: { $ref: "#/components/schemas/test2" }
+        }
+      }
+    }
+    ```
 
 2. **Schema as null:**
-   ```typescript
-   // ❌ WRONG
-   { schema: null }
-   
-   // ✅ CORRECT
-   { schema: { type: "string", nullable: true } }
-   ```
+
+    ```typescript
+    // ❌ WRONG
+    { schema: null }
+
+    // ✅ CORRECT
+    { schema: { type: "string", nullable: true } }
+    ```
 
 3. **Parameter without schema or content:**
-   ```typescript
-   // ❌ WRONG (violates SchemaXORContent constraint)
-   { name: "param1", in: "query" }
-   
-   // ✅ CORRECT
-   { name: "param1", in: "query", schema: { type: "string" } }
-   ```
+
+    ```typescript
+    // ❌ WRONG (violates SchemaXORContent constraint)
+    { name: "param1", in: "query" }
+
+    // ✅ CORRECT
+    { name: "param1", in: "query", schema: { type: "string" } }
+    ```
 
 ## Decision
 
@@ -81,19 +87,15 @@ Real-world OpenAPI specs sometimes violate the official specification due to:
 1. **Validate against the official OpenAPI specification**
 2. **Throw errors immediately** when violations are detected
 3. **Provide helpful error messages** that include:
-   - What went wrong
-   - Why it's a problem
-   - Reference to the spec section
-   - Example of correct usage
+    - What went wrong
+    - Why it's a problem
+    - Reference to the spec section
+    - Example of correct usage
 
 ### Error Message Template
 
 ```typescript
-throw new Error(
-    `Invalid OpenAPI specification: [what's wrong]. ` +
-    `[why it matters]. ` +
-    `See: [spec URL]#[section]`
-);
+throw new Error(`Invalid OpenAPI specification: [what's wrong]. ` + `[why it matters]. ` + `See: [spec URL]#[section]`);
 ```
 
 ### Example Implementation
@@ -103,7 +105,7 @@ throw new Error(
 if (!paramSchema) {
     throw new Error(
         `Invalid OpenAPI specification: Could not resolve schema for parameter "${paramItem.name}" (in: ${paramItem.in}). ` +
-        `This may indicate a missing or invalid $ref target.`
+            `This may indicate a missing or invalid $ref target.`
     );
 }
 
@@ -124,13 +126,13 @@ throw new Error(
 ✅ **Predictable behavior**: No guesswork about how edge cases are handled  
 ✅ **Improved spec quality**: Users are motivated to fix their specs  
 ✅ **Easier maintenance**: No complex workaround logic  
-✅ **Better documentation**: Error messages serve as inline documentation  
+✅ **Better documentation**: Error messages serve as inline documentation
 
 ### Negative
 
 ⚠️ **Strictness**: Users with malformed specs must fix them first  
 ⚠️ **Initial friction**: May require users to update their OpenAPI specs  
-⚠️ **Support requests**: Users might ask for lenient handling  
+⚠️ **Support requests**: Users might ask for lenient handling
 
 ### Mitigation
 
@@ -156,5 +158,3 @@ throw new Error(
 ## Commit
 
 - `6d43201` feat(validation): enforce strict OpenAPI spec compliance
-
-

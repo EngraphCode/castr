@@ -49,7 +49,7 @@ import { asComponentSchema, pathToVariableName } from "./utils.js";
  * });
  * ```
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
+ 
 export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: TemplateContext["options"]) => {
     const resolver = makeSchemaResolver(doc);
     const graphs = getOpenApiDependencyGraph(

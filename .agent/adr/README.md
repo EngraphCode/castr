@@ -61,9 +61,9 @@ What becomes easier or more difficult as a result of this decision?
 ## Timeline
 
 - **October 22-24, 2025**: Phase 1 - Developer Tooling Modernization
-  - ADR-001 through ADR-012 accepted
-  - 297 tests passing
-  - Zero TypeScript errors
+    - ADR-001 through ADR-012 accepted
+    - 297 tests passing
+    - Zero TypeScript errors
 
 ## Status Legend
 
@@ -80,5 +80,3 @@ When making significant architectural decisions:
 2. Follow the template format
 3. Update this README index
 4. Commit the ADR with the implementation
-
-

@@ -11,6 +11,7 @@ The project used Preconstruct for building dual ESM/CJS packages. While Preconst
 ### The Problem
 
 **Issues with Preconstruct:**
+
 1. **Outdated**: Last major update 2+ years ago
 2. **Complex configuration**: Requires `@preconstruct/cli` setup
 3. **Package.json magic**: Modifies package.json with Preconstruct-specific fields
@@ -21,27 +22,27 @@ The project used Preconstruct for building dual ESM/CJS packages. While Preconst
 ### Modern Build Tools
 
 1. **Preconstruct** (Current)
-   - ❌ Outdated, slow development
-   - ✅ Dual package output
-   - ❌ Complex setup
+    - ❌ Outdated, slow development
+    - ✅ Dual package output
+    - ❌ Complex setup
 
 2. **tsup** (esbuild-based)
-   - ✅ Modern, actively maintained
-   - ✅ Fast (esbuild-powered)
-   - ✅ Simple configuration
-   - ✅ Excellent TypeScript support
-   - ✅ Source maps, DTS generation
+    - ✅ Modern, actively maintained
+    - ✅ Fast (esbuild-powered)
+    - ✅ Simple configuration
+    - ✅ Excellent TypeScript support
+    - ✅ Source maps, DTS generation
 
 3. **unbuild**
-   - ✅ Modern, rollup-based
-   - ⚠️ More complex for simple cases
-   - ⚠️ Overkill for libraries
+    - ✅ Modern, rollup-based
+    - ⚠️ More complex for simple cases
+    - ⚠️ Overkill for libraries
 
 4. **tsc** (TypeScript compiler)
-   - ✅ Official TypeScript tool
-   - ❌ No bundling
-   - ❌ Separate builds for ESM/CJS
-   - ❌ Slower
+    - ✅ Official TypeScript tool
+    - ❌ No bundling
+    - ❌ Separate builds for ESM/CJS
+    - ❌ Slower
 
 ## Decision
 
@@ -66,25 +67,25 @@ import { defineConfig } from "tsup";
 export default defineConfig({
     // Entry points
     entry: ["src/index.ts", "src/cli.ts"],
-    
+
     // Output formats
     format: ["cjs", "esm"],
-    
+
     // TypeScript declarations
     dts: true,
-    
+
     // Source maps
     sourcemap: true,
-    
+
     // Clean output before build
     clean: true,
-    
+
     // Don't split into chunks (simpler output)
     splitting: false,
-    
+
     // Tree-shake unused code
     treeshake: true,
-    
+
     // Target modern environments
     target: "es2022",
 });
@@ -117,12 +118,12 @@ dist/
 ✅ **Source maps**: For debugging in both formats  
 ✅ **Tree-shaking**: Smaller bundles for consumers  
 ✅ **Active maintenance**: Regular updates and fixes  
-✅ **Better DX**: Clear error messages, fast feedback  
+✅ **Better DX**: Clear error messages, fast feedback
 
 ### Negative
 
 ⚠️ **Learning curve**: New tool for team (minimal, simple API)  
-⚠️ **Breaking change**: Different output structure (not an issue, fresh migration)  
+⚠️ **Breaking change**: Different output structure (not an issue, fresh migration)
 
 ### Mitigation
 
@@ -137,11 +138,11 @@ dist/
 ```json
 // package.json
 {
-  "preconstruct": {
-    "entrypoints": ["index.ts", "cli.ts"]
-  },
-  "main": "dist/openapi-zod-client.cjs.js",
-  "module": "dist/openapi-zod-client.esm.js"
+    "preconstruct": {
+        "entrypoints": ["index.ts", "cli.ts"]
+    },
+    "main": "dist/openapi-zod-client.cjs.js",
+    "module": "dist/openapi-zod-client.esm.js"
 }
 ```
 
@@ -171,21 +172,21 @@ export default defineConfig({
 ```json
 // package.json
 {
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./cli": {
-      "require": "./dist/cli.cjs",
-      "import": "./dist/cli.js",
-      "types": "./dist/cli.d.ts"
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./cli": {
+            "require": "./dist/cli.cjs",
+            "import": "./dist/cli.js",
+            "types": "./dist/cli.d.ts"
+        }
     }
-  }
 }
 ```
 
@@ -199,11 +200,11 @@ $ pnpm build
 
 ## Build Performance
 
-| Metric | Preconstruct | tsup | Improvement |
-|--------|-------------|------|-------------|
-| Cold build | ~8s | ~3s | **2.7x faster** |
-| Incremental | ~5s | ~1s | **5x faster** |
-| Watch mode | ❌ Unstable | ✅ Fast | N/A |
+| Metric      | Preconstruct | tsup    | Improvement     |
+| ----------- | ------------ | ------- | --------------- |
+| Cold build  | ~8s          | ~3s     | **2.7x faster** |
+| Incremental | ~5s          | ~1s     | **5x faster**   |
+| Watch mode  | ❌ Unstable  | ✅ Fast | N/A             |
 
 ## Package Exports
 
@@ -211,22 +212,23 @@ Modern `package.json` exports for maximum compatibility:
 
 ```json
 {
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./cli": {
-      "types": "./dist/cli.d.ts",
-      "import": "./dist/cli.js",
-      "require": "./dist/cli.cjs"
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./cli": {
+            "types": "./dist/cli.d.ts",
+            "import": "./dist/cli.js",
+            "require": "./dist/cli.cjs"
+        }
     }
-  }
 }
 ```
 
 **Benefits:**
+
 - TypeScript finds `.d.ts` first
 - ESM projects get `.js`
 - CJS projects get `.cjs`
@@ -247,5 +249,3 @@ Modern `package.json` exports for maximum compatibility:
 ## Commits
 
 - Phase 1a: Build tooling modernization
-
-

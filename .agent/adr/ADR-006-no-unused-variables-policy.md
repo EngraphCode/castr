@@ -24,6 +24,7 @@ const types = schema.anyOf
 ```
 
 **Why this is problematic:**
+
 1. **Hides mistakes**: Variable was added for a reason, now forgotten
 2. **Dead code**: Clutters the codebase
 3. **Misleading**: Suggests the variable matters when it doesn't
@@ -33,11 +34,13 @@ const types = schema.anyOf
 ### Forces at Play
 
 **For underscore prefixing:**
+
 - Quick way to silence linter
 - Keeps variable in case it's needed later
 - "Documents" that it's intentionally unused
 
 **Against underscore prefixing:**
+
 - Hides real problems
 - Creates clutter
 - Misleading to readers
@@ -124,12 +127,12 @@ function processSchema(
 ✅ **Clear intent**: Every variable has a purpose  
 ✅ **Easier refactoring**: No dead code to navigate  
 ✅ **Better reviews**: Unused variables trigger discussion  
-✅ **Linter alignment**: Follows best practices  
+✅ **Linter alignment**: Follows best practices
 
 ### Negative
 
 ⚠️ **Extra step**: Need to actually remove variables  
-⚠️ **Interface matching**: May need more explicit handling  
+⚠️ **Interface matching**: May need more explicit handling
 
 ### Mitigation
 
@@ -179,6 +182,7 @@ function processEndpoint(operation: OperationObject) {
 ## Real Example from Codebase
 
 **Before refactoring:**
+
 ```typescript
 const types = schema.anyOf
     .map((prop) => getZodSchema({ schema: prop }))
@@ -190,6 +194,7 @@ const types = schema.anyOf
 ```
 
 **After refactoring:**
+
 ```typescript
 const types = schema.anyOf
     .map((prop) => getZodSchema({ schema: prop }))
@@ -263,5 +268,3 @@ class MyHandler implements Handler {
 
 - RULES.md Section: "Code Organization" → "No unused vars"
 - ESLint rule: `@typescript-eslint/no-unused-vars`
-
-

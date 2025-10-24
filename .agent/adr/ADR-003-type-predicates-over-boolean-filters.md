@@ -6,7 +6,7 @@
 
 ## Context
 
-TypeScript supports type narrowing through type predicates (functions that return `value is Type`). However, it's easy to create functions that *look* like type guards but don't actually narrow types.
+TypeScript supports type narrowing through type predicates (functions that return `value is Type`). However, it's easy to create functions that _look_ like type guards but don't actually narrow types.
 
 ### The Problem
 
@@ -27,11 +27,13 @@ if (isPrimitiveType(schema.type)) {
 ### The Forces
 
 **For boolean filters:**
+
 - Simpler to write (no `is` keyword)
 - Works at runtime
 - Familiar pattern
 
 **Against boolean filters:**
+
 - No compile-time type narrowing
 - Misleading function name (`is*` implies type guard)
 - Loses TypeScript's type safety benefits
@@ -78,7 +80,11 @@ type PrimitiveSchemaType = Extract<
 >;
 
 const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string", "number", "integer", "boolean", "null"
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "null",
 ] as const;
 
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
@@ -135,13 +141,13 @@ function isString(value: string | number): value is string {
 ✅ **Compile-time validation**: Literals validated against library types  
 ✅ **Refactoring safety**: Type changes break code visibly  
 ✅ **Intent clarity**: Function signature declares its purpose  
-✅ **Reusability**: Can use in different contexts safely  
+✅ **Reusability**: Can use in different contexts safely
 
 ### Negative
 
 ⚠️ **More verbose**: Requires `is` keyword and careful typing  
 ⚠️ **Learning curve**: Team must understand type predicates  
-⚠️ **Runtime overhead**: Still need runtime checks  
+⚠️ **Runtime overhead**: Still need runtime checks
 
 ### Mitigation
 
@@ -167,6 +173,7 @@ function isString(value: unknown): value is string {
 ```
 
 **Exceptions:**
+
 - **Public API type guards** where the input type is part of the contract
 - **Discriminated union narrowing** where you're narrowing within a known set
 
@@ -176,9 +183,7 @@ function isString(value: unknown): value is string {
 
 ```typescript
 // Boolean filter
-const primitiveTypeList: readonly string[] = [
-    "string", "number", "integer", "boolean", "null"
-];
+const primitiveTypeList: readonly string[] = ["string", "number", "integer", "boolean", "null"];
 
 function isPrimitiveType(type: SchemaObject["type"]): boolean {
     return primitiveTypeList.includes(type as any);
@@ -202,7 +207,11 @@ type PrimitiveSchemaType = Extract<
 >;
 
 const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string", "number", "integer", "boolean", "null"
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "null",
 ] as const;
 
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
@@ -232,5 +241,3 @@ if (isPrimitiveSchemaType(schema.type)) {
 ## Commit
 
 - `ac70bdc` refactor: use library types, proper type guards
-
-

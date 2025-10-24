@@ -9,7 +9,7 @@ import { asComponentSchema } from "./utils.js";
 test("petstore.yaml", async () => {
     const openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;
     const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject =>
-        get(openApiDoc, ref.replace("#/", "").replaceAll("/", ".")) as SchemaObject | ReferenceObject;
+        get(openApiDoc, ref.replace("#/", "").replaceAll("/", "."));
     const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
         Object.keys(openApiDoc.components?.schemas || {}).map((name) => asComponentSchema(name)),
         getSchemaByRef

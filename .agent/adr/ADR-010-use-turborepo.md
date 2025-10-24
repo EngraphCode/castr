@@ -11,6 +11,7 @@ The project is a monorepo with multiple workspaces (`lib`, formerly `playground`
 ### The Problem
 
 **Before Turborepo:**
+
 - Manual task orchestration across workspaces
 - No caching of task results
 - No parallelization of independent tasks
@@ -18,6 +19,7 @@ The project is a monorepo with multiple workspaces (`lib`, formerly `playground`
 - Unclear task dependencies
 
 **Example pain points:**
+
 ```bash
 # Manual, sequential execution
 cd lib && pnpm build && pnpm test
@@ -28,27 +30,27 @@ cd ../playground && pnpm build
 ### Alternatives Considered
 
 1. **Manual scripts**
-   - ❌ No caching
-   - ❌ No parallelization
-   - ❌ Hard to maintain
+    - ❌ No caching
+    - ❌ No parallelization
+    - ❌ Hard to maintain
 
 2. **Lerna**
-   - ⚠️ Less actively maintained
-   - ⚠️ Complex configuration
-   - ⚠️ Slower than Turborepo
+    - ⚠️ Less actively maintained
+    - ⚠️ Complex configuration
+    - ⚠️ Slower than Turborepo
 
 3. **Nx**
-   - ✅ Feature-rich
-   - ⚠️ More complex
-   - ⚠️ Heavier weight
-   - ⚠️ Overkill for our needs
+    - ✅ Feature-rich
+    - ⚠️ More complex
+    - ⚠️ Heavier weight
+    - ⚠️ Overkill for our needs
 
 4. **Turborepo**
-   - ✅ Simple configuration
-   - ✅ Fast (Rust-based)
-   - ✅ Excellent caching
-   - ✅ Smart parallelization
-   - ✅ Active development (Vercel)
+    - ✅ Simple configuration
+    - ✅ Fast (Rust-based)
+    - ✅ Excellent caching
+    - ✅ Smart parallelization
+    - ✅ Active development (Vercel)
 
 ## Decision
 
@@ -104,6 +106,7 @@ graph TD
 ```
 
 **Dependencies:**
+
 - `build` must run first (generates .d.ts files)
 - `type-check`, `lint`, `test` depend on `build`
 - `format` can run independently
@@ -118,12 +121,12 @@ graph TD
 ✅ **Clear output**: Color-coded, organized logs  
 ✅ **Task dependencies**: Automatic, declarative  
 ✅ **CI/CD ready**: Remote caching support  
-✅ **Developer experience**: Fast local development  
+✅ **Developer experience**: Fast local development
 
 ### Negative
 
 ⚠️ **New dependency**: One more tool to learn  
-⚠️ **Cache management**: Need to understand caching behavior  
+⚠️ **Cache management**: Need to understand caching behavior
 
 ### Mitigation
 
@@ -179,33 +182,36 @@ openapi-zod-client:build: cache hit, replaying logs
 ## Quality Gate Pipeline
 
 **Order of execution:**
+
 1. `format` (can run anytime, doesn't depend on anything)
 2. `build` (must run first for other tasks)
 3. `type-check`, `lint`, `test` (run after build, can parallelize)
 
 **Root package.json scripts:**
+
 ```json
 {
-  "scripts": {
-    "format": "turbo format",
-    "build": "turbo build",
-    "type-check": "turbo type-check",
-    "lint": "turbo lint",
-    "test": "turbo test"
-  }
+    "scripts": {
+        "format": "turbo format",
+        "build": "turbo build",
+        "type-check": "turbo type-check",
+        "lint": "turbo lint",
+        "test": "turbo test"
+    }
 }
 ```
 
 **Workspace package.json scripts:**
+
 ```json
 {
-  "scripts": {
-    "format": "prettier --write .",
-    "build": "tsup",
-    "type-check": "tsc --noEmit --project tsconfig.lint.json",
-    "lint": "eslint .",
-    "test": "vitest run"
-  }
+    "scripts": {
+        "format": "prettier --write .",
+        "build": "tsup",
+        "type-check": "tsc --noEmit --project tsconfig.lint.json",
+        "lint": "eslint .",
+        "test": "vitest run"
+    }
 }
 ```
 
@@ -215,16 +221,16 @@ openapi-zod-client:build: cache hit, replaying logs
 
 ```json
 {
-  "tasks": {
-    "build": {
-      "outputs": ["dist/**"],      // Cache dist/ folder
-      "inputs": ["src/**/*.ts"]     // Invalidate when source changes
-    },
-    "test": {
-      "outputs": ["coverage/**"],   // Cache coverage reports
-      "inputs": ["src/**", "tests/**"]
+    "tasks": {
+        "build": {
+            "outputs": ["dist/**"], // Cache dist/ folder
+            "inputs": ["src/**/*.ts"] // Invalidate when source changes
+        },
+        "test": {
+            "outputs": ["coverage/**"], // Cache coverage reports
+            "inputs": ["src/**", "tests/**"]
+        }
     }
-  }
 }
 ```
 
@@ -232,22 +238,22 @@ openapi-zod-client:build: cache hit, replaying logs
 
 ```json
 {
-  "tasks": {
-    "format": {
-      "cache": false  // Always run (modifies files)
+    "tasks": {
+        "format": {
+            "cache": false // Always run (modifies files)
+        }
     }
-  }
 }
 ```
 
 ## Performance Impact
 
-| Task | Without Turbo | With Turbo (cache hit) | Improvement |
-|------|---------------|------------------------|-------------|
-| build | 3s | 0.1s | **30x faster** |
-| type-check | 5s | 0.1s | **50x faster** |
-| test | 11s | 0.1s | **110x faster** |
-| Full pipeline | 22s | 0.4s | **55x faster** |
+| Task          | Without Turbo | With Turbo (cache hit) | Improvement     |
+| ------------- | ------------- | ---------------------- | --------------- |
+| build         | 3s            | 0.1s                   | **30x faster**  |
+| type-check    | 5s            | 0.1s                   | **50x faster**  |
+| test          | 11s           | 0.1s                   | **110x faster** |
+| Full pipeline | 22s           | 0.4s                   | **55x faster**  |
 
 ## Remote Caching (Future)
 
@@ -255,13 +261,14 @@ Turborepo supports remote caching for teams:
 
 ```json
 {
-  "remoteCache": {
-    "enabled": true
-  }
+    "remoteCache": {
+        "enabled": true
+    }
 }
 ```
 
 **Benefits:**
+
 - Share cache across team members
 - Faster CI/CD (reuse local cache)
 - Skip redundant work in pull requests
@@ -282,5 +289,3 @@ Turborepo supports remote caching for teams:
 ## Commits
 
 - Phase 1a: Turbo setup and configuration
-
-

@@ -70,7 +70,7 @@ export const getOpenApiDependencyGraph = (
                 currentGraph.add(dep);
             }
             if (refsDependencyGraph[dep] && ref !== dep) {
-                refsDependencyGraph[dep]!.forEach((transitive: string) => {
+                refsDependencyGraph[dep].forEach((transitive: string) => {
                     if (visitedsDeepRefs[ref + "__" + transitive]) return;
                     visitedsDeepRefs[ref + "__" + transitive] = true;
                     visit(transitive);

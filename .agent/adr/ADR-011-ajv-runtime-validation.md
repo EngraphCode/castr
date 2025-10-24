@@ -11,6 +11,7 @@ We needed a way to validate OpenAPI documents against the official OpenAPI speci
 ### The Problem
 
 **Challenges:**
+
 1. OpenAPI 3.0.x uses JSON Schema draft-04
 2. OpenAPI 3.1.x uses JSON Schema 2020-12
 3. Different validation approaches needed per version
@@ -52,15 +53,13 @@ const Ajv04 = (Ajv04Module as any).default || Ajv04Module;
 const addFormats = (addFormatsModule as any).default || addFormatsModule;
 
 // Load official OpenAPI 3.0.x schema
-const oas30Schema = JSON.parse(
-    readFileSync(".agent/reference/openapi_schema/openapi_3_0_x_schema.json", "utf-8")
-);
+const oas30Schema = JSON.parse(readFileSync(".agent/reference/openapi_schema/openapi_3_0_x_schema.json", "utf-8"));
 
 // Create validator
 const ajv = new Ajv04({
-    strict: false,           // Allow JSON Schema extensions
-    validateFormats: true,   // Validate format keywords
-    allErrors: true,         // Report all errors, not just first
+    strict: false, // Allow JSON Schema extensions
+    validateFormats: true, // Validate format keywords
+    allErrors: true, // Report all errors, not just first
 });
 
 addFormats(ajv); // Add format validators (uri, email, etc.)
@@ -102,13 +101,13 @@ const validateOAS31 = ajv.compile(oas31Schema);
 ✅ **Test infrastructure**: Can validate all test documents  
 ✅ **Type safety**: Works alongside `openapi3-ts` types  
 ✅ **Version support**: Can handle multiple OAS versions  
-✅ **Performance**: AJV is fast (code generation)  
+✅ **Performance**: AJV is fast (code generation)
 
 ### Negative
 
 ⚠️ **CJS/ESM interop**: Required workaround for default exports  
 ⚠️ **Bundle size**: Adds ~50kb (not a concern for dev/test)  
-⚠️ **Multiple AJV versions**: Need different versions for different JSON Schema drafts  
+⚠️ **Multiple AJV versions**: Need different versions for different JSON Schema drafts
 
 ### Mitigation
 
@@ -148,9 +147,9 @@ describe("openapi-spec-compliance", () => {
 
         // Step 2: Verify our code handles it correctly
         await expect(
-            generateZodClientFromOpenAPI({ 
-                disableWriteToFile: true, 
-                openApiDoc: doc 
+            generateZodClientFromOpenAPI({
+                disableWriteToFile: true,
+                openApiDoc: doc,
             })
         ).resolves.toBeDefined();
     });
@@ -168,9 +167,9 @@ describe("openapi-spec-compliance", () => {
 
         // Step 2: Our code also throws
         await expect(
-            generateZodClientFromOpenAPI({ 
-                disableWriteToFile: true, 
-                openApiDoc: doc 
+            generateZodClientFromOpenAPI({
+                disableWriteToFile: true,
+                openApiDoc: doc,
             })
         ).rejects.toThrow();
     });
@@ -189,6 +188,7 @@ describe("openapi-spec-compliance", () => {
 TypeScript issue: `ajv-draft-04` and `ajv-formats` default exports don't work correctly with ESM.
 
 **Solution:**
+
 ```typescript
 import * as Ajv04Module from "ajv-draft-04";
 import * as addFormatsModule from "ajv-formats";
@@ -245,5 +245,3 @@ $ openapi-zod-client validate ./broken.json
 
 - `eb9faa2` feat(tests): add comprehensive OpenAPI spec compliance tests
 - `647a08e` fix: resolve AJV type issues with CJS/ESM interop
-
-

@@ -259,7 +259,7 @@ describe("CodeMeta", () => {
 
             // Reference objects add themselves to referencedBy
             expect(meta.meta.referencedBy).toHaveLength(1);
-            expect(meta.meta.referencedBy![0]!.ref).toBe("#/components/schemas/Pet");
+            expect(meta.meta.referencedBy[0]!.ref).toBe("#/components/schemas/Pet");
         });
 
         it("should preserve reference chain through nested metadata", () => {
