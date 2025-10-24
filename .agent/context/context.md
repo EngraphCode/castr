@@ -25,7 +25,7 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 ✅ format      - Passing
 ✅ build       - Passing (ESM + CJS + DTS)
 ✅ type-check  - Passing (0 errors)
-⚠️  lint       - 148 issues (see below)
+⚠️  lint       - 146 issues (see below)
 ✅ test        - Passing (297 tests)
 ```
 
@@ -39,24 +39,29 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 
 ### Lint Status (CRITICAL ATTENTION REQUIRED)
 
-- **Total:** 148 issues
-- **Errors:** 74
+- **Total:** 146 issues
+- **Errors:** 72
 - **Warnings:** 74
 
 **EXTRACTION BLOCKER:**
 
-- **74 type assertions** (`@typescript-eslint/consistent-type-assertions`)
+- **74 type assertions** (`@typescript-eslint/consistent-type-assertions`) - ALL warnings
 - Target repo requires `assertionStyle: "never"` - NO type assertions allowed
 - **Must fix before extraction to target monorepo**
 
 **Other Critical Issues:**
 
-- 10 `max-statements` violations
-- 8 `@typescript-eslint/require-await` (dead async functions)
-- 7 `sonarjs/function-return-type` (inconsistent return types)
-- 4 `@typescript-eslint/no-non-null-assertion` (forbidden `!` operator)
+- 3 `max-statements` violations (down from 10)
+- 2 `max-lines-per-function` violations
+- 2 `require-await` (dead async functions)
+- 2 `no-clear-text-protocols` (http in tests)
+- 2 `no-os-command-from-path` (security)
+- 1 `restrict-template-expressions`
+- 1 `different-types-comparison`
+- 1 `no-floating-promises`
+- 1 `todo-tag`
 
-Full breakdown: `.agent/context/CURRENT_LINT_OUTPUT.txt`
+Full breakdown: `.agent/context/archive/CURRENT_LINT_OUTPUT.txt`
 
 ---
 
