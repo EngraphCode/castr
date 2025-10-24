@@ -548,8 +548,11 @@ Tasks MUST be executed in this order due to dependencies:
 - [ ] **Type-safe validation helpers** for request/response
 - [ ] CLI supports `--no-client` flag to skip HTTP client generation
 - [ ] CLI supports `--with-validation-helpers` flag for Oak use case
+- [ ] **STRICT TYPES:** No `any` in generated code (only `unknown` when necessary)
+- [ ] **FAIL-FAST:** All validation uses `.parse()` (throws on invalid input)
+- [ ] **STRICT SCHEMAS:** Generated schemas use `.strict()` by default (no `.passthrough()` unless spec requires)
 - [ ] All tests written BEFORE implementation (TDD)
-- [ ] All tests passing
+- [ ] All tests passing (including strict type validation tests)
 - [ ] README updated with template comparison table
 - [ ] Examples added for each template use case (including Oak pattern)
 - [ ] Programmatic API documented for advanced usage
@@ -1049,6 +1052,93 @@ Tasks MUST be executed in this order due to dependencies:
              expect(result).toContain("export function buildSchemaRegistry");
              expect(result).toContain("rename");
              expect(result).toContain("replace(/[^A-Za-z0-9_]/g");
+         });
+
+         it("should generate STRICT types with NO 'any' in validation helpers", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 paths: {
+                     "/test": {
+                         post: {
+                             requestBody: { content: { "application/json": { schema: { type: "object" } } } },
+                             responses: { 200: { content: { "application/json": { schema: { type: "object" } } } } },
+                         },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+                 options: { withValidationHelpers: true },
+             });
+
+             // ✅ MUST use 'unknown', NOT 'any'
+             expect(result).toContain(": unknown");
+             // ❌ MUST NOT contain 'any' type
+             expect(result).not.toMatch(/: any[,;)]/);
+             expect(result).not.toContain("Record<string, any>");
+         });
+
+         it("should generate FAIL-FAST validation (uses .parse(), not .safeParse())", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 paths: {
+                     "/test": {
+                         post: {
+                             requestBody: { content: { "application/json": { schema: { type: "object" } } } },
+                             responses: { 200: { content: { "application/json": { schema: { type: "object" } } } } },
+                         },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+                 options: { withValidationHelpers: true },
+             });
+
+             // ✅ MUST use .parse() for fail-fast
+             expect(result).toContain(".parse(");
+             // ❌ MUST NOT use .safeParse() in helpers
+             expect(result).not.toContain(".safeParse(");
+             // ✅ MUST document that it throws
+             expect(result).toContain("@throws");
+         });
+
+         it("should generate STRICT schemas with .strict() by default", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 components: {
+                     schemas: {
+                         User: {
+                             type: "object",
+                             properties: { id: { type: "string" }, name: { type: "string" } },
+                             required: ["id"],
+                             // No additionalProperties: true
+                         },
+                     },
+                 },
+                 paths: {
+                     "/users": {
+                         get: { responses: { 200: { content: { "application/json": { schema: { $ref: "#/components/schemas/User" } } } } } },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+             });
+
+             // ✅ MUST use .strict() for objects (reject unknown keys)
+             expect(result).toContain(".strict()");
+             // ❌ MUST NOT use .passthrough() (unless additionalProperties: true)
+             expect(result).not.toContain(".passthrough()");
          });
      });
      ```
