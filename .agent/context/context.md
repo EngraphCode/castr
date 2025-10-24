@@ -29,24 +29,28 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 ✅ test        - Passing (297 tests)
 ```
 
-**Definition of Done:**  
+**Definition of Done:**
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 ```
+
 ✅ **Currently passing**
 
 ### Lint Status (CRITICAL ATTENTION REQUIRED)
 
 - **Total:** 148 issues
-- **Errors:** 74  
+- **Errors:** 74
 - **Warnings:** 74
 
 **EXTRACTION BLOCKER:**
+
 - **74 type assertions** (`@typescript-eslint/consistent-type-assertions`)
 - Target repo requires `assertionStyle: "never"` - NO type assertions allowed
 - **Must fix before extraction to target monorepo**
 
 **Other Critical Issues:**
+
 - 10 `max-statements` violations
 - 8 `@typescript-eslint/require-await` (dead async functions)
 - 7 `sonarjs/function-return-type` (inconsistent return types)
@@ -63,28 +67,33 @@ Full breakdown: `.agent/context/CURRENT_LINT_OUTPUT.txt`
 All documented in `.agent/adr/` (12 ADRs):
 
 **Core Philosophy:**
+
 - **ADR-001:** Fail Fast on Spec Violations (strict validation, helpful errors)
 - **ADR-002:** Defer Types to openapi3-ts (use library types, no custom duplication)
 - **ADR-003:** Type Predicates Over Boolean Filters (proper `is` keyword type guards)
 
 **Code Quality:**
+
 - **ADR-004:** Pure Functions & Single Responsibility (target: <50 lines per function)
 - **ADR-005:** Enum Complexity is Constant (always 2, regardless of size)
 - **ADR-006:** No Unused Variables (never prefix with `_`)
 
 **Tooling:**
+
 - **ADR-007:** ESM with NodeNext Resolution (`.js` extensions for ESM)
 - **ADR-008:** Replace cac with commander (better TypeScript support)
 - **ADR-009:** Replace Preconstruct with tsup (modern, fast build)
 - **ADR-010:** Use Turborepo (monorepo orchestration, caching)
 
 **Infrastructure:**
+
 - **ADR-011:** AJV for Runtime Validation (against official OpenAPI schemas)
 - **ADR-012:** Remove Playground/Examples (focus on core library)
 
 ### Coding Standards
 
 **Comprehensive standards in `.agent/RULES.md`:**
+
 - Pure functions where possible
 - No type assertions (`as` casts)
 - Type safety without `any`
@@ -100,16 +109,16 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ```json
 {
-  "openapi3-ts": "^3",          // Target: 4.5.0 (June 2025)
-  "zod": "^3",                   // Target: 4.1.12 (Oct 2025)
-  "@zodios/core": "^10.9.6",    // Keep or replace?
-  "openapi-types": "^12.1.3",   // Keep or replace?
-  "pastable": "^2.2.1",         // REMOVE: replace with lodash/native
-  "@apidevtools/swagger-parser": "^12.1.0",  // Investigate integration
-  "tanu": "^0.2.0",             // TypeScript AST (keep)
-  "commander": "^14.0.1",       // CLI (keep)
-  "ts-pattern": "^5.8.0",       // Pattern matching (keep)
-  "handlebars": "^4.7.8"        // Templates (keep)
+    "openapi3-ts": "^3", // Target: 4.5.0 (June 2025)
+    "zod": "^3", // Target: 4.1.12 (Oct 2025)
+    "@zodios/core": "^10.9.6", // Keep or replace?
+    "openapi-types": "^12.1.3", // Keep or replace?
+    "pastable": "^2.2.1", // REMOVE: replace with lodash/native
+    "@apidevtools/swagger-parser": "^12.1.0", // Investigate integration
+    "tanu": "^0.2.0", // TypeScript AST (keep)
+    "commander": "^14.0.1", // CLI (keep)
+    "ts-pattern": "^5.8.0", // Pattern matching (keep)
+    "handlebars": "^4.7.8" // Templates (keep)
 }
 ```
 
@@ -127,6 +136,7 @@ All documented in `.agent/adr/` (12 ADRs):
 ### Phase 1: Developer Tooling (✅ COMPLETE)
 
 **Achievements:**
+
 - Modernized all tooling to latest versions
 - Migrated to pure ESM with NodeNext resolution
 - Eliminated all cognitive complexity violations (4 files, 104+47+33+31 points over → all <30)
@@ -136,12 +146,14 @@ All documented in `.agent/adr/` (12 ADRs):
 - Added 47 tests (+19%)
 
 **Quality Improvement:**
+
 - **TypeScript errors:** 151 → 0 ✅
 - **Tests:** 250 → 297 ✅
 - **Cognitive complexity:** 4 violations → 0 ✅
 - **Critical type safety:** 10 errors → 0 ✅
 
 **Documentation:**
+
 - 12 comprehensive ADRs (~2900 lines)
 - RULES.md with coding standards
 - Definition of Done established
@@ -159,66 +171,69 @@ All documented in `.agent/adr/` (12 ADRs):
 ### Immediate (This Week)
 
 1. **Type Assertion Elimination** (BLOCKER)
-   - 74 instances must be resolved before extraction
-   - Target repo: `assertionStyle: "never"`
-   - Files: See `.agent/analysis/LINT_TRIAGE_CRITICAL.md`
+    - 74 instances must be resolved before extraction
+    - Target repo: `assertionStyle: "never"`
+    - Files: See `.agent/analysis/LINT_TRIAGE_CRITICAL.md`
 
 2. **pastable Replacement**
-   - 7 files use it: `get`, `capitalize`, `pick`, `sortBy`, `sortListFromRefArray`, `sortObjKeysFromArray`, `kebabToCamel`, `snakeToCamel`, `getSum`
-   - Replace with lodash or native implementations
-   - Remove dependency
+    - 7 files use it: `get`, `capitalize`, `pick`, `sortBy`, `sortListFromRefArray`, `sortObjKeysFromArray`, `kebabToCamel`, `snakeToCamel`, `getSum`
+    - Replace with lodash or native implementations
+    - Remove dependency
 
 3. **Dependency Updates**
-   - openapi3-ts: v3 → v4.5.0
-   - zod: v3 → v4.1.12
-   - Document breaking changes, migration steps
+    - openapi3-ts: v3 → v4.5.0
+    - zod: v3 → v4.1.12
+    - Document breaking changes, migration steps
 
 ### Short Term (Next 2 Weeks)
 
 4. **openapi3-ts Investigation**
-   - What type guards/utilities does it provide?
-   - What can we defer instead of custom implementations?
-   - Schema traversal, reference resolution, validation
+    - What type guards/utilities does it provide?
+    - What can we defer instead of custom implementations?
+    - Schema traversal, reference resolution, validation
 
 5. **Dependency Evaluation**
-   - `openapi-types`: Still needed with openapi3-ts v4?
-   - `@zodios/core`: What do we use? Active maintenance?
-   - `@apidevtools/swagger-parser`: Integration opportunities?
+    - `openapi-types`: Still needed with openapi3-ts v4?
+    - `@zodios/core`: What do we use? Active maintenance?
+    - `@apidevtools/swagger-parser`: Integration opportunities?
 
 6. **Mutation Testing**
-   - Add Stryker 9.2.0 (October 2025)
-   - Integrate with Turbo
-   - Establish mutation score threshold
+    - Add Stryker 9.2.0 (October 2025)
+    - Integrate with Turbo
+    - Establish mutation score threshold
 
 ### Medium Term (Next Month)
 
 7. **ESLint Target Compliance**
-   - Gap analysis vs `.agent/reference/reference.eslint.config.ts`
-   - Prioritize remaining lint issues
-   - Achieve full target repo compliance
+    - Gap analysis vs `.agent/reference/reference.eslint.config.ts`
+    - Prioritize remaining lint issues
+    - Achieve full target repo compliance
 
 8. **Final Cleanup**
-   - All quality gates green (including lint)
-   - Zero dependencies with security issues
-   - Ready for extraction
+    - All quality gates green (including lint)
+    - Zero dependencies with security issues
+    - Ready for extraction
 
 ---
 
 ## 🔗 Key Documents
 
 ### Plans & Context
+
 - **This file:** Living context
 - **Strategic Plan:** `.agent/plans/00-STRATEGIC-PLAN.md`
 - **Current Implementation:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md`
 - **Definition of Done:** `.agent/DEFINITION_OF_DONE.md`
 
 ### Reference
+
 - **Coding Standards:** `.agent/RULES.md`
 - **ADRs:** `.agent/adr/` (12 decision records)
 - **Target ESLint Config:** `.agent/reference/reference.eslint.config.ts`
 - **Lint Output:** `.agent/context/CURRENT_LINT_OUTPUT.txt`
 
 ### History
+
 - **Session Status:** `.agent/context/SESSION_STATUS_OCT_24.md`
 - **Phase 1 Complete:** `.agent/context/PHASE1_COMPLETE.md`
 - **Previous Plans:** `.agent/plans/archive/`
@@ -281,6 +296,7 @@ All documented in `.agent/adr/` (12 ADRs):
 ### Before Any Commit
 
 Run Definition of Done:
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 ```
@@ -290,5 +306,3 @@ All must pass (currently: ✅ passing)
 ---
 
 **This is a living document. Update as decisions are made and work progresses.**
-
-
