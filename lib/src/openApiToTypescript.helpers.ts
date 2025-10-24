@@ -12,13 +12,37 @@ import type { TsConversionContext } from "./openApiToTypescript.js";
 import { wrapWithQuotesIfNeeded } from "./utils.js";
 
 /**
- * Type guard to check if a schema type is a primitive type
- * Uses library types directly per RULES.md §5
+ * Primitive schema types (subset of SchemaObjectType from openapi3-ts)
+ * Domain concept: types that map to simple TypeScript primitives
+ *
+ * Tied to library type per RULES.md §5: Defer Type Definitions to Source Libraries
  */
-export function isPrimitiveType(type: SchemaObject["type"]): boolean {
-    if (typeof type !== "string") return false;
-    const primitives = ["string", "number", "integer", "boolean", "null"] as const;
-    return primitives.includes(type as any);
+type PrimitiveSchemaType = Extract<
+    NonNullable<SchemaObject["type"]>,
+    "string" | "number" | "integer" | "boolean" | "null"
+>;
+
+/**
+ * Literal array tied to library type - compiler enforces correctness
+ */
+const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "null",
+] as const;
+
+/**
+ * Type predicate to narrow unknown values to primitive schema types
+ * Useful for runtime validation and public API
+ *
+ * Pattern: literals tied to library types per RULES.md §5
+ */
+export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
+    if (typeof value !== "string") return false;
+    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+    return typeStrings.includes(value);
 }
 
 /**
@@ -59,7 +83,7 @@ export function handleReferenceObject(
  * Handles primitive type enums, returning union types
  * Rejects invalid enums (non-string type with string values)
  */
-export function handlePrimitiveEnum(schema: SchemaObject, schemaType: NonNullable<SchemaObject["type"]>): ts.Node | null {
+export function handlePrimitiveEnum(schema: SchemaObject, schemaType: PrimitiveSchemaType): ts.Node | null {
     if (!schema.enum) return null;
 
     // Invalid: non-string type with string enum values
@@ -81,7 +105,7 @@ export function handlePrimitiveEnum(schema: SchemaObject, schemaType: NonNullabl
  * Handles basic primitive types (string, number, boolean)
  * Returns the appropriate TypeScript type, with null union if nullable
  */
-export function handleBasicPrimitive(schemaType: NonNullable<SchemaObject["type"]>, isNullable: boolean): ts.Node {
+export function handleBasicPrimitive(schemaType: PrimitiveSchemaType, isNullable: boolean): ts.Node {
     let baseType: t.TypeDefinition;
 
     if (schemaType === "string") baseType = t.string();
@@ -356,7 +380,7 @@ export function handleTypeArray(
         return convertSchema({ ...schema, type: types[0]! } as SchemaObject) as ts.Node;
     }
 
-    const typeSchemas = types.map((type) => ({ ...schema, type } as SchemaObject));
+    const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);
     const typeDefs: (ts.Node | t.TypeDefinition)[] = convertSchemasToTypes(typeSchemas, convertSchema);
 
     if (isNullable) {

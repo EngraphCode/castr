@@ -3,8 +3,8 @@ import { getSum } from "pastable";
 import { match } from "ts-pattern";
 
 import { isReferenceObject } from "./isReferenceObject.js";
-import type { PrimitiveType } from "./utils.js";
-import { isPrimitiveType } from "./utils.js";
+import type { PrimitiveSchemaType } from "./utils.js";
+import { isPrimitiveSchemaType } from "./utils.js";
 import {
     calculateCompositionComplexity,
     calculatePropertiesComplexity,
@@ -12,7 +12,7 @@ import {
 } from "./schema-complexity.helpers.js";
 
 type CompositeType = "oneOf" | "anyOf" | "allOf" | "enum" | "array" | "empty-object" | "object" | "record";
-const complexityByType = (schema: SchemaObject & { type: PrimitiveType }) => {
+const complexityByType = (schema: SchemaObject & { type: PrimitiveSchemaType }) => {
     const type = schema.type;
     if (!type) return 0;
 
@@ -91,17 +91,17 @@ export function getSchemaComplexity({
 
     if (!schema.type) return current;
 
-    if (isPrimitiveType(schema.type)) {
+    if (isPrimitiveSchemaType(schema.type)) {
         if (schema.enum) {
             return (
                 current +
-                complexityByType(schema as SchemaObject & { type: PrimitiveType }) +
+                complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
                 complexityByComposite("enum") +
                 getSum(schema.enum.map((prop: unknown) => getSchemaComplexity({ current: 0, schema: prop })))
             );
         }
 
-        return current + complexityByType(schema as SchemaObject & { type: PrimitiveType });
+        return current + complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType });
     }
 
     if (schema.type === "array") {

@@ -61,12 +61,28 @@ export const pathToVariableName = (path: string) =>
         .replaceAll(pathParamWithBracketsRegex, (group) => capitalize(group.slice(1, -1))) // {id} -> Id
         .replaceAll(wordPrecededByNonWordCharacter, "_"); // "/robots.txt" -> "/robots_txt"
 
-type SingleType = Exclude<SchemaObject["type"], unknown[] | undefined>;
-export const isPrimitiveType = (type: SingleType): type is PrimitiveType =>
-    primitiveTypeList.includes(type as PrimitiveType);
+/**
+ * Primitive schema types (subset of SchemaObjectType from openapi3-ts)
+ * Domain concept: types that map to simple primitives
+ * 
+ * Pattern per RULES.md §5: Literals tied to library types
+ */
+export type PrimitiveSchemaType = Extract<
+    NonNullable<SchemaObject["type"]>,
+    "string" | "number" | "integer" | "boolean" | "null"
+>;
 
-const primitiveTypeList = ["string", "number", "integer", "boolean", "null"] as const;
-export type PrimitiveType = (typeof primitiveTypeList)[number];
+const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = ["string", "number", "integer", "boolean", "null"] as const;
+
+/**
+ * Type predicate to narrow unknown values to primitive schema types
+ * Pattern: literals tied to library types per RULES.md §5
+ */
+export const isPrimitiveSchemaType = (value: unknown): value is PrimitiveSchemaType => {
+    if (typeof value !== "string") return false;
+    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+    return typeStrings.includes(value);
+};
 
 export const escapeControlCharacters = (str: string): string => {
     return (

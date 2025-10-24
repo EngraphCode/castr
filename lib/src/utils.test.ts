@@ -1,51 +1,51 @@
 import { describe, expect, it } from "vitest";
 
-import { isPrimitiveType, type PrimitiveType } from "./utils.js";
+import { isPrimitiveSchemaType, type PrimitiveSchemaType } from "./utils.js";
 
 describe("utils", () => {
-    describe("isPrimitiveType", () => {
+    describe("isPrimitiveSchemaType", () => {
         it("should return true for string type", () => {
-            expect(isPrimitiveType("string")).toBe(true);
+            expect(isPrimitiveSchemaType("string")).toBe(true);
         });
 
         it("should return true for number type", () => {
-            expect(isPrimitiveType("number")).toBe(true);
+            expect(isPrimitiveSchemaType("number")).toBe(true);
         });
 
         it("should return true for integer type", () => {
-            expect(isPrimitiveType("integer")).toBe(true);
+            expect(isPrimitiveSchemaType("integer")).toBe(true);
         });
 
         it("should return true for boolean type", () => {
-            expect(isPrimitiveType("boolean")).toBe(true);
+            expect(isPrimitiveSchemaType("boolean")).toBe(true);
         });
 
         it("should return true for null type", () => {
-            expect(isPrimitiveType("null")).toBe(true);
+            expect(isPrimitiveSchemaType("null")).toBe(true);
         });
 
         it("should return false for object type", () => {
-            expect(isPrimitiveType("object")).toBe(false);
+            expect(isPrimitiveSchemaType("object")).toBe(false);
         });
 
         it("should return false for array type", () => {
-            expect(isPrimitiveType("array")).toBe(false);
+            expect(isPrimitiveSchemaType("array")).toBe(false);
         });
 
-        it("should narrow type correctly", () => {
-            const type: string = "string";
-            if (isPrimitiveType(type)) {
-                // Type should be narrowed to PrimitiveType
-                const primitiveType: PrimitiveType = type;
+        it("should narrow type correctly from unknown", () => {
+            const value: unknown = "string";
+            if (isPrimitiveSchemaType(value)) {
+                // Type should be narrowed to PrimitiveSchemaType
+                const primitiveType: PrimitiveSchemaType = value;
                 expect(primitiveType).toBe("string");
             }
         });
 
         it("should handle invalid types gracefully", () => {
-            // @ts-expect-error - Testing runtime behavior with invalid input
-            expect(isPrimitiveType("invalid")).toBe(false);
-            // @ts-expect-error - Testing runtime behavior with invalid input
-            expect(isPrimitiveType(undefined)).toBe(false);
+            expect(isPrimitiveSchemaType("invalid")).toBe(false);
+            expect(isPrimitiveSchemaType(undefined)).toBe(false);
+            expect(isPrimitiveSchemaType(null)).toBe(false);
+            expect(isPrimitiveSchemaType(123)).toBe(false);
         });
     });
 });

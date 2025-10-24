@@ -6,7 +6,7 @@ import {
     createAdditionalPropertiesSignature,
     handleBasicPrimitive,
     handlePrimitiveEnum,
-    isPrimitiveType,
+    isPrimitiveSchemaType,
     isPropertyRequired,
     maybeWrapReadonly,
     resolveAdditionalPropertiesType,
@@ -14,18 +14,34 @@ import {
 } from "./openApiToTypescript.helpers.js";
 
 describe("openApiToTypescript.helpers", () => {
-    describe("isPrimitiveType", () => {
-        it("should return true for primitive types", () => {
-            expect(isPrimitiveType("string")).toBe(true);
-            expect(isPrimitiveType("number")).toBe(true);
-            expect(isPrimitiveType("integer")).toBe(true);
-            expect(isPrimitiveType("boolean")).toBe(true);
-            expect(isPrimitiveType("null")).toBe(true);
+    describe("isPrimitiveSchemaType", () => {
+        it("should return true for primitive schema types", () => {
+            expect(isPrimitiveSchemaType("string")).toBe(true);
+            expect(isPrimitiveSchemaType("number")).toBe(true);
+            expect(isPrimitiveSchemaType("integer")).toBe(true);
+            expect(isPrimitiveSchemaType("boolean")).toBe(true);
+            expect(isPrimitiveSchemaType("null")).toBe(true);
         });
 
-        it("should return false for non-primitive types", () => {
-            expect(isPrimitiveType("object")).toBe(false);
-            expect(isPrimitiveType("array")).toBe(false);
+        it("should return false for non-primitive schema types", () => {
+            expect(isPrimitiveSchemaType("object")).toBe(false);
+            expect(isPrimitiveSchemaType("array")).toBe(false);
+        });
+
+        it("should return false for non-string values", () => {
+            expect(isPrimitiveSchemaType(undefined)).toBe(false);
+            expect(isPrimitiveSchemaType(null)).toBe(false);
+            expect(isPrimitiveSchemaType(123)).toBe(false);
+            expect(isPrimitiveSchemaType({})).toBe(false);
+        });
+
+        it("should narrow unknown to PrimitiveSchemaType", () => {
+            const value: unknown = "string";
+            if (isPrimitiveSchemaType(value)) {
+                // Type narrowed - should compile without error
+                const typed: "string" | "number" | "integer" | "boolean" | "null" = value;
+                expect(typed).toBe("string");
+            }
         });
     });
 

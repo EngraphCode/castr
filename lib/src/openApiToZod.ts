@@ -6,7 +6,7 @@ import { CodeMeta } from "./CodeMeta.js";
 import { generateNonStringEnumZodCode, generateStringEnumZodCode, shouldEnumBeNever } from "./enumHelpers.js";
 import { isReferenceObject } from "./isReferenceObject.js";
 import type { TemplateContext } from "./template-context.js";
-import { escapeControlCharacters, isPrimitiveType, wrapWithQuotesIfNeeded } from "./utils.js";
+import { escapeControlCharacters, isPrimitiveSchemaType, wrapWithQuotesIfNeeded } from "./utils.js";
 import { inferRequiredSchema } from "./inferRequiredOnly.js";
 
 type ConversionArgs = {
@@ -174,7 +174,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
     }
 
     const schemaType = schema.type ? (schema.type.toLowerCase() as NonNullable<typeof schema.type>) : undefined;
-    if (schemaType && isPrimitiveType(schemaType)) {
+    if (schemaType && isPrimitiveSchemaType(schemaType)) {
         if (schema.enum) {
             // Handle string enums
             if (schemaType === "string") {

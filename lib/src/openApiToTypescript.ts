@@ -19,7 +19,7 @@ import {
     handlePrimitiveEnum,
     handleReferenceObject,
     handleTypeArray,
-    isPrimitiveType,
+    isPrimitiveSchemaType,
     maybeWrapReadonly,
     resolveAdditionalPropertiesType,
     wrapObjectTypeForOutput,
@@ -126,8 +126,9 @@ export const getTypescriptFromOpenApi = ({
             return schema.nullable ? t.union([intersection, t.reference("null")]) : intersection;
         }
 
-        const schemaType = schema.type ? (schema.type.toLowerCase() as NonNullable<typeof schema.type>) : undefined;
-        if (schemaType && isPrimitiveType(schemaType)) {
+        // Handle primitive types (string, number, integer, boolean, null)
+        const schemaType = schema.type;
+        if (schemaType && isPrimitiveSchemaType(schemaType)) {
             // Try to handle as enum first
             const enumResult = handlePrimitiveEnum(schema, schemaType);
             if (enumResult) return enumResult;
