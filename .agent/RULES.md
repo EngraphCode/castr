@@ -8,6 +8,77 @@
 
 ## Testing Standards
 
+### 🎯 **MANDATORY: Test-Driven Development (TDD)**
+
+**ALL code changes MUST follow TDD:**
+
+1. **Write failing tests FIRST** - Before writing any implementation code
+2. **Run tests - confirm they fail** - Proves test is actually testing something
+3. **Write minimal code to pass** - Implement only what's needed
+4. **Run tests - confirm they pass** - Validates implementation works
+5. **Refactor if needed** - Clean up while tests protect you
+6. **Repeat** - For each new piece of functionality
+
+**Why TDD is mandatory:**
+
+- **Prevents regressions** - Every change is protected by tests
+- **Documents behavior** - Tests serve as living documentation
+- **Validates tests work** - Seeing tests fail first proves they're effective
+- **Forces good design** - Hard-to-test code is usually bad code
+- **Builds confidence** - Safe to refactor with test coverage
+
+**Example workflow:**
+
+```typescript
+// Step 1: Write failing test FIRST
+test("convertOpenAPIToZod converts string type", () => {
+    const schema = { type: "string" };
+    const result = convertOpenAPIToZod(schema);
+    expect(result).toBe("z.string()");
+});
+
+// Step 2: Run tests - EXPECT FAILURE
+// ❌ ReferenceError: convertOpenAPIToZod is not defined
+
+// Step 3: Write minimal implementation
+export function convertOpenAPIToZod(schema: SchemaObject): string {
+    return "z.string()"; // Minimal code to pass
+}
+
+// Step 4: Run tests - EXPECT SUCCESS
+// ✅ Test passes
+
+// Step 5: Add next test case
+test("convertOpenAPIToZod converts number type", () => {
+    const schema = { type: "number" };
+    const result = convertOpenAPIToZod(schema);
+    expect(result).toBe("z.number()");
+});
+
+// Step 6: Run tests - EXPECT FAILURE (new test fails)
+// ✅ string test passes
+// ❌ number test fails
+
+// Step 7: Update implementation
+export function convertOpenAPIToZod(schema: SchemaObject): string {
+    if (schema.type === "string") return "z.string()";
+    if (schema.type === "number") return "z.number()";
+    throw new Error(`Unsupported type: ${schema.type}`);
+}
+
+// Step 8: Run tests - ALL PASS
+// ✅ All tests pass
+```
+
+**No exceptions:**
+
+- ❌ "I'll add tests later" - NOT ALLOWED
+- ❌ "This is too simple to test" - STILL WRITE THE TEST
+- ❌ "I need to prototype first" - Prototype in a test file
+- ✅ Tests must be written BEFORE implementation code
+
+---
+
 ### Core Principles
 
 #### 1. **All tests must be unit tests of pure functions where possible**

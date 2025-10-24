@@ -16,6 +16,28 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ---
 
+## 🎯 Development Methodology
+
+**ALL implementation work MUST follow Test-Driven Development (TDD):**
+
+1. **Write failing tests FIRST** - Before any implementation code
+2. **Run tests - confirm failure** - Proves tests actually validate behavior
+3. **Write minimal implementation** - Only enough code to pass tests
+4. **Run tests - confirm success** - Validates implementation works
+5. **Refactor if needed** - Clean up with test protection
+6. **Repeat for each feature** - No exceptions
+
+**Why TDD is mandatory:**
+- Prevents regressions (every change protected by tests)
+- Documents behavior (tests as living documentation)
+- Validates tests work (seeing failure first proves effectiveness)
+- Forces good design (untestable code signals design issues)
+- Enables safe refactoring (test coverage provides confidence)
+
+**No exceptions:** "I'll add tests later" is NOT ALLOWED. See `.agent/RULES.md` for detailed TDD guidelines.
+
+---
+
 ## Current State (October 24, 2025)
 
 ### Quality Gates
@@ -89,30 +111,38 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - ✅ Handlebars Evaluation (KEEP Phase 2, ts-morph emitter Phase 3/4)
 
 **Implementation Phase (Ready to Execute):**
+
+**⚠️ MANDATORY: ALL tasks MUST follow TDD (tests written BEFORE implementation)**
+
 1. **Dependency Updates** (MUST DO FIRST - Tasks 2.1, 2.2)
    - openapi3-ts v3 → v4.5.0 (migration checklist ready)
    - zod v3 → v4.1.12 (update plan documented)
+   - **TDD:** Update/add tests for new type signatures FIRST, confirm failures, then update
    - **Estimated:** 8-12 hours
 
 2. **Type Assertion Elimination** (EXTRACTION BLOCKER - Task 3.2)
    - 74 instances across 11 files → 0
    - Target repo forbids type assertions
    - File-by-file plan ready
+   - **TDD:** Write type guard tests FIRST, implement guards, replace assertions
    - **Estimated:** 16-24 hours
 
 3. **pastable Removal** (Task 3.1)
    - 7 files, 8 functions → lodash-es + custom
    - Detailed replacement plan ready
+   - **TDD:** Write replacement tests FIRST matching pastable behavior, implement, switch
    - **Estimated:** 6-8 hours
 
 4. **Dependency Cleanup** (Task 3.3)
    - Remove: `openapi-types`, `pastable`
    - Keep: `@zodios/core`, `@apidevtools/swagger-parser`
+   - **TDD:** Verify no broken tests after removal
    - **Estimated:** 2-4 hours
 
 5. **Defer Logic to openapi3-ts v4** (Task 1.8)
    - Analyze custom code that v4 can replace
    - After Task 2.1 complete
+   - **TDD:** Tests guide which custom code can be safely replaced
    - **Estimated:** 3-4 hours
 
 ---
@@ -122,17 +152,21 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Status:** Planned  
 **Duration:** Estimated 1-2 weeks
 
+**⚠️ MANDATORY: ALL tasks MUST follow TDD**
+
 **Goals:**
 - Add Stryker mutation testing (v9.2.0)
 - Achieve target ESLint compliance (146 → 0 issues)
 - Zero lint issues
 - Establish mutation score threshold
 - All quality gates green
+- **TDD:** Write tests that expose gaps mutation testing finds, fix code
 
 **Optional (Phase 3 or 4):**
 - Evaluate ts-morph emitter architecture (22-32 hours)
 - Replace Handlebars with AST-based generation
 - Plugin API for custom templates
+- **TDD:** Build new emitter test-first, maintain backward compatibility
 
 ---
 
@@ -141,12 +175,15 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Status:** Planned  
 **Duration:** Estimated 1 week
 
+**⚠️ MANDATORY: ALL tasks MUST follow TDD**
+
 **Goals:**
 - Final dependency audit (zero issues)
 - Documentation for extraction
 - Integration guide for target repo
 - Performance benchmarks
 - Ready for porting
+- **TDD:** Integration tests in target repo validate extraction success
 
 ---
 
@@ -154,13 +191,14 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ### From RULES.md
 
-1. **Test behavior, not implementation**
-2. **Pure functions where possible**
-3. **Defer types to source libraries**
-4. **Type predicates over boolean filters**
-5. **No unused variables**
-6. **Explicit over implicit**
-7. **Fail fast with helpful errors**
+1. **🎯 Test-Driven Development (TDD) - MANDATORY FOR ALL WORK**
+2. **Test behavior, not implementation**
+3. **Pure functions where possible**
+4. **Defer types to source libraries**
+5. **Type predicates over boolean filters**
+6. **No unused variables**
+7. **Explicit over implicit**
+8. **Fail fast with helpful errors**
 
 ### Quality Standards
 
