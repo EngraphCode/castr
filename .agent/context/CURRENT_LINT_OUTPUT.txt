@@ -1,0 +1,220 @@
+
+> openapi-zod-client@1.18.3 lint /Users/jim/code/personal/openapi-zod-client/lib
+> eslint .
+
+
+/Users/jim/code/personal/openapi-zod-client/lib/samples-generator.ts
+  17:1   error  Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator  @typescript-eslint/no-floating-promises
+  20:15  error  Make sure the "PATH" variable only contains fixed, unwriteable directories                                                                                          sonarjs/no-os-command-from-path
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/CodeMeta.test.ts
+  250:37  error  Invalid type "CodeMeta" of template literal expression  @typescript-eslint/restrict-template-expressions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/cli.ts
+   39:24  warning  Do not use any type assertions                                            @typescript-eslint/consistent-type-assertions
+  101:13  error    Async arrow function has too many statements (31). Maximum allowed is 30  max-statements
+  104:28  warning  Do not use any type assertions                                            @typescript-eslint/consistent-type-assertions
+  104:28  warning  Do not use any type assertions                                            @typescript-eslint/consistent-type-assertions
+  111:31  warning  Do not use any type assertions                                            @typescript-eslint/consistent-type-assertions
+  120:39  warning  Do not use any type assertions                                            @typescript-eslint/consistent-type-assertions
+  157:44  warning  Do not use any type assertions                                            @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/generateJSDocArray.ts
+  34:29  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/generateZodClientFromOpenAPI.test.ts
+    13:46  error  Async arrow function has no 'await' expression                              @typescript-eslint/require-await
+  3472:62  error  Remove this "!==" check; it will always be true. Did you mean to use "!="?  sonarjs/different-types-comparison
+  4008:63  error  Async arrow function has no 'await' expression                              @typescript-eslint/require-await
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/generateZodClientFromOpenAPI.ts
+  73:45  error  Async arrow function has too many statements (40). Maximum allowed is 30  max-statements
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/getZodiosEndpointDefinitionList.test.ts
+  12:25  error  Using http protocol is insecure. Use https instead  sonarjs/no-clear-text-protocols
+  18:18  error  Using http protocol is insecure. Use https instead  sonarjs/no-clear-text-protocols
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/getZodiosEndpointDefinitionList.ts
+   53:48  error    Arrow function has too many lines (108). Maximum allowed is 100     max-lines-per-function
+   53:48  error    Arrow function has too many statements (34). Maximum allowed is 30  max-statements
+   90:37  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+   91:33  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+   94:29  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+   99:40  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  152:13  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  183:20  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  186:29  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  187:16  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  187:32  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/inferRequiredOnly.ts
+   5:5   error    Replace this if-then-else flow by a single return statement  sonarjs/prefer-single-boolean-return
+  35:9   warning  Do not use any type assertions                               @typescript-eslint/consistent-type-assertions
+  41:28  warning  Do not use any type assertions                               @typescript-eslint/consistent-type-assertions
+  46:13  warning  Do not use any type assertions                               @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/makeSchemaResolver.ts
+  33:59  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/openApiToTypescript.helpers.ts
+   45:17  error    Refactor this function to always return the same type                                           sonarjs/function-return-type
+   93:24  error    Unsafe argument of type `any[]` assigned to a parameter of type `TypeDefinition[]`              @typescript-eslint/no-unsafe-argument
+   93:25  error    Unsafe spread of an `any` value in an array                                                     @typescript-eslint/no-unsafe-assignment
+   95:20  error    Unsafe argument of type `any[]` assigned to a parameter of type `TypeDefinition[]`              @typescript-eslint/no-unsafe-argument
+  119:12  error    Provide multiple methods instead of using "shouldBeReadonly" to determine which action to take  sonarjs/no-selector-parameter
+  119:42  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  147:13  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  156:17  error    Refactor this function to always return the same type                                           sonarjs/function-return-type
+  172:16  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  193:12  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  214:12  error    Provide multiple methods instead of using "isNullable" to determine which action to take        sonarjs/no-selector-parameter
+  214:34  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  221:17  error    Refactor this function to always return the same type                                           sonarjs/function-return-type
+  231:12  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  251:66  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  252:51  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  275:52  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  276:39  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  289:68  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  293:30  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  305:61  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  315:25  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  328:16  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  328:30  error    Forbidden non-null assertion                                                                    @typescript-eslint/no-non-null-assertion
+  333:24  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  335:20  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  349:16  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  349:30  error    Forbidden non-null assertion                                                                    @typescript-eslint/no-non-null-assertion
+  351:1   error    File has too many lines (384). Maximum allowed is 350                                           max-lines
+  353:27  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  356:52  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  374:16  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  374:30  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  374:49  error    Forbidden non-null assertion                                                                    @typescript-eslint/no-non-null-assertion
+  377:45  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  381:24  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+  383:20  warning  Do not use any type assertions                                                                  @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/openApiToTypescript.test.ts
+   19:29  error  Arrow function has too many statements (43). Maximum allowed is 30  max-statements
+  413:50  error  Async arrow function has no 'await' expression                      @typescript-eslint/require-await
+  458:55  error  Async arrow function has no 'await' expression                      @typescript-eslint/require-await
+  599:43  error  Arrow function has too many statements (44). Maximum allowed is 30  max-statements
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/openApiToTypescript.ts
+   40:41  error    Arrow function has too many lines (156). Maximum allowed is 100        max-lines-per-function
+   45:65  error    Refactor this function to always return the same type                  sonarjs/function-return-type
+   46:18  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+   59:19  error    Arrow function has too many lines (119). Maximum allowed is 100        max-lines-per-function
+   59:19  error    Arrow function has too many statements (38). Maximum allowed is 30     max-statements
+   59:65  error    Refactor this function to always return the same type                  sonarjs/function-return-type
+   59:65  error    Arrow function has a complexity of 31. Maximum allowed is 29           complexity
+   71:24  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+   83:24  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+   93:24  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+   99:59  error    Forbidden non-null assertion                                           @typescript-eslint/no-non-null-assertion
+  105:77  error    Refactor this function to always return the same type                  sonarjs/function-return-type
+  106:30  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+  107:17  error    Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  113:21  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+  194:75  warning  Do not use any type assertions                                         @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/openApiToZod.test.ts
+  19:5  error  Remove this commented out code  sonarjs/no-commented-code
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/openApiToZod.ts
+   29:8   error    Function 'getZodSchema' has too many lines (285). Maximum allowed is 100             max-lines-per-function
+   29:8   error    Function 'getZodSchema' has too many statements (95). Maximum allowed is 30          max-statements
+   29:8   error    Function 'getZodSchema' has a complexity of 62. Maximum allowed is 29                complexity
+   29:17  error    Refactor this function to reduce its Cognitive Complexity from 83 to the 29 allowed  sonarjs/cognitive-complexity
+  187:39  warning  Do not use any type assertions                                                       @typescript-eslint/consistent-type-assertions
+  222:29  warning  Do not use any type assertions                                                       @typescript-eslint/consistent-type-assertions
+  243:25  warning  Do not use any type assertions                                                       @typescript-eslint/consistent-type-assertions
+  286:29  warning  Do not use any type assertions                                                       @typescript-eslint/consistent-type-assertions
+  351:1   error    File has too many lines (481). Maximum allowed is 350                                max-lines
+  374:60  error    Refactor this function to always return the same type                                sonarjs/function-return-type
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/schema-complexity.helpers.ts
+  52:25  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+  52:44  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+  64:29  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+  64:48  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/schema-complexity.test.ts
+  8:29  error  Async arrow function has too many statements (34). Maximum allowed is 30  max-statements
+  8:38  error  Async arrow function has no 'await' expression                            @typescript-eslint/require-await
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/schema-complexity.ts
+   43:8   error    Function 'getSchemaComplexity' has too many lines (105). Maximum allowed is 100     max-lines-per-function
+   43:8   error    Function 'getSchemaComplexity' has too many statements (32). Maximum allowed is 30  max-statements
+  104:34  warning  Do not use any type assertions                                                      @typescript-eslint/consistent-type-assertions
+  112:43  warning  Do not use any type assertions                                                      @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/template-context.ts
+   20:44  error    Arrow function has too many lines (253). Maximum allowed is 100     max-lines-per-function
+   20:44  error    Arrow function has too many statements (41). Maximum allowed is 30  max-statements
+   83:26  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+   99:34  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  142:32  warning  Do not use any type assertions                                      @typescript-eslint/consistent-type-assertions
+  351:1   error    File has too many lines (481). Maximum allowed is 350               max-lines
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/topologicalSort.ts
+  16:21  error  Remove this commented out code  sonarjs/no-commented-code
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/zodiosEndpoint.helpers.ts
+  140:21  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/zodiosEndpoint.operation.helpers.ts
+   76:25  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+  132:23  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+  203:18  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+  233:26  warning  Do not use any type assertions  @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/src/zodiosEndpoint.path.helpers.ts
+   33:15  error    Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+   36:52  warning  Do not use any type assertions       @typescript-eslint/consistent-type-assertions
+   72:9   warning  Do not use any type assertions       @typescript-eslint/consistent-type-assertions
+  128:17  warning  Do not use any type assertions       @typescript-eslint/consistent-type-assertions
+  145:43  warning  Do not use any type assertions       @typescript-eslint/consistent-type-assertions
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/anyOf-behavior.test.ts
+  13:12  error  Implied eval. Do not use the Function constructor to create functions  @typescript-eslint/no-implied-eval
+  13:16  error  Make sure that this dynamic injection or execution of code is safe     sonarjs/code-eval
+  13:49  error  Invalid type "CodeMeta" of template literal expression                 @typescript-eslint/restrict-template-expressions
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/deps-graph-with-additionalProperties.test.ts
+  21:55  error  Async arrow function has no 'await' expression  @typescript-eslint/require-await
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/group-strategy-file-multi-props-object-as-query-parameter.test.ts
+  7:85  error  Async arrow function has no 'await' expression  @typescript-eslint/require-await
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/invalid-pattern-regex.test.ts
+  20:12  error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+  23:12  error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+  27:9   error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/name-starting-with-number.test.ts
+  42:8  error  Complete the task associated to this "TODO" comment  sonarjs/todo-tag
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/recursive-schema.test.ts
+  15:4  error  Complete the task associated to this "TODO" comment  sonarjs/todo-tag
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/samples.test.ts
+  21:40  error  Async arrow function has no 'await' expression  @typescript-eslint/require-await
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/schema-refiner.test.ts
+  19:17  error  Refactor this function to not always return the same value  sonarjs/no-invariant-returns
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/unicode-pattern-regex.test.ts
+  23:12  error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+  27:9   error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+  30:9   error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+  34:9   error  Invalid operand for a '+' operation. Operands must each be a number or string, allowing a string + any of: `any`, `boolean`, `null`, `RegExp`, `undefined`. Got `CodeMeta`  @typescript-eslint/restrict-plus-operands
+
+/Users/jim/code/personal/openapi-zod-client/lib/tests/validations.test.ts
+  40:24  error  Complete the task associated to this "TODO" comment  sonarjs/todo-tag
+  45:24  error  Complete the task associated to this "TODO" comment  sonarjs/todo-tag
+
+✖ 146 problems (72 errors, 74 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.
