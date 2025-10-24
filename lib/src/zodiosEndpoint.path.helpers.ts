@@ -3,8 +3,9 @@
  * Extracted to reduce cognitive complexity in the main function
  */
 
-import type { OperationObject, ResponseObject } from "openapi3-ts";
+import type { OperationObject, ParameterObject, ReferenceObject, ResponseObject } from "openapi3-ts";
 import type { TemplateContext } from "./template-context.js";
+import type { DefaultStatusBehavior } from "./template-context.types.js";
 import type { ConversionTypeContext } from "./CodeMeta.js";
 import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
 import { replaceHyphenatedPath } from "./utils.js";
@@ -60,9 +61,9 @@ function handleDefaultResponse(
     operationName: string,
     ctx: ConversionTypeContext,
     getZodVarName: GetZodVarNameFn,
-    defaultStatusBehavior: TemplateContext["options"]["defaultStatusBehavior"],
+    defaultStatusBehavior: DefaultStatusBehavior | undefined,
     options?: TemplateContext["options"]
-): { ignoredFallback?: string; ignoredGeneric?: string } {
+): { ignoredFallback?: string | undefined; ignoredGeneric?: string | undefined } {
     if (!operation.responses?.default) {
         return {};
     }
@@ -72,7 +73,7 @@ function handleDefaultResponse(
         ctx,
         getZodVarName,
         Boolean(endpointDefinition.response),
-        defaultStatusBehavior,
+        defaultStatusBehavior ?? "spec-compliant",
         options
     );
 
@@ -98,14 +99,14 @@ type ProcessOperationParams = {
     parameters: Array<unknown>;
     ctx: ConversionTypeContext;
     getZodVarName: GetZodVarNameFn;
-    defaultStatusBehavior: TemplateContext["options"]["defaultStatusBehavior"];
+    defaultStatusBehavior: DefaultStatusBehavior | undefined;
     options?: TemplateContext["options"];
 };
 
 type ProcessOperationResult = {
     endpoint: EndpointDefinitionWithRefs;
-    ignoredFallback?: string;
-    ignoredGeneric?: string;
+    ignoredFallback?: string | undefined;
+    ignoredGeneric?: string | undefined;
 };
 
 /**
@@ -141,7 +142,7 @@ export function processOperation({
     }
 
     for (const param of parameters) {
-        const paramDef = processParameter(param, ctx, getZodVarName, options);
+        const paramDef = processParameter(param as ParameterObject | ReferenceObject, ctx, getZodVarName, options);
         if (paramDef) {
             endpointDefinition.parameters.push(paramDef);
         }

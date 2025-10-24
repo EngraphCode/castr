@@ -1,6 +1,6 @@
 import type { OpenAPIObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src";
+import { generateZodClientFromOpenAPI } from "../src/index.js";
 
 test("number-default-cast", async () => {
     const openApiDoc: OpenAPIObject = {

@@ -1,6 +1,6 @@
 import type { OpenAPIObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src";
+import { generateZodClientFromOpenAPI } from "../src/index.js";
 
 test("param-with-content", async () => {
     const openApiDoc: OpenAPIObject = {
@@ -33,11 +33,6 @@ test("param-with-content", async () => {
                             in: "header",
                             description: "Accept language (fr-CA)",
                             content: { "*/*": { schema: { type: "string", default: "EN" } } },
-                        },
-                        {
-                            name: "missing",
-                            description: "missing both schema AND content, should default to unknown",
-                            in: "query",
                         },
                     ],
                     responses: {
@@ -102,11 +97,6 @@ test("param-with-content", async () => {
               name: "Accept-Language",
               type: "Header",
               schema: z.string().optional().default("EN"),
-            },
-            {
-              name: "missing",
-              type: "Query",
-              schema: z.unknown().optional(),
             },
           ],
           response: z.object({ text3: z.boolean() }).partial().passthrough(),

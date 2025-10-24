@@ -1,11 +1,11 @@
 import type { ZodiosEndpointDefinition } from "@zodios/core";
 import type { OpenAPIObject, OperationObject, PathItemObject } from "openapi3-ts";
+import { isReferenceObject } from "openapi3-ts";
 import type { ObjectLiteral } from "pastable";
 import { match, P } from "ts-pattern";
 
 import type { CodeMeta, ConversionTypeContext } from "./CodeMeta.js";
 import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
-import { isReferenceObject } from "./isReferenceObject.js";
 import { makeSchemaResolver } from "./makeSchemaResolver.js";
 import type { TemplateContext } from "./template-context.js";
 import { getSchemaVarName } from "./zodiosEndpoint.helpers.js";
@@ -75,9 +75,15 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
 
     const complexityThreshold = options?.complexityThreshold ?? 4;
     const getZodVarName = (input: CodeMeta, fallbackName?: string) =>
-        getSchemaVarName(input, ctx, complexityThreshold, fallbackName, {
-            exportAllNamedSchemas: options?.exportAllNamedSchemas,
-        });
+        getSchemaVarName(
+            input,
+            ctx,
+            complexityThreshold,
+            fallbackName,
+            options?.exportAllNamedSchemas !== undefined
+                ? { exportAllNamedSchemas: options.exportAllNamedSchemas }
+                : undefined
+        );
 
     const defaultStatusBehavior = options?.defaultStatusBehavior ?? "spec-compliant";
 

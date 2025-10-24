@@ -5,7 +5,7 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+import { type ReferenceObject, type SchemaObject } from "openapi3-ts";
 import { t, ts } from "tanu";
 
 import type { TsConversionContext } from "./openApiToTypescript.js";
@@ -17,21 +17,14 @@ import { wrapWithQuotesIfNeeded } from "./utils.js";
  *
  * Tied to library type per RULES.md §5: Defer Type Definitions to Source Libraries
  */
-type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
->;
+type SchemaObjectType = SchemaObject["type"];
 
 /**
  * Literal array tied to library type - compiler enforces correctness
  */
-const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string",
-    "number",
-    "integer",
-    "boolean",
-    "null",
-] as const;
+const PRIMITIVE_SCHEMA_TYPES = ["string", "number", "integer", "boolean", "null"] as const satisfies SchemaObjectType[];
+
+type PrimitiveSchemaType = (typeof PRIMITIVE_SCHEMA_TYPES)[number];
 
 /**
  * Type predicate to narrow unknown values to primitive schema types
@@ -54,13 +47,13 @@ export function handleReferenceObject(
     ctx: TsConversionContext | undefined,
     resolveRecursively: (schema: SchemaObject) => unknown
 ): ts.Node | string {
-    if (!ctx?.visitedsRefs || !ctx?.resolver) {
+    if (!ctx?.visitedRefs || !ctx?.resolver) {
         throw new Error("Context is required for OpenAPI $ref");
     }
 
     // Check if we're in a circular reference
     const schemaName = ctx.resolver.resolveRef(schema.$ref)?.normalized;
-    if (ctx.visitedsRefs[schema.$ref]) {
+    if (ctx.visitedRefs[schema.$ref]) {
         return t.reference(schemaName);
     }
 
@@ -72,7 +65,7 @@ export function handleReferenceObject(
             throw new Error(`Schema ${schema.$ref} not found`);
         }
 
-        ctx.visitedsRefs[schema.$ref] = true;
+        ctx.visitedRefs[schema.$ref] = true;
         resolveRecursively(actualSchema);
     }
 
@@ -92,13 +85,14 @@ export function handlePrimitiveEnum(schema: SchemaObject, schemaType: PrimitiveS
     }
 
     // Separate null values from other values
-    const hasNull = schema.enum.includes(null);
-    const withoutNull = schema.enum.filter((f) => f !== null) as Array<string | number | boolean>;
+    const enumValues = schema?.enum;
+    const hasNull = enumValues?.includes(null);
+    const withoutNull = enumValues?.filter((f) => f !== null);
 
     if (schema.nullable || hasNull) {
-        return t.union([...withoutNull, t.reference("null")] as t.TypeDefinition[]);
+        return t.union([...withoutNull, t.reference("null")]);
     }
-    return t.union(withoutNull as unknown as t.TypeDefinition[]);
+    return t.union(withoutNull);
 }
 
 /**

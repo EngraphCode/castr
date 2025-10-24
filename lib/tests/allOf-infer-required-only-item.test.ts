@@ -1,6 +1,6 @@
 import type { OpenAPIObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src";
+import { generateZodClientFromOpenAPI } from "../src/index.js";
 
 // https://github.com/astahmer/openapi-zod-client/issues/49
 test("allOf-infer-required-only-item", async () => {

@@ -1,14 +1,14 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
 
-import { isReferenceObject } from "./isReferenceObject.js";
+import { isReferenceObject } from "openapi3-ts";
 import { visitComposition, visitObjectProperties } from "./getOpenApiDependencyGraph.helpers.js";
 
 export const getOpenApiDependencyGraph = (
     schemaRef: string[],
     getSchemaByRef: (ref: string) => SchemaObject | ReferenceObject
 ) => {
-    const visitedsRefs = {} as Record<string, boolean>;
-    const refsDependencyGraph = {} as Record<string, Set<string>>;
+    const visitedsRefs: Record<string, boolean> = {};
+    const refsDependencyGraph: Record<string, Set<string>> = {};
 
     const visit = (schema: SchemaObject | ReferenceObject, fromRef: string): void => {
         if (!schema) return;
@@ -55,8 +55,8 @@ export const getOpenApiDependencyGraph = (
 
     schemaRef.forEach((ref) => visit(getSchemaByRef(ref), ref));
 
-    const deepDependencyGraph = {} as Record<string, Set<string>>;
-    const visitedsDeepRefs = {} as Record<string, boolean>;
+    const deepDependencyGraph: Record<string, Set<string>> = {};
+    const visitedsDeepRefs: Record<string, boolean> = {};
     schemaRef.forEach((ref) => {
         const deps = refsDependencyGraph[ref];
         if (!deps) return;
@@ -70,7 +70,7 @@ export const getOpenApiDependencyGraph = (
                 currentGraph.add(dep);
             }
             if (refsDependencyGraph[dep] && ref !== dep) {
-                refsDependencyGraph[dep].forEach((transitive) => {
+                refsDependencyGraph[dep]!.forEach((transitive: string) => {
                     if (visitedsDeepRefs[ref + "__" + transitive]) return;
                     visitedsDeepRefs[ref + "__" + transitive] = true;
                     visit(transitive);
@@ -78,7 +78,7 @@ export const getOpenApiDependencyGraph = (
             }
         };
 
-        deps.forEach((dep) => visit(dep));
+        deps.forEach((dep: string) => visit(dep));
     });
 
     return { refsDependencyGraph, deepDependencyGraph };

@@ -130,6 +130,7 @@ graph TD
 For each phase to be considered complete:
 
 **Phase 0 & 1:**
+
 - [x] Build succeeds (tsup CJS + ESM + DTS)
 - [x] Type checking passes (0 errors)
 - [x] Linting passes (no errors)
@@ -141,6 +142,7 @@ For each phase to be considered complete:
 - [ ] All dependencies up-to-date (`pnpm -r outdated` clean) ⚠️ **CHECK NEEDED**
 
 **Phase 2:**
+
 - [ ] openapi3-ts v4 installed
 - [ ] Support OpenAPI 3.0 AND 3.1
 - [ ] All imports updated (~20 files)
@@ -149,6 +151,7 @@ For each phase to be considered complete:
 - [ ] Examples work with both 3.0 and 3.1 specs
 
 **Phase 3:**
+
 - [ ] Zod v4 installed
 - [ ] @zodios/core compatible version
 - [ ] Schema generation updated for v4 API
@@ -160,13 +163,13 @@ For each phase to be considered complete:
 
 ## Timeline
 
-| Phase | Focus                       | Status | Estimated Time | Cumulative |
-| ----- | --------------------------- | ------ | -------------- | ---------- |
-| 0     | Infrastructure + Turbo      | ✅ Done | 1-2 days       | 1-2 days   |
-| 1a    | Developer Tooling + ESM     | ✅ Done | 3-4 days       | 4-6 days   |
-| 1b    | Test Suite & Verification   | 🔧 Current | 1-2 days   | 5-8 days   |
-| 2     | openapi3-ts v4              | ⏸️ Blocked | 2-3 days   | 7-11 days  |
-| 3     | Zod v4                      | ⏸️ Blocked | 3-5 days   | 10-16 days |
+| Phase | Focus                     | Status     | Estimated Time | Cumulative |
+| ----- | ------------------------- | ---------- | -------------- | ---------- |
+| 0     | Infrastructure + Turbo    | ✅ Done    | 1-2 days       | 1-2 days   |
+| 1a    | Developer Tooling + ESM   | ✅ Done    | 3-4 days       | 4-6 days   |
+| 1b    | Test Suite & Verification | 🔧 Current | 1-2 days       | 5-8 days   |
+| 2     | openapi3-ts v4            | ⏸️ Blocked | 2-3 days       | 7-11 days  |
+| 3     | Zod v4                    | ⏸️ Blocked | 3-5 days       | 10-16 days |
 
 **Total Estimated Time**: 10-16 working days (~2-3 weeks)
 
@@ -264,26 +267,23 @@ _Note: Timeline includes fixing all issues found during each phase_
 **Remaining Before Phase 2:**
 
 1. **Test Suite Verification** ⚠️ CRITICAL
-   - Run full test suite (`pnpm test`)
-   - Fix any failing tests
-   - Ensure tests prove functionality (not just types)
-   - Update snapshots if needed
-   
+    - Run full test suite (`pnpm test`)
+    - Fix any failing tests
+    - Ensure tests prove functionality (not just types)
+    - Update snapshots if needed
 2. **Example Validation** ⚠️ CRITICAL
-   - Verify all 3 examples generate correctly
-   - Ensure generated code is valid
-   - Test with small OpenAPI specs
-   
+    - Verify all 3 examples generate correctly
+    - Ensure generated code is valid
+    - Test with small OpenAPI specs
 3. **Dependency Audit** ⚠️ REQUIRED
-   - Run `pnpm -r outdated` and update remaining deps
-   - Run `pnpm audit` and fix security issues
-   - Ensure no deprecated packages
-   
+    - Run `pnpm -r outdated` and update remaining deps
+    - Run `pnpm audit` and fix security issues
+    - Ensure no deprecated packages
 4. **Functional Verification** ⚠️ REQUIRED
-   - CLI generates valid output
-   - Generated schemas validate correctly
-   - No runtime errors
-   - Build artifacts are usable
+    - CLI generates valid output
+    - Generated schemas validate correctly
+    - No runtime errors
+    - Build artifacts are usable
 
 **Blocker:** Cannot proceed to Phase 2 (openapi3-ts v4) until code is fully type-safe, tested, and functional
 
@@ -329,6 +329,7 @@ _Note: Timeline includes fixing all issues found during each phase_
 **Required:** Support for future 3.1 upgrade
 
 **What will be extracted:**
+
 - ✅ `getZodiosEndpointDefinitionList()` - Endpoint metadata with runtime schemas
 - ✅ OpenAPI parsing and $ref resolution
 - ✅ Type guards and utilities
@@ -336,6 +337,7 @@ _Note: Timeline includes fixing all issues found during each phase_
 - 🆕 MCP tool schema generation (build fresh)
 
 **What will be left behind:**
+
 - ❌ Template system (Handlebars)
 - ❌ Permissive schema generation (`.passthrough()`)
 - ❌ CLI tool (not needed in SDK)

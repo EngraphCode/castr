@@ -1,14 +1,12 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+import { isReferenceObject } from "openapi3-ts";
 import { t, ts } from "tanu";
 
-import { isReferenceObject } from "./isReferenceObject.js";
 import type { DocumentResolver } from "./makeSchemaResolver.js";
 import type { TemplateContext } from "./template-context.js";
-import { wrapWithQuotesIfNeeded } from "./utils.js";
 import { inferRequiredSchema } from "./inferRequiredOnly.js";
 import generateJSDocArray from "./generateJSDocArray.js";
 import {
-    addNullToUnionIfNeeded,
     buildObjectType,
     convertObjectProperties,
     convertSchemasToTypes,
@@ -20,7 +18,6 @@ import {
     handleReferenceObject,
     handleTypeArray,
     isPrimitiveSchemaType,
-    maybeWrapReadonly,
     resolveAdditionalPropertiesType,
     wrapObjectTypeForOutput,
     wrapTypeIfNeeded,
@@ -37,7 +34,7 @@ export type TsConversionContext = {
     nodeByRef: Record<string, ts.Node>;
     resolver: DocumentResolver;
     rootRef?: string;
-    visitedsRefs?: Record<string, boolean>;
+    visitedRefs?: Record<string, boolean>;
 };
 
 export const getTypescriptFromOpenApi = ({
@@ -49,9 +46,9 @@ export const getTypescriptFromOpenApi = ({
     const meta = {} as TsConversionArgs["meta"];
     const isInline = !inheritedMeta?.name;
 
-    if (ctx?.visitedsRefs && inheritedMeta?.$ref) {
+    if (ctx?.visitedRefs && inheritedMeta?.$ref) {
         ctx.rootRef = inheritedMeta.$ref;
-        ctx.visitedsRefs[inheritedMeta.$ref] = true;
+        ctx.visitedRefs[inheritedMeta.$ref] = true;
     }
 
     if (!schema) {

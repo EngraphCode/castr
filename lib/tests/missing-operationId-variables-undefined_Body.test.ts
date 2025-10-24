@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getZodiosEndpointDefinitionList } from "../src";
+import { getZodiosEndpointDefinitionList } from "../src/index.js";
 
 test("missing operationId outputs variables['undefined_Body']", () => {
     const result = getZodiosEndpointDefinitionList({

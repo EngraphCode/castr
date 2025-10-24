@@ -352,7 +352,7 @@ describe("getSchemaAsTsString with context", () => {
 
         const ctx: TsConversionContext = {
             nodeByRef: {},
-            visitedsRefs: {},
+            visitedRefs: {},
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
@@ -395,7 +395,7 @@ describe("getSchemaAsTsString with context", () => {
 
         const ctx: TsConversionContext = {
             nodeByRef: {},
-            visitedsRefs: {},
+            visitedRefs: {},
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
@@ -432,7 +432,7 @@ describe("getSchemaAsTsString with context", () => {
 
         const ctx: TsConversionContext = {
             nodeByRef: {},
-            visitedsRefs: {},
+            visitedRefs: {},
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
@@ -478,7 +478,7 @@ describe("getSchemaAsTsString with context", () => {
 
         const ctx: TsConversionContext = {
             nodeByRef: {},
-            visitedsRefs: {},
+            visitedRefs: {},
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
@@ -527,7 +527,7 @@ describe("getSchemaAsTsString with context", () => {
 
         const ctx: TsConversionContext = {
             nodeByRef: {},
-            visitedsRefs: {},
+            visitedRefs: {},
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
@@ -576,7 +576,7 @@ describe("getSchemaAsTsString with context", () => {
 
         const ctx: TsConversionContext = {
             nodeByRef: {},
-            visitedsRefs: {},
+            visitedRefs: {},
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));

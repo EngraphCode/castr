@@ -1,8 +1,8 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
-import { getSum } from "pastable";
+import { isReferenceObject } from "openapi3-ts";
+
 import { match } from "ts-pattern";
 
-import { isReferenceObject } from "./isReferenceObject.js";
 import type { PrimitiveSchemaType } from "./utils.js";
 import { isPrimitiveSchemaType } from "./utils.js";
 import {
@@ -89,6 +89,12 @@ export function getSchemaComplexity({
         );
     }
 
+    // Handle enum without explicit type BEFORE early return (e.g., { enum: ["a", "b"] })
+    if (schema.enum && !schema.type) {
+        return current + complexityByComposite("enum") + 1;
+        // 1 for base enum declaration + 1 for enum composite = 2 total
+    }
+
     if (!schema.type) return current;
 
     if (isPrimitiveSchemaType(schema.type)) {
@@ -96,8 +102,10 @@ export function getSchemaComplexity({
             return (
                 current +
                 complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
-                complexityByComposite("enum") +
-                getSum(schema.enum.map((prop: unknown) => getSchemaComplexity({ current: 0, schema: prop })))
+                complexityByComposite("enum")
+                // NOTE: We intentionally do NOT add enum.length here
+                // Rationale: An enum is an enum whether it has 2 or 100 values
+                // The base complexity remains constant to ensure inlining behavior
             );
         }
 

@@ -1,4 +1,4 @@
-import { getZodSchema } from "../src/openApiToZod";
+import { getZodSchema } from "../src/openApiToZod.js";
 import { test, expect } from "vitest";
 
 test("required-additional-props-not-in-properties", () => {

@@ -1,6 +1,6 @@
 import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+import { isReferenceObject } from "openapi3-ts";
 
-import { isReferenceObject } from "./isReferenceObject.js";
 import type { DocumentResolver } from "./makeSchemaResolver.js";
 import { getSchemaComplexity } from "./schema-complexity.js";
 

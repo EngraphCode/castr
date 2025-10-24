@@ -1,6 +1,6 @@
 import { type SchemasObject } from "openapi3-ts";
 import { expect, it } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src";
+import { generateZodClientFromOpenAPI } from "../src/index.js";
 
 it("includes errors-responses", async () => {
     const schemas = {
@@ -30,18 +30,18 @@ it("includes errors-responses", async () => {
                 get: {
                     operationId: "getExample",
                     responses: {
-                        "200": { description: "OK", content: { "application/json": { schema: schemas.Main } } },
+                        "200": { description: "OK", content: { "application/json": { schema: schemas["Main"] } } },
                         "201": {
                             description: "Created",
-                            content: { "application/json": { schema: schemas.AnotherSuccess } },
+                            content: { "application/json": { schema: schemas["AnotherSuccess"] } },
                         },
                         "400": {
                             description: "Bad request",
-                            content: { "application/json": { schema: schemas.Error400 } },
+                            content: { "application/json": { schema: schemas["Error400"] } },
                         },
                         "500": {
                             description: "Internal server error",
-                            content: { "application/json": { schema: schemas.Error500 } },
+                            content: { "application/json": { schema: schemas["Error500"] } },
                         },
                     },
                 },
@@ -134,22 +134,22 @@ it("determines which status are considered errors-responses", async () => {
                 get: {
                     operationId: "getExample",
                     responses: {
-                        "200": { description: "OK", content: { "application/json": { schema: schemas.Main } } },
+                        "200": { description: "OK", content: { "application/json": { schema: schemas["Main"] } } },
                         "201": {
                             description: "Created",
-                            content: { "application/json": { schema: schemas.AnotherSuccess } },
+                            content: { "application/json": { schema: schemas["AnotherSuccess"] } },
                         },
                         "400": {
                             description: "Bad request",
-                            content: { "application/json": { schema: schemas.Error400 } },
+                            content: { "application/json": { schema: schemas["Error400"] } },
                         },
                         "404": {
                             description: "Not found",
-                            content: { "application/json": { schema: schemas.Error400 } },
+                            content: { "application/json": { schema: schemas["Error400"] } },
                         },
                         "500": {
                             description: "Internal server error",
-                            content: { "application/json": { schema: schemas.Error500 } },
+                            content: { "application/json": { schema: schemas["Error500"] } },
                         },
                     },
                 },

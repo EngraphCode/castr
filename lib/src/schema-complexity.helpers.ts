@@ -7,7 +7,7 @@ import type { ReferenceObject, SchemaObject } from "openapi3-ts";
 import { getSum } from "pastable";
 
 type ComplexityFn = (args: { current: number; schema: SchemaObject | ReferenceObject | undefined }) => number;
-type CompositeType = "oneOf" | "anyOf" | "allOf" | "enum" | "array";
+type CompositeType = "oneOf" | "anyOf" | "allOf" | "enum" | "array" | "empty-object" | "object" | "record";
 
 /**
  * Calculates complexity for a composition schema (oneOf, anyOf, allOf)
@@ -46,14 +46,25 @@ export function calculateTypeArrayComplexity(
         const firstType = types[0];
         if (!firstType) return current;
         return (
-            complexityByComposite("oneOf") + getSchemaComplexity({ current, schema: { ...schema, type: firstType } })
+            complexityByComposite("oneOf") +
+            getSchemaComplexity({
+                current,
+                schema: { ...schema, type: firstType as SchemaObject["type"] } as SchemaObject,
+            })
         );
     }
 
     return (
         current +
         complexityByComposite("oneOf") +
-        getSum(types.map((prop) => getSchemaComplexity({ current: 0, schema: { ...schema, type: prop } })))
+        getSum(
+            types.map((prop) =>
+                getSchemaComplexity({
+                    current: 0,
+                    schema: { ...schema, type: prop as SchemaObject["type"] } as SchemaObject,
+                })
+            )
+        )
     );
 }
 

@@ -5,8 +5,9 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
+import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+
 import type { CodeMeta } from "./CodeMeta.js";
-import type { TemplateContext } from "./template-context.js";
 import { getSchemaComplexity } from "./schema-complexity.js";
 import { normalizeString } from "./utils.js";
 
@@ -24,7 +25,7 @@ type ZodiosContext = {
  * Checks if schema should be inlined (no variable extraction)
  * Returns true if complexity is below threshold or threshold is -1
  */
-export function shouldInlineSchema(complexity: number, complexityThreshold: number, hasRef: boolean): boolean {
+export function shouldInlineSchema(complexity: number, complexityThreshold: number): boolean {
     // Special case: -1 means always inline everything
     if (complexityThreshold === -1) {
         return true;
@@ -75,14 +76,12 @@ export function registerSchemaName(
     ctx: ZodiosContext,
     varName: string,
     schemaResult: string,
-    options?: {
-        exportAllNamedSchemas?: boolean;
-    }
+    exportAllNamedSchemas: boolean
 ): void {
     ctx.zodSchemaByName[varName] = schemaResult;
     ctx.schemaByName[schemaResult] = varName;
 
-    if (options?.exportAllNamedSchemas && ctx.schemasByName) {
+    if (exportAllNamedSchemas && ctx.schemasByName) {
         ctx.schemasByName[schemaResult] = (ctx.schemasByName[schemaResult] ?? []).concat(varName);
     }
 }
@@ -138,7 +137,7 @@ export function handleRefSchema(
     if (input.ref && schema) {
         const complexity = getSchemaComplexity({
             current: 0,
-            schema: ctx.resolver.getSchemaByRef(input.ref),
+            schema: ctx.resolver.getSchemaByRef(input.ref) as SchemaObject | ReferenceObject | undefined,
         });
 
         // Simple refs can be inlined
@@ -166,7 +165,7 @@ export function getSchemaVarName(
     ctx: ZodiosContext,
     complexityThreshold: number,
     fallbackName: string | undefined,
-    options: Pick<TemplateContext["options"], "exportAllNamedSchemas">
+    options: { exportAllNamedSchemas?: boolean } | undefined
 ): string {
     const result = input.toString();
 
@@ -185,19 +184,21 @@ export function getSchemaVarName(
         const safeName = normalizeString(fallbackName);
 
         // Check if already exists
-        const existing = findExistingSchemaVar(result, ctx, options?.exportAllNamedSchemas ?? false);
+        const existing = findExistingSchemaVar(result, ctx, Boolean(options?.exportAllNamedSchemas));
         if (existing) {
             return existing;
         }
 
         // Generate unique name and register
-        const varName = generateUniqueVarName(safeName, ctx.zodSchemaByName, {
-            exportAllNamedSchemas: options?.exportAllNamedSchemas,
-            schemasByName: ctx.schemasByName,
-            schemaKey: result,
-        });
+        const varName = ctx.schemasByName
+            ? generateUniqueVarName(safeName, ctx.zodSchemaByName, {
+                  exportAllNamedSchemas: options?.exportAllNamedSchemas ?? false,
+                  schemasByName: ctx.schemasByName,
+                  schemaKey: result,
+              })
+            : generateUniqueVarName(safeName, ctx.zodSchemaByName);
 
-        registerSchemaName(ctx, varName, result, options);
+        registerSchemaName(ctx, varName, result, options?.exportAllNamedSchemas ?? false);
         return varName;
     }
 

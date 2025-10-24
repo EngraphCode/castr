@@ -1,4 +1,4 @@
-import { getZodiosEndpointDefinitionList } from "../src";
+import { getZodiosEndpointDefinitionList } from "../src/index.js";
 import { expect, test } from "vitest";
 
 test("autofix-unusual-ref-format", () => {

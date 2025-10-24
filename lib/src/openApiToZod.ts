@@ -1,10 +1,10 @@
-import { isSchemaObject, type ReferenceObject, type SchemaObject } from "openapi3-ts";
+import { isSchemaObject, isReferenceObject, type ReferenceObject, type SchemaObject } from "openapi3-ts";
+
 import { match } from "ts-pattern";
 
 import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta.js";
 import { CodeMeta } from "./CodeMeta.js";
 import { generateNonStringEnumZodCode, generateStringEnumZodCode, shouldEnumBeNever } from "./enumHelpers.js";
-import { isReferenceObject } from "./isReferenceObject.js";
 import type { TemplateContext } from "./template-context.js";
 import { escapeControlCharacters, isPrimitiveSchemaType, wrapWithQuotesIfNeeded } from "./utils.js";
 import { inferRequiredSchema } from "./inferRequiredOnly.js";
@@ -20,10 +20,11 @@ type ConversionArgs = {
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
+// At this point have we narrowed schema to be a valid schema object and non-null, or could it be null, or could it be a reference object?
 export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, options }: ConversionArgs): CodeMeta {
+    // Can't a schema object legitimately be null in the OpenAPI spec
     if (!$schema) {
-        throw new Error("Schema is required");
+        throw new Error($schema === null ? "Schema is null (not sure this is wrong)" : "Schema is required");
     }
 
     const schema = options?.schemaRefiner?.($schema, inheritedMeta) ?? $schema;

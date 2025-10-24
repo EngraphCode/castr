@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { getZodSchema } from "../src";
+import { getZodSchema } from "../src/index.js";
 
 // see: https://swagger.io/docs/specification/data-models/data-types/#free-form
 describe("additional-properties", () => {

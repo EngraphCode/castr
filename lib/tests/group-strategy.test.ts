@@ -1,7 +1,7 @@
 import { type OpenAPIObject, type SchemaObject } from "openapi3-ts";
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src";
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src/index.js";
 
 test("group-strategy", async () => {
     const openApiDoc: OpenAPIObject = {
@@ -554,8 +554,8 @@ test("group-strategy", async () => {
 test("group-strategy: tag-file with modified petstore schema", async () => {
     const openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;
     // Add `Pet` object into `Order`.
-    const orderObject = openApiDoc.components!.schemas!.Order as SchemaObject;
-    orderObject.properties!.pet = {
+    const orderObject = openApiDoc.components!.schemas!["Order"] as SchemaObject;
+    orderObject.properties!["pet"] = {
         $ref: "#/components/schemas/Pet",
     };
 

@@ -1,9 +1,9 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import type { OpenAPIObject } from "openapi3-ts";
 import { type Options, resolveConfig } from "prettier";
-import { getZodClientTemplateContext } from "../src/template-context";
-import { getHandlebars } from "../src/getHandlebars";
-import { maybePretty } from "../src/maybePretty";
+import { getZodClientTemplateContext } from "../src/template-context.js";
+import { getHandlebars } from "../src/getHandlebars.js";
+import { maybePretty } from "../src/maybePretty.js";
 
 import fg from "fast-glob";
 

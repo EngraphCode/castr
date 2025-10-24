@@ -1,4 +1,4 @@
-import { getZodClientTemplateContext } from "../src";
+import { getZodClientTemplateContext } from "../src/index.js";
 import { expect, test } from "vitest";
 import { type OpenAPIObject } from "openapi3-ts";
 

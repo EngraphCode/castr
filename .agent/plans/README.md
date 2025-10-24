@@ -14,11 +14,11 @@ This directory contains comprehensive plans for modernizing the openapi-zod-clie
 
 **High-level strategic plan** covering all three phases
 
--   Why three PRs instead of one
--   Version strategy (v2.0.0 or v3.0.0)
--   Risk assessment
--   Timeline estimates
--   Success criteria
+- Why three PRs instead of one
+- Version strategy (v2.0.0 or v3.0.0)
+- Risk assessment
+- Timeline estimates
+- Success criteria
 
 **Read this first!**
 
@@ -28,26 +28,26 @@ This directory contains comprehensive plans for modernizing the openapi-zod-clie
 
 **Developer Tooling Modernization**
 
--   **Type:** `patch` (no breaking changes)
--   **Time:** 2-3 days
--   **Dependencies:** None
+- **Type:** `patch` (no breaking changes)
+- **Time:** 2-3 days
+- **Dependencies:** None
 
 **Updates:**
 
--   TypeScript 5.1 → 5.7
--   Prettier 2.7 → 3.6
--   Vitest 0.22 → 2.1
--   ESLint 8.26 → 9.18
--   Node.js 18.16+ → 18.20+
--   GitHub Actions
--   Security fixes
--   Remove unnecessary @types packages
+- TypeScript 5.1 → 5.7
+- Prettier 2.7 → 3.6
+- Vitest 0.22 → 2.1
+- ESLint 8.26 → 9.18
+- Node.js 18.16+ → 18.20+
+- GitHub Actions
+- Security fixes
+- Remove unnecessary @types packages
 
 **Impact:**
 
--   ✅ No API changes
--   ✅ No output changes
--   ✅ Foundation for other PRs
+- ✅ No API changes
+- ✅ No output changes
+- ✅ Foundation for other PRs
 
 ---
 
@@ -55,16 +55,16 @@ This directory contains comprehensive plans for modernizing the openapi-zod-clie
 
 **openapi3-ts v4 Upgrade**
 
--   **Type:** `major` (breaking change)
--   **Time:** 2-3 days
--   **Dependencies:** Plan 01 complete
+- **Type:** `major` (breaking change)
+- **Time:** 2-3 days
+- **Dependencies:** Plan 01 complete
 
 **Updates:**
 
--   openapi3-ts 3.1.0 → 4.x
--   Import path changes: `"openapi3-ts"` → `"openapi3-ts/oas31"`
--   20+ files updated
--   Target OAS 3.1
+- openapi3-ts 3.1.0 → 4.x
+- Import path changes: `"openapi3-ts"` → `"openapi3-ts/oas31"`
+- 20+ files updated
+- Target OAS 3.1
 
 **Breaking Change:**
 
@@ -78,9 +78,9 @@ import { OpenAPIObject } from "openapi3-ts/oas31";
 
 **Impact:**
 
--   ⚠️ Programmatic users must update imports
--   ✅ CLI users: no changes
--   ✅ Generated output: no changes
+- ⚠️ Programmatic users must update imports
+- ✅ CLI users: no changes
+- ✅ Generated output: no changes
 
 ---
 
@@ -88,26 +88,26 @@ import { OpenAPIObject } from "openapi3-ts/oas31";
 
 **Zod v4 Upgrade**
 
--   **Type:** `major` (breaking change)
--   **Time:** 4-6 days
--   **Dependencies:** Plans 01 & 02 complete
+- **Type:** `major` (breaking change)
+- **Time:** 4-6 days
+- **Dependencies:** Plans 01 & 02 complete
 
 **Updates:**
 
--   Zod 3.x → 4.x
--   @zodios/core to Zod v4 compatible version
--   Schema generation logic (`openApiToZod.ts`)
--   ALL 68 test snapshots
--   Examples and playground
+- Zod 3.x → 4.x
+- @zodios/core to Zod v4 compatible version
+- Schema generation logic (`openApiToZod.ts`)
+- ALL 68 test snapshots
+- Examples and playground
 
 **Breaking Change:**
 Generated code uses Zod v4 API
 
 **Impact:**
 
--   ⚠️ ALL users must update
--   ⚠️ Must regenerate clients
--   ⚠️ Must install Zod v4
+- ⚠️ ALL users must update
+- ⚠️ Must regenerate clients
+- ⚠️ Must install Zod v4
 
 ---
 
@@ -121,10 +121,10 @@ Plan 01 → Merge → Plan 02 → Merge → Plan 03 → Merge
 
 **Advantages:**
 
--   Clear checkpoints
--   Independent review
--   Easy rollback
--   Progressive testing
+- Clear checkpoints
+- Independent review
+- Easy rollback
+- Progressive testing
 
 ### Timeline
 
@@ -138,14 +138,14 @@ Plan 01 → Merge → Plan 02 → Merge → Plan 03 → Merge
 
 ### Option A: Two Majors
 
--   Plan 01 → No bump (patch)
--   Plan 02 → v2.0.0
--   Plan 03 → v3.0.0
+- Plan 01 → No bump (patch)
+- Plan 02 → v2.0.0
+- Plan 03 → v3.0.0
 
 ### Option B: One Major (Recommended)
 
--   Plan 01 → Merge to main (patch)
--   Plans 02 + 03 → v2.0.0 (combined)
+- Plan 01 → Merge to main (patch)
+- Plans 02 + 03 → v2.0.0 (combined)
 
 **Rationale:** Users need to act anyway, single migration is easier
 
@@ -157,29 +157,29 @@ Every plan must include:
 
 ### Code Quality
 
--   ✅ All tests pass
--   ✅ ESLint passes
--   ✅ TypeScript compiles
--   ✅ Prettier formatted
+- ✅ All tests pass
+- ✅ ESLint passes
+- ✅ TypeScript compiles
+- ✅ Prettier formatted
 
 ### Documentation
 
--   ✅ README updates
--   ✅ Migration guides (for breaking changes)
--   ✅ Code comments
--   ✅ Changeset files
+- ✅ README updates
+- ✅ Migration guides (for breaking changes)
+- ✅ Code comments
+- ✅ Changeset files
 
 ### Testing
 
--   ✅ Unit tests
--   ✅ Integration tests
--   ✅ Example verification
--   ✅ Playground verification
+- ✅ Unit tests
+- ✅ Integration tests
+- ✅ Example verification
+- ✅ Playground verification
 
 ### CI/CD
 
--   ✅ GitHub Actions pass
--   ✅ Node 18.20+, 20.x, 22.x tested
+- ✅ GitHub Actions pass
+- ✅ Node 18.20+, 20.x, 22.x tested
 
 ---
 
@@ -253,19 +253,19 @@ Each plan follows this structure:
 
 **Comprehensive Coverage:**
 
--   **Total Words:** ~38,000 words
--   **Total Pages:** ~80 pages (if printed)
--   **Implementation Steps:** ~150+ detailed steps
--   **Test Checkpoints:** ~100+ verification points
--   **Atomic Commits:** ~30 well-defined commits
+- **Total Words:** ~38,000 words
+- **Total Pages:** ~80 pages (if printed)
+- **Implementation Steps:** ~150+ detailed steps
+- **Test Checkpoints:** ~100+ verification points
+- **Atomic Commits:** ~30 well-defined commits
 
 **Coverage:**
 
--   ✅ Every dependency analyzed
--   ✅ Every file identified
--   ✅ Every risk assessed
--   ✅ Every test planned
--   ✅ Every commit defined
+- ✅ Every dependency analyzed
+- ✅ Every file identified
+- ✅ Every risk assessed
+- ✅ Every test planned
+- ✅ Every commit defined
 
 ---
 
@@ -273,11 +273,11 @@ Each plan follows this structure:
 
 ### Why three separate PRs?
 
--   **Risk isolation** - Issues in one don't affect others
--   **Independent review** - Easier to review smaller changes
--   **Clear rollback points** - Can revert specific changes
--   **Progressive testing** - Test after each major change
--   **Better git history** - Clear, understandable commits
+- **Risk isolation** - Issues in one don't affect others
+- **Independent review** - Easier to review smaller changes
+- **Clear rollback points** - Can revert specific changes
+- **Progressive testing** - Test after each major change
+- **Better git history** - Clear, understandable commits
 
 ### Why this specific order?
 
@@ -291,8 +291,8 @@ Each builds on the previous, minimizing compounding issues.
 
 **Yes, you can!** See the overview document for decision matrix.
 
--   **Pros:** Single v2.0.0 release, one migration for users
--   **Cons:** Larger PR, harder to debug, higher risk
+- **Pros:** Single v2.0.0 release, one migration for users
+- **Cons:** Larger PR, harder to debug, higher risk
 
 **Recommendation:** Execute as separate PRs, but release together as v2.0.0.
 
@@ -300,42 +300,42 @@ Each builds on the previous, minimizing compounding issues.
 
 Plan 03 includes a research phase to verify. If Zod v4 doesn't exist:
 
--   Update the plan with actual version info
--   Adjust timelines as needed
--   The research phase will catch this
+- Update the plan with actual version info
+- Adjust timelines as needed
+- The research phase will catch this
 
 ### How long will this really take?
 
 **Time estimates by experience level:**
 
--   **Experienced with codebase:** 1.5-2 weeks
--   **Moderate familiarity:** 2-3 weeks
--   **Learning the codebase:** 3-4 weeks
+- **Experienced with codebase:** 1.5-2 weeks
+- **Moderate familiarity:** 2-3 weeks
+- **Learning the codebase:** 3-4 weeks
 
 **By work intensity:**
 
--   **Full-time focus:** 1.5 weeks
--   **Half-time work:** 3 weeks
--   **Side project:** 4+ weeks
+- **Full-time focus:** 1.5 weeks
+- **Half-time work:** 3 weeks
+- **Side project:** 4+ weeks
 
 ### What if I find issues with the plans?
 
 **Plans are living documents!**
 
--   Update them as you learn
--   Document discoveries
--   Share improvements
--   Help future maintainers
+- Update them as you learn
+- Document discoveries
+- Share improvements
+- Help future maintainers
 
 ### How do I know when I'm done?
 
 Each plan has a **Success Criteria** section listing specific requirements:
 
--   All tests pass
--   Documentation complete
--   Changeset created
--   CI/CD passing
--   Examples work
+- All tests pass
+- Documentation complete
+- Changeset created
+- CI/CD passing
+- Examples work
 
 All checkboxes must be checked before submitting PR.
 
@@ -345,38 +345,38 @@ All checkboxes must be checked before submitting PR.
 
 ### 1. Based on Real Current Data
 
--   Actual `npm outdated` output analyzed
--   Security vulnerabilities considered
--   October 2025 ecosystem state
--   Not based on assumptions
+- Actual `npm outdated` output analyzed
+- Security vulnerabilities considered
+- October 2025 ecosystem state
+- Not based on assumptions
 
 ### 2. Fork-Aware Design
 
--   Professional commit structure
--   Clear, comprehensive documentation
--   High-quality standards
--   Ready for upstream contribution if desired
+- Professional commit structure
+- Clear, comprehensive documentation
+- High-quality standards
+- Ready for upstream contribution if desired
 
 ### 3. Risk-Managed Approach
 
--   Three separate PRs isolate risks
--   Independent rollback capability
--   Progressive testing between phases
--   Clear checkpoints and validation
+- Three separate PRs isolate risks
+- Independent rollback capability
+- Progressive testing between phases
+- Clear checkpoints and validation
 
 ### 4. User-Focused
 
--   Comprehensive migration guides
--   Clear breaking change communication
--   Minimal user disruption
--   Excellent support documentation
+- Comprehensive migration guides
+- Clear breaking change communication
+- Minimal user disruption
+- Excellent support documentation
 
 ### 5. Maintainer-Friendly
 
--   Detailed implementation steps
--   No ambiguous instructions
--   Easy to follow even months later
--   Future maintainers will understand decisions
+- Detailed implementation steps
+- No ambiguous instructions
+- Easy to follow even months later
+- Future maintainers will understand decisions
 
 ---
 
@@ -384,31 +384,31 @@ All checkboxes must be checked before submitting PR.
 
 ### Atomic Commits
 
--   One logical change per commit
--   Clear commit messages
--   Easy to review
--   Easy to rollback
+- One logical change per commit
+- Clear commit messages
+- Easy to review
+- Easy to rollback
 
 ### Comprehensive Testing
 
--   Test after each major change
--   Don't accumulate errors
--   Verify no regressions
--   Document any issues
+- Test after each major change
+- Don't accumulate errors
+- Verify no regressions
+- Document any issues
 
 ### Excellent Documentation
 
--   Migration guides for users
--   Code comments for maintainers
--   Changeset files for releases
--   Clear communication
+- Migration guides for users
+- Code comments for maintainers
+- Changeset files for releases
+- Clear communication
 
 ### Quality First
 
--   No shortcuts
--   Fix issues properly
--   Maintain high standards
--   Think about future maintainers
+- No shortcuts
+- Fix issues properly
+- Maintain high standards
+- Think about future maintainers
 
 ---
 
@@ -418,24 +418,24 @@ Since this is a fork:
 
 ### Clean History
 
--   Professional commits
--   Well-documented changes
--   Easy to understand
--   Ready for upstream if desired
+- Professional commits
+- Well-documented changes
+- Easy to understand
+- Ready for upstream if desired
 
 ### Independence
 
--   Can release separately
--   Own versioning
--   Custom features possible
--   But aligned with best practices
+- Can release separately
+- Own versioning
+- Custom features possible
+- But aligned with best practices
 
 ### Contribution Ready
 
--   High-quality PRs
--   Comprehensive testing
--   Professional communication
--   Could contribute back upstream
+- High-quality PRs
+- Comprehensive testing
+- Professional communication
+- Could contribute back upstream
 
 ---
 
@@ -443,21 +443,21 @@ Since this is a fork:
 
 ### Before Starting
 
--   [ ] Team aware of plans
--   [ ] Timeline communicated
--   [ ] Resources allocated
+- [ ] Team aware of plans
+- [ ] Timeline communicated
+- [ ] Resources allocated
 
 ### During Execution
 
--   [ ] Regular updates
--   [ ] Blockers communicated
--   [ ] Help requested when needed
+- [ ] Regular updates
+- [ ] Blockers communicated
+- [ ] Help requested when needed
 
 ### After Completion
 
--   [ ] Changes documented
--   [ ] Migration guide published
--   [ ] Users notified (for breaking changes)
+- [ ] Changes documented
+- [ ] Migration guide published
+- [ ] Users notified (for breaking changes)
 
 ---
 
@@ -465,25 +465,25 @@ Since this is a fork:
 
 ### Documentation
 
--   [Changesets](https://github.com/changesets/changesets)
--   [Semantic Versioning](https://semver.org/)
--   [Conventional Commits](https://www.conventionalcommits.org/)
+- [Changesets](https://github.com/changesets/changesets)
+- [Semantic Versioning](https://semver.org/)
+- [Conventional Commits](https://www.conventionalcommits.org/)
 
 ### Dependencies
 
--   [TypeScript](https://www.typescriptlang.org/)
--   [Prettier](https://prettier.io/)
--   [Vitest](https://vitest.dev/)
--   [ESLint](https://eslint.org/)
--   [Zod](https://zod.dev/)
--   [openapi3-ts](https://www.npmjs.com/package/openapi3-ts)
--   [Zodios](https://www.zodios.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Prettier](https://prettier.io/)
+- [Vitest](https://vitest.dev/)
+- [ESLint](https://eslint.org/)
+- [Zod](https://zod.dev/)
+- [openapi3-ts](https://www.npmjs.com/package/openapi3-ts)
+- [Zodios](https://www.zodios.org/)
 
 ### Tools
 
--   [pnpm](https://pnpm.io/)
--   [GitHub Actions](https://docs.github.com/en/actions)
--   [Node Version Managers](https://github.com/shadowspawn/node-version-usage)
+- [pnpm](https://pnpm.io/)
+- [GitHub Actions](https://docs.github.com/en/actions)
+- [Node Version Managers](https://github.com/shadowspawn/node-version-usage)
 
 ---
 
@@ -491,23 +491,23 @@ Since this is a fork:
 
 ### Issues
 
--   Check existing plans for answers
--   Review FAQ sections
--   Ask team for help
--   Document new issues
+- Check existing plans for answers
+- Review FAQ sections
+- Ask team for help
+- Document new issues
 
 ### Questions
 
--   Overview doc has general strategy
--   Individual plans have specifics
--   Code has inline comments (after completion)
+- Overview doc has general strategy
+- Individual plans have specifics
+- Code has inline comments (after completion)
 
 ### Feedback
 
--   Plans are living documents
--   Update as you learn
--   Share improvements
--   Help future maintainers
+- Plans are living documents
+- Update as you learn
+- Share improvements
+- Help future maintainers
 
 ---
 
@@ -515,30 +515,30 @@ Since this is a fork:
 
 ### Plan 01: Developer Tooling
 
--   [ ] Started
--   [ ] In Progress
--   [ ] PR Created
--   [ ] Merged
+- [ ] Started
+- [ ] In Progress
+- [ ] PR Created
+- [ ] Merged
 
 ### Plan 02: openapi3-ts v4
 
--   [ ] Started
--   [ ] In Progress
--   [ ] PR Created
--   [ ] Merged
+- [ ] Started
+- [ ] In Progress
+- [ ] PR Created
+- [ ] Merged
 
 ### Plan 03: Zod v4
 
--   [ ] Started
--   [ ] In Progress
--   [ ] PR Created
--   [ ] Merged
+- [ ] Started
+- [ ] In Progress
+- [ ] PR Created
+- [ ] Merged
 
 ### Release
 
--   [ ] v2.0.0 Released
--   [ ] Documentation Updated
--   [ ] Users Notified
+- [ ] v2.0.0 Released
+- [ ] Documentation Updated
+- [ ] Users Notified
 
 ---
 
@@ -546,10 +546,10 @@ Since this is a fork:
 
 These plans are:
 
--   **Comprehensive:** Cover all aspects
--   **Detailed:** Step-by-step instructions
--   **Flexible:** Adapt as needed
--   **Professional:** Production-quality
+- **Comprehensive:** Cover all aspects
+- **Detailed:** Step-by-step instructions
+- **Flexible:** Adapt as needed
+- **Professional:** Production-quality
 
 Take your time. Do it right. The codebase will thank you! 🚀
 

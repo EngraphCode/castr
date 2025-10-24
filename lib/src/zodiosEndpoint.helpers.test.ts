@@ -14,19 +14,19 @@ import {
 describe("zodiosEndpoint.helpers", () => {
     describe("shouldInlineSchema", () => {
         it("should return true when threshold is -1 (inline everything)", () => {
-            expect(shouldInlineSchema(10, -1, false)).toBe(true);
-            expect(shouldInlineSchema(100, -1, true)).toBe(true);
+            expect(shouldInlineSchema(10, -1)).toBe(true);
+            expect(shouldInlineSchema(100, -1)).toBe(true);
         });
 
         it("should return true when complexity is below threshold", () => {
-            expect(shouldInlineSchema(2, 4, false)).toBe(true);
-            expect(shouldInlineSchema(3, 10, false)).toBe(true);
+            expect(shouldInlineSchema(2, 4)).toBe(true);
+            expect(shouldInlineSchema(3, 10)).toBe(true);
         });
 
         it("should return false when complexity meets or exceeds threshold", () => {
-            expect(shouldInlineSchema(4, 4, false)).toBe(false);
-            expect(shouldInlineSchema(5, 4, false)).toBe(false);
-            expect(shouldInlineSchema(10, 5, false)).toBe(false);
+            expect(shouldInlineSchema(4, 4)).toBe(false);
+            expect(shouldInlineSchema(5, 4)).toBe(false);
+            expect(shouldInlineSchema(10, 5)).toBe(false);
         });
     });
 
@@ -71,44 +71,44 @@ describe("zodiosEndpoint.helpers", () => {
 
     describe("registerSchemaName", () => {
         it("should register schema in context", () => {
-            const ctx = {
+            const ctx: {
+                zodSchemaByName: Record<string, string>;
+                schemaByName: Record<string, string>;
+                resolver: never;
+            } = {
                 zodSchemaByName: {},
                 schemaByName: {},
                 resolver: {} as never,
             };
 
-            registerSchemaName(ctx, "Pet", "z.object({ id: z.number() })");
+            registerSchemaName(ctx, "Pet", "z.object({ id: z.number() })", false);
 
-            expect(ctx.zodSchemaByName.Pet).toBe("z.object({ id: z.number() })");
+            expect(ctx.zodSchemaByName["Pet"]).toBe("z.object({ id: z.number() })");
             expect(ctx.schemaByName["z.object({ id: z.number() })"]).toBe("Pet");
         });
 
         it("should register in schemasByName when exportAllNamedSchemas is true", () => {
             const ctx = {
-                zodSchemaByName: {},
-                schemaByName: {},
-                schemasByName: {},
+                zodSchemaByName: {} as Record<string, string>,
+                schemaByName: {} as Record<string, string>,
+                schemasByName: {} as Record<string, string[]>,
                 resolver: {} as never,
             };
 
-            registerSchemaName(ctx, "Pet", "z.object(...)", {
-                exportAllNamedSchemas: true,
-            });
+            registerSchemaName(ctx, "Pet", "z.object(...)", true);
 
             expect(ctx.schemasByName["z.object(...)"]).toEqual(["Pet"]);
         });
 
         it("should append to existing schemasByName array", () => {
             const ctx = {
-                zodSchemaByName: {},
-                schemaByName: {},
-                schemasByName: { "z.object(...)": ["Pet"] },
+                zodSchemaByName: {} as Record<string, string>,
+                schemaByName: {} as Record<string, string>,
+                schemasByName: { "z.object(...)": ["Pet"] } as Record<string, string[]>,
                 resolver: {} as never,
             };
 
-            registerSchemaName(ctx, "Pet2", "z.object(...)", {
-                exportAllNamedSchemas: true,
-            });
+            registerSchemaName(ctx, "Pet2", "z.object(...)", true);
 
             expect(ctx.schemasByName["z.object(...)"]).toEqual(["Pet", "Pet2"]);
         });

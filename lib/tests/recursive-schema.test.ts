@@ -5,12 +5,12 @@ import {
     getZodClientTemplateContext,
     getZodiosEndpointDefinitionList,
     getZodSchema,
-} from "../src";
-import { generateZodClientFromOpenAPI } from "../src/generateZodClientFromOpenAPI";
-import { topologicalSort } from "../src/topologicalSort";
-import type { ConversionTypeContext } from "../src/CodeMeta";
-import { makeSchemaResolver } from "../src/makeSchemaResolver";
-import { asComponentSchema } from "../src/utils";
+} from "../src/index.js";
+import { generateZodClientFromOpenAPI } from "../src/generateZodClientFromOpenAPI.js";
+import { topologicalSort } from "../src/topologicalSort.js";
+import type { ConversionTypeContext } from "../src/CodeMeta.js";
+import { makeSchemaResolver } from "../src/makeSchemaResolver.js";
+import { asComponentSchema } from "../src/utils.js";
 
 // TODO recursive inline response/param ?
 
@@ -70,7 +70,9 @@ describe("recursive-schema", () => {
             resolver: makeSchemaResolver({ components: { schemas } } as any),
         };
         Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
-        expect(getZodSchema({ schema: schemas.Root, ctx })).toMatchInlineSnapshot(
+        const rootSchema = schemas["Root"];
+        if (!rootSchema) throw new Error("Root schema not found");
+        expect(getZodSchema({ schema: rootSchema, ctx })).toMatchInlineSnapshot(
             '"z.object({ recursive: User, basic: z.number() }).partial().passthrough()"'
         );
         expect(ctx).toMatchInlineSnapshot(`
@@ -88,7 +90,7 @@ describe("recursive-schema", () => {
           }
         `);
 
-        const openApiDoc = makeOpenApiDoc(schemas, schemas.Root);
+        const openApiDoc = makeOpenApiDoc(schemas, rootSchema);
         const depsGraph = getOpenApiDependencyGraph(
             Object.keys(ctx.zodSchemaByName).map((name) => asComponentSchema(name)),
             ctx.resolver.getSchemaByRef

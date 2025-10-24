@@ -18,18 +18,15 @@ Upgrade Zod from v3.x to v4.x, updating all schema generation logic and generate
 This **IS** a breaking change because:
 
 1. **Generated code changes:**
-
     - Generated clients will use Zod v4 API
     - All users must have Zod v4 installed
     - May have different validation behavior
 
 2. **@zodios/core dependency:**
-
     - Must update to Zod v4 compatible version
     - May have its own breaking changes
 
 3. **User action required:**
-
     - Update Zod dependency in their projects
     - Regenerate all API clients
     - Test with new Zod v4 API
@@ -44,10 +41,10 @@ This **IS** a breaking change because:
 
 ⚠️ **ALL USERS** are affected:
 
--   CLI users must regenerate clients
--   Programmatic users must regenerate clients
--   All users must install Zod v4
--   Generated code will use different Zod API
+- CLI users must regenerate clients
+- Programmatic users must regenerate clients
+- All users must install Zod v4
+- Generated code will use different Zod API
 
 ### Migration Effort
 
@@ -66,20 +63,20 @@ This **IS** a breaking change because:
 
 ### In Scope ✅
 
--   Update Zod dependency to v4.x
--   Update @zodios/core to Zod v4 compatible version
--   Refactor schema generation logic (`openApiToZod.ts`)
--   Update ALL test snapshots (68 test files)
--   Update all examples
--   Update playground
--   Write comprehensive migration guide
--   Test with real-world specs
+- Update Zod dependency to v4.x
+- Update @zodios/core to Zod v4 compatible version
+- Refactor schema generation logic (`openApiToZod.ts`)
+- Update ALL test snapshots (68 test files)
+- Update all examples
+- Update playground
+- Write comprehensive migration guide
+- Test with real-world specs
 
 ### Out of Scope ❌
 
--   Changes to OpenAPI spec support
--   New features (focus on compatibility)
--   Template changes (unless required)
+- Changes to OpenAPI spec support
+- New features (focus on compatibility)
+- Template changes (unless required)
 
 ---
 
@@ -108,44 +105,44 @@ This **IS** a breaking change because:
 
 **Core Schema Generation:**
 
--   `lib/src/openApiToZod.ts` (463 lines - COMPLEX!)
-    -   Main schema conversion logic
-    -   Handles all OpenAPI → Zod mappings
-    -   Will require significant updates
+- `lib/src/openApiToZod.ts` (463 lines - COMPLEX!)
+    - Main schema conversion logic
+    - Handles all OpenAPI → Zod mappings
+    - Will require significant updates
 
 **Chain Generation:**
 
--   `lib/src/openApiToZod.ts` function `getZodChain`
-    -   Builds validation chains (.min(), .max(), etc.)
-    -   May need updates for Zod v4 API
+- `lib/src/openApiToZod.ts` function `getZodChain`
+    - Builds validation chains (.min(), .max(), etc.)
+    - May need updates for Zod v4 API
 
 **Type Generation:**
 
--   `lib/src/openApiToTypescript.ts`
-    -   Generates TypeScript types
-    -   May need updates for Zod v4 type inference
+- `lib/src/openApiToTypescript.ts`
+    - Generates TypeScript types
+    - May need updates for Zod v4 type inference
 
 **Template Context:**
 
--   `lib/src/template-context.ts`
-    -   Manages schema wrapping (z.lazy for circular refs)
-    -   May need updates
+- `lib/src/template-context.ts`
+    - Manages schema wrapping (z.lazy for circular refs)
+    - May need updates
 
 **Tests:**
 
--   All 68 test files with inline snapshots
--   Expected output will change for Zod v4
+- All 68 test files with inline snapshots
+- Expected output will change for Zod v4
 
 **Examples:**
 
--   `examples/basic/petstore-client.ts` (generated)
--   `examples/schemas-only/petstore-schemas.ts` (generated)
--   All example outputs need regeneration
+- `examples/basic/petstore-client.ts` (generated)
+- `examples/schemas-only/petstore-schemas.ts` (generated)
+- All example outputs need regeneration
 
 **Playground:**
 
--   Real-time generation must work with Zod v4
--   May need UI updates
+- Real-time generation must work with Zod v4
+- May need UI updates
 
 ---
 
@@ -169,62 +166,51 @@ open https://zod.dev/
 **Key areas to research:**
 
 1. **Schema creation API changes**
-
     - `z.string()`, `z.number()`, `z.object()`, etc.
     - Any method renames or removals
 
 2. **Refinement API**
-
     - `.refine()` signature changes
     - `.superRefine()` changes
     - Custom validation
 
 3. **Transform API**
-
     - `.transform()` changes
     - `.preprocess()` changes
 
 4. **Optional/Nullable handling**
-
     - `.optional()` behavior
     - `.nullable()` behavior
     - Union with null
 
 5. **Default values**
-
     - `.default()` API
     - Lazy defaults
 
 6. **Array handling**
-
     - `z.array()` API
     - `.min()`, `.max()`, `.length()`
     - `.nonempty()`
 
 7. **Object handling**
-
     - `.passthrough()`, `.strict()`, `.strip()`
     - `.partial()`, `.required()`, `.pick()`, `.omit()`
     - `.extend()`, `.merge()`
 
 8. **Union/Discriminated Union**
-
     - `z.union()` API
     - `z.discriminatedUnion()` API
     - Discriminator property
 
 9. **Enum handling**
-
     - `z.enum()` API
     - `z.nativeEnum()` API
 
 10. **Lazy schemas (critical for recursion)**
-
     - `z.lazy()` API
     - Performance implications
 
 11. **Error handling**
-
     - `ZodError` structure
     - Error messages
     - Custom error maps
@@ -248,16 +234,16 @@ open https://github.com/ecyrbe/zodios/releases
 
 **Questions to answer:**
 
--   ✅ Which @zodios/core version supports Zod v4?
--   ✅ Does @zodios/core have breaking changes?
--   ✅ Are there any API changes in makeApi()?
--   ✅ Do we need to update template code?
+- ✅ Which @zodios/core version supports Zod v4?
+- ✅ Does @zodios/core have breaking changes?
+- ✅ Are there any API changes in makeApi()?
+- ✅ Do we need to update template code?
 
 **If @zodios/core doesn't support Zod v4 yet:**
 
--   STOP and wait for compatibility
--   OR contribute to @zodios/core
--   OR consider alternative approach
+- STOP and wait for compatibility
+- OR contribute to @zodios/core
+- OR consider alternative approach
 
 #### Step 1.3: Create Breaking Changes Checklist
 
@@ -268,53 +254,53 @@ Document every Zod v3 → v4 change that affects our code:
 
 ## Schema Creation
 
--   [ ] z.string() - any changes?
--   [ ] z.number() - any changes?
--   [ ] z.object() - any changes?
--   [ ] z.array() - any changes?
--   [ ] z.union() - any changes?
--   [ ] z.discriminatedUnion() - any changes?
--   [ ] z.enum() - any changes?
--   [ ] z.lazy() - CRITICAL - any changes?
+- [ ] z.string() - any changes?
+- [ ] z.number() - any changes?
+- [ ] z.object() - any changes?
+- [ ] z.array() - any changes?
+- [ ] z.union() - any changes?
+- [ ] z.discriminatedUnion() - any changes?
+- [ ] z.enum() - any changes?
+- [ ] z.lazy() - CRITICAL - any changes?
 
 ## Validation Chains
 
--   [ ] .min() / .max() - any changes?
--   [ ] .email() / .url() / .uuid() - any changes?
--   [ ] .regex() - any changes?
--   [ ] .refine() - any changes?
+- [ ] .min() / .max() - any changes?
+- [ ] .email() / .url() / .uuid() - any changes?
+- [ ] .regex() - any changes?
+- [ ] .refine() - any changes?
 
 ## Optional/Nullable
 
--   [ ] .optional() - any changes?
--   [ ] .nullable() - any changes?
--   [ ] Union with z.null() - any changes?
+- [ ] .optional() - any changes?
+- [ ] .nullable() - any changes?
+- [ ] Union with z.null() - any changes?
 
 ## Object Operations
 
--   [ ] .passthrough() - any changes?
--   [ ] .strict() - any changes?
--   [ ] .partial() - any changes?
--   [ ] .required() - any changes?
+- [ ] .passthrough() - any changes?
+- [ ] .strict() - any changes?
+- [ ] .partial() - any changes?
+- [ ] .required() - any changes?
 
 ## Default Values
 
--   [ ] .default() - any changes?
+- [ ] .default() - any changes?
 
 ## Error Handling
 
--   [ ] ZodError structure - any changes?
--   [ ] Error messages - any changes?
+- [ ] ZodError structure - any changes?
+- [ ] Error messages - any changes?
 
 ## Type Inference
 
--   [ ] z.infer<> - any changes?
--   [ ] .parse() - any changes?
+- [ ] z.infer<> - any changes?
+- [ ] .parse() - any changes?
 
 ## Performance
 
--   [ ] Any known performance regressions?
--   [ ] Any optimization opportunities?
+- [ ] Any known performance regressions?
+- [ ] Any optimization opportunities?
 ```
 
 #### Step 1.4: Analyze Impact on openApiToZod.ts
@@ -334,20 +320,20 @@ grep "z\." openApiToZod.ts | sort | uniq
 
 **Expected patterns to find:**
 
--   `z.string()`
--   `z.number()`
--   `z.object()`
--   `z.array()`
--   `z.union()`
--   `z.discriminatedUnion()`
--   `z.enum()`
--   `z.lazy()`
--   `.optional()`
--   `.nullable()`
--   `.default()`
--   `.min()`, `.max()`, `.length()`
--   `.passthrough()`, `.strict()`
--   `.refine()`
+- `z.string()`
+- `z.number()`
+- `z.object()`
+- `z.array()`
+- `z.union()`
+- `z.discriminatedUnion()`
+- `z.enum()`
+- `z.lazy()`
+- `.optional()`
+- `.nullable()`
+- `.default()`
+- `.min()`, `.max()`, `.length()`
+- `.passthrough()`, `.strict()`
+- `.refine()`
 
 ---
 
@@ -648,8 +634,8 @@ cat schemas-only.hbs
 
 **Most templates should not need changes unless:**
 
--   Zod import statement changed
--   Type annotation changed (e.g., `z.ZodType<T>` → something else)
+- Zod import statement changed
+- Type annotation changed (e.g., `z.ZodType<T>` → something else)
 
 ```handlebars
 {{!-- default.hbs --}}
@@ -690,23 +676,23 @@ Create a list:
 
 ## Category A: Expected Zod v4 API Changes
 
--   Tests failing because generated output uses new Zod v4 API
--   These are GOOD - update snapshots after verification
+- Tests failing because generated output uses new Zod v4 API
+- These are GOOD - update snapshots after verification
 
 ## Category B: Unexpected Errors
 
--   Tests failing for unknown reasons
--   Need investigation and fixes
+- Tests failing for unknown reasons
+- Need investigation and fixes
 
 ## Category C: Type Errors
 
--   TypeScript compilation errors
--   Need code updates
+- TypeScript compilation errors
+- Need code updates
 
 ## Category D: Runtime Errors
 
--   Tests throwing exceptions
--   Need debugging
+- Tests throwing exceptions
+- Need debugging
 ```
 
 #### Step 6.3: Update Snapshots Systematically
@@ -730,18 +716,18 @@ pnpm test openApiToZod.test.ts -u
 
 **Core tests:**
 
--   `lib/src/generateZodClientFromOpenAPI.test.ts`
--   `lib/src/openApiToZod.test.ts`
--   `lib/src/getZodiosEndpointDefinitionList.test.ts`
--   `lib/src/schema-complexity.test.ts`
--   `lib/src/openApiToTypescript.test.ts`
+- `lib/src/generateZodClientFromOpenAPI.test.ts`
+- `lib/src/openApiToZod.test.ts`
+- `lib/src/getZodiosEndpointDefinitionList.test.ts`
+- `lib/src/schema-complexity.test.ts`
+- `lib/src/openApiToTypescript.test.ts`
 
 **Integration tests (68 files):**
 
--   `lib/tests/*.test.ts` (all of them)
--   Each tests a specific scenario
--   Each has inline snapshots
--   Each needs manual review
+- `lib/tests/*.test.ts` (all of them)
+- Each tests a specific scenario
+- Each has inline snapshots
+- Each needs manual review
 
 #### Step 6.5: Testing Strategy
 
@@ -794,10 +780,10 @@ git diff petstore-schemas.ts
 
 **Check that generated clients:**
 
--   Use Zod v4 API
--   Are syntactically valid
--   Type check correctly
--   Work at runtime
+- Use Zod v4 API
+- Are syntactically valid
+- Type check correctly
+- Work at runtime
 
 ```bash
 cd examples/basic
@@ -899,17 +885,17 @@ done
 
 **Test these specific scenarios:**
 
--   ✅ Recursive schemas (uses z.lazy)
--   ✅ Circular references (uses z.lazy)
--   ✅ Discriminated unions
--   ✅ oneOf / anyOf / allOf
--   ✅ Nested objects
--   ✅ Arrays of objects
--   ✅ Enums (string and number)
--   ✅ Optional fields
--   ✅ Nullable fields
--   ✅ Default values
--   ✅ Validation constraints (min, max, regex, etc.)
+- ✅ Recursive schemas (uses z.lazy)
+- ✅ Circular references (uses z.lazy)
+- ✅ Discriminated unions
+- ✅ oneOf / anyOf / allOf
+- ✅ Nested objects
+- ✅ Arrays of objects
+- ✅ Enums (string and number)
+- ✅ Optional fields
+- ✅ Nullable fields
+- ✅ Default values
+- ✅ Validation constraints (min, max, regex, etc.)
 
 ```bash
 # These test files should cover it:
@@ -980,9 +966,9 @@ which introduces breaking changes from Zod v3.
 
 ### Prerequisites
 
--   Zod v4.0.0 or later
--   @zodios/core v11.0.0 or later (if using Zodios)
--   Node.js 18.20.0 or later
+- Zod v4.0.0 or later
+- @zodios/core v11.0.0 or later (if using Zodios)
+- Node.js 18.20.0 or later
 
 ### Step-by-Step Migration
 
@@ -1068,7 +1054,6 @@ const User = z
 [List all breaking changes from Zod v3 → v4 that affect generated code]
 
 1. **[Breaking Change 1]**
-
     - Description
     - How to fix
 
@@ -1113,9 +1098,9 @@ npm install openapi-zod-client@^1.18.0 zod@^3.19.0
 
 ### Need Help?
 
--   [GitHub Issues](https://github.com/astahmer/openapi-zod-client/issues)
--   [Zod v4 Documentation](https://zod.dev/)
--   [Zodios Documentation](https://www.zodios.org/)
+- [GitHub Issues](https://github.com/astahmer/openapi-zod-client/issues)
+- [Zod v4 Documentation](https://zod.dev/)
+- [Zodios Documentation](https://www.zodios.org/)
 
 ````
 
@@ -1155,8 +1140,8 @@ All examples have been updated for openapi-zod-client v2.0 (Zod v4).
 
 **Requirements:**
 
--   Zod v4.0.0+
--   @zodios/core v11.0.0+
+- Zod v4.0.0+
+- @zodios/core v11.0.0+
 
 **For Zod v3 examples**, see the [v1.x branch](https://github.com/astahmer/openapi-zod-client/tree/v1.18.0/examples).
 ```
@@ -1185,9 +1170,9 @@ breaking changes from Zod v3.
 
 Your project must have:
 
--   Zod v4.0.0 or later
--   @zodios/core v11.0.0 or later (if using Zodios)
--   Node.js 18.20.0 or later
+- Zod v4.0.0 or later
+- @zodios/core v11.0.0 or later (if using Zodios)
+- Node.js 18.20.0 or later
 
 ## Migration Steps
 
@@ -1207,18 +1192,18 @@ Your project must have:
 
 ## What Changed
 
--   Generated schemas use Zod v4 API
--   [List specific Zod v4 API changes]
--   Updated all examples and documentation
--   Improved [specific improvements if any]
+- Generated schemas use Zod v4 API
+- [List specific Zod v4 API changes]
+- Updated all examples and documentation
+- Improved [specific improvements if any]
 
 ## What Didn't Change
 
--   OpenAPI spec compatibility (still supports 3.0 and 3.1)
--   CLI usage and options
--   Template system
--   Programmatic API signatures
--   Generated TypeScript types (mostly unchanged)
+- OpenAPI spec compatibility (still supports 3.0 and 3.1)
+- CLI usage and options
+- Template system
+- Programmatic API signatures
+- Generated TypeScript types (mostly unchanged)
 
 ## Compatibility
 
@@ -1291,61 +1276,61 @@ git commit -m "chore: add major changeset for Zod v4 upgrade"
 
 ### Core Functionality
 
--   [ ] All 68 tests pass
--   [ ] Build succeeds
--   [ ] Linting passes
--   [ ] Type checking passes
--   [ ] No TypeScript errors
+- [ ] All 68 tests pass
+- [ ] Build succeeds
+- [ ] Linting passes
+- [ ] Type checking passes
+- [ ] No TypeScript errors
 
 ### Generated Output
 
--   [ ] Uses Zod v4 API correctly
--   [ ] Schemas are syntactically valid
--   [ ] Types are correct
--   [ ] Validation works at runtime
+- [ ] Uses Zod v4 API correctly
+- [ ] Schemas are syntactically valid
+- [ ] Types are correct
+- [ ] Validation works at runtime
 
 ### Examples
 
--   [ ] basic example works
--   [ ] schemas-only example works
--   [ ] export-schemas example works
--   [ ] All examples type check
--   [ ] All examples run
+- [ ] basic example works
+- [ ] schemas-only example works
+- [ ] export-schemas example works
+- [ ] All examples type check
+- [ ] All examples run
 
 ### Playground
 
--   [ ] Builds successfully
--   [ ] Real-time generation works
--   [ ] All options work
--   [ ] All presets work
+- [ ] Builds successfully
+- [ ] Real-time generation works
+- [ ] All options work
+- [ ] All presets work
 
 ### Spec Compatibility
 
--   [ ] OAS 3.0 specs work
--   [ ] OAS 3.1 specs work
--   [ ] Complex specs tested
--   [ ] Recursive schemas work
--   [ ] Circular refs work
+- [ ] OAS 3.0 specs work
+- [ ] OAS 3.1 specs work
+- [ ] Complex specs tested
+- [ ] Recursive schemas work
+- [ ] Circular refs work
 
 ### Integration
 
--   [ ] @zodios/core integration works
--   [ ] Validation at runtime works
--   [ ] Error messages are helpful
--   [ ] Type inference works
+- [ ] @zodios/core integration works
+- [ ] Validation at runtime works
+- [ ] Error messages are helpful
+- [ ] Type inference works
 
 ### Documentation
 
--   [ ] Migration guide complete
--   [ ] README updated
--   [ ] Examples documented
--   [ ] Changeset created
+- [ ] Migration guide complete
+- [ ] README updated
+- [ ] Examples documented
+- [ ] Changeset created
 
 ### Performance
 
--   [ ] No significant slowdown
--   [ ] Large specs tested
--   [ ] Memory usage reasonable
+- [ ] No significant slowdown
+- [ ] Large specs tested
+- [ ] Memory usage reasonable
 
 ---
 
@@ -1353,37 +1338,37 @@ git commit -m "chore: add major changeset for Zod v4 upgrade"
 
 ✅ **Dependencies**
 
--   Zod updated to v4.x
--   @zodios/core updated to compatible version
+- Zod updated to v4.x
+- @zodios/core updated to compatible version
 
 ✅ **Code**
 
--   Schema generation updated for Zod v4
--   All tests pass
--   No TypeScript errors
+- Schema generation updated for Zod v4
+- All tests pass
+- No TypeScript errors
 
 ✅ **Output**
 
--   Generated code uses Zod v4 API
--   Valid TypeScript
--   Runtime validation works
+- Generated code uses Zod v4 API
+- Valid TypeScript
+- Runtime validation works
 
 ✅ **Examples**
 
--   All examples updated
--   All examples work
+- All examples updated
+- All examples work
 
 ✅ **Documentation**
 
--   Migration guide published
--   Clear breaking changes documented
--   User support prepared
+- Migration guide published
+- Clear breaking changes documented
+- User support prepared
 
 ✅ **Quality**
 
--   No regressions
--   Performance acceptable
--   Error handling improved (if applicable)
+- No regressions
+- Performance acceptable
+- Error handling improved (if applicable)
 
 ---
 
@@ -1413,7 +1398,6 @@ If critical issues discovered:
     ```
 
 2. **Partial rollback:**
-
     - Identify specific problematic change
     - Revert just that commit
     - Release patch
@@ -1430,24 +1414,24 @@ If critical issues discovered:
 
 ### Immediate (Day 1)
 
--   [ ] Monitor GitHub issues
--   [ ] Check CI/CD status
--   [ ] Verify npm publish
--   [ ] Test published package
+- [ ] Monitor GitHub issues
+- [ ] Check CI/CD status
+- [ ] Verify npm publish
+- [ ] Test published package
 
 ### Short-term (Week 1)
 
--   [ ] Respond to user issues
--   [ ] Collect feedback
--   [ ] Create FAQ if needed
--   [ ] Consider beta releases for testing
+- [ ] Respond to user issues
+- [ ] Collect feedback
+- [ ] Create FAQ if needed
+- [ ] Consider beta releases for testing
 
 ### Medium-term (Month 1)
 
--   [ ] Analyze adoption
--   [ ] Document common issues
--   [ ] Consider patches if needed
--   [ ] Plan for v2.1 improvements
+- [ ] Analyze adoption
+- [ ] Document common issues
+- [ ] Consider patches if needed
+- [ ] Plan for v2.1 improvements
 
 ---
 
@@ -1455,24 +1439,24 @@ If critical issues discovered:
 
 ### Pre-Release
 
--   [ ] Announce breaking change coming
--   [ ] Create GitHub discussion
--   [ ] Ask for beta testers
--   [ ] Gather feedback
+- [ ] Announce breaking change coming
+- [ ] Create GitHub discussion
+- [ ] Ask for beta testers
+- [ ] Gather feedback
 
 ### At Release
 
--   [ ] Publish v2.0.0
--   [ ] Tweet/announce release
--   [ ] Post in Discord/Slack
--   [ ] Update website
+- [ ] Publish v2.0.0
+- [ ] Tweet/announce release
+- [ ] Post in Discord/Slack
+- [ ] Update website
 
 ### Post-Release
 
--   [ ] Monitor feedback
--   [ ] Answer questions
--   [ ] Create issues for bugs
--   [ ] Thank contributors
+- [ ] Monitor feedback
+- [ ] Answer questions
+- [ ] Create issues for bugs
+- [ ] Thank contributors
 
 ---
 
@@ -1501,25 +1485,25 @@ If critical issues discovered:
 
 ## Notes
 
--   This is the most impactful of all three PRs
--   Affects ALL users (not just programmatic users)
--   Requires excellent documentation and support
--   Consider beta releases for community testing
--   May want to release as v2.0.0 (combining with Plan 02)
-    or as v3.0.0 (if Plan 02 already released as v2.0.0)
+- This is the most impactful of all three PRs
+- Affects ALL users (not just programmatic users)
+- Requires excellent documentation and support
+- Consider beta releases for community testing
+- May want to release as v2.0.0 (combining with Plan 02)
+  or as v3.0.0 (if Plan 02 already released as v2.0.0)
 
 **Recommendation:**
 
--   Execute Plan 02 first (less risky)
--   Release v2.0.0
--   Then execute Plan 03
--   Release v3.0.0
+- Execute Plan 02 first (less risky)
+- Release v2.0.0
+- Then execute Plan 03
+- Release v3.0.0
 
 OR
 
--   Execute both Plans 02 and 03
--   Release single v2.0.0 with both changes
--   Users migrate once
+- Execute both Plans 02 and 03
+- Release single v2.0.0 with both changes
+- Users migrate once
 
 ---
 

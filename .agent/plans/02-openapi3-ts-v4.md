@@ -37,17 +37,17 @@ This **IS** a breaking change because:
 
 ### Affected Users
 
--   ✅ **CLI users:** NOT affected (no code changes needed)
--   ⚠️ **Programmatic users:** Must update imports (1 line per file)
--   ⚠️ **Users importing OpenAPIObject** from openapi3-ts: Must update
+- ✅ **CLI users:** NOT affected (no code changes needed)
+- ⚠️ **Programmatic users:** Must update imports (1 line per file)
+- ⚠️ **Users importing OpenAPIObject** from openapi3-ts: Must update
 
 ### NOT Affected
 
--   Generated output (no changes)
--   Runtime behavior (still supports both OAS 3.0 and 3.1)
--   CLI usage
--   Configuration
--   Templates
+- Generated output (no changes)
+- Runtime behavior (still supports both OAS 3.0 and 3.1)
+- CLI usage
+- Configuration
+- Templates
 
 ### Migration Effort
 
@@ -59,21 +59,21 @@ This **IS** a breaking change because:
 
 ### In Scope ✅
 
--   Update openapi3-ts dependency to v4.x
--   Update all import statements (20+ files)
--   Implement/update utility functions (isSchemaObject, isReferenceObject)
--   Update type usage across codebase
--   Update examples
--   Write migration guide
--   Update documentation
+- Update openapi3-ts dependency to v4.x
+- Update all import statements (20+ files)
+- Implement/update utility functions (isSchemaObject, isReferenceObject)
+- Update type usage across codebase
+- Update examples
+- Write migration guide
+- Update documentation
 
 ### Out of Scope ❌
 
--   Zod (Plan 03)
--   @zodios/core (Plan 03)
--   Changes to generated output
--   Runtime behavior changes
--   New features
+- Zod (Plan 03)
+- @zodios/core (Plan 03)
+- Changes to generated output
+- Runtime behavior changes
+- New features
 
 ---
 
@@ -116,30 +116,30 @@ This **IS** a breaking change because:
 
 **Test files (variable):**
 
--   All `.test.ts` files importing OpenAPIObject types
+- All `.test.ts` files importing OpenAPIObject types
 
 **Example files:**
 
--   `examples/basic/petstore-generator.ts`
--   Any other programmatic usage examples
+- `examples/basic/petstore-generator.ts`
+- Any other programmatic usage examples
 
 ### Types Imported
 
 Most common imports:
 
--   `OpenAPIObject` - Main document type
--   `SchemaObject` - Schema definitions
--   `ReferenceObject` - $ref objects
--   `OperationObject` - Endpoint operations
--   `PathItemObject` - Path definitions
--   `ParameterObject` - Parameters
--   `RequestBodyObject` - Request bodies
--   `ResponseObject` - Responses
+- `OpenAPIObject` - Main document type
+- `SchemaObject` - Schema definitions
+- `ReferenceObject` - $ref objects
+- `OperationObject` - Endpoint operations
+- `PathItemObject` - Path definitions
+- `ParameterObject` - Parameters
+- `RequestBodyObject` - Request bodies
+- `ResponseObject` - Responses
 
 ### Utility Functions Used
 
--   `isSchemaObject` - From openapi3-ts v3 (may not exist in v4)
--   `isReferenceObject` - Custom implementation (already exists)
+- `isSchemaObject` - From openapi3-ts v3 (may not exist in v4)
+- `isReferenceObject` - Custom implementation (already exists)
 
 ---
 
@@ -164,20 +164,18 @@ npm info openapi3-ts@4
 
 **Research:**
 
--   Read npm package page: https://www.npmjs.com/package/openapi3-ts
--   Check GitHub releases: https://github.com/metadevpro/openapi3-ts/releases
--   Document all breaking changes
--   Note any new features
+- Read npm package page: https://www.npmjs.com/package/openapi3-ts
+- Check GitHub releases: https://github.com/metadevpro/openapi3-ts/releases
+- Document all breaking changes
+- Note any new features
 
 **Key Changes in v4:**
 
 1. **Separate OAS 3.0 and 3.1 modules:**
-
     - `openapi3-ts/oas30` for OpenAPI 3.0
     - `openapi3-ts/oas31` for OpenAPI 3.1
 
 2. **Import changes:**
-
     - No more `import from "openapi3-ts"`
     - Must specify OAS version
 
@@ -196,10 +194,10 @@ node -e "console.log(Object.keys(require('openapi3-ts/oas31')))"
 
 **Questions to answer:**
 
--   ✅ Does `isSchemaObject` exist in v4?
--   ✅ Does `isReferenceObject` exist in v4?
--   ✅ Are type definitions compatible?
--   ✅ Are there new utilities we should use?
+- ✅ Does `isSchemaObject` exist in v4?
+- ✅ Does `isReferenceObject` exist in v4?
+- ✅ Are type definitions compatible?
+- ✅ Are there new utilities we should use?
 
 #### Step 1.4: Verify @apidevtools/swagger-parser Compatibility
 
@@ -492,9 +490,9 @@ pnpm test
 
 **If tests fail:**
 
--   Check if it's just types vs actual behavior
--   Verify openapi3-ts v4 didn't change schema structure
--   Check if test expectations need updating
+- Check if it's just types vs actual behavior
+- Verify openapi3-ts v4 didn't change schema structure
+- Check if test expectations need updating
 
 #### Step 6.2: Verify Generated Output Unchanged
 
@@ -582,15 +580,15 @@ a breaking change in TypeScript import paths.
 
 **✅ NOT Affected:**
 
--   CLI users (no changes needed)
--   Users who only use generated clients
--   Runtime behavior (still supports both OAS 3.0 and 3.1)
+- CLI users (no changes needed)
+- Users who only use generated clients
+- Runtime behavior (still supports both OAS 3.0 and 3.1)
 
 **⚠️ Affected:**
 
--   Users who programmatically import `OpenAPIObject` or other types
-    from `openapi3-ts`
--   Users of the programmatic API who pass `OpenAPIObject` types
+- Users who programmatically import `OpenAPIObject` or other types
+  from `openapi3-ts`
+- Users of the programmatic API who pass `OpenAPIObject` types
 
 #### Migration Guide
 
@@ -636,12 +634,12 @@ import type { OpenAPIObject } from "openapi3-ts/oas30";
 
 #### What Didn't Change
 
--   ✅ Generated client code (identical output)
--   ✅ CLI usage (no changes)
--   ✅ Runtime behavior
--   ✅ All existing options and features
--   ✅ Template system
--   ✅ Configuration
+- ✅ Generated client code (identical output)
+- ✅ CLI usage (no changes)
+- ✅ Runtime behavior
+- ✅ All existing options and features
+- ✅ Template system
+- ✅ Configuration
 
 ````
 
@@ -736,17 +734,17 @@ import type { OpenAPIObject } from "openapi3-ts/oas31";
 
 ## What Changed
 
--   openapi3-ts dependency: 3.1.0 → 4.0.0
--   Import paths now specify OAS version (oas31 or oas30)
--   Better type safety for OpenAPI 3.1 features
--   Updated all examples and documentation
+- openapi3-ts dependency: 3.1.0 → 4.0.0
+- Import paths now specify OAS version (oas31 or oas30)
+- Better type safety for OpenAPI 3.1 features
+- Updated all examples and documentation
 
 ## What Didn't Change
 
--   Generated client code (identical output)
--   Runtime behavior (both OAS 3.0 and 3.1 still supported)
--   CLI usage
--   All features and options
+- Generated client code (identical output)
+- Runtime behavior (both OAS 3.0 and 3.1 still supported)
+- CLI usage
+- All features and options
 
 ## Migration
 
@@ -797,42 +795,42 @@ Before submitting PR:
 
 ### Core Functionality
 
--   [ ] All unit tests pass: `pnpm test`
--   [ ] Build succeeds: `pnpm build`
--   [ ] Linting passes: `cd lib && pnpm lint`
--   [ ] Type checking passes: `pnpm -r run lint:ts`
--   [ ] No new TypeScript errors
+- [ ] All unit tests pass: `pnpm test`
+- [ ] Build succeeds: `pnpm build`
+- [ ] Linting passes: `cd lib && pnpm lint`
+- [ ] Type checking passes: `pnpm -r run lint:ts`
+- [ ] No new TypeScript errors
 
 ### Generated Output
 
--   [ ] Output identical to v1.x (no changes)
--   [ ] Examples generate correctly
--   [ ] CLI generates correctly
--   [ ] Programmatic API works
+- [ ] Output identical to v1.x (no changes)
+- [ ] Examples generate correctly
+- [ ] CLI generates correctly
+- [ ] Programmatic API works
 
 ### Spec Compatibility
 
--   [ ] OAS 3.0 specs work: `samples/v3.0/*.yaml`
--   [ ] OAS 3.1 specs work: `samples/v3.1/*.yaml`
--   [ ] Complex specs tested (recursive, unions, etc.)
+- [ ] OAS 3.0 specs work: `samples/v3.0/*.yaml`
+- [ ] OAS 3.1 specs work: `samples/v3.1/*.yaml`
+- [ ] Complex specs tested (recursive, unions, etc.)
 
 ### Examples
 
--   [ ] basic example works
--   [ ] schemas-only example works
--   [ ] export-schemas example works
+- [ ] basic example works
+- [ ] schemas-only example works
+- [ ] export-schemas example works
 
 ### Documentation
 
--   [ ] Migration guide complete
--   [ ] README updated
--   [ ] Examples documented
--   [ ] Changeset created
+- [ ] Migration guide complete
+- [ ] README updated
+- [ ] Examples documented
+- [ ] Changeset created
 
 ### CI/CD
 
--   [ ] GitHub Actions pass
--   [ ] No workflow failures
+- [ ] GitHub Actions pass
+- [ ] No workflow failures
 
 ---
 
@@ -840,35 +838,35 @@ Before submitting PR:
 
 ✅ **Dependency**
 
--   openapi3-ts updated to v4.x in all workspaces
+- openapi3-ts updated to v4.x in all workspaces
 
 ✅ **Code**
 
--   All imports use `openapi3-ts/oas31`
--   Type guards implemented (if needed)
--   No TypeScript errors
+- All imports use `openapi3-ts/oas31`
+- Type guards implemented (if needed)
+- No TypeScript errors
 
 ✅ **Tests**
 
--   100% of tests pass
--   No snapshot changes (unless expected)
+- 100% of tests pass
+- No snapshot changes (unless expected)
 
 ✅ **Compatibility**
 
--   Both OAS 3.0 and 3.1 specs work
--   Generated output unchanged
+- Both OAS 3.0 and 3.1 specs work
+- Generated output unchanged
 
 ✅ **Documentation**
 
--   Migration guide published
--   Examples updated
--   Clear commit history
+- Migration guide published
+- Examples updated
+- Clear commit history
 
 ✅ **User Experience**
 
--   Simple migration path (1 line change)
--   Clear error messages if wrong import used
--   No runtime breaking changes
+- Simple migration path (1 line change)
+- Clear error messages if wrong import used
+- No runtime breaking changes
 
 ---
 
@@ -895,7 +893,6 @@ If critical issues discovered:
     ```
 
 2. **Hot fix if minor:**
-
     - Create patch PR
     - Fast-track review
     - Document issue
@@ -909,18 +906,15 @@ If critical issues discovered:
 ## Post-Merge Tasks
 
 1. **Monitor issues:**
-
     - Watch for user reports
     - Check GitHub issues
     - Monitor Discord/Slack
 
 2. **Update dependent PRs:**
-
     - Rebase Plan 03 if started
     - Update any other branches
 
 3. **Community communication:**
-
     - Announce v2.0.0 release
     - Share migration guide
     - Offer support
@@ -933,11 +927,11 @@ If critical issues discovered:
 
 ## Notes
 
--   This is a type-only breaking change
--   No runtime behavior changes
--   Clean migration path (simple import update)
--   Foundation for future OAS 3.1 improvements
--   Can be released independently or combined with Plan 03
+- This is a type-only breaking change
+- No runtime behavior changes
+- Clean migration path (simple import update)
+- Foundation for future OAS 3.1 improvements
+- Can be released independently or combined with Plan 03
 
 ---
 

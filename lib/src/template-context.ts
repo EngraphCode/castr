@@ -73,7 +73,7 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
 
     for (const ref in depsGraphs.deepDependencyGraph) {
         const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
-        const ctx: TsConversionContext = { nodeByRef: {}, resolver: result.resolver, visitedsRefs: {} };
+        const ctx: TsConversionContext = { nodeByRef: {}, resolver: result.resolver, visitedRefs: {} };
 
         // Specifically check isCircular if shouldExportAllTypes is false. Either should cause shouldGenerateType to be true.
 

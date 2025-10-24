@@ -64,7 +64,7 @@ export const pathToVariableName = (path: string) =>
 /**
  * Primitive schema types (subset of SchemaObjectType from openapi3-ts)
  * Domain concept: types that map to simple primitives
- * 
+ *
  * Pattern per RULES.md §5: Literals tied to library types
  */
 export type PrimitiveSchemaType = Extract<
@@ -72,7 +72,13 @@ export type PrimitiveSchemaType = Extract<
     "string" | "number" | "integer" | "boolean" | "null"
 >;
 
-const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = ["string", "number", "integer", "boolean", "null"] as const;
+const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "null",
+] as const;
 
 /**
  * Type predicate to narrow unknown values to primitive schema types

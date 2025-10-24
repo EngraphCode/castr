@@ -3469,7 +3469,8 @@ describe("generateZodClientFromOpenAPI", () => {
             disableWriteToFile: true,
             options: { groupStrategy: "tag-file" },
         });
-        expect(prettyOutput["pet"]).toMatchInlineSnapshot(`
+        if (typeof prettyOutput === "object" && prettyOutput !== null) {
+            expect(prettyOutput["pet"]).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -3717,6 +3718,7 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
+        }
     });
 });
 

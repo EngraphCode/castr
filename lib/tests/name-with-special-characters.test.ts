@@ -1,6 +1,6 @@
 import { type OpenAPIObject } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src";
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src/index.js";
 
 test("name-with-special-characters", async () => {
     const openApiDoc: OpenAPIObject = {

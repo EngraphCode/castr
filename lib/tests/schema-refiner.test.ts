@@ -1,5 +1,5 @@
 import { isReferenceObject } from "openapi3-ts";
-import { getZodSchema } from "../src/openApiToZod";
+import { getZodSchema } from "../src/openApiToZod.js";
 import { test, expect } from "vitest";
 
 test("schema-refiner", () => {
@@ -25,7 +25,7 @@ test("schema-refiner", () => {
                         for (const key in schema.properties) {
                             const prop = schema.properties[key];
 
-                            if (!isReferenceObject(prop)) {
+                            if (prop && !isReferenceObject(prop)) {
                                 prop.nullable = true;
                             }
                         }

@@ -1,7 +1,7 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { type OpenAPIObject } from "openapi3-ts";
 import { resolve } from "node:path";
-import { getZodiosEndpointDefinitionList } from "../src";
+import { getZodiosEndpointDefinitionList } from "../src/index.js";
 import { expect, test } from "vitest";
 
 test("ref-in-another-file", async () => {

@@ -1,5 +1,5 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from "openapi3-ts";
 import { get } from "pastable/server";
 import { expect, test } from "vitest";
 import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
@@ -8,7 +8,8 @@ import { asComponentSchema } from "./utils.js";
 
 test("petstore.yaml", async () => {
     const openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;
-    const getSchemaByRef = (ref: string) => get(openApiDoc, ref.replace("#/", "").replaceAll("/", "."));
+    const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject =>
+        get(openApiDoc, ref.replace("#/", "").replaceAll("/", ".")) as SchemaObject | ReferenceObject;
     const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
         Object.keys(openApiDoc.components?.schemas || {}).map((name) => asComponentSchema(name)),
         getSchemaByRef

@@ -1,6 +1,6 @@
-import { getZodSchema } from "../src/openApiToZod";
+import { getZodSchema } from "../src/openApiToZod.js";
 import { test, expect } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src";
+import { generateZodClientFromOpenAPI } from "../src/index.js";
 import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
 
 test("handle-props-with-special-characters", async () => {

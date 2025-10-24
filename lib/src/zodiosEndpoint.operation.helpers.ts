@@ -11,17 +11,18 @@ import type {
     SchemaObject,
     ReferenceObject,
 } from "openapi3-ts";
+import { isReferenceObject, isSchemaObject } from "openapi3-ts";
 import { match, P } from "ts-pattern";
 
 import type { CodeMeta, ConversionTypeContext } from "./CodeMeta.js";
-import { isReferenceObject } from "./isReferenceObject.js";
 import { getZodChain, getZodSchema } from "./openApiToZod.js";
 import type { TemplateContext } from "./template-context.js";
+import type { DefaultStatusBehavior } from "./template-context.types.js";
 import { pathParamToVariableName } from "./utils.js";
 
 const voidSchema = "z.void()";
 
-type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
+export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
 
 type EndpointParameter = {
     name: string;
@@ -152,25 +153,36 @@ export function processParameter(
         // Fallback for OpenAPI spec violations where $ref is at wrong level
         // @ts-expect-error - OpenAPI spec violations: some docs incorrectly place $ref at mediaTypeObject level
         paramSchema = mediaTypeObject?.schema ?? mediaTypeObject;
-    } else {
+    } else if (paramItem.schema) {
         paramSchema = isReferenceObject(paramItem.schema)
             ? ctx.resolver.getSchemaByRef(paramItem.schema.$ref)
             : paramItem.schema;
+    } else {
+        // OpenAPI spec requires parameters to have either 'schema' or 'content'
+        // Per SchemaXORContent constraint in OAS 3.0+ spec
+        throw new Error(
+            `Invalid OpenAPI specification: Parameter "${paramItem.name}" (in: ${paramItem.in}) must have either 'schema' or 'content' property. ` +
+                `See: https://spec.openapis.org/oas/v3.0.3#parameter-object`
+        );
     }
 
-    if (options?.withDescription && paramSchema) {
-        (paramSchema as SchemaObject).description = (paramItem.description ?? "").trim();
+    // Ensure schema was successfully resolved from references
+    if (!paramSchema) {
+        throw new Error(
+            `Invalid OpenAPI specification: Could not resolve schema for parameter "${paramItem.name}" (in: ${paramItem.in}). ` +
+                `This may indicate a missing or invalid $ref target.`
+        );
+    }
+
+    if (options?.withDescription && isSchemaObject(paramSchema)) {
+        paramSchema.description = (paramItem.description ?? "").trim();
     }
 
     // Resolve ref if needed, fallback to default (unknown) value if needed
-    paramSchema = paramSchema
-        ? isReferenceObject(paramSchema)
-            ? ctx.resolver.getSchemaByRef(paramSchema.$ref)
-            : paramSchema
-        : {};
+    paramSchema = isReferenceObject(paramSchema) ? ctx.resolver.getSchemaByRef(paramSchema.$ref) : paramSchema;
 
     const paramCode = getZodSchema({
-        schema: paramSchema ?? {},
+        schema: paramSchema,
         ctx,
         meta: { isRequired: paramItem.in === "path" ? true : (paramItem.required ?? false) },
         options,
@@ -270,7 +282,7 @@ export function processDefaultResponse(
     ctx: ConversionTypeContext,
     getZodVarName: GetZodVarNameFn,
     hasMainResponse: boolean,
-    defaultStatusBehavior: "spec-compliant" | "auto-correct",
+    defaultStatusBehavior: DefaultStatusBehavior,
     options?: TemplateContext["options"]
 ): {
     mainResponse?: string;
