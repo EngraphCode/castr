@@ -6,7 +6,7 @@ import { makeSchemaResolver } from "./makeSchemaResolver.js";
 import { asComponentSchema } from "./utils.js";
 
 const makeSchema = (schema: SchemaObject) => schema;
-const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData  ) =>
+const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData) =>
     getZodSchema({ schema: makeSchema(schema), meta }).toString();
 
 test("getSchemaAsZodString", () => {

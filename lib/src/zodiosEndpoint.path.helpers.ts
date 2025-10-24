@@ -176,4 +176,3 @@ export function processOperation({
 
     return { endpoint: endpointDefinition, ignoredFallback, ignoredGeneric };
 }
-

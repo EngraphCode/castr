@@ -1,7 +1,7 @@
 /**
  * Pure helper functions for Zodios endpoint generation
  * Extracted to reduce cognitive complexity in getZodiosEndpointDefinitionList.ts
- * 
+ *
  * Each function has a single responsibility and is < 50 lines
  */
 
@@ -24,11 +24,7 @@ type ZodiosContext = {
  * Checks if schema should be inlined (no variable extraction)
  * Returns true if complexity is below threshold or threshold is -1
  */
-export function shouldInlineSchema(
-    complexity: number,
-    complexityThreshold: number,
-    hasRef: boolean
-): boolean {
+export function shouldInlineSchema(complexity: number, complexityThreshold: number, hasRef: boolean): boolean {
     // Special case: -1 means always inline everything
     if (complexityThreshold === -1) {
         return true;
@@ -95,11 +91,7 @@ export function registerSchemaName(
  * Handles inline-everything mode (complexityThreshold === -1)
  * Returns the full schema definition or resolved reference
  */
-export function handleInlineEverything(
-    input: CodeMeta,
-    result: string,
-    ctx: ZodiosContext
-): string {
+export function handleInlineEverything(input: CodeMeta, result: string, ctx: ZodiosContext): string {
     if (input.ref) {
         const zodSchema = ctx.zodSchemaByName[result];
         if (!zodSchema) {
@@ -212,4 +204,3 @@ export function getSchemaVarName(
     // Handle reference schemas
     return handleRefSchema(input, result, ctx, complexityThreshold);
 }
-

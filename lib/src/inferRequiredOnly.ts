@@ -25,7 +25,7 @@ export function inferRequiredSchema(schema: SchemaObject) {
     const [standaloneRequisites, noRequiredOnlyAllof] = schema.allOf.reduce(
         (acc, cur) => {
             if (isBrokenAllOfItem(cur)) {
-                const required = (cur).required;
+                const required = cur.required;
                 acc[0].push(...(required ?? []));
             } else {
                 acc[1].push(cur);

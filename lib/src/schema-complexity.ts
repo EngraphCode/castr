@@ -59,16 +59,34 @@ export function getSchemaComplexity({
     }
 
     if (schema.oneOf) {
-        return calculateCompositionComplexity(schema.oneOf, "oneOf", current, complexityByComposite, getSchemaComplexity);
+        return calculateCompositionComplexity(
+            schema.oneOf,
+            "oneOf",
+            current,
+            complexityByComposite,
+            getSchemaComplexity
+        );
     }
 
     // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
     if (schema.anyOf) {
-        return calculateCompositionComplexity(schema.anyOf, "anyOf", current, complexityByComposite, getSchemaComplexity);
+        return calculateCompositionComplexity(
+            schema.anyOf,
+            "anyOf",
+            current,
+            complexityByComposite,
+            getSchemaComplexity
+        );
     }
 
     if (schema.allOf) {
-        return calculateCompositionComplexity(schema.allOf, "allOf", current, complexityByComposite, getSchemaComplexity);
+        return calculateCompositionComplexity(
+            schema.allOf,
+            "allOf",
+            current,
+            complexityByComposite,
+            getSchemaComplexity
+        );
     }
 
     if (!schema.type) return current;
@@ -106,7 +124,12 @@ export function getSchemaComplexity({
         }
 
         if (schema.properties) {
-            return calculatePropertiesComplexity(schema.properties, current, complexityByComposite, getSchemaComplexity);
+            return calculatePropertiesComplexity(
+                schema.properties,
+                current,
+                complexityByComposite,
+                getSchemaComplexity
+            );
         }
 
         return complexityByComposite("empty-object") + getSchemaComplexity({ current, schema: undefined });

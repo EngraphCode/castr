@@ -2,6 +2,10 @@
     "$schema": "https://turbo.build/schema.json",
     "ui": "stream",
     "tasks": {
+        "clean": {
+            "cache": false,
+            "outputs": []
+        },
         "build": {
             "cache": false,
             "dependsOn": ["^build"],

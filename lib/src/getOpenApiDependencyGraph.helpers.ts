@@ -23,11 +23,7 @@ export function visitComposition(
 /**
  * Visits all properties and additionalProperties in an object schema
  */
-export function visitObjectProperties(
-    schema: SchemaObject,
-    fromRef: string,
-    visit: VisitFn
-): void {
+export function visitObjectProperties(schema: SchemaObject, fromRef: string, visit: VisitFn): void {
     if (schema.properties) {
         for (const property in schema.properties) {
             const propSchema = schema.properties[property];
@@ -41,4 +37,3 @@ export function visitObjectProperties(
         visit(schema.additionalProperties, fromRef);
     }
 }
-

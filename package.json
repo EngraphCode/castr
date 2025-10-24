@@ -21,8 +21,9 @@
         "test:watch": "turbo test -- --watch",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
         "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-        "verify": "turbo format:check type-check lint test",
-        "clean": "turbo clean && rm -rf node_modules",
+        "clean": "turbo clean",
+        "qg": "pnpm format && pnpm type-check && pnpm lint && pnpm test",
+        "check": "pnpm clean && pnpm install && pnpm build && pnpm qg",
         "gen:samples": "rm -rf ./samples && tsx ./lib/samples-generator.ts"
     },
     "license": "ISC",

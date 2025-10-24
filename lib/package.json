@@ -27,6 +27,7 @@
         "openapi-zod-client": "./bin.cjs"
     },
     "scripts": {
+        "clean": "rm -rf dist",
         "build": "tsup",
         "dev": "tsup --watch",
         "format": "prettier --write .",

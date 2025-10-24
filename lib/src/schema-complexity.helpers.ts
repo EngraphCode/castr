@@ -46,8 +46,7 @@ export function calculateTypeArrayComplexity(
         const firstType = types[0];
         if (!firstType) return current;
         return (
-            complexityByComposite("oneOf") +
-            getSchemaComplexity({ current, schema: { ...schema, type: firstType } })
+            complexityByComposite("oneOf") + getSchemaComplexity({ current, schema: { ...schema, type: firstType } })
         );
     }
 
@@ -75,4 +74,3 @@ export function calculatePropertiesComplexity(
         getSum(props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
     );
 }
-

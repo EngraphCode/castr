@@ -3,7 +3,14 @@
  * Extracted to reduce cognitive complexity in getZodiosEndpointDefinitionList.ts main loop
  */
 
-import type { OperationObject, ParameterObject, RequestBodyObject, ResponseObject, SchemaObject, ReferenceObject } from "openapi3-ts";
+import type {
+    OperationObject,
+    ParameterObject,
+    RequestBodyObject,
+    ResponseObject,
+    SchemaObject,
+    ReferenceObject,
+} from "openapi3-ts";
 import { match, P } from "ts-pattern";
 
 import type { CodeMeta, ConversionTypeContext } from "./CodeMeta.js";
@@ -165,7 +172,7 @@ export function processParameter(
     const paramCode = getZodSchema({
         schema: paramSchema ?? {},
         ctx,
-        meta: { isRequired: paramItem.in === "path" ? true : paramItem.required ?? false },
+        meta: { isRequired: paramItem.in === "path" ? true : (paramItem.required ?? false) },
         options,
     });
 
@@ -311,4 +318,3 @@ export function processDefaultResponse(
     }
     return { shouldIgnoreGeneric: true };
 }
-
