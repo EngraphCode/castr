@@ -1,28 +1,32 @@
 /**
  * Comprehensive OpenAPI Specification Compliance Tests
- * 
+ *
  * These tests validate that we correctly handle spec-compliant OpenAPI documents
  * for both OAS 3.0.x and 3.1.x specifications.
- * 
+ *
  * Strategy:
  * 1. Use official OpenAPI JSON schemas from .agent/reference/openapi_schema/
  * 2. Validate test documents against official schemas using AJV
  * 3. Verify our code handles compliant documents correctly
  * 4. Use openapi3-ts types exclusively (no duplication)
- * 
+ *
  * References:
  * - OAS 3.0.3: https://spec.openapis.org/oas/v3.0.3
  * - OAS 3.1.0: https://spec.openapis.org/oas/v3.1.0
  */
 
 import { expect, test, describe, beforeAll } from "vitest";
-import Ajv2019 from "ajv/dist/2019.js";
-import Ajv04 from "ajv-draft-04";
-import addFormats from "ajv-formats";
+import * as Ajv04Module from "ajv-draft-04";
+import * as addFormatsModule from "ajv-formats";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { OpenAPIObject } from "openapi3-ts";
+import type { ValidateFunction } from "ajv";
 import { generateZodClientFromOpenAPI } from "../src/generateZodClientFromOpenAPI.js";
+
+// Handle CJS/ESM interop for default exports
+const Ajv04 = (Ajv04Module as any).default || Ajv04Module;
+const addFormats = (addFormatsModule as any).default || addFormatsModule;
 
 // Load official OpenAPI schemas
 const SCHEMA_DIR = join(process.cwd(), "../.agent/reference/openapi_schema");
@@ -32,8 +36,8 @@ const oas30Schema = JSON.parse(readFileSync(join(SCHEMA_DIR, "openapi_3_0_x_sche
 // For now, focus on 3.0.x which is more widely used
 
 describe("openapi-spec-compliance", () => {
-    let ajv: Ajv04;
-    let validateOAS30: ReturnType<Ajv04["compile"]>;
+    let ajv: InstanceType<typeof Ajv04>;
+    let validateOAS30: ValidateFunction;
 
     beforeAll(() => {
         // OpenAPI 3.0 uses JSON Schema draft-04
@@ -41,8 +45,8 @@ describe("openapi-spec-compliance", () => {
             strict: false,
             validateFormats: true,
             allErrors: true,
-        }) as unknown as Ajv04;
-        addFormats(ajv as any);
+        });
+        addFormats(ajv);
 
         validateOAS30 = ajv.compile(oas30Schema);
     });
@@ -497,4 +501,3 @@ describe("openapi-spec-compliance", () => {
         });
     });
 });
-
