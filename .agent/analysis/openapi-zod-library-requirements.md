@@ -536,10 +536,10 @@ When evaluating external libraries, score each criterion:
 
 ## 12. References
 
-- Current implementation: `packages/sdks/oak-curriculum-sdk/type-gen/zodgen-core.ts`
-- Parameter validator: `packages/sdks/oak-curriculum-sdk/type-gen/typegen/validation/emit-request-validator-map.ts`
-- Generated output example: `packages/sdks/oak-curriculum-sdk/src/types/generated/zod/curriculumZodSchemas.ts`
-- Tool descriptor contract: `packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema/mcp-tools/contract/tool-descriptor.contract.ts`
+- Current implementation: `packages/sdks/engraph-curriculum-sdk/type-gen/zodgen-core.ts`
+- Parameter validator: `packages/sdks/engraph-curriculum-sdk/type-gen/typegen/validation/emit-request-validator-map.ts`
+- Generated output example: `packages/sdks/engraph-curriculum-sdk/src/types/generated/zod/curriculumZodSchemas.ts`
+- Tool descriptor contract: `packages/sdks/engraph-curriculum-sdk/src/types/generated/api-schema/mcp-tools/contract/tool-descriptor.contract.ts`
 
 ---
 
@@ -585,7 +585,7 @@ This serialization is critical for the `emitRequestValidatorMap` function.
 
 #### 1. `generateZodClientFromOpenAPI`
 
-- **File:** `packages/sdks/oak-curriculum-sdk/type-gen/zodgen-core.ts`
+- **File:** `packages/sdks/engraph-curriculum-sdk/type-gen/zodgen-core.ts`
 - **Purpose:** Generate complete Zod schema file with endpoint definitions
 - **Current options:**
     ```typescript
@@ -601,7 +601,7 @@ This serialization is critical for the `emitRequestValidatorMap` function.
 
 #### 2. `getZodiosEndpointDefinitionList`
 
-- **File:** `packages/sdks/oak-curriculum-sdk/type-gen/typegen-core.ts`
+- **File:** `packages/sdks/engraph-curriculum-sdk/type-gen/typegen-core.ts`
 - **Purpose:** Extract runtime endpoint metadata with Zod schemas
 - **Returns:** Object with `endpoints` array containing:
     - `method`, `path`, `description`

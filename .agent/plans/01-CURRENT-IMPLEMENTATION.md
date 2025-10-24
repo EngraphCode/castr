@@ -559,7 +559,7 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.9 Zodios-Free Template Strategy with Full Validation (OAK-OPTIMIZED)
+### 1.9 Zodios-Free Template Strategy with Full Validation (ENGRAPH-OPTIMIZED)
 
 **Status:** Pending  
 **Priority:** MEDIUM-HIGH (Engraph SDK critical feature)  
