@@ -48,6 +48,13 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 - **74 type assertions** (`@typescript-eslint/consistent-type-assertions`) - ALL warnings
 - Target repo requires `assertionStyle: "never"` - NO type assertions allowed
 - **Must fix before extraction to target monorepo**
+- **Detailed breakdown:** `.agent/analysis/LINT_TRIAGE_COMPLETE.md`
+
+**Files with Most Assertions:**
+- `openApiToTypescript.helpers.ts` (22 assertions)
+- `openApiToTypescript.ts` (17 assertions)
+- `getZodiosEndpointDefinitionList.ts` (8 assertions)
+- `inferRequiredOnly.ts` (7 assertions)
 
 **Other Critical Issues:**
 
@@ -61,7 +68,7 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 - 1 `no-floating-promises`
 - 1 `todo-tag`
 
-Full breakdown: `.agent/context/archive/CURRENT_LINT_OUTPUT.txt`
+**Analysis Complete:** All 146 issues categorized by priority with file-by-file elimination plan
 
 ---
 
@@ -114,25 +121,37 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ```json
 {
-    "openapi3-ts": "^3", // Target: 4.5.0 (June 2025)
-    "zod": "^3", // Target: 4.1.12 (Oct 2025)
-    "@zodios/core": "^10.9.6", // Keep or replace?
-    "openapi-types": "^12.1.3", // Keep or replace?
-    "pastable": "^2.2.1", // REMOVE: replace with lodash/native
-    "@apidevtools/swagger-parser": "^12.1.0", // Investigate integration
-    "tanu": "^0.2.0", // TypeScript AST (keep)
-    "commander": "^14.0.1", // CLI (keep)
-    "ts-pattern": "^5.8.0", // Pattern matching (keep)
-    "handlebars": "^4.7.8" // Templates (keep)
+    "openapi3-ts": "^3", // Target: 4.5.0 (June 2025) - ✅ Migration plan ready
+    "zod": "^3", // Target: 4.1.12 (Oct 2025) - ✅ Update ready
+    "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, maintenance mode but stable)
+    "openapi-types": "^12.1.3", // ⚠️ REMOVE (redundant with openapi3-ts v4)
+    "pastable": "^2.2.1", // ⚠️ REMOVE (replace with lodash-es + custom)
+    "@apidevtools/swagger-parser": "^12.1.0", // ✅ KEEP (actively maintained, used appropriately)
+    "tanu": "^0.2.0", // ✅ KEEP (TypeScript AST manipulation)
+    "commander": "^14.0.1", // ✅ KEEP (CLI framework)
+    "ts-pattern": "^5.8.0", // ✅ KEEP (pattern matching)
+    "handlebars": "^4.7.8" // ✅ KEEP Phase 2, evaluate ts-morph emitter Phase 3/4
 }
 ```
 
-### Dependency Strategy
+### Dependency Strategy (✅ ANALYSIS COMPLETE)
+
+**Phase 2 Actions:**
 
 1. **Update FIRST:** `openapi3-ts` (v3 → v4.5.0), `zod` (v3 → v4.1.12)
-2. **Remove:** `pastable` (replace with lodash or native code)
-3. **Evaluate:** `openapi-types`, `@zodios/core` (maintenance status)
-4. **Investigate:** What can we defer to `@apidevtools/swagger-parser`?
+   - Migration checklist ready in `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
+2. **REMOVE:** `pastable` → Replace with `lodash-es` + custom utilities
+   - Detailed plan in `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
+3. **REMOVE:** `openapi-types` → Use `openapi3-ts` v4 types
+   - Only used in 1 test file, redundant
+4. **KEEP:** `@zodios/core`, `@apidevtools/swagger-parser`
+   - Evaluations in `.agent/analysis/ZODIOS_CORE_EVALUATION.md` & `SWAGGER_PARSER_INTEGRATION.md`
+
+**Phase 3/4 Consideration:**
+
+5. **Handlebars** → Evaluate ts-morph emitter architecture
+   - Analysis in `.agent/analysis/HANDLEBARS_EVALUATION.md`
+   - Recommended: AST-based emitter with plugin API (22-32 hours effort)
 
 ---
 
@@ -163,58 +182,79 @@ All documented in `.agent/adr/` (12 ADRs):
 - RULES.md with coding standards
 - Definition of Done established
 
-### Current Phase: Planning & Investigation
+### Phase 2: Type Safety & Dependencies (✅ ANALYSIS COMPLETE, READY FOR IMPLEMENTATION)
 
-**Status:** Creating comprehensive task breakdown and investigation
+**Status:** All 7 investigation tasks complete, ready to execute implementation
 
-**Key Insight:** Must update `openapi3-ts` and `zod` **BEFORE** deferring logic to libraries
+**Analysis Documents Created:**
+- ✅ `LINT_TRIAGE_COMPLETE.md` - All 146 issues categorized, type assertions mapped
+- ✅ `PASTABLE_REPLACEMENT_PLAN.md` - 8 functions → lodash-es + custom, detailed plan
+- ✅ `OPENAPI_TYPES_EVALUATION.md` - REMOVE (redundant with openapi3-ts v4)
+- ✅ `ZODIOS_CORE_EVALUATION.md` - KEEP (stable, used in templates)
+- ✅ `SWAGGER_PARSER_INTEGRATION.md` - KEEP (actively maintained, good usage)
+- ✅ `OPENAPI3_TS_V4_INVESTIGATION.md` - Complete migration checklist, breaking changes
+- ✅ `HANDLEBARS_EVALUATION.md` - KEEP Phase 2, ts-morph emitter for Phase 3/4
+
+**Key Insights:**
+- Must update `openapi3-ts` and `zod` **BEFORE** deferring logic to libraries
+- Type assertions concentrated in 4 files (can be systematically eliminated)
+- All dependency decisions made with clear rationale
 
 ---
 
 ## 🎯 Next Priorities
 
-### Immediate (This Week)
+### Immediate (This Week) - Phase 2 Implementation
 
-1. **Type Assertion Elimination** (BLOCKER)
-    - 74 instances must be resolved before extraction
+**✅ ANALYSIS COMPLETE - Ready to execute:**
+
+1. **Dependency Updates** (MUST DO FIRST - Task 2.1, 2.2)
+    - openapi3-ts: v3 → v4.5.0 (migration checklist ready)
+    - zod: v3 → v4.1.12 (update plan ready)
+    - **Estimated:** 8-12 hours
+
+2. **pastable Replacement** (Task 3.1)
+    - 7 files, 8 functions → `lodash-es` + custom utilities
+    - Detailed plan in PASTABLE_REPLACEMENT_PLAN.md
+    - **Estimated:** 6-8 hours
+
+3. **Type Assertion Elimination** (BLOCKER - Task 3.2)
+    - 74 instances across 11 files must → 0
     - Target repo: `assertionStyle: "never"`
-    - Files: See `.agent/analysis/LINT_TRIAGE_CRITICAL.md`
+    - File-by-file elimination plan ready
+    - **Estimated:** 16-24 hours
 
-2. **pastable Replacement**
-    - 7 files use it: `get`, `capitalize`, `pick`, `sortBy`, `sortListFromRefArray`, `sortObjKeysFromArray`, `kebabToCamel`, `snakeToCamel`, `getSum`
-    - Replace with lodash or native implementations
-    - Remove dependency
+4. **Dependency Cleanup** (Task 3.3)
+    - Remove: `openapi-types` (redundant)
+    - Remove: `pastable` (after replacement)
+    - Keep: `@zodios/core`, `@apidevtools/swagger-parser` (justified)
+    - **Estimated:** 2-4 hours
 
-3. **Dependency Updates**
-    - openapi3-ts: v3 → v4.5.0
-    - zod: v3 → v4.1.12
-    - Document breaking changes, migration steps
+5. **Defer Logic to openapi3-ts v4** (Task 1.8)
+    - Analyze what custom code can be replaced
+    - Leverage new v4 capabilities
+    - After Task 2.1 complete
+    - **Estimated:** 3-4 hours
 
-### Short Term (Next 2 Weeks)
-
-4. **openapi3-ts Investigation**
-    - What type guards/utilities does it provide?
-    - What can we defer instead of custom implementations?
-    - Schema traversal, reference resolution, validation
-
-5. **Dependency Evaluation**
-    - `openapi-types`: Still needed with openapi3-ts v4?
-    - `@zodios/core`: What do we use? Active maintenance?
-    - `@apidevtools/swagger-parser`: Integration opportunities?
+### Short Term (Next 2-3 Weeks) - Phase 3
 
 6. **Mutation Testing**
     - Add Stryker 9.2.0 (October 2025)
     - Integrate with Turbo
     - Establish mutation score threshold
 
-### Medium Term (Next Month)
-
 7. **ESLint Target Compliance**
+    - Fix remaining lint issues (146 → 0)
     - Gap analysis vs `.agent/reference/reference.eslint.config.ts`
-    - Prioritize remaining lint issues
     - Achieve full target repo compliance
 
-8. **Final Cleanup**
+8. **Handlebars Evaluation** (Optional)
+    - ts-morph emitter architecture (22-32 hours)
+    - Or defer to Phase 4+
+
+### Medium Term (Next Month) - Phase 4
+
+9. **Final Cleanup**
     - All quality gates green (including lint)
     - Zero dependencies with security issues
     - Ready for extraction
@@ -230,12 +270,22 @@ All documented in `.agent/adr/` (12 ADRs):
 - **Current Implementation:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md`
 - **Definition of Done:** `.agent/DEFINITION_OF_DONE.md`
 
+### Analysis (✅ Phase 2 Investigation Complete)
+
+- **Lint Triage:** `.agent/analysis/LINT_TRIAGE_COMPLETE.md` (146 issues categorized)
+- **pastable Plan:** `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md` (8 functions → replacements)
+- **openapi-types:** `.agent/analysis/OPENAPI_TYPES_EVALUATION.md` (REMOVE - redundant)
+- **@zodios/core:** `.agent/analysis/ZODIOS_CORE_EVALUATION.md` (KEEP - stable)
+- **swagger-parser:** `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` (KEEP - good usage)
+- **openapi3-ts v4:** `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md` (Migration checklist)
+- **Handlebars:** `.agent/analysis/HANDLEBARS_EVALUATION.md` (ts-morph emitter recommended)
+
 ### Reference
 
 - **Coding Standards:** `.agent/RULES.md`
 - **ADRs:** `.agent/adr/` (12 decision records)
 - **Target ESLint Config:** `.agent/reference/reference.eslint.config.ts`
-- **Lint Output:** `.agent/context/CURRENT_LINT_OUTPUT.txt`
+- **Emitter Architecture:** `.agent/reference/openapi-zod-client-emitter-migration.md`
 
 ### History
 

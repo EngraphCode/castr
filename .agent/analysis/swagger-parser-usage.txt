@@ -1,0 +1,6 @@
+src/generateZodClientFromOpenAPI.ts:34: * import SwaggerParser from "@apidevtools/swagger-parser";
+src/generateZodClientFromOpenAPI.test.ts:1:import SwaggerParser from "@apidevtools/swagger-parser";
+src/getZodiosEndpointDefinitionList.ts:27: * import SwaggerParser from "@apidevtools/swagger-parser";
+src/cli.ts:4:import SwaggerParser from "@apidevtools/swagger-parser";
+src/getZodiosEndpointDefinitionList.test.ts:1:import SwaggerParser from "@apidevtools/swagger-parser";
+src/getOpenApiDependencyGraph.test.ts:1:import SwaggerParser from "@apidevtools/swagger-parser";

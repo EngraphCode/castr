@@ -47,20 +47,20 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-## 1. Dependency Analysis & Investigation
+## 1. Dependency Analysis & Investigation (✅ COMPLETE 7/7)
 
-### 1.1 Lint Triage & Categorization
+### 1.1 Lint Triage & Categorization ✅
 
-**Status:** In Progress  
+**Status:** Complete  
 **Priority:** HIGH (identifies BLOCKER)  
-**Estimated Time:** 2 hours
+**Time Taken:** 2 hours
 
 **Acceptance Criteria:**
 
-- [ ] All 148 lint issues categorized by priority
-- [ ] Type assertions (74) documented by file and line
-- [ ] Critical issues identified and prioritized
-- [ ] Document created: `.agent/analysis/LINT_TRIAGE_COMPLETE.md`
+- [x] ✅ All 146 lint issues categorized by priority
+- [x] ✅ Type assertions (74) documented by file and line
+- [x] ✅ Critical issues identified and prioritized
+- [x] ✅ Document created: `.agent/analysis/LINT_TRIAGE_COMPLETE.md`
 
 **Implementation Steps:**
 
@@ -126,18 +126,18 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.2 pastable Usage Analysis
+### 1.2 pastable Usage Analysis ✅
 
-**Status:** Pending  
+**Status:** Complete  
 **Priority:** HIGH  
-**Estimated Time:** 2 hours
+**Time Taken:** 2 hours
 
 **Acceptance Criteria:**
 
-- [ ] All 7 files using pastable documented
-- [ ] All 8 functions mapped to replacements
-- [ ] Replacement strategy chosen (lodash vs native vs custom)
-- [ ] Document created: `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
+- [x] ✅ All 7 files using pastable documented
+- [x] ✅ All 8 functions mapped to replacements
+- [x] ✅ Replacement strategy chosen (lodash-es + custom utilities)
+- [x] ✅ Document created: `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
 
 **Implementation Steps:**
 
@@ -192,19 +192,19 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.3 openapi-types Evaluation
+### 1.3 openapi-types Evaluation ✅
 
-**Status:** Pending  
+**Status:** Complete  
 **Priority:** MEDIUM  
-**Estimated Time:** 1 hour
+**Time Taken:** 1 hour
 
 **Acceptance Criteria:**
 
-- [ ] Current usage documented (where, how, why)
-- [ ] Maintenance status assessed (last update, issues, activity)
-- [ ] Necessity evaluated (needed with openapi3-ts v4?)
-- [ ] Decision made (keep or remove)
-- [ ] Document created: `.agent/analysis/OPENAPI_TYPES_EVALUATION.md`
+- [x] ✅ Current usage documented (only 1 test file)
+- [x] ✅ Maintenance status assessed (active but redundant)
+- [x] ✅ Necessity evaluated (NOT needed with openapi3-ts v4)
+- [x] ✅ Decision made: **REMOVE** (redundant)
+- [x] ✅ Document created: `.agent/analysis/OPENAPI_TYPES_EVALUATION.md`
 
 **Implementation Steps:**
 
@@ -254,19 +254,19 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.4 @zodios/core Evaluation
+### 1.4 @zodios/core Evaluation ✅
 
-**Status:** Pending  
+**Status:** Complete  
 **Priority:** MEDIUM  
-**Estimated Time:** 1 hour
+**Time Taken:** 1 hour
 
 **Acceptance Criteria:**
 
-- [ ] Current usage documented (types, functions, etc.)
-- [ ] Maintenance status assessed
-- [ ] Can we inline or replace?
-- [ ] Decision made (keep, inline, or replace)
-- [ ] Document created: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
+- [x] ✅ Current usage documented (types used in generated code)
+- [x] ✅ Maintenance status assessed (maintenance mode but stable)
+- [x] ✅ Inlining evaluated (not practical, widely used)
+- [x] ✅ Decision made: **KEEP** (stable, 11.5M downloads/month)
+- [x] ✅ Document created: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
 
 **Implementation Steps:**
 
@@ -312,19 +312,19 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.5 @apidevtools/swagger-parser Investigation
+### 1.5 @apidevtools/swagger-parser Investigation ✅
 
-**Status:** Pending  
+**Status:** Complete  
 **Priority:** MEDIUM  
-**Estimated Time:** 2 hours
+**Time Taken:** 2 hours
 
 **Acceptance Criteria:**
 
-- [ ] Current usage documented
-- [ ] Full capabilities mapped (validation, dereferencing, etc.)
-- [ ] Integration opportunities identified
-- [ ] Can we defer validation/resolution to it?
-- [ ] Document created: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
+- [x] ✅ Current usage documented (tests, CLI parsing)
+- [x] ✅ Full capabilities mapped (validation, bundling, dereferencing)
+- [x] ✅ Integration opportunities identified (used appropriately)
+- [x] ✅ Decision: KEEP current usage pattern (actively maintained)
+- [x] ✅ Document created: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
 
 **Implementation Steps:**
 
@@ -375,20 +375,20 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.6 openapi3-ts v4 Capabilities Investigation
+### 1.6 openapi3-ts v4 Capabilities Investigation ✅
 
-**Status:** Pending  
+**Status:** Complete  
 **Priority:** HIGH (informs update strategy)  
-**Estimated Time:** 3 hours
+**Time Taken:** 3 hours
 
 **Acceptance Criteria:**
 
-- [ ] v4 breaking changes documented
-- [ ] New type guards identified
-- [ ] New utilities identified
-- [ ] What can we defer to v4?
-- [ ] Migration checklist created
-- [ ] Document created: `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
+- [x] ✅ v4 breaking changes documented (comprehensive list)
+- [x] ✅ New type guards identified (available and documented)
+- [x] ✅ New utilities identified (OAS 3.1 support, better types)
+- [x] ✅ Deferral opportunities documented (Task 1.8 added)
+- [x] ✅ Migration checklist created (detailed step-by-step)
+- [x] ✅ Document created: `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
 
 **Implementation Steps:**
 
@@ -446,6 +446,86 @@ Tasks MUST be executed in this order due to dependencies:
 - `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
 - Migration checklist
 - List of code to refactor after update
+
+---
+
+### 1.7 Handlebars Evaluation ✅
+
+**Status:** Complete  
+**Priority:** MEDIUM  
+**Time Taken:** 2 hours
+
+**Acceptance Criteria:**
+
+- [x] ✅ Current usage documented (3 files + 5 templates, 201 lines)
+- [x] ✅ Maintenance status assessed (stale: 2+ years, no security issues)
+- [x] ✅ Template literal alternative evaluated (feasible but not recommended)
+- [x] ✅ ts-morph emitter architecture evaluated (RECOMMENDED for Phase 3/4)
+- [x] ✅ Decision made: **KEEP** for Phase 2, evaluate emitter in Phase 3/4
+- [x] ✅ Document created: `.agent/analysis/HANDLEBARS_EVALUATION.md`
+
+**Key Findings:**
+
+- **Phase 2 Decision:** KEEP Handlebars (not blocking extraction)
+- **Phase 3/4 Recommendation:** ts-morph emitter architecture
+  - AST-based code generation (type-safe)
+  - Plugin API for custom templates
+  - 22-32 hours estimated effort
+  - Reference: `.agent/reference/openapi-zod-client-emitter-migration.md`
+
+**Output:**
+
+- `.agent/analysis/HANDLEBARS_EVALUATION.md`
+- Three options compared: Handlebars vs Template Literals vs ts-morph Emitter
+
+---
+
+### 1.8 Defer Logic to openapi3-ts v4 (AFTER Task 2.1)
+
+**Status:** Pending  
+**Priority:** MEDIUM  
+**Estimated Time:** 3-4 hours  
+**Dependencies:** Task 2.1 complete (openapi3-ts updated to v4)
+
+**Acceptance Criteria:**
+
+- [ ] Custom type guards analyzed (can v4 replace them?)
+- [ ] Custom type utilities analyzed (what v4 provides)
+- [ ] Schema traversal logic analyzed (defer opportunities)
+- [ ] Reference resolution analyzed (v4 capabilities)
+- [ ] Refactoring plan created (what to remove/replace)
+- [ ] Document updated: Add findings to OPENAPI3_TS_V4_INVESTIGATION.md
+
+**Implementation Steps:**
+
+1. **After openapi3-ts v4 update complete:**
+   - Review what type guards v4 actually provides
+   - Review what utilities v4 actually provides
+
+2. **Analyze our custom implementations:**
+   - `lib/src/` - Find custom type guards
+   - Compare with v4 equivalents
+   - Identify redundant code
+
+3. **Create refactoring plan:**
+   - List custom code that can be removed
+   - List imports to change
+   - Estimate effort
+
+4. **Document findings:**
+   - Update OPENAPI3_TS_V4_INVESTIGATION.md
+   - Add section: "Custom Code Replaced by v4"
+
+**Validation Steps:**
+
+1. Analysis covers all major custom implementations
+2. Refactoring plan has effort estimates
+3. Benefits vs effort documented
+
+**Output:**
+
+- Updated `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
+- Refactoring plan (if opportunities found)
 
 ---
 
@@ -1235,26 +1315,28 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 
 **Status Legend:** ⏳ Pending | 🔄 In Progress | ✅ Complete | ❌ Blocked
 
-### Investigation Tasks (Week 1)
+### Investigation Tasks (✅ COMPLETE 7/7)
 
-- [ ] ⏳ **1.1** Lint Triage - Categorize all 148 issues, document type assertions by file
-- [ ] ⏳ **1.2** pastable Analysis - Map all 8 functions to replacements, choose strategy
-- [ ] ⏳ **1.3** openapi-types Evaluation - Usage analysis, maintenance status, keep/remove decision
-- [ ] ⏳ **1.4** @zodios/core Evaluation - Usage analysis, maintenance status, keep/inline decision
-- [ ] ⏳ **1.5** swagger-parser Investigation - Current vs potential usage, integration opportunities
-- [ ] ⏳ **1.6** openapi3-ts v4 Investigation - Breaking changes, new capabilities, migration plan
+- [x] ✅ **1.1** Lint Triage - 146 issues categorized, type assertions mapped
+- [x] ✅ **1.2** pastable Analysis - 8 functions → lodash-es + custom utilities
+- [x] ✅ **1.3** openapi-types Evaluation - REMOVE (redundant with v4)
+- [x] ✅ **1.4** @zodios/core Evaluation - KEEP (stable, used in templates)
+- [x] ✅ **1.5** swagger-parser Investigation - KEEP (actively maintained)
+- [x] ✅ **1.6** openapi3-ts v4 Investigation - Migration checklist ready
+- [x] ✅ **1.7** Handlebars Evaluation - KEEP Phase 2, ts-morph emitter Phase 3/4
+- [ ] ⏳ **1.8** Defer Logic to openapi3-ts v4 - Analyze after Task 2.1 (DEFERRED)
 
-### Implementation Tasks (Week 1-3)
+### Implementation Tasks (Week 2-3)
 
-- [ ] ⏳ **2.1** Update openapi3-ts - v3 → v4.5.0, fix all type errors, tests passing
+- [ ] ⏳ **2.1** Update openapi3-ts - v3 → v4.5.0, fix type errors, tests passing
 - [ ] ⏳ **2.2** Update zod - v3 → v4.1.12, fix imports, verify generation works
-- [ ] ⏳ **3.1** Replace pastable - All 8 functions replaced, dependency removed, tests passing
-- [ ] ⏳ **3.2** Eliminate Type Assertions - 74 → 0, proper type guards, BLOCKER RESOLVED
-- [ ] ⏳ **3.3** Remove Evaluated Deps - Based on 1.3/1.4 decisions, clean removal
+- [ ] ⏳ **3.1** Replace pastable - All 8 functions replaced, dependency removed
+- [ ] ⏳ **3.2** Eliminate Type Assertions - 74 → 0, BLOCKER RESOLVED
+- [ ] ⏳ **3.3** Remove Evaluated Deps - Remove openapi-types & pastable
 
 ### Validation Tasks (Week 3)
 
-- [ ] ⏳ **4.1** Full Quality Gate Check - All gates green, documentation updated, Phase 2 complete
+- [ ] ⏳ **4.1** Full Quality Gate Check - All gates green, Phase 2 complete
 
 ---
 

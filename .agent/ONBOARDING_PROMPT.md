@@ -8,9 +8,9 @@
 
 ## Copy-Paste This Prompt Into A New Chat
 
-```
-I'm working on modernizing a fork of openapi-zod-client to extract and port to 
-the Oak National Academy monorepo. The repo generates strict Zod schemas and MCP 
+```text
+I'm working on modernizing a fork of openapi-zod-client to extract and port to
+the Oak National Academy monorepo. The repo generates strict Zod schemas and MCP
 tool validation from OpenAPI 3.0/3.1 specifications.
 
 **Project Context:**
@@ -49,7 +49,22 @@ Task 1.1 from `01-CURRENT-IMPLEMENTATION.md` (Lint Triage)
 - openapi3-ts: 4.5.0 (target for update)
 - Stryker: 9.2.0 (to be added in Phase 3)
 
-Ready to start?
+### Last known todo list
+
+Eliminate Type Assertions (BLOCKER): 74 → 0,
+add type guards,
+fix return types,
+EXTRACTION READY
+Remove Evaluated Dependencies: Based on 1.3/1.4 analysis,
+remove openapi-types and/or @zodios/core if warranted
+Full Quality Gate Verification: All gates green,
+documentation updated, Phase 2 complete summary
+Evaluate handlebars: Can template literals replace it?
+Performance, maintainability, bundle size trade-offs
+Add Stryker v9.2.0: Configure mutation testing,
+integrate with Turbo, establish score threshold
+Target ESLint Compliance: Gap analysis vs reference.eslint.config.ts,
+fix all remaining lint issues
 ```
 
 ---
@@ -57,12 +72,14 @@ Ready to start?
 ## What This Prompt Does
 
 **1. Provides Essential Context**
+
 - Project goal and purpose
 - Current phase and status
 - Critical blocker (type assertions)
 - Test/error state
 
 **2. Guides Reading Order**
+
 - Starts with navigation (README.md)
 - Living context for current state
 - Strategic plan for big picture
@@ -70,18 +87,21 @@ Ready to start?
 - Standards document for quality requirements
 
 **3. Sets Expectations**
+
 - Quality standards must be followed
 - Definition of Done is mandatory
 - Type safety is paramount
 - No shortcuts allowed
 
 **4. Provides Starting Point**
+
 - Clear first task (1.1 Lint Triage)
 - Understanding checkpoints
 - Command to run before commits
 - Current versions verified
 
 **5. Establishes Constraints**
+
 - Zero type assertions (extraction blocker)
 - RULES.md compliance
 - Task structure (acceptance/implementation/validation)
@@ -94,27 +114,27 @@ Ready to start?
 A properly onboarded AI should:
 
 1. **Confirm Reading**
-   - "I've read all 5 documents"
-   - "I understand the current state"
-   - "I'm familiar with RULES.md standards"
+    - "I've read all 5 documents"
+    - "I understand the current state"
+    - "I'm familiar with RULES.md standards"
 
 2. **Summarize Understanding**
-   - Project goal (extraction to Oak monorepo)
-   - Current phase (Phase 2, ready to execute)
-   - Blocker (74 type assertions)
-   - First task (Lint Triage)
+    - Project goal (extraction to Oak monorepo)
+    - Current phase (Phase 2, ready to execute)
+    - Blocker (74 type assertions)
+    - First task (Lint Triage)
 
 3. **Acknowledge Constraints**
-   - No type assertions allowed
-   - RULES.md standards apply
-   - Quality gates must pass
-   - Comprehensive testing required
+    - No type assertions allowed
+    - RULES.md standards apply
+    - Quality gates must pass
+    - Comprehensive testing required
 
 4. **Begin Work**
-   - Start with Task 1.1
-   - Follow acceptance/implementation/validation pattern
-   - Update TODO list as progressing
-   - Commit with quality gates passing
+    - Start with Task 1.1
+    - Follow acceptance/implementation/validation pattern
+    - Update TODO list as progressing
+    - Commit with quality gates passing
 
 ---
 
@@ -125,12 +145,14 @@ A properly onboarded AI should:
 Ask: "Have you read all 5 documents I mentioned?"
 
 If not, provide them one at a time:
+
 1. `.agent/README.md` first
 2. Then guide through the rest
 
 ### If AI Asks for More Context
 
 Point to:
+
 - `.agent/adr/` for specific decision rationale
 - `.agent/plans/01-CURRENT-IMPLEMENTATION.md` for task details
 - `.agent/RULES.md` for standards clarification
@@ -149,7 +171,7 @@ Remind: "This violates RULES.md - see section X"
 ## Alternative: Minimal Prompt (If Full Prompt Too Long)
 
 ```
-I need help modernizing openapi-zod-client for extraction to Oak National 
+I need help modernizing openapi-zod-client for extraction to Oak National
 Academy monorepo. Phase 1 complete, Phase 2 ready to execute.
 
 Start by reading:
@@ -178,7 +200,7 @@ Ready?
 ✅ Knows the first task (1.1 Lint Triage)  
 ✅ Understands quality gate requirements  
 ✅ Can explain acceptance/implementation/validation pattern  
-✅ Knows Definition of Done must pass  
+✅ Knows Definition of Done must pass
 
 **Warning signs of poor onboarding:**
 
@@ -188,7 +210,7 @@ Ready?
 ❌ Suggests skipping tests  
 ❌ Doesn't run quality gates  
 ❌ Violates coding standards  
-❌ Can't cite documentation  
+❌ Can't cite documentation
 
 ---
 
@@ -221,5 +243,3 @@ Ready?
 ---
 
 **This prompt represents 2,800+ lines of documentation distilled into essential onboarding instructions.**
-
-

@@ -23,6 +23,9 @@ pnpm build
 echo "🔍 Running type-check..."
 pnpm type-check
 
+echo "🔍 Running lint..."
+pnpm lint # We don't currently expect lint to pass, but we will in the future, and all critical and high priority lint issues must be resolved immediately.
+
 echo "✅ Running tests..."
 pnpm test -- --run
 
@@ -35,13 +38,13 @@ echo "  ✅ build       - Success (ESM + CJS + DTS)"
 echo "  ✅ type-check  - 0 errors"
 echo "  ✅ test        - 297 tests passing"
 echo ""
-echo "ℹ️  Note: pnpm lint currently has warnings (acceptable)"
+echo "ℹ️  Note: pnpm lint currently has warnings, but we will in the future, and all critical and high priority lint issues must be resolved immediately."
 ```
 
 ### Quick Check
 
 ```bash
-pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test -- --run
 ```
 
 If this exits successfully (exit code 0), the Definition of Done is met.
