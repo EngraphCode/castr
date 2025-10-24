@@ -468,10 +468,10 @@ Tasks MUST be executed in this order due to dependencies:
 
 - **Phase 2 Decision:** KEEP Handlebars (not blocking extraction)
 - **Phase 3/4 Recommendation:** ts-morph emitter architecture
-  - AST-based code generation (type-safe)
-  - Plugin API for custom templates
-  - 22-32 hours estimated effort
-  - Reference: `.agent/reference/openapi-zod-client-emitter-migration.md`
+    - AST-based code generation (type-safe)
+    - Plugin API for custom templates
+    - 22-32 hours estimated effort
+    - Reference: `.agent/reference/openapi-zod-client-emitter-migration.md`
 
 **Output:**
 
@@ -499,22 +499,22 @@ Tasks MUST be executed in this order due to dependencies:
 **Implementation Steps:**
 
 1. **After openapi3-ts v4 update complete:**
-   - Review what type guards v4 actually provides
-   - Review what utilities v4 actually provides
+    - Review what type guards v4 actually provides
+    - Review what utilities v4 actually provides
 
 2. **Analyze our custom implementations:**
-   - `lib/src/` - Find custom type guards
-   - Compare with v4 equivalents
-   - Identify redundant code
+    - `lib/src/` - Find custom type guards
+    - Compare with v4 equivalents
+    - Identify redundant code
 
 3. **Create refactoring plan:**
-   - List custom code that can be removed
-   - List imports to change
-   - Estimate effort
+    - List custom code that can be removed
+    - List imports to change
+    - Estimate effort
 
 4. **Document findings:**
-   - Update OPENAPI3_TS_V4_INVESTIGATION.md
-   - Add section: "Custom Code Replaced by v4"
+    - Update OPENAPI3_TS_V4_INVESTIGATION.md
+    - Add section: "Custom Code Replaced by v4"
 
 **Validation Steps:**
 
@@ -526,6 +526,925 @@ Tasks MUST be executed in this order due to dependencies:
 
 - Updated `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
 - Refactoring plan (if opportunities found)
+
+---
+
+### 1.9 Zodios-Free Template Strategy with Full Validation (OAK-OPTIMIZED)
+
+**Status:** Pending  
+**Priority:** MEDIUM-HIGH (Oak Curriculum SDK critical feature)  
+**Estimated Time:** 6-8 hours (enhanced scope)  
+**Dependencies:** None (can be done anytime)
+
+**Acceptance Criteria:**
+
+- [ ] Current template options documented clearly
+- [ ] New "schemas-with-metadata" template created
+- [ ] Template generates schemas + endpoint metadata WITHOUT Zodios
+- [ ] **Full request validation schemas** (path, query, header, body parameters)
+- [ ] **Full response validation schemas** (success + error responses)
+- [ ] Template includes MCP-friendly tool definitions
+- [ ] **Schema registry builder helper** (optional via flag)
+- [ ] **Type-safe validation helpers** for request/response
+- [ ] CLI supports `--no-client` flag to skip HTTP client generation
+- [ ] CLI supports `--with-validation-helpers` flag for Oak use case
+- [ ] All tests written BEFORE implementation (TDD)
+- [ ] All tests passing
+- [ ] README updated with template comparison table
+- [ ] Examples added for each template use case (including Oak pattern)
+- [ ] Programmatic API documented for advanced usage
+
+**Implementation Steps (TDD Approach):**
+
+**Phase A: Document & Design (30 mins)**
+
+1. **Document current templates:**
+    - Create `.agent/analysis/TEMPLATE_STRATEGY.md`
+    - Document what each template does:
+        - `default.hbs` - Full Zodios client
+        - `grouped.hbs` - Grouped Zodios client
+        - `grouped-common.hbs` - Grouped with common schemas
+        - `grouped-index.hbs` - Index file for grouped
+        - `schemas-only.hbs` - Pure Zod schemas (NO Zodios)
+    - When to use each template
+
+2. **Design new template with Oak enhancements:**
+     - Name: `schemas-with-metadata.hbs`
+     - **Enhanced output structure** (Oak-optimized):
+
+         ```typescript
+         import { z } from "zod";
+
+         // ==========================================
+         // SCHEMAS - All Zod schemas from OpenAPI
+         // ==========================================
+         export const UserSchema = z.object({...});
+         export const CreateUserRequestSchema = z.object({...});
+         export const ErrorSchema = z.object({...});
+
+         export const schemas = {
+           UserSchema,
+           CreateUserRequestSchema,
+           ErrorSchema,
+           // ... all schemas
+         } as const;
+
+         // ==========================================
+         // ENDPOINTS - Full validation metadata
+         // ==========================================
+         export const endpoints = [
+           {
+             method: "post" as const,
+             path: "/users/{userId}",
+             operationId: "createUser",
+             description: "Create a new user",
+
+             // Request validation (ALL parameter types)
+             request: {
+               // Path parameters with Zod schema
+               pathParams: z.object({
+                 userId: z.string().uuid(),
+               }),
+               // Query parameters with Zod schema
+               queryParams: z.object({
+                 include: z.enum(["profile", "settings"]).optional(),
+               }).optional(),
+               // Header parameters with Zod schema
+               headers: z.object({
+                 "x-api-key": z.string(),
+               }).optional(),
+               // Body schema
+               body: CreateUserRequestSchema.optional(),
+             },
+
+             // Response validation (success + errors)
+             responses: {
+               200: {
+                 description: "Success",
+                 schema: UserSchema,
+               },
+               400: {
+                 description: "Bad Request",
+                 schema: ErrorSchema,
+               },
+               404: {
+                 description: "Not Found",
+                 schema: ErrorSchema,
+               },
+             },
+           },
+         ] as const;
+
+         // ==========================================
+         // VALIDATION HELPERS (if --with-validation-helpers)
+         // ==========================================
+         export function validateRequest<T extends (typeof endpoints)[number]>(
+           endpoint: T,
+           input: {
+             pathParams?: Record<string, unknown>;
+             queryParams?: Record<string, unknown>;
+             headers?: Record<string, unknown>;
+             body?: unknown;
+           },
+         ): {
+           pathParams: z.infer<T["request"]["pathParams"]>;
+           queryParams?: z.infer<NonNullable<T["request"]["queryParams"]>>;
+           headers?: z.infer<NonNullable<T["request"]["headers"]>>;
+           body?: z.infer<NonNullable<T["request"]["body"]>>;
+         } {
+           return {
+             pathParams: endpoint.request.pathParams.parse(input.pathParams),
+             queryParams: endpoint.request.queryParams?.parse(input.queryParams),
+             headers: endpoint.request.headers?.parse(input.headers),
+             body: endpoint.request.body?.parse(input.body),
+           };
+         }
+
+         export function validateResponse<
+           T extends (typeof endpoints)[number],
+           S extends keyof T["responses"] & number,
+         >(endpoint: T, status: S, data: unknown): z.infer<T["responses"][S]["schema"]> {
+           const responseSchema = endpoint.responses[status];
+           if (!responseSchema) {
+             throw new Error(`No schema defined for status ${status}`);
+           }
+           return responseSchema.schema.parse(data);
+         }
+
+         // ==========================================
+         // SCHEMA REGISTRY HELPER (if --with-schema-registry)
+         // ==========================================
+         export function buildSchemaRegistry(
+           rawSchemas: typeof schemas,
+           options?: { rename?: (key: string) => string },
+         ): Record<string, z.ZodSchema> {
+           const rename = options?.rename ?? ((key: string) => key.replace(/[^A-Za-z0-9_]/g, "_"));
+           const result: Record<string, z.ZodSchema> = {};
+           for (const [key, value] of Object.entries(rawSchemas)) {
+             const sanitized = rename(key);
+             result[sanitized] = value;
+           }
+           return result;
+         }
+
+         // ==========================================
+         // MCP TOOLS (always included)
+         // ==========================================
+         export const mcpTools = endpoints.map(endpoint => ({
+           name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, "_")}`,
+           description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
+           // Input: all request parameters as single schema
+           inputSchema: z.object({
+             ...(endpoint.request.pathParams ? { path: endpoint.request.pathParams } : {}),
+             ...(endpoint.request.queryParams ? { query: endpoint.request.queryParams } : {}),
+             ...(endpoint.request.headers ? { headers: endpoint.request.headers } : {}),
+             ...(endpoint.request.body ? { body: endpoint.request.body } : {}),
+           }),
+           // Output: success response (200 or 201)
+           outputSchema: endpoint.responses[200]?.schema || endpoint.responses[201]?.schema || z.unknown(),
+         }));
+         ```
+
+     - **Key enhancements for Oak:**
+       - ✅ Full request validation (all parameter types)
+       - ✅ Full response validation (including error responses)
+       - ✅ Type-safe validation helpers
+       - ✅ Schema registry builder (eliminates Oak's string manipulation)
+       - ✅ Endpoints exported directly (no Zodios makeApi wrapper)
+       - ✅ MCP tools with complete parameter schemas
+
+**Phase B: Write Failing Tests (TDD) (1-2 hours)**
+
+3. **Write test for schemas-with-metadata template:**
+
+    Create: `lib/src/templates/schemas-with-metadata.test.ts`
+
+    ```typescript
+    import { describe, it, expect } from "vitest";
+    import { generateZodClientFromOpenAPI } from "../generateZodClientFromOpenAPI.js";
+
+    describe("schemas-with-metadata template", () => {
+        it("should generate schemas without Zodios import", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users": {
+                        post: {
+                            operationId: "createUser",
+                            requestBody: {
+                                content: {
+                                    "application/json": {
+                                        schema: { type: "object", properties: { name: { type: "string" } } },
+                                    },
+                                },
+                            },
+                            responses: {
+                                200: {
+                                    content: {
+                                        "application/json": {
+                                            schema: { type: "object", properties: { id: { type: "string" } } },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "schemas-with-metadata",
+            });
+
+            // MUST NOT import Zodios
+            expect(result).not.toContain("@zodios/core");
+            expect(result).not.toContain("import { Zodios");
+            expect(result).not.toContain("makeApi");
+
+            // MUST import Zod
+            expect(result).toContain('import { z } from "zod"');
+
+            // MUST export schemas
+            expect(result).toContain("export const");
+            expect(result).toMatch(/Schema\s*=/);
+
+            // MUST export endpoints metadata
+            expect(result).toContain("export const endpoints");
+            expect(result).toContain('method: "post"');
+            expect(result).toContain('path: "/users"');
+            expect(result).toContain("requestSchema:");
+            expect(result).toContain("responseSchemas:");
+
+            // MUST export MCP tools
+            expect(result).toContain("export const mcpTools");
+            expect(result).toContain("inputSchema:");
+            expect(result).toContain("outputSchema:");
+        });
+
+        it("should include endpoint metadata with all HTTP methods", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users": {
+                        get: { responses: { 200: { content: { "application/json": { schema: { type: "array" } } } } } },
+                        post: {
+                            responses: { 201: { content: { "application/json": { schema: { type: "object" } } } } },
+                        },
+                    },
+                    "/users/{id}": {
+                        get: {
+                            responses: { 200: { content: { "application/json": { schema: { type: "object" } } } } },
+                        },
+                        put: {
+                            responses: { 200: { content: { "application/json": { schema: { type: "object" } } } } },
+                        },
+                        delete: { responses: { 204: { description: "No content" } } },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "schemas-with-metadata",
+            });
+
+            expect(result).toContain('method: "get"');
+            expect(result).toContain('method: "post"');
+            expect(result).toContain('method: "put"');
+            expect(result).toContain('method: "delete"');
+        });
+
+        it("should handle parameters in endpoint metadata", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users/{id}": {
+                        get: {
+                            parameters: [
+                                { name: "id", in: "path", required: true, schema: { type: "string" } },
+                                { name: "include", in: "query", schema: { type: "string" } },
+                            ],
+                            responses: {
+                                200: { content: { "application/json": { schema: { type: "object" } } } },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "schemas-with-metadata",
+            });
+
+            expect(result).toContain("parameters:");
+            expect(result).toContain('"name": "id"');
+            expect(result).toContain('"type": "Path"');
+            expect(result).toContain('"name": "include"');
+            expect(result).toContain('"type": "Query"');
+        });
+
+        it("should generate MCP-compatible tool definitions", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users": {
+                        post: {
+                            operationId: "createUser",
+                            description: "Create a new user",
+                            requestBody: {
+                                content: { "application/json": { schema: { type: "object" } } },
+                            },
+                            responses: {
+                                201: { content: { "application/json": { schema: { type: "object" } } } },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "schemas-with-metadata",
+            });
+
+            expect(result).toContain("export const mcpTools");
+            expect(result).toContain("name: ");
+            expect(result).toContain("createUser"); // operationId
+            expect(result).toContain("description:");
+            expect(result).toContain("inputSchema:");
+            expect(result).toContain("outputSchema:");
+        });
+
+        it("should work with --no-client CLI flag", async () => {
+            // This test verifies CLI integration
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users": {
+                        get: { responses: { 200: { content: { "application/json": { schema: { type: "array" } } } } } },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "default", // default template
+                options: { noClient: true }, // --no-client flag
+            });
+
+             // Should skip Zodios even in default template when noClient is true
+             expect(result).not.toContain("@zodios/core");
+             expect(result).not.toContain("new Zodios");
+         });
+
+         it("should generate full request validation schemas (Oak use case)", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 paths: {
+                     "/users/{userId}": {
+                         get: {
+                             operationId: "getUser",
+                             parameters: [
+                                 {
+                                     name: "userId",
+                                     in: "path",
+                                     required: true,
+                                     schema: { type: "string", format: "uuid" },
+                                 },
+                                 { name: "include", in: "query", schema: { type: "string" } },
+                                 { name: "x-api-key", in: "header", required: true, schema: { type: "string" } },
+                             ],
+                             responses: {
+                                 200: { content: { "application/json": { schema: { type: "object" } } } },
+                             },
+                         },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+             });
+
+             // MUST have request validation structure
+             expect(result).toContain("request: {");
+             expect(result).toContain("pathParams:");
+             expect(result).toContain("queryParams:");
+             expect(result).toContain("headers:");
+
+             // MUST have Zod schemas for each parameter type
+             expect(result).toContain("z.object");
+             expect(result).toContain("userId");
+             expect(result).toContain("include");
+             expect(result).toContain("x-api-key");
+         });
+
+         it("should generate full response validation including errors (Oak use case)", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 paths: {
+                     "/users": {
+                         post: {
+                             operationId: "createUser",
+                             responses: {
+                                 201: {
+                                     description: "Created",
+                                     content: { "application/json": { schema: { type: "object" } } },
+                                 },
+                                 400: {
+                                     description: "Bad Request",
+                                     content: { "application/json": { schema: { type: "object" } } },
+                                 },
+                                 401: {
+                                     description: "Unauthorized",
+                                     content: { "application/json": { schema: { type: "object" } } },
+                                 },
+                             },
+                         },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+             });
+
+             // MUST have responses structure
+             expect(result).toContain("responses: {");
+             expect(result).toContain("201:");
+             expect(result).toContain("400:");
+             expect(result).toContain("401:");
+
+             // MUST include descriptions
+             expect(result).toContain("Created");
+             expect(result).toContain("Bad Request");
+             expect(result).toContain("Unauthorized");
+
+             // MUST have schema property for each response
+             expect(result).toContain("schema:");
+         });
+
+         it("should generate validation helpers with --with-validation-helpers flag", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 paths: {
+                     "/users": {
+                         post: {
+                             requestBody: { content: { "application/json": { schema: { type: "object" } } } },
+                             responses: { 200: { content: { "application/json": { schema: { type: "object" } } } } },
+                         },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+                 options: { withValidationHelpers: true },
+             });
+
+             // MUST export validateRequest helper
+             expect(result).toContain("export function validateRequest");
+             expect(result).toContain("pathParams");
+             expect(result).toContain("queryParams");
+             expect(result).toContain("headers");
+             expect(result).toContain("body");
+
+             // MUST export validateResponse helper
+             expect(result).toContain("export function validateResponse");
+             expect(result).toContain("status");
+             expect(result).toContain(".parse(");
+         });
+
+         it("should generate schema registry helper with --with-schema-registry flag", async () => {
+             const openApiDoc = {
+                 openapi: "3.0.0",
+                 info: { title: "Test", version: "1.0.0" },
+                 paths: {
+                     "/users": {
+                         get: { responses: { 200: { content: { "application/json": { schema: { type: "array" } } } } } },
+                     },
+                 },
+             };
+
+             const result = await generateZodClientFromOpenAPI({
+                 openApiDoc,
+                 template: "schemas-with-metadata",
+                 options: { withSchemaRegistry: true },
+             });
+
+             // MUST export buildSchemaRegistry helper
+             expect(result).toContain("export function buildSchemaRegistry");
+             expect(result).toContain("rename");
+             expect(result).toContain("replace(/[^A-Za-z0-9_]/g");
+         });
+     });
+     ```
+
+4. **Write CLI flag tests:**
+
+     Add to: `lib/src/cli.test.ts` (or create if doesn't exist)
+
+     ```typescript
+     describe("CLI --no-client flag", () => {
+         it("should skip Zodios client generation with --no-client", async () => {
+             // Test that --no-client flag works
+             // This will fail until we implement it
+         });
+
+         it("should allow --template schemas-with-metadata", async () => {
+             // Test new template option
+             // This will fail until we implement it
+         });
+
+         it("should generate validation helpers with --with-validation-helpers", async () => {
+             // Test Oak-specific validation helpers flag
+             // This will fail until we implement it
+         });
+
+         it("should generate schema registry with --with-schema-registry", async () => {
+             // Test Oak-specific schema registry builder flag
+             // This will fail until we implement it
+         });
+     });
+     ```
+
+5. **Run tests - EXPECT FAILURES:**
+
+    ```bash
+    cd lib
+    pnpm test schemas-with-metadata
+    # Should fail: template doesn't exist yet
+    ```
+
+**Phase C: Implement Template (2-3 hours)**
+
+6. **Create schemas-with-metadata.hbs template:**
+
+    Create: `lib/src/templates/schemas-with-metadata.hbs`
+
+    ```handlebars
+    import { z } from "zod";
+
+    {{#if imports}}
+    {{#each imports}}
+    import { {{{@key}}} } from "./{{{this}}}"
+    {{/each}}
+    {{/if}}
+
+    {{#if types}}
+    {{#each types}}
+    {{{this}}};
+    {{/each}}
+    {{/if}}
+
+    {{#each schemas}}
+    const {{@key}}{{#if (lookup ../emittedType @key)}}: z.ZodType<{{@key}}>{{/if}} = {{{this}}};
+    {{/each}}
+
+    {{#ifNotEmptyObj schemas}}
+    export const schemas = {
+    {{#each schemas}}
+        {{@key}},
+    {{/each}}
+    };
+    {{/ifNotEmptyObj}}
+
+    export const endpoints = [
+    {{#each endpoints}}
+        {
+            method: "{{method}}" as const,
+            path: "{{path}}",
+            {{#if alias}}
+            operationId: "{{alias}}",
+            {{/if}}
+            {{#if description}}
+            description: `{{description}}`,
+            {{/if}}
+            {{#if parameters}}
+            parameters: [
+                {{#each parameters}}
+                {
+                    name: "{{name}}",
+                    {{#if description}}
+                    description: `{{description}}`,
+                    {{/if}}
+                    type: "{{type}}" as const,
+                    schema: {{{schema}}}
+                },
+                {{/each}}
+            ],
+            {{/if}}
+            {{#if requestFormat}}
+            requestFormat: "{{requestFormat}}" as const,
+            {{/if}}
+            responseSchemas: {
+                {{#each responses}}
+                {{status}}: {{{schema}}},
+                {{/each}}
+            },
+            {{#if errors.length}}
+            errorSchemas: {
+                {{#each errors}}
+                {{#ifeq status "default"}}
+                default: {{{schema}}},
+                {{else}}
+                {{status}}: {{{schema}}},
+                {{/ifeq}}
+                {{/each}}
+            },
+            {{/if}}
+        },
+    {{/each}}
+    ] as const;
+
+    export const mcpTools = endpoints.map(endpoint => ({
+        name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, '_')}`,
+        description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
+        inputSchema: endpoint.parameters?.find(p => p.type === "Body")?.schema ||
+                     (endpoint.parameters && endpoint.parameters.length > 0
+                       ? z.object(Object.fromEntries(endpoint.parameters.map(p => [p.name, p.schema])))
+                       : z.object({})),
+        outputSchema: endpoint.responseSchemas[200] || endpoint.responseSchemas[201] || z.unknown(),
+    }));
+    ```
+
+7. **Update CLI to support new template and Oak-specific flags:**
+
+     Update: `lib/src/cli.ts`
+
+     ```typescript
+     // Add to CLI options
+     program
+         .option("--template <name>", "Template to use (default, grouped, schemas-only, schemas-with-metadata)")
+         .option("--no-client", "Skip HTTP client generation (uses schemas-with-metadata template)")
+         .option("--with-validation-helpers", "Include validateRequest/validateResponse helper functions")
+         .option("--with-schema-registry", "Include buildSchemaRegistry helper function");
+     ```
+
+8. **Update generateZodClientFromOpenAPI to handle Oak options:**
+
+     Update: `lib/src/generateZodClientFromOpenAPI.ts`
+
+     ```typescript
+     export interface GenerateZodClientOptions {
+         // ... existing options
+         noClient?: boolean; // NEW: skip client generation
+         withValidationHelpers?: boolean; // NEW: Oak validation helpers
+         withSchemaRegistry?: boolean; // NEW: Oak schema registry builder
+     }
+
+     // In the function:
+     if (options?.noClient && !options?.template) {
+         options.template = "schemas-with-metadata";
+     }
+     ```
+
+**Phase D: Verify Tests Pass (30 mins)**
+
+9. **Run tests again:**
+
+    ```bash
+    cd lib
+    pnpm test schemas-with-metadata
+    # Should pass now
+    ```
+
+10. **Run full test suite:**
+
+    ```bash
+    pnpm test -- --run
+    # All 297+ tests must pass
+    ```
+
+11. **Test CLI manually:**
+
+    ```bash
+    # Test new template
+    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test-metadata.ts --template schemas-with-metadata
+
+    # Verify no Zodios import
+    grep -q "@zodios/core" /tmp/test-metadata.ts && echo "FAIL: Zodios found" || echo "PASS: No Zodios"
+
+    # Test --no-client flag
+    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test-no-client.ts --no-client
+
+    # Verify no Zodios import
+    grep -q "@zodios/core" /tmp/test-no-client.ts && echo "FAIL: Zodios found" || echo "PASS: No Zodios"
+    ```
+
+**Phase E: Documentation (1 hour)**
+
+12. **Update README with template comparison:**
+
+    Update: `README.md`
+
+    ````markdown
+    ## Template Options
+
+    | Template                | Description                   | Use When                         | Dependencies          |
+    | ----------------------- | ----------------------------- | -------------------------------- | --------------------- |
+    | `default`               | Full Zodios HTTP client       | You want type-safe API client    | `@zodios/core`, `zod` |
+    | `grouped`               | Zodios client grouped by tags | Multiple endpoints, organized    | `@zodios/core`, `zod` |
+    | `schemas-only`          | Pure Zod schemas              | Validation only, no client       | `zod` only            |
+    | `schemas-with-metadata` | Schemas + endpoint metadata   | MCP tools, validation + metadata | `zod` only            |
+
+    ### Examples
+
+    **Full API Client (default):**
+
+    ```bash
+    openapi-zod-client ./spec.yaml -o ./client.ts
+    # or
+    openapi-zod-client ./spec.yaml -o ./client.ts --template default
+    ```
+    ````
+
+    **Validation Only (schemas-only):**
+
+    ```bash
+    openapi-zod-client ./spec.yaml -o ./schemas.ts --template schemas-only
+    ```
+
+    **Schemas + Metadata for MCP Tools:**
+
+    ```bash
+    openapi-zod-client ./spec.yaml -o ./tools.ts --template schemas-with-metadata
+    # or
+    openapi-zod-client ./spec.yaml -o ./tools.ts --no-client
+    ```
+
+    ```
+
+    ```
+
+13. **Create examples directory:**
+
+    Create: `lib/examples/mcp-tools-usage.ts`
+
+    ```typescript
+    // Example: Using schemas-with-metadata template for MCP tools
+    import { endpoints, mcpTools, schemas } from "./generated-tools.js";
+
+    // Use endpoint metadata
+    const getUserEndpoint = endpoints.find((e) => e.operationId === "getUser");
+
+    // Validate request
+    const params = getUserEndpoint!.parameters[0].schema.parse({ id: "123" });
+
+    // Validate response
+    const user = getUserEndpoint!.responseSchemas[200].parse(apiResponse);
+
+    // MCP tool integration
+    mcpTools.forEach((tool) => {
+        server.registerTool({
+            name: tool.name,
+            description: tool.description,
+            validate: (input) => tool.inputSchema.parse(input),
+            execute: async (input) => {
+                const result = await callApi(input);
+                return tool.outputSchema.parse(result);
+            },
+        });
+    });
+    ```
+
+14. **Update TEMPLATE_STRATEGY.md:**
+
+    Create: `.agent/analysis/TEMPLATE_STRATEGY.md`
+
+    Document:
+    - All 5 templates
+    - When to use each
+    - Dependencies required
+    - CLI flags
+    - Migration guide from Zodios to non-Zodios
+
+**Validation Steps:**
+
+1. **All tests pass:**
+
+    ```bash
+    pnpm test -- --run
+    # 297+ tests passing (includes new template tests)
+    ```
+
+2. **Template generates valid TypeScript:**
+
+    ```bash
+    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test.ts --template schemas-with-metadata
+    cd /tmp && tsc test.ts --noEmit
+    # Should compile without errors
+    ```
+
+3. **No Zodios in schemas-with-metadata output:**
+
+    ```bash
+    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test.ts --template schemas-with-metadata
+    grep "@zodios" /tmp/test.ts
+    # Should return nothing (exit code 1)
+    ```
+
+4. **--no-client flag works:**
+
+    ```bash
+    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test.ts --no-client
+    grep "@zodios" /tmp/test.ts
+    # Should return nothing (exit code 1)
+    ```
+
+5. **Generated code is usable:**
+
+    ```typescript
+    // Manual test: Can import and use generated code
+    import { schemas, endpoints, mcpTools } from "/tmp/test.ts";
+
+    // Schemas work
+    const user = schemas.UserSchema.parse({...});
+
+    // Endpoints have correct structure
+    console.log(endpoints[0].method); // "get", "post", etc.
+
+    // MCP tools have correct structure
+    console.log(mcpTools[0].inputSchema); // Zod schema
+    ```
+
+6. **Documentation is clear:**
+    - [ ] README has template comparison table
+    - [ ] Examples directory has MCP usage example
+    - [ ] TEMPLATE_STRATEGY.md documents all options
+    - [ ] CLI help shows new options (`--help` output)
+
+7. **Quality gates pass:**
+    ```bash
+    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+    # All must pass
+    ```
+
+**Output:**
+
+- `.agent/analysis/TEMPLATE_STRATEGY.md` - Template documentation
+- `lib/src/templates/schemas-with-metadata.hbs` - New template
+- `lib/src/templates/schemas-with-metadata.test.ts` - Template tests
+- Updated `lib/src/cli.ts` - New CLI flags
+- Updated `lib/src/generateZodClientFromOpenAPI.ts` - noClient option
+- Updated `README.md` - Template comparison table
+- `lib/examples/mcp-tools-usage.ts` - Usage example
+- All tests passing (297+ → 300+)
+
+**Benefits:**
+
+**General Users:**
+- ✅ Users can choose validation-only workflows
+- ✅ No Zodios dependency required for MCP use cases
+- ✅ Better documentation of existing options
+- ✅ Clearer separation of concerns
+- ✅ Full request/response validation schemas
+- ✅ Backwards compatible (no breaking changes)
+
+**Oak Curriculum SDK Specific:**
+- ✅ **Eliminates 60+ lines of fragile string manipulation** from zodgen-core.ts
+- ✅ **No type assertions needed** (fixes line 27-28 issue)
+- ✅ **Full request validation** (path, query, header, body parameters)
+- ✅ **Full response validation** (success + all error responses)
+- ✅ **Schema registry builder** (replaces custom sanitizeSchemaKeys)
+- ✅ **Type-safe validation helpers** (validateRequest/validateResponse)
+- ✅ **Endpoints exported directly** (no Zodios makeApi wrapper needed)
+- ✅ **Drop-in replacement** for current Oak workflow with minimal changes:
+  ```typescript
+  // OLD (zodgen-core.ts): 115 lines with heavy post-processing
+  const output = await generateZodClientFromOpenAPI({...});
+  // 60+ lines of string replacement regex 😱
+
+  // NEW: ~15 lines, no string manipulation! 🎉
+  const output = await generateZodClientFromOpenAPI({
+    openApiDoc,
+    template: 'schemas-with-metadata',
+    options: {
+      withValidationHelpers: true,
+      withSchemaRegistry: true,
+    },
+  });
+  // Use directly, maybe 5-10 lines custom registry logic
+  ```
+
+**Non-Goals (Out of Scope for Phase 2):**
+
+- ❌ Removing Zodios from default template (breaking change)
+- ❌ Creating fetch/axios alternative clients (future work)
+- ❌ Changing existing template behavior (compatibility)
 
 ---
 
@@ -715,7 +1634,8 @@ Migration changes:
 
 All tests passing (297)
 Schema generation verified"
-```
+
+````
 
 **Validation Steps:**
 
@@ -734,7 +1654,7 @@ Schema generation verified"
 ```bash
 git checkout main
 cd lib && pnpm install zod@^3
-```
+````
 
 **Output:**
 
@@ -907,7 +1827,8 @@ Added dependency: lodash-es (tree-shakeable, well-maintained)
 
 All tests passing (297)
 No functionality changes"
-```
+
+````
 
 **Validation Steps:**
 
@@ -932,9 +1853,9 @@ No functionality changes"
 
 ### 3.2 Eliminate Type Assertions (EXTRACTION BLOCKER)
 
-**Status:** Pending  
-**Priority:** CRITICAL BLOCKER  
-**Estimated Time:** 16-24 hours (1-2 weeks with testing)  
+**Status:** Pending
+**Priority:** CRITICAL BLOCKER
+**Estimated Time:** 16-24 hours (1-2 weeks with testing)
 **Dependencies:** Tasks 1.1, 2.1, 2.2 complete
 
 **Acceptance Criteria:**
@@ -1078,7 +1999,7 @@ Target repo compliance: assertionStyle: 'never' ✅
 
 All tests passing (297)
 Zero type assertions remaining"
-```
+````
 
 **Validation Steps:**
 
@@ -1325,6 +2246,7 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 - [x] ✅ **1.6** openapi3-ts v4 Investigation - Migration checklist ready
 - [x] ✅ **1.7** Handlebars Evaluation - KEEP Phase 2, ts-morph emitter Phase 3/4
 - [ ] ⏳ **1.8** Defer Logic to openapi3-ts v4 - Analyze after Task 2.1 (DEFERRED)
+- [ ] ⏳ **1.9** Zodios-Free Template Strategy - schemas-with-metadata template, --no-client flag (OPTIONAL)
 
 ### Implementation Tasks (Week 2-3)
 
