@@ -29,7 +29,7 @@
 
 ### ✅ Completed Phase 1b: Complexity & ESLint (131 errors fixed - 61% reduction!)
 
-- ✅ Fixed 10 critical type safety errors (no-unsafe-*)
+- ✅ Fixed 10 critical type safety errors (no-unsafe-\*)
 - ✅ Eliminated ALL cognitive complexity violations (4 files: 104+31+33+47 → <29)
 - ✅ Extracted 36 pure helper functions across 6 new files
 - ✅ Added 47 comprehensive unit tests (+23%)
@@ -38,6 +38,7 @@
 ### 🔄 Phase 1c: Type-Check Compliance (151 TypeScript errors to fix)
 
 **Current Quality Gates:**
+
 - ✅ **format**: Passing
 - ❌ **type-check**: 151 errors (BLOCKING)
 - ⚠️ **lint**: 71 errors (acceptable tech debt)
@@ -45,6 +46,7 @@
 - ✅ **build**: Successful
 
 **Type-Check Error Breakdown:**
+
 - ~65 errors: Missing `.js` extensions in test imports
 - ~40 errors: Type issues in new helper files (production code)
 - ~15 errors: Index signature access (TS4111)
@@ -2220,6 +2222,7 @@ npx openapi-zod-client --help
 ## Phase 1c: Type-Check Compliance - Detailed Work Plan
 
 ### Overview
+
 Complete ESM migration by fixing all TypeScript compilation errors. This ensures the `type-check` quality gate passes and the codebase is fully type-safe.
 
 **Goal**: Fix all 151 TypeScript errors  
@@ -2229,9 +2232,11 @@ Complete ESM migration by fixing all TypeScript compilation errors. This ensures
 ### Work Breakdown
 
 #### Category 1: Helper File Type Errors (40 errors - CRITICAL)
+
 **Priority**: HIGHEST - Production code we just created
 
 **Files Affected**:
+
 1. `lib/src/openApiToTypescript.helpers.ts` (25 errors)
 2. `lib/src/zodiosEndpoint.path.helpers.ts` (6 errors)
 3. `lib/src/zodiosEndpoint.helpers.ts` (6 errors)
@@ -2240,9 +2245,11 @@ Complete ESM migration by fixing all TypeScript compilation errors. This ensures
 **Estimated Time**: 1-2 hours
 
 #### Category 2: Test Import Extensions (65 errors - HIGH)
+
 **Priority**: HIGH - Required for ESM compliance
 
 **Pattern**: Missing `.js` extensions in imports:
+
 - `from "../src"` → `from "../src/index.js"`
 - `from "../src/openApiToZod"` → `from "../src/openApiToZod.js"`
 
@@ -2251,6 +2258,7 @@ Complete ESM migration by fixing all TypeScript compilation errors. This ensures
 **Estimated Time**: 30 minutes (bulk find/replace)
 
 #### Category 3: Index Signature Access (15 errors - MEDIUM)
+
 **Priority**: MEDIUM - TypeScript strictness
 
 **Pattern**: `schemas.Main` → `schemas['Main']`
@@ -2260,6 +2268,7 @@ Complete ESM migration by fixing all TypeScript compilation errors. This ensures
 **Estimated Time**: 30 minutes
 
 #### Category 4: Implicit Any Parameters (5 errors - MEDIUM)
+
 **Priority**: MEDIUM - Callback type annotations
 
 **Pattern**: Add explicit types to callback parameters
@@ -2269,6 +2278,7 @@ Complete ESM migration by fixing all TypeScript compilation errors. This ensures
 **Estimated Time**: 15 minutes
 
 #### Category 5: Miscellaneous Test Issues (26 errors - LOW)
+
 **Priority**: LOW - Various test-specific type issues
 
 **Estimated Time**: 30-45 minutes
