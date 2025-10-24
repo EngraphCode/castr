@@ -1,7 +1,22 @@
 # Living Context Document
 
-**Last Updated:** October 24, 2025  
+**Last Updated:** October 24, 2025 (Evening - TDD mandate + Task 1.9 enhancements)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
+
+---
+
+## 🎯 MANDATORY: Test-Driven Development (TDD)
+
+**ALL implementation work MUST follow TDD workflow:**
+
+1. ✍️ Write failing tests FIRST (before any implementation code)
+2. 🔴 Run tests - confirm FAILURE (proves tests validate behavior)
+3. ✅ Write minimal implementation (only enough to pass tests)
+4. 🟢 Run tests - confirm SUCCESS (validates implementation works)
+5. ♻️ Refactor if needed (with test protection)
+6. 🔁 Repeat for each feature
+
+**No exceptions:** "I'll add tests later" is NOT ALLOWED. See `.agent/RULES.md` for detailed TDD guidelines.
 
 ---
 
@@ -194,11 +209,24 @@ All documented in `.agent/adr/` (12 ADRs):
 - ✅ `SWAGGER_PARSER_INTEGRATION.md` - KEEP (actively maintained, good usage)
 - ✅ `OPENAPI3_TS_V4_INVESTIGATION.md` - Complete migration checklist, breaking changes
 - ✅ `HANDLEBARS_EVALUATION.md` - KEEP Phase 2, ts-morph emitter for Phase 3/4
+- ✅ `TASK_1.9_OAK_ENHANCEMENTS.md` - Zodios-free template with full validation (Oak-optimized)
 
 **Key Insights:**
 - Must update `openapi3-ts` and `zod` **BEFORE** deferring logic to libraries
 - Type assertions concentrated in 4 files (can be systematically eliminated)
 - All dependency decisions made with clear rationale
+- **Oak use case analyzed** - Need Zodios-free template with full request/response validation
+
+**NEW: Task 1.9 - Zodios-Free Template (Oak-Optimized)**
+- Template: `schemas-with-metadata.hbs` (schemas + endpoints WITHOUT Zodios)
+- **Eliminates 60+ lines of string manipulation** from Oak's zodgen-core.ts
+- Full request validation (path, query, header, body parameters)
+- Full response validation (success + all error responses)
+- Schema registry builder helper (--with-schema-registry)
+- Type-safe validation helpers (--with-validation-helpers)
+- **Strict types:** No `any`, uses `unknown`, fail-fast with `.parse()`
+- **TDD ready:** 12 comprehensive tests designed (write tests FIRST)
+- **Estimated:** 6-10 hours
 
 ---
 
@@ -206,35 +234,58 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### Immediate (This Week) - Phase 2 Implementation
 
+**⚠️ MANDATORY: ALL tasks MUST follow TDD (tests written BEFORE implementation)**
+
 **✅ ANALYSIS COMPLETE - Ready to execute:**
+
+**Option A: Core Blockers First (Recommended)**
 
 1. **Dependency Updates** (MUST DO FIRST - Task 2.1, 2.2)
     - openapi3-ts: v3 → v4.5.0 (migration checklist ready)
     - zod: v3 → v4.1.12 (update plan ready)
+    - **TDD:** Update/add tests for new type signatures FIRST, confirm failures, then update
     - **Estimated:** 8-12 hours
 
 2. **pastable Replacement** (Task 3.1)
     - 7 files, 8 functions → `lodash-es` + custom utilities
     - Detailed plan in PASTABLE_REPLACEMENT_PLAN.md
+    - **TDD:** Write replacement tests FIRST matching pastable behavior, implement, switch
     - **Estimated:** 6-8 hours
 
 3. **Type Assertion Elimination** (BLOCKER - Task 3.2)
     - 74 instances across 11 files must → 0
     - Target repo: `assertionStyle: "never"`
     - File-by-file elimination plan ready
+    - **TDD:** Write type guard tests FIRST, implement guards, replace assertions
     - **Estimated:** 16-24 hours
 
 4. **Dependency Cleanup** (Task 3.3)
     - Remove: `openapi-types` (redundant)
     - Remove: `pastable` (after replacement)
     - Keep: `@zodios/core`, `@apidevtools/swagger-parser` (justified)
+    - **TDD:** Verify no broken tests after removal
     - **Estimated:** 2-4 hours
 
 5. **Defer Logic to openapi3-ts v4** (Task 1.8)
     - Analyze what custom code can be replaced
     - Leverage new v4 capabilities
     - After Task 2.1 complete
+    - **TDD:** Tests guide which custom code can be safely replaced
     - **Estimated:** 3-4 hours
+
+**Option B: Oak Template First (High Value, Not Blocking)**
+
+**NEW: Task 1.9 - Zodios-Free Template Strategy** (Oak-Optimized)
+- Template: `schemas-with-metadata.hbs` (NO Zodios dependency)
+- Full request/response validation (all parameter types, all status codes)
+- Schema registry builder helper
+- Type-safe validation helpers
+- **Eliminates 60+ lines of Oak's string manipulation** (74% code reduction)
+- **Strict types:** No `any`, fail-fast with `.parse()`, `.strict()` by default
+- **TDD:** 12 comprehensive tests written FIRST (already designed)
+- **Priority:** MEDIUM-HIGH (Oak critical, not blocking extraction)
+- **Estimated:** 6-10 hours
+- **Documentation:** `.agent/analysis/TASK_1.9_OAK_ENHANCEMENTS.md` (724 lines)
 
 ### Short Term (Next 2-3 Weeks) - Phase 3
 
@@ -279,13 +330,15 @@ All documented in `.agent/adr/` (12 ADRs):
 - **swagger-parser:** `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` (KEEP - good usage)
 - **openapi3-ts v4:** `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md` (Migration checklist)
 - **Handlebars:** `.agent/analysis/HANDLEBARS_EVALUATION.md` (ts-morph emitter recommended)
+- **Task 1.9 Oak:** `.agent/analysis/TASK_1.9_OAK_ENHANCEMENTS.md` (Zodios-free template, 724 lines)
 
 ### Reference
 
-- **Coding Standards:** `.agent/RULES.md`
+- **Coding Standards:** `.agent/RULES.md` (includes TDD requirements)
 - **ADRs:** `.agent/adr/` (12 decision records)
 - **Target ESLint Config:** `.agent/reference/reference.eslint.config.ts`
 - **Emitter Architecture:** `.agent/reference/openapi-zod-client-emitter-migration.md`
+- **Oak Usage Examples:** `.agent/reference/oak_usage/` (zodgen-core.ts, typegen-core.ts)
 
 ### History
 
@@ -319,13 +372,14 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### From RULES.md
 
-1. **Test behavior, not implementation**
-2. **Pure functions when possible**
-3. **Defer types to source libraries**
-4. **Type predicates over boolean filters**
-5. **No unused variables** (never prefix with `_`)
-6. **Explicit over implicit**
-7. **Fail fast with helpful errors**
+1. **🎯 Test-Driven Development (TDD) - MANDATORY FOR ALL WORK**
+2. **Test behavior, not implementation**
+3. **Pure functions when possible**
+4. **Defer types to source libraries**
+5. **Type predicates over boolean filters**
+6. **No unused variables** (never prefix with `_`)
+7. **Explicit over implicit**
+8. **Fail fast with helpful errors**
 
 ### Quality Standards
 
