@@ -25,7 +25,7 @@ The project's goal evolved: modernize the `lib` workspace to be extracted and po
 
 **Migration target:**
 
-- Destination repo: Oak National Academy monorepo
+- Destination repo: Engraph monorepo
 - Purpose: Generate type-safe SDK and MCP server from OpenAPI spec
 - Only needs: The core library functionality
 - Doesn't need: Interactive playground or example projects
@@ -172,7 +172,7 @@ packages:
 The goal is to port `lib` to another repository:
 
 ```
-oak-national-academy-monorepo/
+engraph-monorepo/
   packages/
     ├── openapi-zod-client/   # Ported from this repo
     ├── sdk-generator/         # Uses openapi-zod-client

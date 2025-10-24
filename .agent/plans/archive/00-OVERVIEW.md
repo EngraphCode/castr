@@ -2,9 +2,9 @@
 
 ## Executive Summary
 
-This document outlines a comprehensive plan to modernize the `openapi-zod-client` fork by updating its core dependencies to their latest versions and fixing all code issues. The work is divided into four sequential phases. **The goal is to bring the codebase up to modern standards, fix all issues, and prepare it for extracting useful components to the Oak Curriculum SDK monorepo.**
+This document outlines a comprehensive plan to modernize the `openapi-zod-client` fork by updating its core dependencies to their latest versions and fixing all code issues. The work is divided into four sequential phases. **The goal is to bring the codebase up to modern standards, fix all issues, and prepare it for extracting useful components to the Engraph SDK monorepo.**
 
-**Target Use Case:** This fork will serve as a reference implementation for generating strict Zod schemas and MCP tool validation from OpenAPI 3.0/3.1 specifications. The extracted components will be used in the Oak Curriculum SDK to auto-generate request/response validators for MCP tools that wrap Oak API endpoints.
+**Target Use Case:** This fork will serve as a reference implementation for generating strict Zod schemas and MCP tool validation from OpenAPI 3.0/3.1 specifications. The extracted components will be used in the Engraph SDK to auto-generate request/response validators for MCP tools that wrap Engraph API endpoints.
 
 ## Strategy
 
@@ -304,7 +304,7 @@ _Note: Timeline includes fixing all issues found during each phase_
     - Update openapi3-ts to v4.4.0
     - Support both OpenAPI 3.0 and 3.1
     - Update all imports and type guards
-    - Verify with Oak API (3.0.3) and 3.1 test specs
+    - Verify with Engraph API (3.0.3) and 3.1 test specs
 6. **⏸️ Execute Phase 3: Zod v4** (BLOCKED until Phase 2 complete)
     - Update Zod to v4.0+
     - Update @zodios/core for compatibility
@@ -317,15 +317,15 @@ _Note: Timeline includes fixing all issues found during each phase_
     - Zod v4 schema generation
     - Zero security vulnerabilities
     - Zero outdated dependencies
-    - Ready for component extraction to Oak SDK
+    - Ready for component extraction to Engraph SDK
 
 ---
 
 ## Target Extraction Context
 
-**Destination:** Oak Curriculum SDK monorepo  
-**Purpose:** Generate MCP tool input/output validators from Oak OpenAPI spec  
-**Current Oak API:** OpenAPI 3.0.3 (500+ endpoints)  
+**Destination:** Engraph SDK monorepo  
+**Purpose:** Generate MCP tool input/output validators from Engraph OpenAPI spec  
+**Current Engraph API:** OpenAPI 3.0.3 (500+ endpoints)  
 **Required:** Support for future 3.1 upgrade
 
 **What will be extracted:**
@@ -351,7 +351,6 @@ _Note: Timeline includes fixing all issues found during each phase_
 - [Prettier 3.0 Release](https://prettier.io/blog/2023/07/05/3.0.0.html)
 - [Zod v4 Documentation](https://zod.dev/)
 - [openapi3-ts v4 Documentation](https://www.npmjs.com/package/openapi3-ts)
-- [Oak National Academy API](https://open-api.thenational.academy/api/v0/swagger.json)
 
 ---
 

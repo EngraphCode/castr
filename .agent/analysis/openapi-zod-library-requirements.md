@@ -493,7 +493,7 @@ Generate complete MCP tool definitions with handlers and documentation
 The library is considered acceptable if:
 
 1. ✅ Can replace `openapi-zod-client` with no changes to generated output structure
-2. ✅ Successfully generates schemas for all 500+ endpoints in Oak Curriculum API
+2. ✅ Successfully generates schemas for all 500+ endpoints in Engraph API
 3. ✅ Generated code passes TypeScript strict mode compilation
 4. ✅ Generated code passes all ESLint rules including custom boundary rules
 5. ✅ All existing tests continue to pass
@@ -617,4 +617,4 @@ This serialization is critical for the `emitRequestValidatorMap` function.
 1. Evaluate existing alternatives against criteria
 2. If no suitable alternative, plan internal workspace implementation
 3. Create proof-of-concept with small OpenAPI spec
-4. Validate against full Oak Curriculum API spec
+4. Validate against full Engraph API spec

@@ -33,6 +33,7 @@ This document contains the **detailed task breakdown** for Phase 2 work. Every t
 **This is non-negotiable.** See `.agent/RULES.md` for detailed TDD guidelines.
 
 **Why TDD?**
+
 - Prevents regressions (every change protected by tests)
 - Documents behavior (tests = living documentation)
 - Validates tests work (seeing failure first proves effectiveness)
@@ -40,6 +41,7 @@ This document contains the **detailed task breakdown** for Phase 2 work. Every t
 - Enables safe refactoring (test coverage provides confidence)
 
 **No exceptions:**
+
 - ❌ "I'll add tests later" - NOT ALLOWED
 - ❌ "This is too simple" - STILL WRITE TESTS
 - ❌ "Just prototyping" - PROTOTYPE IN TESTS
@@ -560,7 +562,7 @@ Tasks MUST be executed in this order due to dependencies:
 ### 1.9 Zodios-Free Template Strategy with Full Validation (OAK-OPTIMIZED)
 
 **Status:** Pending  
-**Priority:** MEDIUM-HIGH (Oak Curriculum SDK critical feature)  
+**Priority:** MEDIUM-HIGH (Engraph SDK critical feature)  
 **Estimated Time:** 6-8 hours (enhanced scope)  
 **Dependencies:** None (can be done anytime)
 
@@ -575,14 +577,14 @@ Tasks MUST be executed in this order due to dependencies:
 - [ ] **Schema registry builder helper** (optional via flag)
 - [ ] **Type-safe validation helpers** for request/response
 - [ ] CLI supports `--no-client` flag to skip HTTP client generation
-- [ ] CLI supports `--with-validation-helpers` flag for Oak use case
+- [ ] CLI supports `--with-validation-helpers` flag for Engraph use case
 - [ ] **STRICT TYPES:** No `any` in generated code (only `unknown` when necessary)
 - [ ] **FAIL-FAST:** All validation uses `.parse()` (throws on invalid input)
 - [ ] **STRICT SCHEMAS:** Generated schemas use `.strict()` by default (no `.passthrough()` unless spec requires)
 - [ ] All tests written BEFORE implementation (TDD)
 - [ ] All tests passing (including strict type validation tests)
 - [ ] README updated with template comparison table
-- [ ] Examples added for each template use case (including Oak pattern)
+- [ ] Examples added for each template use case (including Engraph pattern)
 - [ ] Programmatic API documented for advanced usage
 
 **Implementation Steps (TDD Approach):**
@@ -599,9 +601,9 @@ Tasks MUST be executed in this order due to dependencies:
         - `schemas-only.hbs` - Pure Zod schemas (NO Zodios)
     - When to use each template
 
-2. **Design new template with Oak enhancements:**
+2. **Design new template with Engraph enhancements:**
     - Name: `schemas-with-metadata.hbs`
-    - **Enhanced output structure** (Oak-optimized):
+    - **Enhanced output structure** (Engraph-optimized):
 
         ```typescript
         import { z } from "zod";
@@ -736,11 +738,11 @@ Tasks MUST be executed in this order due to dependencies:
         }));
         ```
 
-    - **Key enhancements for Oak:**
+    - **Key enhancements for Engraph:**
         - ✅ Full request validation (all parameter types)
         - ✅ Full response validation (including error responses)
         - ✅ Type-safe validation helpers
-        - ✅ Schema registry builder (eliminates Oak's string manipulation)
+        - ✅ Schema registry builder (eliminates Engraph's string manipulation)
         - ✅ Endpoints exported directly (no Zodios makeApi wrapper)
         - ✅ MCP tools with complete parameter schemas
 
@@ -935,7 +937,7 @@ Tasks MUST be executed in this order due to dependencies:
             expect(result).not.toContain("new Zodios");
         });
 
-        it("should generate full request validation schemas (Oak use case)", async () => {
+        it("should generate full request validation schemas (Engraph use case)", async () => {
             const openApiDoc = {
                 openapi: "3.0.0",
                 info: { title: "Test", version: "1.0.0" },
@@ -979,7 +981,7 @@ Tasks MUST be executed in this order due to dependencies:
             expect(result).toContain("x-api-key");
         });
 
-        it("should generate full response validation including errors (Oak use case)", async () => {
+        it("should generate full response validation including errors (Engraph use case)", async () => {
             const openApiDoc = {
                 openapi: "3.0.0",
                 info: { title: "Test", version: "1.0.0" },
@@ -1194,12 +1196,12 @@ Tasks MUST be executed in this order due to dependencies:
         });
 
         it("should generate validation helpers with --with-validation-helpers", async () => {
-            // Test Oak-specific validation helpers flag
+            // Test Engraph-specific validation helpers flag
             // This will fail until we implement it
         });
 
         it("should generate schema registry with --with-schema-registry", async () => {
-            // Test Oak-specific schema registry builder flag
+            // Test Engraph-specific schema registry builder flag
             // This will fail until we implement it
         });
     });
@@ -1305,7 +1307,7 @@ Tasks MUST be executed in this order due to dependencies:
     }));
     ```
 
-7. **Update CLI to support new template and Oak-specific flags:**
+7. **Update CLI to support new template and Engraph-specific flags:**
 
     Update: `lib/src/cli.ts`
 
@@ -1318,7 +1320,7 @@ Tasks MUST be executed in this order due to dependencies:
         .option("--with-schema-registry", "Include buildSchemaRegistry helper function");
     ```
 
-8. **Update generateZodClientFromOpenAPI to handle Oak options:**
+8. **Update generateZodClientFromOpenAPI to handle Engraph options:**
 
     Update: `lib/src/generateZodClientFromOpenAPI.ts`
 
@@ -1326,8 +1328,8 @@ Tasks MUST be executed in this order due to dependencies:
     export interface GenerateZodClientOptions {
         // ... existing options
         noClient?: boolean; // NEW: skip client generation
-        withValidationHelpers?: boolean; // NEW: Oak validation helpers
-        withSchemaRegistry?: boolean; // NEW: Oak schema registry builder
+        withValidationHelpers?: boolean; // NEW: Engraph validation helpers
+        withSchemaRegistry?: boolean; // NEW: Engraph schema registry builder
     }
 
     // In the function:
@@ -1539,7 +1541,7 @@ Tasks MUST be executed in this order due to dependencies:
 - ✅ Full request/response validation schemas
 - ✅ Backwards compatible (no breaking changes)
 
-**Oak Curriculum SDK Specific:**
+**Engraph SDK Specific:**
 
 - ✅ **Eliminates 60+ lines of fragile string manipulation** from zodgen-core.ts
 - ✅ **No type assertions needed** (fixes line 27-28 issue)
@@ -1548,7 +1550,7 @@ Tasks MUST be executed in this order due to dependencies:
 - ✅ **Schema registry builder** (replaces custom sanitizeSchemaKeys)
 - ✅ **Type-safe validation helpers** (validateRequest/validateResponse)
 - ✅ **Endpoints exported directly** (no Zodios makeApi wrapper needed)
-- ✅ **Drop-in replacement** for current Oak workflow with minimal changes:
+- ✅ **Drop-in replacement** for current Engraph workflow with minimal changes:
 
     ```typescript
     // OLD (zodgen-core.ts): 115 lines with heavy post-processing

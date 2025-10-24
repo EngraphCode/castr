@@ -179,7 +179,7 @@ cd lib && pnpm test
 2. **If yes**: Add lint ignores, update definition of done
 3. **Phase 2**: Update openapi3-ts to v4 (support OpenAPI 3.0 and 3.1)
 4. **Phase 3**: Update Zod to v4
-5. **Extract**: Port useful components to Oak SDK
+5. **Extract**: Port useful components to Engraph SDK
 
 ---
 

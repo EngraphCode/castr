@@ -73,21 +73,21 @@ export const tsRules: Linter.RulesRecord = {
                 // This is a complicated way of saying `any` for objects
                 "Record<string, unknown>": {
                     message:
-                        "Avoid Record<string, unknown>. Use an existing internal or library type where possible. If you are working on the Oak Curriculum SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
+                        "Avoid Record<string, unknown>. Use an existing internal or library type where possible. If you are working on the Engraph SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
                 },
 
                 // Common variants you might also want to block
                 "Record<string, undefined>": {
                     message:
-                        "Avoid Record<string, undefined>. Use an existing internal or library type where possible. If keys are optional, prefer Partial. If you are working on the Oak Curriculum SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
+                        "Avoid Record<string, undefined>. Use an existing internal or library type where possible. If keys are optional, prefer Partial. If you are working on the Engraph SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
                 },
                 "Readonly<Record<string, undefined>>": {
                     message:
-                        "Avoid Readonly<Record<string, undefined>>. Use an existing internal or library type where possible. If you are working on the Oak Curriculum SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
+                        "Avoid Readonly<Record<string, undefined>>. Use an existing internal or library type where possible. If you are working on the Engraph SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
                 },
                 "Record<PropertyKey, undefined>": {
                     message:
-                        "Avoid Record<PropertyKey, undefined>. Use an existing internal or library type where possible. If you are working on the Oak Curriculum SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
+                        "Avoid Record<PropertyKey, undefined>. Use an existing internal or library type where possible. If you are working on the Engraph SDK or MCP server, use a type and type guard derived from the compile time data structures packages/sdks/oak-curriculum-sdk/src/types/generated/api-schema.",
                 },
             },
         },

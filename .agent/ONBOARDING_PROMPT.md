@@ -10,7 +10,7 @@
 
 ```text
 I'm working on modernizing a fork of openapi-zod-client to extract and port to
-the Oak National Academy monorepo. The repo generates strict Zod schemas and MCP
+the Engraph monorepo. The repo generates strict Zod schemas and MCP
 tool validation from OpenAPI 3.0/3.1 specifications.
 
 **Project Context:**
@@ -119,7 +119,7 @@ A properly onboarded AI should:
     - "I'm familiar with RULES.md standards"
 
 2. **Summarize Understanding**
-    - Project goal (extraction to Oak monorepo)
+    - Project goal (extraction to Engraph monorepo)
     - Current phase (Phase 2, ready to execute)
     - Blocker (74 type assertions)
     - First task (Lint Triage)
@@ -171,7 +171,7 @@ Remind: "This violates RULES.md - see section X"
 ## Alternative: Minimal Prompt (If Full Prompt Too Long)
 
 ```
-I need help modernizing openapi-zod-client for extraction to Oak National
+I need help modernizing openapi-zod-client for extraction to Engraph
 Academy monorepo. Phase 1 complete, Phase 2 ready to execute.
 
 Start by reading:

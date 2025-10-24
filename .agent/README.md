@@ -204,8 +204,7 @@ All must pass (lint is exception for now, but check for new issues).
 
 ## 🔗 External References
 
-**Target Repository:** oak-national-academy-monorepo  
-**Source API:** https://open-api.thenational.academy/api/v0/swagger.json
+**Target Repository:** engraph-monorepo  
 
 **Key Requirements:**
 - OpenAPI 3.1+ support

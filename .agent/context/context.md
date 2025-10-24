@@ -22,13 +22,12 @@
 
 ## 🎯 Project Goal
 
-**Modernize `openapi-zod-client` fork to extract and port to Oak National Academy monorepo**
+**Modernize `openapi-zod-client` fork to extract and port to Engraph monorepo**
 
-The extracted components will generate strict Zod schemas and MCP tool validation from OpenAPI 3.0/3.1 specifications for the Oak Curriculum SDK.
+The extracted components will generate strict Zod schemas and MCP tool validation from OpenAPI 3.0/3.1 specifications for the Engraph SDK.
 
-**Target Repository:** `oak-national-academy-monorepo`  
-**Use Case:** Auto-generate request/response validators for MCP tools wrapping Oak API endpoints  
-**Source API:** https://open-api.thenational.academy/api/v0/swagger.json
+**Target Repository:** `engraph-monorepo`  
+**Use Case:** Auto-generate request/response validators for MCP tools wrapping Engraph API endpoints
 
 ---
 
@@ -66,6 +65,7 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 - **Detailed breakdown:** `.agent/analysis/LINT_TRIAGE_COMPLETE.md`
 
 **Files with Most Assertions:**
+
 - `openApiToTypescript.helpers.ts` (22 assertions)
 - `openApiToTypescript.ts` (17 assertions)
 - `getZodiosEndpointDefinitionList.ts` (8 assertions)
@@ -154,19 +154,19 @@ All documented in `.agent/adr/` (12 ADRs):
 **Phase 2 Actions:**
 
 1. **Update FIRST:** `openapi3-ts` (v3 → v4.5.0), `zod` (v3 → v4.1.12)
-   - Migration checklist ready in `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
+    - Migration checklist ready in `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
 2. **REMOVE:** `pastable` → Replace with `lodash-es` + custom utilities
-   - Detailed plan in `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
+    - Detailed plan in `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
 3. **REMOVE:** `openapi-types` → Use `openapi3-ts` v4 types
-   - Only used in 1 test file, redundant
+    - Only used in 1 test file, redundant
 4. **KEEP:** `@zodios/core`, `@apidevtools/swagger-parser`
-   - Evaluations in `.agent/analysis/ZODIOS_CORE_EVALUATION.md` & `SWAGGER_PARSER_INTEGRATION.md`
+    - Evaluations in `.agent/analysis/ZODIOS_CORE_EVALUATION.md` & `SWAGGER_PARSER_INTEGRATION.md`
 
 **Phase 3/4 Consideration:**
 
 5. **Handlebars** → Evaluate ts-morph emitter architecture
-   - Analysis in `.agent/analysis/HANDLEBARS_EVALUATION.md`
-   - Recommended: AST-based emitter with plugin API (22-32 hours effort)
+    - Analysis in `.agent/analysis/HANDLEBARS_EVALUATION.md`
+    - Recommended: AST-based emitter with plugin API (22-32 hours effort)
 
 ---
 
@@ -202,6 +202,7 @@ All documented in `.agent/adr/` (12 ADRs):
 **Status:** All 7 investigation tasks complete, ready to execute implementation
 
 **Analysis Documents Created:**
+
 - ✅ `LINT_TRIAGE_COMPLETE.md` - All 146 issues categorized, type assertions mapped
 - ✅ `PASTABLE_REPLACEMENT_PLAN.md` - 8 functions → lodash-es + custom, detailed plan
 - ✅ `OPENAPI_TYPES_EVALUATION.md` - REMOVE (redundant with openapi3-ts v4)
@@ -209,17 +210,19 @@ All documented in `.agent/adr/` (12 ADRs):
 - ✅ `SWAGGER_PARSER_INTEGRATION.md` - KEEP (actively maintained, good usage)
 - ✅ `OPENAPI3_TS_V4_INVESTIGATION.md` - Complete migration checklist, breaking changes
 - ✅ `HANDLEBARS_EVALUATION.md` - KEEP Phase 2, ts-morph emitter for Phase 3/4
-- ✅ `TASK_1.9_OAK_ENHANCEMENTS.md` - Zodios-free template with full validation (Oak-optimized)
+- ✅ `TASK_1.9_ENGRAPH_ENHANCEMENTS.md` - Zodios-free template with full validation (Engraph-optimized)
 
 **Key Insights:**
+
 - Must update `openapi3-ts` and `zod` **BEFORE** deferring logic to libraries
 - Type assertions concentrated in 4 files (can be systematically eliminated)
 - All dependency decisions made with clear rationale
-- **Oak use case analyzed** - Need Zodios-free template with full request/response validation
+- **Engraph use case analyzed** - Need Zodios-free template with full request/response validation
 
-**NEW: Task 1.9 - Zodios-Free Template (Oak-Optimized)**
+**NEW: Task 1.9 - Zodios-Free Template (Engraph-Optimized)**
+
 - Template: `schemas-with-metadata.hbs` (schemas + endpoints WITHOUT Zodios)
-- **Eliminates 60+ lines of string manipulation** from Oak's zodgen-core.ts
+- **Eliminates 60+ lines of string manipulation** from Engraph's zodgen-core.ts
 - Full request validation (path, query, header, body parameters)
 - Full response validation (success + all error responses)
 - Schema registry builder helper (--with-schema-registry)
@@ -273,19 +276,20 @@ All documented in `.agent/adr/` (12 ADRs):
     - **TDD:** Tests guide which custom code can be safely replaced
     - **Estimated:** 3-4 hours
 
-**Option B: Oak Template First (High Value, Not Blocking)**
+**Option B: Engraph Template First (High Value, Not Blocking)**
 
-**NEW: Task 1.9 - Zodios-Free Template Strategy** (Oak-Optimized)
+**NEW: Task 1.9 - Zodios-Free Template Strategy** (Engraph-Optimized)
+
 - Template: `schemas-with-metadata.hbs` (NO Zodios dependency)
 - Full request/response validation (all parameter types, all status codes)
 - Schema registry builder helper
 - Type-safe validation helpers
-- **Eliminates 60+ lines of Oak's string manipulation** (74% code reduction)
+- **Eliminates 60+ lines of Engraph's string manipulation** (74% code reduction)
 - **Strict types:** No `any`, fail-fast with `.parse()`, `.strict()` by default
 - **TDD:** 12 comprehensive tests written FIRST (already designed)
-- **Priority:** MEDIUM-HIGH (Oak critical, not blocking extraction)
+- **Priority:** MEDIUM-HIGH (Engraph critical, not blocking extraction)
 - **Estimated:** 6-10 hours
-- **Documentation:** `.agent/analysis/TASK_1.9_OAK_ENHANCEMENTS.md` (724 lines)
+- **Documentation:** `.agent/analysis/TASK_1.9_ENGRAPH_ENHANCEMENTS.md` (724 lines)
 
 ### Short Term (Next 2-3 Weeks) - Phase 3
 
@@ -330,7 +334,7 @@ All documented in `.agent/adr/` (12 ADRs):
 - **swagger-parser:** `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` (KEEP - good usage)
 - **openapi3-ts v4:** `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md` (Migration checklist)
 - **Handlebars:** `.agent/analysis/HANDLEBARS_EVALUATION.md` (ts-morph emitter recommended)
-- **Task 1.9 Oak:** `.agent/analysis/TASK_1.9_OAK_ENHANCEMENTS.md` (Zodios-free template, 724 lines)
+- **Task 1.9 Engraph:** `.agent/analysis/TASK_1.9_ENGRAPH_ENHANCEMENTS.md` (Zodios-free template, 724 lines)
 
 ### Reference
 
@@ -338,7 +342,7 @@ All documented in `.agent/adr/` (12 ADRs):
 - **ADRs:** `.agent/adr/` (12 decision records)
 - **Target ESLint Config:** `.agent/reference/reference.eslint.config.ts`
 - **Emitter Architecture:** `.agent/reference/openapi-zod-client-emitter-migration.md`
-- **Oak Usage Examples:** `.agent/reference/oak_usage/` (zodgen-core.ts, typegen-core.ts)
+- **Engraph Usage Examples:** `.agent/reference/engraph_usage/` (zodgen-core.ts, typegen-core.ts)
 
 ### History
 
@@ -360,7 +364,7 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### Strategic Decisions
 
-1. **Not creating PRs** - Extracting to Oak National Academy monorepo instead
+1. **Not creating PRs** - Extracting to Engraph monorepo instead
 2. **Update dependencies first** - Before deferring to libraries
 3. **Type safety paramount** - Follow all RULES.md standards
 4. **Comprehensive testing** - Mutation testing with Stryker

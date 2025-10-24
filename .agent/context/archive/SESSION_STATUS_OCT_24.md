@@ -200,7 +200,7 @@ See `.agent/TODO.md` for detailed breakdown (10 tasks).
 
 ## 💡 **Key Decisions Made**
 
-1. **No longer creating PRs to upstream** - Extracting to Oak National Academy monorepo instead
+1. **No longer creating PRs to upstream** - Extracting to Engraph monorepo instead
 2. **Type assertions are extraction blocker** - Target repo has `assertionStyle: "never"`
 3. **Update dependencies first** - openapi3-ts/zod v4 before deferring logic
 4. **Comprehensive planning required** - Every task needs acceptance criteria, implementation, validation

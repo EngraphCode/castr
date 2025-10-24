@@ -2,16 +2,15 @@
 
 **Date:** October 24, 2025  
 **Status:** Active Implementation  
-**Goal:** Modernize codebase for extraction to Oak National Academy monorepo
+**Goal:** Modernize codebase for extraction to Engraph monorepo
 
 ---
 
 ## Executive Summary
 
-This fork of `openapi-zod-client` is being modernized to generate strict Zod schemas and MCP tool validation from OpenAPI 3.0/3.1 specifications. The work will be extracted and ported to the Oak Curriculum SDK monorepo to auto-generate request/response validators for MCP tools wrapping Oak API endpoints.
+This fork of `openapi-zod-client` is being modernized to generate strict Zod schemas and MCP tool validation from OpenAPI 3.0/3.1 specifications. The work will be extracted and ported to the Engraph SDK monorepo to auto-generate request/response validators for MCP tools wrapping Engraph API endpoints.
 
-**Target Repository:** `oak-national-academy-monorepo`  
-**Source API:** https://open-api.thenational.academy/api/v0/swagger.json  
+**Target Repository:** `engraph-monorepo`  
 **Extraction Blocker:** 74 type assertions must be eliminated (target repo: `assertionStyle: "never"`)
 
 ---
@@ -28,6 +27,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 6. **Repeat for each feature** - No exceptions
 
 **Why TDD is mandatory:**
+
 - Prevents regressions (every change protected by tests)
 - Documents behavior (tests as living documentation)
 - Validates tests work (seeing failure first proves effectiveness)
@@ -76,6 +76,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Duration:** October 22-24, 2025
 
 **Achievements:**
+
 - Modernized all developer tooling
 - Migrated to pure ESM with NodeNext resolution
 - Eliminated all cognitive complexity violations
@@ -85,6 +86,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - Documented all coding standards (RULES.md)
 
 **Key Decisions:**
+
 - Fail fast on spec violations (ADR-001)
 - Defer types to openapi3-ts (ADR-002)
 - Type predicates over boolean filters (ADR-003)
@@ -102,6 +104,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Duration:** Estimated 2-3 weeks (analysis: 1 week complete, implementation: 2 weeks remaining)
 
 **Analysis Phase Complete (✅ 7/7 tasks):**
+
 - ✅ Lint Triage (146 issues categorized, type assertions mapped)
 - ✅ pastable Analysis (8 functions → lodash-es + custom utilities)
 - ✅ openapi-types Evaluation (REMOVE - redundant with v4)
@@ -115,35 +118,35 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **⚠️ MANDATORY: ALL tasks MUST follow TDD (tests written BEFORE implementation)**
 
 1. **Dependency Updates** (MUST DO FIRST - Tasks 2.1, 2.2)
-   - openapi3-ts v3 → v4.5.0 (migration checklist ready)
-   - zod v3 → v4.1.12 (update plan documented)
-   - **TDD:** Update/add tests for new type signatures FIRST, confirm failures, then update
-   - **Estimated:** 8-12 hours
+    - openapi3-ts v3 → v4.5.0 (migration checklist ready)
+    - zod v3 → v4.1.12 (update plan documented)
+    - **TDD:** Update/add tests for new type signatures FIRST, confirm failures, then update
+    - **Estimated:** 8-12 hours
 
 2. **Type Assertion Elimination** (EXTRACTION BLOCKER - Task 3.2)
-   - 74 instances across 11 files → 0
-   - Target repo forbids type assertions
-   - File-by-file plan ready
-   - **TDD:** Write type guard tests FIRST, implement guards, replace assertions
-   - **Estimated:** 16-24 hours
+    - 74 instances across 11 files → 0
+    - Target repo forbids type assertions
+    - File-by-file plan ready
+    - **TDD:** Write type guard tests FIRST, implement guards, replace assertions
+    - **Estimated:** 16-24 hours
 
 3. **pastable Removal** (Task 3.1)
-   - 7 files, 8 functions → lodash-es + custom
-   - Detailed replacement plan ready
-   - **TDD:** Write replacement tests FIRST matching pastable behavior, implement, switch
-   - **Estimated:** 6-8 hours
+    - 7 files, 8 functions → lodash-es + custom
+    - Detailed replacement plan ready
+    - **TDD:** Write replacement tests FIRST matching pastable behavior, implement, switch
+    - **Estimated:** 6-8 hours
 
 4. **Dependency Cleanup** (Task 3.3)
-   - Remove: `openapi-types`, `pastable`
-   - Keep: `@zodios/core`, `@apidevtools/swagger-parser`
-   - **TDD:** Verify no broken tests after removal
-   - **Estimated:** 2-4 hours
+    - Remove: `openapi-types`, `pastable`
+    - Keep: `@zodios/core`, `@apidevtools/swagger-parser`
+    - **TDD:** Verify no broken tests after removal
+    - **Estimated:** 2-4 hours
 
 5. **Defer Logic to openapi3-ts v4** (Task 1.8)
-   - Analyze custom code that v4 can replace
-   - After Task 2.1 complete
-   - **TDD:** Tests guide which custom code can be safely replaced
-   - **Estimated:** 3-4 hours
+    - Analyze custom code that v4 can replace
+    - After Task 2.1 complete
+    - **TDD:** Tests guide which custom code can be safely replaced
+    - **Estimated:** 3-4 hours
 
 ---
 
@@ -155,6 +158,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **⚠️ MANDATORY: ALL tasks MUST follow TDD**
 
 **Goals:**
+
 - Add Stryker mutation testing (v9.2.0)
 - Achieve target ESLint compliance (146 → 0 issues)
 - Zero lint issues
@@ -163,6 +167,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - **TDD:** Write tests that expose gaps mutation testing finds, fix code
 
 **Optional (Phase 3 or 4):**
+
 - Evaluate ts-morph emitter architecture (22-32 hours)
 - Replace Handlebars with AST-based generation
 - Plugin API for custom templates
@@ -178,6 +183,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **⚠️ MANDATORY: ALL tasks MUST follow TDD**
 
 **Goals:**
+
 - Final dependency audit (zero issues)
 - Documentation for extraction
 - Integration guide for target repo
@@ -211,6 +217,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ### Extraction Requirements
 
 **Must Have:**
+
 - ✅ Zero TypeScript errors
 - ⚠️ Zero type assertions (74 to fix)
 - ⚠️ Zero lint errors (148 to fix)
@@ -226,6 +233,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ### Critical Dependencies (Keep & Update)
 
 **openapi3-ts v4.5.0** ✅
+
 - **Why:** Core OpenAPI type definitions
 - **Update:** v3 → v4.5.0
 - **Breaking changes:** Documented in OPENAPI3_TS_V4_INVESTIGATION.md
@@ -233,6 +241,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - **Priority:** HIGH - do BEFORE deferring logic
 
 **zod v4.1.12** ✅
+
 - **Why:** Runtime validation library
 - **Update:** v3 → v4.1.12
 - **Breaking changes:** Import paths, API refinements
@@ -240,32 +249,38 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - **Priority:** HIGH - core to our functionality
 
 **@zodios/core v10.9.6** ✅ KEEP
+
 - **Why:** Type definitions used in generated code templates
 - **Status:** Maintenance mode but stable
 - **Decision:** KEEP (11.5M downloads/month, no good alternative)
 - **Analysis:** `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
 
 **@apidevtools/swagger-parser v12.1.0** ✅ KEEP
+
 - **Why:** OpenAPI parsing, validation, bundling
 - **Status:** Actively maintained (2M downloads/week)
 - **Decision:** KEEP (used appropriately in tests and CLI)
 - **Analysis:** `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
 
 **commander v14.0.1** ✅ KEEP
+
 - **Why:** CLI framework, excellent TypeScript support
 - **Status:** Current, actively maintained
 - **Replacement of:** cac (removed in Phase 1)
 
 **tanu v0.2.0** ✅ KEEP
+
 - **Why:** TypeScript AST manipulation
 - **Status:** Keep (specialized, no good alternatives)
 - **Note:** Used in openApiToTypescript.ts
 
 **ts-pattern v5.8.0** ✅ KEEP
+
 - **Why:** Pattern matching utility
 - **Status:** Keep (modern, well-maintained)
 
 **handlebars v4.7.8** ✅ KEEP (Phase 2)
+
 - **Why:** Template engine for code generation
 - **Status:** Stale (last update Aug 2023) but no security issues
 - **Decision Phase 2:** KEEP (not blocking, works fine)
@@ -277,23 +292,25 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ### Dependencies to Remove ⚠️
 
 **pastable v2.2.1** ⚠️ REMOVE
+
 - **Why removing:** Obscure, unmaintained "collection of pastable code"
 - **Usage:** 7 files, 8 functions
 - **Replace with:** lodash-es + custom utilities
 - **Priority:** HIGH
 - **Plan:** `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
 - **Functions:**
-  - `get` → lodash-es (4 usages)
-  - `capitalize` → lodash-es or native (2 usages)
-  - `pick` → lodash-es (1 usage)
-  - `sortBy` → lodash-es (1 usage)
-  - `sortListFromRefArray` → custom utility (2 usages)
-  - `sortObjKeysFromArray` → custom utility (1 usage)
-  - `kebabToCamel`, `snakeToCamel` → custom (simple regex, 1 usage each)
-  - `getSum` → native .reduce() (1 usage)
-  - `ObjectLiteral` type → Record<string, unknown> (1 usage)
+    - `get` → lodash-es (4 usages)
+    - `capitalize` → lodash-es or native (2 usages)
+    - `pick` → lodash-es (1 usage)
+    - `sortBy` → lodash-es (1 usage)
+    - `sortListFromRefArray` → custom utility (2 usages)
+    - `sortObjKeysFromArray` → custom utility (1 usage)
+    - `kebabToCamel`, `snakeToCamel` → custom (simple regex, 1 usage each)
+    - `getSum` → native .reduce() (1 usage)
+    - `ObjectLiteral` type → Record<string, unknown> (1 usage)
 
 **openapi-types v12.1.3** ⚠️ REMOVE
+
 - **Why removing:** Redundant with openapi3-ts v4
 - **Current usage:** Only 1 test file imports it
 - **Replace with:** openapi3-ts v4 types
@@ -309,6 +326,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Risk:** Cannot extract with type assertions  
 **Impact:** Project cannot proceed to target repo  
 **Mitigation:**
+
 - Prioritize elimination above all else
 - Create systematic approach (file by file)
 - Add proper type guards where needed
@@ -319,6 +337,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Risk:** openapi3-ts and zod v4 may have breaking changes  
 **Impact:** Code may not compile, tests may fail  
 **Mitigation:**
+
 - Review changelogs thoroughly
 - Update in controlled manner
 - Test after each dependency update
@@ -329,6 +348,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Risk:** Replacing pastable may introduce bugs  
 **Impact:** Functionality could break  
 **Mitigation:**
+
 - Tests cover all functionality
 - Replace one function at a time
 - Validate with existing test suite
@@ -339,26 +359,28 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ## Success Criteria
 
 ### Phase 2 Complete When:
+
 - [x] ✅ **Analysis Complete (7/7 tasks):**
-  - [x] Lint triage and categorization
-  - [x] pastable usage analysis
-  - [x] openapi-types evaluation (REMOVE)
-  - [x] @zodios/core evaluation (KEEP)
-  - [x] swagger-parser investigation (KEEP)
-  - [x] openapi3-ts v4 investigation
-  - [x] Handlebars evaluation (ts-morph recommended)
+    - [x] Lint triage and categorization
+    - [x] pastable usage analysis
+    - [x] openapi-types evaluation (REMOVE)
+    - [x] @zodios/core evaluation (KEEP)
+    - [x] swagger-parser investigation (KEEP)
+    - [x] openapi3-ts v4 investigation
+    - [x] Handlebars evaluation (ts-morph recommended)
 - [ ] ⏳ **Implementation (5/5 tasks):**
-  - [ ] openapi3-ts updated to v4.5.0
-  - [ ] zod updated to v4.1.12
-  - [ ] All tests passing after updates
-  - [ ] Zero type assertions (74 → 0) - BLOCKER RESOLVED
-  - [ ] pastable removed (replaced with lodash-es + custom)
-  - [ ] openapi-types removed
-  - [ ] Defer logic to openapi3-ts v4 analyzed
-  - [ ] Documentation updated
-  - [ ] All quality gates green
+    - [ ] openapi3-ts updated to v4.5.0
+    - [ ] zod updated to v4.1.12
+    - [ ] All tests passing after updates
+    - [ ] Zero type assertions (74 → 0) - BLOCKER RESOLVED
+    - [ ] pastable removed (replaced with lodash-es + custom)
+    - [ ] openapi-types removed
+    - [ ] Defer logic to openapi3-ts v4 analyzed
+    - [ ] Documentation updated
+    - [ ] All quality gates green
 
 ### Phase 3 Complete When:
+
 - [ ] Stryker installed and configured
 - [ ] Mutation score threshold established
 - [ ] Mutation score meets threshold
@@ -368,6 +390,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - [ ] All quality gates green
 
 ### Ready for Extraction When:
+
 - [ ] All phases complete
 - [ ] Zero TypeScript errors
 - [ ] Zero type assertions
@@ -383,15 +406,18 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ## Timeline
 
 **Phase 2 (Current):** 2-3 weeks
+
 - Week 1: Dependency updates, type assertion analysis
 - Week 2: Type assertion elimination, pastable replacement
 - Week 3: Testing, validation, dependency evaluation
 
 **Phase 3:** 1-2 weeks
+
 - Week 1: Stryker setup, lint fixes
 - Week 2: Final quality improvements
 
 **Phase 4:** 1 week
+
 - Final preparation and documentation
 
 **Total Estimated:** 4-6 weeks to extraction-ready state
@@ -401,14 +427,17 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ## Key Documents
 
 ### Plans (This Directory)
+
 - **This file:** Strategic overview
 - **01-CURRENT-IMPLEMENTATION.md:** Detailed task breakdown with acceptance criteria
 - **archive/:** Previous phase plans (reference only)
 
 ### Living Context
+
 - **.agent/context/context.md:** Single source of truth for current state
 
 ### Analysis (✅ Phase 2 Investigation Complete)
+
 - **LINT_TRIAGE_COMPLETE.md:** 146 issues categorized, type assertions mapped by file
 - **PASTABLE_REPLACEMENT_PLAN.md:** 8 functions → lodash-es + custom utilities
 - **OPENAPI_TYPES_EVALUATION.md:** REMOVE (redundant with openapi3-ts v4)
@@ -418,6 +447,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - **HANDLEBARS_EVALUATION.md:** KEEP Phase 2, ts-morph emitter recommended
 
 ### Reference
+
 - **.agent/RULES.md:** Coding standards (MUST follow)
 - **.agent/adr/:** Architecture Decision Records (12 ADRs)
 - **.agent/reference/reference.eslint.config.ts:** Target repo standards
@@ -429,6 +459,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ## Notes
 
 **Work Philosophy:**
+
 - Document everything
 - Test everything
 - No shortcuts on quality
@@ -436,6 +467,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - Type safety is paramount
 
 **For Fresh Context:**
+
 1. Read `.agent/context/context.md` (current state)
 2. Read this file (strategic direction)
 3. Read `01-CURRENT-IMPLEMENTATION.md` (what to do next)
@@ -445,5 +477,3 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ---
 
 **This plan will evolve as work progresses. Update when strategic decisions are made.**
-
-

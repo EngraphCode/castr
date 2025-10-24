@@ -1,8 +1,8 @@
-# Task 1.9: Oak-Optimized Enhancements
+# Task 1.9: Engraph-Optimized Enhancements
 
 **Date:** October 24, 2025  
 **Status:** Planning Complete, Ready for Implementation  
-**Priority:** MEDIUM-HIGH (Critical for Oak Curriculum SDK)
+**Priority:** MEDIUM-HIGH (Critical for Engraph SDK)
 
 ---
 
@@ -16,9 +16,9 @@
 
 ## Executive Summary
 
-Task 1.9 creates a new `schemas-with-metadata` template specifically optimized for the Oak Curriculum SDK use case, while remaining useful for all users who need validation without an HTTP client.
+Task 1.9 creates a new `schemas-with-metadata` template specifically optimized for the Engraph SDK use case, while remaining useful for all users who need validation without an HTTP client.
 
-**Key Value Proposition for Oak:**
+**Key Value Proposition for Engraph:**
 
 - **Eliminates 60+ lines of fragile string manipulation** from `zodgen-core.ts`
 - **Removes type assertion** (line 27-28 in zodgen-core.ts)
@@ -27,9 +27,9 @@ Task 1.9 creates a new `schemas-with-metadata` template specifically optimized f
 
 ---
 
-## Current Oak Pain Points
+## Current Engraph Pain Points
 
-### From `.agent/reference/oak_usage/zodgen-core.ts`
+### From `.agent/reference/engraph_usage/zodgen-core.ts`
 
 **Problems:**
 
@@ -55,20 +55,20 @@ Task 1.9 creates a new `schemas-with-metadata` template specifically optimized f
 
 3. **Unwanted Zodios Client:**
     - Generates `export const api = new Zodios(endpoints);`
-    - Oak doesn't want the HTTP client, only schemas and metadata
+    - Engraph doesn't want the HTTP client, only schemas and metadata
 
 4. **Manual Schema Registry Building:**
-    - Oak implements custom `sanitizeSchemaKeys` function
-    - Oak implements custom `buildCurriculumSchemas` function
-    - Oak implements custom `renameInlineSchema` logic
+    - Engraph implements custom `sanitizeSchemaKeys` function
+    - Engraph implements custom `buildCurriculumSchemas` function
+    - Engraph implements custom `renameInlineSchema` logic
     - All of this could be provided by the library
 
-### From `.agent/reference/oak_usage/typegen-core.ts`
+### From `.agent/reference/engraph_usage/typegen-core.ts`
 
 **What Works Well:**
 
 ```typescript
-// Oak correctly uses the programmatic API
+// Engraph correctly uses the programmatic API
 import { getZodiosEndpointDefinitionList } from "openapi-zod-client";
 
 const endpointContext = getZodiosEndpointDefinitionList(sdkSchemaWithPaths, {
@@ -320,7 +320,7 @@ export const UserSchema = z.object({
 
 ---
 
-## Oak Workflow Transformation
+## Engraph Workflow Transformation
 
 ### Before (Current - zodgen-core.ts)
 
@@ -372,7 +372,7 @@ const output = await generateZodClientFromOpenAPI({
     },
 });
 
-// Minimal custom logic (5-10 lines) for Oak-specific registry:
+// Minimal custom logic (5-10 lines) for Engraph-specific registry:
 const withCustomRegistry = output.replace(
     "export const curriculumSchemas = buildSchemaRegistry(schemas);",
     `export const curriculumSchemas = buildSchemaRegistry(schemas, {
@@ -397,10 +397,10 @@ writeFileSync(outFile, withCustomRegistry);
 
 ## CLI Usage
 
-### For Oak Curriculum SDK
+### For Engraph SDK
 
 ```bash
-# Generate with full Oak features
+# Generate with full Engraph features
 openapi-zod-client ./api-schema.json \
   -o ./curriculumZodSchemas.ts \
   --template schemas-with-metadata \
@@ -498,10 +498,10 @@ const error = validateResponse(endpoint, 400, errorResponse);
 
 ### 4. Schema Registry Builder (Optional)
 
-**Replaces Oak's custom implementation:**
+**Replaces Engraph's custom implementation:**
 
 ```typescript
-// Oak's current custom function (lines 107-110)
+// Engraph's current custom function (lines 107-110)
 function sanitizeSchemaKeys(
     schemas: CurriculumSchemaCollection,
     options?: { readonly rename?: (original: string) => string }
@@ -550,7 +550,7 @@ mcpTools.forEach((tool) => {
 
 ## Benefits Summary
 
-### For Oak Curriculum SDK
+### For Engraph SDK
 
 | Metric                  | Before               | After           | Improvement      |
 | ----------------------- | -------------------- | --------------- | ---------------- |
@@ -578,12 +578,12 @@ mcpTools.forEach((tool) => {
 | Phase                         | Duration    | Description                                                                |
 | ----------------------------- | ----------- | -------------------------------------------------------------------------- |
 | **Design & Documentation**    | 0.5 hours   | Document current templates, design new output                              |
-| **Write Failing Tests (TDD)** | 1.5-2 hours | 8 comprehensive tests for Oak features                                     |
+| **Write Failing Tests (TDD)** | 1.5-2 hours | 8 comprehensive tests for Engraph features                                     |
 | **Implement Template**        | 2-3 hours   | Create schemas-with-metadata.hbs                                           |
 | **Validation Helpers**        | 1-2 hours   | validateRequest/validateResponse functions                                 |
 | **Schema Registry**           | 0.5-1 hour  | buildSchemaRegistry helper                                                 |
 | **CLI Integration**           | 0.5-1 hour  | Add flags (--no-client, --with-validation-helpers, --with-schema-registry) |
-| **Documentation**             | 1-2 hours   | README, examples, Oak migration guide                                      |
+| **Documentation**             | 1-2 hours   | README, examples, Engraph migration guide                                      |
 
 ---
 
@@ -597,13 +597,13 @@ mcpTools.forEach((tool) => {
 3. **Begin TDD implementation:**
     - Write failing tests first
     - Implement template to make tests pass
-    - Verify Oak use case works
+    - Verify Engraph use case works
 
 ---
 
 ## References
 
-- **Oak Usage Files:** `.agent/reference/oak_usage/`
+- **Engraph Usage Files:** `.agent/reference/engraph_usage/`
     - `zodgen-core.ts` - Current heavy post-processing approach
     - `typegen-core.ts` - Programmatic API usage (works well)
 - **Task Plan:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md` (Task 1.9)
@@ -611,4 +611,4 @@ mcpTools.forEach((tool) => {
 
 ---
 
-**Recommendation:** **Implement Task 1.9 in Phase 2** alongside other dependency work. It's not blocking extraction but provides massive value for Oak and general users.
+**Recommendation:** **Implement Task 1.9 in Phase 2** alongside other dependency work. It's not blocking extraction but provides massive value for Engraph and general users.
