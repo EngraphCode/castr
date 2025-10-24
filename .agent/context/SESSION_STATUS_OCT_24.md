@@ -11,6 +11,7 @@
 **Problem:** CJS/ESM interop issues with `ajv-draft-04` and `ajv-formats` default exports
 
 **Solution:**
+
 ```typescript
 import * as Ajv04Module from "ajv-draft-04";
 import * as addFormatsModule from "ajv-formats";
@@ -20,6 +21,7 @@ const addFormats = (addFormatsModule as any).default || addFormatsModule;
 ```
 
 **Result:**
+
 - ✅ All 297 tests passing
 - ✅ Zero TypeScript errors
 - ✅ Full type safety restored
@@ -33,26 +35,31 @@ const addFormats = (addFormatsModule as any).default || addFormatsModule;
 **Architecture Decision Records documenting all Phase 1 decisions:**
 
 #### Core Philosophy
+
 - **ADR-001:** Fail Fast on Spec Violations
 - **ADR-002:** Defer Types to openapi3-ts
 - **ADR-003:** Type Predicates Over Boolean Filters
 
 #### Code Quality & Testing
+
 - **ADR-004:** Pure Functions and Single Responsibility
 - **ADR-005:** Enum Complexity Calculation
 - **ADR-006:** No Unused Variables Policy
 
 #### Tooling & Build
+
 - **ADR-007:** ESM with NodeNext Module Resolution
 - **ADR-008:** Replace cac with commander
 - **ADR-009:** Replace Preconstruct with tsup
 - **ADR-010:** Use Turborepo for Monorepo Orchestration
 
 #### Validation & Infrastructure
+
 - **ADR-011:** AJV for Runtime OpenAPI Validation
 - **ADR-012:** Remove Playground and Examples Workspaces
 
 **Each ADR includes:**
+
 - Context and problem statement
 - Decision rationale with examples
 - Consequences (positive/negative)
@@ -101,12 +108,14 @@ const addFormats = (addFormatsModule as any).default || addFormatsModule;
 **Definition of Done:** `pnpm format && pnpm build && pnpm type-check && pnpm test -- --run` ✅
 
 ### Test Coverage
+
 - **297 tests** all passing
 - Integration tests cover all major functionality
 - Unit tests for all pure helper functions
 - Compliance tests against official OpenAPI schemas
 
 ### Code Quality Achievements (Phase 1)
+
 - ✅ **Cognitive complexity:** 0 violations (was 4 files over limit)
 - ✅ **Critical type safety:** 0 unsafe operations (was 10)
 - ✅ **TypeScript errors:** 0 (was 151)
@@ -122,6 +131,7 @@ const addFormats = (addFormatsModule as any).default || addFormatsModule;
 Target repo requires `assertionStyle: "never"` - **must fix before extraction**
 
 ### Investigation Tasks
+
 1. **Lint triage:** Categorize all 148 issues, document priorities
 2. **pastable replacement:** Analyze 9 files, create replacement tasks
 3. **openapi3-ts deferral:** What logic can we defer to the library?
@@ -129,6 +139,7 @@ Target repo requires `assertionStyle: "never"` - **must fix before extraction**
 5. **Update plan:** openapi3-ts v3→v4, zod v3→v4 (do BEFORE deferring)
 
 ### Enhancement Tasks
+
 6. **Refine backlog:** Comprehensive task breakdown with acceptance criteria
 7. **Add Stryker:** Mutation testing for quality validation
 8. **Target ESLint analysis:** Gap analysis vs target repo standards
@@ -138,6 +149,7 @@ Target repo requires `assertionStyle: "never"` - **must fix before extraction**
 ## 📈 **Progress Summary**
 
 ### Phase 1: Developer Tooling (COMPLETE ✅)
+
 - Modernized all tooling to latest versions
 - Migrated to pure ESM with NodeNext resolution
 - Eliminated all cognitive complexity violations
@@ -145,12 +157,14 @@ Target repo requires `assertionStyle: "never"` - **must fix before extraction**
 - Established comprehensive testing foundation
 
 ### Phase 1c: Type-Check Compliance (COMPLETE ✅)
+
 - Resolved 151 TypeScript errors
 - Achieved full type safety
 - Implemented proper type guards
 - Cleaned up helper function types
 
 ### Current Phase: Planning & Investigation
+
 - Creating comprehensive task breakdown
 - Documenting all architectural decisions
 - Preparing for dependency updates
@@ -163,6 +177,7 @@ Target repo requires `assertionStyle: "never"` - **must fix before extraction**
 See `.agent/TODO.md` for detailed breakdown (10 tasks).
 
 **Top Priority:**
+
 1. Complete lint triage
 2. Analyze pastable usage
 3. Deep dive into openapi3-ts capabilities
@@ -200,5 +215,3 @@ See `.agent/TODO.md` for detailed breakdown (10 tasks).
 - ✅ Comprehensive documentation (12 ADRs, ~2900 lines)
 - ✅ Clear path forward with prioritized tasks
 - ✅ Definition of Done established and passing
-
-

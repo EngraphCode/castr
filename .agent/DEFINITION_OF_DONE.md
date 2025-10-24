@@ -84,6 +84,7 @@ pnpm audit         # 0 vulnerabilities
 ## Current Exceptions
 
 **Lint warnings** are currently acceptable (148 issues):
+
 - 74 type assertion warnings (work in progress)
 - Various other non-critical warnings
 
@@ -94,6 +95,7 @@ These will be resolved as part of the planned work.
 ## Verification
 
 Run the Definition of Done check before:
+
 - Committing significant work
 - Ending a work session
 - Creating a PR (future)
@@ -112,8 +114,8 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run && echo "✅ 
 ```
 
 Then:
+
 ```bash
 chmod +x check-done.sh
 ./check-done.sh
 ```
-

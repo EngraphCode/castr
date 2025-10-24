@@ -21,5 +21,6 @@
         "isolatedModules": true, // https://preconstruct.tools/guides/building-typescript-packages
         "noEmit": true
     },
-    "display": "Strictest"
+    "display": "Strictest",
+    "exclude": [".agent"]
 }
