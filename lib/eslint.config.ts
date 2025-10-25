@@ -38,7 +38,7 @@ export default defineConfig(
         rules: {
             // Consistency rules
             "@typescript-eslint/consistent-type-assertions": [
-                "warn",
+                "error",
                 {
                     assertionStyle: "never",
                 },

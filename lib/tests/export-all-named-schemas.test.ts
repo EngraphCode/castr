@@ -131,16 +131,11 @@ test("export-all-named-schemas", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "delete",
+                  "method": "post",
                   "parameters": [
                       {
-                          "name": "sameSchemaDifferentName",
-                          "schema": "sameSchemaDifferentName",
-                          "type": "Query",
-                      },
-                      {
-                          "name": "sameSchemaSameName",
-                          "schema": "sameSchemaSameName",
+                          "name": "schemaNameAlreadyUsed",
+                          "schema": "schemaNameAlreadyUsed__2",
                           "type": "Query",
                       },
                   ],
@@ -151,11 +146,16 @@ test("export-all-named-schemas", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "post",
+                  "method": "delete",
                   "parameters": [
                       {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed__2",
+                          "name": "sameSchemaDifferentName",
+                          "schema": "sameSchemaDifferentName",
+                          "type": "Query",
+                      },
+                      {
+                          "name": "sameSchemaSameName",
+                          "schema": "sameSchemaSameName",
                           "type": "Query",
                       },
                   ],
@@ -191,14 +191,14 @@ test("export-all-named-schemas", async () => {
 
       const sameSchemaSameName = z.enum(["xxx", "yyy", "zzz"]).optional();
       const schemaNameAlreadyUsed = z.enum(["aaa", "bbb", "ccc"]).optional();
-      const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
       const schemaNameAlreadyUsed__2 = z.enum(["ggg", "hhh", "iii"]).optional();
+      const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
 
       export const schemas = {
         sameSchemaSameName,
         schemaNameAlreadyUsed,
-        sameSchemaDifferentName,
         schemaNameAlreadyUsed__2,
+        sameSchemaDifferentName,
       };
 
       const endpoints = makeApi([
@@ -229,6 +229,19 @@ test("export-all-named-schemas", async () => {
           response: z.string(),
         },
         {
+          method: "post",
+          path: "/export-all-named-schemas",
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "schemaNameAlreadyUsed",
+              type: "Query",
+              schema: schemaNameAlreadyUsed__2,
+            },
+          ],
+          response: z.string(),
+        },
+        {
           method: "delete",
           path: "/export-all-named-schemas",
           requestFormat: "json",
@@ -242,19 +255,6 @@ test("export-all-named-schemas", async () => {
               name: "sameSchemaSameName",
               type: "Query",
               schema: sameSchemaSameName,
-            },
-          ],
-          response: z.string(),
-        },
-        {
-          method: "post",
-          path: "/export-all-named-schemas",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "schemaNameAlreadyUsed",
-              type: "Query",
-              schema: schemaNameAlreadyUsed__2,
             },
           ],
           response: z.string(),

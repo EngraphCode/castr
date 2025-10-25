@@ -2,7 +2,8 @@ import path from "node:path";
 import fs from "node:fs/promises";
 
 import type { OpenAPIObject } from "openapi3-ts/oas30";
-import { capitalize, pick } from "pastable/server";
+import { pick } from "lodash-es";
+import { capitalize } from "./utils.js";
 import type { Options } from "prettier";
 import { match } from "ts-pattern";
 

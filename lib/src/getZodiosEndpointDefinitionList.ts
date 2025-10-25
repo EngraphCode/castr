@@ -1,7 +1,7 @@
 import type { ZodiosEndpointDefinition } from "@zodios/core";
 import type { OpenAPIObject, OperationObject, PathItemObject } from "openapi3-ts/oas30";
 import { isReferenceObject } from "openapi3-ts/oas30";
-import type { ObjectLiteral } from "pastable";
+import { pick } from "lodash-es";
 import { match, P } from "ts-pattern";
 
 import type { CodeMeta, ConversionTypeContext } from "./CodeMeta.js";
@@ -177,15 +177,3 @@ export type EndpointDefinitionWithRefs = Omit<
     errors: Array<Omit<Required<ZodiosEndpointDefinition<unknown>>["errors"][number], "schema"> & { schema: string }>;
     responses?: Array<{ statusCode: string; schema: string; description?: string }>;
 };
-
-/** Pick given properties in object */
-function pick<T extends ObjectLiteral, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
-    const result = {} as Pick<T, K>;
-
-    Object.keys(obj).forEach((key) => {
-        if (!paths.includes(key as K)) return;
-        result[key as K] = obj[key as K];
-    });
-
-    return result;
-}

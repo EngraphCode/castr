@@ -1,9 +1,10 @@
 import type { OpenAPIObject, OperationObject, PathItemObject, ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
-import { sortBy, sortListFromRefArray, sortObjKeysFromArray } from "pastable/server";
+import { sortBy } from "lodash-es";
 import { ts } from "tanu";
 import { match } from "ts-pattern";
 
 import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";
+import { sortSchemasByDependencyOrder, sortSchemaNamesByDependencyOrder } from "./utils/schema-sorting.js";
 import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
 import { getZodiosEndpointDefinitionList } from "./getZodiosEndpointDefinitionList.js";
 import type { TsConversionContext } from "./openApiToTypescript.js";
@@ -121,7 +122,7 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
         }
         return resolved.ref;
     });
-    data.schemas = sortObjKeysFromArray(data.schemas, schemaOrderedByDependencies);
+    data.schemas = sortSchemasByDependencyOrder(data.schemas, schemaOrderedByDependencies);
 
     const groupStrategy = options?.groupStrategy ?? "none";
     const dependenciesByGroupName = new Map<string, Set<string>>();
@@ -260,11 +261,11 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
                 }
             });
 
-            group.schemas = sortObjKeysFromArray(groupSchemas, getPureSchemaNames(schemaOrderedByDependencies));
+            group.schemas = sortSchemasByDependencyOrder(groupSchemas, getPureSchemaNames(schemaOrderedByDependencies));
             group.types = groupTypes;
         });
         data.commonSchemaNames = new Set(
-            sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
+            sortSchemaNamesByDependencyOrder([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
         );
     }
 
@@ -292,7 +293,7 @@ const getOriginalPathWithBrackets = (path: string) => path.replaceAll(originalPa
 // Example full schema name is like: #/components/schemas/Category.
 // We only want to get the "Category".
 //
-// This is because when using `sortObjKeysFromArray`, the string array needs to be exactly the same
+// This is because when using `sortSchemasByDependencyOrder`, the string array needs to be exactly the same
 // like the object keys. Otherwise, the object keys won't be re-ordered.
 const getPureSchemaNames = (fullSchemaNames: string[]) =>
     fullSchemaNames.map((name) => {

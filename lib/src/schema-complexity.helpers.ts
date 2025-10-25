@@ -4,7 +4,6 @@
  */
 
 import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
-import { getSum } from "pastable";
 
 type ComplexityFn = (args: { current: number; schema: SchemaObject | ReferenceObject | undefined }) => number;
 type CompositeType = "oneOf" | "anyOf" | "allOf" | "enum" | "array" | "empty-object" | "object" | "record";
@@ -27,7 +26,7 @@ export function calculateCompositionComplexity(
     return (
         current +
         complexityByComposite(compositeType) +
-        getSum(schemas.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
+        schemas.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((sum, n) => sum + n, 0)
     );
 }
 
@@ -57,14 +56,14 @@ export function calculateTypeArrayComplexity(
     return (
         current +
         complexityByComposite("oneOf") +
-        getSum(
-            types.map((prop) =>
+        types
+            .map((prop) =>
                 getSchemaComplexity({
                     current: 0,
                     schema: { ...schema, type: prop as SchemaObject["type"] } as SchemaObject,
                 })
             )
-        )
+            .reduce((sum, n) => sum + n, 0)
     );
 }
 
@@ -82,6 +81,6 @@ export function calculatePropertiesComplexity(
     return (
         current +
         complexityByComposite("object") +
-        getSum(props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })))
+        props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((sum, n) => sum + n, 0)
     );
 }

@@ -302,9 +302,9 @@ test("function returns something", () => {
 
 ---
 
-#### 7. **Minimize use of type casting (`as`). `as const` is fine.**
+#### 7. **NEVER use type casting (`as`). `as const` is fine.**
 
-**Why:** Type casting bypasses type checking, hiding potential errors.
+**Why:** Type casting bypasses type checking, hiding potential errors. Type escape hatches like `as`, `any`, `!`, etc. are **FORBIDDEN** (see Type System Discipline section for complete rules).
 
 **Good:**
 
@@ -331,11 +331,11 @@ const value = something as any as SpecificType; // Very dangerous!
 
 // ❌ Narrowing from union type (with guard)
 if (isReferenceObject(obj)) {
-    const ref = obj as ReferenceObject; // Needless, if the typeguard uses the `is` keyword then the cast is unecessary.
+    const ref = obj as ReferenceObject; // Needless, if the typeguard uses the `is` keyword then the cast is unnecessary.
 }
 ```
 
-**When casting is acceptable:**
+**When casting is acceptable (RARE):**
 
 ```typescript
 // ✅ Testing type guards
@@ -344,14 +344,22 @@ expect(isSuccess(result)).toBe(true);
 
 // ✅ as const for literal types
 const config = { readonly: true } as const;
+
+// ✅ Narrowing from unknown AFTER validation
+const data: unknown = await response.json();
+const validated = UserSchema.parse(data);
+return validated as User; // Safe - already validated
 ```
 
 **Better alternatives:**
 
-- Use type predicates (type guards) (`isReferenceObject`, etc.) that use the `is` keyword.
+- Use type predicates (type guards) that use the `is` keyword
 - Proper type annotations
 - Generic type parameters
 - Discriminated unions
+- Runtime validation with type inference
+
+**See "Type System Discipline" section below for comprehensive type safety rules.**
 
 ---
 
@@ -404,6 +412,8 @@ function processSchema(schema: SchemaObject): string {
 
 #### 4. **Type safety without `any`**
 
+**The `any` type is FORBIDDEN.** It disables all type checking and destroys type information.
+
 ```typescript
 // ✅ Good - proper typing
 function processValue<T>(value: T, transform: (v: T) => T): T {
@@ -416,11 +426,20 @@ function processValue(value: any, transform: any): any {
 }
 ```
 
-**When `any` is acceptable:**
+**When `any` is acceptable (RARE):**
 
-- Interacting with untyped libraries
-- Extremely dynamic situations
-- Always document why with comment
+- Interacting with untyped legacy libraries (prefer `unknown` and validate)
+- Extremely dynamic situations where no reasonable type exists
+- Always document why with detailed comment explaining alternatives considered
+- Must have a plan to remove it
+
+**Better alternatives:**
+
+- Use `unknown` and validate at runtime
+- Use generic type parameters
+- Use union types
+- Use discriminated unions
+- Use type predicates for validation
 
 #### 5. **Defer Type Definitions to Source Libraries**
 
@@ -583,6 +602,263 @@ function parseOpenAPI(input: string): OpenAPIObject | null {
     }
 }
 ```
+
+---
+
+## Type System Discipline
+
+### Core Principle: **Preserve Maximum Type Information**
+
+TypeScript's power comes from its type system. Our goal is to preserve type information through the entire pipeline, from data sources to usage. Every type widening or escape hatch permanently destroys information that cannot be recovered.
+
+### 1. **NEVER use type system escape hatches**
+
+The following constructs ALL disable the type system and are **FORBIDDEN**:
+
+- ❌ `as` (except `as const`)
+- ❌ `any`
+- ❌ `!` (non-null assertion)
+- ❌ `Record<string, unknown>`
+- ❌ `{ [key: string]: unknown }`
+- ❌ `Object.*` methods (Object.keys, Object.entries, etc.)
+- ❌ `Reflect.*` methods
+
+**Why forbidden:**
+Each of these tells TypeScript "trust me, I know better" and disables type checking. They hide bugs that the compiler could catch.
+
+**Good:**
+
+```typescript
+// Use proper types
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+    return obj[key]; // Type-safe property access
+}
+
+// Use discriminated unions
+type Result<T> = { success: true; value: T } | { success: false; error: Error };
+
+function process(result: Result<User>): void {
+    if (result.success) {
+        console.log(result.value.name); // TypeScript knows value exists
+    }
+}
+```
+
+**Bad:**
+
+```typescript
+// ❌ Type assertions bypass safety
+const user = data as User;
+
+// ❌ Non-null assertion hides potential errors
+const name = user.name!;
+
+// ❌ Unsafe property access
+const value = (obj as any).someProperty;
+
+// ❌ Destroys type information
+const config: Record<string, unknown> = getConfig();
+
+// ❌ Loses all type information
+const keys = Object.keys(obj); // Returns string[], not keyof typeof obj
+```
+
+**Exceptions:**
+
+- ✅ `as const` for literal types (preserves information)
+- ✅ `as` for narrowing from `unknown` AFTER runtime validation
+- ✅ `as` in tests when constructing mock data (with comment explaining why)
+
+### 2. **NEVER widen types**
+
+Type information flows from narrow to wide. Once widened, it cannot be recovered.
+
+**The Rule:** If you have a literal type, keep it. Don't accept/assign to broader types like `string` or `number`.
+
+**Good - Preserves literal types:**
+
+```typescript
+// Literal type preserved with as const
+const API_ENDPOINTS = {
+    users: "/api/users",
+    posts: "/api/posts",
+} as const;
+
+type Endpoint = (typeof API_ENDPOINTS)[keyof typeof API_ENDPOINTS];
+// Type: '/api/users' | '/api/posts' (specific literals)
+
+// Function preserves literal types
+function fetchFromEndpoint<T extends Endpoint>(endpoint: T): Promise<Response> {
+    return fetch(endpoint); // TypeScript knows exact endpoint
+}
+
+// Usage preserves literals
+fetchFromEndpoint(API_ENDPOINTS.users); // Type knows it's '/api/users'
+```
+
+**Bad - Widens types (destroys information):**
+
+```typescript
+// ❌ Widens to string - loses literal type
+const API_ENDPOINTS = {
+    users: "/api/users", // Type: string (not '/api/users')
+    posts: "/api/posts", // Type: string (not '/api/posts')
+};
+
+// ❌ Accepts any string - loses precision
+function fetchFromEndpoint(endpoint: string): Promise<Response> {
+    return fetch(endpoint); // TypeScript can't help with typos
+}
+
+// ❌ Type information destroyed
+fetchFromEndpoint("/api/usres"); // Typo not caught! ❌
+```
+
+**More examples:**
+
+```typescript
+// ✅ Good - preserves union type
+function handleMethod<M extends "GET" | "POST">(method: M): void {
+    // TypeScript knows exact method
+}
+
+// ❌ Bad - widens to string
+function handleMethod(method: string): void {
+    // Lost information about valid methods
+}
+
+// ✅ Good - preserves literal numbers
+const HTTP_STATUS = {
+    OK: 200,
+    NOT_FOUND: 404,
+} as const;
+type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
+// Type: 200 | 404
+
+// ❌ Bad - widens to number
+const HTTP_STATUS = {
+    OK: 200, // Type: number
+    NOT_FOUND: 404, // Type: number
+};
+```
+
+**Critical insight:** Every `: string` or `: number` parameter destroys type information irreversibly. Prefer generic constraints or literal unions.
+
+### 3. **Single source of truth for types**
+
+Define each type ONCE and import it consistently. Type duplication leads to drift and inconsistency.
+
+**Good:**
+
+```typescript
+// types.ts - Single definition
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
+// api.ts - Import and use
+import type { User } from "./types.js";
+export function getUser(id: string): Promise<User> {
+    /* ... */
+}
+
+// ui.ts - Import and use
+import type { User } from "./types.js";
+export function UserProfile({ user }: { user: User }) {
+    /* ... */
+}
+```
+
+**Bad:**
+
+```typescript
+// ❌ Duplicated type definitions
+// api.ts
+interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
+// ui.ts
+interface User {
+    id: string;
+    name: string;
+    email: string;
+} // Drift risk!
+```
+
+### 4. **Defer to library types**
+
+See "Defer Type Definitions to Source Libraries" in Code Quality Standards section above. Never redefine types that libraries already provide.
+
+### 5. **Validate external boundaries**
+
+Data from external sources (network, files, user input) must be validated and parsed. The boundary between external (untrusted) and internal (type-safe) code must be explicit.
+
+**The boundary:** Internal code is type-safe. External data is `unknown` until validated.
+
+**Good:**
+
+```typescript
+import { z } from "zod";
+
+// Define schema for external data
+const UserSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string().email(),
+});
+
+type User = z.infer<typeof UserSchema>;
+
+// Validate at boundary
+async function fetchUser(id: string): Promise<User> {
+    const response = await fetch(`/api/users/${id}`);
+    const data: unknown = await response.json(); // unknown until validated
+
+    // Parse and validate - throws on invalid data
+    return UserSchema.parse(data); // Now type-safe!
+}
+
+// Internal code works with validated types
+function processUser(user: User): void {
+    console.log(user.email.toLowerCase()); // Type-safe!
+}
+```
+
+**Bad:**
+
+```typescript
+// ❌ Trusts external data without validation
+async function fetchUser(id: string): Promise<User> {
+    const response = await fetch(`/api/users/${id}`);
+    const data = await response.json();
+    return data as User; // DANGEROUS! No validation!
+}
+
+// ❌ Runtime errors waiting to happen
+function processUser(user: User): void {
+    console.log(user.email.toLowerCase()); // Crashes if email is undefined
+}
+```
+
+**Validation locations:**
+
+- ✅ API responses (network boundary)
+- ✅ File reads (filesystem boundary)
+- ✅ User input (UI boundary)
+- ✅ Environment variables (system boundary)
+- ✅ Database queries (data boundary)
+- ✅ CLI arguments (external input boundary)
+
+**Don't validate:**
+
+- ❌ Internal function calls (types already guaranteed)
+- ❌ Data already validated upstream
+- ❌ Type-safe transformations
 
 ---
 
@@ -1241,22 +1517,30 @@ console.log(`Took ${performance.now() - start}ms`);
 
 **Key Takeaways:**
 
-1. ✅ Test behavior, not implementation
-2. ✅ Tests prove functionality works
-3. ✅ Preserve type information
-4. ✅ Minimize type casting
-5. ✅ No filesystem/network I/O in tests
-6. ✅ Pure functions when possible
-7. ✅ Explicit over implicit
-8. ✅ Type safety without `any`
-9. ✅ Immutable by default
-10. ✅ Clear error handling
+1. ✅ **TDD is mandatory** - Write failing tests FIRST, always
+2. ✅ **Test behavior, not implementation** - Tests should survive refactoring
+3. ✅ **NEVER use type escape hatches** - No `as`, `any`, `!`, `Record<string, unknown>`, `Object.*`, `Reflect.*`
+4. ✅ **NEVER widen types** - Preserve literal types, avoid `: string` or `: number` parameters
+5. ✅ **Single source of truth** - Define types once, import consistently
+6. ✅ **Validate external boundaries** - Parse/validate data from network, files, user input
+7. ✅ **Defer to library types** - Use library types directly, don't redefine
+8. ✅ **No filesystem/network I/O in tests** - Mock all I/O operations
+9. ✅ **Pure functions when possible** - Same input → same output
+10. ✅ **Explicit over implicit** - No hidden dependencies
+11. ✅ **Immutable by default** - Return new values, don't mutate
+12. ✅ **Clear error handling** - Explicit Result types, never swallow errors
+13. ✅ **Comprehensive TSDoc** - All public APIs documented with examples
+14. ✅ **No unused variables** - Never use underscore prefix to hide them
 
 **When in doubt:**
 
 - Ask: "Does this test prove the code works?"
 - Ask: "Will this survive refactoring?"
-- Ask: "Is this as type-safe as possible?"
+- Ask: "Am I preserving maximum type information?"
+- Ask: "Am I using type escape hatches that bypass safety?"
+- Ask: "Is this type widening destroying information?"
+- Ask: "Should I validate this external data?"
+- Ask: "Can I use a library type instead of defining my own?"
 - Ask: "Is this as simple as it can be?"
 
 ---

@@ -126,7 +126,7 @@ test("schema-name-already-used", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "delete",
+                  "method": "post",
                   "parameters": [
                       {
                           "name": "schemaNameAlreadyUsed",
@@ -141,7 +141,7 @@ test("schema-name-already-used", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "post",
+                  "method": "delete",
                   "parameters": [
                       {
                           "name": "schemaNameAlreadyUsed",
@@ -162,8 +162,8 @@ test("schema-name-already-used", async () => {
           "schemas": {
               "schemaNameAlreadyUsed": "z.enum(["xxx", "yyy", "zzz"]).optional()",
               "schemaNameAlreadyUsed__2": "z.enum(["aaa", "bbb", "ccc"]).optional()",
-              "schemaNameAlreadyUsed__3": "z.enum(["ddd", "eee", "fff"]).optional()",
-              "schemaNameAlreadyUsed__4": "z.enum(["ggg", "hhh", "iii"]).optional()",
+              "schemaNameAlreadyUsed__3": "z.enum(["ggg", "hhh", "iii"]).optional()",
+              "schemaNameAlreadyUsed__4": "z.enum(["ddd", "eee", "fff"]).optional()",
           },
           "types": {},
       }
@@ -181,8 +181,8 @@ test("schema-name-already-used", async () => {
 
       const schemaNameAlreadyUsed = z.enum(["xxx", "yyy", "zzz"]).optional();
       const schemaNameAlreadyUsed__2 = z.enum(["aaa", "bbb", "ccc"]).optional();
-      const schemaNameAlreadyUsed__3 = z.enum(["ddd", "eee", "fff"]).optional();
-      const schemaNameAlreadyUsed__4 = z.enum(["ggg", "hhh", "iii"]).optional();
+      const schemaNameAlreadyUsed__3 = z.enum(["ggg", "hhh", "iii"]).optional();
+      const schemaNameAlreadyUsed__4 = z.enum(["ddd", "eee", "fff"]).optional();
 
       export const schemas = {
         schemaNameAlreadyUsed,
@@ -219,7 +219,7 @@ test("schema-name-already-used", async () => {
           response: z.string(),
         },
         {
-          method: "delete",
+          method: "post",
           path: "/schema-name-already-used",
           requestFormat: "json",
           parameters: [
@@ -232,7 +232,7 @@ test("schema-name-already-used", async () => {
           response: z.string(),
         },
         {
-          method: "post",
+          method: "delete",
           path: "/schema-name-already-used",
           requestFormat: "json",
           parameters: [

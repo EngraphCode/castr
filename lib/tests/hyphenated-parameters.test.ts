@@ -52,11 +52,11 @@ test("common-parameters", async () => {
       const endpoints = makeApi([
         {
           method: "post",
-          path: "/pet/:owner_name",
+          path: "/pet/:ownerName",
           requestFormat: "json",
           parameters: [
             {
-              name: "owner_name",
+              name: "ownerName",
               type: "Path",
               schema: z.string(),
             },
@@ -65,11 +65,11 @@ test("common-parameters", async () => {
         },
         {
           method: "post",
-          path: "/pet/:owner_nameId",
+          path: "/pet/:ownerNameId",
           requestFormat: "json",
           parameters: [
             {
-              name: "owner_nameId",
+              name: "ownerNameId",
               type: "Path",
               schema: z.string(),
             },

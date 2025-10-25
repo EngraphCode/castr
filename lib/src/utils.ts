@@ -1,6 +1,17 @@
 import type { SchemaObject } from "openapi3-ts/oas30";
-import { capitalize, kebabToCamel, snakeToCamel } from "pastable/server";
+import { camelCase } from "lodash-es";
 import { match, P } from "ts-pattern";
+
+/**
+ * Capitalizes the first letter of a string, preserving the rest
+ * @example capitalize("hello") → "Hello"
+ * @example capitalize("mediaObjects") → "MediaObjects"
+ * @example capitalize("world") → "World"
+ */
+export const capitalize = (str: string): string => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 export const asComponentSchema = (name: string) => `#/components/schemas/${name}`;
 
@@ -36,9 +47,17 @@ const pathParamWithBracketsRegex = /({\w+})/g;
 const wordPrecededByNonWordCharacter = /[^\w-]+/g;
 
 export const pathParamToVariableName = (name: string) => {
-    // Replace all underscores with # to preserve them when doing snakeToCamel
-    const preserveUnderscore = name.replaceAll("_", "#");
-    return snakeToCamel(preserveUnderscore.replaceAll("-", "_")).replaceAll("#", "_");
+    // Preserve colons (path params like :id) by temporarily replacing them
+    // lodash camelCase treats : as a delimiter and strips it
+    const hasColon = name.startsWith(":");
+    const nameWithoutColon = hasColon ? name.slice(1) : name;
+
+    // Replace all underscores with # to preserve them when doing camelCase conversion
+    const preserveUnderscore = nameWithoutColon.replaceAll("_", "#");
+    const result = camelCase(preserveUnderscore.replaceAll("-", "_")).replaceAll("#", "_");
+
+    // Restore the colon prefix if it was present
+    return hasColon ? `:${result}` : result;
 };
 
 const matcherRegex = /{(\b\w+(?:-\w+)*\b)}/g;
@@ -57,7 +76,7 @@ export const replaceHyphenatedPath = (path: string) => {
 
 /** @example turns `/media-objects/{id}` into `MediaObjectsId` */
 export const pathToVariableName = (path: string) =>
-    capitalize(kebabToCamel(path).replaceAll("/", "")) // /media-objects/{id} -> MediaObjects{id}
+    capitalize(camelCase(path).replaceAll("/", "")) // /media-objects/{id} -> MediaObjects{id}
         .replaceAll(pathParamWithBracketsRegex, (group) => capitalize(group.slice(1, -1))) // {id} -> Id
         .replaceAll(wordPrecededByNonWordCharacter, "_"); // "/robots.txt" -> "/robots_txt"
 

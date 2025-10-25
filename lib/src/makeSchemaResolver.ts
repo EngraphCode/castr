@@ -1,5 +1,5 @@
 import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas30";
-import { get } from "pastable/server";
+import { get } from "lodash-es";
 
 import { normalizeString } from "./utils.js";
 

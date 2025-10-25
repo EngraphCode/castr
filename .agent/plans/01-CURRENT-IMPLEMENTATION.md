@@ -2905,7 +2905,8 @@ Replaced 9 functions + 1 type from pastable:
 All 334 tests passing ✅
 No functionality changes ✅
 Code clarity improved ✅"
-```
+
+````
 
 ---
 
@@ -3313,7 +3314,7 @@ Quality Gates:
 
 Ready for Phase 3: Quality & Testing"
 
-````
+`````
 
 **Validation Steps:**
 
@@ -3397,10 +3398,10 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 
 ### 5.1 Type-Only Output Mode (Performance Quick Win)
 
-**Status:** Pending  
-**Priority:** HIGH (Performance)  
-**Estimated Time:** 3-4 hours (TDD)  
-**Dependencies:** None  
+**Status:** Pending
+**Priority:** HIGH (Performance)
+**Estimated Time:** 3-4 hours (TDD)
+**Dependencies:** None
 **Source:** Inspired by typed-openapi performance patterns
 
 **Acceptance Criteria:**
@@ -3929,9 +3930,9 @@ After completing Phase 2 core tasks (2.1, 2.2, 3.2), **Phase 2B** provides compr
 
 ### 6.1 Comprehensive Documentation Sweep (CRITICAL FOR DX)
 
-**Status:** Pending  
-**Priority:** CRITICAL (Developer Experience)  
-**Estimated Time:** 16-24 hours (2-3 weeks)  
+**Status:** Pending
+**Priority:** CRITICAL (Developer Experience)
+**Estimated Time:** 16-24 hours (2-3 weeks)
 **Dependencies:** Phase 2 complete, Phase 2B optional
 
 See `.agent/RULES.md` section "MANDATORY: Comprehensive TSDoc Standards" for detailed requirements.
@@ -3966,3 +3967,4 @@ Developer Experience is **Priority #1**. Excellent documentation:
 ---
 
 **This plan is living. Update task status as work progresses. Add notes for future reference.**
+`````
