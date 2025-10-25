@@ -130,7 +130,11 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
                     data.types[depSchemaName] = tsResultToString(tsResult).replace("export ", "");
                     // defining types for strings and using the `z.ZodType<string>` type for their schema
                     // prevents consumers of the type from adding zod validations like `.min()` to the type
-                    if (options?.shouldExportAllTypes && !isReferenceObject(nodeSchema) && nodeSchema.type === "object") {
+                    if (
+                        options?.shouldExportAllTypes &&
+                        !isReferenceObject(nodeSchema) &&
+                        nodeSchema.type === "object"
+                    ) {
                         data.emittedType[depSchemaName] = true;
                     }
                 }
