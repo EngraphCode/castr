@@ -5,8 +5,6 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
-
 import type { CodeMeta } from "./CodeMeta.js";
 import { getSchemaComplexity } from "./schema-complexity.js";
 import { normalizeString } from "./utils.js";
@@ -137,7 +135,7 @@ export function handleRefSchema(
     if (input.ref && schema) {
         const complexity = getSchemaComplexity({
             current: 0,
-            schema: ctx.resolver.getSchemaByRef(input.ref) as SchemaObject | ReferenceObject | undefined,
+            schema: ctx.resolver.getSchemaByRef(input.ref),
         });
 
         // Simple refs can be inlined
