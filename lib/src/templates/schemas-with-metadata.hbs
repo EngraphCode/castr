@@ -1,0 +1,317 @@
+import { z } from "zod";
+
+{{#if imports}}
+{{#each imports}}
+import { {{{@key}}} } from "./{{{this}}}"
+{{/each}}
+{{/if}}
+
+{{#if types}}
+{{#each types}}
+{{{this}}};
+{{/each}}
+{{/if}}
+
+{{#each schemas}}
+const {{@key}}{{#if (lookup ../emittedType @key)}}: z.ZodType<{{@key}}>{{/if}} = {{{this}}};
+{{/each}}
+
+export const schemas = {
+{{#each schemas}}
+	{{@key}},
+{{/each}}
+} as const;
+
+export const endpoints = [
+{{#each endpoints}}
+	{
+		method: "{{method}}" as const,
+		path: "{{path}}",
+		{{#if alias}}
+		operationId: "{{alias}}",
+		{{/if}}
+		{{#if description}}
+		description: `{{description}}`,
+		{{/if}}
+		request: {
+			{{~#if parameters~}}
+			{{~#each parameters~}}
+			{{~#ifeq type "Path"~}}
+			pathParams: z.object({
+				{{~#each ../parameters~}}
+				{{~#ifeq type "Path"~}}
+				"{{name}}": {{{schema}}},
+				{{~/ifeq~}}
+				{{~/each~}}
+			}),
+			{{~/ifeq~}}
+			{{~/each~}}
+			{{~#each parameters~}}
+			{{~#ifeq type "Query"~}}
+			queryParams: z.object({
+				{{~#each ../parameters~}}
+				{{~#ifeq type "Query"~}}
+				"{{name}}": {{{schema}}},
+				{{~/ifeq~}}
+				{{~/each~}}
+			}).optional(),
+			{{~/ifeq~}}
+			{{~/each~}}
+			{{~#each parameters~}}
+			{{~#ifeq type "Header"~}}
+			headers: z.object({
+				{{~#each ../parameters~}}
+				{{~#ifeq type "Header"~}}
+				"{{name}}": {{{schema}}},
+				{{~/ifeq~}}
+				{{~/each~}}
+			}).optional(),
+			{{~/ifeq~}}
+			{{~/each~}}
+			{{~#each parameters~}}
+			{{~#ifeq type "Body"~}}
+			body: {{{schema}}},
+			{{~/ifeq~}}
+			{{~/each~}}
+			{{~/if~}}
+		},
+		responses: {
+			{{~#if responses~}}
+				{{~#each responses~}}
+			{{statusCode}}: {
+					{{~#if description~}}
+				description: "{{description}}",
+					{{~/if~}}
+				schema: {{{schema}}},
+			},
+				{{~/each~}}
+			{{~else~}}
+				{{~#if response~}}
+			200: {
+				description: "Success",
+				schema: {{{response}}},
+			},
+				{{~/if~}}
+			{{~/if~}}
+			{{~#if errors~}}
+				{{~#each errors~}}
+					{{~#ifeq status "default"~}}
+			default: {
+						{{~#if description~}}
+				description: "{{description}}",
+						{{~/if~}}
+				schema: {{{schema}}},
+			},
+					{{~else~}}
+			{{status}}: {
+						{{~#if description~}}
+				description: "{{description}}",
+						{{~/if~}}
+				schema: {{{schema}}},
+			},
+					{{~/ifeq~}}
+				{{~/each~}}
+			{{~/if~}}
+		},
+	},
+{{/each}}
+] as const;
+
+/**
+ * MCP (Model Context Protocol) compatible tool definitions.
+ * 
+ * Each endpoint is transformed into an MCP tool with:
+ * - `name`: Unique identifier (operationId or auto-generated from method + path)
+ * - `description`: Human-readable description of the tool's purpose
+ * - `inputSchema`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+ * - `outputSchema`: Zod schema for the primary success response (200/201) or z.unknown()
+ * 
+ * MCP tools use a consolidated input structure (all params in one object) rather than 
+ * the separated structure in `endpoints`, making them optimized for AI tool integration.
+ * The output schema focuses on the "happy path" (primary success response) as error handling
+ * is typically done at the protocol level.
+ * 
+ * @see https://anthropic.com/mcp - Model Context Protocol specification
+ * @example
+ * ```typescript
+ * import { mcpTools } from "./api";
+ * 
+ * // AI assistant discovers and validates tool usage
+ * const tool = mcpTools.find(t => t.name === "getUserById");
+ * const input = tool.inputSchema.parse({
+ *   path: { userId: "123" },
+ *   query: { include: "profile" }
+ * });
+ * ```
+ */
+export const mcpTools = endpoints.map(endpoint => {
+	// Build consolidated params object from all request parameter types
+	// MCP requires a single inputSchema, not separated path/query/headers/body
+	const params: Record<string, z.ZodTypeAny> = {};
+	if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+	if (endpoint.request?.queryParams) params.query = endpoint.request.queryParams;
+	if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+	if (endpoint.request?.body) params.body = endpoint.request.body;
+	
+	return {
+		// Use operationId as canonical name, fallback to generated name
+		name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, '_')}`,
+		// Provide description for AI context
+		description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
+		// Consolidated input schema (path, query, headers, body all nested)
+		inputSchema: Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+		// Primary success response (200 or 201), fallback to z.unknown() for safety
+		outputSchema: endpoint.responses[200]?.schema || endpoint.responses[201]?.schema || z.unknown(),
+	};
+}) as const;
+
+{{#if options.withValidationHelpers}}
+/**
+ * Validates request parameters against endpoint schema.
+ * 
+ * Uses `.parse()` for fail-fast validation (throws on error). Each parameter type
+ * (path, query, headers, body) is validated individually against the endpoint's schema.
+ * 
+ * @template T - The endpoint type from the endpoints array
+ * @param endpoint - The endpoint definition with request schemas
+ * @param input - The input parameters to validate
+ * @param input.pathParams - Path parameters (e.g., `/users/:userId` -> `{ userId: "123" }`)
+ * @param input.queryParams - Query string parameters (e.g., `?limit=10` -> `{ limit: 10 }`)
+ * @param input.headers - HTTP headers (e.g., `{ "Content-Type": "application/json" }`)
+ * @param input.body - Request body payload
+ * @returns Validated and type-safe request parameters
+ * @throws {ZodError} If any parameter fails validation
+ * 
+ * @example
+ * ```typescript
+ * const endpoint = endpoints.find(e => e.operationId === "createUser");
+ * const validated = validateRequest(endpoint, {
+ *   body: { name: "Alice", email: "alice@example.com" }
+ * });
+ * // validated.body is now type-safe and validated
+ * ```
+ */
+export function validateRequest<T extends (typeof endpoints)[number]>(
+	endpoint: T,
+	input: {
+		pathParams?: unknown;
+		queryParams?: unknown;
+		headers?: unknown;
+		body?: unknown;
+	}
+): {
+	pathParams?: unknown;
+	queryParams?: unknown;
+	headers?: unknown;
+	body?: unknown;
+} {
+	const result: Record<string, unknown> = {};
+	
+	if (endpoint.request.pathParams && input.pathParams !== undefined) {
+		result.pathParams = endpoint.request.pathParams.parse(input.pathParams);
+	}
+	if (endpoint.request.queryParams && input.queryParams !== undefined) {
+		result.queryParams = endpoint.request.queryParams.parse(input.queryParams);
+	}
+	if (endpoint.request.headers && input.headers !== undefined) {
+		result.headers = endpoint.request.headers.parse(input.headers);
+	}
+	if (endpoint.request.body && input.body !== undefined) {
+		result.body = endpoint.request.body.parse(input.body);
+	}
+	
+	return result;
+}
+
+/**
+ * Validates response data against endpoint schema for given status code.
+ * 
+ * Uses `.parse()` for fail-fast validation (throws on error). Validates the response
+ * data against the schema defined for the specific HTTP status code.
+ * 
+ * @template T - The endpoint type from the endpoints array
+ * @template S - The status code type (constrained to valid status codes for the endpoint)
+ * @param endpoint - The endpoint definition with response schemas
+ * @param status - The HTTP status code of the response
+ * @param data - The response data to validate
+ * @returns Validated and type-safe response data
+ * @throws {ZodError} If the response data fails validation
+ * @throws {Error} If no schema is defined for the given status code
+ * 
+ * @example
+ * ```typescript
+ * const endpoint = endpoints.find(e => e.operationId === "getUser");
+ * const response = await fetch(`/users/123`);
+ * const data = await response.json();
+ * const validated = validateResponse(endpoint, response.status, data);
+ * // validated is now type-safe and validated according to the status code schema
+ * ```
+ */
+export function validateResponse<
+	T extends (typeof endpoints)[number],
+	S extends keyof T["responses"] & number
+>(
+	endpoint: T,
+	status: S,
+	data: unknown
+): unknown {
+	const responseSchema = endpoint.responses[status];
+	if (!responseSchema) {
+		throw new Error(`No schema defined for status ${status} on ${endpoint.method.toUpperCase()} ${endpoint.path}`);
+	}
+	return responseSchema.schema.parse(data);
+}
+{{/if}}
+
+{{#if options.withSchemaRegistry}}
+/**
+ * Builds a schema registry with sanitized keys for runtime schema lookup.
+ * 
+ * Transforms schema keys to be safe for programmatic access by replacing special
+ * characters with underscores. Useful when you need to dynamically look up schemas
+ * by name (e.g., from API responses, configuration, or user input).
+ * 
+ * @template T - The type of the raw schemas object
+ * @param rawSchemas - The raw schemas object (typically the `schemas` export)
+ * @param options - Configuration options
+ * @param options.rename - Custom key renaming function (default: replace non-alphanumeric chars with `_`)
+ * @returns A new registry object with sanitized keys
+ * 
+ * @example Default sanitization
+ * ```typescript
+ * const registry = buildSchemaRegistry(schemas);
+ * // { "User-Profile" } becomes { "User_Profile" }
+ * // { "api.v2.Pet" } becomes { "api_v2_Pet" }
+ * ```
+ * 
+ * @example Custom sanitization
+ * ```typescript
+ * const registry = buildSchemaRegistry(schemas, {
+ *   rename: (key) => key.toLowerCase().replace(/[^a-z0-9]/g, "_")
+ * });
+ * // { "User-Profile" } becomes { "user_profile" }
+ * ```
+ * 
+ * @example Dynamic schema lookup
+ * ```typescript
+ * const registry = buildSchemaRegistry(schemas);
+ * const schemaName = response.headers["x-schema-type"]; // "User_Profile"
+ * const schema = registry[schemaName];
+ * const validated = schema?.parse(response.data);
+ * ```
+ */
+export function buildSchemaRegistry<T extends Record<string, z.ZodSchema>>(
+	rawSchemas: T,
+	options?: { rename?: (key: string) => string }
+): Record<string, z.ZodSchema> {
+	const rename = options?.rename ?? ((key: string) => key.replace(/[^A-Za-z0-9_]/g, "_"));
+	const result: Record<string, z.ZodSchema> = {};
+	
+	for (const [key, value] of Object.entries(rawSchemas)) {
+		const sanitized = rename(key);
+		result[sanitized] = value;
+	}
+	
+	return result;
+}
+{{/if}}
