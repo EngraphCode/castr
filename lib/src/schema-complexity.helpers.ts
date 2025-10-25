@@ -33,7 +33,7 @@ export function calculateCompositionComplexity(
 /**
  * Calculates complexity for a type array (OpenAPI 3.1 feature)
  * Handles both single-type and multi-type arrays
- * 
+ *
  * @param types - Array of schema types from schema.type (when schema.type is an array in OAS 3.1)
  */
 export function calculateTypeArrayComplexity(

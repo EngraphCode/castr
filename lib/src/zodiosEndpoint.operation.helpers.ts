@@ -22,6 +22,30 @@ import { pathParamToVariableName } from "./utils.js";
 
 const voidSchema = "z.void()";
 
+/**
+ * Type guard to check if an object is a RequestBodyObject
+ * openapi3-ts doesn't provide this, so we check for the distinguishing property
+ */
+function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
+    return typeof obj === "object" && obj !== null && "content" in obj;
+}
+
+/**
+ * Type guard to check if an object is a ParameterObject
+ * openapi3-ts doesn't provide this, so we check for the distinguishing property
+ */
+function isParameterObject(obj: unknown): obj is ParameterObject {
+    return typeof obj === "object" && obj !== null && "in" in obj && "name" in obj;
+}
+
+/**
+ * Type guard to check if an object is a ResponseObject
+ * openapi3-ts doesn't provide this, so we check for the distinguishing property
+ */
+function isResponseObject(obj: unknown): obj is ResponseObject {
+    return typeof obj === "object" && obj !== null && "description" in obj;
+}
+
 export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
 
 type EndpointParameter = {
@@ -73,11 +97,21 @@ export function processRequestBody(
         return undefined;
     }
 
-    const requestBody = (
-        isReferenceObject(operation.requestBody)
-            ? ctx.resolver.getSchemaByRef(operation.requestBody.$ref)
-            : operation.requestBody
-    ) as RequestBodyObject;
+    let requestBody: RequestBodyObject;
+    if (isReferenceObject(operation.requestBody)) {
+        const resolved = ctx.resolver.getSchemaByRef(operation.requestBody.$ref);
+        if (isReferenceObject(resolved)) {
+            throw new Error(
+                `Nested $ref in requestBody: ${operation.requestBody.$ref}. Use SwaggerParser.bundle() to dereference.`
+            );
+        }
+        if (!isRequestBodyObject(resolved)) {
+            throw new Error(`Invalid $ref: ${operation.requestBody.$ref} does not resolve to a RequestBodyObject`);
+        }
+        requestBody = resolved;
+    } else {
+        requestBody = operation.requestBody;
+    }
 
     const mediaTypes = Object.keys(requestBody.content ?? {});
     const matchingMediaType = mediaTypes.find(isAllowedParamMediaTypes);
@@ -129,7 +163,19 @@ export function processParameter(
     getZodVarName: GetZodVarNameFn,
     options?: TemplateContext["options"]
 ): EndpointParameter | undefined {
-    const paramItem = (isReferenceObject(param) ? ctx.resolver.getSchemaByRef(param.$ref) : param) as ParameterObject;
+    let paramItem: ParameterObject;
+    if (isReferenceObject(param)) {
+        const resolved = ctx.resolver.getSchemaByRef(param.$ref);
+        if (isReferenceObject(resolved)) {
+            throw new Error(`Nested $ref in parameter: ${param.$ref}. Use SwaggerParser.bundle() to dereference.`);
+        }
+        if (!isParameterObject(resolved)) {
+            throw new Error(`Invalid $ref: ${param.$ref} does not resolve to a ParameterObject`);
+        }
+        paramItem = resolved;
+    } else {
+        paramItem = param;
+    }
 
     if (!allowedPathInValues.includes(paramItem.in)) {
         return undefined;
@@ -200,11 +246,12 @@ export function processParameter(
         .with("path", () => pathParamToVariableName(paramItem.name))
         .otherwise(() => paramItem.name);
 
-    const type = match(paramItem.in)
+    // Safe: We've already filtered for allowed values (header, query, path) above
+    const type = match<string, "Header" | "Query" | "Path">(paramItem.in)
         .with("header", () => "Header")
         .with("query", () => "Query")
         .with("path", () => "Path")
-        .run() as "Header" | "Query" | "Path";
+        .otherwise(() => "Query"); // Fallback (unreachable due to filter above)
 
     const schema = getZodVarName(
         paramCode.assign(paramCode.toString() + getZodChain({ schema: paramSchema, meta: paramCode.meta, options })),
@@ -230,9 +277,19 @@ export function processResponse(
     mainResponseDescription?: string;
     error?: EndpointError;
 } {
-    const responseItem = (
-        isReferenceObject(responseObj) ? ctx.resolver.getSchemaByRef(responseObj.$ref) : responseObj
-    ) as ResponseObject;
+    let responseItem: ResponseObject;
+    if (isReferenceObject(responseObj)) {
+        const resolved = ctx.resolver.getSchemaByRef(responseObj.$ref);
+        if (isReferenceObject(resolved)) {
+            throw new Error(`Nested $ref in response: ${responseObj.$ref}. Use SwaggerParser.bundle() to dereference.`);
+        }
+        if (!isResponseObject(resolved)) {
+            throw new Error(`Invalid $ref: ${responseObj.$ref} does not resolve to a ResponseObject`);
+        }
+        responseItem = resolved;
+    } else {
+        responseItem = responseObj;
+    }
 
     const mediaTypes = Object.keys(responseItem.content ?? {});
     const matchingMediaType = mediaTypes.find(isMediaTypeAllowed);
