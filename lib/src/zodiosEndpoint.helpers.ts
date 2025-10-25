@@ -5,6 +5,8 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
+
 import type { CodeMeta } from "./CodeMeta.js";
 import { getSchemaComplexity } from "./schema-complexity.js";
 import { normalizeString } from "./utils.js";
@@ -15,7 +17,7 @@ type ZodiosContext = {
     schemasByName?: Record<string, string[]>;
     resolver: {
         resolveRef: (ref: string) => { name: string };
-        getSchemaByRef: (ref: string) => unknown;
+        getSchemaByRef: (ref: string) => SchemaObject | ReferenceObject;
     };
 };
 

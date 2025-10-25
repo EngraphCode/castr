@@ -185,7 +185,7 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
         return code.assign(`${first.toString()}.${rest}`);
     }
 
-    const schemaType = schema.type ? (schema.type.toLowerCase() as NonNullable<typeof schema.type>) : undefined;
+    const schemaType = schema.type?.toLowerCase();
     if (schemaType && isPrimitiveSchemaType(schemaType)) {
         if (schema.enum) {
             // Handle string enums
@@ -218,9 +218,15 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
     if (schemaType === "array") {
         if (schema.items) {
+            // Resolve ref if needed for getZodChain (which needs .type property)
+            const itemsSchema: SchemaObject | ReferenceObject =
+                isReferenceObject(schema.items) && ctx?.resolver
+                    ? ctx.resolver.getSchemaByRef(schema.items.$ref)
+                    : schema.items;
+
             return code.assign(
                 `z.array(${getZodSchema({ schema: schema.items, ctx, meta, options }).toString()}${getZodChain({
-                    schema: schema.items as SchemaObject,
+                    schema: itemsSchema,
                     meta: { ...meta, isRequired: true },
                     options,
                 })})${readonly}`
@@ -240,9 +246,15 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
         const additionalPropsSchema = additionalProps === false || options?.strictObjects ? "" : ".passthrough()";
 
         if (typeof schema.additionalProperties === "object" && Object.keys(schema.additionalProperties).length > 0) {
+            // Resolve ref if needed for getZodChain (which needs .type property)
+            const additionalPropsResolved: SchemaObject | ReferenceObject =
+                isReferenceObject(schema.additionalProperties) && ctx?.resolver
+                    ? ctx.resolver.getSchemaByRef(schema.additionalProperties.$ref)
+                    : schema.additionalProperties;
+
             const additionalPropsZod = getZodSchema({ schema: schema.additionalProperties, ctx, meta, options });
             const additionalPropsChain = getZodChain({
-                schema: schema.additionalProperties as SchemaObject,
+                schema: additionalPropsResolved,
                 meta: { ...meta, isRequired: true },
                 options,
             });
@@ -274,18 +286,15 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
                     propMetadata.isRequired = propIsRequired;
                 }
 
-                let propActualSchema = propSchema;
-
-                if (isReferenceObject(propSchema) && ctx?.resolver) {
-                    propActualSchema = ctx.resolver.getSchemaByRef(propSchema.$ref);
-                    if (!propActualSchema) {
-                        throw new Error(`Schema ${propSchema.$ref} not found`);
-                    }
-                }
+                // Resolve reference for getZodChain (which needs .type property)
+                const propActualSchema: SchemaObject | ReferenceObject =
+                    isReferenceObject(propSchema) && ctx?.resolver
+                        ? ctx.resolver.getSchemaByRef(propSchema.$ref)
+                        : propSchema;
 
                 const propZodSchema = getZodSchema({ schema: propSchema, ctx, meta: propMetadata, options });
                 const propChain = getZodChain({
-                    schema: propActualSchema as SchemaObject,
+                    schema: propActualSchema,
                     meta: propMetadata,
                     options,
                 });
@@ -314,9 +323,18 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
     throw new Error(`Unsupported schema type: ${schemaType}`);
 }
 
-type ZodChainArgs = { schema: SchemaObject; meta?: CodeMetaData; options?: TemplateContext["options"] };
+type ZodChainArgs = {
+    schema: SchemaObject | ReferenceObject;
+    meta?: CodeMetaData;
+    options?: TemplateContext["options"];
+};
 
 export const getZodChain = ({ schema, meta, options }: ZodChainArgs) => {
+    // ReferenceObjects don't have chainable properties, return empty
+    if (isReferenceObject(schema)) {
+        return "";
+    }
+
     const chains: string[] = [];
 
     match(schema.type)

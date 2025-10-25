@@ -1,4 +1,4 @@
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
 import { get } from "lodash-es";
 
 import { normalizeString } from "./utils.js";
@@ -33,7 +33,7 @@ export const makeSchemaResolver = (doc: OpenAPIObject) => {
     const byRef = new Map<string, RefInfo>();
     const byNormalized = new Map<string, RefInfo>();
 
-    const getSchemaByRef = (ref: string) => {
+    const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject => {
         // #components -> #/components
         const correctRef = autocorrectRef(ref);
         const split = correctRef.split("/");
