@@ -19,40 +19,9 @@ import { getZodChain, getZodSchema } from "./openApiToZod.js";
 import type { TemplateContext } from "./template-context.js";
 import type { DefaultStatusBehavior } from "./template-context.types.js";
 import { pathParamToVariableName } from "./utils.js";
+import { isRequestBodyObject, isParameterObject, isResponseObject } from "./openapi-type-guards.js";
 
 const voidSchema = "z.void()";
-
-/**
- * Type guard to check if an object is a RequestBodyObject
- * openapi3-ts doesn't provide this, so we check for the distinguishing property
- */
-function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
-    return typeof obj === "object" && obj !== null && "content" in obj;
-}
-
-/**
- * Type guard to check if an object is a ParameterObject
- * openapi3-ts doesn't provide this, so we check for the distinguishing property
- */
-function isParameterObject(obj: unknown): obj is ParameterObject {
-    return typeof obj === "object" && obj !== null && "in" in obj && "name" in obj;
-}
-
-/**
- * Type guard to check if an object is a ResponseObject
- * openapi3-ts doesn't provide this, so we check for the distinguishing property
- */
-export function isResponseObject(obj: unknown): obj is ResponseObject {
-    if (!obj || typeof obj !== "object") {
-        return false;
-    }
-    // Per OpenAPI 3.0 spec: ResponseObject can have description, headers, content, links
-    // We need a simple check that distinguishes it from ReferenceObject
-    // ReferenceObject has $ref, ResponseObject does not
-    // For now, we'll check it's an object and NOT a reference
-    // openapi3-ts will handle full validation
-    return !("$ref" in obj);
-}
 
 export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
 

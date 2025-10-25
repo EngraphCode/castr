@@ -11,22 +11,9 @@ import type { TemplateContext } from "./template-context.js";
 import { getSchemaVarName } from "./zodiosEndpoint.helpers.js";
 import { processOperation } from "./zodiosEndpoint.path.helpers.js";
 import { asComponentSchema, pathToVariableName } from "./utils.js";
+import { ALLOWED_METHODS, type AllowedMethod, type PathItem, isAllowedMethod } from "./openapi-type-guards.js";
 
-// Move these to a central definition file.
-// Fetch and mutate methods; following Zodios conventions.
-const ALLOWED_METHODS = ["get", "head", "options", "post", "put", "patch", "delete"] as const;
-export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
-function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMethod {
-    if (!maybeMethod || typeof maybeMethod !== "string") {
-        return false;
-    }
-    const stringMethods: readonly string[] = ALLOWED_METHODS;
-    return stringMethods.includes(maybeMethod);
-}
-
-// NOTE: PathItem uses Partial because a path may only implement some HTTP methods, not all
-// The OpenAPI spec allows paths to define only the methods they support
-type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
+// Helper type guard for PathItemObject
 function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathItemObject {
     if (!maybePathItemObj || typeof maybePathItemObj !== "object") {
         return false;

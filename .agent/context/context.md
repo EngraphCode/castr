@@ -316,9 +316,9 @@ All documented in `.agent/adr/` (12 ADRs):
 - ✅ All "medium" files complete (7 files, 24 assertions) ← **zodiosEndpoint.path.helpers.ts added**
 - ✅ getZodiosEndpointDefinitionList.ts verified clean (only `as const` usages)
 - ⏳ Hard files remaining (3 files, ~41 assertions):
-  1. cli.ts (~6 assertions)
-  2. openApiToTypescript.ts (~7 assertions)  
-  3. openApiToTypescript.helpers.ts (~22+ assertions) - **THE FINAL BOSS**
+    1. cli.ts (~6 assertions)
+    2. openApiToTypescript.ts (~7 assertions)
+    3. openApiToTypescript.helpers.ts (~22+ assertions) - **THE FINAL BOSS**
 
 **Latest Completions:**
 

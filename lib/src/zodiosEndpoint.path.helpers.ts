@@ -8,15 +8,16 @@ import { isReferenceObject } from "openapi3-ts/oas30";
 import type { TemplateContext } from "./template-context.js";
 import type { DefaultStatusBehavior } from "./template-context.types.js";
 import type { ConversionTypeContext } from "./CodeMeta.js";
-import type { AllowedMethod, EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
+import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
 import { replaceHyphenatedPath } from "./utils.js";
+import type { AllowedMethod } from "./openapi-type-guards.js";
+import { isResponseObject } from "./openapi-type-guards.js";
 import type { GetZodVarNameFn } from "./zodiosEndpoint.operation.helpers.js";
 import {
     processDefaultResponse,
     processParameter,
     processRequestBody,
     processResponse,
-    isResponseObject,
 } from "./zodiosEndpoint.operation.helpers.js";
 
 const voidSchema = "z.void()";
