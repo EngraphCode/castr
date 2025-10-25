@@ -5,6 +5,13 @@ import { normalizeString } from "./utils.js";
 
 const autocorrectRef = (ref: string) => (ref[1] === "/" ? ref : "#/" + ref.slice(1));
 
+/**
+ * Type guard to check if a value is a Record<string, SchemaObject>
+ */
+function isSchemaRecord(value: unknown): value is Record<string, SchemaObject> {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 type RefInfo = {
     ref: string;
     name: string;
@@ -28,9 +35,8 @@ export const makeSchemaResolver = (doc: OpenAPIObject) => {
 
         // "#/components/schemas/Something.jsonld" -> #/components/schemas
         const path = split.slice(1, -1).join("/");
-        const retrieved = get(doc, path.replace("#/", "").replace("#", "").replaceAll("/", "."));
-        const map: Record<string, SchemaObject> =
-            retrieved && typeof retrieved === "object" ? (retrieved as Record<string, SchemaObject>) : {};
+        const retrieved: unknown = get(doc, path.replace("#/", "").replace("#", "").replaceAll("/", "."));
+        const map: Record<string, SchemaObject> = isSchemaRecord(retrieved) ? retrieved : {};
 
         // "#/components/schemas/Something.jsonld" -> "Something.jsonld"
         const name = split.at(-1);
