@@ -3,11 +3,19 @@ import { resolve } from "node:path";
 
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { Command } from "commander";
-import type { OpenAPIObject } from "openapi3-ts/oas30";
 import { resolveConfig } from "prettier";
 
 import { toBoolean } from "./utils.js";
-import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI.js";
+import {
+    generateZodClientFromOpenAPI,
+    type GenerateZodClientFromOpenApiArgs,
+} from "./generateZodClientFromOpenAPI.js";
+import {
+    hasVersionProperty,
+    isGroupStrategy,
+    isDefaultStatusBehavior,
+    isOpenAPIObject,
+} from "./cli-type-guards.js";
 
 interface CliOptions {
     output?: string;
@@ -39,8 +47,11 @@ interface CliOptions {
 function getPackageVersion(): string {
     try {
         const packageJsonContent = readFileSync(resolve(__dirname, "../../package.json"), "utf8");
-        const parsed = JSON.parse(packageJsonContent) as { version?: unknown };
-        return typeof parsed.version === "string" ? parsed.version : "0.0.0";
+        const parsed: unknown = JSON.parse(packageJsonContent);
+        if (hasVersionProperty(parsed) && typeof parsed.version === "string") {
+            return parsed.version;
+        }
+        return "0.0.0";
     } catch {
         return "0.0.0";
     }
@@ -115,24 +126,25 @@ program
     )
     .action(async (input: string, options: CliOptions) => {
         console.log("Retrieving OpenAPI document from", input);
-        // SwaggerParser uses its own OpenAPI types, cast to openapi3-ts types
-        const openApiDoc = (await SwaggerParser.bundle(input)) as unknown as OpenAPIObject;
+        // SwaggerParser.bundle returns its own OpenAPI type, structurally compatible with openapi3-ts
+        // We validate the structure with a type guard
+        const bundled: unknown = await SwaggerParser.bundle(input);
+        if (!isOpenAPIObject(bundled)) {
+            throw new Error(`Invalid OpenAPI document: missing required properties (openapi, info, paths)`);
+        }
+        const openApiDoc = bundled;
         const prettierConfig = await resolveConfig(options.prettier ?? "./");
         const distPath = options.output ?? input + ".client.ts";
         const withAlias = toBoolean(options.withAlias, true);
         const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
 
         // Parse and validate CLI options
-        const groupStrategy = options.groupStrategy as
-            | "none"
-            | "tag"
-            | "method"
-            | "tag-file"
-            | "method-file"
-            | undefined;
+        const groupStrategy = isGroupStrategy(options.groupStrategy) ? options.groupStrategy : undefined;
         const complexityThreshold =
             options.complexityThreshold !== undefined ? parseInt(options.complexityThreshold, 10) : undefined;
-        const defaultStatusBehavior = options.defaultStatus as "spec-compliant" | "auto-correct" | undefined;
+        const defaultStatusBehavior = isDefaultStatusBehavior(options.defaultStatus)
+            ? options.defaultStatus
+            : undefined;
 
         // Build generation options (for exactOptionalPropertyTypes: only include defined values)
         const generationOptions: Record<string, unknown> = {
@@ -157,24 +169,20 @@ program
         if (options.allReadonly) generationOptions["allReadonly"] = options.allReadonly;
         if (options.strictObjects) generationOptions["strictObjects"] = options.strictObjects;
 
-        // Build generation args (only include defined properties)
-        // Using Record<string, unknown> to dynamically build options from CLI
-        // Type assertion is safe because we're matching the expected structure
-        const generationArgs: Record<string, unknown> = {
+        // Build generation args with proper type
+        // We construct only the properties that are defined to satisfy exactOptionalPropertyTypes
+        const generationArgs: GenerateZodClientFromOpenApiArgs = {
             openApiDoc,
             distPath,
             options: generationOptions,
+            ...(prettierConfig && { prettierConfig }),
+            ...(options.template && { templatePath: options.template }),
+            ...(options.noClient && { noClient: options.noClient }),
+            ...(options.withValidationHelpers && { withValidationHelpers: options.withValidationHelpers }),
+            ...(options.withSchemaRegistry && { withSchemaRegistry: options.withSchemaRegistry }),
         };
 
-        if (prettierConfig) generationArgs["prettierConfig"] = prettierConfig;
-        if (options.template) generationArgs["templatePath"] = options.template;
-
-        // Add new template-specific flags
-        if (options.noClient) generationArgs["noClient"] = options.noClient;
-        if (options.withValidationHelpers) generationArgs["withValidationHelpers"] = options.withValidationHelpers;
-        if (options.withSchemaRegistry) generationArgs["withSchemaRegistry"] = options.withSchemaRegistry;
-
-        await generateZodClientFromOpenAPI(generationArgs as Parameters<typeof generateZodClientFromOpenAPI>[0]);
+        await generateZodClientFromOpenAPI(generationArgs);
         console.log(`Done generating <${distPath}> !`);
     });
 

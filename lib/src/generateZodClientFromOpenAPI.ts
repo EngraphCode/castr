@@ -12,7 +12,7 @@ import { maybePretty } from "./maybePretty.js";
 import type { TemplateContext } from "./template-context.js";
 import { getZodClientTemplateContext } from "./template-context.js";
 
-type GenerateZodClientFromOpenApiArgs<TOptions extends TemplateContext["options"] = TemplateContext["options"]> = {
+export type GenerateZodClientFromOpenApiArgs<TOptions extends TemplateContext["options"] = TemplateContext["options"]> = {
     openApiDoc: OpenAPIObject;
     /**
      * Template name to use for generation
