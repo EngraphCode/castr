@@ -14,9 +14,12 @@ emitter.on("info", (info) => {
     console.log(info.message);
 });
 
-emitter.clone("./samples").then(() => {
+// Top-level promise handling for sample generation script
+void emitter.clone("./samples").then(() => {
     console.log("done cloning samples");
 
+    // Safe: PATH is hardcoded literal, not user input
+    // eslint-disable-next-line sonarjs/no-os-command-from-path
     spawnSync("rm -rf ./samples/v2.0", { shell: true });
     console.log("removed v2.0 swagger samples");
 
