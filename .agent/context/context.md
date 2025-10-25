@@ -1,10 +1,11 @@
 # Living Context Document
 
-**Last Updated:** October 25, 2025 (Late Afternoon - Post Task 2.4, ready for Task 3.1)  
+**Last Updated:** October 25, 2025 (Early Evening - Post Task 3.1, ready for Task 3.2)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
 
 **Recent Progress:**
 
+- ✅ Task 3.1: pastable replaced with lodash-es + native + domain utils (3 hours, +55 unit tests)
 - ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
 - ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
 - ✅ Task 2.2: swagger-parser verified at latest v12.1.0 (10 minutes)
@@ -50,7 +51,7 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 ✅ build       - Passing (ESM + CJS + DTS)
 ✅ type-check  - Passing (0 errors)
 ⚠️  lint       - 136 issues (down from 147, see below)
-✅ test        - Passing (318 tests, up from 311)
+✅ test        - Passing (373 tests, up from 318 - added 55 pure function unit tests)
 ```
 
 **Definition of Done:**
@@ -151,7 +152,7 @@ All documented in `.agent/adr/` (12 ADRs):
     "zod": "^4.1.12", // ✅ UPDATED (was 3.25.76, backward compatible)
     "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, peer dep warning expected)
     "openapi-types": "^12.1.3", // ⚠️ REMOVE (redundant with openapi3-ts v4)
-    "pastable": "^2.2.1", // ⚠️ REMOVE (replace with lodash-es + custom)
+    "lodash-es": "^4.17.21", // ✅ ADDED (tree-shakeable, replaced pastable)
     "@apidevtools/swagger-parser": "^12.1.0", // ✅ VERIFIED at latest (Oct 14, 2025)
     "tanu": "^0.2.0", // ✅ KEEP (TypeScript AST manipulation)
     "commander": "^14.0.1", // ✅ KEEP (CLI framework)
@@ -188,8 +189,13 @@ All documented in `.agent/adr/` (12 ADRs):
     - @zodios/core peer dependency warning (expected, not a blocker)
     - Duration: 30 minutes
 
-5. ⏳ **LATER:** `pastable` → Replace with `lodash-es` + custom utilities - Task 3.1
-    - Detailed plan in `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
+5. ✅ **COMPLETE:** `pastable` → `lodash-es` + native + domain utils - Task 3.1
+    - Replaced with tree-shakeable lodash-es (get, pick, camelCase, sortBy)
+    - Added native implementations (getSum, capitalize, sortBy for simple cases)
+    - Created domain-specific schema-sorting.ts with precise types
+    - Added 55+ comprehensive unit tests for pure functions (TDD-driven)
+    - All 373 tests passing (+55 from 318)
+    - Duration: 3 hours
 
 6. ⏳ **LATER:** `openapi-types` → Use `openapi3-ts` v4 types - Task 3.3
     - Only used in 1 test file, redundant
@@ -232,9 +238,9 @@ All documented in `.agent/adr/` (12 ADRs):
 - RULES.md with coding standards
 - Definition of Done established
 
-### Phase 2: Type Safety & Dependencies (⏳ IMPLEMENTATION IN PROGRESS - 5/10 tasks complete)
+### Phase 2: Type Safety & Dependencies (⏳ IMPLEMENTATION IN PROGRESS - 6/10 tasks complete)
 
-**Status:** Implementation underway - Task 2.4 ✅, Task 2.3 ✅, Task 2.2 ✅, Task 2.1 ✅, Task 1.10 ✅, Task 1.9 ✅
+**Status:** Implementation underway - Task 3.1 ✅, Task 2.4 ✅, Task 2.3 ✅, Task 2.2 ✅, Task 2.1 ✅, Task 1.10 ✅, Task 1.9 ✅
 
 **Completed Tasks:**
 
@@ -292,64 +298,63 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ## 🎯 Next Priorities
 
-### ⚡ IMMEDIATE: Task 3.1 - Replace pastable
+### ⚡ IMMEDIATE: Task 3.2 - Eliminate Type Assertions (BLOCKER)
 
-**Status:** Ready to execute (All Phase 2 core tasks ✅ complete)  
-**Priority:** HIGH (dependency cleanup)  
-**Estimated Time:** 6-8 hours  
-**TDD Required:** Tests exist, refactor with test protection
+**Status:** Ready to execute (Task 3.1 ✅ complete)  
+**Priority:** P0 BLOCKER (extraction requirement)  
+**Estimated Time:** 16-24 hours  
+**TDD Required:** MANDATORY - add tests for any complex replacements
 
-**What:** Replace `pastable` dependency with `lodash-es` + custom utilities
+**What:** Eliminate all 74 type assertions (`as` casts) from codebase
 
 **Why:**
 
-- Remove unnecessary dependency before Engraph extraction
-- `pastable` is small (8 functions used) - easy to replace
-- `lodash-es` is widely used, well-maintained, tree-shakeable
-- Reduce dependency count
+- **BLOCKER for Engraph extraction:** Target repo has `@typescript-eslint/consistent-type-assertions: ["error", { assertionStyle: "never" }]`
+- Type assertions hide bugs and prevent TypeScript from catching errors
+- Proper type guards and generics are safer and more maintainable
+- This is the LAST major blocker before extraction readiness
 
-**How (from Task 3.1 plan in PASTABLE_REPLACEMENT_PLAN.md):**
+**How (from Task 3.2 plan in 01-CURRENT-IMPLEMENTATION.md):**
 
-1. Install `lodash-es` as dependency
-2. Replace 8 pastable functions:
-    - `get` → `lodash-es/get`
-    - `pick` → `lodash-es/pick`
-    - `omit` → `lodash-es/omit`
-    - `upperFirst` → `lodash-es/upperFirst`
-    - `isString`, `isNumber`, `isObject` → custom or lodash
-    - `asConst` → custom utility
-3. Update 7 affected files
-4. Run all tests to verify no regressions
-5. Remove `pastable` from dependencies
+1. Run `grep -r " as " lib/src --include="*.ts" | grep -v "test.ts"` to inventory all assertions
+2. Categorize by pattern:
+    - Type narrowing → proper type guards
+    - Generic constraints → fix generic parameters
+    - Object literals → proper typing at source
+    - Unknown casts → investigate and add proper validation
+3. Fix file-by-file with TDD workflow
+4. Run quality gates after each file to ensure no regressions
+5. Final validation: grep confirms 0 assertions remain
 
 **Validation:**
 
-- All 334 tests still passing
-- No behavioral changes
-- `pastable` removed from package.json
+- Zero `as` casts in production code (tests may keep some)
+- All 373+ tests still passing
+- Type-check passes with stricter rules
 - Quality gate passes
 
-**After Task 3.1:**
+**After Task 3.2:**
 
-- ✅ Move to Task 3.2: Eliminate Type Assertions (BLOCKER)
+- ✅ Move to Task 3.3: Dependency Cleanup (remove openapi-types)
 
 ---
 
 ### Short Term - Phase 2 Remaining Tasks
 
-**Sequential Order (all dependencies now updated ✅):**
+**Sequential Order (6/10 tasks complete ✅):**
 
-1. ⏳ **Task 3.1:** Replace pastable (6-8 hours) - **NEXT**
-    - 7 files, 8 functions → `lodash-es` + custom utilities
-    - Detailed plan in PASTABLE_REPLACEMENT_PLAN.md
+1. ✅ **Task 3.1:** Replace pastable (3 hours actual) - **COMPLETE**
+    - Replaced with lodash-es + native + domain-specific utils
+    - Added 55+ comprehensive unit tests for pure functions
+    - All 373 tests passing
 
-2. ⏳ **Task 3.2:** Eliminate Type Assertions - **BLOCKER** (16-24 hours)
+2. ⏳ **Task 3.2:** Eliminate Type Assertions - **P0 BLOCKER** (16-24 hours) - **NEXT**
     - 74 instances → 0
     - Target repo: `assertionStyle: "never"`
-    - File-by-file elimination plan ready
+    - File-by-file elimination with TDD
 
-3. ⏳ **Task 3.3:** Dependency Cleanup (2-4 hours)
-    - Remove: `openapi-types`, `pastable`
+3. ⏳ **Task 3.3:** Dependency Cleanup (1-2 hours)
+    - Remove: `openapi-types` (redundant with openapi3-ts v4)
 
 ### Short Term (Next 2-3 Weeks) - Phase 3
 
@@ -501,20 +506,29 @@ All documented in `.agent/adr/` (12 ADRs):
     - All 318 tests passing (7 new tests since last count)
     - No commit needed (already up-to-date)
 
-7. ✅ **fix: resolve Prettier 3.x formatting issue + comprehensive tests**
+7. ✅ **feat(Task 3.1): replace pastable with lodash-es + native + domain-specific utils**
+    - Removed unmaintained pastable dependency (5+ years old)
+    - Replaced with tree-shakeable lodash-es (get, pick, camelCase, sortBy)
+    - Added native implementations (getSum, capitalize, sortBy) for zero-dep cases
+    - Created domain-specific schema-sorting.ts with precise types
+    - Added 55+ comprehensive unit tests for pure functions (TDD-driven)
+    - All 373 tests passing (+55 from 318)
+    - Duration: 3 hours
+
+8. ✅ **fix: resolve Prettier 3.x formatting issue + comprehensive tests**
     - Upgraded Prettier v2 → v3.4.2 (latest)
     - Fixed maybePretty implementation (config loading + error handling)
     - Added 16 comprehensive tests for all formatting scenarios
     - All 318 tests passing
 
-8. ✅ **docs: complete Task 2.3 defer logic analysis**
+9. ✅ **docs: complete Task 2.3 defer logic analysis**
     - 3-phase analysis: openapi3-ts v4 + swagger-parser + refactoring plan
     - Finding: No major deferral opportunities - codebase already optimal
     - Custom code serves specific purposes not covered by libraries
     - Prioritized Phase 3 work (type assertions P0, pastable P1)
     - Duration: 2 hours (vs 4-6 estimated)
 
-9. ✅ **feat: update zod to v4.1.12**
+10. ✅ **feat: update zod to v4.1.12**
     - Upgraded zod v3.25.76 → v4.1.12 (latest stable)
     - All 334 tests passing (no breaking changes)
     - @zodios/core peer dependency warning expected (not a blocker)
@@ -522,7 +536,7 @@ All documented in `.agent/adr/` (12 ADRs):
     - Duration: 30 minutes
 
 **Branch:** `feat/rewrite`  
-**Status:** Clean working tree, ready for Task 3.1 (Replace pastable)
+**Status:** Clean working tree, ready for Task 3.2 (Eliminate Type Assertions - P0 BLOCKER)
 
 ---
 
@@ -530,13 +544,13 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### For a Fresh Context
 
-**Quick Start for Task 2.3:**
+**Quick Start for Task 3.2 (P0 BLOCKER):**
 
 1. ✅ Read this section (you are here) - Current state overview
-2. 📋 Read "IMMEDIATE: Task 2.3" section above - What to do next
-3. 📋 Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 2.3 section - Detailed steps
-4. ✅ Run Definition of Done - Should pass (currently passing)
-5. 🚀 Execute Task 2.3 - Defer Logic Analysis (4-6 hours)
+2. 📋 Read "IMMEDIATE: Task 3.2" section above - What to do next
+3. 📋 Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 3.2 section - Detailed steps
+4. ✅ Run Definition of Done - Should pass (currently passing with 373 tests)
+5. 🚀 Execute Task 3.2 - Eliminate Type Assertions (16-24 hours, BLOCKER for extraction)
 
 **Full Context for Planning:**
 
