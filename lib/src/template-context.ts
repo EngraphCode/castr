@@ -1,4 +1,5 @@
-import type { OpenAPIObject, OperationObject, PathItemObject, ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject, OperationObject, ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
+import { isReferenceObject } from "openapi3-ts/oas30";
 import { sortBy } from "lodash-es";
 import { ts } from "tanu";
 import { match } from "ts-pattern";
@@ -17,6 +18,22 @@ import type { CodeMetaData } from "./CodeMeta.js";
 const file = ts.createSourceFile("", "", ts.ScriptTarget.ESNext, true);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, node, file);
+
+/**
+ * Convert result from getTypescriptFromOpenApi to string
+ * Handles union type: ts.Node | t.TypeDefinitionObject | string
+ */
+const tsResultToString = (result: ReturnType<typeof getTypescriptFromOpenApi>): string => {
+    if (typeof result === "string") {
+        return result;
+    }
+    // ts.Node can be printed
+    if ("kind" in result && typeof result.kind === "number") {
+        return printTs(result);
+    }
+    // t.TypeDefinitionObject - stringify it
+    return JSON.stringify(result);
+};
 
 export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?: TemplateContext["options"]) => {
     const result = getZodiosEndpointDefinitionList(openApiDoc, options);
@@ -81,13 +98,13 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
         const shouldGenerateType = options?.shouldExportAllTypes || isCircular;
         const schemaName = shouldGenerateType ? result.resolver.resolveRef(ref)?.normalized : undefined;
         if (shouldGenerateType && schemaName && !data.types[schemaName]) {
-            const node = getTypescriptFromOpenApi({
+            const tsResult = getTypescriptFromOpenApi({
                 schema: result.resolver.getSchemaByRef(ref),
                 ctx,
                 meta: { name: schemaName },
                 options,
-            }) as ts.Node;
-            data.types[schemaName] = printTs(node).replace("export ", "");
+            });
+            data.types[schemaName] = tsResultToString(tsResult).replace("export ", "");
             data.emittedType[schemaName] = true;
 
             for (const depRef of depsGraphs.deepDependencyGraph[ref] ?? []) {
@@ -97,13 +114,13 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
 
                 if (!isDepCircular && !data.types[depSchemaName]) {
                     const nodeSchema = result.resolver.getSchemaByRef(depRef);
-                    const node = getTypescriptFromOpenApi({
+                    const tsResult = getTypescriptFromOpenApi({
                         schema: nodeSchema,
                         ctx,
                         meta: { name: depSchemaName },
                         options,
-                    }) as ts.Node;
-                    data.types[depSchemaName] = printTs(node).replace("export ", "");
+                    });
+                    data.types[depSchemaName] = tsResultToString(tsResult).replace("export ", "");
                     // defining types for strings and using the `z.ZodType<string>` type for their schema
                     // prevents consumers of the type from adding zod validations like `.min()` to the type
                     if (options?.shouldExportAllTypes && nodeSchema.type === "object") {
@@ -134,13 +151,16 @@ export const getZodClientTemplateContext = (openApiDoc: OpenAPIObject, options?:
 
         if (groupStrategy !== "none") {
             const operationPath = getOriginalPathWithBrackets(endpoint.path);
-            const pathItemObject: unknown = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
-            if (!pathItemObject || typeof pathItemObject !== "object") {
+            const pathItem = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
+
+            // Skip if missing or is a reference (paths should not be refs, but be defensive)
+            if (!pathItem || isReferenceObject(pathItem)) {
                 console.warn("Missing path", endpoint.path);
                 return;
             }
 
-            const operation = (pathItemObject as PathItemObject)[endpoint.method];
+            // After isReferenceObject check, TypeScript knows it's PathItemObject
+            const operation = pathItem[endpoint.method];
             if (!operation) {
                 console.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
                 return;

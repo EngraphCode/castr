@@ -11,7 +11,7 @@ const autocorrectRef = (ref: string) => (ref[1] === "/" ? ref : "#/" + ref.slice
 function isSchemaRecord(value: unknown): value is Record<string, SchemaObject> {
     const isObject = value !== null && typeof value === "object" && !Array.isArray(value);
     if (!isObject) return false;
-    
+
     // For values in components/schemas, check they're objects (not arrays, not primitives)
     const values = Object.values(value);
     return values.every((val) => val !== null && typeof val === "object" && !Array.isArray(val));
