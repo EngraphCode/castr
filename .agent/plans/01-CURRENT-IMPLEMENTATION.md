@@ -2514,188 +2514,440 @@ cd lib && pnpm install zod@^3
 
 ## 3. Code Cleanup
 
-### 3.1 Replace pastable Dependency
+### 3.1 Replace pastable Dependency (REFINED STRATEGY)
 
 **Status:** Pending  
 **Priority:** HIGH  
-**Estimated Time:** 6-8 hours  
+**Estimated Time:** 1.5 hours (down from 6-8 hours due to deep analysis)  
 **Dependencies:** Task 1.2 complete, 2.1 and 2.2 complete
+
+**Analysis Complete:** Deep review conducted October 25, 2025  
+**Key Finding:** Functions are more specific than initially assessed - can simplify and optimize
 
 **Acceptance Criteria:**
 
-- [ ] All 8 pastable functions replaced
+- [ ] All 9 pastable functions + 1 type replaced
 - [ ] pastable dependency removed
-- [ ] All tests passing
+- [ ] All 334 tests passing
 - [ ] No functionality changes
-- [ ] Code is cleaner/more maintainable
+- [ ] Domain-specific naming improves code clarity
+- [ ] Type safety improved (precise type signatures, no `Record<string, unknown>`)
+
+**Refined Replacement Strategy:**
+
+| #   | Function               | Strategy    | Replacement                       | Bundle Impact |
+| --- | ---------------------- | ----------- | --------------------------------- | ------------- |
+| 1   | `getSum`               | ❌ Remove   | Native `.reduce()`                | -0KB          |
+| 2   | `capitalize`           | ✍️ Custom   | Native 1-liner                    | -0KB          |
+| 3   | `kebabToCamel`         | 🔄 Replace  | `camelCase` from lodash-es        | +0.5KB        |
+| 4   | `snakeToCamel`         | 🔄 Replace  | `camelCase` from lodash-es (same) | -             |
+| 5   | `get`                  | 🔄 Replace  | `get` from lodash-es              | +1.5KB        |
+| 6   | `pick`                 | 🔄 Replace  | `pick` from lodash-es             | +1KB          |
+| 7   | `sortBy`               | ❌ Remove   | Native `.localeCompare()`         | -0KB          |
+| 8   | `sortListFromRefArray` | ✍️ Simplify | Custom using lodash `sortBy`      | +0.5KB        |
+| 9   | `sortObjKeysFromArray` | ✍️ Simplify | Custom using lodash `sortBy`      | -             |
+| 10  | `ObjectLiteral` type   | ❌ Remove   | Not needed (lodash types)         | -0KB          |
+
+**Lodash-es imports (tree-shakeable):** `get`, `pick`, `sortBy`, `camelCase`  
+**Net bundle impact:** ~3-4KB (not 24KB!)
+
+---
 
 **Implementation Steps:**
 
-**Phase A: Add lodash utilities (if using Option C)**
+**Phase 1: No-Dependency Replacements (30 min)**
 
-1. **Install lodash:**
+1. **Replace `getSum` → Native `.reduce()` (5 min)**
+
+    **Files:** `lib/src/schema-complexity.helpers.ts` (3 instances)
+
+    ```typescript
+    // BEFORE:
+    import { getSum } from "pastable";
+    getSum(schemas.map((prop) => getSchemaComplexity({ current: 0, schema: prop })));
+
+    // AFTER:
+    schemas.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((sum, n) => sum + n, 0);
+    ```
+
+2. **Replace `capitalize` → Native implementation (5 min)**
+
+    **Files:** `lib/src/utils.ts` (add function)
+
+    ```typescript
+    /**
+     * Capitalizes the first letter of a string
+     * @example capitalize("hello") → "Hello"
+     */
+    export const capitalize = (str: string): string => {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
+    ```
+
+3. **Replace `sortBy` → Native `.localeCompare()` (5 min)**
+
+    **File:** `lib/src/template-context.ts` (line 228)
+
+    ```typescript
+    // BEFORE:
+    import { sortBy } from "pastable/server";
+    data.endpoints = sortBy(data.endpoints, "path");
+
+    // AFTER:
+    data.endpoints = [...data.endpoints].sort((a, b) => a.path.localeCompare(b.path));
+    ```
+
+4. **Remove `ObjectLiteral` type → Not needed (2 min)**
+
+    **File:** `lib/src/getZodiosEndpointDefinitionList.ts`
+
+    ```typescript
+    // BEFORE:
+    import type { ObjectLiteral } from "pastable";
+    function pick<T extends ObjectLiteral, K extends keyof T>...
+
+    // AFTER: (lodash-es pick uses extends object)
+    // No change needed - lodash types handle this
+    ```
+
+5. **Extract inline `pick` to utils (not needed - will use lodash) (0 min)**
+
+---
+
+**Phase 2: Add lodash-es (5 min)**
+
+6. **Install lodash-es:**
     ```bash
     cd lib
     pnpm add lodash-es
     pnpm add -D @types/lodash-es
     ```
 
-**Phase B: Replace simple functions**
+---
 
-2. **Replace `getSum` (schema-complexity.helpers.ts):**
+**Phase 3: lodash-es Replacements (20 min)**
+
+7. **Replace `kebabToCamel` + `snakeToCamel` → `camelCase` (10 min)**
+
+    **File:** `lib/src/utils.ts`
+
+    **Insight:** lodash `camelCase` handles BOTH kebab-case AND snake_case!
 
     ```typescript
     // BEFORE:
-    import { getSum } from "pastable";
-    const total = getSum(array);
+    import { kebabToCamel, snakeToCamel } from "pastable/server";
+
+    // Line 60:
+    capitalize(kebabToCamel(path).replaceAll("/", ""));
+
+    // Line 41:
+    snakeToCamel(preserveUnderscore.replaceAll("-", "_"));
 
     // AFTER:
-    const total = array.reduce((sum, n) => sum + n, 0);
+    import { camelCase } from "lodash-es";
+
+    // Line 60:
+    capitalize(camelCase(path).replaceAll("/", ""));
+
+    // Line 41:
+    camelCase(preserveUnderscore.replaceAll("-", "_"));
     ```
 
-3. **Replace `capitalize` (utils.ts, generateZodClientFromOpenAPI.ts):**
+8. **Replace `get` → lodash-es (2 min)**
 
-    ```typescript
-    // OPTION A: Native
-    const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-
-    // OPTION B: lodash
-    import { capitalize } from "lodash-es";
-    ```
-
-4. **Replace `kebabToCamel` and `snakeToCamel` (utils.ts):**
-
-    ```typescript
-    // Simple regex implementations
-    const kebabToCamel = (str: string): string => str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-
-    const snakeToCamel = (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-    ```
-
-**Phase C: Replace with lodash**
-
-5. **Replace `get` (makeSchemaResolver.ts, getOpenApiDependencyGraph.test.ts):**
-
-    ```typescript
-    // OPTION A: lodash
-    import { get } from "lodash-es";
-
-    // OPTION B: Optional chaining (if simple paths)
-    const value = obj?.prop?.nested?.value;
-    ```
-
-6. **Replace `pick` (generateZodClientFromOpenAPI.ts):**
-
-    ```typescript
-    import { pick } from "lodash-es";
-    // Usage stays the same
-    ```
-
-7. **Replace `sortBy` (template-context.ts):**
-    ```typescript
-    import { sortBy } from "lodash-es";
-    // Usage stays the same
-    ```
-
-**Phase D: Create custom utilities**
-
-8. **Replace `sortListFromRefArray` and `sortObjKeysFromArray` (template-context.ts):**
-
-    ```typescript
-    // Create lib/src/utils/sorting.ts
-    export function sortListFromRefArray<T>(list: T[], refArray: string[], keyFn: (item: T) => string): T[] {
-        const order = new Map(refArray.map((key, idx) => [key, idx]));
-        return [...list].sort((a, b) => {
-            const aKey = keyFn(a);
-            const bKey = keyFn(b);
-            const aIdx = order.get(aKey) ?? Infinity;
-            const bIdx = order.get(bKey) ?? Infinity;
-            return aIdx - bIdx;
-        });
-    }
-
-    export function sortObjKeysFromArray<T extends Record<string, unknown>>(obj: T, keyOrder: string[]): T {
-        const order = new Map(keyOrder.map((key, idx) => [key, idx]));
-        const entries = Object.entries(obj);
-        entries.sort(([keyA], [keyB]) => {
-            const idxA = order.get(keyA) ?? Infinity;
-            const idxB = order.get(keyB) ?? Infinity;
-            return idxA - idxB;
-        });
-        return Object.fromEntries(entries) as T;
-    }
-    ```
-
-**Phase E: Replace type**
-
-9. **Replace `ObjectLiteral` type (getZodiosEndpointDefinitionList.ts):**
+    **Files:** `lib/src/makeSchemaResolver.ts`, `lib/src/getOpenApiDependencyGraph.test.ts`
 
     ```typescript
     // BEFORE:
-    import type { ObjectLiteral } from "pastable";
+    import { get } from "pastable/server";
 
-    // AFTER: (if we need it at all)
-    type ObjectLiteral = Record<string, unknown>;
-    // OR just use Record<string, unknown> inline
-    // OR use a more specific type if possible
+    // AFTER:
+    import { get } from "lodash-es";
+    // Usage stays the same (same API)
     ```
 
-**Phase F: Remove dependency**
+9. **Replace `pick` → lodash-es (2 min)**
 
-10. **Remove pastable:**
+    **Files:** `lib/src/generateZodClientFromOpenAPI.ts`, `lib/src/getZodiosEndpointDefinitionList.ts`
+
+    ```typescript
+    // BEFORE:
+    import { pick } from "pastable/server";
+    // OR inline implementation at getZodiosEndpointDefinitionList.ts:182
+
+    // AFTER:
+    import { pick } from "lodash-es";
+    // Remove inline implementation (lines 181-191 in getZodiosEndpointDefinitionList.ts)
+    ```
+
+---
+
+**Phase 4: Domain-Specific Custom Utilities (30 min)**
+
+10. **Create domain-specific sorting utilities**
+
+    **Create:** `lib/src/utils/schema-sorting.ts`
+
+    **Key Insight:** These functions sort generated schema code, not arbitrary objects!
+
+    ```typescript
+    import { sortBy } from "lodash-es";
+
+    /**
+     * Sort schema code dictionary by dependency order
+     *
+     * Ensures schemas appear in the correct order in generated files,
+     * with dependencies before dependents.
+     *
+     * @param schemas - Dictionary mapping schema names to generated code strings
+     * @param dependencyOrder - Array of schema reference paths in dependency order
+     * @returns New dictionary with keys reordered
+     *
+     * @example
+     * const schemas = { User: "z.object(...)", Pet: "z.object(...)" };
+     * const ordered = sortSchemasByDependencyOrder(schemas, ["#/components/schemas/Pet", "#/components/schemas/User"]);
+     * // Result: { Pet: "z.object(...)", User: "z.object(...)" }
+     */
+    export function sortSchemasByDependencyOrder<T extends Record<string, string>>(
+        schemas: T,
+        dependencyOrder: readonly string[]
+    ): T {
+        const orderMap = new Map(dependencyOrder.map((key, idx) => [key, idx]));
+        const entries = sortBy(Object.entries(schemas), ([key]) => orderMap.get(key) ?? Infinity);
+        return Object.fromEntries(entries) as T;
+    }
+
+    /**
+     * Sort schema names by dependency order
+     *
+     * Orders schema names so dependencies appear before dependents.
+     * Names not in the reference order are placed at the end.
+     *
+     * @param schemaNames - Array of schema names to sort
+     * @param dependencyOrder - Reference array defining the correct order
+     * @returns New array with names sorted by dependency order
+     *
+     * @example
+     * sortSchemaNamesByDependencyOrder(["User", "Pet"], ["Pet", "User"])
+     * // Result: ["Pet", "User"]
+     */
+    export function sortSchemaNamesByDependencyOrder<T extends string>(
+        schemaNames: T[],
+        dependencyOrder: readonly T[]
+    ): T[] {
+        const orderMap = new Map(dependencyOrder.map((item, idx) => [item, idx]));
+        return sortBy(schemaNames, (item) => orderMap.get(item) ?? Infinity);
+    }
+    ```
+
+11. **Create test file: `lib/src/utils/schema-sorting.test.ts` (15 min)**
+
+    ```typescript
+    import { describe, it, expect } from "vitest";
+    import { sortSchemasByDependencyOrder, sortSchemaNamesByDependencyOrder } from "./schema-sorting.js";
+
+    describe("schema-sorting", () => {
+        describe("sortSchemasByDependencyOrder", () => {
+            it("should sort schema code dictionary by dependency order", () => {
+                const schemas = {
+                    User: "z.object({ name: z.string() })",
+                    Pet: "z.object({ owner: UserSchema })",
+                    Store: "z.object({ pets: z.array(PetSchema) })",
+                };
+                const order = ["Pet", "User", "Store"];
+
+                const result = sortSchemasByDependencyOrder(schemas, order);
+
+                expect(Object.keys(result)).toEqual(["Pet", "User", "Store"]);
+            });
+
+            it("should place schemas not in order at the end", () => {
+                const schemas = { Z: "code", A: "code", M: "code" };
+                const order = ["A", "M"];
+
+                const result = sortSchemasByDependencyOrder(schemas, order);
+
+                expect(Object.keys(result)).toEqual(["A", "M", "Z"]);
+            });
+
+            it("should handle empty inputs", () => {
+                expect(sortSchemasByDependencyOrder({}, [])).toEqual({});
+            });
+        });
+
+        describe("sortSchemaNamesByDependencyOrder", () => {
+            it("should sort schema names by dependency order", () => {
+                const names = ["User", "Pet", "Store"];
+                const order = ["Pet", "User", "Store"];
+
+                const result = sortSchemaNamesByDependencyOrder(names, order);
+
+                expect(result).toEqual(["Pet", "User", "Store"]);
+            });
+
+            it("should place names not in order at the end", () => {
+                const names = ["Z", "A", "M"];
+                const order = ["A", "M"];
+
+                const result = sortSchemaNamesByDependencyOrder(names, order);
+
+                expect(result).toEqual(["A", "M", "Z"]);
+            });
+
+            it("should handle empty inputs", () => {
+                expect(sortSchemaNamesByDependencyOrder([], [])).toEqual([]);
+            });
+        });
+    });
+    ```
+
+12. **Update template-context.ts to use new functions**
+
+    ```typescript
+    // BEFORE:
+    import { sortBy, sortListFromRefArray, sortObjKeysFromArray } from "pastable/server";
+
+    // Line 124:
+    data.schemas = sortObjKeysFromArray(data.schemas, schemaOrderedByDependencies);
+
+    // Line 263:
+    group.schemas = sortObjKeysFromArray(groupSchemas, getPureSchemaNames(schemaOrderedByDependencies));
+
+    // Line 267:
+    data.commonSchemaNames = new Set(
+        sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
+    );
+
+    // AFTER:
+    import { sortSchemasByDependencyOrder, sortSchemaNamesByDependencyOrder } from "./utils/schema-sorting.js";
+
+    // Line 124 - Much clearer what this does!
+    data.schemas = sortSchemasByDependencyOrder(data.schemas, schemaOrderedByDependencies);
+
+    // Line 263:
+    group.schemas = sortSchemasByDependencyOrder(groupSchemas, getPureSchemaNames(schemaOrderedByDependencies));
+
+    // Line 267:
+    data.commonSchemaNames = new Set(
+        sortSchemaNamesByDependencyOrder([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
+    );
+    ```
+
+---
+
+**Phase 5: Cleanup (10 min)**
+
+13. **Remove all pastable imports:**
+    - Verify no references remain
+    - Run grep to confirm
+
+14. **Remove pastable dependency:**
 
     ```bash
     cd lib
     pnpm remove pastable
     ```
 
-11. **Run tests:**
+15. **Run tests:**
 
     ```bash
     pnpm test -- --run
+    # Expected: 334/334 passing
     ```
 
-12. **Commit:**
+16. **Run quality gate:**
+
+    ```bash
+    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+    ```
+
+17. **Commit:**
     ```bash
     git add -A
-    git commit -m "refactor: replace pastable with lodash-es and native code
+    git commit -m "refactor: replace pastable with lodash-es and domain-specific utilities
     ```
 
-Replaced functions:
+Replaced 9 functions + 1 type from pastable:
 
-- getSum → native reduce
-- capitalize → lodash-es
-- kebabToCamel, snakeToCamel → custom implementations
-- get, pick, sortBy → lodash-es
-- sortListFromRefArray, sortObjKeysFromArray → custom utils
-- ObjectLiteral type → Record<string, unknown>
+**No-Dependency Replacements:**
 
-Removed dependency: pastable@2.2.1
-Added dependency: lodash-es (tree-shakeable, well-maintained)
+- getSum → native .reduce() (3 instances)
+- capitalize → custom native implementation
+- sortBy → native .localeCompare()
+- ObjectLiteral type → removed (lodash types handle it)
 
-All tests passing (297)
-No functionality changes"
+**lodash-es Replacements (tree-shakeable):**
 
-````
+- kebabToCamel + snakeToCamel → camelCase (2→1 function!)
+- get → lodash-es get
+- pick → lodash-es pick (removed inline implementation)
+
+**Domain-Specific Utilities:**
+
+- sortListFromRefArray → sortSchemaNamesByDependencyOrder
+- sortObjKeysFromArray → sortSchemasByDependencyOrder
+- New file: lib/src/utils/schema-sorting.ts
+- Comprehensive tests: lib/src/utils/schema-sorting.test.ts
+
+**Type Safety Improvements:**
+
+- Precise type signatures (Record<string, string> vs generic object)
+- Domain-specific naming (self-documenting code)
+- No Record<string, unknown> (target repo compliant)
+
+**Bundle Impact:**
+
+- Removed: pastable (obscure dependency)
+- Added: lodash-es (4 functions, tree-shaken: ~3-4KB)
+- Net: +3-4KB (not +24KB due to tree-shaking)
+
+All 334 tests passing ✅
+No functionality changes ✅
+Code clarity improved ✅"
+```
+
+---
 
 **Validation Steps:**
 
-1. `pnpm test -- --run` exits 0 (297 tests)
+1. `pnpm test -- --run` exits 0 (334 tests)
 2. `pnpm type-check` exits 0
 3. `pnpm build` succeeds
 4. No references to "pastable" in code:
     ```bash
     grep -r "pastable" lib/src/
+    # Should return nothing
     ```
 5. Package.json no longer lists pastable
-6. Bundle size acceptable (check dist size)
+6. Bundle size check:
+    ```bash
+    ls -lh lib/dist/openapi-zod-client.js
+    # Should only increase ~3-4KB
+    ```
+7. Tree-shaking verification:
+    ```bash
+    # Check that only 4 lodash functions are imported
+    grep "from 'lodash-es'" lib/src/ -r
+    # Should show: get, pick, sortBy, camelCase
+    ```
 
 **Output:**
 
-- Updated source files
-- New lib/src/utils/sorting.ts (if needed)
-- Updated package.json
-- Commit
+- Updated source files (5 files modified)
+- New `lib/src/utils/schema-sorting.ts` (domain-specific utilities)
+- New `lib/src/utils/schema-sorting.test.ts` (comprehensive tests)
+- Updated `lib/package.json` (lodash-es added, pastable removed)
+- Commit with detailed changelog
+
+**Key Improvements Over Original Plan:**
+
+1. **Time Reduced:** 6-8 hours → 1.5 hours (80% reduction)
+2. **Bundle Impact:** Accurate estimate (3-4KB vs feared 24KB)
+3. **Type Safety:** Precise signatures (no `Record<string, unknown>`)
+4. **Code Clarity:** Domain-specific naming (self-documenting)
+5. **Consistency:** All library functions from one source (lodash-es)
+6. **Simplification:** 2 functions → 1 (kebab+snake → camelCase)
 
 ---
 
@@ -2847,6 +3099,7 @@ Target repo compliance: assertionStyle: 'never' ✅
 
 All tests passing (297)
 Zero type assertions remaining"
+
 ````
 
 **Validation Steps:**
@@ -2868,9 +3121,9 @@ Zero type assertions remaining"
 
 ### 3.3 Remove Evaluated Dependencies
 
-**Status:** Pending  
-**Priority:** MEDIUM  
-**Estimated Time:** 2-4 hours  
+**Status:** Pending
+**Priority:** MEDIUM
+**Estimated Time:** 2-4 hours
 **Dependencies:** Tasks 1.3, 1.4 complete
 
 **Acceptance Criteria:**
@@ -2975,9 +3228,9 @@ All tests passing (297)"
 
 ### 4.1 Full Quality Gate Verification
 
-**Status:** Pending  
-**Priority:** CRITICAL  
-**Estimated Time:** 2 hours  
+**Status:** Pending
+**Priority:** CRITICAL
+**Estimated Time:** 2 hours
 **Dependencies:** All previous tasks complete
 
 **Acceptance Criteria:**
@@ -3063,10 +3316,12 @@ Ready for Phase 3: Quality & Testing"
 ````
 
 **Validation Steps:**
+
 1. Definition of Done script passes:
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
-````
+```
 
 2. No type assertions in code
 3. All dependency changes documented
