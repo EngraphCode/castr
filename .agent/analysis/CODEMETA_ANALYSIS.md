@@ -279,6 +279,7 @@ function getZodSchema(): ZodCodeResult {
 - AST-based generation (no string manipulation)
 - Type-safe code generation
 - Part of already-planned work
+- **Renders CodeMeta completely redundant** (AST nodes replace string-carrying wrappers)
 
 **Cons:**
 
@@ -286,6 +287,37 @@ function getZodSchema(): ZodCodeResult {
 - Postpones long-term solution
 
 **Timeline:** Per `.agent/analysis/HANDLEBARS_EVALUATION.md`, ts-morph emitter is recommended for Phase 3/4
+
+**CodeMeta Obsolescence:**
+
+When we migrate to ts-morph emitter, CodeMeta becomes unnecessary because:
+
+1. **No String Manipulation:** AST nodes ARE the code (no need to carry strings)
+2. **Native Relationships:** AST maintains parent/child structure natively
+3. **Type-Safe Generation:** TypeScript AST provides compile-time guarantees
+4. **No Wrapper Needed:** Generate TypeScript nodes directly, serialize at end
+5. **Complexity is AST Depth:** Calculated from AST structure, not custom logic
+
+Example migration:
+
+```typescript
+// BEFORE (CodeMeta + Handlebars):
+const codeMeta = new CodeMeta(schema).assign("z.string()");
+template.render({ code: codeMeta.toString() });
+
+// AFTER (ts-morph emitter):
+const zodSchema = factory.createCallExpression(
+    factory.createPropertyAccessExpression(
+        factory.createIdentifier("z"),
+        "string"
+    ),
+    undefined,
+    []
+);
+// AST node IS the code, no string wrapper needed
+```
+
+**Estimated Effort to Remove CodeMeta:** 8-12 hours (part of 22-32 hour emitter migration)
 
 ---
 
@@ -387,16 +419,46 @@ function isCodeMeta(x: unknown): x is CodeMeta {
 
 ### Phase 3/4 (ts-morph Emitter Migration)
 
-**Action:** Replace CodeMeta with AST-based approach
+**Action:** Replace CodeMeta with AST-based approach (CodeMeta becomes redundant)
 
 When migrating to ts-morph emitter (per HANDLEBARS_EVALUATION.md):
 
 - Generate code via TypeScript AST (not strings)
-- No need for CodeMeta wrapper
-- Relationships tracked by AST structure
-- Complexity calculated from AST nodes
+- **CodeMeta becomes completely redundant** - AST nodes replace string wrappers
+- No need for code.assign() - AST nodes ARE the code
+- Relationships tracked by AST structure natively (no .inherit() needed)
+- Complexity calculated from AST nodes (no custom complexity getter)
+- Reference resolution happens at AST level (no .ref tracking needed)
 
-**Estimated Effort:** 22-32 hours (part of emitter migration)
+**What Replaces CodeMeta:**
+
+```typescript
+// Instead of:
+const codeMeta = new CodeMeta(schema).assign("z.string()");
+
+// We have:
+const astNode = ts.factory.createCallExpression(
+    ts.factory.createPropertyAccessExpression(
+        ts.factory.createIdentifier("z"),
+        "string"
+    ),
+    undefined,
+    []
+);
+
+// The AST node IS the code representation
+// Serialization happens once at the end via ts.printer
+```
+
+**CodeMeta Removal Effort:** 8-12 hours (within 22-32 hour emitter migration)
+
+**Files Affected:**
+- `lib/src/CodeMeta.ts` - Delete entire file
+- `lib/src/CodeMeta.test.ts` - Delete entire file
+- `lib/src/openApiToZod.ts` - Replace CodeMeta with AST generation
+- `lib/src/template-context.ts` - Pass AST nodes or serialized strings
+- `lib/src/zodiosEndpoint.*.ts` - Work with AST nodes directly
+- All test files using CodeMeta - Update to use AST assertions
 
 ---
 
