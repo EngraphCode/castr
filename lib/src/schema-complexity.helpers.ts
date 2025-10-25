@@ -33,9 +33,11 @@ export function calculateCompositionComplexity(
 /**
  * Calculates complexity for a type array (OpenAPI 3.1 feature)
  * Handles both single-type and multi-type arrays
+ * 
+ * @param types - Array of schema types from schema.type (when schema.type is an array in OAS 3.1)
  */
 export function calculateTypeArrayComplexity(
-    types: string[],
+    types: ReadonlyArray<NonNullable<SchemaObject["type"]>>,
     schema: SchemaObject,
     current: number,
     complexityByComposite: (type: CompositeType) => number,
@@ -48,7 +50,7 @@ export function calculateTypeArrayComplexity(
             complexityByComposite("oneOf") +
             getSchemaComplexity({
                 current,
-                schema: { ...schema, type: firstType as SchemaObject["type"] } as SchemaObject,
+                schema: { ...schema, type: firstType },
             })
         );
     }
@@ -60,7 +62,7 @@ export function calculateTypeArrayComplexity(
             .map((prop) =>
                 getSchemaComplexity({
                     current: 0,
-                    schema: { ...schema, type: prop as SchemaObject["type"] } as SchemaObject,
+                    schema: { ...schema, type: prop },
                 })
             )
             .reduce((sum, n) => sum + n, 0)
