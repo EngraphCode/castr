@@ -83,11 +83,317 @@ Options:
   -h, --help                        Display this message
 ```
 
-## Customization
+## Templates
 
-You can pass a custom [handlebars](https://handlebarsjs.com/) template and/or a [custom prettier config](https://prettier.io/docs/en/configuration.html) with something like:
+`openapi-zod-client` supports multiple output templates to suit different use cases:
 
-`pnpm openapi-zod-client ./example/petstore.yaml -o ./example/petstore-schemas.ts -t ./example/schemas-only.hbs -p ./example/prettier-custom.json --export-schemas`, there is an example of the output [here](./examples/schemas-only/petstore-schemas.ts)
+### Available Templates
+
+#### 1. **`default`** - Full Zodios HTTP Client (default)
+
+Generates a complete Zodios API client with HTTP methods, validation, and type safety.
+
+**Use when**: You want a ready-to-use HTTP client with runtime validation.
+
+```bash
+pnpx openapi-zod-client ./petstore.yaml -o ./client.ts
+# or explicitly:
+pnpx openapi-zod-client ./petstore.yaml -o ./client.ts --template default
+```
+
+#### 2. **`schemas-only`** - Pure Zod Schemas
+
+Generates only the Zod schemas without any HTTP client code.
+
+**Use when**: You only need the validation schemas, not the HTTP client.
+
+```bash
+pnpx openapi-zod-client ./petstore.yaml -o ./schemas.ts --template schemas-only
+```
+
+Example output in [./examples/schemas-only/petstore-schemas.ts](./examples/schemas-only/petstore-schemas.ts)
+
+#### 3. **`schemas-with-metadata`** - Schemas + Metadata (No HTTP Client) ⭐ NEW
+
+Generates Zod schemas, endpoint metadata, and optional validation helpers **without** Zodios HTTP client dependencies.
+
+**Use when**:
+
+- You want to use your own HTTP client (fetch, axios, ky, etc.)
+- You need full request/response validation but not the client
+- You're building SDK tooling or code generators
+- You need MCP (Model Context Protocol) tool definitions
+
+**Features**:
+
+- ✅ All Zod schemas exported
+- ✅ Endpoint metadata (method, path, operationId, description)
+- ✅ Full request validation (path params, query params, headers, body)
+- ✅ Full response validation (all status codes with descriptions)
+- ✅ Optional validation helper functions
+- ✅ Optional schema registry builder (with key sanitization)
+- ✅ MCP-compatible tool definitions
+- ✅ Zero Zodios dependencies
+
+```bash
+# Basic usage
+pnpx openapi-zod-client ./petstore.yaml -o ./api-schemas.ts --no-client
+
+# With validation helpers
+pnpx openapi-zod-client ./petstore.yaml -o ./api.ts --no-client --with-validation-helpers
+
+# With schema registry
+pnpx openapi-zod-client ./petstore.yaml -o ./api.ts --no-client --with-schema-registry
+
+# All features
+pnpx openapi-zod-client ./petstore.yaml -o ./api.ts \
+  --no-client \
+  --with-validation-helpers \
+  --with-schema-registry
+```
+
+**Example output**:
+
+```typescript
+import { z } from "zod";
+
+// Zod schemas
+const Pet = z.object({ id: z.number(), name: z.string() }).strict();
+const Error = z.object({ code: z.number(), message: z.string() }).strict();
+
+export const schemas = {
+    Pet,
+    Error,
+} as const;
+
+// Endpoint metadata with full validation schemas
+export const endpoints = [
+    {
+        method: "get" as const,
+        path: "/pets/:petId",
+        operationId: "getPetById",
+        description: "Get a pet by ID",
+        request: {
+            pathParams: z.object({ petId: z.string() }),
+            queryParams: z.object({ include: z.string().optional() }).optional(),
+            headers: z.object({ "x-api-key": z.string() }).optional(),
+        },
+        responses: {
+            200: { description: "Success", schema: Pet },
+            404: { description: "Not Found", schema: Error },
+        },
+    },
+] as const;
+
+// MCP-compatible tool definitions
+export const mcpTools = endpoints.map((endpoint) => ({
+    name: endpoint.operationId,
+    description: endpoint.description,
+    inputSchema: z.object({
+        path: endpoint.request.pathParams,
+        query: endpoint.request.queryParams,
+    }),
+    outputSchema: endpoint.responses[200]?.schema || z.unknown(),
+})) as const;
+
+// Optional: Validation helpers (--with-validation-helpers)
+export function validateRequest(endpoint, input) {
+    // Validates path, query, headers, body against endpoint schema
+    // Uses .parse() for fail-fast validation (throws on error)
+}
+
+export function validateResponse(endpoint, status, data) {
+    // Validates response data against endpoint response schema
+    // Uses .parse() for fail-fast validation (throws on error)
+}
+
+// Optional: Schema registry (--with-schema-registry)
+export function buildSchemaRegistry(options?: { rename?: (key: string) => string }) {
+    // Builds a sanitized registry of all schemas
+    // Useful for dynamic schema lookup by name
+}
+```
+
+**Options**:
+
+- `--no-client`: Automatically use `schemas-with-metadata` template
+- `--with-validation-helpers`: Generate `validateRequest` and `validateResponse` functions
+- `--with-schema-registry`: Generate `buildSchemaRegistry` function for dynamic schema access
+
+**Benefits**:
+
+- 🚀 Bring your own HTTP client (any library)
+- 🔒 Full type safety with runtime validation
+- 📦 Smaller bundle size (no Zodios/axios dependencies)
+- 🛠️ Perfect for SDK generation or code tooling
+- 🤖 MCP-ready for AI assistant integrations
+
+### Custom Templates
+
+You can also pass a custom [handlebars](https://handlebarsjs.com/) template and/or a [custom prettier config](https://prettier.io/docs/en/configuration.html) with something like:
+
+`pnpm openapi-zod-client ./example/petstore.yaml -o ./example/petstore-schemas.ts -t ./example/schemas-only.hbs -p ./example/prettier-custom.json --export-schemas`
+
+### MCP (Model Context Protocol) Integration
+
+The `schemas-with-metadata` template includes **MCP-compatible tool definitions** out of the box.
+
+#### What is MCP?
+
+**MCP (Model Context Protocol)** is a standardized protocol developed by Anthropic for enabling AI assistants (like Claude) to interact with external tools, APIs, and data sources. It defines a consistent interface for:
+
+- **Tool Discovery**: How AI systems discover available tools
+- **Tool Invocation**: How tools are called with parameters
+- **Input/Output Validation**: How parameters and results are validated
+
+#### MCP Tool Schema
+
+The MCP protocol requires tools to follow this structure:
+
+```typescript
+{
+  name: string;           // Unique identifier (typically operationId from OpenAPI)
+  description?: string;   // Human-readable description of what the tool does
+  inputSchema: z.ZodType; // Zod schema defining all input parameters
+  outputSchema?: z.ZodType; // Zod schema defining the expected response
+}
+```
+
+#### What Makes `mcpTools` MCP-Specific?
+
+The generated `mcpTools` array transforms OpenAPI endpoints into MCP-compatible tool definitions:
+
+```typescript
+export const mcpTools = endpoints.map((endpoint) => {
+    // Build a consolidated params object from all request parameter types
+    const params: Record<string, z.ZodTypeAny> = {};
+    if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+    if (endpoint.request?.queryParams) params.query = endpoint.request.queryParams;
+    if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+    if (endpoint.request?.body) params.body = endpoint.request.body;
+
+    return {
+        name: endpoint.operationId || `${endpoint.method}_${endpoint.path}`,
+        description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
+        inputSchema: Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+        outputSchema: endpoint.responses[200]?.schema || endpoint.responses[201]?.schema || z.unknown(),
+    };
+}) as const;
+```
+
+#### Key MCP-Specific Design Decisions
+
+1. **Consolidated Input Schema**: Unlike `endpoints` (which separates path, query, headers, body), MCP tools use a **single `inputSchema`** that nests all parameter types:
+
+    ```typescript
+    inputSchema: z.object({
+        path: z.object({ userId: z.string() }),
+        query: z.object({ include: z.string().optional() }),
+        headers: z.object({ authorization: z.string() }),
+        body: CreateUserPayload,
+    });
+    ```
+
+2. **Success-Focused Output**: MCP tools use the **primary success response** (200 or 201) as `outputSchema`, not all possible responses. This is because:
+    - MCP focuses on the "happy path" for tool execution
+    - Error handling is typically done at the protocol level (HTTP status, exceptions)
+    - AI assistants need clear expectations of successful tool output
+
+3. **Fallback to `z.unknown()`**: If no 200/201 response is defined, `outputSchema` defaults to `z.unknown()` to maintain type safety while allowing any valid JSON.
+
+4. **Name from `operationId`**: MCP tools use OpenAPI's `operationId` as the tool name (with fallback to auto-generated name), ensuring:
+    - Human-readable tool identifiers
+    - Consistency with API documentation
+    - Uniqueness across the API surface
+
+#### Why Not Just Use `endpoints`?
+
+While `endpoints` provides **full validation** for all request/response scenarios, `mcpTools` is optimized for **AI tool integration**:
+
+| Feature                | `endpoints`                                      | `mcpTools`                               |
+| ---------------------- | ------------------------------------------------ | ---------------------------------------- |
+| **Request Structure**  | Separated (path, query, headers, body)           | Consolidated (single inputSchema)        |
+| **Response Structure** | All status codes (200, 201, 400, 404, 500, etc.) | Primary success only (200/201)           |
+| **Use Case**           | HTTP client implementation, full validation      | AI assistant tool discovery & invocation |
+| **Validation**         | Comprehensive (all edge cases)                   | Success-focused (happy path)             |
+| **TypeScript Types**   | Detailed per-parameter types                     | Simplified input/output types            |
+
+#### Real-World Example
+
+Given this OpenAPI endpoint:
+
+```yaml
+paths:
+    /users/{userId}:
+        get:
+            operationId: getUserById
+            description: Retrieve a user by their ID
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: include
+                  in: query
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: User found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                404:
+                    description: User not found
+```
+
+The generated `mcpTools` entry looks like:
+
+```typescript
+{
+  name: "getUserById",
+  description: "Retrieve a user by their ID",
+  inputSchema: z.object({
+    path: z.object({ userId: z.string() }),
+    query: z.object({ include: z.string().optional() }).optional(),
+  }),
+  outputSchema: User, // The User Zod schema
+}
+```
+
+An AI assistant can now:
+
+1. **Discover** this tool from the `mcpTools` array
+2. **Validate** user input against `inputSchema` before making the API call
+3. **Parse** the API response using `outputSchema`
+4. **Handle** the validated result in a type-safe manner
+
+#### Using MCP Tools in Practice
+
+```typescript
+import { mcpTools, endpoints } from "./api.ts";
+
+// AI assistant discovers available tools
+const tool = mcpTools.find((t) => t.name === "getUserById");
+
+// Validate user request
+const input = tool.inputSchema.parse({
+    path: { userId: "123" },
+    query: { include: "profile" },
+});
+
+// Make API call (using your own HTTP client)
+const response = await fetch(`https://api.example.com/users/${input.path.userId}`, {
+    headers: { "Content-Type": "application/json" },
+});
+
+// Validate response
+const data = tool.outputSchema.parse(await response.json());
+```
+
+This structure aligns perfectly with how MCP servers expose tools to AI assistants, making `openapi-zod-client` a powerful bridge between OpenAPI specs and AI tool integration.
 
 ## When using the CLI
 
