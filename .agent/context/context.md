@@ -148,11 +148,11 @@ All documented in `.agent/adr/` (12 ADRs):
 ```json
 {
     "openapi3-ts": "^4.5.0", // ✅ UPDATED (was ^3, now using oas30 namespace)
-    "zod": "^3", // Target: 4.1.12 (Oct 2025) - Next: Task 2.4
-    "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, maintenance mode but stable)
+    "zod": "^4.1.12", // ✅ UPDATED (was 3.25.76, backward compatible)
+    "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, peer dep warning expected)
     "openapi-types": "^12.1.3", // ⚠️ REMOVE (redundant with openapi3-ts v4)
     "pastable": "^2.2.1", // ⚠️ REMOVE (replace with lodash-es + custom)
-    "@apidevtools/swagger-parser": "^12.1.0", // Next: Task 2.2 (update to latest)
+    "@apidevtools/swagger-parser": "^12.1.0", // ✅ VERIFIED at latest (Oct 14, 2025)
     "tanu": "^0.2.0", // ✅ KEEP (TypeScript AST manipulation)
     "commander": "^14.0.1", // ✅ KEEP (CLI framework)
     "ts-pattern": "^5.8.0", // ✅ KEEP (pattern matching)
@@ -292,78 +292,63 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ## 🎯 Next Priorities
 
-### ⚡ IMMEDIATE: Task 2.3 - Defer Logic Analysis
+### ⚡ IMMEDIATE: Task 3.1 - Replace pastable
 
-**Status:** Ready to execute (Tasks 2.1 ✅ and 2.2 ✅ complete)  
-**Priority:** HIGH (identifies deferral opportunities)  
-**Estimated Time:** 4-6 hours  
-**TDD Required:** Tests already exist, analysis task
+**Status:** Ready to execute (All Phase 2 core tasks ✅ complete)  
+**Priority:** HIGH (dependency cleanup)  
+**Estimated Time:** 6-8 hours  
+**TDD Required:** Tests exist, refactor with test protection
 
-**What:** Analyze custom code vs openapi3-ts v4 & swagger-parser capabilities to identify deferral opportunities
+**What:** Replace `pastable` dependency with `lodash-es` + custom utilities
 
 **Why:**
 
-- Now that both dependencies are at their latest versions, identify what custom code can be safely removed
-- Reduce maintenance burden by deferring to battle-tested libraries
-- Simplify codebase before extraction to Engraph monorepo
+- Remove unnecessary dependency before Engraph extraction
+- `pastable` is small (8 functions used) - easy to replace
+- `lodash-es` is widely used, well-maintained, tree-shakeable
+- Reduce dependency count
 
-**How (from Task 2.3 in 01-CURRENT-IMPLEMENTATION.md):**
+**How (from Task 3.1 plan in PASTABLE_REPLACEMENT_PLAN.md):**
 
-**Phase A: openapi3-ts v4 Analysis (2 hours)**
-
-1. Inventory our custom type guards
-2. Compare with openapi3-ts v4 exports
-3. Check for utilities (schema traversal, dereferencing, validation)
-4. Document findings (custom code vs v4 equivalent)
-
-**Phase B: swagger-parser Analysis (2 hours)**
-
-1. Review swagger-parser capabilities (parse, validate, dereference, bundle, resolve)
-2. Compare with our custom code (makeSchemaResolver, validation)
-3. Identify deferral opportunities with trade-off analysis
-4. Analyze pros/cons (control vs maintenance burden)
-
-**Phase C: Create Refactoring Plan (1-2 hours)**
-
-1. Prioritize replacement opportunities (high/medium/low priority)
-2. Estimate effort for each replacement
-3. Create detailed refactoring tickets
+1. Install `lodash-es` as dependency
+2. Replace 8 pastable functions:
+    - `get` → `lodash-es/get`
+    - `pick` → `lodash-es/pick`
+    - `omit` → `lodash-es/omit`
+    - `upperFirst` → `lodash-es/upperFirst`
+    - `isString`, `isNumber`, `isObject` → custom or lodash
+    - `asConst` → custom utility
+3. Update 7 affected files
+4. Run all tests to verify no regressions
+5. Remove `pastable` from dependencies
 
 **Validation:**
 
-- Comprehensive analysis document created
-- Deferral opportunities clearly documented
-- Refactoring plan with effort estimates
-- No code changes in this task (analysis only)
+- All 334 tests still passing
+- No behavioral changes
+- `pastable` removed from package.json
+- Quality gate passes
 
-**After Task 2.3:**
+**After Task 3.1:**
 
-- ✅ Move to Task 2.4: Update zod (v3 → v4.1.12)
+- ✅ Move to Task 3.2: Eliminate Type Assertions (BLOCKER)
 
 ---
 
 ### Short Term - Phase 2 Remaining Tasks
 
-**Sequential Order (after Task 2.2 ✅):**
+**Sequential Order (all dependencies now updated ✅):**
 
-1. ⏳ **Task 2.3:** Defer Logic Analysis (4-6 hours) - NEXT
-    - Analyze custom code vs openapi3-ts v4 & swagger-parser
-    - Dependencies: Tasks 2.1 ✅ and 2.2 ✅ complete
-
-2. ⏳ **Task 2.4:** Update zod v3 → v4.1.12 (4-6 hours)
-    - Template updates required
-    - Dependencies: Tasks 2.1 ✅ and 2.2 complete
-
-3. ⏳ **Task 3.1:** Replace pastable (6-8 hours)
+1. ⏳ **Task 3.1:** Replace pastable (6-8 hours) - **NEXT**
     - 7 files, 8 functions → `lodash-es` + custom utilities
     - Detailed plan in PASTABLE_REPLACEMENT_PLAN.md
 
-4. ⏳ **Task 3.2:** Eliminate Type Assertions - BLOCKER (16-24 hours)
+2. ⏳ **Task 3.2:** Eliminate Type Assertions - **BLOCKER** (16-24 hours)
     - 74 instances → 0
     - Target repo: `assertionStyle: "never"`
     - File-by-file elimination plan ready
 
-5. ⏳ **Task 3.3:** Dependency Cleanup (2-4 hours)
+3. ⏳ **Task 3.3:** Dependency Cleanup (2-4 hours)
     - Remove: `openapi-types`, `pastable`
 
 ### Short Term (Next 2-3 Weeks) - Phase 3
@@ -516,8 +501,28 @@ All documented in `.agent/adr/` (12 ADRs):
     - All 318 tests passing (7 new tests since last count)
     - No commit needed (already up-to-date)
 
+7. ✅ **fix: resolve Prettier 3.x formatting issue + comprehensive tests**
+    - Upgraded Prettier v2 → v3.4.2 (latest)
+    - Fixed maybePretty implementation (config loading + error handling)
+    - Added 16 comprehensive tests for all formatting scenarios
+    - All 318 tests passing
+
+8. ✅ **docs: complete Task 2.3 defer logic analysis**
+    - 3-phase analysis: openapi3-ts v4 + swagger-parser + refactoring plan
+    - Finding: No major deferral opportunities - codebase already optimal
+    - Custom code serves specific purposes not covered by libraries
+    - Prioritized Phase 3 work (type assertions P0, pastable P1)
+    - Duration: 2 hours (vs 4-6 estimated)
+
+9. ✅ **feat: update zod to v4.1.12**
+    - Upgraded zod v3.25.76 → v4.1.12 (latest stable)
+    - All 334 tests passing (no breaking changes)
+    - @zodios/core peer dependency warning expected (not a blocker)
+    - Generated code works correctly with zod v4
+    - Duration: 30 minutes
+
 **Branch:** `feat/rewrite`  
-**Status:** Clean working tree, ready for Task 2.3
+**Status:** Clean working tree, ready for Task 3.1 (Replace pastable)
 
 ---
 
