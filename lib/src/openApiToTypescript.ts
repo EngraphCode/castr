@@ -5,6 +5,13 @@ import { t, ts } from "tanu";
 import type { DocumentResolver } from "./makeSchemaResolver.js";
 import type { TemplateContext } from "./template-context.js";
 import { inferRequiredSchema } from "./inferRequiredOnly.js";
+
+/**
+ * Type representing the output of TypeScript conversion from OpenAPI schemas
+ * This is the honest return type of getTypescriptFromOpenApi()
+ */
+export type TsConversionOutput = ts.Node | t.TypeDefinitionObject | string;
+
 import generateJSDocArray from "./generateJSDocArray.js";
 import {
     buildObjectType,
@@ -42,8 +49,8 @@ export const getTypescriptFromOpenApi = ({
     meta: inheritedMeta,
     ctx,
     options,
-}: TsConversionArgs): ts.Node | t.TypeDefinitionObject | string => {
-    const meta = {} as TsConversionArgs["meta"];
+}: TsConversionArgs): TsConversionOutput => {
+    const meta: TsConversionArgs["meta"] = {};
     const isInline = !inheritedMeta?.name;
 
     if (ctx?.visitedRefs && inheritedMeta?.$ref) {
@@ -64,11 +71,8 @@ export const getTypescriptFromOpenApi = ({
         }
 
         if (Array.isArray(schema.type)) {
-            return handleTypeArray(
-                schema.type,
-                schema,
-                schema.nullable ?? false,
-                (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
+            return handleTypeArray(schema.type, schema, schema.nullable ?? false, (s) =>
+                getTypescriptFromOpenApi({ schema: s, ctx, meta, options })
             );
         }
 
@@ -77,20 +81,15 @@ export const getTypescriptFromOpenApi = ({
         }
 
         if (schema.oneOf) {
-            return handleOneOf(
-                schema.oneOf,
-                schema.nullable ?? false,
-                (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
+            return handleOneOf(schema.oneOf, schema.nullable ?? false, (s) =>
+                getTypescriptFromOpenApi({ schema: s, ctx, meta, options })
             );
         }
 
         // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
         if (schema.anyOf) {
-            return handleAnyOf(
-                schema.anyOf,
-                schema.nullable ?? false,
-                options?.allReadonly ?? false,
-                (s) => getTypescriptFromOpenApi({ schema: s, ctx, meta, options }) as t.TypeDefinition
+            return handleAnyOf(schema.anyOf, schema.nullable ?? false, options?.allReadonly ?? false, (s) =>
+                getTypescriptFromOpenApi({ schema: s, ctx, meta, options })
             );
         }
 
@@ -103,20 +102,21 @@ export const getTypescriptFromOpenApi = ({
                 inferRequiredSchema(schema);
 
             const types = convertSchemasToTypes(noRequiredOnlyAllof, (prop) => {
-                const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options }) as t.TypeDefinition;
+                const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options });
                 ctx?.resolver && patchRequiredSchemaInLoop(prop, ctx.resolver);
-                return type;
+                // Narrow ONCE: convert string to reference
+                return typeof type === "string" ? t.reference(type) : type;
             });
 
             if (Object.keys(composedRequiredSchema.properties).length > 0) {
-                types.push(
-                    getTypescriptFromOpenApi({
-                        schema: composedRequiredSchema,
-                        ctx,
-                        meta,
-                        options,
-                    }) as t.TypeDefinition
-                );
+                const composedType = getTypescriptFromOpenApi({
+                    schema: composedRequiredSchema,
+                    ctx,
+                    meta,
+                    options,
+                });
+                // Narrow ONCE: convert string to reference
+                types.push(typeof composedType === "string" ? t.reference(composedType) : composedType);
             }
 
             const intersection = t.intersection(types);
@@ -191,5 +191,6 @@ export const getTypescriptFromOpenApi = ({
         }
     }
 
-    return canBeWrapped ? wrapTypeIfNeeded(isInline, inheritedMeta?.name, tsResult as t.TypeDefinition) : tsResult;
+    // wrapTypeIfNeeded now accepts the honest TsConversionOutput type and handles narrowing internally
+    return canBeWrapped ? wrapTypeIfNeeded(isInline, inheritedMeta?.name, tsResult) : tsResult;
 };

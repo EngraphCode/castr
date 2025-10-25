@@ -12,43 +12,44 @@ import { maybePretty } from "./maybePretty.js";
 import type { TemplateContext } from "./template-context.js";
 import { getZodClientTemplateContext } from "./template-context.js";
 
-export type GenerateZodClientFromOpenApiArgs<TOptions extends TemplateContext["options"] = TemplateContext["options"]> = {
-    openApiDoc: OpenAPIObject;
-    /**
-     * Template name to use for generation
-     * - "default": Full Zodios HTTP client
-     * - "schemas-only": Pure Zod schemas
-     * - "schemas-with-metadata": Schemas + endpoint metadata without Zodios
-     */
-    template?: "default" | "schemas-only" | "schemas-with-metadata";
-    /** Path to a custom template file (overrides template name) */
-    templatePath?: string;
-    /**
-     * When true, automatically uses schemas-with-metadata template (no HTTP client)
-     * Overrides template parameter if set
-     */
-    noClient?: boolean;
-    /**
-     * When true, generates validation helper functions (validateRequest, validateResponse)
-     * Only applicable to schemas-with-metadata template
-     */
-    withValidationHelpers?: boolean;
-    /**
-     * When true, generates schema registry builder function
-     * Only applicable to schemas-with-metadata template
-     */
-    withSchemaRegistry?: boolean;
-    prettierConfig?: Options | null;
-    options?: TOptions;
-    handlebars?: ReturnType<typeof getHandlebars>;
-} & (
-    | {
-          distPath?: never;
-          /** when true, will only return the result rather than writing it to a file, mostly used for easier testing purpose */
-          disableWriteToFile: true;
-      }
-    | { distPath: string; disableWriteToFile?: false }
-);
+export type GenerateZodClientFromOpenApiArgs<TOptions extends TemplateContext["options"] = TemplateContext["options"]> =
+    {
+        openApiDoc: OpenAPIObject;
+        /**
+         * Template name to use for generation
+         * - "default": Full Zodios HTTP client
+         * - "schemas-only": Pure Zod schemas
+         * - "schemas-with-metadata": Schemas + endpoint metadata without Zodios
+         */
+        template?: "default" | "schemas-only" | "schemas-with-metadata";
+        /** Path to a custom template file (overrides template name) */
+        templatePath?: string;
+        /**
+         * When true, automatically uses schemas-with-metadata template (no HTTP client)
+         * Overrides template parameter if set
+         */
+        noClient?: boolean;
+        /**
+         * When true, generates validation helper functions (validateRequest, validateResponse)
+         * Only applicable to schemas-with-metadata template
+         */
+        withValidationHelpers?: boolean;
+        /**
+         * When true, generates schema registry builder function
+         * Only applicable to schemas-with-metadata template
+         */
+        withSchemaRegistry?: boolean;
+        prettierConfig?: Options | null;
+        options?: TOptions;
+        handlebars?: ReturnType<typeof getHandlebars>;
+    } & (
+        | {
+              distPath?: never;
+              /** when true, will only return the result rather than writing it to a file, mostly used for easier testing purpose */
+              disableWriteToFile: true;
+          }
+        | { distPath: string; disableWriteToFile?: false }
+    );
 
 /**
  * Generate a Zod client from an OpenAPI specification.

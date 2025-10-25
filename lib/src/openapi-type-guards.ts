@@ -7,13 +7,11 @@
  * Centralized here to avoid circular import issues.
  */
 
-import type {
-    OperationObject,
-    ParameterObject,
-    ReferenceObject,
-    RequestBodyObject,
-    ResponseObject,
-} from "openapi3-ts/oas30";
+import type { OperationObject, ReferenceObject } from "openapi3-ts/oas30";
+import { isReferenceObject } from "openapi3-ts/oas30";
+
+// Re-export isReferenceObject for convenience
+export { isReferenceObject };
 
 /**
  * Allowed HTTP methods per OpenAPI 3.0 spec
@@ -56,108 +54,12 @@ export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMet
  */
 export type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
 
-/**
- * Type guard to check if an object is a ReferenceObject
- *
- * Per OpenAPI 3.0 spec, ReferenceObject MUST have "$ref".
- * This is the definitive way to distinguish ReferenceObject from other OpenAPI objects.
- *
- * @param obj - Unknown object to check
- * @returns True if the object is a ReferenceObject
- *
- * @example
- * ```typescript
- * if (isReferenceObject(maybeRef)) {
- *   console.log(maybeRef.$ref); // TypeScript knows it has $ref
- * }
- * ```
- */
-export function isReferenceObject(obj: unknown): obj is ReferenceObject {
-    return typeof obj === "object" && obj !== null && "$ref" in obj && typeof obj.$ref === "string";
-}
-
-/**
- * Type guard to distinguish RequestBodyObject from ReferenceObject
- *
- * Uses lenient checking: only verifies absence of "$ref" to distinguish from ReferenceObject.
- * Does not enforce full OpenAPI spec compliance (e.g., required properties).
- * This allows the library to be tolerant of slightly malformed specs.
- *
- * @param obj - Unknown object to narrow
- * @returns True if the object is NOT a ReferenceObject (lenient narrowing)
- *
- * @example
- * ```typescript
- * const maybeBody: unknown = operation.requestBody;
- * if (isRequestBodyObject(maybeBody)) {
- *   // TypeScript knows it's RequestBodyObject, not ReferenceObject
- *   console.log(maybeBody.content);
- * }
- * ```
- */
-export function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
-    if (typeof obj !== "object" || obj === null) {
-        return false;
+// eslint-disable-next-line sonarjs/function-return-type
+export function narrowToThingOrReference<T>(thingOrReference: T | ReferenceObject): T | ReferenceObject {
+    if (isReferenceObject(thingOrReference)) {
+        const reference = thingOrReference;
+        return reference;
     }
-    // Lenient: just check it's NOT a ReferenceObject (no $ref property)
-    // openapi3-ts and swagger-parser handle full spec validation
-    return !("$ref" in obj);
-}
-
-/**
- * Type guard to distinguish ParameterObject from ReferenceObject
- *
- * Uses lenient checking: only verifies absence of "$ref" to distinguish from ReferenceObject.
- * Does not enforce full OpenAPI spec compliance (e.g., required properties).
- * This allows the library to be tolerant of slightly malformed specs.
- *
- * @param obj - Unknown object to narrow
- * @returns True if the object is NOT a ReferenceObject (lenient narrowing)
- *
- * @example
- * ```typescript
- * const maybeParam: unknown = parameters[0];
- * if (isParameterObject(maybeParam)) {
- *   // TypeScript knows it's ParameterObject, not ReferenceObject
- *   console.log(maybeParam.name, maybeParam.in);
- * }
- * ```
- */
-export function isParameterObject(obj: unknown): obj is ParameterObject {
-    if (typeof obj !== "object" || obj === null) {
-        return false;
-    }
-    // Lenient: just check it's NOT a ReferenceObject (no $ref property)
-    // openapi3-ts and swagger-parser handle full spec validation
-    return !("$ref" in obj);
-}
-
-/**
- * Type guard to distinguish ResponseObject from ReferenceObject
- *
- * Uses lenient checking: only verifies absence of "$ref" to distinguish from ReferenceObject.
- * Does not enforce full OpenAPI spec compliance (e.g., required "description" property).
- * This allows the library to be tolerant of slightly malformed specs.
- *
- * @param obj - Unknown object to narrow
- * @returns True if the object is NOT a ReferenceObject (lenient narrowing)
- *
- * @example
- * ```typescript
- * const maybeResponse: unknown = responses["200"];
- * if (isResponseObject(maybeResponse)) {
- *   // TypeScript knows it's ResponseObject, not ReferenceObject
- *   console.log(maybeResponse.description);
- * }
- * ```
- */
-export function isResponseObject(obj: unknown): obj is ResponseObject {
-    if (typeof obj !== "object" || obj === null) {
-        return false;
-    }
-    // Lenient: just check it's NOT a ReferenceObject (no $ref property)
-    // openapi3-ts and swagger-parser handle full spec validation
-    // NOTE: Per OpenAPI 3.0 spec, "description" is required, but many real-world
-    // specs omit it, so we don't enforce it here to be tolerant
-    return !("$ref" in obj);
+    const thing = thingOrReference;
+    return thing;
 }

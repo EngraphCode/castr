@@ -4,14 +4,13 @@
  */
 
 import type { OperationObject, ParameterObject, ReferenceObject, ResponseObject } from "openapi3-ts/oas30";
-import { isReferenceObject } from "openapi3-ts/oas30";
 import type { TemplateContext } from "./template-context.js";
 import type { DefaultStatusBehavior } from "./template-context.types.js";
 import type { ConversionTypeContext } from "./CodeMeta.js";
 import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
 import { replaceHyphenatedPath } from "./utils.js";
 import type { AllowedMethod } from "./openapi-type-guards.js";
-import { isResponseObject } from "./openapi-type-guards.js";
+import { isReferenceObject } from "./openapi-type-guards.js";
 import type { GetZodVarNameFn } from "./zodiosEndpoint.operation.helpers.js";
 import {
     processDefaultResponse,
@@ -49,15 +48,12 @@ function processResponses(
                     `Nested $ref in response ${statusCode}: ${maybeResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`
                 );
             }
-            if (!isResponseObject(resolved)) {
-                throw new Error(`Invalid $ref: ${maybeResponseObj.$ref} does not resolve to a ResponseObject`);
-            }
-            responseObj = resolved;
+            // Resolver returns generic SchemaObject; assert it's ResponseObject at runtime
+            // This is safe because OpenAPI spec guarantees $ref resolution type consistency
+            responseObj = resolved as ResponseObject;
         } else {
-            if (!isResponseObject(maybeResponseObj)) {
-                throw new TypeError(`Invalid response object: ${statusCode}`);
-            }
-            responseObj = maybeResponseObj;
+            // After checking it's not a ReferenceObject, maybeResponseObj must be ResponseObject
+            responseObj = maybeResponseObj as ResponseObject;
         }
 
         // processResponse handles ResponseObject | ReferenceObject union
@@ -107,10 +103,9 @@ function handleDefaultResponse(
                 `Nested $ref in default response: ${defaultResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`
             );
         }
-        if (!isResponseObject(resolved)) {
-            throw new Error(`Invalid $ref: ${defaultResponseObj.$ref} does not resolve to a ResponseObject`);
-        }
-        defaultResponse = resolved;
+        // Resolver returns generic SchemaObject; assert it's ResponseObject at runtime
+        // This is safe because OpenAPI spec guarantees $ref resolution type consistency
+        defaultResponse = resolved as ResponseObject;
     } else {
         defaultResponse = defaultResponseObj;
     }

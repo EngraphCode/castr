@@ -8,7 +8,7 @@
 import { type ReferenceObject, type SchemaObject } from "openapi3-ts/oas30";
 import { t, ts } from "tanu";
 
-import type { TsConversionContext } from "./openApiToTypescript.js";
+import type { TsConversionContext, TsConversionOutput } from "./openApiToTypescript.js";
 import { wrapWithQuotesIfNeeded } from "./utils.js";
 
 /**
@@ -187,12 +187,16 @@ export function resolveAdditionalPropertiesType(
 
 /**
  * Wraps a type definition as a type alias or returns inline
+ * Accepts the honest TsConversionOutput type and narrows internally
  */
 export function wrapTypeIfNeeded(
     isInline: boolean,
     name: string | undefined,
-    typeDef: t.TypeDefinition
+    output: TsConversionOutput
 ): t.TypeDefinitionObject | ts.Node {
+    // Narrow ONCE: convert string to reference if needed
+    const typeDef: ts.Node | t.TypeDefinitionObject = typeof output === "string" ? t.reference(output) : output;
+
     if (!isInline) {
         if (!name) {
             throw new Error("Name is required to convert a schema to a type reference");
@@ -200,7 +204,7 @@ export function wrapTypeIfNeeded(
         return t.type(name, typeDef);
     }
 
-    return typeDef as ts.Node;
+    return typeDef;
 }
 
 /**
@@ -328,17 +332,24 @@ export function wrapObjectTypeForOutput(
 /**
  * Handles oneOf composition by creating a union type
  * Returns single schema directly if only one item
+ * Accepts honest TsConversionOutput and narrows internally
  */
 export function handleOneOf(
     schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
     isNullable: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => ts.Node | t.TypeDefinition
+    convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput
 ): ts.Node {
     if (schemas.length === 1) {
-        return convertSchema(schemas[0]!) as ts.Node;
+        const result = convertSchema(schemas[0]!);
+        // Narrow ONCE: convert string to reference
+        return typeof result === "string" ? t.reference(result) : result;
     }
 
-    const types: (ts.Node | t.TypeDefinition)[] = convertSchemasToTypes(schemas, convertSchema);
+    const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
+        const result = convertSchema(schema);
+        // Narrow ONCE: convert string to reference
+        return typeof result === "string" ? t.reference(result) : result;
+    });
     if (isNullable) {
         return t.union([...types, t.reference("null")] as t.TypeDefinition[]);
     }
@@ -348,18 +359,25 @@ export function handleOneOf(
 /**
  * Handles anyOf composition by creating union of value OR array
  * Special OpenAPI semantic: T | T[]
+ * Accepts honest TsConversionOutput and narrows internally
  */
 export function handleAnyOf(
     schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
     isNullable: boolean,
     shouldWrapReadonly: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => ts.Node | t.TypeDefinition
+    convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput
 ): ts.Node {
     if (schemas.length === 1) {
-        return convertSchema(schemas[0]!) as ts.Node;
+        const result = convertSchema(schemas[0]!);
+        // Narrow ONCE: convert string to reference
+        return typeof result === "string" ? t.reference(result) : result;
     }
 
-    const types: (ts.Node | t.TypeDefinition)[] = convertSchemasToTypes(schemas, convertSchema);
+    const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
+        const result = convertSchema(schema);
+        // Narrow ONCE: convert string to reference
+        return typeof result === "string" ? t.reference(result) : result;
+    });
     const oneOf = t.union(types as t.TypeDefinition[]);
     const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), shouldWrapReadonly);
 
@@ -373,19 +391,26 @@ export function handleAnyOf(
 
 /**
  * Handles array of types (OpenAPI 3.1 feature) by creating a union
+ * Accepts honest TsConversionOutput and narrows internally
  */
 export function handleTypeArray(
     types: ReadonlyArray<string>,
     schema: SchemaObject,
     isNullable: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => ts.Node | t.TypeDefinition
+    convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput
 ): ts.Node {
     if (types.length === 1) {
-        return convertSchema({ ...schema, type: types[0]! } as SchemaObject) as ts.Node;
+        const result = convertSchema({ ...schema, type: types[0]! } as SchemaObject);
+        // Narrow ONCE: convert string to reference
+        return typeof result === "string" ? t.reference(result) : result;
     }
 
     const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);
-    const typeDefs: (ts.Node | t.TypeDefinition)[] = convertSchemasToTypes(typeSchemas, convertSchema);
+    const typeDefs: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(typeSchemas, (schema) => {
+        const result = convertSchema(schema);
+        // Narrow ONCE: convert string to reference
+        return typeof result === "string" ? t.reference(result) : result;
+    });
 
     if (isNullable) {
         return t.union([...typeDefs, t.reference("null")] as t.TypeDefinition[]);
