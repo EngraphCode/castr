@@ -43,6 +43,30 @@ export default defineConfig(
                     assertionStyle: "never",
                 },
             ],
+            "@typescript-eslint/no-restricted-types": [
+                "error",
+                {
+                    types: {
+                        "Record<string, unknown>": {
+                            message:
+                                "Avoid Record<string, unknown>. It destroys type information. Refactor, or use an existing internal or library type where possible.",
+                        },
+                        "Record<string, undefined>": {
+                            message:
+                                "Avoid Record<string, undefined>. It destroys type information. Refactor, or use an existing internal or library type where possible.",
+                        },
+                        "Readonly<Record<string, undefined>>": {
+                            message:
+                                "Avoid Readonly<Record<string, undefined>>. It destroys type information. Refactor, or use an existing internal or library type where possible.",
+                        },
+                        "Record<PropertyKey, undefined>": {
+                            message:
+                                "Avoid Record<PropertyKey, undefined>. It destroys type information. Refactor, or use an existing internal or library type where possible.",
+                        },
+                    },
+                },
+            ],
+
             // TypeScript rules
             "@typescript-eslint/no-explicit-any": "error",
             "@typescript-eslint/explicit-module-boundary-types": "off",

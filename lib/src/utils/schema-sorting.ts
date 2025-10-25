@@ -15,13 +15,13 @@ import { sortBy } from "lodash-es";
  * const ordered = sortSchemasByDependencyOrder(schemas, ["#/components/schemas/Pet", "#/components/schemas/User"]);
  * // Result: { Pet: "z.object(...)", User: "z.object(...)" }
  */
-export function sortSchemasByDependencyOrder<T extends Record<string, string>>(
-    schemas: T,
+export function sortSchemasByDependencyOrder(
+    schemas: Record<string, string>,
     dependencyOrder: readonly string[]
-): T {
+): Record<string, string> {
     const orderMap = new Map(dependencyOrder.map((key, idx) => [key, idx]));
     const entries = sortBy(Object.entries(schemas), ([key]) => orderMap.get(key) ?? Infinity);
-    return Object.fromEntries(entries) as T;
+    return Object.fromEntries(entries);
 }
 
 /**
