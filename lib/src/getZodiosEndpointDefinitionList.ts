@@ -31,8 +31,11 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
     if (!maybePathItemObj || typeof maybePathItemObj !== "object") {
         return false;
     }
-    const keys = Object.keys(maybePathItemObj);
-    return keys.every((key) => isAllowedMethod(key));
+    // PathItemObject is any object that's not a ReferenceObject
+    // PathItemObject can have: HTTP methods (get, put, post, etc.), parameters, summary, description, servers
+    // ReferenceObject only has: $ref, summary, description
+    // We distinguish by checking for $ref - if it doesn't have $ref, it's a PathItemObject
+    return !("$ref" in maybePathItemObj);
 }
 
 /**

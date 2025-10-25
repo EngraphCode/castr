@@ -63,11 +63,16 @@ test("same-schema-different-name", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "put",
+                  "method": "post",
                   "parameters": [
                       {
-                          "name": "sameSchemaDifferentName",
-                          "schema": "sameSchemaDifferentName",
+                          "name": "differentNameSameSchema",
+                          "schema": "differentNameSameSchema",
+                          "type": "Query",
+                      },
+                      {
+                          "name": "anotherDifferentNameWithSlightlyDifferentSchema",
+                          "schema": "anotherDifferentNameWithSlightlyDifferentSchema",
                           "type": "Query",
                       },
                   ],
@@ -78,16 +83,11 @@ test("same-schema-different-name", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "post",
+                  "method": "put",
                   "parameters": [
                       {
-                          "name": "differentNameSameSchema",
-                          "schema": "sameSchemaDifferentName",
-                          "type": "Query",
-                      },
-                      {
-                          "name": "anotherDifferentNameWithSlightlyDifferentSchema",
-                          "schema": "anotherDifferentNameWithSlightlyDifferentSchema",
+                          "name": "sameSchemaDifferentName",
+                          "schema": "differentNameSameSchema",
                           "type": "Query",
                       },
                   ],
@@ -103,7 +103,7 @@ test("same-schema-different-name", async () => {
           },
           "schemas": {
               "anotherDifferentNameWithSlightlyDifferentSchema": "z.enum(["aaa", "bbb", "ccc"]).optional().default("aaa")",
-              "sameSchemaDifferentName": "z.enum(["aaa", "bbb", "ccc"]).optional()",
+              "differentNameSameSchema": "z.enum(["aaa", "bbb", "ccc"]).optional()",
           },
           "types": {},
       }
@@ -118,31 +118,18 @@ test("same-schema-different-name", async () => {
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 
-      const sameSchemaDifferentName = z.enum(["aaa", "bbb", "ccc"]).optional();
+      const differentNameSameSchema = z.enum(["aaa", "bbb", "ccc"]).optional();
       const anotherDifferentNameWithSlightlyDifferentSchema = z
         .enum(["aaa", "bbb", "ccc"])
         .optional()
         .default("aaa");
 
       export const schemas = {
-        sameSchemaDifferentName,
+        differentNameSameSchema,
         anotherDifferentNameWithSlightlyDifferentSchema,
       };
 
       const endpoints = makeApi([
-        {
-          method: "put",
-          path: "/same-schema-different-name",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "sameSchemaDifferentName",
-              type: "Query",
-              schema: sameSchemaDifferentName,
-            },
-          ],
-          response: z.string(),
-        },
         {
           method: "post",
           path: "/same-schema-different-name",
@@ -151,12 +138,25 @@ test("same-schema-different-name", async () => {
             {
               name: "differentNameSameSchema",
               type: "Query",
-              schema: sameSchemaDifferentName,
+              schema: differentNameSameSchema,
             },
             {
               name: "anotherDifferentNameWithSlightlyDifferentSchema",
               type: "Query",
               schema: anotherDifferentNameWithSlightlyDifferentSchema,
+            },
+          ],
+          response: z.string(),
+        },
+        {
+          method: "put",
+          path: "/same-schema-different-name",
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "sameSchemaDifferentName",
+              type: "Query",
+              schema: differentNameSameSchema,
             },
           ],
           response: z.string(),

@@ -116,7 +116,7 @@ test("export-all-named-schemas", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "put",
+                  "method": "post",
                   "parameters": [
                       {
                           "name": "schemaNameAlreadyUsed",
@@ -131,7 +131,7 @@ test("export-all-named-schemas", async () => {
               {
                   "description": undefined,
                   "errors": [],
-                  "method": "post",
+                  "method": "put",
                   "parameters": [
                       {
                           "name": "schemaNameAlreadyUsed",
@@ -172,8 +172,8 @@ test("export-all-named-schemas", async () => {
           "schemas": {
               "sameSchemaDifferentName": "z.enum(["xxx", "yyy", "zzz"]).optional()",
               "sameSchemaSameName": "z.enum(["xxx", "yyy", "zzz"]).optional()",
-              "schemaNameAlreadyUsed": "z.enum(["aaa", "bbb", "ccc"]).optional()",
-              "schemaNameAlreadyUsed__2": "z.enum(["ggg", "hhh", "iii"]).optional()",
+              "schemaNameAlreadyUsed": "z.enum(["ggg", "hhh", "iii"]).optional()",
+              "schemaNameAlreadyUsed__2": "z.enum(["aaa", "bbb", "ccc"]).optional()",
           },
           "types": {},
       }
@@ -190,8 +190,8 @@ test("export-all-named-schemas", async () => {
       import { z } from "zod";
 
       const sameSchemaSameName = z.enum(["xxx", "yyy", "zzz"]).optional();
-      const schemaNameAlreadyUsed = z.enum(["aaa", "bbb", "ccc"]).optional();
-      const schemaNameAlreadyUsed__2 = z.enum(["ggg", "hhh", "iii"]).optional();
+      const schemaNameAlreadyUsed = z.enum(["ggg", "hhh", "iii"]).optional();
+      const schemaNameAlreadyUsed__2 = z.enum(["aaa", "bbb", "ccc"]).optional();
       const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
 
       export const schemas = {
@@ -216,7 +216,7 @@ test("export-all-named-schemas", async () => {
           response: z.string(),
         },
         {
-          method: "put",
+          method: "post",
           path: "/export-all-named-schemas",
           requestFormat: "json",
           parameters: [
@@ -229,7 +229,7 @@ test("export-all-named-schemas", async () => {
           response: z.string(),
         },
         {
-          method: "post",
+          method: "put",
           path: "/export-all-named-schemas",
           requestFormat: "json",
           parameters: [

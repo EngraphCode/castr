@@ -229,6 +229,28 @@ test("getZodiosEndpointDefinitionList /pet", () => {
           },
           "endpoints": [
               {
+                  "description": "Add a new pet to the store",
+                  "errors": [
+                      {
+                          "description": "Invalid input",
+                          "schema": "z.void()",
+                          "status": 405,
+                      },
+                  ],
+                  "method": "post",
+                  "parameters": [
+                      {
+                          "description": "Create a new pet in the store",
+                          "name": "body",
+                          "schema": "Pet",
+                          "type": "Body",
+                      },
+                  ],
+                  "path": "/pet",
+                  "requestFormat": "json",
+                  "response": "Pet",
+              },
+              {
                   "description": "Update an existing pet by Id",
                   "errors": [
                       {
@@ -251,28 +273,6 @@ test("getZodiosEndpointDefinitionList /pet", () => {
                   "parameters": [
                       {
                           "description": "Update an existent pet in the store",
-                          "name": "body",
-                          "schema": "Pet",
-                          "type": "Body",
-                      },
-                  ],
-                  "path": "/pet",
-                  "requestFormat": "json",
-                  "response": "Pet",
-              },
-              {
-                  "description": "Add a new pet to the store",
-                  "errors": [
-                      {
-                          "description": "Invalid input",
-                          "schema": "z.void()",
-                          "status": 405,
-                      },
-                  ],
-                  "method": "post",
-                  "parameters": [
-                      {
-                          "description": "Create a new pet in the store",
                           "name": "body",
                           "schema": "Pet",
                           "type": "Body",
@@ -662,6 +662,28 @@ test("petstore.yaml", async () => {
           },
           "endpoints": [
               {
+                  "description": "Add a new pet to the store",
+                  "errors": [
+                      {
+                          "description": "Invalid input",
+                          "schema": "z.void()",
+                          "status": 405,
+                      },
+                  ],
+                  "method": "post",
+                  "parameters": [
+                      {
+                          "description": "Create a new pet in the store",
+                          "name": "body",
+                          "schema": "Pet",
+                          "type": "Body",
+                      },
+                  ],
+                  "path": "/pet",
+                  "requestFormat": "json",
+                  "response": "Pet",
+              },
+              {
                   "description": "Update an existing pet by Id",
                   "errors": [
                       {
@@ -684,28 +706,6 @@ test("petstore.yaml", async () => {
                   "parameters": [
                       {
                           "description": "Update an existent pet in the store",
-                          "name": "body",
-                          "schema": "Pet",
-                          "type": "Body",
-                      },
-                  ],
-                  "path": "/pet",
-                  "requestFormat": "json",
-                  "response": "Pet",
-              },
-              {
-                  "description": "Add a new pet to the store",
-                  "errors": [
-                      {
-                          "description": "Invalid input",
-                          "schema": "z.void()",
-                          "status": 405,
-                      },
-                  ],
-                  "method": "post",
-                  "parameters": [
-                      {
-                          "description": "Create a new pet in the store",
                           "name": "body",
                           "schema": "Pet",
                           "type": "Body",

@@ -49,6 +49,24 @@ test("common-parameters", async () => {
 
       const endpoints = makeApi([
         {
+          method: "post",
+          path: "/pet",
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "petId",
+              type: "Query",
+              schema: z.string(),
+            },
+            {
+              name: "otherParam",
+              type: "Query",
+              schema: z.number().optional(),
+            },
+          ],
+          response: z.boolean(),
+        },
+        {
           method: "put",
           path: "/pet",
           requestFormat: "json",
@@ -70,24 +88,6 @@ test("common-parameters", async () => {
             },
           ],
           response: z.string(),
-        },
-        {
-          method: "post",
-          path: "/pet",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "petId",
-              type: "Query",
-              schema: z.string(),
-            },
-            {
-              name: "otherParam",
-              type: "Query",
-              schema: z.number().optional(),
-            },
-          ],
-          response: z.boolean(),
         },
       ]);
 

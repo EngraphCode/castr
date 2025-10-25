@@ -610,6 +610,28 @@ test("group-strategy: tag-file with modified petstore schema", async () => {
 
       const endpoints = makeApi([
         {
+          method: "post",
+          path: "/pet",
+          description: \`Add a new pet to the store\`,
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "body",
+              description: \`Create a new pet in the store\`,
+              type: "Body",
+              schema: Pet,
+            },
+          ],
+          response: Pet,
+          errors: [
+            {
+              status: 405,
+              description: \`Invalid input\`,
+              schema: z.void(),
+            },
+          ],
+        },
+        {
           method: "put",
           path: "/pet",
           description: \`Update an existing pet by Id\`,
@@ -637,28 +659,6 @@ test("group-strategy: tag-file with modified petstore schema", async () => {
             {
               status: 405,
               description: \`Validation exception\`,
-              schema: z.void(),
-            },
-          ],
-        },
-        {
-          method: "post",
-          path: "/pet",
-          description: \`Add a new pet to the store\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "body",
-              description: \`Create a new pet in the store\`,
-              type: "Body",
-              schema: Pet,
-            },
-          ],
-          response: Pet,
-          errors: [
-            {
-              status: 405,
-              description: \`Invalid input\`,
               schema: z.void(),
             },
           ],

@@ -37,10 +37,27 @@ function processResponses(
         if (!maybeResponseObj) {
             continue;
         }
-        if (!isResponseObject(maybeResponseObj)) {
-            throw new TypeError(`Invalid response object: ${statusCode}`);
+
+        // Handle both ResponseObject and ReferenceObject (like handleDefaultResponse does)
+        let responseObj: ResponseObject;
+        if (isReferenceObject(maybeResponseObj)) {
+            // Resolve the reference
+            const resolved = ctx.resolver.getSchemaByRef(maybeResponseObj.$ref);
+            if (isReferenceObject(resolved)) {
+                throw new Error(
+                    `Nested $ref in response ${statusCode}: ${maybeResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`
+                );
+            }
+            if (!isResponseObject(resolved)) {
+                throw new Error(`Invalid $ref: ${maybeResponseObj.$ref} does not resolve to a ResponseObject`);
+            }
+            responseObj = resolved;
+        } else {
+            if (!isResponseObject(maybeResponseObj)) {
+                throw new TypeError(`Invalid response object: ${statusCode}`);
+            }
+            responseObj = maybeResponseObj;
         }
-        const responseObj: ResponseObject = maybeResponseObj;
 
         // processResponse handles ResponseObject | ReferenceObject union
         const result = processResponse(statusCode, responseObj, ctx, getZodVarName, options);
