@@ -65,9 +65,10 @@ export function handleReferenceObject(
             throw new Error(`Schema ${schema.$ref} not found`);
         }
 
-        // If getSchemaByRef returned a ReferenceObject, the document is malformed
-        // (nested refs without dereferencing). Fail fast.
-        // QUESTION: Is this a problem with a non-compliant OpenAPI document, or a limitation of our code and we should, in fact, handle nested refs?
+        // Nested $refs are VALID per OpenAPI spec, but we require preprocessing.
+        // This is an intentional design choice: dereferencing is SwaggerParser's job,
+        // code generation is our job. Fail fast with clear error directing users to
+        // the correct preprocessing workflow. See: .agent/analysis/NESTED_REFS_ANALYSIS.md
         if ("$ref" in actualSchema) {
             throw new Error(
                 `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference.`
