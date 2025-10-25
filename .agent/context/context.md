@@ -5,7 +5,7 @@
 
 **Recent Progress:**
 
-- ⏳ Task 3.2: Eliminate Type Assertions IN PROGRESS (5/15 files, 65 remaining, ~2 hours so far)
+- ⏳ Task 3.2: Eliminate Type Assertions IN PROGRESS (10/15 files, 47 remaining, ~4.5 hours invested)
 - ✅ Task 3.1: pastable replaced with lodash-es + native + domain utils (3 hours, +55 unit tests)
 - ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
 - ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
@@ -301,19 +301,28 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### ⚡ IMMEDIATE: Task 3.2 - Eliminate Type Assertions (BLOCKER)
 
-**Status:** ⏳ IN PROGRESS (5/15 files complete, 65 assertions remaining, ~2 hours invested)  
+**Status:** ⏳ IN PROGRESS (10/15 files complete, 47 assertions remaining, ~4.5 hours invested)  
 **Priority:** P0 BLOCKER (extraction requirement)  
-**Estimated Time:** 16-24 hours total (14-22 hours remaining)  
+**Estimated Time:** 16-24 hours total (11.5-19.5 hours remaining)  
 **TDD Required:** MANDATORY - add tests for any complex replacements
 
-**What:** Eliminate all 71 type assertions (`as` casts) from codebase → 65 remaining
+**What:** Eliminate all 71 type assertions (`as` casts) from codebase → 47 remaining
 
 **Progress:**
 
 - ✅ All "easy" files complete (4 files, 4 assertions)
-- ✅ First medium file complete (1 file, 2 assertions)
-- ⏳ Medium files remaining (6 files, 21 assertions)
-- ⏳ Hard files remaining (4 files, 40 assertions)
+- ✅ All "medium" files complete (6 files, 20 assertions)
+- ⏳ Hard files remaining (5 files, 47 assertions)
+
+**Latest Completions:**
+- schema-complexity.helpers.ts (4 assertions) - Proper parameter typing
+- zodiosEndpoint.operation.helpers.ts (4 assertions) - Custom type guards + fail-fast
+
+**Key Patterns Established:**
+- Custom type guards: isRequestBodyObject(), isParameterObject(), isResponseObject()
+- Fail-fast validation for nested $refs in all component types
+- Explicit match type parameters to avoid type widening
+- Honest types over assertions (getSchemaByRef returns SchemaObject | ReferenceObject)
 
 **Why:**
 
@@ -544,13 +553,24 @@ All documented in `.agent/adr/` (12 ADRs):
     - Duration: 30 minutes
 
 11. ⏳ **refactor(Task 3.2): eliminate type assertions - IN PROGRESS**
-    - ✅ 5/15 files complete (schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity)
-    - Patterns: type guards, honest types, narrowing, function simplification
-    - 65 assertions remaining (down from 71)
+    - ✅ 10/15 files complete
+    - Files: schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity, inferRequiredOnly, template-context, openApiToZod, schema-complexity.helpers, zodiosEndpoint.operation.helpers
+    - Patterns: type guards, honest types, narrowing, function simplification, fail-fast validation
+    - Custom type guards: isRequestBodyObject, isParameterObject, isResponseObject
+    - 47 assertions remaining (down from 71 → 65 → 55 → 51 → 47)
     - All 373 tests passing after each fix
+    - ~4.5 hours invested
+
+12. 📋 **docs: nested $ref analysis and validation philosophy**
+    - Analyzed OpenAPI 3.0/3.1/3.2 schemas
+    - Finding: Nested $refs ARE valid per spec, but we require preprocessing
+    - Decision: Fail-fast with clear error (intentional design choice)
+    - Created: .agent/analysis/NESTED_REFS_ANALYSIS.md (344 lines)
+    - Created: .agent/analysis/VALIDATION_AUDIT.md (205 lines)
+    - Philosophy: Defer validation to swagger-parser, fail fast on preprocessing issues
 
 **Branch:** `feat/rewrite`  
-**Status:** Task 3.2 in progress (5/15 files, 65 assertions remaining)
+**Status:** Task 3.2 in progress (10/15 files, 47 assertions remaining, ~4.5 hours invested)
 
 ---
 

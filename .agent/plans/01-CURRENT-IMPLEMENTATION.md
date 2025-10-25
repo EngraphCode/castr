@@ -3072,15 +3072,15 @@ if ("$ref" in actualSchema) {
 
 ### 3.2 Eliminate Type Assertions (EXTRACTION BLOCKER)
 
-**Status:** ⏳ IN PROGRESS (8/15 files complete, 55 assertions remaining)
+**Status:** ⏳ IN PROGRESS (10/15 files complete, 47 assertions remaining)
 **Priority:** CRITICAL BLOCKER
 **Estimated Time:** 16-24 hours (1-2 weeks with testing)
 **Dependencies:** Tasks 1.1, 2.1, 2.2 complete
-**Time Spent So Far:** ~3.5 hours
+**Time Spent So Far:** ~4.5 hours
 
 **Progress Update (October 25, 2025 - Late Evening):**
 
-✅ **Completed Files (8/15):**
+✅ **Completed Files (10/15):**
 1. `schema-sorting.ts` (1 assertion) - Returned honest type instead of generic T
 2. `generateJSDocArray.ts` (1 assertion) - Added typeof check for proper narrowing
 3. `makeSchemaResolver.ts` (1 assertion) - Created isSchemaRecord() type guard
@@ -3089,6 +3089,8 @@ if ("$ref" in actualSchema) {
 6. `inferRequiredOnly.ts` (3 assertions) - Explicit reduce typing, fixed isReferenceObject usage
 7. `template-context.ts` (3 assertions) - Created tsResultToString helper, added isReferenceObject checks
 8. `openApiToZod.ts` (4 assertions) - Resolved refs properly, removed unnecessary casts
+9. `schema-complexity.helpers.ts` (4 assertions) - Proper parameter typing for type arrays
+10. `zodiosEndpoint.operation.helpers.ts` (4 assertions) - Custom type guards + fail-fast validation
 
 **Patterns Identified:**
 - **Type Guards:** When runtime checks needed (e.g., isSchemaRecord with openapi3-ts isSchemaObject)
@@ -3102,10 +3104,12 @@ if ("$ref" in actualSchema) {
 - ✅ Linter passes for every file
 - ✅ Behavior preserved - tests define, linter enforces, code implements
 - ✅ Type honesty enforced (getSchemaByRef returns honest SchemaObject | ReferenceObject)
+- ✅ Custom type guards created: isRequestBodyObject, isParameterObject, isResponseObject
+- ✅ Fail-fast validation for nested $refs in all component types
 
-**Remaining Work (7/15 files, 55 assertions):**
-- 4 medium files (15 assertions): schema-complexity.helpers.ts (4), zodiosEndpoint.operation.helpers.ts (4), zodiosEndpoint.path.helpers.ts (4), others (3)
-- 3 hard files (40 assertions): getZodiosEndpointDefinitionList.ts (5), cli.ts (6), openApiToTypescript.ts (7), openApiToTypescript.helpers.ts (22 down from 25)
+**Remaining Work (5/15 files, 47 assertions):**
+- 1 medium file (4 assertions): zodiosEndpoint.path.helpers.ts
+- 4 hard files (43 assertions): getZodiosEndpointDefinitionList.ts (5), cli.ts (6), openApiToTypescript.ts (7), openApiToTypescript.helpers.ts (22 down from 25, estimated)
 
 **Acceptance Criteria:**
 
