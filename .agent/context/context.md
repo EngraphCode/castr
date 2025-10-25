@@ -3,9 +3,29 @@
 **Last Updated:** October 25, 2025 (Late Night - Task 3.2 IN PROGRESS)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
 
+## 🚨 CRITICAL STATUS FOR FRESH CHAT
+
+**Current Blocker:** Task 3.2 (Type Assertion Elimination) **PAUSED** pending Tanu API investigation
+
+**What Happened:** While eliminating type assertions, discovered that remaining ~35 assertions at the tanu library boundary likely indicate **incorrect API usage** rather than actual type incompatibilities. Both `t` and `ts` come from the same `tanu` library - they should compose cleanly.
+
+**Next Action (PRIORITY #1):** Investigate tanu's intended `t` ↔ `ts` composition pattern
+- **Expected Time:** 2-4 hours investigation + 2-12 hours fixing (depends on findings)
+- **Outcome:** Either fix API usage OR decide to migrate to ts-morph
+- **See:** "IMMEDIATE NEXT ACTION" section below for detailed investigation plan
+
+**Current State:**
+- ✅ 11/15 files complete (~30 assertions eliminated)
+- ⏸️ 2 files BLOCKED on tanu (~35 assertions)
+- ⏳ 1 file ready to fix independently (cli.ts, ~6 assertions)
+- ✅ All 373 tests passing
+- ✅ Quality gates passing
+
+---
+
 **Recent Progress:**
 
-- ⏳ Task 3.2: Eliminate Type Assertions IN PROGRESS (11/15 files, ~41 remaining, ~5.5 hours invested)
+- ⏸️ Task 3.2: Eliminate Type Assertions PAUSED (11/15 files, tanu investigation required)
 - ✅ Task 3.1: pastable replaced with lodash-es + native + domain utils (3 hours, +55 unit tests)
 - ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
 - ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
@@ -301,68 +321,110 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### ⚡ IMMEDIATE: Task 3.2 - Eliminate Type Assertions (BLOCKER)
 
-**Status:** ⏳ IN PROGRESS (11/15 files complete, ~41 assertions remaining, ~5.5 hours invested)  
+**Status:** ⏸️ PAUSED - Tanu API Investigation Required (CRITICAL BLOCKER IDENTIFIED)  
 **Priority:** P0 BLOCKER (extraction requirement)  
-**Estimated Time:** 16-24 hours total (10.5-18.5 hours remaining)  
-**TDD Required:** MANDATORY - add tests for any complex replacements
+**Estimated Time:** Varies based on tanu investigation outcome (2-12 hours remaining)  
+**Time Invested:** ~5.5 hours
 
-**What:** Eliminate all 71 type assertions (`as` casts) from codebase → ~41 remaining
+**⚠️ CRITICAL BLOCKER:** Remaining assertions at tanu library boundary suggest **incorrect API usage**. Both `t` and `ts` come from the SAME library - if they don't work together, we're using the API wrong, not hitting a library limitation.
 
-**⚠️ CRITICAL RULE:** **ONLY `as const` IS ALLOWED** - All other `as` usages must be eliminated!
+**🎯 IMMEDIATE NEXT ACTION (DO THIS FIRST):**
 
-**Progress:**
+## 1. Investigate Tanu API Usage ⭐ CRITICAL
 
-- ✅ All "easy" files complete (4 files, 4 assertions)
-- ✅ All "medium" files complete (7 files, 24 assertions) ← **zodiosEndpoint.path.helpers.ts added**
-- ✅ getZodiosEndpointDefinitionList.ts verified clean (only `as const` usages)
-- ⏳ Hard files remaining (3 files, ~41 assertions):
-    1. cli.ts (~6 assertions)
-    2. openApiToTypescript.ts (~7 assertions)
-    3. openApiToTypescript.helpers.ts (~22+ assertions) - **THE FINAL BOSS**
+**Goal:** Understand how tanu intends `t` ↔ `ts` composition to work
 
-**Latest Completions:**
+**Key Insight:**
+```typescript
+import { t, ts } from "tanu";
+```
+Both from same library → should compose cleanly. Type incompatibility indicates incorrect usage.
 
-- zodiosEndpoint.path.helpers.ts (4 assertions) - Fixed parameter types, fail-fast for default responses
-- getZodiosEndpointDefinitionList.ts - Already clean! User improved helpers & fixed PathItem type
+**Investigation Steps:**
+1. Read tanu docs: `cat node_modules/tanu/README.md`
+2. Check type definitions: `cat node_modules/tanu/dist/index.d.ts`
+3. Search our usage: `grep -r "from \"tanu\"" lib/src/`
+4. Test hypothesis: Create small isolated test
 
-**Key Patterns Established:**
+**Questions to Answer:**
+- What is `ts.Node` vs `t.TypeDefinition`?
+- Is there a conversion function between them?
+- Should we stay in one API level (all `t` or all `ts`)?
+- Are we mixing low-level and high-level APIs?
 
-1. **Custom Type Guards:** isRequestBodyObject(), isParameterObject(), isResponseObject()
-2. **Fail-fast Validation:** Nested $refs in all component types with clear error messages
-3. **Honest Return Types:** getSchemaByRef returns SchemaObject | ReferenceObject (not just SchemaObject)
-4. **Fix Types at Source:** ProcessOperationParams uses AllowedMethod (not string)
-5. **Type Narrowing:** Use openapi3-ts isReferenceObject, isSchemaObject + custom guards
-6. **Partial for Optional:** PathItem = Partial<Record<AllowedMethod, ...>> (not all methods required)
+**Expected Outcome:**
+- **Path A:** Find correct pattern → eliminate 5 tanu assertions (2-3 hours)
+- **Path B:** Confirm unsuitable → migrate to ts-morph (8-12 hours)
 
-**Why:**
+**See:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 3.2 "STEP 1" for detailed investigation plan
 
-- **BLOCKER for Engraph extraction:** Target repo has `@typescript-eslint/consistent-type-assertions: ["error", { assertionStyle: "never" }]`
+---
+
+## 2. Joint Strategy Session (AFTER Tanu Investigation)
+
+Once tanu investigation complete, choose path and strategize remaining assertion removal.
+
+---
+
+## Progress Summary (Session Ending October 25, 2025)
+
+**✅ Completed (11/15 files, ~30 assertions eliminated):**
+1. schema-sorting.ts (1) - Honest return types
+2. generateJSDocArray.ts (1) - typeof narrowing
+3. makeSchemaResolver.ts (1) - isSchemaRecord guard
+4. zodiosEndpoint.helpers.ts (1) - Removed widening
+5. schema-complexity.ts (2) - Simplified signatures
+6. inferRequiredOnly.ts (3) - Proper typing
+7. template-context.ts (3) - tsResultToString helper
+8. openApiToZod.ts (4) - Proper ref resolution
+9. schema-complexity.helpers.ts (4) - Type array handling
+10. zodiosEndpoint.operation.helpers.ts (4) - Custom guards + fail-fast
+11. zodiosEndpoint.path.helpers.ts (4) - Fixed types + fail-fast
+
+**✅ Verified Clean:**
+- getZodiosEndpointDefinitionList.ts - Only `as const` (allowed)
+
+**⏸️ BLOCKED on Tanu Investigation (~35 assertions):**
+- openApiToTypescript.ts (~7 assertions) - ALL tanu-related
+- openApiToTypescript.helpers.ts (~22+ assertions) - ALL tanu-related (THE FINAL BOSS)
+
+**⏳ Independent Work Possible (~6 assertions):**
+- cli.ts (~6 assertions) - NOT tanu-related (can do while investigating tanu)
+
+---
+
+## Key Patterns Established (Reuse These!)
+
+1. **Custom Type Guards:** `isRequestBodyObject()`, `isParameterObject()`, `isResponseObject()`
+2. **Fail-fast Validation:** Nested $refs with clear error messages
+3. **Honest Return Types:** Return actual unions, not asserted narrower types
+4. **Fix Types at Source:** Proper parameter types from the start
+5. **Type Narrowing:** Use openapi3-ts built-in guards + custom guards
+6. **Partial for Optional:** `PathItem = Partial<Record<AllowedMethod, ...>>`
+
+---
+
+## Analysis Documents
+
+**Visual Analysis:** `.agent/docs/type-assertion-elimination-analysis.md`
+- Mermaid diagrams showing type flow
+- Domain boundaries
+- Tanu library boundary issue visualization
+- Current state snapshot
+
+---
+
+## Why This Matters
+
+- **BLOCKER for Engraph extraction:** Target repo has `assertionStyle: "never"`
 - Type assertions hide bugs and prevent TypeScript from catching errors
-- Proper type guards and generics are safer and more maintainable
 - This is the LAST major blocker before extraction readiness
 
-**How (from Task 3.2 plan in 01-CURRENT-IMPLEMENTATION.md):**
+---
 
-1. Run `grep -r " as " lib/src --include="*.ts" | grep -v "test.ts"` to inventory all assertions
-2. Categorize by pattern:
-    - Type narrowing → proper type guards
-    - Generic constraints → fix generic parameters
-    - Object literals → proper typing at source
-    - Unknown casts → investigate and add proper validation
-3. Fix file-by-file with TDD workflow
-4. Run quality gates after each file to ensure no regressions
-5. Final validation: grep confirms 0 assertions remain
+## After Task 3.2 Complete
 
-**Validation:**
-
-- Zero `as` casts in production code (tests may keep some)
-- All 373+ tests still passing
-- Type-check passes with stricter rules
-- Quality gate passes
-
-**After Task 3.2:**
-
-- ✅ Move to Task 3.3: Dependency Cleanup (remove openapi-types)
+- Move to Task 3.3: Dependency Cleanup (remove openapi-types)
 
 ---
 
@@ -562,14 +624,15 @@ All documented in `.agent/adr/` (12 ADRs):
     - Generated code works correctly with zod v4
     - Duration: 30 minutes
 
-11. ⏳ **refactor(Task 3.2): eliminate type assertions - IN PROGRESS**
-    - ✅ 11/15 files complete
-    - Files: schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity, inferRequiredOnly, template-context, openApiToZod, schema-complexity.helpers, zodiosEndpoint.operation.helpers, zodiosEndpoint.path.helpers
+11. ⏸️ **refactor(Task 3.2): eliminate type assertions - PAUSED (Tanu API investigation required)**
+    - ✅ 11/15 files complete (~30 assertions eliminated)
+    - ⏸️ 2 files BLOCKED on tanu investigation (~35 assertions)
+    - ⏳ 1 file ready independently (cli.ts, ~6 assertions)
+    - Files completed: schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity, inferRequiredOnly, template-context, openApiToZod, schema-complexity.helpers, zodiosEndpoint.operation.helpers, zodiosEndpoint.path.helpers
     - Verified clean: getZodiosEndpointDefinitionList.ts (only `as const` usages)
-    - Patterns: type guards, honest types, narrowing, function simplification, fail-fast validation
+    - Patterns established: type guards, honest types, narrowing, function simplification, fail-fast validation
     - Custom type guards: isRequestBodyObject, isParameterObject, isResponseObject
     - User improvements: AllowedMethod type, isAllowedMethod guard, PathItem = Partial<Record<...>>
-    - ~41 assertions remaining (down from 71 → 65 → 55 → 51 → 47 → 43 → ~41)
     - All 373 tests passing after each fix
     - ~5.5 hours invested
 
@@ -581,24 +644,53 @@ All documented in `.agent/adr/` (12 ADRs):
     - Created: .agent/analysis/VALIDATION_AUDIT.md (205 lines)
     - Philosophy: Defer validation to swagger-parser, fail fast on preprocessing issues
 
+13. 📊 **docs: type assertion elimination analysis (visual architecture)**
+    - Created comprehensive visual analysis: .agent/docs/type-assertion-elimination-analysis.md
+    - Mermaid diagrams: type flow, domain boundaries, narrowing strategy
+    - Documented all remaining assertions with root cause analysis
+    - Critical insight: Both `t` and `ts` from same tanu library → incorrect API usage
+    - Table of remaining assertions with elimination strategy
+    - Recommendations: Investigate tanu API (preferred) OR migrate to ts-morph
+
 **Branch:** `feat/rewrite`  
-**Status:** Task 3.2 in progress (10/15 files, 47 assertions remaining, ~4.5 hours invested)
+**Status:** Task 3.2 PAUSED - Tanu API investigation required (11/15 files complete, ~35 tanu-related assertions blocked, ~5.5 hours invested)
 
 ---
 
 ## 🚀 How to Continue
 
-### For a Fresh Context
+### For a Fresh Context (START HERE)
 
-**Quick Start for Task 3.2 (P0 BLOCKER):**
+**🎯 IMMEDIATE PRIORITY: Tanu API Investigation**
 
-1. ✅ Read this section (you are here) - Current state overview
-2. 📋 Read "IMMEDIATE: Task 3.2" section above - What to do next
-3. 📋 Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 3.2 section - Detailed steps
-4. ✅ Run Definition of Done - Should pass (currently passing with 373 tests)
-5. 🚀 Execute Task 3.2 - Eliminate Type Assertions (16-24 hours, BLOCKER for extraction)
+1. **Read Critical Status (above)** - Understand the blocker
+2. **Read "IMMEDIATE NEXT ACTION"** section - Tanu investigation plan
+3. **Read Analysis Document:** `.agent/docs/type-assertion-elimination-analysis.md`
+   - Visual diagrams of type flow and tanu boundary
+   - Table of remaining assertions
+   - Critical insight about tanu API usage
+4. **Read Detailed Plan:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 3.2 "STEP 1"
+   - Full investigation checklist
+   - Commands to run
+   - Questions to answer
+5. **Execute Investigation** (2-4 hours)
+   - Explore tanu documentation
+   - Test hypothesis
+   - Document findings
+6. **Strategy Session** - Choose path based on findings
+   - Path A: Fix tanu usage (2-3 hours)
+   - Path B: Migrate to ts-morph (8-12 hours)
 
-**Full Context for Planning:**
+**Key Files to Read for Context:**
+- `.agent/docs/type-assertion-elimination-analysis.md` - Visual analysis (MUST READ)
+- `lib/src/openApiToTypescript.ts` - Our tanu usage
+- `lib/src/openApiToTypescript.helpers.ts` - Heavy tanu usage (THE FINAL BOSS)
+- `node_modules/tanu/README.md` - Tanu documentation
+- `node_modules/tanu/dist/index.d.ts` - Tanu type definitions
+
+---
+
+### Full Context for Planning
 
 1. Read this file (context.md) for current state
 2. Read `.agent/plans/00-STRATEGIC-PLAN.md` for overall strategy

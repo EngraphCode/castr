@@ -157,6 +157,7 @@ import { t, ts } from "tanu";
 ```
 
 The type incompatibility between `ts.Node` and `t.TypeDefinition` suggests:
+
 - We're mixing API levels inappropriately
 - There may be a conversion function we're missing
 - Or we should stay within one API level
@@ -194,7 +195,7 @@ The type incompatibility between `ts.Node` and `t.TypeDefinition` suggests:
 - **openApiToTypescript.ts**: 0 assertions (7 eliminated via honest types)
 - **Type flow**: Clean, no widening, information preserved
 
-### ⚠️  Remaining Work
+### ⚠️ Remaining Work
 
 - **5 assertions** at tanu boundary (UNACCEPTABLE, need to fix API usage)
 - **4 assertions** at resolver boundary (documented, OpenAPI spec guarantees consistency)

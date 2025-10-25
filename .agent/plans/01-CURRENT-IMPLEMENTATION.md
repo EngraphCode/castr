@@ -3072,15 +3072,17 @@ if ("$ref" in actualSchema) {
 
 ### 3.2 Eliminate Type Assertions (EXTRACTION BLOCKER)
 
-**Status:** ⏳ IN PROGRESS (11/15 files complete, ~41 assertions remaining)
-**Priority:** CRITICAL BLOCKER
-**Estimated Time:** 16-24 hours (1-2 weeks with testing)
+**Status:** ⏳ PAUSED - Tanu API Investigation Required
+**Priority:** P0 CRITICAL BLOCKER
+**Estimated Time:** 16-24 hours total (varies based on tanu findings)
 **Dependencies:** Tasks 1.1, 2.1, 2.2 complete
 **Time Spent So Far:** ~5.5 hours
 
 **⚠️ CRITICAL RULE:** **ONLY `as const` IS ALLOWED** - All other `as` usages must be eliminated!
 
-**Progress Update (October 25, 2025 - Late Night):**
+**⚠️ CRITICAL BLOCKER IDENTIFIED:** Remaining assertions at tanu library boundary suggest **incorrect API usage**. Must investigate tanu's intended `t` ↔ `ts` composition pattern before proceeding.
+
+**Progress Summary (Session Ending October 25, 2025):**
 
 ✅ **Completed Files (11/15):**
 1. `schema-sorting.ts` (1 assertion) - Returned honest type instead of generic T
@@ -3186,36 +3188,170 @@ export function isResponseObject(obj: unknown): obj is ResponseObject {
 
 ---
 
-**🚀 NEXT STEPS FOR CONTINUATION (Start Here!):**
+**🎯 IMMEDIATE NEXT STEPS (PRIORITY ORDER):**
 
-**1. Continue with `cli.ts` (Next file, ~6 assertions):**
+## STEP 1: Investigate Tanu API (CRITICAL - DO THIS FIRST) ⭐
 
-```bash
-cd /Users/jim/code/personal/openapi-zod-client/lib
-grep -n " as " src/cli.ts | grep -v "as const"
+**Goal:** Understand how tanu intends `t` and `ts` to compose correctly
+
+**Critical Insight:**
+```typescript
+import { t, ts } from "tanu";
+```
+Both `t` and `ts` come from the SAME library. If they don't work together, we're using the API wrong, not hitting a library limitation.
+
+**Investigation Tasks:**
+
+1. **Read tanu documentation/examples:**
+   ```bash
+   # Check node_modules for docs
+   cat node_modules/tanu/README.md
+   cat node_modules/tanu/package.json
+   
+   # Search for examples in our codebase
+   grep -r "from \"tanu\"" lib/src/
+   ```
+
+2. **Analyze type definitions:**
+   ```bash
+   # Check tanu type definitions
+   cat node_modules/tanu/dist/index.d.ts
+   ```
+
+3. **Key Questions to Answer:**
+   - What is `ts.Node` vs `t.TypeDefinition`?
+   - Is there a conversion function between them?
+   - Should we stay in one API level (all `t` or all `ts`)?
+   - Are we mixing low-level and high-level APIs incorrectly?
+
+4. **Test Hypothesis:**
+   - Create small isolated test of tanu usage
+   - Try composing `t.union([ts.Node, t.TypeDefinition])`
+   - See if there's a wrapper/conversion we're missing
+
+**Expected Outcome:**
+- Either: Find correct API usage → eliminate 5 tanu assertions
+- Or: Confirm tanu is unsuitable → document for ts-morph migration
+
+**Time Estimate:** 2-4 hours
+
+---
+
+## STEP 2: Joint Strategy Session
+
+**After tanu investigation, choose path:**
+
+### Path A: Tanu API Fix Found (Preferred)
+- Apply correct pattern to 5 tanu boundary assertions
+- Should be straightforward once pattern is known
+- Estimate: 2-3 hours
+
+### Path B: Tanu Too Burdensome → ts-morph Swap
+- Larger refactor but cleaner long-term
+- ts-morph wraps TypeScript Compiler API directly
+- Replaces tanu entirely
+- Estimate: 8-12 hours
+- **See:** `.agent/reference/openapi-zod-client-emitter-migration.md`
+
+---
+
+## STEP 3: Remaining File Fixes (ONLY AFTER TANU DECISION)
+
+### Remaining Files Summary:
+
+**File 1: `cli.ts` (~6 assertions)** - NOT tanu-related
+- Line 42: `JSON.parse(packageJsonContent) as { version?: unknown }`
+- Line 119: `(await SwaggerParser.bundle(input)) as unknown as OpenAPIObject`
+- Lines 126-135: Commander option typing
+- Line 177: generationArgs typing
+- **Pattern:** Type guards for enum-like strings
+
+**File 2: `openApiToTypescript.ts` (~7 assertions)** - MOSTLY tanu-related
+- Depends on tanu investigation outcome
+- May all disappear with correct tanu usage
+
+**File 3: `openApiToTypescript.helpers.ts` (~22+ assertions)** - ALL tanu-related
+- **THE FINAL BOSS** - Highest concentration
+- Heavy AST manipulation
+- **BLOCKED ON:** Tanu investigation
+- If tanu path works: Apply pattern systematically
+- If ts-morph path: This file gets rewritten
+
+---
+
+## 📊 Current State Snapshot
+
+**Files Completed (11/15):**
+1. ✅ schema-sorting.ts (1) - Honest return types
+2. ✅ generateJSDocArray.ts (1) - typeof narrowing
+3. ✅ makeSchemaResolver.ts (1) - isSchemaRecord guard
+4. ✅ zodiosEndpoint.helpers.ts (1) - Removed widening
+5. ✅ schema-complexity.ts (2) - Simplified signatures
+6. ✅ inferRequiredOnly.ts (3) - Proper typing
+7. ✅ template-context.ts (3) - tsResultToString helper
+8. ✅ openApiToZod.ts (4) - Proper ref resolution
+9. ✅ schema-complexity.helpers.ts (4) - Type array handling
+10. ✅ zodiosEndpoint.operation.helpers.ts (4) - Custom guards + fail-fast
+11. ✅ zodiosEndpoint.path.helpers.ts (4) - Fixed types + fail-fast
+
+**Files Verified Clean:**
+- ✅ getZodiosEndpointDefinitionList.ts - Only `as const` (allowed)
+
+**Assertions Breakdown:**
+- **Total eliminated:** ~30 (from our domain)
+- **Remaining:** ~41 total
+  - ~6 in cli.ts (NOT tanu-related, can do independently)
+  - ~35 in openApiToTypescript + helpers (ALL tanu-related, BLOCKED)
+
+---
+
+## 🎓 Patterns Established (Reuse These!)
+
+**1. Custom Type Guards:**
+```typescript
+function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
+    return typeof obj === "object" && obj !== null && "content" in obj;
+}
 ```
 
-**Key assertions to fix:**
-- Line 42: Type JSON.parse result properly
-- Line 119: Handle SwaggerParser type mismatch (returns its own OpenAPI types)
-- Lines 126-135: Type Commander options as unions, not `as` casts
-- Line 177: Build generationArgs with proper typing instead of casting
+**2. Fail-Fast Validation:**
+```typescript
+if (isReferenceObject(resolved)) {
+    throw new Error(
+        `Nested $ref found: ${ref}. Use SwaggerParser.bundle() to dereference.`
+    );
+}
+```
 
-**Pattern to use:** Create validation functions for string options (like groupStrategy, defaultStatus)
+**3. Honest Return Types:**
+```typescript
+// BEFORE: function foo(): T
+// AFTER:  function foo<T>(): T | ReferenceObject
+```
 
-**2. Then `openApiToTypescript.ts` (~7 assertions):**
-- Likely AST-related assertions (ts.Node types)
-- Use type guards for Tanu AST nodes
-- Return honest union types (ts.Node | t.TypeDefinition)
+**4. Single-Point Narrowing:**
+```typescript
+// Narrow ONCE, never widen
+const typeDef = typeof output === "string" ? t.reference(output) : output;
+```
 
-**3. Finally `openApiToTypescript.helpers.ts` (~22+ assertions) - THE FINAL BOSS:**
-- Heavy AST manipulation
-- Create comprehensive AST type guards
-- This will be the hardest - budget 3-4 hours
+---
 
-**4. Validation Commands:**
+## 🔍 Key Files for Investigation
+
+**Tanu Usage Examples in Our Codebase:**
+- `lib/src/openApiToTypescript.ts` - Where we use `t` and `ts`
+- `lib/src/openApiToTypescript.helpers.ts` - Heavy tanu usage
+- `lib/src/CodeMeta.ts` - Uses ts.Node
+
+**Analysis Documents:**
+- `.agent/docs/type-assertion-elimination-analysis.md` - Full visual analysis
+- Mermaid diagrams showing type flow and boundaries
+
+**Validation Commands:**
 ```bash
 # Check remaining assertions
+cd /Users/jim/code/personal/openapi-zod-client/lib
 pnpm lint 2>&1 | grep "consistent-type-assertions" | wc -l
 
 # Run tests
@@ -3225,10 +3361,40 @@ pnpm test -- --run
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 ```
 
-**5. When complete (0 assertions remaining):**
-- Update context.md and this file with completion status
-- Commit with message template: "refactor(Task 3.2): eliminate all type assertions - BLOCKER RESOLVED"
-- Move to Task 3.3: Remove openapi-types dependency
+---
+
+## ✅ When Complete
+
+1. Update context.md with resolution
+2. Update this file with final status
+3. Commit with clear message about approach taken
+4. Move to Task 3.3: Remove openapi-types dependency
+
+**Commit Template (Path A - Tanu Fix):**
+```
+refactor(Task 3.2): eliminate remaining type assertions via correct tanu API usage
+
+Investigated tanu's intended t ↔ ts composition pattern:
+- [Document what we learned]
+- Applied [pattern] to eliminate 5 tanu boundary assertions
+- cli.ts fixed via type guards
+
+Result: 0 type assertions (was 74 → 41 → 0)
+All 373 tests passing
+Target repo compliance: assertionStyle: "never" ✅
+```
+
+**Commit Template (Path B - ts-morph Swap):**
+```
+refactor(Task 3.2): migrate from tanu to ts-morph
+
+Tanu investigation revealed [issue].
+Migrated to ts-morph for cleaner TypeScript AST manipulation:
+- [List changes]
+
+Result: 0 type assertions, cleaner API
+All 373 tests passing
+```
 
 **Implementation Steps:**
 
