@@ -3,7 +3,7 @@
  * Extracted to reduce cognitive complexity in schema-complexity.ts
  */
 
-import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
 import { getSum } from "pastable";
 
 type ComplexityFn = (args: { current: number; schema: SchemaObject | ReferenceObject | undefined }) => number;

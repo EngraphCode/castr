@@ -1,6 +1,6 @@
 import { getZodClientTemplateContext } from "../src/index.js";
 import { expect, test } from "vitest";
-import { type OpenAPIObject } from "openapi3-ts";
+import { type OpenAPIObject } from "openapi3-ts/oas30";
 
 test("defaut-status-behavior", () => {
     const doc: OpenAPIObject = {
@@ -10,15 +10,17 @@ test("defaut-status-behavior", () => {
             "/with-default-response": {
                 get: {
                     operationId: "withDefaultResponse",
-                    responses: { default: { content: { "application/json": { schema: { type: "string" } } } } },
+                    responses: {
+                        default: { description: "Default response", content: { "application/json": { schema: { type: "string" } } } },
+                    },
                 },
             },
             "/with-default-error": {
                 get: {
                     operationId: "withDefaultError",
                     responses: {
-                        "200": { content: { "application/json": { schema: { type: "number" } } } },
-                        default: { content: { "application/json": { schema: { type: "string" } } } },
+                        "200": { description: "Success", content: { "application/json": { schema: { type: "number" } } } },
+                        default: { description: "Default error", content: { "application/json": { schema: { type: "string" } } } },
                     },
                 },
             },
@@ -56,7 +58,7 @@ test("defaut-status-behavior", () => {
               "description": undefined,
               "errors": [
                   {
-                      "description": undefined,
+                      "description": "Default error",
                       "schema": "z.string()",
                       "status": "default",
                   },

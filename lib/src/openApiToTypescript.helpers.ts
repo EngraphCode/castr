@@ -5,7 +5,7 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import { type ReferenceObject, type SchemaObject } from "openapi3-ts";
+import { type ReferenceObject, type SchemaObject } from "openapi3-ts/oas30";
 import { t, ts } from "tanu";
 
 import type { TsConversionContext } from "./openApiToTypescript.js";

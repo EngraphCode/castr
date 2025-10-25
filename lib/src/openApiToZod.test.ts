@@ -1,4 +1,4 @@
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from "openapi3-ts/oas30";
 import { expect, test } from "vitest";
 import { getZodSchema } from "./openApiToZod.js";
 import type { CodeMetaData, ConversionTypeContext } from "./CodeMeta.js";

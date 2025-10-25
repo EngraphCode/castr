@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenAPIObject } from "openapi3-ts";
+import type { OpenAPIObject } from "openapi3-ts/oas30";
 
 import { makeSchemaResolver } from "./makeSchemaResolver.js";
 

@@ -17,7 +17,7 @@
  */
 
 import { expect, test, describe } from "vitest";
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from "openapi3-ts/oas30";
 import { getSchemaComplexity } from "./schema-complexity.js";
 
 const getComplexity = (schema: SchemaObject) => getSchemaComplexity({ schema, current: 0 });

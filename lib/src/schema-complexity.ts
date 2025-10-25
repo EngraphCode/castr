@@ -1,5 +1,5 @@
-import type { ReferenceObject, SchemaObject } from "openapi3-ts";
-import { isReferenceObject } from "openapi3-ts";
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
+import { isReferenceObject } from "openapi3-ts/oas30";
 
 import { match } from "ts-pattern";
 

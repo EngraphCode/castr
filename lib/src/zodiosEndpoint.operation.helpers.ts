@@ -10,8 +10,8 @@ import type {
     ResponseObject,
     SchemaObject,
     ReferenceObject,
-} from "openapi3-ts";
-import { isReferenceObject, isSchemaObject } from "openapi3-ts";
+} from "openapi3-ts/oas30";
+import { isReferenceObject, isSchemaObject } from "openapi3-ts/oas30";
 import { match, P } from "ts-pattern";
 
 import type { CodeMeta, ConversionTypeContext } from "./CodeMeta.js";

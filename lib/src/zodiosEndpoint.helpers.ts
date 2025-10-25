@@ -5,7 +5,7 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
 
 import type { CodeMeta } from "./CodeMeta.js";
 import { getSchemaComplexity } from "./schema-complexity.js";

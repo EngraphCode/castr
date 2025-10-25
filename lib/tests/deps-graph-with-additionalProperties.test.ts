@@ -1,4 +1,4 @@
-import { type ReferenceObject, type SchemaObject, type SchemasObject } from "openapi3-ts";
+import { type ReferenceObject, type SchemaObject, type SchemasObject } from "openapi3-ts/oas30";
 import { expect, test } from "vitest";
 import { getOpenApiDependencyGraph } from "../src/index.js";
 

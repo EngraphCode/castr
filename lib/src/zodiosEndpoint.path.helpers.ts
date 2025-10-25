@@ -3,7 +3,7 @@
  * Extracted to reduce cognitive complexity in the main function
  */
 
-import type { OperationObject, ParameterObject, ReferenceObject, ResponseObject } from "openapi3-ts";
+import type { OperationObject, ParameterObject, ReferenceObject, ResponseObject } from "openapi3-ts/oas30";
 import type { TemplateContext } from "./template-context.js";
 import type { DefaultStatusBehavior } from "./template-context.types.js";
 import type { ConversionTypeContext } from "./CodeMeta.js";

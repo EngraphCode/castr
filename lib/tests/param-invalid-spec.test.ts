@@ -7,7 +7,7 @@
  */
 
 import { expect, test, describe } from "vitest";
-import type { OpenAPIObject } from "openapi3-ts";
+import type { OpenAPIObject } from "openapi3-ts/oas30";
 import { generateZodClientFromOpenAPI } from "../src/generateZodClientFromOpenAPI.js";
 
 describe("param-invalid-spec", () => {

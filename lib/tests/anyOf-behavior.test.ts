@@ -2,7 +2,7 @@ import { describe, test, expect } from "vitest";
 import { z } from "zod";
 import { getZodSchema } from "../src/openApiToZod.js";
 import { type CodeMeta } from "../src/CodeMeta.js";
-import { type OpenAPIObject } from "openapi3-ts";
+import { type OpenAPIObject } from "openapi3-ts/oas30";
 import { generateZodClientFromOpenAPI } from "../src/generateZodClientFromOpenAPI.js";
 
 // the schemas and fixtures used in these tests are modified from examples here: https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#anyof
@@ -191,6 +191,9 @@ describe("anyOf behavior", () => {
                                 in: "query",
                             },
                         ],
+                        responses: {
+                            "200": { description: "Success" },
+                        },
                     },
                 },
             },

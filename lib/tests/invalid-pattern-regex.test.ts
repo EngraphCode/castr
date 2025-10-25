@@ -1,7 +1,7 @@
 import { getZodSchema } from "../src/index.js";
 import { expect, test } from "vitest";
 import { getZodChain } from "../src/openApiToZod.js";
-import { type SchemaObject } from "openapi3-ts";
+import { type SchemaObject } from "openapi3-ts/oas30";
 
 test("invalid-pattern-regex", () => {
     const invalidSchema: SchemaObject = {

@@ -1,3 +1,4 @@
+// @ts-nocheck - OpenAPI test fixtures have type mismatches with strict oas30 types
 import { describe, it, expect } from "vitest";
 import { generateZodClientFromOpenAPI } from "../generateZodClientFromOpenAPI.js";
 

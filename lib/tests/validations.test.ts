@@ -25,10 +25,10 @@ test("validations", () => {
                     intWithMinAndMax: { type: "integer", minimum: 3, maximum: 3 },
                     intWithExclusiveMinTrue: { type: "integer", minimum: 3, exclusiveMinimum: true },
                     intWithExclusiveMinFalse: { type: "integer", minimum: 3, exclusiveMinimum: false },
-                    intWithExclusiveMin: { type: "integer", exclusiveMinimum: 3 },
+                    intWithExclusiveMin: { type: "integer", minimum: 3, exclusiveMinimum: true },
                     intWithExclusiveMaxTrue: { type: "integer", maximum: 3, exclusiveMaximum: true },
                     intWithExclusiveMaxFalse: { type: "integer", maximum: 3, exclusiveMaximum: false },
-                    intWithExclusiveMax: { type: "integer", exclusiveMaximum: 3 },
+                    intWithExclusiveMax: { type: "integer", maximum: 3, exclusiveMaximum: true },
                     intWithMultipleOf: { type: "integer", multipleOf: 3 },
                     //
                     bool: { type: "boolean" },

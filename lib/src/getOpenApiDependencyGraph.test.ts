@@ -1,5 +1,5 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from "openapi3-ts";
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
 import { get } from "pastable/server";
 import { expect, test } from "vitest";
 import { getOpenApiDependencyGraph } from "./getOpenApiDependencyGraph.js";

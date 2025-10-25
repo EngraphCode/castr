@@ -1,5 +1,5 @@
-import type { ReferenceObject, SchemaObject } from "openapi3-ts";
-import { isReferenceObject } from "openapi3-ts";
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
+import { isReferenceObject } from "openapi3-ts/oas30";
 import { t, ts } from "tanu";
 
 import type { DocumentResolver } from "./makeSchemaResolver.js";

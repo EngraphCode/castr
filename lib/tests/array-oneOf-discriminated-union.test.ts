@@ -1,4 +1,4 @@
-import type { OpenAPIObject } from "openapi3-ts";
+import type { OpenAPIObject } from "openapi3-ts/oas30";
 import { expect, test } from "vitest";
 import { generateZodClientFromOpenAPI } from "../src/index.js";
 
@@ -16,6 +16,9 @@ test("array-oneOf-discriminated-union", async () => {
                     requestBody: {
                         required: true,
                         content: { "application/json": { schema: { $ref: "#/components/schemas/ArrayRequest" } } },
+                    },
+                    responses: {
+                        "200": { description: "Success" },
                     },
                 },
             },

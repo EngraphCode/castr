@@ -1,6 +1,6 @@
 import { generateZodClientFromOpenAPI, getZodiosEndpointDefinitionList } from "../src/index.js";
 import { expect, test } from "vitest";
-import type { OpenAPIObject } from "openapi3-ts";
+import type { OpenAPIObject } from "openapi3-ts/oas30";
 
 test("handle-refs-with-dots-in-name", async () => {
     const doc = {

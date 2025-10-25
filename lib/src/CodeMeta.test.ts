@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas30";
 
 import { CodeMeta, type ConversionTypeContext } from "./CodeMeta.js";
 import { makeSchemaResolver } from "./makeSchemaResolver.js";

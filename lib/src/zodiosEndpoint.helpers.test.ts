@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from "openapi3-ts/oas30";
 
 import { CodeMeta } from "./CodeMeta.js";
 import {

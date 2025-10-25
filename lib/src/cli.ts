@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { Command } from "commander";
-import type { OpenAPIObject } from "openapi3-ts";
+import type { OpenAPIObject } from "openapi3-ts/oas30";
 import { resolveConfig } from "prettier";
 
 import { toBoolean } from "./utils.js";

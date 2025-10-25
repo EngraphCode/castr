@@ -1,4 +1,4 @@
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from "openapi3-ts/oas30";
 
 type MappingValue = string | string[] | undefined;
 

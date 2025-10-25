@@ -1,5 +1,5 @@
 import SwaggerParser from "@apidevtools/swagger-parser";
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas30";
 import { expect, test } from "vitest";
 import { getZodiosEndpointDefinitionList } from "./getZodiosEndpointDefinitionList.js";
 
@@ -346,13 +346,13 @@ test("getZodiosEndpointDefinitionList /pet without schema ref", () => {
                                             { $ref: "#/components/schemas/Reason" },
                                         ],
                                     },
-                                    "application/x-www-form-urlencoded": {
-                                        schema: {
-                                            allOf: [
-                                                { $ref: "#/components/schemas/Pet" },
-                                                { $ref: "#/components/schemas/Reason" },
-                                            ],
-                                        },
+                                },
+                                "application/x-www-form-urlencoded": {
+                                    schema: {
+                                        allOf: [
+                                            { $ref: "#/components/schemas/Pet" },
+                                            { $ref: "#/components/schemas/Reason" },
+                                        ],
                                     },
                                 },
                             },

@@ -1,6 +1,6 @@
 import type { ZodiosEndpointDefinition } from "@zodios/core";
-import type { OpenAPIObject, OperationObject, PathItemObject } from "openapi3-ts";
-import { isReferenceObject } from "openapi3-ts";
+import type { OpenAPIObject, OperationObject, PathItemObject } from "openapi3-ts/oas30";
+import { isReferenceObject } from "openapi3-ts/oas30";
 import type { ObjectLiteral } from "pastable";
 import { match, P } from "ts-pattern";
 

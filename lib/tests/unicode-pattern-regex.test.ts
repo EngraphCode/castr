@@ -1,7 +1,7 @@
 import { getZodSchema } from "../src/index.js";
 import { expect, test } from "vitest";
 import { getZodChain } from "../src/openApiToZod.js";
-import { type SchemaObject } from "openapi3-ts";
+import { type SchemaObject } from "openapi3-ts/oas30";
 
 test("unicode-pattern-regex", () => {
     const schema: SchemaObject = {
@@ -33,5 +33,4 @@ test("unicode-pattern-regex", () => {
     expect(
         getZodSchema({ schema: schemaWithSlashU }).toString() + getZodChain({ schema: schemaWithSlashU }).toString()
     ).toMatchInlineSnapshot(String.raw`"z.string().regex(/\u{1F600}+/u).optional()"`);
-
 });
