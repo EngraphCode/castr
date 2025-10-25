@@ -81,7 +81,7 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-## 1. Dependency Analysis & Investigation (✅ COMPLETE 9/10 - 1 Pending)
+## 1. Dependency Analysis & Investigation (✅ COMPLETE 10/10)
 
 ### 1.1 Lint Triage & Categorization ✅
 
@@ -2059,21 +2059,21 @@ Closes Task 1.9"
 
 ---
 
-### 1.10 Fix Critical Lint Issues (Pre-flight for Dependency Updates)
+### 1.10 Fix Critical Lint Issues (Pre-flight for Dependency Updates) ✅
 
-**Status:** Pending
-**Priority:** HIGH (prevents issues during dependency updates)
-**Estimated Time:** 30-45 minutes
+**Status:** Complete  
+**Priority:** HIGH (prevents issues during dependency updates)  
+**Time Taken:** 35 minutes  
 **Dependencies:** Task 1.9 complete
 
 **Acceptance Criteria:**
 
-- [ ] CodeMeta type safety issues resolved (5 instances)
-- [ ] Floating promise fixed (samples-generator.ts)
-- [ ] Logic bug fixed (test comparison that always returns true)
-- [ ] PATH security issue reviewed and addressed
-- [ ] No new lint errors introduced
-- [ ] All tests still passing
+- [x] ✅ CodeMeta type safety issues resolved (8 instances)
+- [x] ✅ Floating promise fixed (samples-generator.ts)
+- [x] ✅ Logic bug fixed (test comparison - already resolved)
+- [x] ✅ PATH security issue reviewed and addressed
+- [x] ✅ No new lint errors introduced
+- [x] ✅ All tests still passing (311/311)
 
 **Rationale:**
 
@@ -2181,10 +2181,33 @@ Before starting major dependency updates, fix critical lint issues that represen
 - **TODO comments** → Tracked separately
 - **Test security warnings** (http vs https) → Acceptable in tests
 
+**Completed Actions:**
+
+1. **Fixed CodeMeta type safety (8 instances):**
+   - lib/src/CodeMeta.test.ts:250 - Template literal → .toString()
+   - lib/tests/anyOf-behavior.test.ts:13 - Function constructor → .toString()
+   - lib/tests/invalid-pattern-regex.test.ts - Concatenation (3x) → .toString()
+   - lib/tests/unicode-pattern-regex.test.ts - Concatenation (4x) → .toString()
+
+2. **Fixed floating promise:**
+   - lib/samples-generator.ts:17 - Added `void` operator for explicit ignore
+
+3. **Fixed PATH security:**
+   - lib/samples-generator.ts:20 - Added comment + eslint-disable for safe hardcoded path
+
+4. **Logic bug:** Already resolved (no action needed)
+
+**Results:**
+
+- Lint errors: 147 → 136 (11 errors fixed) ✅
+- Tests: 311/311 passing ✅
+- 2 atomic commits created
+- Ready for dependency updates
+
 **Output:**
 
 - Fixed files committed atomically
-- Lint report showing reduced error count
+- Lint report showing reduced error count (147 → 136)
 - All quality gates passing
 
 **Commit Message:**
