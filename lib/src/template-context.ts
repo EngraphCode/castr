@@ -20,6 +20,13 @@ const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, node, file);
 
 /**
+ * Type guard to check if result is a ts.Node
+ */
+const isTsNode = (result: unknown): result is ts.Node => {
+    return typeof result === "object" && result !== null && "kind" in result && typeof result.kind === "number";
+};
+
+/**
  * Convert result from getTypescriptFromOpenApi to string
  * Handles union type: ts.Node | t.TypeDefinitionObject | string
  */
@@ -28,7 +35,7 @@ const tsResultToString = (result: ReturnType<typeof getTypescriptFromOpenApi>): 
         return result;
     }
     // ts.Node can be printed
-    if ("kind" in result && typeof result.kind === "number") {
+    if (isTsNode(result)) {
         return printTs(result);
     }
     // t.TypeDefinitionObject - stringify it
