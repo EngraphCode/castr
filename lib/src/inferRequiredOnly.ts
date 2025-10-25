@@ -46,9 +46,9 @@ export function inferRequiredSchema(schema: SchemaObject) {
         patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, resolver: DocumentResolver) => {
             if (isReferenceObject(prop)) {
                 const refType = resolver.getSchemaByRef(prop.$ref);
-                if (refType) {
+                if (refType && !isReferenceObject(refType)) {
                     composedRequiredSchema.required.forEach((required) => {
-                        composedRequiredSchema.properties[required] = refType?.properties?.[required] ?? {};
+                        composedRequiredSchema.properties[required] = refType.properties?.[required] ?? {};
                     });
                 }
             } else {

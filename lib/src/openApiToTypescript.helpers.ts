@@ -65,6 +65,15 @@ export function handleReferenceObject(
             throw new Error(`Schema ${schema.$ref} not found`);
         }
 
+        // If getSchemaByRef returned a ReferenceObject, the document is malformed
+        // (nested refs without dereferencing). Fail fast.
+        // QUESTION: Is this a problem with a non-compliant OpenAPI document, or a limitation of our code and we should, in fact, handle nested refs?
+        if ("$ref" in actualSchema) {
+            throw new Error(
+                `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference.`
+            );
+        }
+
         ctx.visitedRefs[schema.$ref] = true;
         resolveRecursively(actualSchema);
     }

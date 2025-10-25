@@ -198,7 +198,7 @@ describe("zodiosEndpoint.helpers", () => {
                 schemaByName: {},
                 resolver: {
                     resolveRef: () => ({ name: "Pet" }),
-                    getSchemaByRef: () => ({ type: "string" }),
+                    getSchemaByRef: () => ({ type: "string" as const }),
                 },
             };
 
@@ -215,8 +215,8 @@ describe("zodiosEndpoint.helpers", () => {
                 resolver: {
                     resolveRef: () => ({ name: "Pet" }),
                     getSchemaByRef: () => ({
-                        type: "object",
-                        properties: { id: { type: "integer" }, name: { type: "string" } },
+                        type: "object" as const,
+                        properties: { id: { type: "integer" as const }, name: { type: "string" as const } },
                     }),
                 },
             };
@@ -233,7 +233,7 @@ describe("zodiosEndpoint.helpers", () => {
                 schemaByName: {},
                 resolver: {
                     resolveRef: () => ({ name: "Invalid" }),
-                    getSchemaByRef: () => undefined,
+                    getSchemaByRef: () => undefined as never,
                 },
             };
 

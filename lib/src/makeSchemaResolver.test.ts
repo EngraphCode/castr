@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { OpenAPIObject } from "openapi3-ts/oas30";
+import { isSchemaObject } from "openapi3-ts/oas30";
 
 import { makeSchemaResolver } from "./makeSchemaResolver.js";
 
@@ -43,19 +44,28 @@ describe("makeSchemaResolver", () => {
         it("should auto-correct refs missing leading slash", () => {
             const resolver = makeSchemaResolver(mockDoc);
             const schema = resolver.getSchemaByRef("#components/schemas/Pet");
-            expect(schema.type).toBe("object");
+            expect(isSchemaObject(schema)).toBe(true);
+            if (isSchemaObject(schema)) {
+                expect(schema.type).toBe("object");
+            }
         });
 
         it("should handle schema names with dashes", () => {
             const resolver = makeSchemaResolver(mockDoc);
             const schema = resolver.getSchemaByRef("#/components/schemas/Name-With-Dash");
-            expect(schema.type).toBe("string");
+            expect(isSchemaObject(schema)).toBe(true);
+            if (isSchemaObject(schema)) {
+                expect(schema.type).toBe("string");
+            }
         });
 
         it("should handle schema names with underscores", () => {
             const resolver = makeSchemaResolver(mockDoc);
             const schema = resolver.getSchemaByRef("#/components/schemas/Name_With_Underscore");
-            expect(schema.type).toBe("string");
+            expect(isSchemaObject(schema)).toBe(true);
+            if (isSchemaObject(schema)) {
+                expect(schema.type).toBe("string");
+            }
         });
 
         it("should throw when schema not found", () => {
