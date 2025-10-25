@@ -153,11 +153,13 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ### Phase 3: Quality & Testing (PLANNED)
 
 **Status:** Planned  
-**Duration:** Estimated 1-2 weeks
+**Duration:** Estimated 3-4 weeks (combining core quality work + DX enhancements)
 
 **⚠️ MANDATORY: ALL tasks MUST follow TDD**
 
-**Goals:**
+**See:** `.agent/plans/03-FURTHER-ENHANCEMENTS.md` for detailed DX & testing improvements
+
+**Core Quality Goals:**
 
 - Add Stryker mutation testing (v9.2.0)
 - Achieve target ESLint compliance (146 → 0 issues)
@@ -165,6 +167,15 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - Establish mutation score threshold
 - All quality gates green
 - **TDD:** Write tests that expose gaps mutation testing finds, fix code
+
+**Additional Enhancements (from typed-openapi analysis):**
+
+- **Tooling:** Config file support (cosmiconfig), bundle size analysis
+- **Developer Experience:** Watch mode, discriminated union errors, configurable status codes
+- **Testing Maturity:** Type-level testing (tstyche), MSW integration tests
+- **Documentation:** Migration guides, comprehensive examples
+
+**Estimated Additional Time:** 25-32 hours for DX enhancements
 
 **Optional (Phase 3 or 4):**
 
@@ -381,6 +392,8 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ### Phase 3 Complete When:
 
+**Core Quality:**
+
 - [ ] Stryker installed and configured
 - [ ] Mutation score threshold established
 - [ ] Mutation score meets threshold
@@ -388,6 +401,16 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - [ ] Target ESLint config compliance achieved
 - [ ] handlebars evaluation complete
 - [ ] All quality gates green
+
+**DX Enhancements (from 03-FURTHER-ENHANCEMENTS.md):**
+
+- [ ] Config file support (cosmiconfig) implemented
+- [ ] Bundle size analysis working
+- [ ] Watch mode implemented (optional)
+- [ ] Discriminated union error handling (optional)
+- [ ] Type-level testing (tstyche) implemented
+- [ ] MSW integration tests implemented
+- [ ] Migration guides complete
 
 ### Ready for Extraction When:
 
@@ -411,16 +434,23 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - Week 2: Type assertion elimination, pastable replacement
 - Week 3: Testing, validation, dependency evaluation
 
-**Phase 3:** 1-2 weeks
+**Phase 3:** 3-4 weeks
 
-- Week 1: Stryker setup, lint fixes
-- Week 2: Final quality improvements
+- Week 1: Stryker setup, lint fixes, config file support
+- Week 2: Bundle analysis, watch mode, discriminated unions
+- Week 3: Type-level testing (tstyche), MSW integration tests
+- Week 4: Migration guides, final quality improvements
 
 **Phase 4:** 1 week
 
 - Final preparation and documentation
 
-**Total Estimated:** 4-6 weeks to extraction-ready state
+**Total Estimated:** 8-11 weeks to extraction-ready state
+
+- Phase 2: 2-3 weeks
+- Phase 2B (optional): 3-4 weeks
+- Phase 3: 3-4 weeks (includes DX enhancements)
+- Phase 4: 1 week
 
 ---
 
@@ -429,7 +459,9 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ### Plans (This Directory)
 
 - **This file:** Strategic overview
-- **01-CURRENT-IMPLEMENTATION.md:** Detailed task breakdown with acceptance criteria
+- **01-CURRENT-IMPLEMENTATION.md:** Phase 2 detailed tasks + Type-only mode quick win
+- **02-MCP-ENHANCEMENTS.md:** Phase 2B MCP-specific enhancements (optional)
+- **03-FURTHER-ENHANCEMENTS.md:** Phase 3 DX and testing improvements (inspired by typed-openapi)
 - **archive/:** Previous phase plans (reference only)
 
 ### Living Context
@@ -445,6 +477,9 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 - **SWAGGER_PARSER_INTEGRATION.md:** KEEP (actively maintained, good usage)
 - **OPENAPI3_TS_V4_INVESTIGATION.md:** Complete migration checklist, breaking changes
 - **HANDLEBARS_EVALUATION.md:** KEEP Phase 2, ts-morph emitter recommended
+- **typed-openapi-lessons/:** Comprehensive analysis comparing with typed-openapi
+    - **IMPACT-ANALYSIS.md:** How existing plans align with typed-openapi patterns
+    - **00-EXECUTIVE-SUMMARY.md** through **09-IMPLEMENTATION-ROADMAP.md:** Deep dives into patterns
 
 ### Reference
 

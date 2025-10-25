@@ -67,8 +67,10 @@ Tasks MUST be executed in this order due to dependencies:
    └─ 1.10 Fix Critical Lint Issues (NEW)
 
 2. Dependency Updates [Week 1-2]
-   ├─ 2.1 Update openapi3-ts (v3 → v4.5.0)
-   └─ 2.2 Update zod (v3 → v4.1.12)
+   ├─ 2.1 Update openapi3-ts (v3 → v4.5.0) ✅
+   ├─ 2.2 Update @apidevtools/swagger-parser
+   ├─ 2.3 Defer Logic to openapi3-ts v4 & swagger-parser (Post-Update Analysis)
+   └─ 2.4 Update zod (v3 → v4.1.12)
 
 3. Code Cleanup [Week 2-3]
    ├─ 3.1 Replace pastable
@@ -514,52 +516,12 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-### 1.8 Defer Logic to openapi3-ts v4 (AFTER Task 2.1)
+### 1.8 Defer Logic to openapi3-ts v4 & swagger-parser (MOVED TO TASK 2.3)
 
-**Status:** Pending  
-**Priority:** MEDIUM  
-**Estimated Time:** 3-4 hours  
-**Dependencies:** Task 2.1 complete (openapi3-ts updated to v4)
+**Status:** DEFERRED → Moved to Task 2.3 (after dependencies updated)
+**Rationale:** Cannot properly analyze deferral opportunities until dependencies are at their target versions.
 
-**Acceptance Criteria:**
-
-- [ ] Custom type guards analyzed (can v4 replace them?)
-- [ ] Custom type utilities analyzed (what v4 provides)
-- [ ] Schema traversal logic analyzed (defer opportunities)
-- [ ] Reference resolution analyzed (v4 capabilities)
-- [ ] Refactoring plan created (what to remove/replace)
-- [ ] Document updated: Add findings to OPENAPI3_TS_V4_INVESTIGATION.md
-
-**Implementation Steps:**
-
-1. **After openapi3-ts v4 update complete:**
-    - Review what type guards v4 actually provides
-    - Review what utilities v4 actually provides
-
-2. **Analyze our custom implementations:**
-    - `lib/src/` - Find custom type guards
-    - Compare with v4 equivalents
-    - Identify redundant code
-
-3. **Create refactoring plan:**
-    - List custom code that can be removed
-    - List imports to change
-    - Estimate effort
-
-4. **Document findings:**
-    - Update OPENAPI3_TS_V4_INVESTIGATION.md
-    - Add section: "Custom Code Replaced by v4"
-
-**Validation Steps:**
-
-1. Analysis covers all major custom implementations
-2. Refactoring plan has effort estimates
-3. Benefits vs effort documented
-
-**Output:**
-
-- Updated `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
-- Refactoring plan (if opportunities found)
+See **Task 2.3** below for full implementation details.
 
 ---
 
@@ -2061,9 +2023,9 @@ Closes Task 1.9"
 
 ### 1.10 Fix Critical Lint Issues (Pre-flight for Dependency Updates) ✅
 
-**Status:** Complete  
-**Priority:** HIGH (prevents issues during dependency updates)  
-**Time Taken:** 35 minutes  
+**Status:** Complete
+**Priority:** HIGH (prevents issues during dependency updates)
+**Time Taken:** 35 minutes
 **Dependencies:** Task 1.9 complete
 
 **Acceptance Criteria:**
@@ -2236,20 +2198,20 @@ No functionality changes
 
 ## 2. Dependency Updates
 
-### 2.1 Update openapi3-ts (v3 → v4.5.0)
+### 2.1 Update openapi3-ts (v3 → v4.5.0) ✅
 
-**Status:** Pending
+**Status:** ✅ COMPLETE
 **Priority:** CRITICAL (must do before other work)
-**Estimated Time:** 4-6 hours
+**Time Taken:** 5 hours
 **Dependencies:** Task 1.6 complete
 
 **Acceptance Criteria:**
 
-- [ ] openapi3-ts updated to v4.5.0
-- [ ] All TypeScript errors fixed
-- [ ] All tests passing
-- [ ] No functionality regressions
-- [ ] Types strengthened where possible
+- [x] ✅ openapi3-ts updated to v4.5.0
+- [x] ✅ All TypeScript errors fixed (imports changed to oas30 namespace)
+- [x] ✅ All tests passing (311/311)
+- [x] ✅ No functionality regressions
+- [x] ✅ Types strengthened where possible (stricter ResponseObject validation)
 
 **Implementation Steps:**
 
@@ -2339,14 +2301,112 @@ cd lib && pnpm install openapi3-ts@^3
 - Updated pnpm-lock.yaml
 - Commit with migration notes
 
+**Completed Actions:**
+
+1. ✅ Updated `openapi3-ts` from v3 to v4.5.0
+2. ✅ Changed all imports from `openapi3-ts` to `openapi3-ts/oas30` (30+ files)
+3. ✅ Fixed ResponseObject validations (added required `description` fields)
+4. ✅ Fixed test fixtures to align with stricter OAS 3.0 types
+5. ✅ Verified full OAS 3.0 & 3.1 runtime support with comprehensive tests
+6. ✅ All 311 tests passing
+
 ---
 
-### 2.2 Update zod (v3 → v4.1.12)
+### 2.2 Update @apidevtools/swagger-parser
+
+**Status:** Pending
+**Priority:** HIGH
+**Estimated Time:** 2-3 hours
+**Dependencies:** Task 2.1 complete
+
+**Acceptance Criteria:**
+
+- [ ] @apidevtools/swagger-parser updated to latest stable version
+- [ ] All TypeScript errors fixed
+- [ ] All tests passing
+- [ ] Validation behavior unchanged
+- [ ] Breaking changes documented (if any)
+
+**Implementation Steps:**
+
+1. Check current and latest versions
+2. Review changelog for breaking changes
+3. Update dependency: `pnpm update @apidevtools/swagger-parser@latest`
+4. Run type-check and fix errors
+5. Run tests and verify behavior
+6. Test CLI with OAS 3.0 and 3.1 specs
+7. Commit changes
+
+**Validation Steps:**
+
+1. `pnpm type-check` exits 0
+2. `pnpm test -- --run` exits 0 (311 tests)
+3. `pnpm build` succeeds
+4. CLI works with OAS 3.0 and 3.1 specs
+
+---
+
+### 2.3 Defer Logic to openapi3-ts v4 & swagger-parser (Post-Update Analysis)
+
+**Status:** Pending
+**Priority:** MEDIUM
+**Estimated Time:** 4-6 hours
+**Dependencies:** Tasks 2.1 and 2.2 complete
+
+**Rationale:** Now that both dependencies are at their latest versions, analyze what custom code can be safely deferred to these battle-tested libraries.
+
+**Acceptance Criteria:**
+
+- [ ] Custom type guards analyzed (can openapi3-ts v4 replace them?)
+- [ ] Custom type utilities analyzed (what v4 provides)
+- [ ] Schema traversal logic analyzed (defer opportunities)
+- [ ] Reference resolution analyzed (swagger-parser capabilities)
+- [ ] Validation logic analyzed (swagger-parser vs custom)
+- [ ] Schema dereferencing analyzed (swagger-parser vs makeSchemaResolver)
+- [ ] Refactoring plan created (what to remove/replace)
+- [ ] Documents updated with findings
+
+**Implementation Steps:**
+
+**Phase A: openapi3-ts v4 Analysis (2 hours)**
+
+1. Inventory our custom type guards
+2. Compare with openapi3-ts v4 exports
+3. Check for utilities (schema traversal, dereferencing, validation)
+4. Document findings (custom code vs v4 equivalent)
+
+**Phase B: swagger-parser Analysis (2 hours)**
+
+1. Review swagger-parser capabilities (parse, validate, dereference, bundle, resolve)
+2. Compare with our custom code (makeSchemaResolver, validation)
+3. Identify deferral opportunities with trade-off analysis
+4. Analyze pros/cons (control vs maintenance burden)
+
+**Phase C: Create Refactoring Plan (1-2 hours)**
+
+1. Prioritize replacement opportunities (high/medium/low priority)
+2. Estimate effort for each replacement
+3. Create detailed refactoring tickets
+
+**Phase D: Documentation (1 hour)**
+
+1. Update `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
+2. Create `.agent/analysis/SWAGGER_PARSER_DEFERRAL_OPPORTUNITIES.md`
+
+**Output:**
+
+- Updated analysis documents
+- Refactoring tickets (if opportunities found)
+- Decision: defer, keep, or hybrid approach
+
+---
+
+### 2.4 Update zod (v3 → v4.1.12)
 
 **Status:** Pending  
 **Priority:** CRITICAL  
 **Estimated Time:** 4-6 hours  
-**Dependencies:** Task 2.1 complete
+**Dependencies:** Tasks 2.1 and 2.2 complete
 
 **Acceptance Criteria:**
 
@@ -3038,8 +3098,10 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 
 ### Implementation Tasks (Week 2-3)
 
-- [ ] ⏳ **2.1** Update openapi3-ts - v3 → v4.5.0, fix type errors, tests passing
-- [ ] ⏳ **2.2** Update zod - v3 → v4.1.12, fix imports, verify generation works
+- [x] ✅ **2.1** Update openapi3-ts - v3 → v4.5.0, fix type errors, tests passing (COMPLETE)
+- [ ] ⏳ **2.2** Update @apidevtools/swagger-parser - Latest version, fix type errors
+- [ ] ⏳ **2.3** Defer Logic Analysis - openapi3-ts v4 & swagger-parser capabilities
+- [ ] ⏳ **2.4** Update zod - v3 → v4.1.12, fix imports, verify generation works
 - [ ] ⏳ **3.1** Replace pastable - All 8 functions replaced, dependency removed
 - [ ] ⏳ **3.2** Eliminate Type Assertions - 74 → 0, BLOCKER RESOLVED
 - [ ] ⏳ **3.3** Remove Evaluated Deps - Remove openapi-types & pastable
@@ -3073,6 +3135,517 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 - ✅ Clean dependency tree (evaluated and cleaned)
 - ✅ All tests passing (297+)
 - ✅ Ready for Phase 3 (quality improvements)
+
+---
+
+## 5. Performance & DX Quick Wins (Optional Phase 2 Extension)
+
+### 5.1 Type-Only Output Mode (Performance Quick Win)
+
+**Status:** Pending  
+**Priority:** HIGH (Performance)  
+**Estimated Time:** 3-4 hours (TDD)  
+**Dependencies:** None  
+**Source:** Inspired by typed-openapi performance patterns
+
+**Acceptance Criteria:**
+
+- [ ] New template created: `types-only.hbs`
+- [ ] CLI flag added: `--output-mode types`
+- [ ] Generated code has ZERO runtime dependencies
+- [ ] TypeScript types only (no Zod, no validation)
+- [ ] Tests written FIRST (TDD)
+- [ ] All tests passing
+- [ ] Quality gates pass
+
+**Why This Matters:**
+
+Performance impact for users who don't need runtime validation:
+
+- **Bundle size:** 0 KB (vs 224 KB with Zod+Zodios+axios)
+- **IDE performance:** <50ms autocomplete (vs 120ms+)
+- **Build time:** Faster (no Zod schemas to generate)
+- **Type safety:** Still full TypeScript types
+- **Use case:** Frontend TypeScript projects, type checking only
+
+**Implementation Steps:**
+
+**Phase A: Write Failing Tests (TDD Red) - 1 hour**
+
+1. **Create test file:**
+
+    ```bash
+    touch lib/src/templates/types-only.test.ts
+    ```
+
+2. **Write comprehensive test suite:**
+
+    ```typescript
+    import { describe, it, expect } from "vitest";
+    import { generateZodClientFromOpenAPI } from "../generateZodClientFromOpenAPI.js";
+
+    describe("types-only template", () => {
+        it("should generate TypeScript types without any imports", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users": {
+                        get: {
+                            operationId: "getUsers",
+                            responses: {
+                                200: {
+                                    content: {
+                                        "application/json": {
+                                            schema: {
+                                                type: "object",
+                                                properties: {
+                                                    id: { type: "string" },
+                                                    name: { type: "string" },
+                                                },
+                                                required: ["id"],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "types-only",
+                disableWriteToFile: true,
+            });
+
+            // MUST NOT import Zod
+            expect(result).not.toContain("import { z }");
+            expect(result).not.toContain('from "zod"');
+
+            // MUST NOT import Zodios
+            expect(result).not.toContain("@zodios/core");
+
+            // MUST export TypeScript types
+            expect(result).toContain("export type");
+            expect(result).toContain("export interface");
+
+            // MUST have schema types
+            expect(result).toMatch(/type.*=.*{/);
+        });
+
+        it("should generate types for all HTTP methods", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/users": {
+                        get: {
+                            responses: {
+                                200: {
+                                    content: {
+                                        "application/json": {
+                                            schema: { type: "object" },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        post: {
+                            requestBody: {
+                                content: {
+                                    "application/json": {
+                                        schema: { type: "object" },
+                                    },
+                                },
+                            },
+                            responses: {
+                                201: {
+                                    content: {
+                                        "application/json": {
+                                            schema: { type: "object" },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "types-only",
+                disableWriteToFile: true,
+            });
+
+            // Should have endpoint types
+            expect(result).toContain("getUsers");
+            expect(result).toContain("postUsers");
+        });
+
+        it("should handle complex schemas (unions, intersections)", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                components: {
+                    schemas: {
+                        Pet: {
+                            oneOf: [
+                                {
+                                    type: "object",
+                                    properties: { type: { enum: ["cat"] } },
+                                },
+                                {
+                                    type: "object",
+                                    properties: { type: { enum: ["dog"] } },
+                                },
+                            ],
+                        },
+                    },
+                },
+                paths: {
+                    "/pets": {
+                        get: {
+                            responses: {
+                                200: {
+                                    content: {
+                                        "application/json": {
+                                            schema: { $ref: "#/components/schemas/Pet" },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "types-only",
+                disableWriteToFile: true,
+            });
+
+            // Should handle union types
+            expect(result).toMatch(/type.*Pet.*=/);
+            expect(result).toContain("|"); // Union operator
+        });
+
+        it("should work with --output-mode CLI flag", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/test": {
+                        get: {
+                            responses: {
+                                200: {
+                                    content: {
+                                        "application/json": {
+                                            schema: { type: "object" },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                options: { outputMode: "types" },
+                disableWriteToFile: true,
+            });
+
+            expect(result).not.toContain("import { z }");
+            expect(result).toContain("export type");
+        });
+
+        it("should have 0 runtime dependencies", async () => {
+            const openApiDoc = {
+                openapi: "3.0.0",
+                info: { title: "Test", version: "1.0.0" },
+                paths: {
+                    "/test": {
+                        get: {
+                            responses: {
+                                200: {
+                                    content: {
+                                        "application/json": {
+                                            schema: { type: "object" },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            const result = await generateZodClientFromOpenAPI({
+                openApiDoc,
+                template: "types-only",
+                disableWriteToFile: true,
+            });
+
+            // NO imports at all (pure types)
+            expect(result).not.toContain("import ");
+            // OR only type imports
+            if (result.includes("import ")) {
+                expect(result).toMatch(/import\s+type/);
+            }
+        });
+    });
+    ```
+
+3. **Run tests - expect failures:**
+    ```bash
+    cd lib
+    pnpm test -- --run src/templates/types-only.test.ts
+    # Expected: 5 FAILING (template doesn't exist yet)
+    ```
+
+**Phase B: Implement Template (TDD Green) - 1.5 hours**
+
+4. **Create types-only.hbs template:**
+
+    ```handlebars
+    {{!-- lib/src/templates/types-only.hbs --}}
+    {{!-- Pure TypeScript types - no runtime dependencies --}}
+
+    {{#if types}}
+    {{#each types}}
+    {{{this}}};
+    {{/each}}
+    {{/if}}
+
+    {{!-- Schema types --}}
+    {{#each schemas}}
+    export type {{@key}} = {{{this}}};
+    {{/each}}
+
+    {{!-- Endpoint types --}}
+    {{#if endpoints}}
+    export type ApiEndpoints = {
+    {{#each endpoints}}
+      {{#if alias}}
+      "{{alias}}": {
+      {{else}}
+      "{{method}}_{{path}}": {
+      {{/if}}
+        method: "{{method}}";
+        path: "{{path}}";
+        {{#if parameters}}
+        parameters: {
+          {{#each parameters}}
+          {{#ifeq type "Path"}}
+          path: {{{schema}}};
+          {{/ifeq}}
+          {{#ifeq type "Query"}}
+          query: {{{schema}}};
+          {{/ifeq}}
+          {{#ifeq type "Header"}}
+          headers: {{{schema}}};
+          {{/ifeq}}
+          {{#ifeq type "Body"}}
+          body: {{{schema}}};
+          {{/ifeq}}
+          {{/each}}
+        };
+        {{/if}}
+        {{#if responses}}
+        responses: {
+          {{#each responses}}
+          {{status}}: {{{schema}}};
+          {{/each}}
+        };
+        {{/if}}
+      };
+    {{/each}}
+    };
+    {{/if}}
+
+    {{!-- Fetcher type for headless client --}}
+    export type Fetcher = (
+      method: string,
+      url: string,
+      params?: {
+        path?: Record<string, unknown>;
+        query?: Record<string, unknown>;
+        headers?: Record<string, unknown>;
+        body?: unknown;
+      }
+    ) => Promise<Response>;
+
+    {{!-- Client factory type --}}
+    export function createClient(fetcher: Fetcher): {
+    {{#each endpoints}}
+      {{#if alias}}
+      {{alias}}: (params: ApiEndpoints["{{alias}}"]["parameters"]) => Promise<ApiEndpoints["{{alias}}"]["responses"][200]>;
+      {{else}}
+      {{method}}_{{path}}: (params: ApiEndpoints["{{method}}_{{path}}"]["parameters"]) => Promise<ApiEndpoints["{{method}}_{{path}}"]["responses"][200]>;
+      {{/if}}
+    {{/each}}
+    } {
+      return {
+    {{#each endpoints}}
+        {{#if alias}}
+        {{alias}}: async (params) => {
+        {{else}}
+        {{method}}_{{path}}: async (params) => {
+        {{/if}}
+          const response = await fetcher("{{method}}", "{{path}}", params);
+          return response.json();
+        },
+    {{/each}}
+      };
+    }
+    ```
+
+5. **Update CLI to support output mode:**
+
+    ```typescript
+    // lib/src/cli.ts
+    program
+        .option("--output-mode <mode>", "Output mode: zod (default) | types")
+        .option("--template <name>", "Template to use (overrides output-mode)");
+
+    // Handle output mode
+    const outputMode = program.opts().outputMode || "zod";
+    if (outputMode === "types" && !program.opts().template) {
+        options.template = "types-only";
+    }
+    ```
+
+6. **Update options handling:**
+
+    ```typescript
+    // lib/src/generateZodClientFromOpenAPI.ts
+    export interface GenerateZodClientFromOpenAPIOptions {
+        // ... existing options
+        outputMode?: "zod" | "types"; // NEW
+    }
+
+    // Auto-select template
+    if (options.outputMode === "types" && !template) {
+        effectiveTemplate = "types-only";
+    }
+    ```
+
+7. **Run tests - expect success:**
+    ```bash
+    pnpm test -- --run src/templates/types-only.test.ts
+    # Expected: 5/5 PASSING ✅
+    ```
+
+**Phase C: Documentation - 30 minutes**
+
+8. **Update README with performance comparison:**
+
+    ````markdown
+    ## Output Modes
+
+    ### Zod Mode (Default)
+
+    Full runtime validation with Zod schemas:
+
+    - Bundle: ~224 KB (Zod + Zodios + axios)
+    - IDE: ~120ms autocomplete
+    - Use case: Runtime validation, API clients
+
+    ### Types-Only Mode
+
+    Pure TypeScript types with 0 runtime dependencies:
+
+    - Bundle: 0 KB
+    - IDE: <50ms autocomplete (instant)
+    - Use case: Type checking only, frontend TypeScript
+
+    ```bash
+    # Generate types only
+    pnpm openapi-zod-client ./api.yaml -o ./types.ts --output-mode types
+
+    # Or use template directly
+    pnpm openapi-zod-client ./api.yaml -o ./types.ts --template types-only
+    ```
+    ````
+
+    **Performance Comparison:**
+
+    | Aspect             | Zod Mode                 | Types-Only Mode |
+    | ------------------ | ------------------------ | --------------- |
+    | Bundle Size        | 224 KB                   | 0 KB            |
+    | Dependencies       | zod, @zodios/core, axios | None            |
+    | IDE Autocomplete   | 120ms                    | <50ms           |
+    | Runtime Validation | ✅ Yes                   | ❌ No           |
+    | Type Safety        | ✅ Yes                   | ✅ Yes          |
+
+    ```
+
+    ```
+
+**Validation Steps:**
+
+1. **All tests pass:**
+
+    ```bash
+    pnpm test -- --run src/templates/types-only.test.ts
+    # 5/5 passing
+    ```
+
+2. **Full test suite passes:**
+
+    ```bash
+    pnpm test -- --run
+    # All tests passing
+    ```
+
+3. **CLI flag works:**
+
+    ```bash
+    # Should generate types only
+    pnpm cli samples/v3.0/petstore.yaml -o /tmp/types.ts --output-mode types
+
+    # Verify no imports
+    grep "import" /tmp/types.ts
+    # Should be empty or only "import type"
+    ```
+
+4. **Generated code compiles:**
+
+    ```bash
+    npx tsc /tmp/types.ts --noEmit --strict
+    # Should compile without errors
+    ```
+
+5. **Quality gates pass:**
+    ```bash
+    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+    ```
+
+**Output:**
+
+- `lib/src/templates/types-only.hbs` (new template)
+- `lib/src/templates/types-only.test.ts` (5 tests)
+- Updated CLI with `--output-mode` flag
+- Updated README with performance comparison
+- 0 KB bundle option for users
+
+**Benefits:**
+
+- **75% bundle size reduction** (224 KB → 0 KB)
+- **3x faster IDE** (120ms → <50ms)
+- **Zero dependencies** for type-only users
+- **Faster builds** (no Zod schema generation)
+- **Production TypeScript apps** can use types without validation overhead
+
+**Cross-Reference:**
+
+- Inspired by: `.agent/analysis/typed-openapi-lessons/02-PERFORMANCE.md` Section 1
+- Impact analysis: `.agent/analysis/typed-openapi-lessons/IMPACT-ANALYSIS.md`
 
 ---
 

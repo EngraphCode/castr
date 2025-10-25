@@ -1,7 +1,15 @@
 # Living Context Document
 
-**Last Updated:** October 24, 2025 (Evening - TDD mandate + Task 1.9 enhancements)  
+**Last Updated:** October 25, 2025 (Afternoon - Post Task 2.2 verification, ready for Task 2.3)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
+
+**Recent Progress:**
+
+- ✅ Task 2.2: @apidevtools/swagger-parser verified at latest (v12.1.0) - 10 minutes
+- ✅ Task 2.1: openapi3-ts upgraded to v4.5.0 (5 hours)
+- ✅ Task 1.10: Critical lint issues fixed (35 minutes)
+- ✅ Task 1.9: schemas-with-metadata template complete (all tests passing)
+- ✅ OAS 3.0 & 3.1 runtime support verified with comprehensive tests
 
 ---
 
@@ -31,7 +39,7 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 
 ---
 
-## 📊 Current Status (October 24, 2025)
+## 📊 Current Status (October 25, 2025)
 
 ### Quality Gates
 
@@ -39,8 +47,8 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 ✅ format      - Passing
 ✅ build       - Passing (ESM + CJS + DTS)
 ✅ type-check  - Passing (0 errors)
-⚠️  lint       - 146 issues (see below)
-✅ test        - Passing (297 tests)
+⚠️  lint       - 136 issues (down from 147, see below)
+✅ test        - Passing (318 tests, up from 311)
 ```
 
 **Definition of Done:**
@@ -53,9 +61,8 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 
 ### Lint Status (CRITICAL ATTENTION REQUIRED)
 
-- **Total:** 146 issues
-- **Errors:** 72
-- **Warnings:** 74
+- **Total:** 136 issues (down from 147)
+- **Fixed:** 11 issues (Task 1.10)
 
 **EXTRACTION BLOCKER:**
 
@@ -71,19 +78,21 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 - `getZodiosEndpointDefinitionList.ts` (8 assertions)
 - `inferRequiredOnly.ts` (7 assertions)
 
-**Other Critical Issues:**
+**Recently Fixed (Task 1.10):**
 
-- 3 `max-statements` violations (down from 10)
+- ✅ CodeMeta type safety issues (8 instances) - Explicit `.toString()` added
+- ✅ Floating promise in samples-generator.ts
+- ✅ PATH security warning in samples-generator.ts
+
+**Remaining Critical Issues:**
+
+- 74 type assertions (BLOCKER for extraction)
+- 3 `max-statements` violations
 - 2 `max-lines-per-function` violations
 - 2 `require-await` (dead async functions)
-- 2 `no-clear-text-protocols` (http in tests)
-- 2 `no-os-command-from-path` (security)
-- 1 `restrict-template-expressions`
-- 1 `different-types-comparison`
-- 1 `no-floating-promises`
-- 1 `todo-tag`
+- Other minor issues (see lint triage document)
 
-**Analysis Complete:** All 146 issues categorized by priority with file-by-file elimination plan
+**Analysis Complete:** All issues categorized by priority with file-by-file elimination plan
 
 ---
 
@@ -136,12 +145,12 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ```json
 {
-    "openapi3-ts": "^3", // Target: 4.5.0 (June 2025) - ✅ Migration plan ready
-    "zod": "^3", // Target: 4.1.12 (Oct 2025) - ✅ Update ready
+    "openapi3-ts": "^4.5.0", // ✅ UPDATED (was ^3, now using oas30 namespace)
+    "zod": "^3", // Target: 4.1.12 (Oct 2025) - Next: Task 2.4
     "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, maintenance mode but stable)
     "openapi-types": "^12.1.3", // ⚠️ REMOVE (redundant with openapi3-ts v4)
     "pastable": "^2.2.1", // ⚠️ REMOVE (replace with lodash-es + custom)
-    "@apidevtools/swagger-parser": "^12.1.0", // ✅ KEEP (actively maintained, used appropriately)
+    "@apidevtools/swagger-parser": "^12.1.0", // Next: Task 2.2 (update to latest)
     "tanu": "^0.2.0", // ✅ KEEP (TypeScript AST manipulation)
     "commander": "^14.0.1", // ✅ KEEP (CLI framework)
     "ts-pattern": "^5.8.0", // ✅ KEEP (pattern matching)
@@ -149,17 +158,39 @@ All documented in `.agent/adr/` (12 ADRs):
 }
 ```
 
-### Dependency Strategy (✅ ANALYSIS COMPLETE)
+### Dependency Strategy (✅ ANALYSIS COMPLETE, ⏳ IMPLEMENTATION IN PROGRESS)
 
-**Phase 2 Actions:**
+**Phase 2 Progress:**
 
-1. **Update FIRST:** `openapi3-ts` (v3 → v4.5.0), `zod` (v3 → v4.1.12)
-    - Migration checklist ready in `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md`
-2. **REMOVE:** `pastable` → Replace with `lodash-es` + custom utilities
+1. ✅ **COMPLETE:** `openapi3-ts` (v3 → v4.5.0) - Task 2.1
+    - All imports changed to `openapi3-ts/oas30` namespace
+    - 30+ files updated
+    - All 318 tests passing
+    - Full OAS 3.0 & 3.1 runtime support verified
+
+2. ✅ **COMPLETE:** `@apidevtools/swagger-parser` - Task 2.2
+    - Already at latest version: 12.1.0 (published Oct 14, 2025)
+    - Verified with `pnpm update` - no changes needed
+    - All 318 tests passing
+    - Duration: 10 minutes (verification only)
+
+3. ⏳ **THEN:** Defer Logic Analysis - Task 2.3
+    - Analyze custom code vs openapi3-ts v4 & swagger-parser capabilities
+    - Estimated: 4-6 hours
+    - Dependencies: Tasks 2.1 ✅ and 2.2 complete
+
+4. ⏳ **THEN:** `zod` (v3 → v4.1.12) - Task 2.4
+    - Template updates required
+    - Estimated: 4-6 hours
+    - Dependencies: Tasks 2.1 ✅ and 2.2 complete
+
+5. ⏳ **LATER:** `pastable` → Replace with `lodash-es` + custom utilities - Task 3.1
     - Detailed plan in `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
-3. **REMOVE:** `openapi-types` → Use `openapi3-ts` v4 types
+
+6. ⏳ **LATER:** `openapi-types` → Use `openapi3-ts` v4 types - Task 3.3
     - Only used in 1 test file, redundant
-4. **KEEP:** `@zodios/core`, `@apidevtools/swagger-parser`
+
+7. ✅ **KEEP:** `@zodios/core`, `@apidevtools/swagger-parser`
     - Evaluations in `.agent/analysis/ZODIOS_CORE_EVALUATION.md` & `SWAGGER_PARSER_INTEGRATION.md`
 
 **Phase 3/4 Consideration:**
@@ -197,9 +228,47 @@ All documented in `.agent/adr/` (12 ADRs):
 - RULES.md with coding standards
 - Definition of Done established
 
-### Phase 2: Type Safety & Dependencies (✅ ANALYSIS COMPLETE, READY FOR IMPLEMENTATION)
+### Phase 2: Type Safety & Dependencies (⏳ IMPLEMENTATION IN PROGRESS - 3/10 tasks complete)
 
-**Status:** All 7 investigation tasks complete, ready to execute implementation
+**Status:** Implementation underway - Task 2.2 ✅, Task 2.1 ✅, Task 1.10 ✅, Task 1.9 ✅
+
+**Completed Tasks:**
+
+- ✅ **Task 1.9:** schemas-with-metadata template (Engraph-optimized) - 6 hours
+    - All 14 tests passing (318 total tests now)
+    - No Zodios dependency, full request/response validation
+    - CLI flags added, documentation complete
+    - Ready for Engraph extraction
+
+- ✅ **Task 1.10:** Critical lint issues fixed - 35 minutes
+    - CodeMeta type safety (8 instances)
+    - Floating promise, PATH security warning
+    - Lint issues: 147 → 136 (11 fixed)
+
+- ✅ **Task 2.1:** openapi3-ts v4.5.0 upgrade - 5 hours
+    - All imports changed to `openapi3-ts/oas30` namespace
+    - 30+ files updated with stricter types
+    - ResponseObject validations fixed (added required `description` fields)
+    - Test fixtures aligned with OAS 3.0 types
+    - All 318 tests passing ✅
+
+- ✅ **Task 2.2:** swagger-parser v12.1.0 verification - 10 minutes
+    - Already at latest version (published Oct 14, 2025)
+    - Ran `pnpm update` - no changes needed
+    - All 318 tests passing ✅
+    - No commit required (already up-to-date)
+
+**Key Discovery: OAS 3.0 & 3.1 Full Runtime Support Verified**
+
+- ✅ Created comprehensive test suite: `oas-3.0-vs-3.1-feature-parity.test.ts` (7 tests, all passing)
+- ✅ **Finding:** Codebase already handles all critical OAS 3.0 AND 3.1 features at runtime
+- ✅ **Evidence:** `openApiToZod.ts` correctly handles:
+    - Both boolean (3.0) and numeric (3.1) `exclusiveMinimum`/`exclusiveMaximum`
+    - Both `nullable: true` (3.0) and `type: ["string", "null"]` (3.1)
+    - `type: "null"` (3.1)
+- ⚠️ **Type-level:** Uses `oas30` types for simplicity (pragmatic choice for 95% of APIs)
+- 📋 **Future:** Multi-version OAS support planned for Phase 3E (after ts-morph emitter)
+- 📄 **Documentation:** `.agent/analysis/OAS_RUNTIME_SUPPORT_VERIFICATION.md`
 
 **Analysis Documents Created:**
 
@@ -210,86 +279,88 @@ All documented in `.agent/adr/` (12 ADRs):
 - ✅ `SWAGGER_PARSER_INTEGRATION.md` - KEEP (actively maintained, good usage)
 - ✅ `OPENAPI3_TS_V4_INVESTIGATION.md` - Complete migration checklist, breaking changes
 - ✅ `HANDLEBARS_EVALUATION.md` - KEEP Phase 2, ts-morph emitter for Phase 3/4
-- ✅ `TASK_1.9_ENGRAPH_ENHANCEMENTS.md` - Zodios-free template with full validation (Engraph-optimized)
-
-**Key Insights:**
-
-- Must update `openapi3-ts` and `zod` **BEFORE** deferring logic to libraries
-- Type assertions concentrated in 4 files (can be systematically eliminated)
-- All dependency decisions made with clear rationale
-- **Engraph use case analyzed** - Need Zodios-free template with full request/response validation
-
-**NEW: Task 1.9 - Zodios-Free Template (Engraph-Optimized)**
-
-- Template: `schemas-with-metadata.hbs` (schemas + endpoints WITHOUT Zodios)
-- **Eliminates 60+ lines of string manipulation** from Engraph's zodgen-core.ts
-- Full request validation (path, query, header, body parameters)
-- Full response validation (success + all error responses)
-- Schema registry builder helper (--with-schema-registry)
-- Type-safe validation helpers (--with-validation-helpers)
-- **Strict types:** No `any`, uses `unknown`, fail-fast with `.parse()`
-- **TDD ready:** 12 comprehensive tests designed (write tests FIRST)
-- **Estimated:** 6-10 hours
+- ✅ `TASK_1.9_ENGRAPH_ENHANCEMENTS.md` - Zodios-free template with full validation
+- ✅ `CODEMETA_ANALYSIS.md` - Analysis of CodeMeta class, ts-morph will render redundant
+- ✅ `OAS_VERSION_STRATEGY.md` - Multi-version OAS support options (for Phase 3E)
+- ✅ `OAS_RUNTIME_SUPPORT_VERIFICATION.md` - Proof of full 3.0/3.1 runtime support
 
 ---
 
 ## 🎯 Next Priorities
 
-### Immediate (This Week) - Phase 2 Implementation
+### ⚡ IMMEDIATE: Task 2.3 - Defer Logic Analysis
 
-**⚠️ MANDATORY: ALL tasks MUST follow TDD (tests written BEFORE implementation)**
+**Status:** Ready to execute (Tasks 2.1 ✅ and 2.2 ✅ complete)  
+**Priority:** HIGH (identifies deferral opportunities)  
+**Estimated Time:** 4-6 hours  
+**TDD Required:** Tests already exist, analysis task
 
-**✅ ANALYSIS COMPLETE - Ready to execute:**
+**What:** Analyze custom code vs openapi3-ts v4 & swagger-parser capabilities to identify deferral opportunities
 
-**Option A: Core Blockers First (Recommended)**
+**Why:**
 
-1. **Dependency Updates** (MUST DO FIRST - Task 2.1, 2.2)
-    - openapi3-ts: v3 → v4.5.0 (migration checklist ready)
-    - zod: v3 → v4.1.12 (update plan ready)
-    - **TDD:** Update/add tests for new type signatures FIRST, confirm failures, then update
-    - **Estimated:** 8-12 hours
+- Now that both dependencies are at their latest versions, identify what custom code can be safely removed
+- Reduce maintenance burden by deferring to battle-tested libraries
+- Simplify codebase before extraction to Engraph monorepo
 
-2. **pastable Replacement** (Task 3.1)
+**How (from Task 2.3 in 01-CURRENT-IMPLEMENTATION.md):**
+
+**Phase A: openapi3-ts v4 Analysis (2 hours)**
+
+1. Inventory our custom type guards
+2. Compare with openapi3-ts v4 exports
+3. Check for utilities (schema traversal, dereferencing, validation)
+4. Document findings (custom code vs v4 equivalent)
+
+**Phase B: swagger-parser Analysis (2 hours)**
+
+1. Review swagger-parser capabilities (parse, validate, dereference, bundle, resolve)
+2. Compare with our custom code (makeSchemaResolver, validation)
+3. Identify deferral opportunities with trade-off analysis
+4. Analyze pros/cons (control vs maintenance burden)
+
+**Phase C: Create Refactoring Plan (1-2 hours)**
+
+1. Prioritize replacement opportunities (high/medium/low priority)
+2. Estimate effort for each replacement
+3. Create detailed refactoring tickets
+
+**Validation:**
+
+- Comprehensive analysis document created
+- Deferral opportunities clearly documented
+- Refactoring plan with effort estimates
+- No code changes in this task (analysis only)
+
+**After Task 2.3:**
+
+- ✅ Move to Task 2.4: Update zod (v3 → v4.1.12)
+
+---
+
+### Short Term - Phase 2 Remaining Tasks
+
+**Sequential Order (after Task 2.2 ✅):**
+
+1. ⏳ **Task 2.3:** Defer Logic Analysis (4-6 hours) - NEXT
+    - Analyze custom code vs openapi3-ts v4 & swagger-parser
+    - Dependencies: Tasks 2.1 ✅ and 2.2 ✅ complete
+
+2. ⏳ **Task 2.4:** Update zod v3 → v4.1.12 (4-6 hours)
+    - Template updates required
+    - Dependencies: Tasks 2.1 ✅ and 2.2 complete
+
+3. ⏳ **Task 3.1:** Replace pastable (6-8 hours)
     - 7 files, 8 functions → `lodash-es` + custom utilities
     - Detailed plan in PASTABLE_REPLACEMENT_PLAN.md
-    - **TDD:** Write replacement tests FIRST matching pastable behavior, implement, switch
-    - **Estimated:** 6-8 hours
 
-3. **Type Assertion Elimination** (BLOCKER - Task 3.2)
-    - 74 instances across 11 files must → 0
+4. ⏳ **Task 3.2:** Eliminate Type Assertions - BLOCKER (16-24 hours)
+    - 74 instances → 0
     - Target repo: `assertionStyle: "never"`
     - File-by-file elimination plan ready
-    - **TDD:** Write type guard tests FIRST, implement guards, replace assertions
-    - **Estimated:** 16-24 hours
 
-4. **Dependency Cleanup** (Task 3.3)
-    - Remove: `openapi-types` (redundant)
-    - Remove: `pastable` (after replacement)
-    - Keep: `@zodios/core`, `@apidevtools/swagger-parser` (justified)
-    - **TDD:** Verify no broken tests after removal
-    - **Estimated:** 2-4 hours
-
-5. **Defer Logic to openapi3-ts v4** (Task 1.8)
-    - Analyze what custom code can be replaced
-    - Leverage new v4 capabilities
-    - After Task 2.1 complete
-    - **TDD:** Tests guide which custom code can be safely replaced
-    - **Estimated:** 3-4 hours
-
-**Option B: Engraph Template First (High Value, Not Blocking)**
-
-**NEW: Task 1.9 - Zodios-Free Template Strategy** (Engraph-Optimized)
-
-- Template: `schemas-with-metadata.hbs` (NO Zodios dependency)
-- Full request/response validation (all parameter types, all status codes)
-- Schema registry builder helper
-- Type-safe validation helpers
-- **Eliminates 60+ lines of Engraph's string manipulation** (74% code reduction)
-- **Strict types:** No `any`, fail-fast with `.parse()`, `.strict()` by default
-- **TDD:** 12 comprehensive tests written FIRST (already designed)
-- **Priority:** MEDIUM-HIGH (Engraph critical, not blocking extraction)
-- **Estimated:** 6-10 hours
-- **Documentation:** `.agent/analysis/TASK_1.9_ENGRAPH_ENHANCEMENTS.md` (724 lines)
+5. ⏳ **Task 3.3:** Dependency Cleanup (2-4 hours)
+    - Remove: `openapi-types`, `pastable`
 
 ### Short Term (Next 2-3 Weeks) - Phase 3
 
@@ -325,7 +396,9 @@ All documented in `.agent/adr/` (12 ADRs):
 - **Current Implementation:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md`
 - **Definition of Done:** `.agent/DEFINITION_OF_DONE.md`
 
-### Analysis (✅ Phase 2 Investigation Complete)
+### Analysis (✅ Phase 2 Investigation Complete + Implementation Insights)
+
+**Initial Analysis Documents:**
 
 - **Lint Triage:** `.agent/analysis/LINT_TRIAGE_COMPLETE.md` (146 issues categorized)
 - **pastable Plan:** `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md` (8 functions → replacements)
@@ -335,6 +408,12 @@ All documented in `.agent/adr/` (12 ADRs):
 - **openapi3-ts v4:** `.agent/analysis/OPENAPI3_TS_V4_INVESTIGATION.md` (Migration checklist)
 - **Handlebars:** `.agent/analysis/HANDLEBARS_EVALUATION.md` (ts-morph emitter recommended)
 - **Task 1.9 Engraph:** `.agent/analysis/TASK_1.9_ENGRAPH_ENHANCEMENTS.md` (Zodios-free template, 724 lines)
+
+**Implementation Insights (NEW):**
+
+- **CodeMeta:** `.agent/analysis/CODEMETA_ANALYSIS.md` (ts-morph will render redundant)
+- **OAS Version Strategy:** `.agent/analysis/OAS_VERSION_STRATEGY.md` (Multi-version options for Phase 3E)
+- **OAS Runtime Verification:** `.agent/analysis/OAS_RUNTIME_SUPPORT_VERIFICATION.md` (Proof of 3.0/3.1 support)
 
 ### Reference
 
@@ -395,16 +474,70 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ---
 
+## 📝 Recent Commits (October 25, 2025)
+
+**Work completed in current session:**
+
+1. ✅ **fix: resolve critical lint issues before dependency updates**
+    - Fixed CodeMeta type safety (8 instances)
+    - Fixed floating promise in samples-generator.ts
+    - Fixed PATH security warning
+    - Lint errors: 147 → 136
+
+2. ✅ **feat: update openapi3-ts to v4.5.0**
+    - Updated all imports to `openapi3-ts/oas30` (30+ files)
+    - Fixed ResponseObject validations (added required `description` fields)
+    - Fixed test fixtures for stricter OAS 3.0 types
+    - All 311 tests passing
+
+3. ✅ **test: verify OAS 3.0 and 3.1 runtime support**
+    - Created comprehensive test suite
+    - Verified full 3.0 & 3.1 feature support at runtime
+    - Documented pragmatic type-level approach
+
+4. 📋 **docs: plan multi-version OAS support for Phase 3E**
+    - Added detailed section to `.agent/plans/03-FURTHER-ENHANCEMENTS.md`
+    - High-level planning for post-ts-morph implementation
+    - Estimated 22-31 hours when ready
+
+5. 📋 **docs: update plans with task restructuring**
+    - Moved Task 1.8 to Task 2.3 (defer logic analysis)
+    - Added Task 2.2 (swagger-parser update)
+    - Renumbered Task 2.2 → 2.4 (zod update)
+    - Updated all references and TODO lists
+
+6. ✅ **Task 2.2: verify swagger-parser at latest version**
+    - Verified already at v12.1.0 (latest, published Oct 14, 2025)
+    - Ran `pnpm update` - no changes needed
+    - All 318 tests passing (7 new tests since last count)
+    - No commit needed (already up-to-date)
+
+**Branch:** `feat/rewrite`  
+**Status:** Clean working tree, ready for Task 2.3
+
+---
+
 ## 🚀 How to Continue
 
 ### For a Fresh Context
 
+**Quick Start for Task 2.3:**
+
+1. ✅ Read this section (you are here) - Current state overview
+2. 📋 Read "IMMEDIATE: Task 2.3" section above - What to do next
+3. 📋 Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 2.3 section - Detailed steps
+4. ✅ Run Definition of Done - Should pass (currently passing)
+5. 🚀 Execute Task 2.3 - Defer Logic Analysis (4-6 hours)
+
+**Full Context for Planning:**
+
 1. Read this file (context.md) for current state
 2. Read `.agent/plans/00-STRATEGIC-PLAN.md` for overall strategy
-3. Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` for detailed next steps
-4. Review `.agent/RULES.md` for standards
-5. Check Definition of Done (should pass before starting work)
-6. Follow the implementation plan tasks in order
+3. Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` for all detailed tasks
+4. Read `.agent/plans/02-MCP-ENHANCEMENTS.md` for Phase 2B (optional, after Phase 2)
+5. Read `.agent/plans/03-FURTHER-ENHANCEMENTS.md` for Phase 3 (DX improvements + OAS multi-version)
+6. Review `.agent/RULES.md` for coding standards (includes TDD mandate)
+7. Check Definition of Done (should pass before starting work)
 
 ### Before Any Commit
 

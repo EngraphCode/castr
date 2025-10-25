@@ -4,10 +4,10 @@ import { generateZodClientFromOpenAPI } from "../src/index.js";
 
 /**
  * OAS 3.0 vs 3.1 Feature Parity Test
- * 
+ *
  * Purpose: Verify that the codebase correctly handles BOTH OpenAPI 3.0 and 3.1 specs
  * at runtime, despite using oas30 types throughout the codebase.
- * 
+ *
  * Key Differences Tested:
  * 1. exclusiveMinimum/Maximum: boolean (3.0) vs number (3.1)
  * 2. nullable: explicit property (3.0) vs type array with "null" (3.1)
@@ -57,7 +57,7 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Should generate gt() for exclusive minimum with boolean
         expect(output).toContain("gt(18)");
         // Should generate lt() for exclusive maximum with boolean
@@ -104,7 +104,7 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Should generate gt() for numeric exclusive minimum
         expect(output).toContain("gt(18)");
         // Should generate lt() for numeric exclusive maximum
@@ -148,7 +148,7 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Should generate .nullable() for nullable property
         expect(output).toContain("nullable()");
     });
@@ -189,7 +189,7 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Should generate union with z.null()
         expect(output).toContain("z.union([z.string(), z.null()])");
     });
@@ -224,7 +224,7 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Should generate z.null()
         expect(output).toContain("z.null()");
     });
@@ -259,7 +259,7 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Should generate union of all types
         expect(output).toContain("z.union([z.string(), z.number(), z.boolean()])");
     });
@@ -311,11 +311,10 @@ describe("OAS 3.0 vs 3.1 Feature Parity", () => {
         };
 
         const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-        
+
         // Both styles should work
         expect(output).toContain("nullable()"); // OAS 3.0 style
         expect(output).toContain("z.union([z.string(), z.null()])"); // OAS 3.1 style
         expect(output).toContain("gt(0)"); // OAS 3.1 numeric exclusive
     });
 });
-

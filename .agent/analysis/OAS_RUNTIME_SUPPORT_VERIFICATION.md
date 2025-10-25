@@ -2,7 +2,7 @@
 
 **Date:** October 25, 2025  
 **Context:** Post-Task 2.1 openapi3-ts v4 upgrade  
-**Stakeholder Requirement:** Support both OAS 3.0 and 3.1  
+**Stakeholder Requirement:** Support both OAS 3.0 and 3.1
 
 ## Executive Summary
 
@@ -82,7 +82,7 @@ if (schema.minimum !== undefined) {
     } else {
         validations.push(`gte(${schema.minimum})`);
     }
-// OAS 3.1: numeric exclusiveMinimum (standalone)
+    // OAS 3.1: numeric exclusiveMinimum (standalone)
 } else if (typeof schema.exclusiveMinimum === "number") {
     validations.push(`gt(${schema.exclusiveMinimum})`);
 }
@@ -100,6 +100,7 @@ if (schema.maximum !== undefined) {
 ```
 
 **Supports:**
+
 - OAS 3.0: `minimum: 18, exclusiveMinimum: true`
 - OAS 3.1: `exclusiveMinimum: 18`
 
@@ -128,6 +129,7 @@ if (schema.nullable) {
 **Reason:** TypeScript requires static type imports. We can't conditionally import types based on runtime spec version.
 
 **Impact:**
+
 - **Runtime:** ✅ Full OAS 3.0 & 3.1 support (proven by tests)
 - **Type-checking:** ⚠️ Warnings when passing OAS 3.1 specs to functions typed with `oas30.OpenAPIObject`
 
@@ -138,11 +140,13 @@ if (schema.nullable) {
 **Status Quo + Documentation is sufficient!**
 
 ### What We Have:
+
 1. ✅ **Runtime support:** All OAS 3.0 and 3.1 features work correctly
 2. ✅ **Test coverage:** Both versions tested and passing
 3. ✅ **Real-world usage:** Existing 3.1 test (`schema-type-list-3.1.test.ts`) has been passing since inception
 
 ### What's "Missing":
+
 1. ⚠️ **Type-level support:** TypeScript complains about OAS 3.1 test fixtures
 2. ⚠️ **Documentation:** No explicit statement that 3.1 is supported
 
@@ -164,13 +168,13 @@ Add to `README.md`:
 
 ### Features Supported
 
-| Feature | OAS 3.0 | OAS 3.1 | Status |
-|---------|---------|---------|--------|
-| Exclusive bounds (boolean) | `exclusiveMinimum: true` with `minimum` | - | ✅ Supported |
-| Exclusive bounds (numeric) | - | `exclusiveMinimum: 18` | ✅ Supported |
-| Nullable values | `nullable: true` | `type: ["string", "null"]` | ✅ Both supported |
-| Type arrays | - | `type: ["string", "number"]` | ✅ Supported |
-| Type null | - | `type: "null"` | ✅ Supported |
+| Feature                    | OAS 3.0                                 | OAS 3.1                      | Status            |
+| -------------------------- | --------------------------------------- | ---------------------------- | ----------------- |
+| Exclusive bounds (boolean) | `exclusiveMinimum: true` with `minimum` | -                            | ✅ Supported      |
+| Exclusive bounds (numeric) | -                                       | `exclusiveMinimum: 18`       | ✅ Supported      |
+| Nullable values            | `nullable: true`                        | `type: ["string", "null"]`   | ✅ Both supported |
+| Type arrays                | -                                       | `type: ["string", "number"]` | ✅ Supported      |
+| Type null                  | -                                       | `type: "null"`               | ✅ Supported      |
 
 ### Why TypeScript Warnings Appear
 
@@ -197,6 +201,7 @@ For test files that use OAS 3.1 fixtures, add:
 ```
 
 **Already done in:**
+
 - `lib/src/templates/schemas-with-metadata.test.ts`
 - `lib/tests/schema-type-list-3.1.test.ts` (implicitly, uses type assertion)
 
@@ -207,11 +212,13 @@ For test files that use OAS 3.1 fixtures, add:
 **Status:** OAS 3.2 spec schemas available in `.agent/reference/openapi_schema/`
 
 **When to Address:**
+
 - OAS 3.2 is still in development/early adoption (October 2025)
 - Monitor `openapi3-ts` for `oas32` namespace
 - Apply same pragmatic approach when widely adopted
 
 **Reference Files:**
+
 ```
 .agent/reference/openapi_schema/
 ├── openapi_3_0_x_schema.json
@@ -232,6 +239,7 @@ For test files that use OAS 3.1 fixtures, add:
 ### Type-Level Support (Complex, Marginal Benefit)
 
 **Would require:**
+
 - Union types everywhere: `oas30.OpenAPIObject | oas31.OpenAPIObject`
 - Conditional type logic: `V extends "3.0" ? oas30.SchemaObject : oas31.SchemaObject`
 - Refactoring 93 files
@@ -239,6 +247,7 @@ For test files that use OAS 3.1 fixtures, add:
 - 20-60 hours of work
 
 **Would provide:**
+
 - Slightly better autocomplete in test fixtures
 - Eliminates `@ts-nocheck` comments
 - No functional improvements (runtime already works)
@@ -248,12 +257,14 @@ For test files that use OAS 3.1 fixtures, add:
 ### Runtime Support (Current Approach)
 
 **What we have:**
+
 - Runtime handles both 3.0 and 3.1 ✅
 - All features work correctly ✅
 - Tests passing ✅
 - Simple, maintainable codebase ✅
 
 **What's "missing:"**
+
 - TypeScript autocomplete for 3.1 features in test fixtures
 - Requires `@ts-nocheck` in some test files
 
@@ -308,4 +319,3 @@ For test files that use OAS 3.1 fixtures, add:
 ---
 
 **Status:** ✅ **COMPLETE - No further code work needed, documentation recommended**
-

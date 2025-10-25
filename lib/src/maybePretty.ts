@@ -5,7 +5,16 @@ import parserTypescript from "prettier/parser-typescript";
 
 export async function maybePretty(input: string, options?: Options | null): Promise<string> {
     try {
-        return prettier.format(input.trim(), { parser: "typescript", plugins: [parserTypescript], ...options });
+        // Filter out the plugins field from options to prevent conflicts
+        // Prettier 3.x requires explicit plugins, and config-loaded plugins
+        // can be undefined/null which causes "Cannot read properties of undefined (reading 'languages')"
+        const { plugins: _ignored, ...safeOptions } = options ?? {};
+
+        return await prettier.format(input.trim(), {
+            parser: "typescript",
+            plugins: [parserTypescript],
+            ...safeOptions,
+        });
     } catch {
         return input; // assume it's invalid syntax and ignore
     }

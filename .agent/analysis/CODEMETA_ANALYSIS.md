@@ -307,10 +307,7 @@ template.render({ code: codeMeta.toString() });
 
 // AFTER (ts-morph emitter):
 const zodSchema = factory.createCallExpression(
-    factory.createPropertyAccessExpression(
-        factory.createIdentifier("z"),
-        "string"
-    ),
+    factory.createPropertyAccessExpression(factory.createIdentifier("z"), "string"),
     undefined,
     []
 );
@@ -438,10 +435,7 @@ const codeMeta = new CodeMeta(schema).assign("z.string()");
 
 // We have:
 const astNode = ts.factory.createCallExpression(
-    ts.factory.createPropertyAccessExpression(
-        ts.factory.createIdentifier("z"),
-        "string"
-    ),
+    ts.factory.createPropertyAccessExpression(ts.factory.createIdentifier("z"), "string"),
     undefined,
     []
 );
@@ -453,6 +447,7 @@ const astNode = ts.factory.createCallExpression(
 **CodeMeta Removal Effort:** 8-12 hours (within 22-32 hour emitter migration)
 
 **Files Affected:**
+
 - `lib/src/CodeMeta.ts` - Delete entire file
 - `lib/src/CodeMeta.test.ts` - Delete entire file
 - `lib/src/openApiToZod.ts` - Replace CodeMeta with AST generation

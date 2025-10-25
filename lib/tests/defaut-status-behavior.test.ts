@@ -11,7 +11,10 @@ test("defaut-status-behavior", () => {
                 get: {
                     operationId: "withDefaultResponse",
                     responses: {
-                        default: { description: "Default response", content: { "application/json": { schema: { type: "string" } } } },
+                        default: {
+                            description: "Default response",
+                            content: { "application/json": { schema: { type: "string" } } },
+                        },
                     },
                 },
             },
@@ -19,8 +22,14 @@ test("defaut-status-behavior", () => {
                 get: {
                     operationId: "withDefaultError",
                     responses: {
-                        "200": { description: "Success", content: { "application/json": { schema: { type: "number" } } } },
-                        default: { description: "Default error", content: { "application/json": { schema: { type: "string" } } } },
+                        "200": {
+                            description: "Success",
+                            content: { "application/json": { schema: { type: "number" } } },
+                        },
+                        default: {
+                            description: "Default error",
+                            content: { "application/json": { schema: { type: "string" } } },
+                        },
                     },
                 },
             },
