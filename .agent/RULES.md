@@ -765,6 +765,421 @@ export function getZodSchema(args: ConversionArgs): ZodSchema {
 
 ---
 
+## 🎯 **MANDATORY: Comprehensive TSDoc Standards**
+
+**Developer Experience is Priority #1.** All code must be self-documenting through excellent TSDoc that enables automatic generation of professional-quality documentation via TypeDoc, Redocly, or similar tools.
+
+### **Documentation Requirements by Visibility**
+
+#### **Public API (Exported Functions, Classes, Types)** - CRITICAL
+
+**MUST have comprehensive TSDoc including:**
+
+1. **Description** - What it does, why it exists, key behaviors
+2. **All parameters** - With types, descriptions, constraints
+3. **Return value** - What's returned, format, guarantees
+4. **Throws** - All error conditions
+5. **Examples** - At least one realistic usage example
+6. **See tags** - Links to related functions/types
+7. **Remarks** - Important behavior notes, edge cases
+8. **Since/Deprecated** - Version info when applicable
+
+**Template for Public Functions:**
+
+````typescript
+/**
+ * Generates Zod schemas from an OpenAPI specification.
+ *
+ * Supports OpenAPI 3.0.x and 3.1.x specifications, converting JSON Schema
+ * definitions to runtime-validated Zod schemas with TypeScript type inference.
+ * Uses fail-fast validation and strict types by default.
+ *
+ * @param openApiDoc - The OpenAPI document to convert (JSON or programmatic object)
+ * @param options - Configuration options for generation behavior
+ * @param options.template - Template to use: "default", "schemas-only", or "schemas-with-metadata"
+ * @param options.distPath - Output file path (required unless disableWriteToFile is true)
+ * @param options.disableWriteToFile - When true, returns string instead of writing file
+ * @param options.prettierConfig - Prettier configuration for output formatting
+ * @returns Generated TypeScript code as string, or object if using group strategy
+ *
+ * @throws {Error} When OpenAPI document is invalid or missing required fields
+ * @throws {Error} When template is not found or invalid
+ * @throws {ValidationError} When MCP validation fails (if enabled)
+ *
+ * @example Basic usage with Zodios client
+ * ```typescript
+ * import SwaggerParser from "@apidevtools/swagger-parser";
+ * import { generateZodClientFromOpenAPI } from "openapi-zod-client";
+ *
+ * const openApiDoc = await SwaggerParser.parse("./api.yaml");
+ * await generateZodClientFromOpenAPI({
+ *   openApiDoc,
+ *   distPath: "./src/api-client.ts",
+ * });
+ * // Generates full Zodios HTTP client with validation
+ * ```
+ *
+ * @example SDK generation without HTTP client
+ * ```typescript
+ * const result = await generateZodClientFromOpenAPI({
+ *   openApiDoc,
+ *   distPath: "./src/api.ts",
+ *   noClient: true, // Use schemas-with-metadata template
+ *   withValidationHelpers: true,
+ *   withSchemaRegistry: true,
+ * });
+ * // Generates schemas + validation helpers for custom HTTP clients
+ * ```
+ *
+ * @example MCP tool generation
+ * ```typescript
+ * const result = await generateZodClientFromOpenAPI({
+ *   openApiDoc,
+ *   distPath: "./src/mcp-tools.ts",
+ *   template: "schemas-with-metadata",
+ *   validateMcpReadiness: true,
+ * });
+ * // Generates MCP-compatible tool definitions with JSON Schema
+ * ```
+ *
+ * @see {@link TemplateContext} for available template variables
+ * @see {@link GenerateZodClientOptions} for all configuration options
+ *
+ * @remarks
+ * - Auto-enables certain options when using schemas-with-metadata template
+ * - MCP validation is automatic with --no-client flag
+ * - Uses .strict() for objects by default (reject unknown keys)
+ * - All validation uses .parse() for fail-fast behavior
+ *
+ * @since 1.0.0
+ * @public
+ */
+export async function generateZodClientFromOpenAPI(
+    args: GenerateZodClientFromOpenApiArgs
+): Promise<string | Record<string, string>> {
+    // Implementation
+}
+````
+
+#### **Internal/Private Functions** - REQUIRED
+
+**MUST have TSDoc including:**
+
+1. **Description** - Brief purpose statement
+2. **All parameters** - Types and descriptions
+3. **Return value** - What's returned
+4. **Throws** - If function can throw
+
+**Minimal but sufficient:**
+
+```typescript
+/**
+ * Sanitizes schema keys for safe programmatic access.
+ * Replaces non-alphanumeric characters with underscores.
+ *
+ * @param key - The schema key to sanitize
+ * @returns Sanitized key safe for object property access
+ *
+ * @internal
+ */
+function sanitizeSchemaKey(key: string): string {
+    return key.replace(/[^A-Za-z0-9_]/g, "_");
+}
+```
+
+#### **Types, Interfaces, Enums** - REQUIRED
+
+**MUST have TSDoc including:**
+
+1. **Description** - Purpose and usage
+2. **All properties** - Individual property descriptions
+3. **Examples** - Type usage examples
+4. **See tags** - Related types
+
+````typescript
+/**
+ * Configuration options for Zod client generation.
+ *
+ * Controls template selection, validation behavior, and output formatting.
+ * Options are validated at runtime to ensure compatibility.
+ *
+ * @example Default template with custom base URL
+ * ```typescript
+ * const options: GenerateZodClientOptions = {
+ *   template: "default",
+ *   baseUrl: "https://api.example.com",
+ *   withAlias: true,
+ * };
+ * ```
+ *
+ * @example SDK generation without HTTP client
+ * ```typescript
+ * const options: GenerateZodClientOptions = {
+ *   noClient: true,
+ *   withValidationHelpers: true,
+ *   strictMcpValidation: true,
+ * };
+ * ```
+ *
+ * @see {@link generateZodClientFromOpenAPI}
+ * @public
+ */
+export interface GenerateZodClientOptions {
+    /**
+     * Template to use for code generation.
+     *
+     * - `"default"` - Full Zodios HTTP client with runtime validation
+     * - `"schemas-only"` - Pure Zod schemas without client
+     * - `"schemas-with-metadata"` - Schemas + metadata without Zodios
+     *
+     * @defaultValue "default"
+     */
+    template?: "default" | "schemas-only" | "schemas-with-metadata";
+
+    /**
+     * Base URL for API requests.
+     *
+     * Only used with default template. Becomes default baseURL in generated client.
+     *
+     * @example "https://api.example.com"
+     */
+    baseUrl?: string;
+
+    /**
+     * Skip HTTP client generation (auto-switches to schemas-with-metadata template).
+     *
+     * Perfect for using your own HTTP client (fetch, axios, ky) while maintaining
+     * full Zod validation. Automatically enables MCP validation.
+     *
+     * @defaultValue false
+     */
+    noClient?: boolean;
+
+    /**
+     * Generate validation helper functions (validateRequest, validateResponse).
+     *
+     * Only applicable when using schemas-with-metadata template. Helpers use
+     * .parse() for fail-fast validation with detailed error messages.
+     *
+     * @defaultValue false
+     * @see {@link validateRequest}
+     * @see {@link validateResponse}
+     */
+    withValidationHelpers?: boolean;
+}
+````
+
+#### **Constants and Variables** - REQUIRED
+
+**MUST have TSDoc for exported constants:**
+
+````typescript
+/**
+ * HTTP methods supported by OpenAPI specifications.
+ *
+ * Covers all standard HTTP methods defined in OpenAPI 3.0.x and 3.1.x specs.
+ * Used for endpoint definition and validation.
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
+ * @public
+ */
+export const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "options", "head", "trace"] as const;
+
+/**
+ * Type representing valid HTTP methods.
+ *
+ * @example
+ * ```typescript
+ * const method: HttpMethod = "get"; // ✅ Valid
+ * const invalid: HttpMethod = "connect"; // ❌ Type error
+ * ```
+ */
+export type HttpMethod = (typeof HTTP_METHODS)[number];
+````
+
+### **TSDoc Tag Reference**
+
+#### **Required Tags**
+
+- `@param` - Every parameter (with description)
+- `@returns` - Return value (unless void)
+- `@throws` - Any thrown errors
+
+#### **Recommended Tags**
+
+- `@example` - Usage examples (CRITICAL for public API)
+- `@see` - Related functions/types/docs
+- `@remarks` - Important notes, edge cases
+- `@defaultValue` - Default parameter values
+
+#### **Situational Tags**
+
+- `@public` - Exported public API
+- `@internal` - Internal implementation (not for consumers)
+- `@deprecated` - Deprecated functions (with migration path)
+- `@since` - Version introduced
+- `@typeParam` - Generic type parameters
+
+### **Example Quality Levels**
+
+#### **EXCELLENT (Target for Public API):**
+
+````typescript
+/**
+ * Validates that an OpenAPI specification is suitable for MCP tool generation.
+ *
+ * Performs comprehensive validation checking for required fields, security schemes,
+ * response definitions, and parameter descriptions. Implements fail-fast philosophy
+ * by throwing on critical errors with actionable error messages.
+ *
+ * Validation levels:
+ * - **ERRORS** - Critical issues that prevent MCP generation (operationId missing, etc.)
+ * - **WARNINGS** - Recommended improvements (missing descriptions, etc.)
+ * - **STRICT** - Treats warnings as errors for maximum spec quality
+ *
+ * @param openApiDoc - The OpenAPI document to validate
+ * @param options - Validation configuration options
+ * @param options.skip - Skip validation entirely (for testing or edge cases)
+ * @param options.strict - Treat warnings as errors for strict validation
+ *
+ * @throws {Error} When spec has critical MCP issues with detailed location context
+ * @throws {Error} In strict mode, when spec has warnings
+ *
+ * @example Validate before generation
+ * ```typescript
+ * try {
+ *   validateMcpReadiness(openApiDoc);
+ *   // Spec is MCP-ready, proceed with generation
+ * } catch (error) {
+ *   console.error("MCP validation failed:", error.message);
+ *   // Error shows:
+ *   // - Exact location (POST /users)
+ *   // - What's wrong (Missing required 'operationId')
+ *   // - How to fix (Add: operationId: "createUser")
+ * }
+ * ```
+ *
+ * @example Strict mode for CI/CD
+ * ```typescript
+ * validateMcpReadiness(openApiDoc, { strict: true });
+ * // Fails on any warnings, ensuring highest quality specs
+ * ```
+ *
+ * @example Skip validation (not recommended)
+ * ```typescript
+ * validateMcpReadiness(openApiDoc, { skip: true });
+ * // Bypasses all validation checks
+ * ```
+ *
+ * @see {@link generateZodClientFromOpenAPI} for usage in generation pipeline
+ * @see {@link https://anthropic.com/mcp} for MCP specification
+ *
+ * @remarks
+ * - Automatically enabled when using --no-client CLI flag
+ * - Validates operationId presence (required for MCP tool naming)
+ * - Validates success response existence (200 or 201)
+ * - Validates security scheme references
+ * - Warns about missing descriptions (improves AI context)
+ *
+ * @since 1.9.0
+ * @public
+ */
+export function validateMcpReadiness(openApiDoc: OpenAPIObject, options: ValidateMcpReadinessOptions = {}): void {
+    // Implementation
+}
+````
+
+#### **GOOD (Target for Internal API):**
+
+```typescript
+/**
+ * Extracts security metadata from an OpenAPI operation.
+ *
+ * Resolves security scheme references and computes helper metadata
+ * like requiresAuth and authTypes for easier consumption.
+ *
+ * @param operation - The operation object to extract security from
+ * @param components - The components object containing security scheme definitions
+ * @returns Security metadata with resolved schemes and computed helpers
+ *
+ * @throws {Error} When security scheme is referenced but not defined
+ *
+ * @internal
+ */
+function extractSecurityMetadata(operation: OperationObject, components?: ComponentsObject): SecurityMetadata {
+    // Implementation
+}
+```
+
+#### **POOR (Not Acceptable):**
+
+```typescript
+// ❌ No JSDoc at all
+export function convert(schema: any): string {
+    // ...
+}
+
+// ❌ Incomplete JSDoc (missing @param, @returns, @example)
+/**
+ * Converts schema.
+ */
+export function convertSchema(schema: SchemaObject, options: Options): string {
+    // ...
+}
+
+// ❌ Useless JSDoc (redundant with types)
+/**
+ * @param schema - schema
+ * @returns string
+ */
+export function convertSchema(schema: SchemaObject): string {
+    // ...
+}
+```
+
+### **Documentation Sweep Requirements**
+
+Before any major release or phase completion, a **comprehensive documentation sweep** is required:
+
+1. **TSDoc Audit** - Every exported symbol has complete TSDoc
+2. **Example Validation** - All @example code blocks are tested and working
+3. **Link Validation** - All @see links resolve correctly
+4. **TypeDoc Generation** - Generate docs with zero warnings
+5. **README Sync** - README examples match actual API
+6. **Migration Guides** - Breaking changes documented with upgrade paths
+
+### **Tooling Integration**
+
+**TypeDoc Configuration:**
+
+```json
+{
+    "entryPoints": ["src/index.ts"],
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "validation": {
+        "notExported": true,
+        "invalidLink": true,
+        "notDocumented": true
+    }
+}
+```
+
+**Quality Checks:**
+
+```bash
+# Generate documentation and fail on warnings
+pnpm typedoc --treatWarningsAsErrors
+
+# Validate examples in JSDoc
+pnpm ts-node scripts/validate-jsdoc-examples.ts
+
+# Check for missing documentation
+pnpm eslint --rule 'jsdoc/require-jsdoc: error'
+```
+
+---
+
 ## Git Commit Standards
 
 ### 1. **Commit message format**
