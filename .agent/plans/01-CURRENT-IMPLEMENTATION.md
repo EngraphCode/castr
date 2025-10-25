@@ -55,12 +55,16 @@ Tasks MUST be executed in this order due to dependencies:
 
 ```
 1. Dependency Analysis (investigations) [Week 1]
-   ├─ 1.1 Lint Triage
-   ├─ 1.2 pastable Analysis
-   ├─ 1.3 openapi-types Evaluation
-   ├─ 1.4 @zodios/core Evaluation
-   ├─ 1.5 swagger-parser Investigation
-   └─ 1.6 openapi3-ts v4 Capabilities
+   ├─ 1.1 Lint Triage ✅
+   ├─ 1.2 pastable Analysis ✅
+   ├─ 1.3 openapi-types Evaluation ✅
+   ├─ 1.4 @zodios/core Evaluation ✅
+   ├─ 1.5 swagger-parser Investigation ✅
+   ├─ 1.6 openapi3-ts v4 Capabilities ✅
+   ├─ 1.7 Handlebars Evaluation ✅
+   ├─ 1.8 Defer Logic to openapi3-ts v4 (DEFERRED)
+   ├─ 1.9 Zodios-Free Template Strategy ✅
+   └─ 1.10 Fix Critical Lint Issues (NEW)
 
 2. Dependency Updates [Week 1-2]
    ├─ 2.1 Update openapi3-ts (v3 → v4.5.0)
@@ -77,7 +81,7 @@ Tasks MUST be executed in this order due to dependencies:
 
 ---
 
-## 1. Dependency Analysis & Investigation (✅ COMPLETE 7/7)
+## 1. Dependency Analysis & Investigation (✅ COMPLETE 9/10 - 1 Pending)
 
 ### 1.1 Lint Triage & Categorization ✅
 
@@ -2052,6 +2056,158 @@ Closes Task 1.9"
 - 90% less regex manipulation (60+ lines → 0)
 - 100% elimination of type assertions
 - Type-safe validation out of the box
+
+---
+
+### 1.10 Fix Critical Lint Issues (Pre-flight for Dependency Updates)
+
+**Status:** Pending  
+**Priority:** HIGH (prevents issues during dependency updates)  
+**Estimated Time:** 30-45 minutes  
+**Dependencies:** Task 1.9 complete
+
+**Acceptance Criteria:**
+
+- [ ] CodeMeta type safety issues resolved (5 instances)
+- [ ] Floating promise fixed (samples-generator.ts)
+- [ ] Logic bug fixed (test comparison that always returns true)
+- [ ] PATH security issue reviewed and addressed
+- [ ] No new lint errors introduced
+- [ ] All tests still passing
+
+**Rationale:**
+
+Before starting major dependency updates, fix critical lint issues that represent real type safety problems, potential runtime failures, and logic bugs. These could interfere with or mask issues during dependency migration work.
+
+**Critical Issues Identified:**
+
+1. **CodeMeta Type Safety Issues (5 instances):**
+   - `CodeMeta.test.ts:250` - Invalid template literal expression
+   - `anyOf-behavior.test.ts:13` - Invalid template literal + eval concerns
+   - `invalid-pattern-regex.test.ts:20,23,27` - Invalid `+` operation with CodeMeta
+   - `unicode-pattern-regex.test.ts:23,27,30,34` - Invalid `+` operation with CodeMeta
+   - **Impact:** Type safety problems that could mask bugs
+   - **Fix:** Add proper toString/valueOf or use .toString() explicitly
+
+2. **Floating Promise (samples-generator.ts:17):**
+   - Unhandled promise could cause silent failures
+   - **Impact:** Runtime failures going unnoticed
+   - **Fix:** Add proper await or .catch() handling
+
+3. **Logic Bug (generateZodClientFromOpenAPI.test.ts:3472):**
+   - Comparison using `!==` will always be true (likely should be `!=`)
+   - **Impact:** Test not validating what it should
+   - **Fix:** Use correct comparison operator
+
+4. **Security Warning (samples-generator.ts:20):**
+   - PATH manipulation warning
+   - **Impact:** Code security best practice
+   - **Fix:** Review if legitimate use case, add comment or refactor
+
+**Implementation Steps:**
+
+1. **Fix CodeMeta type issues:**
+
+   ```typescript
+   // BEFORE:
+   expect(result).toContain(`${codeMeta}`); // Invalid template literal
+
+   // AFTER (Option 1):
+   expect(result).toContain(codeMeta.toString());
+
+   // AFTER (Option 2):
+   expect(result).toContain(String(codeMeta));
+
+   // OR: Investigate if CodeMeta needs toString/valueOf methods
+   ```
+
+2. **Fix floating promise:**
+
+   ```typescript
+   // BEFORE:
+   generateSamples(); // Floating promise
+
+   // AFTER:
+   void generateSamples(); // Explicitly ignored
+   // OR:
+   await generateSamples(); // If top-level await supported
+   // OR:
+   generateSamples().catch(console.error); // Handle errors
+   ```
+
+3. **Fix logic bug:**
+
+   ```typescript
+   // BEFORE:
+   expect(something !== somethingElse).toBe(true); // Always true if different types
+
+   // AFTER:
+   expect(something != somethingElse).toBe(true); // Coercing comparison
+   // OR: Fix the test expectation entirely
+   ```
+
+4. **Review PATH security:**
+   - Check if `samples-generator.ts` legitimately needs PATH manipulation
+   - If yes: Add comment explaining why it's safe
+   - If no: Refactor to avoid PATH manipulation
+
+5. **Run tests after each fix:**
+   ```bash
+   pnpm test -- --run
+   ```
+
+6. **Verify lint improvements:**
+   ```bash
+   pnpm lint 2>&1 | grep "error\|warning" | wc -l
+   # Should be 142 or less (down from 147)
+   ```
+
+**Validation Steps:**
+
+1. All tests pass (311/311)
+2. Lint error count reduced by 5
+3. No new type errors introduced
+4. Code still builds successfully
+5. Quality gate passes:
+   ```bash
+   pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+   ```
+
+**Deferred Issues:**
+
+- **74 type assertions** → Task 3.2 (systematic elimination)
+- **Function complexity** → Natural byproduct of Task 3.2 refactoring
+- **Style issues** → Address during refactoring
+- **TODO comments** → Tracked separately
+- **Test security warnings** (http vs https) → Acceptable in tests
+
+**Output:**
+
+- Fixed files committed atomically
+- Lint report showing reduced error count
+- All quality gates passing
+
+**Commit Message:**
+
+```
+fix: resolve critical lint issues before dependency updates
+
+Fixes 5 critical lint issues identified in pre-flight analysis:
+
+1. CodeMeta type safety (5 instances) - Added explicit toString()
+2. Floating promise (samples-generator.ts) - Added await/void
+3. Logic bug (test comparison) - Fixed comparison operator  
+4. PATH security warning - Reviewed and documented
+
+Impact:
+- Prevents issues during dependency migrations
+- Improves type safety
+- Ensures tests validate correctly
+- Reduces lint errors: 147 → 142
+
+All tests passing (311/311)
+No functionality changes
+```
 
 ---
 
