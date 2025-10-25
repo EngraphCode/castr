@@ -12,10 +12,7 @@ import {
 } from "./schema-complexity.helpers.js";
 
 type CompositeType = "oneOf" | "anyOf" | "allOf" | "enum" | "array" | "empty-object" | "object" | "record";
-const complexityByType = (schema: SchemaObject & { type: PrimitiveSchemaType }) => {
-    const type = schema.type;
-    if (!type) return 0;
-
+const complexityByType = (type: PrimitiveSchemaType) => {
     return match(type)
         .with("string", () => 1)
         .with("number", () => 1)
@@ -55,7 +52,7 @@ export function getSchemaComplexity({
     }
 
     if (schema.type === "null") {
-        return current + complexityByType({ ...schema, type: "null" });
+        return current + complexityByType("null");
     }
 
     if (schema.oneOf) {
@@ -101,7 +98,7 @@ export function getSchemaComplexity({
         if (schema.enum) {
             return (
                 current +
-                complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
+                complexityByType(schema.type) +
                 complexityByComposite("enum")
                 // NOTE: We intentionally do NOT add enum.length here
                 // Rationale: An enum is an enum whether it has 2 or 100 values
@@ -109,7 +106,7 @@ export function getSchemaComplexity({
             );
         }
 
-        return current + complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType });
+        return current + complexityByType(schema.type);
     }
 
     if (schema.type === "array") {
