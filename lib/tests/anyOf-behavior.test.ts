@@ -10,7 +10,7 @@ import { generateZodClientFromOpenAPI } from "../src/generateZodClientFromOpenAP
 type Validator = <T>(zod: typeof z, input: T) => T;
 
 function createValidator(zodSchema: CodeMeta) {
-    return new Function("z", "input", `return ${zodSchema}.parse(input)`) as Validator;
+    return new Function("z", "input", `return ${zodSchema.toString()}.parse(input)`) as Validator;
 }
 
 const fixtures = {

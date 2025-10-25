@@ -243,11 +243,11 @@ describe("CodeMeta", () => {
             expect(meta.toJSON()).toBe("z.string()");
         });
 
-        it("should allow implicit string conversion", () => {
+        it("should allow explicit string conversion", () => {
             const schema: SchemaObject = { type: "string" };
             const meta = new CodeMeta(schema).assign("z.string()");
 
-            const result = `Code: ${meta}`;
+            const result = `Code: ${meta.toString()}`;
             expect(result).toBe("Code: z.string()");
         });
     });

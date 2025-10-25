@@ -2061,9 +2061,9 @@ Closes Task 1.9"
 
 ### 1.10 Fix Critical Lint Issues (Pre-flight for Dependency Updates)
 
-**Status:** Pending  
-**Priority:** HIGH (prevents issues during dependency updates)  
-**Estimated Time:** 30-45 minutes  
+**Status:** Pending
+**Priority:** HIGH (prevents issues during dependency updates)
+**Estimated Time:** 30-45 minutes
 **Dependencies:** Task 1.9 complete
 
 **Acceptance Criteria:**
@@ -2196,7 +2196,7 @@ Fixes 5 critical lint issues identified in pre-flight analysis:
 
 1. CodeMeta type safety (5 instances) - Added explicit toString()
 2. Floating promise (samples-generator.ts) - Added await/void
-3. Logic bug (test comparison) - Fixed comparison operator  
+3. Logic bug (test comparison) - Fixed comparison operator
 4. PATH security warning - Reviewed and documented
 
 Impact:
