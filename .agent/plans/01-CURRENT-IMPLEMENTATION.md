@@ -2954,18 +2954,44 @@ Code clarity improved ✅"
 
 ### 3.2 Eliminate Type Assertions (EXTRACTION BLOCKER)
 
-**Status:** Pending
+**Status:** ⏳ IN PROGRESS (5/15 files complete, 65 assertions remaining)
 **Priority:** CRITICAL BLOCKER
 **Estimated Time:** 16-24 hours (1-2 weeks with testing)
 **Dependencies:** Tasks 1.1, 2.1, 2.2 complete
+**Time Spent So Far:** ~2 hours
+
+**Progress Update (October 25, 2025 - Evening):**
+
+✅ **Completed Files (5/15):**
+1. `schema-sorting.ts` (1 assertion) - Returned honest type instead of generic T
+2. `generateJSDocArray.ts` (1 assertion) - Added typeof check for proper narrowing  
+3. `makeSchemaResolver.ts` (1 assertion) - Created isSchemaRecord() type guard with openapi3-ts validation
+4. `zodiosEndpoint.helpers.ts` (1 assertion) - Removed unnecessary type widening
+5. `schema-complexity.ts` (2 assertions) - Simplified function signature to accept type directly
+
+**Patterns Identified:**
+- **Type Guards:** When runtime checks needed (e.g., isSchemaRecord with openapi3-ts isSchemaObject)
+- **Honest Types:** Return what you actually return, not what you wish you returned
+- **Type Narrowing:** Add runtime checks (typeof, Array.isArray) instead of assertions
+- **Remove Widening:** Sometimes assertions make types LESS specific (zodiosEndpoint.helpers.ts)
+- **Function Simplification:** Accept only what's needed (schema-complexity.ts: type vs whole schema)
+
+**Quality Metrics:**
+- ✅ All 373 tests passing after every fix
+- ✅ Linter passes for every file
+- ✅ Behavior preserved - tests define, linter enforces, code implements
+
+**Remaining Work (10/15 files, 65 assertions):**
+- 7 medium files (23 assertions)
+- 3 hard files (42 assertions - includes openApiToTypescript.helpers.ts with 25)
 
 **Acceptance Criteria:**
 
-- [ ] Zero type assertions (74 → 0)
-- [ ] All tests passing
-- [ ] No functionality regressions
-- [ ] Proper type guards added where needed
-- [ ] Code is more type-safe
+- [ ] Zero type assertions (71 → 65 → 0)
+- [x] All tests passing (✅ 373/373)
+- [x] No functionality regressions (✅ verified with tests)
+- [ ] Proper type guards added where needed (✅ in progress)
+- [ ] Code is more type-safe (✅ improving with each fix)
 
 **Implementation Steps:**
 

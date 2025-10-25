@@ -1,10 +1,11 @@
 # Living Context Document
 
-**Last Updated:** October 25, 2025 (Early Evening - Post Task 3.1, ready for Task 3.2)  
+**Last Updated:** October 25, 2025 (Late Evening - Task 3.2 IN PROGRESS)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
 
 **Recent Progress:**
 
+- ⏳ Task 3.2: Eliminate Type Assertions IN PROGRESS (5/15 files, 65 remaining, ~2 hours so far)
 - ✅ Task 3.1: pastable replaced with lodash-es + native + domain utils (3 hours, +55 unit tests)
 - ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
 - ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
@@ -300,12 +301,18 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### ⚡ IMMEDIATE: Task 3.2 - Eliminate Type Assertions (BLOCKER)
 
-**Status:** Ready to execute (Task 3.1 ✅ complete)  
+**Status:** ⏳ IN PROGRESS (5/15 files complete, 65 assertions remaining, ~2 hours invested)  
 **Priority:** P0 BLOCKER (extraction requirement)  
-**Estimated Time:** 16-24 hours  
+**Estimated Time:** 16-24 hours total (14-22 hours remaining)  
 **TDD Required:** MANDATORY - add tests for any complex replacements
 
-**What:** Eliminate all 74 type assertions (`as` casts) from codebase
+**What:** Eliminate all 71 type assertions (`as` casts) from codebase → 65 remaining
+
+**Progress:**
+- ✅ All "easy" files complete (4 files, 4 assertions)
+- ✅ First medium file complete (1 file, 2 assertions)
+- ⏳ Medium files remaining (6 files, 21 assertions)
+- ⏳ Hard files remaining (4 files, 40 assertions)
 
 **Why:**
 
@@ -535,8 +542,14 @@ All documented in `.agent/adr/` (12 ADRs):
     - Generated code works correctly with zod v4
     - Duration: 30 minutes
 
+11. ⏳ **refactor(Task 3.2): eliminate type assertions - IN PROGRESS**
+    - ✅ 5/15 files complete (schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity)
+    - Patterns: type guards, honest types, narrowing, function simplification
+    - 65 assertions remaining (down from 71)
+    - All 373 tests passing after each fix
+
 **Branch:** `feat/rewrite`  
-**Status:** Clean working tree, ready for Task 3.2 (Eliminate Type Assertions - P0 BLOCKER)
+**Status:** Task 3.2 in progress (5/15 files, 65 assertions remaining)
 
 ---
 
