@@ -46,19 +46,12 @@ export function isResponseObject(obj: unknown): obj is ResponseObject {
     if (!obj || typeof obj !== "object") {
         return false;
     }
-    const requiredProperties = ["description", "content"];
-    const optionalProperties = ["headers", "content", "links"];
-    const allowedProperties = [...requiredProperties, ...optionalProperties];
-
-    const hasRequiredProperties = (keys: string[]): boolean => {
-        return requiredProperties.every((property) => keys.includes(property));
-    };
-    const keys = Object.keys(obj);
-    if (!hasRequiredProperties(keys)) {
-        return false;
-    }
-    const onlyHasAllowedProperties = keys.every((key) => allowedProperties.includes(key));
-    return onlyHasAllowedProperties;
+    // Per OpenAPI 3.0 spec: ResponseObject can have description, headers, content, links
+    // We need a simple check that distinguishes it from ReferenceObject
+    // ReferenceObject has $ref, ResponseObject does not
+    // For now, we'll check it's an object and NOT a reference
+    // openapi3-ts will handle full validation
+    return !("$ref" in obj);
 }
 
 export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
