@@ -235,7 +235,8 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
             options?.additionalPropertiesDefaultValue === undefined ? true : options?.additionalPropertiesDefaultValue;
         const additionalProps =
             schema.additionalProperties == null ? additionalPropsDefaultValue : schema.additionalProperties;
-        const additionalPropsSchema = additionalProps === false ? "" : ".passthrough()";
+        // When strictObjects is enabled, don't add .passthrough() (use .strict() instead)
+        const additionalPropsSchema = additionalProps === false || options?.strictObjects ? "" : ".passthrough()";
 
         if (typeof schema.additionalProperties === "object" && Object.keys(schema.additionalProperties).length > 0) {
             const additionalPropsZod = getZodSchema({ schema: schema.additionalProperties, ctx, meta, options });

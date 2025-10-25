@@ -12,6 +12,7 @@ test("strictObjects-option", () => {
             },
         })
     ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
+    // When strictObjects is true, .passthrough() should NOT be added (they contradict each other)
     expect(
         getZodSchema({
             schema: {
@@ -24,5 +25,5 @@ test("strictObjects-option", () => {
                 strictObjects: true,
             },
         })
-    ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().strict().passthrough()"');
+    ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().strict()"');
 });
