@@ -71,7 +71,7 @@ export function handleReferenceObject(
         // the correct preprocessing workflow. See: .agent/analysis/NESTED_REFS_ANALYSIS.md
         if ("$ref" in actualSchema) {
             throw new Error(
-                `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference.`
+                `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference before passing the spec to this library.`
             );
         }
 
