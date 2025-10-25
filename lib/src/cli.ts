@@ -31,6 +31,9 @@ interface CliOptions {
     allReadonly?: boolean;
     strictObjects?: boolean;
     additionalPropsDefaultValue?: boolean;
+    noClient?: boolean;
+    withValidationHelpers?: boolean;
+    withSchemaRegistry?: boolean;
 }
 
 function getPackageVersion(): string {
@@ -98,6 +101,18 @@ program
         "Use strict validation for objects so we don't allow unknown keys. Defaults to false.",
         false
     )
+    .option(
+        "--no-client",
+        "Generate schemas and metadata without HTTP client (auto-switches to schemas-with-metadata template). Perfect for using your own HTTP client (fetch, axios, etc.) while maintaining full Zod validation."
+    )
+    .option(
+        "--with-validation-helpers",
+        "Generate validation helper functions (validateRequest, validateResponse) for manual request/response validation. Only applicable when using --no-client or schemas-with-metadata template."
+    )
+    .option(
+        "--with-schema-registry",
+        "Generate schema registry builder function for dynamic schema access with optional key sanitization. Useful for SDK generation or runtime schema lookup. Only applicable when using --no-client or schemas-with-metadata template."
+    )
     .action(async (input: string, options: CliOptions) => {
         console.log("Retrieving OpenAPI document from", input);
         // SwaggerParser uses its own OpenAPI types, cast to openapi3-ts types
@@ -153,6 +168,11 @@ program
 
         if (prettierConfig) generationArgs["prettierConfig"] = prettierConfig;
         if (options.template) generationArgs["templatePath"] = options.template;
+
+        // Add new template-specific flags
+        if (options.noClient) generationArgs["noClient"] = options.noClient;
+        if (options.withValidationHelpers) generationArgs["withValidationHelpers"] = options.withValidationHelpers;
+        if (options.withSchemaRegistry) generationArgs["withSchemaRegistry"] = options.withSchemaRegistry;
 
         await generateZodClientFromOpenAPI(generationArgs as Parameters<typeof generateZodClientFromOpenAPI>[0]);
         console.log(`Done generating <${distPath}> !`);
