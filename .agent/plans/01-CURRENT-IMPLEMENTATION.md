@@ -2964,7 +2964,7 @@ Code clarity improved ✅"
 
 ✅ **Completed Files (5/15):**
 1. `schema-sorting.ts` (1 assertion) - Returned honest type instead of generic T
-2. `generateJSDocArray.ts` (1 assertion) - Added typeof check for proper narrowing  
+2. `generateJSDocArray.ts` (1 assertion) - Added typeof check for proper narrowing
 3. `makeSchemaResolver.ts` (1 assertion) - Created isSchemaRecord() type guard with openapi3-ts validation
 4. `zodiosEndpoint.helpers.ts` (1 assertion) - Removed unnecessary type widening
 5. `schema-complexity.ts` (2 assertions) - Simplified function signature to accept type directly

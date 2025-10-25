@@ -97,9 +97,7 @@ export function getSchemaComplexity({
     if (isPrimitiveSchemaType(schema.type)) {
         if (schema.enum) {
             return (
-                current +
-                complexityByType(schema.type) +
-                complexityByComposite("enum")
+                current + complexityByType(schema.type) + complexityByComposite("enum")
                 // NOTE: We intentionally do NOT add enum.length here
                 // Rationale: An enum is an enum whether it has 2 or 100 values
                 // The base complexity remains constant to ensure inlining behavior

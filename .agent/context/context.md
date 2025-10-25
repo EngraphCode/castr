@@ -309,6 +309,7 @@ All documented in `.agent/adr/` (12 ADRs):
 **What:** Eliminate all 71 type assertions (`as` casts) from codebase → 65 remaining
 
 **Progress:**
+
 - ✅ All "easy" files complete (4 files, 4 assertions)
 - ✅ First medium file complete (1 file, 2 assertions)
 - ⏳ Medium files remaining (6 files, 21 assertions)

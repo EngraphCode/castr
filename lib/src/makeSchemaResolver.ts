@@ -2,7 +2,6 @@ import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas30";
 import { get } from "lodash-es";
 
 import { normalizeString } from "./utils.js";
-import { isSchemaObject } from "openapi3-ts/oas30";
 
 const autocorrectRef = (ref: string) => (ref[1] === "/" ? ref : "#/" + ref.slice(1));
 
@@ -10,22 +9,12 @@ const autocorrectRef = (ref: string) => (ref[1] === "/" ? ref : "#/" + ref.slice
  * Type guard to check if a value is a Record<string, SchemaObject>
  */
 function isSchemaRecord(value: unknown): value is Record<string, SchemaObject> {
-    // Rough type guard first.
-    const isProbablySchemaObject = (maybeSchemaObject: unknown): maybeSchemaObject is SchemaObject => {
-        return (
-            !!maybeSchemaObject &&
-            typeof maybeSchemaObject === "object" &&
-            !Array.isArray(maybeSchemaObject) &&
-            "$ref" in maybeSchemaObject
-        );
-    };
     const isObject = value !== null && typeof value === "object" && !Array.isArray(value);
     if (!isObject) return false;
+    
+    // For values in components/schemas, check they're objects (not arrays, not primitives)
     const values = Object.values(value);
-    return values.every((value) => {
-        if (!isProbablySchemaObject(value)) return false;
-        return isSchemaObject(value);
-    });
+    return values.every((val) => val !== null && typeof val === "object" && !Array.isArray(val));
 }
 
 type RefInfo = {

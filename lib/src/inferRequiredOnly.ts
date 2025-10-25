@@ -2,7 +2,7 @@ import { type SchemaObject, type ReferenceObject, isReferenceObject } from "open
 import type { DocumentResolver } from "./makeSchemaResolver.js";
 
 const isBrokenAllOfItem = (item: SchemaObject | ReferenceObject): item is SchemaObject => {
-    if (
+    return (
         !isReferenceObject(item) &&
         !!item.required &&
         !item.type &&
@@ -10,10 +10,7 @@ const isBrokenAllOfItem = (item: SchemaObject | ReferenceObject): item is Schema
         !item?.allOf &&
         !item?.anyOf &&
         !item.oneOf
-    ) {
-        return true;
-    }
-    return false;
+    );
 };
 
 export function inferRequiredSchema(schema: SchemaObject) {
@@ -22,8 +19,9 @@ export function inferRequiredSchema(schema: SchemaObject) {
             "function inferRequiredSchema is specialized to handle item with required only in an allOf array."
         );
     }
-    const [standaloneRequisites, noRequiredOnlyAllof] = schema.allOf.reduce(
-        (acc, cur) => {
+    const accumulator: [string[], (SchemaObject | ReferenceObject)[]] = [[], []];
+    const [standaloneRequisites, noRequiredOnlyAllof]: [string[], (SchemaObject | ReferenceObject)[]] =
+        schema.allOf.reduce((acc, cur) => {
             if (isBrokenAllOfItem(cur)) {
                 const required = cur.required;
                 acc[0].push(...(required ?? []));
@@ -31,22 +29,13 @@ export function inferRequiredSchema(schema: SchemaObject) {
                 acc[1].push(cur);
             }
             return acc;
-        },
-        [[], []] as [string[], (SchemaObject | ReferenceObject)[]]
-    );
+        }, accumulator);
 
     const composedRequiredSchema = {
-        properties: standaloneRequisites.reduce(
-            (acc, cur) => {
-                acc[cur] = {
-                    // type: "unknown" as SchemaObject["type"],
-                } as SchemaObject;
-                return acc;
-            },
-            {} as {
-                [propertyName: string]: SchemaObject | ReferenceObject;
-            }
-        ),
+        properties: standaloneRequisites.reduce<Record<string, SchemaObject | ReferenceObject>>((acc, cur) => {
+            acc[cur] = {};
+            return acc;
+        }, {}),
         type: "object" as const,
         required: standaloneRequisites,
     };
