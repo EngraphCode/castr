@@ -30,8 +30,8 @@ export default function generateJSDocArray(schema: SchemaObject, withTypesAndFor
     addComment("deprecated", (value) => (value ? "@deprecated" : ""));
     addComment("default", (value) => `@default ${JSON.stringify(value)}`);
     addComment("externalDocs", (value) => {
-        if (value && typeof value === "object" && "url" in value) {
-            return `@see ${(value as { url: string }).url}`;
+        if (value && typeof value === "object" && "url" in value && typeof value.url === "string") {
+            return `@see ${value.url}`;
         }
         return undefined;
     });
