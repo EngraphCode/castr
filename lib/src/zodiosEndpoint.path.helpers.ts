@@ -4,6 +4,7 @@
  */
 
 import type { OperationObject, ParameterObject, ReferenceObject, ResponseObject } from "openapi3-ts/oas30";
+import { isReferenceObject } from "openapi3-ts/oas30";
 import type { TemplateContext } from "./template-context.js";
 import type { DefaultStatusBehavior } from "./template-context.types.js";
 import type { ConversionTypeContext } from "./CodeMeta.js";
@@ -15,6 +16,7 @@ import {
     processParameter,
     processRequestBody,
     processResponse,
+    isResponseObject,
 } from "./zodiosEndpoint.operation.helpers.js";
 
 const voidSchema = "z.void()";
@@ -33,7 +35,8 @@ function processResponses(
         const responseObj = operation.responses[statusCode];
         if (!responseObj) continue;
 
-        const result = processResponse(statusCode, responseObj as ResponseObject, ctx, getZodVarName, options);
+        // processResponse handles ResponseObject | ReferenceObject union
+        const result = processResponse(statusCode, responseObj, ctx, getZodVarName, options);
 
         if (result.responseEntry && endpointDefinition.responses !== undefined) {
             endpointDefinition.responses.push(result.responseEntry);
@@ -68,8 +71,29 @@ function handleDefaultResponse(
         return {};
     }
 
+    const defaultResponseObj = operation.responses.default;
+    
+    // Resolve ReferenceObject if needed
+    let defaultResponse: ResponseObject;
+    if (isReferenceObject(defaultResponseObj)) {
+        const resolved = ctx.resolver.getSchemaByRef(defaultResponseObj.$ref);
+        if (isReferenceObject(resolved)) {
+            throw new Error(
+                `Nested $ref in default response: ${defaultResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`
+            );
+        }
+        if (!isResponseObject(resolved)) {
+            throw new Error(
+                `Invalid $ref: ${defaultResponseObj.$ref} does not resolve to a ResponseObject`
+            );
+        }
+        defaultResponse = resolved;
+    } else {
+        defaultResponse = defaultResponseObj;
+    }
+
     const defaultResult = processDefaultResponse(
-        operation.responses.default as ResponseObject,
+        defaultResponse,
         ctx,
         getZodVarName,
         Boolean(endpointDefinition.response),
@@ -93,10 +117,10 @@ function handleDefaultResponse(
 
 type ProcessOperationParams = {
     path: string;
-    method: string;
+    method: "get" | "post" | "put" | "patch" | "delete" | "head" | "options";
     operation: OperationObject;
     operationName: string;
-    parameters: Array<unknown>;
+    parameters: ReadonlyArray<ParameterObject | ReferenceObject>;
     ctx: ConversionTypeContext;
     getZodVarName: GetZodVarNameFn;
     defaultStatusBehavior: DefaultStatusBehavior | undefined;
@@ -125,7 +149,7 @@ export function processOperation({
     options,
 }: ProcessOperationParams): ProcessOperationResult {
     let endpointDefinition: EndpointDefinitionWithRefs = {
-        method: method as EndpointDefinitionWithRefs["method"],
+        method,
         path: replaceHyphenatedPath(path),
         ...(options?.withAlias && { alias: operationName }),
         description: operation.description,
@@ -142,7 +166,8 @@ export function processOperation({
     }
 
     for (const param of parameters) {
-        const paramDef = processParameter(param as ParameterObject | ReferenceObject, ctx, getZodVarName, options);
+        // processParameter handles ParameterObject | ReferenceObject union
+        const paramDef = processParameter(param, ctx, getZodVarName, options);
         if (paramDef) {
             endpointDefinition.parameters.push(paramDef);
         }

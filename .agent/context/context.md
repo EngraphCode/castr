@@ -315,10 +315,12 @@ All documented in `.agent/adr/` (12 ADRs):
 - ⏳ Hard files remaining (5 files, 47 assertions)
 
 **Latest Completions:**
+
 - schema-complexity.helpers.ts (4 assertions) - Proper parameter typing
 - zodiosEndpoint.operation.helpers.ts (4 assertions) - Custom type guards + fail-fast
 
 **Key Patterns Established:**
+
 - Custom type guards: isRequestBodyObject(), isParameterObject(), isResponseObject()
 - Fail-fast validation for nested $refs in all component types
 - Explicit match type parameters to avoid type widening
