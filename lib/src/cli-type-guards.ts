@@ -78,4 +78,3 @@ export function isOpenAPIObject(obj: unknown): obj is import("openapi3-ts/oas30"
         typeof obj.paths === "object"
     );
 }
-

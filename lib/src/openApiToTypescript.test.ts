@@ -6,9 +6,8 @@ import { describe, expect, test } from "vitest";
 import { makeSchemaResolver } from "./makeSchemaResolver.js";
 import { asComponentSchema } from "./utils.js";
 import type { TemplateContext } from "./template-context.js";
-import type { OpenAPIV3 } from "openapi-types";
 
-const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as SchemaObject;
+const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsTsString = (schema: SchemaObject, meta?: { name: string }, options?: TemplateContext["options"]) =>
     printTs(getTypescriptFromOpenApi({ schema: makeSchema(schema), meta, options }) as ts.Node);
 

@@ -1,31 +1,49 @@
 # Living Context Document
 
-**Last Updated:** October 25, 2025 (Late Night - Task 3.2 IN PROGRESS)  
+**Last Updated:** October 25, 2025 (Architecture Rewrite Plan - Ready to Execute)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
 
 ## 🚨 CRITICAL STATUS FOR FRESH CHAT
 
-**Current Blocker:** Task 3.2 (Type Assertion Elimination) **PAUSED** pending Tanu API investigation
+**Current Phase:** **ARCHITECTURE REWRITE PLAN APPROVED** — Ready to Execute Phase 0
 
-**What Happened:** While eliminating type assertions, discovered that remaining ~35 assertions at the tanu library boundary likely indicate **incorrect API usage** rather than actual type incompatibilities. Both `t` and `ts` come from the same `tanu` library - they should compose cleanly.
+**What Happened:** Discovered fundamental architectural flaws in `makeSchemaResolver` and `CodeMeta`:
 
-**Next Action (PRIORITY #1):** Investigate tanu's intended `t` ↔ `ts` composition pattern
-- **Expected Time:** 2-4 hours investigation + 2-12 hours fixing (depends on findings)
-- **Outcome:** Either fix API usage OR decide to migrate to ts-morph
-- **See:** "IMMEDIATE NEXT ACTION" section below for detailed investigation plan
+- Resolver lies about return types (claims `SchemaObject`, returns any component)
+- Type assertions were masking architectural dishonesty, not library limitations
+- Not leveraging `SwaggerParser.bundle()` which resolves all operation-level `$ref`s
+- `CodeMeta` is a poorly conceived abstraction with no clear value
+
+**Decision:** Multi-phase comprehensive rewrite instead of incremental fixes
+
+**Next Action (PRIORITY #1):** Execute Phase 0 → Phase 1 → Phase 2 → Phase 3
+
+- **Phase 0:** Create comprehensive public API test suite (8-12 hours) ⭐ CRITICAL
+- **Phase 1:** Eliminate `makeSchemaResolver` + `CodeMeta` (8-10 hours)
+- **Phase 2:** Migrate from `tanu` to `ts-morph` (6-8 hours)
+- **Phase 3:** Remove Zodios dependencies (4-6 hours)
+- **Timeline:** 26-36 hours total over 2-3 weeks
+- **See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` for complete details
 
 **Current State:**
-- ✅ 11/15 files complete (~30 assertions eliminated)
-- ⏸️ 2 files BLOCKED on tanu (~35 assertions)
-- ⏳ 1 file ready to fix independently (cli.ts, ~6 assertions)
+
 - ✅ All 373 tests passing
-- ✅ Quality gates passing
+- ✅ Quality gates passing (format, build, type-check)
+- ✅ Architecture Rewrite Plan documented and approved
+- 🎯 Task 1.2 (topologicalSort modernization) ready to start with TDD
+- ⏳ Awaiting Phase 0 test suite creation before any breaking changes
 
 ---
 
 **Recent Progress:**
 
-- ⏸️ Task 3.2: Eliminate Type Assertions PAUSED (11/15 files, tanu investigation required)
+- 🎯 **Architecture Rewrite Plan created** (`.agent/plans/ARCHITECTURE_REWRITE_PLAN.md`)
+    - Comprehensive 4-phase plan: Phase 0 (tests), Phase 1 (resolver/CodeMeta), Phase 2 (ts-morph), Phase 3 (Zodios)
+    - TDD methodology section added
+    - Task 1.2 (topologicalSort modernization) detailed with 5-step TDD workflow
+    - Graph library alternatives investigated (keeping custom implementation)
+- ✅ Task 3.2 (partial): Type assertions reduced from 74 to ~41
+    - 11/15 files complete, 2 files blocked on architectural issues (now addressed in rewrite plan)
 - ✅ Task 3.1: pastable replaced with lodash-es + native + domain utils (3 hours, +55 unit tests)
 - ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
 - ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
@@ -335,24 +353,29 @@ All documented in `.agent/adr/` (12 ADRs):
 **Goal:** Understand how tanu intends `t` ↔ `ts` composition to work
 
 **Key Insight:**
+
 ```typescript
 import { t, ts } from "tanu";
 ```
+
 Both from same library → should compose cleanly. Type incompatibility indicates incorrect usage.
 
 **Investigation Steps:**
+
 1. Read tanu docs: `cat node_modules/tanu/README.md`
 2. Check type definitions: `cat node_modules/tanu/dist/index.d.ts`
 3. Search our usage: `grep -r "from \"tanu\"" lib/src/`
 4. Test hypothesis: Create small isolated test
 
 **Questions to Answer:**
+
 - What is `ts.Node` vs `t.TypeDefinition`?
 - Is there a conversion function between them?
 - Should we stay in one API level (all `t` or all `ts`)?
 - Are we mixing low-level and high-level APIs?
 
 **Expected Outcome:**
+
 - **Path A:** Find correct pattern → eliminate 5 tanu assertions (2-3 hours)
 - **Path B:** Confirm unsuitable → migrate to ts-morph (8-12 hours)
 
@@ -369,6 +392,7 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 ## Progress Summary (Session Ending October 25, 2025)
 
 **✅ Completed (11/15 files, ~30 assertions eliminated):**
+
 1. schema-sorting.ts (1) - Honest return types
 2. generateJSDocArray.ts (1) - typeof narrowing
 3. makeSchemaResolver.ts (1) - isSchemaRecord guard
@@ -382,13 +406,16 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 11. zodiosEndpoint.path.helpers.ts (4) - Fixed types + fail-fast
 
 **✅ Verified Clean:**
+
 - getZodiosEndpointDefinitionList.ts - Only `as const` (allowed)
 
 **⏸️ BLOCKED on Tanu Investigation (~35 assertions):**
+
 - openApiToTypescript.ts (~7 assertions) - ALL tanu-related
 - openApiToTypescript.helpers.ts (~22+ assertions) - ALL tanu-related (THE FINAL BOSS)
 
 **⏳ Independent Work Possible (~6 assertions):**
+
 - cli.ts (~6 assertions) - NOT tanu-related (can do while investigating tanu)
 
 ---
@@ -407,6 +434,7 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 ## Analysis Documents
 
 **Visual Analysis:** `.agent/docs/type-assertion-elimination-analysis.md`
+
 - Mermaid diagrams showing type flow
 - Domain boundaries
 - Tanu library boundary issue visualization
@@ -653,7 +681,7 @@ Once tanu investigation complete, choose path and strategize remaining assertion
     - Recommendations: Investigate tanu API (preferred) OR migrate to ts-morph
 
 **Branch:** `feat/rewrite`  
-**Status:** Task 3.2 PAUSED - Tanu API investigation required (11/15 files complete, ~35 tanu-related assertions blocked, ~5.5 hours invested)
+**Status:** Architecture Rewrite Plan approved - Ready to execute Phase 1, Task 1.2 (topologicalSort modernization with TDD)
 
 ---
 
@@ -661,44 +689,46 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 
 ### For a Fresh Context (START HERE)
 
-**🎯 IMMEDIATE PRIORITY: Tanu API Investigation**
+**🎯 IMMEDIATE PRIORITY: Execute Architecture Rewrite Plan**
 
-1. **Read Critical Status (above)** - Understand the blocker
-2. **Read "IMMEDIATE NEXT ACTION"** section - Tanu investigation plan
-3. **Read Analysis Document:** `.agent/docs/type-assertion-elimination-analysis.md`
-   - Visual diagrams of type flow and tanu boundary
-   - Table of remaining assertions
-   - Critical insight about tanu API usage
-4. **Read Detailed Plan:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md` Task 3.2 "STEP 1"
-   - Full investigation checklist
-   - Commands to run
-   - Questions to answer
-5. **Execute Investigation** (2-4 hours)
-   - Explore tanu documentation
-   - Test hypothesis
-   - Document findings
-6. **Strategy Session** - Choose path based on findings
-   - Path A: Fix tanu usage (2-3 hours)
-   - Path B: Migrate to ts-morph (8-12 hours)
+1. **Read Critical Status (above)** - Understand why we're doing a comprehensive rewrite
+2. **Read Architecture Rewrite Plan:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` ⭐
+    - Executive summary (10 min read)
+    - 4-phase plan with timeline
+    - Mandatory TDD methodology section
+    - Current task: Phase 1, Task 1.2 (topologicalSort modernization)
+3. **Verify Quality Gates Pass:**
+    ```bash
+    cd lib && pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+    ```
+4. **Start with Task 1.2: Modernize topologicalSort** (45 min, TDD workflow)
+    - STEP 1: Verify existing test coverage (in `getOpenApiDependencyGraph.test.ts`)
+    - STEP 2: Create `topologicalSort.test.ts` with comprehensive unit tests
+    - STEP 3: Verify all tests pass (baseline)
+    - STEP 4: Refactor implementation (types, TSDoc, performance)
+    - STEP 5: Verify performance improvement
+5. **After Task 1.2:** Proceed to Phase 0 (comprehensive test suite creation)
 
 **Key Files to Read for Context:**
-- `.agent/docs/type-assertion-elimination-analysis.md` - Visual analysis (MUST READ)
-- `lib/src/openApiToTypescript.ts` - Our tanu usage
-- `lib/src/openApiToTypescript.helpers.ts` - Heavy tanu usage (THE FINAL BOSS)
-- `node_modules/tanu/README.md` - Tanu documentation
-- `node_modules/tanu/dist/index.d.ts` - Tanu type definitions
+
+- `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` - The complete rewrite plan (MUST READ)
+- `.agent/context/context.md` - This file (current status)
+- `.agent/RULES.md` - Coding standards (includes TDD mandate)
+- `lib/src/topologicalSort.ts` - Current implementation (starting point)
+- `.agent/docs/type-assertion-elimination-analysis.md` - Analysis that led to rewrite decision
 
 ---
 
 ### Full Context for Planning
 
 1. Read this file (context.md) for current state
-2. Read `.agent/plans/00-STRATEGIC-PLAN.md` for overall strategy
-3. Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` for all detailed tasks
-4. Read `.agent/plans/02-MCP-ENHANCEMENTS.md` for Phase 2B (optional, after Phase 2)
-5. Read `.agent/plans/03-FURTHER-ENHANCEMENTS.md` for Phase 3 (DX improvements + OAS multi-version)
-6. Review `.agent/RULES.md` for coding standards (includes TDD mandate)
-7. Check Definition of Done (should pass before starting work)
+2. Read `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` for rewrite details ⭐
+3. Read `.agent/plans/00-STRATEGIC-PLAN.md` for overall strategy
+4. Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` for context on what was attempted
+5. Read `.agent/plans/02-MCP-ENHANCEMENTS.md` for Phase 2B (optional, after rewrite)
+6. Read `.agent/plans/03-FURTHER-ENHANCEMENTS.md` for Phase 3 (DX improvements + OAS multi-version)
+7. Review `.agent/RULES.md` for coding standards (includes TDD mandate)
+8. Check Definition of Done (should pass before starting work)
 
 ### Before Any Commit
 

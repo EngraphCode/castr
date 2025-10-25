@@ -119,7 +119,8 @@ export const getTypescriptFromOpenApi = ({
                 types.push(typeof composedType === "string" ? t.reference(composedType) : composedType);
             }
 
-            const intersection = t.intersection(types);
+            // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+            const intersection = t.intersection(types as t.TypeDefinition[]);
             return schema.nullable ? t.union([intersection, t.reference("null")]) : intersection;
         }
 

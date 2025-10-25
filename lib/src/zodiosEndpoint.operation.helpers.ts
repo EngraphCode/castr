@@ -82,8 +82,7 @@ export function processRequestBody(
                 `Nested $ref in requestBody: ${operation.requestBody.$ref}. Use SwaggerParser.bundle() to dereference.`
             );
         }
-        // Resolver returns generic SchemaObject; assert it's RequestBodyObject at runtime
-        // This is safe because OpenAPI spec guarantees $ref resolution type consistency
+
         requestBody = resolved as unknown as RequestBodyObject;
     } else {
         requestBody = operation.requestBody;

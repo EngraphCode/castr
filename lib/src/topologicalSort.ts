@@ -1,4 +1,3 @@
-/** @see https://gist.github.com/RubyTuesdayDONO/5006455 */
 export function topologicalSort(graph: Record<string, Set<string>>) {
     const sorted: string[] = [], // sorted list of IDs ( returned value )
         visited: Record<string, boolean> = {}; // hash: id of already visited node => true

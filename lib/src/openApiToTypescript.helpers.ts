@@ -201,7 +201,8 @@ export function wrapTypeIfNeeded(
         if (!name) {
             throw new Error("Name is required to convert a schema to a type reference");
         }
-        return t.type(name, typeDef);
+        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+        return t.type(name, typeDef as t.TypeDefinition);
     }
 
     return typeDef;
@@ -342,7 +343,8 @@ export function handleOneOf(
     if (schemas.length === 1) {
         const result = convertSchema(schemas[0]!);
         // Narrow ONCE: convert string to reference
-        return typeof result === "string" ? t.reference(result) : result;
+        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+        return typeof result === "string" ? t.reference(result) : (result as ts.Node);
     }
 
     const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
@@ -370,7 +372,8 @@ export function handleAnyOf(
     if (schemas.length === 1) {
         const result = convertSchema(schemas[0]!);
         // Narrow ONCE: convert string to reference
-        return typeof result === "string" ? t.reference(result) : result;
+        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+        return typeof result === "string" ? t.reference(result) : (result as ts.Node);
     }
 
     const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
@@ -402,7 +405,8 @@ export function handleTypeArray(
     if (types.length === 1) {
         const result = convertSchema({ ...schema, type: types[0]! } as SchemaObject);
         // Narrow ONCE: convert string to reference
-        return typeof result === "string" ? t.reference(result) : result;
+        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+        return typeof result === "string" ? t.reference(result) : (result as ts.Node);
     }
 
     const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);

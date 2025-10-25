@@ -319,7 +319,6 @@ export function getZodSchema({ schema: $schema, ctx, meta: inheritedMeta, option
 
     if (!schemaType) return code.assign("z.unknown()");
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new Error(`Unsupported schema type: ${schemaType}`);
 }
 

@@ -6,16 +6,8 @@ import { Command } from "commander";
 import { resolveConfig } from "prettier";
 
 import { toBoolean } from "./utils.js";
-import {
-    generateZodClientFromOpenAPI,
-    type GenerateZodClientFromOpenApiArgs,
-} from "./generateZodClientFromOpenAPI.js";
-import {
-    hasVersionProperty,
-    isGroupStrategy,
-    isDefaultStatusBehavior,
-    isOpenAPIObject,
-} from "./cli-type-guards.js";
+import { generateZodClientFromOpenAPI, type GenerateZodClientFromOpenApiArgs } from "./generateZodClientFromOpenAPI.js";
+import { hasVersionProperty, isGroupStrategy, isDefaultStatusBehavior, isOpenAPIObject } from "./cli-type-guards.js";
 
 interface CliOptions {
     output?: string;
