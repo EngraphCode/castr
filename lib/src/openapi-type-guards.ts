@@ -7,7 +7,13 @@
  * Centralized here to avoid circular import issues.
  */
 
-import type { OperationObject, ParameterObject, RequestBodyObject, ResponseObject } from "openapi3-ts/oas30";
+import type {
+    OperationObject,
+    ParameterObject,
+    ReferenceObject,
+    RequestBodyObject,
+    ResponseObject,
+} from "openapi3-ts/oas30";
 
 /**
  * Allowed HTTP methods per OpenAPI 3.0 spec
@@ -51,68 +57,107 @@ export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMet
 export type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
 
 /**
- * Type guard to check if an object is a RequestBodyObject (not a ReferenceObject)
+ * Type guard to check if an object is a ReferenceObject
  *
- * Per OpenAPI 3.0 spec, RequestBodyObject has "content" as a required property.
- * openapi3-ts doesn't provide this guard, so we implement it ourselves.
+ * Per OpenAPI 3.0 spec, ReferenceObject MUST have "$ref".
+ * This is the definitive way to distinguish ReferenceObject from other OpenAPI objects.
  *
- * @param obj - Object to check
- * @returns True if the object is a RequestBodyObject
- */
-export function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
-    if (!obj || typeof obj !== "object") {
-        return false;
-    }
-    // RequestBodyObject has "content" property, ReferenceObject has "$ref"
-    return "content" in obj && !("$ref" in obj);
-}
-
-/**
- * Type guard to check if an object is a ParameterObject (not a ReferenceObject)
- *
- * Per OpenAPI 3.0 spec, ParameterObject has "name" and "in" as required properties.
- * openapi3-ts doesn't provide this guard, so we implement it ourselves.
- *
- * @param obj - Object to check
- * @returns True if the object is a ParameterObject
- */
-export function isParameterObject(obj: unknown): obj is ParameterObject {
-    if (!obj || typeof obj !== "object") {
-        return false;
-    }
-    // ParameterObject has "in" and "name" properties, ReferenceObject has "$ref"
-    return "in" in obj && "name" in obj && !("$ref" in obj);
-}
-
-/**
- * Type guard to check if an object is a ResponseObject (not a ReferenceObject)
- *
- * Per OpenAPI 3.0 spec, ResponseObject can have description, headers, content, links.
- * We use a simple check: if it doesn't have $ref, it's a ResponseObject.
- * Full validation is deferred to openapi3-ts.
- *
- * openapi3-ts doesn't provide this guard, so we implement it ourselves.
- *
- * @param obj - Object to check
- * @returns True if the object is a ResponseObject
+ * @param obj - Unknown object to check
+ * @returns True if the object is a ReferenceObject
  *
  * @example
  * ```typescript
- * if (isResponseObject(response)) {
+ * if (isReferenceObject(maybeRef)) {
+ *   console.log(maybeRef.$ref); // TypeScript knows it has $ref
+ * }
+ * ```
+ */
+export function isReferenceObject(obj: unknown): obj is ReferenceObject {
+    return typeof obj === "object" && obj !== null && "$ref" in obj && typeof obj.$ref === "string";
+}
+
+/**
+ * Type guard to distinguish RequestBodyObject from ReferenceObject
+ *
+ * Uses lenient checking: only verifies absence of "$ref" to distinguish from ReferenceObject.
+ * Does not enforce full OpenAPI spec compliance (e.g., required properties).
+ * This allows the library to be tolerant of slightly malformed specs.
+ *
+ * @param obj - Unknown object to narrow
+ * @returns True if the object is NOT a ReferenceObject (lenient narrowing)
+ *
+ * @example
+ * ```typescript
+ * const maybeBody: unknown = operation.requestBody;
+ * if (isRequestBodyObject(maybeBody)) {
+ *   // TypeScript knows it's RequestBodyObject, not ReferenceObject
+ *   console.log(maybeBody.content);
+ * }
+ * ```
+ */
+export function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
+    if (typeof obj !== "object" || obj === null) {
+        return false;
+    }
+    // Lenient: just check it's NOT a ReferenceObject (no $ref property)
+    // openapi3-ts and swagger-parser handle full spec validation
+    return !("$ref" in obj);
+}
+
+/**
+ * Type guard to distinguish ParameterObject from ReferenceObject
+ *
+ * Uses lenient checking: only verifies absence of "$ref" to distinguish from ReferenceObject.
+ * Does not enforce full OpenAPI spec compliance (e.g., required properties).
+ * This allows the library to be tolerant of slightly malformed specs.
+ *
+ * @param obj - Unknown object to narrow
+ * @returns True if the object is NOT a ReferenceObject (lenient narrowing)
+ *
+ * @example
+ * ```typescript
+ * const maybeParam: unknown = parameters[0];
+ * if (isParameterObject(maybeParam)) {
+ *   // TypeScript knows it's ParameterObject, not ReferenceObject
+ *   console.log(maybeParam.name, maybeParam.in);
+ * }
+ * ```
+ */
+export function isParameterObject(obj: unknown): obj is ParameterObject {
+    if (typeof obj !== "object" || obj === null) {
+        return false;
+    }
+    // Lenient: just check it's NOT a ReferenceObject (no $ref property)
+    // openapi3-ts and swagger-parser handle full spec validation
+    return !("$ref" in obj);
+}
+
+/**
+ * Type guard to distinguish ResponseObject from ReferenceObject
+ *
+ * Uses lenient checking: only verifies absence of "$ref" to distinguish from ReferenceObject.
+ * Does not enforce full OpenAPI spec compliance (e.g., required "description" property).
+ * This allows the library to be tolerant of slightly malformed specs.
+ *
+ * @param obj - Unknown object to narrow
+ * @returns True if the object is NOT a ReferenceObject (lenient narrowing)
+ *
+ * @example
+ * ```typescript
+ * const maybeResponse: unknown = responses["200"];
+ * if (isResponseObject(maybeResponse)) {
  *   // TypeScript knows it's ResponseObject, not ReferenceObject
- *   console.log(response.description);
+ *   console.log(maybeResponse.description);
  * }
  * ```
  */
 export function isResponseObject(obj: unknown): obj is ResponseObject {
-    if (!obj || typeof obj !== "object") {
+    if (typeof obj !== "object" || obj === null) {
         return false;
     }
-    // Per OpenAPI 3.0 spec: ResponseObject can have description, headers, content, links
-    // We need a simple check that distinguishes it from ReferenceObject
-    // ReferenceObject has $ref, ResponseObject does not
-    // For now, we'll check it's an object and NOT a reference
-    // openapi3-ts will handle full validation
+    // Lenient: just check it's NOT a ReferenceObject (no $ref property)
+    // openapi3-ts and swagger-parser handle full spec validation
+    // NOTE: Per OpenAPI 3.0 spec, "description" is required, but many real-world
+    // specs omit it, so we don't enforce it here to be tolerant
     return !("$ref" in obj);
 }
-
