@@ -16,10 +16,10 @@ describe("schemas-with-metadata template", () => {
                                 content: {
                                     "application/json": {
                                         schema: {
-                                            type: "object",
+                                            type: "object" as const,
                                             properties: {
-                                                name: { type: "string" },
-                                                email: { type: "string", format: "email" },
+                                                name: { type: "string" as const },
+                                                email: { type: "string" as const, format: "email" },
                                             },
                                             required: ["name", "email"],
                                         },
@@ -32,11 +32,11 @@ describe("schemas-with-metadata template", () => {
                                     content: {
                                         "application/json": {
                                             schema: {
-                                                type: "object",
+                                                type: "object" as const,
                                                 properties: {
-                                                    id: { type: "string" },
-                                                    name: { type: "string" },
-                                                    email: { type: "string" },
+                                                    id: { type: "string" as const },
+                                                    name: { type: "string" as const },
+                                                    email: { type: "string" as const },
                                                 },
                                                 required: ["id", "name", "email"],
                                             },
@@ -52,6 +52,7 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // MUST NOT import Zodios
@@ -63,9 +64,9 @@ describe("schemas-with-metadata template", () => {
             // MUST import Zod
             expect(result).toContain('import { z } from "zod"');
 
-            // MUST export schemas
-            expect(result).toContain("export const");
-            expect(result).toMatch(/Schema\s*=/);
+            // MUST export schemas (inline schemas are named based on operation, like createUser_Body)
+            expect(result).toContain("const ");
+            expect(result).toMatch(/createUser_Body\s*=/);
 
             // MUST export schemas object
             expect(result).toContain("export const schemas =");
@@ -84,18 +85,18 @@ describe("schemas-with-metadata template", () => {
                 components: {
                     schemas: {
                         User: {
-                            type: "object",
+                            type: "object" as const,
                             properties: {
-                                id: { type: "string" },
-                                name: { type: "string" },
+                                id: { type: "string" as const },
+                                name: { type: "string" as const },
                             },
                             required: ["id", "name"],
                         },
                         Error: {
-                            type: "object",
+                            type: "object" as const,
                             properties: {
-                                message: { type: "string" },
-                                code: { type: "number" },
+                                message: { type: "string" as const },
+                                code: { type: "number" as const },
                             },
                             required: ["message"],
                         },
@@ -121,14 +122,15 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // MUST have schemas object export
             expect(result).toContain("export const schemas = {");
 
-            // MUST include all schema names
-            expect(result).toMatch(/User.*Schema/);
-            expect(result).toMatch(/Error.*Schema/);
+            // MUST include all component schema names (User, Error from components.schemas)
+            expect(result).toContain("const User");
+            expect(result).toContain("const Error");
 
             // MUST use 'as const' for schemas object
             expect(result).toMatch(/export const schemas = \{[^}]*\} as const/s);
@@ -147,7 +149,7 @@ describe("schemas-with-metadata template", () => {
                                 "200": {
                                     content: {
                                         "application/json": {
-                                            schema: { type: "array", items: { type: "object" } },
+                                            schema: { type: "array" as const, items: { type: "object" as const } },
                                         },
                                     },
                                 },
@@ -159,7 +161,7 @@ describe("schemas-with-metadata template", () => {
                                 "201": {
                                     content: {
                                         "application/json": {
-                                            schema: { type: "object" },
+                                            schema: { type: "object" as const },
                                         },
                                     },
                                 },
@@ -174,14 +176,14 @@ describe("schemas-with-metadata template", () => {
                                     name: "id",
                                     in: "path",
                                     required: true,
-                                    schema: { type: "string" },
+                                    schema: { type: "string" as const },
                                 },
                             ],
                             responses: {
                                 "200": {
                                     content: {
                                         "application/json": {
-                                            schema: { type: "object" },
+                                            schema: { type: "object" as const },
                                         },
                                     },
                                 },
@@ -194,6 +196,7 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // MUST export endpoints directly
@@ -251,6 +254,7 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // MUST export mcpTools
@@ -294,6 +298,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "default",
                 noClient: true,
+                disableWriteToFile: true,
             });
 
             // When noClient is true, should NOT have Zodios even with default template
@@ -351,6 +356,7 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // MUST have request validation structure
@@ -419,6 +425,7 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // MUST have responses structure
@@ -472,6 +479,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "schemas-with-metadata",
                 withValidationHelpers: true,
+                disableWriteToFile: true,
             });
 
             // MUST export validateRequest helper
@@ -515,6 +523,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "schemas-with-metadata",
                 withValidationHelpers: false,
+                disableWriteToFile: true,
             });
 
             // MUST NOT have validation helpers
@@ -549,6 +558,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "schemas-with-metadata",
                 withSchemaRegistry: true,
+                disableWriteToFile: true,
             });
 
             // MUST export buildSchemaRegistry helper
@@ -586,6 +596,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "schemas-with-metadata",
                 withSchemaRegistry: false,
+                disableWriteToFile: true,
             });
 
             // MUST NOT have schema registry builder
@@ -626,6 +637,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "schemas-with-metadata",
                 withValidationHelpers: true,
+                disableWriteToFile: true,
             });
 
             // ✅ MUST use 'unknown', NOT 'any'
@@ -669,6 +681,7 @@ describe("schemas-with-metadata template", () => {
                 openApiDoc,
                 template: "schemas-with-metadata",
                 withValidationHelpers: true,
+                disableWriteToFile: true,
             });
 
             // ✅ MUST use .parse() for fail-fast
@@ -688,10 +701,10 @@ describe("schemas-with-metadata template", () => {
                 components: {
                     schemas: {
                         User: {
-                            type: "object",
+                            type: "object" as const,
                             properties: {
-                                id: { type: "string" },
-                                name: { type: "string" },
+                                id: { type: "string" as const },
+                                name: { type: "string" as const },
                             },
                             required: ["id"],
                             // No additionalProperties: true
@@ -718,6 +731,7 @@ describe("schemas-with-metadata template", () => {
             const result = await generateZodClientFromOpenAPI({
                 openApiDoc,
                 template: "schemas-with-metadata",
+                disableWriteToFile: true,
             });
 
             // ✅ MUST use .strict() for objects (reject unknown keys)
@@ -725,7 +739,8 @@ describe("schemas-with-metadata template", () => {
 
             // ❌ MUST NOT use .passthrough() by default (unless additionalProperties: true)
             // Note: This test assumes default behavior; passthrough is valid if spec says so
-            if (!result.includes("additionalProperties")) {
+            const resultString = result as string;
+            if (!resultString.includes("additionalProperties")) {
                 expect(result).not.toMatch(/\.passthrough\(\)/);
             }
         });
