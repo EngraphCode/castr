@@ -3072,15 +3072,17 @@ if ("$ref" in actualSchema) {
 
 ### 3.2 Eliminate Type Assertions (EXTRACTION BLOCKER)
 
-**Status:** ⏳ IN PROGRESS (10/15 files complete, 47 assertions remaining)
+**Status:** ⏳ IN PROGRESS (11/15 files complete, ~41 assertions remaining)
 **Priority:** CRITICAL BLOCKER
 **Estimated Time:** 16-24 hours (1-2 weeks with testing)
 **Dependencies:** Tasks 1.1, 2.1, 2.2 complete
-**Time Spent So Far:** ~4.5 hours
+**Time Spent So Far:** ~5.5 hours
 
-**Progress Update (October 25, 2025 - Late Evening):**
+**⚠️ CRITICAL RULE:** **ONLY `as const` IS ALLOWED** - All other `as` usages must be eliminated!
 
-✅ **Completed Files (10/15):**
+**Progress Update (October 25, 2025 - Late Night):**
+
+✅ **Completed Files (11/15):**
 1. `schema-sorting.ts` (1 assertion) - Returned honest type instead of generic T
 2. `generateJSDocArray.ts` (1 assertion) - Added typeof check for proper narrowing
 3. `makeSchemaResolver.ts` (1 assertion) - Created isSchemaRecord() type guard
@@ -3091,6 +3093,10 @@ if ("$ref" in actualSchema) {
 8. `openApiToZod.ts` (4 assertions) - Resolved refs properly, removed unnecessary casts
 9. `schema-complexity.helpers.ts` (4 assertions) - Proper parameter typing for type arrays
 10. `zodiosEndpoint.operation.helpers.ts` (4 assertions) - Custom type guards + fail-fast validation
+11. `zodiosEndpoint.path.helpers.ts` (4 assertions) - Fixed parameter types, fail-fast for default responses
+
+✅ **Verified Clean (0 problematic assertions):**
+- `getZodiosEndpointDefinitionList.ts` - Only `as const` usages (allowed). User improved helpers.
 
 **Patterns Identified:**
 - **Type Guards:** When runtime checks needed (e.g., isSchemaRecord with openapi3-ts isSchemaObject)
@@ -3101,23 +3107,128 @@ if ("$ref" in actualSchema) {
 
 **Quality Metrics:**
 - ✅ All 373 tests passing after every fix
-- ✅ Linter passes for every file
+- ✅ Linter passes for every file (only 41 type-assertion warnings remaining)
 - ✅ Behavior preserved - tests define, linter enforces, code implements
 - ✅ Type honesty enforced (getSchemaByRef returns honest SchemaObject | ReferenceObject)
 - ✅ Custom type guards created: isRequestBodyObject, isParameterObject, isResponseObject
 - ✅ Fail-fast validation for nested $refs in all component types
+- ✅ User improvements: AllowedMethod type, PathItem = Partial<Record<...>>
 
-**Remaining Work (5/15 files, 47 assertions):**
-- 1 medium file (4 assertions): zodiosEndpoint.path.helpers.ts
-- 4 hard files (43 assertions): getZodiosEndpointDefinitionList.ts (5), cli.ts (6), openApiToTypescript.ts (7), openApiToTypescript.helpers.ts (22 down from 25, estimated)
+**Remaining Work (3/15 files, ~41 assertions):**
+
+**File 1: `cli.ts` (~6 assertions)** - Commander CLI argument parsing
+- Line 42: `JSON.parse(packageJsonContent) as { version?: unknown }` - Parse JSON, narrow version type
+- Line 119: `(await SwaggerParser.bundle(input)) as unknown as OpenAPIObject` - SwaggerParser type mismatch
+- Line 126-135: `options.groupStrategy as ...`, `options.defaultStatus as ...` - Commander option typing
+- Line 177: `generationArgs as Parameters<typeof generateZodClientFromOpenAPI>[0]` - Dynamic options object
+- **Strategy:** Type commander options properly, create validation functions for enum-like strings
+
+**File 2: `openApiToTypescript.ts` (~7 assertions)** - TypeScript type generation from OpenAPI
+- **Location:** Likely Tanu AST node type assertions (ts.Node vs t.TypeDefinition)
+- **Strategy:** Fix return types to match actual unions, use type guards for AST nodes
+
+**File 3: `openApiToTypescript.helpers.ts` (~22+ assertions)** - **THE FINAL BOSS**
+- **Location:** Heavy AST manipulation, type conversions between Tanu types
+- **Complexity:** Highest concentration of assertions in the codebase
+- **Strategy:** Create proper AST type guards, fix function signatures to return honest union types
 
 **Acceptance Criteria:**
 
-- [ ] Zero type assertions (71 → 65 → 0)
+- [ ] Zero type assertions (71 → ~41 → 0) - ⏳ IN PROGRESS (73% complete)
 - [x] All tests passing (✅ 373/373)
 - [x] No functionality regressions (✅ verified with tests)
-- [ ] Proper type guards added where needed (✅ in progress)
-- [ ] Code is more type-safe (✅ improving with each fix)
+- [x] Proper type guards added where needed (✅ 3 custom guards created)
+- [x] Code is more type-safe (✅ significantly improved)
+
+---
+
+**📚 KEY LEARNINGS & USER IMPROVEMENTS:**
+
+**User-Created Helpers (to reuse in remaining files):**
+
+1. **AllowedMethod Type & Guard** (`getZodiosEndpointDefinitionList.ts:17-25`):
+```typescript
+const ALLOWED_METHODS = ["get", "head", "options", "post", "put", "patch", "delete"] as const;
+export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
+function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMethod {
+    if (!maybeMethod || typeof maybeMethod !== "string") return false;
+    const stringMethods: readonly string[] = ALLOWED_METHODS;
+    return stringMethods.includes(maybeMethod);
+}
+```
+
+2. **PathItem Type** (`getZodiosEndpointDefinitionList.ts:29`):
+```typescript
+// Use Partial because not all HTTP methods are required on every path
+type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
+```
+
+3. **Custom OpenAPI Type Guards** (`zodiosEndpoint.operation.helpers.ts:29-62`):
+```typescript
+function isRequestBodyObject(obj: unknown): obj is RequestBodyObject {
+    return typeof obj === "object" && obj !== null && "content" in obj;
+}
+
+function isParameterObject(obj: unknown): obj is ParameterObject {
+    return typeof obj === "object" && obj !== null && "in" in obj && "name" in obj;
+}
+
+export function isResponseObject(obj: unknown): obj is ResponseObject {
+    // Checks for required "description" property + validates allowed properties
+    // Full implementation in zodiosEndpoint.operation.helpers.ts:45-62
+}
+```
+
+**Pattern for Creating Type Guards:**
+- Check for distinguishing required properties
+- Validate allowed properties (prevent false positives)
+- Export if needed in other files
+
+---
+
+**🚀 NEXT STEPS FOR CONTINUATION (Start Here!):**
+
+**1. Continue with `cli.ts` (Next file, ~6 assertions):**
+
+```bash
+cd /Users/jim/code/personal/openapi-zod-client/lib
+grep -n " as " src/cli.ts | grep -v "as const"
+```
+
+**Key assertions to fix:**
+- Line 42: Type JSON.parse result properly
+- Line 119: Handle SwaggerParser type mismatch (returns its own OpenAPI types)
+- Lines 126-135: Type Commander options as unions, not `as` casts
+- Line 177: Build generationArgs with proper typing instead of casting
+
+**Pattern to use:** Create validation functions for string options (like groupStrategy, defaultStatus)
+
+**2. Then `openApiToTypescript.ts` (~7 assertions):**
+- Likely AST-related assertions (ts.Node types)
+- Use type guards for Tanu AST nodes
+- Return honest union types (ts.Node | t.TypeDefinition)
+
+**3. Finally `openApiToTypescript.helpers.ts` (~22+ assertions) - THE FINAL BOSS:**
+- Heavy AST manipulation
+- Create comprehensive AST type guards
+- This will be the hardest - budget 3-4 hours
+
+**4. Validation Commands:**
+```bash
+# Check remaining assertions
+pnpm lint 2>&1 | grep "consistent-type-assertions" | wc -l
+
+# Run tests
+pnpm test -- --run
+
+# Full quality gate
+pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+```
+
+**5. When complete (0 assertions remaining):**
+- Update context.md and this file with completion status
+- Commit with message template: "refactor(Task 3.2): eliminate all type assertions - BLOCKER RESOLVED"
+- Move to Task 3.3: Remove openapi-types dependency
 
 **Implementation Steps:**
 

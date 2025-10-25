@@ -12,6 +12,29 @@ import { getSchemaVarName } from "./zodiosEndpoint.helpers.js";
 import { processOperation } from "./zodiosEndpoint.path.helpers.js";
 import { asComponentSchema, pathToVariableName } from "./utils.js";
 
+// Move these to a central definition file.
+// Fetch and mutate methods; following Zodios conventions.
+const ALLOWED_METHODS = ["get", "head", "options", "post", "put", "patch", "delete"] as const;
+export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
+function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMethod {
+    if (!maybeMethod || typeof maybeMethod !== "string") {
+        return false;
+    }
+    const stringMethods: readonly string[] = ALLOWED_METHODS;
+    return stringMethods.includes(maybeMethod);
+}
+
+// NOTE: PathItem uses Partial because a path may only implement some HTTP methods, not all
+// The OpenAPI spec allows paths to define only the methods they support
+type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
+function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathItemObject {
+    if (!maybePathItemObj || typeof maybePathItemObj !== "object") {
+        return false;
+    }
+    const keys = Object.keys(maybePathItemObj);
+    return keys.every((key) => isAllowedMethod(key));
+}
+
 /**
  * Extract endpoint definitions with runtime Zod schemas from an OpenAPI specification.
  *
@@ -91,13 +114,25 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
     const ignoredGenericError = [] as string[];
 
     for (const path in doc.paths) {
-        const pathItemObj = doc.paths[path] as PathItemObject;
-        const pathItem = pick(pathItemObj, ["get", "put", "post", "delete", "options", "head", "patch", "trace"]);
+        const maybePathItemObj = doc.paths[path];
+        if (!isPathItemObject(maybePathItemObj)) {
+            throw new TypeError(`Invalid path item object: ${path}`);
+        }
+        const pathItemObj: PathItemObject = maybePathItemObj;
+        const pathItem: PathItem = pick(pathItemObj, ALLOWED_METHODS);
         const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
 
-        for (const method in pathItem) {
-            const operation = pathItem[method as keyof typeof pathItem];
+        for (const maybeMethod in pathItem) {
+            if (!isAllowedMethod(maybeMethod)) {
+                throw new TypeError(`Invalid method: ${maybeMethod}`);
+            }
+            const method: AllowedMethod = maybeMethod;
+            const operation = pathItem[method];
+
+            // Is this behaviour compliant with the OpenAPI schema?
             if (!operation) continue;
+
+            // Should we allow this deprecated endpoint, or should we fail fast with a clear error message?
             if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
 
             const parameters = Object.values({
@@ -120,10 +155,12 @@ export const getZodiosEndpointDefinitionList = (doc: OpenAPIObject, options?: Te
 
             endpoints.push(result.endpoint);
 
+            // Should we allow this ignored fallback response, or should we fail fast with a clear error message?
             if (result.ignoredFallback) {
                 ignoredFallbackResponse.push(result.ignoredFallback);
             }
 
+            // Should we allow this ignored generic error, or should we fail fast with a clear error message?
             if (result.ignoredGeneric) {
                 ignoredGenericError.push(result.ignoredGeneric);
             }

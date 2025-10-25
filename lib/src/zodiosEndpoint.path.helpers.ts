@@ -8,7 +8,7 @@ import { isReferenceObject } from "openapi3-ts/oas30";
 import type { TemplateContext } from "./template-context.js";
 import type { DefaultStatusBehavior } from "./template-context.types.js";
 import type { ConversionTypeContext } from "./CodeMeta.js";
-import type { EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
+import type { AllowedMethod, EndpointDefinitionWithRefs } from "./getZodiosEndpointDefinitionList.js";
 import { replaceHyphenatedPath } from "./utils.js";
 import type { GetZodVarNameFn } from "./zodiosEndpoint.operation.helpers.js";
 import {
@@ -32,8 +32,15 @@ function processResponses(
     options?: TemplateContext["options"]
 ): void {
     for (const statusCode in operation.responses) {
-        const responseObj = operation.responses[statusCode];
-        if (!responseObj) continue;
+        const maybeResponseObj: unknown = operation.responses[statusCode];
+
+        if (!maybeResponseObj) {
+            continue;
+        }
+        if (!isResponseObject(maybeResponseObj)) {
+            throw new TypeError(`Invalid response object: ${statusCode}`);
+        }
+        const responseObj: ResponseObject = maybeResponseObj;
 
         // processResponse handles ResponseObject | ReferenceObject union
         const result = processResponse(statusCode, responseObj, ctx, getZodVarName, options);
@@ -72,7 +79,7 @@ function handleDefaultResponse(
     }
 
     const defaultResponseObj = operation.responses.default;
-    
+
     // Resolve ReferenceObject if needed
     let defaultResponse: ResponseObject;
     if (isReferenceObject(defaultResponseObj)) {
@@ -83,9 +90,7 @@ function handleDefaultResponse(
             );
         }
         if (!isResponseObject(resolved)) {
-            throw new Error(
-                `Invalid $ref: ${defaultResponseObj.$ref} does not resolve to a ResponseObject`
-            );
+            throw new Error(`Invalid $ref: ${defaultResponseObj.$ref} does not resolve to a ResponseObject`);
         }
         defaultResponse = resolved;
     } else {
@@ -117,7 +122,7 @@ function handleDefaultResponse(
 
 type ProcessOperationParams = {
     path: string;
-    method: "get" | "post" | "put" | "patch" | "delete" | "head" | "options";
+    method: AllowedMethod;
     operation: OperationObject;
     operationName: string;
     parameters: ReadonlyArray<ParameterObject | ReferenceObject>;

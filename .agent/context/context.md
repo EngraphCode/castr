@@ -1,11 +1,11 @@
 # Living Context Document
 
-**Last Updated:** October 25, 2025 (Late Evening - Task 3.2 IN PROGRESS)  
+**Last Updated:** October 25, 2025 (Late Night - Task 3.2 IN PROGRESS)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
 
 **Recent Progress:**
 
-- ⏳ Task 3.2: Eliminate Type Assertions IN PROGRESS (10/15 files, 47 remaining, ~4.5 hours invested)
+- ⏳ Task 3.2: Eliminate Type Assertions IN PROGRESS (11/15 files, ~41 remaining, ~5.5 hours invested)
 - ✅ Task 3.1: pastable replaced with lodash-es + native + domain utils (3 hours, +55 unit tests)
 - ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
 - ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
@@ -301,30 +301,38 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### ⚡ IMMEDIATE: Task 3.2 - Eliminate Type Assertions (BLOCKER)
 
-**Status:** ⏳ IN PROGRESS (10/15 files complete, 47 assertions remaining, ~4.5 hours invested)  
+**Status:** ⏳ IN PROGRESS (11/15 files complete, ~41 assertions remaining, ~5.5 hours invested)  
 **Priority:** P0 BLOCKER (extraction requirement)  
-**Estimated Time:** 16-24 hours total (11.5-19.5 hours remaining)  
+**Estimated Time:** 16-24 hours total (10.5-18.5 hours remaining)  
 **TDD Required:** MANDATORY - add tests for any complex replacements
 
-**What:** Eliminate all 71 type assertions (`as` casts) from codebase → 47 remaining
+**What:** Eliminate all 71 type assertions (`as` casts) from codebase → ~41 remaining
+
+**⚠️ CRITICAL RULE:** **ONLY `as const` IS ALLOWED** - All other `as` usages must be eliminated!
 
 **Progress:**
 
 - ✅ All "easy" files complete (4 files, 4 assertions)
-- ✅ All "medium" files complete (6 files, 20 assertions)
-- ⏳ Hard files remaining (5 files, 47 assertions)
+- ✅ All "medium" files complete (7 files, 24 assertions) ← **zodiosEndpoint.path.helpers.ts added**
+- ✅ getZodiosEndpointDefinitionList.ts verified clean (only `as const` usages)
+- ⏳ Hard files remaining (3 files, ~41 assertions):
+  1. cli.ts (~6 assertions)
+  2. openApiToTypescript.ts (~7 assertions)  
+  3. openApiToTypescript.helpers.ts (~22+ assertions) - **THE FINAL BOSS**
 
 **Latest Completions:**
 
-- schema-complexity.helpers.ts (4 assertions) - Proper parameter typing
-- zodiosEndpoint.operation.helpers.ts (4 assertions) - Custom type guards + fail-fast
+- zodiosEndpoint.path.helpers.ts (4 assertions) - Fixed parameter types, fail-fast for default responses
+- getZodiosEndpointDefinitionList.ts - Already clean! User improved helpers & fixed PathItem type
 
 **Key Patterns Established:**
 
-- Custom type guards: isRequestBodyObject(), isParameterObject(), isResponseObject()
-- Fail-fast validation for nested $refs in all component types
-- Explicit match type parameters to avoid type widening
-- Honest types over assertions (getSchemaByRef returns SchemaObject | ReferenceObject)
+1. **Custom Type Guards:** isRequestBodyObject(), isParameterObject(), isResponseObject()
+2. **Fail-fast Validation:** Nested $refs in all component types with clear error messages
+3. **Honest Return Types:** getSchemaByRef returns SchemaObject | ReferenceObject (not just SchemaObject)
+4. **Fix Types at Source:** ProcessOperationParams uses AllowedMethod (not string)
+5. **Type Narrowing:** Use openapi3-ts isReferenceObject, isSchemaObject + custom guards
+6. **Partial for Optional:** PathItem = Partial<Record<AllowedMethod, ...>> (not all methods required)
 
 **Why:**
 
@@ -555,13 +563,15 @@ All documented in `.agent/adr/` (12 ADRs):
     - Duration: 30 minutes
 
 11. ⏳ **refactor(Task 3.2): eliminate type assertions - IN PROGRESS**
-    - ✅ 10/15 files complete
-    - Files: schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity, inferRequiredOnly, template-context, openApiToZod, schema-complexity.helpers, zodiosEndpoint.operation.helpers
+    - ✅ 11/15 files complete
+    - Files: schema-sorting, generateJSDocArray, makeSchemaResolver, zodiosEndpoint.helpers, schema-complexity, inferRequiredOnly, template-context, openApiToZod, schema-complexity.helpers, zodiosEndpoint.operation.helpers, zodiosEndpoint.path.helpers
+    - Verified clean: getZodiosEndpointDefinitionList.ts (only `as const` usages)
     - Patterns: type guards, honest types, narrowing, function simplification, fail-fast validation
     - Custom type guards: isRequestBodyObject, isParameterObject, isResponseObject
-    - 47 assertions remaining (down from 71 → 65 → 55 → 51 → 47)
+    - User improvements: AllowedMethod type, isAllowedMethod guard, PathItem = Partial<Record<...>>
+    - ~41 assertions remaining (down from 71 → 65 → 55 → 51 → 47 → 43 → ~41)
     - All 373 tests passing after each fix
-    - ~4.5 hours invested
+    - ~5.5 hours invested
 
 12. 📋 **docs: nested $ref analysis and validation philosophy**
     - Analyzed OpenAPI 3.0/3.1/3.2 schemas

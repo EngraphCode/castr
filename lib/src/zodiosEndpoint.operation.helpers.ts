@@ -42,8 +42,23 @@ function isParameterObject(obj: unknown): obj is ParameterObject {
  * Type guard to check if an object is a ResponseObject
  * openapi3-ts doesn't provide this, so we check for the distinguishing property
  */
-function isResponseObject(obj: unknown): obj is ResponseObject {
-    return typeof obj === "object" && obj !== null && "description" in obj;
+export function isResponseObject(obj: unknown): obj is ResponseObject {
+    if (!obj || typeof obj !== "object") {
+        return false;
+    }
+    const requiredProperties = ["description", "content"];
+    const optionalProperties = ["headers", "content", "links"];
+    const allowedProperties = [...requiredProperties, ...optionalProperties];
+
+    const hasRequiredProperties = (keys: string[]): boolean => {
+        return requiredProperties.every((property) => keys.includes(property));
+    };
+    const keys = Object.keys(obj);
+    if (!hasRequiredProperties(keys)) {
+        return false;
+    }
+    const onlyHasAllowedProperties = keys.every((key) => allowedProperties.includes(key));
+    return onlyHasAllowedProperties;
 }
 
 export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
