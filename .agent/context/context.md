@@ -1,15 +1,17 @@
 # Living Context Document
 
-**Last Updated:** October 25, 2025 (Afternoon - Post Task 2.2 verification, ready for Task 2.3)  
+**Last Updated:** October 25, 2025 (Late Afternoon - Post Task 2.4, ready for Task 3.1)  
 **Purpose:** Single source of truth for project state, decisions, and next steps
 
 **Recent Progress:**
 
-- ✅ Task 2.2: @apidevtools/swagger-parser verified at latest (v12.1.0) - 10 minutes
+- ✅ Task 2.4: zod upgraded v3.25.76 → v4.1.12 (30 minutes)
+- ✅ Task 2.3: Defer logic analysis complete (2 hours) - No deferral opportunities found
+- ✅ Task 2.2: swagger-parser verified at latest v12.1.0 (10 minutes)
+- ✅ Prettier 3.x fix + 16 comprehensive tests (1 hour)
 - ✅ Task 2.1: openapi3-ts upgraded to v4.5.0 (5 hours)
 - ✅ Task 1.10: Critical lint issues fixed (35 minutes)
 - ✅ Task 1.9: schemas-with-metadata template complete (all tests passing)
-- ✅ OAS 3.0 & 3.1 runtime support verified with comprehensive tests
 
 ---
 
@@ -174,15 +176,17 @@ All documented in `.agent/adr/` (12 ADRs):
     - All 318 tests passing
     - Duration: 10 minutes (verification only)
 
-3. ⏳ **THEN:** Defer Logic Analysis - Task 2.3
-    - Analyze custom code vs openapi3-ts v4 & swagger-parser capabilities
-    - Estimated: 4-6 hours
-    - Dependencies: Tasks 2.1 ✅ and 2.2 complete
+3. ✅ **COMPLETE:** Defer Logic Analysis - Task 2.3
+    - Analyzed custom code vs openapi3-ts v4 & swagger-parser
+    - Finding: No major deferral opportunities - codebase already optimal
+    - Document: `.agent/analysis/TASK_2.3_DEFER_LOGIC_ANALYSIS.md`
+    - Duration: 2 hours (vs 4-6 estimated)
 
-4. ⏳ **THEN:** `zod` (v3 → v4.1.12) - Task 2.4
-    - Template updates required
-    - Estimated: 4-6 hours
-    - Dependencies: Tasks 2.1 ✅ and 2.2 complete
+4. ✅ **COMPLETE:** `zod` (v3.25.76 → v4.1.12) - Task 2.4
+    - All 334 tests passing with zod v4
+    - No breaking changes detected
+    - @zodios/core peer dependency warning (expected, not a blocker)
+    - Duration: 30 minutes
 
 5. ⏳ **LATER:** `pastable` → Replace with `lodash-es` + custom utilities - Task 3.1
     - Detailed plan in `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
@@ -228,9 +232,9 @@ All documented in `.agent/adr/` (12 ADRs):
 - RULES.md with coding standards
 - Definition of Done established
 
-### Phase 2: Type Safety & Dependencies (⏳ IMPLEMENTATION IN PROGRESS - 3/10 tasks complete)
+### Phase 2: Type Safety & Dependencies (⏳ IMPLEMENTATION IN PROGRESS - 5/10 tasks complete)
 
-**Status:** Implementation underway - Task 2.2 ✅, Task 2.1 ✅, Task 1.10 ✅, Task 1.9 ✅
+**Status:** Implementation underway - Task 2.4 ✅, Task 2.3 ✅, Task 2.2 ✅, Task 2.1 ✅, Task 1.10 ✅, Task 1.9 ✅
 
 **Completed Tasks:**
 
