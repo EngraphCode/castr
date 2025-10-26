@@ -3,10 +3,12 @@
 **⚠️ PREREQUISITE:** Architecture Rewrite and Phase 2 completion required.
 
 **See:**
-- `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated into `01-CURRENT-IMPLEMENTATION.md`) - Core architecture must be complete
-- `.agent/plans/00-STRATEGIC-PLAN.md` - Phase 2 must be marked complete
+
+- `01-CURRENT-IMPLEMENTATION.md` Section 4 - Complete Architecture Rewrite plan (core architecture must be complete)
+- `00-STRATEGIC-PLAN.md` - Phase 2 must be marked complete
 
 **Timeline:** Start Phase 3 enhancements after:
+
 - Architecture Rewrite Phases 0-3 complete
 - Zod v4 updated ✅
 - All Phase 2 quality gates green

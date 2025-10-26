@@ -2,9 +2,10 @@
 
 **⚠️ PREREQUISITE:** Architecture Rewrite must be complete before starting MCP enhancements.
 
-**See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated into `01-CURRENT-IMPLEMENTATION.md`)
+**See:** `01-CURRENT-IMPLEMENTATION.md` Section 4 (complete Architecture Rewrite plan)
 
 **Timeline:** Start MCP work after:
+
 - Architecture Rewrite Phase 3 complete
 - Zod v4 update complete (Task 2.4) ✅
 - All quality gates green

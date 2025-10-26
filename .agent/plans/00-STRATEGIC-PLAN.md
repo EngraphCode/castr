@@ -116,23 +116,23 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Implementation Status:**
 
 **Completed:**
+
 1. ✅ Task 2.1: openapi3-ts v3 → v4.5.0
 2. ✅ Task 2.4: Zod v3 → v4.1.12
 3. ✅ Task 3.1: pastable removed, lodash-es added
 
-**In Progress:**
-4. 🔄 Task 2.2: swagger-parser update (PRE-REQ for rewrite)
+**In Progress:** 4. 🔄 Task 2.2: swagger-parser update (PRE-REQ for rewrite)
 
 **Architecture Rewrite (Supersedes 3.2, 2.3):**
+
 - Phase 0: Comprehensive test suite (8-12 hours)
 - Phase 1: Eliminate resolver + CodeMeta (8-10 hours)
 - Phase 2: Migrate tanu → ts-morph (6-8 hours)
 - Phase 3: Remove Zodios dependencies (4-6 hours)
 
-**Post-Rewrite:**
-5. Task 4.1: Full quality gate validation
+**Post-Rewrite:** 5. Task 4.1: Full quality gate validation
 
-**See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated into `01-CURRENT-IMPLEMENTATION.md`)
+**See:** `01-CURRENT-IMPLEMENTATION.md` Section 4 (complete plan with all implementation details)
 
 ---
 

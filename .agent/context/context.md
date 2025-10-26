@@ -11,11 +11,11 @@
 
 All planning documents have been reconciled into a single coherent roadmap:
 
-1. **Architecture Rewrite Plan** fully integrated into `01-CURRENT-IMPLEMENTATION.md`
-2. All task statuses updated (2.1 ✅, 2.4 ✅, 3.1 ✅)
+1. **Architecture Rewrite Plan** fully integrated into `01-CURRENT-IMPLEMENTATION.md` Section 4 (complete 1,240 lines)
+2. All task statuses updated (2.1 ✅, 2.2 ✅, 2.4 ✅, 3.1 ✅)
 3. Superseded tasks clearly marked (3.2, 2.3)
-4. Cross-references added to 02-MCP and 03-FURTHER plans
-5. **00-STRATEGIC-PLAN.md** reflects current state
+4. Cross-references updated in all plans (02-MCP, 03-FURTHER, 00-STRATEGIC)
+5. `ARCHITECTURE_REWRITE_PLAN.md` archived to `.agent/plans/archive/`
 
 **Single Source of Truth:** `.agent/plans/01-CURRENT-IMPLEMENTATION.md` → Section 4: Architecture Rewrite
 
@@ -35,7 +35,7 @@ All planning documents have been reconciled into a single coherent roadmap:
 - **Phase 2:** Migrate from `tanu` to `ts-morph` (6-8 hours)
 - **Phase 3:** Remove Zodios dependencies (4-6 hours)
 - **Timeline:** 26-36 hours total over 2-3 weeks
-- **See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` for complete details
+- **See:** `01-CURRENT-IMPLEMENTATION.md` Section 4 for complete details (includes all test code examples, implementation details, TDD methodology)
 
 **Current State:**
 
@@ -49,7 +49,7 @@ All planning documents have been reconciled into a single coherent roadmap:
 
 **Recent Progress:**
 
-- 🎯 **Architecture Rewrite Plan created** (`.agent/plans/ARCHITECTURE_REWRITE_PLAN.md`)
+- 🎯 **Architecture Rewrite Plan complete** (`01-CURRENT-IMPLEMENTATION.md` Section 4)
     - Comprehensive 4-phase plan: Phase 0 (tests), Phase 1 (resolver/CodeMeta), Phase 2 (ts-morph), Phase 3 (Zodios)
     - TDD methodology section added
     - Task 1.2 (topologicalSort modernization) detailed with 5-step TDD workflow
@@ -704,7 +704,7 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 **🎯 IMMEDIATE PRIORITY: Execute Architecture Rewrite Plan**
 
 1. **Read Critical Status (above)** - Understand why we're doing a comprehensive rewrite
-2. **Read Architecture Rewrite Plan:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` ⭐
+2. **Read Architecture Rewrite Plan:** `01-CURRENT-IMPLEMENTATION.md` Section 4 ⭐ (complete with all test examples and implementation code)
     - Executive summary (10 min read)
     - 4-phase plan with timeline
     - Mandatory TDD methodology section
@@ -723,7 +723,7 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 
 **Key Files to Read for Context:**
 
-- `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` - The complete rewrite plan (MUST READ)
+- `01-CURRENT-IMPLEMENTATION.md` Section 4 - The complete Architecture Rewrite plan (MUST READ - includes all test code examples)
 - `.agent/context/context.md` - This file (current status)
 - `.agent/RULES.md` - Coding standards (includes TDD mandate)
 - `lib/src/topologicalSort.ts` - Current implementation (starting point)
@@ -734,7 +734,7 @@ Once tanu investigation complete, choose path and strategize remaining assertion
 ### Full Context for Planning
 
 1. Read this file (context.md) for current state
-2. Read `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` for rewrite details ⭐
+2. Read `01-CURRENT-IMPLEMENTATION.md` Section 4 for complete rewrite plan ⭐
 3. Read `.agent/plans/00-STRATEGIC-PLAN.md` for overall strategy
 4. Read `.agent/plans/01-CURRENT-IMPLEMENTATION.md` for context on what was attempted
 5. Read `.agent/plans/02-MCP-ENHANCEMENTS.md` for Phase 2B (optional, after rewrite)
