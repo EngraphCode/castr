@@ -15,6 +15,18 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ---
 
+## Requirements Alignment
+
+**See:** `.agent/plans/requirements.md` for high-level project requirements
+
+This strategic plan ensures all 8 requirements are met:
+- **Req 1-3:** Core functionality (Zod generation, SDK creation, validation helpers) - Phase 1 & 2
+- **Req 4-6:** MCP integration (SDK→MCP tools, validation architecture, JSON schemas) - Phase 2B
+- **Req 7:** Fail-fast philosophy - ADR-001, enforced throughout
+- **Req 8:** Highest standards, test-defined behavior - TDD mandate, comprehensive test coverage
+
+---
+
 ## 🎯 Development Methodology
 
 **ALL implementation work MUST follow Test-Driven Development (TDD):**
@@ -100,39 +112,44 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ### Phase 2: Type Safety & Dependencies (🔄 IN PROGRESS - ARCHITECTURE REWRITE)
 
-**Status:** Partially complete, Architecture Rewrite in progress  
-**Duration:** Revised 3-4 weeks (analysis: 1 week ✅, rewrite: 2-3 weeks)
+**Status:** Ready to Execute - All Prerequisites Complete ✅  
+**Duration:** 26-38 hours over 2-3 weeks
 
-**Analysis Phase Complete (✅ 7/7 tasks):**
+**Pre-Work Complete (✅ ALL TASKS):**
 
-- ✅ Lint Triage
-- ✅ pastable Analysis → COMPLETE (removed)
-- ✅ openapi-types Evaluation (removed)
-- ✅ @zodios/core Evaluation (will be removed in Architecture Rewrite Phase 3)
-- ✅ swagger-parser Investigation (updating now)
-- ✅ openapi3-ts v4 Investigation → COMPLETE (updated)
-- ✅ Handlebars Evaluation (keep, ts-morph for tanu only)
+**Analysis (7/7 complete):**
 
-**Implementation Status:**
+- ✅ Lint Triage → identified 74 type assertions as BLOCKER
+- ✅ pastable Analysis → COMPLETE (removed, replaced with lodash-es)
+- ✅ openapi-types Evaluation → Decision: REMOVE (redundant)
+- ✅ @zodios/core Evaluation → KEEP for now (Phase 3 removal)
+- ✅ swagger-parser Investigation → KEEP (latest v12.1.0)
+- ✅ openapi3-ts v4 Investigation → Migration complete
+- ✅ Handlebars Evaluation → KEEP for Phase 2, ts-morph for tanu only
 
-**Completed:**
+**Implementation (4/4 complete):**
 
-1. ✅ Task 2.1: openapi3-ts v3 → v4.5.0
-2. ✅ Task 2.4: Zod v3 → v4.1.12
-3. ✅ Task 3.1: pastable removed, lodash-es added
+1. ✅ Task 2.1: openapi3-ts v3 → v4.5.0 (5 hours)
+2. ✅ Task 2.2: swagger-parser verified at latest v12.1.0 (10 min)
+3. ✅ Task 2.4: Zod v3 → v4.1.12 (30 min)
+4. ✅ Task 3.1: pastable removed, replaced with lodash-es + domain utils (3 hours)
 
-**In Progress:** 4. 🔄 Task 2.2: swagger-parser update (PRE-REQ for rewrite)
+**Additional Complete:**
 
-**Architecture Rewrite (Supersedes 3.2, 2.3):**
+- ✅ Task 1.9: schemas-with-metadata template (Engraph-optimized, 6 hours)
+- ✅ Task 1.10: Critical lint issues fixed (35 min)
+- ✅ Task 2.3: Defer logic analysis (2 hours, no opportunities found)
+- ✅ topologicalSort modernization (45 min)
 
-- Phase 0: Comprehensive test suite (8-12 hours)
-- Phase 1: Eliminate resolver + CodeMeta (8-10 hours)
-- Phase 2: Migrate tanu → ts-morph (6-8 hours)
-- Phase 3: Remove Zodios dependencies (4-6 hours)
+**Architecture Rewrite (Active):**
 
-**Post-Rewrite:** 5. Task 4.1: Full quality gate validation
+- **Phase 0:** Comprehensive Public API Test Suite (8-12 hours) ⭐ **NEXT**
+- **Phase 1:** Eliminate resolver + CodeMeta (8-12 hours)
+- **Phase 2:** Migrate tanu → ts-morph (6-8 hours)
+- **Phase 3:** Remove Zodios dependencies (4-6 hours)
 
-**See:** `01-CURRENT-IMPLEMENTATION.md` Section 4 (complete plan with all implementation details)
+**See:** `01-CURRENT-IMPLEMENTATION.md` (complete Architecture Rewrite plan)  
+**History:** `COMPLETED_WORK.md` (all pre-work details)
 
 ---
 
@@ -357,24 +374,25 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ### Phase 2 Complete When:
 
-- [x] ✅ **Analysis Complete (7/7 tasks):**
-    - [x] Lint triage and categorization
-    - [x] pastable usage analysis
-    - [x] openapi-types evaluation (REMOVE)
-    - [x] @zodios/core evaluation (KEEP)
-    - [x] swagger-parser investigation (KEEP)
-    - [x] openapi3-ts v4 investigation
-    - [x] Handlebars evaluation (ts-morph recommended)
-- [ ] ⏳ **Implementation (5/5 tasks):**
-    - [ ] openapi3-ts updated to v4.5.0
-    - [ ] zod updated to v4.1.12
-    - [ ] All tests passing after updates
-    - [ ] Zero type assertions (74 → 0) - BLOCKER RESOLVED
-    - [ ] pastable removed (replaced with lodash-es + custom)
-    - [ ] openapi-types removed
-    - [ ] Defer logic to openapi3-ts v4 analyzed
-    - [ ] Documentation updated
-    - [ ] All quality gates green
+**Pre-Work (✅ COMPLETE):**
+
+- [x] ✅ All 7 analysis tasks complete
+- [x] ✅ All 4 dependency updates complete
+- [x] ✅ schemas-with-metadata template complete
+- [x] ✅ All quality gates green (format, build, type-check, test)
+- [x] ✅ Documentation complete (15 analysis docs, COMPLETED_WORK.md)
+
+**Architecture Rewrite (⏳ IN PROGRESS):**
+
+- [ ] ⏳ Phase 0: Comprehensive test suite (50-60 tests)
+- [ ] ⏳ Phase 1: Resolver & CodeMeta eliminated
+- [ ] ⏳ Phase 2: ts-morph migration complete
+- [ ] ⏳ Phase 3: Zodios dependencies removed
+- [ ] ⏳ Zero type assertions (except `as const`)
+- [ ] ⏳ All quality gates green
+- [ ] ⏳ Full validation complete
+
+**See:** `01-CURRENT-IMPLEMENTATION.md` for detailed Architecture Rewrite plan
 
 ### Phase 3 Complete When:
 
@@ -414,11 +432,20 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ## Timeline
 
-**Phase 2 (Current):** 2-3 weeks
+**Phase 2 (Current):** 2-3 weeks remaining
 
-- Week 1: Dependency updates, type assertion analysis
-- Week 2: Type assertion elimination, pastable replacement
-- Week 3: Testing, validation, dependency evaluation
+- ✅ Week 1: Pre-work complete (analysis, dependency updates, templates)
+- ⏳ Week 2-3: Architecture Rewrite (26-38 hours)
+    - Phase 0: Comprehensive test suite (8-12 hours)
+    - Phase 1: Eliminate resolver & CodeMeta (8-12 hours)
+    - Phase 2: Migrate tanu → ts-morph (6-8 hours)
+    - Phase 3: Remove Zodios (4-6 hours)
+- Week 4: Final validation & documentation
+
+**Phase 2B (Optional):** 3-4 weeks
+
+- MCP Enhancements (after Architecture Rewrite)
+- See: `02-MCP-ENHANCEMENTS.md`
 
 **Phase 3:** 3-4 weeks
 
@@ -430,13 +457,14 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **Phase 4:** 1 week
 
 - Final preparation and documentation
+- Extraction readiness validation
 
-**Total Estimated:** 8-11 weeks to extraction-ready state
+**Total Estimated:** 7-9 weeks to extraction-ready state
 
-- Phase 2: 2-3 weeks
-- Phase 2B (optional): 3-4 weeks
-- Phase 3: 3-4 weeks (includes DX enhancements)
-- Phase 4: 1 week
+- Phase 2: 2-3 weeks (including Architecture Rewrite)
+- Phase 2B: 3-4 weeks (optional MCP enhancements)
+- Phase 3: 3-4 weeks (quality & DX improvements)
+- Phase 4: 1 week (final prep)
 
 ---
 
@@ -445,27 +473,35 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 ### Plans (This Directory)
 
 - **This file:** Strategic overview
-- **01-CURRENT-IMPLEMENTATION.md:** Phase 2 detailed tasks + Type-only mode quick win
-- **02-MCP-ENHANCEMENTS.md:** Phase 2B MCP-specific enhancements (optional)
-- **03-FURTHER-ENHANCEMENTS.md:** Phase 3 DX and testing improvements (inspired by typed-openapi)
+- **01-CURRENT-IMPLEMENTATION.md:** Architecture Rewrite plan (complete details)
+- **COMPLETED_WORK.md:** Historical archive (all Phase 1 & 2 pre-work)
+- **02-MCP-ENHANCEMENTS.md:** Phase 2B MCP-specific enhancements (optional, after rewrite)
+- **03-FURTHER-ENHANCEMENTS.md:** Phase 3 DX and testing improvements
 - **archive/:** Previous phase plans (reference only)
 
 ### Living Context
 
-- **.agent/context/context.md:** Single source of truth for current state
+- **.agent/context/context.md:** Quick start guide for fresh context
 
-### Analysis (✅ Phase 2 Investigation Complete)
+### Analysis (✅ Phase 2 Complete - 15 Documents)
 
-- **LINT_TRIAGE_COMPLETE.md:** 146 issues categorized, type assertions mapped by file
-- **PASTABLE_REPLACEMENT_PLAN.md:** 8 functions → lodash-es + custom utilities
-- **OPENAPI_TYPES_EVALUATION.md:** REMOVE (redundant with openapi3-ts v4)
-- **ZODIOS_CORE_EVALUATION.md:** KEEP (stable, used in templates)
-- **SWAGGER_PARSER_INTEGRATION.md:** KEEP (actively maintained, good usage)
-- **OPENAPI3_TS_V4_INVESTIGATION.md:** Complete migration checklist, breaking changes
-- **HANDLEBARS_EVALUATION.md:** KEEP Phase 2, ts-morph emitter recommended
-- **typed-openapi-lessons/:** Comprehensive analysis comparing with typed-openapi
-    - **IMPACT-ANALYSIS.md:** How existing plans align with typed-openapi patterns
-    - **00-EXECUTIVE-SUMMARY.md** through **09-IMPLEMENTATION-ROADMAP.md:** Deep dives into patterns
+All in `.agent/analysis/`:
+
+- **LINT_TRIAGE_COMPLETE.md** - 146 issues categorized
+- **PASTABLE_REPLACEMENT_PLAN.md** - Replacement strategy
+- **OPENAPI_TYPES_EVALUATION.md** - Decision: REMOVE
+- **ZODIOS_CORE_EVALUATION.md** - Decision: KEEP
+- **SWAGGER_PARSER_INTEGRATION.md** - Decision: KEEP
+- **OPENAPI3_TS_V4_INVESTIGATION.md** - Migration complete
+- **HANDLEBARS_EVALUATION.md** - ts-morph recommendation
+- **TASK_1.9_ENGRAPH_ENHANCEMENTS.md** - Template implementation
+- **CODEMETA_ANALYSIS.md** - Will be obsolete
+- **OAS_VERSION_STRATEGY.md** - Multi-version options
+- **OAS_RUNTIME_SUPPORT_VERIFICATION.md** - 3.0/3.1 proof
+- **TASK_2.3_DEFER_LOGIC_ANALYSIS.md** - No opportunities
+- **NESTED_REFS_ANALYSIS.md** - Validation philosophy
+- **VALIDATION_AUDIT.md** - Fail-fast approach
+- **TEMPLATE_STRATEGY.md** - Template usage guide
 
 ### Reference
 
@@ -489,11 +525,18 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 **For Fresh Context:**
 
-1. Read `.agent/context/context.md` (current state)
-2. Read this file (strategic direction)
-3. Read `01-CURRENT-IMPLEMENTATION.md` (what to do next)
-4. Follow RULES.md standards
-5. Run Definition of Done before committing
+1. Read `.agent/context/context.md` (quick orientation - 5 min)
+2. Read this file (strategic direction - 10 min)
+3. Read `01-CURRENT-IMPLEMENTATION.md` (Architecture Rewrite plan - 15 min)
+4. Verify quality gates pass (see Prerequisites)
+5. Start with Phase 0 test suite creation
+6. Follow RULES.md standards (especially TDD)
+
+**For Historical Context:**
+
+- `COMPLETED_WORK.md` - All Phase 1 & 2 pre-work details
+- `.agent/analysis/` - 15 analysis documents
+- `.agent/adr/` - 12 Architecture Decision Records
 
 ---
 

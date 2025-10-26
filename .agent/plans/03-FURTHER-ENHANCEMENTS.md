@@ -30,6 +30,17 @@ This plan adds developer experience and quality improvements inspired by typed-o
 
 ---
 
+## Requirements Alignment
+
+**See:** `.agent/plans/requirements.md` (Requirements 7, 8)
+
+This plan reinforces:
+
+- **Req 7:** Fail-fast philosophy (discriminated union error handling, clear validation messages)
+- **Req 8:** Highest quality standards (type-level testing with tstyche, MSW integration tests, mutation testing)
+
+---
+
 ## 🎯 MANDATORY: Test-Driven Development (TDD)
 
 **ALL implementation tasks MUST follow TDD workflow:**
@@ -1212,9 +1223,10 @@ pnpm lint
 **Estimated Time:** 22-31 hours (~3-4 weeks)
 **Prerequisites:**
 
-- ✅ Phase 2 complete (dependencies updated, type safety achieved)
-- ⏳ ts-morph emitter migration complete (Task 3.2+)
-- 📋 Phase 2B complete (recommended - validates architecture)
+- ✅ Phase 2 pre-work complete (dependencies updated, templates ready)
+- ⏳ Architecture Rewrite complete (Phases 0-3, see 01-CURRENT-IMPLEMENTATION.md)
+- ⏳ ts-morph migration complete (Architecture Rewrite Phase 2)
+- 📋 Phase 2B complete (recommended - MCP enhancements)
 
 **Rationale for Deferral:**
 

@@ -61,8 +61,8 @@ pnpm test -- --run # Must pass ✅ (373 tests)
 - ✅ **Task 2.1:** openapi3-ts updated to v4.5.0 (COMPLETE)
 - ✅ **Task 2.4:** Zod updated to v4.1.12 (COMPLETE)
 - ⏳ **Task 2.2:** @apidevtools/swagger-parser update to latest (IN PROGRESS)
-  - **Critical:** Phase 1 relies on `SwaggerParser.bundle()` correctly resolving all operation-level `$ref`s
-  - Must verify bundling behavior before starting rewrite
+    - **Critical:** Phase 1 relies on `SwaggerParser.bundle()` correctly resolving all operation-level `$ref`s
+    - Must verify bundling behavior before starting rewrite
 
 ---
 

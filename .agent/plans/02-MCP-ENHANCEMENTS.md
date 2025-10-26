@@ -29,6 +29,20 @@ This plan adds comprehensive MCP (Model Context Protocol) support while maintain
 
 ---
 
+## Requirements Alignment
+
+**See:** `.agent/plans/requirements.md` (Requirements 4, 5, 6, 7, 8)
+
+This plan specifically implements:
+
+- **Req 4:** SDK → MCP tools (Use Case 2: MCP Tool Consumption)
+- **Req 5:** No validation duplication (MCP tools reference SDK schemas, detailed validation at SDK level)
+- **Req 6:** JSON Schema export for MCP protocol compliance (Task 5.3.1: zod-to-json-schema)
+- **Req 7:** Fail-fast validation (Task 5.2.1: OpenAPI spec validation with clear errors)
+- **Req 8:** TDD for all tasks, comprehensive test coverage
+
+---
+
 ## 🎯 MANDATORY: Test-Driven Development (TDD)
 
 **ALL implementation tasks MUST follow TDD workflow:**
@@ -188,9 +202,10 @@ function formatZodErrors(error: z.ZodError): string { ... }
 ```
 Prerequisites (from Phase 2):
 ├─ 1.9 ✅ schemas-with-metadata template (COMPLETE)
-├─ 2.1 ⏳ openapi3-ts v4 update (PENDING)
-├─ 2.2 ⏳ zod v4 update (PENDING)
-└─ 3.2 ⏳ Eliminate type assertions (PENDING)
+├─ 2.1 ✅ openapi3-ts v4 update (COMPLETE)
+├─ 2.4 ✅ zod v4 update (COMPLETE)
+├─ 3.1 ✅ pastable replacement (COMPLETE)
+└─ Architecture Rewrite ⏳ (Phases 0-3) - See 01-CURRENT-IMPLEMENTATION.md
 
 Phase 2B: MCP Enhancements (this plan)
 ├─ 5.1 Investigation: MCP Protocol Requirements (Week 1)
