@@ -1,10 +1,21 @@
 # Further Enhancements Plan: Phase 3 - DX & Quality Improvements
 
+**⚠️ PREREQUISITE:** Architecture Rewrite and Phase 2 completion required.
+
+**See:**
+- `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated into `01-CURRENT-IMPLEMENTATION.md`) - Core architecture must be complete
+- `.agent/plans/00-STRATEGIC-PLAN.md` - Phase 2 must be marked complete
+
+**Timeline:** Start Phase 3 enhancements after:
+- Architecture Rewrite Phases 0-3 complete
+- Zod v4 updated ✅
+- All Phase 2 quality gates green
+
 **Date:** October 25, 2025  
-**Phase:** 3 of 4 (after Phase 2 and Phase 2B)  
+**Phase:** 3 of 4 (after Architecture Rewrite and Phase 2B)  
 **Status:** Planning  
 **Estimated Duration:** 3-4 weeks (25-32 hours)  
-**Prerequisites:** Phase 2 complete (type assertions eliminated, dependencies updated)  
+**Prerequisites:** Architecture Rewrite complete, All Phase 2 quality gates green  
 **Source:** Inspired by typed-openapi patterns and industry best practices
 
 ---

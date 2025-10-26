@@ -1,10 +1,19 @@
 # MCP Enhancement Plan: Phase 2B - Advanced Validation & Protocol Support
 
+**⚠️ PREREQUISITE:** Architecture Rewrite must be complete before starting MCP enhancements.
+
+**See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated into `01-CURRENT-IMPLEMENTATION.md`)
+
+**Timeline:** Start MCP work after:
+- Architecture Rewrite Phase 3 complete
+- Zod v4 update complete (Task 2.4) ✅
+- All quality gates green
+
 **Date:** October 25, 2025  
-**Phase:** 2B (After Phase 2 Core Tasks)  
+**Phase:** 2B (After Phase 2 Core Tasks & Architecture Rewrite)  
 **Status:** Planning  
 **Estimated Duration:** 3-4 weeks  
-**Prerequisites:** Tasks 1.9, 2.1, 2.2, 3.2 complete (schemas-with-metadata template working, dependencies updated, type assertions eliminated)
+**Prerequisites:** Architecture Rewrite Phases 0-3 complete, All quality gates green
 
 ---
 

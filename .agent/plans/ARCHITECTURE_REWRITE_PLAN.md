@@ -54,6 +54,25 @@ pnpm test -- --run # Must pass ✅ (373 tests)
 
 **If any quality gate fails:** STOP and fix before proceeding.
 
+### **Dependency Prerequisites**
+
+**Must Complete Before Starting:**
+
+- ✅ **Task 2.1:** openapi3-ts updated to v4.5.0 (COMPLETE)
+- ✅ **Task 2.4:** Zod updated to v4.1.12 (COMPLETE)
+- ⏳ **Task 2.2:** @apidevtools/swagger-parser update to latest (IN PROGRESS)
+  - **Critical:** Phase 1 relies on `SwaggerParser.bundle()` correctly resolving all operation-level `$ref`s
+  - Must verify bundling behavior before starting rewrite
+
+---
+
+## **Tasks Superseded by This Plan**
+
+The following tasks from `01-CURRENT-IMPLEMENTATION.md` are superseded by this rewrite:
+
+- **Task 3.2 (Type Assertion Elimination):** ~35 remaining assertions eliminated by Phase 1 (resolver/CodeMeta removal) and Phase 2 (ts-morph migration)
+- **Task 2.3 (Defer Logic Analysis):** Replaced by Phase 1 Task 1.1 (component-access.ts)
+
 ---
 
 ## **🔬 MANDATORY DEVELOPMENT METHODOLOGY**
@@ -594,8 +613,9 @@ export function assertNotReference<T>(value: T | ReferenceObject, context: strin
 
 ### **1.2: Modernize topologicalSort.ts** (45 minutes)
 
-**Status:** Pending  
-**Priority:** P1 (Code quality, prep for dependency graph update)
+**Status:** ✅ COMPLETE  
+**Priority:** P1 (Code quality, prep for dependency graph update)  
+**Completed:** October 26, 2025
 
 **Objective:** Rewrite `topologicalSort.ts` in modern TypeScript with comprehensive documentation using TDD.
 
@@ -1026,7 +1046,10 @@ grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc 
 
 ## **🔄 PHASE 2: MIGRATE TO TS-MORPH**
 
-**Timeline:** 12-16 hours  
+**Timeline:** 6-8 hours  
+**Scope:** Replaces tanu only, NOT Handlebars  
+**Note:** Handlebars replacement deferred to future phase (see Task 1.7 evaluation in 01-CURRENT-IMPLEMENTATION.md)
+**Rationale:** Clean separation - ts-morph generates TypeScript type strings, Handlebars assembles templates
 **Priority:** P1  
 **Dependencies:** Phase 1 complete and validated
 
@@ -1136,7 +1159,8 @@ Same validation as Phase 1.
 
 **Timeline:** 4-6 hours  
 **Priority:** P2  
-**Dependencies:** Phase 2 complete
+**Dependencies:** Phase 2 complete  
+**Note:** Zod v4 (Task 2.4) already complete - `@zodios/core` incompatibility was a blocker that's now resolved
 
 ### **3.1: Remove @zodios/core** (2 hours)
 

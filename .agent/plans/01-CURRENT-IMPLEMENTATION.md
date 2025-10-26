@@ -49,37 +49,39 @@ This document contains the **detailed task breakdown** for Phase 2 work. Every t
 
 ---
 
-## Task Execution Order
+## Task Execution Order (REVISED)
 
-Tasks MUST be executed in this order due to dependencies:
+**⚠️ ARCHITECTURE REWRITE SUPERSEDES SEVERAL TASKS**
+
+See: `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated below)
 
 ```
-1. Dependency Analysis (investigations) [Week 1]
-   ├─ 1.1 Lint Triage ✅
-   ├─ 1.2 pastable Analysis ✅
-   ├─ 1.3 openapi-types Evaluation ✅
-   ├─ 1.4 @zodios/core Evaluation ✅
-   ├─ 1.5 swagger-parser Investigation ✅
-   ├─ 1.6 openapi3-ts v4 Capabilities ✅
-   ├─ 1.7 Handlebars Evaluation ✅
-   ├─ 1.8 Defer Logic to openapi3-ts v4 (DEFERRED)
-   ├─ 1.9 Zodios-Free Template Strategy ✅
-   └─ 1.10 Fix Critical Lint Issues (NEW)
+1. Remaining Phase 2 Pre-work [ACTIVE]
+   ├─ 2.2 swagger-parser update ⏳ (PRE-REQ for Architecture Rewrite)
+   └─ Any remaining cleanup
 
-2. Dependency Updates [Week 1-2]
-   ├─ 2.1 Update openapi3-ts (v3 → v4.5.0) ✅
-   ├─ 2.2 Update @apidevtools/swagger-parser
-   ├─ 2.3 Defer Logic to openapi3-ts v4 & swagger-parser (Post-Update Analysis)
-   └─ 2.4 Update zod (v3 → v4.1.12)
+2. ARCHITECTURE REWRITE (20-28 hours) [NEXT]
+   ├─ Phase 0: Comprehensive test suite (8-12 hours)
+   ├─ Phase 1: Eliminate resolver + CodeMeta (8-10 hours)
+   ├─ Phase 2: Migrate tanu → ts-morph (6-8 hours)
+   └─ Phase 3: Remove Zodios dependencies (4-6 hours)
 
-3. Code Cleanup [Week 2-3]
-   ├─ 3.1 Replace pastable
-   ├─ 3.2 Eliminate Type Assertions (BLOCKER)
-   └─ 3.3 Remove Evaluated Dependencies
+3. Post-Rewrite Tasks [DEFERRED]
+   └─ 4.1 Full quality gate validation
 
-4. Validation [Week 3]
-   └─ 4.1 Full Quality Gate Check
+4. Phase 3: Quality & Testing [PLANNED]
+   └─ See: 03-FURTHER-ENHANCEMENTS.md
 ```
+
+**Completed Tasks:**
+- ✅ Task 2.1: openapi3-ts v3 → v4.5.0
+- ✅ Task 2.4: Zod v3 → v4.1.12
+- ✅ Task 3.1: pastable removed, lodash-es added
+- ✅ All analysis tasks (1.1-1.10)
+
+**Superseded Tasks:**
+- ❌ Task 2.3: Defer Logic Analysis → Architecture Rewrite Phase 1
+- ❌ Task 3.2: Type Assertion Elimination → Architecture Rewrite Phase 1 & 2
 
 ---
 
@@ -2314,10 +2316,13 @@ cd lib && pnpm install openapi3-ts@^3
 
 ### 2.2 Update @apidevtools/swagger-parser
 
-**Status:** Pending
-**Priority:** HIGH
+**Status:** ⏳ ACTIVE - PRE-REQUISITE FOR ARCHITECTURE REWRITE
+**Priority:** CRITICAL
 **Estimated Time:** 2-3 hours
-**Dependencies:** Task 2.1 complete
+**Dependencies:** Task 2.1 complete ✅
+
+**⚠️ ARCHITECTURE REWRITE DEPENDENCY:**
+Architecture Rewrite Phase 1 relies on `SwaggerParser.bundle()` correctly resolving all operation-level `$ref`s. Must update to latest version and verify behavior before starting rewrite.
 
 **Acceptance Criteria:**
 
@@ -2326,6 +2331,7 @@ cd lib && pnpm install openapi3-ts@^3
 - [ ] All tests passing
 - [ ] Validation behavior unchanged
 - [ ] Breaking changes documented (if any)
+- [ ] Bundle() behavior verified for operation-level refs
 
 **Implementation Steps:**
 
@@ -2348,12 +2354,11 @@ cd lib && pnpm install openapi3-ts@^3
 
 ### 2.3 Defer Logic to openapi3-ts v4 & swagger-parser (Post-Update Analysis)
 
-**Status:** Pending
-**Priority:** MEDIUM
-**Estimated Time:** 4-6 hours
-**Dependencies:** Tasks 2.1 and 2.2 complete
+**Status:** ❌ SUPERSEDED by Architecture Rewrite Phase 1
+**Original Priority:** MEDIUM
+**Resolution:** Architecture Rewrite Task 1.1 creates `component-access.ts` which properly leverages `SwaggerParser.bundle()` and `ComponentsObject` from openapi3-ts v4.
 
-**Rationale:** Now that both dependencies are at their latest versions, analyze what custom code can be safely deferred to these battle-tested libraries.
+**See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` Phase 1, Task 1.1 (integrated below in Architecture Rewrite section)
 
 **Acceptance Criteria:**
 
@@ -2403,10 +2408,11 @@ cd lib && pnpm install openapi3-ts@^3
 
 ### 2.4 Update zod (v3 → v4.1.12)
 
-**Status:** Pending  
+**Status:** ✅ COMPLETE
 **Priority:** CRITICAL  
-**Estimated Time:** 4-6 hours  
-**Dependencies:** Tasks 2.1 and 2.2 complete
+**Time Taken:** 4-6 hours  
+**Completed:** October 26, 2025
+**Dependencies:** Tasks 2.1 and 2.2 complete ✅
 
 **Acceptance Criteria:**
 
@@ -2516,13 +2522,21 @@ cd lib && pnpm install zod@^3
 
 ### 3.1 Replace pastable Dependency (REFINED STRATEGY)
 
-**Status:** Pending  
+**Status:** ✅ COMPLETE
 **Priority:** HIGH  
-**Estimated Time:** 1.5 hours (down from 6-8 hours due to deep analysis)  
-**Dependencies:** Task 1.2 complete, 2.1 and 2.2 complete
+**Time Taken:** 1.5 hours  
+**Completed:** October 25, 2025
+**Dependencies:** Task 1.2 complete ✅
 
 **Analysis Complete:** Deep review conducted October 25, 2025  
-**Key Finding:** Functions are more specific than initially assessed - can simplify and optimize
+**Key Finding:** Functions are more specific than initially assessed - simplified and optimized
+
+**Summary:**
+- All 9 functions + 1 type replaced
+- pastable dependency removed
+- lodash-es added (tree-shaken: ~3-4KB)
+- Domain-specific utilities created (schema-sorting.ts)
+- All 334 tests passing
 
 **Acceptance Criteria:**
 
@@ -3072,15 +3086,18 @@ if ("$ref" in actualSchema) {
 
 ### 3.2 Eliminate Type Assertions (EXTRACTION BLOCKER)
 
-**Status:** ⏳ PAUSED - Tanu API Investigation Required
-**Priority:** P0 CRITICAL BLOCKER
-**Estimated Time:** 16-24 hours total (varies based on tanu findings)
-**Dependencies:** Tasks 1.1, 2.1, 2.2 complete
-**Time Spent So Far:** ~5.5 hours
+**Status:** ❌ SUPERSEDED by Architecture Rewrite
+**Original Priority:** P0 CRITICAL BLOCKER
+**Progress:** 11/15 files complete (~30 assertions eliminated)
+**Remaining:** ~41 assertions (mostly at tanu/resolver boundary)
 
-**⚠️ CRITICAL RULE:** **ONLY `as const` IS ALLOWED** - All other `as` usages must be eliminated!
+**Resolution:**
+- Resolver/CodeMeta architectural flaws identified as root cause
+- Architecture Rewrite Phase 1: Eliminates resolver/CodeMeta (removes ~20-25 assertions)
+- Architecture Rewrite Phase 2: ts-morph migration (removes ~15-20 tanu assertions)
+- Remaining ~6 assertions in cli.ts: Can be fixed independently
 
-**⚠️ CRITICAL BLOCKER IDENTIFIED:** Remaining assertions at tanu library boundary suggest **incorrect API usage**. Must investigate tanu's intended `t` ↔ `ts` composition pattern before proceeding.
+**See:** Architecture Rewrite section below (integrated from ARCHITECTURE_REWRITE_PLAN.md)
 
 **Progress Summary (Session Ending October 25, 2025):**
 
@@ -3654,14 +3671,223 @@ All tests passing (297)"
 
 ---
 
-## 4. Validation & Documentation
+## 4. ARCHITECTURE REWRITE (INTEGRATED FROM ARCHITECTURE_REWRITE_PLAN.md)
 
-### 4.1 Full Quality Gate Verification
+**⚠️ THIS IS THE PRIMARY FOCUS - Supersedes Task 3.2 (Type Assertions) and Task 2.3 (Defer Logic)**
 
+### Overview
+
+**Problem:** The current architecture has fundamental flaws:
+
+1. `makeSchemaResolver` lies about its return types (claims `SchemaObject`, returns any component)
+2. `CodeMeta` is a poorly conceived abstraction with no clear value
+3. We're not leveraging `SwaggerParser.bundle()` which already resolves all `$ref`s
+4. Tanu may be misused (or insufficient) for AST generation
+5. `@zodios/core` is incompatible with Zod 4, must be removed
+
+**Solution:** Multi-phase rewrite
+
+- **Phase 0:** Comprehensive Public API Test Suite (8-12 hours) - CRITICAL prerequisite
+- **Phase 1:** Eliminate `makeSchemaResolver` and `CodeMeta` (8-10 hours)
+- **Phase 2:** Migrate to `ts-morph` for proper AST generation (6-8 hours)
+- **Phase 3:** Remove all Zodios dependencies (4-6 hours)
+
+**Timeline:** 20-28 hours over 2-3 weeks  
+**Risk:** MEDIUM (mitigated by comprehensive testing first)  
+**Benefit:** Zero type assertions, clean architecture, Zod 4 compatible
+
+### Pre-Requisites
+
+**Quality Gate Status Check:**
+
+```bash
+cd /Users/jim/code/personal/openapi-zod-client/lib
+pnpm format    # Must pass ✅
+pnpm build     # Must pass ✅
+pnpm type-check # Must pass ✅
+pnpm test -- --run # Must pass ✅ (373 tests)
+# pnpm lint - May have warnings (136 issues), but no NEW errors
+```
+
+**Dependency Prerequisites:**
+
+- ✅ **Task 2.1:** openapi3-ts updated to v4.5.0 (COMPLETE)
+- ✅ **Task 2.4:** Zod updated to v4.1.12 (COMPLETE)
+- ⏳ **Task 2.2:** @apidevtools/swagger-parser update to latest (ACTIVE - PRE-REQ)
+  - **Critical:** Phase 1 relies on `SwaggerParser.bundle()` correctly resolving all operation-level `$ref`s
+  - Must verify bundling behavior before starting rewrite
+
+### PHASE 0: Comprehensive Public API Test Suite (⭐ CRITICAL)
+
+**Timeline:** 8-12 hours  
+**Priority:** P0 - MUST complete before any changes  
 **Status:** Pending
+
+**Objective:** Create tests that encode PUBLIC API behaviors (not implementation details). These tests will survive the rewrite and prove compatibility.
+
+**Test Categories:**
+
+1. **E2E Generation Tests** (4 hours) - Full pipeline: OpenAPI → Generated Code
+2. **Schema Dependency Resolution** (2 hours) - Schema ordering and dependency tracking
+3. **Type Safety Guarantees** (2 hours) - Generated code is type-safe
+4. **SwaggerParser.bundle() Guarantees** (2 hours) - Verify bundle() resolves all refs
+5. **Regression Prevention** (2 hours) - Snapshot tests + regression guards
+
+**Target Coverage:**
+- E2E tests: 20+ scenarios
+- Dependency resolution: 10+ scenarios
+- Type safety: 5+ real-world specs
+- SwaggerParser guarantees: 8+ scenarios
+- Regression: All existing specs (6+ files)
+
+**Total New Tests:** ~50-60 comprehensive tests
+
+See `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` for detailed test examples.
+
+### PHASE 1: Eliminate Resolver & CodeMeta
+
+**Timeline:** 8-10 hours  
+**Priority:** P0  
+**Dependencies:** Phase 0 complete, all tests passing  
+**Status:** Pending
+
+**Tasks:**
+
+1. **Design Type-Safe Component Access** (2 hours)
+   - Create `lib/src/component-access.ts`
+   - Functions: `getSchemaFromComponents()`, `resolveSchemaRef()`, `assertNotReference()`
+   - Use `asserts` type guards instead of type assertions
+
+2. **Modernize topologicalSort.ts** (45 minutes) - ✅ COMPLETE
+
+3. **Update Dependency Graph** (1 hour)
+   - Update `getOpenApiDependencyGraph.ts` to use new component access
+
+4. **Eliminate CodeMeta Usage** (2 hours)
+   - Replace CodeMeta with direct type usage
+   - Update: `openApiToZod.ts`, `openApiToTypescript.ts`, `template-context.ts`
+
+5. **Simplify ConversionTypeContext** (1 hour)
+   - Replace `resolver: DocumentResolver` with `doc: OpenAPIObject`
+
+6. **Update All Call Sites** (3-4 hours)
+   - ~24 locations across 6 files
+   - Pattern: `assertNotReference()` instead of `as unknown as`
+
+7. **Delete Old Files** (15 min)
+   - `makeSchemaResolver.ts`, `CodeMeta.ts`, and their test files
+
+8. **Validation** (1 hour)
+   - All quality gates must pass
+   - Run Phase 0 comprehensive test suite
+   - Count remaining assertions (target: <10, down from ~41)
+
+**Success Criteria:**
+- ✅ All quality gates green
+- ✅ All Phase 0 tests passing
+- ✅ makeSchemaResolver.ts deleted
+- ✅ CodeMeta.ts deleted
+- ✅ ~20 type assertions eliminated
+- ✅ No new type errors introduced
+- ✅ Generated code unchanged (snapshot tests prove it)
+
+### PHASE 2: Migrate to ts-morph
+
+**Timeline:** 6-8 hours  
+**Scope:** Replaces tanu only, NOT Handlebars  
+**Note:** Handlebars replacement deferred (see Task 1.7 evaluation)  
+**Rationale:** Clean separation - ts-morph generates TypeScript type strings, Handlebars assembles templates  
+**Priority:** P1  
+**Dependencies:** Phase 1 complete  
+**Status:** Pending
+
+**Tasks:**
+
+1. **Research & Design** (2 hours)
+   - Investigate ts-morph API
+   - Create design doc: `.agent/analysis/TS_MORPH_MIGRATION_DESIGN.md`
+
+2. **Implement ts-morph Adapter** (4 hours)
+   - Create `lib/src/ast-builder.ts`
+   - Implement AstBuilder class with builder methods
+
+3. **Rewrite openApiToTypescript.ts** (4 hours)
+   - Replace tanu with ts-morph
+   - String-based type generation via ts-morph
+
+4. **Update Tests** (2 hours)
+   - Update tests dependent on internal AST structure
+
+5. **Validation** (1 hour)
+   - Same validation as Phase 1
+
+**Success Criteria:**
+- ✅ tanu dependency removed
+- ✅ ts-morph working correctly
+- ✅ ALL remaining type assertions eliminated
+- ✅ All tests passing
+- ✅ Generated code quality same or better
+
+### PHASE 3: Remove Zodios Dependencies
+
+**Timeline:** 4-6 hours  
+**Priority:** P2  
+**Dependencies:** Phase 2 complete  
+**Note:** Zod v4 already complete - `@zodios/core` incompatibility resolved  
+**Status:** Pending
+
+**Tasks:**
+
+1. **Remove @zodios/core** (2 hours)
+   - Delete zodios imports
+   - Update template-context types
+   - Remove zodios-specific template code
+
+2. **Update Templates** (2 hours)
+   - Focus on `schemas-with-metadata` template
+   - Remove zodios from default template (or deprecate)
+
+3. **Validation** (1 hour)
+   - Final validation suite
+
+### Definition of Done (Architecture Rewrite)
+
+1. ✅ All 373+ existing tests passing
+2. ✅ All 50+ new Phase 0 tests passing
+3. ✅ Zero type assertions (except `as const`)
+4. ✅ Zero lint errors (down from 136)
+5. ✅ makeSchemaResolver.ts deleted
+6. ✅ CodeMeta.ts deleted
+7. ✅ tanu dependency removed
+8. ✅ @zodios/core dependency removed
+9. ✅ Generated code quality validated (snapshot tests)
+10. ✅ Documentation updated (README, ADRs, RULES.md)
+
+### Rollback Plan
+
+Each phase is independently committable:
+
+```bash
+# If Phase N fails:
+git reset --hard HEAD~1
+git clean -fd
+```
+
+**Protection:**
+- Each phase is a separate branch
+- All tests must pass before merging
+- Keep main branch stable
+
+---
+
+## 5. Validation & Documentation
+
+### 5.1 Full Quality Gate Verification
+
+**Status:** Deferred until after Architecture Rewrite
 **Priority:** CRITICAL
 **Estimated Time:** 2 hours
-**Dependencies:** All previous tasks complete
+**Dependencies:** Architecture Rewrite complete
 
 **Acceptance Criteria:**
 

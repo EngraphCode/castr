@@ -98,55 +98,41 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 
 ---
 
-### Phase 2: Type Safety & Dependencies (✅ ANALYSIS COMPLETE → IMPLEMENTATION READY)
+### Phase 2: Type Safety & Dependencies (🔄 IN PROGRESS - ARCHITECTURE REWRITE)
 
-**Status:** All investigations complete, ready for implementation  
-**Duration:** Estimated 2-3 weeks (analysis: 1 week complete, implementation: 2 weeks remaining)
+**Status:** Partially complete, Architecture Rewrite in progress  
+**Duration:** Revised 3-4 weeks (analysis: 1 week ✅, rewrite: 2-3 weeks)
 
 **Analysis Phase Complete (✅ 7/7 tasks):**
 
-- ✅ Lint Triage (146 issues categorized, type assertions mapped)
-- ✅ pastable Analysis (8 functions → lodash-es + custom utilities)
-- ✅ openapi-types Evaluation (REMOVE - redundant with v4)
-- ✅ @zodios/core Evaluation (KEEP - stable, used in templates)
-- ✅ swagger-parser Investigation (KEEP - actively maintained)
-- ✅ openapi3-ts v4 Investigation (Migration checklist ready)
-- ✅ Handlebars Evaluation (KEEP Phase 2, ts-morph emitter Phase 3/4)
+- ✅ Lint Triage
+- ✅ pastable Analysis → COMPLETE (removed)
+- ✅ openapi-types Evaluation (removed)
+- ✅ @zodios/core Evaluation (will be removed in Architecture Rewrite Phase 3)
+- ✅ swagger-parser Investigation (updating now)
+- ✅ openapi3-ts v4 Investigation → COMPLETE (updated)
+- ✅ Handlebars Evaluation (keep, ts-morph for tanu only)
 
-**Implementation Phase (Ready to Execute):**
+**Implementation Status:**
 
-**⚠️ MANDATORY: ALL tasks MUST follow TDD (tests written BEFORE implementation)**
+**Completed:**
+1. ✅ Task 2.1: openapi3-ts v3 → v4.5.0
+2. ✅ Task 2.4: Zod v3 → v4.1.12
+3. ✅ Task 3.1: pastable removed, lodash-es added
 
-1. **Dependency Updates** (MUST DO FIRST - Tasks 2.1, 2.2)
-    - openapi3-ts v3 → v4.5.0 (migration checklist ready)
-    - zod v3 → v4.1.12 (update plan documented)
-    - **TDD:** Update/add tests for new type signatures FIRST, confirm failures, then update
-    - **Estimated:** 8-12 hours
+**In Progress:**
+4. 🔄 Task 2.2: swagger-parser update (PRE-REQ for rewrite)
 
-2. **Type Assertion Elimination** (EXTRACTION BLOCKER - Task 3.2)
-    - 74 instances across 11 files → 0
-    - Target repo forbids type assertions
-    - File-by-file plan ready
-    - **TDD:** Write type guard tests FIRST, implement guards, replace assertions
-    - **Estimated:** 16-24 hours
+**Architecture Rewrite (Supersedes 3.2, 2.3):**
+- Phase 0: Comprehensive test suite (8-12 hours)
+- Phase 1: Eliminate resolver + CodeMeta (8-10 hours)
+- Phase 2: Migrate tanu → ts-morph (6-8 hours)
+- Phase 3: Remove Zodios dependencies (4-6 hours)
 
-3. **pastable Removal** (Task 3.1)
-    - 7 files, 8 functions → lodash-es + custom
-    - Detailed replacement plan ready
-    - **TDD:** Write replacement tests FIRST matching pastable behavior, implement, switch
-    - **Estimated:** 6-8 hours
+**Post-Rewrite:**
+5. Task 4.1: Full quality gate validation
 
-4. **Dependency Cleanup** (Task 3.3)
-    - Remove: `openapi-types`, `pastable`
-    - Keep: `@zodios/core`, `@apidevtools/swagger-parser`
-    - **TDD:** Verify no broken tests after removal
-    - **Estimated:** 2-4 hours
-
-5. **Defer Logic to openapi3-ts v4** (Task 1.8)
-    - Analyze custom code that v4 can replace
-    - After Task 2.1 complete
-    - **TDD:** Tests guide which custom code can be safely replaced
-    - **Estimated:** 3-4 hours
+**See:** `.agent/plans/ARCHITECTURE_REWRITE_PLAN.md` (integrated into `01-CURRENT-IMPLEMENTATION.md`)
 
 ---
 
