@@ -56,6 +56,13 @@ What becomes easier or more difficult as a result of this decision?
 - [ADR-011: AJV for Runtime OpenAPI Validation](./ADR-011-ajv-runtime-validation.md) - **Accepted**
 - [ADR-012: Remove Playground and Examples Workspaces](./ADR-012-remove-playground-examples.md) - **Accepted**
 
+### Architecture Rewrite (Phase 2)
+
+- [ADR-013: Architecture Rewrite Decision](./ADR-013-architecture-rewrite-decision.md) - **Accepted**
+- [ADR-014: Migrate from tanu to ts-morph](./ADR-014-migrate-tanu-to-ts-morph.md) - **Accepted**
+- [ADR-015: Eliminate makeSchemaResolver](./ADR-015-eliminate-make-schema-resolver.md) - **Accepted**
+- [ADR-016: Remove Zodios Dependencies](./ADR-016-remove-zodios-dependencies.md) - **Accepted**
+
 ---
 
 ## Timeline
@@ -64,6 +71,12 @@ What becomes easier or more difficult as a result of this decision?
     - ADR-001 through ADR-012 accepted
     - 297 tests passing
     - Zero TypeScript errors
+
+- **October 26, 2025**: Phase 2 - Architecture Rewrite Planning
+    - ADR-013 through ADR-016 accepted
+    - 4-phase comprehensive rewrite planned (26-36 hours)
+    - 373 tests passing
+    - Ready to execute Phase 0
 
 ## Status Legend
 
