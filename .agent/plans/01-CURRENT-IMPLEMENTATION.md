@@ -586,25 +586,92 @@ describe('Regression Prevention', () => {
 
 ---
 
-## 🏗️ PHASE 1: ELIMINATE RESOLVER & CODEMETA
+## 🏗️ PHASE 1: ELIMINATE RESOLVER & CODEMETA (REVISED)
 
-**Timeline:** 8-12 hours  
+**Timeline:** 12-16 hours  
 **Priority:** P0  
-**Dependencies:** Phase 0 complete, all tests passing
+**Dependencies:** Phase 0 complete, all tests passing  
+**Status:** Ready to execute with revised plan  
+**Last Revision:** October 26, 2025
+
+### What Changed from Original Plan
+
+**Original approach (FAILED):**
+- Added internal `SwaggerParser.dereference()` call in `generateZodClientFromOpenAPI`
+- Used `assertNotReference` everywhere to eliminate refs
+- Result: 40 failing characterisation tests, loss of semantic information for named schemas
+
+**Root cause analysis:**
+- Internal dereferencing removed `$ref`s needed for component schema naming
+- `assertNotReference` was too aggressive - some refs are GOOD (component schemas)
+- Didn't distinguish between operation-level refs (should be dereferenced) vs component refs (should be preserved)
+- Missing e2e tests for actual usage scenarios (CLI vs programmatic)
+
+**Revised approach (THIS PLAN):**
+1. **E2E tests FIRST** - Define acceptance criteria for all usage scenarios
+2. **No internal dereferencing** - Let callers control it (CLI does, programmers choose)
+3. **Preserve component schema $refs** - Critical for named type extraction
+4. **Use ComponentsObject properly** - Import from `openapi3-ts/oas30`, don't create ad-hoc
+5. **Handle both dereferenced AND non-dereferenced specs** - Be flexible
+6. **Unit tests via TDD** - Build incrementally with test coverage
 
 ### Overview
 
-Replace `makeSchemaResolver` (which lies about types) and `CodeMeta` (poorly conceived abstraction) with honest, type-safe component access functions that leverage `SwaggerParser.bundle()`.
+Replace `makeSchemaResolver` (which lies about types) and `CodeMeta` (poorly conceived abstraction) with honest, type-safe component access functions.
+
+**CRITICAL LEARNINGS from first attempt:**
+1. CLI already calls `SwaggerParser.dereference()` internally (see `lib/src/cli.ts`)
+2. Programmatic usage may or may not dereference - we must handle both
+3. Component schema `$ref`s must be preserved for named type extraction
+4. Operation-level `$ref`s are resolved by dereference() but may exist in raw specs
+5. E2E tests define WHAT (acceptance criteria), unit tests define HOW (TDD)
+6. `assertNotReference` should be used sparingly - only where refs are truly impossible
 
 ### Task Breakdown
 
-#### 1.1: Design Type-Safe Component Access (2 hours)
+#### 1.0: Create E2E Test Matrix (2-3 hours) ⭐ NEW
 
-**Problem:** `ComponentsObject` has everything as `T | ReferenceObject`, but after `SwaggerParser.bundle()`, operation-level properties should have NO `ReferenceObject`s.
+**Purpose:** Define acceptance criteria BEFORE implementation
 
-**Solution:** Type-safe helpers with clear guarantees
+**Create:** `lib/src/characterisation/programmatic-usage.char.test.ts`
 
-**Create:** `lib/src/component-access.ts`
+Write 12 scenarios covering:
+- Programmatic usage with internal refs only (no dereference)
+- Programmatic usage after caller dereferences
+- CLI usage (auto-dereferenced)
+- Operation-level refs (parameters, requestBody, responses)
+- Edge cases (special characters, circular refs)
+- Template variations
+
+**See:** `.agent/analysis/E2E-TEST-MATRIX.md` for complete test specifications
+
+**Run against Phase 0 baseline:**
+```bash
+pnpm character
+```
+
+**Acceptance:** Document which scenarios pass/fail (establish baseline)
+
+**Tests:** These ARE the tests - they define what success looks like
+
+---
+
+#### 1.1: Create Component Access with Unit Tests (3-4 hours)
+
+**Follow STRICT TDD:** Red -> Green -> Refactor
+
+**Given:** `lib/src/component-access.test.ts` (already exists, 19 tests, 402 lines)
+
+**Task:** Create minimal `lib/src/component-access.ts` to pass tests
+
+**TDD Workflow:**
+1. Run tests (RED): `pnpm test -- --run component-access.test.ts`
+2. Implement ONE function at a time
+3. Run tests after each function (GREEN)
+4. Refactor if needed
+5. Repeat
+
+**Key Functions to Implement:**
 
 ```typescript
 import type {
@@ -616,241 +683,207 @@ import type {
 import { isReferenceObject } from 'openapi3-ts/oas30';
 
 /**
- * DESIGN PRINCIPLE:
- * After SwaggerParser.bundle(), operation-level properties (requestBody, parameters, responses)
- * should NEVER be ReferenceObjects. Only component definitions can have refs (for dependency tracking).
- */
-
-/**
- * Type-safe access to component schemas.
- * Used ONLY for dependency resolution and schema ordering.
- *
- * @param doc - OpenAPI document
- * @param name - Schema name
- * @returns Schema or ReferenceObject (for dependency tracking)
- * @throws {Error} If schema not found
+ * Get a schema from components.schemas by name.
+ * Preserves $ref if present (for dependency tracking).
  */
 export function getSchemaFromComponents(
   doc: OpenAPIObject,
   name: string,
-): SchemaObject | ReferenceObject {
-  const schema = doc.components?.schemas?.[name];
-  if (!schema) {
-    throw new Error(`Schema '${name}' not found in components.schemas`);
-  }
-  return schema;
-}
+): SchemaObject | ReferenceObject;
 
 /**
- * Resolve a schema reference to its definition.
- * Handles $refs within component schemas (for dependency tracking).
- *
- * @param doc - OpenAPI document
- * @param schema - Schema or reference
- * @returns Resolved schema
- * @throws {Error} If ref is invalid or nested
+ * Resolve a schema $ref to its definition.
+ * Used for dependency graph building.
  */
 export function resolveSchemaRef(
   doc: OpenAPIObject,
   schema: SchemaObject | ReferenceObject,
-): SchemaObject {
-  if (!isReferenceObject(schema)) {
-    return schema;
-  }
-
-  // Parse #/components/schemas/Name
-  const match = schema.$ref.match(/^#\/components\/schemas\/(.+)$/);
-  if (!match) {
-    throw new Error(`Invalid schema $ref: ${schema.$ref}`);
-  }
-
-  const resolved = getSchemaFromComponents(doc, match[1]);
-
-  // After SwaggerParser.bundle(), nested refs shouldn't exist in components
-  if (isReferenceObject(resolved)) {
-    throw new Error(
-      `Nested $ref in schema: ${schema.$ref} -> ${resolved.$ref}. ` +
-        `Use SwaggerParser.bundle() to fully dereference the spec.`,
-    );
-  }
-
-  return resolved;
-}
+): SchemaObject;
 
 /**
- * Type guard: After bundle(), operation-level properties should never be ReferenceObjects.
- * If they are, it indicates SwaggerParser didn't fully bundle.
- *
- * @param value - Value to check
- * @param context - Context for error message
- * @throws {Error} If value is a ReferenceObject
+ * Extract schema name from a $ref string.
+ * Example: '#/components/schemas/User' -> 'User'
+ */
+export function getSchemaNameFromRef(ref: string): string;
+
+/**
+ * Type guard: Assert value is not a ReferenceObject.
+ * Use ONLY where refs should be impossible (after proper dereferencing).
  */
 export function assertNotReference<T>(
   value: T | ReferenceObject,
   context: string,
-): asserts value is T {
-  if (isReferenceObject(value)) {
-    throw new Error(
-      `Unexpected $ref in ${context}: ${value.$ref}. ` +
-        `Ensure you called SwaggerParser.bundle() before code generation.`,
-    );
-  }
-}
+): asserts value is T;
 ```
 
-**Key Design Decisions:**
+**Key Design Principles:**
 
-1. **Explicit about guarantees** - Comments document when refs should/shouldn't exist
-2. **Fail-fast** - Throw clear errors if assumptions violated
-3. **Type assertions eliminated** - Use `asserts` type guard
-4. **Single responsibility** - Each function has ONE job
+1. **Use ComponentsObject types** - Import from `openapi3-ts/oas30`, don't create ad-hoc
+2. **Preserve refs in components.schemas** - Critical for named type extraction
+3. **Handle both dereferenced and non-dereferenced specs** - Be flexible
+4. **Fail-fast with helpful errors** - Clear messages about what went wrong
+5. **Zero type assertions** - Use proper type guards
 
-**Tests:** Write comprehensive tests FIRST (TDD)
+**Tests:** Already written (19 tests) - just make them pass!
 
 ---
 
-#### 1.2: Update Dependency Graph (1 hour)
+#### 1.2: Understand Current Dereferencing Strategy (1 hour)
+
+**Task:** Investigate HOW and WHERE dereferencing happens in current code
+
+**Files to examine:**
+- `lib/src/cli.ts` - Does CLI dereference? (YES, it does)
+- `lib/src/generateZodClientFromOpenAPI.ts` - Does this dereference?
+- Where does `makeSchemaResolver` get used?
+- What does `makeSchemaResolver` actually do?
+
+**Document findings:**
+- When are specs dereferenced?
+- What refs remain after dereferencing?
+- How does current code handle component schema refs?
+
+**Output:** Update `.agent/analysis/E2E-TEST-MATRIX.md` with findings
+
+---
+
+#### 1.3: Update Template Context to Use ComponentsObject (2 hours)
+
+**Update:** `lib/src/template-context.ts`
+
+**Changes:**
+1. Accept `doc: OpenAPIObject` instead of resolver
+2. Use `doc.components?.schemas` directly (it's already typed as `ComponentsObject`)
+3. Use `component-access` functions where needed
+4. Remove `makeSchemaResolver` dependency
+
+**Pattern:**
+```typescript
+// BEFORE:
+const schema = ctx.resolver.getSchemaByRef('#/components/schemas/User');
+
+// AFTER:
+const schema = getSchemaFromComponents(doc, 'User');
+```
+
+**Run tests after each change:**
+```bash
+pnpm test -- --run template-context
+pnpm test -- --run schemas-with-metadata
+```
+
+---
+
+#### 1.4: Update Dependency Graph (1-2 hours)
 
 **Update:** `lib/src/getOpenApiDependencyGraph.ts`
 
-```typescript
-import { getSchemaFromComponents, resolveSchemaRef } from './component-access.js';
+**Changes:**
+1. Remove `makeSchemaResolver` dependency
+2. Accept `doc: OpenAPIObject` directly
+3. Use `component-access` functions
 
-export const getOpenApiDependencyGraph = (
-  schemaNames: string[], // Changed from refs to names
-  doc: OpenAPIObject, // Pass doc instead of getter function
-) => {
-  // Implementation using getSchemaFromComponents and resolveSchemaRef
-  // ...
-};
-```
+**Tests:** Existing dependency graph tests should pass
+
+---
+
+#### 1.5: Update OpenAPIToZod (2 hours)
+
+**Update:** `lib/src/openApiToZod.ts`
 
 **Changes:**
+1. Replace `ctx.resolver` with `ctx.doc`
+2. Use `component-access` functions
+3. Handle both dereferenced and non-dereferenced schemas
+4. Remove CodeMeta usage if present
 
-- Remove dependency on `makeSchemaResolver`
-- Pass OpenAPIObject directly
-- Use new component-access functions
-
-**Tests:** Verify all existing dependency graph tests pass
-
----
-
-#### 1.3: Eliminate CodeMeta Usage (2 hours)
-
-**Replace CodeMeta with direct type usage:**
-
-```typescript
-// BEFORE (with CodeMeta):
-const codeMeta = new CodeMeta(schema, ctx);
-const code = codeMeta.assign(generatedCode);
-return code.toString();
-
-// AFTER (direct):
-const code = generateCodeForSchema(schema, doc);
-return code;
+**Tests:** Run after each change
+```bash
+pnpm test -- --run openApiToZod
 ```
 
-**Update all files:**
-
-- `openApiToZod.ts` - Remove CodeMeta instantiation
-- `openApiToTypescript.ts` - Remove CodeMeta usage
-- `template-context.ts` - Remove CodeMeta dependency
-
-**Tests:** All existing tests should pass without changes
-
 ---
 
-#### 1.4: Simplify ConversionTypeContext (1 hour)
+#### 1.6: Update Zodios Helpers (2-3 hours)
 
-```typescript
-// BEFORE:
-export type ConversionTypeContext = {
-  resolver: DocumentResolver; // DELETE
-  zodSchemaByName: Record<string, string>;
-  schemaByName: Record<string, string>;
-  schemasByName?: Record<string, string[]>;
-};
+**Update these files ONE AT A TIME:**
+- `lib/src/zodiosEndpoint.helpers.ts`
+- `lib/src/zodiosEndpoint.operation.helpers.ts`
+- `lib/src/zodiosEndpoint.path.helpers.ts`
 
-// AFTER:
-export type ConversionContext = {
-  doc: OpenAPIObject; // Pass the doc directly
-  zodSchemaByName: Record<string, string>;
-  schemaByName: Record<string, string>;
-  schemasByName?: Record<string, string[]>;
-};
+**Strategy:**
+- DON'T use `assertNotReference` everywhere
+- Instead, handle both cases: `if (isReferenceObject(x)) { resolve it } else { use it }`
+- This supports both dereferenced and non-dereferenced specs
+
+**Tests:** Run full test suite after EACH file:
+```bash
+pnpm test -- --run
+pnpm character
 ```
 
-**Tests:** Type-check should pass, all tests should pass
-
 ---
 
-#### 1.5: Update All Call Sites (3-4 hours)
-
-**Files to update (~24 locations):**
-
-- `zodiosEndpoint.operation.helpers.ts` (9 calls)
-- `zodiosEndpoint.path.helpers.ts` (2 calls)
-- `openApiToZod.ts` (4 calls)
-- `openApiToTypescript.ts` (1 call)
-- `openApiToTypescript.helpers.ts` (1 call)
-- `zodiosEndpoint.helpers.ts` (1 call)
-- Test files (6 calls)
-
-**Pattern for each update:**
-
-```typescript
-// BEFORE:
-const resolved = ctx.resolver.getSchemaByRef(operation.requestBody.$ref);
-requestBody = resolved as unknown as RequestBodyObject;
-
-// AFTER:
-// After SwaggerParser.bundle(), requestBody should never be a $ref
-assertNotReference(operation.requestBody, 'operation.requestBody');
-const requestBody = operation.requestBody;
-```
-
-**Tests:** All 373+ tests should still pass after each file update
-
----
-
-#### 1.6: Delete Old Files (15 min)
+#### 1.7: Delete makeSchemaResolver (15 min)
 
 ```bash
 rm lib/src/makeSchemaResolver.ts
 rm lib/src/makeSchemaResolver.test.ts
-rm lib/src/CodeMeta.ts
-rm lib/src/CodeMeta.test.ts
 ```
+
+**Only do this AFTER all files stop using it!**
 
 **Tests:** All tests should still pass
 
 ---
 
-#### 1.7: Validation (1 hour)
+#### 1.8: Run Full E2E Test Matrix (1 hour)
+
+**Run ALL quality gates:**
 
 ```bash
-# All quality gates must pass
+# 1. Format
 pnpm format
-pnpm build
-pnpm type-check  # Should show FEWER errors (assertions gone!)
-pnpm test -- --run  # All 373+ tests + 50 Phase 0 tests pass
 
-# Count remaining type assertions (should be dramatically reduced)
+# 2. Build
+pnpm build
+
+# 3. Type check
+pnpm type-check  # Should pass (no errors)
+
+# 4. Unit tests
+cd lib && pnpm test -- --run
+# Should show 246 tests passing (227 + 19 component-access tests)
+
+# 5. Characterisation tests
+pnpm character
+# Should show 88/88 passing
+
+# 6. NEW: E2E programmatic usage tests
+pnpm test -- --run programmatic-usage.char.test.ts
+# Should show 8/12 P0 scenarios passing (minimum)
+```
+
+**Verify type assertion reduction:**
+```bash
 cd lib/src
 grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc -l
-# Target: <10 (down from ~41)
+# Target: <20 (down from 41 in production code)
 ```
 
 **Success Criteria:**
 
 - ✅ All quality gates green
-- ✅ All Phase 0 tests passing
-- ✅ All existing tests passing
+- ✅ 246/246 unit tests passing (227 + 19 new)
+- ✅ 88/88 characterisation tests passing
+- ✅ 8/12 P0 e2e scenarios passing minimum
 - ✅ `makeSchemaResolver.ts` deleted
-- ✅ `CodeMeta.ts` deleted
-- ✅ ~20-30 type assertions eliminated
-- ✅ No new type errors
-- ✅ Generated code unchanged (snapshot tests prove it)
+- ✅ `makeSchemaResolver.test.ts` deleted
+- ✅ Zero type assertions in `component-access.ts`
+- ✅ ~20-30 type assertions eliminated overall
+- ✅ Using `ComponentsObject` types properly
+- ✅ NO internal dereferencing added
+- ✅ Supports both dereferenced and non-dereferenced specs
 
 ---
 

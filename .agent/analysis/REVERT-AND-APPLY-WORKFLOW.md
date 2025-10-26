@@ -23,7 +23,7 @@ Preserves:
 - Analysis of what went wrong
 - Insights about makeSchemaResolver issues
 
-These tests document the behavior we want, even if the 
+These tests document the behavior we want, even if the
 implementation approach was flawed."
 
 git tag tests-to-preserve
@@ -81,8 +81,8 @@ describe('E2E: Programmatic Usage', () => {
       openapi: '3.0.0',
       components: {
         schemas: {
-          User: { type: 'object', properties: { name: { type: 'string' } } }
-        }
+          User: { type: 'object', properties: { name: { type: 'string' } } },
+        },
       },
       paths: {
         '/users': {
@@ -91,21 +91,21 @@ describe('E2E: Programmatic Usage', () => {
               '200': {
                 content: {
                   'application/json': {
-                    schema: { $ref: '#/components/schemas/User' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    schema: { $ref: '#/components/schemas/User' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     };
-    
+
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: spec,
       disableWriteToFile: true,
     });
-    
+
     // Should export named User schema
     expect(result).toContain('export const User');
     expect(result).toContain('z.object');
@@ -116,8 +116,8 @@ describe('E2E: Programmatic Usage', () => {
       openapi: '3.0.0',
       components: {
         schemas: {
-          User: { type: 'object', properties: { name: { type: 'string' } } }
-        }
+          User: { type: 'object', properties: { name: { type: 'string' } } },
+        },
       },
       paths: {
         '/users': {
@@ -128,22 +128,22 @@ describe('E2E: Programmatic Usage', () => {
                   'application/json': {
                     // After dereference, this might still be a ref (good)
                     // or might be inlined (we need to handle both)
-                    schema: { $ref: '#/components/schemas/User' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    schema: { $ref: '#/components/schemas/User' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     };
-    
+
     const dereferenced = await SwaggerParser.dereference(spec);
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: dereferenced,
       disableWriteToFile: true,
     });
-    
+
     // Should still export named User schema
     expect(result).toContain('export const User');
   });
@@ -153,6 +153,7 @@ describe('E2E: Programmatic Usage', () => {
 ## Step 6: Eliminate makeSchemaResolver Properly
 
 Now with both unit tests and e2e tests guiding us:
+
 - Update files to use ComponentsObject properly
 - Remove makeSchemaResolver
 - Ensure all tests pass (unit + e2e + characterisation)
@@ -171,6 +172,7 @@ The tests we wrote are probably GOOD - they test behavior we want.
 The implementation was flawed, but the tests document correct expectations.
 
 By applying tests immediately, we:
+
 - Force ourselves to implement correctly to pass them
 - Don't lose the test design work
 - Can adjust tests if they're testing wrong behavior

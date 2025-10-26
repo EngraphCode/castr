@@ -5,33 +5,48 @@
 
 ## 🚨 CRITICAL STATUS FOR FRESH CHAT
 
-**Current Phase:** **ARCHITECTURE REWRITE - READY TO START**
+**Current Phase:** **PHASE 1 - READY TO EXECUTE (REVISED PLAN)**
 
-**Next Action (PRIORITY #1):** Execute Architecture Rewrite (Phases 0-3)
+**Next Action (PRIORITY #1):** Execute Phase 1 with revised approach
 
-- **Phase 0:** Create comprehensive public API test suite (8-12 hours) ⭐ START HERE
-- **Phase 1:** Eliminate `makeSchemaResolver` + `CodeMeta` (8-10 hours)
+- **Phase 1:** Eliminate `makeSchemaResolver` + `CodeMeta` (12-16 hours) ⭐ START HERE
 - **Phase 2:** Migrate from `tanu` to `ts-morph` (6-8 hours)
 - **Phase 3:** Remove Zodios dependencies (4-6 hours)
-- **Timeline:** 26-36 hours total over 2-3 weeks
-- **Details:** See `01-CURRENT-IMPLEMENTATION.md` (complete plan with all test examples, TDD methodology)
+- **Timeline:** 22-40 hours total over 2-3 weeks
+- **Details:** See `01-CURRENT-IMPLEMENTATION.md` (REVISED plan with learnings from first attempt)
 
-**Why Architecture Rewrite?**
+**What Happened:**
 
-Discovered fundamental flaws requiring comprehensive fix rather than incremental patches:
+1. **Phase 0 COMPLETE** ✅ - System fully characterized (88/88 char tests passing)
+2. **Phase 1 ATTEMPTED** ❌ - First approach failed (40 failing char tests)
+3. **ROOT CAUSE IDENTIFIED** ✅ - Internal dereferencing broke semantic naming
+4. **REVERTED TO WORKING STATE** ✅ - Back to Phase 0 baseline (88/88 passing)
+5. **VALUABLE WORK SAVED** ✅ - component-access.test.ts preserved (19 tests, 402 lines)
+6. **REVISED PLAN COMPLETE** ✅ - E2E test matrix designed, proper approach documented
 
-- `makeSchemaResolver` lies about return types (masks bugs with assertions)
-- Not leveraging `SwaggerParser.bundle()` correctly (it already resolves operation-level $refs)
-- `CodeMeta` is poorly conceived abstraction with no clear value
-- Type assertions (74 instances) were symptoms, not the disease
+**Why First Attempt Failed:**
+
+- Added internal `SwaggerParser.dereference()` in `generateZodClientFromOpenAPI`
+- Used `assertNotReference` everywhere (too aggressive)
+- Removed `$ref`s needed for component schema naming
+- Missing e2e tests for actual usage scenarios
+
+**Revised Approach:**
+
+1. **E2E tests FIRST** - Define acceptance criteria (12 scenarios)
+2. **No internal dereferencing** - Let callers control it
+3. **Preserve component schema $refs** - Critical for named types
+4. **Use ComponentsObject properly** - No ad-hoc types
+5. **Unit tests via TDD** - Build incrementally
 
 **Current State:**
 
-- ✅ All 373 tests passing
-- ✅ Quality gates passing (format, build, type-check)
-- ✅ Phase 2 pre-work complete (dependencies updated, templates ready)
-- ✅ Architecture Rewrite Plan approved and documented
-- 🎯 Ready to execute Phase 0
+- ✅ Quality gates: format ✅, build ✅, unit tests 227/227 ✅, char tests 88/88 ✅
+- ❌ Type-check: FAILS (expected - component-access.ts doesn't exist yet)
+- ✅ Test work preserved on `save-phase1-good-work` branch
+- ✅ E2E test matrix designed (`.agent/analysis/E2E-TEST-MATRIX.md`)
+- ✅ Analysis complete (3 analysis docs capturing learnings)
+- 🎯 Ready to execute Phase 1 properly
 
 ---
 
@@ -372,19 +387,28 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ### For a Fresh Context (START HERE)
 
-**🎯 Three-Step Quick Start:**
+**🎯 Four-Step Quick Start:**
 
-1. **Read Critical Status (above)** - 2 min overview of current phase
-2. **Read Architecture Rewrite Plan:** `01-CURRENT-IMPLEMENTATION.md` ⭐
-   - Complete 4-phase plan with all test examples and implementation details
-   - Mandatory TDD methodology
-   - Timeline: 26-36 hours over 2-3 weeks
-3. **Verify Quality Gates:**
+1. **Read Critical Status (above)** - 3 min overview of what happened and current state
+2. **Read E2E Test Matrix:** `.agent/analysis/E2E-TEST-MATRIX.md` ⭐
+   - 12 acceptance criteria scenarios for Phase 1
+   - Distinguishes E2E (WHAT) from unit tests (HOW)
+   - Current baseline: 88/88 char tests passing
+3. **Read Revised Phase 1 Plan:** `01-CURRENT-IMPLEMENTATION.md` Phase 1 section
+   - Learnings from first attempt
+   - Revised approach with e2e tests first
+   - 8 tasks: E2E tests → Unit tests (TDD) → Integration → Validation
+4. **Verify Current Quality Gates:**
    ```bash
-   cd lib && pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+   cd /Users/jim/code/personal/openapi-zod-client
+   pnpm format       # ✅ PASSING
+   pnpm build        # ✅ PASSING
+   pnpm type-check   # ❌ FAILS (expected - component-access.ts missing)
+   cd lib && pnpm test -- --run  # ✅ 227/227 PASSING
+   cd .. && pnpm character       # ✅ 88/88 PASSING
    ```
 
-**Then Start Phase 0:** Create comprehensive public API test suite (8-12 hours)
+**Then Start Phase 1, Task 1.0:** Create e2e test file with 12 scenarios (2-3 hours)
 
 ---
 

@@ -9,18 +9,19 @@
 
 ## Executive Summary
 
-| Metric                      | Current Value     | Phase 1 Target   | Phase 2 Target   | Phase 3 Target   |
-| --------------------------- | ----------------- | ---------------- | ---------------- | ---------------- |
-| **Source Lines of Code**    | 4,599 lines       | ~4,200 lines     | ~4,600 lines     | ~4,600 lines     |
-| **Source Files**            | 28 files          | 27 files         | 27 files         | 27 files         |
-| **Type Assertions (src/)**  | 61 assertions     | ~30 assertions   | 0 assertions ✅  | 0 assertions ✅  |
-| **Lint Issues**             | 143 (133 errors)  | 145 (expected +) | 10 errors        | <10 errors ✅    |
-| **Test Count**              | 468 tests         | 468+ tests       | 468+ tests       | 468+ tests       |
-| **Test Pass Rate**          | 100%              | 100%             | 100%             | 100%             |
-| **Build Time**              | 2.39s             | <2.5s            | <2.5s            | <2.5s            |
-| **Quality Gates**           | 4/5 green         | 4/5 green        | 5/5 green ✅     | 5/5 green ✅     |
+| Metric                     | Current Value    | Phase 1 Target   | Phase 2 Target  | Phase 3 Target  |
+| -------------------------- | ---------------- | ---------------- | --------------- | --------------- |
+| **Source Lines of Code**   | 4,599 lines      | ~4,200 lines     | ~4,600 lines    | ~4,600 lines    |
+| **Source Files**           | 28 files         | 27 files         | 27 files        | 27 files        |
+| **Type Assertions (src/)** | 61 assertions    | ~30 assertions   | 0 assertions ✅ | 0 assertions ✅ |
+| **Lint Issues**            | 143 (133 errors) | 145 (expected +) | 10 errors       | <10 errors ✅   |
+| **Test Count**             | 468 tests        | 468+ tests       | 468+ tests      | 468+ tests      |
+| **Test Pass Rate**         | 100%             | 100%             | 100%            | 100%            |
+| **Build Time**             | 2.39s            | <2.5s            | <2.5s           | <2.5s           |
+| **Quality Gates**          | 4/5 green        | 4/5 green        | 5/5 green ✅    | 5/5 green ✅    |
 
 **Key Goals:**
+
 - ✅ **Eliminate all type assertions** (61 → 0)
 - ✅ **Reduce lint errors** (133 → <10)
 - ✅ **Maintain test quality** (100% pass rate)
@@ -59,12 +60,14 @@ find src -name "*.ts" \
 - Other files - ~2,029 lines
 
 **Phase 1 Impact:**
+
 - **Delete:** ~415 lines (resolver, CodeMeta + tests)
 - **Create:** ~350 lines (component-access + tests)
 - **Net:** ~65 lines fewer
 - **Target:** ~4,200 lines
 
 **Phase 2 Impact:**
+
 - **Rewrite:** ~600 lines (ts-morph migration)
 - **Net:** Approximately same LOC
 - **Target:** ~4,600 lines (similar to current)
@@ -88,16 +91,19 @@ find src -name "*.ts" \
 **Result:** **28 source files**
 
 **Phase 1 Changes:**
+
 - **Delete:** 2 files (`makeSchemaResolver.ts`, `CodeMeta.ts`)
 - **Create:** 1 file (`component-access.ts`)
 - **Net:** -1 file
 - **Target:** 27 files
 
 **Phase 2 Changes:**
+
 - No new files (rewrite existing)
 - **Target:** 27 files
 
 **Phase 3 Changes:**
+
 - Possibly remove zodios endpoint helpers
 - **Target:** ~25 files
 
@@ -152,10 +158,12 @@ grep -r " as " src \
    - Nested $ref checks force assertions
 
 **Phase 1 Target:** ~30 assertions (50% reduction)
+
 - Eliminate resolver-related assertions
 - Eliminate CodeMeta-related assertions
 
 **Phase 2 Target:** 0 assertions (100% elimination) ✅
+
 - ts-morph migration eliminates tanu assertions
 - Proper type guards for remaining cases
 
@@ -192,6 +200,7 @@ pnpm lint 2>&1 | grep "problems"
 **Breakdown:**
 
 **Errors (133):**
+
 - `@typescript-eslint/consistent-type-assertions` - ~74 warnings (will become errors)
 - `sonarjs/cognitive-complexity` - ~20 errors
 - `sonarjs/max-statements` - ~3 errors
@@ -200,9 +209,11 @@ pnpm lint 2>&1 | grep "problems"
 - Other errors - ~32 errors
 
 **Warnings (10):**
+
 - Unused `eslint-disable` directives - 10 warnings (in new test file)
 
 **Phase 1 Impact:**
+
 - Type assertion rule will be changed to ERROR
 - Will ADD ~74 errors initially (expected)
 - Then eliminate ~30 assertions
@@ -210,11 +221,13 @@ pnpm lint 2>&1 | grep "problems"
 - **Target:** ~145 issues (temporary increase)
 
 **Phase 2 Impact:**
+
 - Eliminate remaining assertions (~30)
 - Fix complexity issues during rewrites
 - **Target:** ~10 errors
 
 **Phase 3 Impact:**
+
 - Final cleanup
 - **Target:** <10 errors ✅
 
@@ -239,6 +252,7 @@ Test Files  11 passed (11)
 ```
 
 **Coverage:**
+
 - Pure function tests
 - Helper function tests
 - Utility tests
@@ -265,6 +279,7 @@ Test Files  8 passed (8)
 ```
 
 **Files:**
+
 - `generation.char.test.ts` - 15 tests
 - `schema-dependencies.char.test.ts` - 10 tests
 - `options.char.test.ts` - 20 tests
@@ -274,6 +289,7 @@ Test Files  8 passed (8)
 - **`bundled-spec-assumptions.char.test.ts` - 12 tests (NEW in Phase 0) ✅**
 
 **Coverage:**
+
 - Full generation pipeline
 - CLI behavior (truly exercises system via execSync)
 - Configuration options
@@ -302,6 +318,7 @@ Test Files  75 passed (75)
 ```
 
 **Coverage:**
+
 - Generated code validation
 - Regression protection
 - All existing OpenAPI specs
@@ -314,12 +331,12 @@ Test Files  75 passed (75)
 
 **Summary:**
 
-| Test Type          | Files | Tests | Pass Rate |
-| ------------------ | ----- | ----- | --------- |
-| Unit               | 11    | 227   | 100%      |
-| Characterisation   | 8     | 89    | 100%      |
-| Snapshot           | 75    | 152   | 100%      |
-| **TOTAL**          | **94**| **468**| **100%** |
+| Test Type        | Files  | Tests   | Pass Rate |
+| ---------------- | ------ | ------- | --------- |
+| Unit             | 11     | 227     | 100%      |
+| Characterisation | 8      | 89      | 100%      |
+| Snapshot         | 75     | 152     | 100%      |
+| **TOTAL**        | **94** | **468** | **100%**  |
 
 **Phase 0 Addition:** +12 tests (bundled-spec-assumptions)
 
@@ -341,6 +358,7 @@ time pnpm build
 **Result:** **2.39 seconds** (total time)
 
 **Breakdown:**
+
 - ESM build: ~300ms
 - CJS build: ~300ms
 - DTS build (cli): ~1,261ms
@@ -362,15 +380,16 @@ ls -lh dist/*.{js,cjs}
 
 **Result:**
 
-| File                      | Size  | Format | Purpose                  |
-| ------------------------- | ----- | ------ | ------------------------ |
-| `cli.cjs`                 | 86K   | CJS    | CLI executable           |
-| `openapi-zod-client.cjs`  | 79K   | CJS    | CommonJS library export  |
-| `openapi-zod-client.js`   | 77K   | ESM    | ES Module library export |
+| File                     | Size | Format | Purpose                  |
+| ------------------------ | ---- | ------ | ------------------------ |
+| `cli.cjs`                | 86K  | CJS    | CLI executable           |
+| `openapi-zod-client.cjs` | 79K  | CJS    | CommonJS library export  |
+| `openapi-zod-client.js`  | 77K  | ESM    | ES Module library export |
 
 **Target:** Maintain or reduce bundle sizes
 
 **Expected Phase 2 Impact:**
+
 - ts-morph might increase bundle size slightly
 - Goal: <100K for main library
 
@@ -407,11 +426,13 @@ cat package.json | grep -A 20 '"dependencies"'
 ```
 
 **Phase 2 Changes:**
+
 - Remove: `tanu` (-1)
 - Add: `ts-morph` (+1)
 - **Net:** 10 dependencies (unchanged)
 
 **Phase 3 Changes:**
+
 - Remove: `@zodios/core` (-1)
 - **Net:** 9 dependencies
 
@@ -421,16 +442,16 @@ cat package.json | grep -A 20 '"dependencies"'
 
 ### Dependencies to Remove
 
-| Dependency      | Phase | Reason                           |
-| --------------- | ----- | -------------------------------- |
-| `tanu`          | 2     | Replace with ts-morph            |
-| `@zodios/core`  | 3     | Zod 4 incompatible, not needed   |
+| Dependency     | Phase | Reason                         |
+| -------------- | ----- | ------------------------------ |
+| `tanu`         | 2     | Replace with ts-morph          |
+| `@zodios/core` | 3     | Zod 4 incompatible, not needed |
 
 ### Dependencies to Add
 
-| Dependency  | Phase | Reason                              |
-| ----------- | ----- | ----------------------------------- |
-| `ts-morph`  | 2     | Better TypeScript AST manipulation  |
+| Dependency | Phase | Reason                             |
+| ---------- | ----- | ---------------------------------- |
+| `ts-morph` | 2     | Better TypeScript AST manipulation |
 
 ---
 
@@ -438,39 +459,39 @@ cat package.json | grep -A 20 '"dependencies"'
 
 ### Files to Delete (Phase 1)
 
-| File                          | Lines | Purpose                          |
-| ----------------------------- | ----- | -------------------------------- |
-| `makeSchemaResolver.ts`       | ~150  | Resolver (lies about types)      |
-| `makeSchemaResolver.test.ts`  | ~100  | Resolver tests                   |
-| `CodeMeta.ts`                 | ~85   | CodeMeta class (no clear value)  |
-| `CodeMeta.test.ts`            | ~80   | CodeMeta tests                   |
-| **TOTAL**                     | **~415** | **Will be deleted**          |
+| File                         | Lines    | Purpose                         |
+| ---------------------------- | -------- | ------------------------------- |
+| `makeSchemaResolver.ts`      | ~150     | Resolver (lies about types)     |
+| `makeSchemaResolver.test.ts` | ~100     | Resolver tests                  |
+| `CodeMeta.ts`                | ~85      | CodeMeta class (no clear value) |
+| `CodeMeta.test.ts`           | ~80      | CodeMeta tests                  |
+| **TOTAL**                    | **~415** | **Will be deleted**             |
 
 ---
 
 ### Files to Rewrite (Phase 1)
 
-| File                                  | Lines | Type Assertions | Changes                          |
-| ------------------------------------- | ----- | --------------- | -------------------------------- |
-| `cli.ts`                              | ~220  | 2               | Change bundle() to dereference() |
-| `template-context.ts`                 | ~550  | 4               | Remove resolver dependency       |
-| `getOpenApiDependencyGraph.ts`        | ~85   | 0               | Accept doc directly              |
-| `zodiosEndpoint.operation.helpers.ts` | ~300  | 9               | Remove resolver usage            |
-| `zodiosEndpoint.path.helpers.ts`      | ~200  | 2               | Remove resolver usage            |
-| `openApiToZod.ts`                     | ~280  | 4               | Remove CodeMeta                  |
-| `openApiToTypescript.ts`              | ~250  | 17              | Remove CodeMeta usage            |
-| `openApiToTypescript.helpers.ts`      | ~450  | 22              | Minor changes                    |
-| **TOTAL**                             | **~2,335** | **60**      | **Will be rewritten**            |
+| File                                  | Lines      | Type Assertions | Changes                          |
+| ------------------------------------- | ---------- | --------------- | -------------------------------- |
+| `cli.ts`                              | ~220       | 2               | Change bundle() to dereference() |
+| `template-context.ts`                 | ~550       | 4               | Remove resolver dependency       |
+| `getOpenApiDependencyGraph.ts`        | ~85        | 0               | Accept doc directly              |
+| `zodiosEndpoint.operation.helpers.ts` | ~300       | 9               | Remove resolver usage            |
+| `zodiosEndpoint.path.helpers.ts`      | ~200       | 2               | Remove resolver usage            |
+| `openApiToZod.ts`                     | ~280       | 4               | Remove CodeMeta                  |
+| `openApiToTypescript.ts`              | ~250       | 17              | Remove CodeMeta usage            |
+| `openApiToTypescript.helpers.ts`      | ~450       | 22              | Minor changes                    |
+| **TOTAL**                             | **~2,335** | **60**          | **Will be rewritten**            |
 
 ---
 
 ### Files to Create (Phase 1)
 
-| File                        | Lines | Purpose                               |
-| --------------------------- | ----- | ------------------------------------- |
-| `component-access.ts`       | ~150  | Type-safe component access functions  |
-| `component-access.test.ts`  | ~200  | Comprehensive unit tests              |
-| **TOTAL**                   | **~350** | **New files**                      |
+| File                       | Lines    | Purpose                              |
+| -------------------------- | -------- | ------------------------------------ |
+| `component-access.ts`      | ~150     | Type-safe component access functions |
+| `component-access.test.ts` | ~200     | Comprehensive unit tests             |
+| **TOTAL**                  | **~350** | **New files**                        |
 
 ---
 
@@ -478,13 +499,13 @@ cat package.json | grep -A 20 '"dependencies"'
 
 ### Current Status (Phase 0 Complete)
 
-| Gate        | Status | Details                                    |
-| ----------- | ------ | ------------------------------------------ |
-| Format      | ✅ Pass | Prettier formatting enforced               |
-| Build       | ✅ Pass | 5 successful builds (ESM, CJS, DTS)        |
-| Type-check  | ✅ Pass | 0 type errors                              |
-| Lint        | ❌ Fail | 143 issues (133 errors, 10 warnings)       |
-| Test        | ✅ Pass | 468/468 tests passing (100%)               |
+| Gate       | Status  | Details                              |
+| ---------- | ------- | ------------------------------------ |
+| Format     | ✅ Pass | Prettier formatting enforced         |
+| Build      | ✅ Pass | 5 successful builds (ESM, CJS, DTS)  |
+| Type-check | ✅ Pass | 0 type errors                        |
+| Lint       | ❌ Fail | 143 issues (133 errors, 10 warnings) |
+| Test       | ✅ Pass | 468/468 tests passing (100%)         |
 
 **Pass Rate:** 4/5 gates passing (80%)
 
@@ -492,13 +513,13 @@ cat package.json | grep -A 20 '"dependencies"'
 
 ### Phase 1 Expected Status
 
-| Gate        | Status | Details                                    |
-| ----------- | ------ | ------------------------------------------ |
-| Format      | ✅ Pass | Maintained                                 |
-| Build       | ✅ Pass | Maintained                                 |
-| Type-check  | ✅ Pass | Maintained (0 errors)                      |
-| Lint        | ❌ Fail | ~145 issues (temporary increase expected)  |
-| Test        | ✅ Pass | 468+/468+ tests passing (100%)             |
+| Gate       | Status  | Details                                   |
+| ---------- | ------- | ----------------------------------------- |
+| Format     | ✅ Pass | Maintained                                |
+| Build      | ✅ Pass | Maintained                                |
+| Type-check | ✅ Pass | Maintained (0 errors)                     |
+| Lint       | ❌ Fail | ~145 issues (temporary increase expected) |
+| Test       | ✅ Pass | 468+/468+ tests passing (100%)            |
 
 **Pass Rate:** 4/5 gates passing (80%)
 
@@ -508,13 +529,13 @@ cat package.json | grep -A 20 '"dependencies"'
 
 ### Phase 2 Expected Status
 
-| Gate        | Status | Details                                    |
-| ----------- | ------ | ------------------------------------------ |
-| Format      | ✅ Pass | Maintained                                 |
-| Build       | ✅ Pass | Maintained                                 |
-| Type-check  | ✅ Pass | Maintained (0 errors)                      |
-| Lint        | ✅ Pass | ~10 issues (major improvement) ✅          |
-| Test        | ✅ Pass | 468+/468+ tests passing (100%)             |
+| Gate       | Status  | Details                           |
+| ---------- | ------- | --------------------------------- |
+| Format     | ✅ Pass | Maintained                        |
+| Build      | ✅ Pass | Maintained                        |
+| Type-check | ✅ Pass | Maintained (0 errors)             |
+| Lint       | ✅ Pass | ~10 issues (major improvement) ✅ |
+| Test       | ✅ Pass | 468+/468+ tests passing (100%)    |
 
 **Pass Rate:** 5/5 gates passing (100%) ✅
 
@@ -522,13 +543,13 @@ cat package.json | grep -A 20 '"dependencies"'
 
 ### Phase 3 Expected Status
 
-| Gate        | Status | Details                                    |
-| ----------- | ------ | ------------------------------------------ |
-| Format      | ✅ Pass | Maintained                                 |
-| Build       | ✅ Pass | Maintained                                 |
-| Type-check  | ✅ Pass | Maintained (0 errors)                      |
-| Lint        | ✅ Pass | <10 issues (excellent) ✅                  |
-| Test        | ✅ Pass | 468+/468+ tests passing (100%)             |
+| Gate       | Status  | Details                        |
+| ---------- | ------- | ------------------------------ |
+| Format     | ✅ Pass | Maintained                     |
+| Build      | ✅ Pass | Maintained                     |
+| Type-check | ✅ Pass | Maintained (0 errors)          |
+| Lint       | ✅ Pass | <10 issues (excellent) ✅      |
+| Test       | ✅ Pass | 468+/468+ tests passing (100%) |
 
 **Pass Rate:** 5/5 gates passing (100%) ✅
 
@@ -586,6 +607,7 @@ cat package.json | grep -A 20 '"dependencies"'
 **Next:** Phase 1 - Eliminate makeSchemaResolver & CodeMeta
 
 **Documentation:**
+
 - Architecture: `.agent/architecture/CURRENT-ARCHITECTURE.md`
 - Test suite: 468 tests, all passing
 - Critical findings: `dereference()` not `bundle()`
@@ -593,4 +615,3 @@ cat package.json | grep -A 20 '"dependencies"'
 ---
 
 **This baseline enables quantifiable measurement of rewrite success.**
-

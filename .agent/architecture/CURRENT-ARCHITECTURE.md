@@ -39,6 +39,7 @@ Generated TypeScript code with Zod schemas
 **Responsibility:** Main orchestration and template rendering
 
 **Key Functions:**
+
 - Accepts OpenAPIObject (from SwaggerParser)
 - Determines template (default, schemas-only, schemas-with-metadata)
 - Auto-enables options for schemas-with-metadata template
@@ -47,6 +48,7 @@ Generated TypeScript code with Zod schemas
 - Writes output to file or returns string
 
 **Dependencies:**
+
 - `getZodClientTemplateContext()` - generates template data
 - `getHandlebars()` - Handlebars instance
 - `maybePretty()` - Prettier formatting
@@ -71,11 +73,13 @@ const bundled: unknown = await SwaggerParser.bundle(input);
 **⚠️ CRITICAL ISSUE:** `bundle()` does NOT resolve operation-level $refs
 
 **Discovered in Phase 0:**
+
 - `bundle()` keeps $refs in parameters, requestBody, responses
 - `dereference()` fully resolves all $refs
 - This is why `makeSchemaResolver` exists
 
 **Resolution for Phase 1:**
+
 - Change from `bundle()` to `dereference()`
 - Eliminates need for resolver
 
@@ -90,6 +94,7 @@ const bundled: unknown = await SwaggerParser.bundle(input);
 **Key Function:** `getZodClientTemplateContext()`
 
 **Process:**
+
 1. Get endpoint definitions via `getZodiosEndpointDefinitionList()`
 2. Build dependency graph for schemas
 3. Sort schemas topologically
@@ -99,6 +104,7 @@ const bundled: unknown = await SwaggerParser.bundle(input);
 7. Export common schemas
 
 **Dependencies:**
+
 - `makeSchemaResolver()` (⚠️ TO BE ELIMINATED)
 - `getOpenApiDependencyGraph()` (✅ KEEP)
 - `getZodSchema()` (uses CodeMeta ⚠️)
@@ -108,6 +114,7 @@ const bundled: unknown = await SwaggerParser.bundle(input);
 **Type Safety:** ⚠️ Poor - relies on resolver's lying types
 
 **Issues:**
+
 - Depends on flawed `makeSchemaResolver`
 - Uses `CodeMeta` which adds no clear value
 - Many type assertions needed due to resolver issues
@@ -131,6 +138,7 @@ getSchemaByRef(ref: string): SchemaObject | ReferenceObject
 ```
 
 **Why It Exists:**
+
 - Current code uses `SwaggerParser.bundle()` which doesn't resolve operation-level $refs
 - Resolver manually dereferences them
 - But types are dishonest - claims SchemaObject, returns anything
@@ -138,6 +146,7 @@ getSchemaByRef(ref: string): SchemaObject | ReferenceObject
 **Call Sites:** ~24 locations across codebase
 
 **Files Using Resolver:**
+
 - `template-context.ts` - passes resolver to conversion context
 - `getZodiosEndpointDefinitionList.ts` - uses to resolve refs
 - `zodiosEndpoint.operation.helpers.ts` - 9 calls
@@ -147,6 +156,7 @@ getSchemaByRef(ref: string): SchemaObject | ReferenceObject
 - `openApiToTypescript.helpers.ts` - 1 call
 
 **Phase 1 Strategy:**
+
 - Switch CLI from `bundle()` to `dereference()`
 - Remove resolver entirely
 - Access operations directly (no $refs to resolve)
@@ -161,6 +171,7 @@ getSchemaByRef(ref: string): SchemaObject | ReferenceObject
 **Responsibility:** Unclear - appears to be abstraction layer for code metadata
 
 **Problems:**
+
 - Poorly conceived abstraction with no clear value
 - Will be obsolete with ts-morph migration
 - Adds complexity without benefit
@@ -179,19 +190,27 @@ export class CodeMeta {
     public schema: SchemaObject | ReferenceObject,
     public ctx?: ConversionTypeContext,
     meta: CodeMetaData = {},
-  ) { /* ... */ }
+  ) {
+    /* ... */
+  }
 
-  assign(code: string): this { /* ... */ }
-  toString(): string { /* ... */ }
+  assign(code: string): this {
+    /* ... */
+  }
+  toString(): string {
+    /* ... */
+  }
 }
 ```
 
 **Usage:**
+
 - Instantiated in `getZodSchema()`
 - `.toString()` called to get string output
 - Children tracked for composition schemas
 
 **Phase 1 Strategy:**
+
 - Remove `CodeMeta` class entirely
 - Return strings directly from `getZodSchema()`
 - No wrapper needed
@@ -205,6 +224,7 @@ export class CodeMeta {
 **Responsibility:** Build dependency graph of schemas and topologically sort them
 
 **Algorithm:**
+
 1. Visit all schema references recursively
 2. Track which schemas depend on which
 3. Build dependency graph: `Record<string, Set<string>>`
@@ -212,11 +232,13 @@ export class CodeMeta {
 5. Return graphs for topological sorting
 
 **Key Functions:**
+
 - `getOpenApiDependencyGraph()` - builds dependency graphs
 - Called with schema refs and resolver function
 - Returns shallow and deep dependency graphs
 
 **Usage:**
+
 - `template-context.ts` calls it to order schemas
 - Essential for generating valid TypeScript (dependencies before dependents)
 
@@ -225,6 +247,7 @@ export class CodeMeta {
 **Tests:** ✅ Comprehensive unit tests
 
 **Phase 1 Changes:**
+
 - Update to accept OpenAPIObject directly (no resolver)
 - Use new component-access functions
 
@@ -241,6 +264,7 @@ export class CodeMeta {
 **Current Tool:** CodeMeta (to be removed)
 
 **Process:**
+
 1. Handle different schema types (object, array, string, number, etc.)
 2. Handle composition (allOf, oneOf, anyOf)
 3. Add validations (min, max, pattern, etc.)
@@ -253,6 +277,7 @@ export class CodeMeta {
 **Tests:** ✅ Unit tested
 
 **Phase 1 Changes:**
+
 - Remove CodeMeta dependency
 - Return strings directly
 - Reduce type assertions
@@ -266,6 +291,7 @@ export class CodeMeta {
 **Current Tool:** tanu (TypeScript AST manipulation)
 
 **Issues:**
+
 - **22 type assertions in helpers** (most in codebase!)
 - **17 type assertions in main file**
 - tanu usage unclear/insufficient
@@ -276,6 +302,7 @@ export class CodeMeta {
 **Tests:** ✅ Unit tested
 
 **Phase 2 Changes:**
+
 - Migrate from tanu to ts-morph
 - Eliminate ALL remaining type assertions (~44 total)
 - Better AST generation
@@ -287,6 +314,7 @@ export class CodeMeta {
 **Tool:** Handlebars
 
 **Templates:**
+
 - `default.hbs` - Full Zodios HTTP client
 - `schemas-only.hbs` - Pure Zod schemas
 - `schemas-with-metadata.hbs` - Schemas + metadata without Zodios (Engraph-ready)
@@ -402,14 +430,14 @@ Write to file or return
 
 ```json
 {
-  "openapi3-ts": "^4.5.0",         // ✅ OpenAPI type definitions (v4 - latest)
-  "@apidevtools/swagger-parser": "^12.1.0",  // ✅ Parsing & bundling (latest, Oct 2025)
-  "zod": "^4.1.12",                // ✅ Schema validation runtime (v4 - latest)
-  "handlebars": "^4.7.8",          // ✅ Template engine (keep Phase 1-2)
-  "lodash-es": "^4.17.21",         // ✅ Tree-shakeable utilities
-  "commander": "^14.0.1",          // ✅ CLI framework
-  "ts-pattern": "^5.8.0",          // ✅ Pattern matching
-  "prettier": "^3.6.2"             // ✅ Code formatting
+  "openapi3-ts": "^4.5.0", // ✅ OpenAPI type definitions (v4 - latest)
+  "@apidevtools/swagger-parser": "^12.1.0", // ✅ Parsing & bundling (latest, Oct 2025)
+  "zod": "^4.1.12", // ✅ Schema validation runtime (v4 - latest)
+  "handlebars": "^4.7.8", // ✅ Template engine (keep Phase 1-2)
+  "lodash-es": "^4.17.21", // ✅ Tree-shakeable utilities
+  "commander": "^14.0.1", // ✅ CLI framework
+  "ts-pattern": "^5.8.0", // ✅ Pattern matching
+  "prettier": "^3.6.2" // ✅ Code formatting
 }
 ```
 
@@ -482,6 +510,7 @@ Write to file or return
 ### Test Principles Applied
 
 All tests follow 6 principles (see `TEST-PRINCIPLES-APPLIED.md`):
+
 1. ✅ Prove behaviour, not implementation
 2. ✅ Prove something useful
 3. ✅ NOT validate test code
@@ -506,27 +535,32 @@ All tests follow 6 principles (see `TEST-PRINCIPLES-APPLIED.md`):
 ### 2. Architecture Issues
 
 **A. Not leveraging SwaggerParser correctly**
+
 - Using `bundle()` instead of `dereference()`
 - Forces need for resolver
 - **Discovered in Phase 0** ✅
 
 **B. Resolver is redundant**
+
 - After `dereference()`, no $refs to resolve
 - Can access operations directly
 - Resolver will be eliminated
 
 **C. tanu usage unclear**
+
 - Many type assertions suggest misuse or insufficiency
 - ts-morph will provide better types
 
 ### 3. Dependency Issues
 
 **A. @zodios/core incompatible with Zod 4**
+
 - Peer dependency warning expected
 - Only used in templates
 - Will be removed in Phase 3
 
 **B. tanu may not be needed**
+
 - ts-morph might fully replace it
 - Evaluation in Phase 2
 
@@ -539,23 +573,27 @@ All tests follow 6 principles (see `TEST-PRINCIPLES-APPLIED.md`):
 **Assumption (WRONG):** `bundle()` resolves all operation-level $refs
 
 **Actual Behavior:**
+
 - `bundle()` KEEPS $refs in parameters, requestBody, responses
 - `dereference()` RESOLVES all $refs
 
 **Validation:** 12 tests in `bundled-spec-assumptions.char.test.ts`
 
 **Evidence:**
+
 ```typescript
 // BEFORE dereference()
-parameters: [{ $ref: "#/components/parameters/UserId" }]
+parameters: [{ $ref: '#/components/parameters/UserId' }];
 
 // AFTER dereference()
-parameters: [{
-  name: "userId",
-  in: "path",
-  required: true,
-  schema: { type: "string" }
-}]
+parameters: [
+  {
+    name: 'userId',
+    in: 'path',
+    required: true,
+    schema: { type: 'string' },
+  },
+];
 ```
 
 **Impact:** Phase 1 plan updated to use `dereference()` not `bundle()`
@@ -700,19 +738,19 @@ parameters: [{
 
 ## Component Responsibility Summary
 
-| Component                         | Status     | Type Safety | Keep/Remove/Rewrite |
-| --------------------------------- | ---------- | ----------- | ------------------- |
-| `generateZodClientFromOpenAPI.ts` | ✅ Good    | ✅ Good     | Keep                |
-| `cli.ts`                          | ⚠️ Issue   | ✅ Good     | Rewrite (5 lines)   |
-| `template-context.ts`             | ⚠️ Depends | ⚠️ Poor     | Rewrite             |
-| `makeSchemaResolver.ts`           | ❌ Flawed  | ❌ Lying    | DELETE (Phase 1)    |
-| `CodeMeta.ts`                     | ❌ Flawed  | ⚠️ Poor     | DELETE (Phase 1)    |
-| `getOpenApiDependencyGraph.ts`    | ✅ Good    | ✅ Good     | Update (30 lines)   |
-| `topologicalSort.ts`              | ✅ Good    | ✅ Good     | Keep                |
-| `openApiToZod.ts`                 | ⚠️ Depends | ⚠️ Poor     | Rewrite (Phase 1)   |
-| `openApiToTypescript.ts`          | ⚠️ Tanu    | ❌ Very Poor| Rewrite (Phase 2)   |
-| `openApiToTypescript.helpers.ts`  | ⚠️ Tanu    | ❌ Worst    | Rewrite (Phase 2)   |
-| Templates (Handlebars)            | ✅ Good    | N/A         | Keep (Phase 1-2)    |
+| Component                         | Status     | Type Safety  | Keep/Remove/Rewrite |
+| --------------------------------- | ---------- | ------------ | ------------------- |
+| `generateZodClientFromOpenAPI.ts` | ✅ Good    | ✅ Good      | Keep                |
+| `cli.ts`                          | ⚠️ Issue   | ✅ Good      | Rewrite (5 lines)   |
+| `template-context.ts`             | ⚠️ Depends | ⚠️ Poor      | Rewrite             |
+| `makeSchemaResolver.ts`           | ❌ Flawed  | ❌ Lying     | DELETE (Phase 1)    |
+| `CodeMeta.ts`                     | ❌ Flawed  | ⚠️ Poor      | DELETE (Phase 1)    |
+| `getOpenApiDependencyGraph.ts`    | ✅ Good    | ✅ Good      | Update (30 lines)   |
+| `topologicalSort.ts`              | ✅ Good    | ✅ Good      | Keep                |
+| `openApiToZod.ts`                 | ⚠️ Depends | ⚠️ Poor      | Rewrite (Phase 1)   |
+| `openApiToTypescript.ts`          | ⚠️ Tanu    | ❌ Very Poor | Rewrite (Phase 2)   |
+| `openApiToTypescript.helpers.ts`  | ⚠️ Tanu    | ❌ Worst     | Rewrite (Phase 2)   |
+| Templates (Handlebars)            | ✅ Good    | N/A          | Keep (Phase 1-2)    |
 
 ---
 
@@ -735,4 +773,3 @@ parameters: [{
 ---
 
 **This architecture document provides the complete foundation for confident Phase 1 execution.**
-
