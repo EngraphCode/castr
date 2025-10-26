@@ -20,6 +20,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 **See:** `.agent/plans/requirements.md` for high-level project requirements
 
 This strategic plan ensures all 8 requirements are met:
+
 - **Req 1-3:** Core functionality (Zod generation, SDK creation, validation helpers) - Phase 1 & 2
 - **Req 4-6:** MCP integration (SDK→MCP tools, validation architecture, JSON schemas) - Phase 2B
 - **Req 7:** Fail-fast philosophy - ADR-001, enforced throughout

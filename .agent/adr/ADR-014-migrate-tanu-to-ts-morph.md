@@ -12,43 +12,46 @@ We currently use `tanu` (v0.2.0) for TypeScript AST manipulation and code genera
 ### The Problem with tanu
 
 1. **API Confusion**
-   - Both `t` and `ts` exports from same library
-   - They don't compose well together
-   - Suggests we're using the API incorrectly
-   - ~15-20 type assertions at tanu boundaries
+    - Both `t` and `ts` exports from same library
+    - They don't compose well together
+    - Suggests we're using the API incorrectly
+    - ~15-20 type assertions at tanu boundaries
 
 2. **Limited Ecosystem**
-   - Small package (last updated 2+ years ago)
-   - Limited documentation
-   - No active community
-   - Uncertain maintenance status
+    - Small package (last updated 2+ years ago)
+    - Limited documentation
+    - No active community
+    - Uncertain maintenance status
 
 3. **Type Safety Issues**
-   - `t.TypeDefinition` vs `ts.Node` incompatibility
-   - Requires assertions to bridge these types
-   - No clear conversion path
-   - Type flow is unclear
+    - `t.TypeDefinition` vs `ts.Node` incompatibility
+    - Requires assertions to bridge these types
+    - No clear conversion path
+    - Type flow is unclear
 
 4. **Integration with CodeMeta**
-   - CodeMeta wraps tanu types
-   - Adds unnecessary abstraction layer
-   - Makes code harder to understand
-   - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
+    - CodeMeta wraps tanu types
+    - Adds unnecessary abstraction layer
+    - Makes code harder to understand
+    - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
 
 ### Alternatives Considered
 
 **Option 1: Fix tanu Usage (Rejected)**
+
 - Investigate correct tanu API patterns
 - Attempt to use `t` or `ts` exclusively
 - **Rejected:** Even if fixable, ecosystem concerns remain
 
 **Option 2: Template Literals (Rejected)**
+
 - Generate code via string concatenation
 - Use template literals for structure
 - **Rejected:** Fragile, no type safety, hard to maintain
 - Reference: `.agent/analysis/HANDLEBARS_EVALUATION.md`
 
 **Option 3: ts-morph (Accepted)**
+
 - Wrapper around TypeScript Compiler API
 - Excellent documentation and ecosystem
 - Type-safe AST manipulation
@@ -56,6 +59,7 @@ We currently use `tanu` (v0.2.0) for TypeScript AST manipulation and code genera
 - **Accepted:** Best long-term choice
 
 **Option 4: TypeScript Compiler API Directly (Rejected)**
+
 - Use `ts.factory` directly
 - Maximum control and flexibility
 - **Rejected:** Too low-level, ts-morph provides better DX
@@ -67,6 +71,7 @@ We currently use `tanu` (v0.2.0) for TypeScript AST manipulation and code genera
 ### Why ts-morph
 
 **Advantages:**
+
 - ✅ **Mature ecosystem** - Actively maintained, 2M+ weekly downloads
 - ✅ **Excellent documentation** - Comprehensive guides and examples
 - ✅ **Type-safe** - Full TypeScript compiler type safety
@@ -82,8 +87,8 @@ const param = t.param(name, t.fromString(type) as any); // ❌ Assertion needed
 
 // After (ts-morph, type-safe)
 const param = sourceFile.addParameter({
-  name: name,
-  type: type, // ✅ No assertion, type-safe
+    name: name,
+    type: type, // ✅ No assertion, type-safe
 });
 ```
 
@@ -92,18 +97,21 @@ const param = sourceFile.addParameter({
 **Phase 2 of Architecture Rewrite: Migrate tanu → ts-morph (6-8 hours)**
 
 **Step 1: Create ast-builder.ts (2-3 hours)**
+
 - New module wrapping ts-morph
 - Pure functions for building AST nodes
 - Type-safe, testable
 - Comprehensive TSDoc
 
 **Step 2: Rewrite openApiToTypescript.ts (3-4 hours)**
+
 - Replace tanu with ast-builder
 - Remove CodeMeta (already eliminated in Phase 1)
 - Use ts-morph source file manipulation
 - Add tests for each function
 
 **Step 3: Update Tests (1 hour)**
+
 - Verify all 430+ tests still pass
 - Update snapshot tests if needed
 - Add new tests for ast-builder
@@ -125,29 +133,29 @@ import { t } from "tanu";
 import { CodeMeta } from "./CodeMeta.js";
 
 function generateInterface(name: string, props: Property[]): CodeMeta {
-  const properties = props.map(p => 
-    t.prop(p.name, t.fromString(p.type) as any) // ❌ Type assertion
-  );
-  return new CodeMeta(
-    name,
-    t.inter(name, properties) // Wrapped in CodeMeta
-  );
+    const properties = props.map(
+        (p) => t.prop(p.name, t.fromString(p.type) as any) // ❌ Type assertion
+    );
+    return new CodeMeta(
+        name,
+        t.inter(name, properties) // Wrapped in CodeMeta
+    );
 }
 ```
 
 **After (ts-morph):**
 
-```typescript
+````typescript
 import { type SourceFile, type InterfaceDeclaration } from "ts-morph";
 
 /**
  * Generates a TypeScript interface declaration.
- * 
+ *
  * @param sourceFile - The source file to add the interface to
  * @param name - The interface name
  * @param properties - Array of property definitions
  * @returns The created interface declaration
- * 
+ *
  * @example
  * ```typescript
  * const iface = generateInterface(sourceFile, "User", [
@@ -158,19 +166,19 @@ import { type SourceFile, type InterfaceDeclaration } from "ts-morph";
  * ```
  */
 export function generateInterface(
-  sourceFile: SourceFile,
-  name: string,
-  properties: Array<{ name: string; type: string }>
+    sourceFile: SourceFile,
+    name: string,
+    properties: Array<{ name: string; type: string }>
 ): InterfaceDeclaration {
-  return sourceFile.addInterface({
-    name,
-    properties: properties.map(p => ({
-      name: p.name,
-      type: p.type, // ✅ Type-safe, no assertions
-    })),
-  });
+    return sourceFile.addInterface({
+        name,
+        properties: properties.map((p) => ({
+            name: p.name,
+            type: p.type, // ✅ Type-safe, no assertions
+        })),
+    });
 }
-```
+````
 
 ## Consequences
 
@@ -195,16 +203,19 @@ export function generateInterface(
 ### Mitigation
 
 **Learning Curve:**
+
 - Comprehensive examples in ast-builder.ts
 - TSDoc documentation for all functions
 - Reference implementations in tests
 
 **Migration Effort:**
+
 - Incremental approach (one function at a time)
 - Tests catch any behavioral changes
 - Clear completion criteria per function
 
 **Bundle Size:**
+
 - Only affects CLI tool, not generated code
 - Tree-shaking reduces actual impact
 - Better type safety worth the trade-off
@@ -212,10 +223,12 @@ export function generateInterface(
 ## Integration with Other Phases
 
 **Depends On:**
+
 - **Phase 0:** Comprehensive test suite protects during migration
 - **Phase 1:** CodeMeta eliminated, simplifies migration
 
 **Enables:**
+
 - **Phase 3:** Clean foundation for Zodios removal
 - **Future:** Easier multi-version OAS support (Phase 3E)
 - **Future:** Plugin architecture for custom code generation
@@ -247,13 +260,16 @@ sourceFile.addExportDeclaration({ namedExports: [name] });
 ## References
 
 **Planning:**
+
 - `.agent/plans/01-CURRENT-IMPLEMENTATION.md` - Phase 2 complete implementation plan
 - `.agent/analysis/HANDLEBARS_EVALUATION.md` - Code generation options analysis
 
 **Analysis:**
+
 - `.agent/docs/type-assertion-elimination-analysis.md` - Tanu boundary issues visualized
 
 **Dependencies:**
+
 - ts-morph: https://ts-morph.com/
 - npm: https://www.npmjs.com/package/ts-morph (2M+ weekly downloads)
 

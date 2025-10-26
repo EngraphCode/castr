@@ -12,12 +12,14 @@ The current default template generates Zodios clients with `@zodios/core` and `a
 ### The Current Situation
 
 **Default Template (Zodios-based):**
+
 - Generates `@zodios/core` client
 - Depends on `axios` for HTTP
 - Bundle size: ~48 KB (zod + zodios + axios)
 - Maintenance: Zodios in maintenance mode (stable but not actively developed)
 
 **schemas-with-metadata Template:**
+
 - Pure Zod schemas (no Zodios)
 - Full request/response validation
 - MCP tools array
@@ -29,6 +31,7 @@ The current default template generates Zodios clients with `@zodios/core` and `a
 ### Why Zodios Was Used Originally
 
 Historical reasons:
+
 1. Provided type-safe HTTP client out of the box
 2. Integrated Zod validation with axios
 3. Reduced boilerplate for API clients
@@ -36,50 +39,54 @@ Historical reasons:
 ### Why It's No Longer Ideal
 
 1. **Maintenance Mode**
-   - Zodios is stable but not actively developed
-   - No support for latest Zod v4 features
-   - Uncertain long-term future
-   - Analysis: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
+    - Zodios is stable but not actively developed
+    - No support for latest Zod v4 features
+    - Uncertain long-term future
+    - Analysis: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
 
 2. **Not Our Primary Use Case**
-   - We need: Zod schemas for validation + MCP tools
-   - We don't need: HTTP client wrapper
-   - Target: Engraph SDK (headless validation) + MCP tools
+    - We need: Zod schemas for validation + MCP tools
+    - We don't need: HTTP client wrapper
+    - Target: Engraph SDK (headless validation) + MCP tools
 
 3. **Larger Bundle Size**
-   - Zodios + axios: ~35 KB additional
-   - Unnecessary for schema-only usage
-   - Analysis: `.agent/analysis/HANDLEBARS_EVALUATION.md`
+    - Zodios + axios: ~35 KB additional
+    - Unnecessary for schema-only usage
+    - Analysis: `.agent/analysis/HANDLEBARS_EVALUATION.md`
 
 4. **schemas-with-metadata is Superior**
-   - Everything Zodios provides, plus:
-     - Full request parameter validation (path, query, headers, body)
-     - All response status codes (not just success)
-     - MCP tools array (protocol-ready)
-     - Validation helpers
-     - Schema registry builder
-   - No dependencies beyond Zod
-   - Cleaner generated code
+    - Everything Zodios provides, plus:
+        - Full request parameter validation (path, query, headers, body)
+        - All response status codes (not just success)
+        - MCP tools array (protocol-ready)
+        - Validation helpers
+        - Schema registry builder
+    - No dependencies beyond Zod
+    - Cleaner generated code
 
 ### Alternatives Considered
 
 **Option 1: Keep Both Templates (Rejected)**
+
 - Default: Zodios (backward compatibility)
 - Alternative: schemas-with-metadata
 - **Rejected:** Confusing for users, split maintenance burden
 
 **Option 2: Deprecate Default, Keep Both (Rejected)**
+
 - Mark default as deprecated
 - Guide users to schemas-with-metadata
 - **Rejected:** Still maintains both codebases
 
 **Option 3: Replace Default with schemas-with-metadata (Accepted)**
+
 - schemas-with-metadata becomes the default
 - Zodios template available via explicit flag
 - Clear migration path
 - **Accepted:** Best for project direction
 
 **Option 4: Remove Zodios Entirely (Considered)**
+
 - Only offer schemas-with-metadata
 - **Deferred:** Keep Zodios template for backward compatibility
 
@@ -92,24 +99,28 @@ Historical reasons:
 **Phase 3 of Architecture Rewrite: Remove Zodios Dependencies (4-6 hours)**
 
 **Step 1: Rename Templates (1 hour)**
+
 - `schemas-with-metadata.hbs` → `default.hbs`
 - Current `default.hbs` → `zodios-client.hbs`
 - Update template registry
 - Update imports
 
 **Step 2: Update CLI Flags (1 hour)**
+
 - Default behavior: Generate schemas-with-metadata
 - Add flag: `--with-zodios-client` (opt-in to Zodios)
 - Add flag: `--with-validation-helpers` (default: false for schemas-only)
 - Update help text
 
 **Step 3: Update Tests (1-2 hours)**
+
 - Update default template tests
 - Add tests for --with-zodios-client flag
 - Verify backward compatibility path
 - Update snapshots
 
 **Step 4: Update Documentation (1-2 hours)**
+
 - README: Update default examples
 - README: Add migration guide (Zodios → schemas-with-metadata)
 - README: Document --with-zodios-client flag
@@ -118,18 +129,21 @@ Historical reasons:
 ### Migration Path for Existing Users
 
 **For users wanting schemas-with-metadata (most users):**
+
 ```bash
 # No change needed - now the default!
 pnpx openapi-zod-client spec.yaml -o client.ts
 ```
 
 **For users wanting Zodios client (backward compatibility):**
+
 ```bash
 # Add --with-zodios-client flag
 pnpx openapi-zod-client spec.yaml -o client.ts --with-zodios-client
 ```
 
 **For users wanting to migrate:**
+
 1. Remove flag (or add `--no-zodios-client`)
 2. Update imports (no more `@zodios/core`)
 3. Use validation helpers if needed (`--with-validation-helpers`)
@@ -138,6 +152,7 @@ pnpx openapi-zod-client spec.yaml -o client.ts --with-zodios-client
 ### Generated Code Comparison
 
 **Before (Zodios, was default):**
+
 ```typescript
 import { Zodios } from "@zodios/core";
 import { z } from "zod";
@@ -157,6 +172,7 @@ export default api;
 ```
 
 **After (schemas-with-metadata, now default):**
+
 ```typescript
 import { z } from "zod";
 
@@ -207,18 +223,21 @@ export function validateResponse(endpoint, status, data) { ... }
 ### Mitigation
 
 **Breaking Change:**
+
 - Major version bump (when extracted)
 - Clear migration guide in docs
 - Zodios template still available
 - Announcement in CHANGELOG
 
 **Migration:**
+
 - Simple flag addition for Zodios users
 - Most users benefit from better default
 - Migration guide with code examples
 - Step-by-step instructions
 
 **HTTP Client:**
+
 - Modern standard: use `fetch` (built-in)
 - Alternative: install axios, ky, etc.
 - More flexibility for users
@@ -229,6 +248,7 @@ export function validateResponse(endpoint, status, data) { ... }
 **See:** `.agent/plans/requirements.md`
 
 This decision directly supports:
+
 - **Req 1:** Generate Zod schemas ✅ (primary output)
 - **Req 2:** SDK generation ✅ (schemas-with-metadata is SDK-focused)
 - **Req 3:** Validation helpers ✅ (included, optional)
@@ -245,18 +265,22 @@ This decision directly supports:
 ## References
 
 **Planning:**
+
 - `.agent/plans/01-CURRENT-IMPLEMENTATION.md` - Phase 3 implementation
 - `.agent/plans/requirements.md` - Requirements alignment
 
 **Completed Work:**
+
 - `.agent/plans/archive/COMPLETED_WORK.md` - Task 1.9 (schemas-with-metadata creation)
 - `.agent/analysis/TASK_1.9_ENGRAPH_ENHANCEMENTS.md` - Template design
 
 **Analysis:**
+
 - `.agent/analysis/ZODIOS_CORE_EVALUATION.md` - Zodios maintenance status
 - `.agent/analysis/HANDLEBARS_EVALUATION.md` - Code generation options
 
 **Template Files:**
+
 - `lib/src/templates/schemas-with-metadata.hbs` (current)
 - `lib/src/templates/default.hbs` (current Zodios template)
 

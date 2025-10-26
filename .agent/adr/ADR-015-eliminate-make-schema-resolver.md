@@ -16,14 +16,15 @@ The codebase uses `makeSchemaResolver` as a factory function to create schema re
 ```typescript
 // ❌ Claims to return SchemaObject
 export function makeSchemaResolver(openApiDoc: OpenAPIObject) {
-  return function resolver($ref: string): SchemaObject {
-    // Actually returns: SchemaObject | ResponseObject | ParameterObject | any component!
-    return get(openApiDoc.components, $ref.split('/').slice(2));
-  };
+    return function resolver($ref: string): SchemaObject {
+        // Actually returns: SchemaObject | ResponseObject | ParameterObject | any component!
+        return get(openApiDoc.components, $ref.split("/").slice(2));
+    };
 }
 ```
 
 The resolver **lies**:
+
 - Claims return type: `SchemaObject`
 - Actual return type: `any component type`
 - Result: ~20-25 type assertions throughout codebase to "fix" this lie
@@ -38,6 +39,7 @@ const bundledSpec = await SwaggerParser.bundle(spec);
 ```
 
 `SwaggerParser.bundle()` **already resolves all operation-level $refs**:
+
 - Resolves `$ref` in paths/operations
 - Resolves `$ref` in parameters, request bodies, responses
 - Does NOT resolve component-level $refs (intentionally - those should stay as refs)
@@ -52,11 +54,12 @@ const resolver = makeSchemaResolver(openApiDoc);
 
 // Then passing it around
 function processSchema(schema: SchemaObject, resolver: Resolver) {
-  const resolved = resolver(schema.$ref); // Type assertion needed
+    const resolved = resolver(schema.$ref); // Type assertion needed
 }
 ```
 
 This pattern:
+
 - Hides the components object
 - Makes type flow unclear
 - Requires closures and function passing
@@ -66,20 +69,18 @@ This pattern:
 
 ```typescript
 // Direct, honest access
-function processSchema(
-  schema: SchemaObject | ReferenceObject,
-  components: ComponentsObject
-) {
-  if (isReferenceObject(schema)) {
-    const resolved = getSchemaFromComponents(components, schema.$ref);
-    // Type is honest: SchemaObject | undefined
-  }
+function processSchema(schema: SchemaObject | ReferenceObject, components: ComponentsObject) {
+    if (isReferenceObject(schema)) {
+        const resolved = getSchemaFromComponents(components, schema.$ref);
+        // Type is honest: SchemaObject | undefined
+    }
 }
 ```
 
 ### Discovery Process
 
 Analysis documented in:
+
 - `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` - SwaggerParser.bundle() guarantees
 - `.agent/docs/type-assertion-elimination-analysis.md` - Type flow analysis
 - `.agent/plans/archive/COMPLETED_WORK.md` - Task 2.3 analysis
@@ -92,7 +93,7 @@ Analysis documented in:
 
 **Create `component-access.ts` module:**
 
-```typescript
+````typescript
 import type { ComponentsObject, SchemaObject, ReferenceObject } from "openapi3-ts/oas30";
 
 /**
@@ -113,31 +114,30 @@ import type { ComponentsObject, SchemaObject, ReferenceObject } from "openapi3-t
  * ```
  */
 export function getSchemaFromComponents(
-  components: ComponentsObject | undefined,
-  $ref: string
+    components: ComponentsObject | undefined,
+    $ref: string
 ): SchemaObject | undefined {
-  if (!components?.schemas) return undefined;
-  
-  // Parse $ref path
-  const parts = $ref.split('/');
-  if (parts[0] !== '#' || parts[1] !== 'components' || parts[2] !== 'schemas') {
-    throw new Error(`Invalid $ref format: ${$ref}. Expected #/components/schemas/...`);
-  }
-  
-  const schemaName = parts[3];
-  const schema = components.schemas[schemaName];
-  
-  if (!schema) return undefined;
-  
-  // Ensure it's not a reference (SwaggerParser.bundle() should have resolved these)
-  if (isReferenceObject(schema)) {
-    throw new Error(
-      `Unexpected $ref in components: ${$ref}. ` +
-      `Ensure SwaggerParser.bundle() is called before processing.`
-    );
-  }
-  
-  return schema;
+    if (!components?.schemas) return undefined;
+
+    // Parse $ref path
+    const parts = $ref.split("/");
+    if (parts[0] !== "#" || parts[1] !== "components" || parts[2] !== "schemas") {
+        throw new Error(`Invalid $ref format: ${$ref}. Expected #/components/schemas/...`);
+    }
+
+    const schemaName = parts[3];
+    const schema = components.schemas[schemaName];
+
+    if (!schema) return undefined;
+
+    // Ensure it's not a reference (SwaggerParser.bundle() should have resolved these)
+    if (isReferenceObject(schema)) {
+        throw new Error(
+            `Unexpected $ref in components: ${$ref}. ` + `Ensure SwaggerParser.bundle() is called before processing.`
+        );
+    }
+
+    return schema;
 }
 
 /**
@@ -150,17 +150,17 @@ export function getSchemaFromComponents(
  * @throws {Error} If reference cannot be resolved
  */
 export function resolveSchemaRef(
-  schema: SchemaObject | ReferenceObject,
-  components: ComponentsObject | undefined
+    schema: SchemaObject | ReferenceObject,
+    components: ComponentsObject | undefined
 ): SchemaObject {
-  if (isReferenceObject(schema)) {
-    const resolved = getSchemaFromComponents(components, schema.$ref);
-    if (!resolved) {
-      throw new Error(`Cannot resolve $ref: ${schema.$ref}`);
+    if (isReferenceObject(schema)) {
+        const resolved = getSchemaFromComponents(components, schema.$ref);
+        if (!resolved) {
+            throw new Error(`Cannot resolve $ref: ${schema.$ref}`);
+        }
+        return resolved;
     }
-    return resolved;
-  }
-  return schema;
+    return schema;
 }
 
 /**
@@ -168,43 +168,48 @@ export function resolveSchemaRef(
  * Useful for fail-fast validation.
  */
 export function assertNotReference(
-  value: SchemaObject | ReferenceObject,
-  context: string
+    value: SchemaObject | ReferenceObject,
+    context: string
 ): asserts value is SchemaObject {
-  if (isReferenceObject(value)) {
-    throw new Error(
-      `Unexpected $ref in ${context}: ${value.$ref}. ` +
-      `Ensure SwaggerParser.bundle() resolved all operation-level refs.`
-    );
-  }
+    if (isReferenceObject(value)) {
+        throw new Error(
+            `Unexpected $ref in ${context}: ${value.$ref}. ` +
+                `Ensure SwaggerParser.bundle() resolved all operation-level refs.`
+        );
+    }
 }
-```
+````
 
 ### Migration Strategy
 
 **Phase 1 of Architecture Rewrite: Eliminate Resolver (8-10 hours)**
 
 **Step 1: Create component-access.ts (1-2 hours)**
+
 - Implement helper functions with proper types
 - Write comprehensive tests
 - Document fail-fast philosophy
 
 **Step 2: Update Function Signatures (2-3 hours)**
+
 - Change `resolver: Resolver` → `components: ComponentsObject`
 - Update all call sites
 - Fix type flows (no more assertions needed)
 
 **Step 3: Remove makeSchemaResolver (1 hour)**
+
 - Delete makeSchemaResolver.ts
 - Update imports throughout codebase
 - Verify all tests pass
 
 **Step 4: Update Tests (1-2 hours)**
+
 - Update test fixtures
 - Verify component access patterns
 - Add tests for new helper functions
 
 **Step 5: Modernize topologicalSort (1-2 hours)**
+
 - Add comprehensive TSDoc
 - Optimize performance (`.includes()` → `Set.has()`)
 - Add unit tests
@@ -239,16 +244,19 @@ export function assertNotReference(
 ### Mitigation
 
 **API Change:**
+
 - Internal functions only (not public API)
 - Phase 0 test suite catches any behavioral changes
 - Migration done in small, testable steps
 
 **More Parameters:**
+
 - Actually simpler - no closure factory needed
 - More explicit - clear where data comes from
 - Standard pattern - same as passing `openApiDoc`
 
 **Migration Effort:**
+
 - Well-defined scope (Phase 1 of rewrite)
 - Clear before/after examples
 - TDD approach catches regressions
@@ -263,9 +271,9 @@ const resolver = makeSchemaResolver(openApiDoc);
 
 // Use resolver (type assertions needed)
 function processParameter(param: ParameterObject, resolver: Resolver) {
-  if (param.schema?.$ref) {
-    const schema = resolver(param.schema.$ref) as SchemaObject; // ❌ Assertion
-  }
+    if (param.schema?.$ref) {
+        const schema = resolver(param.schema.$ref) as SchemaObject; // ❌ Assertion
+    }
 }
 
 // Pass resolver everywhere
@@ -276,13 +284,10 @@ processParameter(param, resolver);
 
 ```typescript
 // Direct access
-function processParameter(
-  param: ParameterObject,
-  components: ComponentsObject | undefined
-) {
-  if (isReferenceObject(param.schema)) {
-    const schema = resolveSchemaRef(param.schema, components); // ✅ No assertion
-  }
+function processParameter(param: ParameterObject, components: ComponentsObject | undefined) {
+    if (isReferenceObject(param.schema)) {
+        const schema = resolveSchemaRef(param.schema, components); // ✅ No assertion
+    }
 }
 
 // Pass components directly
@@ -292,10 +297,12 @@ processParameter(param, openApiDoc.components);
 ## Integration with Other Phases
 
 **Enables:**
+
 - **Phase 2:** Simpler ts-morph migration (no resolver to deal with)
 - **Future:** Easier multi-version OAS support
 
 **Prerequisites:**
+
 - **Phase 0:** Test suite catches any behavioral changes
 
 ## Related Decisions
@@ -308,13 +315,16 @@ processParameter(param, openApiDoc.components);
 ## References
 
 **Planning:**
+
 - `.agent/plans/01-CURRENT-IMPLEMENTATION.md` - Phase 1 complete implementation
 
 **Analysis:**
+
 - `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` - SwaggerParser.bundle() analysis
 - `.agent/docs/type-assertion-elimination-analysis.md` - Type flow problems
 
 **Current Implementation:**
+
 - `lib/src/makeSchemaResolver.ts` - Function to be removed
 - `lib/src/openApiToZod.ts` - Major consumer of resolver
 

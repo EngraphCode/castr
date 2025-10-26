@@ -29,6 +29,7 @@ This document contains the **complete Architecture Rewrite plan** for Phase 2.
 **See:** `.agent/plans/requirements.md` (Requirements 1, 2, 3, 7, 8)
 
 This Architecture Rewrite directly supports:
+
 - **Req 1:** Maintains and improves Zod schema generation from OpenAPI
 - **Req 2-3:** Ensures high-quality SDK generation with validation helpers
 - **Req 7:** Eliminates type assertions, enforces fail-fast with honest types

@@ -13,35 +13,36 @@ During Phase 2 pre-work (dependency updates and cleanup), we attempted to elimin
 While analyzing `openApiToTypescript.ts` and `openApiToTypescript.helpers.ts`, we found:
 
 1. **`makeSchemaResolver` lies about return types**
-   - Claims to return `SchemaObject`
-   - Actually returns any component type (schemas, responses, parameters, etc.)
-   - Type assertions throughout codebase mask this dishonesty
-   - ~20-25 assertions exist solely to "fix" the resolver's lies
+    - Claims to return `SchemaObject`
+    - Actually returns any component type (schemas, responses, parameters, etc.)
+    - Type assertions throughout codebase mask this dishonesty
+    - ~20-25 assertions exist solely to "fix" the resolver's lies
 
 2. **Not leveraging `SwaggerParser.bundle()` correctly**
-   - SwaggerParser already resolves all operation-level `$ref`s
-   - We're not trusting this guarantee
-   - Custom resolver logic is redundant and error-prone
-   - Analysis: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
+    - SwaggerParser already resolves all operation-level `$ref`s
+    - We're not trusting this guarantee
+    - Custom resolver logic is redundant and error-prone
+    - Analysis: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
 
 3. **`CodeMeta` is a poorly conceived abstraction**
-   - Wraps tanu's `t` types with name strings
-   - No clear value proposition
-   - Adds complexity without benefits
-   - Makes code harder to understand and maintain
-   - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
+    - Wraps tanu's `t` types with name strings
+    - No clear value proposition
+    - Adds complexity without benefits
+    - Makes code harder to understand and maintain
+    - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
 
 4. **Tanu API usage at wrong abstraction level**
-   - Both `t` and `ts` from same library but don't compose well
-   - Suggests incorrect API usage pattern
-   - ~15-20 assertions at tanu boundary
-   - Analysis: `.agent/docs/type-assertion-elimination-analysis.md`
+    - Both `t` and `ts` from same library but don't compose well
+    - Suggests incorrect API usage pattern
+    - ~15-20 assertions at tanu boundary
+    - Analysis: `.agent/docs/type-assertion-elimination-analysis.md`
 
 ### The Problem
 
 **Type assertions were symptoms, not the disease.**
 
 Attempting incremental fixes would:
+
 - Leave architectural dishonesty in place
 - Perpetuate the resolver anti-pattern
 - Continue masking bugs with assertions
@@ -51,17 +52,20 @@ Attempting incremental fixes would:
 ### Alternatives Considered
 
 **Option 1: Continue Incremental Fixes (Rejected)**
+
 - Complete type assertion elimination file-by-file
 - Work around resolver and CodeMeta issues
 - Migrate to ts-morph separately later
 - **Rejected:** Leaves technical debt, requires rework when fixing architecture
 
 **Option 2: Partial Rewrite (Rejected)**
+
 - Fix resolver only, keep CodeMeta
 - Or fix CodeMeta only, keep resolver
 - **Rejected:** These issues are interconnected, half-measures insufficient
 
 **Option 3: Comprehensive 4-Phase Rewrite (Accepted)**
+
 - Phase 0: Comprehensive test suite (safety net)
 - Phase 1: Eliminate resolver + CodeMeta
 - Phase 2: Migrate tanu → ts-morph
@@ -75,12 +79,14 @@ Attempting incremental fixes would:
 ### Phase Breakdown
 
 **Phase 0: Comprehensive Public API Test Suite (8-12 hours)**
+
 - 50-60 end-to-end tests covering entire public API
 - Safety net before making architectural changes
 - Prevents behavioral regressions
 - Tests document expected behavior
 
 **Phase 1: Eliminate makeSchemaResolver + CodeMeta (8-10 hours)**
+
 - Direct schema access via `components` parameter
 - Honest function signatures (return what they claim)
 - Remove CodeMeta abstraction entirely
@@ -88,12 +94,14 @@ Attempting incremental fixes would:
 - Eliminates ~20-25 type assertions automatically
 
 **Phase 2: Migrate from tanu to ts-morph (6-8 hours)**
+
 - Replace tanu with ts-morph for AST manipulation
 - Better ecosystem, more maintainable
 - Type-safe code generation
 - Eliminates ~15-20 tanu-boundary assertions
 
 **Phase 3: Remove Zodios Dependencies (4-6 hours)**
+
 - schemas-with-metadata becomes default template
 - Remove Zodios from generated code
 - Cleaner, more maintainable output
@@ -104,10 +112,12 @@ Attempting incremental fixes would:
 ### Superseded Work
 
 This decision supersedes:
+
 - **Task 3.2:** Type Assertion Elimination (11/15 files complete, paused)
 - **Task 2.3:** Defer Logic Analysis (completed but revealed deeper issues)
 
 Work from Task 3.2 is preserved:
+
 - 11 files with ~30 assertions eliminated
 - Established patterns (type guards, honest types, fail-fast)
 - Custom type guards created (isRequestBodyObject, isParameterObject, etc.)
@@ -143,22 +153,26 @@ Work from Task 3.2 is preserved:
 ### Mitigation
 
 **Time Investment:**
+
 - Comprehensive planning (done) reduces unknowns
 - TDD approach prevents rework
 - Clean foundation saves future maintenance time
 
 **Risk:**
+
 - Phase 0 test suite catches regressions
 - Small, testable steps within phases
 - Quality gates must pass after every change
 - Rollback plan documented
 
 **Context Switches:**
+
 - Clear phase boundaries with completion criteria
 - Each phase is independently valuable
 - Can pause between phases if needed
 
 **Delayed Completion:**
+
 - Better than rushed incremental fixes
 - Avoids technical debt requiring later rework
 - Investment pays off in maintainability
@@ -176,16 +190,19 @@ Work from Task 3.2 is preserved:
 ## References
 
 **Planning Documents:**
+
 - `.agent/plans/01-CURRENT-IMPLEMENTATION.md` - Complete 4-phase plan with implementation details
 - `.agent/plans/00-STRATEGIC-PLAN.md` - Strategic overview and timeline
 - `.agent/plans/archive/COMPLETED_WORK.md` - Phase 2 pre-work details (Task 3.2 partial completion)
 
 **Analysis Documents:**
+
 - `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` - SwaggerParser.bundle() analysis
 - `.agent/analysis/CODEMETA_ANALYSIS.md` - CodeMeta problems documented
 - `.agent/docs/type-assertion-elimination-analysis.md` - Visual analysis with diagrams
 
 **Requirements:**
+
 - `.agent/plans/requirements.md` - 8 core requirements this rewrite supports
 
 ## Timeline
