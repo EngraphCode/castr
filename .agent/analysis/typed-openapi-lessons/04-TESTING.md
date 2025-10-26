@@ -59,70 +59,70 @@ pnpm add -D tstyche
 
 ```typescript
 // tests/integration.types.tstyche.ts
-import { expect, test } from "tstyche";
-import type { Schemas, Endpoints } from "../tmp/generated-client";
+import { expect, test } from 'tstyche';
+import type { Schemas, Endpoints } from '../tmp/generated-client';
 
-test("Pet schema has correct structure", () => {
-    const pet: Schemas.Pet = {} as any;
+test('Pet schema has correct structure', () => {
+  const pet: Schemas.Pet = {} as any;
 
-    expect(pet).type.toHaveProperty("id");
-    expect(pet).type.toHaveProperty("name");
-    expect(pet).type.toHaveProperty("photoUrls");
+  expect(pet).type.toHaveProperty('id');
+  expect(pet).type.toHaveProperty('name');
+  expect(pet).type.toHaveProperty('photoUrls');
 
-    expect(pet.id).type.toBe<number>();
-    expect(pet.name).type.toBe<string>();
-    expect(pet.photoUrls).type.toBe<Array<string>>();
-    expect(pet.status).type.toBe<"available" | "pending" | "sold" | undefined>();
+  expect(pet.id).type.toBe<number>();
+  expect(pet.name).type.toBe<string>();
+  expect(pet.photoUrls).type.toBe<Array<string>>();
+  expect(pet.status).type.toBe<'available' | 'pending' | 'sold' | undefined>();
 });
 
-test("getPetById endpoint types are correct", () => {
-    const endpoint: Endpoints.get_GetPetById = {} as any;
+test('getPetById endpoint types are correct', () => {
+  const endpoint: Endpoints.get_GetPetById = {} as any;
 
-    expect(endpoint.method).type.toBe<"GET">();
-    expect(endpoint.path).type.toBe<"/pet/{petId}">();
+  expect(endpoint.method).type.toBe<'GET'>();
+  expect(endpoint.path).type.toBe<'/pet/{petId}'>();
 
-    expect(endpoint.parameters).type.toMatchInlineSnapshot(`
+  expect(endpoint.parameters).type.toMatchInlineSnapshot(`
     {
       path: { petId: number };
     }
   `);
 
-    expect(endpoint.responses["200"]).type.toBe<Schemas.Pet>();
-    expect(endpoint.responses["404"]).type.toBe<unknown>();
+  expect(endpoint.responses['200']).type.toBe<Schemas.Pet>();
+  expect(endpoint.responses['404']).type.toBe<unknown>();
 });
 
-test("API client methods are typed correctly", () => {
-    declare const api: ReturnType<typeof createClient>;
+test('API client methods are typed correctly', () => {
+  declare const api: ReturnType<typeof createClient>;
 
-    // getPetById accepts correct params
-    expect(api.get).type.toBeCallableWith("/pet/{petId}", {
-        path: { petId: 123 },
-    });
+  // getPetById accepts correct params
+  expect(api.get).type.toBeCallableWith('/pet/{petId}', {
+    path: { petId: 123 },
+  });
 
-    // getPetById rejects incorrect params
-    expect(api.get).type.not.toBeCallableWith("/pet/{petId}", {
-        path: { petId: "string" }, // Wrong type
-    });
+  // getPetById rejects incorrect params
+  expect(api.get).type.not.toBeCallableWith('/pet/{petId}', {
+    path: { petId: 'string' }, // Wrong type
+  });
 
-    // Return type is correct
-    const pet = api.get("/pet/{petId}", { path: { petId: 123 } });
-    expect(pet).type.resolves.toBe<Schemas.Pet>();
+  // Return type is correct
+  const pet = api.get('/pet/{petId}', { path: { petId: 123 } });
+  expect(pet).type.resolves.toBe<Schemas.Pet>();
 });
 
-test("discriminated unions work correctly", () => {
-    declare const result: Awaited<ReturnType<typeof api.get>>;
+test('discriminated unions work correctly', () => {
+  declare const result: Awaited<ReturnType<typeof api.get>>;
 
-    if (result.ok) {
-        expect(result.status).type.toBe<200 | 201>();
-        expect(result.data).type.toBe<Schemas.Pet>();
-    } else {
-        expect(result.status).type.toBe<400 | 404 | 500>();
+  if (result.ok) {
+    expect(result.status).type.toBe<200 | 201>();
+    expect(result.data).type.toBe<Schemas.Pet>();
+  } else {
+    expect(result.status).type.toBe<400 | 404 | 500>();
 
-        // Type narrows based on status
-        if (result.status === 404) {
-            expect(result.data).type.toBe<Schemas.NotFoundError>();
-        }
+    // Type narrows based on status
+    if (result.status === 404) {
+      expect(result.data).type.toBe<Schemas.NotFoundError>();
     }
+  }
 });
 ```
 
@@ -134,9 +134,9 @@ test("discriminated unions work correctly", () => {
 
 ```typescript
 // Mostly runtime tests
-test("generates correct schema", () => {
-    const code = getZodSchema({ schema, ctx });
-    expect(code.toString()).toBe("z.object({ id: z.number() })");
+test('generates correct schema', () => {
+  const code = getZodSchema({ schema, ctx });
+  expect(code.toString()).toBe('z.object({ id: z.number() })');
 });
 ```
 
@@ -158,28 +158,28 @@ pnpm add -D tstyche
 
 ```typescript
 // tests/types/generated-schemas.types.test.ts
-import { expect, test } from "tstyche";
-import { schemas } from "../fixtures/petstore-client";
+import { expect, test } from 'tstyche';
+import { schemas } from '../fixtures/petstore-client';
 
-test("Pet schema structure", () => {
-    const Pet = schemas.Pet;
+test('Pet schema structure', () => {
+  const Pet = schemas.Pet;
 
-    // Test that schema accepts correct input
-    expect(Pet.parse).type.toBeCallableWith({
-        id: 123,
-        name: "Fluffy",
-        photoUrls: [],
-    });
+  // Test that schema accepts correct input
+  expect(Pet.parse).type.toBeCallableWith({
+    id: 123,
+    name: 'Fluffy',
+    photoUrls: [],
+  });
 
-    // Test that schema rejects incorrect input (compile error)
-    expect(Pet.parse).type.not.toBeCallableWith({
-        id: "string", // Wrong type
-        name: "Fluffy",
-    });
+  // Test that schema rejects incorrect input (compile error)
+  expect(Pet.parse).type.not.toBeCallableWith({
+    id: 'string', // Wrong type
+    name: 'Fluffy',
+  });
 
-    // Test inferred type
-    type InferredPet = z.infer<typeof Pet>;
-    expect<InferredPet>().type.toMatchInlineSnapshot(`
+  // Test inferred type
+  type InferredPet = z.infer<typeof Pet>;
+  expect<InferredPet>().type.toMatchInlineSnapshot(`
     {
       id: number;
       name: string;
@@ -189,29 +189,29 @@ test("Pet schema structure", () => {
   `);
 });
 
-test("Endpoint parameter types", () => {
-    declare const api: ReturnType<typeof createApiClient>;
+test('Endpoint parameter types', () => {
+  declare const api: ReturnType<typeof createApiClient>;
 
-    // Test method signatures
-    expect(api.getPetById).type.toBeCallableWith({
-        params: { petId: "123" },
-    });
+  // Test method signatures
+  expect(api.getPetById).type.toBeCallableWith({
+    params: { petId: '123' },
+  });
 
-    expect(api.getPetById).type.not.toBeCallableWith({
-        params: { wrongParam: "123" },
-    });
+  expect(api.getPetById).type.not.toBeCallableWith({
+    params: { wrongParam: '123' },
+  });
 });
 
-test("Breaking changes are caught", () => {
-    // If we accidentally change id from number to string,
-    // this test will fail at type-check time
-    const pet: z.infer<typeof schemas.Pet> = {
-        id: 123, // If schema changed to string, this errors
-        name: "Fluffy",
-        photoUrls: [],
-    };
+test('Breaking changes are caught', () => {
+  // If we accidentally change id from number to string,
+  // this test will fail at type-check time
+  const pet: z.infer<typeof schemas.Pet> = {
+    id: 123, // If schema changed to string, this errors
+    name: 'Fluffy',
+    photoUrls: [],
+  };
 
-    expect(pet.id).type.toBe<number>(); // Not string!
+  expect(pet.id).type.toBe<number>(); // Not string!
 });
 ```
 
@@ -219,11 +219,11 @@ test("Breaking changes are caught", () => {
 
 ```json
 {
-    "scripts": {
-        "test": "vitest",
-        "test:types": "tstyche",
-        "test:all": "pnpm test && pnpm test:types"
-    }
+  "scripts": {
+    "test": "vitest",
+    "test:types": "tstyche",
+    "test:all": "pnpm test && pnpm test:types"
+  }
 }
 ```
 
@@ -248,9 +248,9 @@ test("Breaking changes are caught", () => {
 
 ```typescript
 // tests/integration-runtime-msw.test.ts
-import { setupServer } from "msw/node";
-import { http, HttpResponse } from "msw";
-import { createClient } from "../tmp/generated-client";
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
+import { createClient } from '../tmp/generated-client';
 
 // Setup MSW server
 const server = setupServer();
@@ -259,57 +259,57 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("API client with successful response", async () => {
-    // Mock the endpoint
-    server.use(
-        http.get("/pet/:petId", ({ params }) => {
-            return HttpResponse.json({
-                id: parseInt(params.petId as string),
-                name: "Fluffy",
-                photoUrls: [],
-            });
-        })
-    );
+test('API client with successful response', async () => {
+  // Mock the endpoint
+  server.use(
+    http.get('/pet/:petId', ({ params }) => {
+      return HttpResponse.json({
+        id: parseInt(params.petId as string),
+        name: 'Fluffy',
+        photoUrls: [],
+      });
+    }),
+  );
 
-    // Create client
-    const api = createClient("http://localhost", fetch);
+  // Create client
+  const api = createClient('http://localhost', fetch);
 
-    // Make request
-    const pet = await api.get("/pet/{petId}", {
-        path: { petId: 123 },
-    });
+  // Make request
+  const pet = await api.get('/pet/{petId}', {
+    path: { petId: 123 },
+  });
 
-    // Assertions
-    expect(pet.id).toBe(123);
-    expect(pet.name).toBe("Fluffy");
+  // Assertions
+  expect(pet.id).toBe(123);
+  expect(pet.name).toBe('Fluffy');
 });
 
-test("API client with error response", async () => {
-    server.use(
-        http.get("/pet/:petId", () => {
-            return HttpResponse.json({ code: 404, message: "Pet not found" }, { status: 404 });
-        })
-    );
+test('API client with error response', async () => {
+  server.use(
+    http.get('/pet/:petId', () => {
+      return HttpResponse.json({ code: 404, message: 'Pet not found' }, { status: 404 });
+    }),
+  );
 
-    const api = createClient("http://localhost", fetch);
+  const api = createClient('http://localhost', fetch);
 
-    await expect(api.get("/pet/{petId}", { path: { petId: 999 } })).rejects.toThrow("Pet not found");
+  await expect(api.get('/pet/{petId}', { path: { petId: 999 } })).rejects.toThrow('Pet not found');
 });
 
-test("API client validates response with Zod", async () => {
-    server.use(
-        http.get("/pet/:petId", () => {
-            return HttpResponse.json({
-                invalid: "data", // Missing required fields
-            });
-        })
-    );
+test('API client validates response with Zod', async () => {
+  server.use(
+    http.get('/pet/:petId', () => {
+      return HttpResponse.json({
+        invalid: 'data', // Missing required fields
+      });
+    }),
+  );
 
-    const api = createClient("http://localhost", fetch, {
-        validateResponse: true,
-    });
+  const api = createClient('http://localhost', fetch, {
+    validateResponse: true,
+  });
 
-    await expect(api.get("/pet/{petId}", { path: { petId: 123 } })).rejects.toThrow(ZodError);
+  await expect(api.get('/pet/{petId}', { path: { petId: 123 } })).rejects.toThrow(ZodError);
 });
 ```
 
@@ -322,12 +322,12 @@ test("API client validates response with Zod", async () => {
 Mostly inline snapshots:
 
 ```typescript
-test("petstore", async () => {
-    const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
-        disableWriteToFile: true,
-    });
-    expect(result).toMatchInlineSnapshot(`...`);
+test('petstore', async () => {
+  const result = await generateZodClientFromOpenAPI({
+    openApiDoc,
+    disableWriteToFile: true,
+  });
+  expect(result).toMatchInlineSnapshot(`...`);
 });
 ```
 
@@ -349,9 +349,9 @@ pnpm add -D msw
 
 ```typescript
 // tests/integration/zodios-runtime.test.ts
-import { setupServer } from "msw/node";
-import { http, HttpResponse } from "msw";
-import { createApiClient } from "../generated/petstore-client";
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
+import { createApiClient } from '../generated/petstore-client';
 
 const server = setupServer();
 
@@ -359,77 +359,77 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-describe("Zodios client integration", () => {
-    test("successful request", async () => {
-        server.use(
-            http.get("http://localhost/pets/:petId", ({ params }) => {
-                return HttpResponse.json({
-                    id: parseInt(params.petId),
-                    name: "Fluffy",
-                    photoUrls: [],
-                });
-            })
-        );
-
-        const api = createApiClient("http://localhost");
-        const pet = await api.getPetById({ params: { petId: "123" } });
-
-        expect(pet).toMatchObject({
-            id: 123,
-            name: "Fluffy",
+describe('Zodios client integration', () => {
+  test('successful request', async () => {
+    server.use(
+      http.get('http://localhost/pets/:petId', ({ params }) => {
+        return HttpResponse.json({
+          id: parseInt(params.petId),
+          name: 'Fluffy',
+          photoUrls: [],
         });
+      }),
+    );
+
+    const api = createApiClient('http://localhost');
+    const pet = await api.getPetById({ params: { petId: '123' } });
+
+    expect(pet).toMatchObject({
+      id: 123,
+      name: 'Fluffy',
     });
+  });
 
-    test("validates response schema", async () => {
-        server.use(
-            http.get("http://localhost/pets/:petId", () => {
-                return HttpResponse.json({
-                    // Missing required fields
-                    invalid: "data",
-                });
-            })
-        );
+  test('validates response schema', async () => {
+    server.use(
+      http.get('http://localhost/pets/:petId', () => {
+        return HttpResponse.json({
+          // Missing required fields
+          invalid: 'data',
+        });
+      }),
+    );
 
-        const api = createApiClient("http://localhost");
+    const api = createApiClient('http://localhost');
 
-        await expect(api.getPetById({ params: { petId: "123" } })).rejects.toThrow(); // Zod validation error
-    });
+    await expect(api.getPetById({ params: { petId: '123' } })).rejects.toThrow(); // Zod validation error
+  });
 
-    test("handles error responses", async () => {
-        server.use(
-            http.get("http://localhost/pets/:petId", () => {
-                return HttpResponse.json({ code: 404, message: "Not found" }, { status: 404 });
-            })
-        );
+  test('handles error responses', async () => {
+    server.use(
+      http.get('http://localhost/pets/:petId', () => {
+        return HttpResponse.json({ code: 404, message: 'Not found' }, { status: 404 });
+      }),
+    );
 
-        const api = createApiClient("http://localhost");
+    const api = createApiClient('http://localhost');
 
-        await expect(api.getPetById({ params: { petId: "999" } })).rejects.toThrow("Not found");
-    });
+    await expect(api.getPetById({ params: { petId: '999' } })).rejects.toThrow('Not found');
+  });
 });
 ```
 
 **3. Test different templates**:
 
 ```typescript
-describe("schemas-with-metadata template", () => {
-    test("validates requests", async () => {
-        const { endpoints, validateRequest } = require("../generated/api");
+describe('schemas-with-metadata template', () => {
+  test('validates requests', async () => {
+    const { endpoints, validateRequest } = require('../generated/api');
 
-        const endpoint = endpoints.find((e) => e.operationId === "getPetById");
+    const endpoint = endpoints.find((e) => e.operationId === 'getPetById');
 
-        expect(() => {
-            validateRequest(endpoint, {
-                pathParams: { petId: "123" },
-            });
-        }).not.toThrow();
+    expect(() => {
+      validateRequest(endpoint, {
+        pathParams: { petId: '123' },
+      });
+    }).not.toThrow();
 
-        expect(() => {
-            validateRequest(endpoint, {
-                pathParams: { wrongParam: "123" },
-            });
-        }).toThrow(ZodError);
-    });
+    expect(() => {
+      validateRequest(endpoint, {
+        pathParams: { wrongParam: '123' },
+      });
+    }).toThrow(ZodError);
+  });
 });
 ```
 
@@ -451,28 +451,28 @@ Tests generation for all runtimes:
 //   petstore.valibot.ts      (valibot)
 //   petstore.arktype.ts      (arktype)
 
-describe.each(["none", "zod", "typebox", "valibot", "arktype", "io-ts", "yup"])(
-    "generates %s runtime correctly",
-    async (runtime) => {
-        test("petstore", async () => {
-            const output = await generateFile({
-                ...options,
-                runtime,
-            });
+describe.each(['none', 'zod', 'typebox', 'valibot', 'arktype', 'io-ts', 'yup'])(
+  'generates %s runtime correctly',
+  async (runtime) => {
+    test('petstore', async () => {
+      const output = await generateFile({
+        ...options,
+        runtime,
+      });
 
-            expect(output).toMatchFileSnapshot(`./snapshots/petstore.${runtime}.ts`);
-        });
+      expect(output).toMatchFileSnapshot(`./snapshots/petstore.${runtime}.ts`);
+    });
 
-        test("docker", async () => {
-            const output = await generateFile({
-                ...options,
-                input: "./samples/docker.openapi.yaml",
-                runtime,
-            });
+    test('docker', async () => {
+      const output = await generateFile({
+        ...options,
+        input: './samples/docker.openapi.yaml',
+        runtime,
+      });
 
-            expect(output).toMatchFileSnapshot(`./snapshots/docker.${runtime}.ts`);
-        });
-    }
+      expect(output).toMatchFileSnapshot(`./snapshots/docker.${runtime}.ts`);
+    });
+  },
 );
 ```
 
@@ -483,11 +483,11 @@ describe.each(["none", "zod", "typebox", "valibot", "arktype", "io-ts", "yup"])(
 Single runtime (Zod):
 
 ```typescript
-test("petstore", async () => {
-    const result = await generateZodClientFromOpenAPI({
-        /* ... */
-    });
-    expect(result).toMatchInlineSnapshot(`...`);
+test('petstore', async () => {
+  const result = await generateZodClientFromOpenAPI({
+    /* ... */
+  });
+  expect(result).toMatchInlineSnapshot(`...`);
 });
 ```
 
@@ -498,44 +498,44 @@ Test all templates and options:
 ```typescript
 // tests/snapshots.test.ts
 describe.each([
-    { template: "default", name: "zodios-client" },
-    { template: "schemas-only", name: "schemas-only" },
-    { template: "schemas-with-metadata", name: "schemas-metadata" },
-    { template: "types-only", name: "types-only" }, // Future
-])("$name template", ({ template, name }) => {
-    test.each(["petstore", "petstore-expanded", "uspto", "docker"])("%s spec", async (specName) => {
-        const openApiDoc = await loadSpec(`./samples/${specName}.yaml`);
+  { template: 'default', name: 'zodios-client' },
+  { template: 'schemas-only', name: 'schemas-only' },
+  { template: 'schemas-with-metadata', name: 'schemas-metadata' },
+  { template: 'types-only', name: 'types-only' }, // Future
+])('$name template', ({ template, name }) => {
+  test.each(['petstore', 'petstore-expanded', 'uspto', 'docker'])('%s spec', async (specName) => {
+    const openApiDoc = await loadSpec(`./samples/${specName}.yaml`);
 
-        const output = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            template,
-            disableWriteToFile: true,
-            options: {
-                strictObjects: true,
-                exportSchemas: true,
-            },
-        });
-
-        expect(output).toMatchFileSnapshot(`./snapshots/${specName}.${name}.ts`);
+    const output = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      template,
+      disableWriteToFile: true,
+      options: {
+        strictObjects: true,
+        exportSchemas: true,
+      },
     });
+
+    expect(output).toMatchFileSnapshot(`./snapshots/${specName}.${name}.ts`);
+  });
 });
 
 // Test with different options
 describe.each([
-    { strictObjects: true, name: "strict" },
-    { strictObjects: false, name: "loose" },
-    { withDescription: true, name: "with-descriptions" },
-    { allReadonly: true, name: "readonly" },
-])("with $name options", ({ name, ...options }) => {
-    test("petstore", async () => {
-        const output = await generateZodClientFromOpenAPI({
-            openApiDoc: petstoreSpec,
-            disableWriteToFile: true,
-            options,
-        });
-
-        expect(output).toMatchFileSnapshot(`./snapshots/petstore.${name}.ts`);
+  { strictObjects: true, name: 'strict' },
+  { strictObjects: false, name: 'loose' },
+  { withDescription: true, name: 'with-descriptions' },
+  { allReadonly: true, name: 'readonly' },
+])('with $name options', ({ name, ...options }) => {
+  test('petstore', async () => {
+    const output = await generateZodClientFromOpenAPI({
+      openApiDoc: petstoreSpec,
+      disableWriteToFile: true,
+      options,
     });
+
+    expect(output).toMatchFileSnapshot(`./snapshots/petstore.${name}.ts`);
+  });
 });
 ```
 
@@ -550,24 +550,24 @@ describe.each([
 Generate test cases from OpenAPI spec:
 
 ```typescript
-import fc from "fast-check";
+import fc from 'fast-check';
 
-test("all schemas are valid Zod schemas", () => {
-    fc.assert(
-        fc.property(fc.jsonObject(), (data) => {
-            // For each schema in spec
-            for (const [name, schema] of Object.entries(schemas)) {
-                const zodSchema = generateZodSchema(schema);
+test('all schemas are valid Zod schemas', () => {
+  fc.assert(
+    fc.property(fc.jsonObject(), (data) => {
+      // For each schema in spec
+      for (const [name, schema] of Object.entries(schemas)) {
+        const zodSchema = generateZodSchema(schema);
 
-                // Should either parse or throw ZodError
-                try {
-                    zodSchema.parse(data);
-                } catch (error) {
-                    expect(error).toBeInstanceOf(ZodError);
-                }
-            }
-        })
-    );
+        // Should either parse or throw ZodError
+        try {
+          zodSchema.parse(data);
+        } catch (error) {
+          expect(error).toBeInstanceOf(ZodError);
+        }
+      }
+    }),
+  );
 });
 ```
 
@@ -591,11 +591,11 @@ typed-openapi tracks:
 
 ```json
 {
-    "scripts": {
-        "test": "vitest",
-        "test:coverage": "vitest --coverage",
-        "test:types": "tstyche"
-    }
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:types": "tstyche"
+  }
 }
 ```
 

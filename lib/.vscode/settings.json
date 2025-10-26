@@ -1,4 +1,4 @@
 {
-    "typescript.tsdk": "../node_modules/typescript/lib",
-    "typescript.tsserver.projectName": "openapi-zod-client-lib"
+  "typescript.tsdk": "../node_modules/typescript/lib",
+  "typescript.tsserver.projectName": "openapi-zod-client-lib"
 }

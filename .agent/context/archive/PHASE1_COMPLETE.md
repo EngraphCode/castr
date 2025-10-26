@@ -36,33 +36,33 @@
 ### Complexity Reductions
 
 1. **openApiToTypescript.ts**: 104 → <30 ✅
-    - Extracted 18 helpers to `openApiToTypescript.helpers.ts`
-    - Added 27 unit tests
-    - Reduced by 74+ complexity points
+   - Extracted 18 helpers to `openApiToTypescript.helpers.ts`
+   - Added 27 unit tests
+   - Reduced by 74+ complexity points
 
 2. **getOpenApiDependencyGraph.ts**: 31 → <29 ✅
-    - Extracted 2 helpers to `getOpenApiDependencyGraph.helpers.ts`
-    - Replaced nested loops with focused functions
+   - Extracted 2 helpers to `getOpenApiDependencyGraph.helpers.ts`
+   - Replaced nested loops with focused functions
 
 3. **schema-complexity.ts**: 33 → <29 ✅
-    - Extracted 3 helpers to `schema-complexity.helpers.ts`
-    - Unified composition handling
+   - Extracted 3 helpers to `schema-complexity.helpers.ts`
+   - Unified composition handling
 
 4. **getZodiosEndpointDefinitionList.ts**: 47 → <29 ✅
-    - Extracted 15 helpers across 3 files:
-        - `zodiosEndpoint.helpers.ts` (getSchemaVarName + 20 tests)
-        - `zodiosEndpoint.operation.helpers.ts` (request/response processing)
-        - `zodiosEndpoint.path.helpers.ts` (operation processing)
-    - Main function: 175 lines → 26 lines
-    - Inner loop: 100 lines → 15 lines
+   - Extracted 15 helpers across 3 files:
+     - `zodiosEndpoint.helpers.ts` (getSchemaVarName + 20 tests)
+     - `zodiosEndpoint.operation.helpers.ts` (request/response processing)
+     - `zodiosEndpoint.path.helpers.ts` (operation processing)
+   - Main function: 175 lines → 26 lines
+   - Inner loop: 100 lines → 15 lines
 
 ### Type Safety Improvements
 
 - **Fixed 10 critical type safety errors**:
-    - getZodiosEndpointDefinitionList.ts: unsafe argument
-    - openApiToTypescript.helpers.ts: 3 unsafe any[] operations
-    - schema-complexity.ts: unsafe assignment
-    - openApiToZod.ts: DTS build errors with exactOptionalPropertyTypes
+  - getZodiosEndpointDefinitionList.ts: unsafe argument
+  - openApiToTypescript.helpers.ts: 3 unsafe any[] operations
+  - schema-complexity.ts: unsafe assignment
+  - openApiToZod.ts: DTS build errors with exactOptionalPropertyTypes
 - **Removed unused imports**: 5 occurrences
 - **Added explicit type annotations** throughout
 

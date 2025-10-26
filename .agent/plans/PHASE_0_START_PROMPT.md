@@ -36,24 +36,24 @@ I'm working on the `openapi-zod-client` project and need to execute **Phase 0 of
 **Before starting, please read these documents in order:**
 
 1. **`.agent/plans/requirements.md`** (2 min) ⭐
-    - 8 core project requirements
-    - High-level goals and constraints
+   - 8 core project requirements
+   - High-level goals and constraints
 
 2. **`.agent/RULES.md`** (10 min) ⭐ **MANDATORY**
-    - Test-Driven Development (TDD) methodology - **STRICTLY REQUIRED**
-    - Comprehensive TSDoc standards
-    - Coding standards (pure functions, fail-fast, no type assertions)
-    - This defines HOW we write code
+   - Test-Driven Development (TDD) methodology - **STRICTLY REQUIRED**
+   - Comprehensive TSDoc standards
+   - Coding standards (pure functions, fail-fast, no type assertions)
+   - This defines HOW we write code
 
 3. **`.agent/plans/01-CURRENT-IMPLEMENTATION.md`** (15 min) ⭐ **THE PLAN**
-    - Complete Architecture Rewrite plan
-    - **Section: "Phase 0: Comprehensive Public API Test Suite"** - Read this section carefully
-    - Detailed task breakdown with test examples
-    - This is THE single source of truth for what to implement
+   - Complete Architecture Rewrite plan
+   - **Section: "Phase 0: Comprehensive Public API Test Suite"** - Read this section carefully
+   - Detailed task breakdown with test examples
+   - This is THE single source of truth for what to implement
 
 4. **`.agent/context/context.md`** (5 min)
-    - Current project state
-    - Quick reference for dependencies and tools
+   - Current project state
+   - Quick reference for dependencies and tools
 
 ### Phase 0 Detailed Instructions
 
@@ -62,32 +62,32 @@ I'm working on the `openapi-zod-client` project and need to execute **Phase 0 of
 **What Phase 0 Includes:**
 
 1. **Task 0.1: End-to-End Generation Tests** (3-4 hours)
-    - Test complete OpenAPI → TypeScript generation flow
-    - Multiple OpenAPI specs (simple, complex, real-world)
-    - All templates: `default`, `schemas-with-metadata`
-    - All output modes: `zod`, `types`
+   - Test complete OpenAPI → TypeScript generation flow
+   - Multiple OpenAPI specs (simple, complex, real-world)
+   - All templates: `default`, `schemas-with-metadata`
+   - All output modes: `zod`, `types`
 
 2. **Task 0.2: Schema Dependencies Tests** (2-3 hours)
-    - Test dependency graph generation
-    - Test topological sorting
-    - Test circular dependency detection
-    - Test schema ordering
+   - Test dependency graph generation
+   - Test topological sorting
+   - Test circular dependency detection
+   - Test schema ordering
 
 3. **Task 0.3: Type Safety Tests** (2-3 hours)
-    - Test generated code type-checks
-    - Test schema composition
-    - Test discriminated unions
-    - Test nested schemas
+   - Test generated code type-checks
+   - Test schema composition
+   - Test discriminated unions
+   - Test nested schemas
 
 4. **Task 0.4: Swagger Parser Integration Tests** (1-2 hours)
-    - Test `SwaggerParser.bundle()` guarantees
-    - Test $ref resolution expectations
-    - Test error handling
+   - Test `SwaggerParser.bundle()` guarantees
+   - Test $ref resolution expectations
+   - Test error handling
 
 5. **Task 0.5: Regression Prevention Tests** (1-2 hours)
-    - Test known edge cases
-    - Test GitHub issues scenarios
-    - Test breaking changes from previous versions
+   - Test known edge cases
+   - Test GitHub issues scenarios
+   - Test breaking changes from previous versions
 
 **Each test file has detailed examples and structure in the plan document.**
 
@@ -272,4 +272,3 @@ cd lib && pnpm test -- --run
 Verify all 373 tests pass, then start creating your Phase 0 test files.
 
 Good luck! 🚀
-

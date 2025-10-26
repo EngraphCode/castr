@@ -19,13 +19,13 @@ This **IS** a breaking change because:
 
 1. **TypeScript imports change:**
 
-    ```typescript
-    // Before (v1.x)
-    import { OpenAPIObject } from "openapi3-ts";
+   ```typescript
+   // Before (v1.x)
+   import { OpenAPIObject } from 'openapi3-ts';
 
-    // After (v2.x)
-    import { OpenAPIObject } from "openapi3-ts/oas31";
-    ```
+   // After (v2.x)
+   import { OpenAPIObject } from 'openapi3-ts/oas31';
+   ```
 
 2. **Users who programmatically use the library** will need to update their imports
 
@@ -83,15 +83,15 @@ This **IS** a breaking change because:
 
 ```json
 {
-    "lib/package.json": {
-        "openapi3-ts": "3.1.0" // ❌ Exact version, no caret
-    },
-    "examples/basic/package.json": {
-        "openapi3-ts": "3.0.2" // ❌ Different version!
-    },
-    "examples/*/package.json": {
-        "openapi3-ts": "3.0.2" // ❌ Also old
-    }
+  "lib/package.json": {
+    "openapi3-ts": "3.1.0" // ❌ Exact version, no caret
+  },
+  "examples/basic/package.json": {
+    "openapi3-ts": "3.0.2" // ❌ Different version!
+  },
+  "examples/*/package.json": {
+    "openapi3-ts": "3.0.2" // ❌ Also old
+  }
 }
 ```
 
@@ -172,16 +172,16 @@ npm info openapi3-ts@4
 **Key Changes in v4:**
 
 1. **Separate OAS 3.0 and 3.1 modules:**
-    - `openapi3-ts/oas30` for OpenAPI 3.0
-    - `openapi3-ts/oas31` for OpenAPI 3.1
+   - `openapi3-ts/oas30` for OpenAPI 3.0
+   - `openapi3-ts/oas31` for OpenAPI 3.1
 
 2. **Import changes:**
-    - No more `import from "openapi3-ts"`
-    - Must specify OAS version
+   - No more `import from "openapi3-ts"`
+   - Must specify OAS version
 
 3. **Type definitions:**
-    - May have slight differences between oas30 and oas31 types
-    - More accurate to spec
+   - May have slight differences between oas30 and oas31 types
+   - More accurate to spec
 
 #### Step 1.3: Check Utility Functions
 
@@ -205,10 +205,10 @@ node -e "console.log(Object.keys(require('openapi3-ts/oas31')))"
 // swagger-parser returns OpenAPIObject
 // Will it work with openapi3-ts v4 types?
 
-import SwaggerParser from "@apidevtools/swagger-parser";
-import type { OpenAPIObject } from "openapi3-ts/oas31";
+import SwaggerParser from '@apidevtools/swagger-parser';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-const doc = (await SwaggerParser.parse("spec.yaml")) as OpenAPIObject;
+const doc = (await SwaggerParser.parse('spec.yaml')) as OpenAPIObject;
 // Does this work? Test it!
 ```
 
@@ -271,14 +271,14 @@ Document before/after for each file:
 
 ```typescript
 // BEFORE (v3)
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from "openapi3-ts";
-import { isSchemaObject } from "openapi3-ts";
+import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts';
+import { isSchemaObject } from 'openapi3-ts';
 
 // AFTER (v4)
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from "openapi3-ts/oas31";
-import { isSchemaObject } from "openapi3-ts/oas31"; // If it exists
+import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
+import { isSchemaObject } from 'openapi3-ts/oas31'; // If it exists
 // OR
-import { isSchemaObject } from "./isSchemaObject"; // If custom needed
+import { isSchemaObject } from './isSchemaObject'; // If custom needed
 ```
 
 #### Step 3.2: Update Core Library Files
@@ -287,39 +287,39 @@ import { isSchemaObject } from "./isSchemaObject"; // If custom needed
 
 1. **lib/src/CodeMeta.ts:**
 
-    ```typescript
-    - import type { ReferenceObject, SchemaObject } from "openapi3-ts";
-    + import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
-    ```
+   ```typescript
+   - import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+   + import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
+   ```
 
 2. **lib/src/makeSchemaResolver.ts:**
 
-    ```typescript
-    - import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
-    + import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas31";
-    ```
+   ```typescript
+   - import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
+   + import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas31";
+   ```
 
 3. **lib/src/openApiToZod.ts:**
 
-    ```typescript
-    - import { isSchemaObject, type ReferenceObject, type SchemaObject } from "openapi3-ts";
-    + import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
-    + import { isSchemaObject } from "openapi3-ts/oas31"; // Or custom
-    ```
+   ```typescript
+   - import { isSchemaObject, type ReferenceObject, type SchemaObject } from "openapi3-ts";
+   + import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
+   + import { isSchemaObject } from "openapi3-ts/oas31"; // Or custom
+   ```
 
 4. **lib/src/schema-complexity.ts:**
 
-    ```typescript
-    - import type { ReferenceObject, SchemaObject } from "openapi3-ts";
-    + import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
-    ```
+   ```typescript
+   - import type { ReferenceObject, SchemaObject } from "openapi3-ts";
+   + import type { ReferenceObject, SchemaObject } from "openapi3-ts/oas31";
+   ```
 
 5. **lib/src/utils.ts:**
 
-    ```typescript
-    - import type { SchemaObject } from "openapi3-ts";
-    + import type { SchemaObject } from "openapi3-ts/oas31";
-    ```
+   ```typescript
+   - import type { SchemaObject } from "openapi3-ts";
+   + import type { SchemaObject } from "openapi3-ts/oas31";
+   ```
 
 6. **Continue for all 20 files...**
 
@@ -383,14 +383,14 @@ node
 Create or update `lib/src/isSchemaObject.ts`:
 
 ```typescript
-import type { SchemaObject } from "openapi3-ts/oas31";
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 /**
  * Type guard to check if an object is a SchemaObject
  * (as opposed to a ReferenceObject)
  */
 export function isSchemaObject(obj: any): obj is SchemaObject {
-    return obj && typeof obj === "object" && !("$ref" in obj);
+  return obj && typeof obj === 'object' && !('$ref' in obj);
 }
 ```
 
@@ -405,7 +405,7 @@ Then update imports in files that use it:
 Also update `lib/src/index.ts` to export it if needed:
 
 ```typescript
-export { isSchemaObject } from "./isSchemaObject";
+export { isSchemaObject } from './isSchemaObject';
 ```
 
 #### Step 4.3: Verify isReferenceObject
@@ -415,10 +415,10 @@ export { isSchemaObject } from "./isSchemaObject";
 Ensure it imports from correct path:
 
 ```typescript
-import type { ReferenceObject } from "openapi3-ts/oas31";
+import type { ReferenceObject } from 'openapi3-ts/oas31';
 
 export function isReferenceObject(obj: any): obj is ReferenceObject {
-    return obj && typeof obj.$ref === "string";
+  return obj && typeof obj.$ref === 'string';
 }
 ```
 
@@ -533,18 +533,18 @@ pnpm openapi-zod-client examples/petstore.yaml -o /tmp/test-output.ts
 
 ```typescript
 // Test the exported generateZodClientFromOpenAPI function
-import { generateZodClientFromOpenAPI } from "openapi-zod-client";
-import type { OpenAPIObject } from "openapi3-ts/oas31";
+import { generateZodClientFromOpenAPI } from 'openapi-zod-client';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 const doc: OpenAPIObject = {
-    openapi: "3.1.0",
-    info: { title: "Test", version: "1.0.0" },
-    paths: {},
+  openapi: '3.1.0',
+  info: { title: 'Test', version: '1.0.0' },
+  paths: {},
 };
 
 const result = await generateZodClientFromOpenAPI({
-    openApiDoc: doc,
-    disableWriteToFile: true,
+  openApiDoc: doc,
+  disableWriteToFile: true,
 });
 
 // Should work without errors
@@ -597,11 +597,11 @@ If you import types from `openapi3-ts`, update your imports:
 **Before (v1.x):**
 
 ```typescript
-import type { OpenAPIObject } from "openapi3-ts";
-import { generateZodClientFromOpenAPI } from "openapi-zod-client";
+import type { OpenAPIObject } from 'openapi3-ts';
+import { generateZodClientFromOpenAPI } from 'openapi-zod-client';
 
 const doc: OpenAPIObject = {
-    /* ... */
+  /* ... */
 };
 ```
 ````
@@ -609,11 +609,11 @@ const doc: OpenAPIObject = {
 **After (v2.x):**
 
 ```typescript
-import type { OpenAPIObject } from "openapi3-ts/oas31";
-import { generateZodClientFromOpenAPI } from "openapi-zod-client";
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { generateZodClientFromOpenAPI } from 'openapi-zod-client';
 
 const doc: OpenAPIObject = {
-    /* ... */
+  /* ... */
 };
 ```
 
@@ -629,7 +629,7 @@ is purely a TypeScript type change.
 If you specifically need OAS 3.0 types, use:
 
 ```typescript
-import type { OpenAPIObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
 ```
 
 #### What Didn't Change
@@ -665,7 +665,7 @@ All examples have been updated for openapi-zod-client v2.0.
 **Note:** If you're using the programmatic API, update your imports:
 
 ```typescript
-import type { OpenAPIObject } from "openapi3-ts/oas31";
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 ```
 ````
 
@@ -706,7 +706,7 @@ pnpm changeset
 
 ````markdown
 ---
-"openapi-zod-client": major
+'openapi-zod-client': major
 ---
 
 BREAKING CHANGE: Upgrade openapi3-ts to v4
@@ -720,10 +720,10 @@ Type imports now require specifying the OpenAPI version path:
 
 ```typescript
 // Before (v1.x)
-import type { OpenAPIObject } from "openapi3-ts";
+import type { OpenAPIObject } from 'openapi3-ts';
 
 // After (v2.x)
-import type { OpenAPIObject } from "openapi3-ts/oas31";
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 ```
 ````
 
@@ -888,40 +888,40 @@ If critical issues discovered:
 
 1. **Revert PR:**
 
-    ```bash
-    git revert <merge-commit>
-    ```
+   ```bash
+   git revert <merge-commit>
+   ```
 
 2. **Hot fix if minor:**
-    - Create patch PR
-    - Fast-track review
-    - Document issue
+   - Create patch PR
+   - Fast-track review
+   - Document issue
 
 3. **Delay Zod update:**
-    - If Plan 03 in progress, pause it
-    - Stabilize Plan 02 first
+   - If Plan 03 in progress, pause it
+   - Stabilize Plan 02 first
 
 ---
 
 ## Post-Merge Tasks
 
 1. **Monitor issues:**
-    - Watch for user reports
-    - Check GitHub issues
-    - Monitor Discord/Slack
+   - Watch for user reports
+   - Check GitHub issues
+   - Monitor Discord/Slack
 
 2. **Update dependent PRs:**
-    - Rebase Plan 03 if started
-    - Update any other branches
+   - Rebase Plan 03 if started
+   - Update any other branches
 
 3. **Community communication:**
-    - Announce v2.0.0 release
-    - Share migration guide
-    - Offer support
+   - Announce v2.0.0 release
+   - Share migration guide
+   - Offer support
 
 4. **Prepare for Plan 03:**
-    - Stable baseline now exists
-    - Can proceed with Zod v4
+   - Stable baseline now exists
+   - Can proceed with Zod v4
 
 ---
 

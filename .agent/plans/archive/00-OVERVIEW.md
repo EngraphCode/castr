@@ -83,11 +83,11 @@ graph TD
 - ✅ TypeScript updated
 - ✅ `.js` extensions added to all src files
 - ⚠️ Still need to fix:
-    - `samples-generator.ts` missing `.js` extension
-    - `cli.ts` cac import issue
-    - `maybePretty.ts` async format() call
-    - `openApiToTypescript.ts` tanu import path
-    - Unused variables
+  - `samples-generator.ts` missing `.js` extension
+  - `cli.ts` cac import issue
+  - `maybePretty.ts` async format() call
+  - `openApiToTypescript.ts` tanu import path
+  - Unused variables
 
 ---
 
@@ -267,23 +267,23 @@ _Note: Timeline includes fixing all issues found during each phase_
 **Remaining Before Phase 2:**
 
 1. **Test Suite Verification** ⚠️ CRITICAL
-    - Run full test suite (`pnpm test`)
-    - Fix any failing tests
-    - Ensure tests prove functionality (not just types)
-    - Update snapshots if needed
+   - Run full test suite (`pnpm test`)
+   - Fix any failing tests
+   - Ensure tests prove functionality (not just types)
+   - Update snapshots if needed
 2. **Example Validation** ⚠️ CRITICAL
-    - Verify all 3 examples generate correctly
-    - Ensure generated code is valid
-    - Test with small OpenAPI specs
+   - Verify all 3 examples generate correctly
+   - Ensure generated code is valid
+   - Test with small OpenAPI specs
 3. **Dependency Audit** ⚠️ REQUIRED
-    - Run `pnpm -r outdated` and update remaining deps
-    - Run `pnpm audit` and fix security issues
-    - Ensure no deprecated packages
+   - Run `pnpm -r outdated` and update remaining deps
+   - Run `pnpm audit` and fix security issues
+   - Ensure no deprecated packages
 4. **Functional Verification** ⚠️ REQUIRED
-    - CLI generates valid output
-    - Generated schemas validate correctly
-    - No runtime errors
-    - Build artifacts are usable
+   - CLI generates valid output
+   - Generated schemas validate correctly
+   - No runtime errors
+   - Build artifacts are usable
 
 **Blocker:** Cannot proceed to Phase 2 (openapi3-ts v4) until code is fully type-safe, tested, and functional
 
@@ -295,29 +295,29 @@ _Note: Timeline includes fixing all issues found during each phase_
 2. ✅ Execute Phase 0: Infrastructure & Workspace Setup
 3. ✅ Phase 1a: Developer Tooling Modernization (type-check passes)
 4. **🔧 Phase 1b: Test Suite & Verification** (CURRENT)
-    - [ ] Run full test suite and fix failures
-    - [ ] Verify examples generate correctly
-    - [ ] Run `pnpm audit` and fix vulnerabilities
-    - [ ] Run `pnpm -r outdated` and update dependencies
-    - [ ] Functional verification with sample OpenAPI specs
+   - [ ] Run full test suite and fix failures
+   - [ ] Verify examples generate correctly
+   - [ ] Run `pnpm audit` and fix vulnerabilities
+   - [ ] Run `pnpm -r outdated` and update dependencies
+   - [ ] Functional verification with sample OpenAPI specs
 5. **⏸️ Execute Phase 2: openapi3-ts v4** (BLOCKED until Phase 1b complete)
-    - Update openapi3-ts to v4.4.0
-    - Support both OpenAPI 3.0 and 3.1
-    - Update all imports and type guards
-    - Verify with Engraph API (3.0.3) and 3.1 test specs
+   - Update openapi3-ts to v4.4.0
+   - Support both OpenAPI 3.0 and 3.1
+   - Update all imports and type guards
+   - Verify with Engraph API (3.0.3) and 3.1 test specs
 6. **⏸️ Execute Phase 3: Zod v4** (BLOCKED until Phase 2 complete)
-    - Update Zod to v4.0+
-    - Update @zodios/core for compatibility
-    - Update schema generation logic
-    - Regenerate all test snapshots
+   - Update Zod to v4.0+
+   - Update @zodios/core for compatibility
+   - Update schema generation logic
+   - Regenerate all test snapshots
 7. **Final State:**
-    - Modernized, fully tested codebase
-    - All dependencies at latest versions
-    - OpenAPI 3.0 and 3.1 support
-    - Zod v4 schema generation
-    - Zero security vulnerabilities
-    - Zero outdated dependencies
-    - Ready for component extraction to Engraph SDK
+   - Modernized, fully tested codebase
+   - All dependencies at latest versions
+   - OpenAPI 3.0 and 3.1 support
+   - Zod v4 schema generation
+   - Zero security vulnerabilities
+   - Zero outdated dependencies
+   - Ready for component extraction to Engraph SDK
 
 ---
 

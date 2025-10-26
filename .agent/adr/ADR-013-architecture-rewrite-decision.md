@@ -13,29 +13,29 @@ During Phase 2 pre-work (dependency updates and cleanup), we attempted to elimin
 While analyzing `openApiToTypescript.ts` and `openApiToTypescript.helpers.ts`, we found:
 
 1. **`makeSchemaResolver` lies about return types**
-    - Claims to return `SchemaObject`
-    - Actually returns any component type (schemas, responses, parameters, etc.)
-    - Type assertions throughout codebase mask this dishonesty
-    - ~20-25 assertions exist solely to "fix" the resolver's lies
+   - Claims to return `SchemaObject`
+   - Actually returns any component type (schemas, responses, parameters, etc.)
+   - Type assertions throughout codebase mask this dishonesty
+   - ~20-25 assertions exist solely to "fix" the resolver's lies
 
 2. **Not leveraging `SwaggerParser.bundle()` correctly**
-    - SwaggerParser already resolves all operation-level `$ref`s
-    - We're not trusting this guarantee
-    - Custom resolver logic is redundant and error-prone
-    - Analysis: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
+   - SwaggerParser already resolves all operation-level `$ref`s
+   - We're not trusting this guarantee
+   - Custom resolver logic is redundant and error-prone
+   - Analysis: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
 
 3. **`CodeMeta` is a poorly conceived abstraction**
-    - Wraps tanu's `t` types with name strings
-    - No clear value proposition
-    - Adds complexity without benefits
-    - Makes code harder to understand and maintain
-    - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
+   - Wraps tanu's `t` types with name strings
+   - No clear value proposition
+   - Adds complexity without benefits
+   - Makes code harder to understand and maintain
+   - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
 
 4. **Tanu API usage at wrong abstraction level**
-    - Both `t` and `ts` from same library but don't compose well
-    - Suggests incorrect API usage pattern
-    - ~15-20 assertions at tanu boundary
-    - Analysis: `.agent/docs/type-assertion-elimination-analysis.md`
+   - Both `t` and `ts` from same library but don't compose well
+   - Suggests incorrect API usage pattern
+   - ~15-20 assertions at tanu boundary
+   - Analysis: `.agent/docs/type-assertion-elimination-analysis.md`
 
 ### The Problem
 
@@ -216,4 +216,3 @@ Work from Task 3.2 is preserved:
 
 - This ADR documents the decision captured in planning reconciliation
 - Implementation begins with Phase 0 test suite creation
-

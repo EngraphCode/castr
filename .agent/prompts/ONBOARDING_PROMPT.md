@@ -114,27 +114,27 @@ fix all remaining lint issues
 A properly onboarded AI should:
 
 1. **Confirm Reading**
-    - "I've read all 5 documents"
-    - "I understand the current state"
-    - "I'm familiar with RULES.md standards"
+   - "I've read all 5 documents"
+   - "I understand the current state"
+   - "I'm familiar with RULES.md standards"
 
 2. **Summarize Understanding**
-    - Project goal (extraction to Engraph monorepo)
-    - Current phase (Phase 2, ready to execute)
-    - Blocker (74 type assertions)
-    - First task (Lint Triage)
+   - Project goal (extraction to Engraph monorepo)
+   - Current phase (Phase 2, ready to execute)
+   - Blocker (74 type assertions)
+   - First task (Lint Triage)
 
 3. **Acknowledge Constraints**
-    - No type assertions allowed
-    - RULES.md standards apply
-    - Quality gates must pass
-    - Comprehensive testing required
+   - No type assertions allowed
+   - RULES.md standards apply
+   - Quality gates must pass
+   - Comprehensive testing required
 
 4. **Begin Work**
-    - Start with Task 1.1
-    - Follow acceptance/implementation/validation pattern
-    - Update TODO list as progressing
-    - Commit with quality gates passing
+   - Start with Task 1.1
+   - Follow acceptance/implementation/validation pattern
+   - Update TODO list as progressing
+   - Commit with quality gates passing
 
 ---
 

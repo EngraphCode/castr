@@ -46,12 +46,12 @@ This library must support our schema-first, build-time type generation architect
 
 - **MUST** provide a function that returns structured endpoint data
 - **MUST** include for each endpoint:
-    - HTTP method (GET, POST, etc.)
-    - Path pattern (e.g., `/users/{id}`)
-    - Operation ID (if defined)
-    - Description
-    - Parameter definitions with **runtime Zod schema objects** (not just code)
-    - Response schema as **runtime Zod schema object**
+  - HTTP method (GET, POST, etc.)
+  - Path pattern (e.g., `/users/{id}`)
+  - Operation ID (if defined)
+  - Description
+  - Parameter definitions with **runtime Zod schema objects** (not just code)
+  - Response schema as **runtime Zod schema object**
 - **MUST** return runtime Zod schemas that can be used for validation
 - **MUST** support querying endpoint data programmatically during build
 
@@ -82,46 +82,46 @@ This library must support our schema-first, build-time type generation architect
 
 ```typescript
 export async function generateZodClientFromOpenAPI(config: {
+  /**
+   * OpenAPI document to process
+   */
+  openApiDoc: OpenAPIObject;
+
+  /**
+   * Output file path (for file writing if applicable)
+   */
+  distPath?: string;
+
+  /**
+   * Generation options
+   */
+  options: {
     /**
-     * OpenAPI document to process
+     * Export all named schemas in addition to inline schemas
      */
-    openApiDoc: OpenAPIObject;
+    shouldExportAllSchemas: boolean;
 
     /**
-     * Output file path (for file writing if applicable)
+     * Export TypeScript type definitions alongside Zod schemas
      */
-    distPath?: string;
+    shouldExportAllTypes: boolean;
 
     /**
-     * Generation options
+     * How to group/organize generated code
+     * 'none' | 'tag' | 'method' | custom
      */
-    options: {
-        /**
-         * Export all named schemas in addition to inline schemas
-         */
-        shouldExportAllSchemas: boolean;
+    groupStrategy?: string;
 
-        /**
-         * Export TypeScript type definitions alongside Zod schemas
-         */
-        shouldExportAllTypes: boolean;
+    /**
+     * Generate type aliases for inferred types
+     */
+    withAlias?: boolean;
 
-        /**
-         * How to group/organize generated code
-         * 'none' | 'tag' | 'method' | custom
-         */
-        groupStrategy?: string;
-
-        /**
-         * Generate type aliases for inferred types
-         */
-        withAlias?: boolean;
-
-        /**
-         * Additional custom options
-         */
-        [key: string]: unknown;
-    };
+    /**
+     * Additional custom options
+     */
+    [key: string]: unknown;
+  };
 }): Promise<string>;
 ```
 
@@ -138,95 +138,95 @@ export async function generateZodClientFromOpenAPI(config: {
 
 ```typescript
 export function getZodiosEndpointDefinitionList(
-    openApiDoc: OpenAPIObject,
-    options: {
-        shouldExportAllSchemas: boolean;
-        shouldExportAllTypes: boolean;
-        groupStrategy?: string;
-        withAlias?: boolean;
-    }
+  openApiDoc: OpenAPIObject,
+  options: {
+    shouldExportAllSchemas: boolean;
+    shouldExportAllTypes: boolean;
+    groupStrategy?: string;
+    withAlias?: boolean;
+  },
 ): EndpointContext;
 
 interface EndpointContext {
-    /**
-     * Array of endpoint definitions with runtime Zod schemas
-     */
-    endpoints: EndpointDefinition[];
+  /**
+   * Array of endpoint definitions with runtime Zod schemas
+   */
+  endpoints: EndpointDefinition[];
 
-    /**
-     * Named schemas extracted from components
-     */
-    schemas?: Record<string, z.ZodTypeAny>;
+  /**
+   * Named schemas extracted from components
+   */
+  schemas?: Record<string, z.ZodTypeAny>;
 
-    /**
-     * Additional metadata
-     */
-    [key: string]: unknown;
+  /**
+   * Additional metadata
+   */
+  [key: string]: unknown;
 }
 
 interface EndpointDefinition {
-    /**
-     * HTTP method in lowercase
-     */
-    method: string;
+  /**
+   * HTTP method in lowercase
+   */
+  method: string;
 
-    /**
-     * Path pattern from OpenAPI (e.g., /users/{id})
-     */
-    path: string;
+  /**
+   * Path pattern from OpenAPI (e.g., /users/{id})
+   */
+  path: string;
 
-    /**
-     * Operation description
-     */
-    description?: string;
+  /**
+   * Operation description
+   */
+  description?: string;
 
-    /**
-     * Request format
-     */
-    requestFormat: "json" | "form-data" | "form-url";
+  /**
+   * Request format
+   */
+  requestFormat: 'json' | 'form-data' | 'form-url';
 
-    /**
-     * Runtime Zod schema for response validation
-     */
-    response: z.ZodTypeAny;
+  /**
+   * Runtime Zod schema for response validation
+   */
+  response: z.ZodTypeAny;
 
-    /**
-     * Parameter definitions with runtime Zod schemas
-     */
-    parameters?: ParameterDefinition[];
+  /**
+   * Parameter definitions with runtime Zod schemas
+   */
+  parameters?: ParameterDefinition[];
 
-    /**
-     * Operation ID from OpenAPI
-     */
-    operationId?: string;
+  /**
+   * Operation ID from OpenAPI
+   */
+  operationId?: string;
 }
 
 interface ParameterDefinition {
-    /**
-     * Parameter name
-     */
-    name: string;
+  /**
+   * Parameter name
+   */
+  name: string;
 
-    /**
-     * Parameter location
-     */
-    type: "Path" | "Query" | "Header" | "Body";
+  /**
+   * Parameter location
+   */
+  type: 'Path' | 'Query' | 'Header' | 'Body';
 
-    /**
-     * Runtime Zod schema object (NOT a string)
-     * Must be usable for validation and code generation
-     */
-    schema: z.ZodTypeAny;
+  /**
+   * Runtime Zod schema object (NOT a string)
+   * Must be usable for validation and code generation
+   */
+  schema: z.ZodTypeAny;
 
-    /**
-     * Description from OpenAPI
-     */
-    description?: string;
+  /**
+   * Description from OpenAPI
+   */
+  description?: string;
 
-    /**
-     * Whether parameter is required
-     */
-    required?: boolean;
+  /**
+   * Whether parameter is required
+   */
+  required?: boolean;
 }
 ```
 
@@ -249,7 +249,10 @@ export function jsonSchemaToZodSchema(schema: JSONSchema7): z.ZodTypeAny;
 /**
  * Convert a JSON Schema object to Zod TypeScript code
  */
-export function jsonSchemaToZodCode(schema: JSONSchema7, options?: { name?: string; export?: boolean }): string;
+export function jsonSchemaToZodCode(
+  schema: JSONSchema7,
+  options?: { name?: string; export?: boolean },
+): string;
 
 /**
  * Serialize a runtime Zod schema to TypeScript code
@@ -265,12 +268,12 @@ export function zodSchemaToCode(schema: z.ZodTypeAny, options?: { name?: string 
 
 ```typescript
 interface OpenAPIObject {
-    openapi: string; // '3.0.0' | '3.0.1' | '3.1.0'
-    info: InfoObject;
-    paths: PathsObject;
-    components?: ComponentsObject;
-    servers?: ServerObject[];
-    // ... other OpenAPI properties
+  openapi: string; // '3.0.0' | '3.0.1' | '3.1.0'
+  info: InfoObject;
+  paths: PathsObject;
+  components?: ComponentsObject;
+  servers?: ServerObject[];
+  // ... other OpenAPI properties
 }
 ```
 
@@ -284,42 +287,42 @@ interface OpenAPIObject {
 **Example structure the library should generate:**
 
 ```typescript
-import { z } from "zod";
+import { z } from 'zod';
 
 // Named schema exports
 export const UserSchema = z
-    .object({
-        id: z.string(),
-        name: z.string(),
-        email: z.string().email(),
-    })
-    .strict();
+  .object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string().email(),
+  })
+  .strict();
 
 export type User = z.infer<typeof UserSchema>;
 
 // Endpoints array (Zodios compatible)
 export const endpoints = [
-    {
-        method: "get",
-        path: "/users/:id",
-        description: "Get user by ID",
-        requestFormat: "json",
-        parameters: [
-            {
-                name: "id",
-                type: "Path",
-                schema: z.string().uuid(),
-            },
-        ],
-        response: UserSchema,
-    },
-    // ... more endpoints
+  {
+    method: 'get',
+    path: '/users/:id',
+    description: 'Get user by ID',
+    requestFormat: 'json',
+    parameters: [
+      {
+        name: 'id',
+        type: 'Path',
+        schema: z.string().uuid(),
+      },
+    ],
+    response: UserSchema,
+  },
+  // ... more endpoints
 ];
 
 // Schema collection
 export const schemas = {
-    User: UserSchema,
-    // ... more schemas
+  User: UserSchema,
+  // ... more schemas
 };
 ```
 
@@ -564,8 +567,8 @@ The library must support serializing runtime Zod schemas to code. Example:
 
 ```typescript
 const schema = z.object({
-    keyStage: z.union([z.literal("ks1"), z.literal("ks2")]),
-    subject: z.string(),
+  keyStage: z.union([z.literal('ks1'), z.literal('ks2')]),
+  subject: z.string(),
 });
 ```
 
@@ -588,14 +591,14 @@ This serialization is critical for the `emitRequestValidatorMap` function.
 - **File:** `packages/sdks/engraph-curriculum-sdk/type-gen/zodgen-core.ts`
 - **Purpose:** Generate complete Zod schema file with endpoint definitions
 - **Current options:**
-    ```typescript
-    {
-      shouldExportAllSchemas: true,
-      shouldExportAllTypes: true,
-      groupStrategy: 'none',
-      withAlias: false,
-    }
-    ```
+  ```typescript
+  {
+    shouldExportAllSchemas: true,
+    shouldExportAllTypes: true,
+    groupStrategy: 'none',
+    withAlias: false,
+  }
+  ```
 - **Template:** Uses `src/templates/default.hbs` from `openapi-zod-client` package
 - **Post-processing:** Heavy string manipulation to add custom exports
 
@@ -604,9 +607,9 @@ This serialization is critical for the `emitRequestValidatorMap` function.
 - **File:** `packages/sdks/engraph-curriculum-sdk/type-gen/typegen-core.ts`
 - **Purpose:** Extract runtime endpoint metadata with Zod schemas
 - **Returns:** Object with `endpoints` array containing:
-    - `method`, `path`, `description`
-    - `parameters[]` with `name`, `type`, and **runtime `schema` object**
-    - `response` as runtime Zod schema
+  - `method`, `path`, `description`
+  - `parameters[]` with `name`, `type`, and **runtime `schema` object**
+  - `response` as runtime Zod schema
 - **Usage:** Parameters are serialized to code for `REQUEST_PARAMETER_SCHEMAS`
 
 ---

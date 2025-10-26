@@ -22,10 +22,10 @@
 - ✅ Removed playground and examples workspaces
 - ✅ Fixed `generateJSDocArray.ts` (4 issues)
 - ✅ **Major complexity refactoring:**
-    - openApiToTypescript.ts: 104 → <30 (BELOW THRESHOLD!)
-    - getZodiosEndpointDefinitionList helpers: 289 lines extracted
-    - Created 29 pure helper functions across 3 files
-    - Added 47 comprehensive unit tests
+  - openApiToTypescript.ts: 104 → <30 (BELOW THRESHOLD!)
+  - getZodiosEndpointDefinitionList helpers: 289 lines extracted
+  - Created 29 pure helper functions across 3 files
+  - Added 47 comprehensive unit tests
 
 ### ✅ Completed Phase 1b: Complexity & ESLint (131 errors fixed - 61% reduction!)
 
@@ -162,24 +162,24 @@ pnpm list --depth=0
 Document breaking changes for:
 
 - **Prettier 2 → 3:** [Migration guide](https://prettier.io/blog/2023/07/05/3.0.0.html)
-    - Default formatting changes
-    - Plugin API changes
-    - Node.js 14+ required
+  - Default formatting changes
+  - Plugin API changes
+  - Node.js 14+ required
 
 - **Vitest 0.x → 2.x:** [Migration guide](https://vitest.dev/guide/migration.html)
-    - Config API changes
-    - Snapshot format updates
-    - New test APIs
+  - Config API changes
+  - Snapshot format updates
+  - New test APIs
 
 - **ESLint 8 → 9:** [Migration guide](https://eslint.org/docs/latest/use/migrate-to-9.0.0)
-    - Flat config (optional but recommended)
-    - Rule updates
-    - Plugin compatibility
+  - Flat config (optional but recommended)
+  - Rule updates
+  - Plugin compatibility
 
 - **TypeScript 5.1 → 5.7:**
-    - Check for new strict checks
-    - Performance improvements
-    - New language features
+  - Check for new strict checks
+  - Performance improvements
+  - New language features
 
 #### Step 1.3: Check Built-in Types
 
@@ -206,43 +206,43 @@ npm info js-yaml types
 
 1. `.node-version`
 
-    ```
-    - 18.16.0
-    + 18.20.0
-    ```
+   ```
+   - 18.16.0
+   + 18.20.0
+   ```
 
 2. `package.json` (root)
 
-    ```json
-    "engines": {
-    -  "node": ">=18.16.0"
-    +  "node": ">=18.20.0"
-    }
-    ```
+   ```json
+   "engines": {
+   -  "node": ">=18.16.0"
+   +  "node": ">=18.20.0"
+   }
+   ```
 
 3. `.github/workflows/ci.yml`
 
-    ```yaml
-    strategy:
-      matrix:
-    -   node-version: [16.x, 18.x, 20.x]
-    +   node-version: [18.x, 20.x, 22.x]  # Remove 16, add 22
-    ```
+   ```yaml
+   strategy:
+     matrix:
+   -   node-version: [16.x, 18.x, 20.x]
+   +   node-version: [18.x, 20.x, 22.x]  # Remove 16, add 22
+   ```
 
 4. `.github/workflows/publish.yml`
 
-    ```yaml
-    - name: Setup Node.js 16.x
-    + name: Setup Node.js 18.x
-      uses: actions/setup-node@v4
-      with:
-    -   node-version: 16.x
-    +   node-version: 18.x
-    ```
+   ```yaml
+   - name: Setup Node.js 16.x
+   + name: Setup Node.js 18.x
+     uses: actions/setup-node@v4
+     with:
+   -   node-version: 16.x
+   +   node-version: 18.x
+   ```
 
 5. `README.md` (Contributing section)
-    - Update Node.js version requirement
-    - Update any version-specific instructions
+   - Update Node.js version requirement
+   - Update any version-specific instructions
 
 #### Step 2.2: Test Node Compatibility
 
@@ -296,11 +296,11 @@ Review and update compiler options if beneficial:
 
 ```json
 {
-    "compilerOptions": {
-        // Consider adding new TS 5.7 features
-        "verbatimModuleSyntax": true // Better ES module support
-        // Review if any new strict checks are useful
-    }
+  "compilerOptions": {
+    // Consider adding new TS 5.7 features
+    "verbatimModuleSyntax": true // Better ES module support
+    // Review if any new strict checks are useful
+  }
 }
 ```
 
@@ -377,9 +377,9 @@ Review and update config for Prettier 3:
 
 ```json
 {
-    // Prettier 3 may have new defaults
-    // Review: https://prettier.io/blog/2023/07/05/3.0.0.html
-    // Update any plugin references if needed
+  // Prettier 3 may have new defaults
+  // Review: https://prettier.io/blog/2023/07/05/3.0.0.html
+  // Update any plugin references if needed
 }
 ```
 
@@ -431,19 +431,19 @@ This makes it easy to review the functional changes separately from formatting.
 // lib/vitest.config.ts
 /// <reference types="vitest" />
 
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    test: {
-        include: ["src/*.test.ts", "tests/*.test.ts"],
-        snapshotFormat: {
-            indent: 4,
-            escapeString: false,
-        },
-        // Vitest 2.x may have new config options
-        // Review: https://vitest.dev/guide/migration.html
+  test: {
+    include: ['src/*.test.ts', 'tests/*.test.ts'],
+    snapshotFormat: {
+      indent: 4,
+      escapeString: false,
     },
+    // Vitest 2.x may have new config options
+    // Review: https://vitest.dev/guide/migration.html
+  },
 });
 ```
 
@@ -454,11 +454,11 @@ Check if test scripts need updates:
 ```json
 // lib/package.json
 {
-    "scripts": {
-        "test": "vitest",
-        "test:ci": "vitest run"
-        // These should still work, but verify
-    }
+  "scripts": {
+    "test": "vitest",
+    "test:ci": "vitest run"
+    // These should still work, but verify
+  }
 }
 ```
 
@@ -533,22 +533,22 @@ Check if current plugins support ESLint 9:
 
 ```javascript
 // eslint.config.js
-import tseslint from "@typescript-eslint/eslint-plugin";
-import tsparser from "@typescript-eslint/parser";
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
 
 export default [
-    {
-        files: ["**/*.ts"],
-        languageOptions: {
-            parser: tsparser,
-        },
-        plugins: {
-            "@typescript-eslint": tseslint,
-        },
-        rules: {
-            // Migrate rules
-        },
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tsparser,
     },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      // Migrate rules
+    },
+  },
 ];
 ```
 
@@ -631,7 +631,7 @@ tsx ./lib/samples-generator.ts
 ```json
 // package.json (root)
 {
-    "packageManager": "pnpm@10.19.0" // Already latest
+  "packageManager": "pnpm@10.19.0" // Already latest
 }
 ```
 
@@ -640,11 +640,11 @@ tsx ./lib/samples-generator.ts
 ```json
 // package.json (root)
 {
-    "dependencies": {
-        "@babel/core": "^7.26.0",
-        "@babel/preset-env": "^7.26.0",
-        "@babel/preset-typescript": "^7.26.0"
-    }
+  "dependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0"
+  }
 }
 ```
 
@@ -822,14 +822,14 @@ pnpm audit
 
 1. **Automatic fixes:**
 
-    ```bash
-    pnpm audit --fix
-    ```
+   ```bash
+   pnpm audit --fix
+   ```
 
 2. **Manual updates for remaining issues:**
-    - Update vulnerable packages to safe versions
-    - If no safe version, consider alternatives
-    - Document any unfixable vulnerabilities
+   - Update vulnerable packages to safe versions
+   - If no safe version, consider alternatives
+   - Document any unfixable vulnerabilities
 
 #### Step 11.3: Verify Fixes
 
@@ -980,7 +980,7 @@ pnpm changeset
 
 ```markdown
 ---
-"openapi-zod-client": patch
+'openapi-zod-client': patch
 ---
 
 Modernize developer tooling and fix security vulnerabilities
@@ -1144,18 +1144,18 @@ If issues are discovered after merge:
 
 1. **Revert the entire PR:**
 
-    ```bash
-    git revert <merge-commit-sha>
-    ```
+   ```bash
+   git revert <merge-commit-sha>
+   ```
 
 2. **Fix specific issue:**
-    - Identify problematic commit
-    - Revert just that commit
-    - Fix and re-apply
+   - Identify problematic commit
+   - Revert just that commit
+   - Fix and re-apply
 
 3. **Hot fix:**
-    - Create patch PR with fix
-    - Fast-track review and merge
+   - Create patch PR with fix
+   - Fast-track review and merge
 
 ---
 
@@ -1164,18 +1164,18 @@ If issues are discovered after merge:
 After Phase 1 is complete:
 
 1. **Verify Everything Works:**
-    - Run full test suite
-    - Generate examples
-    - Build playground
-    - Test CLI
+   - Run full test suite
+   - Generate examples
+   - Build playground
+   - Test CLI
 
 2. **Prepare for Phase 2:**
-    - Document any issues found
-    - Clean working directory
-    - Commit all changes
+   - Document any issues found
+   - Clean working directory
+   - Commit all changes
 
 3. **Begin Phase 2:**
-    - Start openapi3-ts v4 update
+   - Start openapi3-ts v4 update
 
 ---
 
@@ -1218,11 +1218,11 @@ Verify the configuration that requires explicit extensions:
 ```json
 // lib/tsconfig.json
 {
-    "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext"
-        // These settings require .js extensions on relative imports
-    }
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+    // These settings require .js extensions on relative imports
+  }
 }
 ```
 
@@ -1989,11 +1989,11 @@ pnpm --filter lib build
 6. ✅ No TypeScript errors - **DONE**
 7. ✅ All code formatted with Prettier - **DONE**
 8. ⚠️ **Lint: 270 issues triaged** (see `.agent/LINT_TRIAGE.md`)
-    - [x] Unicorn rules removed (too strict)
-    - [ ] Tests excluded from linting (68 files)
-    - [ ] Critical type safety issues fixed in extracted files (~50 issues)
-    - [ ] Dead code removed (9 unused vars/imports)
-    - [ ] Remaining ~210 issues baselined as tech debt
+   - [x] Unicorn rules removed (too strict)
+   - [ ] Tests excluded from linting (68 files)
+   - [ ] Critical type safety issues fixed in extracted files (~50 issues)
+   - [ ] Dead code removed (9 unused vars/imports)
+   - [ ] Remaining ~210 issues baselined as tech debt
 
 **Lint Triage Summary:**
 
@@ -2024,13 +2024,13 @@ pnpm --filter lib build
 6. ✅ No TypeScript errors - **DONE**
 7. ✅ All code formatted - **DONE**
 8. 🔄 **Lint: 167/270 (38% reduction)** - **IN PROGRESS**
-    - [x] Test-specific rules configured
-    - [x] Critical issues fixed in extracted files (26 issues)
-    - [x] All unused vars/imports removed (9 issues)
-    - [x] CLI migrated from cac to commander (52 issues)
-    - [x] generateJSDocArray.ts type-safe (4 issues)
-    - [ ] 8 remaining files: ~69 critical issues
-    - [ ] Document ~98 issues as tech debt
+   - [x] Test-specific rules configured
+   - [x] Critical issues fixed in extracted files (26 issues)
+   - [x] All unused vars/imports removed (9 issues)
+   - [x] CLI migrated from cac to commander (52 issues)
+   - [x] generateJSDocArray.ts type-safe (4 issues)
+   - [ ] 8 remaining files: ~69 critical issues
+   - [ ] Document ~98 issues as tech debt
 
 **Progress Metrics:**
 
@@ -2151,11 +2151,11 @@ pnpm --filter lib build
 
 - Estimated effort: 2-3 hours
 - Native implementations needed:
-    - Object path getter (30 LOC)
-    - String case converters (20 LOC)
-    - Array sum (5 LOC)
-    - Sorting utilities (30 LOC)
-    - Object picker (15 LOC)
+  - Object path getter (30 LOC)
+  - String case converters (20 LOC)
+  - Array sum (5 LOC)
+  - Sorting utilities (30 LOC)
+  - Object picker (15 LOC)
 
 #### 2. **tanu** (3 files - template generation only)
 
@@ -2292,32 +2292,32 @@ Complete ESM migration by fixing all TypeScript compilation errors. This ensures
 #### Type Safety Errors (5 errors)
 
 1. **getZodiosEndpointDefinitionList.ts:147** - no-unsafe-argument
-    - Issue: `operation.responses[statusCode]` typed as `any`
-    - Fix: Add explicit type guard for ResponseObject | ReferenceObject
+   - Issue: `operation.responses[statusCode]` typed as `any`
+   - Fix: Add explicit type guard for ResponseObject | ReferenceObject
 
 2. **openApiToTypescript.helpers.ts:75** - no-unsafe-argument (3 errors)
-    - Lines: 75:49, 75:50, 75:98
-    - Issue: `any[]` in union/spread operations with TypeDefinition[]
-    - Fix: Add proper type annotations for composition helpers
+   - Lines: 75:49, 75:50, 75:98
+   - Issue: `any[]` in union/spread operations with TypeDefinition[]
+   - Fix: Add proper type annotations for composition helpers
 
 3. **schema-complexity.ts:114** - no-unsafe-assignment
-    - Issue: Schema property access returns `any`
-    - Fix: Add type guard or explicit schema type
+   - Issue: Schema property access returns `any`
+   - Fix: Add type guard or explicit schema type
 
 #### Cognitive Complexity (3 files - 24 points over threshold)
 
 1. **getOpenApiDependencyGraph.ts:12** - 31/29 (need -2)
-    - Status: Just barely over threshold
-    - Effort: ~30 min - extract 1-2 small helpers
+   - Status: Just barely over threshold
+   - Effort: ~30 min - extract 1-2 small helpers
 
 2. **schema-complexity.ts:38** - 33/29 (need -4)
-    - Also: 117 lines (max 100), 41 statements (max 30)
-    - Effort: ~1 hour - extract property/composition handlers
+   - Also: 117 lines (max 100), 41 statements (max 30)
+   - Effort: ~1 hour - extract property/composition handlers
 
 3. **getZodiosEndpointDefinitionList.ts:67** - 47/29 (need -18)
-    - Also: 175 lines (max 100), 66 statements (max 30)
-    - Status: Main function, already extracted 289 lines
-    - Effort: ~2 hours - extract path/method iteration logic
+   - Also: 175 lines (max 100), 66 statements (max 30)
+   - Status: Main function, already extracted 289 lines
+   - Effort: ~2 hours - extract path/method iteration logic
 
 **Total Critical Work:** ~4 hours
 

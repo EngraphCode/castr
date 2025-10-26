@@ -11,9 +11,9 @@
 
 - **Problem:** Enum complexity was incorrectly including `enum.length`, causing unexpected schema extraction
 - **Approach:** Test-Driven Development
-    - Created 21 unit tests defining desired behavior
-    - Refactored implementation to pass all tests
-    - Restored original snapshot behavior
+  - Created 21 unit tests defining desired behavior
+  - Refactored implementation to pass all tests
+  - Restored original snapshot behavior
 - **Result:** Enum complexity is now constant (type + enum = 2) regardless of size
 - **Commit:** `f2445d2` feat(validation): fix enum complexity calculation using TDD
 
@@ -21,9 +21,9 @@
 
 - **Philosophy Shift:** Fail fast with helpful errors instead of tolerating malformed specs
 - **Fixes:**
-    - **MediaType.$ref validation:** Must be inside `schema` property (per OAS spec lines 603-615)
-    - **Schema null validation:** Schema is always an object, never null (per OAS spec lines 313-514)
-    - Removed all `@ts-expect-error` workarounds
+  - **MediaType.$ref validation:** Must be inside `schema` property (per OAS spec lines 603-615)
+  - **Schema null validation:** Schema is always an object, never null (per OAS spec lines 313-514)
+  - Removed all `@ts-expect-error` workarounds
 - **Error Quality:** All errors now include spec references and fix suggestions
 - **Commit:** `6d43201` feat(validation): enforce strict OpenAPI spec compliance
 
@@ -32,13 +32,13 @@
 - **Infrastructure:** Automated validation against official OpenAPI schemas
 - **Coverage:** 14 new tests (10 positive, 4 negative)
 - **Tests Include:**
-    - Parameter schema vs content
-    - MediaType.$ref placement
-    - Schema composition (allOf, oneOf, anyOf)
-    - Nullable properties (OAS 3.0 style)
-    - Enums, arrays, additionalProperties
-    - Multiple response status codes
-    - Spec violation detection
+  - Parameter schema vs content
+  - MediaType.$ref placement
+  - Schema composition (allOf, oneOf, anyOf)
+  - Nullable properties (OAS 3.0 style)
+  - Enums, arrays, additionalProperties
+  - Multiple response status codes
+  - Spec violation detection
 - **Validation:** Using AJV with JSON Schema draft-04 (OAS 3.0 standard)
 - **Type Safety:** Using `openapi3-ts` types exclusively (no duplication)
 - **Commit:** `eb9faa2` feat(tests): add comprehensive OpenAPI spec compliance tests
@@ -48,11 +48,11 @@
 - **Purpose:** Track future improvements and research
 - **Scope:** 19 enhancements across 6 categories
 - **Highlight: Investigation Project** - "Defer Logic to openapi3-ts Library"
-    - Audit custom type guards
-    - Review schema traversal
-    - Check validation approaches
-    - Analyze HTTP method extraction
-    - Verify default values
+  - Audit custom type guards
+  - Review schema traversal
+  - Check validation approaches
+  - Analyze HTTP method extraction
+  - Verify default values
 - **Commit:** `dcee9d7` docs: add comprehensive enhancements backlog
 
 ---
@@ -115,21 +115,21 @@ Our Code (generateZodClientFromOpenAPI)
 
 ```typescript
 // ✅ Use library types exclusively
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from "openapi3-ts";
+import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts';
 
 // ✅ Use library type guards
-import { isReferenceObject, isSchemaObject } from "openapi3-ts";
+import { isReferenceObject, isSchemaObject } from 'openapi3-ts';
 
 // ✅ Create type predicates tied to library types
 type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
+  NonNullable<SchemaObject['type']>,
+  'string' | 'number' | 'integer' | 'boolean' | 'null'
 >;
 
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-    if (typeof value !== "string") return false;
-    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-    return typeStrings.includes(value);
+  if (typeof value !== 'string') return false;
+  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return typeStrings.includes(value);
 }
 ```
 
@@ -138,26 +138,26 @@ export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaT
 ## 📚 Documentation Added
 
 1. **`.agent/ENHANCEMENTS_BACKLOG.md`**
-    - 19 tracked enhancements
-    - Prioritization guidance
-    - Effort estimates
-    - Implementation strategies
+   - 19 tracked enhancements
+   - Prioritization guidance
+   - Effort estimates
+   - Implementation strategies
 
 2. **`lib/tests/spec-compliance.test.ts`**
-    - 4 tests for basic spec violations
-    - Documentation of fail-fast philosophy
+   - 4 tests for basic spec violations
+   - Documentation of fail-fast philosophy
 
 3. **`lib/tests/param-invalid-spec.test.ts`**
-    - Tests for parameter validation
-    - Helpful error message verification
+   - Tests for parameter validation
+   - Helpful error message verification
 
 4. **`lib/tests/openapi-spec-compliance.test.ts`**
-    - 14 comprehensive compliance tests
-    - Automated validation against official schemas
+   - 14 comprehensive compliance tests
+   - Automated validation against official schemas
 
 5. **`lib/src/schema-complexity.enum.test.ts`**
-    - 21 unit tests for enum complexity
-    - Behavior documentation through tests
+   - 21 unit tests for enum complexity
+   - Behavior documentation through tests
 
 ---
 
@@ -176,10 +176,10 @@ paramSchema = mediaTypeObject?.schema ?? mediaTypeObject;
 
 ```typescript
 if (!mediaTypeObject.schema) {
-    throw new Error(
-        `Invalid OpenAPI specification: mediaTypeObject must have ` +
-            `a 'schema' property. See: https://spec.openapis.org/oas/v3.0.3#media-type-object`
-    );
+  throw new Error(
+    `Invalid OpenAPI specification: mediaTypeObject must have ` +
+      `a 'schema' property. See: https://spec.openapis.org/oas/v3.0.3#media-type-object`,
+  );
 }
 ```
 
@@ -207,12 +207,12 @@ if (!mediaTypeObject.schema) {
 
 ```typescript
 // ❌ BAD: Redefining library types
-type PrimitiveType = "string" | "number" | "integer" | "boolean" | "null";
+type PrimitiveType = 'string' | 'number' | 'integer' | 'boolean' | 'null';
 
 // ✅ GOOD: Deriving from library types
 type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
+  NonNullable<SchemaObject['type']>,
+  'string' | 'number' | 'integer' | 'boolean' | 'null'
 >;
 ```
 
@@ -239,22 +239,22 @@ type PrimitiveSchemaType = Extract<
 ### Immediate Priorities
 
 1. **Investigation: Defer to openapi3-ts (#1)**
-    - Review what utilities `openapi3-ts` provides
-    - Check `OpenApiBuilder` DSL capabilities
-    - Audit custom type guards for library equivalents
-    - Investigate schema traversal helpers
+   - Review what utilities `openapi3-ts` provides
+   - Check `OpenApiBuilder` DSL capabilities
+   - Audit custom type guards for library equivalents
+   - Investigate schema traversal helpers
 
 2. **OAS 3.1.x Compliance Tests (#2)**
-    - Setup JSON Schema 2020-12 validation
-    - Test nullable as union type: `type: ["string", "null"]`
-    - Test webhooks, jsonSchemaDialect
-    - Update code for 3.1 differences
+   - Setup JSON Schema 2020-12 validation
+   - Test nullable as union type: `type: ["string", "null"]`
+   - Test webhooks, jsonSchemaDialect
+   - Update code for 3.1 differences
 
 3. **Architecture Decision Records (#9)**
-    - ADR-001: Fail Fast on Spec Violations
-    - ADR-002: Defer Types to openapi3-ts
-    - ADR-003: Enum Complexity Calculation
-    - ADR-004: Type Predicates Over Boolean Filters
+   - ADR-001: Fail Fast on Spec Violations
+   - ADR-002: Defer Types to openapi3-ts
+   - ADR-003: Enum Complexity Calculation
+   - ADR-004: Type Predicates Over Boolean Filters
 
 ---
 

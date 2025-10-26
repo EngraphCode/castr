@@ -1,18 +1,18 @@
-import SwaggerParser from "@apidevtools/swagger-parser";
-import type { OpenAPIObject, SchemasObject } from "openapi3-ts/oas30";
-import { beforeAll, describe, expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "./generateZodClientFromOpenAPI.js";
-import { getZodClientTemplateContext } from "./template-context.js";
-import { pathToVariableName } from "./utils.js";
+import SwaggerParser from '@apidevtools/swagger-parser';
+import type { OpenAPIObject, SchemasObject } from 'openapi3-ts/oas30';
+import { beforeAll, describe, expect, test } from 'vitest';
+import { generateZodClientFromOpenAPI } from './generateZodClientFromOpenAPI.js';
+import { getZodClientTemplateContext } from './template-context.js';
+import { pathToVariableName } from './utils.js';
 
 let openApiDoc: OpenAPIObject;
 beforeAll(async () => {
-    openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;
+  openApiDoc = (await SwaggerParser.parse('./tests/petstore.yaml')) as OpenAPIObject;
 });
 
-test("getZodClientTemplateContext", async () => {
-    const result = getZodClientTemplateContext(openApiDoc);
-    expect(result).toMatchInlineSnapshot(`
+test('getZodClientTemplateContext', async () => {
+  const result = getZodClientTemplateContext(openApiDoc);
+  expect(result).toMatchInlineSnapshot(`
       {
           "circularTypeByName": {},
           "emittedType": {},
@@ -464,10 +464,13 @@ test("getZodClientTemplateContext", async () => {
     `);
 });
 
-describe("generateZodClientFromOpenAPI", () => {
-    test("without options", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
-        expect(prettyOutput).toMatchInlineSnapshot(`
+describe('generateZodClientFromOpenAPI', () => {
+  test('without options', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+    });
+    expect(prettyOutput).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -952,15 +955,15 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
-    });
+  });
 
-    test("withAlias as true", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            disableWriteToFile: true,
-            options: { withAlias: true },
-        });
-        expect(prettyOutput).toMatchInlineSnapshot(`
+  test('withAlias as true', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+      options: { withAlias: true },
+    });
+    expect(prettyOutput).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -1464,15 +1467,15 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
-    });
+  });
 
-    test("withAlias as false", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            disableWriteToFile: true,
-            options: { withAlias: false },
-        });
-        expect(prettyOutput).toMatchInlineSnapshot(`
+  test('withAlias as false', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+      options: { withAlias: false },
+    });
+    expect(prettyOutput).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -1957,20 +1960,20 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
-    });
+  });
 
-    test("withAlias as a custom function", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            disableWriteToFile: true,
-            options: {
-                withAlias: (path: string, method: string, operation) =>
-                    path === "/pet"
-                        ? method + "CustomPet"
-                        : (operation?.operationId ?? method + pathToVariableName(path || "/noPath")),
-            },
-        });
-        expect(prettyOutput).toMatchInlineSnapshot(`
+  test('withAlias as a custom function', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+      options: {
+        withAlias: (path: string, method: string, operation) =>
+          path === '/pet'
+            ? method + 'CustomPet'
+            : (operation?.operationId ?? method + pathToVariableName(path || '/noPath')),
+      },
+    });
+    expect(prettyOutput).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -2474,17 +2477,17 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
-    });
+  });
 
-    test("with baseUrl", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            disableWriteToFile: true,
-            options: {
-                baseUrl: "http://example.com",
-            },
-        });
-        expect(prettyOutput).toMatchInlineSnapshot(`
+  test('with baseUrl', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+      options: {
+        baseUrl: 'http://example.com',
+      },
+    });
+    expect(prettyOutput).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -2969,17 +2972,17 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
-    });
+  });
 
-    test("without default values", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            disableWriteToFile: true,
-            options: {
-                withDefaultValues: false,
-            },
-        });
-        expect(prettyOutput).toMatchInlineSnapshot(`
+  test('without default values', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+      options: {
+        withDefaultValues: false,
+      },
+    });
+    expect(prettyOutput).toMatchInlineSnapshot(`
           "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
           import { z } from "zod";
 
@@ -3461,16 +3464,16 @@ describe("generateZodClientFromOpenAPI", () => {
           }
           "
         `);
-    });
+  });
 
-    test("with tag-file groupStrategy", async () => {
-        const prettyOutput = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            disableWriteToFile: true,
-            options: { groupStrategy: "tag-file" },
-        });
-        if (typeof prettyOutput === "object" && prettyOutput !== null) {
-            expect(prettyOutput["pet"]).toMatchInlineSnapshot(`
+  test('with tag-file groupStrategy', async () => {
+    const prettyOutput = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      disableWriteToFile: true,
+      options: { groupStrategy: 'tag-file' },
+    });
+    if (typeof prettyOutput === 'object' && prettyOutput !== null) {
+      expect(prettyOutput['pet']).toMatchInlineSnapshot(`
               "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
               import { z } from "zod";
 
@@ -3718,98 +3721,104 @@ describe("generateZodClientFromOpenAPI", () => {
               }
               "
             `);
-        }
-    });
+    }
+  });
 });
 
-test("with optional, partial, all required objects", async () => {
-    const schemas = {
-        Root2: {
-            type: "object",
-            properties: {
-                str: { type: "string" },
-                nb: { type: "number" },
-                nested: { $ref: "#/components/schemas/Nested2" },
-                partial: { $ref: "#/components/schemas/PartialObject" },
-                optionalProp: { type: "string" },
+test('with optional, partial, all required objects', async () => {
+  const schemas = {
+    Root2: {
+      type: 'object',
+      properties: {
+        str: { type: 'string' },
+        nb: { type: 'number' },
+        nested: { $ref: '#/components/schemas/Nested2' },
+        partial: { $ref: '#/components/schemas/PartialObject' },
+        optionalProp: { type: 'string' },
+      },
+      required: ['str', 'nb', 'nested'],
+    },
+    Nested2: {
+      type: 'object',
+      properties: {
+        nested_prop: { type: 'boolean' },
+        deeplyNested: { $ref: '#/components/schemas/DeeplyNested' },
+        circularToRoot: { $ref: '#/components/schemas/Root2' },
+        requiredProp: { type: 'string' },
+      },
+      required: ['requiredProp'],
+    },
+    PartialObject: {
+      type: 'object',
+      properties: {
+        something: { type: 'string' },
+        another: { type: 'number' },
+      },
+    },
+    DeeplyNested: {
+      type: 'array',
+      items: { $ref: '#/components/schemas/VeryDeeplyNested' },
+    },
+    VeryDeeplyNested: {
+      type: 'string',
+      enum: ['aaa', 'bbb', 'ccc'],
+    },
+  } as SchemasObject;
+  const openApiDoc = {
+    openapi: '3.0.3',
+    info: { title: 'Swagger Petstore - OpenAPI 3.0', version: '1.0.11' },
+    paths: {
+      '/root': {
+        get: {
+          operationId: 'getRoot',
+          responses: {
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: schemas['Root2'] } },
             },
-            required: ["str", "nb", "nested"],
+          },
         },
-        Nested2: {
-            type: "object",
-            properties: {
-                nested_prop: { type: "boolean" },
-                deeplyNested: { $ref: "#/components/schemas/DeeplyNested" },
-                circularToRoot: { $ref: "#/components/schemas/Root2" },
-                requiredProp: { type: "string" },
+      },
+      '/nested': {
+        get: {
+          operationId: 'getNested',
+          responses: {
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: schemas['Nested2'] } },
             },
-            required: ["requiredProp"],
+          },
         },
-        PartialObject: {
-            type: "object",
-            properties: {
-                something: { type: "string" },
-                another: { type: "number" },
+      },
+      '/deeplyNested': {
+        get: {
+          operationId: 'getDeeplyNested',
+          responses: {
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: schemas['DeeplyNested'] } },
             },
+          },
         },
-        DeeplyNested: {
-            type: "array",
-            items: { $ref: "#/components/schemas/VeryDeeplyNested" },
+      },
+      '/veryDeeplyNested': {
+        get: {
+          operationId: 'getVeryDeeplyNested',
+          responses: {
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: schemas['VeryDeeplyNested'] } },
+            },
+          },
         },
-        VeryDeeplyNested: {
-            type: "string",
-            enum: ["aaa", "bbb", "ccc"],
-        },
-    } as SchemasObject;
-    const openApiDoc = {
-        openapi: "3.0.3",
-        info: { title: "Swagger Petstore - OpenAPI 3.0", version: "1.0.11" },
-        paths: {
-            "/root": {
-                get: {
-                    operationId: "getRoot",
-                    responses: {
-                        "200": { description: "OK", content: { "application/json": { schema: schemas["Root2"] } } },
-                    },
-                },
-            },
-            "/nested": {
-                get: {
-                    operationId: "getNested",
-                    responses: {
-                        "200": { description: "OK", content: { "application/json": { schema: schemas["Nested2"] } } },
-                    },
-                },
-            },
-            "/deeplyNested": {
-                get: {
-                    operationId: "getDeeplyNested",
-                    responses: {
-                        "200": {
-                            description: "OK",
-                            content: { "application/json": { schema: schemas["DeeplyNested"] } },
-                        },
-                    },
-                },
-            },
-            "/veryDeeplyNested": {
-                get: {
-                    operationId: "getVeryDeeplyNested",
-                    responses: {
-                        "200": {
-                            description: "OK",
-                            content: { "application/json": { schema: schemas["VeryDeeplyNested"] } },
-                        },
-                    },
-                },
-            },
-        },
-        components: { schemas },
-    };
+      },
+    },
+    components: { schemas },
+  };
 
-    const data = getZodClientTemplateContext(openApiDoc);
+  const data = getZodClientTemplateContext(openApiDoc);
 
-    expect(data).toMatchInlineSnapshot(`
+  expect(data).toMatchInlineSnapshot(`
       {
           "circularTypeByName": {
               "Nested2": true,
@@ -3893,8 +3902,8 @@ test("with optional, partial, all required objects", async () => {
       }
     `);
 
-    const prettyOutput = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
-    expect(prettyOutput).toMatchInlineSnapshot(`
+  const prettyOutput = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
+  expect(prettyOutput).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 
@@ -4005,11 +4014,11 @@ test("with optional, partial, all required objects", async () => {
     `);
 });
 
-test("getZodClientTemplateContext with allReadonly", async () => {
-    const result = getZodClientTemplateContext(openApiDoc, {
-        allReadonly: true,
-    });
-    expect(result).toMatchInlineSnapshot(`
+test('getZodClientTemplateContext with allReadonly', async () => {
+  const result = getZodClientTemplateContext(openApiDoc, {
+    allReadonly: true,
+  });
+  expect(result).toMatchInlineSnapshot(`
       {
           "circularTypeByName": {},
           "emittedType": {},

@@ -27,11 +27,11 @@ typed-openapi's tooling philosophy:
 
 ```json
 {
-    "exports": {
-        ".": "./dist/index.js", // Main API
-        "./node": "./dist/node.export.js", // Node-specific
-        "./pretty": "./dist/pretty.export.js" // Formatting
-    }
+  "exports": {
+    ".": "./dist/index.js", // Main API
+    "./node": "./dist/node.export.js", // Node-specific
+    "./pretty": "./dist/pretty.export.js" // Formatting
+  }
 }
 ```
 
@@ -45,9 +45,9 @@ typed-openapi's tooling philosophy:
 
 ```typescript
 // Users building tools
-import { generateFile } from "typed-openapi";
-import { formatWithPrettier } from "typed-openapi/pretty";
-import { readOpenApiFile } from "typed-openapi/node";
+import { generateFile } from 'typed-openapi';
+import { formatWithPrettier } from 'typed-openapi/pretty';
+import { readOpenApiFile } from 'typed-openapi/node';
 ```
 
 ### 1.2 Applying to openapi-zod-client
@@ -58,13 +58,13 @@ import { readOpenApiFile } from "typed-openapi/node";
 
 ```json
 {
-    "exports": {
-        ".": "./dist/index.js",
-        "./cli": "./dist/cli.js",
-        "./templates": "./dist/templates.js",
-        "./validation": "./dist/validation.js",
-        "./types": "./dist/types.js"
-    }
+  "exports": {
+    ".": "./dist/index.js",
+    "./cli": "./dist/cli.js",
+    "./templates": "./dist/templates.js",
+    "./validation": "./dist/validation.js",
+    "./types": "./dist/types.js"
+  }
 }
 ```
 
@@ -72,16 +72,16 @@ import { readOpenApiFile } from "typed-openapi/node";
 
 ```typescript
 // Main API
-import { generateZodClientFromOpenAPI } from "openapi-zod-client";
+import { generateZodClientFromOpenAPI } from 'openapi-zod-client';
 
 // Template utilities
-import { getHandlebars, registerHelpers } from "openapi-zod-client/templates";
+import { getHandlebars, registerHelpers } from 'openapi-zod-client/templates';
 
 // Validation helpers
-import { validateRequest, validateResponse } from "openapi-zod-client/validation";
+import { validateRequest, validateResponse } from 'openapi-zod-client/validation';
 
 // Just types (for type-only imports)
-import type { TemplateContext } from "openapi-zod-client/types";
+import type { TemplateContext } from 'openapi-zod-client/types';
 ```
 
 **See implementation**: [examples/30-modular-exports.ts](./examples/30-modular-exports.ts)
@@ -157,13 +157,13 @@ pnpm openapi-zod-client --output ./different-output.ts
 **Implementation with cosmiconfig**:
 
 ```typescript
-import { cosmiconfig } from "cosmiconfig";
+import { cosmiconfig } from 'cosmiconfig';
 
-const explorer = cosmiconfig("openapi-zod-client");
+const explorer = cosmiconfig('openapi-zod-client');
 
 async function loadConfig() {
-    const result = await explorer.search();
-    return result?.config;
+  const result = await explorer.search();
+  return result?.config;
 }
 ```
 
@@ -176,14 +176,14 @@ async function loadConfig() {
 ```typescript
 // configs/api-v1.config.ts
 export default defineConfig({
-    input: "./specs/api-v1.yaml",
-    output: "./packages/api-v1/src/client.ts",
+  input: './specs/api-v1.yaml',
+  output: './packages/api-v1/src/client.ts',
 });
 
 // configs/api-v2.config.ts
 export default defineConfig({
-    input: "./specs/api-v2.yaml",
-    output: "./packages/api-v2/src/client.ts",
+  input: './specs/api-v2.yaml',
+  output: './packages/api-v2/src/client.ts',
 });
 ```
 
@@ -198,11 +198,11 @@ pnpm openapi-zod-client --config ./configs/api-v2.config.ts
 
 ```json
 {
-    "scripts": {
-        "generate:v1": "openapi-zod-client --config ./configs/api-v1.config.ts",
-        "generate:v2": "openapi-zod-client --config ./configs/api-v2.config.ts",
-        "generate:all": "pnpm generate:v1 && pnpm generate:v2"
-    }
+  "scripts": {
+    "generate:v1": "openapi-zod-client --config ./configs/api-v1.config.ts",
+    "generate:v2": "openapi-zod-client --config ./configs/api-v2.config.ts",
+    "generate:all": "pnpm generate:v1 && pnpm generate:v2"
+  }
 }
 ```
 
@@ -244,33 +244,33 @@ pnpm openapi-zod-client --watch
 **Implementation**:
 
 ```typescript
-import chokidar from "chokidar";
+import chokidar from 'chokidar';
 
 async function watchMode(config: Config) {
-    console.log("🔄 Watch mode enabled");
-    console.log("👀 Watching:", config.input);
+  console.log('🔄 Watch mode enabled');
+  console.log('👀 Watching:', config.input);
 
-    const watcher = chokidar.watch(config.input, {
-        persistent: true,
-        ignoreInitial: false,
-    });
+  const watcher = chokidar.watch(config.input, {
+    persistent: true,
+    ignoreInitial: false,
+  });
 
-    watcher.on("change", async (path) => {
-        console.log("🔄 Detected changes in", path);
-        console.log("⚙️  Regenerating...");
+  watcher.on('change', async (path) => {
+    console.log('🔄 Detected changes in', path);
+    console.log('⚙️  Regenerating...');
 
-        try {
-            const startTime = Date.now();
-            await generateZodClientFromOpenAPI(config);
-            const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+    try {
+      const startTime = Date.now();
+      await generateZodClientFromOpenAPI(config);
+      const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
-            console.log(`✅ Successfully regenerated (${duration}s)`);
-        } catch (error) {
-            console.error("❌ Generation failed:", error.message);
-        }
-    });
+      console.log(`✅ Successfully regenerated (${duration}s)`);
+    } catch (error) {
+      console.error('❌ Generation failed:', error.message);
+    }
+  });
 
-    console.log("✨ Ready! Waiting for changes...");
+  console.log('✨ Ready! Waiting for changes...');
 }
 ```
 
@@ -282,13 +282,13 @@ Watch multiple files:
 
 ```typescript
 const filesToWatch = [
-    config.input, // Main OpenAPI file
-    ...(config.additionalSpecs || []), // Referenced specs
-    config.templatePath, // Custom template
+  config.input, // Main OpenAPI file
+  ...(config.additionalSpecs || []), // Referenced specs
+  config.templatePath, // Custom template
 ];
 
 const watcher = chokidar.watch(filesToWatch, {
-    /* ... */
+  /* ... */
 });
 ```
 
@@ -297,11 +297,11 @@ Debounce rapid changes:
 ```typescript
 let timeout: NodeJS.Timeout;
 
-watcher.on("change", (path) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-        regenerate(path);
-    }, 300); // Wait 300ms for more changes
+watcher.on('change', (path) => {
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    regenerate(path);
+  }, 300); // Wait 300ms for more changes
 });
 ```
 
@@ -344,44 +344,44 @@ pnpm openapi-zod-client ./large-api.yaml -o ./client.ts
 **Implementation**:
 
 ```typescript
-import ora from "ora";
+import ora from 'ora';
 
 async function generateWithProgress(config: Config) {
-    const spinner = ora("Reading OpenAPI spec...").start();
+  const spinner = ora('Reading OpenAPI spec...').start();
 
-    try {
-        const openApiDoc = await loadSpec(config.input);
-        spinner.succeed(`Loaded: ${config.input}`);
+  try {
+    const openApiDoc = await loadSpec(config.input);
+    spinner.succeed(`Loaded: ${config.input}`);
 
-        spinner.start("Generating client...");
+    spinner.start('Generating client...');
 
-        const result = await generateZodClientFromOpenAPI({
-            openApiDoc,
-            ...config,
-            onProgress: (step) => {
-                spinner.text = `Generating client... ${step}`;
-            },
-        });
+    const result = await generateZodClientFromOpenAPI({
+      openApiDoc,
+      ...config,
+      onProgress: (step) => {
+        spinner.text = `Generating client... ${step}`;
+      },
+    });
 
-        spinner.succeed("Generated successfully!");
+    spinner.succeed('Generated successfully!');
 
-        // Show summary
-        console.log("\n📊 Summary:");
-        console.log(`  • Output: ${config.output}`);
-        console.log(`  • Time: ${result.duration}s`);
-        console.log(`  • Schemas: ${result.schemaCount}`);
-        console.log(`  • Endpoints: ${result.endpointCount}`);
+    // Show summary
+    console.log('\n📊 Summary:');
+    console.log(`  • Output: ${config.output}`);
+    console.log(`  • Time: ${result.duration}s`);
+    console.log(`  • Schemas: ${result.schemaCount}`);
+    console.log(`  • Endpoints: ${result.endpointCount}`);
 
-        // Show tips
-        if (result.suggestions.length > 0) {
-            console.log("\n💡 Optimization Tips:");
-            result.suggestions.forEach((tip) => console.log(`  • ${tip}`));
-        }
-    } catch (error) {
-        spinner.fail("Generation failed");
-        console.error(error);
-        process.exit(1);
+    // Show tips
+    if (result.suggestions.length > 0) {
+      console.log('\n💡 Optimization Tips:');
+      result.suggestions.forEach((tip) => console.log(`  • ${tip}`));
     }
+  } catch (error) {
+    spinner.fail('Generation failed');
+    console.error(error);
+    process.exit(1);
+  }
 }
 ```
 
@@ -424,27 +424,27 @@ Allow users to extend generation:
 ```typescript
 // plugins/add-jsdoc.ts
 export const addJSDocPlugin: Plugin = {
-    name: "add-jsdoc",
+  name: 'add-jsdoc',
 
-    transformSchema(schema, context) {
-        if (schema.description) {
-            return {
-                ...schema,
-                jsdoc: `/**\n * ${schema.description}\n */`,
-            };
-        }
-        return schema;
-    },
+  transformSchema(schema, context) {
+    if (schema.description) {
+      return {
+        ...schema,
+        jsdoc: `/**\n * ${schema.description}\n */`,
+      };
+    }
+    return schema;
+  },
 
-    transformEndpoint(endpoint, context) {
-        if (endpoint.description) {
-            return {
-                ...endpoint,
-                jsdoc: generateJSDoc(endpoint),
-            };
-        }
-        return endpoint;
-    },
+  transformEndpoint(endpoint, context) {
+    if (endpoint.description) {
+      return {
+        ...endpoint,
+        jsdoc: generateJSDoc(endpoint),
+      };
+    }
+    return endpoint;
+  },
 };
 ```
 
@@ -452,11 +452,11 @@ export const addJSDocPlugin: Plugin = {
 
 ```typescript
 // openapi-zod-client.config.ts
-import { defineConfig } from "openapi-zod-client";
-import { addJSDocPlugin } from "./plugins/add-jsdoc";
+import { defineConfig } from 'openapi-zod-client';
+import { addJSDocPlugin } from './plugins/add-jsdoc';
 
 export default defineConfig({
-    plugins: [addJSDocPlugin],
+  plugins: [addJSDocPlugin],
 });
 ```
 

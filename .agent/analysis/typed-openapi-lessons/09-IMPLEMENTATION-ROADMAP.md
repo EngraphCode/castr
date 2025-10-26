@@ -540,31 +540,31 @@ This roadmap provides a phased approach to implementing insights from typed-open
 ### Each Phase
 
 1. **Plan** (1 week)
-    - Review phase goals
-    - Create detailed tickets
-    - Assign priorities
+   - Review phase goals
+   - Create detailed tickets
+   - Assign priorities
 
 2. **Implement** (Phase duration)
-    - Follow implementation plan
-    - Write tests alongside code
-    - Document as you go
+   - Follow implementation plan
+   - Write tests alongside code
+   - Document as you go
 
 3. **Review** (3 days)
-    - Code review
-    - Documentation review
-    - User feedback gathering
+   - Code review
+   - Documentation review
+   - User feedback gathering
 
 4. **Release** (2 days)
-    - Changeset creation
-    - Version bump
-    - Release notes
-    - Announcement
+   - Changeset creation
+   - Version bump
+   - Release notes
+   - Announcement
 
 5. **Monitor** (2 weeks)
-    - Watch for issues
-    - Gather metrics
-    - Collect feedback
-    - Plan adjustments
+   - Watch for issues
+   - Gather metrics
+   - Collect feedback
+   - Plan adjustments
 
 ---
 

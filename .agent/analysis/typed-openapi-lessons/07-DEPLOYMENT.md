@@ -30,15 +30,15 @@ typed-openapi's deployment philosophy:
 ```typescript
 // No imports needed!
 export type Pet = {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 };
 
 // Lightweight client
 export function createClient(fetcher: Fetcher) {
-    return {
-        getPetById: (id) => fetcher("GET", `/pets/${id}`),
-    };
+  return {
+    getPetById: (id) => fetcher('GET', `/pets/${id}`),
+  };
 }
 ```
 
@@ -112,19 +112,19 @@ Potential Total Savings: 1.5 MB (75%)
 ```typescript
 // Default export object
 export default {
-    PetSchema: z.object({
-        /* ... */
-    }),
-    UserSchema: z.object({
-        /* ... */
-    }),
-    // ... 200 more schemas
+  PetSchema: z.object({
+    /* ... */
+  }),
+  UserSchema: z.object({
+    /* ... */
+  }),
+  // ... 200 more schemas
 };
 
 // Barrel exports
-export * from "./schemas";
-export * from "./endpoints";
-export * from "./client";
+export * from './schemas';
+export * from './endpoints';
+export * from './client';
 ```
 
 **Result**: Bundler includes everything, even unused code
@@ -136,21 +136,21 @@ export * from "./client";
 ```typescript
 // Each schema is a separate export
 export const Pet = z.object({
-    /* ... */
+  /* ... */
 });
 export const User = z.object({
-    /* ... */
+  /* ... */
 });
 
 // Users import only what they need
-import { Pet } from "./client"; // Only Pet is bundled
+import { Pet } from './client'; // Only Pet is bundled
 ```
 
 **Mark as side-effect free**:
 
 ```json
 {
-    "sideEffects": false
+  "sideEffects": false
 }
 ```
 
@@ -163,29 +163,29 @@ import { Pet } from "./client"; // Only Pet is bundled
 ```typescript
 // Good: Named exports (tree-shakeable)
 export const PetSchema = z
-    .object({
-        id: z.number(),
-        name: z.string(),
-    })
-    .strict();
+  .object({
+    id: z.number(),
+    name: z.string(),
+  })
+  .strict();
 
 export const UserSchema = z
-    .object({
-        id: z.number(),
-        email: z.string().email(),
-    })
-    .strict();
+  .object({
+    id: z.number(),
+    email: z.string().email(),
+  })
+  .strict();
 
 // Also good: Namespace exports (tree-shakeable with modern bundlers)
 export const schemas = {
-    Pet: PetSchema,
-    User: UserSchema,
+  Pet: PetSchema,
+  User: UserSchema,
 } as const;
 
 // Avoid: Computed object keys (not tree-shakeable)
 export const schemas = {
-    ["Pet"]: PetSchema, // ❌ Not statically analyzable
-    ["User"]: UserSchema,
+  ['Pet']: PetSchema, // ❌ Not statically analyzable
+  ['User']: UserSchema,
 } as const;
 ```
 
@@ -246,25 +246,25 @@ Bundle Impact Test:
 ```typescript
 // client.ts (main bundle)
 export async function createApiClient() {
-    return {
-        // Eager-loaded (common)
-        auth: await import("./domains/auth"),
-        users: await import("./domains/users"),
+  return {
+    // Eager-loaded (common)
+    auth: await import('./domains/auth'),
+    users: await import('./domains/users'),
 
-        // Lazy-loaded (rare)
-        get admin() {
-            return import("./domains/admin");
-        },
-        get analytics() {
-            return import("./domains/analytics");
-        },
-    };
+    // Lazy-loaded (rare)
+    get admin() {
+      return import('./domains/admin');
+    },
+    get analytics() {
+      return import('./domains/analytics');
+    },
+  };
 }
 
 // Usage
 const api = await createApiClient();
-await api.users.getUser("123"); // Already loaded
-await (await api.admin).deleteUser("123"); // Loads on first use
+await api.users.getUser('123'); // Already loaded
+await (await api.admin).deleteUser('123'); // Loads on first use
 ```
 
 **Implementation**: [examples/41-code-splitting.ts](./examples/41-code-splitting.ts)
@@ -281,21 +281,21 @@ await (await api.admin).deleteUser("123"); // Loads on first use
 
 ```json
 {
-    "dependencies": {
-        "zod": "^3.22.0"
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "peerDependencies": {
+    "@zodios/core": "^10.0.0",
+    "axios": "^1.6.0"
+  },
+  "peerDependenciesMeta": {
+    "@zodios/core": {
+      "optional": true
     },
-    "peerDependencies": {
-        "@zodios/core": "^10.0.0",
-        "axios": "^1.6.0"
-    },
-    "peerDependenciesMeta": {
-        "@zodios/core": {
-            "optional": true
-        },
-        "axios": {
-            "optional": true
-        }
+    "axios": {
+      "optional": true
     }
+  }
 }
 ```
 
@@ -340,19 +340,19 @@ pnpm openapi-zod-client ./api.yaml --client types
 ```typescript
 // Bad: Long descriptive names (doesn't minify)
 const PetWithLongDescriptiveNameSchema = z.object({
-    veryLongPropertyName: z.string(),
+  veryLongPropertyName: z.string(),
 });
 
 // Good: Shorter names (minifies better)
 const Pet = z.object({
-    id: z.number(),
-    name: z.string(),
+  id: z.number(),
+  name: z.string(),
 });
 
 // Comments are stripped by minifier anyway
 const Pet = z.object({
-    id: z.number(), // Pet ID
-    name: z.string(), // Pet name
+  id: z.number(), // Pet ID
+  name: z.string(), // Pet name
 });
 ```
 
@@ -370,14 +370,14 @@ export const schemas = { Pet, User };
 
 // Bad: IIFE (can't be optimized)
 export const Pet = (() => {
-    const base = z.object({ id: z.number() });
-    return base.extend({ name: z.string() });
+  const base = z.object({ id: z.number() });
+  return base.extend({ name: z.string() });
 })();
 
 // Good: Direct definition
 export const Pet = z.object({
-    id: z.number(),
-    name: z.string(),
+  id: z.number(),
+  name: z.string(),
 });
 ```
 
@@ -405,14 +405,14 @@ pnpm openapi-zod-client ./api.yaml -o ./client.ts --sourcemap
 
 ```json
 {
-    "type": "module",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        }
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
+  }
 }
 ```
 

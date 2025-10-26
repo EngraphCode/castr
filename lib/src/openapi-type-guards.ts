@@ -7,8 +7,8 @@
  * Centralized here to avoid circular import issues.
  */
 
-import type { OperationObject, ReferenceObject } from "openapi3-ts/oas30";
-import { isReferenceObject } from "openapi3-ts/oas30";
+import type { OperationObject, ReferenceObject } from 'openapi3-ts/oas30';
+import { isReferenceObject } from 'openapi3-ts/oas30';
 
 // Re-export isReferenceObject for convenience
 export { isReferenceObject };
@@ -17,7 +17,15 @@ export { isReferenceObject };
  * Allowed HTTP methods per OpenAPI 3.0 spec
  * https://spec.openapis.org/oas/v3.0.3#path-item-object
  */
-export const ALLOWED_METHODS = ["get", "head", "options", "post", "put", "patch", "delete"] as const;
+export const ALLOWED_METHODS = [
+  'get',
+  'head',
+  'options',
+  'post',
+  'put',
+  'patch',
+  'delete',
+] as const;
 
 /**
  * Type representing allowed HTTP methods
@@ -38,12 +46,12 @@ export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
  * ```
  */
 export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMethod {
-    if (!maybeMethod || typeof maybeMethod !== "string") {
-        return false;
-    }
-    // Cast to readonly string[] for .includes() compatibility
-    const stringMethods: readonly string[] = ALLOWED_METHODS;
-    return stringMethods.includes(maybeMethod);
+  if (!maybeMethod || typeof maybeMethod !== 'string') {
+    return false;
+  }
+  // Cast to readonly string[] for .includes() compatibility
+  const stringMethods: readonly string[] = ALLOWED_METHODS;
+  return stringMethods.includes(maybeMethod);
 }
 
 /**
@@ -55,11 +63,13 @@ export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMet
 export type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
 
 // eslint-disable-next-line sonarjs/function-return-type
-export function narrowToThingOrReference<T>(thingOrReference: T | ReferenceObject): T | ReferenceObject {
-    if (isReferenceObject(thingOrReference)) {
-        const reference = thingOrReference;
-        return reference;
-    }
-    const thing = thingOrReference;
-    return thing;
+export function narrowToThingOrReference<T>(
+  thingOrReference: T | ReferenceObject,
+): T | ReferenceObject {
+  if (isReferenceObject(thingOrReference)) {
+    const reference = thingOrReference;
+    return reference;
+  }
+  const thing = thingOrReference;
+  return thing;
 }

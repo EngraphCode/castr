@@ -22,27 +22,27 @@ The project used Preconstruct for building dual ESM/CJS packages. While Preconst
 ### Modern Build Tools
 
 1. **Preconstruct** (Current)
-    - ❌ Outdated, slow development
-    - ✅ Dual package output
-    - ❌ Complex setup
+   - ❌ Outdated, slow development
+   - ✅ Dual package output
+   - ❌ Complex setup
 
 2. **tsup** (esbuild-based)
-    - ✅ Modern, actively maintained
-    - ✅ Fast (esbuild-powered)
-    - ✅ Simple configuration
-    - ✅ Excellent TypeScript support
-    - ✅ Source maps, DTS generation
+   - ✅ Modern, actively maintained
+   - ✅ Fast (esbuild-powered)
+   - ✅ Simple configuration
+   - ✅ Excellent TypeScript support
+   - ✅ Source maps, DTS generation
 
 3. **unbuild**
-    - ✅ Modern, rollup-based
-    - ⚠️ More complex for simple cases
-    - ⚠️ Overkill for libraries
+   - ✅ Modern, rollup-based
+   - ⚠️ More complex for simple cases
+   - ⚠️ Overkill for libraries
 
 4. **tsc** (TypeScript compiler)
-    - ✅ Official TypeScript tool
-    - ❌ No bundling
-    - ❌ Separate builds for ESM/CJS
-    - ❌ Slower
+   - ✅ Official TypeScript tool
+   - ❌ No bundling
+   - ❌ Separate builds for ESM/CJS
+   - ❌ Slower
 
 ## Decision
 
@@ -62,32 +62,32 @@ The project used Preconstruct for building dual ESM/CJS packages. While Preconst
 
 ```typescript
 // tsup.config.ts
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
-    // Entry points
-    entry: ["src/index.ts", "src/cli.ts"],
+  // Entry points
+  entry: ['src/index.ts', 'src/cli.ts'],
 
-    // Output formats
-    format: ["cjs", "esm"],
+  // Output formats
+  format: ['cjs', 'esm'],
 
-    // TypeScript declarations
-    dts: true,
+  // TypeScript declarations
+  dts: true,
 
-    // Source maps
-    sourcemap: true,
+  // Source maps
+  sourcemap: true,
 
-    // Clean output before build
-    clean: true,
+  // Clean output before build
+  clean: true,
 
-    // Don't split into chunks (simpler output)
-    splitting: false,
+  // Don't split into chunks (simpler output)
+  splitting: false,
 
-    // Tree-shake unused code
-    treeshake: true,
+  // Tree-shake unused code
+  treeshake: true,
 
-    // Target modern environments
-    target: "es2022",
+  // Target modern environments
+  target: 'es2022',
 });
 ```
 
@@ -138,11 +138,11 @@ dist/
 ```json
 // package.json
 {
-    "preconstruct": {
-        "entrypoints": ["index.ts", "cli.ts"]
-    },
-    "main": "dist/openapi-zod-client.cjs.js",
-    "module": "dist/openapi-zod-client.esm.js"
+  "preconstruct": {
+    "entrypoints": ["index.ts", "cli.ts"]
+  },
+  "main": "dist/openapi-zod-client.cjs.js",
+  "module": "dist/openapi-zod-client.esm.js"
 }
 ```
 
@@ -159,34 +159,34 @@ $ pnpm build
 ```typescript
 // tsup.config.ts
 export default defineConfig({
-    entry: ["src/index.ts", "src/cli.ts"],
-    format: ["cjs", "esm"],
-    dts: true,
-    sourcemap: true,
-    clean: true,
-    splitting: false,
-    treeshake: true,
+  entry: ['src/index.ts', 'src/cli.ts'],
+  format: ['cjs', 'esm'],
+  dts: true,
+  sourcemap: true,
+  clean: true,
+  splitting: false,
+  treeshake: true,
 });
 ```
 
 ```json
 // package.json
 {
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "exports": {
-        ".": {
-            "require": "./dist/index.cjs",
-            "import": "./dist/index.js",
-            "types": "./dist/index.d.ts"
-        },
-        "./cli": {
-            "require": "./dist/cli.cjs",
-            "import": "./dist/cli.js",
-            "types": "./dist/cli.d.ts"
-        }
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": {
+      "require": "./dist/cli.cjs",
+      "import": "./dist/cli.js",
+      "types": "./dist/cli.d.ts"
     }
+  }
 }
 ```
 
@@ -212,18 +212,18 @@ Modern `package.json` exports for maximum compatibility:
 
 ```json
 {
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        },
-        "./cli": {
-            "types": "./dist/cli.d.ts",
-            "import": "./dist/cli.js",
-            "require": "./dist/cli.cjs"
-        }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js",
+      "require": "./dist/cli.cjs"
     }
+  }
 }
 ```
 

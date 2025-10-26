@@ -178,10 +178,10 @@ The ESLint config already has relaxed rules for tests (lines 66-81).
 
 - [x] Test-specific rules configured (appropriate relaxed rules for tests)
 - [x] Critical type safety issues fixed in extracted files:
-    - [x] `getZodiosEndpointDefinitionList.ts` - Fixed 15 critical issues
-    - [x] `makeSchemaResolver.ts` - Fixed 7 critical issues
-    - [x] `getOpenApiDependencyGraph.ts` - Fixed 3 critical issues
-    - [x] `isReferenceObject.ts` - Fixed 1 critical issue
+  - [x] `getZodiosEndpointDefinitionList.ts` - Fixed 15 critical issues
+  - [x] `makeSchemaResolver.ts` - Fixed 7 critical issues
+  - [x] `getOpenApiDependencyGraph.ts` - Fixed 3 critical issues
+  - [x] `isReferenceObject.ts` - Fixed 1 critical issue
 - [x] All unused vars/imports removed (fixed all 9: 8 unused imports, 1 unused var)
 - [x] Remaining ~226 issues documented as tech debt (not blocking)
 

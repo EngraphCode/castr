@@ -1,6 +1,4 @@
-/// <reference types="vitest" />
-
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 /**
  * Vitest configuration for characterisation tests
@@ -9,10 +7,10 @@ import { defineConfig } from "vitest/config";
  * during architectural refactoring. Run with: pnpm character
  */
 export default defineConfig({
-    test: {
-        include: ["src/characterisation/**/*.test.ts"],
-        snapshotFormat: { indent: 4, escapeString: false },
-        // Characterisation tests may be slower as they exercise the full API
-        testTimeout: 30000,
-    },
+  test: {
+    include: ['src/characterisation/**/*.test.ts'],
+    snapshotFormat: { indent: 4, escapeString: false },
+    // Characterisation tests may be slower as they exercise the full API
+    testTimeout: 30000,
+  },
 });

@@ -18,8 +18,8 @@ After upgrading to openapi3-ts v4.5.0, we now have access to separate type names
 
 ```typescript
 // Hard-coded to OAS 3.0 throughout codebase (93 files)
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from "openapi3-ts/oas30";
-import { isReferenceObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas30';
+import { isReferenceObject } from 'openapi3-ts/oas30';
 ```
 
 **Implications:**
@@ -35,9 +35,9 @@ import { isReferenceObject } from "openapi3-ts/oas30";
 
 ```typescript
 // openapi3-ts/dist/index.d.ts
-export * as oas30 from "./oas30"; // OpenAPI 3.0.x types
-export * as oas31 from "./oas31"; // OpenAPI 3.1.x types
-export { Server, ServerVariable } from "./model/server"; // Common types
+export * as oas30 from './oas30'; // OpenAPI 3.0.x types
+export * as oas31 from './oas31'; // OpenAPI 3.1.x types
+export { Server, ServerVariable } from './model/server'; // Common types
 ```
 
 **Key Differences Between OAS 3.0 and 3.1:**
@@ -87,13 +87,13 @@ export { Server, ServerVariable } from "./model/server"; // Common types
 ```typescript
 // Pseudo-code
 function getOpenAPITypes(spec: unknown) {
-    const version = (spec as any).openapi;
-    if (version.startsWith("3.0")) {
-        return import("openapi3-ts/oas30");
-    } else if (version.startsWith("3.1")) {
-        return import("openapi3-ts/oas31");
-    }
-    throw new Error(`Unsupported OpenAPI version: ${version}`);
+  const version = (spec as any).openapi;
+  if (version.startsWith('3.0')) {
+    return import('openapi3-ts/oas30');
+  } else if (version.startsWith('3.1')) {
+    return import('openapi3-ts/oas31');
+  }
+  throw new Error(`Unsupported OpenAPI version: ${version}`);
 }
 ```
 
@@ -116,17 +116,19 @@ function getOpenAPITypes(spec: unknown) {
 **Example Type Pattern:**
 
 ```typescript
-type VersionedOpenAPI = { version: "3.0"; spec: oas30.OpenAPIObject } | { version: "3.1"; spec: oas31.OpenAPIObject };
+type VersionedOpenAPI =
+  | { version: '3.0'; spec: oas30.OpenAPIObject }
+  | { version: '3.1'; spec: oas31.OpenAPIObject };
 
 function processSpec(versionedSpec: VersionedOpenAPI) {
-    switch (versionedSpec.version) {
-        case "3.0":
-            // Use oas30 types
-            break;
-        case "3.1":
-            // Use oas31 types
-            break;
-    }
+  switch (versionedSpec.version) {
+    case '3.0':
+      // Use oas30 types
+      break;
+    case '3.1':
+      // Use oas31 types
+      break;
+  }
 }
 ```
 
@@ -151,21 +153,21 @@ generateZodClientFromOpenAPI({
 
 ```typescript
 // lib/src/generateZodClientFromOpenAPI.ts
-import * as oas30 from "openapi3-ts/oas30";
-import * as oas31 from "openapi3-ts/oas31";
+import * as oas30 from 'openapi3-ts/oas30';
+import * as oas31 from 'openapi3-ts/oas31';
 
 export interface GenerateZodClientFromOpenApiArgs<Options> {
-    openApiDoc: oas30.OpenAPIObject | oas31.OpenAPIObject;
-    oasVersion?: "3.0" | "3.1" | "auto"; // New
-    // ... existing options
+  openApiDoc: oas30.OpenAPIObject | oas31.OpenAPIObject;
+  oasVersion?: '3.0' | '3.1' | 'auto'; // New
+  // ... existing options
 }
 
-function getVersionedTypes(version: "3.0" | "3.1" | "auto", spec: unknown) {
-    if (version === "auto") {
-        const detected = (spec as any).openapi;
-        version = detected.startsWith("3.1") ? "3.1" : "3.0";
-    }
-    return version === "3.1" ? oas31 : oas30;
+function getVersionedTypes(version: '3.0' | '3.1' | 'auto', spec: unknown) {
+  if (version === 'auto') {
+    const detected = (spec as any).openapi;
+    version = detected.startsWith('3.1') ? '3.1' : '3.0';
+  }
+  return version === '3.1' ? oas31 : oas30;
 }
 ```
 
@@ -244,10 +246,10 @@ openapi-zod-client/oas31
 1. Monitor GitHub issues for OAS 3.1 feature requests
 2. Survey users about their OAS version usage
 3. Track which OAS 3.1 features are most requested:
-    - Numeric `exclusiveMinimum`/`exclusiveMaximum`
-    - `type: null` instead of `nullable`
-    - JSON Schema 2020-12 keywords (`const`, `if`/`then`/`else`, etc.)
-    - `$schema` support
+   - Numeric `exclusiveMinimum`/`exclusiveMaximum`
+   - `type: null` instead of `nullable`
+   - JSON Schema 2020-12 keywords (`const`, `if`/`then`/`else`, etc.)
+   - `$schema` support
 
 **Why:**
 
@@ -316,11 +318,11 @@ type OpenAPIObject = any;  // or unknown
 
 ```typescript
 // Use generics + version parameter
-function processSpec<V extends "3.0" | "3.1">(
-    spec: V extends "3.0" ? oas30.OpenAPIObject : oas31.OpenAPIObject,
-    version: V
+function processSpec<V extends '3.0' | '3.1'>(
+  spec: V extends '3.0' ? oas30.OpenAPIObject : oas31.OpenAPIObject,
+  version: V,
 ) {
-    // Type-safe based on version parameter
+  // Type-safe based on version parameter
 }
 ```
 
@@ -358,12 +360,12 @@ function processSpec<V extends "3.0" | "3.1">(
 
 ```typescript
 // Before (current)
-import type { OpenAPIObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
 function myFunction(spec: OpenAPIObject) {}
 
 // After (multi-version)
-import type { OpenAPIObject as OAS30 } from "openapi3-ts/oas30";
-import type { OpenAPIObject as OAS31 } from "openapi3-ts/oas31";
+import type { OpenAPIObject as OAS30 } from 'openapi3-ts/oas30';
+import type { OpenAPIObject as OAS31 } from 'openapi3-ts/oas31';
 function myFunction(spec: OAS30 | OAS31) {} // Breaking!
 ```
 
@@ -383,7 +385,7 @@ function myFunction(spec: OAS30 | OAS31) {} // Breaking!
 ```typescript
 // Add optional parameter, default to current behavior
 interface GenerateZodClientFromOpenApiArgs {
-    oasVersion?: "3.0" | "3.1" | "auto"; // default: "3.0"
+  oasVersion?: '3.0' | '3.1' | 'auto'; // default: "3.0"
 }
 ```
 
@@ -396,30 +398,33 @@ interface GenerateZodClientFromOpenApiArgs {
 
 ```typescript
 // lib/src/oas-version-helpers.ts
-import * as oas30 from "openapi3-ts/oas30";
-import * as oas31 from "openapi3-ts/oas31";
+import * as oas30 from 'openapi3-ts/oas30';
+import * as oas31 from 'openapi3-ts/oas31';
 
-export type OASVersion = "3.0" | "3.1";
+export type OASVersion = '3.0' | '3.1';
 
 export interface VersionedSpec<V extends OASVersion> {
-    version: V;
-    spec: V extends "3.0" ? oas30.OpenAPIObject : oas31.OpenAPIObject;
+  version: V;
+  spec: V extends '3.0' ? oas30.OpenAPIObject : oas31.OpenAPIObject;
 }
 
 export function detectVersion(spec: unknown): OASVersion {
-    const openapi = (spec as any)?.openapi;
-    if (typeof openapi !== "string") {
-        throw new Error("Invalid OpenAPI spec: missing 'openapi' field");
-    }
-    return openapi.startsWith("3.1") ? "3.1" : "3.0";
+  const openapi = (spec as any)?.openapi;
+  if (typeof openapi !== 'string') {
+    throw new Error("Invalid OpenAPI spec: missing 'openapi' field");
+  }
+  return openapi.startsWith('3.1') ? '3.1' : '3.0';
 }
 
-export function wrapSpec<V extends OASVersion>(spec: unknown, version: V | "auto"): VersionedSpec<V> {
-    const actualVersion = version === "auto" ? detectVersion(spec) : version;
-    return {
-        version: actualVersion as V,
-        spec: spec as any,
-    };
+export function wrapSpec<V extends OASVersion>(
+  spec: unknown,
+  version: V | 'auto',
+): VersionedSpec<V> {
+  const actualVersion = version === 'auto' ? detectVersion(spec) : version;
+  return {
+    version: actualVersion as V,
+    spec: spec as any,
+  };
 }
 ```
 
@@ -438,8 +443,8 @@ function processSchema(schema: oas30.SchemaObject) {}
 
 // After
 function processSchema<V extends OASVersion>(
-    schema: V extends "3.0" ? oas30.SchemaObject : oas31.SchemaObject,
-    version: V
+  schema: V extends '3.0' ? oas30.SchemaObject : oas31.SchemaObject,
+  version: V,
 ) {}
 ```
 
@@ -531,26 +536,26 @@ function processSchema<V extends OASVersion>(
  * const version = detectOASVersion({ openapi: "3.1.0", ... });
  * // => "3.1"
  */
-export function detectOASVersion(spec: unknown): "3.0" | "3.1" {
-    if (!spec || typeof spec !== "object") {
-        throw new Error("Invalid OpenAPI spec: not an object");
-    }
+export function detectOASVersion(spec: unknown): '3.0' | '3.1' {
+  if (!spec || typeof spec !== 'object') {
+    throw new Error('Invalid OpenAPI spec: not an object');
+  }
 
-    const openapi = (spec as Record<string, unknown>).openapi;
+  const openapi = (spec as Record<string, unknown>).openapi;
 
-    if (typeof openapi !== "string") {
-        throw new Error("Invalid OpenAPI spec: missing 'openapi' field");
-    }
+  if (typeof openapi !== 'string') {
+    throw new Error("Invalid OpenAPI spec: missing 'openapi' field");
+  }
 
-    if (openapi.startsWith("3.0.")) {
-        return "3.0";
-    }
+  if (openapi.startsWith('3.0.')) {
+    return '3.0';
+  }
 
-    if (openapi.startsWith("3.1.")) {
-        return "3.1";
-    }
+  if (openapi.startsWith('3.1.')) {
+    return '3.1';
+  }
 
-    throw new Error(`Unsupported OpenAPI version: ${openapi}`);
+  throw new Error(`Unsupported OpenAPI version: ${openapi}`);
 }
 ```
 

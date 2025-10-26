@@ -40,24 +40,24 @@ CodeMeta wraps an OpenAPI schema and maintains:
 
 ```typescript
 class CodeMeta {
-    // Core data
-    schema: SchemaObject | ReferenceObject;
-    ref?: string; // Extracted from $ref
-    children: CodeMeta[] = []; // Parent/child relationships
+  // Core data
+  schema: SchemaObject | ReferenceObject;
+  ref?: string; // Extracted from $ref
+  children: CodeMeta[] = []; // Parent/child relationships
 
-    // Generated code
-    assign(code: string): this; // Set generated code, returns self for chaining
+  // Generated code
+  assign(code: string): this; // Set generated code, returns self for chaining
 
-    // Relationships
-    inherit(parent?: CodeMeta): this; // Add to parent's children array
+  // Relationships
+  inherit(parent?: CodeMeta): this; // Add to parent's children array
 
-    // Stringification
-    toString(): string; // Returns codeString
-    toJSON(): string; // Returns codeString
+  // Stringification
+  toString(): string; // Returns codeString
+  toJSON(): string; // Returns codeString
 
-    // Computed properties
-    get codeString(): string; // Priority: assigned code > resolved ref > empty
-    get complexity(): number; // Schema complexity score
+  // Computed properties
+  get codeString(): string; // Priority: assigned code > resolved ref > empty
+  get complexity(): number; // Schema complexity score
 }
 ```
 
@@ -67,12 +67,12 @@ class CodeMeta {
 // In openApiToZod.ts - main conversion function
 const code = new CodeMeta(schema, ctx, inheritedMeta);
 const meta = {
-    parent: code.inherit(inheritedMeta?.parent),
-    // ... more metadata
+  parent: code.inherit(inheritedMeta?.parent),
+  // ... more metadata
 };
 
 // Generate Zod code and assign it
-code.assign("z.string().min(5)");
+code.assign('z.string().min(5)');
 
 // Later: stringify for template
 const result = `${code}`; // Calls toString() implicitly
@@ -85,18 +85,18 @@ const result = `${code}`; // Calls toString() implicitly
 ### Where CodeMeta is Used
 
 1. **`openApiToZod.ts`** (PRIMARY) - Core schema-to-Zod conversion
-    - Creates CodeMeta for every schema processed
-    - Assigns generated Zod code strings
-    - Tracks parent/child relationships for nested schemas
+   - Creates CodeMeta for every schema processed
+   - Assigns generated Zod code strings
+   - Tracks parent/child relationships for nested schemas
 2. **`template-context.ts`** - Template data preparation
-    - Passes CodeMeta objects to templates
-    - Templates call `.toString()` to get Zod code
+   - Passes CodeMeta objects to templates
+   - Templates call `.toString()` to get Zod code
 3. **`zodiosEndpoint.*.ts`** - Endpoint definition building
-    - Uses CodeMeta to build Zodios endpoint schemas
-    - Helper functions extract Zod strings from CodeMeta
+   - Uses CodeMeta to build Zodios endpoint schemas
+   - Helper functions extract Zod strings from CodeMeta
 4. **Test files** - Verification
-    - Tests create CodeMeta to verify conversion logic
-    - **LINT ISSUES HERE:** Using CodeMeta in template literals/concatenation
+   - Tests create CodeMeta to verify conversion logic
+   - **LINT ISSUES HERE:** Using CodeMeta in template literals/concatenation
 
 ### Feature Usage Frequency
 
@@ -128,12 +128,12 @@ TypeScript's `restrict-template-expressions` and `restrict-plus-operands` rules 
 ```typescript
 // anyOf-behavior.test.ts:13
 function createValidator(zodSchema: CodeMeta) {
-    // ❌ TypeScript Error: Invalid type "CodeMeta" of template literal expression
-    return new Function("z", "input", `return ${zodSchema}.parse(input)`) as Validator;
+  // ❌ TypeScript Error: Invalid type "CodeMeta" of template literal expression
+  return new Function('z', 'input', `return ${zodSchema}.parse(input)`) as Validator;
 }
 
 // FIX:
-return new Function("z", "input", `return ${zodSchema.toString()}.parse(input)`) as Validator;
+return new Function('z', 'input', `return ${zodSchema.toString()}.parse(input)`) as Validator;
 ```
 
 **2. String Concatenation with + Operator**
@@ -150,14 +150,14 @@ expect(getZodSchema({ schema }).toString() + getZodChain({ schema }).toString())
 ### Why This Happens
 
 1. **TypeScript's Type System:**
-    - Template literals require types: `string | number | boolean | bigint | null | undefined`
-    - Classes with `toString()` are NOT automatically recognized
+   - Template literals require types: `string | number | boolean | bigint | null | undefined`
+   - Classes with `toString()` are NOT automatically recognized
 2. **Lint Rule Philosophy:**
-    - Forces explicit conversion to prevent accidental `[object Object]` strings
-    - Ensures developers understand what's being stringified
+   - Forces explicit conversion to prevent accidental `[object Object]` strings
+   - Ensures developers understand what's being stringified
 3. **CodeMeta's toString() Implementation:**
-    - Works correctly at runtime
-    - But TypeScript can't infer this at compile-time without explicit call
+   - Works correctly at runtime
+   - But TypeScript can't infer this at compile-time without explicit call
 
 ---
 
@@ -184,11 +184,11 @@ expect(getZodSchema({ schema }).toString() + getZodChain({ schema }).toString())
 ```typescript
 // Before:
 const result = `${codeMeta}`;
-expect(codeA + codeB).toBe("z.string()");
+expect(codeA + codeB).toBe('z.string()');
 
 // After:
 const result = `${codeMeta.toString()}`;
-expect(codeA.toString() + codeB.toString()).toBe("z.string()");
+expect(codeA.toString() + codeB.toString()).toBe('z.string()');
 ```
 
 ### Option 2: Add Symbol.toPrimitive (Medium-term)
@@ -211,15 +211,15 @@ expect(codeA.toString() + codeB.toString()).toBe("z.string()");
 
 ```typescript
 class CodeMeta {
-    // Existing code...
+  // Existing code...
 
-    [Symbol.toPrimitive](hint: "string" | "number" | "default"): string {
-        return this.codeString;
-    }
+  [Symbol.toPrimitive](hint: 'string' | 'number' | 'default'): string {
+    return this.codeString;
+  }
 
-    valueOf(): string {
-        return this.codeString;
-    }
+  valueOf(): string {
+    return this.codeString;
+  }
 }
 ```
 
@@ -248,24 +248,24 @@ class CodeMeta {
 ```typescript
 // Instead of:
 function getZodSchema(): CodeMeta {
-    return new CodeMeta(schema).assign("z.string()");
+  return new CodeMeta(schema).assign('z.string()');
 }
 
 // Use:
 type ZodCodeResult = {
-    code: string;
-    schema: SchemaObject | ReferenceObject;
-    ref?: string;
-    complexity?: number;
-    children?: ZodCodeResult[];
+  code: string;
+  schema: SchemaObject | ReferenceObject;
+  ref?: string;
+  complexity?: number;
+  children?: ZodCodeResult[];
 };
 
 function getZodSchema(): ZodCodeResult {
-    return {
-        code: "z.string()",
-        schema,
-        ref: schema.$ref,
-    };
+  return {
+    code: 'z.string()',
+    schema,
+    ref: schema.$ref,
+  };
 }
 ```
 
@@ -302,14 +302,14 @@ Example migration:
 
 ```typescript
 // BEFORE (CodeMeta + Handlebars):
-const codeMeta = new CodeMeta(schema).assign("z.string()");
+const codeMeta = new CodeMeta(schema).assign('z.string()');
 template.render({ code: codeMeta.toString() });
 
 // AFTER (ts-morph emitter):
 const zodSchema = factory.createCallExpression(
-    factory.createPropertyAccessExpression(factory.createIdentifier("z"), "string"),
-    undefined,
-    []
+  factory.createPropertyAccessExpression(factory.createIdentifier('z'), 'string'),
+  undefined,
+  [],
 );
 // AST node IS the code, no string wrapper needed
 ```
@@ -323,17 +323,17 @@ const zodSchema = factory.createCallExpression(
 ### Features Rarely Used
 
 1. **`.meta.referencedBy` array** - Tracks what references this schema
-    - **Usage:** Initialized but rarely accessed
-    - **Complexity:** Adds memory overhead
-    - **Benefit:** Unclear - circular reference detection?
+   - **Usage:** Initialized but rarely accessed
+   - **Complexity:** Adds memory overhead
+   - **Benefit:** Unclear - circular reference detection?
 2. **`.children` array** - Parent/child relationships
-    - **Usage:** Built via `.inherit()` but rarely queried
-    - **Complexity:** Manual relationship management
-    - **Benefit:** Could be useful for dependency graphing
+   - **Usage:** Built via `.inherit()` but rarely queried
+   - **Complexity:** Manual relationship management
+   - **Benefit:** Could be useful for dependency graphing
 3. **`.complexity` getter** - Schema complexity score
-    - **Usage:** Only in specific optimization scenarios
-    - **Complexity:** Recursive calculation on every access
-    - **Benefit:** Could help with inline vs. reference decisions
+   - **Usage:** Only in specific optimization scenarios
+   - **Complexity:** Recursive calculation on every access
+   - **Benefit:** Could help with inline vs. reference decisions
 
 ### What's Actually Essential?
 
@@ -342,9 +342,9 @@ If we distilled CodeMeta to its essentials:
 ```typescript
 // Minimal version
 type CodeMeta = {
-    schema: SchemaObject | ReferenceObject;
-    code: string; // Generated Zod code
-    ref?: string; // If it's a reference
+  schema: SchemaObject | ReferenceObject;
+  code: string; // Generated Zod code
+  ref?: string; // If it's a reference
 };
 ```
 
@@ -361,9 +361,9 @@ Everything else (parent/child, referencedBy, complexity) could be:
 - **Current:** It's both - holds value (code string) AND provides methods (assign, inherit)
 - **Problem:** Mixed concerns - state + behavior + relationships
 - **Alternative:** Separate concerns
-    - State: Just the code string and schema
-    - Behavior: Pure functions that operate on schemas
-    - Relationships: Separate graph structure if needed
+  - State: Just the code string and schema
+  - Behavior: Pure functions that operate on schemas
+  - Relationships: Separate graph structure if needed
 
 ---
 
@@ -410,7 +410,7 @@ const schema = something as CodeMeta;
 
 // Better:
 function isCodeMeta(x: unknown): x is CodeMeta {
-    return x instanceof CodeMeta;
+  return x instanceof CodeMeta;
 }
 ```
 
@@ -431,13 +431,13 @@ When migrating to ts-morph emitter (per HANDLEBARS_EVALUATION.md):
 
 ```typescript
 // Instead of:
-const codeMeta = new CodeMeta(schema).assign("z.string()");
+const codeMeta = new CodeMeta(schema).assign('z.string()');
 
 // We have:
 const astNode = ts.factory.createCallExpression(
-    ts.factory.createPropertyAccessExpression(ts.factory.createIdentifier("z"), "string"),
-    undefined,
-    []
+  ts.factory.createPropertyAccessExpression(ts.factory.createIdentifier('z'), 'string'),
+  undefined,
+  [],
 );
 
 // The AST node IS the code representation
@@ -584,7 +584,7 @@ function createValidator(zodSchema: CodeMeta) {
 ```typescript
 // Lines 20, 23, 27: Concatenation
 -expect(getZodSchema({ schema }) + getZodChain({ schema })) +
-    expect(getZodSchema({ schema }).toString() + getZodChain({ schema }).toString());
+  expect(getZodSchema({ schema }).toString() + getZodChain({ schema }).toString());
 ```
 
 ### 4. lib/tests/unicode-pattern-regex.test.ts:23, 27, 30, 34
@@ -592,7 +592,7 @@ function createValidator(zodSchema: CodeMeta) {
 ```typescript
 // Lines 23, 27, 30, 34: Concatenation (same pattern)
 -expect(getZodSchema({ schema }) + getZodChain({ schema })) +
-    expect(getZodSchema({ schema }).toString() + getZodChain({ schema }).toString());
+  expect(getZodSchema({ schema }).toString() + getZodChain({ schema }).toString());
 ```
 
 ### Validation
@@ -626,10 +626,10 @@ A bare string would lose this context.
 Could use TypeScript branded types:
 
 ```typescript
-type ZodCode = string & { readonly _brand: "ZodCode" };
+type ZodCode = string & { readonly _brand: 'ZodCode' };
 type ZodSchemaBundle = {
-    code: ZodCode;
-    schema: SchemaObject | ReferenceObject;
+  code: ZodCode;
+  schema: SchemaObject | ReferenceObject;
 };
 ```
 

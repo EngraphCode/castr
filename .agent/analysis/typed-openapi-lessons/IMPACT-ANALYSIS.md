@@ -218,11 +218,11 @@ From `HANDLEBARS_EVALUATION.md` and `CODEMETA_ANALYSIS.md`:
 **🔗 Cross-Reference:**
 
 - Your work:
-    - `CODEMETA_ANALYSIS.md` lines 419-445 (ts-morph migration)
-    - `HANDLEBARS_EVALUATION.md` (ts-morph recommendation)
+  - `CODEMETA_ANALYSIS.md` lines 419-445 (ts-morph migration)
+  - `HANDLEBARS_EVALUATION.md` (ts-morph recommendation)
 - typed-openapi lessons:
-    - `01-ARCHITECTURE.md` Section 1 (Box Pattern)
-    - `01-ARCHITECTURE.md` Section 2 (Factory Pattern)
+  - `01-ARCHITECTURE.md` Section 1 (Box Pattern)
+  - `01-ARCHITECTURE.md` Section 2 (Factory Pattern)
 
 **💡 Recommendation:** Your ts-morph emitter plan is excellent. The typed-openapi lessons provide:
 
@@ -323,16 +323,16 @@ These are high-impact, low-effort items from typed-openapi that are **NOT** in y
 **What:** Union-style error responses with type narrowing
 
 ```typescript
-const result = await api.getPetById({ id: "123", withResponse: true });
+const result = await api.getPetById({ id: '123', withResponse: true });
 if (result.ok) {
-    // result.data is Pet (200 response)
-    console.log(result.data.name);
+  // result.data is Pet (200 response)
+  console.log(result.data.name);
 } else {
-    // result.status is 400 | 404 | 500
-    switch (result.status) {
-        case 404: // result.data is NotFoundError
-            break;
-    }
+  // result.status is 400 | 404 | 500
+  switch (result.status) {
+    case 404: // result.data is NotFoundError
+      break;
+  }
 }
 ```
 
@@ -722,19 +722,19 @@ patterns but don't change your plan.
 ### Immediate Actions (Phase 1 Quick Wins)
 
 1. **Add type-only output mode** (3 hours)
-    - Biggest performance win from typed-openapi
-    - 0 KB bundle, instant IDE
-    - See: `02-PERFORMANCE.md` Section 1
+   - Biggest performance win from typed-openapi
+   - 0 KB bundle, instant IDE
+   - See: `02-PERFORMANCE.md` Section 1
 
 2. **Add config file support** (2 hours)
-    - Industry standard pattern
-    - Better DX
-    - See: `05-TOOLING.md` Section 2
+   - Industry standard pattern
+   - Better DX
+   - See: `05-TOOLING.md` Section 2
 
 3. **Add bundle analysis** (2 hours)
-    - Visibility into size impact
-    - Optimization guidance
-    - See: `07-DEPLOYMENT.md` Section 1.3
+   - Visibility into size impact
+   - Optimization guidance
+   - See: `07-DEPLOYMENT.md` Section 1.3
 
 **Total:** 7 hours for massive DX improvements
 
@@ -743,16 +743,16 @@ patterns but don't change your plan.
 ### Near-Term Actions (Phase 2 Additions)
 
 1. **Add watch mode** (2-3 hours)
-    - Better development workflow
-    - See: `05-TOOLING.md` Section 3
+   - Better development workflow
+   - See: `05-TOOLING.md` Section 3
 
 2. **Add discriminated union errors** (6-8 hours)
-    - Type-safe error handling
-    - See: `03-API-DESIGN.md` Section 2
+   - Type-safe error handling
+   - See: `03-API-DESIGN.md` Section 2
 
 3. **Add configurable status codes** (3 hours)
-    - More flexible for edge cases
-    - See: `03-API-DESIGN.md` Section 2.4
+   - More flexible for edge cases
+   - See: `03-API-DESIGN.md` Section 2.4
 
 **Total:** 11-14 hours for better DX and type safety
 
@@ -761,12 +761,12 @@ patterns but don't change your plan.
 ### Quality Actions (Phase 3 Additions)
 
 1. **Add type-level testing** (3-4 hours)
-    - tstyche for type tests
-    - See: `04-TESTING.md` Section 1
+   - tstyche for type tests
+   - See: `04-TESTING.md` Section 1
 
 2. **Add MSW integration tests** (4-5 hours)
-    - Test generated code against HTTP
-    - See: `04-TESTING.md` Section 2
+   - Test generated code against HTTP
+   - See: `04-TESTING.md` Section 2
 
 **Total:** 7-9 hours for comprehensive testing
 

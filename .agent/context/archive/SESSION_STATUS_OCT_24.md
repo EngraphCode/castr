@@ -13,8 +13,8 @@
 **Solution:**
 
 ```typescript
-import * as Ajv04Module from "ajv-draft-04";
-import * as addFormatsModule from "ajv-formats";
+import * as Ajv04Module from 'ajv-draft-04';
+import * as addFormatsModule from 'ajv-formats';
 
 const Ajv04 = (Ajv04Module as any).default || Ajv04Module;
 const addFormats = (addFormatsModule as any).default || addFormatsModule;

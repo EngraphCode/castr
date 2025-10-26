@@ -1,32 +1,32 @@
-import { expect, test } from "vitest";
-import { getZodiosEndpointDefinitionList } from "../src/index.js";
+import { expect, test } from 'vitest';
+import { getZodiosEndpointDefinitionList } from '../src/index.js';
 
 test("missing operationId outputs variables['undefined_Body']", () => {
-    const result = getZodiosEndpointDefinitionList({
-        openapi: "3.0.3",
-        info: { version: "1", title: "Example API" },
-        paths: {
-            "/media-objects/{id}": {
-                put: {
-                    requestBody: {
-                        content: { "application/json": { schema: { $ref: "#/components/schemas/Basic" } } },
-                    },
-                    responses: {
-                        "200": {
-                            content: { "application/json": { schema: { $ref: "#/components/schemas/Basic" } } },
-                        },
-                    },
-                },
+  const result = getZodiosEndpointDefinitionList({
+    openapi: '3.0.3',
+    info: { version: '1', title: 'Example API' },
+    paths: {
+      '/media-objects/{id}': {
+        put: {
+          requestBody: {
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/Basic' } } },
+          },
+          responses: {
+            '200': {
+              content: { 'application/json': { schema: { $ref: '#/components/schemas/Basic' } } },
             },
+          },
         },
-        components: {
-            schemas: {
-                Payload: { type: "object", properties: { thing: { type: "number" } } },
-                Basic: { type: "string" },
-            },
-        },
-    });
-    expect(result.endpoints).toMatchInlineSnapshot(`
+      },
+    },
+    components: {
+      schemas: {
+        Payload: { type: 'object', properties: { thing: { type: 'number' } } },
+        Basic: { type: 'string' },
+      },
+    },
+  });
+  expect(result.endpoints).toMatchInlineSnapshot(`
       [
           {
               "description": undefined,

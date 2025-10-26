@@ -54,7 +54,7 @@ This document tracks future enhancements, refactoring opportunities, and technic
 
 ```typescript
 // Check what utilities openapi3-ts provides
-import * as OpenAPI from "openapi3-ts";
+import * as OpenAPI from 'openapi3-ts';
 
 // Review:
 // - OpenApiBuilder methods
@@ -113,7 +113,7 @@ const method = pathItem as string; // Treating pathItem as method name
 **Current State:**
 
 ```typescript
-const defaultStatusBehavior = options?.defaultStatusBehavior ?? "spec-compliant";
+const defaultStatusBehavior = options?.defaultStatusBehavior ?? 'spec-compliant';
 ```
 
 **Questions:**
@@ -142,38 +142,38 @@ const defaultStatusBehavior = options?.defaultStatusBehavior ?? "spec-compliant"
 
 - OAS 3.1.x aligns with JSON Schema 2020-12
 - Significant differences from 3.0.x:
-    - `nullable` removed (use `type: ["string", "null"]`)
-    - Full JSON Schema compatibility
-    - `$schema` keyword support
-    - `webhooks` top-level property
+  - `nullable` removed (use `type: ["string", "null"]`)
+  - Full JSON Schema compatibility
+  - `$schema` keyword support
+  - `webhooks` top-level property
 
 **Implementation Steps:**
 
 1. **Setup JSON Schema 2020-12 Validation:**
 
 ```typescript
-import Ajv2020 from "ajv/dist/2020.js";
+import Ajv2020 from 'ajv/dist/2020.js';
 
 const ajv = new Ajv2020({
-    strict: true,
-    validateFormats: true,
+  strict: true,
+  validateFormats: true,
 });
 
-const oas31Schema = JSON.parse(readFileSync("openapi_3_1_x_schema_without_validation.json"));
+const oas31Schema = JSON.parse(readFileSync('openapi_3_1_x_schema_without_validation.json'));
 const validate = ajv.compile(oas31Schema);
 ```
 
 2. **Test Key OAS 3.1 Features:**
-    - [ ] Nullable as union type: `type: ["string", "null"]`
-    - [ ] `webhooks` property
-    - [ ] `jsonSchemaDialect` property
-    - [ ] Full JSON Schema features (if/then/else, etc.)
-    - [ ] `summary` on `Reference` objects
+   - [ ] Nullable as union type: `type: ["string", "null"]`
+   - [ ] `webhooks` property
+   - [ ] `jsonSchemaDialect` property
+   - [ ] Full JSON Schema features (if/then/else, etc.)
+   - [ ] `summary` on `Reference` objects
 
 3. **Update Code to Handle 3.1:**
-    - [ ] Detect OAS version from `openapi` field
-    - [ ] Handle nullable differences between 3.0 and 3.1
-    - [ ] Support webhooks if present
+   - [ ] Detect OAS version from `openapi` field
+   - [ ] Handle nullable differences between 3.0 and 3.1
+   - [ ] Support webhooks if present
 
 **Files to Create:**
 
@@ -196,27 +196,27 @@ const validate = ajv.compile(oas31Schema);
 
 - OAS 3.2.x is the latest (as of 2025)
 - New features to test:
-    - `additionalOperations` in PathItemObject
-    - `query` HTTP method (QUERY per RFC 9110)
-    - Enhanced `discriminator` with `defaultMapping`
-    - `querystring` parameter location
-    - Enhanced XML support (`nodeType` vs deprecated `attribute`/`wrapped`)
+  - `additionalOperations` in PathItemObject
+  - `query` HTTP method (QUERY per RFC 9110)
+  - Enhanced `discriminator` with `defaultMapping`
+  - `querystring` parameter location
+  - Enhanced XML support (`nodeType` vs deprecated `attribute`/`wrapped`)
 
 **Implementation Steps:**
 
 1. **Load 3.2.x Schema:**
 
 ```typescript
-const oas32Schema = JSON.parse(readFileSync("openapi_3_2_x_schema_without_validation.json"));
+const oas32Schema = JSON.parse(readFileSync('openapi_3_2_x_schema_without_validation.json'));
 ```
 
 2. **Test 3.2-Specific Features:**
-    - [ ] `query` HTTP method support
-    - [ ] `querystring` parameter location
-    - [ ] `additionalOperations` property
-    - [ ] Enhanced discriminator
-    - [ ] Server `name` property
-    - [ ] Response `summary` property
+   - [ ] `query` HTTP method support
+   - [ ] `querystring` parameter location
+   - [ ] `additionalOperations` property
+   - [ ] Enhanced discriminator
+   - [ ] Server `name` property
+   - [ ] Response `summary` property
 
 **Files to Create:**
 
@@ -237,42 +237,42 @@ const oas32Schema = JSON.parse(readFileSync("openapi_3_2_x_schema_without_valida
 1. **Use `fast-check` for Property-Based Testing:**
 
 ```typescript
-import fc from "fast-check";
+import fc from 'fast-check';
 
 // Generate arbitrary valid OpenAPI documents
 const arbOpenAPIDoc = fc.record({
-    openapi: fc.constant("3.0.3"),
-    info: fc.record({
-        title: fc.string(),
-        version: fc.string(),
-    }),
-    paths: arbPaths, // Recursive arbitrary
+  openapi: fc.constant('3.0.3'),
+  info: fc.record({
+    title: fc.string(),
+    version: fc.string(),
+  }),
+  paths: arbPaths, // Recursive arbitrary
 });
 
 fc.assert(
-    fc.property(arbOpenAPIDoc, async (doc) => {
-        const valid = validateOAS30(doc);
-        expect(valid).toBe(true);
+  fc.property(arbOpenAPIDoc, async (doc) => {
+    const valid = validateOAS30(doc);
+    expect(valid).toBe(true);
 
-        await expect(
-            generateZodClientFromOpenAPI({
-                disableWriteToFile: true,
-                openApiDoc: doc,
-            })
-        ).resolves.not.toThrow();
-    })
+    await expect(
+      generateZodClientFromOpenAPI({
+        disableWriteToFile: true,
+        openApiDoc: doc,
+      }),
+    ).resolves.not.toThrow();
+  }),
 );
 ```
 
 2. **Benefits:**
-    - Discovers edge cases we haven't thought of
-    - Validates assumptions about spec
-    - Ensures robustness across all valid inputs
+   - Discovers edge cases we haven't thought of
+   - Validates assumptions about spec
+   - Ensures robustness across all valid inputs
 
 3. **Challenges:**
-    - Generating valid recursive schemas (paths, components, refs)
-    - Ensuring generated docs are semantically meaningful
-    - Performance (may need to limit generation depth)
+   - Generating valid recursive schemas (paths, components, refs)
+   - Ensuring generated docs are semantically meaningful
+   - Performance (may need to limit generation depth)
 
 **Files to Create:**
 
@@ -297,60 +297,60 @@ fc.assert(
 #### A. Deeply Nested Schemas
 
 ```typescript
-test("schema with 10+ levels of nesting", async () => {
-    // Test recursion limits, stack overflow prevention
+test('schema with 10+ levels of nesting', async () => {
+  // Test recursion limits, stack overflow prevention
 });
 ```
 
 #### B. Circular References
 
 ```typescript
-test("schema with circular $ref", async () => {
-    // Test cycle detection
+test('schema with circular $ref', async () => {
+  // Test cycle detection
 });
 ```
 
 #### C. Large Documents
 
 ```typescript
-test("document with 1000+ paths", async () => {
-    // Test performance, memory usage
+test('document with 1000+ paths', async () => {
+  // Test performance, memory usage
 });
 
-test("schema with 100+ properties", async () => {
-    // Test code generation limits
+test('schema with 100+ properties', async () => {
+  // Test code generation limits
 });
 ```
 
 #### D. Special Characters
 
 ```typescript
-test("path with special characters: /user/{id}/items/{item-id}", async () => {
-    // Test URL encoding, parameter extraction
+test('path with special characters: /user/{id}/items/{item-id}', async () => {
+  // Test URL encoding, parameter extraction
 });
 
-test("schema name with dots: My.Nested.Schema", async () => {
-    // Test identifier generation
+test('schema name with dots: My.Nested.Schema', async () => {
+  // Test identifier generation
 });
 ```
 
 #### E. Empty/Minimal Cases
 
 ```typescript
-test("path with no parameters", async () => {});
-test("operation with no responses", async () => {});
-test("schema with no properties", async () => {});
+test('path with no parameters', async () => {});
+test('operation with no responses', async () => {});
+test('schema with no properties', async () => {});
 ```
 
 #### F. maxLength, minLength, pattern Constraints
 
 ```typescript
-test("string with complex regex pattern", async () => {
-    // Test pattern escaping, validation
+test('string with complex regex pattern', async () => {
+  // Test pattern escaping, validation
 });
 
-test("array with minItems/maxItems", async () => {
-    // Test Zod constraint translation
+test('array with minItems/maxItems', async () => {
+  // Test Zod constraint translation
 });
 ```
 
@@ -387,19 +387,19 @@ Several files exceed complexity thresholds:
 ```typescript
 // BEFORE: In template-context.ts (line 20-273)
 const generateCode = () => {
-    // 250+ lines of mixed concerns
+  // 250+ lines of mixed concerns
 };
 
 // AFTER: Extracted pure functions
-import { buildEndpoints } from "./template/endpoints.js";
-import { buildSchemas } from "./template/schemas.js";
-import { buildTypes } from "./template/types.js";
+import { buildEndpoints } from './template/endpoints.js';
+import { buildSchemas } from './template/schemas.js';
+import { buildTypes } from './template/types.js';
 
 const generateCode = () => {
-    const endpoints = buildEndpoints(ctx);
-    const schemas = buildSchemas(ctx);
-    const types = buildTypes(ctx);
-    return combineTemplates({ endpoints, schemas, types });
+  const endpoints = buildEndpoints(ctx);
+  const schemas = buildSchemas(ctx);
+  const types = buildTypes(ctx);
+  return combineTemplates({ endpoints, schemas, types });
 };
 ```
 
@@ -473,24 +473,24 @@ const generateCode = () => {
 **ADRs to Create:**
 
 1. **ADR-001: Fail Fast on Spec Violations**
-    - Context: Why we don't tolerate malformed specs
-    - Decision: Throw errors instead of workarounds
-    - Consequences: Better error messages, clearer boundaries
+   - Context: Why we don't tolerate malformed specs
+   - Decision: Throw errors instead of workarounds
+   - Consequences: Better error messages, clearer boundaries
 
 2. **ADR-002: Defer Types to openapi3-ts**
-    - Context: Duplication vs library usage
-    - Decision: Use openapi3-ts types exclusively
-    - Consequences: Less maintenance, better compatibility
+   - Context: Duplication vs library usage
+   - Decision: Use openapi3-ts types exclusively
+   - Consequences: Less maintenance, better compatibility
 
 3. **ADR-003: Enum Complexity Calculation**
-    - Context: Should enum size affect complexity?
-    - Decision: No, enum complexity is constant
-    - Consequences: Consistent inlining behavior
+   - Context: Should enum size affect complexity?
+   - Decision: No, enum complexity is constant
+   - Consequences: Consistent inlining behavior
 
 4. **ADR-004: Type Predicates Over Boolean Filters**
-    - Context: Runtime type narrowing patterns
-    - Decision: Use `is` keyword with `unknown` input
-    - Consequences: Better type safety, clearer intent
+   - Context: Runtime type narrowing patterns
+   - Decision: Use `is` keyword with `unknown` input
+   - Consequences: Better type safety, clearer intent
 
 **Format:**
 
@@ -533,8 +533,8 @@ What are the implications?
 ```typescript
 // Simple client generation
 const result = await generateZodClientFromOpenAPI({
-    openApiDoc: "./swagger.json",
-    outputPath: "./src/api/client.ts",
+  openApiDoc: './swagger.json',
+  outputPath: './src/api/client.ts',
 });
 ```
 
@@ -543,13 +543,13 @@ const result = await generateZodClientFromOpenAPI({
 ```typescript
 // With all options explained
 const result = await generateZodClientFromOpenAPI({
-    openApiDoc: "./swagger.json",
-    outputPath: "./src/api/client.ts",
-    groupStrategy: "tag",
-    complexityThreshold: 10,
-    defaultStatusBehavior: "spec-compliant",
-    withAlias: true,
-    // ... document each option
+  openApiDoc: './swagger.json',
+  outputPath: './src/api/client.ts',
+  groupStrategy: 'tag',
+  complexityThreshold: 10,
+  defaultStatusBehavior: 'spec-compliant',
+  withAlias: true,
+  // ... document each option
 });
 ```
 
@@ -557,16 +557,16 @@ const result = await generateZodClientFromOpenAPI({
 
 ```typescript
 // Use in build pipeline
-import { generateZodClientFromOpenAPI } from "openapi-zod-client";
+import { generateZodClientFromOpenAPI } from 'openapi-zod-client';
 
 // Fetch remote spec
-const response = await fetch("https://api.example.com/openapi.json");
+const response = await fetch('https://api.example.com/openapi.json');
 const spec = await response.json();
 
 // Generate and process
 const { output } = await generateZodClientFromOpenAPI({
-    openApiDoc: spec,
-    disableWriteToFile: true,
+  openApiDoc: spec,
+  disableWriteToFile: true,
 });
 
 // Post-process output
@@ -578,17 +578,17 @@ const enhanced = addCustomHelpers(output);
 ```typescript
 // Custom schema transformations
 const result = await generateZodClientFromOpenAPI({
-    openApiDoc: "./swagger.json",
-    schemaRefiner: (schema, meta) => {
-        // Add custom validation
-        if (schema.format === "email") {
-            return {
-                ...schema,
-                pattern: "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$",
-            };
-        }
-        return schema;
-    },
+  openApiDoc: './swagger.json',
+  schemaRefiner: (schema, meta) => {
+    // Add custom validation
+    if (schema.format === 'email') {
+      return {
+        ...schema,
+        pattern: '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$',
+      };
+    }
+    return schema;
+  },
 });
 ```
 
@@ -693,9 +693,9 @@ const result = await generateZodClientFromOpenAPI({
 
 ```typescript
 throw new Error(
-    `Invalid OpenAPI specification: Parameter "${paramItem.name}" ` +
-        `(in: ${paramItem.in}) must have either 'schema' or 'content' property. ` +
-        `See: https://spec.openapis.org/oas/v3.0.3#parameter-object`
+  `Invalid OpenAPI specification: Parameter "${paramItem.name}" ` +
+    `(in: ${paramItem.in}) must have either 'schema' or 'content' property. ` +
+    `See: https://spec.openapis.org/oas/v3.0.3#parameter-object`,
 );
 ```
 
@@ -769,24 +769,24 @@ Generating client...
 
 ```typescript
 interface GenerationMetrics {
-    inputStats: {
-        pathCount: number;
-        operationCount: number;
-        schemaCount: number;
-        refCount: number;
-    };
-    outputStats: {
-        endpointCount: number;
-        schemaCount: number;
-        typeCount: number;
-        lineCount: number;
-    };
-    performance: {
-        parseTime: number;
-        generateTime: number;
-        writeTime: number;
-        totalTime: number;
-    };
+  inputStats: {
+    pathCount: number;
+    operationCount: number;
+    schemaCount: number;
+    refCount: number;
+  };
+  outputStats: {
+    endpointCount: number;
+    schemaCount: number;
+    typeCount: number;
+    lineCount: number;
+  };
+  performance: {
+    parseTime: number;
+    generateTime: number;
+    writeTime: number;
+    totalTime: number;
+  };
 }
 ```
 
@@ -820,12 +820,12 @@ Stats:  Generated 1,234 lines in 234ms
 
 ```json
 {
-    "extends": ["config:base"],
-    "automerge": true,
-    "major": {
-        "automerge": false
-    },
-    "schedule": ["every weekend"]
+  "extends": ["config:base"],
+  "automerge": true,
+  "major": {
+    "automerge": false
+  },
+  "schedule": ["every weekend"]
 }
 ```
 
@@ -842,18 +842,18 @@ Stats:  Generated 1,234 lines in 234ms
 **Benchmarks:**
 
 ```typescript
-benchmark("small spec (10 paths)", async () => {
-    await generateZodClientFromOpenAPI({
-        openApiDoc: smallSpec,
-        disableWriteToFile: true,
-    });
+benchmark('small spec (10 paths)', async () => {
+  await generateZodClientFromOpenAPI({
+    openApiDoc: smallSpec,
+    disableWriteToFile: true,
+  });
 });
 
-benchmark("large spec (1000 paths)", async () => {
-    await generateZodClientFromOpenAPI({
-        openApiDoc: largeSpec,
-        disableWriteToFile: true,
-    });
+benchmark('large spec (1000 paths)', async () => {
+  await generateZodClientFromOpenAPI({
+    openApiDoc: largeSpec,
+    disableWriteToFile: true,
+  });
 });
 ```
 

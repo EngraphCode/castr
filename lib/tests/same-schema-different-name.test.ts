@@ -1,61 +1,61 @@
-import { type OpenAPIObject } from "openapi3-ts/oas30";
-import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src/index.js";
+import { type OpenAPIObject } from 'openapi3-ts/oas30';
+import { expect, test } from 'vitest';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 
-test("same-schema-different-name", async () => {
-    const openApiDoc: OpenAPIObject = {
-        openapi: "3.0.3",
-        info: { version: "1", title: "Example API" },
-        paths: {
-            "/same-schema-different-name": {
-                put: {
-                    operationId: "putSameSchemaDifferentName",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { type: "string" },
-                                },
-                            },
-                        },
-                    },
-                    parameters: [
-                        {
-                            name: "sameSchemaDifferentName",
-                            in: "query",
-                            schema: { type: "string", enum: ["aaa", "bbb", "ccc"] },
-                        },
-                    ],
+test('same-schema-different-name', async () => {
+  const openApiDoc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: { version: '1', title: 'Example API' },
+    paths: {
+      '/same-schema-different-name': {
+        put: {
+          operationId: 'putSameSchemaDifferentName',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
                 },
-                post: {
-                    operationId: "postSameSchemaDifferentName",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { type: "string" },
-                                },
-                            },
-                        },
-                    },
-                    parameters: [
-                        {
-                            name: "differentNameSameSchema",
-                            in: "query",
-                            schema: { type: "string", enum: ["aaa", "bbb", "ccc"] },
-                        },
-                        {
-                            name: "anotherDifferentNameWithSlightlyDifferentSchema",
-                            in: "query",
-                            schema: { type: "string", enum: ["aaa", "bbb", "ccc"], default: "aaa" },
-                        },
-                    ],
-                },
+              },
             },
+          },
+          parameters: [
+            {
+              name: 'sameSchemaDifferentName',
+              in: 'query',
+              schema: { type: 'string', enum: ['aaa', 'bbb', 'ccc'] },
+            },
+          ],
         },
-    };
-    const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
-    expect(ctx).toMatchInlineSnapshot(`
+        post: {
+          operationId: 'postSameSchemaDifferentName',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
+                },
+              },
+            },
+          },
+          parameters: [
+            {
+              name: 'differentNameSameSchema',
+              in: 'query',
+              schema: { type: 'string', enum: ['aaa', 'bbb', 'ccc'] },
+            },
+            {
+              name: 'anotherDifferentNameWithSlightlyDifferentSchema',
+              in: 'query',
+              schema: { type: 'string', enum: ['aaa', 'bbb', 'ccc'], default: 'aaa' },
+            },
+          ],
+        },
+      },
+    },
+  };
+  const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
+  expect(ctx).toMatchInlineSnapshot(`
       {
           "circularTypeByName": {},
           "emittedType": {},
@@ -109,12 +109,12 @@ test("same-schema-different-name", async () => {
       }
     `);
 
-    const result = await generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc,
-        options: { complexityThreshold: 2 },
-    });
-    expect(result).toMatchInlineSnapshot(`
+  const result = await generateZodClientFromOpenAPI({
+    disableWriteToFile: true,
+    openApiDoc,
+    options: { complexityThreshold: 2 },
+  });
+  expect(result).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 

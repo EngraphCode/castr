@@ -132,8 +132,8 @@ cd lib && pnpm test
 - **Test suite**: 125/125 passing
 - **Examples**: Removed (not needed)
 - **Dependencies**: All updated and audited
-    - 0 security vulnerabilities
-    - Only openapi3-ts and zod deferred (Phase 2 & 3)
+  - 0 security vulnerabilities
+  - Only openapi3-ts and zod deferred (Phase 2 & 3)
 - **Functional verification**: CLI works end-to-end
 - **TSDoc**: Added comprehensive examples
 
@@ -158,9 +158,9 @@ cd lib && pnpm test
 
 1. Exclude `tests/` from linting (68 errors from TypeScript project mismatch)
 2. Add `.eslintignore` or update `eslint.config.ts`:
-    ```typescript
-    ignores: ["tests/**", "samples-generator.ts"];
-    ```
+   ```typescript
+   ignores: ['tests/**', 'samples-generator.ts'];
+   ```
 3. Document remaining ~250 src/ violations as technical debt
 4. **Proceed to Phase 2 & 3** (openapi3-ts v4, Zod v4)
 

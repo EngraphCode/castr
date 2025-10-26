@@ -30,27 +30,27 @@ cd ../playground && pnpm build
 ### Alternatives Considered
 
 1. **Manual scripts**
-    - ❌ No caching
-    - ❌ No parallelization
-    - ❌ Hard to maintain
+   - ❌ No caching
+   - ❌ No parallelization
+   - ❌ Hard to maintain
 
 2. **Lerna**
-    - ⚠️ Less actively maintained
-    - ⚠️ Complex configuration
-    - ⚠️ Slower than Turborepo
+   - ⚠️ Less actively maintained
+   - ⚠️ Complex configuration
+   - ⚠️ Slower than Turborepo
 
 3. **Nx**
-    - ✅ Feature-rich
-    - ⚠️ More complex
-    - ⚠️ Heavier weight
-    - ⚠️ Overkill for our needs
+   - ✅ Feature-rich
+   - ⚠️ More complex
+   - ⚠️ Heavier weight
+   - ⚠️ Overkill for our needs
 
 4. **Turborepo**
-    - ✅ Simple configuration
-    - ✅ Fast (Rust-based)
-    - ✅ Excellent caching
-    - ✅ Smart parallelization
-    - ✅ Active development (Vercel)
+   - ✅ Simple configuration
+   - ✅ Fast (Rust-based)
+   - ✅ Excellent caching
+   - ✅ Smart parallelization
+   - ✅ Active development (Vercel)
 
 ## Decision
 
@@ -70,28 +70,28 @@ cd ../playground && pnpm build
 ```json
 // turbo.json
 {
-    "$schema": "https://turbo.build/schema.json",
-    "tasks": {
-        "build": {
-            "dependsOn": ["^build"],
-            "outputs": ["dist/**"]
-        },
-        "format": {
-            "cache": false
-        },
-        "type-check": {
-            "dependsOn": ["build"],
-            "outputs": []
-        },
-        "lint": {
-            "dependsOn": ["build"],
-            "outputs": []
-        },
-        "test": {
-            "dependsOn": ["build"],
-            "outputs": ["coverage/**"]
-        }
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "format": {
+      "cache": false
+    },
+    "type-check": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
     }
+  }
 }
 ```
 
@@ -191,13 +191,13 @@ openapi-zod-client:build: cache hit, replaying logs
 
 ```json
 {
-    "scripts": {
-        "format": "turbo format",
-        "build": "turbo build",
-        "type-check": "turbo type-check",
-        "lint": "turbo lint",
-        "test": "turbo test"
-    }
+  "scripts": {
+    "format": "turbo format",
+    "build": "turbo build",
+    "type-check": "turbo type-check",
+    "lint": "turbo lint",
+    "test": "turbo test"
+  }
 }
 ```
 
@@ -205,13 +205,13 @@ openapi-zod-client:build: cache hit, replaying logs
 
 ```json
 {
-    "scripts": {
-        "format": "prettier --write .",
-        "build": "tsup",
-        "type-check": "tsc --noEmit --project tsconfig.lint.json",
-        "lint": "eslint .",
-        "test": "vitest run"
-    }
+  "scripts": {
+    "format": "prettier --write .",
+    "build": "tsup",
+    "type-check": "tsc --noEmit --project tsconfig.lint.json",
+    "lint": "eslint .",
+    "test": "vitest run"
+  }
 }
 ```
 
@@ -221,16 +221,16 @@ openapi-zod-client:build: cache hit, replaying logs
 
 ```json
 {
-    "tasks": {
-        "build": {
-            "outputs": ["dist/**"], // Cache dist/ folder
-            "inputs": ["src/**/*.ts"] // Invalidate when source changes
-        },
-        "test": {
-            "outputs": ["coverage/**"], // Cache coverage reports
-            "inputs": ["src/**", "tests/**"]
-        }
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"], // Cache dist/ folder
+      "inputs": ["src/**/*.ts"] // Invalidate when source changes
+    },
+    "test": {
+      "outputs": ["coverage/**"], // Cache coverage reports
+      "inputs": ["src/**", "tests/**"]
     }
+  }
 }
 ```
 
@@ -238,11 +238,11 @@ openapi-zod-client:build: cache hit, replaying logs
 
 ```json
 {
-    "tasks": {
-        "format": {
-            "cache": false // Always run (modifies files)
-        }
+  "tasks": {
+    "format": {
+      "cache": false // Always run (modifies files)
     }
+  }
 }
 ```
 
@@ -261,9 +261,9 @@ Turborepo supports remote caching for teams:
 
 ```json
 {
-    "remoteCache": {
-        "enabled": true
-    }
+  "remoteCache": {
+    "enabled": true
+  }
 }
 ```
 

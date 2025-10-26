@@ -15,15 +15,15 @@ A nested `$ref` occurs when a reference object points to another reference objec
 
 ```yaml
 components:
-    schemas:
-        Pet:
-            $ref: "#/components/schemas/Animal" # ← This is a Reference
-        Animal:
-            $ref: "#/components/schemas/LivingThing" # ← Another Reference
-        LivingThing:
-            type: object
-            properties:
-                alive: { type: boolean }
+  schemas:
+    Pet:
+      $ref: '#/components/schemas/Animal' # ← This is a Reference
+    Animal:
+      $ref: '#/components/schemas/LivingThing' # ← Another Reference
+    LivingThing:
+      type: object
+      properties:
+        alive: { type: boolean }
 ```
 
 In this case, `Pet` → `Animal` → `LivingThing` requires **multi-level dereferencing**.
@@ -91,25 +91,25 @@ Same structure as 3.0.x and 3.1.x - Reference objects are valid schema values.
 ### ❌ NO - Here's Why:
 
 1. **Not Our Job**
-    - Dereferencing is a **preprocessing** concern, not a **code generation** concern
-    - `@apidevtools/swagger-parser` is specifically designed for this
-    - We already depend on it - let's use it fully
+   - Dereferencing is a **preprocessing** concern, not a **code generation** concern
+   - `@apidevtools/swagger-parser` is specifically designed for this
+   - We already depend on it - let's use it fully
 
 2. **Complexity Explosion**
-    - Supporting nested refs requires recursive dereferencing logic
-    - Must handle circular refs, infinite loops, missing refs
-    - Must maintain dereferencing state across the entire document
-    - This duplicates 90% of what swagger-parser does
+   - Supporting nested refs requires recursive dereferencing logic
+   - Must handle circular refs, infinite loops, missing refs
+   - Must maintain dereferencing state across the entire document
+   - This duplicates 90% of what swagger-parser does
 
 3. **Fail-Fast Philosophy**
-    - Better to reject with a **clear, actionable error** than to silently fail later
-    - Users get immediate feedback on what to do
-    - Prevents subtle bugs from malformed preprocessing
+   - Better to reject with a **clear, actionable error** than to silently fail later
+   - Users get immediate feedback on what to do
+   - Prevents subtle bugs from malformed preprocessing
 
 4. **User Clarity**
-    - Clear separation of concerns: "preprocess with swagger-parser, then generate code"
-    - Easier to debug (is it a preprocessing issue or a generation issue?)
-    - Users learn the correct workflow
+   - Clear separation of concerns: "preprocess with swagger-parser, then generate code"
+   - Easier to debug (is it a preprocessing issue or a generation issue?)
+   - Users learn the correct workflow
 
 ### ✅ Our Current Implementation is CORRECT
 
@@ -118,10 +118,10 @@ Same structure as 3.0.x and 3.1.x - Reference objects are valid schema values.
 ```typescript
 // If getSchemaByRef returned a ReferenceObject, the document is malformed
 // (nested refs without dereferencing). Fail fast.
-if ("$ref" in actualSchema) {
-    throw new Error(
-        `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference.`
-    );
+if ('$ref' in actualSchema) {
+  throw new Error(
+    `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference.`,
+  );
 }
 ```
 

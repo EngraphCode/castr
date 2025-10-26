@@ -71,10 +71,10 @@
 
 - Phase 1: Developer Tooling (COMPLETE)
 - Phase 2 Pre-Work:
-    - All analysis tasks (1.1-1.10) with full details
-    - All dependency updates (2.1, 2.2, 2.4, 3.1) with full details
-    - Task 1.9 (Engraph template) with full test code
-    - Task 1.10 (lint fixes) with full details
+  - All analysis tasks (1.1-1.10) with full details
+  - All dependency updates (2.1, 2.2, 2.4, 3.1) with full details
+  - Task 1.9 (Engraph template) with full test code
+  - Task 1.10 (lint fixes) with full details
 
 **Benefits:**
 
@@ -242,33 +242,33 @@
 ## Success Criteria
 
 1. **01-CURRENT-IMPLEMENTATION.md:**
-    - < 2500 lines (down from 5669)
-    - Focused on Architecture Rewrite only
-    - No completed work details
-    - Clear structure, easy to scan
+   - < 2500 lines (down from 5669)
+   - Focused on Architecture Rewrite only
+   - No completed work details
+   - Clear structure, easy to scan
 
 2. **COMPLETED_WORK.md:**
-    - Contains ALL Phase 1 and Phase 2 pre-work details
-    - Comprehensive historical record
-    - Easy to search and reference
+   - Contains ALL Phase 1 and Phase 2 pre-work details
+   - Comprehensive historical record
+   - Easy to search and reference
 
 3. **context.md:**
-    - < 500 lines (down from 700+)
-    - Perfect for fresh context
-    - Quick orientation
-    - Links to details, doesn't duplicate them
+   - < 500 lines (down from 700+)
+   - Perfect for fresh context
+   - Quick orientation
+   - Links to details, doesn't duplicate them
 
 4. **00, 02, 03 plans:**
-    - Consistent with 01
-    - No broken references
-    - Clear prerequisites
-    - Updated timelines
+   - Consistent with 01
+   - No broken references
+   - Clear prerequisites
+   - Updated timelines
 
 5. **All plans:**
-    - Aligned with RULES.md
-    - No information loss
-    - Cross-references validated
-    - Easy to navigate
+   - Aligned with RULES.md
+   - No information loss
+   - Cross-references validated
+   - Easy to navigate
 
 ---
 

@@ -25,14 +25,14 @@ Task 1.9 (Zodios-Free Template Strategy) has successfully completed the **TDD Re
 **What Was Accomplished:**
 
 - ✅ Verified all quality gates passing:
-    - `pnpm format` - Passing
-    - `pnpm build` - Passing (ESM + CJS + DTS)
-    - `pnpm type-check` - Passing (0 errors)
-    - `pnpm test -- --run` - Passing (297 tests)
+  - `pnpm format` - Passing
+  - `pnpm build` - Passing (ESM + CJS + DTS)
+  - `pnpm type-check` - Passing (0 errors)
+  - `pnpm test -- --run` - Passing (297 tests)
 - ✅ Reviewed existing template structure:
-    - `default.hbs` - Full Zodios client (what we're creating alternative to)
-    - `schemas-only.hbs` - No client, no endpoints (simpler than our target)
-    - `grouped.hbs` - Grouped structure (reference for organization)
+  - `default.hbs` - Full Zodios client (what we're creating alternative to)
+  - `schemas-only.hbs` - No client, no endpoints (simpler than our target)
+  - `grouped.hbs` - Grouped structure (reference for organization)
 - ✅ Understood template context data structure from `template-context.ts`
 - ✅ Updated `vitest.config.ts` to support subdirectory tests (`src/**/*.test.ts`)
 
@@ -50,21 +50,21 @@ Task 1.9 (Zodios-Free Template Strategy) has successfully completed the **TDD Re
 
 - ✅ Analyzed all 5 existing templates and their purposes
 - ✅ Designed new template structure with 5 sections:
-    1. Schemas (like schemas-only.hbs)
-    2. Endpoints with full validation metadata
-    3. Validation helpers (optional via `--with-validation-helpers`)
-    4. Schema registry builder (optional via `--with-schema-registry`)
-    5. MCP tools (always included)
+  1. Schemas (like schemas-only.hbs)
+  2. Endpoints with full validation metadata
+  3. Validation helpers (optional via `--with-validation-helpers`)
+  4. Schema registry builder (optional via `--with-schema-registry`)
+  5. MCP tools (always included)
 - ✅ Identified data requirements from template context
 - ✅ Documented design in `.agent/plans/01-CURRENT-IMPLEMENTATION.md`
 
 **What's Remaining:**
 
 - [ ] Create `.agent/analysis/TEMPLATE_STRATEGY.md` document with:
-    - All 5 templates documented
-    - When to use each
-    - New template design details
-    - Migration guide
+  - All 5 templates documented
+  - When to use each
+  - New template design details
+  - Migration guide
 
 **Estimated Time to Complete:** 10-15 minutes
 
@@ -80,8 +80,8 @@ Task 1.9 (Zodios-Free Template Strategy) has successfully completed the **TDD Re
 
 - ✅ Created comprehensive test file: `lib/src/templates/schemas-with-metadata.test.ts` (29,358 bytes)
 - ✅ Wrote 14 test cases covering all features:
-    - 12 feature tests (currently FAILING ❌ - as expected for TDD Red)
-    - 2 negative tests (currently PASSING ✅ - correctly test absence of features)
+  - 12 feature tests (currently FAILING ❌ - as expected for TDD Red)
+  - 2 negative tests (currently PASSING ✅ - correctly test absence of features)
 - ✅ Tests use realistic OpenAPI spec fixtures
 - ✅ Tests assert correct output structure
 - ✅ Tests follow RULES.md standards (test behavior, not implementation)
@@ -131,11 +131,11 @@ pnpm test -- --run src/templates/schemas-with-metadata.test.ts
 
 1. Create `lib/src/templates/schemas-with-metadata.hbs`
 2. Implement 5 sections:
-    - Schemas generation (NO Zodios import)
-    - Endpoints with full request/response validation
-    - Optional validation helpers
-    - Optional schema registry builder
-    - MCP tools export
+   - Schemas generation (NO Zodios import)
+   - Endpoints with full request/response validation
+   - Optional validation helpers
+   - Optional schema registry builder
+   - MCP tools export
 3. Ensure strict types (no `any`, use `unknown`)
 4. Use `.strict()` for objects
 5. Use `.parse()` for fail-fast validation
@@ -158,10 +158,10 @@ pnpm test -- --run src/templates/schemas-with-metadata.test.ts
 **What Needs To Be Done:**
 
 1. Update `lib/src/cli.ts` to add options:
-    - `--template schemas-with-metadata`
-    - `--no-client`
-    - `--with-validation-helpers`
-    - `--with-schema-registry`
+   - `--template schemas-with-metadata`
+   - `--no-client`
+   - `--with-validation-helpers`
+   - `--with-schema-registry`
 2. Wire options to generation function
 3. Update `--help` output
 
@@ -178,8 +178,8 @@ pnpm test -- --run src/templates/schemas-with-metadata.test.ts
 
 1. Update `lib/src/template-context.types.ts` to add option types
 2. Update `lib/src/generateZodClientFromOpenAPI.ts`:
-    - Handle `noClient` flag (switch to schemas-with-metadata)
-    - Pass options to template context
+   - Handle `noClient` flag (switch to schemas-with-metadata)
+   - Pass options to template context
 3. Ensure type-safe option handling
 
 ---
@@ -217,9 +217,9 @@ pnpm test -- --run src/templates/schemas-with-metadata.test.ts
 **What Needs To Be Done:**
 
 1. Update `README.md`:
-    - Add template comparison table
-    - Add usage examples
-    - Document CLI flags
+   - Add template comparison table
+   - Add usage examples
+   - Document CLI flags
 2. Create `lib/examples/mcp-tools-usage.ts`
 3. Finalize `.agent/analysis/TEMPLATE_STRATEGY.md`
 
@@ -235,9 +235,9 @@ pnpm test -- --run src/templates/schemas-with-metadata.test.ts
 **What Needs To Be Done:**
 
 1. Run full quality gate:
-    ```bash
-    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
-    ```
+   ```bash
+   pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+   ```
 2. Check for new lint errors
 3. Manual smoke tests (3 scenarios)
 4. Commit with proper message

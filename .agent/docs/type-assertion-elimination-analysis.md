@@ -153,7 +153,7 @@ graph TB
 **Both `t` and `ts` are from tanu** - if they don't gel together, it indicates **incorrect API usage**, not a library limitation.
 
 ```typescript
-import { t, ts } from "tanu";
+import { t, ts } from 'tanu';
 ```
 
 The type incompatibility between `ts.Node` and `t.TypeDefinition` suggests:

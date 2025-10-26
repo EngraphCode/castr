@@ -1,25 +1,25 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "target": "ES2022",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "sourceMap": true,
-        "declaration": true,
-        "pretty": true,
-        "strictNullChecks": true,
-        "resolveJsonModule": true,
-        "outDir": "./dist",
-        "rootDir": ".",
-        "lib": ["ES2022"],
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "strictPropertyInitialization": false,
-        "baseUrl": "./"
-    },
-    "include": ["src", "eslint.config.ts"],
-    "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist", "bin.cjs"]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "declaration": true,
+    "pretty": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "lib": ["ES2022"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "baseUrl": "./"
+  },
+  "include": ["src", "eslint.config.ts"],
+  "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist", "bin.cjs"]
 }

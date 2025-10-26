@@ -32,14 +32,14 @@
 - All 4 phases with status, duration, goals
 - Strategic principles from RULES.md
 - Comprehensive dependency analysis:
-    - openapi3-ts v4.5.0 (keep & update)
-    - zod v4.1.12 (keep & update)
-    - pastable v2.2.1 (REMOVE - 8 functions to replace)
-    - openapi-types v12.1.3 (evaluate)
-    - @zodios/core v10.9.6 (evaluate)
-    - @apidevtools/swagger-parser v12.1.0 (investigate)
-    - handlebars v4.7.8 (evaluate in Phase 3)
-    - Stryker v9.2.0 (add in Phase 3)
+  - openapi3-ts v4.5.0 (keep & update)
+  - zod v4.1.12 (keep & update)
+  - pastable v2.2.1 (REMOVE - 8 functions to replace)
+  - openapi-types v12.1.3 (evaluate)
+  - @zodios/core v10.9.6 (evaluate)
+  - @apidevtools/swagger-parser v12.1.0 (investigate)
+  - handlebars v4.7.8 (evaluate in Phase 3)
+  - Stryker v9.2.0 (add in Phase 3)
 - Risk management strategy
 - Success criteria for each phase
 - Timeline estimates
@@ -52,11 +52,11 @@
 
 - 12 detailed tasks for Phase 2
 - Every task has:
-    - Acceptance criteria (what "done" looks like)
-    - Implementation steps (how to do it)
-    - Validation steps (how to verify)
-    - Rollback plans (if applicable)
-    - Output artifacts
+  - Acceptance criteria (what "done" looks like)
+  - Implementation steps (how to do it)
+  - Validation steps (how to verify)
+  - Rollback plans (if applicable)
+  - Output artifacts
 - Task dependencies & execution order
 - Embedded TODO list (15 items)
 - Quality gate requirements

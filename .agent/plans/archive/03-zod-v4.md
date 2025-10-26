@@ -18,22 +18,22 @@ Upgrade Zod from v3.x to v4.x, updating all schema generation logic and generate
 This **IS** a breaking change because:
 
 1. **Generated code changes:**
-    - Generated clients will use Zod v4 API
-    - All users must have Zod v4 installed
-    - May have different validation behavior
+   - Generated clients will use Zod v4 API
+   - All users must have Zod v4 installed
+   - May have different validation behavior
 
 2. **@zodios/core dependency:**
-    - Must update to Zod v4 compatible version
-    - May have its own breaking changes
+   - Must update to Zod v4 compatible version
+   - May have its own breaking changes
 
 3. **User action required:**
-    - Update Zod dependency in their projects
-    - Regenerate all API clients
-    - Test with new Zod v4 API
+   - Update Zod dependency in their projects
+   - Regenerate all API clients
+   - Test with new Zod v4 API
 
 4. **Semantic versioning:**
-    - This requires a major version bump
-    - Clear signal of breaking changes
+   - This requires a major version bump
+   - Clear signal of breaking changes
 
 ## User Impact Assessment
 
@@ -86,18 +86,18 @@ This **IS** a breaking change because:
 
 ```json
 {
-    "lib/package.json": {
-        "zod": "^3.19.1",
-        "@zodios/core": "^10.3.1"
-    },
-    "playground/package.json": {
-        "zod": "^3.20.0", // Different!
-        "@zodios/core": "^10.3.1"
-    },
-    "examples/*/package.json": {
-        "zod": "^3.19.1",
-        "@zodios/core": "^10.3.1"
-    }
+  "lib/package.json": {
+    "zod": "^3.19.1",
+    "@zodios/core": "^10.3.1"
+  },
+  "playground/package.json": {
+    "zod": "^3.20.0", // Different!
+    "@zodios/core": "^10.3.1"
+  },
+  "examples/*/package.json": {
+    "zod": "^3.19.1",
+    "@zodios/core": "^10.3.1"
+  }
 }
 ```
 
@@ -106,27 +106,27 @@ This **IS** a breaking change because:
 **Core Schema Generation:**
 
 - `lib/src/openApiToZod.ts` (463 lines - COMPLEX!)
-    - Main schema conversion logic
-    - Handles all OpenAPI → Zod mappings
-    - Will require significant updates
+  - Main schema conversion logic
+  - Handles all OpenAPI → Zod mappings
+  - Will require significant updates
 
 **Chain Generation:**
 
 - `lib/src/openApiToZod.ts` function `getZodChain`
-    - Builds validation chains (.min(), .max(), etc.)
-    - May need updates for Zod v4 API
+  - Builds validation chains (.min(), .max(), etc.)
+  - May need updates for Zod v4 API
 
 **Type Generation:**
 
 - `lib/src/openApiToTypescript.ts`
-    - Generates TypeScript types
-    - May need updates for Zod v4 type inference
+  - Generates TypeScript types
+  - May need updates for Zod v4 type inference
 
 **Template Context:**
 
 - `lib/src/template-context.ts`
-    - Manages schema wrapping (z.lazy for circular refs)
-    - May need updates
+  - Manages schema wrapping (z.lazy for circular refs)
+  - May need updates
 
 **Tests:**
 
@@ -166,45 +166,45 @@ open https://zod.dev/
 **Key areas to research:**
 
 1. **Schema creation API changes**
-    - `z.string()`, `z.number()`, `z.object()`, etc.
-    - Any method renames or removals
+   - `z.string()`, `z.number()`, `z.object()`, etc.
+   - Any method renames or removals
 
 2. **Refinement API**
-    - `.refine()` signature changes
-    - `.superRefine()` changes
-    - Custom validation
+   - `.refine()` signature changes
+   - `.superRefine()` changes
+   - Custom validation
 
 3. **Transform API**
-    - `.transform()` changes
-    - `.preprocess()` changes
+   - `.transform()` changes
+   - `.preprocess()` changes
 
 4. **Optional/Nullable handling**
-    - `.optional()` behavior
-    - `.nullable()` behavior
-    - Union with null
+   - `.optional()` behavior
+   - `.nullable()` behavior
+   - Union with null
 
 5. **Default values**
-    - `.default()` API
-    - Lazy defaults
+   - `.default()` API
+   - Lazy defaults
 
 6. **Array handling**
-    - `z.array()` API
-    - `.min()`, `.max()`, `.length()`
-    - `.nonempty()`
+   - `z.array()` API
+   - `.min()`, `.max()`, `.length()`
+   - `.nonempty()`
 
 7. **Object handling**
-    - `.passthrough()`, `.strict()`, `.strip()`
-    - `.partial()`, `.required()`, `.pick()`, `.omit()`
-    - `.extend()`, `.merge()`
+   - `.passthrough()`, `.strict()`, `.strip()`
+   - `.partial()`, `.required()`, `.pick()`, `.omit()`
+   - `.extend()`, `.merge()`
 
 8. **Union/Discriminated Union**
-    - `z.union()` API
-    - `z.discriminatedUnion()` API
-    - Discriminator property
+   - `z.union()` API
+   - `z.discriminatedUnion()` API
+   - Discriminator property
 
 9. **Enum handling**
-    - `z.enum()` API
-    - `z.nativeEnum()` API
+   - `z.enum()` API
+   - `z.nativeEnum()` API
 
 10. **Lazy schemas (critical for recursion)**
     - `z.lazy()` API
@@ -923,24 +923,24 @@ Create test files to verify generated schemas work:
 
 ```typescript
 // test-runtime-validation.ts
-import { z } from "zod";
+import { z } from 'zod';
 // Import generated schemas
 
 const TestSchema = z.object({
-    name: z.string(),
-    age: z.number().min(0),
+  name: z.string(),
+  age: z.number().min(0),
 });
 
 // Valid data
-const valid = { name: "John", age: 30 };
+const valid = { name: 'John', age: 30 };
 console.log(TestSchema.parse(valid)); // Should succeed
 
 // Invalid data
-const invalid = { name: "John", age: -5 };
+const invalid = { name: 'John', age: -5 };
 try {
-    TestSchema.parse(invalid);
+  TestSchema.parse(invalid);
 } catch (e) {
-    console.log("Validation failed as expected:", e);
+  console.log('Validation failed as expected:', e);
 }
 ```
 
@@ -1025,20 +1025,20 @@ changes are backward compatible, but there are some differences:
 ```typescript
 // Zod v3 (old)
 const User = z
-    .object({
-        name: z.string(),
-        age: z.number().int().min(0),
-    })
-    .passthrough();
+  .object({
+    name: z.string(),
+    age: z.number().int().min(0),
+  })
+  .passthrough();
 
 // Zod v4 (new)
 // [API changes will be documented here based on actual Zod v4 changes]
 const User = z
-    .object({
-        name: z.string(),
-        age: z.number().int().min(0),
-    })
-    .passthrough();
+  .object({
+    name: z.string(),
+    age: z.number().int().min(0),
+  })
+  .passthrough();
 ```
 
 #### Validation Behavior
@@ -1054,12 +1054,12 @@ const User = z
 [List all breaking changes from Zod v3 → v4 that affect generated code]
 
 1. **[Breaking Change 1]**
-    - Description
-    - How to fix
+   - Description
+   - How to fix
 
 2. **[Breaking Change 2]**
-    - Description
-    - How to fix
+   - Description
+   - How to fix
 
 ### Troubleshooting
 
@@ -1158,7 +1158,7 @@ pnpm changeset
 
 ````markdown
 ---
-"openapi-zod-client": major
+'openapi-zod-client': major
 ---
 
 BREAKING CHANGE: Upgrade to Zod v4
@@ -1177,16 +1177,16 @@ Your project must have:
 ## Migration Steps
 
 1. Update dependencies:
-    ```bash
-    npm install zod@^4 @zodios/core@^11 openapi-zod-client@^2
-    ```
+   ```bash
+   npm install zod@^4 @zodios/core@^11 openapi-zod-client@^2
+   ```
 ````
 
 2. Regenerate your API client:
 
-    ```bash
-    npx openapi-zod-client your-spec.yaml -o client.ts
-    ```
+   ```bash
+   npx openapi-zod-client your-spec.yaml -o client.ts
+   ```
 
 3. Test your application
 
@@ -1392,21 +1392,21 @@ If critical issues discovered:
 
 1. **Immediate rollback:**
 
-    ```bash
-    git revert <merge-commit>
-    # Release v2.0.1 with rollback
-    ```
+   ```bash
+   git revert <merge-commit>
+   # Release v2.0.1 with rollback
+   ```
 
 2. **Partial rollback:**
-    - Identify specific problematic change
-    - Revert just that commit
-    - Release patch
+   - Identify specific problematic change
+   - Revert just that commit
+   - Release patch
 
 3. **Forward fix:**
-    - If issue is fixable quickly
-    - Create hot fix PR
-    - Fast-track review
-    - Release patch
+   - If issue is fixable quickly
+   - Create hot fix PR
+   - Fast-track review
+   - Release patch
 
 ---
 

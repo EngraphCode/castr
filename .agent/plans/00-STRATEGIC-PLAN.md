@@ -314,15 +314,15 @@ This strategic plan ensures all 8 requirements are met:
 - **Priority:** HIGH
 - **Plan:** `.agent/analysis/PASTABLE_REPLACEMENT_PLAN.md`
 - **Functions:**
-    - `get` → lodash-es (4 usages)
-    - `capitalize` → lodash-es or native (2 usages)
-    - `pick` → lodash-es (1 usage)
-    - `sortBy` → lodash-es (1 usage)
-    - `sortListFromRefArray` → custom utility (2 usages)
-    - `sortObjKeysFromArray` → custom utility (1 usage)
-    - `kebabToCamel`, `snakeToCamel` → custom (simple regex, 1 usage each)
-    - `getSum` → native .reduce() (1 usage)
-    - `ObjectLiteral` type → Record<string, unknown> (1 usage)
+  - `get` → lodash-es (4 usages)
+  - `capitalize` → lodash-es or native (2 usages)
+  - `pick` → lodash-es (1 usage)
+  - `sortBy` → lodash-es (1 usage)
+  - `sortListFromRefArray` → custom utility (2 usages)
+  - `sortObjKeysFromArray` → custom utility (1 usage)
+  - `kebabToCamel`, `snakeToCamel` → custom (simple regex, 1 usage each)
+  - `getSum` → native .reduce() (1 usage)
+  - `ObjectLiteral` type → Record<string, unknown> (1 usage)
 
 **openapi-types v12.1.3** ⚠️ REMOVE
 
@@ -437,10 +437,10 @@ This strategic plan ensures all 8 requirements are met:
 
 - ✅ Week 1: Pre-work complete (analysis, dependency updates, templates)
 - ⏳ Week 2-3: Architecture Rewrite (26-38 hours)
-    - Phase 0: Comprehensive test suite (8-12 hours)
-    - Phase 1: Eliminate resolver & CodeMeta (8-12 hours)
-    - Phase 2: Migrate tanu → ts-morph (6-8 hours)
-    - Phase 3: Remove Zodios (4-6 hours)
+  - Phase 0: Comprehensive test suite (8-12 hours)
+  - Phase 1: Eliminate resolver & CodeMeta (8-12 hours)
+  - Phase 2: Migrate tanu → ts-morph (6-8 hours)
+  - Phase 3: Remove Zodios (4-6 hours)
 - Week 4: Final validation & documentation
 
 **Phase 2B (Optional):** 3-4 weeks

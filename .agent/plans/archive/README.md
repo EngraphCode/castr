@@ -70,10 +70,10 @@ This directory contains comprehensive plans for modernizing the openapi-zod-clie
 
 ```typescript
 // Before
-import { OpenAPIObject } from "openapi3-ts";
+import { OpenAPIObject } from 'openapi3-ts';
 
 // After
-import { OpenAPIObject } from "openapi3-ts/oas31";
+import { OpenAPIObject } from 'openapi3-ts/oas31';
 ```
 
 **Impact:**

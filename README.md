@@ -155,62 +155,62 @@ pnpx openapi-zod-client ./petstore.yaml -o ./api.ts \
 **Example output**:
 
 ```typescript
-import { z } from "zod";
+import { z } from 'zod';
 
 // Zod schemas
 const Pet = z.object({ id: z.number(), name: z.string() }).strict();
 const Error = z.object({ code: z.number(), message: z.string() }).strict();
 
 export const schemas = {
-    Pet,
-    Error,
+  Pet,
+  Error,
 } as const;
 
 // Endpoint metadata with full validation schemas
 export const endpoints = [
-    {
-        method: "get" as const,
-        path: "/pets/:petId",
-        operationId: "getPetById",
-        description: "Get a pet by ID",
-        request: {
-            pathParams: z.object({ petId: z.string() }),
-            queryParams: z.object({ include: z.string().optional() }).optional(),
-            headers: z.object({ "x-api-key": z.string() }).optional(),
-        },
-        responses: {
-            200: { description: "Success", schema: Pet },
-            404: { description: "Not Found", schema: Error },
-        },
+  {
+    method: 'get' as const,
+    path: '/pets/:petId',
+    operationId: 'getPetById',
+    description: 'Get a pet by ID',
+    request: {
+      pathParams: z.object({ petId: z.string() }),
+      queryParams: z.object({ include: z.string().optional() }).optional(),
+      headers: z.object({ 'x-api-key': z.string() }).optional(),
     },
+    responses: {
+      200: { description: 'Success', schema: Pet },
+      404: { description: 'Not Found', schema: Error },
+    },
+  },
 ] as const;
 
 // MCP-compatible tool definitions
 export const mcpTools = endpoints.map((endpoint) => ({
-    name: endpoint.operationId,
-    description: endpoint.description,
-    inputSchema: z.object({
-        path: endpoint.request.pathParams,
-        query: endpoint.request.queryParams,
-    }),
-    outputSchema: endpoint.responses[200]?.schema || z.unknown(),
+  name: endpoint.operationId,
+  description: endpoint.description,
+  inputSchema: z.object({
+    path: endpoint.request.pathParams,
+    query: endpoint.request.queryParams,
+  }),
+  outputSchema: endpoint.responses[200]?.schema || z.unknown(),
 })) as const;
 
 // Optional: Validation helpers (--with-validation-helpers)
 export function validateRequest(endpoint, input) {
-    // Validates path, query, headers, body against endpoint schema
-    // Uses .parse() for fail-fast validation (throws on error)
+  // Validates path, query, headers, body against endpoint schema
+  // Uses .parse() for fail-fast validation (throws on error)
 }
 
 export function validateResponse(endpoint, status, data) {
-    // Validates response data against endpoint response schema
-    // Uses .parse() for fail-fast validation (throws on error)
+  // Validates response data against endpoint response schema
+  // Uses .parse() for fail-fast validation (throws on error)
 }
 
 // Optional: Schema registry (--with-schema-registry)
 export function buildSchemaRegistry(options?: { rename?: (key: string) => string }) {
-    // Builds a sanitized registry of all schemas
-    // Useful for dynamic schema lookup by name
+  // Builds a sanitized registry of all schemas
+  // Useful for dynamic schema lookup by name
 }
 ```
 
@@ -265,19 +265,19 @@ The generated `mcpTools` array transforms OpenAPI endpoints into MCP-compatible 
 
 ```typescript
 export const mcpTools = endpoints.map((endpoint) => {
-    // Build a consolidated params object from all request parameter types
-    const params: Record<string, z.ZodTypeAny> = {};
-    if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-    if (endpoint.request?.queryParams) params.query = endpoint.request.queryParams;
-    if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-    if (endpoint.request?.body) params.body = endpoint.request.body;
+  // Build a consolidated params object from all request parameter types
+  const params: Record<string, z.ZodTypeAny> = {};
+  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+  if (endpoint.request?.queryParams) params.query = endpoint.request.queryParams;
+  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+  if (endpoint.request?.body) params.body = endpoint.request.body;
 
-    return {
-        name: endpoint.operationId || `${endpoint.method}_${endpoint.path}`,
-        description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
-        inputSchema: Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-        outputSchema: endpoint.responses[200]?.schema || endpoint.responses[201]?.schema || z.unknown(),
-    };
+  return {
+    name: endpoint.operationId || `${endpoint.method}_${endpoint.path}`,
+    description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
+    inputSchema: Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+    outputSchema: endpoint.responses[200]?.schema || endpoint.responses[201]?.schema || z.unknown(),
+  };
 }) as const;
 ```
 
@@ -285,26 +285,26 @@ export const mcpTools = endpoints.map((endpoint) => {
 
 1. **Consolidated Input Schema**: Unlike `endpoints` (which separates path, query, headers, body), MCP tools use a **single `inputSchema`** that nests all parameter types:
 
-    ```typescript
-    inputSchema: z.object({
-        path: z.object({ userId: z.string() }),
-        query: z.object({ include: z.string().optional() }),
-        headers: z.object({ authorization: z.string() }),
-        body: CreateUserPayload,
-    });
-    ```
+   ```typescript
+   inputSchema: z.object({
+     path: z.object({ userId: z.string() }),
+     query: z.object({ include: z.string().optional() }),
+     headers: z.object({ authorization: z.string() }),
+     body: CreateUserPayload,
+   });
+   ```
 
 2. **Success-Focused Output**: MCP tools use the **primary success response** (200 or 201) as `outputSchema`, not all possible responses. This is because:
-    - MCP focuses on the "happy path" for tool execution
-    - Error handling is typically done at the protocol level (HTTP status, exceptions)
-    - AI assistants need clear expectations of successful tool output
+   - MCP focuses on the "happy path" for tool execution
+   - Error handling is typically done at the protocol level (HTTP status, exceptions)
+   - AI assistants need clear expectations of successful tool output
 
 3. **Fallback to `z.unknown()`**: If no 200/201 response is defined, `outputSchema` defaults to `z.unknown()` to maintain type safety while allowing any valid JSON.
 
 4. **Name from `operationId`**: MCP tools use OpenAPI's `operationId` as the tool name (with fallback to auto-generated name), ensuring:
-    - Human-readable tool identifiers
-    - Consistency with API documentation
-    - Uniqueness across the API surface
+   - Human-readable tool identifiers
+   - Consistency with API documentation
+   - Uniqueness across the API surface
 
 #### Why Not Just Use `endpoints`?
 
@@ -324,29 +324,29 @@ Given this OpenAPI endpoint:
 
 ```yaml
 paths:
-    /users/{userId}:
-        get:
-            operationId: getUserById
-            description: Retrieve a user by their ID
-            parameters:
-                - name: userId
-                  in: path
-                  required: true
-                  schema:
-                      type: string
-                - name: include
-                  in: query
-                  schema:
-                      type: string
-            responses:
-                200:
-                    description: User found
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/User"
-                404:
-                    description: User not found
+  /users/{userId}:
+    get:
+      operationId: getUserById
+      description: Retrieve a user by their ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: include
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
 ```
 
 The generated `mcpTools` entry looks like:
@@ -373,20 +373,20 @@ An AI assistant can now:
 #### Using MCP Tools in Practice
 
 ```typescript
-import { mcpTools, endpoints } from "./api.ts";
+import { mcpTools, endpoints } from './api.ts';
 
 // AI assistant discovers available tools
-const tool = mcpTools.find((t) => t.name === "getUserById");
+const tool = mcpTools.find((t) => t.name === 'getUserById');
 
 // Validate user request
 const input = tool.inputSchema.parse({
-    path: { userId: "123" },
-    query: { include: "profile" },
+  path: { userId: '123' },
+  query: { include: 'profile' },
 });
 
 // Make API call (using your own HTTP client)
 const response = await fetch(`https://api.example.com/users/${input.path.userId}`, {
-    headers: { "Content-Type": "application/json" },
+  headers: { 'Content-Type': 'application/json' },
 });
 
 // Validate response
@@ -424,174 +424,174 @@ Exemple: `--success-expr "status >= 200 && status < 300"`
 [input](./samples/v3.0/petstore.yaml):
 
 ```yaml
-openapi: "3.0.0"
+openapi: '3.0.0'
 info:
-    version: 1.0.0
-    title: Swagger Petstore
-    license:
-        name: MIT
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
 servers:
-    - url: http://petstore.swagger.io/v1
+  - url: http://petstore.swagger.io/v1
 paths:
-    /pets:
-        get:
-            summary: List all pets
-            operationId: listPets
-            tags:
-                - pets
-            parameters:
-                - name: limit
-                  in: query
-                  description: How many items to return at one time (max 100)
-                  required: false
-                  schema:
-                      type: integer
-                      format: int32
-            responses:
-                "200":
-                    description: A paged array of pets
-                    headers:
-                        x-next:
-                            description: A link to the next page of responses
-                            schema:
-                                type: string
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Pets"
-                default:
-                    description: unexpected error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Error"
-        post:
-            summary: Create a pet
-            operationId: createPets
-            tags:
-                - pets
-            responses:
-                "201":
-                    description: Null response
-                default:
-                    description: unexpected error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Error"
-    /pets/{petId}:
-        get:
-            summary: Info for a specific pet
-            operationId: showPetById
-            tags:
-                - pets
-            parameters:
-                - name: petId
-                  in: path
-                  required: true
-                  description: The id of the pet to retrieve
-                  schema:
-                      type: string
-            responses:
-                "200":
-                    description: Expected response to a valid request
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Pet"
-                default:
-                    description: unexpected error
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Error"
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of pets
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pets'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a pet
+      operationId: createPets
+      tags:
+        - pets
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /pets/{petId}:
+    get:
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - pets
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
-    schemas:
-        Pet:
-            type: object
-            required:
-                - id
-                - name
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                name:
-                    type: string
-                tag:
-                    type: string
-        Pets:
-            type: array
-            items:
-                $ref: "#/components/schemas/Pet"
-        Error:
-            type: object
-            required:
-                - code
-                - message
-            properties:
-                code:
-                    type: integer
-                    format: int32
-                message:
-                    type: string
+  schemas:
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string
+    Pets:
+      type: array
+      items:
+        $ref: '#/components/schemas/Pet'
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
 ```
 
 output:
 
 ```ts
-import { makeApi, Zodios } from "@zodios/core";
-import { z } from "zod";
+import { makeApi, Zodios } from '@zodios/core';
+import { z } from 'zod';
 
 const Pet = z.object({ id: z.number().int(), name: z.string(), tag: z.string().optional() });
 const Pets = z.array(Pet);
 const Error = z.object({ code: z.number().int(), message: z.string() });
 
 export const schemas = {
-    Pet,
-    Pets,
-    Error,
+  Pet,
+  Pets,
+  Error,
 };
 
 const endpoints = makeApi([
-    {
-        method: "get",
-        path: "/pets",
-        requestFormat: "json",
-        parameters: [
-            {
-                name: "limit",
-                type: "Query",
-                schema: z.number().int().optional(),
-            },
-        ],
-        response: z.array(Pet),
-    },
-    {
-        method: "post",
-        path: "/pets",
-        requestFormat: "json",
-        response: z.void(),
-    },
-    {
-        method: "get",
-        path: "/pets/:petId",
-        requestFormat: "json",
-        parameters: [
-            {
-                name: "petId",
-                type: "Path",
-                schema: z.string(),
-            },
-        ],
-        response: Pet,
-    },
+  {
+    method: 'get',
+    path: '/pets',
+    requestFormat: 'json',
+    parameters: [
+      {
+        name: 'limit',
+        type: 'Query',
+        schema: z.number().int().optional(),
+      },
+    ],
+    response: z.array(Pet),
+  },
+  {
+    method: 'post',
+    path: '/pets',
+    requestFormat: 'json',
+    response: z.void(),
+  },
+  {
+    method: 'get',
+    path: '/pets/:petId',
+    requestFormat: 'json',
+    parameters: [
+      {
+        name: 'petId',
+        type: 'Path',
+        schema: z.string(),
+      },
+    ],
+    response: Pet,
+  },
 ]);
 
 export const api = new Zodios(endpoints);
 
 export function createApiClient(baseUrl: string) {
-    return new Zodios(baseUrl, endpoints);
+  return new Zodios(baseUrl, endpoints);
 }
 ```
 

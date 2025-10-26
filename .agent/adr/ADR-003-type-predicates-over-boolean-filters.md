@@ -54,15 +54,15 @@ if (isPrimitiveType(schema.type)) {
 
 ```typescript
 // 1. Extract the subset from library type (compiler validates)
-type MySubset = Extract<LibraryType, "foo" | "bar">;
+type MySubset = Extract<LibraryType, 'foo' | 'bar'>;
 
 // 2. Define literals tied to that type
-const MY_VALUES: readonly MySubset[] = ["foo", "bar"] as const;
+const MY_VALUES: readonly MySubset[] = ['foo', 'bar'] as const;
 
 // 3. Create type predicate that narrows from unknown
 export function isMySubset(value: unknown): value is MySubset {
-    if (typeof value !== "string") return false;
-    return (MY_VALUES as readonly string[]).includes(value);
+  if (typeof value !== 'string') return false;
+  return (MY_VALUES as readonly string[]).includes(value);
 }
 ```
 
@@ -71,42 +71,42 @@ export function isMySubset(value: unknown): value is MySubset {
 #### Good: Proper Type Predicates
 
 ```typescript
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from 'openapi3-ts';
 
 // ✅ Proper type guard - tied to library type with Extract
 type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
+  NonNullable<SchemaObject['type']>,
+  'string' | 'number' | 'integer' | 'boolean' | 'null'
 >;
 
 const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string",
-    "number",
-    "integer",
-    "boolean",
-    "null",
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'null',
 ] as const;
 
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-    if (typeof value !== "string") return false;
-    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-    return typeStrings.includes(value);
+  if (typeof value !== 'string') return false;
+  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return typeStrings.includes(value);
 }
 
 // Usage: TypeScript knows the type is narrowed!
 if (isPrimitiveSchemaType(schema.type)) {
-    // schema.type is now PrimitiveSchemaType
-    // "string" | "number" | "integer" | "boolean" | "null"
+  // schema.type is now PrimitiveSchemaType
+  // "string" | "number" | "integer" | "boolean" | "null"
 }
 ```
 
 ```typescript
 // ✅ Type guard from existing library
-import { isReferenceObject } from "openapi3-ts";
+import { isReferenceObject } from 'openapi3-ts';
 
 if (isReferenceObject(obj)) {
-    // obj is now ReferenceObject
-    console.log(obj.$ref);
+  // obj is now ReferenceObject
+  console.log(obj.$ref);
 }
 ```
 
@@ -163,12 +163,12 @@ Type predicates that accept already-narrowed inputs defeat the purpose:
 ```typescript
 // ❌ BAD: Input is already narrowed
 function isString(value: string | number): value is string {
-    return typeof value === "string";
+  return typeof value === 'string';
 }
 
 // ✅ GOOD: Input is unknown, provides real narrowing
 function isString(value: unknown): value is string {
-    return typeof value === "string";
+  return typeof value === 'string';
 }
 ```
 
@@ -183,15 +183,15 @@ function isString(value: unknown): value is string {
 
 ```typescript
 // Boolean filter
-const primitiveTypeList: readonly string[] = ["string", "number", "integer", "boolean", "null"];
+const primitiveTypeList: readonly string[] = ['string', 'number', 'integer', 'boolean', 'null'];
 
-function isPrimitiveType(type: SchemaObject["type"]): boolean {
-    return primitiveTypeList.includes(type as any);
+function isPrimitiveType(type: SchemaObject['type']): boolean {
+  return primitiveTypeList.includes(type as any);
 }
 
 // Usage requires type assertion
 if (isPrimitiveType(schema.type)) {
-    const narrowed = schema.type as PrimitiveType; // ❌ Manual assertion!
+  const narrowed = schema.type as PrimitiveType; // ❌ Manual assertion!
 }
 ```
 
@@ -199,30 +199,30 @@ if (isPrimitiveType(schema.type)) {
 
 ```typescript
 // Proper type predicate
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from 'openapi3-ts';
 
 type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
+  NonNullable<SchemaObject['type']>,
+  'string' | 'number' | 'integer' | 'boolean' | 'null'
 >;
 
 const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string",
-    "number",
-    "integer",
-    "boolean",
-    "null",
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'null',
 ] as const;
 
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-    if (typeof value !== "string") return false;
-    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-    return typeStrings.includes(value);
+  if (typeof value !== 'string') return false;
+  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return typeStrings.includes(value);
 }
 
 // Usage: TypeScript automatically narrows!
 if (isPrimitiveSchemaType(schema.type)) {
-    // schema.type is now PrimitiveSchemaType - no assertion needed!
+  // schema.type is now PrimitiveSchemaType - no assertion needed!
 }
 ```
 

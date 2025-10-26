@@ -32,7 +32,7 @@
 
 ```typescript
 // Line 9:
-import type { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV3 } from 'openapi-types';
 
 // Line 11:
 const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as SchemaObject;
@@ -88,10 +88,10 @@ GitHub: https://github.com/kogosoftwarellc/open-api/tree/master/packages/openapi
 
 ```json
 {
-    "dependencies": {
-        "openapi-types": "^12.1.3",
-        "openapi3-ts": "^3"
-    }
+  "dependencies": {
+    "openapi-types": "^12.1.3",
+    "openapi3-ts": "^3"
+  }
 }
 ```
 
@@ -101,7 +101,7 @@ GitHub: https://github.com/kogosoftwarellc/open-api/tree/master/packages/openapi
 
 ```json
 {
-    "yaml": "^2.8.0"
+  "yaml": "^2.8.0"
 }
 ```
 
@@ -134,7 +134,7 @@ Both packages provide TypeScript types for OpenAPI schemas:
 
 ```typescript
 // BEFORE (openApiToTypescript.test.ts):
-import type { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV3 } from 'openapi-types';
 
 const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as SchemaObject;
 
@@ -145,7 +145,7 @@ const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as 
 const makeSchema = (schema: SchemaObject) => schema;
 
 // Option B: If we need to be explicit about accepting different types
-import type { SchemaObject as OpenAPISchemaObject } from "openapi3-ts";
+import type { SchemaObject as OpenAPISchemaObject } from 'openapi3-ts';
 const makeSchema = (schema: SchemaObject | OpenAPISchemaObject) => schema as SchemaObject;
 ```
 
@@ -158,29 +158,29 @@ const makeSchema = (schema: SchemaObject | OpenAPISchemaObject) => schema as Sch
 ### Rationale
 
 1. **Redundant** ✅
-    - openapi3-ts provides all types we need
-    - 100% overlap for our use cases
-    - No unique functionality
+   - openapi3-ts provides all types we need
+   - 100% overlap for our use cases
+   - No unique functionality
 
 2. **Minimal Usage** ✅
-    - Only 1 file (test helper)
-    - No production code usage
-    - Easy to replace
+   - Only 1 file (test helper)
+   - No production code usage
+   - Easy to replace
 
 3. **Maintenance Concerns** ⚠️
-    - Last updated 2.5 years ago
-    - Not actively maintained
-    - May become outdated
+   - Last updated 2.5 years ago
+   - Not actively maintained
+   - May become outdated
 
 4. **Dependency Reduction** ✅
-    - Fewer dependencies = smaller attack surface
-    - Simpler dependency tree
-    - Faster installs
+   - Fewer dependencies = smaller attack surface
+   - Simpler dependency tree
+   - Faster installs
 
 5. **Target Repo Compliance** ✅
-    - Prefer minimal dependencies
-    - Use authoritative sources (openapi3-ts)
-    - Remove unnecessary packages
+   - Prefer minimal dependencies
+   - Use authoritative sources (openapi3-ts)
+   - Remove unnecessary packages
 
 ---
 
@@ -193,7 +193,7 @@ const makeSchema = (schema: SchemaObject | OpenAPISchemaObject) => schema as Sch
 **Current:**
 
 ```typescript
-import type { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV3 } from 'openapi-types';
 
 const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as SchemaObject;
 ```
@@ -210,7 +210,7 @@ const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as 
 
 ```typescript
 // REMOVE:
-import type { OpenAPIV3 } from "openapi-types";
+import type { OpenAPIV3 } from 'openapi-types';
 const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as SchemaObject;
 
 // REPLACE WITH: (if helper still needed)
@@ -244,46 +244,46 @@ grep -r "openapi-types" src/
 ## Execution Checklist
 
 - [ ] **Review test helper usage**
-    - Understand why `makeSchema` exists
-    - Determine if it can be simplified or removed
+  - Understand why `makeSchema` exists
+  - Determine if it can be simplified or removed
 
 - [ ] **Update openApiToTypescript.test.ts**
-    - Remove `import type { OpenAPIV3 } from "openapi-types";`
-    - Simplify or remove `makeSchema` helper
-    - Use `SchemaObject` from openapi3-ts directly
+  - Remove `import type { OpenAPIV3 } from "openapi-types";`
+  - Simplify or remove `makeSchema` helper
+  - Use `SchemaObject` from openapi3-ts directly
 
 - [ ] **Run tests**
 
-    ```bash
-    pnpm test -- openApiToTypescript
-    ```
+  ```bash
+  pnpm test -- openApiToTypescript
+  ```
 
 - [ ] **Remove dependency**
 
-    ```bash
-    pnpm remove openapi-types
-    ```
+  ```bash
+  pnpm remove openapi-types
+  ```
 
 - [ ] **Verify removal**
 
-    ```bash
-    # Should return nothing:
-    grep -r "openapi-types" lib/src/
+  ```bash
+  # Should return nothing:
+  grep -r "openapi-types" lib/src/
 
-    # Should not be in package.json:
-    cat lib/package.json | grep openapi-types
-    ```
+  # Should not be in package.json:
+  cat lib/package.json | grep openapi-types
+  ```
 
 - [ ] **Type-check**
 
-    ```bash
-    pnpm type-check
-    ```
+  ```bash
+  pnpm type-check
+  ```
 
 - [ ] **Full test suite**
-    ```bash
-    pnpm test -- --run
-    ```
+  ```bash
+  pnpm test -- --run
+  ```
 
 ---
 

@@ -147,8 +147,8 @@ openapi-zod-client/
 ```yaml
 # pnpm-workspace.yaml
 packages:
-    - lib
-    # Removed: playground, examples
+  - lib
+  # Removed: playground, examples
 ```
 
 ### Removed Dependencies

@@ -30,7 +30,16 @@
 **Problem:**
 
 ```typescript
-const pathItem = pick(pathItemObj, ["get", "put", "post", "delete", "options", "head", "patch", "trace"]);
+const pathItem = pick(pathItemObj, [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+]);
 ```
 
 This uses a hardcoded array to extract HTTP methods from `PathItemObject`. Issues:
@@ -45,32 +54,32 @@ Create a type-safe HTTP method extraction:
 ```typescript
 // Define HTTP methods as a type derived from PathItemObject
 type HttpMethod = Extract<
-    keyof PathItemObject,
-    "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace"
+  keyof PathItemObject,
+  'get' | 'put' | 'post' | 'delete' | 'options' | 'head' | 'patch' | 'trace'
 >;
 
 const HTTP_METHODS = [
-    "get",
-    "put",
-    "post",
-    "delete",
-    "options",
-    "head",
-    "patch",
-    "trace",
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
 ] as const satisfies readonly HttpMethod[];
 
 // Type-safe method extraction
 type PathItemMethods = Pick<PathItemObject, HttpMethod>;
 
 function extractMethods(pathItem: PathItemObject): PathItemMethods {
-    const result: Partial<PathItemMethods> = {};
-    for (const method of HTTP_METHODS) {
-        if (pathItem[method]) {
-            result[method] = pathItem[method];
-        }
+  const result: Partial<PathItemMethods> = {};
+  for (const method of HTTP_METHODS) {
+    if (pathItem[method]) {
+      result[method] = pathItem[method];
     }
-    return result as PathItemMethods;
+  }
+  return result as PathItemMethods;
 }
 ```
 
@@ -84,7 +93,7 @@ function extractMethods(pathItem: PathItemObject): PathItemMethods {
 // Before: Allowed params without schema or content, defaulted to {}
 // After: Throws error if param has neither schema nor content
 if (!paramItem.schema && !paramItem.content) {
-    throw new Error(`No schema or content for param ${paramItem.name}`);
+  throw new Error(`No schema or content for param ${paramItem.name}`);
 }
 ```
 

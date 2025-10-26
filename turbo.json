@@ -1,41 +1,41 @@
 {
-    "$schema": "https://turbo.build/schema.json",
-    "ui": "stream",
-    "tasks": {
-        "clean": {
-            "cache": false,
-            "outputs": []
-        },
-        "build": {
-            "cache": false,
-            "dependsOn": ["^build"],
-            "outputs": ["dist/**", ".next/**", "out/**"]
-        },
-        "type-check": {
-            "cache": false,
-            "dependsOn": ["build"],
-            "outputs": []
-        },
-        "format": {
-            "cache": false,
-            "outputs": []
-        },
-        "format:check": {
-            "cache": false,
-            "outputs": []
-        },
-        "lint": {
-            "cache": false,
-            "outputs": []
-        },
-        "test": {
-            "cache": false,
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "clean": {
+      "cache": false,
+      "outputs": []
+    },
+    "build": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "out/**"]
+    },
+    "type-check": {
+      "cache": false,
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "format": {
+      "cache": false,
+      "outputs": []
+    },
+    "format:check": {
+      "cache": false,
+      "outputs": []
+    },
+    "lint": {
+      "cache": false,
+      "outputs": []
+    },
+    "test": {
+      "cache": false,
 
-            "outputs": ["coverage/**"]
-        },
-        "dev": {
-            "cache": false,
-            "persistent": true
-        }
+      "outputs": ["coverage/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
     }
+  }
 }

@@ -8,7 +8,7 @@
 /**
  * Valid group strategy values per CLI documentation
  */
-const GROUP_STRATEGIES = ["none", "tag", "method", "tag-file", "method-file"] as const;
+const GROUP_STRATEGIES = ['none', 'tag', 'method', 'tag-file', 'method-file'] as const;
 type GroupStrategy = (typeof GROUP_STRATEGIES)[number];
 
 /**
@@ -18,17 +18,17 @@ type GroupStrategy = (typeof GROUP_STRATEGIES)[number];
  * @returns True if the value is a valid GroupStrategy
  */
 export function isGroupStrategy(value: unknown): value is GroupStrategy {
-    if (typeof value !== "string") {
-        return false;
-    }
-    const strategies: readonly string[] = GROUP_STRATEGIES;
-    return strategies.includes(value);
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const strategies: readonly string[] = GROUP_STRATEGIES;
+  return strategies.includes(value);
 }
 
 /**
  * Valid default status behavior values per CLI documentation
  */
-const DEFAULT_STATUS_BEHAVIORS = ["spec-compliant", "auto-correct"] as const;
+const DEFAULT_STATUS_BEHAVIORS = ['spec-compliant', 'auto-correct'] as const;
 type DefaultStatusBehavior = (typeof DEFAULT_STATUS_BEHAVIORS)[number];
 
 /**
@@ -38,11 +38,11 @@ type DefaultStatusBehavior = (typeof DEFAULT_STATUS_BEHAVIORS)[number];
  * @returns True if the value is a valid DefaultStatusBehavior
  */
 export function isDefaultStatusBehavior(value: unknown): value is DefaultStatusBehavior {
-    if (typeof value !== "string") {
-        return false;
-    }
-    const behaviors: readonly string[] = DEFAULT_STATUS_BEHAVIORS;
-    return behaviors.includes(value);
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const behaviors: readonly string[] = DEFAULT_STATUS_BEHAVIORS;
+  return behaviors.includes(value);
 }
 
 /**
@@ -52,7 +52,7 @@ export function isDefaultStatusBehavior(value: unknown): value is DefaultStatusB
  * @returns True if the object has a valid version property
  */
 export function hasVersionProperty(obj: unknown): obj is { version?: unknown } {
-    return typeof obj === "object" && obj !== null;
+  return typeof obj === 'object' && obj !== null;
 }
 
 /**
@@ -64,17 +64,17 @@ export function hasVersionProperty(obj: unknown): obj is { version?: unknown } {
  * @param obj - Object to check (typically from SwaggerParser.bundle())
  * @returns True if the object has required OpenAPI 3.0 properties
  */
-export function isOpenAPIObject(obj: unknown): obj is import("openapi3-ts/oas30").OpenAPIObject {
-    if (typeof obj !== "object" || obj === null) {
-        return false;
-    }
-    // Check for required OpenAPI 3.0 properties
-    return (
-        "openapi" in obj &&
-        typeof obj.openapi === "string" &&
-        "info" in obj &&
-        typeof obj.info === "object" &&
-        "paths" in obj &&
-        typeof obj.paths === "object"
-    );
+export function isOpenAPIObject(obj: unknown): obj is import('openapi3-ts/oas30').OpenAPIObject {
+  if (typeof obj !== 'object' || obj === null) {
+    return false;
+  }
+  // Check for required OpenAPI 3.0 properties
+  return (
+    'openapi' in obj &&
+    typeof obj.openapi === 'string' &&
+    'info' in obj &&
+    typeof obj.info === 'object' &&
+    'paths' in obj &&
+    typeof obj.paths === 'object'
+  );
 }

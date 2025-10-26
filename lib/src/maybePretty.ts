@@ -1,21 +1,21 @@
-import prettier, { type Options } from "prettier";
-import parserTypescript from "prettier/parser-typescript";
+import prettier, { type Options } from 'prettier';
+import parserTypescript from 'prettier/parser-typescript';
 
 /** @see https://github.dev/stephenh/ts-poet/blob/5ea0dbb3c9f1f4b0ee51a54abb2d758102eda4a2/src/Code.ts#L231 */
 
 export async function maybePretty(input: string, options?: Options | null): Promise<string> {
-    try {
-        // Filter out the plugins field from options to prevent conflicts
-        // Prettier 3.x requires explicit plugins, and config-loaded plugins
-        // can be undefined/null which causes "Cannot read properties of undefined (reading 'languages')"
-        const { plugins: _ignored, ...safeOptions } = options ?? {};
+  try {
+    // Filter out the plugins field from options to prevent conflicts
+    // Prettier 3.x requires explicit plugins, and config-loaded plugins
+    // can be undefined/null which causes "Cannot read properties of undefined (reading 'languages')"
+    const { plugins: _ignored, ...safeOptions } = options ?? {};
 
-        return await prettier.format(input.trim(), {
-            parser: "typescript",
-            plugins: [parserTypescript],
-            ...safeOptions,
-        });
-    } catch {
-        return input; // assume it's invalid syntax and ignore
-    }
+    return await prettier.format(input.trim(), {
+      parser: 'typescript',
+      plugins: [parserTypescript],
+      ...safeOptions,
+    });
+  } catch {
+    return input; // assume it's invalid syntax and ignore
+  }
 }

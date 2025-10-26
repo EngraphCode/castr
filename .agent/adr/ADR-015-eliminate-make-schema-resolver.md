@@ -16,10 +16,10 @@ The codebase uses `makeSchemaResolver` as a factory function to create schema re
 ```typescript
 // ❌ Claims to return SchemaObject
 export function makeSchemaResolver(openApiDoc: OpenAPIObject) {
-    return function resolver($ref: string): SchemaObject {
-        // Actually returns: SchemaObject | ResponseObject | ParameterObject | any component!
-        return get(openApiDoc.components, $ref.split("/").slice(2));
-    };
+  return function resolver($ref: string): SchemaObject {
+    // Actually returns: SchemaObject | ResponseObject | ParameterObject | any component!
+    return get(openApiDoc.components, $ref.split('/').slice(2));
+  };
 }
 ```
 
@@ -54,7 +54,7 @@ const resolver = makeSchemaResolver(openApiDoc);
 
 // Then passing it around
 function processSchema(schema: SchemaObject, resolver: Resolver) {
-    const resolved = resolver(schema.$ref); // Type assertion needed
+  const resolved = resolver(schema.$ref); // Type assertion needed
 }
 ```
 
@@ -70,10 +70,10 @@ This pattern:
 ```typescript
 // Direct, honest access
 function processSchema(schema: SchemaObject | ReferenceObject, components: ComponentsObject) {
-    if (isReferenceObject(schema)) {
-        const resolved = getSchemaFromComponents(components, schema.$ref);
-        // Type is honest: SchemaObject | undefined
-    }
+  if (isReferenceObject(schema)) {
+    const resolved = getSchemaFromComponents(components, schema.$ref);
+    // Type is honest: SchemaObject | undefined
+  }
 }
 ```
 
@@ -94,7 +94,7 @@ Analysis documented in:
 **Create `component-access.ts` module:**
 
 ````typescript
-import type { ComponentsObject, SchemaObject, ReferenceObject } from "openapi3-ts/oas30";
+import type { ComponentsObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas30';
 
 /**
  * Gets a schema from components by $ref path.
@@ -114,30 +114,31 @@ import type { ComponentsObject, SchemaObject, ReferenceObject } from "openapi3-t
  * ```
  */
 export function getSchemaFromComponents(
-    components: ComponentsObject | undefined,
-    $ref: string
+  components: ComponentsObject | undefined,
+  $ref: string,
 ): SchemaObject | undefined {
-    if (!components?.schemas) return undefined;
+  if (!components?.schemas) return undefined;
 
-    // Parse $ref path
-    const parts = $ref.split("/");
-    if (parts[0] !== "#" || parts[1] !== "components" || parts[2] !== "schemas") {
-        throw new Error(`Invalid $ref format: ${$ref}. Expected #/components/schemas/...`);
-    }
+  // Parse $ref path
+  const parts = $ref.split('/');
+  if (parts[0] !== '#' || parts[1] !== 'components' || parts[2] !== 'schemas') {
+    throw new Error(`Invalid $ref format: ${$ref}. Expected #/components/schemas/...`);
+  }
 
-    const schemaName = parts[3];
-    const schema = components.schemas[schemaName];
+  const schemaName = parts[3];
+  const schema = components.schemas[schemaName];
 
-    if (!schema) return undefined;
+  if (!schema) return undefined;
 
-    // Ensure it's not a reference (SwaggerParser.bundle() should have resolved these)
-    if (isReferenceObject(schema)) {
-        throw new Error(
-            `Unexpected $ref in components: ${$ref}. ` + `Ensure SwaggerParser.bundle() is called before processing.`
-        );
-    }
+  // Ensure it's not a reference (SwaggerParser.bundle() should have resolved these)
+  if (isReferenceObject(schema)) {
+    throw new Error(
+      `Unexpected $ref in components: ${$ref}. ` +
+        `Ensure SwaggerParser.bundle() is called before processing.`,
+    );
+  }
 
-    return schema;
+  return schema;
 }
 
 /**
@@ -150,17 +151,17 @@ export function getSchemaFromComponents(
  * @throws {Error} If reference cannot be resolved
  */
 export function resolveSchemaRef(
-    schema: SchemaObject | ReferenceObject,
-    components: ComponentsObject | undefined
+  schema: SchemaObject | ReferenceObject,
+  components: ComponentsObject | undefined,
 ): SchemaObject {
-    if (isReferenceObject(schema)) {
-        const resolved = getSchemaFromComponents(components, schema.$ref);
-        if (!resolved) {
-            throw new Error(`Cannot resolve $ref: ${schema.$ref}`);
-        }
-        return resolved;
+  if (isReferenceObject(schema)) {
+    const resolved = getSchemaFromComponents(components, schema.$ref);
+    if (!resolved) {
+      throw new Error(`Cannot resolve $ref: ${schema.$ref}`);
     }
-    return schema;
+    return resolved;
+  }
+  return schema;
 }
 
 /**
@@ -168,15 +169,15 @@ export function resolveSchemaRef(
  * Useful for fail-fast validation.
  */
 export function assertNotReference(
-    value: SchemaObject | ReferenceObject,
-    context: string
+  value: SchemaObject | ReferenceObject,
+  context: string,
 ): asserts value is SchemaObject {
-    if (isReferenceObject(value)) {
-        throw new Error(
-            `Unexpected $ref in ${context}: ${value.$ref}. ` +
-                `Ensure SwaggerParser.bundle() resolved all operation-level refs.`
-        );
-    }
+  if (isReferenceObject(value)) {
+    throw new Error(
+      `Unexpected $ref in ${context}: ${value.$ref}. ` +
+        `Ensure SwaggerParser.bundle() resolved all operation-level refs.`,
+    );
+  }
 }
 ````
 
@@ -271,9 +272,9 @@ const resolver = makeSchemaResolver(openApiDoc);
 
 // Use resolver (type assertions needed)
 function processParameter(param: ParameterObject, resolver: Resolver) {
-    if (param.schema?.$ref) {
-        const schema = resolver(param.schema.$ref) as SchemaObject; // ❌ Assertion
-    }
+  if (param.schema?.$ref) {
+    const schema = resolver(param.schema.$ref) as SchemaObject; // ❌ Assertion
+  }
 }
 
 // Pass resolver everywhere
@@ -285,9 +286,9 @@ processParameter(param, resolver);
 ```typescript
 // Direct access
 function processParameter(param: ParameterObject, components: ComponentsObject | undefined) {
-    if (isReferenceObject(param.schema)) {
-        const schema = resolveSchemaRef(param.schema, components); // ✅ No assertion
-    }
+  if (isReferenceObject(param.schema)) {
+    const schema = resolveSchemaRef(param.schema, components); // ✅ No assertion
+  }
 }
 
 // Pass components directly
@@ -347,4 +348,3 @@ processParameter(param, openApiDoc.components);
 
 - Implementation will be committed as part of Phase 1 execution
 - See: Phase 1 tasks in `01-CURRENT-IMPLEMENTATION.md`
-

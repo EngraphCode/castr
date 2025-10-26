@@ -1,65 +1,65 @@
-import { describe, expect, test } from "vitest";
-import { getZodSchema } from "../src/index.js";
+import { describe, expect, test } from 'vitest';
+import { getZodSchema } from '../src/index.js';
 
 // see: https://swagger.io/docs/specification/data-models/data-types/#free-form
-describe("additional-properties", () => {
-    test("plain free-form object", () => {
-        const schema = getZodSchema({
-            schema: {
-                type: "object",
-            },
-        });
-
-        expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+describe('additional-properties', () => {
+  test('plain free-form object', () => {
+    const schema = getZodSchema({
+      schema: {
+        type: 'object',
+      },
     });
 
-    test("additionalProperties is true", () => {
-        const schema = getZodSchema({
-            schema: {
-                type: "object",
-                additionalProperties: true,
-            },
-        });
+    expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+  });
 
-        expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+  test('additionalProperties is true', () => {
+    const schema = getZodSchema({
+      schema: {
+        type: 'object',
+        additionalProperties: true,
+      },
     });
 
-    test("additionalProperties is empty object", () => {
-        const schema = getZodSchema({
-            schema: {
-                type: "object",
-                // empty object is equivalent to true according to swagger docs above
-                additionalProperties: {},
-            },
-        });
+    expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+  });
 
-        expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+  test('additionalProperties is empty object', () => {
+    const schema = getZodSchema({
+      schema: {
+        type: 'object',
+        // empty object is equivalent to true according to swagger docs above
+        additionalProperties: {},
+      },
     });
 
-    test("additional properties opt-out", () => {
-        const additionalPropertiesOptOut = getZodSchema({
-            schema: {
-                type: "object",
-                additionalProperties: false,
-            },
-        });
+    expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+  });
 
-        expect(additionalPropertiesOptOut).toMatchInlineSnapshot('"z.object({}).partial()"');
+  test('additional properties opt-out', () => {
+    const additionalPropertiesOptOut = getZodSchema({
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+      },
     });
 
-    test("object with some properties", () => {
-        const schema = getZodSchema({
-            schema: {
-                type: "object",
-                properties: {
-                    foo: { type: "string" },
-                    bar: { type: "number" },
-                },
-            },
-        });
+    expect(additionalPropertiesOptOut).toMatchInlineSnapshot('"z.object({}).partial()"');
+  });
 
-        expect(schema).toMatchInlineSnapshot(
-            '"z.object({ foo: z.string(), bar: z.number() }).partial().passthrough()"'
-        );
+  test('object with some properties', () => {
+    const schema = getZodSchema({
+      schema: {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+          bar: { type: 'number' },
+        },
+      },
     });
+
+    expect(schema).toMatchInlineSnapshot(
+      '"z.object({ foo: z.string(), bar: z.number() }).partial().passthrough()"',
+    );
+  });
 });

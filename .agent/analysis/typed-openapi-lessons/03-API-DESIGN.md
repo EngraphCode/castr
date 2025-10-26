@@ -28,7 +28,7 @@ typed-openapi's API design principles:
 **openapi-zod-client's current approach**:
 
 ```typescript
-import { Zodios } from "@zodios/core";
+import { Zodios } from '@zodios/core';
 const api = new Zodios(baseUrl, endpoints);
 // Locked into: Zodios wrapper + axios HTTP client
 ```
@@ -47,26 +47,26 @@ const api = new Zodios(baseUrl, endpoints);
 ```typescript
 // Step 1: Define what a fetcher looks like
 type Fetcher = (
-    method: Method,
-    url: string,
-    params?: {
-        query?: Record<string, unknown>;
-        header?: Record<string, unknown>;
-        body?: unknown;
-    }
+  method: Method,
+  url: string,
+  params?: {
+    query?: Record<string, unknown>;
+    header?: Record<string, unknown>;
+    body?: unknown;
+  },
 ) => Promise<Response>;
 
 // Step 2: Client accepts any fetcher
 export function createClient<F extends Fetcher>(baseUrl: string, fetcher: F): ApiClient {
-    return {
-        get: (path, params) => fetcher("GET", `${baseUrl}${path}`, params),
-        post: (path, params) => fetcher("POST", `${baseUrl}${path}`, params),
-        // ... fully typed based on OpenAPI spec
-    };
+  return {
+    get: (path, params) => fetcher('GET', `${baseUrl}${path}`, params),
+    post: (path, params) => fetcher('POST', `${baseUrl}${path}`, params),
+    // ... fully typed based on OpenAPI spec
+  };
 }
 
 // Step 3: Users provide their own implementation
-const api = createClient("https://api.example.com", myCustomFetcher);
+const api = createClient('https://api.example.com', myCustomFetcher);
 ```
 
 **See full pattern**: [examples/16-headless-client.ts](./examples/16-headless-client.ts)
@@ -77,46 +77,46 @@ const api = createClient("https://api.example.com", myCustomFetcher);
 
 ```typescript
 const fetchFetcher: Fetcher = async (method, url, params) => {
-    const urlObj = new URL(url);
+  const urlObj = new URL(url);
 
-    // Add query params
-    if (params?.query) {
-        Object.entries(params.query).forEach(([key, value]) => {
-            if (value != null) {
-                urlObj.searchParams.append(key, String(value));
-            }
-        });
-    }
+  // Add query params
+  if (params?.query) {
+    Object.entries(params.query).forEach(([key, value]) => {
+      if (value != null) {
+        urlObj.searchParams.append(key, String(value));
+      }
+    });
+  }
 
-    // Build request
-    const headers = new Headers(params?.header as HeadersInit);
-    const body = params?.body ? JSON.stringify(params.body) : undefined;
+  // Build request
+  const headers = new Headers(params?.header as HeadersInit);
+  const body = params?.body ? JSON.stringify(params.body) : undefined;
 
-    if (body) headers.set("Content-Type", "application/json");
+  if (body) headers.set('Content-Type', 'application/json');
 
-    return fetch(urlObj, { method, headers, body });
+  return fetch(urlObj, { method, headers, body });
 };
 ```
 
 #### Axios
 
 ```typescript
-import axios from "axios";
+import axios from 'axios';
 
 const axiosFetcher: Fetcher = async (method, url, params) => {
-    const response = await axios({
-        method,
-        url,
-        params: params?.query,
-        headers: params?.header,
-        data: params?.body,
-    });
+  const response = await axios({
+    method,
+    url,
+    params: params?.query,
+    headers: params?.header,
+    data: params?.body,
+  });
 
-    // Convert axios response to fetch Response format
-    return new Response(JSON.stringify(response.data), {
-        status: response.status,
-        headers: response.headers as any,
-    });
+  // Convert axios response to fetch Response format
+  return new Response(JSON.stringify(response.data), {
+    status: response.status,
+    headers: response.headers as any,
+  });
 };
 ```
 
@@ -124,35 +124,35 @@ const axiosFetcher: Fetcher = async (method, url, params) => {
 
 ```typescript
 const authenticatedFetcher: Fetcher = async (method, url, params) => {
-    const token = await getAuthToken();
+  const token = await getAuthToken();
 
-    return fetch(url, {
-        method,
-        headers: {
-            ...params?.header,
-            Authorization: `Bearer ${token}`,
-        },
-        body: params?.body ? JSON.stringify(params.body) : undefined,
-    });
+  return fetch(url, {
+    method,
+    headers: {
+      ...params?.header,
+      Authorization: `Bearer ${token}`,
+    },
+    body: params?.body ? JSON.stringify(params.body) : undefined,
+  });
 };
 ```
 
 #### With Retry Logic
 
 ```typescript
-import { retry } from "ts-retry-promise";
+import { retry } from 'ts-retry-promise';
 
 const retryingFetcher: Fetcher = async (method, url, params) => {
-    return retry(
-        async () => {
-            const response = await baseFetcher(method, url, params);
-            if (!response.ok && response.status >= 500) {
-                throw new Error(`Server error: ${response.status}`);
-            }
-            return response;
-        },
-        { retries: 3, delay: 1000 }
-    );
+  return retry(
+    async () => {
+      const response = await baseFetcher(method, url, params);
+      if (!response.ok && response.status >= 500) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+      return response;
+    },
+    { retries: 3, delay: 1000 },
+  );
 };
 ```
 
@@ -177,7 +177,7 @@ Good start, but can be enhanced:
 ```typescript
 // Current: endpoints metadata only
 export const endpoints = [
-    /* ... */
+  /* ... */
 ];
 
 // Users have to write their own client
@@ -188,42 +188,46 @@ export const endpoints = [
 
 ```typescript
 // Generated client with type inference
-export function createApiClient<TFetcher extends Fetcher>(baseUrl: string, fetcher: TFetcher, options?: ClientOptions) {
-    return {
-        // Auto-generated methods from endpoints
-        getPetById: async (params: GetPetByIdParams) => {
-            const endpoint = endpoints.find((e) => e.operationId === "getPetById")!;
+export function createApiClient<TFetcher extends Fetcher>(
+  baseUrl: string,
+  fetcher: TFetcher,
+  options?: ClientOptions,
+) {
+  return {
+    // Auto-generated methods from endpoints
+    getPetById: async (params: GetPetByIdParams) => {
+      const endpoint = endpoints.find((e) => e.operationId === 'getPetById')!;
 
-            // Optional request validation
-            if (options?.validateRequest) {
-                validateRequest(endpoint, params);
-            }
+      // Optional request validation
+      if (options?.validateRequest) {
+        validateRequest(endpoint, params);
+      }
 
-            // Build URL with path params
-            const url = buildUrl(baseUrl, endpoint.path, params);
+      // Build URL with path params
+      const url = buildUrl(baseUrl, endpoint.path, params);
 
-            // Make request
-            const response = await fetcher("GET", url, {
-                query: params.queryParams,
-                header: params.headers,
-            });
+      // Make request
+      const response = await fetcher('GET', url, {
+        query: params.queryParams,
+        header: params.headers,
+      });
 
-            // Optional response validation
-            const data = await response.json();
-            if (options?.validateResponse) {
-                return validateResponse(endpoint, response.status, data);
-            }
+      // Optional response validation
+      const data = await response.json();
+      if (options?.validateResponse) {
+        return validateResponse(endpoint, response.status, data);
+      }
 
-            return data as GetPetByIdResponse;
-        },
+      return data as GetPetByIdResponse;
+    },
 
-        // ... all other endpoints
-    };
+    // ... all other endpoints
+  };
 }
 
 // Usage
-const api = createApiClient("https://api.example.com", fetch);
-const pet = await api.getPetById({ pathParams: { petId: "123" } });
+const api = createApiClient('https://api.example.com', fetch);
+const pet = await api.getPetById({ pathParams: { petId: '123' } });
 //    ^? Fully typed Pet response
 ```
 
@@ -268,18 +272,18 @@ pnpm openapi-zod-client ./api.yaml -o ./client.ts --zodios
 
 ```typescript
 try {
-    const pet = await api.getPetById({ pathParams: { petId: "123" } });
-    // pet is Pet
-    console.log(pet.name);
+  const pet = await api.getPetById({ pathParams: { petId: '123' } });
+  // pet is Pet
+  console.log(pet.name);
 } catch (error) {
-    // error is unknown or generic Error
-    // No type information about error structure
-    // Have to check status code manually
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-        console.log("Not found");
-    } else if (error.response?.status === 401) {
-        console.log("Unauthorized");
-    }
+  // error is unknown or generic Error
+  // No type information about error structure
+  // Have to check status code manually
+  if (axios.isAxiosError(error) && error.response?.status === 404) {
+    console.log('Not found');
+  } else if (error.response?.status === 401) {
+    console.log('Unauthorized');
+  }
 }
 ```
 
@@ -296,32 +300,32 @@ try {
 
 ```typescript
 const result = await api.getPetById({
-    path: { petId: "123" },
-    withResponse: true,
+  path: { petId: '123' },
+  withResponse: true,
 });
 
 // result is a discriminated union
 if (result.ok) {
-    // result.data is Pet (from 200 response)
-    // result.status is 200
-    console.log(result.data.name);
+  // result.data is Pet (from 200 response)
+  // result.status is 200
+  console.log(result.data.name);
 } else {
-    // result.data is error schema based on status
-    // result.status is 400 | 401 | 404 | 500 | etc.
+  // result.data is error schema based on status
+  // result.status is 400 | 401 | 404 | 500 | etc.
 
-    switch (result.status) {
-        case 404:
-            // result.data is NotFoundError (from spec)
-            console.log(result.data.message);
-            break;
-        case 401:
-            // result.data is UnauthorizedError (from spec)
-            console.log("Please login");
-            break;
-        default:
-            // result.data is unknown
-            console.log("Unexpected error");
-    }
+  switch (result.status) {
+    case 404:
+      // result.data is NotFoundError (from spec)
+      console.log(result.data.message);
+      break;
+    case 401:
+      // result.data is UnauthorizedError (from spec)
+      console.log('Please login');
+      break;
+    default:
+      // result.data is unknown
+      console.log('Unexpected error');
+  }
 }
 ```
 
@@ -329,10 +333,10 @@ if (result.ok) {
 
 ```typescript
 type ApiResponse<TSuccess, TErrors> =
-    | { ok: true; status: 200; data: TSuccess }
-    | { ok: false; status: 404; data: NotFoundError }
-    | { ok: false; status: 401; data: UnauthorizedError }
-    | { ok: false; status: 500; data: InternalError };
+  | { ok: true; status: 200; data: TSuccess }
+  | { ok: false; status: 404; data: NotFoundError }
+  | { ok: false; status: 401; data: UnauthorizedError }
+  | { ok: false; status: 500; data: InternalError };
 ```
 
 **See full pattern**: [examples/19-discriminated-unions.ts](./examples/19-discriminated-unions.ts)
@@ -367,68 +371,68 @@ typed-openapi allows configuration:
 
 ```typescript
 const DEFAULT_SUCCESS = [
-    200,
-    201,
-    202,
-    203,
-    204,
-    205,
-    206,
-    207,
-    208,
-    226, // 2xx
-    300,
-    301,
-    302,
-    303,
-    304,
-    305,
-    306,
-    307,
-    308, // 3xx
+  200,
+  201,
+  202,
+  203,
+  204,
+  205,
+  206,
+  207,
+  208,
+  226, // 2xx
+  300,
+  301,
+  302,
+  303,
+  304,
+  305,
+  306,
+  307,
+  308, // 3xx
 ];
 
 const DEFAULT_ERROR = [
-    400,
-    401,
-    402,
-    403,
-    404,
-    405,
-    406,
-    407,
-    408,
-    409, // 4xx
-    410,
-    411,
-    412,
-    413,
-    414,
-    415,
-    416,
-    417,
-    418,
-    421,
-    422,
-    423,
-    424,
-    425,
-    426,
-    428,
-    429,
-    431,
-    451,
-    500,
-    501,
-    502,
-    503,
-    504,
-    505,
-    506,
-    507,
-    508,
-    510,
-    511, // 5xx
+  400,
+  401,
+  402,
+  403,
+  404,
+  405,
+  406,
+  407,
+  408,
+  409, // 4xx
+  410,
+  411,
+  412,
+  413,
+  414,
+  415,
+  416,
+  417,
+  418,
+  421,
+  422,
+  423,
+  424,
+  425,
+  426,
+  428,
+  429,
+  431,
+  451,
+  500,
+  501,
+  502,
+  503,
+  504,
+  505,
+  506,
+  507,
+  508,
+  510,
+  511, // 5xx
 ];
 ```
 
@@ -439,12 +443,12 @@ const DEFAULT_ERROR = [
 ```typescript
 // Hardcoded in isMainResponseStatus and isErrorStatus
 export function isMainResponseStatus(status: string): boolean {
-    return status === "200" || status === "201" || status === "default";
+  return status === '200' || status === '201' || status === 'default';
 }
 
 export function isErrorStatus(status: string): boolean {
-    const code = parseInt(status);
-    return code >= 400 && code < 600;
+  const code = parseInt(status);
+  return code >= 400 && code < 600;
 }
 ```
 
@@ -463,11 +467,11 @@ export function isErrorStatus(status: string): boolean {
 ```typescript
 // openapi-zod-client.config.ts
 export default {
-    statusCodes: {
-        success: [200, 201, 202, 204, 304],
-        error: [400, 401, 403, 404, 500, 502, 503],
-        default: 200,
-    },
+  statusCodes: {
+    success: [200, 201, 202, 204, 304],
+    error: [400, 401, 403, 404, 500, 502, 503],
+    default: 200,
+  },
 };
 ```
 
@@ -476,30 +480,30 @@ export default {
 ```typescript
 // Generate response type
 export type GetPetByIdResponse =
-    | { ok: true; status: 200; data: Pet }
-    | { ok: true; status: 304; data: null } // Not modified
-    | { ok: false; status: 400; data: BadRequest }
-    | { ok: false; status: 404; data: NotFound }
-    | { ok: false; status: 500; data: ServerError };
+  | { ok: true; status: 200; data: Pet }
+  | { ok: true; status: 304; data: null } // Not modified
+  | { ok: false; status: 400; data: BadRequest }
+  | { ok: false; status: 404; data: NotFound }
+  | { ok: false; status: 500; data: ServerError };
 
 // Helper function
 export async function safeGetPetById(params: GetPetByIdParams): Promise<GetPetByIdResponse> {
-    try {
-        const response = await fetch(/* ... */);
-        const data = await response.json();
+  try {
+    const response = await fetch(/* ... */);
+    const data = await response.json();
 
-        if (isSuccessStatus(response.status)) {
-            return { ok: true, status: response.status, data };
-        } else {
-            return { ok: false, status: response.status, data };
-        }
-    } catch (error) {
-        return {
-            ok: false,
-            status: 500,
-            data: { message: "Network error", error },
-        };
+    if (isSuccessStatus(response.status)) {
+      return { ok: true, status: response.status, data };
+    } else {
+      return { ok: false, status: response.status, data };
     }
+  } catch (error) {
+    return {
+      ok: false,
+      status: 500,
+      data: { message: 'Network error', error },
+    };
+  }
 }
 ```
 
@@ -515,10 +519,10 @@ For dynamic endpoint calls:
 
 ```typescript
 // Generic request method with full type inference
-const response = await api.request("GET", "/users/{id}", {
-    path: { id: "123" },
-    query: { include: ["profile", "settings"] },
-    headers: { authorization: "Bearer token" },
+const response = await api.request('GET', '/users/{id}', {
+  path: { id: '123' },
+  query: { include: ['profile', 'settings'] },
+  headers: { authorization: 'Bearer token' },
 });
 
 // response is fully typed based on endpoint definition
@@ -539,30 +543,30 @@ const user = await response.json();
 
 ```typescript
 export interface ApiClient {
-    // Specific methods (existing)
-    getPetById(params: GetPetByIdParams): Promise<Pet>;
+  // Specific methods (existing)
+  getPetById(params: GetPetByIdParams): Promise<Pet>;
 
-    // Generic request method (NEW)
-    request<TEndpoint extends keyof EndpointMap>(
-        method: EndpointMap[TEndpoint]["method"],
-        path: TEndpoint,
-        params?: EndpointMap[TEndpoint]["params"]
-    ): Promise<EndpointMap[TEndpoint]["response"]>;
+  // Generic request method (NEW)
+  request<TEndpoint extends keyof EndpointMap>(
+    method: EndpointMap[TEndpoint]['method'],
+    path: TEndpoint,
+    params?: EndpointMap[TEndpoint]['params'],
+  ): Promise<EndpointMap[TEndpoint]['response']>;
 }
 
 // Usage
 const api = createApiClient(/* ... */);
 
 // Dynamic endpoint
-const endpoint = "/pets/{petId}" as const;
-const pet = await api.request("GET", endpoint, {
-    pathParams: { petId: "123" },
+const endpoint = '/pets/{petId}' as const;
+const pet = await api.request('GET', endpoint, {
+  pathParams: { petId: '123' },
 });
 //    ^? Pet (fully typed)
 
 // Programmatic
-function callEndpoint<T extends keyof EndpointMap>(endpoint: T, params: EndpointMap[T]["params"]) {
-    return api.request(EndpointMap[endpoint].method, endpoint, params);
+function callEndpoint<T extends keyof EndpointMap>(endpoint: T, params: EndpointMap[T]['params']) {
+  return api.request(EndpointMap[endpoint].method, endpoint, params);
 }
 ```
 
@@ -583,20 +587,20 @@ Generates:
 ```typescript
 // Queries
 export const tanstackApi = {
-    get: (path, params) => ({
-        queryKey: [path, params],
-        queryFn: () => api.get(path, params),
-        queryOptions: {
-            /* ... */
-        },
-    }),
+  get: (path, params) => ({
+    queryKey: [path, params],
+    queryFn: () => api.get(path, params),
+    queryOptions: {
+      /* ... */
+    },
+  }),
 };
 
 // Usage
-const query = useQuery(tanstackApi.get("/pets/{petId}", { path: { petId: "123" } }).queryOptions);
+const query = useQuery(tanstackApi.get('/pets/{petId}', { path: { petId: '123' } }).queryOptions);
 
 // Mutations
-const mutation = useMutation(tanstackApi.mutation("post", "/pets").mutationOptions);
+const mutation = useMutation(tanstackApi.mutation('post', '/pets').mutationOptions);
 ```
 
 **Features**:
@@ -619,37 +623,37 @@ pnpm openapi-zod-client ./api.yaml -o ./api-client.ts --tanstack ./tanstack-api.
 Generate separate file with React Query helpers:
 
 ```typescript
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { endpoints, createApiClient } from "./api-client";
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { endpoints, createApiClient } from './api-client';
 
 export function createTanstackApi(api: ReturnType<typeof createApiClient>) {
-    return {
-        // Queries
-        getPetById: (params: GetPetByIdParams) => ({
-            queryKey: ["getPetById", params] as const,
-            queryFn: () => api.getPetById(params),
-        }),
+  return {
+    // Queries
+    getPetById: (params: GetPetByIdParams) => ({
+      queryKey: ['getPetById', params] as const,
+      queryFn: () => api.getPetById(params),
+    }),
 
-        // Mutations
-        createPet: () => ({
-            mutationFn: (data: CreatePetParams) => api.createPet(data),
-        }),
+    // Mutations
+    createPet: () => ({
+      mutationFn: (data: CreatePetParams) => api.createPet(data),
+    }),
 
-        // ... all other endpoints
-    };
+    // ... all other endpoints
+  };
 }
 
 // Hooks
 export function useGetPetById(params: GetPetByIdParams) {
-    const api = useApiClient(); // From context
-    const tanstack = createTanstackApi(api);
-    return useQuery(tanstack.getPetById(params));
+  const api = useApiClient(); // From context
+  const tanstack = createTanstackApi(api);
+  return useQuery(tanstack.getPetById(params));
 }
 
 export function useCreatePet() {
-    const api = useApiClient();
-    const tanstack = createTanstackApi(api);
-    return useMutation(tanstack.createPet());
+  const api = useApiClient();
+  const tanstack = createTanstackApi(api);
+  return useMutation(tanstack.createPet());
 }
 ```
 

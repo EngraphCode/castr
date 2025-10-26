@@ -32,9 +32,9 @@
 
 ```typescript
 if (isReferenceObject(maybeResponseObj)) {
-    const resolved = ctx.resolver.getSchemaByRef(maybeResponseObj.$ref);
-    // Check for nested $refs (fail-fast with clear error)
-    // Verify resolved is ResponseObject
+  const resolved = ctx.resolver.getSchemaByRef(maybeResponseObj.$ref);
+  // Check for nested $refs (fail-fast with clear error)
+  // Verify resolved is ResponseObject
 }
 ```
 
@@ -62,10 +62,10 @@ if (isReferenceObject(maybeResponseObj)) {
 - All 373 tests passing ✅
 - 19 inline snapshots updated
 - Quality gate: PASS ✅
-    - format ✅
-    - build ✅
-    - type-check ✅
-    - test (373/373) ✅
+  - format ✅
+  - build ✅
+  - type-check ✅
+  - test (373/373) ✅
 
 **Type Assertions:**
 
@@ -84,8 +84,8 @@ if (isReferenceObject(maybeResponseObj)) {
 
 ```typescript
 // Simple check: does object have $ref?
-if (!obj || typeof obj !== "object") return false;
-return !("$ref" in obj);
+if (!obj || typeof obj !== 'object') return false;
+return !('$ref' in obj);
 ```
 
 This works because:

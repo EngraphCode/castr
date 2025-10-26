@@ -91,19 +91,19 @@ This document contains the complete details of all finished work. It's organized
 - `.agent/analysis/LINT_TRIAGE_COMPLETE.md` (comprehensive categorization)
 - Identified **74 type assertions** as EXTRACTION BLOCKER
 - All 146 issues categorized by priority:
-    - CRITICAL: 78 issues (type assertions, non-null assertions)
-    - HIGH: 19 issues (type safety violations)
-    - MEDIUM: 18 issues (code quality)
-    - LOW: 31 issues (style/minor)
+  - CRITICAL: 78 issues (type assertions, non-null assertions)
+  - HIGH: 19 issues (type safety violations)
+  - MEDIUM: 18 issues (code quality)
+  - LOW: 31 issues (style/minor)
 
 **Key Findings:**
 
 - Target repo requires `assertionStyle: "never"`
 - Type assertions must be eliminated before extraction
 - Files with most assertions:
-    - `openApiToTypescript.helpers.ts` (22)
-    - `openApiToTypescript.ts` (17)
-    - `getZodiosEndpointDefinitionList.ts` (8)
+  - `openApiToTypescript.helpers.ts` (22)
+  - `openApiToTypescript.ts` (17)
+  - `getZodiosEndpointDefinitionList.ts` (8)
 
 ---
 
@@ -182,10 +182,10 @@ This document contains the complete details of all finished work. It's organized
 - Actively maintained (2M downloads/week)
 - Used appropriately (tests, CLI parsing)
 - Capabilities well-utilized:
-    - Parse OpenAPI (YAML/JSON)
-    - Validate against OAS schema
-    - Resolve $ref pointers
-    - Bundle multi-file specs
+  - Parse OpenAPI (YAML/JSON)
+  - Validate against OAS schema
+  - Resolve $ref pointers
+  - Bundle multi-file specs
 
 **Key Finding:** Already using `SwaggerParser.bundle()` which resolves all operation-level $refs - this insight led to Architecture Rewrite discovery
 
@@ -223,9 +223,9 @@ This document contains the complete details of all finished work. It's organized
 
 - `.agent/analysis/HANDLEBARS_EVALUATION.md`
 - Three options compared:
-    1. Keep Handlebars (Phase 2 decision)
-    2. Template literals (not recommended)
-    3. ts-morph emitter (Phase 3/4 recommendation)
+  1. Keep Handlebars (Phase 2 decision)
+  2. Template literals (not recommended)
+  3. ts-morph emitter (Phase 3/4 recommendation)
 
 **Decision:**
 
@@ -262,39 +262,39 @@ This document contains the complete details of all finished work. It's organized
 **Features Delivered:**
 
 1. **Schemas Without Zodios:**
-    - Pure Zod schemas, no `@zodios/core` import
-    - All schemas exported both individually and as object
+   - Pure Zod schemas, no `@zodios/core` import
+   - All schemas exported both individually and as object
 
 2. **Full Request Validation:**
-    - Path parameters (with Zod schema)
-    - Query parameters (with Zod schema)
-    - Header parameters (with Zod schema)
-    - Body schema
+   - Path parameters (with Zod schema)
+   - Query parameters (with Zod schema)
+   - Header parameters (with Zod schema)
+   - Body schema
 
 3. **Full Response Validation:**
-    - Success responses (200, 201)
-    - Error responses (400, 404, 500, etc.)
-    - All with Zod schemas
+   - Success responses (200, 201)
+   - Error responses (400, 404, 500, etc.)
+   - All with Zod schemas
 
 4. **Endpoints Array:**
-    - Direct export (no Zodios `makeApi` wrapper)
-    - Complete metadata for each endpoint
-    - Type-safe structure
+   - Direct export (no Zodios `makeApi` wrapper)
+   - Complete metadata for each endpoint
+   - Type-safe structure
 
 5. **Validation Helpers (Optional):**
-    - `validateRequest()` - Type-safe request validation
-    - `validateResponse()` - Type-safe response validation
-    - Enabled via `--with-validation-helpers` flag
+   - `validateRequest()` - Type-safe request validation
+   - `validateResponse()` - Type-safe response validation
+   - Enabled via `--with-validation-helpers` flag
 
 6. **Schema Registry Builder (Optional):**
-    - `buildSchemaRegistry()` function
-    - Eliminates Engraph's string manipulation
-    - Enabled via `--with-schema-registry` flag
+   - `buildSchemaRegistry()` function
+   - Eliminates Engraph's string manipulation
+   - Enabled via `--with-schema-registry` flag
 
 7. **MCP Tools:**
-    - Always included
-    - Consolidated input schema
-    - Success-focused output (200/201)
+   - Always included
+   - Consolidated input schema
+   - Success-focused output (200/201)
 
 **CLI Integration:**
 
@@ -338,17 +338,17 @@ This document contains the complete details of all finished work. It's organized
 **Issues Fixed:**
 
 1. **CodeMeta Type Safety (8 instances):**
-    - Added explicit `.toString()` calls
-    - Eliminated implicit string coercion
-    - Files: `openApiToZod.ts`, `template-context.ts`, `zodiosEndpoint.helpers.ts`
+   - Added explicit `.toString()` calls
+   - Eliminated implicit string coercion
+   - Files: `openApiToZod.ts`, `template-context.ts`, `zodiosEndpoint.helpers.ts`
 
 2. **Floating Promise:**
-    - Fixed `samples-generator.ts` async/await
-    - Added proper error handling
+   - Fixed `samples-generator.ts` async/await
+   - Added proper error handling
 
 3. **Security Warning:**
-    - Fixed PATH security issue in `samples-generator.ts`
-    - Added input validation
+   - Fixed PATH security issue in `samples-generator.ts`
+   - Added input validation
 
 **Metrics:**
 
@@ -434,27 +434,27 @@ This document contains the complete details of all finished work. It's organized
 **Analysis Conducted:**
 
 1. **Phase 1: openapi3-ts v4 Comparison**
-    - Reviewed all custom type guards
-    - Finding: Already using library types effectively
-    - No major deferral opportunities
+   - Reviewed all custom type guards
+   - Finding: Already using library types effectively
+   - No major deferral opportunities
 
 2. **Phase 2: swagger-parser Comparison**
-    - Reviewed custom $ref resolution
-    - Finding: `makeSchemaResolver` is architectural issue, not deferral opportunity
-    - Led to Architecture Rewrite plan
+   - Reviewed custom $ref resolution
+   - Finding: `makeSchemaResolver` is architectural issue, not deferral opportunity
+   - Led to Architecture Rewrite plan
 
 3. **Phase 3: Refactoring Opportunities**
-    - Custom code serves specific purposes
-    - Most cannot be deferred to libraries
-    - Already well-optimized
+   - Custom code serves specific purposes
+   - Most cannot be deferred to libraries
+   - Already well-optimized
 
 **Conclusion:**
 
 - **No major deferral opportunities found**
 - Custom code is necessary for our use case
 - Prioritize Phase 3 work instead:
-    - Task 3.2: Type assertions (P0 BLOCKER)
-    - Task 3.1: pastable replacement (P1)
+  - Task 3.2: Type assertions (P0 BLOCKER)
+  - Task 3.1: pastable replacement (P1)
 
 **Duration:** 2 hours (vs 4-6 estimated) - faster due to focused analysis
 
@@ -504,20 +504,20 @@ This document contains the complete details of all finished work. It's organized
 **Implementation:**
 
 1. **Replaced with lodash-es (Tree-Shakeable):**
-    - `get()` → `lodash-es/get` (4 usages)
-    - `pick()` → `lodash-es/pick` (1 usage)
-    - `camelCase()` → `lodash-es/camelCase` (2 usages)
-    - `sortBy()` → `lodash-es/sortBy` (1 usage)
+   - `get()` → `lodash-es/get` (4 usages)
+   - `pick()` → `lodash-es/pick` (1 usage)
+   - `camelCase()` → `lodash-es/camelCase` (2 usages)
+   - `sortBy()` → `lodash-es/sortBy` (1 usage)
 
 2. **Replaced with Native:**
-    - `getSum()` → native `.reduce()` (1 usage)
-    - `capitalize()` → native string manipulation where simple
+   - `getSum()` → native `.reduce()` (1 usage)
+   - `capitalize()` → native string manipulation where simple
 
 3. **Created Domain-Specific Utilities:**
-    - `lib/src/utils/schema-sorting.ts`:
-        - `sortListFromRefArray()` - Precise types, comprehensively tested
-        - `sortObjKeysFromArray()` - Type-safe object key sorting
-    - 55+ comprehensive unit tests (TDD-driven)
+   - `lib/src/utils/schema-sorting.ts`:
+     - `sortListFromRefArray()` - Precise types, comprehensively tested
+     - `sortObjKeysFromArray()` - Type-safe object key sorting
+   - 55+ comprehensive unit tests (TDD-driven)
 
 **Quality Improvements:**
 
@@ -553,10 +553,10 @@ This document contains the complete details of all finished work. It's organized
 
 - 11/15 files complete (~30 assertions eliminated)
 - Established patterns:
-    - Custom type guards (`isRequestBodyObject`, `isParameterObject`, etc.)
-    - Honest return types (no narrowing with assertions)
-    - Fail-fast validation with clear errors
-    - Type narrowing using library guards
+  - Custom type guards (`isRequestBodyObject`, `isParameterObject`, etc.)
+  - Honest return types (no narrowing with assertions)
+  - Fail-fast validation with clear errors
+  - Type narrowing using library guards
 
 **Files Completed:**
 
@@ -672,10 +672,10 @@ This document contains the complete details of all finished work. It's organized
 **Content:**
 
 - Mermaid diagrams showing:
-    - Type flow through codebase
-    - Domain boundaries
-    - Tanu library boundary issues
-    - Narrowing strategy
+  - Type flow through codebase
+  - Domain boundaries
+  - Tanu library boundary issues
+  - Narrowing strategy
 - Complete table of remaining assertions
 - Root cause analysis for each file
 - Recommendations for resolution
@@ -698,26 +698,26 @@ This document contains the complete details of all finished work. It's organized
 **Implementation:**
 
 1. **Full TypeScript Types:**
-    - Function signature: `(graph: Record<string, Set<string>>): string[]`
-    - Proper parameter types with `: void` return on visitor
+   - Function signature: `(graph: Record<string, Set<string>>): string[]`
+   - Proper parameter types with `: void` return on visitor
 
 2. **Comprehensive TSDoc:**
-    - Algorithm description and purpose
-    - Circular dependency handling explained
-    - Three realistic `@example` blocks
-    - Links to Wikipedia and original source
-    - Detailed parameter and return descriptions
+   - Algorithm description and purpose
+   - Circular dependency handling explained
+   - Three realistic `@example` blocks
+   - Links to Wikipedia and original source
+   - Detailed parameter and return descriptions
 
 3. **Performance Optimization:**
-    - Changed from `.includes()` O(n) to `Set.has()` O(1)
-    - Estimated 10-100x faster for large graphs
-    - Added performance test in test suite
+   - Changed from `.includes()` O(n) to `Set.has()` O(1)
+   - Estimated 10-100x faster for large graphs
+   - Added performance test in test suite
 
 4. **Code Clarity:**
-    - Inline comments explaining key steps
-    - Descriptive variable names
-    - Clear DFS structure
-    - Modern arrow functions and spread operator
+   - Inline comments explaining key steps
+   - Descriptive variable names
+   - Clear DFS structure
+   - Modern arrow functions and spread operator
 
 **Test Coverage:**
 

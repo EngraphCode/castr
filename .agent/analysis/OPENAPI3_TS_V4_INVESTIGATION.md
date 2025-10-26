@@ -55,39 +55,39 @@
 
 ```typescript
 // v3 (everything in one export)
-import { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
 // v4 (default export - includes both 3.0 and 3.1)
-import { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
 // v4 (OAS 3.0 specific)
-import { OpenAPIObject } from "openapi3-ts/oas30";
+import { OpenAPIObject } from 'openapi3-ts/oas30';
 
 // v4 (OAS 3.1 specific)
-import { OpenAPIObject } from "openapi3-ts/oas31";
+import { OpenAPIObject } from 'openapi3-ts/oas31';
 ```
 
 **Package exports (from package.json):**
 
 ```json
 {
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.js"
-        },
-        "./oas30": {
-            "types": "./dist/oas30.d.ts",
-            "import": "./dist/oas30.mjs",
-            "require": "./dist/oas30.js"
-        },
-        "./oas31": {
-            "types": "./dist/oas31.d.ts",
-            "import": "./dist/oas31.mjs",
-            "require": "./dist/oas31.js"
-        }
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./oas30": {
+      "types": "./dist/oas30.d.ts",
+      "import": "./dist/oas30.mjs",
+      "require": "./dist/oas30.js"
+    },
+    "./oas31": {
+      "types": "./dist/oas31.d.ts",
+      "import": "./dist/oas31.mjs",
+      "require": "./dist/oas31.js"
     }
+  }
 }
 ```
 
@@ -96,18 +96,18 @@ import { OpenAPIObject } from "openapi3-ts/oas31";
 Based on the export structure, v4 likely includes:
 
 1. **Separate Types for OAS 3.0 vs 3.1**
-    - OAS 3.1 has differences (JSON Schema compatibility)
-    - v4 likely models these differences
+   - OAS 3.1 has differences (JSON Schema compatibility)
+   - v4 likely models these differences
 
 2. **Improved Type Safety**
-    - Stricter type definitions
-    - Better discriminated unions
-    - More precise optional properties
+   - Stricter type definitions
+   - Better discriminated unions
+   - More precise optional properties
 
 3. **New Utility Functions** (possibly)
-    - Type guards for 3.0 vs 3.1
-    - Helper functions
-    - Validation utilities
+   - Type guards for 3.0 vs 3.1
+   - Helper functions
+   - Validation utilities
 
 ### Dependencies
 
@@ -115,7 +115,7 @@ Based on the export structure, v4 likely includes:
 
 ```json
 {
-    "yaml": "^2.8.0"
+  "yaml": "^2.8.0"
 }
 ```
 
@@ -143,20 +143,20 @@ May need to update imports depending on whether we target OAS 3.0 or 3.1.
 **Current (v3):**
 
 ```typescript
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 ```
 
 **Possible v4 options:**
 
 ```typescript
 // Option A: Default export (both 3.0 and 3.1)
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts";
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
 // Option B: Specific to OAS 3.0
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 
 // Option C: Specific to OAS 3.1
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas31";
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 ```
 
 ### 3. Type Property Changes
@@ -181,19 +181,19 @@ If we use `isReferenceObject` or similar type guards from openapi3-ts, they may 
 **BEFORE updating, document:**
 
 1. **Check GitHub CHANGELOG:**
-    - Visit: https://github.com/metadevpro/openapi3-ts/blob/master/CHANGELOG.md
-    - Document v3 → v4 breaking changes
-    - Note migration examples
+   - Visit: https://github.com/metadevpro/openapi3-ts/blob/master/CHANGELOG.md
+   - Document v3 → v4 breaking changes
+   - Note migration examples
 
 2. **Check README:**
-    - New API examples
-    - Migration guide (if exists)
-    - Breaking change list
+   - New API examples
+   - Migration guide (if exists)
+   - Breaking change list
 
 3. **Review Types:**
-    - Compare v3 vs v4 type exports
-    - Document differences
-    - Plan updates
+   - Compare v3 vs v4 type exports
+   - Document differences
+   - Plan updates
 
 ### Phase 2: Update & Fix
 
@@ -201,55 +201,55 @@ If we use `isReferenceObject` or similar type guards from openapi3-ts, they may 
 
 1. **Update package.json**
 
-    ```bash
-    cd lib
-    pnpm update openapi3-ts@4.5.0
-    ```
+   ```bash
+   cd lib
+   pnpm update openapi3-ts@4.5.0
+   ```
 
 2. **Run type-check**
 
-    ```bash
-    pnpm type-check 2>&1 | tee ../agent/analysis/openapi3-ts-v4-errors.txt
-    ```
+   ```bash
+   pnpm type-check 2>&1 | tee ../agent/analysis/openapi3-ts-v4-errors.txt
+   ```
 
 3. **Categorize errors:**
-    - Import errors
-    - Type mismatches
-    - Property access errors
-    - Type guard errors
+   - Import errors
+   - Type mismatches
+   - Property access errors
+   - Type guard errors
 
 4. **Fix systematically:**
-    - Group by file
-    - Fix one file at a time
-    - Run type-check after each
-    - Document changes
+   - Group by file
+   - Fix one file at a time
+   - Run type-check after each
+   - Document changes
 
 5. **Update imports if needed:**
-    - Keep default import (recommended)
-    - Or switch to /oas30 or /oas31 if needed
+   - Keep default import (recommended)
+   - Or switch to /oas30 or /oas31 if needed
 
 ### Phase 3: Test & Validate
 
 1. **Run all tests:**
 
-    ```bash
-    pnpm test -- --run
-    ```
+   ```bash
+   pnpm test -- --run
+   ```
 
 2. **Fix test failures:**
-    - Update expectations
-    - Verify functionality unchanged
+   - Update expectations
+   - Verify functionality unchanged
 
 3. **Test CLI manually:**
 
-    ```bash
-    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test-output.ts
-    ```
+   ```bash
+   pnpm cli samples/v3.0/petstore.yaml -o /tmp/test-output.ts
+   ```
 
 4. **Check generated code:**
-    - Compile successfully?
-    - Types correct?
-    - Snapshots match (or document differences)?
+   - Compile successfully?
+   - Types correct?
+   - Snapshots match (or document differences)?
 
 ---
 
@@ -279,23 +279,23 @@ cd lib && grep -r "from \"openapi3-ts\"" src/ | wc -l
 ### Types of Errors Expected
 
 1. **Import errors:**
-    - Type not found
-    - Module not found
-    - Export doesn't exist
+   - Type not found
+   - Module not found
+   - Export doesn't exist
 
 2. **Type mismatches:**
-    - Property doesn't exist on type
-    - Type `X` is not assignable to type `Y`
-    - Argument type mismatch
+   - Property doesn't exist on type
+   - Type `X` is not assignable to type `Y`
+   - Argument type mismatch
 
 3. **Type guard errors:**
-    - `isReferenceObject` signature changed
-    - Type predicate not working
+   - `isReferenceObject` signature changed
+   - Type predicate not working
 
 4. **Property access errors:**
-    - Optional vs required changed
-    - Property renamed
-    - Type narrowed/widened
+   - Optional vs required changed
+   - Property renamed
+   - Type narrowed/widened
 
 ---
 
@@ -352,30 +352,30 @@ git revert <commit-hash>
 ### After Update
 
 - [ ] **All imports resolve**
-    - No "module not found" errors
-    - No "type not found" errors
+  - No "module not found" errors
+  - No "type not found" errors
 
 - [ ] **Type-check passes**
-    - `pnpm type-check` exits 0
-    - No type errors
+  - `pnpm type-check` exits 0
+  - No type errors
 
 - [ ] **All tests pass**
-    - `pnpm test -- --run` exits 0
-    - 297+ tests passing
+  - `pnpm test -- --run` exits 0
+  - 297+ tests passing
 
 - [ ] **Build succeeds**
-    - `pnpm build` succeeds
-    - ESM, CJS, DTS all generated
+  - `pnpm build` succeeds
+  - ESM, CJS, DTS all generated
 
 - [ ] **Generated code works**
-    - CLI can generate from petstore.yaml
-    - Generated code type-checks
-    - Generated code compiles
+  - CLI can generate from petstore.yaml
+  - Generated code type-checks
+  - Generated code compiles
 
 - [ ] **Snapshots valid**
-    - Update snapshots if needed
-    - Verify changes are intentional
-    - Document breaking changes
+  - Update snapshots if needed
+  - Verify changes are intentional
+  - Document breaking changes
 
 ### Manual Testing
 
@@ -483,111 +483,111 @@ Uses latest TypeScript features and patterns
 ### Pre-Migration
 
 - [ ] **Read CHANGELOG**
-    - Visit: https://github.com/metadevpro/openapi3-ts/blob/master/CHANGELOG.md
-    - Document breaking changes
-    - Note migration examples
+  - Visit: https://github.com/metadevpro/openapi3-ts/blob/master/CHANGELOG.md
+  - Document breaking changes
+  - Note migration examples
 
 - [ ] **Create branch**
 
-    ```bash
-    git checkout -b feat/update-openapi3-ts-v4
-    ```
+  ```bash
+  git checkout -b feat/update-openapi3-ts-v4
+  ```
 
 - [ ] **Backup current state**
-    - Commit any pending changes
-    - Verify tests pass on main
+  - Commit any pending changes
+  - Verify tests pass on main
 
 ### Migration
 
 - [ ] **Update package**
 
-    ```bash
-    cd lib && pnpm update openapi3-ts@4.5.0
-    ```
+  ```bash
+  cd lib && pnpm update openapi3-ts@4.5.0
+  ```
 
 - [ ] **Document errors**
 
-    ```bash
-    pnpm type-check 2>&1 | tee ../.agent/analysis/openapi3-ts-v4-errors.txt
-    ```
+  ```bash
+  pnpm type-check 2>&1 | tee ../.agent/analysis/openapi3-ts-v4-errors.txt
+  ```
 
 - [ ] **Fix imports**
-    - Update import statements if needed
-    - Choose default export or /oas30 or /oas31
+  - Update import statements if needed
+  - Choose default export or /oas30 or /oas31
 
 - [ ] **Fix type errors**
-    - Group by file
-    - Fix one file at a time
-    - Run type-check after each
+  - Group by file
+  - Fix one file at a time
+  - Run type-check after each
 
 - [ ] **Update type guards**
-    - Check `isReferenceObject` still works
-    - Update if API changed
+  - Check `isReferenceObject` still works
+  - Update if API changed
 
 - [ ] **Fix tests**
-    - Run: `pnpm test -- --run`
-    - Update expectations
-    - Fix failures
+  - Run: `pnpm test -- --run`
+  - Update expectations
+  - Fix failures
 
 ### Validation
 
 - [ ] **Type-check passes**
 
-    ```bash
-    pnpm type-check  # Exit code 0
-    ```
+  ```bash
+  pnpm type-check  # Exit code 0
+  ```
 
 - [ ] **All tests pass**
 
-    ```bash
-    pnpm test -- --run  # 297+ tests, exit code 0
-    ```
+  ```bash
+  pnpm test -- --run  # 297+ tests, exit code 0
+  ```
 
 - [ ] **Build succeeds**
 
-    ```bash
-    pnpm build  # ESM + CJS + DTS
-    ```
+  ```bash
+  pnpm build  # ESM + CJS + DTS
+  ```
 
 - [ ] **Manual CLI test**
 
-    ```bash
-    pnpm cli samples/v3.0/petstore.yaml -o /tmp/test.ts
-    tsc /tmp/test.ts --noEmit
-    ```
+  ```bash
+  pnpm cli samples/v3.0/petstore.yaml -o /tmp/test.ts
+  tsc /tmp/test.ts --noEmit
+  ```
 
 - [ ] **Snapshot updates**
-    - Review changed snapshots
-    - Verify changes are correct
-    - Update if needed
+  - Review changed snapshots
+  - Verify changes are correct
+  - Update if needed
 
 ### Post-Migration
 
 - [ ] **Commit**
 
-    ```bash
-    git add -A
-    git commit -m "feat: update openapi3-ts to v4.5.0
+  ```bash
+  git add -A
+  git commit -m "feat: update openapi3-ts to v4.5.0
 
-    Breaking changes:
-    - [List changes]
+  Breaking changes:
+  - [List changes]
 
-    Migration notes:
-    - [Document what was needed]
+  Migration notes:
+  - [Document what was needed]
 
-    All tests passing (297)
-    All type checks passing"
-    ```
+  All tests passing (297)
+  All type checks passing"
+  ```
 
 - [ ] **Document**
-    - Update CHANGELOG.md
-    - Note breaking changes
-    - Document migration
+  - Update CHANGELOG.md
+  - Note breaking changes
+  - Document migration
 
 - [ ] **Create summary**
-    - `.agent/analysis/OPENAPI3_TS_V4_MIGRATION_COMPLETE.md`
-    - Document all changes
-    - Note any remaining issues
+  - `.agent/analysis/OPENAPI3_TS_V4_MIGRATION_COMPLETE.md`
+  - Document all changes
+  - Note any remaining issues
 
 ---
 

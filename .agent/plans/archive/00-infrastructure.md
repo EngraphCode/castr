@@ -82,9 +82,9 @@ root/
 
 ```json
 {
-    "build": "preconstruct build",
-    "dev": "preconstruct watch",
-    "postinstall": "preconstruct dev"
+  "build": "preconstruct build",
+  "dev": "preconstruct watch",
+  "postinstall": "preconstruct dev"
 }
 ```
 
@@ -92,11 +92,11 @@ root/
 
 ```json
 {
-    "test": "vitest",
-    "test:ci": "vitest run",
-    "lint:ts": "tsc --noEmit --project tsconfig.lint.json",
-    "lint": "eslint --cache --format=pretty",
-    "lint:fix": "eslint --cache --format=pretty --fix"
+  "test": "vitest",
+  "test:ci": "vitest run",
+  "lint:ts": "tsc --noEmit --project tsconfig.lint.json",
+  "lint": "eslint --cache --format=pretty",
+  "lint:fix": "eslint --cache --format=pretty --fix"
 }
 ```
 
@@ -104,9 +104,9 @@ root/
 
 ```json
 {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview"
 }
 ```
 
@@ -143,37 +143,37 @@ Create root-level `turbo.json` with latest config format:
 
 ```json
 {
-    "$schema": "https://turbo.build/schema.json",
-    "ui": "stream",
-    "tasks": {
-        "build": {
-            "dependsOn": ["^build"],
-            "outputs": ["dist/**", ".next/**", "out/**"]
-        },
-        "type-check": {
-            "dependsOn": ["^build"],
-            "outputs": []
-        },
-        "lint": {
-            "dependsOn": ["^build"],
-            "outputs": []
-        },
-        "test": {
-            "dependsOn": ["^build"],
-            "outputs": ["coverage/**"]
-        },
-        "format": {
-            "outputs": [],
-            "cache": false
-        },
-        "format:check": {
-            "outputs": []
-        },
-        "dev": {
-            "cache": false,
-            "persistent": true
-        }
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "out/**"]
+    },
+    "type-check": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "format": {
+      "outputs": [],
+      "cache": false
+    },
+    "format:check": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
     }
+  }
 }
 ```
 
@@ -192,19 +192,19 @@ Update root `package.json`:
 
 ```json
 {
-    "scripts": {
-        "build": "turbo build",
-        "dev": "turbo dev --parallel",
-        "type-check": "turbo type-check",
-        "lint": "turbo lint",
-        "lint:fix": "turbo lint -- --fix",
-        "test": "turbo test",
-        "test:watch": "turbo test -- --watch",
-        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-        "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
-        "clean": "turbo clean && rm -rf node_modules",
-        "verify": "turbo format:check type-check lint test"
-    }
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev --parallel",
+    "type-check": "turbo type-check",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint -- --fix",
+    "test": "turbo test",
+    "test:watch": "turbo test -- --watch",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "clean": "turbo clean && rm -rf node_modules",
+    "verify": "turbo format:check type-check lint test"
+  }
 }
 ```
 
@@ -221,17 +221,17 @@ Update root `package.json`:
 
 ```json
 {
-    "scripts": {
-        "build": "preconstruct build",
-        "dev": "preconstruct watch",
-        "type-check": "tsc --noEmit --project tsconfig.lint.json",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
-    }
+  "scripts": {
+    "build": "preconstruct build",
+    "dev": "preconstruct watch",
+    "type-check": "tsc --noEmit --project tsconfig.lint.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
 }
 ```
 
@@ -249,17 +249,17 @@ Update root `package.json`:
 
 ```json
 {
-    "scripts": {
-        "build": "vite build",
-        "dev": "vite",
-        "preview": "vite preview",
-        "type-check": "tsc --noEmit",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
-        "test": "echo 'No tests in playground'",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
-    }
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "echo 'No tests in playground'",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
 }
 ```
 
@@ -279,13 +279,13 @@ Each example needs minimal scripts:
 
 ```json
 {
-    "scripts": {
-        "gen:basic": "tsx ./petstore-generator.ts",
-        "type-check": "tsc --noEmit",
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
-        "test": "echo 'Example - no tests needed'"
-    }
+  "scripts": {
+    "gen:basic": "tsx ./petstore-generator.ts",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "echo 'Example - no tests needed'"
+  }
 }
 ```
 
@@ -309,11 +309,11 @@ ls lib/tests/*.ts | wc -l  # Count test files
 - [ ] All tests run and pass
 - [ ] Tests prove behavior (not just types)
 - [ ] Critical paths covered:
-    - Schema generation (openApiToZod)
-    - Type generation (openApiToTypescript)
-    - Endpoint generation (getZodiosEndpointDefinitionList)
-    - CLI functionality
-    - Template rendering
+  - Schema generation (openApiToZod)
+  - Type generation (openApiToTypescript)
+  - Endpoint generation (getZodiosEndpointDefinitionList)
+  - CLI functionality
+  - Template rendering
 
 #### Test Quality Checklist
 
@@ -332,31 +332,31 @@ For each test file, verify against `.agent/RULES.md`:
 
 1. **CLI Input/Output** (mock filesystem)
 
-    ```typescript
-    test("CLI generates client from OpenAPI URL", async () => {
-        // Mock fetch, verify output structure
-    });
-    ```
+   ```typescript
+   test('CLI generates client from OpenAPI URL', async () => {
+     // Mock fetch, verify output structure
+   });
+   ```
 
 2. **End-to-End Schema Generation**
 
-    ```typescript
-    test("Full schema pipeline preserves types", async () => {
-        const input = {
-            /* OpenAPI doc */
-        };
-        const output = await generateZodClientFromOpenAPI(input);
-        expect(output).toContain("z.object");
-        // Verify actual functionality
-    });
-    ```
+   ```typescript
+   test('Full schema pipeline preserves types', async () => {
+     const input = {
+       /* OpenAPI doc */
+     };
+     const output = await generateZodClientFromOpenAPI(input);
+     expect(output).toContain('z.object');
+     // Verify actual functionality
+   });
+   ```
 
 3. **Error Cases**
-    ```typescript
-    test("Invalid OpenAPI spec throws descriptive error", () => {
-        expect(() => validateSpec({})).toThrow("Missing required");
-    });
-    ```
+   ```typescript
+   test('Invalid OpenAPI spec throws descriptive error', () => {
+     expect(() => validateSpec({})).toThrow('Missing required');
+   });
+   ```
 
 ---
 
@@ -366,8 +366,8 @@ For each test file, verify against `.agent/RULES.md`:
 
 ```json
 {
-    "teamId": "local",
-    "apiUrl": "https://turbo.build"
+  "teamId": "local",
+  "apiUrl": "https://turbo.build"
 }
 ```
 
@@ -591,12 +591,12 @@ If issues arise:
 Once infrastructure is solid:
 
 1. **Phase 1:** Dev tooling + ESM migration
-    - With fast verification, iterate quickly
-    - Turbo caching makes fixing errors fast
+   - With fast verification, iterate quickly
+   - Turbo caching makes fixing errors fast
 2. **Phase 2:** openapi3-ts v4
-    - Verify changes don't break other workspaces
+   - Verify changes don't break other workspaces
 3. **Phase 3:** Zod v4
-    - Run full test suite frequently
+   - Run full test suite frequently
 
 ---
 

@@ -130,333 +130,333 @@ Benefits for users:
 
 1. **Create test file:**
 
-    ```bash
-    touch lib/src/loadConfig.test.ts
-    ```
+   ```bash
+   touch lib/src/loadConfig.test.ts
+   ```
 
 2. **Write comprehensive test suite:**
 
-    ```typescript
-    import { describe, it, expect, beforeEach, afterEach } from "vitest";
-    import { loadConfig } from "./loadConfig.js";
-    import { writeFileSync, unlinkSync, mkdirSync, rmdirSync } from "fs";
-    import { join } from "path";
+   ```typescript
+   import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+   import { loadConfig } from './loadConfig.js';
+   import { writeFileSync, unlinkSync, mkdirSync, rmdirSync } from 'fs';
+   import { join } from 'path';
 
-    describe("loadConfig", () => {
-        const testDir = join(__dirname, "__test-config__");
+   describe('loadConfig', () => {
+     const testDir = join(__dirname, '__test-config__');
 
-        beforeEach(() => {
-            mkdirSync(testDir, { recursive: true });
-        });
+     beforeEach(() => {
+       mkdirSync(testDir, { recursive: true });
+     });
 
-        afterEach(() => {
-            // Clean up test files
-            try {
-                const files = ["openapi.config.js", ".openapirc.json", ".openapirc.yml"];
-                files.forEach((file) => {
-                    try {
-                        unlinkSync(join(testDir, file));
-                    } catch {}
-                });
-                rmdirSync(testDir);
-            } catch {}
-        });
+     afterEach(() => {
+       // Clean up test files
+       try {
+         const files = ['openapi.config.js', '.openapirc.json', '.openapirc.yml'];
+         files.forEach((file) => {
+           try {
+             unlinkSync(join(testDir, file));
+           } catch {}
+         });
+         rmdirSync(testDir);
+       } catch {}
+     });
 
-        it("should load config from openapi.config.js", async () => {
-            const configPath = join(testDir, "openapi.config.js");
-            writeFileSync(
-                configPath,
-                `
-                module.exports = {
-                    input: './api.yaml',
-                    output: './client.ts',
-                    template: 'schemas-with-metadata',
-                };
-            `
-            );
+     it('should load config from openapi.config.js', async () => {
+       const configPath = join(testDir, 'openapi.config.js');
+       writeFileSync(
+         configPath,
+         `
+               module.exports = {
+                   input: './api.yaml',
+                   output: './client.ts',
+                   template: 'schemas-with-metadata',
+               };
+           `,
+       );
 
-            const config = await loadConfig(testDir);
+       const config = await loadConfig(testDir);
 
-            expect(config).toEqual({
-                input: "./api.yaml",
-                output: "./client.ts",
-                template: "schemas-with-metadata",
-            });
-        });
+       expect(config).toEqual({
+         input: './api.yaml',
+         output: './client.ts',
+         template: 'schemas-with-metadata',
+       });
+     });
 
-        it("should load config from .openapirc.json", async () => {
-            const configPath = join(testDir, ".openapirc.json");
-            writeFileSync(
-                configPath,
-                JSON.stringify({
-                    input: "./spec.yaml",
-                    output: "./generated.ts",
-                })
-            );
+     it('should load config from .openapirc.json', async () => {
+       const configPath = join(testDir, '.openapirc.json');
+       writeFileSync(
+         configPath,
+         JSON.stringify({
+           input: './spec.yaml',
+           output: './generated.ts',
+         }),
+       );
 
-            const config = await loadConfig(testDir);
+       const config = await loadConfig(testDir);
 
-            expect(config).toEqual({
-                input: "./spec.yaml",
-                output: "./generated.ts",
-            });
-        });
+       expect(config).toEqual({
+         input: './spec.yaml',
+         output: './generated.ts',
+       });
+     });
 
-        it("should search parent directories (monorepo support)", async () => {
-            const rootDir = join(testDir, "root");
-            const subDir = join(rootDir, "packages", "api");
+     it('should search parent directories (monorepo support)', async () => {
+       const rootDir = join(testDir, 'root');
+       const subDir = join(rootDir, 'packages', 'api');
 
-            mkdirSync(subDir, { recursive: true });
+       mkdirSync(subDir, { recursive: true });
 
-            const configPath = join(rootDir, "openapi.config.js");
-            writeFileSync(
-                configPath,
-                `
-                module.exports = {
-                    template: 'schemas-with-metadata',
-                };
-            `
-            );
+       const configPath = join(rootDir, 'openapi.config.js');
+       writeFileSync(
+         configPath,
+         `
+               module.exports = {
+                   template: 'schemas-with-metadata',
+               };
+           `,
+       );
 
-            // Search from subdirectory
-            const config = await loadConfig(subDir);
+       // Search from subdirectory
+       const config = await loadConfig(subDir);
 
-            expect(config).toEqual({
-                template: "schemas-with-metadata",
-            });
-        });
+       expect(config).toEqual({
+         template: 'schemas-with-metadata',
+       });
+     });
 
-        it("should return null if no config found", async () => {
-            const config = await loadConfig(testDir);
-            expect(config).toBeNull();
-        });
+     it('should return null if no config found', async () => {
+       const config = await loadConfig(testDir);
+       expect(config).toBeNull();
+     });
 
-        it("should handle TypeScript config files", async () => {
-            const configPath = join(testDir, "openapi.config.ts");
-            writeFileSync(
-                configPath,
-                `
-                export default {
-                    input: './api.yaml',
-                    output: './client.ts',
-                };
-            `
-            );
+     it('should handle TypeScript config files', async () => {
+       const configPath = join(testDir, 'openapi.config.ts');
+       writeFileSync(
+         configPath,
+         `
+               export default {
+                   input: './api.yaml',
+                   output: './client.ts',
+               };
+           `,
+       );
 
-            const config = await loadConfig(testDir);
+       const config = await loadConfig(testDir);
 
-            expect(config).toEqual({
-                input: "./api.yaml",
-                output: "./client.ts",
-            });
-        });
+       expect(config).toEqual({
+         input: './api.yaml',
+         output: './client.ts',
+       });
+     });
 
-        it("should handle ESM config files", async () => {
-            const configPath = join(testDir, "openapi.config.mjs");
-            writeFileSync(
-                configPath,
-                `
-                export default {
-                    input: './api.yaml',
-                };
-            `
-            );
+     it('should handle ESM config files', async () => {
+       const configPath = join(testDir, 'openapi.config.mjs');
+       writeFileSync(
+         configPath,
+         `
+               export default {
+                   input: './api.yaml',
+               };
+           `,
+       );
 
-            const config = await loadConfig(testDir);
+       const config = await loadConfig(testDir);
 
-            expect(config).toEqual({
-                input: "./api.yaml",
-            });
-        });
-    });
+       expect(config).toEqual({
+         input: './api.yaml',
+       });
+     });
+   });
 
-    describe("CLI with config file", () => {
-        it("should merge CLI flags with config file (CLI takes priority)", async () => {
-            // This will be tested in cli.test.ts
-            // Just a placeholder for integration testing
-        });
-    });
-    ```
+   describe('CLI with config file', () => {
+     it('should merge CLI flags with config file (CLI takes priority)', async () => {
+       // This will be tested in cli.test.ts
+       // Just a placeholder for integration testing
+     });
+   });
+   ```
 
 3. **Run tests - expect failures:**
-    ```bash
-    cd lib
-    pnpm test -- --run src/loadConfig.test.ts
-    # Expected: 6 FAILING (loadConfig doesn't exist yet)
-    ```
+   ```bash
+   cd lib
+   pnpm test -- --run src/loadConfig.test.ts
+   # Expected: 6 FAILING (loadConfig doesn't exist yet)
+   ```
 
 **Phase B: Implement Config Loader (TDD Green) - 1 hour**
 
 4. **Install cosmiconfig:**
 
-    ```bash
-    cd lib
-    pnpm add cosmiconfig
-    ```
+   ```bash
+   cd lib
+   pnpm add cosmiconfig
+   ```
 
 5. **Create implementation:**
 
-    ````typescript
-    // lib/src/loadConfig.ts
-    import { cosmiconfig } from "cosmiconfig";
+   ````typescript
+   // lib/src/loadConfig.ts
+   import { cosmiconfig } from 'cosmiconfig';
 
-    export interface OpenApiZodClientConfig {
-        input?: string;
-        output?: string;
-        template?: string;
-        outputMode?: "zod" | "types";
-        noClient?: boolean;
-        withValidationHelpers?: boolean;
-        withSchemaRegistry?: boolean;
-        withTypePredicates?: boolean;
-        validateMcpReadiness?: boolean;
-        skipMcpValidation?: boolean;
-        strictMcpValidation?: boolean;
-        prettierConfig?: string;
-        // Add other options as needed
-    }
+   export interface OpenApiZodClientConfig {
+     input?: string;
+     output?: string;
+     template?: string;
+     outputMode?: 'zod' | 'types';
+     noClient?: boolean;
+     withValidationHelpers?: boolean;
+     withSchemaRegistry?: boolean;
+     withTypePredicates?: boolean;
+     validateMcpReadiness?: boolean;
+     skipMcpValidation?: boolean;
+     strictMcpValidation?: boolean;
+     prettierConfig?: string;
+     // Add other options as needed
+   }
 
-    /**
-     * Load configuration from config file using cosmiconfig.
-     *
-     * Searches for configuration in the following order:
-     * - openapi.config.{js,ts,mjs,cjs}
-     * - .openapirc.{json,yaml,yml}
-     * - .openapirc
-     * - openapi field in package.json
-     *
-     * @param searchFrom - Directory to start searching from (defaults to cwd)
-     * @returns Configuration object or null if no config found
-     *
-     * @example
-     * ```typescript
-     * const config = await loadConfig();
-     * if (config) {
-     *   console.log('Found config:', config);
-     * }
-     * ```
-     *
-     * @example
-     * ```typescript
-     * // Monorepo: search from subdirectory
-     * const config = await loadConfig('./packages/api');
-     * ```
-     *
-     * @example
-     * ```typescript
-     * // openapi.config.js
-     * module.exports = {
-     *   input: './api.yaml',
-     *   output: './client.ts',
-     *   template: 'schemas-with-metadata',
-     * };
-     * ```
-     */
-    export async function loadConfig(searchFrom?: string): Promise<OpenApiZodClientConfig | null> {
-        const explorer = cosmiconfig("openapi", {
-            searchPlaces: [
-                "openapi.config.js",
-                "openapi.config.mjs",
-                "openapi.config.cjs",
-                "openapi.config.ts",
-                ".openapirc",
-                ".openapirc.json",
-                ".openapirc.yaml",
-                ".openapirc.yml",
-                "package.json",
-            ],
-        });
+   /**
+    * Load configuration from config file using cosmiconfig.
+    *
+    * Searches for configuration in the following order:
+    * - openapi.config.{js,ts,mjs,cjs}
+    * - .openapirc.{json,yaml,yml}
+    * - .openapirc
+    * - openapi field in package.json
+    *
+    * @param searchFrom - Directory to start searching from (defaults to cwd)
+    * @returns Configuration object or null if no config found
+    *
+    * @example
+    * ```typescript
+    * const config = await loadConfig();
+    * if (config) {
+    *   console.log('Found config:', config);
+    * }
+    * ```
+    *
+    * @example
+    * ```typescript
+    * // Monorepo: search from subdirectory
+    * const config = await loadConfig('./packages/api');
+    * ```
+    *
+    * @example
+    * ```typescript
+    * // openapi.config.js
+    * module.exports = {
+    *   input: './api.yaml',
+    *   output: './client.ts',
+    *   template: 'schemas-with-metadata',
+    * };
+    * ```
+    */
+   export async function loadConfig(searchFrom?: string): Promise<OpenApiZodClientConfig | null> {
+     const explorer = cosmiconfig('openapi', {
+       searchPlaces: [
+         'openapi.config.js',
+         'openapi.config.mjs',
+         'openapi.config.cjs',
+         'openapi.config.ts',
+         '.openapirc',
+         '.openapirc.json',
+         '.openapirc.yaml',
+         '.openapirc.yml',
+         'package.json',
+       ],
+     });
 
-        try {
-            const result = await explorer.search(searchFrom);
-            return result?.config ?? null;
-        } catch (error) {
-            console.error("Error loading config:", error);
-            return null;
-        }
-    }
-    ````
+     try {
+       const result = await explorer.search(searchFrom);
+       return result?.config ?? null;
+     } catch (error) {
+       console.error('Error loading config:', error);
+       return null;
+     }
+   }
+   ````
 
 6. **Update CLI to use config:**
 
-    ```typescript
-    // lib/src/cli.ts
-    import { loadConfig } from "./loadConfig.js";
+   ```typescript
+   // lib/src/cli.ts
+   import { loadConfig } from './loadConfig.js';
 
-    // Load config file
-    const fileConfig = await loadConfig();
+   // Load config file
+   const fileConfig = await loadConfig();
 
-    // Merge CLI flags with config file (CLI takes priority)
-    const finalOptions = {
-        ...fileConfig, // Config file (lower priority)
-        ...cliOptions, // CLI flags (higher priority)
-    };
+   // Merge CLI flags with config file (CLI takes priority)
+   const finalOptions = {
+     ...fileConfig, // Config file (lower priority)
+     ...cliOptions, // CLI flags (higher priority)
+   };
 
-    // Use finalOptions for generation
-    ```
+   // Use finalOptions for generation
+   ```
 
 7. **Run tests - expect success:**
-    ```bash
-    pnpm test -- --run src/loadConfig.test.ts
-    # Expected: 6/6 PASSING ✅
-    ```
+   ```bash
+   pnpm test -- --run src/loadConfig.test.ts
+   # Expected: 6/6 PASSING ✅
+   ```
 
 **Phase C: Documentation - 30 minutes**
 
 8. **Update README with config file examples:**
 
-    ````markdown
-    ## Configuration
+   ````markdown
+   ## Configuration
 
-    ### Config File (Recommended)
+   ### Config File (Recommended)
 
-    Create a config file in your project root:
+   Create a config file in your project root:
 
-    ```javascript
-    // openapi.config.js
-    module.exports = {
-        input: "./api/openapi.yaml",
-        output: "./src/generated/client.ts",
-        template: "schemas-with-metadata",
-        withValidationHelpers: true,
-    };
-    ```
+   ```javascript
+   // openapi.config.js
+   module.exports = {
+     input: './api/openapi.yaml',
+     output: './src/generated/client.ts',
+     template: 'schemas-with-metadata',
+     withValidationHelpers: true,
+   };
+   ```
 
-    Then run without flags:
+   Then run without flags:
 
-    ```bash
-    pnpm openapi-zod-client
-    ```
+   ```bash
+   pnpm openapi-zod-client
+   ```
 
-    ### Supported Config Files
+   ### Supported Config Files
 
-    - `openapi.config.{js,ts,mjs,cjs}` - JavaScript/TypeScript
-    - `.openapirc` - JSON or YAML
-    - `.openapirc.{json,yaml,yml}` - Explicit format
-    - `package.json` - `"openapi"` field
+   - `openapi.config.{js,ts,mjs,cjs}` - JavaScript/TypeScript
+   - `.openapirc` - JSON or YAML
+   - `.openapirc.{json,yaml,yml}` - Explicit format
+   - `package.json` - `"openapi"` field
 
-    ### Monorepo Support
+   ### Monorepo Support
 
-    Config file can be in any parent directory:
+   Config file can be in any parent directory:
 
-    ```
-    /workspace/
-      openapi.config.js  ← Config here
-      /packages/
-        /api/
-          run here →  pnpx openapi-zod-client
-    ```
+   ```
+   /workspace/
+     openapi.config.js  ← Config here
+     /packages/
+       /api/
+         run here →  pnpx openapi-zod-client
+   ```
 
-    ### CLI Overrides
+   ### CLI Overrides
 
-    CLI flags override config file:
+   CLI flags override config file:
 
-    ```bash
-    # Config has template: 'default'
-    # This will use 'schemas-with-metadata' instead
-    pnpm openapi-zod-client --template schemas-with-metadata
-    ```
-    ````
+   ```bash
+   # Config has template: 'default'
+   # This will use 'schemas-with-metadata' instead
+   pnpm openapi-zod-client --template schemas-with-metadata
+   ```
+   ````
 
 **Validation Steps:**
 
@@ -524,275 +524,278 @@ Users need visibility into bundle impact:
 
 1. **Create test file:**
 
-    ```bash
-    touch lib/src/analyzeBundleSize.test.ts
-    ```
+   ```bash
+   touch lib/src/analyzeBundleSize.test.ts
+   ```
 
 2. **Write comprehensive test suite:**
 
-    ```typescript
-    import { describe, it, expect } from "vitest";
-    import { analyzeBundleSize } from "./analyzeBundleSize.js";
+   ```typescript
+   import { describe, it, expect } from 'vitest';
+   import { analyzeBundleSize } from './analyzeBundleSize.js';
 
-    describe("analyzeBundleSize", () => {
-        it("should calculate generated code size", () => {
-            const code = "export const Pet = z.object({ id: z.string() });";
-            const analysis = analyzeBundleSize(code, { template: "default" });
+   describe('analyzeBundleSize', () => {
+     it('should calculate generated code size', () => {
+       const code = 'export const Pet = z.object({ id: z.string() });';
+       const analysis = analyzeBundleSize(code, { template: 'default' });
 
-            expect(analysis.generated).toMatchObject({
-                size: expect.any(Number),
-                sizeFormatted: expect.stringMatching(/\d+ [BKM]B/),
-            });
-        });
+       expect(analysis.generated).toMatchObject({
+         size: expect.any(Number),
+         sizeFormatted: expect.stringMatching(/\d+ [BKM]B/),
+       });
+     });
 
-        it("should show dependency sizes for Zod mode", () => {
-            const code = 'import { z } from "zod";\nexport const Pet = z.object({});';
-            const analysis = analyzeBundleSize(code, { template: "default" });
+     it('should show dependency sizes for Zod mode', () => {
+       const code = 'import { z } from "zod";\nexport const Pet = z.object({});';
+       const analysis = analyzeBundleSize(code, { template: 'default' });
 
-            expect(analysis.dependencies).toEqual({
-                zod: { size: expect.any(Number), sizeFormatted: expect.any(String) },
-                "@zodios/core": { size: expect.any(Number), sizeFormatted: expect.any(String) },
-                axios: { size: expect.any(Number), sizeFormatted: expect.any(String) },
-            });
-        });
+       expect(analysis.dependencies).toEqual({
+         zod: { size: expect.any(Number), sizeFormatted: expect.any(String) },
+         '@zodios/core': { size: expect.any(Number), sizeFormatted: expect.any(String) },
+         axios: { size: expect.any(Number), sizeFormatted: expect.any(String) },
+       });
+     });
 
-        it("should show 0 dependencies for types-only mode", () => {
-            const code = "export type Pet = { id: string };";
-            const analysis = analyzeBundleSize(code, { template: "types-only" });
+     it('should show 0 dependencies for types-only mode', () => {
+       const code = 'export type Pet = { id: string };';
+       const analysis = analyzeBundleSize(code, { template: 'types-only' });
 
-            expect(analysis.dependencies).toEqual({});
-            expect(analysis.totalSize).toBeLessThan(1000); // Should be tiny
-        });
+       expect(analysis.dependencies).toEqual({});
+       expect(analysis.totalSize).toBeLessThan(1000); // Should be tiny
+     });
 
-        it("should provide optimization tips", () => {
-            const code = 'import { z } from "zod";\nexport const Pet = z.object({});';
-            const analysis = analyzeBundleSize(code, { template: "default" });
+     it('should provide optimization tips', () => {
+       const code = 'import { z } from "zod";\nexport const Pet = z.object({});';
+       const analysis = analyzeBundleSize(code, { template: 'default' });
 
-            expect(analysis.tips).toBeInstanceOf(Array);
-            expect(analysis.tips.length).toBeGreaterThan(0);
-            expect(analysis.tips[0]).toHaveProperty("title");
-            expect(analysis.tips[0]).toHaveProperty("savings");
-            expect(analysis.tips[0]).toHaveProperty("description");
-        });
+       expect(analysis.tips).toBeInstanceOf(Array);
+       expect(analysis.tips.length).toBeGreaterThan(0);
+       expect(analysis.tips[0]).toHaveProperty('title');
+       expect(analysis.tips[0]).toHaveProperty('savings');
+       expect(analysis.tips[0]).toHaveProperty('description');
+     });
 
-        it("should format output as table", () => {
-            const code = 'import { z } from "zod";';
-            const analysis = analyzeBundleSize(code, { template: "default" });
-            const table = analysis.formatAsTable();
+     it('should format output as table', () => {
+       const code = 'import { z } from "zod";';
+       const analysis = analyzeBundleSize(code, { template: 'default' });
+       const table = analysis.formatAsTable();
 
-            expect(table).toContain("Bundle Analysis");
-            expect(table).toContain("Generated Code");
-            expect(table).toContain("Dependencies");
-        });
-    });
-    ```
+       expect(table).toContain('Bundle Analysis');
+       expect(table).toContain('Generated Code');
+       expect(table).toContain('Dependencies');
+     });
+   });
+   ```
 
 3. **Run tests - expect failures:**
-    ```bash
-    pnpm test -- --run src/analyzeBundleSize.test.ts
-    # Expected: 5 FAILING
-    ```
+   ```bash
+   pnpm test -- --run src/analyzeBundleSize.test.ts
+   # Expected: 5 FAILING
+   ```
 
 **Phase B: Implement Bundle Analysis (TDD Green) - 1 hour**
 
 4. **Create implementation:**
 
-    ````typescript
-    // lib/src/analyzeBundleSize.ts
+   ````typescript
+   // lib/src/analyzeBundleSize.ts
 
-    interface DependencySize {
-        size: number; // bytes
-        sizeFormatted: string; // "13 KB"
-    }
+   interface DependencySize {
+     size: number; // bytes
+     sizeFormatted: string; // "13 KB"
+   }
 
-    interface OptimizationTip {
-        title: string;
-        savings: string; // "180 KB (-62%)"
-        description: string;
-    }
+   interface OptimizationTip {
+     title: string;
+     savings: string; // "180 KB (-62%)"
+     description: string;
+   }
 
-    export interface BundleAnalysis {
-        generated: DependencySize;
-        dependencies: Record<string, DependencySize>;
-        totalSize: number;
-        totalSizeFormatted: string;
-        tips: OptimizationTip[];
-        formatAsTable(): string;
-    }
+   export interface BundleAnalysis {
+     generated: DependencySize;
+     dependencies: Record<string, DependencySize>;
+     totalSize: number;
+     totalSizeFormatted: string;
+     tips: OptimizationTip[];
+     formatAsTable(): string;
+   }
 
-    // Approximate dependency sizes (min+gzip)
-    const DEPENDENCY_SIZES = {
-        zod: 13 * 1024, // 13 KB
-        "@zodios/core": 7 * 1024, // 7 KB
-        axios: 28 * 1024, // 28 KB
-    };
+   // Approximate dependency sizes (min+gzip)
+   const DEPENDENCY_SIZES = {
+     zod: 13 * 1024, // 13 KB
+     '@zodios/core': 7 * 1024, // 7 KB
+     axios: 28 * 1024, // 28 KB
+   };
 
-    /**
-     * Analyze bundle size impact of generated code.
-     *
-     * @param code - Generated code string
-     * @param options - Generation options (template, etc.)
-     * @returns Bundle analysis with sizes and optimization tips
-     *
-     * @example
-     * ```typescript
-     * const analysis = analyzeBundleSize(generatedCode, { template: 'default' });
-     * console.log(analysis.formatAsTable());
-     * ```
-     */
-    export function analyzeBundleSize(code: string, options: { template?: string }): BundleAnalysis {
-        // Calculate generated code size
-        const generated = {
-            size: Buffer.byteLength(code, "utf8"),
-            sizeFormatted: formatBytes(Buffer.byteLength(code, "utf8")),
-        };
+   /**
+    * Analyze bundle size impact of generated code.
+    *
+    * @param code - Generated code string
+    * @param options - Generation options (template, etc.)
+    * @returns Bundle analysis with sizes and optimization tips
+    *
+    * @example
+    * ```typescript
+    * const analysis = analyzeBundleSize(generatedCode, { template: 'default' });
+    * console.log(analysis.formatAsTable());
+    * ```
+    */
+   export function analyzeBundleSize(code: string, options: { template?: string }): BundleAnalysis {
+     // Calculate generated code size
+     const generated = {
+       size: Buffer.byteLength(code, 'utf8'),
+       sizeFormatted: formatBytes(Buffer.byteLength(code, 'utf8')),
+     };
 
-        // Detect dependencies from imports
-        const dependencies: Record<string, DependencySize> = {};
-        if (code.includes('from "zod"')) {
-            dependencies.zod = {
-                size: DEPENDENCY_SIZES.zod,
-                sizeFormatted: formatBytes(DEPENDENCY_SIZES.zod),
-            };
-        }
-        if (code.includes("@zodios/core")) {
-            dependencies["@zodios/core"] = {
-                size: DEPENDENCY_SIZES["@zodios/core"],
-                sizeFormatted: formatBytes(DEPENDENCY_SIZES["@zodios/core"]),
-            };
-        }
-        if (code.includes("axios")) {
-            dependencies.axios = {
-                size: DEPENDENCY_SIZES.axios,
-                sizeFormatted: formatBytes(DEPENDENCY_SIZES.axios),
-            };
-        }
+     // Detect dependencies from imports
+     const dependencies: Record<string, DependencySize> = {};
+     if (code.includes('from "zod"')) {
+       dependencies.zod = {
+         size: DEPENDENCY_SIZES.zod,
+         sizeFormatted: formatBytes(DEPENDENCY_SIZES.zod),
+       };
+     }
+     if (code.includes('@zodios/core')) {
+       dependencies['@zodios/core'] = {
+         size: DEPENDENCY_SIZES['@zodios/core'],
+         sizeFormatted: formatBytes(DEPENDENCY_SIZES['@zodios/core']),
+       };
+     }
+     if (code.includes('axios')) {
+       dependencies.axios = {
+         size: DEPENDENCY_SIZES.axios,
+         sizeFormatted: formatBytes(DEPENDENCY_SIZES.axios),
+       };
+     }
 
-        // Calculate total
-        const totalSize = generated.size + Object.values(dependencies).reduce((sum, dep) => sum + dep.size, 0);
+     // Calculate total
+     const totalSize =
+       generated.size + Object.values(dependencies).reduce((sum, dep) => sum + dep.size, 0);
 
-        // Generate optimization tips
-        const tips: OptimizationTip[] = [];
+     // Generate optimization tips
+     const tips: OptimizationTip[] = [];
 
-        if (dependencies.zod && options.template !== "types-only") {
-            tips.push({
-                title: "Use types-only mode for zero-dependency output",
-                savings: `${formatBytes(totalSize)} (-100%)`,
-                description: "Add --output-mode types to generate pure TypeScript types with no runtime dependencies",
-            });
-        }
+     if (dependencies.zod && options.template !== 'types-only') {
+       tips.push({
+         title: 'Use types-only mode for zero-dependency output',
+         savings: `${formatBytes(totalSize)} (-100%)`,
+         description:
+           'Add --output-mode types to generate pure TypeScript types with no runtime dependencies',
+       });
+     }
 
-        if (dependencies["@zodios/core"]) {
-            tips.push({
-                title: "Use schemas-with-metadata template",
-                savings: `${formatBytes(DEPENDENCY_SIZES["@zodios/core"] + DEPENDENCY_SIZES.axios)} (-42%)`,
-                description: "Use --template schemas-with-metadata for headless client without Zodios/axios",
-            });
-        }
+     if (dependencies['@zodios/core']) {
+       tips.push({
+         title: 'Use schemas-with-metadata template',
+         savings: `${formatBytes(DEPENDENCY_SIZES['@zodios/core'] + DEPENDENCY_SIZES.axios)} (-42%)`,
+         description:
+           'Use --template schemas-with-metadata for headless client without Zodios/axios',
+       });
+     }
 
-        return {
-            generated,
-            dependencies,
-            totalSize,
-            totalSizeFormatted: formatBytes(totalSize),
-            tips,
-            formatAsTable() {
-                let table = "\n📊 Bundle Analysis\n\n";
+     return {
+       generated,
+       dependencies,
+       totalSize,
+       totalSizeFormatted: formatBytes(totalSize),
+       tips,
+       formatAsTable() {
+         let table = '\n📊 Bundle Analysis\n\n';
 
-                table += "Generated Code:\n";
-                table += `  ${generated.sizeFormatted}\n\n`;
+         table += 'Generated Code:\n';
+         table += `  ${generated.sizeFormatted}\n\n`;
 
-                if (Object.keys(dependencies).length > 0) {
-                    table += "Dependencies (min+gzip):\n";
-                    for (const [name, info] of Object.entries(dependencies)) {
-                        table += `  ${name.padEnd(20)} ${info.sizeFormatted}\n`;
-                    }
-                    table += "\n";
-                }
+         if (Object.keys(dependencies).length > 0) {
+           table += 'Dependencies (min+gzip):\n';
+           for (const [name, info] of Object.entries(dependencies)) {
+             table += `  ${name.padEnd(20)} ${info.sizeFormatted}\n`;
+           }
+           table += '\n';
+         }
 
-                table += `Total Bundle Impact: ${formatBytes(totalSize)}\n`;
+         table += `Total Bundle Impact: ${formatBytes(totalSize)}\n`;
 
-                if (tips.length > 0) {
-                    table += "\n💡 Optimization Tips:\n\n";
-                    tips.forEach((tip, i) => {
-                        table += `${i + 1}. ${tip.title}\n`;
-                        table += `   Savings: ${tip.savings}\n`;
-                        table += `   ${tip.description}\n\n`;
-                    });
-                }
+         if (tips.length > 0) {
+           table += '\n💡 Optimization Tips:\n\n';
+           tips.forEach((tip, i) => {
+             table += `${i + 1}. ${tip.title}\n`;
+             table += `   Savings: ${tip.savings}\n`;
+             table += `   ${tip.description}\n\n`;
+           });
+         }
 
-                return table;
-            },
-        };
-    }
+         return table;
+       },
+     };
+   }
 
-    function formatBytes(bytes: number): string {
-        if (bytes === 0) return "0 B";
-        const k = 1024;
-        const sizes = ["B", "KB", "MB"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return Math.round(bytes / Math.pow(k, i)) + " " + sizes[i];
-    }
-    ````
+   function formatBytes(bytes: number): string {
+     if (bytes === 0) return '0 B';
+     const k = 1024;
+     const sizes = ['B', 'KB', 'MB'];
+     const i = Math.floor(Math.log(bytes) / Math.log(k));
+     return Math.round(bytes / Math.pow(k, i)) + ' ' + sizes[i];
+   }
+   ````
 
 5. **Add CLI flag:**
 
-    ```typescript
-    // lib/src/cli.ts
-    program.option("--analyze", "Show bundle size analysis");
+   ```typescript
+   // lib/src/cli.ts
+   program.option('--analyze', 'Show bundle size analysis');
 
-    // After generation
-    if (program.opts().analyze) {
-        const analysis = analyzeBundleSize(generatedCode, options);
-        console.log(analysis.formatAsTable());
-    }
-    ```
+   // After generation
+   if (program.opts().analyze) {
+     const analysis = analyzeBundleSize(generatedCode, options);
+     console.log(analysis.formatAsTable());
+   }
+   ```
 
 6. **Run tests - expect success:**
-    ```bash
-    pnpm test -- --run src/analyzeBundleSize.test.ts
-    # Expected: 5/5 PASSING ✅
-    ```
+   ```bash
+   pnpm test -- --run src/analyzeBundleSize.test.ts
+   # Expected: 5/5 PASSING ✅
+   ```
 
 **Phase C: Documentation - 30 minutes**
 
 7. **Update README:**
 
-    ````markdown
-    ## Bundle Analysis
+   ````markdown
+   ## Bundle Analysis
 
-    See the bundle size impact of generated code:
+   See the bundle size impact of generated code:
 
-    ```bash
-    pnpm openapi-zod-client ./api.yaml -o ./client.ts --analyze
-    ```
+   ```bash
+   pnpm openapi-zod-client ./api.yaml -o ./client.ts --analyze
+   ```
 
-    Output:
+   Output:
 
-    ```
-    📊 Bundle Analysis
+   ```
+   📊 Bundle Analysis
 
-    Generated Code:
-      45 KB
+   Generated Code:
+     45 KB
 
-    Dependencies (min+gzip):
-      zod                  13 KB
-      @zodios/core         7 KB
-      axios                28 KB
+   Dependencies (min+gzip):
+     zod                  13 KB
+     @zodios/core         7 KB
+     axios                28 KB
 
-    Total Bundle Impact: 93 KB
+   Total Bundle Impact: 93 KB
 
-    💡 Optimization Tips:
+   💡 Optimization Tips:
 
-    1. Use types-only mode for zero-dependency output
-       Savings: 93 KB (-100%)
-       Add --output-mode types to generate pure TypeScript types
+   1. Use types-only mode for zero-dependency output
+      Savings: 93 KB (-100%)
+      Add --output-mode types to generate pure TypeScript types
 
-    2. Use schemas-with-metadata template
-       Savings: 35 KB (-42%)
-       Use --template schemas-with-metadata for headless client
-    ```
-    ````
+   2. Use schemas-with-metadata template
+      Savings: 35 KB (-42%)
+      Use --template schemas-with-metadata for headless client
+   ```
+   ````
 
 **Validation Steps:**
 
@@ -886,23 +889,23 @@ Better development workflow:
 Type-safe error handling without try/catch:
 
 ```typescript
-const result = await api.getPetById({ id: "123", withResponse: true });
+const result = await api.getPetById({ id: '123', withResponse: true });
 
 if (result.ok) {
-    // result.data is Pet (200 response)
-    console.log(result.data.name);
+  // result.data is Pet (200 response)
+  console.log(result.data.name);
 } else {
-    // result.status is discriminated union: 400 | 404 | 500
-    switch (result.status) {
-        case 404:
-            // TypeScript knows result.data is NotFoundError
-            console.error("Not found:", result.data.message);
-            break;
-        case 400:
-            // TypeScript knows result.data is ValidationError
-            console.error("Invalid:", result.data.errors);
-            break;
-    }
+  // result.status is discriminated union: 400 | 404 | 500
+  switch (result.status) {
+    case 404:
+      // TypeScript knows result.data is NotFoundError
+      console.error('Not found:', result.data.message);
+      break;
+    case 400:
+      // TypeScript knows result.data is ValidationError
+      console.error('Invalid:', result.data.errors);
+      break;
+  }
 }
 ```
 
@@ -983,18 +986,18 @@ Catch type regressions:
 **Example Type Test:**
 
 ```typescript
-import { test } from "tstyche";
-import { Pet, ApiEndpoints } from "./generated";
+import { test } from 'tstyche';
+import { Pet, ApiEndpoints } from './generated';
 
-test("Pet type has correct properties", () => {
-    expect<Pet>().type.toHaveProperty("id");
-    expect<Pet>().type.toHaveProperty("name");
-    expect<Pet["id"]>().type.toBe<string>();
+test('Pet type has correct properties', () => {
+  expect<Pet>().type.toHaveProperty('id');
+  expect<Pet>().type.toHaveProperty('name');
+  expect<Pet['id']>().type.toBe<string>();
 });
 
-test("Endpoint types are correct", () => {
-    expect<ApiEndpoints["getPetById"]["parameters"]>().type.toHaveProperty("path");
-    expect<ApiEndpoints["getPetById"]["responses"][200]>().type.toBe<Pet>();
+test('Endpoint types are correct', () => {
+  expect<ApiEndpoints['getPetById']['parameters']>().type.toHaveProperty('path');
+  expect<ApiEndpoints['getPetById']['responses'][200]>().type.toBe<Pet>();
 });
 ```
 
@@ -1038,25 +1041,25 @@ Test generated code actually works:
 **Example MSW Test:**
 
 ```typescript
-import { rest } from "msw";
-import { setupServer } from "msw/node";
-import { createClient } from "./generated";
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import { createClient } from './generated';
 
 const server = setupServer(
-    rest.get("https://api.example.com/pets/:id", (req, res, ctx) => {
-        return res(ctx.json({ id: req.params.id, name: "Fluffy" }));
-    })
+  rest.get('https://api.example.com/pets/:id', (req, res, ctx) => {
+    return res(ctx.json({ id: req.params.id, name: 'Fluffy' }));
+  }),
 );
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("client makes successful request", async () => {
-    const client = createClient(fetch);
-    const pet = await client.getPetById({ id: "123" });
+test('client makes successful request', async () => {
+  const client = createClient(fetch);
+  const pet = await client.getPetById({ id: '123' });
 
-    expect(pet).toEqual({ id: "123", name: "Fluffy" });
+  expect(pet).toEqual({ id: '123', name: 'Fluffy' });
 });
 ```
 
@@ -1152,29 +1155,29 @@ pnpm lint
 ### Deliverables
 
 1. **Tooling Improvements:**
-    - Config file support (cosmiconfig)
-    - Bundle size analysis
-    - Watch mode
+   - Config file support (cosmiconfig)
+   - Bundle size analysis
+   - Watch mode
 
 2. **Developer Experience:**
-    - Discriminated union errors
-    - Configurable status codes
+   - Discriminated union errors
+   - Configurable status codes
 
 3. **Testing Maturity:**
-    - Type-level testing (tstyche)
-    - MSW integration tests
+   - Type-level testing (tstyche)
+   - MSW integration tests
 
 4. **Documentation:**
-    - Migration guides
-    - Updated README
-    - Examples
+   - Migration guides
+   - Updated README
+   - Examples
 
 5. **OpenAPI Multi-Version Support (Phase 3E - Post-ts-morph):**
-    - Full OAS 3.0, 3.1, and 3.2 support
-    - Auto-detection with user override
-    - Version-specific schema generation
-    - ~85 new tests
-    - Comprehensive documentation
+   - Full OAS 3.0, 3.1, and 3.2 support
+   - Auto-detection with user override
+   - Version-specific schema generation
+   - ~85 new tests
+   - Comprehensive documentation
 
 ### Benefits
 
@@ -1199,18 +1202,18 @@ pnpm lint
 ## Next Steps
 
 1. **Complete Phase 2 prerequisites:**
-    - Type assertions eliminated
-    - Dependencies updated
+   - Type assertions eliminated
+   - Dependencies updated
 
 2. **Begin Phase 3A:**
-    - Start with config file support (quick win)
-    - Follow with bundle analysis
-    - Both are 2-3 hours each
+   - Start with config file support (quick win)
+   - Follow with bundle analysis
+   - Both are 2-3 hours each
 
 3. **Continue with Phase 3B and 3C:**
-    - Pick tasks based on priority
-    - Follow TDD strictly
-    - Maintain quality gates
+   - Pick tasks based on priority
+   - Follow TDD strictly
+   - Maintain quality gates
 
 ---
 
@@ -1263,16 +1266,16 @@ This work is intentionally deferred until after the ts-morph emitter migration b
 ```typescript
 // Version detection and context
 interface GenerationContext {
-    oasVersion: "3.0" | "3.1" | "3.2";
-    types: typeof oas30 | typeof oas31 | typeof oas32;
-    sourceFile: ts.SourceFile;
+  oasVersion: '3.0' | '3.1' | '3.2';
+  types: typeof oas30 | typeof oas31 | typeof oas32;
+  sourceFile: ts.SourceFile;
 }
 
 // AST-based version-specific generation
 function generateSchema(schema: SchemaObject, ctx: GenerationContext): ts.Node {
-    // Conditional logic based on version
-    // AST manipulation instead of string concatenation
-    // Type-safe, refactor-friendly
+  // Conditional logic based on version
+  // AST manipulation instead of string concatenation
+  // Type-safe, refactor-friendly
 }
 ```
 

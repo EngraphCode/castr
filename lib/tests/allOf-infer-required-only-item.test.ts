@@ -1,75 +1,75 @@
-import type { OpenAPIObject } from "openapi3-ts/oas30";
-import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src/index.js";
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import { expect, test } from 'vitest';
+import { generateZodClientFromOpenAPI } from '../src/index.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/49
-test("allOf-infer-required-only-item", async () => {
-    const openApiDoc: OpenAPIObject = {
-        openapi: "3.0.3",
-        info: {
-            title: "User",
-            version: "1.0.0",
-        },
-        paths: {
-            "/user": {
-                get: {
-                    responses: {
-                        "200": {
-                            description: "return user",
-                            content: {
-                                "application/json": {
-                                    schema: {
-                                        $ref: "#/components/schemas/userResponse",
-                                    },
-                                },
-                            },
-                        },
-                    },
+test('allOf-infer-required-only-item', async () => {
+  const openApiDoc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: {
+      title: 'User',
+      version: '1.0.0',
+    },
+    paths: {
+      '/user': {
+        get: {
+          responses: {
+            '200': {
+              description: 'return user',
+              content: {
+                'application/json': {
+                  schema: {
+                    $ref: '#/components/schemas/userResponse',
+                  },
                 },
+              },
             },
+          },
         },
-        components: {
-            schemas: {
-                user: {
-                    type: "object",
-                    properties: {
-                        name: {
-                            type: "string",
-                        },
-                        email: {
-                            type: "string",
-                        },
-                    },
-                },
-                userResponse: {
-                    type: "object",
-                    properties: {
-                        user: {
-                            allOf: [
-                                {
-                                    $ref: "#/components/schemas/user",
-                                },
-                                {
-                                    required: ["name"],
-                                },
-                            ],
-                        },
-                    },
-                },
+      },
+    },
+    components: {
+      schemas: {
+        user: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
             },
+            email: {
+              type: 'string',
+            },
+          },
         },
-    };
+        userResponse: {
+          type: 'object',
+          properties: {
+            user: {
+              allOf: [
+                {
+                  $ref: '#/components/schemas/user',
+                },
+                {
+                  required: ['name'],
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  };
 
-    const output = await generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc,
-        options: {
-            shouldExportAllTypes: true,
-            shouldExportAllSchemas: true,
-            withImplicitRequiredProps: true,
-        },
-    });
-    expect(output).toMatchInlineSnapshot(`
+  const output = await generateZodClientFromOpenAPI({
+    disableWriteToFile: true,
+    openApiDoc,
+    options: {
+      shouldExportAllTypes: true,
+      shouldExportAllSchemas: true,
+      withImplicitRequiredProps: true,
+    },
+  });
+  expect(output).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 

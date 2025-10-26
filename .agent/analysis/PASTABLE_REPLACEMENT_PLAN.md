@@ -37,33 +37,33 @@
 ### Files Affected
 
 1. **schema-complexity.helpers.ts**
-    - `getSum` (lines 30, 60, 85)
-    - Sums array of complexity numbers
+   - `getSum` (lines 30, 60, 85)
+   - Sums array of complexity numbers
 
 2. **utils.ts**
-    - `capitalize` (used for string capitalization)
-    - `kebabToCamel` (line 41)
-    - `snakeToCamel` (line 41)
+   - `capitalize` (used for string capitalization)
+   - `kebabToCamel` (line 41)
+   - `snakeToCamel` (line 41)
 
 3. **generateZodClientFromOpenAPI.ts**
-    - `capitalize` (various uses)
-    - `pick` (not shown in snippet, but imported)
+   - `capitalize` (various uses)
+   - `pick` (not shown in snippet, but imported)
 
 4. **makeSchemaResolver.ts**
-    - `get` (line 31) - Deep object property access
-    - Path: `"#/components/schemas"` → `doc.components.schemas`
+   - `get` (line 31) - Deep object property access
+   - Path: `"#/components/schemas"` → `doc.components.schemas`
 
 5. **getOpenApiDependencyGraph.test.ts**
-    - `get` (lines 12, 93, 173, 269) - Deep object access in tests
+   - `get` (lines 12, 93, 173, 269) - Deep object access in tests
 
 6. **template-context.ts**
-    - `sortBy` (line 228) - Sort endpoints by path
-    - `sortListFromRefArray` (line 267) - Sort schemas by dependency order
-    - `sortObjKeysFromArray` (lines 124, 263) - Reorder schema keys
+   - `sortBy` (line 228) - Sort endpoints by path
+   - `sortListFromRefArray` (line 267) - Sort schemas by dependency order
+   - `sortObjKeysFromArray` (lines 124, 263) - Reorder schema keys
 
 7. **getZodiosEndpointDefinitionList.ts**
-    - `ObjectLiteral` (type only) - Generic object type
-    - Also has inline `pick` function implementation
+   - `ObjectLiteral` (type only) - Generic object type
+   - Also has inline `pick` function implementation
 
 ---
 
@@ -119,7 +119,7 @@ pnpm add -D @types/lodash-es
 **Current (3 instances):**
 
 ```typescript
-import { getSum } from "pastable";
+import { getSum } from 'pastable';
 
 // Line 30:
 getSum(schemas.map((prop) => getSchemaComplexity({ current: 0, schema: prop })));
@@ -137,13 +137,19 @@ getSum(props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })));
 // Remove import, use native reduce
 
 // Line 30:
-schemas.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((sum, n) => sum + n, 0);
+schemas
+  .map((prop) => getSchemaComplexity({ current: 0, schema: prop }))
+  .reduce((sum, n) => sum + n, 0);
 
 // Line 60:
-types.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((sum, n) => sum + n, 0);
+types
+  .map((prop) => getSchemaComplexity({ current: 0, schema: prop }))
+  .reduce((sum, n) => sum + n, 0);
 
 // Line 85:
-props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((sum, n) => sum + n, 0);
+props
+  .map((prop) => getSchemaComplexity({ current: 0, schema: prop }))
+  .reduce((sum, n) => sum + n, 0);
 ```
 
 **Effort:** LOW (10 minutes)  
@@ -159,7 +165,7 @@ props.map((prop) => getSchemaComplexity({ current: 0, schema: prop })).reduce((s
 
 ```typescript
 // Add to imports
-import { capitalize } from "lodash-es";
+import { capitalize } from 'lodash-es';
 
 // Usage stays the same
 const capitalized = capitalize(str);
@@ -170,8 +176,8 @@ const capitalized = capitalize(str);
 ```typescript
 // Add helper in utils.ts
 export const capitalize = (str: string): string => {
-    if (!str) return str;
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };
 ```
 
@@ -188,10 +194,10 @@ export const capitalize = (str: string): string => {
 **Current:**
 
 ```typescript
-import { kebabToCamel, snakeToCamel } from "pastable/server";
+import { kebabToCamel, snakeToCamel } from 'pastable/server';
 
 // Line 41:
-snakeToCamel(preserveUnderscore.replaceAll("-", "_")).replaceAll("#", "_");
+snakeToCamel(preserveUnderscore.replaceAll('-', '_')).replaceAll('#', '_');
 ```
 
 **Replacement:**
@@ -204,7 +210,7 @@ snakeToCamel(preserveUnderscore.replaceAll("-", "_")).replaceAll("#", "_");
  * @example "foo-bar-baz" → "fooBarBaz"
  */
 export const kebabToCamel = (str: string): string => {
-    return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 };
 
 /**
@@ -212,7 +218,7 @@ export const kebabToCamel = (str: string): string => {
  * @example "foo_bar_baz" → "fooBarBaz"
  */
 export const snakeToCamel = (str: string): string => {
-    return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
 };
 ```
 
@@ -223,16 +229,16 @@ export const snakeToCamel = (str: string): string => {
 
 ```typescript
 // Add to utils.test.ts
-test("kebabToCamel", () => {
-    expect(kebabToCamel("foo-bar")).toBe("fooBar");
-    expect(kebabToCamel("foo-bar-baz")).toBe("fooBarBaz");
-    expect(kebabToCamel("foo")).toBe("foo");
+test('kebabToCamel', () => {
+  expect(kebabToCamel('foo-bar')).toBe('fooBar');
+  expect(kebabToCamel('foo-bar-baz')).toBe('fooBarBaz');
+  expect(kebabToCamel('foo')).toBe('foo');
 });
 
-test("snakeToCamel", () => {
-    expect(snakeToCamel("foo_bar")).toBe("fooBar");
-    expect(snakeToCamel("foo_bar_baz")).toBe("fooBarBaz");
-    expect(snakeToCamel("foo")).toBe("foo");
+test('snakeToCamel', () => {
+  expect(snakeToCamel('foo_bar')).toBe('fooBar');
+  expect(snakeToCamel('foo_bar_baz')).toBe('fooBarBaz');
+  expect(snakeToCamel('foo')).toBe('foo');
 });
 ```
 
@@ -247,20 +253,20 @@ test("snakeToCamel", () => {
 **Current:**
 
 ```typescript
-import { get } from "pastable/server";
+import { get } from 'pastable/server';
 
 // makeSchemaResolver.ts line 31:
-const retrieved = get(doc, path.replace("#/", "").replace("#", "").replaceAll("/", "."));
+const retrieved = get(doc, path.replace('#/', '').replace('#', '').replaceAll('/', '.'));
 
 // getOpenApiDependencyGraph.test.ts:
 const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject =>
-    get(openApiDoc, ref.replace("#/", "").replaceAll("/", "."));
+  get(openApiDoc, ref.replace('#/', '').replaceAll('/', '.'));
 ```
 
 **Replacement:**
 
 ```typescript
-import { get } from "lodash-es";
+import { get } from 'lodash-es';
 
 // Usage stays the same - lodash.get has same API
 ```
@@ -279,11 +285,20 @@ import { get } from "lodash-es";
 ```typescript
 // NOTE: File already has an inline pick implementation at line 182!
 function pick<T extends ObjectLiteral, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
-    // ... existing implementation
+  // ... existing implementation
 }
 
 // Line 95:
-const pathItem = pick(pathItemObj, ["get", "put", "post", "delete", "options", "head", "patch", "trace"]);
+const pathItem = pick(pathItemObj, [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+]);
 ```
 
 **Analysis:** **File already has a `pick` implementation!** No need to replace.
@@ -300,7 +315,7 @@ const pathItem = pick(pathItemObj, ["get", "put", "post", "delete", "options", "
 **Option B: Use lodash-es**
 
 ```typescript
-import { pick } from "lodash-es";
+import { pick } from 'lodash-es';
 // Remove the inline implementation
 ```
 
@@ -317,16 +332,16 @@ import { pick } from "lodash-es";
 **Current:**
 
 ```typescript
-import { sortBy } from "pastable/server";
+import { sortBy } from 'pastable/server';
 
 // Line 228:
-data.endpoints = sortBy(data.endpoints, "path");
+data.endpoints = sortBy(data.endpoints, 'path');
 ```
 
 **Option A: lodash-es (Recommended)**
 
 ```typescript
-import { sortBy } from "lodash-es";
+import { sortBy } from 'lodash-es';
 // Usage stays the same
 ```
 
@@ -335,11 +350,11 @@ import { sortBy } from "lodash-es";
 ```typescript
 // Sort by object key
 data.endpoints = [...data.endpoints].sort((a, b) => {
-    const aPath = a.path;
-    const bPath = b.path;
-    if (aPath < bPath) return -1;
-    if (aPath > bPath) return 1;
-    return 0;
+  const aPath = a.path;
+  const bPath = b.path;
+  if (aPath < bPath) return -1;
+  if (aPath > bPath) return 1;
+  return 0;
 });
 ```
 
@@ -358,11 +373,11 @@ data.endpoints = [...data.endpoints].sort((a, b) => {
 **Current:**
 
 ```typescript
-import { sortListFromRefArray } from "pastable/server";
+import { sortListFromRefArray } from 'pastable/server';
 
 // Line 267:
 data.commonSchemaNames = new Set(
-    sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
+  sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies)),
 );
 ```
 
@@ -383,23 +398,23 @@ Create `lib/src/utils/sorting.ts`:
  * // => ['a', 'b', 'c']
  */
 export function sortListFromRefArray<T>(list: T[], refArray: readonly T[]): T[] {
-    const orderMap = new Map(refArray.map((item, idx) => [item, idx]));
+  const orderMap = new Map(refArray.map((item, idx) => [item, idx]));
 
-    return [...list].sort((a, b) => {
-        const aIdx = orderMap.get(a) ?? Infinity;
-        const bIdx = orderMap.get(b) ?? Infinity;
-        return aIdx - bIdx;
-    });
+  return [...list].sort((a, b) => {
+    const aIdx = orderMap.get(a) ?? Infinity;
+    const bIdx = orderMap.get(b) ?? Infinity;
+    return aIdx - bIdx;
+  });
 }
 ```
 
 **Usage:**
 
 ```typescript
-import { sortListFromRefArray } from "./utils/sorting.js";
+import { sortListFromRefArray } from './utils/sorting.js';
 
 data.commonSchemaNames = new Set(
-    sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies))
+  sortListFromRefArray([...commonSchemaNames], getPureSchemaNames(schemaOrderedByDependencies)),
 );
 ```
 
@@ -410,12 +425,12 @@ data.commonSchemaNames = new Set(
 
 ```typescript
 // utils/sorting.test.ts
-test("sortListFromRefArray", () => {
-    expect(sortListFromRefArray(["c", "a", "b"], ["a", "b", "c"])).toEqual(["a", "b", "c"]);
+test('sortListFromRefArray', () => {
+  expect(sortListFromRefArray(['c', 'a', 'b'], ['a', 'b', 'c'])).toEqual(['a', 'b', 'c']);
 
-    expect(sortListFromRefArray(["x", "a", "y"], ["a", "b", "c"])).toEqual(["a", "x", "y"]); // x, y not in ref, so at end
+  expect(sortListFromRefArray(['x', 'a', 'y'], ['a', 'b', 'c'])).toEqual(['a', 'x', 'y']); // x, y not in ref, so at end
 
-    expect(sortListFromRefArray([], ["a"])).toEqual([]);
+  expect(sortListFromRefArray([], ['a'])).toEqual([]);
 });
 ```
 
@@ -428,7 +443,7 @@ test("sortListFromRefArray", () => {
 **Current:**
 
 ```typescript
-import { sortObjKeysFromArray } from "pastable/server";
+import { sortObjKeysFromArray } from 'pastable/server';
 
 // Line 124:
 data.schemas = sortObjKeysFromArray(data.schemas, schemaOrderedByDependencies);
@@ -453,17 +468,20 @@ Add to `lib/src/utils/sorting.ts`:
  * sortObjKeysFromArray({ c: 3, a: 1, b: 2 }, ['a', 'b', 'c'])
  * // => { a: 1, b: 2, c: 3 }
  */
-export function sortObjKeysFromArray<T extends Record<string, unknown>>(obj: T, keyOrder: readonly string[]): T {
-    const orderMap = new Map(keyOrder.map((key, idx) => [key, idx]));
+export function sortObjKeysFromArray<T extends Record<string, unknown>>(
+  obj: T,
+  keyOrder: readonly string[],
+): T {
+  const orderMap = new Map(keyOrder.map((key, idx) => [key, idx]));
 
-    const entries = Object.entries(obj);
-    entries.sort(([keyA], [keyB]) => {
-        const idxA = orderMap.get(keyA) ?? Infinity;
-        const idxB = orderMap.get(keyB) ?? Infinity;
-        return idxA - idxB;
-    });
+  const entries = Object.entries(obj);
+  entries.sort(([keyA], [keyB]) => {
+    const idxA = orderMap.get(keyA) ?? Infinity;
+    const idxB = orderMap.get(keyB) ?? Infinity;
+    return idxA - idxB;
+  });
 
-    return Object.fromEntries(entries) as T;
+  return Object.fromEntries(entries) as T;
 }
 ```
 
@@ -473,14 +491,14 @@ export function sortObjKeysFromArray<T extends Record<string, unknown>>(obj: T, 
 **Tests:**
 
 ```typescript
-test("sortObjKeysFromArray", () => {
-    const obj = { c: 3, a: 1, b: 2 };
-    const sorted = sortObjKeysFromArray(obj, ["a", "b", "c"]);
-    expect(Object.keys(sorted)).toEqual(["a", "b", "c"]);
+test('sortObjKeysFromArray', () => {
+  const obj = { c: 3, a: 1, b: 2 };
+  const sorted = sortObjKeysFromArray(obj, ['a', 'b', 'c']);
+  expect(Object.keys(sorted)).toEqual(['a', 'b', 'c']);
 
-    const obj2 = { z: 26, a: 1, y: 25 };
-    const sorted2 = sortObjKeysFromArray(obj2, ["a", "b"]);
-    expect(Object.keys(sorted2)).toEqual(["a", "z", "y"]);
+  const obj2 = { z: 26, a: 1, y: 25 };
+  const sorted2 = sortObjKeysFromArray(obj2, ['a', 'b']);
+  expect(Object.keys(sorted2)).toEqual(['a', 'z', 'y']);
 });
 ```
 
@@ -495,10 +513,10 @@ test("sortObjKeysFromArray", () => {
 **Current:**
 
 ```typescript
-import type { ObjectLiteral } from "pastable";
+import type { ObjectLiteral } from 'pastable';
 
 function pick<T extends ObjectLiteral, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
-    // ...
+  // ...
 }
 ```
 
@@ -507,8 +525,11 @@ function pick<T extends ObjectLiteral, K extends keyof T>(obj: T, paths: K[]): P
 ```typescript
 // Remove import
 
-function pick<T extends Record<string, unknown>, K extends keyof T>(obj: T, paths: K[]): Pick<T, K> {
-    // ...
+function pick<T extends Record<string, unknown>, K extends keyof T>(
+  obj: T,
+  paths: K[],
+): Pick<T, K> {
+  // ...
 }
 ```
 
@@ -558,94 +579,94 @@ cat package.json | grep pastable
 #### Week 1: Simple Replacements
 
 - [ ] **1. Add lodash-es dependency**
-    - Add `lodash-es` and `@types/lodash-es`
-    - Verify tree-shaking works
+  - Add `lodash-es` and `@types/lodash-es`
+  - Verify tree-shaking works
 
 - [ ] **2. Replace `getSum` with native reduce**
-    - File: schema-complexity.helpers.ts (3 instances)
-    - Run tests: `pnpm test -- schema-complexity`
+  - File: schema-complexity.helpers.ts (3 instances)
+  - Run tests: `pnpm test -- schema-complexity`
 
 - [ ] **3. Replace `capitalize` with lodash-es**
-    - Files: utils.ts, generateZodClientFromOpenAPI.ts
-    - Run tests: `pnpm test -- utils`
+  - Files: utils.ts, generateZodClientFromOpenAPI.ts
+  - Run tests: `pnpm test -- utils`
 
 - [ ] **4. Replace `kebabToCamel` & `snakeToCamel` with custom**
-    - File: utils.ts
-    - Add tests to utils.test.ts
-    - Run tests: `pnpm test -- utils`
+  - File: utils.ts
+  - Add tests to utils.test.ts
+  - Run tests: `pnpm test -- utils`
 
 #### Week 1-2: lodash-es Replacements
 
 - [ ] **5. Replace `get` with lodash-es**
-    - Files: makeSchemaResolver.ts, getOpenApiDependencyGraph.test.ts
-    - Run tests: `pnpm test -- makeSchemaResolver getOpenApiDependencyGraph`
+  - Files: makeSchemaResolver.ts, getOpenApiDependencyGraph.test.ts
+  - Run tests: `pnpm test -- makeSchemaResolver getOpenApiDependencyGraph`
 
 - [ ] **6. Handle `pick` (already implemented inline)**
-    - Remove from pastable import
-    - Keep inline implementation
-    - Run tests: `pnpm test -- getZodiosEndpointDefinitionList`
+  - Remove from pastable import
+  - Keep inline implementation
+  - Run tests: `pnpm test -- getZodiosEndpointDefinitionList`
 
 - [ ] **7. Replace `sortBy` with lodash-es**
-    - File: template-context.ts
-    - Run tests: `pnpm test -- template-context`
+  - File: template-context.ts
+  - Run tests: `pnpm test -- template-context`
 
 #### Week 2: Custom Implementations
 
 - [ ] **8. Create sorting utilities file**
-    - Create `lib/src/utils/sorting.ts`
-    - Create `lib/src/utils/sorting.test.ts`
-    - Implement `sortListFromRefArray`
-    - Implement `sortObjKeysFromArray`
-    - Write comprehensive tests
+  - Create `lib/src/utils/sorting.ts`
+  - Create `lib/src/utils/sorting.test.ts`
+  - Implement `sortListFromRefArray`
+  - Implement `sortObjKeysFromArray`
+  - Write comprehensive tests
 
 - [ ] **9. Replace sorting functions in template-context.ts**
-    - Import from `./utils/sorting.js`
-    - Update 3 call sites
-    - Run tests: `pnpm test -- template-context`
+  - Import from `./utils/sorting.js`
+  - Update 3 call sites
+  - Run tests: `pnpm test -- template-context`
 
 #### Week 2: Type & Cleanup
 
 - [ ] **10. Replace `ObjectLiteral` type**
-    - File: getZodiosEndpointDefinitionList.ts
-    - Use `Record<string, unknown>`
-    - Run tests: `pnpm test -- getZodiosEndpointDefinitionList`
+  - File: getZodiosEndpointDefinitionList.ts
+  - Use `Record<string, unknown>`
+  - Run tests: `pnpm test -- getZodiosEndpointDefinitionList`
 
 - [ ] **11. Remove pastable dependency**
-    - Run: `pnpm remove pastable`
-    - Verify: `grep -r "pastable" src/` returns nothing
+  - Run: `pnpm remove pastable`
+  - Verify: `grep -r "pastable" src/` returns nothing
 
 ### Validation
 
 - [ ] **All tests passing**
 
-    ```bash
-    pnpm test -- --run
-    ```
+  ```bash
+  pnpm test -- --run
+  ```
 
 - [ ] **Type-check passing**
 
-    ```bash
-    pnpm type-check
-    ```
+  ```bash
+  pnpm type-check
+  ```
 
 - [ ] **Build succeeds**
 
-    ```bash
-    pnpm build
-    ```
+  ```bash
+  pnpm build
+  ```
 
 - [ ] **No pastable references**
 
-    ```bash
-    grep -r "pastable" lib/src/
-    # Should return: (no output)
-    ```
+  ```bash
+  grep -r "pastable" lib/src/
+  # Should return: (no output)
+  ```
 
 - [ ] **Bundle size check**
-    ```bash
-    ls -lh lib/dist/openapi-zod-client.js
-    # Compare before/after
-    ```
+  ```bash
+  ls -lh lib/dist/openapi-zod-client.js
+  # Compare before/after
+  ```
 
 ---
 

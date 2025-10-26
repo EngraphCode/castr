@@ -27,13 +27,13 @@ After integrating `ARCHITECTURE_REWRITE_PLAN.md` into the numbered plans, the pl
 
 - **Focus:** Now entirely dedicated to the Architecture Rewrite Plan
 - **Structure:**
-    - Executive Summary
-    - Prerequisites (Quality Gate, Dependencies)
-    - Mandatory TDD Methodology
-    - Complete 4-phase plan (Phases 0, 1, 2, 3)
-    - Detailed task breakdowns with code examples
-    - Rollback Plan
-    - Definition of Done
+  - Executive Summary
+  - Prerequisites (Quality Gate, Dependencies)
+  - Mandatory TDD Methodology
+  - Complete 4-phase plan (Phases 0, 1, 2, 3)
+  - Detailed task breakdowns with code examples
+  - Rollback Plan
+  - Definition of Done
 - **Removed:** Historical task details (moved to COMPLETED_WORK.md)
 - **Result:** Clean, actionable roadmap for current work
 
@@ -250,18 +250,18 @@ After integrating `ARCHITECTURE_REWRITE_PLAN.md` into the numbered plans, the pl
 ## Next Steps
 
 1. **Execute Architecture Rewrite**
-    - Follow `01-CURRENT-IMPLEMENTATION.md`
-    - Start with Phase 0 (comprehensive test suite)
-    - Track progress with todos
+   - Follow `01-CURRENT-IMPLEMENTATION.md`
+   - Start with Phase 0 (comprehensive test suite)
+   - Track progress with todos
 
 2. **Update COMPLETED_WORK.md as work progresses**
-    - Add Architecture Rewrite completion when done
-    - Document any architectural learnings
-    - Update metrics
+   - Add Architecture Rewrite completion when done
+   - Document any architectural learnings
+   - Update metrics
 
 3. **Move to Phase 2B when ready**
-    - Prerequisites will be clearly met
-    - `02-MCP-ENHANCEMENTS.md` is ready to execute
+   - Prerequisites will be clearly met
+   - `02-MCP-ENHANCEMENTS.md` is ready to execute
 
 ## Success Criteria
 

@@ -273,11 +273,11 @@ As we learn more or typed-openapi evolves:
 ## 📅 Document History
 
 - **2025-10-25**: Initial comprehensive analysis created
-    - Executive summary
-    - 8 domain deep-dives
-    - Implementation roadmap
-    - 45 code examples outlined
-    - Total: ~140 KB of documentation
+  - Executive summary
+  - 8 domain deep-dives
+  - Implementation roadmap
+  - 45 code examples outlined
+  - Total: ~140 KB of documentation
 
 ---
 

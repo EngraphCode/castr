@@ -40,43 +40,43 @@ Real-world OpenAPI specs sometimes violate the official specification due to:
 
 1. **`MediaType.$ref` at wrong level:**
 
-    ```typescript
-    // ❌ WRONG (spec violation)
-    parameter: {
-      content: {
-        "*/*": { $ref: "#/components/schemas/test2" }
-      }
-    }
+   ```typescript
+   // ❌ WRONG (spec violation)
+   parameter: {
+     content: {
+       "*/*": { $ref: "#/components/schemas/test2" }
+     }
+   }
 
-    // ✅ CORRECT (per OAS spec lines 603-615)
-    parameter: {
-      content: {
-        "*/*": {
-          schema: { $ref: "#/components/schemas/test2" }
-        }
-      }
-    }
-    ```
+   // ✅ CORRECT (per OAS spec lines 603-615)
+   parameter: {
+     content: {
+       "*/*": {
+         schema: { $ref: "#/components/schemas/test2" }
+       }
+     }
+   }
+   ```
 
 2. **Schema as null:**
 
-    ```typescript
-    // ❌ WRONG
-    { schema: null }
+   ```typescript
+   // ❌ WRONG
+   { schema: null }
 
-    // ✅ CORRECT
-    { schema: { type: "string", nullable: true } }
-    ```
+   // ✅ CORRECT
+   { schema: { type: "string", nullable: true } }
+   ```
 
 3. **Parameter without schema or content:**
 
-    ```typescript
-    // ❌ WRONG (violates SchemaXORContent constraint)
-    { name: "param1", in: "query" }
+   ```typescript
+   // ❌ WRONG (violates SchemaXORContent constraint)
+   { name: "param1", in: "query" }
 
-    // ✅ CORRECT
-    { name: "param1", in: "query", schema: { type: "string" } }
-    ```
+   // ✅ CORRECT
+   { name: "param1", in: "query", schema: { type: "string" } }
+   ```
 
 ## Decision
 
@@ -87,15 +87,19 @@ Real-world OpenAPI specs sometimes violate the official specification due to:
 1. **Validate against the official OpenAPI specification**
 2. **Throw errors immediately** when violations are detected
 3. **Provide helpful error messages** that include:
-    - What went wrong
-    - Why it's a problem
-    - Reference to the spec section
-    - Example of correct usage
+   - What went wrong
+   - Why it's a problem
+   - Reference to the spec section
+   - Example of correct usage
 
 ### Error Message Template
 
 ```typescript
-throw new Error(`Invalid OpenAPI specification: [what's wrong]. ` + `[why it matters]. ` + `See: [spec URL]#[section]`);
+throw new Error(
+  `Invalid OpenAPI specification: [what's wrong]. ` +
+    `[why it matters]. ` +
+    `See: [spec URL]#[section]`,
+);
 ```
 
 ### Example Implementation
@@ -103,17 +107,17 @@ throw new Error(`Invalid OpenAPI specification: [what's wrong]. ` + `[why it mat
 ```typescript
 // In zodiosEndpoint.operation.helpers.ts
 if (!paramSchema) {
-    throw new Error(
-        `Invalid OpenAPI specification: Could not resolve schema for parameter "${paramItem.name}" (in: ${paramItem.in}). ` +
-            `This may indicate a missing or invalid $ref target.`
-    );
+  throw new Error(
+    `Invalid OpenAPI specification: Could not resolve schema for parameter "${paramItem.name}" (in: ${paramItem.in}). ` +
+      `This may indicate a missing or invalid $ref target.`,
+  );
 }
 
 // In openApiToZod.ts
 throw new Error(
-    $schema === null
-        ? "Invalid OpenAPI specification: Schema cannot be null. Use 'nullable: true' to indicate null values."
-        : "Schema is required"
+  $schema === null
+    ? "Invalid OpenAPI specification: Schema cannot be null. Use 'nullable: true' to indicate null values."
+    : 'Schema is required',
 );
 ```
 

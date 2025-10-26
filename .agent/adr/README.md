@@ -68,15 +68,15 @@ What becomes easier or more difficult as a result of this decision?
 ## Timeline
 
 - **October 22-24, 2025**: Phase 1 - Developer Tooling Modernization
-    - ADR-001 through ADR-012 accepted
-    - 297 tests passing
-    - Zero TypeScript errors
+  - ADR-001 through ADR-012 accepted
+  - 297 tests passing
+  - Zero TypeScript errors
 
 - **October 26, 2025**: Phase 2 - Architecture Rewrite Planning
-    - ADR-013 through ADR-016 accepted
-    - 4-phase comprehensive rewrite planned (26-36 hours)
-    - 373 tests passing
-    - Ready to execute Phase 0
+  - ADR-013 through ADR-016 accepted
+  - 4-phase comprehensive rewrite planned (26-36 hours)
+  - 373 tests passing
+  - Ready to execute Phase 0
 
 ## Status Legend
 

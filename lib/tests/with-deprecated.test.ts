@@ -1,30 +1,30 @@
-import { getZodiosEndpointDefinitionList } from "../src/index.js";
-import { expect, test } from "vitest";
-import { type OpenAPIObject } from "openapi3-ts/oas30";
+import { getZodiosEndpointDefinitionList } from '../src/index.js';
+import { expect, test } from 'vitest';
+import { type OpenAPIObject } from 'openapi3-ts/oas30';
 
-test("with-deprecated", () => {
-    const doc: OpenAPIObject = {
-        openapi: "3.0.3",
-        info: { version: "1", title: "Example API" },
-        paths: {
-            "/deprecated-endpoint": {
-                get: {
-                    operationId: "deprecatedEndpoint",
-                    responses: { "200": { content: { "application/json": { schema: { type: "string" } } } } },
-                    deprecated: true,
-                },
-            },
-            "/new-endpoint": {
-                get: {
-                    operationId: "newEndpoint",
-                    responses: { "200": { content: { "application/json": { schema: { type: "number" } } } } },
-                },
-            },
+test('with-deprecated', () => {
+  const doc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: { version: '1', title: 'Example API' },
+    paths: {
+      '/deprecated-endpoint': {
+        get: {
+          operationId: 'deprecatedEndpoint',
+          responses: { '200': { content: { 'application/json': { schema: { type: 'string' } } } } },
+          deprecated: true,
         },
-    };
+      },
+      '/new-endpoint': {
+        get: {
+          operationId: 'newEndpoint',
+          responses: { '200': { content: { 'application/json': { schema: { type: 'number' } } } } },
+        },
+      },
+    },
+  };
 
-    const defaultResult = getZodiosEndpointDefinitionList(doc);
-    expect(defaultResult.endpoints).toMatchInlineSnapshot(`
+  const defaultResult = getZodiosEndpointDefinitionList(doc);
+  expect(defaultResult.endpoints).toMatchInlineSnapshot(`
       [
           {
               "description": undefined,
@@ -38,10 +38,10 @@ test("with-deprecated", () => {
       ]
     `);
 
-    const withCustomOption = getZodiosEndpointDefinitionList(doc, {
-        withDeprecatedEndpoints: true,
-    });
-    expect(withCustomOption.endpoints).toMatchInlineSnapshot(`
+  const withCustomOption = getZodiosEndpointDefinitionList(doc, {
+    withDeprecatedEndpoints: true,
+  });
+  expect(withCustomOption.endpoints).toMatchInlineSnapshot(`
       [
           {
               "description": undefined,

@@ -175,11 +175,11 @@ characterisation/
 ```typescript
 // Helper function using type guard (NOT type assertion)
 async function bundleSpec(spec: OpenAPIObject): Promise<OpenAPIObject> {
-    const bundled: unknown = await SwaggerParser.bundle(spec);
-    if (!isOpenAPIObject(bundled)) {
-        throw new Error("SwaggerParser.bundle() returned invalid OpenAPI document");
-    }
-    return bundled;
+  const bundled: unknown = await SwaggerParser.bundle(spec);
+  if (!isOpenAPIObject(bundled)) {
+    throw new Error('SwaggerParser.bundle() returned invalid OpenAPI document');
+  }
+  return bundled;
 }
 ```
 
@@ -204,43 +204,43 @@ To reach the target of 50-60 comprehensive tests, we should add:
 ### High Priority (Complete Phase 0)
 
 1. **CLI Characterisation Tests** (15-20 tests) - **CRITICAL GAP**
-    - Test file I/O operations
-    - Test all command-line options
-    - Test error messages
-    - Test exit codes
-    - Test help/version commands
+   - Test file I/O operations
+   - Test all command-line options
+   - Test error messages
+   - Test exit codes
+   - Test help/version commands
 
 2. **Options Coverage** (10-12 tests)
-    - Test each option's effect on generated code
-    - Test option combinations
-    - Test invalid option values
+   - Test each option's effect on generated code
+   - Test option combinations
+   - Test invalid option values
 
 3. **Error Handling** (8-10 tests)
-    - Invalid specs
-    - Missing required fields
-    - Unsupported features
-    - SwaggerParser errors
+   - Invalid specs
+   - Missing required fields
+   - Unsupported features
+   - SwaggerParser errors
 
 ### Medium Priority (Future Enhancements)
 
 4. **Advanced OpenAPI Features** (10-15 tests)
-    - All HTTP methods
-    - All parameter types and styles
-    - Error responses
-    - Multiple content types
+   - All HTTP methods
+   - All parameter types and styles
+   - Error responses
+   - Multiple content types
 
 5. **Edge Cases** (5-10 tests)
-    - Empty/minimal specs
-    - Special characters
-    - Reserved words
-    - Very large specs
+   - Empty/minimal specs
+   - Special characters
+   - Reserved words
+   - Very large specs
 
 ### Low Priority (Nice to Have)
 
 6. **Runtime Validation** (10-15 tests)
-    - Compile generated code
-    - Test Zod schema validation
-    - Test Zodios client usage
+   - Compile generated code
+   - Test Zod schema validation
+   - Test Zodios client usage
 
 ## CLI Coverage Gap Analysis
 
@@ -249,37 +249,37 @@ To reach the target of 50-60 comprehensive tests, we should add:
 **Critical CLI Behaviors Not Tested:**
 
 1. **Input Handling**
-    - File path input
-    - URL input
-    - YAML parsing
-    - JSON parsing
-    - Invalid file paths
-    - Network errors
+   - File path input
+   - URL input
+   - YAML parsing
+   - JSON parsing
+   - Invalid file paths
+   - Network errors
 
 2. **Output Handling**
-    - Custom output path
-    - Default output path generation
-    - File overwriting
-    - Filesystem errors
+   - Custom output path
+   - Default output path generation
+   - File overwriting
+   - Filesystem errors
 
 3. **Option Processing**
-    - All 20+ CLI options
-    - Option validation
-    - Option defaults
-    - Invalid option values
-    - Option combinations
+   - All 20+ CLI options
+   - Option validation
+   - Option defaults
+   - Invalid option values
+   - Option combinations
 
 4. **Error Reporting**
-    - Error message formatting
-    - Exit codes (0 vs 1)
-    - Stack traces
-    - Validation errors
+   - Error message formatting
+   - Exit codes (0 vs 1)
+   - Stack traces
+   - Validation errors
 
 5. **User Experience**
-    - Help text display
-    - Version display
-    - Progress indicators
-    - Prettier integration
+   - Help text display
+   - Version display
+   - Progress indicators
+   - Prettier integration
 
 **Recommendation:** Create `cli.char.test.ts` with 15-20 tests covering CLI behavior.
 

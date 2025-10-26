@@ -33,20 +33,20 @@ The project needed to modernize from mixed CommonJS/ESM to pure ESM with proper 
 ```json
 // tsconfig.json (lib workspace)
 {
-    "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "NodeNext",
-        "target": "ES2022",
-        "outDir": "./dist",
-        "declaration": true,
-        "declarationMap": true,
-        "sourceMap": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true
-    }
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  }
 }
 ```
 
@@ -54,18 +54,18 @@ The project needed to modernize from mixed CommonJS/ESM to pure ESM with proper 
 
 ```typescript
 // ✅ CORRECT: Relative imports with .js extension
-import { getZodSchema } from "./openApiToZod.js";
-import type { TemplateContext } from "./template-context.js";
+import { getZodSchema } from './openApiToZod.js';
+import type { TemplateContext } from './template-context.js';
 
 // ✅ CORRECT: Package imports without extension
-import type { OpenAPIObject } from "openapi3-ts";
-import { z } from "zod";
+import type { OpenAPIObject } from 'openapi3-ts';
+import { z } from 'zod';
 
 // ❌ WRONG: Relative import without extension
-import { getZodSchema } from "./openApiToZod";
+import { getZodSchema } from './openApiToZod';
 
 // ❌ WRONG: Using .ts extension
-import { getZodSchema } from "./openApiToZod.ts";
+import { getZodSchema } from './openApiToZod.ts';
 ```
 
 ### Why `.js` Extensions?
@@ -76,14 +76,14 @@ Node.js ESM requires explicit file extensions. TypeScript compiles `.ts` to `.js
 
 ```typescript
 // src/index.ts
-import { helper } from "./helper.js"; // ✅ References future output file
+import { helper } from './helper.js'; // ✅ References future output file
 ```
 
 **Runtime (after compilation):**
 
 ```javascript
 // dist/index.js
-import { helper } from "./helper.js"; // ✅ File exists as helper.js
+import { helper } from './helper.js'; // ✅ File exists as helper.js
 ```
 
 ### Dual Package Output
@@ -93,13 +93,13 @@ We output both ESM and CJS for maximum compatibility:
 ```javascript
 // tsup.config.ts
 export default defineConfig({
-    entry: ["src/index.ts", "src/cli.ts"],
-    format: ["cjs", "esm"], // Dual output
-    dts: true, // Generate .d.ts
-    sourcemap: true,
-    clean: true,
-    splitting: false,
-    treeshake: true,
+  entry: ['src/index.ts', 'src/cli.ts'],
+  format: ['cjs', 'esm'], // Dual output
+  dts: true, // Generate .d.ts
+  sourcemap: true,
+  clean: true,
+  splitting: false,
+  treeshake: true,
 });
 ```
 
@@ -154,16 +154,16 @@ dist/
 
 ```typescript
 // src/index.ts
-import { getZodSchema } from "./openApiToZod";
-import { TemplateContext } from "./template-context";
+import { getZodSchema } from './openApiToZod';
+import { TemplateContext } from './template-context';
 ```
 
 **After:**
 
 ```typescript
 // src/index.ts
-import { getZodSchema } from "./openApiToZod.js";
-import type { TemplateContext } from "./template-context.js";
+import { getZodSchema } from './openApiToZod.js';
+import type { TemplateContext } from './template-context.js';
 ```
 
 ## Alternative Considered: `bundler` Resolution
@@ -190,10 +190,10 @@ TypeScript 5.7+ will support `rewriteRelativeImportExtensions` which allows writ
 
 ```typescript
 // Source
-import { helper } from "./helper.ts";
+import { helper } from './helper.ts';
 
 // Output (with rewriteRelativeImportExtensions: true)
-import { helper } from "./helper.js";
+import { helper } from './helper.js';
 ```
 
 When TypeScript 5.7+ is stable, we may consider this option. However, the current `.js` pattern is more explicit and works today.

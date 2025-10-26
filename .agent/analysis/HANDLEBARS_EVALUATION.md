@@ -73,30 +73,33 @@
 
 ```typescript
 // Helper 1: String equality conditional
-instance.registerHelper("ifeq", function (a: string, b: string, options: HelperOptions) {
-    if (a === b) {
-        return options.fn(this); // If branch
-    }
-    return options.inverse(this); // Else branch
+instance.registerHelper('ifeq', function (a: string, b: string, options: HelperOptions) {
+  if (a === b) {
+    return options.fn(this); // If branch
+  }
+  return options.inverse(this); // Else branch
 });
 
 // Helper 2: Check if object is non-empty
-instance.registerHelper("ifNotEmptyObj", function (obj: Record<string, unknown>, options: HelperOptions) {
-    if (typeof obj === "object" && Object.keys(obj).length > 0) {
-        return options.fn(this);
+instance.registerHelper(
+  'ifNotEmptyObj',
+  function (obj: Record<string, unknown>, options: HelperOptions) {
+    if (typeof obj === 'object' && Object.keys(obj).length > 0) {
+      return options.fn(this);
     }
     return options.inverse(this);
-});
+  },
+);
 
 // Helper 3: Convert to camelCase
-instance.registerHelper("toCamelCase", function (input: string) {
-    const words = input.split(/[\s_-]/);
-    return words
-        .map((word, index) => {
-            if (index === 0) return word.toLowerCase();
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        })
-        .join("");
+instance.registerHelper('toCamelCase', function (input: string) {
+  const words = input.split(/[\s_-]/);
+  return words
+    .map((word, index) => {
+      if (index === 0) return word.toLowerCase();
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join('');
 });
 ```
 
@@ -109,7 +112,7 @@ instance.registerHelper("toCamelCase", function (input: string) {
 #### 2. generateZodClientFromOpenAPI.ts (Template Usage)
 
 ```typescript
-const source = await fs.readFile(templatePath, "utf8");
+const source = await fs.readFile(templatePath, 'utf8');
 const hbs = handlebars ?? getHandlebars();
 const template = hbs.compile(source);
 const output = template(data);
@@ -240,11 +243,11 @@ alias: "{{alias}}",
 
 ```handlebars
 {{#if imports}}
-    {{#each imports}}
-        import {
-        {{{@key}}}
-        } from "./{{{this}}}"
-    {{/each}}
+  {{#each imports}}
+    import {
+    {{{@key}}}
+    } from "./{{{this}}}"
+  {{/each}}
 {{/if}}
 ```
 
@@ -252,11 +255,11 @@ alias: "{{alias}}",
 
 ```typescript
 const renderImports = (imports: Record<string, string>) => {
-    if (!imports || Object.keys(imports).length === 0) return "";
+  if (!imports || Object.keys(imports).length === 0) return '';
 
-    return Object.entries(imports)
-        .map(([key, value]) => `import { ${key} } from "./${value}"`)
-        .join("\n");
+  return Object.entries(imports)
+    .map(([key, value]) => `import { ${key} } from "./${value}"`)
+    .join('\n');
 };
 
 // Usage:
@@ -290,34 +293,34 @@ const renderImports = (imports: Record<string, string>) => {
 **To replace Handlebars with template literals:**
 
 1. **Convert templates** (5 files, 201 lines)
-    - Estimated: 4-8 hours
-    - Create function per template
-    - Convert Handlebars syntax to template literals
-    - Extract helper functions
+   - Estimated: 4-8 hours
+   - Create function per template
+   - Convert Handlebars syntax to template literals
+   - Extract helper functions
 
 2. **Create helper library**
-    - Estimated: 2-3 hours
-    - Conditional helpers
-    - Loop helpers
-    - String transformation helpers
+   - Estimated: 2-3 hours
+   - Conditional helpers
+   - Loop helpers
+   - String transformation helpers
 
 3. **Update API**
-    - Estimated: 1-2 hours
-    - Change `templatePath` to accept function or string
-    - Update documentation
-    - Maintain backward compatibility?
+   - Estimated: 1-2 hours
+   - Change `templatePath` to accept function or string
+   - Update documentation
+   - Maintain backward compatibility?
 
 4. **Testing**
-    - Estimated: 2-4 hours
-    - Update snapshot tests
-    - Verify output identical
-    - Test all template strategies
+   - Estimated: 2-4 hours
+   - Update snapshot tests
+   - Verify output identical
+   - Test all template strategies
 
 5. **Documentation**
-    - Estimated: 1-2 hours
-    - Update README
-    - Add migration guide
-    - Update examples
+   - Estimated: 1-2 hours
+   - Update README
+   - Add migration guide
+   - Update examples
 
 **Total Effort:** 10-19 hours (1.5-2.5 weeks)
 
@@ -345,36 +348,43 @@ const renderImports = (imports: Record<string, string>) => {
 ```typescript
 // lib/src/templateHelpers.ts
 
-export const conditional = (condition: boolean, thenBlock: string, elseBlock: string = "") => {
-    return condition ? thenBlock : elseBlock;
+export const conditional = (condition: boolean, thenBlock: string, elseBlock: string = '') => {
+  return condition ? thenBlock : elseBlock;
 };
 
-export const each = <T>(items: T[] | Record<string, T>, fn: (item: T, key: string | number) => string): string => {
-    if (Array.isArray(items)) {
-        return items.map((item, index) => fn(item, index)).join("");
-    }
-    return Object.entries(items)
-        .map(([key, value]) => fn(value, key))
-        .join("");
+export const each = <T>(
+  items: T[] | Record<string, T>,
+  fn: (item: T, key: string | number) => string,
+): string => {
+  if (Array.isArray(items)) {
+    return items.map((item, index) => fn(item, index)).join('');
+  }
+  return Object.entries(items)
+    .map(([key, value]) => fn(value, key))
+    .join('');
 };
 
-export const ifeq = (a: unknown, b: unknown, thenBlock: string, elseBlock: string = "") => {
-    return a === b ? thenBlock : elseBlock;
+export const ifeq = (a: unknown, b: unknown, thenBlock: string, elseBlock: string = '') => {
+  return a === b ? thenBlock : elseBlock;
 };
 
-export const ifNotEmptyObj = (obj: Record<string, unknown>, thenBlock: string, elseBlock: string = "") => {
-    return typeof obj === "object" && Object.keys(obj).length > 0 ? thenBlock : elseBlock;
+export const ifNotEmptyObj = (
+  obj: Record<string, unknown>,
+  thenBlock: string,
+  elseBlock: string = '',
+) => {
+  return typeof obj === 'object' && Object.keys(obj).length > 0 ? thenBlock : elseBlock;
 };
 
 export const toCamelCase = (input: string): string => {
-    if (/^[a-z][a-zA-Z0-9]*$/.test(input)) return input;
-    const words = input.split(/[\s_-]/);
-    return words
-        .map((word, index) => {
-            if (index === 0) return word.toLowerCase();
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        })
-        .join("");
+  if (/^[a-z][a-zA-Z0-9]*$/.test(input)) return input;
+  const words = input.split(/[\s_-]/);
+  return words
+    .map((word, index) => {
+      if (index === 0) return word.toLowerCase();
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join('');
 };
 ```
 
@@ -382,74 +392,75 @@ export const toCamelCase = (input: string): string => {
 
 ```typescript
 // lib/src/templates/default.ts
-import type { TemplateContext } from "../template-context.js";
-import { conditional, each, ifeq, ifNotEmptyObj } from "../templateHelpers.js";
+import type { TemplateContext } from '../template-context.js';
+import { conditional, each, ifeq, ifNotEmptyObj } from '../templateHelpers.js';
 
 export const defaultTemplate = (data: TemplateContext): string =>
-    `
+  `
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
-${conditional(!!data.imports, each(data.imports, (path, name) => `import { ${name} } from "./${path}"`).join("\n"))}
+${conditional(!!data.imports, each(data.imports, (path, name) => `import { ${name} } from "./${path}"`).join('\n'))}
 
-${conditional(!!data.types, each(data.types, (type) => `${type};`).join("\n"))}
+${conditional(!!data.types, each(data.types, (type) => `${type};`).join('\n'))}
 
 ${each(
-    data.schemas,
-    (schema, name) => `const ${name}${data.emittedType[name] ? `: z.ZodType<${name}>` : ""} = ${schema};`
-).join("\n")}
+  data.schemas,
+  (schema, name) =>
+    `const ${name}${data.emittedType[name] ? `: z.ZodType<${name}>` : ''} = ${schema};`,
+).join('\n')}
 
 ${ifNotEmptyObj(
-    data.schemas,
-    `
+  data.schemas,
+  `
 export const schemas = {
-${each(data.schemas, (_schema, name) => `\t${name},`).join("\n")}
+${each(data.schemas, (_schema, name) => `\t${name},`).join('\n')}
 };
-`
+`,
 )}
 
 const endpoints = makeApi([
 ${each(
-    data.endpoints,
-    (endpoint) => `\t{
+  data.endpoints,
+  (endpoint) => `\t{
 \t\tmethod: "${endpoint.method}",
 \t\tpath: "${endpoint.path}",
 ${conditional(data.options?.withAlias && endpoint.alias, `\t\talias: "${endpoint.alias}",`)}
 ${conditional(!!endpoint.description, `\t\tdescription: \`${endpoint.description}\`,`)}
 ${conditional(!!endpoint.requestFormat, `\t\trequestFormat: "${endpoint.requestFormat}",`)}
 ${conditional(
-    !!endpoint.parameters,
-    `\t\tparameters: [
+  !!endpoint.parameters,
+  `\t\tparameters: [
 ${each(
-    endpoint.parameters,
-    (param) => `\t\t\t{
+  endpoint.parameters,
+  (param) => `\t\t\t{
 \t\t\t\tname: "${param.name}",
 ${conditional(!!param.description, `\t\t\t\tdescription: \`${param.description}\`,`)}
 ${conditional(!!param.type, `\t\t\t\ttype: "${param.type}",`)}
 \t\t\t\tschema: ${param.schema}
-\t\t\t},`
-).join("\n")}
-\t\t],`
+\t\t\t},`,
+).join('\n')}
+\t\t],`,
 )}
 \t\tresponse: ${endpoint.response},
 ${conditional(
-    endpoint.errors.length > 0,
-    `\t\terrors: [
+  endpoint.errors.length > 0,
+  `\t\terrors: [
 ${each(
-    endpoint.errors,
-    (error) => `\t\t\t{
-${ifeq(error.status, "default", `\t\t\t\tstatus: "default",`, `\t\t\t\tstatus: ${error.status},`)}
+  endpoint.errors,
+  (error) => `\t\t\t{
+${ifeq(error.status, 'default', `\t\t\t\tstatus: "default",`, `\t\t\t\tstatus: ${error.status},`)}
 ${conditional(!!error.description, `\t\t\t\tdescription: \`${error.description}\`,`)}
 \t\t\t\tschema: ${error.schema}
-\t\t\t},`
-).join("\n")}
-\t\t]`
+\t\t\t},`,
+).join('\n')}
+\t\t]`,
 )}
-\t},`
-).join("\n")}
+\t},`,
+).join('\n')}
 ]);
 
-export const ${data.options.apiClientName} = new Zodios(${data.options.baseUrl ? `"${data.options.baseUrl}", ` : ""}endpoints);
+export const ${data.options.apiClientName} = new Zodios(${data.options.baseUrl ? `"${data.options.baseUrl}", ` : ''}endpoints);
 
 export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
     return new Zodios(baseUrl, endpoints, options);
@@ -522,9 +533,9 @@ Instead of string-based templates, use **AST-based code generation**:
 ```typescript
 // Intermediate Representation
 interface FileUnit {
-    path: string;
-    imports: ImportSpec[];
-    declarations: Decl[]; // zodSchema | tsTypeAlias | tsInterface | const | client
+  path: string;
+  imports: ImportSpec[];
+  declarations: Decl[]; // zodSchema | tsTypeAlias | tsInterface | const | client
 }
 
 // Emit with ts-morph
@@ -547,47 +558,47 @@ await emitFilesTsMorph(files, { runPrettier });
 #### Key Benefits
 
 1. **Type-Safe Generation**
-    - Construct TypeScript AST nodes, not strings
-    - Impossible to generate invalid syntax
-    - Full TypeScript compiler guarantees
+   - Construct TypeScript AST nodes, not strings
+   - Impossible to generate invalid syntax
+   - Full TypeScript compiler guarantees
 
 2. **Pluggable Architecture**
-    - Current `.hbs` templates → Built-in strategy emitters
-    - Custom templates → **Emitter plugins** (JS modules)
-    - Users can extend without forking
+   - Current `.hbs` templates → Built-in strategy emitters
+   - Custom templates → **Emitter plugins** (JS modules)
+   - Users can extend without forking
 
 3. **Clean Separation**
-    - OpenAPI parsing → IR (`FileUnit[]`) → Emitter
-    - Each strategy is a pure function: `IR → FileUnit[]`
-    - Emitter is strategy-agnostic
+   - OpenAPI parsing → IR (`FileUnit[]`) → Emitter
+   - Each strategy is a pure function: `IR → FileUnit[]`
+   - Emitter is strategy-agnostic
 
 4. **Better DX**
-    - IDE autocomplete for IR structures
-    - Type errors at compile time, not runtime
-    - Easy to test (compare IR, not strings)
+   - IDE autocomplete for IR structures
+   - Type errors at compile time, not runtime
+   - Easy to test (compare IR, not strings)
 
 #### Implementation Path
 
 1. **Introduce IR model** alongside Handlebars (4-6 hours)
-    - `FileUnit`, `ImportSpec`, `Decl` types
-    - Build IR from existing template context
+   - `FileUnit`, `ImportSpec`, `Decl` types
+   - Build IR from existing template context
 
 2. **Implement emitter** for one strategy (8-12 hours)
-    - Start with `default` template
-    - Verify output matches (golden tests)
-    - Use `ts-morph` for convenience
+   - Start with `default` template
+   - Verify output matches (golden tests)
+   - Use `ts-morph` for convenience
 
 3. **Migrate remaining strategies** (6-8 hours)
-    - `grouped`, `grouped-common`, `schemas-only`
-    - Each strategy becomes a builder function
+   - `grouped`, `grouped-common`, `schemas-only`
+   - Each strategy becomes a builder function
 
 4. **Add plugin API** (4-6 hours)
-    - `--template path/to/emitter-plugin.js`
-    - Plugin exports: `function apply(ir, options): FileUnit[]`
+   - `--template path/to/emitter-plugin.js`
+   - Plugin exports: `function apply(ir, options): FileUnit[]`
 
 5. **Deprecate Handlebars** (v3.0 breaking change)
-    - Document migration path
-    - Support both in v2.x
+   - Document migration path
+   - Support both in v2.x
 
 **Total Effort:** 22-32 hours (1-1.5 sprints)
 
@@ -624,18 +635,18 @@ await emitFilesTsMorph(files, { runPrettier });
 **If migrating:**
 
 1. Support **both** approaches
-    - Keep handlebars for backward compat
-    - Add template function option
-    - Users choose preferred approach
+   - Keep handlebars for backward compat
+   - Add template function option
+   - Users choose preferred approach
 
 2. Deprecation path
-    - v2.0: Support both, recommend template functions
-    - v3.0: Remove handlebars (breaking change)
+   - v2.0: Support both, recommend template functions
+   - v3.0: Remove handlebars (breaking change)
 
 3. Migration guide
-    - Convert `.hbs` to functions
-    - Helper library examples
-    - Backward compat strategy
+   - Convert `.hbs` to functions
+   - Helper library examples
+   - Backward compat strategy
 
 ---
 

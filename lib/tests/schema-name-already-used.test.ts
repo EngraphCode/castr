@@ -1,94 +1,94 @@
-import { type OpenAPIObject } from "openapi3-ts/oas30";
-import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src/index.js";
+import { type OpenAPIObject } from 'openapi3-ts/oas30';
+import { expect, test } from 'vitest';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 
-test("schema-name-already-used", async () => {
-    const openApiDoc: OpenAPIObject = {
-        openapi: "3.0.3",
-        info: { version: "1", title: "Example API" },
-        paths: {
-            "/schema-name-already-used": {
-                get: {
-                    operationId: "getSchemaNameAlreadyUsed",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { type: "string" },
-                                },
-                            },
-                        },
-                    },
-                    parameters: [
-                        {
-                            name: "schemaNameAlreadyUsed",
-                            in: "query",
-                            schema: { type: "string", enum: ["xxx", "yyy", "zzz"] },
-                        },
-                    ],
+test('schema-name-already-used', async () => {
+  const openApiDoc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: { version: '1', title: 'Example API' },
+    paths: {
+      '/schema-name-already-used': {
+        get: {
+          operationId: 'getSchemaNameAlreadyUsed',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
                 },
-                put: {
-                    operationId: "putSchemaNameAlreadyUsed",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { type: "string" },
-                                },
-                            },
-                        },
-                    },
-                    parameters: [
-                        {
-                            name: "schemaNameAlreadyUsed",
-                            in: "query",
-                            schema: { type: "string", enum: ["aaa", "bbb", "ccc"] },
-                        },
-                    ],
-                },
-                delete: {
-                    operationId: "deleteSchemaNameAlreadyUsed",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { type: "string" },
-                                },
-                            },
-                        },
-                    },
-                    parameters: [
-                        {
-                            name: "schemaNameAlreadyUsed",
-                            in: "query",
-                            schema: { type: "string", enum: ["ddd", "eee", "fff"] },
-                        },
-                    ],
-                },
-                post: {
-                    operationId: "postSchemaNameAlreadyUsed",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { type: "string" },
-                                },
-                            },
-                        },
-                    },
-                    parameters: [
-                        {
-                            name: "schemaNameAlreadyUsed",
-                            in: "query",
-                            schema: { type: "string", enum: ["ggg", "hhh", "iii"] },
-                        },
-                    ],
-                },
+              },
             },
+          },
+          parameters: [
+            {
+              name: 'schemaNameAlreadyUsed',
+              in: 'query',
+              schema: { type: 'string', enum: ['xxx', 'yyy', 'zzz'] },
+            },
+          ],
         },
-    };
-    const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
-    expect(ctx).toMatchInlineSnapshot(`
+        put: {
+          operationId: 'putSchemaNameAlreadyUsed',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
+                },
+              },
+            },
+          },
+          parameters: [
+            {
+              name: 'schemaNameAlreadyUsed',
+              in: 'query',
+              schema: { type: 'string', enum: ['aaa', 'bbb', 'ccc'] },
+            },
+          ],
+        },
+        delete: {
+          operationId: 'deleteSchemaNameAlreadyUsed',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
+                },
+              },
+            },
+          },
+          parameters: [
+            {
+              name: 'schemaNameAlreadyUsed',
+              in: 'query',
+              schema: { type: 'string', enum: ['ddd', 'eee', 'fff'] },
+            },
+          ],
+        },
+        post: {
+          operationId: 'postSchemaNameAlreadyUsed',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
+                },
+              },
+            },
+          },
+          parameters: [
+            {
+              name: 'schemaNameAlreadyUsed',
+              in: 'query',
+              schema: { type: 'string', enum: ['ggg', 'hhh', 'iii'] },
+            },
+          ],
+        },
+      },
+    },
+  };
+  const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
+  expect(ctx).toMatchInlineSnapshot(`
       {
           "circularTypeByName": {},
           "emittedType": {},
@@ -169,13 +169,13 @@ test("schema-name-already-used", async () => {
       }
     `);
 
-    const result = await generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc,
-        options: { complexityThreshold: 2 },
-    });
+  const result = await generateZodClientFromOpenAPI({
+    disableWriteToFile: true,
+    openApiDoc,
+    options: { complexityThreshold: 2 },
+  });
 
-    expect(result).toMatchInlineSnapshot(`
+  expect(result).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 

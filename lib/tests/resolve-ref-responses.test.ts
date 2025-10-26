@@ -1,34 +1,34 @@
-import { getZodiosEndpointDefinitionList } from "../src/index.js";
-import { expect, test } from "vitest";
+import { getZodiosEndpointDefinitionList } from '../src/index.js';
+import { expect, test } from 'vitest';
 
-test("resolve-ref-responses", () => {
-    // Without the refiner function passed.
-    expect(
-        getZodiosEndpointDefinitionList({
-            openapi: "3.0.3",
-            info: { version: "1", title: "Example API" },
-            paths: {
-                "/": {
-                    get: {
-                        operationId: "getExample",
-                        responses: {
-                            "200": {
-                                $ref: "#/components/responses/ExampleResponse",
-                            },
-                        },
-                    },
-                },
+test('resolve-ref-responses', () => {
+  // Without the refiner function passed.
+  expect(
+    getZodiosEndpointDefinitionList({
+      openapi: '3.0.3',
+      info: { version: '1', title: 'Example API' },
+      paths: {
+        '/': {
+          get: {
+            operationId: 'getExample',
+            responses: {
+              '200': {
+                $ref: '#/components/responses/ExampleResponse',
+              },
             },
-            components: {
-                responses: {
-                    ExampleResponse: {
-                        description: "example response",
-                        content: { "application/json": { schema: { type: "string" } } },
-                    },
-                },
-            },
-        })
-    ).toMatchInlineSnapshot(`
+          },
+        },
+      },
+      components: {
+        responses: {
+          ExampleResponse: {
+            description: 'example response',
+            content: { 'application/json': { schema: { type: 'string' } } },
+          },
+        },
+      },
+    }),
+  ).toMatchInlineSnapshot(`
       {
           "deepDependencyGraph": {},
           "endpoints": [

@@ -8,14 +8,14 @@
  * Handles null, strings, numbers, and complex objects
  */
 export function safeStringifyEnumValue(value: unknown): string {
-    if (value === null) {
-        return "null";
-    }
-    if (typeof value === "string") {
-        return value;
-    }
-    // For numbers, booleans, or complex objects, use JSON.stringify
-    return JSON.stringify(value);
+  if (value === null) {
+    return 'null';
+  }
+  if (typeof value === 'string') {
+    return value;
+  }
+  // For numbers, booleans, or complex objects, use JSON.stringify
+  return JSON.stringify(value);
 }
 
 /**
@@ -23,11 +23,11 @@ export function safeStringifyEnumValue(value: unknown): string {
  * Used for generating z.enum([...]) or z.literal(...) code
  */
 export function stringEnumValueToZodCode(value: unknown): string {
-    if (value === null) {
-        return "null";
-    }
-    const safeValue = safeStringifyEnumValue(value);
-    return `"${safeValue}"`;
+  if (value === null) {
+    return 'null';
+  }
+  const safeValue = safeStringifyEnumValue(value);
+  return `"${safeValue}"`;
 }
 
 /**
@@ -36,13 +36,13 @@ export function stringEnumValueToZodCode(value: unknown): string {
  */
 // eslint-disable-next-line sonarjs/function-return-type
 export function nonStringEnumValueToZodLiteral(value: unknown): string | number {
-    if (value === null) {
-        return "null";
-    }
-    if (typeof value === "number") {
-        return value;
-    }
-    return JSON.stringify(value);
+  if (value === null) {
+    return 'null';
+  }
+  if (typeof value === 'number') {
+    return value;
+  }
+  return JSON.stringify(value);
 }
 
 /**
@@ -50,10 +50,10 @@ export function nonStringEnumValueToZodLiteral(value: unknown): string | number 
  * This happens when a non-string type has string values mixed in
  */
 export function shouldEnumBeNever(schemaType: string, enumValues: unknown[]): boolean {
-    if (schemaType === "string") {
-        return false;
-    }
-    return enumValues.some((e) => typeof e === "string");
+  if (schemaType === 'string') {
+    return false;
+  }
+  return enumValues.some((e) => typeof e === 'string');
 }
 
 /**
@@ -61,14 +61,14 @@ export function shouldEnumBeNever(schemaType: string, enumValues: unknown[]): bo
  * Returns either z.literal(...) for single values or z.enum([...]) for multiple
  */
 export function generateStringEnumZodCode(enumValues: unknown[]): string {
-    if (enumValues.length === 1) {
-        const value = enumValues[0];
-        const valueString = stringEnumValueToZodCode(value);
-        return `z.literal(${valueString})`;
-    }
+  if (enumValues.length === 1) {
+    const value = enumValues[0];
+    const valueString = stringEnumValueToZodCode(value);
+    return `z.literal(${valueString})`;
+  }
 
-    const enumMembers = enumValues.map((value) => stringEnumValueToZodCode(value)).join(", ");
-    return `z.enum([${enumMembers}])`;
+  const enumMembers = enumValues.map((value) => stringEnumValueToZodCode(value)).join(', ');
+  return `z.enum([${enumMembers}])`;
 }
 
 /**
@@ -76,16 +76,16 @@ export function generateStringEnumZodCode(enumValues: unknown[]): string {
  * Returns either z.literal(...) for single values or z.union([...]) for multiple
  */
 export function generateNonStringEnumZodCode(enumValues: unknown[]): string {
-    if (enumValues.length === 1) {
-        const safeValue = nonStringEnumValueToZodLiteral(enumValues[0]);
-        return `z.literal(${safeValue})`;
-    }
+  if (enumValues.length === 1) {
+    const safeValue = nonStringEnumValueToZodLiteral(enumValues[0]);
+    return `z.literal(${safeValue})`;
+  }
 
-    const literals = enumValues
-        .map((value) => {
-            const safeValue = nonStringEnumValueToZodLiteral(value);
-            return `z.literal(${safeValue})`;
-        })
-        .join(", ");
-    return `z.union([${literals}])`;
+  const literals = enumValues
+    .map((value) => {
+      const safeValue = nonStringEnumValueToZodLiteral(value);
+      return `z.literal(${safeValue})`;
+    })
+    .join(', ');
+  return `z.union([${literals}])`;
 }

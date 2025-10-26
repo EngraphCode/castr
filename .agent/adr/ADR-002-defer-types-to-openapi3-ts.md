@@ -20,11 +20,11 @@ The original codebase had custom type definitions that duplicated library types:
 
 ```typescript
 // ❌ BAD: Custom type definitions
-type PrimitiveType = "string" | "number" | "integer" | "boolean" | "null";
-type SingleType = Exclude<SchemaObject["type"], unknown[] | undefined>;
+type PrimitiveType = 'string' | 'number' | 'integer' | 'boolean' | 'null';
+type SingleType = Exclude<SchemaObject['type'], unknown[] | undefined>;
 
 function handleItems(items: SchemaObject): Result {
-    // ❌ Actually receives SchemaObject | ReferenceObject!
+  // ❌ Actually receives SchemaObject | ReferenceObject!
 }
 ```
 
@@ -61,27 +61,27 @@ When we need runtime validation of library types, use this pattern:
 
 ```typescript
 // 1. Extract the subset from library type (compiler validates)
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from 'openapi3-ts';
 
 type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
+  NonNullable<SchemaObject['type']>,
+  'string' | 'number' | 'integer' | 'boolean' | 'null'
 >;
 
 // 2. Define literals tied to that type
 const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string",
-    "number",
-    "integer",
-    "boolean",
-    "null",
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'null',
 ] as const;
 
 // 3. Create type predicate that narrows from unknown
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-    if (typeof value !== "string") return false;
-    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-    return typeStrings.includes(value);
+  if (typeof value !== 'string') return false;
+  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return typeStrings.includes(value);
 }
 ```
 
@@ -97,25 +97,25 @@ This pattern ensures:
 #### Good: Use Library Types Directly
 
 ```typescript
-import type { SchemaObject, ReferenceObject, SchemaObjectType } from "openapi3-ts";
-import { isReferenceObject, isSchemaObject } from "openapi3-ts";
+import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-ts';
+import { isReferenceObject, isSchemaObject } from 'openapi3-ts';
 
 // ✅ Accept union types as defined by the library
 function processSchema(schema: SchemaObject | ReferenceObject): Result {
-    if (isReferenceObject(schema)) {
-        return handleRef(schema);
-    }
-    return handleSchema(schema);
+  if (isReferenceObject(schema)) {
+    return handleRef(schema);
+  }
+  return handleSchema(schema);
 }
 
 // ✅ Use library's exact types
 function getSchemaType(schema: SchemaObject): SchemaObjectType | SchemaObjectType[] | undefined {
-    return schema.type; // Type matches library definition
+  return schema.type; // Type matches library definition
 }
 
 // ✅ Use library's type guards
 if (isSchemaObject(obj)) {
-    // TypeScript now knows obj is SchemaObject
+  // TypeScript now knows obj is SchemaObject
 }
 ```
 
@@ -123,20 +123,20 @@ if (isSchemaObject(obj)) {
 
 ```typescript
 // ❌ Redefining library enums
-type PrimitiveType = "string" | "number" | "integer" | "boolean" | "null";
+type PrimitiveType = 'string' | 'number' | 'integer' | 'boolean' | 'null';
 
 // ❌ Complex extractions
-type SingleType = Exclude<SchemaObject["type"], unknown[] | undefined>;
+type SingleType = Exclude<SchemaObject['type'], unknown[] | undefined>;
 
 // ❌ Claiming narrower types than reality
 function handleItems(items: SchemaObject): Result {
-    // Actually receives SchemaObject | ReferenceObject!
+  // Actually receives SchemaObject | ReferenceObject!
 }
 
 // ❌ Boolean filter pretending to be a type guard
-function isPrimitive(type: SchemaObject["type"]): boolean {
-    // Input is already typed! This provides NO type narrowing
-    return type === "string" || type === "number";
+function isPrimitive(type: SchemaObject['type']): boolean {
+  // Input is already typed! This provides NO type narrowing
+  return type === 'string' || type === 'number';
 }
 ```
 

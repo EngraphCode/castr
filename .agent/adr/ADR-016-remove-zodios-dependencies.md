@@ -39,30 +39,30 @@ Historical reasons:
 ### Why It's No Longer Ideal
 
 1. **Maintenance Mode**
-    - Zodios is stable but not actively developed
-    - No support for latest Zod v4 features
-    - Uncertain long-term future
-    - Analysis: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
+   - Zodios is stable but not actively developed
+   - No support for latest Zod v4 features
+   - Uncertain long-term future
+   - Analysis: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
 
 2. **Not Our Primary Use Case**
-    - We need: Zod schemas for validation + MCP tools
-    - We don't need: HTTP client wrapper
-    - Target: Engraph SDK (headless validation) + MCP tools
+   - We need: Zod schemas for validation + MCP tools
+   - We don't need: HTTP client wrapper
+   - Target: Engraph SDK (headless validation) + MCP tools
 
 3. **Larger Bundle Size**
-    - Zodios + axios: ~35 KB additional
-    - Unnecessary for schema-only usage
-    - Analysis: `.agent/analysis/HANDLEBARS_EVALUATION.md`
+   - Zodios + axios: ~35 KB additional
+   - Unnecessary for schema-only usage
+   - Analysis: `.agent/analysis/HANDLEBARS_EVALUATION.md`
 
 4. **schemas-with-metadata is Superior**
-    - Everything Zodios provides, plus:
-        - Full request parameter validation (path, query, headers, body)
-        - All response status codes (not just success)
-        - MCP tools array (protocol-ready)
-        - Validation helpers
-        - Schema registry builder
-    - No dependencies beyond Zod
-    - Cleaner generated code
+   - Everything Zodios provides, plus:
+     - Full request parameter validation (path, query, headers, body)
+     - All response status codes (not just success)
+     - MCP tools array (protocol-ready)
+     - Validation helpers
+     - Schema registry builder
+   - No dependencies beyond Zod
+   - Cleaner generated code
 
 ### Alternatives Considered
 
@@ -305,4 +305,3 @@ This decision directly supports:
 
 - Implementation will be committed as part of Phase 3 execution
 - See: Phase 3 tasks in `01-CURRENT-IMPLEMENTATION.md`
-

@@ -119,8 +119,8 @@ pnpm test -- --run  # Must pass ✅ (373 tests)
 - ✅ **Task 2.1:** openapi3-ts updated to v4.5.0
 - ✅ **Task 2.4:** Zod updated to v4.1.12
 - ✅ **Task 2.2:** swagger-parser verified at latest v12.1.0
-    - **Critical insight:** `SwaggerParser.bundle()` resolves all operation-level `$ref`s
-    - This enables Phase 1 to eliminate `makeSchemaResolver`
+  - **Critical insight:** `SwaggerParser.bundle()` resolves all operation-level `$ref`s
+  - This enables Phase 1 to eliminate `makeSchemaResolver`
 
 ---
 
@@ -207,135 +207,135 @@ Test the FULL pipeline: OpenAPI → Generated Code
 ```typescript
 // File: lib/src/e2e-generation.test.ts
 
-describe("E2E: Full Generation Pipeline", () => {
-    describe("Basic OpenAPI 3.0 Specs", () => {
-        it("should generate valid TypeScript from minimal spec", async () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        get: {
-                            operationId: "getUsers",
-                            responses: {
-                                200: {
-                                    description: "Success",
-                                    content: {
-                                        "application/json": {
-                                            schema: { type: "array", items: { type: "string" } },
-                                        },
-                                    },
-                                },
-                            },
-                        },
+describe('E2E: Full Generation Pipeline', () => {
+  describe('Basic OpenAPI 3.0 Specs', () => {
+    it('should generate valid TypeScript from minimal spec', async () => {
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              responses: {
+                200: {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { type: 'array', items: { type: 'string' } },
                     },
+                  },
                 },
-            };
+              },
+            },
+          },
+        },
+      };
 
-            const bundled = await SwaggerParser.bundle(spec);
-            const result = await generateZodClientFromOpenAPI({
-                openApiDoc: bundled as OpenAPIObject,
-                disableWriteToFile: true,
-            });
+      const bundled = await SwaggerParser.bundle(spec);
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: bundled as OpenAPIObject,
+        disableWriteToFile: true,
+      });
 
-            // Test generated code characteristics (not exact output)
-            expect(result).toContain("import { z }");
-            expect(result).toContain("export const"); // Has exports
-            expect(result).not.toContain("as unknown as"); // NO type assertions
-            expect(result).not.toContain(" as "); // NO casts (except 'as const')
+      // Test generated code characteristics (not exact output)
+      expect(result).toContain('import { z }');
+      expect(result).toContain('export const'); // Has exports
+      expect(result).not.toContain('as unknown as'); // NO type assertions
+      expect(result).not.toContain(' as '); // NO casts (except 'as const')
 
-            // Verify it's valid TypeScript (could be compiled)
-            expect(() => new Function(result)).not.toThrow();
-        });
-
-        it("should handle schemas with $ref after bundling", async () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                components: {
-                    schemas: {
-                        User: {
-                            type: "object",
-                            properties: {
-                                id: { type: "string" },
-                                name: { type: "string" },
-                            },
-                            required: ["id"],
-                        },
-                    },
-                },
-                paths: {
-                    "/users": {
-                        get: {
-                            responses: {
-                                200: {
-                                    description: "Success",
-                                    content: {
-                                        "application/json": {
-                                            schema: { $ref: "#/components/schemas/User" },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            };
-
-            const bundled = await SwaggerParser.bundle(spec);
-            const result = await generateZodClientFromOpenAPI({
-                openApiDoc: bundled as OpenAPIObject,
-                disableWriteToFile: true,
-            });
-
-            expect(result).toContain("User"); // Schema name preserved
-            expect(result).not.toContain("as unknown as");
-        });
-
-        it("should handle requestBody with $ref", async () => {
-            // Test request bodies are properly resolved
-        });
-
-        it("should handle responses with $ref", async () => {
-            // Test responses are properly resolved
-        });
-
-        it("should handle parameters with $ref", async () => {
-            // Test parameters are properly resolved
-        });
+      // Verify it's valid TypeScript (could be compiled)
+      expect(() => new Function(result)).not.toThrow();
     });
 
-    describe("Complex OpenAPI Features", () => {
-        it("should handle allOf composition", async () => {
-            // Test schema composition
-        });
+    it('should handle schemas with $ref after bundling', async () => {
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+              },
+              required: ['id'],
+            },
+          },
+        },
+        paths: {
+          '/users': {
+            get: {
+              responses: {
+                200: {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/User' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
 
-        it("should handle oneOf unions", async () => {
-            // Test union types
-        });
+      const bundled = await SwaggerParser.bundle(spec);
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: bundled as OpenAPIObject,
+        disableWriteToFile: true,
+      });
 
-        it("should handle circular references", async () => {
-            // Test circular schema dependencies
-        });
-
-        it("should handle deeply nested schemas", async () => {
-            // Test complex nesting
-        });
+      expect(result).toContain('User'); // Schema name preserved
+      expect(result).not.toContain('as unknown as');
     });
 
-    describe("Template Options", () => {
-        it("should generate default template correctly", async () => {
-            // Test default template output
-        });
-
-        it("should generate schemas-only template", async () => {
-            // Test schemas-only output
-        });
-
-        it("should generate schemas-with-metadata template", async () => {
-            // Test metadata template
-        });
+    it('should handle requestBody with $ref', async () => {
+      // Test request bodies are properly resolved
     });
+
+    it('should handle responses with $ref', async () => {
+      // Test responses are properly resolved
+    });
+
+    it('should handle parameters with $ref', async () => {
+      // Test parameters are properly resolved
+    });
+  });
+
+  describe('Complex OpenAPI Features', () => {
+    it('should handle allOf composition', async () => {
+      // Test schema composition
+    });
+
+    it('should handle oneOf unions', async () => {
+      // Test union types
+    });
+
+    it('should handle circular references', async () => {
+      // Test circular schema dependencies
+    });
+
+    it('should handle deeply nested schemas', async () => {
+      // Test complex nesting
+    });
+  });
+
+  describe('Template Options', () => {
+    it('should generate default template correctly', async () => {
+      // Test default template output
+    });
+
+    it('should generate schemas-only template', async () => {
+      // Test schemas-only output
+    });
+
+    it('should generate schemas-with-metadata template', async () => {
+      // Test metadata template
+    });
+  });
 });
 ```
 
@@ -346,46 +346,46 @@ Test schema ordering and dependency tracking:
 ```typescript
 // File: lib/src/schema-dependencies.test.ts
 
-describe("Schema Dependency Resolution", () => {
-    it("should order schemas by dependencies", () => {
-        const spec: OpenAPIObject = {
-            openapi: "3.0.0",
-            info: { title: "Test", version: "1.0.0" },
-            components: {
-                schemas: {
-                    Address: { type: "object", properties: { street: { type: "string" } } },
-                    User: {
-                        type: "object",
-                        properties: {
-                            address: { $ref: "#/components/schemas/Address" },
-                        },
-                    },
-                    Company: {
-                        type: "object",
-                        properties: {
-                            owner: { $ref: "#/components/schemas/User" },
-                        },
-                    },
-                },
+describe('Schema Dependency Resolution', () => {
+  it('should order schemas by dependencies', () => {
+    const spec: OpenAPIObject = {
+      openapi: '3.0.0',
+      info: { title: 'Test', version: '1.0.0' },
+      components: {
+        schemas: {
+          Address: { type: 'object', properties: { street: { type: 'string' } } },
+          User: {
+            type: 'object',
+            properties: {
+              address: { $ref: '#/components/schemas/Address' },
             },
-            paths: {},
-        };
+          },
+          Company: {
+            type: 'object',
+            properties: {
+              owner: { $ref: '#/components/schemas/User' },
+            },
+          },
+        },
+      },
+      paths: {},
+    };
 
-        const context = getZodClientTemplateContext(spec);
-        const schemaOrder = Object.keys(context.schemas);
+    const context = getZodClientTemplateContext(spec);
+    const schemaOrder = Object.keys(context.schemas);
 
-        // Address must come before User, User before Company
-        expect(schemaOrder.indexOf("Address")).toBeLessThan(schemaOrder.indexOf("User"));
-        expect(schemaOrder.indexOf("User")).toBeLessThan(schemaOrder.indexOf("Company"));
-    });
+    // Address must come before User, User before Company
+    expect(schemaOrder.indexOf('Address')).toBeLessThan(schemaOrder.indexOf('User'));
+    expect(schemaOrder.indexOf('User')).toBeLessThan(schemaOrder.indexOf('Company'));
+  });
 
-    it("should handle circular dependencies", () => {
-        // Test circular schema references
-    });
+  it('should handle circular dependencies', () => {
+    // Test circular schema references
+  });
 
-    it("should handle self-referencing schemas", () => {
-        // Test recursive schemas
-    });
+  it('should handle self-referencing schemas', () => {
+    // Test recursive schemas
+  });
 });
 ```
 
@@ -396,32 +396,32 @@ Test that generated code is type-safe:
 ```typescript
 // File: lib/src/type-safety.test.ts
 
-describe("Type Safety Guarantees", () => {
-    it("should generate code with zero type assertions", async () => {
-        const specs = [
-            "./tests/petstore.yaml",
-            "./samples/v3.0/petstore-expanded.yaml",
-            // Add more real-world specs
-        ];
+describe('Type Safety Guarantees', () => {
+  it('should generate code with zero type assertions', async () => {
+    const specs = [
+      './tests/petstore.yaml',
+      './samples/v3.0/petstore-expanded.yaml',
+      // Add more real-world specs
+    ];
 
-        for (const specPath of specs) {
-            const bundled = await SwaggerParser.bundle(specPath);
-            const result = await generateZodClientFromOpenAPI({
-                openApiDoc: bundled as OpenAPIObject,
-                disableWriteToFile: true,
-            });
+    for (const specPath of specs) {
+      const bundled = await SwaggerParser.bundle(specPath);
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: bundled as OpenAPIObject,
+        disableWriteToFile: true,
+      });
 
-            // Must not contain type assertions (except 'as const')
-            const assertionPattern = / as (?!const\b)/g;
-            const matches = result.match(assertionPattern);
+      // Must not contain type assertions (except 'as const')
+      const assertionPattern = / as (?!const\b)/g;
+      const matches = result.match(assertionPattern);
 
-            expect(matches).toBeNull(`Found type assertions in ${specPath}: ${matches}`);
-        }
-    });
+      expect(matches).toBeNull(`Found type assertions in ${specPath}: ${matches}`);
+    }
+  });
 
-    it("should generate compilable TypeScript", async () => {
-        // Verify generated code compiles
-    });
+  it('should generate compilable TypeScript', async () => {
+    // Verify generated code compiles
+  });
 });
 ```
 
@@ -432,97 +432,97 @@ Test our assumption that bundle() resolves all operation-level refs:
 ```typescript
 // File: lib/src/swagger-parser-guarantees.test.ts
 
-describe("SwaggerParser.bundle() Guarantees", () => {
-    it("should resolve all operation-level $refs", async () => {
-        const spec: OpenAPIObject = {
-            openapi: "3.0.0",
-            info: { title: "Test", version: "1.0.0" },
-            components: {
-                requestBodies: {
-                    UserBody: {
-                        content: {
-                            "application/json": {
-                                schema: { type: "object", properties: { name: { type: "string" } } },
-                            },
-                        },
-                    },
-                },
-                responses: {
-                    UserResponse: {
-                        description: "User response",
-                        content: {
-                            "application/json": {
-                                schema: { type: "object", properties: { id: { type: "string" } } },
-                            },
-                        },
-                    },
-                },
-                parameters: {
-                    UserId: {
-                        name: "userId",
-                        in: "path",
-                        required: true,
-                        schema: { type: "string" },
-                    },
-                },
+describe('SwaggerParser.bundle() Guarantees', () => {
+  it('should resolve all operation-level $refs', async () => {
+    const spec: OpenAPIObject = {
+      openapi: '3.0.0',
+      info: { title: 'Test', version: '1.0.0' },
+      components: {
+        requestBodies: {
+          UserBody: {
+            content: {
+              'application/json': {
+                schema: { type: 'object', properties: { name: { type: 'string' } } },
+              },
             },
-            paths: {
-                "/users/{userId}": {
-                    post: {
-                        parameters: [{ $ref: "#/components/parameters/UserId" }],
-                        requestBody: { $ref: "#/components/requestBodies/UserBody" },
-                        responses: {
-                            200: { $ref: "#/components/responses/UserResponse" },
-                        },
-                    },
-                },
+          },
+        },
+        responses: {
+          UserResponse: {
+            description: 'User response',
+            content: {
+              'application/json': {
+                schema: { type: 'object', properties: { id: { type: 'string' } } },
+              },
             },
-        };
-
-        const bundled = await SwaggerParser.bundle(spec);
-
-        // After bundling, operation-level $refs should be resolved
-        const operation = bundled.paths["/users/{userId}"]?.post;
-        expect(operation).toBeDefined();
-
-        // Parameters should be resolved (not $ref)
-        expect(operation.parameters?.[0]).not.toHaveProperty("$ref");
-        expect(operation.parameters?.[0]).toHaveProperty("name", "userId");
-
-        // RequestBody should be resolved
-        expect(operation.requestBody).not.toHaveProperty("$ref");
-        expect(operation.requestBody).toHaveProperty("content");
-
-        // Response should be resolved
-        expect(operation.responses?.["200"]).not.toHaveProperty("$ref");
-        expect(operation.responses?.["200"]).toHaveProperty("description");
-    });
-
-    it("components.schemas CAN still have $refs (for dependency tracking)", async () => {
-        const spec: OpenAPIObject = {
-            openapi: "3.0.0",
-            info: { title: "Test", version: "1.0.0" },
-            components: {
-                schemas: {
-                    Address: { type: "object" },
-                    User: {
-                        type: "object",
-                        properties: {
-                            address: { $ref: "#/components/schemas/Address" },
-                        },
-                    },
-                },
+          },
+        },
+        parameters: {
+          UserId: {
+            name: 'userId',
+            in: 'path',
+            required: true,
+            schema: { type: 'string' },
+          },
+        },
+      },
+      paths: {
+        '/users/{userId}': {
+          post: {
+            parameters: [{ $ref: '#/components/parameters/UserId' }],
+            requestBody: { $ref: '#/components/requestBodies/UserBody' },
+            responses: {
+              200: { $ref: '#/components/responses/UserResponse' },
             },
-            paths: {},
-        };
+          },
+        },
+      },
+    };
 
-        const bundled = await SwaggerParser.bundle(spec);
+    const bundled = await SwaggerParser.bundle(spec);
 
-        // Component schemas preserve $refs for dependency tracking
-        const userSchema = bundled.components?.schemas?.["User"];
-        expect(userSchema).toBeDefined();
-        // This $ref might be preserved (for topological sorting)
-    });
+    // After bundling, operation-level $refs should be resolved
+    const operation = bundled.paths['/users/{userId}']?.post;
+    expect(operation).toBeDefined();
+
+    // Parameters should be resolved (not $ref)
+    expect(operation.parameters?.[0]).not.toHaveProperty('$ref');
+    expect(operation.parameters?.[0]).toHaveProperty('name', 'userId');
+
+    // RequestBody should be resolved
+    expect(operation.requestBody).not.toHaveProperty('$ref');
+    expect(operation.requestBody).toHaveProperty('content');
+
+    // Response should be resolved
+    expect(operation.responses?.['200']).not.toHaveProperty('$ref');
+    expect(operation.responses?.['200']).toHaveProperty('description');
+  });
+
+  it('components.schemas CAN still have $refs (for dependency tracking)', async () => {
+    const spec: OpenAPIObject = {
+      openapi: '3.0.0',
+      info: { title: 'Test', version: '1.0.0' },
+      components: {
+        schemas: {
+          Address: { type: 'object' },
+          User: {
+            type: 'object',
+            properties: {
+              address: { $ref: '#/components/schemas/Address' },
+            },
+          },
+        },
+      },
+      paths: {},
+    };
+
+    const bundled = await SwaggerParser.bundle(spec);
+
+    // Component schemas preserve $refs for dependency tracking
+    const userSchema = bundled.components?.schemas?.['User'];
+    expect(userSchema).toBeDefined();
+    // This $ref might be preserved (for topological sorting)
+  });
 });
 ```
 
@@ -533,30 +533,30 @@ Use existing snapshot tests + add regression guards:
 ```typescript
 // File: lib/src/regression-prevention.test.ts
 
-describe("Regression Prevention", () => {
-    const specs = [
-        "./tests/petstore.yaml",
-        "./samples/v3.0/petstore-expanded.yaml",
-        "./samples/v3.0/uspto.yaml",
-        // All existing test specs
-    ];
+describe('Regression Prevention', () => {
+  const specs = [
+    './tests/petstore.yaml',
+    './samples/v3.0/petstore-expanded.yaml',
+    './samples/v3.0/uspto.yaml',
+    // All existing test specs
+  ];
 
-    for (const specPath of specs) {
-        it(`should generate consistent output for ${specPath}`, async () => {
-            const bundled = await SwaggerParser.bundle(specPath);
-            const result = await generateZodClientFromOpenAPI({
-                openApiDoc: bundled as OpenAPIObject,
-                disableWriteToFile: true,
-            });
+  for (const specPath of specs) {
+    it(`should generate consistent output for ${specPath}`, async () => {
+      const bundled = await SwaggerParser.bundle(specPath);
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: bundled as OpenAPIObject,
+        disableWriteToFile: true,
+      });
 
-            // Snapshot the generated code
-            expect(result).toMatchSnapshot();
+      // Snapshot the generated code
+      expect(result).toMatchSnapshot();
 
-            // Also check invariants
-            expect(result).toContain("import { z }");
-            expect(result).not.toContain("as unknown as");
-        });
-    }
+      // Also check invariants
+      expect(result).toContain('import { z }');
+      expect(result).not.toContain('as unknown as');
+    });
+  }
 });
 ```
 
@@ -605,8 +605,13 @@ Replace `makeSchemaResolver` (which lies about types) and `CodeMeta` (poorly con
 **Create:** `lib/src/component-access.ts`
 
 ```typescript
-import type { OpenAPIObject, ComponentsObject, SchemaObject, ReferenceObject } from "openapi3-ts/oas30";
-import { isReferenceObject } from "openapi3-ts/oas30";
+import type {
+  OpenAPIObject,
+  ComponentsObject,
+  SchemaObject,
+  ReferenceObject,
+} from 'openapi3-ts/oas30';
+import { isReferenceObject } from 'openapi3-ts/oas30';
 
 /**
  * DESIGN PRINCIPLE:
@@ -623,12 +628,15 @@ import { isReferenceObject } from "openapi3-ts/oas30";
  * @returns Schema or ReferenceObject (for dependency tracking)
  * @throws {Error} If schema not found
  */
-export function getSchemaFromComponents(doc: OpenAPIObject, name: string): SchemaObject | ReferenceObject {
-    const schema = doc.components?.schemas?.[name];
-    if (!schema) {
-        throw new Error(`Schema '${name}' not found in components.schemas`);
-    }
-    return schema;
+export function getSchemaFromComponents(
+  doc: OpenAPIObject,
+  name: string,
+): SchemaObject | ReferenceObject {
+  const schema = doc.components?.schemas?.[name];
+  if (!schema) {
+    throw new Error(`Schema '${name}' not found in components.schemas`);
+  }
+  return schema;
 }
 
 /**
@@ -640,28 +648,31 @@ export function getSchemaFromComponents(doc: OpenAPIObject, name: string): Schem
  * @returns Resolved schema
  * @throws {Error} If ref is invalid or nested
  */
-export function resolveSchemaRef(doc: OpenAPIObject, schema: SchemaObject | ReferenceObject): SchemaObject {
-    if (!isReferenceObject(schema)) {
-        return schema;
-    }
+export function resolveSchemaRef(
+  doc: OpenAPIObject,
+  schema: SchemaObject | ReferenceObject,
+): SchemaObject {
+  if (!isReferenceObject(schema)) {
+    return schema;
+  }
 
-    // Parse #/components/schemas/Name
-    const match = schema.$ref.match(/^#\/components\/schemas\/(.+)$/);
-    if (!match) {
-        throw new Error(`Invalid schema $ref: ${schema.$ref}`);
-    }
+  // Parse #/components/schemas/Name
+  const match = schema.$ref.match(/^#\/components\/schemas\/(.+)$/);
+  if (!match) {
+    throw new Error(`Invalid schema $ref: ${schema.$ref}`);
+  }
 
-    const resolved = getSchemaFromComponents(doc, match[1]);
+  const resolved = getSchemaFromComponents(doc, match[1]);
 
-    // After SwaggerParser.bundle(), nested refs shouldn't exist in components
-    if (isReferenceObject(resolved)) {
-        throw new Error(
-            `Nested $ref in schema: ${schema.$ref} -> ${resolved.$ref}. ` +
-                `Use SwaggerParser.bundle() to fully dereference the spec.`
-        );
-    }
+  // After SwaggerParser.bundle(), nested refs shouldn't exist in components
+  if (isReferenceObject(resolved)) {
+    throw new Error(
+      `Nested $ref in schema: ${schema.$ref} -> ${resolved.$ref}. ` +
+        `Use SwaggerParser.bundle() to fully dereference the spec.`,
+    );
+  }
 
-    return resolved;
+  return resolved;
 }
 
 /**
@@ -672,13 +683,16 @@ export function resolveSchemaRef(doc: OpenAPIObject, schema: SchemaObject | Refe
  * @param context - Context for error message
  * @throws {Error} If value is a ReferenceObject
  */
-export function assertNotReference<T>(value: T | ReferenceObject, context: string): asserts value is T {
-    if (isReferenceObject(value)) {
-        throw new Error(
-            `Unexpected $ref in ${context}: ${value.$ref}. ` +
-                `Ensure you called SwaggerParser.bundle() before code generation.`
-        );
-    }
+export function assertNotReference<T>(
+  value: T | ReferenceObject,
+  context: string,
+): asserts value is T {
+  if (isReferenceObject(value)) {
+    throw new Error(
+      `Unexpected $ref in ${context}: ${value.$ref}. ` +
+        `Ensure you called SwaggerParser.bundle() before code generation.`,
+    );
+  }
 }
 ```
 
@@ -698,14 +712,14 @@ export function assertNotReference<T>(value: T | ReferenceObject, context: strin
 **Update:** `lib/src/getOpenApiDependencyGraph.ts`
 
 ```typescript
-import { getSchemaFromComponents, resolveSchemaRef } from "./component-access.js";
+import { getSchemaFromComponents, resolveSchemaRef } from './component-access.js';
 
 export const getOpenApiDependencyGraph = (
-    schemaNames: string[], // Changed from refs to names
-    doc: OpenAPIObject // Pass doc instead of getter function
+  schemaNames: string[], // Changed from refs to names
+  doc: OpenAPIObject, // Pass doc instead of getter function
 ) => {
-    // Implementation using getSchemaFromComponents and resolveSchemaRef
-    // ...
+  // Implementation using getSchemaFromComponents and resolveSchemaRef
+  // ...
 };
 ```
 
@@ -749,18 +763,18 @@ return code;
 ```typescript
 // BEFORE:
 export type ConversionTypeContext = {
-    resolver: DocumentResolver; // DELETE
-    zodSchemaByName: Record<string, string>;
-    schemaByName: Record<string, string>;
-    schemasByName?: Record<string, string[]>;
+  resolver: DocumentResolver; // DELETE
+  zodSchemaByName: Record<string, string>;
+  schemaByName: Record<string, string>;
+  schemasByName?: Record<string, string[]>;
 };
 
 // AFTER:
 export type ConversionContext = {
-    doc: OpenAPIObject; // Pass the doc directly
-    zodSchemaByName: Record<string, string>;
-    schemaByName: Record<string, string>;
-    schemasByName?: Record<string, string[]>;
+  doc: OpenAPIObject; // Pass the doc directly
+  zodSchemaByName: Record<string, string>;
+  schemaByName: Record<string, string>;
+  schemasByName?: Record<string, string[]>;
 };
 ```
 
@@ -789,7 +803,7 @@ requestBody = resolved as unknown as RequestBodyObject;
 
 // AFTER:
 // After SwaggerParser.bundle(), requestBody should never be a $ref
-assertNotReference(operation.requestBody, "operation.requestBody");
+assertNotReference(operation.requestBody, 'operation.requestBody');
 const requestBody = operation.requestBody;
 ```
 
@@ -855,11 +869,11 @@ grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc 
 **Investigate ts-morph API:**
 
 ```typescript
-import { Project, VariableDeclarationKind } from "ts-morph";
+import { Project, VariableDeclarationKind } from 'ts-morph';
 
 // Create example to understand API
 const project = new Project();
-const sourceFile = project.createSourceFile("test.ts");
+const sourceFile = project.createSourceFile('test.ts');
 
 // How to create:
 // - Type aliases
@@ -885,38 +899,38 @@ const sourceFile = project.createSourceFile("test.ts");
 **Create:** `lib/src/ast-builder.ts`
 
 ```typescript
-import { Project, SourceFile, VariableDeclarationKind } from "ts-morph";
-import type { SchemaObject } from "openapi3-ts/oas30";
+import { Project, SourceFile, VariableDeclarationKind } from 'ts-morph';
+import type { SchemaObject } from 'openapi3-ts/oas30';
 
 export class AstBuilder {
-    private project: Project;
-    private sourceFile: SourceFile;
+  private project: Project;
+  private sourceFile: SourceFile;
 
-    constructor() {
-        this.project = new Project();
-        this.sourceFile = this.project.createSourceFile("generated.ts", "", { overwrite: true });
-    }
+  constructor() {
+    this.project = new Project();
+    this.sourceFile = this.project.createSourceFile('generated.ts', '', { overwrite: true });
+  }
 
-    addImport(moduleSpecifier: string, namedImports: string[]): void {
-        this.sourceFile.addImportDeclaration({
-            moduleSpecifier,
-            namedImports,
-        });
-    }
+  addImport(moduleSpecifier: string, namedImports: string[]): void {
+    this.sourceFile.addImportDeclaration({
+      moduleSpecifier,
+      namedImports,
+    });
+  }
 
-    addTypeAlias(name: string, type: string): void {
-        this.sourceFile.addTypeAlias({
-            name,
-            type,
-            isExported: true,
-        });
-    }
+  addTypeAlias(name: string, type: string): void {
+    this.sourceFile.addTypeAlias({
+      name,
+      type,
+      isExported: true,
+    });
+  }
 
-    // ... more builder methods
+  // ... more builder methods
 
-    toString(): string {
-        return this.sourceFile.getFullText();
-    }
+  toString(): string {
+    return this.sourceFile.getFullText();
+  }
 }
 ```
 
@@ -930,19 +944,19 @@ Replace tanu usage with ts-morph:
 
 ```typescript
 // BEFORE (with tanu):
-import { t, ts } from "tanu";
+import { t, ts } from 'tanu';
 
 function handleOneOf(schemas) {
-    const types = schemas.map(convertSchema);
-    return t.union(types as t.TypeDefinition[]); // Type assertion!
+  const types = schemas.map(convertSchema);
+  return t.union(types as t.TypeDefinition[]); // Type assertion!
 }
 
 // AFTER (with ts-morph):
-import { AstBuilder } from "./ast-builder.js";
+import { AstBuilder } from './ast-builder.js';
 
 function handleOneOf(schemas: SchemaObject[], builder: AstBuilder) {
-    const types = schemas.map((s) => schemaToTypeString(s));
-    return types.join(" | "); // Just string manipulation, ts-morph handles AST
+  const types = schemas.map((s) => schemaToTypeString(s));
+  return types.join(' | '); // Just string manipulation, ts-morph handles AST
 }
 ```
 

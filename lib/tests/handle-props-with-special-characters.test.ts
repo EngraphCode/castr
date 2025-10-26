@@ -1,44 +1,44 @@
-import { getZodSchema } from "../src/openApiToZod.js";
-import { test, expect } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src/index.js";
-import type { OpenAPIObject, SchemaObject } from "openapi3-ts/oas30";
+import { getZodSchema } from '../src/openApiToZod.js';
+import { test, expect } from 'vitest';
+import { generateZodClientFromOpenAPI } from '../src/index.js';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 
-test("handle-props-with-special-characters", async () => {
-    const schemaWithSpecialCharacters = {
-        properties: {
-            "@id": { type: "string" },
-            id: { type: "number" },
-        },
-    } as SchemaObject;
+test('handle-props-with-special-characters', async () => {
+  const schemaWithSpecialCharacters = {
+    properties: {
+      '@id': { type: 'string' },
+      id: { type: 'number' },
+    },
+  } as SchemaObject;
 
-    expect(getZodSchema({ schema: schemaWithSpecialCharacters })).toMatchInlineSnapshot(
-        '"z.object({ "@id": z.string(), id: z.number() }).partial().passthrough()"'
-    );
+  expect(getZodSchema({ schema: schemaWithSpecialCharacters })).toMatchInlineSnapshot(
+    '"z.object({ "@id": z.string(), id: z.number() }).partial().passthrough()"',
+  );
 
-    const output = await generateZodClientFromOpenAPI({
-        openApiDoc: {
-            openapi: "3.0.3",
-            info: { version: "1", title: "Example API" },
-            paths: {
-                "/something": {
-                    get: {
-                        operationId: "getSomething",
-                        responses: {
-                            "200": {
-                                content: {
-                                    "application/json": {
-                                        schema: schemaWithSpecialCharacters,
-                                    },
-                                },
-                            },
-                        },
-                    },
+  const output = await generateZodClientFromOpenAPI({
+    openApiDoc: {
+      openapi: '3.0.3',
+      info: { version: '1', title: 'Example API' },
+      paths: {
+        '/something': {
+          get: {
+            operationId: 'getSomething',
+            responses: {
+              '200': {
+                content: {
+                  'application/json': {
+                    schema: schemaWithSpecialCharacters,
+                  },
                 },
+              },
             },
-        } as OpenAPIObject,
-        disableWriteToFile: true,
-    });
-    expect(output).toMatchInlineSnapshot(`
+          },
+        },
+      },
+    } as OpenAPIObject,
+    disableWriteToFile: true,
+  });
+  expect(output).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 

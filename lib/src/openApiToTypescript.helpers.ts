@@ -5,11 +5,11 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import { type ReferenceObject, type SchemaObject } from "openapi3-ts/oas30";
-import { t, ts } from "tanu";
+import { type ReferenceObject, type SchemaObject } from 'openapi3-ts/oas30';
+import { t, ts } from 'tanu';
 
-import type { TsConversionContext, TsConversionOutput } from "./openApiToTypescript.js";
-import { wrapWithQuotesIfNeeded } from "./utils.js";
+import type { TsConversionContext, TsConversionOutput } from './openApiToTypescript.js';
+import { wrapWithQuotesIfNeeded } from './utils.js';
 
 /**
  * Primitive schema types (subset of SchemaObjectType from openapi3-ts)
@@ -17,12 +17,18 @@ import { wrapWithQuotesIfNeeded } from "./utils.js";
  *
  * Tied to library type per RULES.md §5: Defer Type Definitions to Source Libraries
  */
-type SchemaObjectType = SchemaObject["type"];
+type SchemaObjectType = SchemaObject['type'];
 
 /**
  * Literal array tied to library type - compiler enforces correctness
  */
-const PRIMITIVE_SCHEMA_TYPES = ["string", "number", "integer", "boolean", "null"] as const satisfies SchemaObjectType[];
+const PRIMITIVE_SCHEMA_TYPES = [
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'null',
+] as const satisfies SchemaObjectType[];
 
 type PrimitiveSchemaType = (typeof PRIMITIVE_SCHEMA_TYPES)[number];
 
@@ -33,9 +39,9 @@ type PrimitiveSchemaType = (typeof PRIMITIVE_SCHEMA_TYPES)[number];
  * Pattern: literals tied to library types per RULES.md §5
  */
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-    if (typeof value !== "string") return false;
-    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-    return typeStrings.includes(value);
+  if (typeof value !== 'string') return false;
+  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return typeStrings.includes(value);
 }
 
 /**
@@ -43,120 +49,130 @@ export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaT
  * Returns a type reference to the resolved schema name
  */
 export function handleReferenceObject(
-    schema: ReferenceObject,
-    ctx: TsConversionContext | undefined,
-    resolveRecursively: (schema: SchemaObject) => unknown
+  schema: ReferenceObject,
+  ctx: TsConversionContext | undefined,
+  resolveRecursively: (schema: SchemaObject) => unknown,
 ): ts.Node | string {
-    if (!ctx?.visitedRefs || !ctx?.resolver) {
-        throw new Error("Context is required for OpenAPI $ref");
-    }
+  if (!ctx?.visitedRefs || !ctx?.resolver) {
+    throw new Error('Context is required for OpenAPI $ref');
+  }
 
-    // Check if we're in a circular reference
-    const schemaName = ctx.resolver.resolveRef(schema.$ref)?.normalized;
-    if (ctx.visitedRefs[schema.$ref]) {
-        return t.reference(schemaName);
-    }
-
-    // Resolve the actual schema if not yet resolved
-    const result = ctx.nodeByRef[schema.$ref];
-    if (!result) {
-        const actualSchema = ctx.resolver.getSchemaByRef(schema.$ref);
-        if (!actualSchema) {
-            throw new Error(`Schema ${schema.$ref} not found`);
-        }
-
-        // Nested $refs are VALID per OpenAPI spec, but we require preprocessing.
-        // This is an intentional design choice: dereferencing is SwaggerParser's job,
-        // code generation is our job. Fail fast with clear error directing users to
-        // the correct preprocessing workflow. See: .agent/analysis/NESTED_REFS_ANALYSIS.md
-        if ("$ref" in actualSchema) {
-            throw new Error(
-                `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference before passing the spec to this library.`
-            );
-        }
-
-        ctx.visitedRefs[schema.$ref] = true;
-        resolveRecursively(actualSchema);
-    }
-
+  // Check if we're in a circular reference
+  const schemaName = ctx.resolver.resolveRef(schema.$ref)?.normalized;
+  if (ctx.visitedRefs[schema.$ref]) {
     return t.reference(schemaName);
+  }
+
+  // Resolve the actual schema if not yet resolved
+  const result = ctx.nodeByRef[schema.$ref];
+  if (!result) {
+    const actualSchema = ctx.resolver.getSchemaByRef(schema.$ref);
+    if (!actualSchema) {
+      throw new Error(`Schema ${schema.$ref} not found`);
+    }
+
+    // Nested $refs are VALID per OpenAPI spec, but we require preprocessing.
+    // This is an intentional design choice: dereferencing is SwaggerParser's job,
+    // code generation is our job. Fail fast with clear error directing users to
+    // the correct preprocessing workflow. See: .agent/analysis/NESTED_REFS_ANALYSIS.md
+    if ('$ref' in actualSchema) {
+      throw new Error(
+        `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference before passing the spec to this library.`,
+      );
+    }
+
+    ctx.visitedRefs[schema.$ref] = true;
+    resolveRecursively(actualSchema);
+  }
+
+  return t.reference(schemaName);
 }
 
 /**
  * Handles primitive type enums, returning union types
  * Rejects invalid enums (non-string type with string values)
  */
-export function handlePrimitiveEnum(schema: SchemaObject, schemaType: PrimitiveSchemaType): ts.Node | null {
-    if (!schema.enum) return null;
+export function handlePrimitiveEnum(
+  schema: SchemaObject,
+  schemaType: PrimitiveSchemaType,
+): ts.Node | null {
+  if (!schema.enum) return null;
 
-    // Invalid: non-string type with string enum values
-    if (schemaType !== "string" && schema.enum.some((e) => typeof e === "string")) {
-        return schema.nullable ? t.union([t.never(), t.reference("null")]) : t.never();
-    }
+  // Invalid: non-string type with string enum values
+  if (schemaType !== 'string' && schema.enum.some((e) => typeof e === 'string')) {
+    return schema.nullable ? t.union([t.never(), t.reference('null')]) : t.never();
+  }
 
-    // Separate null values from other values
-    const enumValues = schema?.enum;
-    const hasNull = enumValues?.includes(null);
-    const withoutNull = enumValues?.filter((f) => f !== null);
+  // Separate null values from other values
+  const enumValues = schema?.enum;
+  const hasNull = enumValues?.includes(null);
+  const withoutNull = enumValues?.filter((f) => f !== null);
 
-    if (schema.nullable || hasNull) {
-        return t.union([...withoutNull, t.reference("null")]);
-    }
-    return t.union(withoutNull);
+  if (schema.nullable || hasNull) {
+    return t.union([...withoutNull, t.reference('null')]);
+  }
+  return t.union(withoutNull);
 }
 
 /**
  * Handles basic primitive types (string, number, boolean)
  * Returns the appropriate TypeScript type, with null union if nullable
  */
-export function handleBasicPrimitive(schemaType: PrimitiveSchemaType, isNullable: boolean): ts.Node {
-    let baseType: t.TypeDefinition;
+export function handleBasicPrimitive(
+  schemaType: PrimitiveSchemaType,
+  isNullable: boolean,
+): ts.Node {
+  let baseType: t.TypeDefinition;
 
-    if (schemaType === "string") baseType = t.string();
-    else if (schemaType === "boolean") baseType = t.boolean();
-    else baseType = t.number(); // number or integer
+  if (schemaType === 'string') baseType = t.string();
+  else if (schemaType === 'boolean') baseType = t.boolean();
+  else baseType = t.number(); // number or integer
 
-    return isNullable ? t.union([baseType, t.reference("null")]) : baseType;
+  return isNullable ? t.union([baseType, t.reference('null')]) : baseType;
 }
 
 /**
  * Wraps a type in readonly if the option is enabled
  */
 export function maybeWrapReadonly(
-    type: ts.Node | t.TypeDefinitionObject,
-    shouldBeReadonly: boolean
+  type: ts.Node | t.TypeDefinitionObject,
+  shouldBeReadonly: boolean,
 ): ts.Node | t.TypeDefinitionObject {
-    return shouldBeReadonly ? t.readonly(type as t.TypeDefinition) : type;
+  return shouldBeReadonly ? t.readonly(type as t.TypeDefinition) : type;
 }
 
 /**
  * Determines if a property is required in an object schema
  */
-export function isPropertyRequired(propName: string, schema: SchemaObject, isPartial: boolean): boolean {
-    return Boolean(isPartial ? true : schema.required?.includes(propName));
+export function isPropertyRequired(
+  propName: string,
+  schema: SchemaObject,
+  isPartial: boolean,
+): boolean {
+  return Boolean(isPartial ? true : schema.required?.includes(propName));
 }
 
 /**
  * Creates an additionalProperties index signature for TypeScript
  */
 export function createAdditionalPropertiesSignature(
-    additionalPropertiesType: t.TypeDefinition | ts.TypeNode
+  additionalPropertiesType: t.TypeDefinition | ts.TypeNode,
 ): ts.TypeLiteralNode {
-    return ts.factory.createTypeLiteralNode([
-        ts.factory.createIndexSignature(
-            undefined,
-            [
-                ts.factory.createParameterDeclaration(
-                    undefined,
-                    undefined,
-                    ts.factory.createIdentifier("key"),
-                    undefined,
-                    ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
-                ),
-            ],
-            additionalPropertiesType as ts.TypeNode
+  return ts.factory.createTypeLiteralNode([
+    ts.factory.createIndexSignature(
+      undefined,
+      [
+        ts.factory.createParameterDeclaration(
+          undefined,
+          undefined,
+          ts.factory.createIdentifier('key'),
+          undefined,
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
         ),
-    ]);
+      ],
+      additionalPropertiesType as ts.TypeNode,
+    ),
+  ]);
 }
 
 /**
@@ -164,25 +180,25 @@ export function createAdditionalPropertiesSignature(
  * Returns undefined if no additional properties are allowed
  */
 export function resolveAdditionalPropertiesType(
-    additionalProperties: SchemaObject["additionalProperties"],
-    convertSchema: (schema: SchemaObject | ReferenceObject) => unknown
+  additionalProperties: SchemaObject['additionalProperties'],
+  convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
 ): ts.Node | t.TypeDefinition | undefined {
-    if (!additionalProperties) return undefined;
+  if (!additionalProperties) return undefined;
 
-    // Boolean true or empty object means any type
-    if (
-        (typeof additionalProperties === "boolean" && additionalProperties) ||
-        (typeof additionalProperties === "object" && Object.keys(additionalProperties).length === 0)
-    ) {
-        return t.any();
-    }
+  // Boolean true or empty object means any type
+  if (
+    (typeof additionalProperties === 'boolean' && additionalProperties) ||
+    (typeof additionalProperties === 'object' && Object.keys(additionalProperties).length === 0)
+  ) {
+    return t.any();
+  }
 
-    // Specific schema for additional properties
-    if (typeof additionalProperties === "object") {
-        return convertSchema(additionalProperties) as ts.Node | t.TypeDefinition;
-    }
+  // Specific schema for additional properties
+  if (typeof additionalProperties === 'object') {
+    return convertSchema(additionalProperties) as ts.Node | t.TypeDefinition;
+  }
 
-    return undefined;
+  return undefined;
 }
 
 /**
@@ -190,22 +206,23 @@ export function resolveAdditionalPropertiesType(
  * Accepts the honest TsConversionOutput type and narrows internally
  */
 export function wrapTypeIfNeeded(
-    isInline: boolean,
-    name: string | undefined,
-    output: TsConversionOutput
+  isInline: boolean,
+  name: string | undefined,
+  output: TsConversionOutput,
 ): t.TypeDefinitionObject | ts.Node {
-    // Narrow ONCE: convert string to reference if needed
-    const typeDef: ts.Node | t.TypeDefinitionObject = typeof output === "string" ? t.reference(output) : output;
+  // Narrow ONCE: convert string to reference if needed
+  const typeDef: ts.Node | t.TypeDefinitionObject =
+    typeof output === 'string' ? t.reference(output) : output;
 
-    if (!isInline) {
-        if (!name) {
-            throw new Error("Name is required to convert a schema to a type reference");
-        }
-        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-        return t.type(name, typeDef as t.TypeDefinition);
+  if (!isInline) {
+    if (!name) {
+      throw new Error('Name is required to convert a schema to a type reference');
     }
+    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+    return t.type(name, typeDef as t.TypeDefinition);
+  }
 
-    return typeDef;
+  return typeDef;
 }
 
 /**
@@ -213,20 +230,20 @@ export function wrapTypeIfNeeded(
  * Used by oneOf, anyOf, allOf composition handlers
  */
 export function convertSchemasToTypes<T>(
-    schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
-    convertFn: (schema: SchemaObject | ReferenceObject) => T
+  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  convertFn: (schema: SchemaObject | ReferenceObject) => T,
 ): T[] {
-    return schemas.map((schema) => convertFn(schema));
+  return schemas.map((schema) => convertFn(schema));
 }
 
 /**
  * Adds null to a union type if nullable flag is true
  */
 export function addNullToUnionIfNeeded(
-    type: ts.Node | t.TypeDefinitionObject,
-    isNullable: boolean
+  type: ts.Node | t.TypeDefinitionObject,
+  isNullable: boolean,
 ): ts.Node | t.TypeDefinitionObject {
-    return isNullable ? t.union([type as t.TypeDefinition, t.reference("null")]) : type;
+  return isNullable ? t.union([type as t.TypeDefinition, t.reference('null')]) : type;
 }
 
 /**
@@ -234,16 +251,16 @@ export function addNullToUnionIfNeeded(
  * Handles circular references by converting string types to references
  */
 export function convertPropertyType(
-    propType: unknown,
-    ctx: { resolver?: unknown } | undefined
+  propType: unknown,
+  ctx: { resolver?: unknown } | undefined,
 ): ts.Node | t.TypeDefinition {
-    if (typeof propType === "string") {
-        if (!ctx) {
-            throw new Error("Context is required for circular $ref (recursive schemas)");
-        }
-        return t.reference(propType);
+  if (typeof propType === 'string') {
+    if (!ctx) {
+      throw new Error('Context is required for circular $ref (recursive schemas)');
     }
-    return propType as ts.Node | t.TypeDefinition;
+    return t.reference(propType);
+  }
+  return propType as ts.Node | t.TypeDefinition;
 }
 
 /**
@@ -251,83 +268,92 @@ export function convertPropertyType(
  * Returns an object mapping property names to their types
  */
 export function convertObjectProperties(
-    properties: Record<string, SchemaObject | ReferenceObject>,
-    schema: SchemaObject,
-    isPartial: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-    ctx: { resolver?: unknown } | undefined
+  properties: Record<string, SchemaObject | ReferenceObject>,
+  schema: SchemaObject,
+  isPartial: boolean,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
+  ctx: { resolver?: unknown } | undefined,
 ): Record<string, t.TypeDefinition> {
-    return Object.fromEntries(
-        Object.entries(properties).map(([prop, propSchema]) => {
-            const rawPropType = convertSchema(propSchema);
-            const propType = convertPropertyType(rawPropType, ctx);
-            const isRequired = isPropertyRequired(prop, schema, isPartial);
-            // Cast to t.TypeDefinition since t.optional requires it
-            const finalType = isRequired ? propType : t.optional(propType as t.TypeDefinition);
-            return [wrapWithQuotesIfNeeded(prop), finalType as t.TypeDefinition];
-        })
-    );
+  return Object.fromEntries(
+    Object.entries(properties).map(([prop, propSchema]) => {
+      const rawPropType = convertSchema(propSchema);
+      const propType = convertPropertyType(rawPropType, ctx);
+      const isRequired = isPropertyRequired(prop, schema, isPartial);
+      // Cast to t.TypeDefinition since t.optional requires it
+      const finalType = isRequired ? propType : t.optional(propType as t.TypeDefinition);
+      return [wrapWithQuotesIfNeeded(prop), finalType as t.TypeDefinition];
+    }),
+  );
 }
 
 /**
  * Handles array schema conversion with proper readonly wrapping
  */
 export function handleArraySchema(
-    schema: SchemaObject,
-    shouldWrapReadonly: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-    ctx: { resolver?: unknown } | undefined
+  schema: SchemaObject,
+  shouldWrapReadonly: boolean,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
+  ctx: { resolver?: unknown } | undefined,
 ): ts.Node | t.TypeDefinitionObject {
-    let arrayOfType: ts.Node | t.TypeDefinition;
+  let arrayOfType: ts.Node | t.TypeDefinition;
 
-    if (schema.items) {
-        const rawType = convertSchema(schema.items);
-        arrayOfType = convertPropertyType(rawType, ctx);
-    } else {
-        arrayOfType = t.any();
-    }
+  if (schema.items) {
+    const rawType = convertSchema(schema.items);
+    arrayOfType = convertPropertyType(rawType, ctx);
+  } else {
+    arrayOfType = t.any();
+  }
 
-    const wrappedArray = maybeWrapReadonly(t.array(arrayOfType as t.TypeDefinition), shouldWrapReadonly);
-    return schema.nullable ? t.union([wrappedArray as t.TypeDefinition, t.reference("null")]) : wrappedArray;
+  const wrappedArray = maybeWrapReadonly(
+    t.array(arrayOfType as t.TypeDefinition),
+    shouldWrapReadonly,
+  );
+  return schema.nullable
+    ? t.union([wrappedArray as t.TypeDefinition, t.reference('null')])
+    : wrappedArray;
 }
 
 /**
  * Builds the final object type by combining properties and additional properties
  */
 export function buildObjectType(
-    props: Record<string, t.TypeDefinition>,
-    additionalPropertiesType: ts.Node | t.TypeDefinition | undefined,
-    shouldWrapReadonly: boolean
+  props: Record<string, t.TypeDefinition>,
+  additionalPropertiesType: ts.Node | t.TypeDefinition | undefined,
+  shouldWrapReadonly: boolean,
 ): ts.Node | t.TypeDefinitionObject {
-    let additionalProperties;
-    if (additionalPropertiesType) {
-        additionalProperties = createAdditionalPropertiesSignature(additionalPropertiesType as t.TypeDefinition);
-    }
+  let additionalProperties;
+  if (additionalPropertiesType) {
+    additionalProperties = createAdditionalPropertiesSignature(
+      additionalPropertiesType as t.TypeDefinition,
+    );
+  }
 
-    const objectType = additionalProperties ? t.intersection([props, additionalProperties]) : props;
-    return maybeWrapReadonly(objectType as t.TypeDefinitionObject, shouldWrapReadonly);
+  const objectType = additionalProperties ? t.intersection([props, additionalProperties]) : props;
+  return maybeWrapReadonly(objectType as t.TypeDefinitionObject, shouldWrapReadonly);
 }
 
 /**
  * Wraps an object type as Partial if needed, handling both inline and named types
  */
 export function wrapObjectTypeForOutput(
-    finalType: ts.Node | t.TypeDefinitionObject,
-    isPartial: boolean,
-    isInline: boolean,
-    name: string | undefined
+  finalType: ts.Node | t.TypeDefinitionObject,
+  isPartial: boolean,
+  isInline: boolean,
+  name: string | undefined,
 ): ts.Node | t.TypeDefinitionObject {
-    const wrappedType = isPartial ? t.reference("Partial", [finalType as t.TypeDefinition]) : finalType;
+  const wrappedType = isPartial
+    ? t.reference('Partial', [finalType as t.TypeDefinition])
+    : finalType;
 
-    if (isInline) {
-        return wrappedType;
-    }
+  if (isInline) {
+    return wrappedType;
+  }
 
-    if (!name) {
-        throw new Error("Name is required to convert an object schema to a type reference");
-    }
+  if (!name) {
+    throw new Error('Name is required to convert an object schema to a type reference');
+  }
 
-    return t.type(name, wrappedType as t.TypeDefinition);
+  return t.type(name, wrappedType as t.TypeDefinition);
 }
 
 /**
@@ -336,26 +362,26 @@ export function wrapObjectTypeForOutput(
  * Accepts honest TsConversionOutput and narrows internally
  */
 export function handleOneOf(
-    schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
-    isNullable: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput
+  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  isNullable: boolean,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
 ): ts.Node {
-    if (schemas.length === 1) {
-        const result = convertSchema(schemas[0]!);
-        // Narrow ONCE: convert string to reference
-        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-        return typeof result === "string" ? t.reference(result) : (result as ts.Node);
-    }
+  if (schemas.length === 1) {
+    const result = convertSchema(schemas[0]!);
+    // Narrow ONCE: convert string to reference
+    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+    return typeof result === 'string' ? t.reference(result) : (result as ts.Node);
+  }
 
-    const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
-        const result = convertSchema(schema);
-        // Narrow ONCE: convert string to reference
-        return typeof result === "string" ? t.reference(result) : result;
-    });
-    if (isNullable) {
-        return t.union([...types, t.reference("null")] as t.TypeDefinition[]);
-    }
-    return t.union(types as t.TypeDefinition[]);
+  const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
+    const result = convertSchema(schema);
+    // Narrow ONCE: convert string to reference
+    return typeof result === 'string' ? t.reference(result) : result;
+  });
+  if (isNullable) {
+    return t.union([...types, t.reference('null')] as t.TypeDefinition[]);
+  }
+  return t.union(types as t.TypeDefinition[]);
 }
 
 /**
@@ -364,32 +390,32 @@ export function handleOneOf(
  * Accepts honest TsConversionOutput and narrows internally
  */
 export function handleAnyOf(
-    schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
-    isNullable: boolean,
-    shouldWrapReadonly: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput
+  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  isNullable: boolean,
+  shouldWrapReadonly: boolean,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
 ): ts.Node {
-    if (schemas.length === 1) {
-        const result = convertSchema(schemas[0]!);
-        // Narrow ONCE: convert string to reference
-        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-        return typeof result === "string" ? t.reference(result) : (result as ts.Node);
-    }
+  if (schemas.length === 1) {
+    const result = convertSchema(schemas[0]!);
+    // Narrow ONCE: convert string to reference
+    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+    return typeof result === 'string' ? t.reference(result) : (result as ts.Node);
+  }
 
-    const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
-        const result = convertSchema(schema);
-        // Narrow ONCE: convert string to reference
-        return typeof result === "string" ? t.reference(result) : result;
-    });
-    const oneOf = t.union(types as t.TypeDefinition[]);
-    const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), shouldWrapReadonly);
+  const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
+    const result = convertSchema(schema);
+    // Narrow ONCE: convert string to reference
+    return typeof result === 'string' ? t.reference(result) : result;
+  });
+  const oneOf = t.union(types as t.TypeDefinition[]);
+  const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), shouldWrapReadonly);
 
-    const unionParts: t.TypeDefinition[] = [oneOf, arrayOfOneOf as t.TypeDefinition];
-    if (isNullable) {
-        unionParts.push(t.reference("null"));
-    }
+  const unionParts: t.TypeDefinition[] = [oneOf, arrayOfOneOf as t.TypeDefinition];
+  if (isNullable) {
+    unionParts.push(t.reference('null'));
+  }
 
-    return t.union(unionParts);
+  return t.union(unionParts);
 }
 
 /**
@@ -397,27 +423,30 @@ export function handleAnyOf(
  * Accepts honest TsConversionOutput and narrows internally
  */
 export function handleTypeArray(
-    types: ReadonlyArray<string>,
-    schema: SchemaObject,
-    isNullable: boolean,
-    convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput
+  types: ReadonlyArray<string>,
+  schema: SchemaObject,
+  isNullable: boolean,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
 ): ts.Node {
-    if (types.length === 1) {
-        const result = convertSchema({ ...schema, type: types[0]! } as SchemaObject);
-        // Narrow ONCE: convert string to reference
-        // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-        return typeof result === "string" ? t.reference(result) : (result as ts.Node);
-    }
+  if (types.length === 1) {
+    const result = convertSchema({ ...schema, type: types[0]! } as SchemaObject);
+    // Narrow ONCE: convert string to reference
+    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
+    return typeof result === 'string' ? t.reference(result) : (result as ts.Node);
+  }
 
-    const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);
-    const typeDefs: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(typeSchemas, (schema) => {
-        const result = convertSchema(schema);
-        // Narrow ONCE: convert string to reference
-        return typeof result === "string" ? t.reference(result) : result;
-    });
+  const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);
+  const typeDefs: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(
+    typeSchemas,
+    (schema) => {
+      const result = convertSchema(schema);
+      // Narrow ONCE: convert string to reference
+      return typeof result === 'string' ? t.reference(result) : result;
+    },
+  );
 
-    if (isNullable) {
-        return t.union([...typeDefs, t.reference("null")] as t.TypeDefinition[]);
-    }
-    return t.union(typeDefs as t.TypeDefinition[]);
+  if (isNullable) {
+    return t.union([...typeDefs, t.reference('null')] as t.TypeDefinition[]);
+  }
+  return t.union(typeDefs as t.TypeDefinition[]);
 }

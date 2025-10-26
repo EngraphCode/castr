@@ -254,73 +254,73 @@ Phase 2B: MCP Enhancements (this plan)
 **Implementation Steps:**
 
 1. **Research MCP specification:**
-    - Visit: https://anthropic.com/mcp (if available)
-    - Read: Tool definition schema
-    - Read: Input/output schema requirements
-    - Read: Security/authentication handling
-    - Read: Error response format
+   - Visit: https://anthropic.com/mcp (if available)
+   - Read: Tool definition schema
+   - Read: Input/output schema requirements
+   - Read: Security/authentication handling
+   - Read: Error response format
 
 2. **Document JSON Schema requirements:**
 
-    ```markdown
-    # MCP Tool Schema Requirements
+   ```markdown
+   # MCP Tool Schema Requirements
 
-    ## Input Schema
+   ## Input Schema
 
-    - Format: JSON Schema Draft 2020-12
-    - Must be: Object type with properties
-    - Must include: Required array
-    - Must include: Descriptions for all fields
-    - $ref handling: Inline all refs (no external refs)
+   - Format: JSON Schema Draft 2020-12
+   - Must be: Object type with properties
+   - Must include: Required array
+   - Must include: Descriptions for all fields
+   - $ref handling: Inline all refs (no external refs)
 
-    ## Output Schema
+   ## Output Schema
 
-    - Format: JSON Schema Draft 2020-12
-    - Must represent: Success response (200/201)
-    - Error handling: Via protocol errors, not schema
-    ```
+   - Format: JSON Schema Draft 2020-12
+   - Must represent: Success response (200/201)
+   - Error handling: Via protocol errors, not schema
+   ```
 
 3. **Compare with current implementation:**
-    - What we have: Zod schemas only
-    - What we need: JSON Schema + Zod schemas
-    - Gap analysis: Missing features
+   - What we have: Zod schemas only
+   - What we need: JSON Schema + Zod schemas
+   - Gap analysis: Missing features
 
 4. **Document security requirements:**
-    - How MCP handles auth
-    - What metadata to extract from OpenAPI
-    - How to represent in tool definition
+   - How MCP handles auth
+   - What metadata to extract from OpenAPI
+   - How to represent in tool definition
 
 5. **Create requirements document:**
 
-    ```bash
-    cat > .agent/analysis/MCP_PROTOCOL_ANALYSIS.md << 'EOF'
-    # MCP Protocol Analysis
+   ```bash
+   cat > .agent/analysis/MCP_PROTOCOL_ANALYSIS.md << 'EOF'
+   # MCP Protocol Analysis
 
-    ## JSON Schema Format
-    - Draft version: 2020-12
-    - Required fields: [list]
-    - Optional fields: [list]
+   ## JSON Schema Format
+   - Draft version: 2020-12
+   - Required fields: [list]
+   - Optional fields: [list]
 
-    ## Tool Definition Structure
-    {
-      "name": string,
-      "description": string,
-      "inputSchema": JSONSchema,
-      "outputSchema": JSONSchema (optional),
-      "security": [...] (custom extension)
-    }
+   ## Tool Definition Structure
+   {
+     "name": string,
+     "description": string,
+     "inputSchema": JSONSchema,
+     "outputSchema": JSONSchema (optional),
+     "security": [...] (custom extension)
+   }
 
-    ## Conversion Requirements
-    - Zod → JSON Schema library: zod-to-json-schema
-    - $ref strategy: inline (no external refs)
-    - Unknown types: Use { type: "object" }
+   ## Conversion Requirements
+   - Zod → JSON Schema library: zod-to-json-schema
+   - $ref strategy: inline (no external refs)
+   - Unknown types: Use { type: "object" }
 
-    ## Security Metadata
-    - Extract from: openapi.components.securitySchemes
-    - Extract from: operation.security
-    - Format as: { scheme: type, scopes: [] }
-    EOF
-    ```
+   ## Security Metadata
+   - Extract from: openapi.components.securitySchemes
+   - Extract from: operation.security
+   - Format as: { scheme: type, scopes: [] }
+   EOF
+   ```
 
 **Validation Steps:**
 
@@ -355,85 +355,85 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Evaluate zod-to-json-schema library:**
 
-    ```bash
-    npm info zod-to-json-schema
-    # Check: Version, maintenance, GitHub activity
-    # Read: Documentation, examples
-    ```
+   ```bash
+   npm info zod-to-json-schema
+   # Check: Version, maintenance, GitHub activity
+   # Read: Documentation, examples
+   ```
 
 2. **Test conversion with sample schemas:**
 
-    ```typescript
-    import { zodToJsonSchema } from "zod-to-json-schema";
+   ```typescript
+   import { zodToJsonSchema } from "zod-to-json-schema";
 
-    // Test with various Zod types
-    const schemas = [
-      z.string(),
-      z.number().int().min(1).max(100),
-      z.object({ name: z.string(), age: z.number() }),
-      z.array(z.string()),
-      z.union([z.string(), z.number()]),
-      z.discriminatedUnion("type", [...]),
-      z.enum(["a", "b", "c"]),
-    ];
+   // Test with various Zod types
+   const schemas = [
+     z.string(),
+     z.number().int().min(1).max(100),
+     z.object({ name: z.string(), age: z.number() }),
+     z.array(z.string()),
+     z.union([z.string(), z.number()]),
+     z.discriminatedUnion("type", [...]),
+     z.enum(["a", "b", "c"]),
+   ];
 
-    schemas.forEach(schema => {
-      const jsonSchema = zodToJsonSchema(schema, {
-        $refStrategy: "none", // Inline all refs
-        target: "jsonSchema2019-09", // Or 2020-12
-      });
-      console.log(JSON.stringify(jsonSchema, null, 2));
-    });
-    ```
+   schemas.forEach(schema => {
+     const jsonSchema = zodToJsonSchema(schema, {
+       $refStrategy: "none", // Inline all refs
+       target: "jsonSchema2019-09", // Or 2020-12
+     });
+     console.log(JSON.stringify(jsonSchema, null, 2));
+   });
+   ```
 
 3. **Document edge cases:**
-    - Recursive schemas
-    - Complex unions
-    - Custom Zod types (.refine(), .transform())
-    - Unknown/any types
-    - Branded types
+   - Recursive schemas
+   - Complex unions
+   - Custom Zod types (.refine(), .transform())
+   - Unknown/any types
+   - Branded types
 
 4. **Define test strategy:**
-    - Unit tests for conversion
-    - Integration tests with real OpenAPI specs
-    - Validation against JSON Schema validators
+   - Unit tests for conversion
+   - Integration tests with real OpenAPI specs
+   - Validation against JSON Schema validators
 
 5. **Create strategy document:**
 
-    ````markdown
-    # JSON Schema Conversion Strategy
+   ````markdown
+   # JSON Schema Conversion Strategy
 
-    ## Library Choice
+   ## Library Choice
 
-    - Library: zod-to-json-schema@3.x
-    - Rationale: Most popular, well-maintained, good Zod support
+   - Library: zod-to-json-schema@3.x
+   - Rationale: Most popular, well-maintained, good Zod support
 
-    ## Configuration
+   ## Configuration
 
-    ```typescript
-    const config = {
-        $refStrategy: "none", // Inline all refs for MCP
-        target: "jsonSchema2019-09", // Or 2020-12
-        errorMessages: true, // Include validation messages
-        markdownDescription: true, // Use description field
-    };
-    ```
-    ````
+   ```typescript
+   const config = {
+     $refStrategy: 'none', // Inline all refs for MCP
+     target: 'jsonSchema2019-09', // Or 2020-12
+     errorMessages: true, // Include validation messages
+     markdownDescription: true, // Use description field
+   };
+   ```
+   ````
 
-    ## Edge Cases
-    1. Recursive schemas → Inline with depth limit
-    2. .refine() → Custom validation, use description
-    3. .transform() → Omit (not JSON-serializable)
-    4. z.unknown() → { type: "object" }
+   ## Edge Cases
+   1. Recursive schemas → Inline with depth limit
+   2. .refine() → Custom validation, use description
+   3. .transform() → Omit (not JSON-serializable)
+   4. z.unknown() → { type: "object" }
 
-    ## Testing Approach
-    - Test each Zod primitive type
-    - Test complex compositions
-    - Test with real OpenAPI schemas
+   ## Testing Approach
+   - Test each Zod primitive type
+   - Test complex compositions
+   - Test with real OpenAPI schemas
 
-    ```
+   ```
 
-    ```
+   ```
 
 **Validation Steps:**
 
@@ -468,132 +468,135 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Review OpenAPI security structure:**
 
-    ```yaml
-    # OpenAPI security definitions
-    components:
-        securitySchemes:
-            bearerAuth:
-                type: http
-                scheme: bearer
-                bearerFormat: JWT
-            apiKey:
-                type: apiKey
-                in: header
-                name: X-API-Key
-            oauth2:
-                type: oauth2
-                flows:
-                    authorizationCode:
-                        authorizationUrl: https://example.com/oauth/authorize
-                        tokenUrl: https://example.com/oauth/token
-                        scopes:
-                            read: Read access
-                            write: Write access
+   ```yaml
+   # OpenAPI security definitions
+   components:
+     securitySchemes:
+       bearerAuth:
+         type: http
+         scheme: bearer
+         bearerFormat: JWT
+       apiKey:
+         type: apiKey
+         in: header
+         name: X-API-Key
+       oauth2:
+         type: oauth2
+         flows:
+           authorizationCode:
+             authorizationUrl: https://example.com/oauth/authorize
+             tokenUrl: https://example.com/oauth/token
+             scopes:
+               read: Read access
+               write: Write access
 
-    paths:
-        /users:
-            post:
-                security:
-                    - bearerAuth: []
-                    - apiKey: []
-    ```
+   paths:
+     /users:
+       post:
+         security:
+           - bearerAuth: []
+           - apiKey: []
+   ```
 
 2. **Design extraction function:**
 
-    ```typescript
-    interface SecurityMetadata {
-        // From operation.security
-        requirements: SecurityRequirementObject[];
+   ```typescript
+   interface SecurityMetadata {
+     // From operation.security
+     requirements: SecurityRequirementObject[];
 
-        // Resolved from components.securitySchemes
-        schemes: Record<string, SecuritySchemeObject>;
+     // Resolved from components.securitySchemes
+     schemes: Record<string, SecuritySchemeObject>;
 
-        // Computed helpers
-        requiresAuth: boolean;
-        authTypes: string[]; // ["bearer", "apiKey", "oauth2"]
-        scopes: string[]; // For OAuth2
-    }
+     // Computed helpers
+     requiresAuth: boolean;
+     authTypes: string[]; // ["bearer", "apiKey", "oauth2"]
+     scopes: string[]; // For OAuth2
+   }
 
-    function extractSecurityMetadata(operation: OperationObject, components?: ComponentsObject): SecurityMetadata {
-        // Implementation plan
-    }
-    ```
+   function extractSecurityMetadata(
+     operation: OperationObject,
+     components?: ComponentsObject,
+   ): SecurityMetadata {
+     // Implementation plan
+   }
+   ```
 
 3. **Define output format for MCP tools:**
 
-    ```typescript
-    // In mcpTools output
-    {
-      name: "createUser",
-      // ... other fields
+   ```typescript
+   // In mcpTools output
+   {
+     name: "createUser",
+     // ... other fields
 
-      security: [
-        { bearerAuth: [] },
-        { apiKey: [] },
-      ],
-      requiresAuth: true,
-      authTypes: ["bearer", "apiKey"],
+     security: [
+       { bearerAuth: [] },
+       { apiKey: [] },
+     ],
+     requiresAuth: true,
+     authTypes: ["bearer", "apiKey"],
 
-      // Full scheme definitions for reference
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-        apiKey: {
-          type: "apiKey",
-          in: "header",
-          name: "X-API-Key",
-        },
-      },
-    }
-    ```
+     // Full scheme definitions for reference
+     securitySchemes: {
+       bearerAuth: {
+         type: "http",
+         scheme: "bearer",
+         bearerFormat: "JWT",
+       },
+       apiKey: {
+         type: "apiKey",
+         in: "header",
+         name: "X-API-Key",
+       },
+     },
+   }
+   ```
 
 4. **Identify test cases:**
-    - No security
-    - Single security scheme
-    - Multiple security schemes (OR)
-    - Multiple requirements (AND)
-    - OAuth2 with scopes
-    - Undefined security scheme (error case)
+   - No security
+   - Single security scheme
+   - Multiple security schemes (OR)
+   - Multiple requirements (AND)
+   - OAuth2 with scopes
+   - Undefined security scheme (error case)
 
 5. **Create design document:**
 
-    ````markdown
-    # Security Metadata Extraction Design
+   ````markdown
+   # Security Metadata Extraction Design
 
-    ## Data Sources
+   ## Data Sources
 
-    1. `operation.security` - Security requirements
-    2. `components.securitySchemes` - Scheme definitions
+   1. `operation.security` - Security requirements
+   2. `components.securitySchemes` - Scheme definitions
 
-    ## Extraction Algorithm
+   ## Extraction Algorithm
 
-    ```typescript
-    for each operation:
-      if operation.security exists:
-        for each requirement in operation.security:
-          for each schemeName in requirement:
-            resolve scheme from components.securitySchemes
-            add to output
-      else:
-        use global security from openapi.security
-    ```
-    ````
+   ```typescript
+   for each operation:
+     if operation.security exists:
+       for each requirement in operation.security:
+         for each schemeName in requirement:
+           resolve scheme from components.securitySchemes
+           add to output
+     else:
+       use global security from openapi.security
+   ```
+   ````
 
-    ## Output Format
+   ## Output Format
 
-    [Schema definition]
+   [Schema definition]
 
-    ## Error Handling (Fail-Fast)
-    - Missing security scheme → Throw error
-    - Invalid scheme type → Throw error
-    - Malformed security object → Throw error
+   ## Error Handling (Fail-Fast)
+   - Missing security scheme → Throw error
+   - Invalid scheme type → Throw error
+   - Malformed security object → Throw error
 
-    ```
+   ```
 
-    ```
+   ```
 
 **Validation Steps:**
 
@@ -635,437 +638,449 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Create test file:**
 
-    ```bash
-    touch lib/src/validateMcpReadiness.test.ts
-    ```
+   ```bash
+   touch lib/src/validateMcpReadiness.test.ts
+   ```
 
 2. **Write comprehensive test suite:**
 
-    ```typescript
-    import { describe, it, expect } from "vitest";
-    import { validateMcpReadiness } from "./validateMcpReadiness.js";
-    import type { OpenAPIObject } from "openapi3-ts";
+   ```typescript
+   import { describe, it, expect } from 'vitest';
+   import { validateMcpReadiness } from './validateMcpReadiness.js';
+   import type { OpenAPIObject } from 'openapi3-ts';
 
-    describe("validateMcpReadiness", () => {
-        it("should pass validation for MCP-ready spec", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            operationId: "createUser",
-                            description: "Create a user",
-                            responses: {
-                                200: {
-                                    description: "Success",
-                                    content: {
-                                        "application/json": {
-                                            schema: { type: "object" },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            };
+   describe('validateMcpReadiness', () => {
+     it('should pass validation for MCP-ready spec', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               operationId: 'createUser',
+               description: 'Create a user',
+               responses: {
+                 200: {
+                   description: 'Success',
+                   content: {
+                     'application/json': {
+                       schema: { type: 'object' },
+                     },
+                   },
+                 },
+               },
+             },
+           },
+         },
+       };
 
-            expect(() => validateMcpReadiness(spec)).not.toThrow();
-        });
+       expect(() => validateMcpReadiness(spec)).not.toThrow();
+     });
 
-        it("should throw error when operationId is missing", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            // Missing operationId
-                            responses: {
-                                200: { description: "Success" },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should throw error when operationId is missing', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               // Missing operationId
+               responses: {
+                 200: { description: 'Success' },
+               },
+             },
+           },
+         },
+       };
 
-            expect(() => validateMcpReadiness(spec)).toThrow(/Missing required 'operationId'/);
-            expect(() => validateMcpReadiness(spec)).toThrow(/POST \/users/);
-        });
+       expect(() => validateMcpReadiness(spec)).toThrow(/Missing required 'operationId'/);
+       expect(() => validateMcpReadiness(spec)).toThrow(/POST \/users/);
+     });
 
-        it("should throw when success response is missing", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            operationId: "createUser",
-                            responses: {
-                                // Missing 200/201
-                                400: { description: "Error" },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should throw when success response is missing', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               operationId: 'createUser',
+               responses: {
+                 // Missing 200/201
+                 400: { description: 'Error' },
+               },
+             },
+           },
+         },
+       };
 
-            expect(() => validateMcpReadiness(spec)).toThrow(/Missing success response/);
-        });
+       expect(() => validateMcpReadiness(spec)).toThrow(/Missing success response/);
+     });
 
-        it("should throw when security scheme is undefined", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            operationId: "createUser",
-                            security: [{ undefinedScheme: [] }],
-                            responses: {
-                                200: { description: "Success" },
-                            },
-                        },
-                    },
-                },
-                // No components.securitySchemes
-            };
+     it('should throw when security scheme is undefined', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               operationId: 'createUser',
+               security: [{ undefinedScheme: [] }],
+               responses: {
+                 200: { description: 'Success' },
+               },
+             },
+           },
+         },
+         // No components.securitySchemes
+       };
 
-            expect(() => validateMcpReadiness(spec)).toThrow(/undefined security scheme 'undefinedScheme'/);
-        });
+       expect(() => validateMcpReadiness(spec)).toThrow(
+         /undefined security scheme 'undefinedScheme'/,
+       );
+     });
 
-        it("should warn when description is missing (non-strict)", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            operationId: "createUser",
-                            // Missing description
-                            responses: {
-                                200: { description: "Success" },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should warn when description is missing (non-strict)', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               operationId: 'createUser',
+               // Missing description
+               responses: {
+                 200: { description: 'Success' },
+               },
+             },
+           },
+         },
+       };
 
-            // Should not throw in non-strict mode
-            expect(() => validateMcpReadiness(spec)).not.toThrow();
+       // Should not throw in non-strict mode
+       expect(() => validateMcpReadiness(spec)).not.toThrow();
 
-            // Should throw in strict mode
-            expect(() => validateMcpReadiness(spec, { strict: true })).toThrow(/Missing 'description'/);
-        });
+       // Should throw in strict mode
+       expect(() => validateMcpReadiness(spec, { strict: true })).toThrow(/Missing 'description'/);
+     });
 
-        it("should warn when parameter description is missing", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users/{id}": {
-                        get: {
-                            operationId: "getUser",
-                            parameters: [
-                                {
-                                    name: "id",
-                                    in: "path",
-                                    required: true,
-                                    schema: { type: "string" },
-                                    // Missing description
-                                },
-                            ],
-                            responses: {
-                                200: { description: "Success" },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should warn when parameter description is missing', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users/{id}': {
+             get: {
+               operationId: 'getUser',
+               parameters: [
+                 {
+                   name: 'id',
+                   in: 'path',
+                   required: true,
+                   schema: { type: 'string' },
+                   // Missing description
+                 },
+               ],
+               responses: {
+                 200: { description: 'Success' },
+               },
+             },
+           },
+         },
+       };
 
-            // Should not throw (warning only)
-            expect(() => validateMcpReadiness(spec)).not.toThrow();
-        });
+       // Should not throw (warning only)
+       expect(() => validateMcpReadiness(spec)).not.toThrow();
+     });
 
-        it("should provide helpful error messages with location context", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users/{userId}/posts/{postId}": {
-                        delete: {
-                            // Missing operationId
-                            responses: {
-                                204: { description: "Deleted" },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should provide helpful error messages with location context', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users/{userId}/posts/{postId}': {
+             delete: {
+               // Missing operationId
+               responses: {
+                 204: { description: 'Deleted' },
+               },
+             },
+           },
+         },
+       };
 
-            try {
-                validateMcpReadiness(spec);
-                expect.fail("Should have thrown");
-            } catch (error) {
-                const message = (error as Error).message;
-                expect(message).toContain("DELETE /users/{userId}/posts/{postId}");
-                expect(message).toContain("operationId");
-                expect(message).toContain("Add: operationId:");
-            }
-        });
+       try {
+         validateMcpReadiness(spec);
+         expect.fail('Should have thrown');
+       } catch (error) {
+         const message = (error as Error).message;
+         expect(message).toContain('DELETE /users/{userId}/posts/{postId}');
+         expect(message).toContain('operationId');
+         expect(message).toContain('Add: operationId:');
+       }
+     });
 
-        it("should handle skip validation option", () => {
-            const spec: OpenAPIObject = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            // Missing operationId
-                            responses: {
-                                200: { description: "Success" },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should handle skip validation option', () => {
+       const spec: OpenAPIObject = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               // Missing operationId
+               responses: {
+                 200: { description: 'Success' },
+               },
+             },
+           },
+         },
+       };
 
-            // Should not throw when skipped
-            expect(() => validateMcpReadiness(spec, { skip: true })).not.toThrow();
-        });
-    });
-    ```
+       // Should not throw when skipped
+       expect(() => validateMcpReadiness(spec, { skip: true })).not.toThrow();
+     });
+   });
+   ```
 
 3. **Run tests - expect failures:**
-    ```bash
-    cd lib
-    pnpm test -- --run src/validateMcpReadiness.test.ts
-    # Expected: 8 FAILING (function doesn't exist yet)
-    ```
+   ```bash
+   cd lib
+   pnpm test -- --run src/validateMcpReadiness.test.ts
+   # Expected: 8 FAILING (function doesn't exist yet)
+   ```
 
 **Phase B: Implement Validation (TDD Green) - 2.5 hours**
 
 4. **Create implementation file:**
 
-    ````typescript
-    // lib/src/validateMcpReadiness.ts
-    import type { OpenAPIObject, OperationObject } from "openapi3-ts";
+   ````typescript
+   // lib/src/validateMcpReadiness.ts
+   import type { OpenAPIObject, OperationObject } from 'openapi3-ts';
 
-    export interface ValidateMcpReadinessOptions {
-        /**
-         * Skip validation entirely (for testing or edge cases)
-         */
-        skip?: boolean;
+   export interface ValidateMcpReadinessOptions {
+     /**
+      * Skip validation entirely (for testing or edge cases)
+      */
+     skip?: boolean;
 
-        /**
-         * Treat warnings as errors
-         */
-        strict?: boolean;
-    }
+     /**
+      * Treat warnings as errors
+      */
+     strict?: boolean;
+   }
 
-    /**
-     * Validates that an OpenAPI spec is suitable for MCP tool generation.
-     *
-     * Implements fail-fast philosophy: throws on critical errors with helpful context.
-     *
-     * @throws {Error} If spec has critical MCP issues (missing operationId, responses, etc.)
-     *
-     * @example
-     * ```typescript
-     * try {
-     *   validateMcpReadiness(openApiDoc);
-     *   // Spec is MCP-ready
-     * } catch (error) {
-     *   console.error("MCP validation failed:", error.message);
-     *   // Shows exactly what's wrong and how to fix it
-     * }
-     * ```
-     */
-    export function validateMcpReadiness(openApiDoc: OpenAPIObject, options: ValidateMcpReadinessOptions = {}): void {
-        if (options.skip) {
-            return;
-        }
+   /**
+    * Validates that an OpenAPI spec is suitable for MCP tool generation.
+    *
+    * Implements fail-fast philosophy: throws on critical errors with helpful context.
+    *
+    * @throws {Error} If spec has critical MCP issues (missing operationId, responses, etc.)
+    *
+    * @example
+    * ```typescript
+    * try {
+    *   validateMcpReadiness(openApiDoc);
+    *   // Spec is MCP-ready
+    * } catch (error) {
+    *   console.error("MCP validation failed:", error.message);
+    *   // Shows exactly what's wrong and how to fix it
+    * }
+    * ```
+    */
+   export function validateMcpReadiness(
+     openApiDoc: OpenAPIObject,
+     options: ValidateMcpReadinessOptions = {},
+   ): void {
+     if (options.skip) {
+       return;
+     }
 
-        const errors: string[] = [];
-        const warnings: string[] = [];
+     const errors: string[] = [];
+     const warnings: string[] = [];
 
-        // Validate each operation
-        for (const [path, pathItem] of Object.entries(openApiDoc.paths || {})) {
-            if (!pathItem || typeof pathItem !== "object") continue;
+     // Validate each operation
+     for (const [path, pathItem] of Object.entries(openApiDoc.paths || {})) {
+       if (!pathItem || typeof pathItem !== 'object') continue;
 
-            for (const [method, operation] of Object.entries(pathItem)) {
-                if (!isOperationObject(operation)) continue;
+       for (const [method, operation] of Object.entries(pathItem)) {
+         if (!isOperationObject(operation)) continue;
 
-                const location = `${method.toUpperCase()} ${path}`;
+         const location = `${method.toUpperCase()} ${path}`;
 
-                // CRITICAL: operationId is required for MCP tool naming
-                if (!operation.operationId) {
-                    errors.push(
-                        `${location}: Missing required 'operationId'. ` +
-                            `MCP tools require unique identifiers. ` +
-                            `Add: operationId: "myToolName"`
-                    );
-                }
+         // CRITICAL: operationId is required for MCP tool naming
+         if (!operation.operationId) {
+           errors.push(
+             `${location}: Missing required 'operationId'. ` +
+               `MCP tools require unique identifiers. ` +
+               `Add: operationId: "myToolName"`,
+           );
+         }
 
-                // CRITICAL: Must have success response (200 or 201)
-                const hasSuccessResponse = operation.responses?.["200"] || operation.responses?.["201"];
+         // CRITICAL: Must have success response (200 or 201)
+         const hasSuccessResponse = operation.responses?.['200'] || operation.responses?.['201'];
 
-                if (!hasSuccessResponse) {
-                    errors.push(
-                        `${location}: Missing success response (200 or 201). ` +
-                            `MCP tools require output schemas. ` +
-                            `Add a response definition with a schema.`
-                    );
-                }
+         if (!hasSuccessResponse) {
+           errors.push(
+             `${location}: Missing success response (200 or 201). ` +
+               `MCP tools require output schemas. ` +
+               `Add a response definition with a schema.`,
+           );
+         }
 
-                // WARNING: Description helps AI context
-                if (!operation.description && !operation.summary) {
-                    warnings.push(
-                        `${location}: Missing 'description' or 'summary'. ` +
-                            `MCP tools benefit from clear descriptions for AI assistants.`
-                    );
-                }
+         // WARNING: Description helps AI context
+         if (!operation.description && !operation.summary) {
+           warnings.push(
+             `${location}: Missing 'description' or 'summary'. ` +
+               `MCP tools benefit from clear descriptions for AI assistants.`,
+           );
+         }
 
-                // CRITICAL: Security schemes must be defined
-                if (operation.security) {
-                    for (const requirement of operation.security) {
-                        for (const schemeName of Object.keys(requirement)) {
-                            if (!openApiDoc.components?.securitySchemes?.[schemeName]) {
-                                errors.push(
-                                    `${location}: References undefined security scheme '${schemeName}'. ` +
-                                        `Define it in components.securitySchemes.`
-                                );
-                            }
-                        }
-                    }
-                }
+         // CRITICAL: Security schemes must be defined
+         if (operation.security) {
+           for (const requirement of operation.security) {
+             for (const schemeName of Object.keys(requirement)) {
+               if (!openApiDoc.components?.securitySchemes?.[schemeName]) {
+                 errors.push(
+                   `${location}: References undefined security scheme '${schemeName}'. ` +
+                     `Define it in components.securitySchemes.`,
+                 );
+               }
+             }
+           }
+         }
 
-                // WARNING: Parameter descriptions improve error messages
-                if (operation.parameters) {
-                    for (const param of operation.parameters) {
-                        if (!isReferenceObject(param) && !param.description) {
-                            warnings.push(
-                                `${location}: Parameter '${param.name}' missing description. ` +
-                                    `Descriptions improve validation error messages.`
-                            );
-                        }
-                    }
-                }
-            }
-        }
+         // WARNING: Parameter descriptions improve error messages
+         if (operation.parameters) {
+           for (const param of operation.parameters) {
+             if (!isReferenceObject(param) && !param.description) {
+               warnings.push(
+                 `${location}: Parameter '${param.name}' missing description. ` +
+                   `Descriptions improve validation error messages.`,
+               );
+             }
+           }
+         }
+       }
+     }
 
-        // Fail-fast on errors
-        if (errors.length > 0) {
-            throw new Error(
-                `OpenAPI spec is not MCP-ready:\n\n` +
-                    `ERRORS (must fix):\n${errors.map((e) => `  ❌ ${e}`).join("\n")}\n\n` +
-                    `${
-                        warnings.length > 0
-                            ? `WARNINGS (recommended):\n${warnings.map((w) => `  ⚠️  ${w}`).join("\n")}\n\n`
-                            : ""
-                    }` +
-                    `Fix these issues or use --skip-mcp-validation to bypass (not recommended).`
-            );
-        }
+     // Fail-fast on errors
+     if (errors.length > 0) {
+       throw new Error(
+         `OpenAPI spec is not MCP-ready:\n\n` +
+           `ERRORS (must fix):\n${errors.map((e) => `  ❌ ${e}`).join('\n')}\n\n` +
+           `${
+             warnings.length > 0
+               ? `WARNINGS (recommended):\n${warnings.map((w) => `  ⚠️  ${w}`).join('\n')}\n\n`
+               : ''
+           }` +
+           `Fix these issues or use --skip-mcp-validation to bypass (not recommended).`,
+       );
+     }
 
-        // In strict mode, treat warnings as errors
-        if (options.strict && warnings.length > 0) {
-            throw new Error(`MCP validation warnings (strict mode):\n` + warnings.map((w) => `  ⚠️  ${w}`).join("\n"));
-        }
+     // In strict mode, treat warnings as errors
+     if (options.strict && warnings.length > 0) {
+       throw new Error(
+         `MCP validation warnings (strict mode):\n` + warnings.map((w) => `  ⚠️  ${w}`).join('\n'),
+       );
+     }
 
-        // Log warnings but don't fail
-        if (warnings.length > 0) {
-            console.warn(`\n⚠️  MCP Readiness Warnings:\n` + warnings.map((w) => `  ${w}`).join("\n") + `\n`);
-        }
-    }
+     // Log warnings but don't fail
+     if (warnings.length > 0) {
+       console.warn(
+         `\n⚠️  MCP Readiness Warnings:\n` + warnings.map((w) => `  ${w}`).join('\n') + `\n`,
+       );
+     }
+   }
 
-    function isOperationObject(obj: unknown): obj is OperationObject {
-        return typeof obj === "object" && obj !== null && "responses" in obj;
-    }
+   function isOperationObject(obj: unknown): obj is OperationObject {
+     return typeof obj === 'object' && obj !== null && 'responses' in obj;
+   }
 
-    function isReferenceObject(obj: unknown): obj is { $ref: string } {
-        return typeof obj === "object" && obj !== null && "$ref" in obj;
-    }
-    ````
+   function isReferenceObject(obj: unknown): obj is { $ref: string } {
+     return typeof obj === 'object' && obj !== null && '$ref' in obj;
+   }
+   ````
 
 5. **Run tests - expect success:**
-    ```bash
-    pnpm test -- --run src/validateMcpReadiness.test.ts
-    # Expected: 8/8 PASSING ✅
-    ```
+   ```bash
+   pnpm test -- --run src/validateMcpReadiness.test.ts
+   # Expected: 8/8 PASSING ✅
+   ```
 
 **Phase C: CLI Integration - 1 hour**
 
 6. **Add CLI flags:**
 
-    ```typescript
-    // lib/src/cli.ts
-    program
-        .option("--validate-mcp-readiness", "Validate OpenAPI spec is MCP-ready (auto-enabled with --no-client)")
-        .option("--skip-mcp-validation", "Skip MCP readiness validation (not recommended)")
-        .option("--strict-mcp-validation", "Treat MCP warnings as errors");
-    ```
+   ```typescript
+   // lib/src/cli.ts
+   program
+     .option(
+       '--validate-mcp-readiness',
+       'Validate OpenAPI spec is MCP-ready (auto-enabled with --no-client)',
+     )
+     .option('--skip-mcp-validation', 'Skip MCP readiness validation (not recommended)')
+     .option('--strict-mcp-validation', 'Treat MCP warnings as errors');
+   ```
 
 7. **Integrate into generation:**
 
-    ```typescript
-    // lib/src/generateZodClientFromOpenAPI.ts
+   ```typescript
+   // lib/src/generateZodClientFromOpenAPI.ts
 
-    // Auto-validate when using schemas-with-metadata template
-    if (effectiveTemplate === "schemas-with-metadata" && !options.skipMcpValidation) {
-        validateMcpReadiness(openApiDoc, {
-            skip: options.skipMcpValidation,
-            strict: options.strictMcpValidation,
-        });
-    }
-    ```
+   // Auto-validate when using schemas-with-metadata template
+   if (effectiveTemplate === 'schemas-with-metadata' && !options.skipMcpValidation) {
+     validateMcpReadiness(openApiDoc, {
+       skip: options.skipMcpValidation,
+       strict: options.strictMcpValidation,
+     });
+   }
+   ```
 
 **Phase D: Documentation - 30 minutes**
 
 8. **Add JSDoc to validation function** (already done in implementation above)
 
 9. **Update type definitions:**
-    ```typescript
-    // lib/src/template-context.types.ts
-    export interface GenerateZodClientFromOpenAPIOptions {
-        // ... existing options
-        validateMcpReadiness?: boolean;
-        skipMcpValidation?: boolean;
-        strictMcpValidation?: boolean;
-    }
-    ```
+   ```typescript
+   // lib/src/template-context.types.ts
+   export interface GenerateZodClientFromOpenAPIOptions {
+     // ... existing options
+     validateMcpReadiness?: boolean;
+     skipMcpValidation?: boolean;
+     strictMcpValidation?: boolean;
+   }
+   ```
 
 **Validation Steps:**
 
 1. **All tests pass:**
 
-    ```bash
-    pnpm test -- --run src/validateMcpReadiness.test.ts
-    # 8/8 passing
-    ```
+   ```bash
+   pnpm test -- --run src/validateMcpReadiness.test.ts
+   # 8/8 passing
+   ```
 
 2. **Full test suite passes:**
 
-    ```bash
-    pnpm test -- --run
-    # All tests passing
-    ```
+   ```bash
+   pnpm test -- --run
+   # All tests passing
+   ```
 
 3. **CLI flags work:**
 
-    ```bash
-    # Should fail validation
-    pnpm cli samples/bad-spec.yaml -o /tmp/test.ts --no-client
+   ```bash
+   # Should fail validation
+   pnpm cli samples/bad-spec.yaml -o /tmp/test.ts --no-client
 
-    # Should skip validation
-    pnpm cli samples/bad-spec.yaml -o /tmp/test.ts --no-client --skip-mcp-validation
-    ```
+   # Should skip validation
+   pnpm cli samples/bad-spec.yaml -o /tmp/test.ts --no-client --skip-mcp-validation
+   ```
 
 4. **Quality gates pass:**
-    ```bash
-    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
-    ```
+   ```bash
+   pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+   ```
 
 **Output:**
 
@@ -1160,253 +1175,253 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Create test file:**
 
-    ```typescript
-    // lib/src/templates/mcp-json-schema.test.ts
-    import { describe, it, expect } from "vitest";
-    import { generateZodClientFromOpenAPI } from "../generateZodClientFromOpenAPI.js";
+   ```typescript
+   // lib/src/templates/mcp-json-schema.test.ts
+   import { describe, it, expect } from 'vitest';
+   import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
 
-    describe("MCP JSON Schema export", () => {
-        it("should generate inputSchemaJson for mcpTools", async () => {
-            const openApiDoc = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users/{id}": {
-                        get: {
-                            operationId: "getUser",
-                            parameters: [
-                                {
-                                    name: "id",
-                                    in: "path",
-                                    required: true,
-                                    schema: { type: "string", format: "uuid" },
-                                },
-                                {
-                                    name: "include",
-                                    in: "query",
-                                    schema: { type: "string" },
-                                },
-                            ],
-                            responses: {
-                                200: {
-                                    content: {
-                                        "application/json": {
-                                            schema: {
-                                                type: "object",
-                                                properties: {
-                                                    id: { type: "string" },
-                                                    name: { type: "string" },
-                                                },
-                                                required: ["id", "name"],
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            };
+   describe('MCP JSON Schema export', () => {
+     it('should generate inputSchemaJson for mcpTools', async () => {
+       const openApiDoc = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users/{id}': {
+             get: {
+               operationId: 'getUser',
+               parameters: [
+                 {
+                   name: 'id',
+                   in: 'path',
+                   required: true,
+                   schema: { type: 'string', format: 'uuid' },
+                 },
+                 {
+                   name: 'include',
+                   in: 'query',
+                   schema: { type: 'string' },
+                 },
+               ],
+               responses: {
+                 200: {
+                   content: {
+                     'application/json': {
+                       schema: {
+                         type: 'object',
+                         properties: {
+                           id: { type: 'string' },
+                           name: { type: 'string' },
+                         },
+                         required: ['id', 'name'],
+                       },
+                     },
+                   },
+                 },
+               },
+             },
+           },
+         },
+       };
 
-            const result = await generateZodClientFromOpenAPI({
-                openApiDoc,
-                template: "schemas-with-metadata",
-                disableWriteToFile: true,
-            });
+       const result = await generateZodClientFromOpenAPI({
+         openApiDoc,
+         template: 'schemas-with-metadata',
+         disableWriteToFile: true,
+       });
 
-            // Should have inputSchemaJson
-            expect(result).toContain("inputSchemaJson:");
+       // Should have inputSchemaJson
+       expect(result).toContain('inputSchemaJson:');
 
-            // Should be valid JSON Schema
-            expect(result).toContain('"type": "object"');
-            expect(result).toContain('"properties"');
-            expect(result).toContain('"path"');
-            expect(result).toContain('"query"');
+       // Should be valid JSON Schema
+       expect(result).toContain('"type": "object"');
+       expect(result).toContain('"properties"');
+       expect(result).toContain('"path"');
+       expect(result).toContain('"query"');
 
-            // Should include descriptions if available
-            // Should inline all $refs (no external refs)
-            expect(result).not.toContain('"$ref"');
-        });
+       // Should include descriptions if available
+       // Should inline all $refs (no external refs)
+       expect(result).not.toContain('"$ref"');
+     });
 
-        it("should generate outputSchemaJson for mcpTools", async () => {
-            const openApiDoc = {
-                openapi: "3.0.0",
-                info: { title: "Test", version: "1.0.0" },
-                paths: {
-                    "/users": {
-                        post: {
-                            operationId: "createUser",
-                            requestBody: {
-                                content: {
-                                    "application/json": {
-                                        schema: { type: "object" },
-                                    },
-                                },
-                            },
-                            responses: {
-                                201: {
-                                    content: {
-                                        "application/json": {
-                                            schema: {
-                                                type: "object",
-                                                properties: {
-                                                    id: { type: "string" },
-                                                    name: { type: "string" },
-                                                },
-                                                required: ["id"],
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            };
+     it('should generate outputSchemaJson for mcpTools', async () => {
+       const openApiDoc = {
+         openapi: '3.0.0',
+         info: { title: 'Test', version: '1.0.0' },
+         paths: {
+           '/users': {
+             post: {
+               operationId: 'createUser',
+               requestBody: {
+                 content: {
+                   'application/json': {
+                     schema: { type: 'object' },
+                   },
+                 },
+               },
+               responses: {
+                 201: {
+                   content: {
+                     'application/json': {
+                       schema: {
+                         type: 'object',
+                         properties: {
+                           id: { type: 'string' },
+                           name: { type: 'string' },
+                         },
+                         required: ['id'],
+                       },
+                     },
+                   },
+                 },
+               },
+             },
+           },
+         },
+       };
 
-            const result = await generateZodClientFromOpenAPI({
-                openApiDoc,
-                template: "schemas-with-metadata",
-                disableWriteToFile: true,
-            });
+       const result = await generateZodClientFromOpenAPI({
+         openApiDoc,
+         template: 'schemas-with-metadata',
+         disableWriteToFile: true,
+       });
 
-            // Should have outputSchemaJson
-            expect(result).toContain("outputSchemaJson:");
+       // Should have outputSchemaJson
+       expect(result).toContain('outputSchemaJson:');
 
-            // Should be JSON Schema for 201 response
-            expect(result).toContain('"properties"');
-            expect(result).toContain('"id"');
-            expect(result).toContain('"name"');
-            expect(result).toContain('"required": ["id"]');
-        });
+       // Should be JSON Schema for 201 response
+       expect(result).toContain('"properties"');
+       expect(result).toContain('"id"');
+       expect(result).toContain('"name"');
+       expect(result).toContain('"required": ["id"]');
+     });
 
-        it("should handle complex Zod schemas (unions, enums, arrays)", async () => {
-            // Test conversion of complex types
-            // [Implementation details]
-        });
+     it('should handle complex Zod schemas (unions, enums, arrays)', async () => {
+       // Test conversion of complex types
+       // [Implementation details]
+     });
 
-        it("should use z.unknown() JSON Schema when no response defined", async () => {
-            // Test fallback behavior
-            // [Implementation details]
-        });
-    });
-    ```
+     it('should use z.unknown() JSON Schema when no response defined', async () => {
+       // Test fallback behavior
+       // [Implementation details]
+     });
+   });
+   ```
 
 2. **Run tests - expect failures:**
-    ```bash
-    pnpm test -- --run src/templates/mcp-json-schema.test.ts
-    # Expected: FAILING (JSON Schema not generated yet)
-    ```
+   ```bash
+   pnpm test -- --run src/templates/mcp-json-schema.test.ts
+   # Expected: FAILING (JSON Schema not generated yet)
+   ```
 
 **Phase B: Install Dependency - 15 minutes**
 
 3. **Add zod-to-json-schema:**
 
-    ```bash
-    cd lib
-    pnpm add zod-to-json-schema
-    ```
+   ```bash
+   cd lib
+   pnpm add zod-to-json-schema
+   ```
 
 4. **Test library:**
 
-    ```typescript
-    // Quick manual test
-    import { zodToJsonSchema } from "zod-to-json-schema";
-    import { z } from "zod";
+   ```typescript
+   // Quick manual test
+   import { zodToJsonSchema } from 'zod-to-json-schema';
+   import { z } from 'zod';
 
-    const schema = z.object({
-        name: z.string(),
-        age: z.number().int().min(0),
-    });
+   const schema = z.object({
+     name: z.string(),
+     age: z.number().int().min(0),
+   });
 
-    const jsonSchema = zodToJsonSchema(schema, {
-        $refStrategy: "none",
-    });
+   const jsonSchema = zodToJsonSchema(schema, {
+     $refStrategy: 'none',
+   });
 
-    console.log(JSON.stringify(jsonSchema, null, 2));
-    ```
+   console.log(JSON.stringify(jsonSchema, null, 2));
+   ```
 
 **Phase C: Implement Template Changes - 3 hours**
 
 5. **Update template to generate JSON Schema:**
 
-    ```handlebars
-    {{!-- lib/src/templates/schemas-with-metadata.hbs --}}
+   ```handlebars
+   {{!-- lib/src/templates/schemas-with-metadata.hbs --}}
 
-    import { z } from "zod";
-    {{#if options.withMcpJsonSchema}}
-    import { zodToJsonSchema } from "zod-to-json-schema";
-    {{/if}}
+   import { z } from "zod";
+   {{#if options.withMcpJsonSchema}}
+   import { zodToJsonSchema } from "zod-to-json-schema";
+   {{/if}}
 
-    {{!-- ... schemas section ... --}}
+   {{!-- ... schemas section ... --}}
 
-    {{!-- MCP Tools with JSON Schema --}}
-    export const mcpTools = endpoints.map(endpoint => {
-      // Build consolidated params object
-      const params: Record<string, z.ZodTypeAny> = {};
-      if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-      if (endpoint.request?.queryParams) params.query = endpoint.request.queryParams;
-      if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-      if (endpoint.request?.body) params.body = endpoint.request.body;
+   {{!-- MCP Tools with JSON Schema --}}
+   export const mcpTools = endpoints.map(endpoint => {
+     // Build consolidated params object
+     const params: Record<string, z.ZodTypeAny> = {};
+     if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+     if (endpoint.request?.queryParams) params.query = endpoint.request.queryParams;
+     if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+     if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      const inputSchema = Object.keys(params).length > 0
-        ? z.object(params)
-        : z.object({});
-      const outputSchema = endpoint.responses[200]?.schema ||
-                           endpoint.responses[201]?.schema ||
-                           z.unknown();
+     const inputSchema = Object.keys(params).length > 0
+       ? z.object(params)
+       : z.object({});
+     const outputSchema = endpoint.responses[200]?.schema ||
+                          endpoint.responses[201]?.schema ||
+                          z.unknown();
 
-      return {
-        name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, '_')}`,
-        description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
+     return {
+       name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, '_')}`,
+       description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,
 
-        // Zod schemas (runtime validation)
-        inputSchema,
-        outputSchema,
+       // Zod schemas (runtime validation)
+       inputSchema,
+       outputSchema,
 
-        {{#if options.withMcpJsonSchema}}
-        // JSON Schema (MCP protocol)
-        inputSchemaJson: zodToJsonSchema(inputSchema, {
-          name: (endpoint.operationId || 'input') + 'Input',
-          $refStrategy: 'none', // Inline all refs for MCP
-          target: 'jsonSchema2019-09',
-          errorMessages: true,
-        }),
-        outputSchemaJson: zodToJsonSchema(outputSchema, {
-          name: (endpoint.operationId || 'output') + 'Output',
-          $refStrategy: 'none',
-          target: 'jsonSchema2019-09',
-        }),
-        {{/if}}
-      };
-    }) as const;
-    ```
+       {{#if options.withMcpJsonSchema}}
+       // JSON Schema (MCP protocol)
+       inputSchemaJson: zodToJsonSchema(inputSchema, {
+         name: (endpoint.operationId || 'input') + 'Input',
+         $refStrategy: 'none', // Inline all refs for MCP
+         target: 'jsonSchema2019-09',
+         errorMessages: true,
+       }),
+       outputSchemaJson: zodToJsonSchema(outputSchema, {
+         name: (endpoint.operationId || 'output') + 'Output',
+         $refStrategy: 'none',
+         target: 'jsonSchema2019-09',
+       }),
+       {{/if}}
+     };
+   }) as const;
+   ```
 
 6. **Update options handling:**
 
-    ```typescript
-    // lib/src/generateZodClientFromOpenAPI.ts
+   ```typescript
+   // lib/src/generateZodClientFromOpenAPI.ts
 
-    // Auto-enable JSON Schema export for schemas-with-metadata
-    if (effectiveTemplate === "schemas-with-metadata") {
-        options.withMcpJsonSchema = true;
-    }
-    ```
+   // Auto-enable JSON Schema export for schemas-with-metadata
+   if (effectiveTemplate === 'schemas-with-metadata') {
+     options.withMcpJsonSchema = true;
+   }
+   ```
 
 **Phase D: Run Tests - 30 minutes**
 
 7. **Run tests - expect success:**
 
-    ```bash
-    pnpm test -- --run src/templates/mcp-json-schema.test.ts
-    # Expected: ALL PASSING ✅
-    ```
+   ```bash
+   pnpm test -- --run src/templates/mcp-json-schema.test.ts
+   # Expected: ALL PASSING ✅
+   ```
 
 8. **Run full test suite:**
-    ```bash
-    pnpm test -- --run
-    # All tests passing
-    ```
+   ```bash
+   pnpm test -- --run
+   # All tests passing
+   ```
 
 **Validation Steps:**
 
@@ -1538,67 +1553,67 @@ Phase 2B: MCP Enhancements (this plan)
 
 2. **Add use case comparison:**
 
-    ```markdown
-    ## Use Case: SDK Generation vs MCP Tool Consumption
+   ```markdown
+   ## Use Case: SDK Generation vs MCP Tool Consumption
 
-    | Aspect                 | SDK Generation           | MCP Tool Consumption         |
-    | ---------------------- | ------------------------ | ---------------------------- |
-    | **Goal**               | Comprehensive validation | AI tool integration          |
-    | **Output Focus**       | All status codes         | Success only (200/201)       |
-    | **Request Structure**  | Separated by type        | Consolidated                 |
-    | **Response Structure** | All responses            | Primary success              |
-    | **Format**             | Zod only                 | Zod + JSON Schema            |
-    | **Security**           | Full metadata            | Extracted + computed         |
-    | **Validation**         | `.parse()` fail-fast     | Type predicates + assertions |
-    ```
+   | Aspect                 | SDK Generation           | MCP Tool Consumption         |
+   | ---------------------- | ------------------------ | ---------------------------- |
+   | **Goal**               | Comprehensive validation | AI tool integration          |
+   | **Output Focus**       | All status codes         | Success only (200/201)       |
+   | **Request Structure**  | Separated by type        | Consolidated                 |
+   | **Response Structure** | All responses            | Primary success              |
+   | **Format**             | Zod only                 | Zod + JSON Schema            |
+   | **Security**           | Full metadata            | Extracted + computed         |
+   | **Validation**         | `.parse()` fail-fast     | Type predicates + assertions |
+   ```
 
 3. **Add SDK generation example:**
 
-    ````markdown
-    ### SDK Generation Example
+   ````markdown
+   ### SDK Generation Example
 
-    ```bash
-    pnpx openapi-zod-client ./api.yaml -o ./sdk.ts \
-      --no-client \
-      --with-validation-helpers \
-      --with-schema-registry \
-      --validate-mcp-readiness
-    ```
-    ````
+   ```bash
+   pnpx openapi-zod-client ./api.yaml -o ./sdk.ts \
+     --no-client \
+     --with-validation-helpers \
+     --with-schema-registry \
+     --validate-mcp-readiness
+   ```
+   ````
 
-    Generated output includes:
-    - All Zod schemas with `.strict()`
-    - Endpoints with full request/response validation
-    - `validateRequest()` and `validateResponse()` helpers
-    - `buildSchemaRegistry()` for dynamic lookup
+   Generated output includes:
+   - All Zod schemas with `.strict()`
+   - Endpoints with full request/response validation
+   - `validateRequest()` and `validateResponse()` helpers
+   - `buildSchemaRegistry()` for dynamic lookup
 
-    ```
+   ```
 
-    ```
+   ```
 
 4. **Add MCP tool consumption example:**
 
-    ````markdown
-    ### MCP Tool Consumption Example
+   ````markdown
+   ### MCP Tool Consumption Example
 
-    ```bash
-    pnpx openapi-zod-client ./api.yaml -o ./mcp-tools.ts \
-      --no-client \
-      --with-type-predicates \
-      --validate-mcp-readiness
-    ```
-    ````
+   ```bash
+   pnpx openapi-zod-client ./api.yaml -o ./mcp-tools.ts \
+     --no-client \
+     --with-type-predicates \
+     --validate-mcp-readiness
+   ```
+   ````
 
-    Generated output includes:
-    - Zod schemas for runtime validation
-    - JSON Schema for MCP protocol
-    - Security metadata extraction
-    - Type predicates for fail-fast validation
-    - Rich error messages with context
+   Generated output includes:
+   - Zod schemas for runtime validation
+   - JSON Schema for MCP protocol
+   - Security metadata extraction
+   - Type predicates for fail-fast validation
+   - Rich error messages with context
 
-    ```
+   ```
 
-    ```
+   ```
 
 **Output:**
 
@@ -1627,78 +1642,78 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Create SDK integration example:**
 
-    ```typescript
-    // examples/sdk-integration.ts
-    import { endpoints, validateRequest, validateResponse } from "./generated-sdk.js";
+   ```typescript
+   // examples/sdk-integration.ts
+   import { endpoints, validateRequest, validateResponse } from './generated-sdk.js';
 
-    // Find endpoint
-    const endpoint = endpoints.find((e) => e.operationId === "createUser");
+   // Find endpoint
+   const endpoint = endpoints.find((e) => e.operationId === 'createUser');
 
-    // Validate request
-    try {
-        const validated = validateRequest(endpoint, {
-            body: { name: "Alice", email: "alice@example.com" },
-        });
+   // Validate request
+   try {
+     const validated = validateRequest(endpoint, {
+       body: { name: 'Alice', email: 'alice@example.com' },
+     });
 
-        // Make API call with validated data
-        const response = await fetch(`https://api.example.com${endpoint.path}`, {
-            method: endpoint.method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(validated.body),
-        });
+     // Make API call with validated data
+     const response = await fetch(`https://api.example.com${endpoint.path}`, {
+       method: endpoint.method,
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify(validated.body),
+     });
 
-        // Validate response
-        const data = await response.json();
-        const user = validateResponse(endpoint, response.status, data);
+     // Validate response
+     const data = await response.json();
+     const user = validateResponse(endpoint, response.status, data);
 
-        console.log("Created user:", user);
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            console.error("Validation failed:", error.errors);
-        } else {
-            console.error("Request failed:", error);
-        }
-    }
-    ```
+     console.log('Created user:', user);
+   } catch (error) {
+     if (error instanceof z.ZodError) {
+       console.error('Validation failed:', error.errors);
+     } else {
+       console.error('Request failed:', error);
+     }
+   }
+   ```
 
 2. **Create MCP server example:**
 
-    ```typescript
-    // examples/mcp-server-integration.ts
-    import { mcpTools, assertMcpToolInput, assertMcpToolOutput } from "./generated-mcp.js";
+   ```typescript
+   // examples/mcp-server-integration.ts
+   import { mcpTools, assertMcpToolInput, assertMcpToolOutput } from './generated-mcp.js';
 
-    // Register MCP tools with server
-    for (const tool of mcpTools) {
-        server.registerTool({
-            name: tool.name,
-            description: tool.description,
-            inputSchema: tool.inputSchemaJson, // JSON Schema for protocol
+   // Register MCP tools with server
+   for (const tool of mcpTools) {
+     server.registerTool({
+       name: tool.name,
+       description: tool.description,
+       inputSchema: tool.inputSchemaJson, // JSON Schema for protocol
 
-            async execute(input: unknown) {
-                try {
-                    // Validate input (fail-fast)
-                    assertMcpToolInput(tool, input);
+       async execute(input: unknown) {
+         try {
+           // Validate input (fail-fast)
+           assertMcpToolInput(tool, input);
 
-                    // Check security
-                    if (tool.requiresAuth) {
-                        await validateAuth(tool.authTypes);
-                    }
+           // Check security
+           if (tool.requiresAuth) {
+             await validateAuth(tool.authTypes);
+           }
 
-                    // Execute API call
-                    const result = await callApi(tool, input);
+           // Execute API call
+           const result = await callApi(tool, input);
 
-                    // Validate output (fail-fast)
-                    assertMcpToolOutput(tool, result);
+           // Validate output (fail-fast)
+           assertMcpToolOutput(tool, result);
 
-                    return result;
-                } catch (error) {
-                    // Error includes rich context from assertions
-                    throw new McpError(error.message);
-                }
-            },
-        });
-    }
-    ```
+           return result;
+         } catch (error) {
+           // Error includes rich context from assertions
+           throw new McpError(error.message);
+         }
+       },
+     });
+   }
+   ```
 
 **Output:**
 
@@ -1726,36 +1741,36 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Document new CLI flags:**
 
-    ````markdown
-    ## New CLI Flags for MCP
+   ````markdown
+   ## New CLI Flags for MCP
 
-    ### Validation
+   ### Validation
 
-    - `--validate-mcp-readiness` - Validate OpenAPI spec is MCP-ready (auto-enabled with --no-client)
-    - `--skip-mcp-validation` - Skip MCP readiness validation (not recommended)
-    - `--strict-mcp-validation` - Treat warnings as errors
+   - `--validate-mcp-readiness` - Validate OpenAPI spec is MCP-ready (auto-enabled with --no-client)
+   - `--skip-mcp-validation` - Skip MCP readiness validation (not recommended)
+   - `--strict-mcp-validation` - Treat warnings as errors
 
-    ### Type Safety
+   ### Type Safety
 
-    - `--with-type-predicates` - Generate type predicates and assertion functions
+   - `--with-type-predicates` - Generate type predicates and assertion functions
 
-    ### Common Combinations
+   ### Common Combinations
 
-    ```bash
-    # SDK generation (comprehensive)
-    --no-client --with-validation-helpers --with-schema-registry
+   ```bash
+   # SDK generation (comprehensive)
+   --no-client --with-validation-helpers --with-schema-registry
 
-    # MCP tools (protocol-focused)
-    --no-client --with-type-predicates --validate-mcp-readiness
+   # MCP tools (protocol-focused)
+   --no-client --with-type-predicates --validate-mcp-readiness
 
-    # Strict MCP validation
-    --no-client --strict-mcp-validation
-    ```
-    ````
+   # Strict MCP validation
+   --no-client --strict-mcp-validation
+   ```
+   ````
 
-    ```
+   ```
 
-    ```
+   ```
 
 **Output:**
 
@@ -1785,85 +1800,85 @@ Phase 2B: MCP Enhancements (this plan)
 
 1. **Run full quality gate:**
 
-    ```bash
-    pnpm format
-    pnpm build
-    pnpm type-check
-    pnpm test -- --run
-    pnpm lint
-    ```
+   ```bash
+   pnpm format
+   pnpm build
+   pnpm type-check
+   pnpm test -- --run
+   pnpm lint
+   ```
 
 2. **Verify all new features:**
-    - JSON Schema export works
-    - Security metadata extracted
-    - Type predicates work
-    - Validation functions work
-    - CLI flags work
-    - Examples run successfully
+   - JSON Schema export works
+   - Security metadata extracted
+   - Type predicates work
+   - Validation functions work
+   - CLI flags work
+   - Examples run successfully
 
 3. **Create completion summary:**
 
-    ```markdown
-    # Phase 2B Complete: MCP Enhancements
+   ```markdown
+   # Phase 2B Complete: MCP Enhancements
 
-    ## Achievements
+   ## Achievements
 
-    - ✅ MCP readiness validation (fail-fast)
-    - ✅ JSON Schema export (zod-to-json-schema)
-    - ✅ Security metadata extraction
-    - ✅ Type predicates and assertions
-    - ✅ Enhanced error formatting
-    - ✅ Comprehensive documentation
+   - ✅ MCP readiness validation (fail-fast)
+   - ✅ JSON Schema export (zod-to-json-schema)
+   - ✅ Security metadata extraction
+   - ✅ Type predicates and assertions
+   - ✅ Enhanced error formatting
+   - ✅ Comprehensive documentation
 
-    ## Metrics
+   ## Metrics
 
-    - Tests: X passing (Y new tests added)
-    - CLI flags: 6 new flags
-    - Examples: 4 working examples
-    - Documentation: Complete
+   - Tests: X passing (Y new tests added)
+   - CLI flags: 6 new flags
+   - Examples: 4 working examples
+   - Documentation: Complete
 
-    ## Use Cases Supported
+   ## Use Cases Supported
 
-    1. SDK Generation (Engraph pattern)
-    2. MCP Tool Consumption (AI assistants)
-    ```
+   1. SDK Generation (Engraph pattern)
+   2. MCP Tool Consumption (AI assistants)
+   ```
 
 4. **Commit changes:**
 
-    ```bash
-    git add -A
-    git commit -m "feat: Add comprehensive MCP support (Phase 2B)
+   ```bash
+   git add -A
+   git commit -m "feat: Add comprehensive MCP support (Phase 2B)
 
-    Implements Phase 2B MCP Enhancements
+   Implements Phase 2B MCP Enhancements
 
-    SDK Generation Features:
-    - OpenAPI spec validation (fail-fast)
-    - Enhanced parameter metadata
-    - Rate limiting extraction
+   SDK Generation Features:
+   - OpenAPI spec validation (fail-fast)
+   - Enhanced parameter metadata
+   - Rate limiting extraction
 
-    MCP Tool Features:
-    - JSON Schema export (zod-to-json-schema)
-    - Security metadata extraction
-    - Type predicates and guards
-    - Enhanced error formatting
+   MCP Tool Features:
+   - JSON Schema export (zod-to-json-schema)
+   - Security metadata extraction
+   - Type predicates and guards
+   - Enhanced error formatting
 
-    CLI Flags Added:
-    - --validate-mcp-readiness
-    - --skip-mcp-validation
-    - --strict-mcp-validation
-    - --with-type-predicates
+   CLI Flags Added:
+   - --validate-mcp-readiness
+   - --skip-mcp-validation
+   - --strict-mcp-validation
+   - --with-type-predicates
 
-    Documentation:
-    - Complete MCP section in README
-    - SDK integration examples
-    - MCP server integration examples
-    - CLI flag documentation
+   Documentation:
+   - Complete MCP section in README
+   - SDK integration examples
+   - MCP server integration examples
+   - CLI flag documentation
 
-    Tests: X new tests, all passing
-    Quality gates: All passing
+   Tests: X new tests, all passing
+   Quality gates: All passing
 
-    Closes Phase 2B"
-    ```
+   Closes Phase 2B"
+   ```
 
 **Output:**
 
@@ -1886,29 +1901,29 @@ Phase 2B: MCP Enhancements (this plan)
 ### Deliverables
 
 1. **SDK Generation (Use Case 1):**
-    - OpenAPI spec validation (fail-fast)
-    - Enhanced parameter metadata
-    - Rate limiting & constraints
-    - Already has: Comprehensive validation, helpers, schema registry
+   - OpenAPI spec validation (fail-fast)
+   - Enhanced parameter metadata
+   - Rate limiting & constraints
+   - Already has: Comprehensive validation, helpers, schema registry
 
 2. **MCP Tool Consumption (Use Case 2):**
-    - JSON Schema export (MCP protocol)
-    - Security metadata extraction
-    - Type predicates & guards
-    - Enhanced error formatting
-    - Already has: Basic mcpTools structure
+   - JSON Schema export (MCP protocol)
+   - Security metadata extraction
+   - Type predicates & guards
+   - Enhanced error formatting
+   - Already has: Basic mcpTools structure
 
 3. **Documentation:**
-    - Comprehensive README section
-    - SDK integration examples
-    - MCP server integration examples
-    - CLI flag documentation
+   - Comprehensive README section
+   - SDK integration examples
+   - MCP server integration examples
+   - CLI flag documentation
 
 4. **Quality:**
-    - All TDD (tests written first)
-    - All quality gates passing
-    - No type assertions
-    - Comprehensive test coverage
+   - All TDD (tests written first)
+   - All quality gates passing
+   - No type assertions
+   - Comprehensive test coverage
 
 ### Benefits
 
@@ -1938,16 +1953,16 @@ Phase 2B: MCP Enhancements (this plan)
 ## Next Steps
 
 1. **Complete Phase 2 prerequisites:**
-    - Task 2.1: Update openapi3-ts to v4
-    - Task 2.2: Update zod to v4
-    - Task 3.2: Eliminate type assertions
+   - Task 2.1: Update openapi3-ts to v4
+   - Task 2.2: Update zod to v4
+   - Task 3.2: Eliminate type assertions
 
 2. **Begin Phase 2B:**
-    - Start with Task 5.1.1 (MCP Specification Analysis)
-    - Follow TDD strictly
-    - Maintain quality gates
+   - Start with Task 5.1.1 (MCP Specification Analysis)
+   - Follow TDD strictly
+   - Maintain quality gates
 
 3. **Track progress:**
-    - Update this document with completion status
-    - Mark tasks as complete
-    - Document any deviations or learnings
+   - Update this document with completion status
+   - Mark tasks as complete
+   - Document any deviations or learnings

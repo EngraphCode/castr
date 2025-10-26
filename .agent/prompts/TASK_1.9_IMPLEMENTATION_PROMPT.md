@@ -17,30 +17,30 @@ Implement a new Handlebars template called `schemas-with-metadata.hbs` that gene
 **Start with these 4 documents to understand the project:**
 
 1. **`.agent/context/context.md`** (12 min read)
-    - Current project state
-    - Quality gates status
-    - TDD mandate (MANDATORY section at top)
-    - Where Task 1.9 fits in priorities
+   - Current project state
+   - Quality gates status
+   - TDD mandate (MANDATORY section at top)
+   - Where Task 1.9 fits in priorities
 
 2. **`.agent/plans/01-CURRENT-IMPLEMENTATION.md`** (search for "Task 1.9")
-    - Complete task specification (lines 532-1450+)
-    - Acceptance criteria
-    - Implementation steps (TDD phases A-E)
-    - All 12 test cases (write FIRST)
-    - Validation steps
+   - Complete task specification (lines 532-1450+)
+   - Acceptance criteria
+   - Implementation steps (TDD phases A-E)
+   - All 12 test cases (write FIRST)
+   - Validation steps
 
 3. **`.agent/analysis/TASK_1.9_ENGRAPH_ENHANCEMENTS.md`** (30 min read)
-    - **COMPLETE SPECIFICATION** (724 lines)
-    - Problem analysis (Engraph's current pain points)
-    - Solution design (full generated code examples)
-    - Before/after comparison (60+ lines eliminated)
-    - All features explained in detail
+   - **COMPLETE SPECIFICATION** (724 lines)
+   - Problem analysis (Engraph's current pain points)
+   - Solution design (full generated code examples)
+   - Before/after comparison (60+ lines eliminated)
+   - All features explained in detail
 
 4. **`.agent/RULES.md`** (20 min read)
-    - **TDD workflow** (MANDATORY section at top)
-    - Coding standards
-    - Type safety rules (no `any`, use `unknown`)
-    - Testing principles
+   - **TDD workflow** (MANDATORY section at top)
+   - Coding standards
+   - Type safety rules (no `any`, use `unknown`)
+   - Testing principles
 
 ---
 
@@ -51,7 +51,7 @@ Implement a new Handlebars template called `schemas-with-metadata.hbs` that gene
 Engraph currently uses the `default.hbs` template which generates:
 
 ```typescript
-import { Zodios, makeApi } from "@zodios/core";
+import { Zodios, makeApi } from '@zodios/core';
 // ... schemas ...
 const api = new Zodios(endpoints); // ❌ Don't want this!
 ```
@@ -212,10 +212,10 @@ pnpm test -- --run schemas-with-metadata.test.ts
 
 1. Create `lib/src/templates/schemas-with-metadata.hbs`
 2. Update `lib/src/cli.ts` to add flags:
-    - `--template schemas-with-metadata`
-    - `--no-client`
-    - `--with-validation-helpers`
-    - `--with-schema-registry`
+   - `--template schemas-with-metadata`
+   - `--no-client`
+   - `--with-validation-helpers`
+   - `--with-schema-registry`
 3. Update `lib/src/generateZodClientFromOpenAPI.ts` to handle new options
 
 ### Step 4: Run Tests - Expect SUCCESS
@@ -364,18 +364,18 @@ Update:
 
 ```typescript
 export function validateRequest<T extends (typeof endpoints)[number]>(
-    endpoint: T,
-    input: {
-        pathParams?: unknown; // ✅ STRICT: unknown, not any
-        queryParams?: unknown;
-        headers?: unknown;
-        body?: unknown;
-    }
+  endpoint: T,
+  input: {
+    pathParams?: unknown; // ✅ STRICT: unknown, not any
+    queryParams?: unknown;
+    headers?: unknown;
+    body?: unknown;
+  },
 ): ValidatedRequest {
-    return {
-        pathParams: endpoint.request.pathParams.parse(input.pathParams), // ✅ FAIL-FAST: .parse()
-        // ...
-    };
+  return {
+    pathParams: endpoint.request.pathParams.parse(input.pathParams), // ✅ FAIL-FAST: .parse()
+    // ...
+  };
 }
 ```
 
@@ -383,14 +383,14 @@ export function validateRequest<T extends (typeof endpoints)[number]>(
 
 ```typescript
 export function validateRequest(
-    endpoint: any, // ❌ NO! Use proper generic
-    input: Record<string, any> // ❌ NO! Use unknown
+  endpoint: any, // ❌ NO! Use proper generic
+  input: Record<string, any>, // ❌ NO! Use unknown
 ): any {
-    // ❌ NO! Use proper return type
-    return {
-        pathParams: endpoint.request.pathParams.safeParse(input.pathParams), // ❌ NO! Use .parse()
-        // ...
-    };
+  // ❌ NO! Use proper return type
+  return {
+    pathParams: endpoint.request.pathParams.safeParse(input.pathParams), // ❌ NO! Use .parse()
+    // ...
+  };
 }
 ```
 
@@ -500,10 +500,10 @@ Closes Task 1.9
 
 1. **Read all 4 required documents** (~77 minutes)
 2. **Verify quality gates pass** before starting:
-    ```bash
-    cd /Users/jim/code/personal/openapi-zod-client
-    pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
-    ```
+   ```bash
+   cd /Users/jim/code/personal/openapi-zod-client
+   pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+   ```
 3. **Create test file** `lib/src/templates/schemas-with-metadata.test.ts`
 4. **Write all 12 tests** (copy from plan, understand each one)
 5. **Run tests** - confirm they FAIL

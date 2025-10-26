@@ -15,12 +15,12 @@ It's common in JavaScript/TypeScript codebases to prefix unused variables with a
 ```typescript
 // ❌ Hiding unused variable
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type) => {
-        let _isObject = true; // Unused! Hidden with underscore
-        return type.toString();
-    })
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type) => {
+    let _isObject = true; // Unused! Hidden with underscore
+    return type.toString();
+  })
+  .join(', ');
 ```
 
 **Why this is problematic:**
@@ -88,33 +88,33 @@ const futureFeature = extractData();
 ```typescript
 // ❌ BAD: Underscore prefix
 function processSchema(schema: SchemaObject, _options?: Options) {
-    // _options is never used
-    return transform(schema);
+  // _options is never used
+  return transform(schema);
 }
 
 // ❌ BAD: Unused local variable
 function calculate(x: number) {
-    let _intermediate = x * 2; // Never used
-    return x + 1;
+  let _intermediate = x * 2; // Never used
+  return x + 1;
 }
 
 // ✅ GOOD: Remove unused parameters
 function processSchema(schema: SchemaObject) {
-    return transform(schema);
+  return transform(schema);
 }
 
 // ✅ GOOD: Remove unused local variables
 function calculate(x: number) {
-    return x + 1;
+  return x + 1;
 }
 
 // ✅ GOOD: If truly needed, document why
 function processSchema(
-    schema: SchemaObject,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    options?: Options // Reserved for future enhancement - see issue #123
+  schema: SchemaObject,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  options?: Options, // Reserved for future enhancement - see issue #123
 ) {
-    return transform(schema);
+  return transform(schema);
 }
 ```
 
@@ -148,20 +148,20 @@ function processSchema(
 ```typescript
 // ❌ Multiple unused variables hidden
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type, _index) => {
-        let _isObject = true; // Never used
-        let _depth = 0; // Never used
-        return type.toString();
-    })
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type, _index) => {
+    let _isObject = true; // Never used
+    let _depth = 0; // Never used
+    return type.toString();
+  })
+  .join(', ');
 
 function processEndpoint(
-    operation: OperationObject,
-    _path: string, // Never used
-    _method: string // Never used
+  operation: OperationObject,
+  _path: string, // Never used
+  _method: string, // Never used
 ) {
-    return operation.operationId;
+  return operation.operationId;
 }
 ```
 
@@ -170,12 +170,12 @@ function processEndpoint(
 ```typescript
 // ✅ Clean, only what's needed
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type) => type.toString())
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type) => type.toString())
+  .join(', ');
 
 function processEndpoint(operation: OperationObject) {
-    return operation.operationId;
+  return operation.operationId;
 }
 ```
 
@@ -185,21 +185,21 @@ function processEndpoint(operation: OperationObject) {
 
 ```typescript
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type) => {
-        let _isObject = true; // ❌ Unused, hidden with underscore
-        return type.toString();
-    })
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type) => {
+    let _isObject = true; // ❌ Unused, hidden with underscore
+    return type.toString();
+  })
+  .join(', ');
 ```
 
 **After refactoring:**
 
 ```typescript
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type) => type.toString()) // ✅ Simplified, removed unused
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type) => type.toString()) // ✅ Simplified, removed unused
+  .join(', ');
 ```
 
 ## Linter Configuration
@@ -207,18 +207,18 @@ const types = schema.anyOf
 ```javascript
 // eslint.config.js
 export default [
-    {
-        rules: {
-            "@typescript-eslint/no-unused-vars": [
-                "error",
-                {
-                    argsIgnorePattern: "^_", // Allow _param in interface matching only
-                    varsIgnorePattern: "^_", // Warn if used (should be removed or documented)
-                    caughtErrorsIgnorePattern: "^_", // Allow _error in catch blocks
-                },
-            ],
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_', // Allow _param in interface matching only
+          varsIgnorePattern: '^_', // Warn if used (should be removed or documented)
+          caughtErrorsIgnorePattern: '^_', // Allow _error in catch blocks
         },
+      ],
     },
+  },
 ];
 ```
 
@@ -249,14 +249,14 @@ const { used } = getConfig();
 ```typescript
 // ✅ Acceptable when signature must match
 interface Handler {
-    handle(data: Data, context: Context): Result;
+  handle(data: Data, context: Context): Result;
 }
 
 class MyHandler implements Handler {
-    // Must accept both parameters even if context is unused
-    handle(data: Data, _context: Context): Result {
-        return process(data);
-    }
+  // Must accept both parameters even if context is unused
+  handle(data: Data, _context: Context): Result {
+    return process(data);
+  }
 }
 ```
 

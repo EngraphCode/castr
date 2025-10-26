@@ -71,7 +71,7 @@ return someNode as t.TypeDefinition;
 
 // SOLUTION: Fix return type union
 function foo(): ts.Node | t.TypeDefinition {
-    return someNode; // No assertion needed
+  return someNode; // No assertion needed
 }
 ```
 
@@ -83,7 +83,7 @@ const schema = obj as SchemaObject; // ❌
 
 // SOLUTION: Use existing type guards
 if (isReferenceObject(obj)) {
-    return; // Handle reference
+  return; // Handle reference
 }
 // TypeScript knows obj is SchemaObject here ✅
 ```
@@ -111,26 +111,26 @@ const arr = [...items] as SomeType[]; // ❌
 
 // SOLUTION: Proper generic typing
 function processItems<T extends SomeType>(items: T[]): T[] {
-    return [...items]; // ✅
+  return [...items]; // ✅
 }
 ```
 
 ### Elimination Strategy
 
 1. **Week 1: High-effort files**
-    - `openApiToTypescript.helpers.ts` (23 assertions)
-    - Create proper type guards
-    - Fix union type handling
+   - `openApiToTypescript.helpers.ts` (23 assertions)
+   - Create proper type guards
+   - Fix union type handling
 
 2. **Week 2: Medium-effort files**
-    - `getZodiosEndpointDefinitionList.ts` (9)
-    - `openApiToTypescript.ts` (7)
-    - `cli.ts` (6)
-    - `openApiToZod.ts` (4)
+   - `getZodiosEndpointDefinitionList.ts` (9)
+   - `openApiToTypescript.ts` (7)
+   - `cli.ts` (6)
+   - `openApiToZod.ts` (4)
 
 3. **Week 2-3: Low-effort files**
-    - All remaining files (4 or fewer each)
-    - Should be straightforward after patterns established
+   - All remaining files (4 or fewer each)
+   - Should be straightforward after patterns established
 
 ---
 
@@ -405,17 +405,17 @@ Boolean parameters that control function behavior:
 **Priority:** CRITICAL
 
 1. **Week 1:** High-effort files
-    - `openApiToTypescript.helpers.ts` (23 assertions)
-    - Establish patterns for common cases
+   - `openApiToTypescript.helpers.ts` (23 assertions)
+   - Establish patterns for common cases
 
 2. **Week 2:** Medium-effort files
-    - `getZodiosEndpointDefinitionList.ts` (9)
-    - `openApiToTypescript.ts` (7)
-    - `cli.ts` (6)
-    - `openApiToZod.ts` (4)
+   - `getZodiosEndpointDefinitionList.ts` (9)
+   - `openApiToTypescript.ts` (7)
+   - `cli.ts` (6)
+   - `openApiToZod.ts` (4)
 
 3. **Week 2-3:** Low-effort files
-    - All remaining 10 files (≤4 each)
+   - All remaining 10 files (≤4 each)
 
 **Success Criteria:**
 
@@ -430,14 +430,14 @@ Boolean parameters that control function behavior:
 **Priority:** HIGH
 
 1. **Code Complexity**
-    - Refactor `getZodSchema` (openApiToZod.ts)
-    - Break down large functions
-    - Extract utilities
+   - Refactor `getZodSchema` (openApiToZod.ts)
+   - Break down large functions
+   - Extract utilities
 
 2. **Large Files**
-    - Split `template-context.ts` (481 lines)
-    - Split `openApiToZod.ts` (481 lines)
-    - Split `openApiToTypescript.helpers.ts` (384 lines)
+   - Split `template-context.ts` (481 lines)
+   - Split `openApiToZod.ts` (481 lines)
+   - Split `openApiToTypescript.helpers.ts` (384 lines)
 
 ### Phase 3: Type Safety Improvements
 

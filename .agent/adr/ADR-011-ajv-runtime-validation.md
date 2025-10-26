@@ -44,22 +44,24 @@ We needed a way to validate OpenAPI documents against the official OpenAPI speci
 #### For OpenAPI 3.0.x (JSON Schema draft-04)
 
 ```typescript
-import Ajv04 from "ajv-draft-04";
-import addFormats from "ajv-formats";
-import { readFileSync } from "node:fs";
+import Ajv04 from 'ajv-draft-04';
+import addFormats from 'ajv-formats';
+import { readFileSync } from 'node:fs';
 
 // Handle CJS/ESM interop
 const Ajv04 = (Ajv04Module as any).default || Ajv04Module;
 const addFormats = (addFormatsModule as any).default || addFormatsModule;
 
 // Load official OpenAPI 3.0.x schema
-const oas30Schema = JSON.parse(readFileSync(".agent/reference/openapi_schema/openapi_3_0_x_schema.json", "utf-8"));
+const oas30Schema = JSON.parse(
+  readFileSync('.agent/reference/openapi_schema/openapi_3_0_x_schema.json', 'utf-8'),
+);
 
 // Create validator
 const ajv = new Ajv04({
-    strict: false, // Allow JSON Schema extensions
-    validateFormats: true, // Validate format keywords
-    allErrors: true, // Report all errors, not just first
+  strict: false, // Allow JSON Schema extensions
+  validateFormats: true, // Validate format keywords
+  allErrors: true, // Report all errors, not just first
 });
 
 addFormats(ajv); // Add format validators (uri, email, etc.)
@@ -69,23 +71,26 @@ const validateOAS30 = ajv.compile(oas30Schema);
 // Validate a document
 const valid = validateOAS30(openApiDoc);
 if (!valid) {
-    console.error(validateOAS30.errors);
+  console.error(validateOAS30.errors);
 }
 ```
 
 #### For OpenAPI 3.1.x (JSON Schema 2020-12) - Future
 
 ```typescript
-import Ajv2020 from "ajv/dist/2020.js";
+import Ajv2020 from 'ajv/dist/2020.js';
 
 const oas31Schema = JSON.parse(
-    readFileSync(".agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json", "utf-8")
+  readFileSync(
+    '.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json',
+    'utf-8',
+  ),
 );
 
 const ajv = new Ajv2020({
-    strict: false,
-    validateFormats: true,
-    allErrors: true,
+  strict: false,
+  validateFormats: true,
+  allErrors: true,
 });
 
 const validateOAS31 = ajv.compile(oas31Schema);
@@ -120,59 +125,59 @@ const validateOAS31 = ajv.compile(oas31Schema);
 ### Compliance Test Pattern
 
 ```typescript
-describe("openapi-spec-compliance", () => {
-    let ajv: InstanceType<typeof Ajv04>;
-    let validateOAS30: ValidateFunction;
+describe('openapi-spec-compliance', () => {
+  let ajv: InstanceType<typeof Ajv04>;
+  let validateOAS30: ValidateFunction;
 
-    beforeAll(() => {
-        ajv = new Ajv04({
-            strict: false,
-            validateFormats: true,
-            allErrors: true,
-        });
-        addFormats(ajv);
-        validateOAS30 = ajv.compile(oas30Schema);
+  beforeAll(() => {
+    ajv = new Ajv04({
+      strict: false,
+      validateFormats: true,
+      allErrors: true,
     });
+    addFormats(ajv);
+    validateOAS30 = ajv.compile(oas30Schema);
+  });
 
-    test("validates compliant document", async () => {
-        const doc: OpenAPIObject = {
-            openapi: "3.0.3",
-            info: { title: "Test API", version: "1.0.0" },
-            paths: {},
-        };
+  test('validates compliant document', async () => {
+    const doc: OpenAPIObject = {
+      openapi: '3.0.3',
+      info: { title: 'Test API', version: '1.0.0' },
+      paths: {},
+    };
 
-        // Step 1: Validate against official schema
-        const valid = validateOAS30(doc);
-        expect(valid).toBe(true);
+    // Step 1: Validate against official schema
+    const valid = validateOAS30(doc);
+    expect(valid).toBe(true);
 
-        // Step 2: Verify our code handles it correctly
-        await expect(
-            generateZodClientFromOpenAPI({
-                disableWriteToFile: true,
-                openApiDoc: doc,
-            })
-        ).resolves.toBeDefined();
-    });
+    // Step 2: Verify our code handles it correctly
+    await expect(
+      generateZodClientFromOpenAPI({
+        disableWriteToFile: true,
+        openApiDoc: doc,
+      }),
+    ).resolves.toBeDefined();
+  });
 
-    test("rejects invalid document", async () => {
-        const doc: OpenAPIObject = {
-            openapi: "3.0.3",
-            // Missing required 'info' and 'paths'
-        } as OpenAPIObject;
+  test('rejects invalid document', async () => {
+    const doc: OpenAPIObject = {
+      openapi: '3.0.3',
+      // Missing required 'info' and 'paths'
+    } as OpenAPIObject;
 
-        // Step 1: AJV catches the error
-        const valid = validateOAS30(doc);
-        expect(valid).toBe(false);
-        expect(validateOAS30.errors?.[0]?.message).toContain("must have required property 'info'");
+    // Step 1: AJV catches the error
+    const valid = validateOAS30(doc);
+    expect(valid).toBe(false);
+    expect(validateOAS30.errors?.[0]?.message).toContain("must have required property 'info'");
 
-        // Step 2: Our code also throws
-        await expect(
-            generateZodClientFromOpenAPI({
-                disableWriteToFile: true,
-                openApiDoc: doc,
-            })
-        ).rejects.toThrow();
-    });
+    // Step 2: Our code also throws
+    await expect(
+      generateZodClientFromOpenAPI({
+        disableWriteToFile: true,
+        openApiDoc: doc,
+      }),
+    ).rejects.toThrow();
+  });
 });
 ```
 

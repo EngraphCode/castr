@@ -26,33 +26,33 @@
 #### Type Predicates / Utilities
 
 1. **`isPrimitiveSchemaType`** (2 implementations)
-    - Location: `lib/src/utils.ts`, `lib/src/openApiToTypescript.helpers.ts`
-    - Purpose: Runtime type guard for primitive schema types
-    - Tests: 9 tests in utils.test.ts, 10 tests in openApiToTypescript.helpers.test.ts
-    - Pattern: Literals tied to library types (per RULES.md §5)
+   - Location: `lib/src/utils.ts`, `lib/src/openApiToTypescript.helpers.ts`
+   - Purpose: Runtime type guard for primitive schema types
+   - Tests: 9 tests in utils.test.ts, 10 tests in openApiToTypescript.helpers.test.ts
+   - Pattern: Literals tied to library types (per RULES.md §5)
 
-    ```typescript
-    // Extract from SchemaObject["type"]
-    type PrimitiveSchemaType = Extract<
-        NonNullable<SchemaObject["type"]>,
-        "string" | "number" | "integer" | "boolean" | "null"
-    >;
+   ```typescript
+   // Extract from SchemaObject["type"]
+   type PrimitiveSchemaType = Extract<
+     NonNullable<SchemaObject['type']>,
+     'string' | 'number' | 'integer' | 'boolean' | 'null'
+   >;
 
-    export const isPrimitiveSchemaType = (value: unknown): value is PrimitiveSchemaType => {
-        if (typeof value !== "string") return false;
-        return ["string", "number", "integer", "boolean", "null"].includes(value);
-    };
-    ```
+   export const isPrimitiveSchemaType = (value: unknown): value is PrimitiveSchemaType => {
+     if (typeof value !== 'string') return false;
+     return ['string', 'number', 'integer', 'boolean', 'null'].includes(value);
+   };
+   ```
 
 2. **`isDefaultStatusBehavior`**
-    - Location: `lib/src/template-context.types.ts`
-    - Purpose: Validate CLI option values
-    - Domain-specific, not replaceable by library
+   - Location: `lib/src/template-context.types.ts`
+   - Purpose: Validate CLI option values
+   - Domain-specific, not replaceable by library
 
 3. **`isPropertyRequired`**
-    - Location: `lib/src/openApiToTypescript.helpers.ts`
-    - Purpose: Determine if property is required based on schema and flags
-    - Domain logic, not a type predicate
+   - Location: `lib/src/openApiToTypescript.helpers.ts`
+   - Purpose: Determine if property is required based on schema and flags
+   - Domain logic, not a type predicate
 
 #### Custom Type Definitions
 
@@ -105,57 +105,57 @@ openapi3-ts v4 provides:
 #### Schema Resolution / Dereferencing
 
 1. **`makeSchemaResolver`** (`lib/src/makeSchemaResolver.ts`)
-    - Purpose: Resolve `$ref` pointers within already-parsed OpenAPI document
-    - 247 lines of code
-    - 18 comprehensive tests
-    - Features:
-        - Resolves internal references (`#/components/schemas/...`)
-        - Tracks seen references to prevent cycles
-        - Returns both resolved schema and reference name
-        - Uses WeakMap for caching
+   - Purpose: Resolve `$ref` pointers within already-parsed OpenAPI document
+   - 247 lines of code
+   - 18 comprehensive tests
+   - Features:
+     - Resolves internal references (`#/components/schemas/...`)
+     - Tracks seen references to prevent cycles
+     - Returns both resolved schema and reference name
+     - Uses WeakMap for caching
 
 2. **Schema Traversal Utilities**
-    - Scattered across multiple files
-    - Pattern matching on schema types
-    - Recursive traversal for nested schemas (allOf, anyOf, oneOf, items, properties)
+   - Scattered across multiple files
+   - Pattern matching on schema types
+   - Recursive traversal for nested schemas (allOf, anyOf, oneOf, items, properties)
 
 #### Validation Logic
 
 1. **AJV-based validation** (using swagger-parser's parsed output)
-    - No custom OpenAPI validation beyond what swagger-parser provides
-    - We rely on swagger-parser's built-in validation
+   - No custom OpenAPI validation beyond what swagger-parser provides
+   - We rely on swagger-parser's built-in validation
 
 ### What swagger-parser Provides
 
 **Core Capabilities (from v12.1.0):**
 
 1. **`SwaggerParser.parse(spec)`**
-    - Parses YAML/JSON OpenAPI specs
-    - Validates against OpenAPI schema
-    - Returns fully-typed `OpenAPIObject`
-    - **We use this:** Yes, in CLI (`lib/src/cli.ts`)
+   - Parses YAML/JSON OpenAPI specs
+   - Validates against OpenAPI schema
+   - Returns fully-typed `OpenAPIObject`
+   - **We use this:** Yes, in CLI (`lib/src/cli.ts`)
 
 2. **`SwaggerParser.validate(spec)`**
-    - Strict validation against OpenAPI standard
-    - Throws detailed errors for violations
-    - **We use this:** No, we use `bundle()` which validates
+   - Strict validation against OpenAPI standard
+   - Throws detailed errors for violations
+   - **We use this:** No, we use `bundle()` which validates
 
 3. **`SwaggerParser.bundle(spec)`**
-    - Bundles multi-file specs into single document
-    - Resolves external `$ref` pointers
-    - Validates during bundling
-    - **We use this:** ✅ Yes, primary entry point in CLI
+   - Bundles multi-file specs into single document
+   - Resolves external `$ref` pointers
+   - Validates during bundling
+   - **We use this:** ✅ Yes, primary entry point in CLI
 
 4. **`SwaggerParser.dereference(spec)`**
-    - Fully dereferences ALL `$ref` pointers (internal + external)
-    - Returns document with all references inlined
-    - No `$ref` pointers remain
-    - **We use this:** ❌ No - and this is KEY
+   - Fully dereferences ALL `$ref` pointers (internal + external)
+   - Returns document with all references inlined
+   - No `$ref` pointers remain
+   - **We use this:** ❌ No - and this is KEY
 
 5. **`SwaggerParser.resolve(spec)`**
-    - Resolves external refs, keeps internal refs
-    - Returns document + `$refs` object with resolved values
-    - **We use this:** ❌ No
+   - Resolves external refs, keeps internal refs
+   - Returns document + `$refs` object with resolved values
+   - **We use this:** ❌ No
 
 ### Key Insight: Why We Have `makeSchemaResolver`
 
@@ -362,33 +362,33 @@ const schema = { $ref: "#/components/schemas/User" };
 ### Immediate Actions (Phase 3)
 
 1. **Task 2.4: Update zod to v4.1.12** (4-6 hours)
-    - Template updates required
-    - Next sequential task
+   - Template updates required
+   - Next sequential task
 
 2. **Task 3.1: Replace pastable** (6-8 hours)
-    - Remove dependency
-    - Replace with lodash-es + custom
+   - Remove dependency
+   - Replace with lodash-es + custom
 
 3. **Task 3.2: Eliminate type assertions** (16-24 hours) **← BLOCKER**
-    - 74 assertions → 0
-    - Required for target repo compliance
-    - Most critical task
+   - 74 assertions → 0
+   - Required for target repo compliance
+   - Most critical task
 
 4. **Task 3.3: Remove openapi-types** (2-4 hours)
-    - Redundant with openapi3-ts v4
-    - Quick cleanup
+   - Redundant with openapi3-ts v4
+   - Quick cleanup
 
 ### Long-Term Considerations (Phase 4+)
 
 1. **Handlebars → ts-morph emitter**
-    - Deferred to Phase 3E per Phase 2 findings
-    - Estimated 22-32 hours when ready
-    - See `.agent/analysis/HANDLEBARS_EVALUATION.md`
+   - Deferred to Phase 3E per Phase 2 findings
+   - Estimated 22-32 hours when ready
+   - See `.agent/analysis/HANDLEBARS_EVALUATION.md`
 
 2. **Multi-version OAS support**
-    - Deferred to Phase 3E (after ts-morph)
-    - See `.agent/plans/03-FURTHER-ENHANCEMENTS.md`
-    - See `.agent/analysis/OAS_VERSION_STRATEGY.md`
+   - Deferred to Phase 3E (after ts-morph)
+   - See `.agent/plans/03-FURTHER-ENHANCEMENTS.md`
+   - See `.agent/analysis/OAS_VERSION_STRATEGY.md`
 
 ### What NOT to Do
 

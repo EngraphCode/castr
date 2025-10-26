@@ -59,11 +59,11 @@
 #### 1. getOpenApiDependencyGraph.test.ts (TEST)
 
 ```typescript
-import SwaggerParser from "@apidevtools/swagger-parser";
+import SwaggerParser from '@apidevtools/swagger-parser';
 
-test("petstore.yaml", async () => {
-    const openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;
-    // ... test logic
+test('petstore.yaml', async () => {
+  const openApiDoc = (await SwaggerParser.parse('./tests/petstore.yaml')) as OpenAPIObject;
+  // ... test logic
 });
 ```
 
@@ -72,11 +72,11 @@ test("petstore.yaml", async () => {
 #### 2. generateZodClientFromOpenAPI.test.ts (TEST)
 
 ```typescript
-import SwaggerParser from "@apidevtools/swagger-parser";
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 let openApiDoc: OpenAPIObject;
 beforeAll(async () => {
-    openApiDoc = (await SwaggerParser.parse("./tests/petstore.yaml")) as OpenAPIObject;
+  openApiDoc = (await SwaggerParser.parse('./tests/petstore.yaml')) as OpenAPIObject;
 });
 ```
 
@@ -116,24 +116,24 @@ beforeAll(async () => {
 ### API Overview
 
 ```typescript
-import SwaggerParser from "@apidevtools/swagger-parser";
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 // Parse and validate
-const api = await SwaggerParser.parse("openapi.yaml");
+const api = await SwaggerParser.parse('openapi.yaml');
 
 // Validate only (doesn't dereference)
-const api = await SwaggerParser.validate("openapi.yaml");
+const api = await SwaggerParser.validate('openapi.yaml');
 
 // Dereference (inline all $refs)
-const api = await SwaggerParser.dereference("openapi.yaml");
+const api = await SwaggerParser.dereference('openapi.yaml');
 
 // Bundle (combine files, keep $refs)
-const api = await SwaggerParser.bundle("openapi.yaml");
+const api = await SwaggerParser.bundle('openapi.yaml');
 
 // Access $refs resolver
 const parser = new SwaggerParser();
-await parser.parse("openapi.yaml");
-const ref = parser.$refs.get("#/components/schemas/Pet");
+await parser.parse('openapi.yaml');
+const ref = parser.$refs.get('#/components/schemas/Pet');
 ```
 
 ---
@@ -200,7 +200,7 @@ const parser = new SwaggerParser();
 await parser.parse(doc);
 
 // Get any $ref
-const schema = parser.$refs.get("#/components/schemas/Pet");
+const schema = parser.$refs.get('#/components/schemas/Pet');
 
 // Or dereference entire doc
 const dereferenced = await SwaggerParser.dereference(doc);
@@ -231,7 +231,7 @@ const dereferenced = await SwaggerParser.dereference(doc);
 
 ```typescript
 // Parse with external refs
-const api = await SwaggerParser.parse("main.yaml");
+const api = await SwaggerParser.parse('main.yaml');
 // Automatically resolves refs to other files
 ```
 
@@ -259,24 +259,24 @@ const api = await SwaggerParser.parse("main.yaml");
 **Rationale:**
 
 1. **Test Usage is Sufficient**
-    - Tests need to load YAML
-    - Swagger-parser does this well
-    - No need to expand
+   - Tests need to load YAML
+   - Swagger-parser does this well
+   - No need to expand
 
 2. **Production Code Doesn't Need It**
-    - We receive pre-parsed `OpenAPIObject`
-    - Users handle file loading
-    - Our custom resolver works fine
+   - We receive pre-parsed `OpenAPIObject`
+   - Users handle file loading
+   - Our custom resolver works fine
 
 3. **Validation Handled**
-    - AJV validation works (ADR-011)
-    - Custom validation for our needs
-    - No need to change
+   - AJV validation works (ADR-011)
+   - Custom validation for our needs
+   - No need to change
 
 4. **Simple is Better**
-    - Less dependencies in production code
-    - Clear separation of concerns
-    - Maintainable
+   - Less dependencies in production code
+   - Clear separation of concerns
+   - Maintainable
 
 ### Current Architecture (GOOD)
 
@@ -373,31 +373,31 @@ Our Library:                   ▼
 ### Rationale
 
 1. **Actively Maintained** ✅
-    - Latest update: 10 days ago
-    - Regular releases
-    - Healthy project
-    - Security patches ongoing
+   - Latest update: 10 days ago
+   - Regular releases
+   - Healthy project
+   - Security patches ongoing
 
 2. **Appropriate Usage** ✅
-    - Tests need to load YAML
-    - Documentation examples helpful
-    - No production code dependency
+   - Tests need to load YAML
+   - Documentation examples helpful
+   - No production code dependency
 
 3. **Well-Documented** ✅
-    - Clear API
-    - Good examples
-    - Active community
+   - Clear API
+   - Good examples
+   - Active community
 
 4. **Future-Proof** ✅
-    - OpenAPI 3.1 support
-    - Continues to evolve
-    - Will support future OpenAPI versions
+   - OpenAPI 3.1 support
+   - Continues to evolve
+   - Will support future OpenAPI versions
 
 5. **No Reason to Remove** ✅
-    - Works well
-    - No issues
-    - Clean dependency
-    - Helps users understand usage
+   - Works well
+   - No issues
+   - Clean dependency
+   - Helps users understand usage
 
 ### Action Items
 
@@ -427,14 +427,14 @@ Our Library:                   ▼
 
 ```typescript
 // CURRENT:
-import SwaggerParser from "@apidevtools/swagger-parser";
-const doc = await SwaggerParser.parse("./tests/petstore.yaml");
+import SwaggerParser from '@apidevtools/swagger-parser';
+const doc = await SwaggerParser.parse('./tests/petstore.yaml');
 
 // ALTERNATIVE:
-import fs from "fs/promises";
-import yaml from "js-yaml";
+import fs from 'fs/promises';
+import yaml from 'js-yaml';
 
-const content = await fs.readFile("./tests/petstore.yaml", "utf-8");
+const content = await fs.readFile('./tests/petstore.yaml', 'utf-8');
 const doc = yaml.load(content) as OpenAPIObject;
 ```
 

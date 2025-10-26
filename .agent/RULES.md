@@ -31,10 +31,10 @@
 
 ```typescript
 // Step 1: Write failing test FIRST
-test("convertOpenAPIToZod converts string type", () => {
-    const schema = { type: "string" };
-    const result = convertOpenAPIToZod(schema);
-    expect(result).toBe("z.string()");
+test('convertOpenAPIToZod converts string type', () => {
+  const schema = { type: 'string' };
+  const result = convertOpenAPIToZod(schema);
+  expect(result).toBe('z.string()');
 });
 
 // Step 2: Run tests - EXPECT FAILURE
@@ -42,17 +42,17 @@ test("convertOpenAPIToZod converts string type", () => {
 
 // Step 3: Write minimal implementation
 export function convertOpenAPIToZod(schema: SchemaObject): string {
-    return "z.string()"; // Minimal code to pass
+  return 'z.string()'; // Minimal code to pass
 }
 
 // Step 4: Run tests - EXPECT SUCCESS
 // ✅ Test passes
 
 // Step 5: Add next test case
-test("convertOpenAPIToZod converts number type", () => {
-    const schema = { type: "number" };
-    const result = convertOpenAPIToZod(schema);
-    expect(result).toBe("z.number()");
+test('convertOpenAPIToZod converts number type', () => {
+  const schema = { type: 'number' };
+  const result = convertOpenAPIToZod(schema);
+  expect(result).toBe('z.number()');
 });
 
 // Step 6: Run tests - EXPECT FAILURE (new test fails)
@@ -61,9 +61,9 @@ test("convertOpenAPIToZod converts number type", () => {
 
 // Step 7: Update implementation
 export function convertOpenAPIToZod(schema: SchemaObject): string {
-    if (schema.type === "string") return "z.string()";
-    if (schema.type === "number") return "z.number()";
-    throw new Error(`Unsupported type: ${schema.type}`);
+  if (schema.type === 'string') return 'z.string()';
+  if (schema.type === 'number') return 'z.number()';
+  throw new Error(`Unsupported type: ${schema.type}`);
 }
 
 // Step 8: Run tests - ALL PASS
@@ -90,11 +90,11 @@ export function convertOpenAPIToZod(schema: SchemaObject): string {
 ```typescript
 // Pure function - same input always gives same output
 function normalizeString(input: string): string {
-    return input.trim().toLowerCase();
+  return input.trim().toLowerCase();
 }
 
-test("normalizeString removes whitespace and lowercases", () => {
-    expect(normalizeString("  HELLO  ")).toBe("hello");
+test('normalizeString removes whitespace and lowercases', () => {
+  expect(normalizeString('  HELLO  ')).toBe('hello');
 });
 ```
 
@@ -104,12 +104,12 @@ test("normalizeString removes whitespace and lowercases", () => {
 // Impure - depends on external state
 let globalCounter = 0;
 function incrementAndReturn(): number {
-    return ++globalCounter;
+  return ++globalCounter;
 }
 
 // Hard to test reliably
-test("incrementAndReturn increases counter", () => {
-    expect(incrementAndReturn()).toBe(1); // Depends on order!
+test('incrementAndReturn increases counter', () => {
+  expect(incrementAndReturn()).toBe(1); // Depends on order!
 });
 ```
 
@@ -128,20 +128,20 @@ test("incrementAndReturn increases counter", () => {
 **Good:**
 
 ```typescript
-test("getZodSchema converts OpenAPI string to z.string()", () => {
-    const schema = { type: "string" as const };
-    const result = getZodSchema({ schema });
-    expect(result.toString()).toBe("z.string()");
+test('getZodSchema converts OpenAPI string to z.string()', () => {
+  const schema = { type: 'string' as const };
+  const result = getZodSchema({ schema });
+  expect(result.toString()).toBe('z.string()');
 });
 ```
 
 **Bad:**
 
 ```typescript
-test("getZodSchema returns something", () => {
-    const schema = { type: "string" as const };
-    const result = getZodSchema({ schema });
-    expect(result).toBeDefined(); // Too vague, proves nothing
+test('getZodSchema returns something', () => {
+  const schema = { type: 'string' as const };
+  const result = getZodSchema({ schema });
+  expect(result).toBeDefined(); // Too vague, proves nothing
 });
 ```
 
@@ -162,19 +162,19 @@ test("getZodSchema returns something", () => {
 **Good - Tests behavior:**
 
 ```typescript
-test("pathToVariableName converts kebab-case to camelCase", () => {
-    expect(pathToVariableName("/user-profile")).toBe("userProfile");
-    expect(pathToVariableName("/api/user-data")).toBe("apiUserData");
+test('pathToVariableName converts kebab-case to camelCase', () => {
+  expect(pathToVariableName('/user-profile')).toBe('userProfile');
+  expect(pathToVariableName('/api/user-data')).toBe('apiUserData');
 });
 ```
 
 **Bad - Tests implementation:**
 
 ```typescript
-test("pathToVariableName calls replaceHyphenatedPath internally", () => {
-    const spy = jest.spyOn(utils, "replaceHyphenatedPath");
-    pathToVariableName("/user-profile");
-    expect(spy).toHaveBeenCalled(); // Constrains implementation!
+test('pathToVariableName calls replaceHyphenatedPath internally', () => {
+  const spy = jest.spyOn(utils, 'replaceHyphenatedPath');
+  pathToVariableName('/user-profile');
+  expect(spy).toHaveBeenCalled(); // Constrains implementation!
 });
 ```
 
@@ -195,7 +195,7 @@ test("pathToVariableName calls replaceHyphenatedPath internally", () => {
 
 ```typescript
 // ❌ Constrains internal structure
-expect(result).toHaveProperty("_internalCache");
+expect(result).toHaveProperty('_internalCache');
 
 // ❌ Constrains method calls
 expect(mockFn).toHaveBeenCalledTimes(3);
@@ -204,7 +204,7 @@ expect(mockFn).toHaveBeenCalledTimes(3);
 expect(obj._privateMethod).toBeDefined();
 
 // ✅ Tests behavior
-expect(result.output).toBe("expected");
+expect(result.output).toBe('expected');
 expect(result.errors).toHaveLength(0);
 ```
 
@@ -227,14 +227,14 @@ expect(result.errors).toHaveLength(0);
 ```typescript
 // Mock filesystem
 const mockFs = {
-    readFile: vi.fn().mockResolvedValue("content"),
-    writeFile: vi.fn().mockResolvedValue(undefined),
+  readFile: vi.fn().mockResolvedValue('content'),
+  writeFile: vi.fn().mockResolvedValue(undefined),
 };
 
-test("processFile reads and transforms content", async () => {
-    const result = await processFile("test.txt", mockFs);
-    expect(mockFs.readFile).toHaveBeenCalledWith("test.txt");
-    expect(result).toBe("transformed content");
+test('processFile reads and transforms content', async () => {
+  const result = await processFile('test.txt', mockFs);
+  expect(mockFs.readFile).toHaveBeenCalledWith('test.txt');
+  expect(result).toBe('transformed content');
 });
 ```
 
@@ -242,10 +242,10 @@ test("processFile reads and transforms content", async () => {
 
 ```typescript
 // ❌ Reads actual filesystem
-test("processFile reads actual file", async () => {
-    await fs.writeFile("/tmp/test.txt", "content"); // Slow, fragile
-    const result = await processFile("/tmp/test.txt");
-    expect(result).toBe("transformed content");
+test('processFile reads actual file', async () => {
+  await fs.writeFile('/tmp/test.txt', 'content'); // Slow, fragile
+  const result = await processFile('/tmp/test.txt');
+  expect(result).toBe('transformed content');
 });
 ```
 
@@ -266,19 +266,19 @@ test("processFile reads actual file", async () => {
 **Good:**
 
 ```typescript
-test("getTypescriptFromOpenApi preserves type structure", () => {
-    const schema: SchemaObject = {
-        type: "object",
-        properties: {
-            name: { type: "string" },
-            age: { type: "number" },
-        },
-    };
+test('getTypescriptFromOpenApi preserves type structure', () => {
+  const schema: SchemaObject = {
+    type: 'object',
+    properties: {
+      name: { type: 'string' },
+      age: { type: 'number' },
+    },
+  };
 
-    const result = getTypescriptFromOpenApi({ schema });
-    // Type is preserved through the pipeline
-    const typed: TypeDefinition = result;
-    expect(typed).toBeDefined();
+  const result = getTypescriptFromOpenApi({ schema });
+  // Type is preserved through the pipeline
+  const typed: TypeDefinition = result;
+  expect(typed).toBeDefined();
 });
 ```
 
@@ -286,9 +286,9 @@ test("getTypescriptFromOpenApi preserves type structure", () => {
 
 ```typescript
 // ❌ Loses type information
-test("function returns something", () => {
-    const result: any = getTypescriptFromOpenApi({ schema });
-    expect(result).toBeTruthy();
+test('function returns something', () => {
+  const result: any = getTypescriptFromOpenApi({ schema });
+  expect(result).toBeTruthy();
 });
 ```
 
@@ -311,12 +311,12 @@ test("function returns something", () => {
 ```typescript
 // Proper typing
 const schema: SchemaObject = {
-    type: "string",
-    enum: ["a", "b", "c"],
+  type: 'string',
+  enum: ['a', 'b', 'c'],
 };
 
 // as const is fine - preserves literal types
-const methods = ["GET", "POST", "PUT"] as const;
+const methods = ['GET', 'POST', 'PUT'] as const;
 type Method = (typeof methods)[number]; // "GET" | "POST" | "PUT"
 ```
 
@@ -331,7 +331,7 @@ const value = something as any as SpecificType; // Very dangerous!
 
 // ❌ Narrowing from union type (with guard)
 if (isReferenceObject(obj)) {
-    const ref = obj as ReferenceObject; // Needless, if the typeguard uses the `is` keyword then the cast is unnecessary.
+  const ref = obj as ReferenceObject; // Needless, if the typeguard uses the `is` keyword then the cast is unnecessary.
 }
 ```
 
@@ -379,12 +379,12 @@ return validated as User; // Safe - already validated
 ```typescript
 // ✅ Good - explicit and clear
 function convertSchema(schema: SchemaObject, options: ConversionOptions): string {
-    return generateZod(schema, options);
+  return generateZod(schema, options);
 }
 
 // ❌ Bad - implicit dependencies
 function convertSchema(schema: SchemaObject): string {
-    return generateZod(schema, globalOptions); // Hidden dependency!
+  return generateZod(schema, globalOptions); // Hidden dependency!
 }
 ```
 
@@ -395,18 +395,18 @@ Each function should do one thing well:
 ```typescript
 // ✅ Good - separate concerns
 function parseSchema(schema: SchemaObject): ParsedSchema {
-    /* ... */
+  /* ... */
 }
 function validateSchema(parsed: ParsedSchema): ValidationResult {
-    /* ... */
+  /* ... */
 }
 function generateCode(parsed: ParsedSchema): string {
-    /* ... */
+  /* ... */
 }
 
 // ❌ Bad - does too much
 function processSchema(schema: SchemaObject): string {
-    // parsing + validation + generation all in one
+  // parsing + validation + generation all in one
 }
 ```
 
@@ -417,12 +417,12 @@ function processSchema(schema: SchemaObject): string {
 ```typescript
 // ✅ Good - proper typing
 function processValue<T>(value: T, transform: (v: T) => T): T {
-    return transform(value);
+  return transform(value);
 }
 
 // ❌ Bad - loses type safety
 function processValue(value: any, transform: any): any {
-    return transform(value);
+  return transform(value);
 }
 ```
 
@@ -455,19 +455,19 @@ function processValue(value: any, transform: any): any {
 **Good:**
 
 ```typescript
-import type { SchemaObject, ReferenceObject, SchemaObjectType } from "openapi3-ts";
+import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-ts';
 
 // Use library's union types directly
 function processSchema(schema: SchemaObject | ReferenceObject): Result {
-    if (isReferenceObject(schema)) {
-        // Handle ref
-    }
-    // Handle schema
+  if (isReferenceObject(schema)) {
+    // Handle ref
+  }
+  // Handle schema
 }
 
 // Use library's exact types
 function getSchemaType(schema: SchemaObject): SchemaObjectType | SchemaObjectType[] | undefined {
-    return schema.type; // Type matches library definition
+  return schema.type; // Type matches library definition
 }
 ```
 
@@ -475,15 +475,21 @@ function getSchemaType(schema: SchemaObject): SchemaObjectType | SchemaObjectTyp
 
 ```typescript
 // ❌ Redefining library enums
-type PrimitiveType = "string" | "number" | "integer" | "boolean" | "null";
-const primitiveTypeList: readonly PrimitiveType[] = ["string", "number", "integer", "boolean", "null"];
+type PrimitiveType = 'string' | 'number' | 'integer' | 'boolean' | 'null';
+const primitiveTypeList: readonly PrimitiveType[] = [
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'null',
+];
 
 // ❌ Complex extractions
-type SingleType = Exclude<SchemaObject["type"], unknown[] | undefined>;
+type SingleType = Exclude<SchemaObject['type'], unknown[] | undefined>;
 
 // ❌ Claiming narrower types than reality
 function handleItems(
-    items: SchemaObject // ❌ Actually receives SchemaObject | ReferenceObject!
+  items: SchemaObject, // ❌ Actually receives SchemaObject | ReferenceObject!
 ): Result {}
 ```
 
@@ -491,44 +497,44 @@ function handleItems(
 
 ```typescript
 // ✅ Proper type guard - tied to library type with Extract
-import type { SchemaObject } from "openapi3-ts";
+import type { SchemaObject } from 'openapi3-ts';
 
 type PrimitiveSchemaType = Extract<
-    NonNullable<SchemaObject["type"]>,
-    "string" | "number" | "integer" | "boolean" | "null"
+  NonNullable<SchemaObject['type']>,
+  'string' | 'number' | 'integer' | 'boolean' | 'null'
 >;
 
 const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
-    "string",
-    "number",
-    "integer",
-    "boolean",
-    "null",
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'null',
 ] as const;
 
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-    if (typeof value !== "string") return false;
-    const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-    return typeStrings.includes(value);
+  if (typeof value !== 'string') return false;
+  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return typeStrings.includes(value);
 }
 
 // ✅ Type guard from existing library
 export function isReferenceObject(obj: unknown): obj is ReferenceObject {
-    return obj != null && Object.prototype.hasOwnProperty.call(obj, "$ref");
+  return obj != null && Object.prototype.hasOwnProperty.call(obj, '$ref');
 }
 
 // ❌ Avoid type assertions
 const schema = obj as SchemaObject; // Bypasses type safety!
 
 // ❌ Boolean filter pretending to be a type guard
-function isPrimitive(type: SchemaObject["type"]): boolean {
-    // ❌ Input is already typed! This provides NO type narrowing
-    return type === "string" || type === "number";
+function isPrimitive(type: SchemaObject['type']): boolean {
+  // ❌ Input is already typed! This provides NO type narrowing
+  return type === 'string' || type === 'number';
 }
 
 // ❌ Performative type predicates
 function isObject(obj: unknown): obj is Record<string, unknown> {
-    // This is just a fancy 'any' - not a meaningful type
+  // This is just a fancy 'any' - not a meaningful type
 }
 ```
 
@@ -538,15 +544,15 @@ When defining runtime checks for library types:
 
 ```typescript
 // 1. Extract the subset from library type (compiler validates)
-type MySubset = Extract<LibraryType, "foo" | "bar">;
+type MySubset = Extract<LibraryType, 'foo' | 'bar'>;
 
 // 2. Define literals tied to that type
-const MY_VALUES: readonly MySubset[] = ["foo", "bar"] as const;
+const MY_VALUES: readonly MySubset[] = ['foo', 'bar'] as const;
 
 // 3. Create type predicate that narrows from unknown
 export function isMySubset(value: unknown): value is MySubset {
-    if (typeof value !== "string") return false;
-    return (MY_VALUES as readonly string[]).includes(value);
+  if (typeof value !== 'string') return false;
+  return (MY_VALUES as readonly string[]).includes(value);
 }
 ```
 
@@ -568,12 +574,12 @@ This pattern ensures:
 ```typescript
 // ✅ Good - immutable
 function addItem<T>(array: readonly T[], item: T): T[] {
-    return [...array, item];
+  return [...array, item];
 }
 
 // ❌ Bad - mutates input
 function addItem<T>(array: T[], item: T): void {
-    array.push(item); // Mutates!
+  array.push(item); // Mutates!
 }
 ```
 
@@ -582,24 +588,24 @@ function addItem<T>(array: T[], item: T): void {
 ```typescript
 // ✅ Good - explicit error handling
 function parseOpenAPI(input: string): Result<OpenAPIObject, Error> {
-    try {
-        const parsed = JSON.parse(input);
-        if (!isValidOpenAPI(parsed)) {
-            return { success: false, error: new Error("Invalid OpenAPI") };
-        }
-        return { success: true, value: parsed };
-    } catch (error) {
-        return { success: false, error: error as Error };
+  try {
+    const parsed = JSON.parse(input);
+    if (!isValidOpenAPI(parsed)) {
+      return { success: false, error: new Error('Invalid OpenAPI') };
     }
+    return { success: true, value: parsed };
+  } catch (error) {
+    return { success: false, error: error as Error };
+  }
 }
 
 // ❌ Bad - swallows errors
 function parseOpenAPI(input: string): OpenAPIObject | null {
-    try {
-        return JSON.parse(input);
-    } catch {
-        return null; // Lost error information!
-    }
+  try {
+    return JSON.parse(input);
+  } catch {
+    return null; // Lost error information!
+  }
 }
 ```
 
@@ -631,16 +637,16 @@ Each of these tells TypeScript "trust me, I know better" and disables type check
 ```typescript
 // Use proper types
 function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
-    return obj[key]; // Type-safe property access
+  return obj[key]; // Type-safe property access
 }
 
 // Use discriminated unions
 type Result<T> = { success: true; value: T } | { success: false; error: Error };
 
 function process(result: Result<User>): void {
-    if (result.success) {
-        console.log(result.value.name); // TypeScript knows value exists
-    }
+  if (result.success) {
+    console.log(result.value.name); // TypeScript knows value exists
+  }
 }
 ```
 
@@ -680,8 +686,8 @@ Type information flows from narrow to wide. Once widened, it cannot be recovered
 ```typescript
 // Literal type preserved with as const
 const API_ENDPOINTS = {
-    users: "/api/users",
-    posts: "/api/posts",
+  users: '/api/users',
+  posts: '/api/posts',
 } as const;
 
 type Endpoint = (typeof API_ENDPOINTS)[keyof typeof API_ENDPOINTS];
@@ -689,7 +695,7 @@ type Endpoint = (typeof API_ENDPOINTS)[keyof typeof API_ENDPOINTS];
 
 // Function preserves literal types
 function fetchFromEndpoint<T extends Endpoint>(endpoint: T): Promise<Response> {
-    return fetch(endpoint); // TypeScript knows exact endpoint
+  return fetch(endpoint); // TypeScript knows exact endpoint
 }
 
 // Usage preserves literals
@@ -701,44 +707,44 @@ fetchFromEndpoint(API_ENDPOINTS.users); // Type knows it's '/api/users'
 ```typescript
 // ❌ Widens to string - loses literal type
 const API_ENDPOINTS = {
-    users: "/api/users", // Type: string (not '/api/users')
-    posts: "/api/posts", // Type: string (not '/api/posts')
+  users: '/api/users', // Type: string (not '/api/users')
+  posts: '/api/posts', // Type: string (not '/api/posts')
 };
 
 // ❌ Accepts any string - loses precision
 function fetchFromEndpoint(endpoint: string): Promise<Response> {
-    return fetch(endpoint); // TypeScript can't help with typos
+  return fetch(endpoint); // TypeScript can't help with typos
 }
 
 // ❌ Type information destroyed
-fetchFromEndpoint("/api/usres"); // Typo not caught! ❌
+fetchFromEndpoint('/api/usres'); // Typo not caught! ❌
 ```
 
 **More examples:**
 
 ```typescript
 // ✅ Good - preserves union type
-function handleMethod<M extends "GET" | "POST">(method: M): void {
-    // TypeScript knows exact method
+function handleMethod<M extends 'GET' | 'POST'>(method: M): void {
+  // TypeScript knows exact method
 }
 
 // ❌ Bad - widens to string
 function handleMethod(method: string): void {
-    // Lost information about valid methods
+  // Lost information about valid methods
 }
 
 // ✅ Good - preserves literal numbers
 const HTTP_STATUS = {
-    OK: 200,
-    NOT_FOUND: 404,
+  OK: 200,
+  NOT_FOUND: 404,
 } as const;
 type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
 // Type: 200 | 404
 
 // ❌ Bad - widens to number
 const HTTP_STATUS = {
-    OK: 200, // Type: number
-    NOT_FOUND: 404, // Type: number
+  OK: 200, // Type: number
+  NOT_FOUND: 404, // Type: number
 };
 ```
 
@@ -753,21 +759,21 @@ Define each type ONCE and import it consistently. Type duplication leads to drif
 ```typescript
 // types.ts - Single definition
 export interface User {
-    id: string;
-    name: string;
-    email: string;
+  id: string;
+  name: string;
+  email: string;
 }
 
 // api.ts - Import and use
-import type { User } from "./types.js";
+import type { User } from './types.js';
 export function getUser(id: string): Promise<User> {
-    /* ... */
+  /* ... */
 }
 
 // ui.ts - Import and use
-import type { User } from "./types.js";
+import type { User } from './types.js';
 export function UserProfile({ user }: { user: User }) {
-    /* ... */
+  /* ... */
 }
 ```
 
@@ -777,16 +783,16 @@ export function UserProfile({ user }: { user: User }) {
 // ❌ Duplicated type definitions
 // api.ts
 interface User {
-    id: string;
-    name: string;
-    email: string;
+  id: string;
+  name: string;
+  email: string;
 }
 
 // ui.ts
 interface User {
-    id: string;
-    name: string;
-    email: string;
+  id: string;
+  name: string;
+  email: string;
 } // Drift risk!
 ```
 
@@ -803,29 +809,29 @@ Data from external sources (network, files, user input) must be validated and pa
 **Good:**
 
 ```typescript
-import { z } from "zod";
+import { z } from 'zod';
 
 // Define schema for external data
 const UserSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    email: z.string().email(),
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
 });
 
 type User = z.infer<typeof UserSchema>;
 
 // Validate at boundary
 async function fetchUser(id: string): Promise<User> {
-    const response = await fetch(`/api/users/${id}`);
-    const data: unknown = await response.json(); // unknown until validated
+  const response = await fetch(`/api/users/${id}`);
+  const data: unknown = await response.json(); // unknown until validated
 
-    // Parse and validate - throws on invalid data
-    return UserSchema.parse(data); // Now type-safe!
+  // Parse and validate - throws on invalid data
+  return UserSchema.parse(data); // Now type-safe!
 }
 
 // Internal code works with validated types
 function processUser(user: User): void {
-    console.log(user.email.toLowerCase()); // Type-safe!
+  console.log(user.email.toLowerCase()); // Type-safe!
 }
 ```
 
@@ -834,14 +840,14 @@ function processUser(user: User): void {
 ```typescript
 // ❌ Trusts external data without validation
 async function fetchUser(id: string): Promise<User> {
-    const response = await fetch(`/api/users/${id}`);
-    const data = await response.json();
-    return data as User; // DANGEROUS! No validation!
+  const response = await fetch(`/api/users/${id}`);
+  const data = await response.json();
+  return data as User; // DANGEROUS! No validation!
 }
 
 // ❌ Runtime errors waiting to happen
 function processUser(user: User): void {
-    console.log(user.email.toLowerCase()); // Crashes if email is undefined
+  console.log(user.email.toLowerCase()); // Crashes if email is undefined
 }
 ```
 
@@ -870,13 +876,13 @@ Ensure `tsconfig.json` has:
 
 ```json
 {
-    "compilerOptions": {
-        "strict": true,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true
-    }
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
 }
 ```
 
@@ -884,11 +890,11 @@ Ensure `tsconfig.json` has:
 
 ```typescript
 // ✅ Good - let TypeScript infer
-const name = "John"; // inferred as string
+const name = 'John'; // inferred as string
 const age = 30; // inferred as number
 
 // ❌ Unnecessary annotation
-const name: string = "John";
+const name: string = 'John';
 ```
 
 ### 3. **Use discriminated unions**
@@ -898,11 +904,11 @@ const name: string = "John";
 type Result<T, E> = { success: true; value: T } | { success: false; error: E };
 
 function handleResult<T, E>(result: Result<T, E>): void {
-    if (result.success) {
-        console.log(result.value); // TypeScript knows this exists
-    } else {
-        console.error(result.error); // TypeScript knows this exists
-    }
+  if (result.success) {
+    console.log(result.value); // TypeScript knows this exists
+  } else {
+    console.error(result.error); // TypeScript knows this exists
+  }
 }
 ```
 
@@ -911,19 +917,19 @@ function handleResult<T, E>(result: Result<T, E>): void {
 ```typescript
 // ✅ Good - const object with as const
 const HttpMethod = {
-    GET: "GET",
-    POST: "POST",
-    PUT: "PUT",
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
 } as const;
 type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
 
 // ✅ Good - union type
-type HttpMethod = "GET" | "POST" | "PUT";
+type HttpMethod = 'GET' | 'POST' | 'PUT';
 
 // ❌ Avoid - enum has runtime overhead
 enum HttpMethod {
-    GET = "GET",
-    POST = "POST",
+  GET = 'GET',
+  POST = 'POST',
 }
 ```
 
@@ -938,18 +944,18 @@ enum HttpMethod {
 ```typescript
 // ❌ Bad - hiding unused variable
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type) => {
-        let _isObject = true; // Unused! Should be removed
-        return type.toString();
-    })
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type) => {
+    let _isObject = true; // Unused! Should be removed
+    return type.toString();
+  })
+  .join(', ');
 
 // ✅ Good - remove unused variable entirely
 const types = schema.anyOf
-    .map((prop) => getZodSchema({ schema: prop }))
-    .map((type) => type.toString())
-    .join(", ");
+  .map((prop) => getZodSchema({ schema: prop }))
+  .map((type) => type.toString())
+  .join(', ');
 ```
 
 **Exceptions:**
@@ -967,15 +973,15 @@ const types = schema.anyOf
 
 ```typescript
 // 1. External dependencies
-import type { OpenAPIObject } from "openapi3-ts";
-import { match } from "ts-pattern";
+import type { OpenAPIObject } from 'openapi3-ts';
+import { match } from 'ts-pattern';
 
 // 2. Internal imports (with .js extensions for ESM)
-import { isReferenceObject } from "./is-reference-object.js";
-import type { TemplateContext } from "./template-context.js";
+import { isReferenceObject } from './is-reference-object.js';
+import type { TemplateContext } from './template-context.js';
 
 // 3. Relative imports
-import { utils } from "./utils.js";
+import { utils } from './utils.js';
 ```
 
 ### 4. **Function size**
@@ -1035,7 +1041,7 @@ if (Object.keys(schema).length === 0) continue;
  * ```
  */
 export function getZodSchema(args: ConversionArgs): ZodSchema {
-    // ...
+  // ...
 }
 ````
 
@@ -1131,9 +1137,9 @@ export function getZodSchema(args: ConversionArgs): ZodSchema {
  * @public
  */
 export async function generateZodClientFromOpenAPI(
-    args: GenerateZodClientFromOpenApiArgs
+  args: GenerateZodClientFromOpenApiArgs,
 ): Promise<string | Record<string, string>> {
-    // Implementation
+  // Implementation
 }
 ````
 
@@ -1159,7 +1165,7 @@ export async function generateZodClientFromOpenAPI(
  * @internal
  */
 function sanitizeSchemaKey(key: string): string {
-    return key.replace(/[^A-Za-z0-9_]/g, "_");
+  return key.replace(/[^A-Za-z0-9_]/g, '_');
 }
 ```
 
@@ -1201,47 +1207,47 @@ function sanitizeSchemaKey(key: string): string {
  * @public
  */
 export interface GenerateZodClientOptions {
-    /**
-     * Template to use for code generation.
-     *
-     * - `"default"` - Full Zodios HTTP client with runtime validation
-     * - `"schemas-only"` - Pure Zod schemas without client
-     * - `"schemas-with-metadata"` - Schemas + metadata without Zodios
-     *
-     * @defaultValue "default"
-     */
-    template?: "default" | "schemas-only" | "schemas-with-metadata";
+  /**
+   * Template to use for code generation.
+   *
+   * - `"default"` - Full Zodios HTTP client with runtime validation
+   * - `"schemas-only"` - Pure Zod schemas without client
+   * - `"schemas-with-metadata"` - Schemas + metadata without Zodios
+   *
+   * @defaultValue "default"
+   */
+  template?: 'default' | 'schemas-only' | 'schemas-with-metadata';
 
-    /**
-     * Base URL for API requests.
-     *
-     * Only used with default template. Becomes default baseURL in generated client.
-     *
-     * @example "https://api.example.com"
-     */
-    baseUrl?: string;
+  /**
+   * Base URL for API requests.
+   *
+   * Only used with default template. Becomes default baseURL in generated client.
+   *
+   * @example "https://api.example.com"
+   */
+  baseUrl?: string;
 
-    /**
-     * Skip HTTP client generation (auto-switches to schemas-with-metadata template).
-     *
-     * Perfect for using your own HTTP client (fetch, axios, ky) while maintaining
-     * full Zod validation. Automatically enables MCP validation.
-     *
-     * @defaultValue false
-     */
-    noClient?: boolean;
+  /**
+   * Skip HTTP client generation (auto-switches to schemas-with-metadata template).
+   *
+   * Perfect for using your own HTTP client (fetch, axios, ky) while maintaining
+   * full Zod validation. Automatically enables MCP validation.
+   *
+   * @defaultValue false
+   */
+  noClient?: boolean;
 
-    /**
-     * Generate validation helper functions (validateRequest, validateResponse).
-     *
-     * Only applicable when using schemas-with-metadata template. Helpers use
-     * .parse() for fail-fast validation with detailed error messages.
-     *
-     * @defaultValue false
-     * @see {@link validateRequest}
-     * @see {@link validateResponse}
-     */
-    withValidationHelpers?: boolean;
+  /**
+   * Generate validation helper functions (validateRequest, validateResponse).
+   *
+   * Only applicable when using schemas-with-metadata template. Helpers use
+   * .parse() for fail-fast validation with detailed error messages.
+   *
+   * @defaultValue false
+   * @see {@link validateRequest}
+   * @see {@link validateResponse}
+   */
+  withValidationHelpers?: boolean;
 }
 ````
 
@@ -1259,7 +1265,16 @@ export interface GenerateZodClientOptions {
  * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
  * @public
  */
-export const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "options", "head", "trace"] as const;
+export const HTTP_METHODS = [
+  'get',
+  'post',
+  'put',
+  'patch',
+  'delete',
+  'options',
+  'head',
+  'trace',
+] as const;
 
 /**
  * Type representing valid HTTP methods.
@@ -1360,8 +1375,11 @@ export type HttpMethod = (typeof HTTP_METHODS)[number];
  * @since 1.9.0
  * @public
  */
-export function validateMcpReadiness(openApiDoc: OpenAPIObject, options: ValidateMcpReadinessOptions = {}): void {
-    // Implementation
+export function validateMcpReadiness(
+  openApiDoc: OpenAPIObject,
+  options: ValidateMcpReadinessOptions = {},
+): void {
+  // Implementation
 }
 ````
 
@@ -1382,8 +1400,11 @@ export function validateMcpReadiness(openApiDoc: OpenAPIObject, options: Validat
  *
  * @internal
  */
-function extractSecurityMetadata(operation: OperationObject, components?: ComponentsObject): SecurityMetadata {
-    // Implementation
+function extractSecurityMetadata(
+  operation: OperationObject,
+  components?: ComponentsObject,
+): SecurityMetadata {
+  // Implementation
 }
 ```
 
@@ -1392,7 +1413,7 @@ function extractSecurityMetadata(operation: OperationObject, components?: Compon
 ```typescript
 // ❌ No JSDoc at all
 export function convert(schema: any): string {
-    // ...
+  // ...
 }
 
 // ❌ Incomplete JSDoc (missing @param, @returns, @example)
@@ -1400,7 +1421,7 @@ export function convert(schema: any): string {
  * Converts schema.
  */
 export function convertSchema(schema: SchemaObject, options: Options): string {
-    // ...
+  // ...
 }
 
 // ❌ Useless JSDoc (redundant with types)
@@ -1409,7 +1430,7 @@ export function convertSchema(schema: SchemaObject, options: Options): string {
  * @returns string
  */
 export function convertSchema(schema: SchemaObject): string {
-    // ...
+  // ...
 }
 ```
 
@@ -1430,14 +1451,14 @@ Before any major release or phase completion, a **comprehensive documentation sw
 
 ```json
 {
-    "entryPoints": ["src/index.ts"],
-    "excludePrivate": true,
-    "excludeInternal": true,
-    "validation": {
-        "notExported": true,
-        "invalidLink": true,
-        "notDocumented": true
-    }
+  "entryPoints": ["src/index.ts"],
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": true
+  }
 }
 ```
 

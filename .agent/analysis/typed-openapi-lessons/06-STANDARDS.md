@@ -176,8 +176,8 @@ Tracks version in package.json, uses changesets for releases:
 
 ```json
 {
-    "name": "typed-openapi",
-    "version": "2.2.2"
+  "name": "typed-openapi",
+  "version": "2.2.2"
 }
 ```
 
@@ -200,12 +200,12 @@ Tracks version in package.json, uses changesets for releases:
  */
 
 export const __GENERATED_BY__ = {
-    tool: "openapi-zod-client",
-    version: "1.16.0",
-    template: "schemas-with-metadata",
-    generatedAt: "2025-10-25T12:00:00Z",
-    sourceSpec: "./openapi.yaml",
-    sourceSpecVersion: "3.0.3",
+  tool: 'openapi-zod-client',
+  version: '1.16.0',
+  template: 'schemas-with-metadata',
+  generatedAt: '2025-10-25T12:00:00Z',
+  sourceSpec: './openapi.yaml',
+  sourceSpecVersion: '3.0.3',
 } as const;
 ```
 
@@ -228,18 +228,18 @@ Allow opt-in to new features without breaking existing users:
 
 ```typescript
 export const __FEATURES__ = {
-    // Stable features (always enabled)
-    strictObjects: true,
-    exportSchemas: true,
+  // Stable features (always enabled)
+  strictObjects: true,
+  exportSchemas: true,
 
-    // New features (opt-in via config)
-    discriminatedUnions: true, // v2.0 feature
-    headlessClient: true, // v2.0 feature
-    typeOnlyMode: true, // v2.0 feature
+  // New features (opt-in via config)
+  discriminatedUnions: true, // v2.0 feature
+  headlessClient: true, // v2.0 feature
+  typeOnlyMode: true, // v2.0 feature
 
-    // Experimental features (opt-in via --experimental)
-    multiRuntime: false, // Future
-    asyncValidation: false, // Future
+  // Experimental features (opt-in via --experimental)
+  multiRuntime: false, // Future
+  asyncValidation: false, // Future
 } as const;
 ```
 
@@ -248,10 +248,10 @@ export const __FEATURES__ = {
 ```typescript
 // openapi-zod-client.config.ts
 export default defineConfig({
-    features: {
-        discriminatedUnions: true,
-        headlessClient: true,
-    },
+  features: {
+    discriminatedUnions: true,
+    headlessClient: true,
+  },
 });
 ```
 
@@ -368,27 +368,30 @@ Add automatic version detection:
 
 ```typescript
 function detectOpenApiVersion(spec: unknown): string {
-    if ("openapi" in spec) {
-        return spec.openapi; // "3.0.3" or "3.1.0"
-    }
-    if ("swagger" in spec) {
-        return spec.swagger; // "2.0"
-    }
-    throw new Error("Invalid OpenAPI spec: missing version");
+  if ('openapi' in spec) {
+    return spec.openapi; // "3.0.3" or "3.1.0"
+  }
+  if ('swagger' in spec) {
+    return spec.swagger; // "2.0"
+  }
+  throw new Error('Invalid OpenAPI spec: missing version');
 }
 
 function validateVersion(version: string) {
-    if (version.startsWith("2.")) {
-        throw new Error(
-            "Swagger 2.0 is not supported. " + "Please convert to OpenAPI 3.0+ using: " + "https://editor.swagger.io/"
-        );
-    }
+  if (version.startsWith('2.')) {
+    throw new Error(
+      'Swagger 2.0 is not supported. ' +
+        'Please convert to OpenAPI 3.0+ using: ' +
+        'https://editor.swagger.io/',
+    );
+  }
 
-    if (!version.startsWith("3.0") && !version.startsWith("3.1")) {
-        console.warn(
-            `⚠️  OpenAPI version ${version} is not officially supported. ` + `Some features may not work correctly.`
-        );
-    }
+  if (!version.startsWith('3.0') && !version.startsWith('3.1')) {
+    console.warn(
+      `⚠️  OpenAPI version ${version} is not officially supported. ` +
+        `Some features may not work correctly.`,
+    );
+  }
 }
 ```
 
@@ -398,28 +401,28 @@ Handle version differences:
 
 ```typescript
 const features = {
-    "3.0": {
-        nullable: true, // Uses nullable: true
-        webhooks: false, // No webhooks
-        discriminator: "basic", // Basic discriminator
-    },
-    "3.1": {
-        nullable: false, // Uses type: ["string", "null"]
-        webhooks: true, // Has webhooks
-        discriminator: "full", // Full discriminator support
-    },
+  '3.0': {
+    nullable: true, // Uses nullable: true
+    webhooks: false, // No webhooks
+    discriminator: 'basic', // Basic discriminator
+  },
+  '3.1': {
+    nullable: false, // Uses type: ["string", "null"]
+    webhooks: true, // Has webhooks
+    discriminator: 'full', // Full discriminator support
+  },
 };
 
 function generateSchema(schema: SchemaObject, specVersion: string) {
-    if (specVersion.startsWith("3.0") && schema.nullable) {
-        return `z.union([${baseType}, z.null()])`;
-    }
+  if (specVersion.startsWith('3.0') && schema.nullable) {
+    return `z.union([${baseType}, z.null()])`;
+  }
 
-    if (specVersion.startsWith("3.1") && Array.isArray(schema.type)) {
-        return generateUnionType(schema.type);
-    }
+  if (specVersion.startsWith('3.1') && Array.isArray(schema.type)) {
+    return generateUnionType(schema.type);
+  }
 
-    // ...
+  // ...
 }
 ```
 
@@ -432,25 +435,25 @@ function generateSchema(schema: SchemaObject, specVersion: string) {
 Validate OpenAPI spec before generation:
 
 ```typescript
-import SwaggerParser from "@apidevtools/swagger-parser";
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 async function validateSpec(input: string) {
-    try {
-        const api = await SwaggerParser.validate(input);
-        console.log("✓ Spec validation passed");
-        return api;
-    } catch (error) {
-        console.error("✗ Spec validation failed:");
-        console.error(error.message);
+  try {
+    const api = await SwaggerParser.validate(input);
+    console.log('✓ Spec validation passed');
+    return api;
+  } catch (error) {
+    console.error('✗ Spec validation failed:');
+    console.error(error.message);
 
-        if (error.details) {
-            error.details.forEach((detail) => {
-                console.error(`  - ${detail.path}: ${detail.message}`);
-            });
-        }
-
-        process.exit(1);
+    if (error.details) {
+      error.details.forEach((detail) => {
+        console.error(`  - ${detail.path}: ${detail.message}`);
+      });
     }
+
+    process.exit(1);
+  }
 }
 ```
 

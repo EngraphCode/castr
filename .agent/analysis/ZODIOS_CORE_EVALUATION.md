@@ -37,20 +37,26 @@
 
 ```typescript
 // Line 1:
-import type { ZodiosEndpointDefinition } from "@zodios/core";
+import type { ZodiosEndpointDefinition } from '@zodios/core';
 
 // Lines 168-179: Type definition
 export type EndpointDefinitionWithRefs = Omit<
-    ZodiosEndpointDefinition<unknown>,
-    "response" | "parameters" | "errors" | "description"
+  ZodiosEndpointDefinition<unknown>,
+  'response' | 'parameters' | 'errors' | 'description'
 > & {
-    response: string;
-    description?: string | undefined;
-    parameters: Array<
-        Omit<Required<ZodiosEndpointDefinition<unknown>>["parameters"][number], "schema"> & { schema: string }
-    >;
-    errors: Array<Omit<Required<ZodiosEndpointDefinition<unknown>>["errors"][number], "schema"> & { schema: string }>;
-    responses?: Array<{ statusCode: string; schema: string; description?: string }>;
+  response: string;
+  description?: string | undefined;
+  parameters: Array<
+    Omit<Required<ZodiosEndpointDefinition<unknown>>['parameters'][number], 'schema'> & {
+      schema: string;
+    }
+  >;
+  errors: Array<
+    Omit<Required<ZodiosEndpointDefinition<unknown>>['errors'][number], 'schema'> & {
+      schema: string;
+    }
+  >;
+  responses?: Array<{ statusCode: string; schema: string; description?: string }>;
 };
 ```
 
@@ -115,22 +121,22 @@ We generate code that uses Zodios to create type-safe API clients from OpenAPI s
 **Typical Generated Code:**
 
 ```typescript
-import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-import { z } from "zod";
+import { makeApi, Zodios, type ZodiosOptions } from '@zodios/core';
+import { z } from 'zod';
 
 const endpoints = makeApi([
-    {
-        method: "get",
-        path: "/users/:id",
-        alias: "getUser",
-        description: "Get user by ID",
-        response: z.object({ id: z.number(), name: z.string() }),
-        parameters: [{ name: "id", type: "Path", schema: z.number() }],
-    },
-    // ... more endpoints
+  {
+    method: 'get',
+    path: '/users/:id',
+    alias: 'getUser',
+    description: 'Get user by ID',
+    response: z.object({ id: z.number(), name: z.string() }),
+    parameters: [{ name: 'id', type: 'Path', schema: z.number() }],
+  },
+  // ... more endpoints
 ]);
 
-const api = new Zodios("https://api.example.com", endpoints);
+const api = new Zodios('https://api.example.com', endpoints);
 const user = await api.getUser({ params: { id: 123 } }); // Type-safe!
 ```
 
@@ -180,24 +186,24 @@ Would need to check:
 
 ```typescript
 export interface ZodiosEndpointDefinition<T = unknown> {
-    method: "get" | "post" | "put" | "patch" | "delete" | "head" | "options";
-    path: string;
-    alias?: string;
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
+  path: string;
+  alias?: string;
+  description?: string;
+  immutable?: boolean;
+  requestFormat?: 'json' | 'form-data' | 'form-url' | 'binary' | 'text';
+  response: ZodType<T>;
+  errors?: Array<{
+    status: number | 'default';
     description?: string;
-    immutable?: boolean;
-    requestFormat?: "json" | "form-data" | "form-url" | "binary" | "text";
-    response: ZodType<T>;
-    errors?: Array<{
-        status: number | "default";
-        description?: string;
-        schema: ZodType;
-    }>;
-    parameters?: Array<{
-        name: string;
-        type: "Query" | "Body" | "Header" | "Path";
-        schema: ZodType;
-        description?: string;
-    }>;
+    schema: ZodType;
+  }>;
+  parameters?: Array<{
+    name: string;
+    type: 'Query' | 'Body' | 'Header' | 'Path';
+    schema: ZodType;
+    description?: string;
+  }>;
 }
 ```
 
@@ -333,23 +339,23 @@ Alternatives:
 ### Mitigation Strategies
 
 1. **Monitor Activity**
-    - Watch GitHub for signs of life
-    - Check for forks with activity
-    - Monitor npm downloads
+   - Watch GitHub for signs of life
+   - Check for forks with activity
+   - Monitor npm downloads
 
 2. **Test with Zod v4**
-    - Verify compatibility after zod update
-    - Document any issues
+   - Verify compatibility after zod update
+   - Document any issues
 
 3. **Plan Escape Route**
-    - Document how to create Zodios-free template
-    - Consider forking if needed
-    - Have migration guide ready
+   - Document how to create Zodios-free template
+   - Consider forking if needed
+   - Have migration guide ready
 
 4. **Inform Users**
-    - Document Zodios dependency in README
-    - Warn about maintenance status
-    - Provide alternatives if asked
+   - Document Zodios dependency in README
+   - Warn about maintenance status
+   - Provide alternatives if asked
 
 ---
 
@@ -358,29 +364,29 @@ Alternatives:
 ### Rationale
 
 1. **End User Dependency** ✅
-    - Generated code imports from @zodios/core
-    - Removing would be major breaking change
-    - Users expect Zodios integration
+   - Generated code imports from @zodios/core
+   - Removing would be major breaking change
+   - Users expect Zodios integration
 
 2. **Still Works** ✅
-    - Package functions correctly today
-    - No known critical bugs
-    - Compatible with Zod v3 (verify with v4)
+   - Package functions correctly today
+   - No known critical bugs
+   - Compatible with Zod v3 (verify with v4)
 
 3. **Large Install Base** ✅
-    - 100k downloads/week
-    - Community still using it
-    - Not completely abandoned
+   - 100k downloads/week
+   - Community still using it
+   - Not completely abandoned
 
 4. **Low Immediate Risk** ✅
-    - No production code dependency (just templates)
-    - End users control their own installations
-    - We don't bundle it
+   - No production code dependency (just templates)
+   - End users control their own installations
+   - We don't bundle it
 
 5. **Alternatives Too Complex** ⚠️
-    - Creating alternative would be weeks of work
-    - Breaking change would hurt users
-    - Not worth it while it still works
+   - Creating alternative would be weeks of work
+   - Breaking change would hurt users
+   - Not worth it while it still works
 
 ### Action Items
 
@@ -437,7 +443,7 @@ Alternatives:
 `lib/src/types/zodios.ts`:
 
 ```typescript
-import type { ZodType } from "zod";
+import type { ZodType } from 'zod';
 
 /**
  * Zodios endpoint definition structure
@@ -446,24 +452,24 @@ import type { ZodType } from "zod";
  * @see https://github.com/ecyrbe/zodios
  */
 export interface ZodiosEndpointDefinition<T = unknown> {
-    method: "get" | "post" | "put" | "patch" | "delete" | "head" | "options";
-    path: string;
-    alias?: string;
+  method: 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
+  path: string;
+  alias?: string;
+  description?: string;
+  immutable?: boolean;
+  requestFormat?: 'json' | 'form-data' | 'form-url' | 'binary' | 'text';
+  response: ZodType<T>;
+  errors?: Array<{
+    status: number | 'default';
     description?: string;
-    immutable?: boolean;
-    requestFormat?: "json" | "form-data" | "form-url" | "binary" | "text";
-    response: ZodType<T>;
-    errors?: Array<{
-        status: number | "default";
-        description?: string;
-        schema: ZodType;
-    }>;
-    parameters?: Array<{
-        name: string;
-        type: "Query" | "Body" | "Header" | "Path";
-        schema: ZodType;
-        description?: string;
-    }>;
+    schema: ZodType;
+  }>;
+  parameters?: Array<{
+    name: string;
+    type: 'Query' | 'Body' | 'Header' | 'Path';
+    schema: ZodType;
+    description?: string;
+  }>;
 }
 ```
 
@@ -471,10 +477,10 @@ export interface ZodiosEndpointDefinition<T = unknown> {
 
 ```typescript
 // BEFORE:
-import type { ZodiosEndpointDefinition } from "@zodios/core";
+import type { ZodiosEndpointDefinition } from '@zodios/core';
 
 // AFTER:
-import type { ZodiosEndpointDefinition } from "./types/zodios.js";
+import type { ZodiosEndpointDefinition } from './types/zodios.js';
 ```
 
 ### Step 3: Keep templates using @zodios/core

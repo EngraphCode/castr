@@ -71,23 +71,23 @@ complexity = 1 (base enum) + 1 (enum composite) = 2
 
 ```typescript
 if (isPrimitiveSchemaType(schema.type)) {
-    if (schema.enum) {
-        return (
-            current +
-            complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
-            complexityByComposite("enum")
-            // NOTE: We intentionally do NOT add enum.length here
-            // Rationale: An enum is an enum whether it has 2 or 100 values
-            // The base complexity remains constant to ensure inlining behavior
-        );
-    }
-    return current + complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType });
+  if (schema.enum) {
+    return (
+      current +
+      complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
+      complexityByComposite('enum')
+      // NOTE: We intentionally do NOT add enum.length here
+      // Rationale: An enum is an enum whether it has 2 or 100 values
+      // The base complexity remains constant to ensure inlining behavior
+    );
+  }
+  return current + complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType });
 }
 
 // Handle enum without explicit type
 if (schema.enum && !schema.type) {
-    return current + complexityByComposite("enum") + 1;
-    // 1 for base enum declaration + 1 for enum composite = 2 total
+  return current + complexityByComposite('enum') + 1;
+  // 1 for base enum declaration + 1 for enum composite = 2 total
 }
 ```
 
@@ -98,23 +98,23 @@ We used TDD to define and validate the correct behavior:
 ### 1. Created 21 unit tests
 
 ```typescript
-describe("schema-complexity: enum calculations", () => {
-    describe("base enum complexity (without type)", () => {
-        test("enum with 2 values should have complexity 2", () => {
-            expect(getComplexity({ enum: ["a", "b"] })).toBe(2);
-        });
-
-        test("enum with 10 values should have complexity 2", () => {
-            expect(getComplexity({ enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] })).toBe(2);
-        });
-
-        test("enum with 100 values should have complexity 2", () => {
-            const values = Array.from({ length: 100 }, (_, i) => `val${i}`);
-            expect(getComplexity({ type: "string", enum: values })).toBe(2);
-        });
+describe('schema-complexity: enum calculations', () => {
+  describe('base enum complexity (without type)', () => {
+    test('enum with 2 values should have complexity 2', () => {
+      expect(getComplexity({ enum: ['a', 'b'] })).toBe(2);
     });
 
-    // ... 18 more tests covering edge cases
+    test('enum with 10 values should have complexity 2', () => {
+      expect(getComplexity({ enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] })).toBe(2);
+    });
+
+    test('enum with 100 values should have complexity 2', () => {
+      const values = Array.from({ length: 100 }, (_, i) => `val${i}`);
+      expect(getComplexity({ type: 'string', enum: values })).toBe(2);
+    });
+  });
+
+  // ... 18 more tests covering edge cases
 });
 ```
 
@@ -125,15 +125,15 @@ All 283 existing tests continued to pass, proving backward compatibility.
 ### 3. Confirmed inlining behavior
 
 ```typescript
-test("simple enum should inline (complexity < 4)", () => {
-    const complexity = getComplexity({ type: "string", enum: ["a", "b", "c"] });
-    expect(complexity).toBeLessThan(4); // Will be inlined
+test('simple enum should inline (complexity < 4)', () => {
+  const complexity = getComplexity({ type: 'string', enum: ['a', 'b', 'c'] });
+  expect(complexity).toBeLessThan(4); // Will be inlined
 });
 
-test("enum with 100 values should still inline", () => {
-    const values = Array.from({ length: 100 }, (_, i) => `val${i}`);
-    const complexity = getComplexity({ type: "string", enum: values });
-    expect(complexity).toBeLessThan(4); // Even large enums inline
+test('enum with 100 values should still inline', () => {
+  const values = Array.from({ length: 100 }, (_, i) => `val${i}`);
+  const complexity = getComplexity({ type: 'string', enum: values });
+  expect(complexity).toBeLessThan(4); // Even large enums inline
 });
 ```
 
@@ -178,12 +178,12 @@ If extremely large enums become a problem:
 ```typescript
 // ❌ Adding enum.length
 if (schema.enum) {
-    return (
-        current +
-        complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
-        complexityByComposite("enum") +
-        schema.enum.length // ❌ WRONG!
-    );
+  return (
+    current +
+    complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
+    complexityByComposite('enum') +
+    schema.enum.length // ❌ WRONG!
+  );
 }
 ```
 
@@ -194,12 +194,12 @@ Result: Enum with 3 values = 2 + 3 = 5 → **extracted** ❌
 ```typescript
 // ✅ Constant complexity
 if (schema.enum) {
-    return (
-        current +
-        complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
-        complexityByComposite("enum")
-        // NOTE: We intentionally do NOT add enum.length here
-    );
+  return (
+    current +
+    complexityByType(schema as SchemaObject & { type: PrimitiveSchemaType }) +
+    complexityByComposite('enum')
+    // NOTE: We intentionally do NOT add enum.length here
+  );
 }
 ```
 

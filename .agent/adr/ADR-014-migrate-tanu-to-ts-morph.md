@@ -12,28 +12,28 @@ We currently use `tanu` (v0.2.0) for TypeScript AST manipulation and code genera
 ### The Problem with tanu
 
 1. **API Confusion**
-    - Both `t` and `ts` exports from same library
-    - They don't compose well together
-    - Suggests we're using the API incorrectly
-    - ~15-20 type assertions at tanu boundaries
+   - Both `t` and `ts` exports from same library
+   - They don't compose well together
+   - Suggests we're using the API incorrectly
+   - ~15-20 type assertions at tanu boundaries
 
 2. **Limited Ecosystem**
-    - Small package (last updated 2+ years ago)
-    - Limited documentation
-    - No active community
-    - Uncertain maintenance status
+   - Small package (last updated 2+ years ago)
+   - Limited documentation
+   - No active community
+   - Uncertain maintenance status
 
 3. **Type Safety Issues**
-    - `t.TypeDefinition` vs `ts.Node` incompatibility
-    - Requires assertions to bridge these types
-    - No clear conversion path
-    - Type flow is unclear
+   - `t.TypeDefinition` vs `ts.Node` incompatibility
+   - Requires assertions to bridge these types
+   - No clear conversion path
+   - Type flow is unclear
 
 4. **Integration with CodeMeta**
-    - CodeMeta wraps tanu types
-    - Adds unnecessary abstraction layer
-    - Makes code harder to understand
-    - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
+   - CodeMeta wraps tanu types
+   - Adds unnecessary abstraction layer
+   - Makes code harder to understand
+   - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
 
 ### Alternatives Considered
 
@@ -87,8 +87,8 @@ const param = t.param(name, t.fromString(type) as any); // ❌ Assertion needed
 
 // After (ts-morph, type-safe)
 const param = sourceFile.addParameter({
-    name: name,
-    type: type, // ✅ No assertion, type-safe
+  name: name,
+  type: type, // ✅ No assertion, type-safe
 });
 ```
 
@@ -129,24 +129,24 @@ const param = sourceFile.addParameter({
 **Before (tanu):**
 
 ```typescript
-import { t } from "tanu";
-import { CodeMeta } from "./CodeMeta.js";
+import { t } from 'tanu';
+import { CodeMeta } from './CodeMeta.js';
 
 function generateInterface(name: string, props: Property[]): CodeMeta {
-    const properties = props.map(
-        (p) => t.prop(p.name, t.fromString(p.type) as any) // ❌ Type assertion
-    );
-    return new CodeMeta(
-        name,
-        t.inter(name, properties) // Wrapped in CodeMeta
-    );
+  const properties = props.map(
+    (p) => t.prop(p.name, t.fromString(p.type) as any), // ❌ Type assertion
+  );
+  return new CodeMeta(
+    name,
+    t.inter(name, properties), // Wrapped in CodeMeta
+  );
 }
 ```
 
 **After (ts-morph):**
 
 ````typescript
-import { type SourceFile, type InterfaceDeclaration } from "ts-morph";
+import { type SourceFile, type InterfaceDeclaration } from 'ts-morph';
 
 /**
  * Generates a TypeScript interface declaration.
@@ -166,17 +166,17 @@ import { type SourceFile, type InterfaceDeclaration } from "ts-morph";
  * ```
  */
 export function generateInterface(
-    sourceFile: SourceFile,
-    name: string,
-    properties: Array<{ name: string; type: string }>
+  sourceFile: SourceFile,
+  name: string,
+  properties: Array<{ name: string; type: string }>,
 ): InterfaceDeclaration {
-    return sourceFile.addInterface({
-        name,
-        properties: properties.map((p) => ({
-            name: p.name,
-            type: p.type, // ✅ Type-safe, no assertions
-        })),
-    });
+  return sourceFile.addInterface({
+    name,
+    properties: properties.map((p) => ({
+      name: p.name,
+      type: p.type, // ✅ Type-safe, no assertions
+    })),
+  });
 }
 ````
 
@@ -292,4 +292,3 @@ sourceFile.addExportDeclaration({ namedExports: [name] });
 
 - Implementation will be committed as part of Phase 2 execution
 - See: Phase 2 tasks in `01-CURRENT-IMPLEMENTATION.md`
-

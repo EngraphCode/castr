@@ -1,4 +1,4 @@
-import { sortBy } from "lodash-es";
+import { sortBy } from 'lodash-es';
 
 /**
  * Sort schema code dictionary by dependency order
@@ -16,12 +16,12 @@ import { sortBy } from "lodash-es";
  * // Result: { Pet: "z.object(...)", User: "z.object(...)" }
  */
 export function sortSchemasByDependencyOrder(
-    schemas: Record<string, string>,
-    dependencyOrder: readonly string[]
+  schemas: Record<string, string>,
+  dependencyOrder: readonly string[],
 ): Record<string, string> {
-    const orderMap = new Map(dependencyOrder.map((key, idx) => [key, idx]));
-    const entries = sortBy(Object.entries(schemas), ([key]) => orderMap.get(key) ?? Infinity);
-    return Object.fromEntries(entries);
+  const orderMap = new Map(dependencyOrder.map((key, idx) => [key, idx]));
+  const entries = sortBy(Object.entries(schemas), ([key]) => orderMap.get(key) ?? Infinity);
+  return Object.fromEntries(entries);
 }
 
 /**
@@ -39,9 +39,9 @@ export function sortSchemasByDependencyOrder(
  * // Result: ["Pet", "User"]
  */
 export function sortSchemaNamesByDependencyOrder<T extends string>(
-    schemaNames: T[],
-    dependencyOrder: readonly T[]
+  schemaNames: T[],
+  dependencyOrder: readonly T[],
 ): T[] {
-    const orderMap = new Map(dependencyOrder.map((item, idx) => [item, idx]));
-    return sortBy(schemaNames, (item) => orderMap.get(item) ?? Infinity);
+  const orderMap = new Map(dependencyOrder.map((item, idx) => [item, idx]));
+  return sortBy(schemaNames, (item) => orderMap.get(item) ?? Infinity);
 }

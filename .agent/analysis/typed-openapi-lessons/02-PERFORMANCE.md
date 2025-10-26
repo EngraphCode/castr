@@ -40,16 +40,16 @@ typed-openapi prioritizes performance through:
 ```typescript
 // Default: Pure types (0KB, instant)
 export type Pet = {
-    id: number;
-    name: string;
-    status?: "available" | "pending" | "sold";
+  id: number;
+  name: string;
+  status?: 'available' | 'pending' | 'sold';
 };
 
 // Opt-in: Runtime validation (58KB zod)
 export const Pet = z.object({
-    id: z.number(),
-    name: z.string(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+  id: z.number(),
+  name: z.string(),
+  status: z.enum(['available', 'pending', 'sold']).optional(),
 });
 ```
 
@@ -137,46 +137,46 @@ pnpm openapi-zod-client ./api.yaml -o ./client.ts --output-mode hybrid
 ```typescript
 // Pure TypeScript types
 export namespace Schemas {
-    export type Pet = {
-        id: number;
-        name: string;
-        status?: "available" | "pending" | "sold";
-        photoUrls: string[];
-    };
+  export type Pet = {
+    id: number;
+    name: string;
+    status?: 'available' | 'pending' | 'sold';
+    photoUrls: string[];
+  };
 
-    export type Error = {
-        code: number;
-        message: string;
-    };
+  export type Error = {
+    code: number;
+    message: string;
+  };
 }
 
 // Endpoint metadata (no runtime validation)
 export namespace Endpoints {
-    export type GetPetById = {
-        method: "GET";
-        path: "/pets/{petId}";
-        request: {
-            pathParams: { petId: string };
-            queryParams?: { include?: string[] };
-        };
-        responses: {
-            200: Schemas.Pet;
-            404: Schemas.Error;
-        };
+  export type GetPetById = {
+    method: 'GET';
+    path: '/pets/{petId}';
+    request: {
+      pathParams: { petId: string };
+      queryParams?: { include?: string[] };
     };
+    responses: {
+      200: Schemas.Pet;
+      404: Schemas.Error;
+    };
+  };
 }
 
 // Lightweight client factory
 export function createApiClient<F extends Fetcher>(baseUrl: string, fetcher: F): ApiClient {
-    return {
-        getPetById: async (params: Endpoints.GetPetById["request"]) => {
-            // No validation, just type safety
-            const url = buildUrl(baseUrl, "/pets/{petId}", params);
-            const response = await fetcher("GET", url, params);
-            return response.json() as Promise<Schemas.Pet>;
-        },
-        // ... other methods
-    };
+  return {
+    getPetById: async (params: Endpoints.GetPetById['request']) => {
+      // No validation, just type safety
+      const url = buildUrl(baseUrl, '/pets/{petId}', params);
+      const response = await fetcher('GET', url, params);
+      return response.json() as Promise<Schemas.Pet>;
+    },
+    // ... other methods
+  };
 }
 ```
 
@@ -187,36 +187,36 @@ For users who want both:
 ```typescript
 // Types for fast IDE experience
 export type Pet = {
-    id: number;
-    name: string;
-    status?: "available" | "pending" | "sold";
+  id: number;
+  name: string;
+  status?: 'available' | 'pending' | 'sold';
 };
 
 // Zod schemas for runtime validation (when needed)
 export const PetSchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+  id: z.number(),
+  name: z.string(),
+  status: z.enum(['available', 'pending', 'sold']).optional(),
 });
 
 // Type assertion helper
 export function assertPet(data: unknown): asserts data is Pet {
-    PetSchema.parse(data);
+  PetSchema.parse(data);
 }
 
 // Client with optional validation
 export function createApiClient(options?: { validate?: boolean }) {
-    return {
-        getPetById: async (params: { pathParams: { petId: string } }) => {
-            const response = await fetch(/* ... */);
-            const data = await response.json();
+  return {
+    getPetById: async (params: { pathParams: { petId: string } }) => {
+      const response = await fetch(/* ... */);
+      const data = await response.json();
 
-            if (options?.validate) {
-                return PetSchema.parse(data); // Validated
-            }
-            return data as Pet; // Trust the type
-        },
-    };
+      if (options?.validate) {
+        return PetSchema.parse(data); // Validated
+      }
+      return data as Pet; // Trust the type
+    },
+  };
 }
 ```
 
@@ -284,8 +284,8 @@ type DeepNested<T> = T extends object ? { [K in keyof T]: DeepNested<T[K]> } : T
 
 // Fast: Simple types
 type Pet = {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 };
 ```
 
@@ -365,16 +365,16 @@ pnpm openapi-zod-client ./api.yaml -o ./client.ts --group-strategy tag-file
 ```typescript
 // Auto-select based on API size
 if (endpointCount < 50) {
-    // Small API: Multi-file is fine
-    defaultStrategy = userPreference || "tag-file";
+  // Small API: Multi-file is fine
+  defaultStrategy = userPreference || 'tag-file';
 } else if (endpointCount < 200) {
-    // Medium API: Single file recommended
-    defaultStrategy = "none";
-    console.warn("Using single-file for better performance");
+  // Medium API: Single file recommended
+  defaultStrategy = 'none';
+  console.warn('Using single-file for better performance');
 } else {
-    // Large API: Single file strongly recommended
-    defaultStrategy = "none";
-    console.warn("Large API detected. Single-file required for good performance.");
+  // Large API: Single file strongly recommended
+  defaultStrategy = 'none';
+  console.warn('Large API detected. Single-file required for good performance.');
 }
 ```
 
@@ -390,10 +390,10 @@ if (endpointCount < 50) {
 
 ```typescript
 if (options.exportSchemas) {
-    // Export ALL schemas in #/components/schemas
-    for (const [name, schema] of Object.entries(components.schemas)) {
-        output += generateSchema(name, schema);
-    }
+  // Export ALL schemas in #/components/schemas
+  for (const [name, schema] of Object.entries(components.schemas)) {
+    output += generateSchema(name, schema);
+  }
 }
 ```
 
@@ -414,10 +414,10 @@ if (options.exportSchemas) {
 
 ```typescript
 refs.getOrderedSchemas().forEach(([schema, infos]) => {
-    if (!infos?.name) return; // Skip anonymous
-    if (infos.kind !== "schemas") return; // Skip non-schema refs
-    // Only generate if actually referenced
-    if (!isReferenced(infos.name, endpoints)) return;
+  if (!infos?.name) return; // Skip anonymous
+  if (infos.kind !== 'schemas') return; // Skip non-schema refs
+  // Only generate if actually referenced
+  if (!isReferenced(infos.name, endpoints)) return;
 });
 ```
 
@@ -429,11 +429,11 @@ typed-openapi tracks which schemas are referenced:
 
 ```typescript
 interface RefInfo {
-    name: string; // Original name
-    normalized: string; // Sanitized for TS
-    kind: "schemas" | "parameters" | "requestBodies" | "responses";
-    referencedBy: string[]; // What references this schema
-    schema: SchemaObject;
+  name: string; // Original name
+  normalized: string; // Sanitized for TS
+  kind: 'schemas' | 'parameters' | 'requestBodies' | 'responses';
+  referencedBy: string[]; // What references this schema
+  schema: SchemaObject;
 }
 ```
 
@@ -445,7 +445,7 @@ const unusedSchemas = allSchemas.filter((schema) => schema.referencedBy.length =
 
 // Find orphaned schemas (not in components, not referenced)
 const orphanedSchemas = allSchemas.filter(
-    (schema) => !schema.name.startsWith("#/components/") && schema.referencedBy.length === 0
+  (schema) => !schema.name.startsWith('#/components/') && schema.referencedBy.length === 0,
 );
 ```
 
@@ -476,26 +476,26 @@ const orphanedSchemas = allSchemas.filter(
 ```typescript
 // Track references during generation
 class SchemaTracker {
-    private references = new Map<string, Set<string>>();
+  private references = new Map<string, Set<string>>();
 
-    recordReference(schemaName: string, referencedBy: string) {
-        if (!this.references.has(schemaName)) {
-            this.references.set(schemaName, new Set());
-        }
-        this.references.get(schemaName)!.add(referencedBy);
+  recordReference(schemaName: string, referencedBy: string) {
+    if (!this.references.has(schemaName)) {
+      this.references.set(schemaName, new Set());
     }
+    this.references.get(schemaName)!.add(referencedBy);
+  }
 
-    isReferenced(schemaName: string): boolean {
-        return this.references.has(schemaName) && this.references.get(schemaName)!.size > 0;
-    }
+  isReferenced(schemaName: string): boolean {
+    return this.references.has(schemaName) && this.references.get(schemaName)!.size > 0;
+  }
 
-    getReferencedSchemas(): string[] {
-        return Array.from(this.references.keys());
-    }
+  getReferencedSchemas(): string[] {
+    return Array.from(this.references.keys());
+  }
 
-    getUnusedSchemas(allSchemas: string[]): string[] {
-        return allSchemas.filter((name) => !this.isReferenced(name));
-    }
+  getUnusedSchemas(allSchemas: string[]): string[] {
+    return allSchemas.filter((name) => !this.isReferenced(name));
+  }
 }
 
 // During generation
@@ -503,35 +503,35 @@ const tracker = new SchemaTracker();
 
 // When processing endpoints
 for (const endpoint of endpoints) {
-    if (endpoint.requestBody?.schema?.$ref) {
-        tracker.recordReference(endpoint.requestBody.schema.$ref, endpoint.operationId);
-    }
+  if (endpoint.requestBody?.schema?.$ref) {
+    tracker.recordReference(endpoint.requestBody.schema.$ref, endpoint.operationId);
+  }
 
-    for (const [status, response] of Object.entries(endpoint.responses)) {
-        if (response.schema?.$ref) {
-            tracker.recordReference(response.schema.$ref, endpoint.operationId);
-        }
+  for (const [status, response] of Object.entries(endpoint.responses)) {
+    if (response.schema?.$ref) {
+      tracker.recordReference(response.schema.$ref, endpoint.operationId);
     }
+  }
 }
 
 // When exporting schemas
-if (options.exportSchemas === "referenced") {
-    const referencedSchemas = tracker.getReferencedSchemas();
-    for (const schemaName of referencedSchemas) {
-        output += generateSchema(schemaName, schemas[schemaName]);
-    }
+if (options.exportSchemas === 'referenced') {
+  const referencedSchemas = tracker.getReferencedSchemas();
+  for (const schemaName of referencedSchemas) {
+    output += generateSchema(schemaName, schemas[schemaName]);
+  }
 }
 
 // Warn about unused schemas
 if (options.warnUnused) {
-    const unused = tracker.getUnusedSchemas(Object.keys(schemas));
-    if (unused.length > 0) {
-        console.warn(
-            `⚠️  ${unused.length} unused schemas detected:\n` +
-                unused.map((name) => `   - ${name}`).join("\n") +
-                `\n\nTip: Use --export-schemas referenced to exclude them`
-        );
-    }
+  const unused = tracker.getUnusedSchemas(Object.keys(schemas));
+  if (unused.length > 0) {
+    console.warn(
+      `⚠️  ${unused.length} unused schemas detected:\n` +
+        unused.map((name) => `   - ${name}`).join('\n') +
+        `\n\nTip: Use --export-schemas referenced to exclude them`,
+    );
+  }
 }
 ```
 
@@ -560,28 +560,28 @@ if (options.warnUnused) {
 ```typescript
 // Benchmark: Validate 10,000 Pet objects
 const schema = z.object({
-    id: z.number(),
-    name: z.string(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+  id: z.number(),
+  name: z.string(),
+  status: z.enum(['available', 'pending', 'sold']).optional(),
 });
 
 // Test data
 const pets = Array.from({ length: 10000 }, (_, i) => ({
-    id: i,
-    name: `Pet ${i}`,
-    status: "available",
+  id: i,
+  name: `Pet ${i}`,
+  status: 'available',
 }));
 
 // With validation
-console.time("with validation");
+console.time('with validation');
 pets.forEach((pet) => schema.parse(pet));
-console.timeEnd("with validation");
+console.timeEnd('with validation');
 // Time: 1,240 ms
 
 // Without validation (type assertion)
-console.time("without validation");
+console.time('without validation');
 pets.forEach((pet) => pet as Pet);
-console.timeEnd("without validation");
+console.timeEnd('without validation');
 // Time: 0.8 ms
 
 // Overhead: 1,550x slower!
@@ -601,12 +601,12 @@ typed-openapi allows opt-in validation:
 ```typescript
 // Type-only (no validation)
 const api = createClient(fetcher);
-const pet = await api.getPetById({ path: { petId: "123" } });
+const pet = await api.getPetById({ path: { petId: '123' } });
 // Fast, no overhead
 
 // With validation (when needed)
 const api = createClient(validatingFetcher);
-const pet = await api.getPetById({ path: { petId: "123" } });
+const pet = await api.getPetById({ path: { petId: '123' } });
 // Slower, but validated
 ```
 
@@ -618,7 +618,7 @@ Zodios always validates:
 
 ```typescript
 const api = new Zodios(baseUrl, endpoints);
-const pet = await api.get("/pets/:petId", { params: { petId: "123" } });
+const pet = await api.get('/pets/:petId', { params: { petId: '123' } });
 // Always validated, no opt-out
 ```
 
@@ -627,27 +627,27 @@ const pet = await api.get("/pets/:petId", { params: { petId: "123" } });
 **Type-only mode** (no validation):
 
 ```typescript
-import { createApiClient } from "./client"; // No Zod import needed!
+import { createApiClient } from './client'; // No Zod import needed!
 
-const api = createApiClient("https://api.example.com", fetch);
-const pet = await api.getPetById({ pathParams: { petId: "123" } });
+const api = createApiClient('https://api.example.com', fetch);
+const pet = await api.getPetById({ pathParams: { petId: '123' } });
 // Type-safe, no runtime validation, fast
 ```
 
 **Hybrid mode** (validation on-demand):
 
 ```typescript
-import { createApiClient, schemas } from "./client";
+import { createApiClient, schemas } from './client';
 
-const api = createApiClient("https://api.example.com", fetch, {
-    validate: "response", // 'request' | 'response' | 'both' | false
+const api = createApiClient('https://api.example.com', fetch, {
+  validate: 'response', // 'request' | 'response' | 'both' | false
 });
 
 // Validate untrusted input
 const pet = await api.getPetById({ pathParams: { petId: userInput } }, { validate: true });
 
 // Skip validation for trusted data
-const pet = await api.getPetById({ pathParams: { petId: "hardcoded-123" } }, { validate: false });
+const pet = await api.getPetById({ pathParams: { petId: 'hardcoded-123' } }, { validate: false });
 ```
 
 **See code example**: [examples/14-selective-validation.ts](./examples/14-selective-validation.ts)
@@ -661,9 +661,9 @@ const pet = await api.getPetById({ pathParams: { petId: "hardcoded-123" } }, { v
 typed-openapi tracks generation time:
 
 ```typescript
-console.time("generate");
+console.time('generate');
 const output = generateFile(options);
-console.timeEnd("generate");
+console.timeEnd('generate');
 // generate: 1.2s
 ```
 

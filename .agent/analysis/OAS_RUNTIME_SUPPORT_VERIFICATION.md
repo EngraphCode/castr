@@ -38,17 +38,17 @@ Created comprehensive test suite: `lib/tests/oas-3.0-vs-3.1-feature-parity.test.
 
 ```typescript
 if (Array.isArray(schema.type)) {
-    if (schema.type.length === 1) {
-        const firstType = schema.type[0];
-        if (!firstType) throw new Error("Schema type array has invalid first element");
-        return getZodSchema({ schema: { ...schema, type: firstType }, ctx, meta, options });
-    }
+  if (schema.type.length === 1) {
+    const firstType = schema.type[0];
+    if (!firstType) throw new Error('Schema type array has invalid first element');
+    return getZodSchema({ schema: { ...schema, type: firstType }, ctx, meta, options });
+  }
 
-    return code.assign(
-        `z.union([${schema.type
-            .map((prop) => getZodSchema({ schema: { ...schema, type: prop }, ctx, meta, options }))
-            .join(", ")}])`
-    );
+  return code.assign(
+    `z.union([${schema.type
+      .map((prop) => getZodSchema({ schema: { ...schema, type: prop }, ctx, meta, options }))
+      .join(', ')}])`,
+  );
 }
 ```
 
@@ -61,8 +61,8 @@ if (Array.isArray(schema.type)) {
 **Location:** `lib/src/openApiToZod.ts:103-105`
 
 ```typescript
-if (schema.type === "null") {
-    return code.assign("z.null()");
+if (schema.type === 'null') {
+  return code.assign('z.null()');
 }
 ```
 
@@ -77,25 +77,25 @@ if (schema.type === "null") {
 ```typescript
 // OAS 3.0: boolean exclusiveMinimum with minimum
 if (schema.minimum !== undefined) {
-    if (schema.exclusiveMinimum === true) {
-        validations.push(`gt(${schema.minimum})`);
-    } else {
-        validations.push(`gte(${schema.minimum})`);
-    }
-    // OAS 3.1: numeric exclusiveMinimum (standalone)
-} else if (typeof schema.exclusiveMinimum === "number") {
-    validations.push(`gt(${schema.exclusiveMinimum})`);
+  if (schema.exclusiveMinimum === true) {
+    validations.push(`gt(${schema.minimum})`);
+  } else {
+    validations.push(`gte(${schema.minimum})`);
+  }
+  // OAS 3.1: numeric exclusiveMinimum (standalone)
+} else if (typeof schema.exclusiveMinimum === 'number') {
+  validations.push(`gt(${schema.exclusiveMinimum})`);
 }
 
 // Same for maximum/exclusiveMaximum
 if (schema.maximum !== undefined) {
-    if (schema.exclusiveMaximum === true) {
-        validations.push(`lt(${schema.maximum})`);
-    } else {
-        validations.push(`lte(${schema.maximum})`);
-    }
-} else if (typeof schema.exclusiveMaximum === "number") {
-    validations.push(`lt(${schema.exclusiveMaximum})`);
+  if (schema.exclusiveMaximum === true) {
+    validations.push(`lt(${schema.maximum})`);
+  } else {
+    validations.push(`lte(${schema.maximum})`);
+  }
+} else if (typeof schema.exclusiveMaximum === 'number') {
+  validations.push(`lt(${schema.exclusiveMaximum})`);
 }
 ```
 
@@ -112,11 +112,11 @@ if (schema.maximum !== undefined) {
 
 ```typescript
 if (schema.nullable && !meta?.isRequired) {
-    return "nullish()";
+  return 'nullish()';
 }
 
 if (schema.nullable) {
-    return "nullable()";
+  return 'nullable()';
 }
 ```
 

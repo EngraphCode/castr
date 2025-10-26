@@ -43,12 +43,15 @@ const schema = "z.object({ id: z.number() " + // Missing closing }
 
 ```typescript
 const wrapWithQuotesIfNeeded = (str: string) => {
-    return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(str) ? str : `"${str}"`;
+  return /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(str) ? str : `"${str}"`;
 };
 
 const propsString = Object.entries(props)
-    .map(([prop, type]) => `${wrapWithQuotesIfNeeded(prop)}${isOptional(type) ? "?" : ""}: ${unwrap(type)}`)
-    .join(", ");
+  .map(
+    ([prop, type]) =>
+      `${wrapWithQuotesIfNeeded(prop)}${isOptional(type) ? '?' : ''}: ${unwrap(type)}`,
+  )
+  .join(', ');
 
 return `{ ${propsString} }`;
 ```
@@ -60,25 +63,25 @@ return `{ ${propsString} }`;
 ```typescript
 // Tagged template for Zod code
 function zodCode(strings: TemplateStringsArray, ...values: unknown[]): string {
-    return strings.reduce((result, str, i) => {
-        const value = values[i];
+  return strings.reduce((result, str, i) => {
+    const value = values[i];
 
-        // Validate and escape values
-        if (value !== undefined) {
-            if (typeof value === "string") {
-                // Escape quotes
-                return result + str + value.replace(/"/g, '\\"');
-            }
-            return result + str + String(value);
-        }
+    // Validate and escape values
+    if (value !== undefined) {
+      if (typeof value === 'string') {
+        // Escape quotes
+        return result + str + value.replace(/"/g, '\\"');
+      }
+      return result + str + String(value);
+    }
 
-        return result + str;
-    }, "");
+    return result + str;
+  }, '');
 }
 
 // Usage
-const field = "user-name"; // Contains hyphen
-const type = "z.string()";
+const field = 'user-name'; // Contains hyphen
+const type = 'z.string()';
 
 // Safe: Automatically handles special characters
 const code = zodCode`z.object({ ${field}: ${type} })`;
@@ -93,50 +96,50 @@ const code = zodCode`z.object({ ${field}: ${type} })`;
 
 ```typescript
 class ZodBuilder {
-    object(props: Record<string, string>, options: ObjectOptions = {}) {
-        const propsStr = Object.entries(props)
-            .map(([key, value]) => {
-                const safeKey = this.escapeKey(key);
-                return `${safeKey}: ${value}`;
-            })
-            .join(",\n  ");
+  object(props: Record<string, string>, options: ObjectOptions = {}) {
+    const propsStr = Object.entries(props)
+      .map(([key, value]) => {
+        const safeKey = this.escapeKey(key);
+        return `${safeKey}: ${value}`;
+      })
+      .join(',\n  ');
 
-        let code = `z.object({\n  ${propsStr}\n})`;
+    let code = `z.object({\n  ${propsStr}\n})`;
 
-        if (options.strict) code += ".strict()";
-        if (options.description) code += `.describe(${JSON.stringify(options.description)})`;
+    if (options.strict) code += '.strict()';
+    if (options.description) code += `.describe(${JSON.stringify(options.description)})`;
 
-        return code;
+    return code;
+  }
+
+  array(itemType: string, options: ArrayOptions = {}) {
+    let code = `z.array(${itemType})`;
+
+    if (options.min !== undefined) code += `.min(${options.min})`;
+    if (options.max !== undefined) code += `.max(${options.max})`;
+
+    return code;
+  }
+
+  private escapeKey(key: string): string {
+    // Valid JS identifier?
+    if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key)) {
+      return key;
     }
-
-    array(itemType: string, options: ArrayOptions = {}) {
-        let code = `z.array(${itemType})`;
-
-        if (options.min !== undefined) code += `.min(${options.min})`;
-        if (options.max !== undefined) code += `.max(${options.max})`;
-
-        return code;
-    }
-
-    private escapeKey(key: string): string {
-        // Valid JS identifier?
-        if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key)) {
-            return key;
-        }
-        // Needs quotes
-        return JSON.stringify(key);
-    }
+    // Needs quotes
+    return JSON.stringify(key);
+  }
 }
 
 // Usage
 const builder = new ZodBuilder();
 const code = builder.object(
-    {
-        id: "z.number()",
-        "user-name": "z.string()", // Auto-quoted
-        email: "z.string().email()",
-    },
-    { strict: true, description: "User schema" }
+  {
+    id: 'z.number()',
+    'user-name': 'z.string()', // Auto-quoted
+    email: 'z.string().email()',
+  },
+  { strict: true, description: 'User schema' },
 );
 ```
 
@@ -151,9 +154,9 @@ const code = builder.object(
 **Generic errors** (not helpful):
 
 ```typescript
-throw new Error("Schema not found");
-throw new Error("Invalid type");
-throw new Error("Generation failed");
+throw new Error('Schema not found');
+throw new Error('Invalid type');
+throw new Error('Generation failed');
 ```
 
 **Problems**:
@@ -168,29 +171,29 @@ throw new Error("Generation failed");
 
 ```typescript
 // Bad
-throw new Error("Schema not found");
+throw new Error('Schema not found');
 
 // Good
 throw new Error(
-    `Schema reference "${ref}" not found.\n\n` +
-        `Available schemas:\n` +
-        availableSchemas.map((s) => `  - ${s}`).join("\n") +
-        "\n\n" +
-        `Location: ${ctx.currentPath.join(" > ")}\n` +
-        `File: ${ctx.sourceFile}:${ctx.lineNumber}\n\n` +
-        `Tip: Check your OpenAPI spec for broken $ref pointers.`
+  `Schema reference "${ref}" not found.\n\n` +
+    `Available schemas:\n` +
+    availableSchemas.map((s) => `  - ${s}`).join('\n') +
+    '\n\n' +
+    `Location: ${ctx.currentPath.join(' > ')}\n` +
+    `File: ${ctx.sourceFile}:${ctx.lineNumber}\n\n` +
+    `Tip: Check your OpenAPI spec for broken $ref pointers.`,
 );
 
 // Even better: Include link to docs
 throw new Error(
-    `Schema reference "${ref}" not found.\n\n` +
-        `This usually means:\n` +
-        `  1. The schema doesn't exist in #/components/schemas\n` +
-        `  2. The $ref path is incorrect\n` +
-        `  3. The schema is in a different file (check multi-file specs)\n\n` +
-        `Available schemas: ${availableSchemas.join(", ")}\n\n` +
-        `Location: ${ctx.currentPath.join(" > ")}\n` +
-        `Learn more: https://docs.openapi-zod-client.com/errors/schema-not-found`
+  `Schema reference "${ref}" not found.\n\n` +
+    `This usually means:\n` +
+    `  1. The schema doesn't exist in #/components/schemas\n` +
+    `  2. The $ref path is incorrect\n` +
+    `  3. The schema is in a different file (check multi-file specs)\n\n` +
+    `Available schemas: ${availableSchemas.join(', ')}\n\n` +
+    `Location: ${ctx.currentPath.join(' > ')}\n` +
+    `Learn more: https://docs.openapi-zod-client.com/errors/schema-not-found`,
 );
 ```
 
@@ -200,43 +203,43 @@ throw new Error(
 
 ```typescript
 class SchemaNotFoundError extends Error {
-    constructor(
-        public ref: string,
-        public availableSchemas: string[],
-        public location: string[]
-    ) {
-        super(
-            `Schema "${ref}" not found.\n\n` +
-                `Available: ${availableSchemas.join(", ")}\n` +
-                `Location: ${location.join(" > ")}`
-        );
-        this.name = "SchemaNotFoundError";
-    }
+  constructor(
+    public ref: string,
+    public availableSchemas: string[],
+    public location: string[],
+  ) {
+    super(
+      `Schema "${ref}" not found.\n\n` +
+        `Available: ${availableSchemas.join(', ')}\n` +
+        `Location: ${location.join(' > ')}`,
+    );
+    this.name = 'SchemaNotFoundError';
+  }
 }
 
 class CircularReferenceError extends Error {
-    constructor(
-        public ref: string,
-        public chain: string[]
-    ) {
-        super(
-            `Circular reference detected: ${chain.join(" -> ")} -> ${ref}\n\n` +
-                `Tip: Use z.lazy() for recursive schemas or simplify your schema structure.`
-        );
-        this.name = "CircularReferenceError";
-    }
+  constructor(
+    public ref: string,
+    public chain: string[],
+  ) {
+    super(
+      `Circular reference detected: ${chain.join(' -> ')} -> ${ref}\n\n` +
+        `Tip: Use z.lazy() for recursive schemas or simplify your schema structure.`,
+    );
+    this.name = 'CircularReferenceError';
+  }
 }
 
 class InvalidOpenApiError extends Error {
-    constructor(public issues: Array<{ path: string; message: string }>) {
-        super(
-            `Invalid OpenAPI specification:\n` +
-                issues.map((i) => `  - ${i.path}: ${i.message}`).join("\n") +
-                "\n\n" +
-                `Tip: Validate your spec at https://editor.swagger.io/`
-        );
-        this.name = "InvalidOpenApiError";
-    }
+  constructor(public issues: Array<{ path: string; message: string }>) {
+    super(
+      `Invalid OpenAPI specification:\n` +
+        issues.map((i) => `  - ${i.path}: ${i.message}`).join('\n') +
+        '\n\n' +
+        `Tip: Validate your spec at https://editor.swagger.io/`,
+    );
+    this.name = 'InvalidOpenApiError';
+  }
 }
 ```
 
@@ -341,20 +344,20 @@ pnpm openapi-zod-client ./api.yaml --debug
  * }
  */
 export const Pet = z
-    .object({
-        /** Unique identifier */
-        id: z.number().int(),
+  .object({
+    /** Unique identifier */
+    id: z.number().int(),
 
-        /** Pet name */
-        name: z.string(),
+    /** Pet name */
+    name: z.string(),
 
-        /** Photo URLs */
-        photoUrls: z.array(z.string().url()),
+    /** Photo URLs */
+    photoUrls: z.array(z.string().url()),
 
-        /** Pet status in the store */
-        status: z.enum(["available", "pending", "sold"]).optional(),
-    })
-    .strict();
+    /** Pet status in the store */
+    status: z.enum(['available', 'pending', 'sold']).optional(),
+  })
+  .strict();
 
 /**
  * Get pet by ID
@@ -365,9 +368,9 @@ export const Pet = z
  * @tag pets
  */
 export const getPetById = {
-    method: "GET" as const,
-    path: "/pets/{petId}",
-    // ...
+  method: 'GET' as const,
+  path: '/pets/{petId}',
+  // ...
 };
 ```
 
@@ -386,26 +389,26 @@ pnpm openapi-zod-client ./api.yaml --with-docs --with-examples
 **Always format output**:
 
 ```typescript
-import prettier from "prettier";
+import prettier from 'prettier';
 
 async function formatOutput(code: string, config?: prettier.Options) {
-    const defaultConfig = {
-        parser: "typescript",
-        printWidth: 100,
-        tabWidth: 2,
-        singleQuote: false,
-        trailingComma: "es5",
-    };
+  const defaultConfig = {
+    parser: 'typescript',
+    printWidth: 100,
+    tabWidth: 2,
+    singleQuote: false,
+    trailingComma: 'es5',
+  };
 
-    try {
-        return await prettier.format(code, {
-            ...defaultConfig,
-            ...config,
-        });
-    } catch (error) {
-        console.warn("⚠️  Prettier formatting failed, output may be unformatted");
-        return code;
-    }
+  try {
+    return await prettier.format(code, {
+      ...defaultConfig,
+      ...config,
+    });
+  } catch (error) {
+    console.warn('⚠️  Prettier formatting failed, output may be unformatted');
+    return code;
+  }
 }
 ```
 
@@ -414,28 +417,28 @@ async function formatOutput(code: string, config?: prettier.Options) {
 **Validate generated code**:
 
 ```typescript
-import ts from "typescript";
+import ts from 'typescript';
 
 function validateGeneratedCode(code: string): ts.Diagnostic[] {
-    const sourceFile = ts.createSourceFile("generated.ts", code, ts.ScriptTarget.Latest, true);
+  const sourceFile = ts.createSourceFile('generated.ts', code, ts.ScriptTarget.Latest, true);
 
-    const program = ts.createProgram(["generated.ts"], {
-        noEmit: true,
-        noImplicitAny: true,
-        strict: true,
+  const program = ts.createProgram(['generated.ts'], {
+    noEmit: true,
+    noImplicitAny: true,
+    strict: true,
+  });
+
+  const diagnostics = ts.getPreEmitDiagnostics(program);
+
+  if (diagnostics.length > 0) {
+    console.error('❌ Generated code has TypeScript errors:');
+    diagnostics.forEach((diagnostic) => {
+      const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+      console.error(`  - ${message}`);
     });
+  }
 
-    const diagnostics = ts.getPreEmitDiagnostics(program);
-
-    if (diagnostics.length > 0) {
-        console.error("❌ Generated code has TypeScript errors:");
-        diagnostics.forEach((diagnostic) => {
-            const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
-            console.error(`  - ${message}`);
-        });
-    }
-
-    return diagnostics;
+  return diagnostics;
 }
 ```
 
@@ -479,25 +482,25 @@ function validateGeneratedCode(code: string): ts.Diagnostic[] {
 
 ```typescript
 // Unit tests: Pure functions
-test("escapeKey handles special characters", () => {
-    expect(escapeKey("user-name")).toBe('"user-name"');
-    expect(escapeKey("validName")).toBe("validName");
+test('escapeKey handles special characters', () => {
+  expect(escapeKey('user-name')).toBe('"user-name"');
+  expect(escapeKey('validName')).toBe('validName');
 });
 
 // Integration tests: Full generation
-test("generates valid code from spec", async () => {
-    const code = await generateZodClientFromOpenAPI({
-        openApiDoc: petstoreSpec,
-        disableWriteToFile: true,
-    });
+test('generates valid code from spec', async () => {
+  const code = await generateZodClientFromOpenAPI({
+    openApiDoc: petstoreSpec,
+    disableWriteToFile: true,
+  });
 
-    expect(code).toContain("export const Pet");
-    expect(() => validateGeneratedCode(code)).not.toThrow();
+  expect(code).toContain('export const Pet');
+  expect(() => validateGeneratedCode(code)).not.toThrow();
 });
 
 // Type tests: Generated types are correct
-test("generated types are correct", () => {
-    expect<Schemas.Pet>().type.toHaveProperty("id");
+test('generated types are correct', () => {
+  expect<Schemas.Pet>().type.toHaveProperty('id');
 });
 ```
 
@@ -533,7 +536,7 @@ test("generated types are correct", () => {
  * });
  */
 function resolveCircularReference(ref: string, chain: string[], ctx: Context): string {
-    // Implementation...
+  // Implementation...
 }
 ```
 

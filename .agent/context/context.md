@@ -167,16 +167,16 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ```json
 {
-    "openapi3-ts": "^4.5.0", // ✅ UPDATED (was ^3, now using oas30 namespace)
-    "zod": "^4.1.12", // ✅ UPDATED (was 3.25.76, backward compatible)
-    "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, peer dep warning expected)
-    "openapi-types": "^12.1.3", // ⚠️ REMOVE (redundant with openapi3-ts v4)
-    "lodash-es": "^4.17.21", // ✅ ADDED (tree-shakeable, replaced pastable)
-    "@apidevtools/swagger-parser": "^12.1.0", // ✅ VERIFIED at latest (Oct 14, 2025)
-    "tanu": "^0.2.0", // ✅ KEEP (TypeScript AST manipulation)
-    "commander": "^14.0.1", // ✅ KEEP (CLI framework)
-    "ts-pattern": "^5.8.0", // ✅ KEEP (pattern matching)
-    "handlebars": "^4.7.8" // ✅ KEEP Phase 2, evaluate ts-morph emitter Phase 3/4
+  "openapi3-ts": "^4.5.0", // ✅ UPDATED (was ^3, now using oas30 namespace)
+  "zod": "^4.1.12", // ✅ UPDATED (was 3.25.76, backward compatible)
+  "@zodios/core": "^10.9.6", // ✅ KEEP (used in templates, peer dep warning expected)
+  "openapi-types": "^12.1.3", // ⚠️ REMOVE (redundant with openapi3-ts v4)
+  "lodash-es": "^4.17.21", // ✅ ADDED (tree-shakeable, replaced pastable)
+  "@apidevtools/swagger-parser": "^12.1.0", // ✅ VERIFIED at latest (Oct 14, 2025)
+  "tanu": "^0.2.0", // ✅ KEEP (TypeScript AST manipulation)
+  "commander": "^14.0.1", // ✅ KEEP (CLI framework)
+  "ts-pattern": "^5.8.0", // ✅ KEEP (pattern matching)
+  "handlebars": "^4.7.8" // ✅ KEEP Phase 2, evaluate ts-morph emitter Phase 3/4
 }
 ```
 
@@ -185,48 +185,48 @@ All documented in `.agent/adr/` (12 ADRs):
 **Phase 2 Progress:**
 
 1. ✅ **COMPLETE:** `openapi3-ts` (v3 → v4.5.0) - Task 2.1
-    - All imports changed to `openapi3-ts/oas30` namespace
-    - 30+ files updated
-    - All 318 tests passing
-    - Full OAS 3.0 & 3.1 runtime support verified
+   - All imports changed to `openapi3-ts/oas30` namespace
+   - 30+ files updated
+   - All 318 tests passing
+   - Full OAS 3.0 & 3.1 runtime support verified
 
 2. ✅ **COMPLETE:** `@apidevtools/swagger-parser` - Task 2.2
-    - Already at latest version: 12.1.0 (published Oct 14, 2025)
-    - Verified with `pnpm update` - no changes needed
-    - All 318 tests passing
-    - Duration: 10 minutes (verification only)
+   - Already at latest version: 12.1.0 (published Oct 14, 2025)
+   - Verified with `pnpm update` - no changes needed
+   - All 318 tests passing
+   - Duration: 10 minutes (verification only)
 
 3. ✅ **COMPLETE:** Defer Logic Analysis - Task 2.3
-    - Analyzed custom code vs openapi3-ts v4 & swagger-parser
-    - Finding: No major deferral opportunities - codebase already optimal
-    - Document: `.agent/analysis/TASK_2.3_DEFER_LOGIC_ANALYSIS.md`
-    - Duration: 2 hours (vs 4-6 estimated)
+   - Analyzed custom code vs openapi3-ts v4 & swagger-parser
+   - Finding: No major deferral opportunities - codebase already optimal
+   - Document: `.agent/analysis/TASK_2.3_DEFER_LOGIC_ANALYSIS.md`
+   - Duration: 2 hours (vs 4-6 estimated)
 
 4. ✅ **COMPLETE:** `zod` (v3.25.76 → v4.1.12) - Task 2.4
-    - All 334 tests passing with zod v4
-    - No breaking changes detected
-    - @zodios/core peer dependency warning (expected, not a blocker)
-    - Duration: 30 minutes
+   - All 334 tests passing with zod v4
+   - No breaking changes detected
+   - @zodios/core peer dependency warning (expected, not a blocker)
+   - Duration: 30 minutes
 
 5. ✅ **COMPLETE:** `pastable` → `lodash-es` + native + domain utils - Task 3.1
-    - Replaced with tree-shakeable lodash-es (get, pick, camelCase, sortBy)
-    - Added native implementations (getSum, capitalize, sortBy for simple cases)
-    - Created domain-specific schema-sorting.ts with precise types
-    - Added 55+ comprehensive unit tests for pure functions (TDD-driven)
-    - All 373 tests passing (+55 from 318)
-    - Duration: 3 hours
+   - Replaced with tree-shakeable lodash-es (get, pick, camelCase, sortBy)
+   - Added native implementations (getSum, capitalize, sortBy for simple cases)
+   - Created domain-specific schema-sorting.ts with precise types
+   - Added 55+ comprehensive unit tests for pure functions (TDD-driven)
+   - All 373 tests passing (+55 from 318)
+   - Duration: 3 hours
 
 6. ⏳ **LATER:** `openapi-types` → Use `openapi3-ts` v4 types - Task 3.3
-    - Only used in 1 test file, redundant
+   - Only used in 1 test file, redundant
 
 7. ✅ **KEEP:** `@zodios/core`, `@apidevtools/swagger-parser`
-    - Evaluations in `.agent/analysis/ZODIOS_CORE_EVALUATION.md` & `SWAGGER_PARSER_INTEGRATION.md`
+   - Evaluations in `.agent/analysis/ZODIOS_CORE_EVALUATION.md` & `SWAGGER_PARSER_INTEGRATION.md`
 
 **Phase 3/4 Consideration:**
 
 5. **Handlebars** → Evaluate ts-morph emitter architecture
-    - Analysis in `.agent/analysis/HANDLEBARS_EVALUATION.md`
-    - Recommended: AST-based emitter with plugin API (22-32 hours effort)
+   - Analysis in `.agent/analysis/HANDLEBARS_EVALUATION.md`
+   - Recommended: AST-based emitter with plugin API (22-32 hours effort)
 
 ---
 
@@ -376,13 +376,13 @@ All documented in `.agent/adr/` (12 ADRs):
 
 1. **Read Critical Status (above)** - 2 min overview of current phase
 2. **Read Architecture Rewrite Plan:** `01-CURRENT-IMPLEMENTATION.md` ⭐
-    - Complete 4-phase plan with all test examples and implementation details
-    - Mandatory TDD methodology
-    - Timeline: 26-36 hours over 2-3 weeks
+   - Complete 4-phase plan with all test examples and implementation details
+   - Mandatory TDD methodology
+   - Timeline: 26-36 hours over 2-3 weeks
 3. **Verify Quality Gates:**
-    ```bash
-    cd lib && pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
-    ```
+   ```bash
+   cd lib && pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
+   ```
 
 **Then Start Phase 0:** Create comprehensive public API test suite (8-12 hours)
 

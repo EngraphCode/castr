@@ -20,29 +20,29 @@ This is a _thin, stable_ interface between the conversion logic and the emitter.
 ```ts
 // file-model.ts
 export interface FileUnit {
-    path: string; // e.g. "users.ts" or "schemas/common.ts"
-    imports: ImportSpec[];
-    declarations: Decl[];
+  path: string; // e.g. "users.ts" or "schemas/common.ts"
+  imports: ImportSpec[];
+  declarations: Decl[];
 }
 
 export interface ImportSpec {
-    from: string; // module specifier, e.g. "zod" or "@zodios/core"
-    names: string[]; // named imports
-    typeOnly?: boolean; // import type { ... } from "..."
+  from: string; // module specifier, e.g. "zod" or "@zodios/core"
+  names: string[]; // named imports
+  typeOnly?: boolean; // import type { ... } from "..."
 }
 
 export type Decl =
-    | { kind: "zodSchema"; name: string; expr: string; jsDoc?: string }
-    | { kind: "tsTypeAlias"; name: string; type: string; jsDoc?: string }
-    | { kind: "tsInterface"; name: string; members: Member[]; jsDoc?: string }
-    | { kind: "const"; name: string; initializer: string; isExported?: boolean; jsDoc?: string }
-    | { kind: "client"; name: string; body: string; jsDoc?: string };
+  | { kind: 'zodSchema'; name: string; expr: string; jsDoc?: string }
+  | { kind: 'tsTypeAlias'; name: string; type: string; jsDoc?: string }
+  | { kind: 'tsInterface'; name: string; members: Member[]; jsDoc?: string }
+  | { kind: 'const'; name: string; initializer: string; isExported?: boolean; jsDoc?: string }
+  | { kind: 'client'; name: string; body: string; jsDoc?: string };
 
 export interface Member {
-    name: string;
-    type: string;
-    optional?: boolean;
-    readonly?: boolean;
+  name: string;
+  type: string;
+  optional?: boolean;
+  readonly?: boolean;
 }
 ```
 
@@ -56,95 +56,98 @@ A minimal ts‑morph emitter that writes files to disk. It respects JSDoc, named
 
 ```ts
 // emit-tsmorph.ts
-import { Project, VariableDeclarationKind } from "ts-morph";
-import type { FileUnit, Decl } from "./file-model";
+import { Project, VariableDeclarationKind } from 'ts-morph';
+import type { FileUnit, Decl } from './file-model';
 
 type PrettierRunner = (path: string) => Promise<void>;
 
-export async function emitFilesTsMorph(files: FileUnit[], options?: { runPrettier?: PrettierRunner }) {
-    const project = new Project();
-    for (const f of files) {
-        const sf = project.createSourceFile(f.path, "", { overwrite: true });
+export async function emitFilesTsMorph(
+  files: FileUnit[],
+  options?: { runPrettier?: PrettierRunner },
+) {
+  const project = new Project();
+  for (const f of files) {
+    const sf = project.createSourceFile(f.path, '', { overwrite: true });
 
-        // Imports
-        for (const im of f.imports) {
-            sf.addImportDeclaration({
-                isTypeOnly: !!im.typeOnly,
-                moduleSpecifier: im.from,
-                namedImports: im.names.map((n) => ({ name: n })),
-            });
-        }
-
-        // Declarations
-        for (const d of f.declarations) {
-            emitDecl(sf, d);
-        }
+    // Imports
+    for (const im of f.imports) {
+      sf.addImportDeclaration({
+        isTypeOnly: !!im.typeOnly,
+        moduleSpecifier: im.from,
+        namedImports: im.names.map((n) => ({ name: n })),
+      });
     }
 
-    await project.save();
-
-    // Optional formatting pass
-    if (options?.runPrettier) {
-        await Promise.all(files.map((f) => options.runPrettier!(f.path)));
+    // Declarations
+    for (const d of f.declarations) {
+      emitDecl(sf, d);
     }
+  }
+
+  await project.save();
+
+  // Optional formatting pass
+  if (options?.runPrettier) {
+    await Promise.all(files.map((f) => options.runPrettier!(f.path)));
+  }
 }
 
-function emitDecl(sf: import("ts-morph").SourceFile, d: Decl) {
-    if (d.kind === "zodSchema") {
-        if (d.jsDoc) sf.addStatements(jsDoc(d.jsDoc));
-        sf.addVariableStatement({
-            isExported: true,
-            declarationKind: VariableDeclarationKind.Const,
-            declarations: [{ name: d.name, initializer: d.expr }],
-        });
-        return;
-    }
+function emitDecl(sf: import('ts-morph').SourceFile, d: Decl) {
+  if (d.kind === 'zodSchema') {
+    if (d.jsDoc) sf.addStatements(jsDoc(d.jsDoc));
+    sf.addVariableStatement({
+      isExported: true,
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{ name: d.name, initializer: d.expr }],
+    });
+    return;
+  }
 
-    if (d.kind === "tsTypeAlias") {
-        sf.addTypeAlias({
-            isExported: true,
-            name: d.name,
-            type: d.type,
-            docs: d.jsDoc ? [{ description: d.jsDoc }] : [],
-        });
-        return;
-    }
+  if (d.kind === 'tsTypeAlias') {
+    sf.addTypeAlias({
+      isExported: true,
+      name: d.name,
+      type: d.type,
+      docs: d.jsDoc ? [{ description: d.jsDoc }] : [],
+    });
+    return;
+  }
 
-    if (d.kind === "tsInterface") {
-        sf.addInterface({
-            isExported: true,
-            name: d.name,
-            docs: d.jsDoc ? [{ description: d.jsDoc }] : [],
-            properties: d.members.map((m) => ({
-                name: m.name,
-                type: m.type,
-                hasQuestionToken: !!m.optional,
-                isReadonly: !!m.readonly,
-            })),
-        });
-        return;
-    }
+  if (d.kind === 'tsInterface') {
+    sf.addInterface({
+      isExported: true,
+      name: d.name,
+      docs: d.jsDoc ? [{ description: d.jsDoc }] : [],
+      properties: d.members.map((m) => ({
+        name: m.name,
+        type: m.type,
+        hasQuestionToken: !!m.optional,
+        isReadonly: !!m.readonly,
+      })),
+    });
+    return;
+  }
 
-    if (d.kind === "const") {
-        if (d.jsDoc) sf.addStatements(jsDoc(d.jsDoc));
-        sf.addVariableStatement({
-            isExported: d.isExported ?? true,
-            declarationKind: VariableDeclarationKind.Const,
-            declarations: [{ name: d.name, initializer: d.initializer }],
-        });
-        return;
-    }
+  if (d.kind === 'const') {
+    if (d.jsDoc) sf.addStatements(jsDoc(d.jsDoc));
+    sf.addVariableStatement({
+      isExported: d.isExported ?? true,
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{ name: d.name, initializer: d.initializer }],
+    });
+    return;
+  }
 
-    if (d.kind === "client") {
-        if (d.jsDoc) sf.addStatements(jsDoc(d.jsDoc));
-        sf.addStatements(`export const ${d.name} = ${d.body};`);
-        return;
-    }
+  if (d.kind === 'client') {
+    if (d.jsDoc) sf.addStatements(jsDoc(d.jsDoc));
+    sf.addStatements(`export const ${d.name} = ${d.body};`);
+    return;
+  }
 }
 
 function jsDoc(text: string) {
-    // escape */ inside comments
-    return `/** ${text.replace(/\*\//g, "*\/")} */`;
+  // escape */ inside comments
+  return `/** ${text.replace(/\*\//g, '*\/')} */`;
 }
 ```
 
@@ -156,69 +159,72 @@ When `disableWriteToFile` is true, return a `Record<path,string>` instead of wri
 
 ```ts
 // emit-print.ts (TS factory + printer to avoid touching disk)
-import ts from "typescript";
-import type { FileUnit } from "./file-model";
+import ts from 'typescript';
+import type { FileUnit } from './file-model';
 
 export function printFilesToStrings(files: FileUnit[]): Record<string, string> {
-    const out: Record<string, string> = {};
-    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+  const out: Record<string, string> = {};
+  const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 
-    for (const f of files) {
-        const stmts: ts.Statement[] = [];
+  for (const f of files) {
+    const stmts: ts.Statement[] = [];
 
-        // imports
-        for (const im of f.imports) {
-            // import { A, B } from "mod";
-            const importClause = ts.factory.createImportClause(
-                false,
-                undefined,
-                ts.factory.createNamedImports(
-                    im.names.map((n) =>
-                        ts.factory.createImportSpecifier(false, undefined, ts.factory.createIdentifier(n))
-                    )
-                )
-            );
-            const decl = ts.factory.createImportDeclaration(
-                undefined,
-                im.typeOnly ? [ts.factory.createModifier(ts.SyntaxKind.TypeKeyword)] : undefined,
-                importClause,
-                ts.factory.createStringLiteral(im.from)
-            );
-            stmts.push(decl);
-        }
-
-        // crude approach: emit declarations as raw statements (keeps this example short).
-        // In production, construct AST nodes for each declaration (mirroring emitFilesTsMorph).
-        for (const d of f.declarations) {
-            if (d.kind === "zodSchema") {
-                stmts.push(s(`export const ${d.name} = ${d.expr};`));
-            } else if (d.kind === "tsTypeAlias") {
-                stmts.push(s(`export type ${d.name} = ${d.type};`));
-            } else if (d.kind === "tsInterface") {
-                const props = d.members
-                    .map((m) => `  ${m.readonly ? "readonly " : ""}${m.name}${m.optional ? "?" : ""}: ${m.type};`)
-                    .join("\n");
-                stmts.push(s(`export interface ${d.name} {\n${props}\n}`));
-            } else if (d.kind === "const") {
-                stmts.push(s(`export const ${d.name} = ${d.initializer};`));
-            } else if (d.kind === "client") {
-                stmts.push(s(`export const ${d.name} = ${d.body};`));
-            }
-        }
-
-        const sf = ts.factory.createSourceFile(
-            stmts,
-            ts.factory.createToken(ts.SyntaxKind.EndOfFileToken),
-            ts.NodeFlags.None
-        );
-        out[f.path] = printer.printFile(sf);
+    // imports
+    for (const im of f.imports) {
+      // import { A, B } from "mod";
+      const importClause = ts.factory.createImportClause(
+        false,
+        undefined,
+        ts.factory.createNamedImports(
+          im.names.map((n) =>
+            ts.factory.createImportSpecifier(false, undefined, ts.factory.createIdentifier(n)),
+          ),
+        ),
+      );
+      const decl = ts.factory.createImportDeclaration(
+        undefined,
+        im.typeOnly ? [ts.factory.createModifier(ts.SyntaxKind.TypeKeyword)] : undefined,
+        importClause,
+        ts.factory.createStringLiteral(im.from),
+      );
+      stmts.push(decl);
     }
-    return out;
+
+    // crude approach: emit declarations as raw statements (keeps this example short).
+    // In production, construct AST nodes for each declaration (mirroring emitFilesTsMorph).
+    for (const d of f.declarations) {
+      if (d.kind === 'zodSchema') {
+        stmts.push(s(`export const ${d.name} = ${d.expr};`));
+      } else if (d.kind === 'tsTypeAlias') {
+        stmts.push(s(`export type ${d.name} = ${d.type};`));
+      } else if (d.kind === 'tsInterface') {
+        const props = d.members
+          .map(
+            (m) =>
+              `  ${m.readonly ? 'readonly ' : ''}${m.name}${m.optional ? '?' : ''}: ${m.type};`,
+          )
+          .join('\n');
+        stmts.push(s(`export interface ${d.name} {\n${props}\n}`));
+      } else if (d.kind === 'const') {
+        stmts.push(s(`export const ${d.name} = ${d.initializer};`));
+      } else if (d.kind === 'client') {
+        stmts.push(s(`export const ${d.name} = ${d.body};`));
+      }
+    }
+
+    const sf = ts.factory.createSourceFile(
+      stmts,
+      ts.factory.createToken(ts.SyntaxKind.EndOfFileToken),
+      ts.NodeFlags.None,
+    );
+    out[f.path] = printer.printFile(sf);
+  }
+  return out;
 }
 
 function s(code: string): ts.Statement {
-    const file = ts.createSourceFile("x.ts", code, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
-    return file.statements[0]!;
+  const file = ts.createSourceFile('x.ts', code, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+  return file.statements[0]!;
 }
 ```
 
@@ -242,59 +248,59 @@ Below shows a rough sketch for the grouped-by-tag mode; in practice you already 
 
 ```ts
 // build-files.ts (sketch)
-import type { FileUnit, Decl } from "./file-model";
+import type { FileUnit, Decl } from './file-model';
 
 export function buildFilesFromGroups(
-    groups: Group[],
-    options: { mode: "schemas-only" | "client+schemas"; includeIndex?: boolean }
+  groups: Group[],
+  options: { mode: 'schemas-only' | 'client+schemas'; includeIndex?: boolean },
 ): FileUnit[] {
-    const files: FileUnit[] = [];
+  const files: FileUnit[] = [];
 
-    for (const g of groups) {
-        const decls: Decl[] = [];
+  for (const g of groups) {
+    const decls: Decl[] = [];
 
-        // Schemas (Zod)
-        for (const s of g.schemas) {
-            decls.push({
-                kind: "zodSchema",
-                name: s.name, // e.g. "UserSchema"
-                expr: s.expr, // e.g. z.object({...}).strict()
-                jsDoc: s.description,
-            });
+    // Schemas (Zod)
+    for (const s of g.schemas) {
+      decls.push({
+        kind: 'zodSchema',
+        name: s.name, // e.g. "UserSchema"
+        expr: s.expr, // e.g. z.object({...}).strict()
+        jsDoc: s.description,
+      });
 
-            // Optional: exported types via z.infer
-            decls.push({
-                kind: "tsTypeAlias",
-                name: s.name.replace(/Schema$/, ""),
-                type: `z.infer<typeof ${s.name}>`,
-            });
-        }
-
-        // Endpoints client
-        if (options.mode === "client+schemas") {
-            decls.push({
-                kind: "client",
-                name: `${g.tagName}Api`, // e.g. "UsersApi"
-                body: makeZodiosClientBody(g), // returns string like: makeApi([...]) or a small wrapper
-            });
-        }
-
-        const imports = [
-            { from: "zod", names: ["z"] },
-            // add zodios or fetch client imports if you generate a client
-        ];
-
-        files.push({
-            path: `api/${g.tagName}.ts`,
-            imports,
-            declarations: decls,
-        });
+      // Optional: exported types via z.infer
+      decls.push({
+        kind: 'tsTypeAlias',
+        name: s.name.replace(/Schema$/, ''),
+        type: `z.infer<typeof ${s.name}>`,
+      });
     }
 
-    // Optional index (barrel)
-    // files.push({ path: "api/index.ts", imports: [], declarations: groups.map(...) })
+    // Endpoints client
+    if (options.mode === 'client+schemas') {
+      decls.push({
+        kind: 'client',
+        name: `${g.tagName}Api`, // e.g. "UsersApi"
+        body: makeZodiosClientBody(g), // returns string like: makeApi([...]) or a small wrapper
+      });
+    }
 
-    return files;
+    const imports = [
+      { from: 'zod', names: ['z'] },
+      // add zodios or fetch client imports if you generate a client
+    ];
+
+    files.push({
+      path: `api/${g.tagName}.ts`,
+      imports,
+      declarations: decls,
+    });
+  }
+
+  // Optional index (barrel)
+  // files.push({ path: "api/index.ts", imports: [], declarations: groups.map(...) })
+
+  return files;
 }
 ```
 
@@ -313,12 +319,12 @@ const userExpr = `z.object({
 }).strict()`;
 
 const file: FileUnit = {
-    path: "schemas/user.ts",
-    imports: [{ from: "zod", names: ["z"] }],
-    declarations: [
-        { kind: "zodSchema", name: "UserSchema", expr: userExpr, jsDoc: "User model" },
-        { kind: "tsTypeAlias", name: "User", type: "z.infer<typeof UserSchema>" },
-    ],
+  path: 'schemas/user.ts',
+  imports: [{ from: 'zod', names: ['z'] }],
+  declarations: [
+    { kind: 'zodSchema', name: 'UserSchema', expr: userExpr, jsDoc: 'User model' },
+    { kind: 'tsTypeAlias', name: 'User', type: 'z.infer<typeof UserSchema>' },
+  ],
 };
 ```
 
@@ -334,8 +340,8 @@ await emitFilesTsMorph([file], { runPrettier: maybeRunPrettier });
 
 - Keep flags like `--output`, `--export-schemas`, `--group-strategy`, `--success-expr`, `--error-expr`, `--media-type-expr`, `--allReadonly`, `--strictObjects`, `--prettier`, `--disableWriteToFile`.
 - Interpret `--template` as either:
-    - a **built-in strategy name** (e.g. `schemas-only`, `grouped`, `grouped-index`, `grouped-common`), or
-    - a **path to an emitter plugin module** (see below).
+  - a **built-in strategy name** (e.g. `schemas-only`, `grouped`, `grouped-index`, `grouped-common`), or
+  - a **path to an emitter plugin module** (see below).
 
 Programmatic usage continues to support `disableWriteToFile`; return `Record<path,string>` using the “print to strings” path.
 
@@ -355,13 +361,13 @@ Let users pass a JS module path to `--template` that exports a function:
 
 ```ts
 // my-emitter-plugin.ts
-import type { FileUnit } from "openapi-zod-client/internal/file-model";
+import type { FileUnit } from 'openapi-zod-client/internal/file-model';
 
 export type PluginOptions = Record<string, unknown>;
 
 export function apply(ir: YourExistingIR, options: PluginOptions): FileUnit[] {
-    // transform your IR into FileUnit[] however you like
-    return [];
+  // transform your IR into FileUnit[] however you like
+  return [];
 }
 ```
 
@@ -376,27 +382,30 @@ The core CLI will:
 ## End-to-end example
 
 ```ts
-import { emitFilesTsMorph } from "./emit-tsmorph";
-import { buildFilesFromGroups } from "./build-files";
-import { parseAndBundleOpenAPI } from "./load"; // existing logic
-import { toIR } from "./to-ir"; // your current OpenAPI→IR
-import { groupByTag } from "./grouping"; // your existing grouping
+import { emitFilesTsMorph } from './emit-tsmorph';
+import { buildFilesFromGroups } from './build-files';
+import { parseAndBundleOpenAPI } from './load'; // existing logic
+import { toIR } from './to-ir'; // your current OpenAPI→IR
+import { groupByTag } from './grouping'; // your existing grouping
 
-async function generate(input: string, opts: { outDir: string; mode: "schemas-only" | "client+schemas" }) {
-    const doc = await parseAndBundleOpenAPI(input); // uses @apidevtools/swagger-parser
-    const ir = toIR(doc);
-    const groups = groupByTag(ir);
+async function generate(
+  input: string,
+  opts: { outDir: string; mode: 'schemas-only' | 'client+schemas' },
+) {
+  const doc = await parseAndBundleOpenAPI(input); // uses @apidevtools/swagger-parser
+  const ir = toIR(doc);
+  const groups = groupByTag(ir);
 
-    const files = buildFilesFromGroups(groups, { mode: opts.mode, includeIndex: true }).map((f) => ({
-        ...f,
-        path: `${opts.outDir}/${f.path}`,
-    }));
+  const files = buildFilesFromGroups(groups, { mode: opts.mode, includeIndex: true }).map((f) => ({
+    ...f,
+    path: `${opts.outDir}/${f.path}`,
+  }));
 
-    await emitFilesTsMorph(files, { runPrettier: maybeRunPrettier });
+  await emitFilesTsMorph(files, { runPrettier: maybeRunPrettier });
 }
 
 async function maybeRunPrettier(path: string) {
-    // shell out to Prettier or use API; respect user config.
+  // shell out to Prettier or use API; respect user config.
 }
 ```
 

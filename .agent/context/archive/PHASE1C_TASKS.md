@@ -440,36 +440,36 @@ cd lib && pnpm build
 
 ```typescript
 // Before
-import { generateZodClientFromOpenAPI } from "../src";
+import { generateZodClientFromOpenAPI } from '../src';
 // After
-import { generateZodClientFromOpenAPI } from "../src/index.js";
+import { generateZodClientFromOpenAPI } from '../src/index.js';
 ```
 
 **Pattern 2**: Specific module imports
 
 ```typescript
 // Before
-import { getZodSchema } from "../src/openApiToZod";
+import { getZodSchema } from '../src/openApiToZod';
 // After
-import { getZodSchema } from "../src/openApiToZod.js";
+import { getZodSchema } from '../src/openApiToZod.js';
 ```
 
 **Pattern 3**: Type imports
 
 ```typescript
 // Before
-import type { TemplateContext } from "../src/template-context";
+import type { TemplateContext } from '../src/template-context';
 // After
-import type { TemplateContext } from "../src/template-context.js";
+import type { TemplateContext } from '../src/template-context.js';
 ```
 
 **Pattern 4**: Multiple imports
 
 ```typescript
 // Before
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src";
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src';
 // After
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src/index.js";
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 ```
 
 #### Files to Update (Partial List)
@@ -587,8 +587,8 @@ cd lib && pnpm test
 schema: schemas.Main;
 schema: schemas.AnotherSuccess;
 // After
-schema: schemas["Main"];
-schema: schemas["AnotherSuccess"];
+schema: schemas['Main'];
+schema: schemas['AnotherSuccess'];
 ```
 
 **File 3**: `tests/group-strategy.test.ts` (2 errors)
@@ -614,7 +614,7 @@ orderObject.properties!['pet'] = {...};
 // Before
 expect(getZodSchema({ schema: schemas.Root, ctx }));
 // After
-expect(getZodSchema({ schema: schemas["Root"], ctx }));
+expect(getZodSchema({ schema: schemas['Root'], ctx }));
 ```
 
 ---

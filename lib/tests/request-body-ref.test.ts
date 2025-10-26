@@ -1,54 +1,54 @@
-import type { OpenAPIObject } from "openapi3-ts/oas30";
-import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI } from "../src/index.js";
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import { expect, test } from 'vitest';
+import { generateZodClientFromOpenAPI } from '../src/index.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/122
-test("request-body-ref", async () => {
-    const openApiDoc: OpenAPIObject = {
-        openapi: "3.0.3",
-        info: {
-            title: "Pets",
-            version: "1.0.0",
+test('request-body-ref', async () => {
+  const openApiDoc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: {
+      title: 'Pets',
+      version: '1.0.0',
+    },
+    paths: {
+      '/pets': {
+        post: {
+          summary: 'Post pets.',
+          operationId: 'PostPets',
+          requestBody: {
+            $ref: '#/components/requestBodies/PostPetsRequest',
+          },
+          responses: {},
         },
-        paths: {
-            "/pets": {
-                post: {
-                    summary: "Post pets.",
-                    operationId: "PostPets",
-                    requestBody: {
-                        $ref: "#/components/requestBodies/PostPetsRequest",
-                    },
-                    responses: {},
-                },
+      },
+    },
+    components: {
+      schemas: {
+        PostPetsRequest: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
             },
+          },
         },
-        components: {
-            schemas: {
-                PostPetsRequest: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "string",
-                        },
-                    },
-                },
+      },
+      requestBodies: {
+        PostPetsRequest: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/PostPetsRequest',
+              },
             },
-            requestBodies: {
-                PostPetsRequest: {
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/PostPetsRequest",
-                            },
-                        },
-                    },
-                },
-            },
+          },
         },
-    };
+      },
+    },
+  };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-    expect(output).toMatchInlineSnapshot(`
+  const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+  expect(output).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 

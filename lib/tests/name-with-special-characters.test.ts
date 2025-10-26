@@ -1,35 +1,35 @@
-import { type OpenAPIObject } from "openapi3-ts/oas30";
-import { expect, test } from "vitest";
-import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from "../src/index.js";
+import { type OpenAPIObject } from 'openapi3-ts/oas30';
+import { expect, test } from 'vitest';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 
-test("name-with-special-characters", async () => {
-    const openApiDoc: OpenAPIObject = {
-        openapi: "3.0.3",
-        info: { version: "1", title: "Example API" },
-        paths: {
-            "/name-with-special-characters": {
-                get: {
-                    operationId: "nameWithSPecialCharacters",
-                    responses: {
-                        "200": {
-                            content: {
-                                "application/json": {
-                                    schema: { $ref: "#/components/schemas/1Name-With-Special---Characters" },
-                                },
-                            },
-                        },
-                    },
+test('name-with-special-characters', async () => {
+  const openApiDoc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: { version: '1', title: 'Example API' },
+    paths: {
+      '/name-with-special-characters': {
+        get: {
+          operationId: 'nameWithSPecialCharacters',
+          responses: {
+            '200': {
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/1Name-With-Special---Characters' },
                 },
+              },
             },
+          },
         },
-        components: {
-            schemas: {
-                "1Name-With-Special---Characters": { type: "string" },
-            },
-        },
-    };
-    const ctx = getZodClientTemplateContext(openApiDoc);
-    expect(ctx.endpoints).toMatchInlineSnapshot(`
+      },
+    },
+    components: {
+      schemas: {
+        '1Name-With-Special---Characters': { type: 'string' },
+      },
+    },
+  };
+  const ctx = getZodClientTemplateContext(openApiDoc);
+  expect(ctx.endpoints).toMatchInlineSnapshot(`
       [
           {
               "description": undefined,
@@ -43,8 +43,8 @@ test("name-with-special-characters", async () => {
       ]
     `);
 
-    const result = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-    expect(result).toMatchInlineSnapshot(`
+  const result = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+  expect(result).toMatchInlineSnapshot(`
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 

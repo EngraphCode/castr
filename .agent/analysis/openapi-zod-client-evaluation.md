@@ -27,8 +27,8 @@ While `openapi-zod-client` provides core functionality for generating Zod schema
 
 ```typescript
 // Force cast needed because library uses outdated PathsObject definition
-const openApiDocWithPaths: Parameters<typeof generateZodClientFromOpenAPI>[0]["openApiDoc"] =
-    openApiDoc as OpenAPIObject & { paths: PathsObject };
+const openApiDocWithPaths: Parameters<typeof generateZodClientFromOpenAPI>[0]['openApiDoc'] =
+  openApiDoc as OpenAPIObject & { paths: PathsObject };
 ```
 
 **Deduction:** -1 point for type incompatibility issues
@@ -54,8 +54,14 @@ const openApiDocWithPaths: Parameters<typeof generateZodClientFromOpenAPI>[0]["o
 
 ```typescript
 // Post-processing required to fix generated output
-const withTypedImport = output.replace('import { z } from "zod";', 'import { z, type ZodSchema } from "zod";');
-const withExportedEndpoints = withTypedImport.replace(/const endpoints = makeApi/g, "export const endpoints = makeApi");
+const withTypedImport = output.replace(
+  'import { z } from "zod";',
+  'import { z, type ZodSchema } from "zod";',
+);
+const withExportedEndpoints = withTypedImport.replace(
+  /const endpoints = makeApi/g,
+  'export const endpoints = makeApi',
+);
 // ... 70+ more lines of string manipulation
 ```
 
@@ -69,18 +75,18 @@ const withExportedEndpoints = withTypedImport.replace(/const endpoints = makeApi
 
 - `getZodiosEndpointDefinitionList()` function exists and works
 - Returns structured endpoint data with:
-    - method, path, description
-    - parameters array with runtime Zod schemas
-    - response as runtime Zod schema
+  - method, path, description
+  - parameters array with runtime Zod schemas
+  - response as runtime Zod schema
 
 **From typegen-core.ts:165-171:**
 
 ```typescript
 const endpointContext = getZodiosEndpointDefinitionList(sdkSchemaWithPaths, {
-    shouldExportAllSchemas: true,
-    shouldExportAllTypes: true,
-    groupStrategy: "none",
-    withAlias: false,
+  shouldExportAllSchemas: true,
+  shouldExportAllTypes: true,
+  groupStrategy: 'none',
+  withAlias: false,
 });
 const requestValidatorContent = emitRequestValidatorMap(endpointContext.endpoints);
 ```
@@ -158,8 +164,8 @@ z.object({
 ```typescript
 // Has to resolve template from node_modules
 const require = createRequire(import.meta.url);
-const ozcPkgDir = path.dirname(require.resolve("openapi-zod-client/package.json"));
-const templatePath = path.join(ozcPkgDir, "src/templates/default.hbs");
+const ozcPkgDir = path.dirname(require.resolve('openapi-zod-client/package.json'));
+const templatePath = path.join(ozcPkgDir, 'src/templates/default.hbs');
 ```
 
 **Deduction:** -2 points for type assertion requirements and template dependency
@@ -226,44 +232,44 @@ const templatePath = path.join(ozcPkgDir, "src/templates/default.hbs");
 ### ✅ **SATISFIED Requirements**
 
 1. **FR-1: OpenAPI Parsing** - Fully satisfied
-    - Accepts OpenAPI 3.0.x specs ✅
-    - Handles $ref resolution ✅
-    - Supports all parameter types ✅
+   - Accepts OpenAPI 3.0.x specs ✅
+   - Handles $ref resolution ✅
+   - Supports all parameter types ✅
 
 2. **FR-3: Endpoint Metadata Extraction** - Fully satisfied
-    - `getZodiosEndpointDefinitionList()` provides exactly what we need ✅
-    - Runtime Zod schema objects in parameters array ✅
-    - Method, path, description all included ✅
+   - `getZodiosEndpointDefinitionList()` provides exactly what we need ✅
+   - Runtime Zod schema objects in parameters array ✅
+   - Method, path, description all included ✅
 
 3. **FR-4: Code Generation** - Partially satisfied
-    - Generates valid TypeScript ✅
-    - ES module syntax ✅
-    - Deterministic output ✅
+   - Generates valid TypeScript ✅
+   - ES module syntax ✅
+   - Deterministic output ✅
 
 ### ⚠️ **PARTIALLY SATISFIED Requirements**
 
 4. **FR-2: Zod Schema Generation** - Major issues
-    - ❌ Generates `.passthrough()` instead of `.strict()`
-    - ❌ Requires extensive post-processing
-    - ✅ Handles most JSON Schema types
-    - ✅ Supports complex types
+   - ❌ Generates `.passthrough()` instead of `.strict()`
+   - ❌ Requires extensive post-processing
+   - ✅ Handles most JSON Schema types
+   - ✅ Supports complex types
 
 5. **FR-5: MCP Tool Schema Generation** - Works but awkward
-    - ✅ Can generate required schemas
-    - ❌ Requires heavy customization
-    - ⚠️ Schema serialization not straightforward
+   - ✅ Can generate required schemas
+   - ❌ Requires heavy customization
+   - ⚠️ Schema serialization not straightforward
 
 ### ❌ **UNSATISFIED Requirements**
 
 6. **NFR-3: Maintainability** - Fails our rules
-    - ❌ Forces type assertions (against our `.cursorrules`)
-    - ❌ Template dependency reduces control
-    - ❌ Heavy post-processing indicates poor fit
+   - ❌ Forces type assertions (against our `.cursorrules`)
+   - ❌ Template dependency reduces control
+   - ❌ Heavy post-processing indicates poor fit
 
 7. **NFR-5: Documentation** - Insufficient
-    - ❌ Advanced features poorly documented
-    - ❌ No migration guides
-    - ❌ Template customization unclear
+   - ❌ Advanced features poorly documented
+   - ❌ No migration guides
+   - ❌ Template customization unclear
 
 ---
 
@@ -276,9 +282,9 @@ const templatePath = path.join(ozcPkgDir, "src/templates/default.hbs");
 
 ```typescript
 // zodgen-core.ts:26-28
-const openApiDocWithPaths: Parameters<typeof generateZodClientFromOpenAPI>[0]["openApiDoc"] =
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    openApiDoc as OpenAPIObject & { paths: PathsObject };
+const openApiDocWithPaths: Parameters<typeof generateZodClientFromOpenAPI>[0]['openApiDoc'] =
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  openApiDoc as OpenAPIObject & { paths: PathsObject };
 ```
 
 This forced type assertion indicates a mismatch between our OpenAPI types and the library's expectations.
@@ -329,7 +335,7 @@ This suggests the library's output format doesn't align with our needs.
 
 ```typescript
 // Must resolve internal template file from node_modules
-const templatePath = path.join(ozcPkgDir, "src/templates/default.hbs");
+const templatePath = path.join(ozcPkgDir, 'src/templates/default.hbs');
 ```
 
 **Problems:**
@@ -350,13 +356,13 @@ The library generates schema names that need sanitization:
 
 ```typescript
 const renameInlineSchema = (original: string) => {
-    if (original === "changelog_changelog_200") {
-        return "ChangelogResponseSchema";
-    }
-    if (original === "changelog_latest_200") {
-        return "ChangelogLatestResponseSchema";
-    }
-    return original.replace(/[^A-Za-z0-9_]/g, "_");
+  if (original === 'changelog_changelog_200') {
+    return 'ChangelogResponseSchema';
+  }
+  if (original === 'changelog_latest_200') {
+    return 'ChangelogLatestResponseSchema';
+  }
+  return original.replace(/[^A-Za-z0-9_]/g, '_');
 };
 ```
 
@@ -369,18 +375,18 @@ Schema naming should be configurable or follow conventions without post-processi
 Despite the issues, some aspects work excellently:
 
 1. **✅ `getZodiosEndpointDefinitionList()` is perfect**
-    - Provides exactly the runtime schema metadata we need
-    - Clean API that our code consumes successfully
-    - Powers request parameter validation generation
+   - Provides exactly the runtime schema metadata we need
+   - Clean API that our code consumes successfully
+   - Powers request parameter validation generation
 
 2. **✅ Handles complex OpenAPI schemas**
-    - Successfully processes 500+ endpoint API spec
-    - Handles unions, enums, arrays, nested objects
-    - Resolves $ref correctly
+   - Successfully processes 500+ endpoint API spec
+   - Handles unions, enums, arrays, nested objects
+   - Resolves $ref correctly
 
 3. **✅ Generates working code**
-    - Despite quality issues, the generated code compiles and works
-    - After post-processing, meets our needs
+   - Despite quality issues, the generated code compiles and works
+   - After post-processing, meets our needs
 
 ---
 
@@ -389,23 +395,23 @@ Despite the issues, some aspects work excellently:
 The library fails to meet our minimum score (26/40 vs 32/40 required) due to:
 
 1. **Philosophical Mismatch:**
-    - Library generates permissive schemas (`.passthrough()`)
-    - We require strict validation (`.strict()`)
-    - This indicates different design goals
+   - Library generates permissive schemas (`.passthrough()`)
+   - We require strict validation (`.strict()`)
+   - This indicates different design goals
 
 2. **Type Safety Issues:**
-    - Forces type assertions violating our rules
-    - Template-based approach reduces type safety
+   - Forces type assertions violating our rules
+   - Template-based approach reduces type safety
 
 3. **Customization Burden:**
-    - 70+ lines of post-processing required
-    - Template dependency limits control
-    - Schema naming requires custom logic
+   - 70+ lines of post-processing required
+   - Template dependency limits control
+   - Schema naming requires custom logic
 
 4. **Maintenance Concerns:**
-    - Post-processing is fragile
-    - Template path resolution is fragile
-    - Updates could break our customizations
+   - Post-processing is fragile
+   - Template path resolution is fragile
+   - Updates could break our customizations
 
 ---
 
@@ -507,9 +513,9 @@ Before committing to internal development, evaluate:
 1. ✅ **Document current library limitations** (this document)
 2. ⏭️ **Evaluate 2-3 alternative libraries** (1-2 days)
 3. ⏭️ **If no alternative scores >32/40:**
-    - Create internal workspace spec
-    - Build proof-of-concept
-    - Validate with small OpenAPI spec
+   - Create internal workspace spec
+   - Build proof-of-concept
+   - Validate with small OpenAPI spec
 4. ⏭️ **Make final decision** based on findings
 
 ---

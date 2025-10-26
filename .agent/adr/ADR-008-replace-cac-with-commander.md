@@ -22,38 +22,39 @@ The project used `cac` (Command And Conquer) as its CLI framework. While `cac` i
 
 ```typescript
 // ❌ With cac: No type safety
-cli.command("generate <input>")
-    .option("--output <path>", "Output path")
-    .action((input, options) => {
-        // options is 'any' - no type safety!
-        const outputPath = options.output; // Could be anything
-    });
+cli
+  .command('generate <input>')
+  .option('--output <path>', 'Output path')
+  .action((input, options) => {
+    // options is 'any' - no type safety!
+    const outputPath = options.output; // Could be anything
+  });
 ```
 
 ### Alternatives Considered
 
 1. **`cac`** (Current)
-    - ❌ Poor TypeScript support
-    - ✅ Very lightweight (3.8kb)
-    - ❌ Weak community
+   - ❌ Poor TypeScript support
+   - ✅ Very lightweight (3.8kb)
+   - ❌ Weak community
 
 2. **`commander`**
-    - ✅ Excellent TypeScript support
-    - ✅ Strong typing with generics
-    - ✅ Widely used (30M+ weekly downloads)
-    - ✅ Active maintenance
-    - ⚠️ Slightly larger (7kb)
+   - ✅ Excellent TypeScript support
+   - ✅ Strong typing with generics
+   - ✅ Widely used (30M+ weekly downloads)
+   - ✅ Active maintenance
+   - ⚠️ Slightly larger (7kb)
 
 3. **`yargs`**
-    - ✅ Good TypeScript support
-    - ⚠️ More complex API
-    - ⚠️ Larger bundle size
-    - ⚠️ Overkill for our needs
+   - ✅ Good TypeScript support
+   - ⚠️ More complex API
+   - ⚠️ Larger bundle size
+   - ⚠️ Overkill for our needs
 
 4. **`clipanion`**
-    - ✅ Modern, TypeScript-first
-    - ⚠️ Different paradigm (class-based)
-    - ⚠️ Less familiar to team
+   - ✅ Modern, TypeScript-first
+   - ⚠️ Different paradigm (class-based)
+   - ⚠️ Less familiar to team
 
 ## Decision
 
@@ -71,30 +72,33 @@ cli.command("generate <input>")
 ### Implementation
 
 ```typescript
-import { Command } from "commander";
+import { Command } from 'commander';
 
 const program = new Command();
 
 // ✅ Type-safe option parsing
-program.name("openapi-zod-client").description("Generate Zod schemas from OpenAPI specs").version(version);
+program
+  .name('openapi-zod-client')
+  .description('Generate Zod schemas from OpenAPI specs')
+  .version(version);
 
 program
-    .command("generate")
-    .description("Generate Zod client from OpenAPI spec")
-    .argument("<input>", "Path to OpenAPI spec (file, URL, or 'stdin')")
-    .option("-o, --output <path>", "Output path")
-    .option("--api-client <name>", "API client name", "api")
-    .option("--export-schemas", "Export schemas separately")
-    .action(async (input, options) => {
-        // options is properly typed!
-        const config: Config = {
-            input,
-            output: options.output,
-            apiClientName: options.apiClient,
-            exportSchemas: options.exportSchemas,
-        };
-        await generateClient(config);
-    });
+  .command('generate')
+  .description('Generate Zod client from OpenAPI spec')
+  .argument('<input>', "Path to OpenAPI spec (file, URL, or 'stdin')")
+  .option('-o, --output <path>', 'Output path')
+  .option('--api-client <name>', 'API client name', 'api')
+  .option('--export-schemas', 'Export schemas separately')
+  .action(async (input, options) => {
+    // options is properly typed!
+    const config: Config = {
+      input,
+      output: options.output,
+      apiClientName: options.apiClient,
+      exportSchemas: options.exportSchemas,
+    };
+    await generateClient(config);
+  });
 
 program.parse();
 ```
@@ -125,16 +129,17 @@ program.parse();
 ### Before (`cac`)
 
 ```typescript
-import cac from "cac";
+import cac from 'cac';
 
-const cli = cac("openapi-zod-client");
+const cli = cac('openapi-zod-client');
 
-cli.command("<input>", "Generate client")
-    .option("--output <path>", "Output path")
-    .action((input, options) => {
-        // options: any ❌
-        generate(input, options.output);
-    });
+cli
+  .command('<input>', 'Generate client')
+  .option('--output <path>', 'Output path')
+  .action((input, options) => {
+    // options: any ❌
+    generate(input, options.output);
+  });
 
 cli.help();
 cli.version(version);
@@ -144,20 +149,23 @@ cli.parse();
 ### After (`commander`)
 
 ```typescript
-import { Command } from "commander";
+import { Command } from 'commander';
 
 const program = new Command();
 
-program.name("openapi-zod-client").version(version).description("Generate Zod schemas from OpenAPI specs");
+program
+  .name('openapi-zod-client')
+  .version(version)
+  .description('Generate Zod schemas from OpenAPI specs');
 
 program
-    .command("generate")
-    .argument("<input>", "Path to OpenAPI spec")
-    .option("-o, --output <path>", "Output path")
-    .action((input, options) => {
-        // options: { output?: string } ✅
-        generate(input, options.output);
-    });
+  .command('generate')
+  .argument('<input>', 'Path to OpenAPI spec')
+  .option('-o, --output <path>', 'Output path')
+  .action((input, options) => {
+    // options: { output?: string } ✅
+    generate(input, options.output);
+  });
 
 program.parse();
 ```
@@ -169,34 +177,36 @@ program.parse();
 ```typescript
 // ✅ Type-safe options
 interface GenerateOptions {
-    output?: string;
-    apiClient?: string;
-    exportSchemas?: boolean;
+  output?: string;
+  apiClient?: string;
+  exportSchemas?: boolean;
 }
 
 program
-    .command("generate")
-    .argument("<input>", "Input spec")
-    .option("-o, --output <path>", "Output path")
-    .option("--api-client <name>", "Client name", "api")
-    .option("--export-schemas", "Export schemas")
-    .action((input: string, options: GenerateOptions) => {
-        // Full type safety throughout!
-    });
+  .command('generate')
+  .argument('<input>', 'Input spec')
+  .option('-o, --output <path>', 'Output path')
+  .option('--api-client <name>', 'Client name', 'api')
+  .option('--export-schemas', 'Export schemas')
+  .action((input: string, options: GenerateOptions) => {
+    // Full type safety throughout!
+  });
 ```
 
 ### Validation
 
 ```typescript
 program
-    .command("generate")
-    .argument("<input>", "Input spec")
-    .addOption(
-        new Option("-f, --format <type>", "Output format").choices(["typescript", "javascript"]).default("typescript")
-    )
-    .action((input, options) => {
-        // options.format is "typescript" | "javascript"
-    });
+  .command('generate')
+  .argument('<input>', 'Input spec')
+  .addOption(
+    new Option('-f, --format <type>', 'Output format')
+      .choices(['typescript', 'javascript'])
+      .default('typescript'),
+  )
+  .action((input, options) => {
+    // options.format is "typescript" | "javascript"
+  });
 ```
 
 ## Quality Impact

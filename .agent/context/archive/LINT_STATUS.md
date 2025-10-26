@@ -13,25 +13,25 @@
 #### getZodiosEndpointDefinitionList.ts (1 error)
 
 - **Line 147:21**: `@typescript-eslint/no-unsafe-argument`
-    - Issue: `any` type passed as `ReferenceObject | ResponseObject`
-    - Context: `operation.responses[statusCode]`
-    - Fix: Add explicit type guard or assertion
+  - Issue: `any` type passed as `ReferenceObject | ResponseObject`
+  - Context: `operation.responses[statusCode]`
+  - Fix: Add explicit type guard or assertion
 
 #### openApiToTypescript.helpers.ts (3 errors)
 
 - **Line 75:49**: `@typescript-eslint/no-unsafe-argument`
-    - Issue: `any[]` passed as `TypeDefinition[]`
+  - Issue: `any[]` passed as `TypeDefinition[]`
 - **Line 75:50**: `@typescript-eslint/no-unsafe-assignment`
-    - Issue: Unsafe spread of `any` value in array
+  - Issue: Unsafe spread of `any` value in array
 - **Line 75:98**: `@typescript-eslint/no-unsafe-argument`
-    - Issue: `any[]` passed as `TypeDefinition[]`
-    - Context: All in `addNullToUnionIfNeeded` function dealing with composition
+  - Issue: `any[]` passed as `TypeDefinition[]`
+  - Context: All in `addNullToUnionIfNeeded` function dealing with composition
 
 #### schema-complexity.ts (1 error)
 
 - **Line 114:84**: `@typescript-eslint/no-unsafe-assignment`
-    - Issue: Unsafe assignment of `any` value
-    - Context: Schema property access
+  - Issue: Unsafe assignment of `any` value
+  - Context: Schema property access
 
 ---
 
@@ -47,8 +47,8 @@
 
 - **Line 38**: Complexity **33/29** (need -4 points)
 - **Also has**:
-    - max-lines-per-function: 117/100 lines
-    - max-statements: 41/30 statements
+  - max-lines-per-function: 117/100 lines
+  - max-statements: 41/30 statements
 - **Status**: Needs moderate refactoring
 - **Effort**: Medium
 
@@ -56,9 +56,9 @@
 
 - **Line 67**: Complexity **47/29** (need -18 points!)
 - **Also has**:
-    - max-lines-per-function: 175/100 lines
-    - max-statements: 66/30 statements
-    - cyclomatic complexity: 47/29
+  - max-lines-per-function: 175/100 lines
+  - max-statements: 66/30 statements
+  - cyclomatic complexity: 47/29
 - **Status**: Main function, already extracted 289 lines, still complex
 - **Effort**: High - needs further helper extraction
 
@@ -80,14 +80,14 @@
 #### High Priority (Blocks completion)
 
 1. **Fix 5 type safety errors** (no-unsafe-\*)
-    - getZodiosEndpointDefinitionList.ts (1)
-    - openApiToTypescript.helpers.ts (3)
-    - schema-complexity.ts (1)
+   - getZodiosEndpointDefinitionList.ts (1)
+   - openApiToTypescript.helpers.ts (3)
+   - schema-complexity.ts (1)
 
 2. **Reduce cognitive complexity** (3 files)
-    - getOpenApiDependencyGraph.ts: 31 → 29 (-2 points)
-    - schema-complexity.ts: 33 → 29 (-4 points)
-    - getZodiosEndpointDefinitionList.ts: 47 → 29 (-18 points)
+   - getOpenApiDependencyGraph.ts: 31 → 29 (-2 points)
+   - schema-complexity.ts: 33 → 29 (-4 points)
+   - getZodiosEndpointDefinitionList.ts: 47 → 29 (-18 points)
 
 #### Medium Priority
 
