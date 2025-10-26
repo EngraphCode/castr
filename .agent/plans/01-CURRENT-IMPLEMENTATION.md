@@ -184,6 +184,8 @@ pnpm test -- --run myPureFunction  # Should STILL PASS (green)
 
 ##🧪 PHASE 0: COMPREHENSIVE PUBLIC API TEST SUITE ⭐ CRITICAL
 
+Superseded by .agent/plans/PHASE-0-COMPLETE.md
+
 **Timeline:** 8-12 hours  
 **Priority:** P0 - MUST complete before any changes  
 **Status:** Pending
