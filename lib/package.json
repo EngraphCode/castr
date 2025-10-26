@@ -36,7 +36,9 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "character": "vitest run --config vitest.characterisation.config.ts",
+        "character:watch": "vitest --config vitest.characterisation.config.ts"
     },
     "license": "ISC",
     "dependencies": {
