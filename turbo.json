@@ -33,6 +33,14 @@
 
       "outputs": ["coverage/**"]
     },
+    "test:snapshot": {
+      "cache": false,
+      "outputs": []
+    },
+    "character": {
+      "cache": false,
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true

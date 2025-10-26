@@ -1,0 +1,276 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { writeFileSync, rmSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { execSync } from 'node:child_process';
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
+
+/**
+ * Characterisation Tests: CLI Behavior
+ *
+ * These tests validate that the CLI correctly drives the system.
+ * They test ACTUAL behavior by running the CLI and verifying generated output.
+ *
+ * CRITICAL: These tests exercise the PRODUCT CODE through the CLI interface.
+ * They must survive the architectural rewrite (Phases 1-3).
+ */
+
+const CLI_PATH = join(__dirname, '../../dist/cli.cjs');
+const TEST_OUTPUT_DIR = join(__dirname, 'test-output-cli');
+
+/**
+ * Helper: Create a test OpenAPI spec file
+ */
+function createTestSpec(filename: string, spec?: Partial<OpenAPIObject>): string {
+  const defaultSpec: OpenAPIObject = {
+    openapi: '3.0.0',
+    info: { title: 'Test API', version: '1.0.0' },
+    components: {
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            email: { type: 'string' },
+          },
+          required: ['id', 'name'],
+        },
+      },
+    },
+    paths: {
+      '/users': {
+        get: {
+          operationId: 'getUsers',
+          responses: {
+            '200': {
+              description: 'Success',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/User' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const fullSpec = { ...defaultSpec, ...spec };
+  const filePath = join(TEST_OUTPUT_DIR, filename);
+  writeFileSync(filePath, JSON.stringify(fullSpec, null, 2));
+  return filePath;
+}
+
+/**
+ * Helper: Run CLI command
+ */
+function runCli(args: string[]): { stdout: string; exitCode: number } {
+  try {
+    const result = execSync(`node "${CLI_PATH}" ${args.join(' ')}`, {
+      encoding: 'utf8',
+      cwd: TEST_OUTPUT_DIR,
+      stdio: 'pipe',
+    });
+    return { stdout: result, exitCode: 0 };
+  } catch (error: any) {
+    return {
+      stdout: error.stdout?.toString() || '',
+      exitCode: error.status || 1,
+    };
+  }
+}
+
+describe('Characterisation: CLI Behavior', () => {
+  beforeAll(() => {
+    // Create test output directory
+    if (existsSync(TEST_OUTPUT_DIR)) {
+      rmSync(TEST_OUTPUT_DIR, { recursive: true });
+    }
+    mkdirSync(TEST_OUTPUT_DIR, { recursive: true });
+  });
+
+  afterAll(() => {
+    // Cleanup
+    if (existsSync(TEST_OUTPUT_DIR)) {
+      rmSync(TEST_OUTPUT_DIR, { recursive: true });
+    }
+  });
+
+  describe('Basic CLI Operations', () => {
+    it('should display help with --help', () => {
+      const result = runCli(['--help']);
+
+      expect(result.stdout).toContain('Usage:');
+      expect(result.stdout).toContain('openapi-zod-client');
+      expect(result.stdout).toContain('Options:');
+      expect(result.exitCode).toBe(0);
+    });
+
+    it('should display version with --version', () => {
+      const result = runCli(['--version']);
+
+      expect(result.stdout).toMatch(/\d+\.\d+\.\d+/); // Semantic version
+      expect(result.exitCode).toBe(0);
+    });
+
+    it('should generate output file from OpenAPI spec', () => {
+      const inputPath = createTestSpec('basic-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'basic-output.ts');
+
+      runCli([inputPath, '-o', outputPath]);
+
+      // Verify file was created
+      expect(existsSync(outputPath)).toBe(true);
+
+      // Verify content
+      const content = readFileSync(outputPath, 'utf8');
+      expect(content).toContain('User');
+      expect(content).toContain('getUsers');
+      expect(content).toContain('import { z }');
+    });
+  });
+
+  describe('CLI Options Effect on Generated Code', () => {
+    it('should respect --base-url option', () => {
+      const inputPath = createTestSpec('base-url-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'base-url-output.ts');
+
+      runCli([inputPath, '-o', outputPath, '--base-url', 'https://api.example.com']);
+
+      const content = readFileSync(outputPath, 'utf8');
+      expect(content).toContain('User');
+      expect(content).not.toContain('as unknown as');
+    });
+
+    it('should respect --export-schemas option', () => {
+      const inputPath = createTestSpec('export-schemas-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'export-schemas-output.ts');
+
+      runCli([inputPath, '-o', outputPath, '--export-schemas']);
+
+      const content = readFileSync(outputPath, 'utf8');
+      expect(content).toContain('export');
+      expect(content).toContain('User');
+    });
+
+    it('should respect --with-alias option', () => {
+      const inputPath = createTestSpec('with-alias-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'with-alias-output.ts');
+
+      runCli([inputPath, '-o', outputPath, '--with-alias']);
+
+      const content = readFileSync(outputPath, 'utf8');
+      expect(content).toContain('User');
+    });
+
+    it('should respect --no-with-alias option', () => {
+      const inputPath = createTestSpec('no-alias-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'no-alias-output.ts');
+
+      runCli([inputPath, '-o', outputPath, '--no-with-alias']);
+
+      const content = readFileSync(outputPath, 'utf8');
+      expect(content).toContain('User');
+    });
+
+    it('should respect --strict-objects option', () => {
+      const inputPath = createTestSpec('strict-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'strict-output.ts');
+
+      runCli([inputPath, '-o', outputPath, '--strict-objects']);
+
+      const content = readFileSync(outputPath, 'utf8');
+      expect(content).toContain('User');
+      expect(content).not.toContain('as unknown as');
+    });
+  });
+
+  describe('Generated Code Quality', () => {
+    it('should generate valid TypeScript without type assertions', () => {
+      const inputPath = createTestSpec('quality-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'quality-output.ts');
+
+      runCli([inputPath, '-o', outputPath]);
+
+      const content = readFileSync(outputPath, 'utf8');
+
+      // No type assertions (except 'as const')
+      const assertionPattern = / as (?!const\b)/g;
+      const matches = content.match(assertionPattern);
+      expect(matches).toBeNull();
+
+      // Has proper imports
+      expect(content).toContain('import { z }');
+
+      // Has proper exports
+      expect(content).toContain('export');
+    });
+
+    it('should handle complex schemas correctly', () => {
+      const complexSpec = {
+        components: {
+          schemas: {
+            Address: {
+              type: 'object',
+              properties: {
+                street: { type: 'string' },
+                city: { type: 'string' },
+              },
+            },
+            Person: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                address: { $ref: '#/components/schemas/Address' },
+              },
+            },
+          },
+        },
+        paths: {
+          '/people': {
+            get: {
+              operationId: 'getPeople',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/Person' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const inputPath = createTestSpec('complex-test.json', complexSpec as any);
+      const outputPath = join(TEST_OUTPUT_DIR, 'complex-output.ts');
+
+      runCli([inputPath, '-o', outputPath]);
+
+      const content = readFileSync(outputPath, 'utf8');
+
+      // Both schemas should be present
+      expect(content).toContain('Address');
+      expect(content).toContain('Person');
+
+      // Dependencies should be resolved
+      expect(content).toContain('z.object');
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should exit successfully on valid input', () => {
+      const inputPath = createTestSpec('success-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'success-output.ts');
+
+      const result = runCli([inputPath, '-o', outputPath]);
+
+      expect(result.exitCode).toBe(0);
+      expect(existsSync(outputPath)).toBe(true);
+    });
+  });
+});

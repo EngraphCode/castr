@@ -1,8 +1,8 @@
 import type { HelperOptions } from 'handlebars';
-import { create } from 'handlebars';
+import Handlebars from 'handlebars';
 
 export const getHandlebars = () => {
-  const instance = create();
+  const instance = Handlebars.create();
   instance.registerHelper('ifeq', function (a: string, b: string, options: HelperOptions) {
     if (a === b) {
       // @ts-expect-error - Handlebars HelperOptions.fn expects context as 'any', but we're in strict mode

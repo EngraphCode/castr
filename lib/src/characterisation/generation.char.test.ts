@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import SwaggerParser from '@apidevtools/swagger-parser';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
-import { isOpenAPIObject } from '../cli-type-guards.js';
+import { assertIsString } from './test-utils.js';
 
 /**
- * Phase 0 - Task 0.1: End-to-End Generation Tests
+ * Characterisation Tests: Full Generation Pipeline
  *
  * These tests validate the FULL pipeline: OpenAPI → Generated TypeScript Code
  *
@@ -19,25 +18,7 @@ import { isOpenAPIObject } from '../cli-type-guards.js';
  * - Ensure code is valid TypeScript
  */
 
-/**
- * Helper: Bundle an OpenAPI spec using SwaggerParser
- *
- * SwaggerParser.bundle() returns its own OpenAPI type that is structurally
- * compatible with openapi3-ts's OpenAPIObject. We use a type guard to safely
- * narrow the type without using type assertions.
- *
- * This follows the pattern established in cli.ts for handling the type mismatch
- * between @apidevtools/swagger-parser and openapi3-ts.
- */
-async function bundleSpec(spec: OpenAPIObject): Promise<OpenAPIObject> {
-  const bundled: unknown = await SwaggerParser.bundle(spec);
-  if (!isOpenAPIObject(bundled)) {
-    throw new Error('SwaggerParser.bundle() returned invalid OpenAPI document');
-  }
-  return bundled;
-}
-
-describe('E2E: Full Generation Pipeline', () => {
+describe('Characterisation: Full Generation Pipeline', () => {
   describe('Basic OpenAPI 3.0 Specs', () => {
     it('should generate valid TypeScript from minimal spec', async () => {
       // Arrange: Minimal valid OpenAPI 3.0 spec
@@ -67,14 +48,15 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act: Bundle and generate code
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
       // Assert: Generated code characteristics (PUBLIC API BEHAVIOR)
       expect(typeof result).toBe('string');
+      assertIsString(result, 'generation output');
       expect(result).toContain('import { z }'); // Has Zod imports
       expect(result).toContain('export const'); // Has exports
       expect(result).not.toContain('as unknown as'); // NO type assertions
@@ -126,9 +108,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -186,9 +168,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -244,9 +226,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -304,9 +286,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -371,9 +353,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -437,9 +419,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -489,9 +471,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -553,9 +535,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -596,9 +578,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act: Generate with default template (implicit)
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -645,9 +627,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act: Generate with schemas-only template
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
         template: 'schemas-only',
       });
@@ -696,9 +678,9 @@ describe('E2E: Full Generation Pipeline', () => {
       };
 
       // Act: Generate with schemas-with-metadata template
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
         template: 'schemas-with-metadata',
       });
@@ -708,6 +690,221 @@ describe('E2E: Full Generation Pipeline', () => {
       expect(result).toContain('User');
       expect(result).not.toContain('makeApi'); // No Zodios client
       expect(result).not.toContain('as unknown as');
+    });
+  });
+
+  describe('Additional Core Features', () => {
+    it('should handle PUT, PATCH, DELETE HTTP methods', async () => {
+      // Arrange: Spec with multiple HTTP methods
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {
+          '/resource/{id}': {
+            put: {
+              operationId: 'updateResource',
+              parameters: [
+                {
+                  name: 'id',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'string' },
+                },
+              ],
+              requestBody: {
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        name: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { type: 'object', properties: { id: { type: 'string' } } },
+                    },
+                  },
+                },
+              },
+            },
+            patch: {
+              operationId: 'patchResource',
+              parameters: [
+                {
+                  name: 'id',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'string' },
+                },
+              ],
+              requestBody: {
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        name: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { type: 'object', properties: { id: { type: 'string' } } },
+                    },
+                  },
+                },
+              },
+            },
+            delete: {
+              operationId: 'deleteResource',
+              parameters: [
+                {
+                  name: 'id',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'string' },
+                },
+              ],
+              responses: {
+                '204': {
+                  description: 'No Content',
+                },
+              },
+            },
+          },
+        },
+      };
+
+      // Act
+      // Bundling not needed for in-memory specs with internal refs
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      });
+
+      // Assert: All HTTP methods are handled
+      expect(result).toContain('/resource/:id');
+      expect(result).not.toContain('as unknown as');
+    });
+
+    it('should handle anyOf composition', async () => {
+      // Arrange: Spec with anyOf schema
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        components: {
+          schemas: {
+            StringOrNumber: {
+              anyOf: [{ type: 'string' }, { type: 'number' }],
+            },
+            Response: {
+              type: 'object',
+              properties: {
+                value: { $ref: '#/components/schemas/StringOrNumber' },
+              },
+            },
+          },
+        },
+        paths: {
+          '/data': {
+            get: {
+              operationId: 'getData',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/Response' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      // Act
+      // Bundling not needed for in-memory specs with internal refs
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      });
+
+      // Assert: anyOf is handled (union type in Zod)
+      expect(result).toContain('StringOrNumber');
+      expect(result).toContain('Response');
+      expect(result).not.toContain('as unknown as');
+    });
+
+    it('should handle multiple content types in responses', async () => {
+      // Arrange: Spec with multiple response content types
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {
+          '/document': {
+            get: {
+              operationId: 'getDocument',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string' },
+                          data: { type: 'string' },
+                        },
+                      },
+                    },
+                    'application/xml': {
+                      schema: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string' },
+                          data: { type: 'string' },
+                        },
+                      },
+                    },
+                    'text/plain': {
+                      schema: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      // Act
+      // Bundling not needed for in-memory specs with internal refs
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      });
+
+      // Assert: Multiple content types handled
+      expect(result).toContain('/document');
+      expect(result).not.toContain('as unknown as');
+      // Should have generated schema (object is inlined)
+      expect(result).toContain('.object');
     });
   });
 });

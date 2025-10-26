@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import SwaggerParser from '@apidevtools/swagger-parser';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
-import { isOpenAPIObject } from '../cli-type-guards.js';
+import { assertIsString } from './test-utils.js';
 
 /**
- * Phase 0 - Task 0.2: Schema Dependencies Tests
+ * Characterisation Tests: Schema Dependencies
  *
  * These tests validate schema dependency resolution and ordering.
  *
@@ -22,25 +21,7 @@ import { isOpenAPIObject } from '../cli-type-guards.js';
  * - Ensure self-referencing schemas work
  */
 
-/**
- * Helper: Bundle an OpenAPI spec using SwaggerParser
- *
- * SwaggerParser.bundle() returns its own OpenAPI type that is structurally
- * compatible with openapi3-ts's OpenAPIObject. We use a type guard to safely
- * narrow the type without using type assertions.
- *
- * This follows the pattern established in cli.ts for handling the type mismatch
- * between @apidevtools/swagger-parser and openapi3-ts.
- */
-async function bundleSpec(spec: OpenAPIObject): Promise<OpenAPIObject> {
-  const bundled: unknown = await SwaggerParser.bundle(spec);
-  if (!isOpenAPIObject(bundled)) {
-    throw new Error('SwaggerParser.bundle() returned invalid OpenAPI document');
-  }
-  return bundled;
-}
-
-describe('E2E: Schema Dependency Resolution', () => {
+describe('Characterisation: Schema Dependency Resolution', () => {
   describe('Schema Ordering', () => {
     it('should order schemas by dependencies (Address before User)', async () => {
       // Arrange: User depends on Address
@@ -85,13 +66,14 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
       // Assert: Address must appear before User in generated code
+      assertIsString(result, 'generated code');
       const addressIndex = result.indexOf('Address');
       const userIndex = result.indexOf('User');
       expect(addressIndex).toBeGreaterThan(-1);
@@ -148,13 +130,14 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
       // Assert: Address before User, User before Company
+      assertIsString(result, 'generated code');
       const addressIndex = result.indexOf('Address');
       const userIndex = result.indexOf('User');
       const companyIndex = result.indexOf('Company');
@@ -213,13 +196,14 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
       // Assert: Address and Contact both appear before Person
+      assertIsString(result, 'generated code');
       const addressIndex = result.indexOf('Address');
       const contactIndex = result.indexOf('Contact');
       const personIndex = result.indexOf('Person');
@@ -273,13 +257,14 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
       // Assert: User appears before Group
+      assertIsString(result, 'generated code');
       const userIndex = result.indexOf('User');
       const groupIndex = result.indexOf('Group');
 
@@ -327,9 +312,9 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -388,9 +373,9 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -447,9 +432,9 @@ describe('E2E: Schema Dependency Resolution', () => {
       };
 
       // Act
-      const bundled = await bundleSpec(spec);
+      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc: bundled,
+        openApiDoc: spec,
         disableWriteToFile: true,
       });
 
@@ -460,12 +445,210 @@ describe('E2E: Schema Dependency Resolution', () => {
     });
   });
 
+  describe('Additional Dependency Scenarios', () => {
+    it('should handle dependencies through additionalProperties', async () => {
+      // Arrange: Schema with additionalProperties referencing another schema
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        components: {
+          schemas: {
+            Dictionary: {
+              type: 'object',
+              additionalProperties: { $ref: '#/components/schemas/Value' },
+            },
+            Value: {
+              type: 'object',
+              properties: {
+                data: { type: 'string' },
+              },
+            },
+          },
+        },
+        paths: {
+          '/dict': {
+            get: {
+              operationId: 'getDict',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/Dictionary' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      // Act
+      // Bundling not needed for in-memory specs with internal refs
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      });
+
+      // Assert: Value appears before Dictionary
+      assertIsString(result, 'generated code');
+      const valueIndex = result.indexOf('Value');
+      const dictionaryIndex = result.indexOf('Dictionary');
+
+      expect(valueIndex).toBeLessThan(dictionaryIndex);
+      expect(result).not.toContain('as unknown as');
+    });
+
+    it('should handle dependencies in oneOf/anyOf union members', async () => {
+      // Arrange: Union schema with multiple referenced schemas
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        components: {
+          schemas: {
+            TypeA: {
+              type: 'object',
+              properties: {
+                type: { type: 'string', enum: ['a'] },
+                valueA: { type: 'string' },
+              },
+            },
+            TypeB: {
+              type: 'object',
+              properties: {
+                type: { type: 'string', enum: ['b'] },
+                valueB: { type: 'number' },
+              },
+            },
+            Union: {
+              oneOf: [
+                { $ref: '#/components/schemas/TypeA' },
+                { $ref: '#/components/schemas/TypeB' },
+              ],
+            },
+          },
+        },
+        paths: {
+          '/union': {
+            get: {
+              operationId: 'getUnion',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/Union' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      // Act
+      // Bundling not needed for in-memory specs with internal refs
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      });
+
+      // Assert: TypeA and TypeB appear before Union
+      assertIsString(result, 'generated code');
+      const typeAIndex = result.indexOf('TypeA');
+      const typeBIndex = result.indexOf('TypeB');
+      const unionIndex = result.indexOf('Union');
+
+      expect(typeAIndex).toBeLessThan(unionIndex);
+      expect(typeBIndex).toBeLessThan(unionIndex);
+      expect(result).not.toContain('as unknown as');
+    });
+
+    it('should handle complex dependency diamond (A→B, A→C, B→D, C→D)', async () => {
+      // Arrange: Diamond dependency pattern
+      const spec: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        components: {
+          schemas: {
+            Base: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+              },
+            },
+            Left: {
+              type: 'object',
+              properties: {
+                base: { $ref: '#/components/schemas/Base' },
+                leftValue: { type: 'string' },
+              },
+            },
+            Right: {
+              type: 'object',
+              properties: {
+                base: { $ref: '#/components/schemas/Base' },
+                rightValue: { type: 'number' },
+              },
+            },
+            Top: {
+              type: 'object',
+              properties: {
+                left: { $ref: '#/components/schemas/Left' },
+                right: { $ref: '#/components/schemas/Right' },
+              },
+            },
+          },
+        },
+        paths: {
+          '/diamond': {
+            get: {
+              operationId: 'getDiamond',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/Top' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      // Act
+      // Bundling not needed for in-memory specs with internal refs
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      });
+
+      // Assert: Base appears before Left and Right, which appear before Top
+      assertIsString(result, 'generated code');
+      const baseIndex = result.indexOf('Base');
+      const leftIndex = result.indexOf('Left');
+      const rightIndex = result.indexOf('Right');
+      const topIndex = result.indexOf('Top');
+
+      expect(baseIndex).toBeLessThan(leftIndex);
+      expect(baseIndex).toBeLessThan(rightIndex);
+      expect(leftIndex).toBeLessThan(topIndex);
+      expect(rightIndex).toBeLessThan(topIndex);
+      expect(result).not.toContain('as unknown as');
+    });
+  });
+
   /**
    * NOTE: Tests for internal dependency graph implementation exist in
    * getOpenApiDependencyGraph.test.ts. This file focuses on PUBLIC API behavior
-   * (E2E tests showing that generated code has correct schema ordering).
+   * (characterisation tests showing that generated code has correct schema ordering).
    *
-   * The 7 tests above thoroughly document the PUBLIC API behavior around
+   * The 10 tests above thoroughly document the PUBLIC API behavior around
    * schema dependency ordering in generated output.
    */
 });

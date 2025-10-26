@@ -1,7 +1,7 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
-import { getZodiosEndpointDefinitionList } from './getZodiosEndpointDefinitionList.js';
+import { getZodiosEndpointDefinitionList } from '../src/getZodiosEndpointDefinitionList.js';
 
 const baseDoc = {
   openapi: '3.0.3',
@@ -664,7 +664,7 @@ test('getZodiosEndpointDefinitionList /pet/findXXX', () => {
 });
 
 test('petstore.yaml', async () => {
-  const openApiDoc = (await SwaggerParser.parse('./tests/petstore.yaml')) as OpenAPIObject;
+  const openApiDoc = (await SwaggerParser.parse('./tests-snapshot/petstore.yaml')) as OpenAPIObject;
   const result = getZodiosEndpointDefinitionList(openApiDoc);
   expect(result).toMatchInlineSnapshot(`
       {

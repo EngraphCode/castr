@@ -1,11 +1,11 @@
-import { getTypescriptFromOpenApi, type TsConversionContext } from './openApiToTypescript.js';
+import { getTypescriptFromOpenApi, type TsConversionContext } from '../src/openApiToTypescript.js';
 
 import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas30';
 import { ts } from 'tanu';
 import { describe, expect, test } from 'vitest';
-import { makeSchemaResolver } from './makeSchemaResolver.js';
-import { asComponentSchema } from './utils.js';
-import type { TemplateContext } from './template-context.js';
+import { makeSchemaResolver } from '../src/makeSchemaResolver.js';
+import { asComponentSchema } from '../src/utils.js';
+import type { TemplateContext } from '../src/template-context.js';
 
 const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsTsString = (

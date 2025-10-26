@@ -19,6 +19,8 @@
     "lint:fix": "turbo lint -- --fix",
     "test": "turbo test",
     "test:watch": "turbo test -- --watch",
+    "test:snapshot": "turbo test:snapshot",
+    "character": "turbo character",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "clean": "turbo clean",

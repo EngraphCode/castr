@@ -115,7 +115,7 @@ export const escapeControlCharacters = (str: string): string => {
       .replaceAll('\t', String.raw`\t`) // U+0009
       .replaceAll('\n', String.raw`\n`) // U+000A
       .replaceAll('\r', String.raw`\r`) // U+000D
-      // eslint-disable-next-line no-control-regex, sonarjs/no-control-regex
+       
       .replaceAll(
         /([\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\uFFFE\uFFFF])/g,
         (_m, p1: string) => {

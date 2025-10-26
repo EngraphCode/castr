@@ -2,12 +2,12 @@ import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 import { get } from 'lodash-es';
 import { expect, test } from 'vitest';
-import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
-import { topologicalSort } from './topologicalSort.js';
-import { asComponentSchema } from './utils.js';
+import { getOpenApiDependencyGraph } from '../src/getOpenApiDependencyGraph.js';
+import { topologicalSort } from '../src/topologicalSort.js';
+import { asComponentSchema } from '../src/utils.js';
 
 test('petstore.yaml', async () => {
-  const openApiDoc = (await SwaggerParser.parse('./tests/petstore.yaml')) as OpenAPIObject;
+  const openApiDoc = (await SwaggerParser.parse('./tests-snapshot/petstore.yaml')) as OpenAPIObject;
   const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject =>
     get(openApiDoc, ref.replace('#/', '').replaceAll('/', '.'));
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
