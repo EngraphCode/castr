@@ -9,12 +9,14 @@
 ## 🎯 WHY: Impact & Purpose
 
 **Problem:** Current TypeScript AST generation uses `tanu`, which:
+
 - Requires extensive type assertions (22 in `openApiToTypescript.helpers.ts`, 17 in `openApiToTypescript.ts`)
 - Has unclear/inconsistent API
 - Mixing ts.Node and string-based type generation
 - Makes code hard to reason about
 
 **Impact:** Migrating to `ts-morph` will:
+
 - **Eliminate remaining type assertions** (~39 in TypeScript generation alone)
 - **Improve maintainability** (industry-standard API, better docs)
 - **Enable confident refactoring** (proper AST manipulation vs string templates)
@@ -48,14 +50,16 @@
 **MANDATORY:** All implementation MUST follow Test-Driven Development:
 
 ### For Each New Helper Function:
+
 1. **RED** - Write test with expected input/output
 2. **GREEN** - Implement minimal code
 3. **REFACTOR** - Improve while tests stay green
 4. **VALIDATE** - Run quality gates
 
 ### For Each Refactored Function:
+
 1. **CHARACTERISE** - Add tests for current behavior
-2. **RED** - Write tests for new behavior  
+2. **RED** - Write tests for new behavior
 3. **GREEN** - Refactor to new implementation
 4. **VALIDATE** - All tests pass
 
@@ -72,35 +76,37 @@
 **Steps:**
 
 1. **Create spike test file:**
+
    ```bash
    touch lib/src/ast-builder.test.ts
    ```
 
 2. **Write exploratory tests:**
+
    ```typescript
    import { Project } from 'ts-morph';
    import { describe, it, expect } from 'vitest';
-   
+
    describe('ts-morph API exploration', () => {
      it('should create type alias', () => {
        const project = new Project();
        const sourceFile = project.createSourceFile('test.ts', '', { overwrite: true });
-       
+
        sourceFile.addTypeAlias({
          name: 'User',
          type: '{ id: number; name: string }',
          isExported: true,
        });
-       
+
        const output = sourceFile.getFullText();
        expect(output).toContain('export type User');
        expect(output).toContain('id: number');
      });
-     
+
      it('should create interface', () => {
        // Test interface generation
      });
-     
+
      it('should create union type', () => {
        // Test union type generation
      });
@@ -126,6 +132,7 @@
 **TDD Workflow:**
 
 1. **Write tests FIRST:**
+
    ```typescript
    // lib/src/ast-builder.test.ts
    describe('AstBuilder', () => {
@@ -136,7 +143,7 @@
          expect(builder.toString()).toContain("import { z } from 'zod'");
        });
      });
-     
+
      describe('addTypeAlias', () => {
        it('should create exported type alias', () => {
          const builder = new AstBuilder();
@@ -144,38 +151,40 @@
          expect(builder.toString()).toContain('export type User = { id: number }');
        });
      });
-     
+
      // More tests...
    });
    ```
 
 2. **Run tests (RED):**
+
    ```bash
    pnpm test -- --run ast-builder.test.ts
    # Should FAIL - no implementation yet
    ```
 
 3. **Implement minimal code (GREEN):**
+
    ```typescript
    // lib/src/ast-builder.ts
    import { Project, SourceFile } from 'ts-morph';
-   
+
    export class AstBuilder {
      private project: Project;
      private sourceFile: SourceFile;
-     
+
      constructor() {
        this.project = new Project();
        this.sourceFile = this.project.createSourceFile('generated.ts', '', { overwrite: true });
      }
-     
+
      addImport(moduleSpecifier: string, namedImports: string[]): void {
        this.sourceFile.addImportDeclaration({
          moduleSpecifier,
          namedImports,
        });
      }
-     
+
      addTypeAlias(name: string, type: string): void {
        this.sourceFile.addTypeAlias({
          name,
@@ -183,7 +192,7 @@
          isExported: true,
        });
      }
-     
+
      toString(): string {
        return this.sourceFile.getFullText();
      }
@@ -191,6 +200,7 @@
    ```
 
 4. **Run tests (GREEN):**
+
    ```bash
    pnpm test -- --run ast-builder.test.ts
    # Should PASS
@@ -217,14 +227,17 @@
 **TDD Workflow:**
 
 1. **Add characterisation tests for current behavior:**
+
    ```typescript
    // Capture CURRENT behavior before changing
    describe('handleReferenceObject', () => {
      it('should convert ref to type reference', () => {
        const schema: ReferenceObject = { $ref: '#/components/schemas/User' };
-       const ctx = { /* ... */ };
+       const ctx = {
+         /* ... */
+       };
        const result = handleReferenceObject(schema, ctx, () => {});
-       
+
        // Capture what it CURRENTLY does
        expect(result).toMatchSnapshot();
      });
@@ -232,18 +245,20 @@
    ```
 
 2. **Run tests (GREEN - establishes baseline):**
+
    ```bash
    pnpm test -- --run openApiToTypescript.helpers.test.ts
    ```
 
 3. **Write tests for NEW behavior:**
+
    ```typescript
    describe('handleReferenceObject (ts-morph)', () => {
      it('should use AstBuilder for type reference', () => {
        const builder = new AstBuilder();
        const schema: ReferenceObject = { $ref: '#/components/schemas/User' };
        const result = handleReferenceObject(schema, builder);
-       
+
        expect(result).toBe('User'); // Returns type name
        // AstBuilder tracks the reference internally
      });
@@ -270,8 +285,9 @@
 **Duration:** 2 hours
 
 **Same TDD process:**
+
 1. Characterisation tests first
-2. New behavior tests  
+2. New behavior tests
 3. Refactor incrementally
 4. Validate constantly
 
@@ -284,6 +300,7 @@
 **Steps:**
 
 1. **Verify no usage:**
+
    ```bash
    cd lib/src
    grep -r "from 'tanu'" --include="*.ts"
@@ -292,6 +309,7 @@
    ```
 
 2. **Remove from package.json:**
+
    ```bash
    cd lib
    pnpm remove tanu
@@ -323,7 +341,7 @@ pnpm format
 pnpm build
 
 # 3. Type-check
-pnpm type-check  
+pnpm type-check
 # MUST show 0 errors
 
 # 4. Lint
@@ -339,12 +357,13 @@ cd lib && pnpm test -- --run
 cd .. && pnpm character
 # All 100 tests must pass
 
-# 7. Snapshot tests  
+# 7. Snapshot tests
 cd lib && pnpm test:snapshot
 # Update snapshots if output format improved
 ```
 
 **Count type assertions:**
+
 ```bash
 cd lib/src
 grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc -l
@@ -357,16 +376,19 @@ grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc 
 ## 🚦 Validation Gates
 
 **After EVERY function refactored:**
+
 ```bash
 pnpm test -- --run <test-file>
 ```
 
 **After each task complete:**
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 ```
 
 **Before declaring complete:**
+
 ```bash
 # All gates must pass
 pnpm format      # ✅ Must pass
@@ -382,12 +404,14 @@ pnpm lint        # ⚠️ Improved vs baseline
 ## 📊 Success Metrics
 
 ### Before (Baseline)
+
 - Type assertions: 74 total (39 in TypeScript generation)
 - tanu dependency: Present
 - Code complexity: High (some functions >100 lines)
 - Test coverage: Partial
 
 ### After (Target)
+
 - Type assertions: 0 (except `as const`)
 - tanu dependency: Removed
 - Code complexity: All functions <50 lines
@@ -398,12 +422,14 @@ pnpm lint        # ⚠️ Improved vs baseline
 ## 🎓 TDD Principles
 
 ### Every change must follow:
+
 1. **Write test first** (RED)
 2. **Implement minimal code** (GREEN)
 3. **Refactor while green**
 4. **Validate with quality gates**
 
 ### No exceptions for:
+
 - "Quick fixes"
 - "Obvious changes"
 - "Just refactoring"

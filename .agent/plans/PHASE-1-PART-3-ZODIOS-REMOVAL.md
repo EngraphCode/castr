@@ -9,12 +9,14 @@
 ## 🎯 WHY: Impact & Purpose
 
 **Problem:** `@zodios/core` dependency creates:
+
 - Zod 4 incompatibility (peer dependency warnings)
 - Unnecessary coupling to Zodios-specific patterns
 - Extra dependency to maintain
 - Not needed for core functionality (Zod schema generation)
 
 **Impact:** Removing `@zodios/core` will:
+
 - **Enable Zod 4 compatibility** (no peer dependency conflicts)
 - **Simplify dependency tree** (one less package to maintain)
 - **Improve focus** (pure Zod schema generation)
@@ -48,6 +50,7 @@
 **MANDATORY:** All implementation MUST follow Test-Driven Development:
 
 ### For Template Changes:
+
 1. **CHARACTERISE** - Capture current template output
 2. **SPECIFY** - Write tests for new output format
 3. **RED** - Tests fail (new format doesn't exist)
@@ -55,12 +58,14 @@
 5. **VALIDATE** - All tests pass
 
 ### For Type Changes:
+
 1. **RED** - Write test with new types
 2. **GREEN** - Implement type changes
 3. **REFACTOR** - Clean up while tests stay green
 4. **VALIDATE** - Run quality gates
 
 **Tests must exist BEFORE changing:**
+
 - Template syntax
 - Type definitions
 - Import statements
@@ -76,12 +81,14 @@
 **Steps:**
 
 1. **Find all imports:**
+
    ```bash
    cd lib/src
    grep -r "@zodios/core" --include="*.ts"
    ```
 
 2. **Find all type references:**
+
    ```bash
    grep -r "ZodiosEndpoint" --include="*.ts"
    grep -r "Zodios" --include="*.ts"
@@ -108,6 +115,7 @@
 **TDD Workflow:**
 
 1. **Write tests for new types:**
+
    ```typescript
    // lib/src/template-context.test.ts
    describe('Endpoint Definition Types (post-Zodios)', () => {
@@ -118,7 +126,7 @@
          parameters: z.object({ id: z.string() }),
          response: z.object({ name: z.string() }),
        };
-       
+
        expect(endpoint.method).toBe('get');
        // No Zodios types involved
      });
@@ -126,35 +134,39 @@
    ```
 
 2. **Run tests (RED):**
+
    ```bash
    pnpm test -- --run template-context.test.ts
    ```
 
 3. **Define new types:**
+
    ```typescript
    // lib/src/template-context.types.ts
    export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
-   
+
    export type EndpointDefinition = {
      method: HttpMethod;
      path: string;
-     parameters?: unknown;  // Zod schema
+     parameters?: unknown; // Zod schema
      requestBody?: unknown; // Zod schema
-     response: unknown;      // Zod schema
+     response: unknown; // Zod schema
      // etc.
    };
    ```
 
 4. **Update imports:**
+
    ```typescript
    // Replace:
    import type { ZodiosEndpointDefinition } from '@zodios/core';
-   
+
    // With:
    import type { EndpointDefinition } from './template-context.types.js';
    ```
 
 5. **Run tests (GREEN):**
+
    ```bash
    pnpm test -- --run template-context.test.ts
    pnpm test -- --run  # Full suite
@@ -174,13 +186,16 @@
 **TDD Workflow:**
 
 1. **Characterise current template output:**
+
    ```typescript
    // lib/src/templates/default.test.ts (if doesn't exist, create it)
    describe('default template', () => {
      it('should generate client code', async () => {
-       const context = { /* ... */ };
+       const context = {
+         /* ... */
+       };
        const output = await renderTemplate('default', context);
-       
+
        // Snapshot CURRENT output
        expect(output).toMatchSnapshot();
      });
@@ -188,12 +203,15 @@
    ```
 
 2. **Write tests for new output:**
+
    ```typescript
    describe('default template (post-Zodios)', () => {
      it('should generate pure Zod schemas without Zodios references', async () => {
-       const context = { /* ... */ };
+       const context = {
+         /* ... */
+       };
        const output = await renderTemplate('default', context);
-       
+
        expect(output).not.toContain('@zodios/core');
        expect(output).not.toContain('ZodiosEndpoint');
        expect(output).toContain('z.object'); // Pure Zod
@@ -214,6 +232,7 @@
    ```
 
 **Templates to update:**
+
 - `lib/src/templates/default.hbs` (may deprecate)
 - `lib/src/templates/grouped.hbs`
 - `lib/src/templates/schemas-with-metadata.hbs` (already Zodios-free?)
@@ -228,11 +247,12 @@
 **TDD Workflow:**
 
 1. **Write tests first:**
+
    ```typescript
    describe('getZodClientTemplateContext (post-Zodios)', () => {
      it('should not include Zodios-specific metadata', () => {
        const context = getZodClientTemplateContext(openApiDoc);
-       
+
        expect(context).not.toHaveProperty('zodiosEndpoints');
        expect(context.endpoints).toBeDefined();
        // Each endpoint should have pure Zod schemas
@@ -260,6 +280,7 @@
 **Steps:**
 
 1. **Verify no usage:**
+
    ```bash
    cd lib/src
    grep -r "@zodios/core" --include="*.ts"
@@ -267,6 +288,7 @@
    ```
 
 2. **Remove from package.json:**
+
    ```bash
    cd lib
    pnpm remove @zodios/core
@@ -325,6 +347,7 @@ pnpm cli -- ./samples/v3.0/petstore.yaml -o /tmp/petstore-client.ts
 ```
 
 **Check dependency tree:**
+
 ```bash
 cd lib
 pnpm list --depth=0
@@ -337,16 +360,19 @@ pnpm list --depth=0
 ## 🚦 Validation Gates
 
 **After EVERY file updated:**
+
 ```bash
 pnpm test -- --run <test-file>
 ```
 
 **After each task complete:**
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 ```
 
 **Before declaring complete:**
+
 ```bash
 # All gates must pass
 pnpm format      # ✅ Must pass
@@ -362,12 +388,14 @@ pnpm lint        # ⚠️ No worse than baseline
 ## 📊 Success Metrics
 
 ### Before (Baseline)
+
 - Dependencies: `@zodios/core`, `zod`
 - Peer warnings: Yes (Zod 4 incompatible)
 - Templates: Mixed (some Zodios-free, some not)
 - Generated code: Zodios-specific patterns
 
 ### After (Target)
+
 - Dependencies: `zod` only
 - Peer warnings: None
 - Templates: 100% Zodios-free
@@ -378,18 +406,21 @@ pnpm lint        # ⚠️ No worse than baseline
 ## 🎓 TDD Principles
 
 ### Every change must follow:
+
 1. **Characterise current behavior** (establish baseline)
 2. **Write tests for new behavior** (RED)
 3. **Implement changes** (GREEN)
 4. **Validate with quality gates**
 
 ### For template changes:
+
 - **Snapshot current output** first
 - **Write assertion tests** for new output
 - **Update templates** incrementally
 - **Validate constantly**
 
 ### No exceptions for:
+
 - "Simple" template changes
 - "Obvious" type replacements
 - "Just removing imports"
@@ -401,6 +432,7 @@ pnpm lint        # ⚠️ No worse than baseline
 ## 🚀 Migration Strategy
 
 ### Conservative Approach (Recommended)
+
 1. Keep Zodios templates as `*.deprecated.hbs`
 2. Create new Zodios-free templates
 3. Test both in parallel
@@ -408,6 +440,7 @@ pnpm lint        # ⚠️ No worse than baseline
 5. Remove deprecated after 1-2 releases
 
 ### Aggressive Approach (Faster)
+
 1. Update templates in place
 2. Fix all tests immediately
 3. Remove dependency ASAP
@@ -430,6 +463,7 @@ pnpm lint        # ⚠️ No worse than baseline
 ## 📋 Definition of Done
 
 Phase 1 is complete when:
+
 - ✅ `makeSchemaResolver` deleted (Part 1)
 - ✅ `CodeMeta` deleted (Part 1)
 - ✅ `tanu` removed (Part 2)

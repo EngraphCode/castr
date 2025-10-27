@@ -10,11 +10,13 @@
 ## 🎯 WHY: Impact & Purpose
 
 **Problem:** `makeSchemaResolver` is a "type lie" - claims to return `SchemaObject` but actually returns any component type. This creates:
+
 - 74 type assertions (blocker for extraction)
 - Unpredictable behavior at runtime
 - Difficulty reasoning about code correctness
 
 **Impact:** Eliminating `makeSchemaResolver` and replacing with direct `OpenAPIObject` access will:
+
 - **Enable extraction** to Engraph monorepo (removes assertion blocker)
 - **Improve type safety** (honest types, no lies)
 - **Simplify architecture** (one less abstraction layer)
@@ -53,11 +55,13 @@
 4. **VALIDATE** - Run full quality gates
 
 **This applies to:**
+
 - Every function signature change
 - Every new helper function
 - Every refactoring of existing code
 
 **Tests must be written BEFORE changing:**
+
 - Helper function signatures
 - Context type usage
 - Any API surface
@@ -71,12 +75,14 @@
 **TDD Status:** ✅ Perfect - 19 tests written first, 0 assertions in implementation
 
 **What was done:**
+
 - Created `component-access.ts` with 3 functions
 - `getSchemaFromComponents(doc, name)` - Type-safe schema lookup
 - `resolveSchemaRef(doc, schema)` - Resolve `$ref` to schema
 - `assertNotReference(value, context)` - Type guard for non-refs
 
 **Validation:**
+
 - ✅ 19/19 unit tests passing
 - ✅ 0 type assertions in implementation
 - ✅ All quality gates green
@@ -88,8 +94,9 @@
 **TDD Status:** ⚠️ Types changed without prior test updates (VIOLATION)
 
 **What was done:**
+
 - Changed `ConversionTypeContext`: `resolver` → `doc`
-- Changed `TsConversionContext`: `resolver` → `doc`  
+- Changed `TsConversionContext`: `resolver` → `doc`
 - Updated 9 files:
   - `CodeMeta.ts`
   - `template-context.ts`
@@ -102,6 +109,7 @@
   - `zodiosEndpoint.helpers.ts` (partial)
 
 **Validation:**
+
 - ✅ Type-check passing for updated files
 - ⚠️ Tests NOT run after each change (VIOLATION)
 - ❌ Helper files incomplete
@@ -113,6 +121,7 @@
 **TDD Status:** ❌ Not started - should write tests FIRST
 
 **Current State:**
+
 - `zodiosEndpoint.operation.helpers.ts` - 11 uses of `ctx.resolver` remain
 - `zodiosEndpoint.path.helpers.ts` - 2 uses of `ctx.resolver` remain
 - Causing 60/100 character test failures
@@ -120,24 +129,27 @@
 **Required Steps (TDD):**
 
 1. **Write Tests FIRST:**
+
    ```bash
    # Create test file if needed
    touch lib/src/zodiosEndpoint.operation.helpers.test.ts
-   
+
    # Write tests for new API (doc-based)
    # Test EACH function that uses ctx
    # RED - Tests should FAIL (current API doesn't exist yet)
    ```
 
 2. **Update Implementation:**
+
    ```bash
    # Change ctx.resolver.getSchemaByRef(ref) to:
    # getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(ref))
-   
+
    # GREEN - Tests should PASS
    ```
 
 3. **Validate:**
+
    ```bash
    pnpm test -- --run zodiosEndpoint.operation.helpers.test.ts
    pnpm test -- --run  # All 246 should pass
@@ -150,10 +162,12 @@
    ```
 
 **Files to update:**
+
 - `lib/src/zodiosEndpoint.operation.helpers.ts` (11 locations)
 - `lib/src/zodiosEndpoint.path.helpers.ts` (2 locations)
 
 **Helper function needed:**
+
 ```typescript
 const getSchemaNameFromRef = (ref: string): string => {
   const parts = ref.split('/');
@@ -170,6 +184,7 @@ const getSchemaNameFromRef = (ref: string): string => {
 **TDD Status:** N/A (tests ARE the validation)
 
 **Current State:**
+
 - 46 type errors in snapshot tests
 - Tests still create `resolver` contexts
 - Tests verify OLD API
@@ -191,8 +206,9 @@ const getSchemaNameFromRef = (ref: string): string => {
    ```
 
 **Files to update:**
+
 - `lib/src/CodeMeta.test.ts` ✅ Done
-- `lib/src/zodiosEndpoint.helpers.test.ts` ✅ Done  
+- `lib/src/zodiosEndpoint.helpers.test.ts` ✅ Done
 - `lib/tests-snapshot/getOpenApiDependencyGraph.test.ts` ✅ Done
 - `lib/tests-snapshot/deps-graph-with-additionalProperties.test.ts` ✅ Done
 - `lib/tests-snapshot/openApiToTypescript.test.ts` ❌ TODO
@@ -204,11 +220,13 @@ const getSchemaNameFromRef = (ref: string): string => {
 ### Task 1.5: Delete makeSchemaResolver ❌ BLOCKED
 
 **Cannot proceed until:**
+
 - ✅ All production code updated
 - ✅ All tests passing
 - ✅ No remaining uses of `makeSchemaResolver`
 
 **Steps:**
+
 ```bash
 # 1. Verify no usage
 cd lib/src
@@ -229,23 +247,26 @@ pnpm character      # All 100 should still pass
 ## 🚦 Validation Gates
 
 **After EVERY code change:**
+
 ```bash
 # Quick validation (30 seconds)
 pnpm test -- --run <specific-test-file>
 ```
 
 **After completing each task:**
+
 ```bash
 # Full validation (2-3 minutes)
 cd /Users/jim/code/personal/openapi-zod-client
 pnpm format        # Must pass
-pnpm build         # Must pass  
+pnpm build         # Must pass
 pnpm type-check    # Must pass (0 errors)
 pnpm test -- --run # All tests must pass
 pnpm character     # All tests must pass
 ```
 
 **Quality Gate Definition:**
+
 - ✅ Format: No changes needed
 - ✅ Build: Compiles successfully (ESM + CJS + DTS)
 - ✅ Type-check: 0 errors
@@ -258,6 +279,7 @@ pnpm character     # All tests must pass
 ## 📊 Current State (Oct 27, 2025 - 10:10 AM)
 
 ### What Works ✅
+
 - Core type system refactored (11 files)
 - Context types updated throughout
 - Template context uses `doc` directly
@@ -265,11 +287,13 @@ pnpm character     # All tests must pass
 - Component access module complete (0 assertions)
 
 ### What's Broken ❌
+
 - **Type-check:** 46 errors (8 files)
 - **Unit tests:** 243/246 passing (3 failures in helpers)
 - **Character tests:** 40/100 passing (60 failures due to helpers)
 
 ### Remaining Work
+
 1. Fix 2 helper files (13 locations total)
 2. Update 3 snapshot test files
 3. Delete makeSchemaResolver files
@@ -282,12 +306,14 @@ pnpm character     # All tests must pass
 ## 🎓 Lessons Learned
 
 ### Process Violations
+
 1. **❌ Didn't follow TDD** - Changed API without writing tests first
 2. **❌ Didn't run tests frequently** - Let tech debt accumulate
 3. **❌ Optimistic scope estimates** - Declared tasks complete prematurely
 4. **❌ Didn't validate boundaries** - Missed helper file dependencies
 
 ### Correct Process Going Forward
+
 1. **✅ Write tests FIRST** - Before ANY implementation code
 2. **✅ Run tests after EVERY change** - Catch regressions immediately
 3. **✅ Validate at boundaries** - Check all dependencies before declaring complete
