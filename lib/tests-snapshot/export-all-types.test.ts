@@ -20,7 +20,7 @@ const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) =>
 });
 
 describe('export-all-types', () => {
-  test.skip('shouldExportAllTypes option, non-circular types are exported', async () => {
+  test('shouldExportAllTypes option, non-circular types are exported', async () => {
     const Playlist = {
       allOf: [
         {
@@ -161,14 +161,10 @@ describe('export-all-types', () => {
       "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
       import { z } from "zod";
 
-      type Playlist = Partial<{
-        name: string;
-        author: Author;
-        songs: Array<Song>;
-      }> &
+      type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }> &
         Settings;
       type Author = Partial<{
-        name: (string | null) | number | null;
+        name: (string | null | number) | null;
         title: Title;
         id: Id;
         mail: string;
@@ -176,15 +172,9 @@ describe('export-all-types', () => {
       }>;
       type Title = string;
       type Id = number;
-      type Settings = Partial<{
-        theme_color: string;
-        features: Features;
-      }>;
+      type Settings = Partial<{ theme_color: string; features: Features }>;
       type Features = Array<string>;
-      type Song = Partial<{
-        name: string;
-        duration: number;
-      }>;
+      type Song = Partial<{ name: string; duration: number }>;
 
       export const Title = z.string();
       export const Id = z.number();
