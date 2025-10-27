@@ -9,12 +9,20 @@
 
 **Previous Completion:** Phase 1 Part 1 - ✅ COMPLETE (100%) - All quality gates green!
 
-**Current Task:** Task 2.3 - Migrate 19 helper functions from tanu AST nodes → string-based generation
+**Current Task:** Task 2.3 - NON-INCREMENTAL migration (all 19 helpers at once)
+
+**⚠️ CRITICAL STRATEGY PIVOT:**
+- **Attempted:** Incremental migration (1 function at a time)
+- **Result:** 45 lines bridge code, 14 lint errors, bugs in new code
+- **Decision:** Switch to non-incremental (delete bridge, rewrite all at once)
+- **Status:** Ready to start all-in migration using TDD
 
 **Key Architecture Decisions Made:**
+
 - Helpers return strings (type expressions), not AST nodes
-- Call sites decide: inline (return string) or declaration (use AstBuilder)
-- Delete wrapper functions like `wrapTypeIfNeeded` (no added value)
+- NO bridge code - clean rewrite with clear before/after
+- Use TDD with unit tests of pure functions
+- Call sites updated simultaneously with helpers
 - After completion: `TsConversionOutput = string` (clean, no mixed types)
 
 **Timeline Remaining:**

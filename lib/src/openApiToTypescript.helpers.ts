@@ -128,23 +128,6 @@ export function handlePrimitiveEnum(
 }
 
 /**
- * Handles basic primitive types (string, number, boolean)
- * Returns the appropriate TypeScript type, with null union if nullable
- */
-export function handleBasicPrimitive(
-  schemaType: PrimitiveSchemaType,
-  isNullable: boolean,
-): ts.Node {
-  let baseType: t.TypeDefinition;
-
-  if (schemaType === 'string') baseType = t.string();
-  else if (schemaType === 'boolean') baseType = t.boolean();
-  else baseType = t.number(); // number or integer
-
-  return isNullable ? t.union([baseType, t.reference('null')]) : baseType;
-}
-
-/**
  * Wraps a type in readonly if the option is enabled
  */
 export function maybeWrapReadonly(
@@ -223,9 +206,36 @@ export function wrapTypeIfNeeded(
   name: string | undefined,
   output: TsConversionOutput,
 ): t.TypeDefinitionObject | ts.Node {
-  // Narrow ONCE: convert string to reference if needed
-  const typeDef: ts.Node | t.TypeDefinitionObject =
-    typeof output === 'string' ? t.reference(output) : output;
+  // Narrow ONCE: convert string to appropriate tanu node
+  let typeDef: ts.Node | t.TypeDefinitionObject;
+
+  if (typeof output === 'string') {
+    // Handle primitive type strings
+    if (output === 'string') {
+      typeDef = t.string();
+    } else if (output === 'number') {
+      typeDef = t.number();
+    } else if (output === 'boolean') {
+      typeDef = t.boolean();
+    } else if (output === 'null') {
+      typeDef = t.reference('null');
+    } else if (output.includes(' | ')) {
+      // Handle union types (e.g., "string | null")
+      const types = output.split(' | ').map((type) => {
+        if (type === 'string') return t.string();
+        if (type === 'number') return t.number();
+        if (type === 'boolean') return t.boolean();
+        if (type === 'null') return t.reference('null');
+        return t.reference(type);
+      });
+      typeDef = t.union(types as t.TypeDefinition[]);
+    } else {
+      // For other strings, assume they're type references
+      typeDef = t.reference(output);
+    }
+  } else {
+    typeDef = output;
+  }
 
   if (!isInline) {
     if (!name) {

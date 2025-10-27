@@ -25,7 +25,8 @@ export type PrimitiveSchemaType = (typeof PRIMITIVE_SCHEMA_TYPES)[number];
  * Type guard for primitive schema types
  */
 export function isPrimitiveSchemaType(value: string): value is PrimitiveSchemaType {
-  return PRIMITIVE_SCHEMA_TYPES.includes(value as PrimitiveSchemaType);
+  const stringPrimitives: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
+  return stringPrimitives.includes(value);
 }
 
 /**
@@ -292,12 +293,10 @@ export function handleObjectType(properties: Record<string, string>): string {
     // Check if already quoted
     const isAlreadyQuoted = cleanKey.startsWith('"') && cleanKey.endsWith('"');
 
-    // Use the clean key as-is if already quoted, otherwise check if it needs quoting
-    const finalKey = isAlreadyQuoted
-      ? cleanKey
-      : /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(cleanKey)
-        ? cleanKey
-        : `"${cleanKey}"`;
+    // Check if it's a valid JavaScript identifier (doesn't need quoting)
+    const isValidIdentifier = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(cleanKey);
+    const needsQuoting = !isAlreadyQuoted && !isValidIdentifier;
+    const finalKey = needsQuoting ? `"${cleanKey}"` : cleanKey;
 
     const optional = isOptional ? '?' : '';
 

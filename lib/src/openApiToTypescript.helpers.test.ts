@@ -4,7 +4,6 @@ import { t } from 'tanu';
 
 import {
   createAdditionalPropertiesSignature,
-  handleBasicPrimitive,
   handlePrimitiveEnum,
   isPrimitiveSchemaType,
   isPropertyRequired,
@@ -80,34 +79,6 @@ describe('openApiToTypescript.helpers', () => {
       const schema: SchemaObject = { type: 'string', enum: ['a', 'b'], nullable: true };
       const result = handlePrimitiveEnum(schema, 'string');
       expect(result).toBeDefined();
-    });
-  });
-
-  describe('handleBasicPrimitive', () => {
-    it('should return string type for string', () => {
-      const result = handleBasicPrimitive('string', false);
-      expect(result).toBeDefined();
-    });
-
-    it('should return boolean type for boolean', () => {
-      const result = handleBasicPrimitive('boolean', false);
-      expect(result).toBeDefined();
-    });
-
-    it('should return number type for number', () => {
-      const result = handleBasicPrimitive('number', false);
-      expect(result).toBeDefined();
-    });
-
-    it('should return number type for integer', () => {
-      const result = handleBasicPrimitive('integer', false);
-      expect(result).toBeDefined();
-    });
-
-    it('should add null to union when nullable', () => {
-      const result = handleBasicPrimitive('string', true);
-      expect(result).toBeDefined();
-      // Should be a union type
     });
   });
 
