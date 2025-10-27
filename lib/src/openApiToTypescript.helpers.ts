@@ -11,6 +11,11 @@ import { t, ts } from 'tanu';
 import type { TsConversionContext, TsConversionOutput } from './openApiToTypescript.js';
 import { wrapWithQuotesIfNeeded } from './utils.js';
 import { getSchemaFromComponents } from './component-access.js';
+import {
+  handleBasicPrimitive as handleBasicPrimitiveString,
+  wrapNullable,
+  wrapReadonly,
+} from './openApiToTypescript.string-helpers.js';
 
 /**
  * Extract schema name from a component schema $ref
@@ -58,14 +63,14 @@ export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaT
 }
 
 /**
- * Handles reference objects ($ref) by resolving them to schema names
- * Returns a type reference to the resolved schema name
+ * Handles OpenAPI $ref objects, returning the referenced schema name
+ * MIGRATED: Now returns string (schema name) instead of tanu reference node
  */
 export function handleReferenceObject(
   schema: ReferenceObject,
   ctx: TsConversionContext | undefined,
   resolveRecursively: (schema: SchemaObject) => unknown,
-): ts.Node | string {
+): string {
   if (!ctx?.visitedRefs || !ctx?.doc) {
     throw new Error('Context is required for OpenAPI $ref');
   }
@@ -73,7 +78,7 @@ export function handleReferenceObject(
   // Check if we're in a circular reference
   const schemaName = getSchemaNameFromRef(schema.$ref);
   if (ctx.visitedRefs[schema.$ref]) {
-    return t.reference(schemaName);
+    return schemaName; // Return name directly, not t.reference
   }
 
   // Resolve the actual schema if not yet resolved
@@ -98,7 +103,7 @@ export function handleReferenceObject(
     resolveRecursively(actualSchema);
   }
 
-  return t.reference(schemaName);
+  return schemaName; // Return name directly, not t.reference
 }
 
 /**
@@ -129,29 +134,27 @@ export function handlePrimitiveEnum(
 
 /**
  * Handles basic primitive types (string, number, boolean)
- * Returns the appropriate TypeScript type, with null union if nullable
- * NOTE: Will be replaced with string-based version in all-in migration
+ * Returns string-based TypeScript type expression
+ * MIGRATED: Now returns strings instead of tanu nodes
  */
 export function handleBasicPrimitive(
   schemaType: PrimitiveSchemaType,
   isNullable: boolean,
-): ts.Node {
-  let baseType: t.TypeDefinition;
-
-  if (schemaType === 'string') baseType = t.string();
-  else if (schemaType === 'boolean') baseType = t.boolean();
-  else baseType = t.number(); // number or integer
-
-  return isNullable ? t.union([baseType, t.reference('null')]) : baseType;
+): string {
+  return handleBasicPrimitiveString(schemaType, isNullable);
 }
 
 /**
  * Wraps a type in readonly if the option is enabled
+ * MIGRATED: Now works with both strings and nodes during transition
  */
 export function maybeWrapReadonly(
-  type: ts.Node | t.TypeDefinitionObject,
+  type: ts.Node | t.TypeDefinitionObject | string,
   shouldBeReadonly: boolean,
-): ts.Node | t.TypeDefinitionObject {
+): ts.Node | t.TypeDefinitionObject | string {
+  if (typeof type === 'string') {
+    return wrapReadonly(type, shouldBeReadonly);
+  }
   return shouldBeReadonly ? t.readonly(type as t.TypeDefinition) : type;
 }
 
@@ -257,28 +260,30 @@ export function convertSchemasToTypes<T>(
 }
 
 /**
- * Adds null to a union type if nullable flag is true
+ * Adds null to a type if nullable
+ * MIGRATED: Now works with both strings and nodes during transition
  */
 export function addNullToUnionIfNeeded(
-  type: ts.Node | t.TypeDefinitionObject,
+  type: ts.Node | t.TypeDefinitionObject | string,
   isNullable: boolean,
-): ts.Node | t.TypeDefinitionObject {
+): ts.Node | t.TypeDefinitionObject | string {
+  if (typeof type === 'string') {
+    return wrapNullable(type, isNullable);
+  }
   return isNullable ? t.union([type as t.TypeDefinition, t.reference('null')]) : type;
 }
 
 /**
  * Converts a single property schema to a TypeScript type
- * Handles circular references by converting string types to references
+ * MIGRATED: Now passes strings through directly
  */
 export function convertPropertyType(
   propType: unknown,
-  ctx: TsConversionContext | undefined,
-): ts.Node | t.TypeDefinition {
+  _ctx: TsConversionContext | undefined,
+): ts.Node | t.TypeDefinition | string {
   if (typeof propType === 'string') {
-    if (!ctx) {
-      throw new Error('Context is required for circular $ref (recursive schemas)');
-    }
-    return t.reference(propType);
+    // Strings are now type references, just pass through
+    return propType;
   }
   return propType as ts.Node | t.TypeDefinition;
 }
@@ -314,14 +319,19 @@ export function handleArraySchema(
   shouldWrapReadonly: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
   ctx: TsConversionContext | undefined,
-): ts.Node | t.TypeDefinitionObject {
-  let arrayOfType: ts.Node | t.TypeDefinition;
+): ts.Node | t.TypeDefinitionObject | string {
+  let arrayOfType: ts.Node | t.TypeDefinition | string;
 
   if (schema.items) {
     const rawType = convertSchema(schema.items);
     arrayOfType = convertPropertyType(rawType, ctx);
   } else {
     arrayOfType = t.any();
+  }
+
+  // Convert string to node if needed for tanu processing
+  if (typeof arrayOfType === 'string') {
+    arrayOfType = t.reference(arrayOfType);
   }
 
   const wrappedArray = maybeWrapReadonly(
@@ -340,7 +350,7 @@ export function buildObjectType(
   props: Record<string, t.TypeDefinition>,
   additionalPropertiesType: ts.Node | t.TypeDefinition | undefined,
   shouldWrapReadonly: boolean,
-): ts.Node | t.TypeDefinitionObject {
+): ts.Node | t.TypeDefinitionObject | string {
   let additionalProperties;
   if (additionalPropertiesType) {
     additionalProperties = createAdditionalPropertiesSignature(
@@ -349,21 +359,27 @@ export function buildObjectType(
   }
 
   const objectType = additionalProperties ? t.intersection([props, additionalProperties]) : props;
-  return maybeWrapReadonly(objectType as t.TypeDefinitionObject, shouldWrapReadonly);
+  const result = maybeWrapReadonly(objectType as t.TypeDefinitionObject, shouldWrapReadonly);
+  // If maybeWrapReadonly returns a string, convert back to node for now
+  return typeof result === 'string' ? t.reference(result) : result;
 }
 
 /**
  * Wraps an object type as Partial if needed, handling both inline and named types
+ * MIGRATED: Now accepts strings during transition
  */
 export function wrapObjectTypeForOutput(
-  finalType: ts.Node | t.TypeDefinitionObject,
+  finalType: ts.Node | t.TypeDefinitionObject | string,
   isPartial: boolean,
   isInline: boolean,
   name: string | undefined,
 ): ts.Node | t.TypeDefinitionObject {
+  // Convert string to node if needed
+  const nodeType = typeof finalType === 'string' ? t.reference(finalType) : finalType;
+  
   const wrappedType = isPartial
-    ? t.reference('Partial', [finalType as t.TypeDefinition])
-    : finalType;
+    ? t.reference('Partial', [nodeType as t.TypeDefinition])
+    : nodeType;
 
   if (isInline) {
     return wrappedType;
