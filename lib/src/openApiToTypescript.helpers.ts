@@ -138,7 +138,7 @@ export function handlePrimitiveEnum(
 
   let enumType: string;
   if (allStrings) {
-    enumType = handleStringEnum(withoutNull as string[]);
+    enumType = handleStringEnum(withoutNull);
   } else if (allNumbers) {
     enumType = handleNumericEnum(withoutNull as number[]);
   } else {
