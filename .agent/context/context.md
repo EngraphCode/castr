@@ -9,7 +9,13 @@
 
 **Previous Completion:** Phase 1 Part 1 - ✅ COMPLETE (100%) - All quality gates green!
 
-**Current Task:** Task 2.3 - Convert helpers to return strings (eliminating tanu)
+**Current Task:** Task 2.3 - Migrate 19 helper functions from tanu AST nodes → string-based generation
+
+**Key Architecture Decisions Made:**
+- Helpers return strings (type expressions), not AST nodes
+- Call sites decide: inline (return string) or declaration (use AstBuilder)
+- Delete wrapper functions like `wrapTypeIfNeeded` (no added value)
+- After completion: `TsConversionOutput = string` (clean, no mixed types)
 
 **Timeline Remaining:**
 

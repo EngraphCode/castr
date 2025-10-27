@@ -67,7 +67,7 @@
 
 ---
 
-## 🏗️ **Architectural Insight: Strings vs AST Nodes**
+## 🏗️ **Architectural Clarity: Strings All The Way**
 
 ### **Key Realization**
 
@@ -78,27 +78,56 @@ TypeScript type expressions are **just strings**! We don't need AST manipulation
 t.union([t.string(), t.number()]); // Returns ts.Node → requires printing
 
 // NEW approach (strings):
-('string | number'); // It's already valid TypeScript!
+'string | number'; // It's already valid TypeScript!
 ```
 
-### **Layered Architecture**
+### **Clean Layered Architecture**
 
 ```
 ┌─────────────────────────────────────────┐
 │  Schema → Helpers (return strings)     │  ← Convert here (Task 2.3)
 ├─────────────────────────────────────────┤
-│  Strings → AstBuilder (declarations)   │  ← Already done (Task 2.2)
+│  Call site: inline or declaration?     │  ← Decision point
+├─────────────────────────────────────────┤
+│  If declaration: AstBuilder            │  ← Already done (Task 2.2)
 ├─────────────────────────────────────────┤
 │  AstBuilder → TypeScript source code   │  ← ts-morph handles this
 └─────────────────────────────────────────┘
 ```
 
+### **Critical Architectural Decisions**
+
+**1. Helpers Return Strings (Type Expressions)**
+```typescript
+// Helper generates type expression
+const userType = handleObjectType({ id: 'number', name: 'string' });
+// → "{ id: number; name: string }"
+```
+
+**2. Call Sites Make Declaration Decisions**
+```typescript
+// Option A: Inline (return the string directly)
+if (!schema.name) {
+  return userType;  // "{ id: number; name: string }"
+}
+
+// Option B: Named declaration (use AstBuilder)
+astBuilder.addTypeAlias(schema.name, userType);
+return schema.name;  // "User" (reference to the type)
+```
+
+**3. No Intermediate Wrapper Functions**
+- Delete `wrapTypeIfNeeded` - just inline the if/else
+- Object helpers return strings directly, not `Record<string, t.TypeDefinition>`
+- No mixed types - after refactoring: `TsConversionOutput = string`
+
 ### **Benefits**
 
-1. **Simpler**: Strings are easier than AST nodes
-2. **Type-safe**: No need for assertions
-3. **Testable**: String comparison is straightforward
+1. **Simpler**: Strings are easier than AST nodes, no wrapper abstractions
+2. **Type-safe**: No need for assertions, clean types
+3. **Testable**: String comparison is straightforward  
 4. **Forward-compatible**: Supports both OAS 3.0 and 3.1+
+5. **Direct**: Call sites decide inline vs declaration, no indirection
 
 ## ⚠️ Critical Considerations
 
@@ -126,6 +155,48 @@ function primitiveToTypeScript(type: PrimitiveSchemaType): string {
 - Start with simplest (primitives)
 - Keep all tests passing after each change
 - Commit after each milestone
+
+---
+
+## 📊 Migration Complexity Analysis
+
+**Analysis Complete:** See `.agent/analysis/TASK_2.3_MIGRATION_ROADMAP.md` for detailed breakdown.
+
+### Function Inventory (19 total functions)
+
+```
+Category A: No Changes (3)     ✅ Already correct
+Category B: Simple (8)         🟢 Direct replacements
+Category C: Complex (8)        🟡🔴 Needs refactoring
+```
+
+### Key Discoveries from Analysis
+
+**1. Name Collision Issue**
+- Current `handleBasicPrimitive` conflicts with new string helper
+- **Solution:** Delete old function, use new string-based version
+
+**2. Object Properties Strategy**
+- Current: Returns `Record<string, t.TypeDefinition>` (intermediate structure)
+- **New:** Return string directly from `convertObjectProperties`
+- Rationale: No value in intermediate structure, simpler to return final string
+
+**3. `wrapTypeIfNeeded` Should Be Deleted**
+- Current: Wrapper function for inline vs declaration logic
+- **New:** Inline the if/else at call sites
+- Rationale: Function adds no value, just indirection
+
+**4. Clean Output Types**
+- Current: `TsConversionOutput = ts.Node | t.TypeDefinitionObject | string`
+- **New:** `TsConversionOutput = string` (clean, no mixed types)
+
+### Migration Order (Low → High Risk)
+
+**Phase 1:** Foundation (resolve name collision, basic replacements)  
+**Phase 2:** Modifiers & Collections (wrapping, arrays, enums)  
+**Phase 3:** Compositions (unions, intersections)  
+**Phase 4:** Objects (most complex, architectural decisions)  
+**Phase 5:** Final Integration (cleanup, tanu removal)
 
 ---
 
@@ -303,91 +374,77 @@ pnpm build  # Verify no build issues
 
 **Duration:** 2-3 hours
 
-**Strategy:** Convert helpers incrementally from returning tanu nodes to returning strings.
+**Strategy:** Convert helpers incrementally from returning tanu nodes to returning strings. Delete functions that don't add value.
+
+**Key Principles:**
+- Helpers return `string` (type expressions only)
+- Call sites decide: inline (return string) or declaration (call `astBuilder.addTypeAlias`)
+- No wrapper functions - just direct string generation and usage
+- After completion: `TsConversionOutput = string` (no mixed types)
 
 **TDD Workflow:**
 
-1. **Write comprehensive tests FIRST** (define new API):
+1. **✅ ALREADY COMPLETE: Comprehensive tests written and passing (97 tests)**
 
-   ```typescript
-   // lib/src/openApiToTypescript.string-helpers.test.ts
-   describe('primitiveToTypeScript', () => {
-     it('should map string to string', () => {
-       expect(primitiveToTypeScript('string')).toBe('string');
-     });
+   File: `lib/src/openApiToTypescript.string-helpers.test.ts`
+   Status: All 97 tests passing, 0 lint errors, 0 type errors
 
-     it('should map integer to number', () => {
-       expect(primitiveToTypeScript('integer')).toBe('number');
-     });
+2. **Migration by Category:**
 
-     it('should map number to number', () => {
-       expect(primitiveToTypeScript('number')).toBe('number');
-     });
+   **Category A: No Changes (3 functions)**
+   - `isPrimitiveSchemaType` - Already type predicate
+   - `isPropertyRequired` - Already pure utility
+   - `convertSchemasToTypes` - Already generic mapper
 
-     it('should map boolean to boolean', () => {
-       expect(primitiveToTypeScript('boolean')).toBe('boolean');
-     });
+   **Category B: Simple Replacements (8 functions)**
+   
+   **Priority 1: Foundation (resolve name collision first)**
+   - ⚠️ `handleBasicPrimitive` - **NAME COLLISION** - Delete old function, use new string helper
+   - `handleReferenceObject` - Return `schemaName` string instead of `t.reference(schemaName)`
+   - `convertPropertyType` - Return string instead of `t.reference()`
+   - `addNullToUnionIfNeeded` - Use `wrapNullable()` from string-helpers
 
-     it('should map null to null (3.1+ support)', () => {
-       expect(primitiveToTypeScript('null')).toBe('null');
-     });
-   });
+   **Priority 2: Modifiers & Collections**
+   - `maybeWrapReadonly` - Use `wrapReadonly()` from string-helpers
+   - `handlePrimitiveEnum` - Use `handleStringEnum/NumericEnum/MixedEnum()`
+   - `handleArraySchema` - Use `handleArrayType()` or `handleReadonlyArray()`
+   - `resolveAdditionalPropertiesType` - Use `handleAnyType()` from string-helpers
 
-   describe('handleBasicPrimitive', () => {
-     it('should return string for non-nullable string', () => {
-       expect(handleBasicPrimitive('string', false)).toBe('string');
-     });
+   **Priority 3: Compositions**
+   - `handleOneOf` - Use `handleUnion()` from string-helpers
+   - `handleTypeArray` - Use `handleUnion()` from string-helpers
+   - `handleAnyOf` - Use `handleUnion()` + array helpers
 
-     it('should return union with null for nullable string', () => {
-       expect(handleBasicPrimitive('string', true)).toBe('string | null');
-     });
+   **Category C: Complex Refactoring (5 functions)**
+   
+   **Object Handling:**
+   - `createAdditionalPropertiesSignature` - Use `handleAdditionalProperties()` (string-based)
+   - `convertObjectProperties` - **Return string directly**, not intermediate structure
+   - `buildObjectType` - Use object helpers + `mergeObjectWithAdditionalProps()`
+   - `wrapObjectTypeForOutput` - Use `handlePartialObject()` from string-helpers
 
-     it('should return number for integer', () => {
-       expect(handleBasicPrimitive('integer', false)).toBe('number');
-     });
-   });
-   ```
+   **Architectural Cleanup:**
+   - `wrapTypeIfNeeded` - **DELETE** - Inline logic at call sites:
+     ```typescript
+     // Instead of wrapTypeIfNeeded(isInline, name, output):
+     if (schema.name) {
+       astBuilder.addTypeAlias(schema.name, typeExpression);
+       return schema.name;  // Return reference
+     } else {
+       return typeExpression;  // Return inline
+     }
+     ```
 
-2. **Run tests (RED - should fail):**
-
-   ```bash
-   pnpm test -- --run openApiToTypescript.string-helpers.test.ts
-   # Should FAIL - new functions don't exist yet
-   ```
-
-3. **Implement new string-based helpers:**
-
-   ```typescript
-   // lib/src/openApiToTypescript.string-helpers.ts
-   export function primitiveToTypeScript(type: PrimitiveSchemaType): string {
-     return type === 'integer' ? 'number' : type;
-   }
-
-   export function handleBasicPrimitive(
-     schemaType: PrimitiveSchemaType,
-     isNullable: boolean,
-   ): string {
-     const baseType = primitiveToTypeScript(schemaType);
-     return isNullable ? `${baseType} | null` : baseType;
-   }
-   ```
-
-4. **Run tests (GREEN):**
-
-   ```bash
-   pnpm test -- --run openApiToTypescript.string-helpers.test.ts
-   # Should PASS
-   ```
-
-5. **Replace old helpers incrementally:**
-   - Start with simplest (primitives)
-   - Update one function at a time
-   - Run full test suite after each change
-   - Keep existing tests passing
-
-6. **Quality gates after EACH function:**
+3. **Quality gates after EACH function:**
    ```bash
    pnpm test:all  # All tests must stay green
+   pnpm type-check  # Must stay at 0 errors
+   ```
+
+4. **Commit after EACH successful conversion:**
+   ```bash
+   git add -A
+   git commit -m "refactor: Convert [function-name] to string-based generation"
    ```
 
 ---
