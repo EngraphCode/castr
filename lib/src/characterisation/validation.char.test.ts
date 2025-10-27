@@ -389,4 +389,3 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     });
   });
 });
-

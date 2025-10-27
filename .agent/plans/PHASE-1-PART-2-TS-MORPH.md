@@ -1,8 +1,8 @@
 # Phase 1 Part 2: ts-morph Migration
 
-**Status:** NOT STARTED (Blocked by Part 1)  
+**Status:** READY TO START (Part 1 Complete!)  
 **Estimated Duration:** 6-8 hours  
-**Prerequisites:** Part 1 complete (100/100 char tests, 0 type errors)
+**Prerequisites:** ✅ Part 1 complete (115/115 char tests, 0 type errors, 552/552 total tests)
 
 ---
 
@@ -10,14 +10,14 @@
 
 **Problem:** Current TypeScript AST generation uses `tanu`, which:
 
-- Requires extensive type assertions (22 in `openApiToTypescript.helpers.ts`, 17 in `openApiToTypescript.ts`)
+- Requires extensive type assertions (28 in `openApiToTypescript.helpers.ts`, 2 in `openApiToTypescript.ts`)
 - Has unclear/inconsistent API
 - Mixing ts.Node and string-based type generation
 - Makes code hard to reason about
 
 **Impact:** Migrating to `ts-morph` will:
 
-- **Eliminate remaining type assertions** (~39 in TypeScript generation alone)
+- **Eliminate type assertions in TS generation** (~30 in TypeScript generation files)
 - **Improve maintainability** (industry-standard API, better docs)
 - **Enable confident refactoring** (proper AST manipulation vs string templates)
 - **Prepare for Phase 2** (complete template system rewrite)
@@ -67,7 +67,52 @@
 
 ---
 
+## ⚠️ Critical Considerations
+
+### 1. **Breaking Changes in Output Format**
+- ts-morph may format code differently than tanu
+- Expect snapshot tests to need updating
+- Budget additional time for snapshot regeneration
+- Verify generated code is functionally equivalent
+
+### 2. **Complexity Management**
+- `openApiToTypescript.helpers.ts` is likely complex
+- May need to break into smaller modules during refactoring
+- Monitor cognitive complexity metrics
+- Target: <50 lines per function, <10 cognitive complexity
+
+### 3. **Test Strategy**
+- **Existing snapshot tests:** Will catch output regressions
+- **New unit tests:** Focus on AstBuilder methods (isolated)
+- **Characterization tests:** Capture current tanu behavior before changes
+- **Integration tests:** Verify end-to-end TypeScript generation
+
+### 4. **Incremental Approach**
+- Replace one function at a time
+- Keep all tests passing after each change
+- Don't refactor multiple files simultaneously
+- Commit after each major milestone
+
+---
+
 ## 📋 Implementation Steps
+
+### Task 2.0: Install ts-morph Dependency
+
+**Duration:** 5 minutes
+
+**Steps:**
+
+```bash
+cd /Users/jim/code/personal/openapi-zod-client/lib
+pnpm add ts-morph
+pnpm install
+pnpm build  # Verify no build issues
+```
+
+**Note:** ts-morph is a mature library built on top of the TypeScript Compiler API. It provides a simpler, more intuitive API for AST manipulation.
+
+---
 
 ### Task 2.1: Research & Design (TDD: Spike with Tests)
 
@@ -346,7 +391,7 @@ pnpm type-check
 
 # 4. Lint
 pnpm lint
-# Should show IMPROVEMENT from current 136 issues
+# Should show IMPROVEMENT from current 124 issues
 # Target: <100 issues
 
 # 5. Unit tests
@@ -355,7 +400,7 @@ cd lib && pnpm test -- --run
 
 # 6. Character tests
 cd .. && pnpm character
-# All 100 tests must pass
+# All 115 tests must pass
 
 # 7. Snapshot tests
 cd lib && pnpm test:snapshot
@@ -367,8 +412,12 @@ cd lib && pnpm test:snapshot
 ```bash
 cd lib/src
 grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc -l
-# Target: 0
-# Previous: 74
+# Target: <32 (eliminate 30 from TypeScript generation)
+# Current baseline: 62 (down from 74 after Part 1)
+
+# Check specific files:
+grep -c " as " openApiToTypescript.helpers.ts  # Current: 28, Target: 0
+grep -c " as " openApiToTypescript.ts          # Current: 2, Target: 0
 ```
 
 ---
@@ -394,28 +443,32 @@ pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 pnpm format      # ✅ Must pass
 pnpm build       # ✅ Must pass
 pnpm type-check  # ✅ 0 errors
-pnpm test        # ✅ All passing
-pnpm character   # ✅ All 100 passing
-pnpm lint        # ⚠️ Improved vs baseline
+pnpm test:all    # ✅ All 552 tests passing
+pnpm character   # ✅ All 115 passing
+pnpm lint        # ⚠️ Improved vs baseline (124 issues)
 ```
 
 ---
 
 ## 📊 Success Metrics
 
-### Before (Baseline)
+### Before (Baseline - After Part 1 Completion)
 
-- Type assertions: 74 total (39 in TypeScript generation)
+- Type assertions: 62 total (down from 74 after Part 1)
+  - 30 in TypeScript generation files (28 in helpers, 2 in main)
+  - 32 in other files (will address in future phases)
 - tanu dependency: Present
 - Code complexity: High (some functions >100 lines)
-- Test coverage: Partial
+- Test coverage: 552 tests passing (286 unit, 115 char, 151 snapshot)
+- Quality gates: ✅ All green
 
 ### After (Target)
 
-- Type assertions: 0 (except `as const`)
+- Type assertions: <32 (eliminate all 30 in TypeScript generation)
 - tanu dependency: Removed
-- Code complexity: All functions <50 lines
-- Test coverage: 100% of TypeScript generation
+- Code complexity: All TypeScript generation functions <50 lines
+- Test coverage: 100% of TypeScript generation + existing 552 tests
+- Quality gates: ✅ All green
 
 ---
 

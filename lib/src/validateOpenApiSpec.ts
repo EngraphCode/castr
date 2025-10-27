@@ -126,7 +126,8 @@ export function validateOpenApiSpec(spec: unknown): OpenAPIObject {
 
   // Check 7: Property 'info' must be an object
   if (typeof doc['info'] !== 'object' || doc['info'] === null || Array.isArray(doc['info'])) {
-    const receivedType = doc['info'] === null ? 'null' : Array.isArray(doc['info']) ? 'array' : typeof doc['info'];
+    const receivedType =
+      doc['info'] === null ? 'null' : Array.isArray(doc['info']) ? 'array' : typeof doc['info'];
     throw new ValidationError(
       `Invalid OpenAPI document: property 'info' must be an object, received ${receivedType}`,
     );
@@ -139,7 +140,8 @@ export function validateOpenApiSpec(spec: unknown): OpenAPIObject {
 
   // Check 9: Property 'paths' must be an object
   if (typeof doc['paths'] !== 'object' || doc['paths'] === null || Array.isArray(doc['paths'])) {
-    const receivedType = doc['paths'] === null ? 'null' : Array.isArray(doc['paths']) ? 'array' : typeof doc['paths'];
+    const receivedType =
+      doc['paths'] === null ? 'null' : Array.isArray(doc['paths']) ? 'array' : typeof doc['paths'];
     throw new ValidationError(
       `Invalid OpenAPI document: property 'paths' must be an object, received ${receivedType}`,
     );
@@ -149,4 +151,3 @@ export function validateOpenApiSpec(spec: unknown): OpenAPIObject {
   // Type assertion is safe here because we've validated the structure
   return spec as OpenAPIObject;
 }
-
