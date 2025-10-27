@@ -55,10 +55,7 @@ export function primitiveToTypeScript(type: PrimitiveSchemaType): string {
  * handleBasicPrimitive('string', true) // 'string | null'
  * handleBasicPrimitive('null', false) // 'null' (3.1+ type: "null")
  */
-export function handleBasicPrimitive(
-  schemaType: PrimitiveSchemaType,
-  isNullable: boolean,
-): string {
+export function handleBasicPrimitive(schemaType: PrimitiveSchemaType, isNullable: boolean): string {
   const baseType = primitiveToTypeScript(schemaType);
 
   // For type: "null", nullable doesn't add anything (already null)
@@ -294,13 +291,13 @@ export function handleObjectType(properties: Record<string, string>): string {
 
     // Check if already quoted
     const isAlreadyQuoted = cleanKey.startsWith('"') && cleanKey.endsWith('"');
-    
+
     // Use the clean key as-is if already quoted, otherwise check if it needs quoting
     const finalKey = isAlreadyQuoted
       ? cleanKey
       : /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(cleanKey)
-      ? cleanKey
-      : `"${cleanKey}"`;
+        ? cleanKey
+        : `"${cleanKey}"`;
 
     const optional = isOptional ? '?' : '';
 
@@ -371,6 +368,9 @@ export function mergeObjectWithAdditionalProps(
  */
 export function handleReference(ref: string): string {
   const parts = ref.split('/');
-  return parts[parts.length - 1];
+  const name = parts[parts.length - 1];
+  if (!name) {
+    throw new Error(`Invalid $ref format: ${ref}`);
+  }
+  return name;
 }
-

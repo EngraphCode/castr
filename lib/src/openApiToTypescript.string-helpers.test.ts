@@ -11,10 +11,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { SchemaObject } from 'openapi3-ts/oas30';
 import {
-  PRIMITIVE_SCHEMA_TYPES,
-  type PrimitiveSchemaType,
   primitiveToTypeScript,
   handleBasicPrimitive,
   handleStringEnum,
