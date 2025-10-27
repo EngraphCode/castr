@@ -12,17 +12,17 @@
 
 - Requires extensive type assertions (28 in `openApiToTypescript.helpers.ts`, 2 in `openApiToTypescript.ts`)
 - Has unclear/inconsistent API
-- Mixing ts.Node and string-based type generation
+- Returns AST nodes (ts.Node) that need printing
 - Makes code hard to reason about
 
-**Impact:** Migrating to `ts-morph` will:
+**Revised Approach:** Convert helpers to return **strings** instead of AST nodes:
 
-- **Eliminate type assertions in TS generation** (~30 in TypeScript generation files)
-- **Improve maintainability** (industry-standard API, better docs)
-- **Enable confident refactoring** (proper AST manipulation vs string templates)
-- **Prepare for Phase 2** (complete template system rewrite)
+- **Eliminate ALL type assertions** (30 in TypeScript generation files → 0)
+- **Simplify dramatically** - TypeScript types are just strings!
+- **Remove tanu completely** - no hybrid state, no AST complexity
+- **Support 3.0 AND 3.1+** - forward compatible from day one
 
-**Success Metric:** Zero type assertions in TypeScript generation, all tests passing
+**Success Metric:** Zero type assertions, zero tanu usage, all tests passing
 
 ---
 
@@ -67,35 +67,63 @@
 
 ---
 
+## 🏗️ **Architectural Insight: Strings vs AST Nodes**
+
+### **Key Realization**
+TypeScript type expressions are **just strings**! We don't need AST manipulation:
+
+```typescript
+// OLD approach (tanu):
+t.union([t.string(), t.number()])  // Returns ts.Node → requires printing
+
+// NEW approach (strings):
+'string | number'  // It's already valid TypeScript!
+```
+
+### **Layered Architecture**
+
+```
+┌─────────────────────────────────────────┐
+│  Schema → Helpers (return strings)     │  ← Convert here (Task 2.3)
+├─────────────────────────────────────────┤
+│  Strings → AstBuilder (declarations)   │  ← Already done (Task 2.2)
+├─────────────────────────────────────────┤
+│  AstBuilder → TypeScript source code   │  ← ts-morph handles this
+└─────────────────────────────────────────┘
+```
+
+### **Benefits**
+
+1. **Simpler**: Strings are easier than AST nodes
+2. **Type-safe**: No need for assertions
+3. **Testable**: String comparison is straightforward
+4. **Forward-compatible**: Supports both OAS 3.0 and 3.1+
+
 ## ⚠️ Critical Considerations
 
-### 1. **Breaking Changes in Output Format**
+### 1. **OpenAPI Version Compatibility**
 
-- ts-morph may format code differently than tanu
-- Expect snapshot tests to need updating
-- Budget additional time for snapshot regeneration
-- Verify generated code is functionally equivalent
+Support both 3.0 and 3.1+ from the start:
+- **3.0**: `type: "string"` + `nullable: true` → `"string | null"`
+- **3.1+**: `type: "null"` → `"null"`
+- **3.1+**: `type: ["string", "null"]` → handled by `handleTypeArray()`
 
-### 2. **Complexity Management**
+### 2. **Primitive Type Mapping**
 
-- `openApiToTypescript.helpers.ts` is likely complex
-- May need to break into smaller modules during refactoring
-- Monitor cognitive complexity metrics
-- Target: <50 lines per function, <10 cognitive complexity
+```typescript
+const PRIMITIVE_SCHEMA_TYPES = ['string', 'number', 'integer', 'boolean', 'null'] as const;
 
-### 3. **Test Strategy**
+function primitiveToTypeScript(type: PrimitiveSchemaType): string {
+  return type === 'integer' ? 'number' : type;
+}
+```
 
-- **Existing snapshot tests:** Will catch output regressions
-- **New unit tests:** Focus on AstBuilder methods (isolated)
-- **Characterization tests:** Capture current tanu behavior before changes
-- **Integration tests:** Verify end-to-end TypeScript generation
+### 3. **Incremental Approach**
 
-### 4. **Incremental Approach**
-
-- Replace one function at a time
+- Convert one helper at a time
+- Start with simplest (primitives)
 - Keep all tests passing after each change
-- Don't refactor multiple files simultaneously
-- Commit after each major milestone
+- Commit after each milestone
 
 ---
 
@@ -269,62 +297,95 @@ pnpm build  # Verify no build issues
 
 ---
 
-### Task 2.3: Refactor openApiToTypescript.helpers.ts (TDD Required)
+### Task 2.3: Convert Helpers to Return Strings (TDD Required)
 
 **Duration:** 2-3 hours
 
+**Strategy:** Convert helpers incrementally from returning tanu nodes to returning strings.
+
 **TDD Workflow:**
 
-1. **Add characterisation tests for current behavior:**
+1. **Write comprehensive tests FIRST** (define new API):
 
    ```typescript
-   // Capture CURRENT behavior before changing
-   describe('handleReferenceObject', () => {
-     it('should convert ref to type reference', () => {
-       const schema: ReferenceObject = { $ref: '#/components/schemas/User' };
-       const ctx = {
-         /* ... */
-       };
-       const result = handleReferenceObject(schema, ctx, () => {});
-
-       // Capture what it CURRENTLY does
-       expect(result).toMatchSnapshot();
+   // lib/src/openApiToTypescript.string-helpers.test.ts
+   describe('primitiveToTypeScript', () => {
+     it('should map string to string', () => {
+       expect(primitiveToTypeScript('string')).toBe('string');
+     });
+     
+     it('should map integer to number', () => {
+       expect(primitiveToTypeScript('integer')).toBe('number');
+     });
+     
+     it('should map number to number', () => {
+       expect(primitiveToTypeScript('number')).toBe('number');
+     });
+     
+     it('should map boolean to boolean', () => {
+       expect(primitiveToTypeScript('boolean')).toBe('boolean');
+     });
+     
+     it('should map null to null (3.1+ support)', () => {
+       expect(primitiveToTypeScript('null')).toBe('null');
+     });
+   });
+   
+   describe('handleBasicPrimitive', () => {
+     it('should return string for non-nullable string', () => {
+       expect(handleBasicPrimitive('string', false)).toBe('string');
+     });
+     
+     it('should return union with null for nullable string', () => {
+       expect(handleBasicPrimitive('string', true)).toBe('string | null');
+     });
+     
+     it('should return number for integer', () => {
+       expect(handleBasicPrimitive('integer', false)).toBe('number');
      });
    });
    ```
 
-2. **Run tests (GREEN - establishes baseline):**
+2. **Run tests (RED - should fail):**
 
    ```bash
-   pnpm test -- --run openApiToTypescript.helpers.test.ts
+   pnpm test -- --run openApiToTypescript.string-helpers.test.ts
+   # Should FAIL - new functions don't exist yet
    ```
 
-3. **Write tests for NEW behavior:**
+3. **Implement new string-based helpers:**
 
    ```typescript
-   describe('handleReferenceObject (ts-morph)', () => {
-     it('should use AstBuilder for type reference', () => {
-       const builder = new AstBuilder();
-       const schema: ReferenceObject = { $ref: '#/components/schemas/User' };
-       const result = handleReferenceObject(schema, builder);
-
-       expect(result).toBe('User'); // Returns type name
-       // AstBuilder tracks the reference internally
-     });
-   });
+   // lib/src/openApiToTypescript.string-helpers.ts
+   export function primitiveToTypeScript(type: PrimitiveSchemaType): string {
+     return type === 'integer' ? 'number' : type;
+   }
+   
+   export function handleBasicPrimitive(
+     schemaType: PrimitiveSchemaType,
+     isNullable: boolean,
+   ): string {
+     const baseType = primitiveToTypeScript(schemaType);
+     return isNullable ? `${baseType} | null` : baseType;
+   }
    ```
 
-4. **Refactor ONE function at a time:**
-   - Update function signature
-   - Replace tanu with ts-morph
-   - Run tests
-   - Fix until green
-   - Move to next function
+4. **Run tests (GREEN):**
 
-5. **Quality gates after EACH function:**
    ```bash
-   pnpm test -- --run openApiToTypescript.helpers.test.ts
-   pnpm test -- --run  # Full suite
+   pnpm test -- --run openApiToTypescript.string-helpers.test.ts
+   # Should PASS
+   ```
+
+5. **Replace old helpers incrementally:**
+   - Start with simplest (primitives)
+   - Update one function at a time
+   - Run full test suite after each change
+   - Keep existing tests passing
+
+6. **Quality gates after EACH function:**
+   ```bash
+   pnpm test:all  # All tests must stay green
    ```
 
 ---
