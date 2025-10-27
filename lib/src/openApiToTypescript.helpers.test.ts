@@ -9,7 +9,6 @@ import {
   isPropertyRequired,
   maybeWrapReadonly,
   resolveAdditionalPropertiesType,
-  wrapTypeIfNeeded,
 } from './openApiToTypescript.helpers.js';
 
 describe('openApiToTypescript.helpers', () => {
@@ -154,25 +153,6 @@ describe('openApiToTypescript.helpers', () => {
       const mockConvert = () => t.string();
       const result = resolveAdditionalPropertiesType(schema, mockConvert);
       expect(result).toBeDefined();
-    });
-  });
-
-  describe('wrapTypeIfNeeded', () => {
-    it('should wrap type when not inline', () => {
-      const typeDef = t.string();
-      const result = wrapTypeIfNeeded(false, 'MyType', typeDef);
-      expect(result).toBeDefined();
-    });
-
-    it('should throw when not inline and no name provided', () => {
-      const typeDef = t.string();
-      expect(() => wrapTypeIfNeeded(false, undefined, typeDef)).toThrow('Name is required');
-    });
-
-    it('should return type unchanged when inline', () => {
-      const typeDef = t.string();
-      const result = wrapTypeIfNeeded(true, undefined, typeDef);
-      expect(result).toBe(typeDef);
     });
   });
 

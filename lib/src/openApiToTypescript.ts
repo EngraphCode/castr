@@ -1,20 +1,17 @@
 import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
-import { t, ts } from 'tanu';
 
 import type { TemplateContext } from './template-context.js';
 import { inferRequiredSchema } from './inferRequiredOnly.js';
 
 /**
  * Type representing the output of TypeScript conversion from OpenAPI schemas
- * This is the honest return type of getTypescriptFromOpenApi()
+ * Returns string-based TypeScript type expressions
+ * MIGRATED: Now returns only strings (no more tanu nodes)
  */
-export type TsConversionOutput = ts.Node | t.TypeDefinitionObject | string;
+export type TsConversionOutput = string;
 
-import generateJSDocArray from './generateJSDocArray.js';
 import {
-  buildObjectType,
-  convertObjectProperties,
   convertSchemasToTypes,
   handleAnyOf,
   handleArraySchema,
@@ -24,10 +21,17 @@ import {
   handleReferenceObject,
   handleTypeArray,
   isPrimitiveSchemaType,
+  isPropertyRequired,
   resolveAdditionalPropertiesType,
-  wrapObjectTypeForOutput,
-  wrapTypeIfNeeded,
 } from './openApiToTypescript.helpers.js';
+import {
+  handleIntersection,
+  handleObjectType,
+  handlePartialObject,
+  mergeObjectWithAdditionalProps,
+  wrapNullable,
+  wrapReadonly,
+} from './openApiToTypescript.string-helpers.js';
 
 type TsConversionArgs = {
   schema: SchemaObject | ReferenceObject;
@@ -37,7 +41,7 @@ type TsConversionArgs = {
 };
 
 export type TsConversionContext = {
-  nodeByRef: Record<string, ts.Node>;
+  nodeByRef: Record<string, string>;
   doc: OpenAPIObject;
   rootRef?: string;
   visitedRefs?: Record<string, boolean>;
@@ -50,7 +54,6 @@ export const getTypescriptFromOpenApi = ({
   options,
 }: TsConversionArgs): TsConversionOutput => {
   const meta: TsConversionArgs['meta'] = {};
-  const isInline = !inheritedMeta?.name;
 
   if (ctx?.visitedRefs && inheritedMeta?.$ref) {
     ctx.rootRef = inheritedMeta.$ref;
@@ -61,8 +64,7 @@ export const getTypescriptFromOpenApi = ({
     throw new Error('Schema is required');
   }
 
-  let canBeWrapped = !isInline;
-  const getTs = (): ts.Node | t.TypeDefinitionObject | string => {
+  const getTs = (): string => {
     if (isReferenceObject(schema)) {
       return handleReferenceObject(schema, ctx, (actualSchema) =>
         getTypescriptFromOpenApi({ schema: actualSchema, meta, ctx, options }),
@@ -76,7 +78,7 @@ export const getTypescriptFromOpenApi = ({
     }
 
     if (schema.type === 'null') {
-      return t.reference('null');
+      return 'null';
     }
 
     if (schema.oneOf) {
@@ -106,8 +108,7 @@ export const getTypescriptFromOpenApi = ({
       const types = convertSchemasToTypes(noRequiredOnlyAllof, (prop) => {
         const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options });
         ctx?.doc && patchRequiredSchemaInLoop(prop, ctx.doc);
-        // Narrow ONCE: convert string to reference
-        return typeof type === 'string' ? t.reference(type) : type;
+        return type; // Already a string
       });
 
       if (Object.keys(composedRequiredSchema.properties).length > 0) {
@@ -117,13 +118,11 @@ export const getTypescriptFromOpenApi = ({
           meta,
           options,
         });
-        // Narrow ONCE: convert string to reference
-        types.push(typeof composedType === 'string' ? t.reference(composedType) : composedType);
+        types.push(composedType); // Already a string
       }
 
-      // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-      const intersection = t.intersection(types as t.TypeDefinition[]);
-      return schema.nullable ? t.union([intersection, t.reference('null')]) : intersection;
+      const intersection = handleIntersection(types);
+      return wrapNullable(intersection, schema.nullable ?? false);
     }
 
     // Handle primitive types (string, number, integer, boolean, null)
@@ -148,53 +147,63 @@ export const getTypescriptFromOpenApi = ({
 
     if (schemaType === 'object' || schema.properties || schema.additionalProperties) {
       if (!schema.properties) {
-        return {};
+        return '{}';
       }
-
-      canBeWrapped = false;
 
       const isPartial = !schema.required?.length;
       const shouldWrapReadonly = options?.allReadonly ?? false;
 
+      // Convert properties to Record<string, string>
+      const propsRecord: Record<string, string> = {};
+      for (const [propName, propSchema] of Object.entries(schema.properties)) {
+        const propType = getTypescriptFromOpenApi({ schema: propSchema, ctx, meta, options });
+        const isRequired = isPropertyRequired(propName, schema, isPartial);
+        const finalPropType = isRequired ? propType : `${propType}?`;
+        propsRecord[propName] = finalPropType;
+      }
+
+      let objectType = handleObjectType(propsRecord);
+
+      // Handle additional properties
       const additionalPropertiesType = resolveAdditionalPropertiesType(
         schema.additionalProperties,
         (additionalSchema) =>
           getTypescriptFromOpenApi({ schema: additionalSchema, ctx, meta, options }),
       );
 
-      const props = convertObjectProperties(
-        schema.properties,
-        schema,
-        isPartial,
-        (propSchema) => getTypescriptFromOpenApi({ schema: propSchema, ctx, meta, options }),
-        ctx,
-      );
+      if (additionalPropertiesType) {
+        const indexSig = `[key: string]: ${additionalPropertiesType}`;
+        objectType = mergeObjectWithAdditionalProps(objectType, indexSig);
+      }
 
-      const finalType = buildObjectType(props, additionalPropertiesType, shouldWrapReadonly);
+      // Wrap with readonly if needed
+      if (shouldWrapReadonly) {
+        objectType = wrapReadonly(objectType, true);
+      }
 
-      return wrapObjectTypeForOutput(finalType, isPartial, isInline, inheritedMeta?.name);
+      // Wrap with Partial if needed
+      if (isPartial) {
+        objectType = handlePartialObject(objectType);
+      }
+
+      return objectType;
     }
 
-    if (!schemaType) return t.unknown();
+    if (!schemaType) return 'unknown';
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     throw new Error(`Unsupported schema type: ${schemaType}`);
   };
 
-  let tsResult = getTs();
+  const tsResult = getTs();
 
-  // Add JSDoc comments (only works with tanu nodes, not strings)
-  if (options?.withDocs && !isReferenceObject(schema)) {
-    const jsDocComments = generateJSDocArray(schema);
+  // Note: JSDoc comments are handled at declaration time by AstBuilder
+  // String-based type expressions don't carry JSDoc metadata
 
-    if (
-      jsDocComments.length > 0 &&
-      typeof tsResult === 'object' &&
-      tsResult.kind !== ts.SyntaxKind.TypeAliasDeclaration
-    ) {
-      tsResult = t.comment(tsResult, jsDocComments);
-    }
+  // If a name is provided, wrap as a type declaration
+  // Otherwise return the inline type expression
+  if (inheritedMeta?.name && !inheritedMeta?.isInline) {
+    return `export type ${inheritedMeta.name} = ${tsResult};`;
   }
 
-  // TODO: This will be replaced with string-based logic in all-in migration
-  return canBeWrapped ? wrapTypeIfNeeded(isInline, inheritedMeta?.name, tsResult) : tsResult;
+  return tsResult;
 };

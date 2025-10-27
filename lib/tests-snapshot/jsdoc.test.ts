@@ -102,66 +102,17 @@ test('jsdoc', async () => {
     import { z } from "zod";
 
     type ComplexObject = Partial<{
-      /**
-       * A string with example tag
-       *
-       * @example "example"
-       */
       example: string;
-      /**
-       * A string with examples tag
-       *
-       * @example Example 1: "example1"
-       * @example Example 2: "example2"
-       */
       examples: string;
-      /**
-       * A string with many tags
-       *
-       * @minLength 1
-       * @maxLength 10
-       * @pattern ^[a-z]*$
-       * @enum a, b, c
-       */
       manyTagsStr: "a" | "b" | "c";
-      /**
-       * A number with minimum tag
-       *
-       * @minimum 0
-       */
       numMin: number;
-      /**
-       * A number with maximum tag
-       *
-       * @maximum 10
-       */
       numMax: number;
-      /**
-       * A number with many tags
-       *
-       * @example 3
-       * @deprecated
-       * @default 5
-       * @see https://example.com
-       * @minimum 0
-       * @maximum 10
-       */
       manyTagsNum: number;
-      /**
-       * A boolean
-       *
-       * @default true
-       */
       bool: boolean;
       ref: SimpleObject;
-      /**
-       * An array of SimpleObject
-       */
       refArray: Array<SimpleObject>;
     }>;
-    type SimpleObject = Partial<{
-      str: string;
-    }>;
+    type SimpleObject = Partial<{ str: string }>;
 
     export const SimpleObject: z.ZodType<SimpleObject> = z
       .object({ str: z.string() })

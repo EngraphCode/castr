@@ -15,6 +15,10 @@ import {
   handleBasicPrimitive as handleBasicPrimitiveString,
   wrapNullable,
   wrapReadonly,
+  handleStringEnum,
+  handleNumericEnum,
+  handleMixedEnum,
+  handleUnion,
 } from './openApiToTypescript.string-helpers.js';
 
 /**
@@ -108,28 +112,40 @@ export function handleReferenceObject(
 
 /**
  * Handles primitive type enums, returning union types
- * Rejects invalid enums (non-string type with string values)
+ * MIGRATED: Now returns strings using string-helpers
  */
 export function handlePrimitiveEnum(
   schema: SchemaObject,
   schemaType: PrimitiveSchemaType,
-): ts.Node | null {
+): string | null {
   if (!schema.enum) return null;
 
   // Invalid: non-string type with string enum values
   if (schemaType !== 'string' && schema.enum.some((e) => typeof e === 'string')) {
-    return schema.nullable ? t.union([t.never(), t.reference('null')]) : t.never();
+    return schema.nullable ? 'never | null' : 'never';
   }
 
-  // Separate null values from other values
-  const enumValues = schema?.enum;
-  const hasNull = enumValues?.includes(null);
-  const withoutNull = enumValues?.filter((f) => f !== null);
+  const enumValues = schema.enum;
+  const hasNull = enumValues.includes(null);
+  const isNullable = schema.nullable || hasNull;
 
-  if (schema.nullable || hasNull) {
-    return t.union([...withoutNull, t.reference('null')]);
+  // Filter out null values for processing
+  const withoutNull = enumValues.filter((e) => e !== null);
+
+  // Determine enum type and call appropriate helper
+  const allStrings = withoutNull.every((e) => typeof e === 'string');
+  const allNumbers = withoutNull.every((e) => typeof e === 'number' || typeof e === 'boolean');
+
+  let enumType: string;
+  if (allStrings) {
+    enumType = handleStringEnum(withoutNull as string[]);
+  } else if (allNumbers) {
+    enumType = handleNumericEnum(withoutNull as number[]);
+  } else {
+    enumType = handleMixedEnum(withoutNull as Array<string | number | boolean | null>);
   }
-  return t.union(withoutNull);
+
+  return wrapNullable(enumType, isNullable);
 }
 
 /**
@@ -137,10 +153,7 @@ export function handlePrimitiveEnum(
  * Returns string-based TypeScript type expression
  * MIGRATED: Now returns strings instead of tanu nodes
  */
-export function handleBasicPrimitive(
-  schemaType: PrimitiveSchemaType,
-  isNullable: boolean,
-): string {
+export function handleBasicPrimitive(schemaType: PrimitiveSchemaType, isNullable: boolean): string {
   return handleBasicPrimitiveString(schemaType, isNullable);
 }
 
@@ -194,12 +207,12 @@ export function createAdditionalPropertiesSignature(
 
 /**
  * Determines the type for additionalProperties
- * Returns undefined if no additional properties are allowed
+ * MIGRATED: Hybrid - returns strings or nodes during transition
  */
 export function resolveAdditionalPropertiesType(
   additionalProperties: SchemaObject['additionalProperties'],
   convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-): ts.Node | t.TypeDefinition | undefined {
+): ts.Node | t.TypeDefinition | string | undefined {
   if (!additionalProperties) return undefined;
 
   // Boolean true or empty object means any type
@@ -207,45 +220,17 @@ export function resolveAdditionalPropertiesType(
     (typeof additionalProperties === 'boolean' && additionalProperties) ||
     (typeof additionalProperties === 'object' && Object.keys(additionalProperties).length === 0)
   ) {
-    return t.any();
+    return 'any'; // Return string 'any' instead of t.any()
   }
 
   // Specific schema for additional properties
   if (typeof additionalProperties === 'object') {
-    return convertSchema(additionalProperties) as ts.Node | t.TypeDefinition;
+    const result = convertSchema(additionalProperties);
+    // Accept both strings and nodes during migration
+    return result as ts.Node | t.TypeDefinition | string;
   }
 
   return undefined;
-}
-
-/**
- * Wraps a type definition as a type alias or returns inline
- * NOTE: This function will be deleted in all-in migration
- * Currently only handles tanu nodes, not strings
- */
-export function wrapTypeIfNeeded(
-  isInline: boolean,
-  name: string | undefined,
-  output: TsConversionOutput,
-): t.TypeDefinitionObject | ts.Node {
-  // Only handle tanu nodes (strings not supported after bridge code removal)
-  if (typeof output === 'string') {
-    throw new Error(
-      'wrapTypeIfNeeded: String conversion removed. This should not be called with strings.',
-    );
-  }
-
-  const typeDef = output;
-
-  if (!isInline) {
-    if (!name) {
-      throw new Error('Name is required to convert a schema to a type reference');
-    }
-    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-    return t.type(name, typeDef as t.TypeDefinition);
-  }
-
-  return typeDef;
 }
 
 /**
@@ -290,7 +275,7 @@ export function convertPropertyType(
 
 /**
  * Converts object properties to TypeScript property definitions
- * Returns an object mapping property names to their types
+ * MIGRATED: Hybrid - converts strings to nodes for tanu processing
  */
 export function convertObjectProperties(
   properties: Record<string, SchemaObject | ReferenceObject>,
@@ -302,9 +287,14 @@ export function convertObjectProperties(
   return Object.fromEntries(
     Object.entries(properties).map(([prop, propSchema]) => {
       const rawPropType = convertSchema(propSchema);
-      const propType = convertPropertyType(rawPropType, ctx);
+      let propType = convertPropertyType(rawPropType, ctx);
+
+      // Convert string to node if needed for tanu processing
+      if (typeof propType === 'string') {
+        propType = t.reference(propType);
+      }
+
       const isRequired = isPropertyRequired(prop, schema, isPartial);
-      // Cast to t.TypeDefinition since t.optional requires it
       const finalType = isRequired ? propType : t.optional(propType as t.TypeDefinition);
       return [wrapWithQuotesIfNeeded(prop), finalType as t.TypeDefinition];
     }),
@@ -313,34 +303,20 @@ export function convertObjectProperties(
 
 /**
  * Handles array schema conversion with proper readonly wrapping
+ * MIGRATED: Now returns strings
  */
 export function handleArraySchema(
   schema: SchemaObject,
   shouldWrapReadonly: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-  ctx: TsConversionContext | undefined,
-): ts.Node | t.TypeDefinitionObject | string {
-  let arrayOfType: ts.Node | t.TypeDefinition | string;
+  _ctx: TsConversionContext | undefined,
+): string {
+  const rawType = schema.items ? convertSchema(schema.items) : 'any';
+  const itemType = typeof rawType === 'string' ? rawType : String(rawType);
 
-  if (schema.items) {
-    const rawType = convertSchema(schema.items);
-    arrayOfType = convertPropertyType(rawType, ctx);
-  } else {
-    arrayOfType = t.any();
-  }
+  const arrayType = shouldWrapReadonly ? `readonly ${itemType}[]` : `Array<${itemType}>`;
 
-  // Convert string to node if needed for tanu processing
-  if (typeof arrayOfType === 'string') {
-    arrayOfType = t.reference(arrayOfType);
-  }
-
-  const wrappedArray = maybeWrapReadonly(
-    t.array(arrayOfType as t.TypeDefinition),
-    shouldWrapReadonly,
-  );
-  return schema.nullable
-    ? t.union([wrappedArray as t.TypeDefinition, t.reference('null')])
-    : wrappedArray;
+  return wrapNullable(arrayType, schema.nullable ?? false);
 }
 
 /**
@@ -348,14 +324,17 @@ export function handleArraySchema(
  */
 export function buildObjectType(
   props: Record<string, t.TypeDefinition>,
-  additionalPropertiesType: ts.Node | t.TypeDefinition | undefined,
+  additionalPropertiesType: ts.Node | t.TypeDefinition | string | undefined,
   shouldWrapReadonly: boolean,
 ): ts.Node | t.TypeDefinitionObject | string {
   let additionalProperties;
   if (additionalPropertiesType) {
-    additionalProperties = createAdditionalPropertiesSignature(
-      additionalPropertiesType as t.TypeDefinition,
-    );
+    // Convert string to node if needed for tanu processing
+    const nodeType =
+      typeof additionalPropertiesType === 'string'
+        ? t.reference(additionalPropertiesType)
+        : additionalPropertiesType;
+    additionalProperties = createAdditionalPropertiesSignature(nodeType as t.TypeDefinition);
   }
 
   const objectType = additionalProperties ? t.intersection([props, additionalProperties]) : props;
@@ -376,10 +355,8 @@ export function wrapObjectTypeForOutput(
 ): ts.Node | t.TypeDefinitionObject {
   // Convert string to node if needed
   const nodeType = typeof finalType === 'string' ? t.reference(finalType) : finalType;
-  
-  const wrappedType = isPartial
-    ? t.reference('Partial', [nodeType as t.TypeDefinition])
-    : nodeType;
+
+  const wrappedType = isPartial ? t.reference('Partial', [nodeType as t.TypeDefinition]) : nodeType;
 
   if (isInline) {
     return wrappedType;
@@ -394,95 +371,68 @@ export function wrapObjectTypeForOutput(
 
 /**
  * Handles oneOf composition by creating a union type
- * Returns single schema directly if only one item
- * Accepts honest TsConversionOutput and narrows internally
+ * MIGRATED: Now returns strings using handleUnion helper
  */
 export function handleOneOf(
   schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
   isNullable: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
-): ts.Node {
-  if (schemas.length === 1) {
-    const result = convertSchema(schemas[0]!);
-    // Narrow ONCE: convert string to reference
-    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-    return typeof result === 'string' ? t.reference(result) : (result as ts.Node);
-  }
-
-  const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
+): string {
+  const results = convertSchemasToTypes(schemas, (schema) => {
     const result = convertSchema(schema);
-    // Narrow ONCE: convert string to reference
-    return typeof result === 'string' ? t.reference(result) : result;
+    // Convert to string if needed
+    if (typeof result === 'string') return result;
+    // For now, can't convert nodes to strings - this path should not be hit
+    // once all helpers return strings
+    throw new Error('handleOneOf: Expected string from convertSchema during migration');
   });
-  if (isNullable) {
-    return t.union([...types, t.reference('null')] as t.TypeDefinition[]);
-  }
-  return t.union(types as t.TypeDefinition[]);
+
+  const unionType = handleUnion(results);
+  return wrapNullable(unionType, isNullable);
 }
 
 /**
  * Handles anyOf composition by creating union of value OR array
  * Special OpenAPI semantic: T | T[]
- * Accepts honest TsConversionOutput and narrows internally
+ * MIGRATED: Now returns strings
  */
 export function handleAnyOf(
   schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
   isNullable: boolean,
   shouldWrapReadonly: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
-): ts.Node {
-  if (schemas.length === 1) {
-    const result = convertSchema(schemas[0]!);
-    // Narrow ONCE: convert string to reference
-    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-    return typeof result === 'string' ? t.reference(result) : (result as ts.Node);
-  }
-
-  const types: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(schemas, (schema) => {
+): string {
+  const results = convertSchemasToTypes(schemas, (schema) => {
     const result = convertSchema(schema);
-    // Narrow ONCE: convert string to reference
-    return typeof result === 'string' ? t.reference(result) : result;
+    if (typeof result === 'string') return result;
+    throw new Error('handleAnyOf: Expected string from convertSchema during migration');
   });
-  const oneOf = t.union(types as t.TypeDefinition[]);
-  const arrayOfOneOf = maybeWrapReadonly(t.array(oneOf), shouldWrapReadonly);
 
-  const unionParts: t.TypeDefinition[] = [oneOf, arrayOfOneOf as t.TypeDefinition];
-  if (isNullable) {
-    unionParts.push(t.reference('null'));
-  }
+  const oneOfType = handleUnion(results);
+  const arrayOfOneOf = shouldWrapReadonly ? `readonly (${oneOfType})[]` : `Array<${oneOfType}>`;
 
-  return t.union(unionParts);
+  const unionParts: string[] = [oneOfType, arrayOfOneOf];
+  const unionType = handleUnion(unionParts);
+  return wrapNullable(unionType, isNullable);
 }
 
 /**
  * Handles array of types (OpenAPI 3.1 feature) by creating a union
- * Accepts honest TsConversionOutput and narrows internally
+ * MIGRATED: Now returns strings using handleUnion
  */
 export function handleTypeArray(
   types: ReadonlyArray<string>,
   schema: SchemaObject,
   isNullable: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
-): ts.Node {
-  if (types.length === 1) {
-    const result = convertSchema({ ...schema, type: types[0]! } as SchemaObject);
-    // Narrow ONCE: convert string to reference
-    // TEMPORARY: Type assertion at tanu boundary - will be eliminated in architectural rewrite
-    return typeof result === 'string' ? t.reference(result) : (result as ts.Node);
-  }
-
+): string {
   const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);
-  const typeDefs: (ts.Node | t.TypeDefinitionObject)[] = convertSchemasToTypes(
-    typeSchemas,
-    (schema) => {
-      const result = convertSchema(schema);
-      // Narrow ONCE: convert string to reference
-      return typeof result === 'string' ? t.reference(result) : result;
-    },
-  );
+  const results = convertSchemasToTypes(typeSchemas, (schema) => {
+    const result = convertSchema(schema);
+    if (typeof result === 'string') return result;
+    throw new Error('handleTypeArray: Expected string from convertSchema during migration');
+  });
 
-  if (isNullable) {
-    return t.union([...typeDefs, t.reference('null')] as t.TypeDefinition[]);
-  }
-  return t.union(typeDefs as t.TypeDefinition[]);
+  const unionType = handleUnion(results);
+  return wrapNullable(unionType, isNullable);
 }

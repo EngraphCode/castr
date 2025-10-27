@@ -3758,88 +3758,74 @@ test('with optional, partial, all required objects', async () => {
   const data = getZodClientTemplateContext(openApiDoc);
 
   expect(data).toMatchInlineSnapshot(`
-      {
-          "circularTypeByName": {
-              "Nested2": true,
-              "Root2": true,
-          },
-          "emittedType": {
-              "Nested2": true,
-              "Root2": true,
-          },
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/deeplyNested",
-                  "requestFormat": "json",
-                  "response": "z.array(VeryDeeplyNested)",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/nested",
-                  "requestFormat": "json",
-                  "response": "z.object({ nested_prop: z.boolean().optional(), deeplyNested: DeeplyNested.optional(), circularToRoot: Root2.optional(), requiredProp: z.string() }).passthrough()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/root",
-                  "requestFormat": "json",
-                  "response": "z.object({ str: z.string(), nb: z.number(), nested: Nested2, partial: PartialObject.optional(), optionalProp: z.string().optional() }).passthrough()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/veryDeeplyNested",
-                  "requestFormat": "json",
-                  "response": "z.enum(["aaa", "bbb", "ccc"])",
-              },
-          ],
-          "endpointsGroups": {},
-          "options": {
-              "baseUrl": "",
-              "withAlias": false,
-          },
-          "schemas": {
-              "DeeplyNested": "z.array(VeryDeeplyNested)",
-              "Nested2": "z.lazy(() => z.object({ nested_prop: z.boolean().optional(), deeplyNested: DeeplyNested.optional(), circularToRoot: Root2.optional(), requiredProp: z.string() }).passthrough())",
-              "PartialObject": "z.object({ something: z.string(), another: z.number() }).partial().passthrough()",
-              "Root2": "z.lazy(() => z.object({ str: z.string(), nb: z.number(), nested: Nested2, partial: PartialObject.optional(), optionalProp: z.string().optional() }).passthrough())",
-              "VeryDeeplyNested": "z.enum(["aaa", "bbb", "ccc"])",
-          },
-          "types": {
-              "DeeplyNested": "type DeeplyNested = Array<VeryDeeplyNested>;",
-              "Nested2": "type Nested2 = {
-          nested_prop?: boolean | undefined;
-          deeplyNested?: DeeplyNested | undefined;
-          circularToRoot?: Root2 | undefined;
-          requiredProp: string;
-      };",
-              "PartialObject": "type PartialObject = Partial<{
-          something: string;
-          another: number;
-      }>;",
-              "Root2": "type Root2 = {
-          str: string;
-          nb: number;
-          nested: Nested2;
-          partial?: PartialObject | undefined;
-          optionalProp?: string | undefined;
-      };",
-              "VeryDeeplyNested": "type VeryDeeplyNested = "aaa" | "bbb" | "ccc";",
-          },
-      }
-    `);
+    {
+        "circularTypeByName": {
+            "Nested2": true,
+            "Root2": true,
+        },
+        "emittedType": {
+            "Nested2": true,
+            "Root2": true,
+        },
+        "endpoints": [
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/deeplyNested",
+                "requestFormat": "json",
+                "response": "z.array(VeryDeeplyNested)",
+            },
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/nested",
+                "requestFormat": "json",
+                "response": "z.object({ nested_prop: z.boolean().optional(), deeplyNested: DeeplyNested.optional(), circularToRoot: Root2.optional(), requiredProp: z.string() }).passthrough()",
+            },
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/root",
+                "requestFormat": "json",
+                "response": "z.object({ str: z.string(), nb: z.number(), nested: Nested2, partial: PartialObject.optional(), optionalProp: z.string().optional() }).passthrough()",
+            },
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/veryDeeplyNested",
+                "requestFormat": "json",
+                "response": "z.enum(["aaa", "bbb", "ccc"])",
+            },
+        ],
+        "endpointsGroups": {},
+        "options": {
+            "baseUrl": "",
+            "withAlias": false,
+        },
+        "schemas": {
+            "DeeplyNested": "z.array(VeryDeeplyNested)",
+            "Nested2": "z.lazy(() => z.object({ nested_prop: z.boolean().optional(), deeplyNested: DeeplyNested.optional(), circularToRoot: Root2.optional(), requiredProp: z.string() }).passthrough())",
+            "PartialObject": "z.object({ something: z.string(), another: z.number() }).partial().passthrough()",
+            "Root2": "z.lazy(() => z.object({ str: z.string(), nb: z.number(), nested: Nested2, partial: PartialObject.optional(), optionalProp: z.string().optional() }).passthrough())",
+            "VeryDeeplyNested": "z.enum(["aaa", "bbb", "ccc"])",
+        },
+        "types": {
+            "DeeplyNested": "type DeeplyNested = Array<VeryDeeplyNested>;",
+            "Nested2": "type Nested2 = { nested_prop: boolean?; deeplyNested: DeeplyNested?; circularToRoot: Root2?; requiredProp: string };",
+            "PartialObject": "type PartialObject = Partial<{ something: string; another: number }>;",
+            "Root2": "type Root2 = { str: string; nb: number; nested: Nested2; partial: PartialObject?; optionalProp: string? };",
+            "VeryDeeplyNested": "type VeryDeeplyNested = "aaa" | "bbb" | "ccc";",
+        },
+    }
+  `);
 
   const prettyOutput = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
   expect(prettyOutput).toMatchInlineSnapshot(`
@@ -3850,19 +3836,16 @@ test('with optional, partial, all required objects', async () => {
       str: string;
       nb: number;
       nested: Nested2;
-      partial?: PartialObject | undefined;
-      optionalProp?: string | undefined;
+      partial: PartialObject?;
+      optionalProp: string?;
     };
     type DeeplyNested = Array<VeryDeeplyNested>;
     type VeryDeeplyNested = "aaa" | "bbb" | "ccc";
-    type PartialObject = Partial<{
-      something: string;
-      another: number;
-    }>;
+    type PartialObject = Partial<{ something: string; another: number }>;
     type Nested2 = {
-      nested_prop?: boolean | undefined;
-      deeplyNested?: DeeplyNested | undefined;
-      circularToRoot?: Root2 | undefined;
+      nested_prop: boolean?;
+      deeplyNested: DeeplyNested?;
+      circularToRoot: Root2?;
       requiredProp: string;
     };
 
