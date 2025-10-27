@@ -1,17 +1,19 @@
 // @ts-nocheck - Testing runtime behavior across OAS versions, type warnings expected
 import { expect, test, describe } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../src/index.js';
+import { generateZodClientFromOpenAPI, ValidationError } from '../src/index.js';
 
 /**
  * OAS 3.0 vs 3.1 Feature Parity Test
  *
- * Purpose: Verify that the codebase correctly handles BOTH OpenAPI 3.0 and 3.1 specs
- * at runtime, despite using oas30 types throughout the codebase.
+ * Purpose: Verify that the codebase correctly handles OpenAPI 3.0 specs and
+ * REJECTS OpenAPI 3.1 specs with clear error messages.
+ *
+ * This library only supports OpenAPI 3.0.x (3.0.0 - 3.0.3).
  *
  * Key Differences Tested:
- * 1. exclusiveMinimum/Maximum: boolean (3.0) vs number (3.1)
- * 2. nullable: explicit property (3.0) vs type array with "null" (3.1)
- * 3. type: single value (3.0) vs array of types (3.1)
+ * 1. OpenAPI 3.0.x: supported, generates code
+ * 2. OpenAPI 3.1.x: explicitly rejected with ValidationError
+ * 3. Error messages guide users to use 3.0.x instead
  */
 
 describe('OAS 3.0 vs 3.1 Feature Parity', () => {
@@ -103,12 +105,18 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    // OpenAPI 3.1.x is not supported - should reject with ValidationError
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow(ValidationError);
 
-    // Should generate gt() for numeric exclusive minimum
-    expect(output).toContain('gt(18)');
-    // Should generate lt() for numeric exclusive maximum
-    expect(output).toContain('lt(100)');
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
+
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow('only supports OpenAPI 3.0.x');
   });
 
   test('OAS 3.0: nullable property', async () => {
@@ -188,10 +196,14 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    // OpenAPI 3.1.x is not supported - should reject with ValidationError
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow(ValidationError);
 
-    // Should generate union with z.null()
-    expect(output).toContain('z.union([z.string(), z.null()])');
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 
   test('OAS 3.1: standalone type null', async () => {
@@ -223,10 +235,14 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    // OpenAPI 3.1.x is not supported - should reject with ValidationError
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow(ValidationError);
 
-    // Should generate z.null()
-    expect(output).toContain('z.null()');
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 
   test('OAS 3.1: multiple types in array', async () => {
@@ -258,10 +274,14 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    // OpenAPI 3.1.x is not supported - should reject with ValidationError
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow(ValidationError);
 
-    // Should generate union of all types
-    expect(output).toContain('z.union([z.string(), z.number(), z.boolean()])');
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 
   test('Mixed: Both OAS 3.0 and 3.1 features in same spec', async () => {
@@ -310,11 +330,13 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    // OpenAPI 3.1.x is not supported - should reject with ValidationError
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow(ValidationError);
 
-    // Both styles should work
-    expect(output).toContain('nullable()'); // OAS 3.0 style
-    expect(output).toContain('z.union([z.string(), z.null()])'); // OAS 3.1 style
-    expect(output).toContain('gt(0)'); // OAS 3.1 numeric exclusive
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 });

@@ -2,6 +2,7 @@ export { type CodeMeta, type CodeMetaData, type ConversionTypeContext } from './
 export { generateZodClientFromOpenAPI } from './generateZodClientFromOpenAPI.js';
 export { getHandlebars } from './getHandlebars.js';
 export { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
+export { ValidationError, validateOpenApiSpec } from './validateOpenApiSpec.js';
 export {
   type EndpointDefinitionWithRefs,
   getZodiosEndpointDefinitionList,

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import { ValidationError } from '../validateOpenApiSpec.js';
 
 /**
  * Characterisation Tests: Error Handling
@@ -26,13 +27,20 @@ describe('Characterisation: Error Handling', () => {
         paths: {},
       } as any;
 
-      // Note: The code handles this gracefully rather than throwing
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: invalidSpec,
-        disableWriteToFile: true,
-      });
+      // Fail fast: reject invalid specs at the boundary with ValidationError
+      await expect(
+        generateZodClientFromOpenAPI({
+          openApiDoc: invalidSpec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow(ValidationError);
 
-      expect(result).toBeTruthy();
+      await expect(
+        generateZodClientFromOpenAPI({
+          openApiDoc: invalidSpec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow("missing required property 'openapi'");
     });
 
     it('should handle spec without info object', async () => {
@@ -41,13 +49,20 @@ describe('Characterisation: Error Handling', () => {
         paths: {},
       } as any;
 
-      // Note: The code handles this gracefully rather than throwing
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: invalidSpec,
-        disableWriteToFile: true,
-      });
+      // Fail fast: reject invalid specs at the boundary with ValidationError
+      await expect(
+        generateZodClientFromOpenAPI({
+          openApiDoc: invalidSpec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow(ValidationError);
 
-      expect(result).toBeTruthy();
+      await expect(
+        generateZodClientFromOpenAPI({
+          openApiDoc: invalidSpec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow("missing required property 'info'");
     });
 
     it('should handle spec without paths object', async () => {
@@ -56,13 +71,20 @@ describe('Characterisation: Error Handling', () => {
         info: { title: 'Test', version: '1.0.0' },
       } as any;
 
-      // Note: The code handles this gracefully rather than throwing
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: invalidSpec,
-        disableWriteToFile: true,
-      });
+      // Fail fast: reject invalid specs at the boundary with ValidationError
+      await expect(
+        generateZodClientFromOpenAPI({
+          openApiDoc: invalidSpec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow(ValidationError);
 
-      expect(result).toBeTruthy();
+      await expect(
+        generateZodClientFromOpenAPI({
+          openApiDoc: invalidSpec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow("missing required property 'paths'");
     });
   });
 

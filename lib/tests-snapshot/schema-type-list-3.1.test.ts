@@ -1,8 +1,9 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../src/index.js';
+import { generateZodClientFromOpenAPI, ValidationError } from '../src/index.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/60
+// Note: OpenAPI 3.1 is not supported - this test verifies we reject it properly
 test('schema-type-list-3.1', async () => {
   const openApiDoc: OpenAPIObject = {
     openapi: '3.1.0',
@@ -42,46 +43,16 @@ test('schema-type-list-3.1', async () => {
     },
   };
 
-  const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-  expect(output).toMatchInlineSnapshot(`
-    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-    import { z } from "zod";
+  // OpenAPI 3.1.x is not supported - should reject with ValidationError
+  await expect(
+    generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+  ).rejects.toThrow(ValidationError);
 
-    export const test1 = z.union([
-      z
-        .object({
-          text1: z.string(),
-          name: z.union([z.enum(["Dogs", "Cats", "Mice"]), z.null()]),
-          another: z.union([z.enum(["Dogs", "Cats", "Mice"]), z.never()]),
-        })
-        .partial()
-        .passthrough(),
-      z.null(),
-    ]);
-    export const test2 = z.union([
-      z.object({ text2: z.number() }).partial().passthrough(),
-      z.boolean(),
-    ]);
-    export const test3 = z.union([
-      z.number(),
-      z.object({ text3: z.boolean() }).partial().passthrough(),
-    ]);
-    export const test4 = test1.and(test2).and(test3);
+  await expect(
+    generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+  ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
 
-    const endpoints = makeApi([
-      {
-        method: "put",
-        path: "/pet",
-        requestFormat: "json",
-        response: test4,
-      },
-    ]);
-
-    export const api = new Zodios(endpoints);
-
-    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-      return new Zodios(baseUrl, endpoints, options);
-    }
-    "
-  `);
+  await expect(
+    generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+  ).rejects.toThrow('only supports OpenAPI 3.0.x');
 });

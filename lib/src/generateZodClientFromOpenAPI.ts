@@ -11,6 +11,7 @@ import { getHandlebars } from './getHandlebars.js';
 import { maybePretty } from './maybePretty.js';
 import type { TemplateContext } from './template-context.js';
 import { getZodClientTemplateContext } from './template-context.js';
+import { validateOpenApiSpec } from './validateOpenApiSpec.js';
 
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
@@ -153,6 +154,10 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   disableWriteToFile,
   handlebars,
 }: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<string | Record<string, string>> => {
+  // Validate OpenAPI spec structure at entry point (fail fast)
+  // This ensures both CLI and programmatic APIs have consistent validation
+  validateOpenApiSpec(openApiDoc);
+
   // Auto-switch to schemas-with-metadata template if noClient or template option is set
   // noClient takes precedence over explicit template choice
   const effectiveTemplate = noClient ? 'schemas-with-metadata' : template || options?.template;
