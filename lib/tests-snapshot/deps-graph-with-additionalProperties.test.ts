@@ -46,13 +46,12 @@ test('deps-graph-with-additionalProperties', async () => {
     },
   } as SchemasObject;
   const openApiDoc = makeOpenApiDoc(schemas, { $ref: 'ResponsesMap' });
-  const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject => {
-    const schema = schemas[ref];
-    if (!schema) throw new Error(`Schema not found: ${ref}`);
-    return schema;
-  };
-  expect(getOpenApiDependencyGraph(Object.keys(openApiDoc.components.schemas), getSchemaByRef))
-    .toMatchInlineSnapshot(`
+  expect(
+    getOpenApiDependencyGraph(
+      Object.keys(openApiDoc.components.schemas).map((name) => `#/components/schemas/${name}`),
+      openApiDoc,
+    ),
+  ).toMatchInlineSnapshot(`
           {
               "deepDependencyGraph": {
                   "ResponsesMap": Set {

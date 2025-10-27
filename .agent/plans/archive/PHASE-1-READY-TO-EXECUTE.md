@@ -10,6 +10,7 @@
 ## Executive Summary
 
 ✅ **Successfully completed:**
+
 1. Reverted to working Phase 0 baseline (88/88 char tests passing)
 2. Saved valuable test work to `save-phase1-good-work` branch
 3. Applied test work back to main branch
@@ -25,6 +26,7 @@
 ## Current State
 
 ### Quality Gates
+
 ```
 ✅ format:      PASSING
 ✅ build:       PASSING
@@ -35,6 +37,7 @@
 ```
 
 ### Files Status
+
 ```
 ✅ lib/src/component-access.test.ts - EXISTS (19 tests, 402 lines)
 ❌ lib/src/component-access.ts      - MISSING (to be created via TDD)
@@ -43,6 +46,7 @@
 ```
 
 ### Git State
+
 ```
 Branch: feat/rewrite
 Latest: 7f78a99 "docs: comprehensive Phase 1 revision and planning"
@@ -55,12 +59,14 @@ Tags:   phase0-complete-working (f2b3ca7)
 ## What We Learned (First Attempt Analysis)
 
 ### What Failed
+
 1. Added internal `SwaggerParser.dereference()` in `generateZodClientFromOpenAPI`
 2. Used `assertNotReference` everywhere (too aggressive)
 3. Lost component schema `$ref`s needed for semantic naming
 4. Result: 40/88 characterisation tests failing
 
 ### Root Cause
+
 - Internal dereferencing removed `$ref` information for component schemas
 - System needs `$ref`s to extract named types (e.g., `export const User = z.object(...)`)
 - Without refs, schemas get inlined instead of extracted as named exports
@@ -69,6 +75,7 @@ Tags:   phase0-complete-working (f2b3ca7)
   - **Component schema refs** (components.schemas) - MUST be preserved for naming
 
 ### Key Insights
+
 1. **CLI already dereferences** (see `lib/src/cli.ts` line 65+)
 2. **Programmatic usage varies** - some callers dereference, some don't
 3. **We must handle both** - dereferenced AND non-dereferenced specs
@@ -129,6 +136,7 @@ Tags:   phase0-complete-working (f2b3ca7)
 ## Success Criteria
 
 Phase 1 complete when:
+
 - ✅ All quality gates green
 - ✅ 246/246 unit tests passing (227 + 19 component-access)
 - ✅ 88/88 characterisation tests passing
@@ -145,6 +153,7 @@ Phase 1 complete when:
 ## Key Documents for Implementation
 
 ### Must Read (in order)
+
 1. **This document** - Overview and current state
 2. **`.agent/analysis/E2E-TEST-MATRIX.md`** - 12 acceptance criteria scenarios
 3. **`.agent/plans/01-CURRENT-IMPLEMENTATION.md`** - Phase 1 section (revised)
@@ -152,6 +161,7 @@ Phase 1 complete when:
 5. **`.agent/context/context.md`** - How to continue section
 
 ### Reference
+
 - `lib/src/component-access.test.ts` - Unit tests (already written)
 - `.agent/analysis/REVERT-IMPACT-ANALYSIS.md` - Why we reverted
 
@@ -160,6 +170,7 @@ Phase 1 complete when:
 ## Commands for Fresh Chat
 
 ### Verify Current State
+
 ```bash
 cd /Users/jim/code/personal/openapi-zod-client
 
@@ -178,6 +189,7 @@ ls -lh lib/src/component-access.ts       # ❌ Should NOT exist
 ```
 
 ### Start Phase 1, Task 1.0
+
 ```bash
 cd /Users/jim/code/personal/openapi-zod-client/lib
 
@@ -193,6 +205,7 @@ touch src/characterisation/programmatic-usage.char.test.ts
 ## Architecture Principles (Critical!)
 
 ### DO ✅
+
 - Use `ComponentsObject` from `openapi3-ts/oas30`
 - Preserve component schema `$ref`s (needed for naming)
 - Handle both dereferenced AND non-dereferenced specs
@@ -201,6 +214,7 @@ touch src/characterisation/programmatic-usage.char.test.ts
 - Test after EVERY change
 
 ### DON'T ❌
+
 - Add internal `SwaggerParser.dereference()` call
 - Use `assertNotReference` everywhere (too aggressive)
 - Create ad-hoc types instead of using `ComponentsObject`
@@ -245,4 +259,3 @@ touch src/characterisation/programmatic-usage.char.test.ts
 ---
 
 **This planning is complete. Ready for implementation in fresh chat.**
-

@@ -1,12 +1,22 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 
 import { isReferenceObject } from 'openapi3-ts/oas30';
 import { visitComposition, visitObjectProperties } from './getOpenApiDependencyGraph.helpers.js';
+import { getSchemaFromComponents } from './component-access.js';
 
-export const getOpenApiDependencyGraph = (
-  schemaRef: string[],
-  getSchemaByRef: (ref: string) => SchemaObject | ReferenceObject,
-) => {
+/**
+ * Extract schema name from a component schema $ref
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    throw new Error(`Invalid schema $ref: ${ref}`);
+  }
+  return name;
+};
+
+export const getOpenApiDependencyGraph = (schemaRef: string[], doc: OpenAPIObject) => {
   const visitedsRefs: Record<string, boolean> = {};
   const refsDependencyGraph: Record<string, Set<string>> = {};
 
@@ -23,7 +33,8 @@ export const getOpenApiDependencyGraph = (
       if (visitedsRefs[schema.$ref]) return;
 
       visitedsRefs[fromRef] = true;
-      visit(getSchemaByRef(schema.$ref), schema.$ref);
+      const schemaName = getSchemaNameFromRef(schema.$ref);
+      visit(getSchemaFromComponents(doc, schemaName), schema.$ref);
       return;
     }
 
@@ -53,7 +64,10 @@ export const getOpenApiDependencyGraph = (
     }
   };
 
-  schemaRef.forEach((ref) => visit(getSchemaByRef(ref), ref));
+  schemaRef.forEach((ref) => {
+    const schemaName = getSchemaNameFromRef(ref);
+    visit(getSchemaFromComponents(doc, schemaName), ref);
+  });
 
   const deepDependencyGraph: Record<string, Set<string>> = {};
   const visitedsDeepRefs: Record<string, boolean> = {};

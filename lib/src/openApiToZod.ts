@@ -13,6 +13,19 @@ import {
 import type { TemplateContext } from './template-context.js';
 import { escapeControlCharacters, isPrimitiveSchemaType, wrapWithQuotesIfNeeded } from './utils.js';
 import { inferRequiredSchema } from './inferRequiredOnly.js';
+import { getSchemaFromComponents } from './component-access.js';
+
+/**
+ * Extract schema name from a component schema $ref
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    return ref; // Fallback to ref if can't extract name
+  }
+  return name;
+};
 
 type ConversionArgs = {
   schema: SchemaObject | ReferenceObject;
@@ -59,15 +72,14 @@ export function getZodSchema({
     .map((prev) => {
       if (!prev.ref) return '';
       if (!ctx) return prev.ref;
-      const resolved = ctx.resolver.resolveRef(prev.ref);
-      return resolved?.normalized ?? prev.ref;
+      return getSchemaNameFromRef(prev.ref);
     })
     .filter(Boolean);
 
   if (isReferenceObject(schema)) {
     if (!ctx) throw new Error('Context is required');
 
-    const schemaName = ctx.resolver.resolveRef(schema.$ref)?.normalized;
+    const schemaName = getSchemaNameFromRef(schema.$ref);
 
     // circular(=recursive) reference
     if (refsPath.length > 1 && refsPath.includes(schemaName)) {
@@ -79,7 +91,7 @@ export function getZodSchema({
 
     let result = ctx.zodSchemaByName[schema.$ref];
     if (!result) {
-      const actualSchema = ctx.resolver.getSchemaByRef(schema.$ref);
+      const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
       if (!actualSchema) {
         throw new Error(`Schema ${schema.$ref} not found`);
       }
@@ -171,8 +183,8 @@ export function getZodSchema({
 
     const types = noRequiredOnlyAllof.map((prop) => {
       const zodSchema = getZodSchema({ schema: prop, ctx, meta, options });
-      if (ctx?.resolver) {
-        patchRequiredSchemaInLoop(prop, ctx.resolver);
+      if (ctx?.doc) {
+        patchRequiredSchemaInLoop(prop, ctx.doc);
       }
       return zodSchema;
     });
@@ -232,8 +244,8 @@ export function getZodSchema({
     if (schema.items) {
       // Resolve ref if needed for getZodChain (which needs .type property)
       const itemsSchema: SchemaObject | ReferenceObject =
-        isReferenceObject(schema.items) && ctx?.resolver
-          ? ctx.resolver.getSchemaByRef(schema.items.$ref)
+        isReferenceObject(schema.items) && ctx?.doc
+          ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.items.$ref))
           : schema.items;
 
       return code.assign(
@@ -270,8 +282,8 @@ export function getZodSchema({
     ) {
       // Resolve ref if needed for getZodChain (which needs .type property)
       const additionalPropsResolved: SchemaObject | ReferenceObject =
-        isReferenceObject(schema.additionalProperties) && ctx?.resolver
-          ? ctx.resolver.getSchemaByRef(schema.additionalProperties.$ref)
+        isReferenceObject(schema.additionalProperties) && ctx?.doc
+          ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.additionalProperties.$ref))
           : schema.additionalProperties;
 
       const additionalPropsZod = getZodSchema({
@@ -315,8 +327,8 @@ export function getZodSchema({
 
         // Resolve reference for getZodChain (which needs .type property)
         const propActualSchema: SchemaObject | ReferenceObject =
-          isReferenceObject(propSchema) && ctx?.resolver
-            ? ctx.resolver.getSchemaByRef(propSchema.$ref)
+          isReferenceObject(propSchema) && ctx?.doc
+            ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(propSchema.$ref))
             : propSchema;
 
         const propZodSchema = getZodSchema({

@@ -63,66 +63,58 @@ test('missing-zod-chains', async () => {
 
   const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
   expect(output).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const test1 = z.string();
-      const test2 = z.number();
-      const test3 = z
-        .object({ text: z.string().min(5), num: z.number().int().gte(10) })
-        .passthrough();
-      const nulltype = z.object({}).partial().passthrough();
-      const anyOfType = z.union([
-        z.object({}).partial().passthrough(),
-        z.object({ foo: z.string() }).partial().passthrough(),
-      ]);
+    export const test1 = z.string();
+    export const test2 = z.number();
+    export const test3 = z
+      .object({ text: z.string().min(5), num: z.number().int().gte(10) })
+      .passthrough();
+    export const nulltype = z.object({}).partial().passthrough();
+    export const anyOfType = z.union([
+      z.object({}).partial().passthrough(),
+      z.object({ foo: z.string() }).partial().passthrough(),
+    ]);
 
-      export const schemas = {
-        test1,
-        test2,
-        test3,
-        nulltype,
-        anyOfType,
-      };
+    const endpoints = makeApi([
+      {
+        method: "put",
+        path: "/pet",
+        requestFormat: "json",
+        response: z.string().min(5),
+        errors: [
+          {
+            status: 401,
+            description: \`Successful operation\`,
+            schema: z.number().int().gte(10),
+          },
+          {
+            status: 402,
+            description: \`Successful operation\`,
+            schema: z
+              .object({ text: z.string().min(5), num: z.number().int().gte(10) })
+              .passthrough(),
+          },
+          {
+            status: 403,
+            description: \`Successful operation\`,
+            schema: z.object({}).partial().passthrough().nullable(),
+          },
+          {
+            status: 404,
+            description: \`Successful operation\`,
+            schema: anyOfType,
+          },
+        ],
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "put",
-          path: "/pet",
-          requestFormat: "json",
-          response: z.string().min(5),
-          errors: [
-            {
-              status: 401,
-              description: \`Successful operation\`,
-              schema: z.number().int().gte(10),
-            },
-            {
-              status: 402,
-              description: \`Successful operation\`,
-              schema: z
-                .object({ text: z.string().min(5), num: z.number().int().gte(10) })
-                .passthrough(),
-            },
-            {
-              status: 403,
-              description: \`Successful operation\`,
-              schema: z.object({}).partial().passthrough().nullable(),
-            },
-            {
-              status: 404,
-              description: \`Successful operation\`,
-              schema: anyOfType,
-            },
-          ],
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

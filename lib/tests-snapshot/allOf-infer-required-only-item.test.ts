@@ -70,45 +70,40 @@ test('allOf-infer-required-only-item', async () => {
     },
   });
   expect(output).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      type userResponse = Partial<{
-        user: user & {
-          name: string;
-        };
-      }>;
-      type user = Partial<{
+    type userResponse = Partial<{
+      user: user & {
         name: string;
-        email: string;
-      }>;
-
-      const user: z.ZodType<user> = z
-        .object({ name: z.string(), email: z.string() })
-        .passthrough();
-      const userResponse: z.ZodType<userResponse> = z
-        .object({ user: user.and(z.object({ name: z.string() }).passthrough()) })
-        .passthrough();
-
-      export const schemas = {
-        user,
-        userResponse,
       };
+    }>;
+    type user = Partial<{
+      name: string;
+      email: string;
+    }>;
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/user",
-          requestFormat: "json",
-          response: userResponse,
-        },
-      ]);
+    export const user: z.ZodType<user> = z
+      .object({ name: z.string(), email: z.string() })
+      .passthrough();
+    export const userResponse: z.ZodType<userResponse> = z
+      .object({ user: user.and(z.object({ name: z.string() }).passthrough()) })
+      .passthrough();
 
-      export const api = new Zodios(endpoints);
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/user",
+        requestFormat: "json",
+        response: userResponse,
+      },
+    ]);
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export const api = new Zodios(endpoints);
+
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

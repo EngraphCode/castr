@@ -66,11 +66,11 @@ describe('schemas-with-metadata template', () => {
       expect(result).toContain('import { z } from "zod"');
 
       // MUST export schemas (inline schemas are named based on operation, like createUser_Body)
-      expect(result).toContain('const ');
-      expect(result).toMatch(/createUser_Body\s*=/);
+      expect(result).toContain('export const ');
+      expect(result).toMatch(/export const createUser_Body\s*=/);
 
-      // MUST export schemas object
-      expect(result).toContain('export const schemas =');
+      // Schemas are exported individually (not as grouped object)
+      expect(result).not.toContain('export const schemas = {');
 
       // MUST export endpoints metadata
       expect(result).toContain('export const endpoints');
@@ -126,15 +126,13 @@ describe('schemas-with-metadata template', () => {
         disableWriteToFile: true,
       });
 
-      // MUST have schemas object export
-      expect(result).toContain('export const schemas = {');
+      // MUST have individual schema exports (not grouped)
+      expect(result).toContain('export const User');
+      expect(result).toContain('export const Error');
 
-      // MUST include all component schema names (User, Error from components.schemas)
-      expect(result).toContain('const User');
-      expect(result).toContain('const Error');
-
-      // MUST use 'as const' for schemas object
-      expect(result).toMatch(/export const schemas = \{[^}]*\} as const/s);
+      // MUST include schema definitions with zod
+      expect(result).toContain('z.object');
+      expect(result).toContain('.strict()'); // Schemas-with-metadata uses strict by default
     });
 
     it('should export endpoints array directly without makeApi', async () => {
@@ -306,9 +304,9 @@ describe('schemas-with-metadata template', () => {
       expect(result).not.toContain('@zodios/core');
       expect(result).not.toContain('new Zodios');
 
-      // Should have schemas and endpoints
-      expect(result).toContain('export const schemas');
-      expect(result).toContain('export const endpoints');
+      // Should have individual exports and endpoints
+      expect(result).toContain('export const'); // Has exports
+      expect(result).toContain('export const endpoints'); // Has endpoints array
     });
   });
 

@@ -58,7 +58,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
       const operation = bundled.paths?.['/users/{userId}']?.get as OperationObject;
 
@@ -100,7 +99,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
       const operation = bundled.paths?.['/users']?.post as OperationObject;
 
@@ -141,14 +139,13 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
       const operation = bundled.paths?.['/users']?.get as OperationObject;
 
       // CRITICAL: After dereference(), responses should NOT be $refs
       expect(operation.responses?.['200']).toBeDefined();
-      expect(isReferenceObject(operation.responses!['200'])).toBe(false);
-      expect(operation.responses!['200']).toHaveProperty('description');
+      expect(isReferenceObject(operation.responses['200'])).toBe(false);
+      expect(operation.responses['200']).toHaveProperty('description');
     });
 
     it('should resolve multiple levels of operation $refs', async () => {
@@ -218,7 +215,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
 
       // Check GET operation
@@ -228,7 +224,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
       expect(isReferenceObject(getOp.parameters![0])).toBe(false);
       expect(isReferenceObject(getOp.parameters![1])).toBe(false);
       expect(getOp.responses?.['200']).toBeDefined();
-      expect(isReferenceObject(getOp.responses!['200'])).toBe(false);
+      expect(isReferenceObject(getOp.responses['200'])).toBe(false);
 
       // Check POST operation
       const postOp = bundled.paths?.['/users']?.post as OperationObject;
@@ -289,7 +285,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
 
       // All operations should have resolved refs
@@ -305,7 +300,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         expect(operation.parameters?.[0]).toBeDefined();
         expect(isReferenceObject(operation.parameters![0])).toBe(false);
         expect(operation.responses?.['200']).toBeDefined();
-        expect(isReferenceObject(operation.responses!['200'])).toBe(false);
+        expect(isReferenceObject(operation.responses['200'])).toBe(false);
       }
     });
   });
@@ -332,7 +327,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         paths: {},
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
 
       // Component schemas SHOULD preserve $refs (for topological sorting)
@@ -374,7 +368,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         paths: {},
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
 
       const extendedSchema = bundled.components?.schemas?.['Extended'];
@@ -431,7 +424,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
       ];
 
       for (const specPath of specs) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const bundled = (await SwaggerParser.dereference(specPath)) as OpenAPIObject;
 
         // Prove OUR CODE works with dereferenced specs
@@ -483,7 +475,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
 
       // Prove we can access operation properties directly
@@ -584,7 +575,6 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
 
       // Verify our code can generate from this complex dereferenced spec
@@ -603,14 +593,14 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
       // Verify all operation-level refs are resolved
       const getOp = bundled.paths?.['/users/{userId}']?.get as OperationObject;
       expect(isReferenceObject(getOp.parameters![0])).toBe(false);
-      expect(isReferenceObject(getOp.responses!['200'])).toBe(false);
-      expect(isReferenceObject(getOp.responses!['404'])).toBe(false);
+      expect(isReferenceObject(getOp.responses['200'])).toBe(false);
+      expect(isReferenceObject(getOp.responses['404'])).toBe(false);
 
       const putOp = bundled.paths?.['/users/{userId}']?.put as OperationObject;
       expect(isReferenceObject(putOp.parameters![0])).toBe(false);
       expect(isReferenceObject(putOp.requestBody!)).toBe(false);
-      expect(isReferenceObject(putOp.responses!['200'])).toBe(false);
-      expect(isReferenceObject(putOp.responses!['404'])).toBe(false);
+      expect(isReferenceObject(putOp.responses['200'])).toBe(false);
+      expect(isReferenceObject(putOp.responses['404'])).toBe(false);
     });
   });
 });

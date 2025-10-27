@@ -1,27 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 
-import { CodeMeta, type ConversionTypeContext } from './CodeMeta.js';
-import { makeSchemaResolver } from './makeSchemaResolver.js';
+import { CodeMeta } from './CodeMeta.js';
 
 describe('CodeMeta', () => {
-  const mockDoc = {
-    openapi: '3.0.0' as const,
-    info: { title: 'Test', version: '1.0.0' },
-    paths: {},
-    components: {
-      schemas: {
-        Pet: {
-          type: 'object' as const,
-          properties: {
-            id: { type: 'integer' as const },
-            name: { type: 'string' as const },
-          },
-        },
-      },
-    },
-  };
-
   describe('constructor', () => {
     it('should initialize with schema', () => {
       const schema: SchemaObject = { type: 'string' };
@@ -79,41 +61,24 @@ describe('CodeMeta', () => {
       expect(meta.codeString).toBe('');
     });
 
-    it('should return ref when no code assigned and no ctx', () => {
+    it('should extract schema name from ref when no code assigned', () => {
       const refSchema: ReferenceObject = { $ref: '#/components/schemas/Pet' };
       const meta = new CodeMeta(refSchema);
-
-      expect(meta.codeString).toBe('#/components/schemas/Pet');
-    });
-
-    it('should resolve ref through ctx resolver when provided', () => {
-      const resolver = makeSchemaResolver(mockDoc);
-      resolver.getSchemaByRef('#/components/schemas/Pet');
-
-      const ctx: ConversionTypeContext = {
-        resolver,
-        zodSchemaByName: {},
-        schemaByName: {},
-      };
-
-      const refSchema: ReferenceObject = { $ref: '#/components/schemas/Pet' };
-      const meta = new CodeMeta(refSchema, ctx);
 
       expect(meta.codeString).toBe('Pet');
     });
 
-    it('should prefer assigned code over ref resolution', () => {
-      const resolver = makeSchemaResolver(mockDoc);
-      resolver.getSchemaByRef('#/components/schemas/Pet');
+    it('should handle external refs gracefully', () => {
+      const refSchema: ReferenceObject = { $ref: '../external.yaml#/schemas/Pet' };
+      const meta = new CodeMeta(refSchema);
 
-      const ctx: ConversionTypeContext = {
-        resolver,
-        zodSchemaByName: {},
-        schemaByName: {},
-      };
+      // Falls back to last segment of ref
+      expect(meta.codeString).toBe('Pet');
+    });
 
+    it('should prefer assigned code over ref extraction', () => {
       const refSchema: ReferenceObject = { $ref: '#/components/schemas/Pet' };
-      const meta = new CodeMeta(refSchema, ctx).assign('z.object({ custom: true })');
+      const meta = new CodeMeta(refSchema).assign('z.object({ custom: true })');
 
       expect(meta.codeString).toBe('z.object({ custom: true })');
     });

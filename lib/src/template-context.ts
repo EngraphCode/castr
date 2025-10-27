@@ -22,6 +22,7 @@ import { getZodSchema } from './openApiToZod.js';
 import { topologicalSort } from './topologicalSort.js';
 import { asComponentSchema, normalizeString } from './utils.js';
 import type { CodeMetaData } from './CodeMeta.js';
+import { getSchemaFromComponents } from './component-access.js';
 
 const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, true);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
@@ -55,6 +56,20 @@ const tsResultToString = (result: ReturnType<typeof getTypescriptFromOpenApi>): 
   return JSON.stringify(result);
 };
 
+/**
+ * Extract schema name from a component schema $ref
+ * @param ref - Full ref like '#/components/schemas/User'
+ * @returns Schema name like 'User'
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    throw new Error(`Invalid schema $ref: ${ref}`);
+  }
+  return name;
+};
+
 export const getZodClientTemplateContext = (
   openApiDoc: OpenAPIObject,
   options?: TemplateContext['options'],
@@ -65,7 +80,7 @@ export const getZodClientTemplateContext = (
   const docSchemas = openApiDoc.components?.schemas ?? {};
   const depsGraphs = getOpenApiDependencyGraph(
     Object.keys(docSchemas).map((name) => asComponentSchema(name)),
-    result.resolver.getSchemaByRef,
+    openApiDoc,
   );
 
   if (options?.shouldExportAllSchemas) {
@@ -90,15 +105,8 @@ export const getZodClientTemplateContext = (
       throw new Error(`Zod schema not found for name: ${schemaName}`);
     }
 
-    // Try to resolve the schema name to get its ref
-    // The schema might not be in byNormalized yet if it hasn't been accessed via getSchemaByRef
-    let ref: string | undefined;
-    try {
-      ref = result.resolver.resolveSchemaName(schemaName)?.ref;
-    } catch {
-      // Schema not yet resolved, try constructing the ref
-      ref = asComponentSchema(schemaName);
-    }
+    // Convert schema name to ref
+    const ref = asComponentSchema(schemaName);
 
     const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
     if (isCircular) {
@@ -114,15 +122,15 @@ export const getZodClientTemplateContext = (
 
   for (const ref in depsGraphs.deepDependencyGraph) {
     const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
-    const ctx: TsConversionContext = { nodeByRef: {}, resolver: result.resolver, visitedRefs: {} };
+    const ctx: TsConversionContext = { nodeByRef: {}, doc: openApiDoc, visitedRefs: {} };
 
     // Specifically check isCircular if shouldExportAllTypes is false. Either should cause shouldGenerateType to be true.
 
     const shouldGenerateType = options?.shouldExportAllTypes || isCircular;
-    const schemaName = shouldGenerateType ? result.resolver.resolveRef(ref)?.normalized : undefined;
+    const schemaName = shouldGenerateType ? getSchemaNameFromRef(ref) : undefined;
     if (shouldGenerateType && schemaName && !data.types[schemaName]) {
       const tsResult = getTypescriptFromOpenApi({
-        schema: result.resolver.getSchemaByRef(ref),
+        schema: getSchemaFromComponents(openApiDoc, schemaName),
         ctx,
         meta: { name: schemaName },
         options,
@@ -131,12 +139,12 @@ export const getZodClientTemplateContext = (
       data.emittedType[schemaName] = true;
 
       for (const depRef of depsGraphs.deepDependencyGraph[ref] ?? []) {
-        const depSchemaName = result.resolver.resolveRef(depRef)?.normalized;
+        const depSchemaName = getSchemaNameFromRef(depRef);
         if (!depSchemaName) continue;
         const isDepCircular = depsGraphs.deepDependencyGraph[depRef]?.has(depRef);
 
         if (!isDepCircular && !data.types[depSchemaName]) {
-          const nodeSchema = result.resolver.getSchemaByRef(depRef);
+          const nodeSchema = getSchemaFromComponents(openApiDoc, depSchemaName);
           const tsResult = getTypescriptFromOpenApi({
             schema: nodeSchema,
             ctx,
@@ -159,13 +167,7 @@ export const getZodClientTemplateContext = (
   }
 
   // NOTE: Topological sort ensures schemas are ordered by their dependencies
-  const schemaOrderedByDependencies = topologicalSort(depsGraphs.deepDependencyGraph).map((ref) => {
-    const resolved = result.resolver.resolveRef(ref);
-    if (!resolved) {
-      throw new Error(`Schema not found for $ref: ${ref}`);
-    }
-    return resolved.ref;
-  });
+  const schemaOrderedByDependencies = topologicalSort(depsGraphs.deepDependencyGraph);
   data.schemas = sortSchemasByDependencyOrder(data.schemas, schemaOrderedByDependencies);
 
   const groupStrategy = options?.groupStrategy ?? 'none';
@@ -247,16 +249,11 @@ export const getZodClientTemplateContext = (
             group.schemas[schemaName] = schema;
           }
 
-          // Try to resolve the schema name, fallback to constructing ref
-          let resolvedRef: string | undefined;
-          try {
-            resolvedRef = result.resolver.resolveSchemaName(schemaName)?.ref;
-          } catch {
-            resolvedRef = asComponentSchema(schemaName);
-          }
+          // Convert schema name to ref
+          const resolvedRef = asComponentSchema(schemaName);
 
           depsGraphs.deepDependencyGraph[resolvedRef]?.forEach((transitiveRef) => {
-            const transitiveSchemaName = result.resolver.resolveRef(transitiveRef)?.normalized;
+            const transitiveSchemaName = getSchemaNameFromRef(transitiveRef);
             if (!transitiveSchemaName) return;
             addDependencyIfNeeded(transitiveSchemaName);
             const transitiveType = data.types[transitiveSchemaName];

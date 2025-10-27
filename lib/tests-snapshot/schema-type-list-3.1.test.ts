@@ -44,51 +44,44 @@ test('schema-type-list-3.1', async () => {
 
   const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
   expect(output).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const test1 = z.union([
-        z
-          .object({
-            text1: z.string(),
-            name: z.union([z.enum(["Dogs", "Cats", "Mice"]), z.null()]),
-            another: z.union([z.enum(["Dogs", "Cats", "Mice"]), z.never()]),
-          })
-          .partial()
-          .passthrough(),
-        z.null(),
-      ]);
-      const test2 = z.union([
-        z.object({ text2: z.number() }).partial().passthrough(),
-        z.boolean(),
-      ]);
-      const test3 = z.union([
-        z.number(),
-        z.object({ text3: z.boolean() }).partial().passthrough(),
-      ]);
-      const test4 = test1.and(test2).and(test3);
+    export const test1 = z.union([
+      z
+        .object({
+          text1: z.string(),
+          name: z.union([z.enum(["Dogs", "Cats", "Mice"]), z.null()]),
+          another: z.union([z.enum(["Dogs", "Cats", "Mice"]), z.never()]),
+        })
+        .partial()
+        .passthrough(),
+      z.null(),
+    ]);
+    export const test2 = z.union([
+      z.object({ text2: z.number() }).partial().passthrough(),
+      z.boolean(),
+    ]);
+    export const test3 = z.union([
+      z.number(),
+      z.object({ text3: z.boolean() }).partial().passthrough(),
+    ]);
+    export const test4 = test1.and(test2).and(test3);
 
-      export const schemas = {
-        test1,
-        test2,
-        test3,
-        test4,
-      };
+    const endpoints = makeApi([
+      {
+        method: "put",
+        path: "/pet",
+        requestFormat: "json",
+        response: test4,
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "put",
-          path: "/pet",
-          requestFormat: "json",
-          response: test4,
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

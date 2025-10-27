@@ -1,18 +1,23 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
-import { get } from 'lodash-es';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
 import { getOpenApiDependencyGraph } from '../src/getOpenApiDependencyGraph.js';
 import { topologicalSort } from '../src/topologicalSort.js';
 import { asComponentSchema } from '../src/utils.js';
 
+/** Helper to wrap test schemas in OpenAPIObject */
+const makeTestDoc = (schemas: Record<string, SchemaObject>): OpenAPIObject => ({
+  openapi: '3.0.0',
+  info: { title: 'Test', version: '1.0.0' },
+  paths: {},
+  components: { schemas },
+});
+
 test('petstore.yaml', async () => {
   const openApiDoc = (await SwaggerParser.parse('./tests-snapshot/petstore.yaml')) as OpenAPIObject;
-  const getSchemaByRef = (ref: string): SchemaObject | ReferenceObject =>
-    get(openApiDoc, ref.replace('#/', '').replaceAll('/', '.'));
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
     Object.keys(openApiDoc.components?.schemas || {}).map((name) => asComponentSchema(name)),
-    getSchemaByRef,
+    openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
       {
@@ -93,19 +98,19 @@ test('complex relations', () => {
     },
   } as Record<string, SchemaObject>;
 
-  const getSchemaByRef = (ref: string) => schemas[ref]!;
+  const openApiDoc = makeTestDoc(schemas);
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
-    Object.keys(schemas),
-    getSchemaByRef,
+    Object.keys(schemas).map((name) => asComponentSchema(name)),
+    openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
       {
-          "ObjectWithArrayOfRef": Set {
-              "WithNested",
-              "Basic",
+          "#/components/schemas/ObjectWithArrayOfRef": Set {
+              "#/components/schemas/WithNested",
+              "#/components/schemas/Basic",
           },
-          "Root": Set {
-              "ObjectWithArrayOfRef",
+          "#/components/schemas/Root": Set {
+              "#/components/schemas/ObjectWithArrayOfRef",
               "WithNested",
               "Basic",
           },
@@ -173,10 +178,10 @@ test('recursive relations', () => {
   } as SchemaObject;
   const schemas = { UserWithFriends, Friend } as Record<string, SchemaObject>;
 
-  const getSchemaByRef = (ref: string) => schemas[ref]!;
+  const openApiDoc = makeTestDoc(schemas);
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
-    Object.keys(schemas),
-    getSchemaByRef,
+    Object.keys(schemas).map((name) => asComponentSchema(name)),
+    openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
       {
@@ -272,16 +277,16 @@ test('recursive relations along with some basics schemas', () => {
     },
   } as Record<string, SchemaObject>;
 
-  const getSchemaByRef = (ref: string) => schemas[ref]!;
+  const openApiDoc = makeTestDoc(schemas);
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
-    Object.keys(schemas),
-    getSchemaByRef,
+    Object.keys(schemas).map((name) => asComponentSchema(name)),
+    openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
       {
-          "Friend": Set {
-              "UserWithFriends",
-              "Friend",
+          "#/components/schemas/Friend": Set {
+              "#/components/schemas/UserWithFriends",
+              "#/components/schemas/Friend",
               "Basic",
           },
           "ObjectWithArrayOfRef": Set {

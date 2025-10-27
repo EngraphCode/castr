@@ -124,6 +124,97 @@ pnpm test -- --run  # Must pass ✅ (373 tests)
 
 ---
 
+## 📊 Current Progress (October 27, 2025)
+
+### ✅ Completed Tasks (4-5 hours)
+
+**Task 1.0: E2E Test Matrix** ✅ COMPLETE (30 min)
+
+- Created `lib/src/characterisation/programmatic-usage.char.test.ts`
+- 12 comprehensive scenarios (8 P0, 4 P1)
+- Final: 12/12 passing (all scenarios)
+- Defines acceptance criteria for Phase 1
+
+**Task 1.1: Component Access via TDD** ✅ COMPLETE (30 min)
+
+- Created `lib/src/component-access.ts` (164 lines)
+- **Perfect TDD execution:** 19/19 tests passing on first implementation
+- **Zero type assertions** in implementation
+- Functions: `getSchemaFromComponents`, `resolveSchemaRef`, `assertNotReference`
+- Unit tests: 246/246 passing (up from 227/227)
+- Type-check: Now PASSING (was failing before)
+
+**Task 1.2: Dereferencing Strategy** ✅ COMPLETE (15 min)
+
+- **Key discovery:** CLI uses `SwaggerParser.bundle()` NOT `dereference()`!
+- `bundle()` resolves external refs but preserves internal refs
+- Component schemas retain `$refs` for semantic naming
+- Explains why first Phase 1 attempt failed
+
+**Task 1.3: Fix Template Export Format + Type Safety** ✅ COMPLETE (2-3 hours)
+
+- **Templates fixed:** Modified 4 Handlebars templates to generate `export const SchemaName` pattern
+  - `default.hbs`, `schemas-only.hbs`, `schemas-with-metadata.hbs`, `grouped.hbs`
+  - Removed grouped `export const schemas = { ... }` pattern
+- **E2E tests fixed:** Added `shouldExportAllSchemas: true` for specs without endpoints
+- **Unit tests updated:** `schemas-with-metadata.test.ts` expectations updated
+- **Type safety added:** Created honest type helpers for E2E tests
+  - `assertIsString()` - Type guard for return value union
+  - `dereferenceSpec()` - Honest type boundary handler for `openapi-types` ↔ `openapi3-ts`
+- **Result:** Comprehensive fixes, no deferred issues
+
+**Current Quality Gates Status:**
+
+```
+✅ format:      PASSING
+✅ build:       PASSING
+✅ type-check:  PASSING (0 errors)
+✅ unit tests:  246/246 PASSING
+✅ char tests:  100/100 PASSING (includes 12/12 E2E)
+✅ e2e tests:   12/12 PASSING (perfect baseline!)
+```
+
+### ⏳ Current Task
+
+**Task 1.4: Update Template Context** (2-3 hours) - **IN PROGRESS (95% complete)**
+
+**Completed:**
+
+- ✅ Removed all resolver uses from production code (11 files refactored)
+  - `template-context.ts`: Removed 10 resolver uses
+  - `getOpenApiDependencyGraph.ts`: Now accepts `OpenAPIObject`
+  - `getZodiosEndpointDefinitionList.ts`: No longer creates resolver
+  - `CodeMeta.ts`: Updated `codeString` getter
+  - `ConversionTypeContext`: Changed from `resolver` to `doc`
+  - `TsConversionContext`: Changed from `resolver` to `doc`
+  - `zodiosEndpoint.helpers.ts`: Updated to use `doc`
+  - `openApiToTypescript.helpers.ts`: Updated to use `doc`
+  - `openApiToTypescript.ts`: Updated `patchRequiredSchemaInLoop` call
+  - `openApiToZod.ts`: 7 resolver uses replaced with `doc`
+  - `inferRequiredOnly.ts`: Updated `patchRequiredSchemaInLoop` signature
+
+**Expanded Scope:** Initial estimate missed interconnected dependencies
+
+- Original: "Update template-context.ts only"
+- Actual: Full context type refactoring across 11 files
+- Reason: `ConversionTypeContext` and `TsConversionContext` used everywhere
+- Time: ~3-4 hours (vs 2-3 estimated)
+
+**Remaining:**
+
+- 🔧 Fix 4 snapshot test files (20-30 min)
+  - `deps-graph-with-additionalProperties.test.ts`
+  - `getOpenApiDependencyGraph.test.ts`
+  - `openApiToTypescript.test.ts`
+  - `openApiToZod.test.ts`
+  - `recursive-schema.test.ts`
+- ✅ Run quality gates
+- ✅ Update todos
+
+**Next:** Tasks 1.5-1.9 (~6-8 hours remaining)
+
+---
+
 ## 🔬 Development Methodology
 
 ### Test-Driven Development for Pure Functions
@@ -588,26 +679,31 @@ describe('Regression Prevention', () => {
 
 ## 🏗️ PHASE 1: ELIMINATE RESOLVER & CODEMETA (REVISED)
 
-**Timeline:** 12-16 hours  
+**Timeline:** 14-19 hours (12.5-17.5 hours remaining)  
 **Priority:** P0  
 **Dependencies:** Phase 0 complete, all tests passing  
-**Status:** Ready to execute with revised plan  
-**Last Revision:** October 26, 2025
+**Status:** In Progress - Tasks 1.0-1.2 complete, Task 1.3 (template fix) starting  
+**Progress:** 1.5 hours completed, ~75 minutes per task average  
+**Comprehensive Approach:** Fix ALL issues (templates + resolver), no deferred work  
+**Last Revision:** October 26, 2025 - Task order revised for comprehensive fixes
 
 ### What Changed from Original Plan
 
 **Original approach (FAILED):**
+
 - Added internal `SwaggerParser.dereference()` call in `generateZodClientFromOpenAPI`
 - Used `assertNotReference` everywhere to eliminate refs
 - Result: 40 failing characterisation tests, loss of semantic information for named schemas
 
 **Root cause analysis:**
+
 - Internal dereferencing removed `$ref`s needed for component schema naming
 - `assertNotReference` was too aggressive - some refs are GOOD (component schemas)
 - Didn't distinguish between operation-level refs (should be dereferenced) vs component refs (should be preserved)
 - Missing e2e tests for actual usage scenarios (CLI vs programmatic)
 
 **Revised approach (THIS PLAN):**
+
 1. **E2E tests FIRST** - Define acceptance criteria for all usage scenarios
 2. **No internal dereferencing** - Let callers control it (CLI does, programmers choose)
 3. **Preserve component schema $refs** - Critical for named type extraction
@@ -620,6 +716,7 @@ describe('Regression Prevention', () => {
 Replace `makeSchemaResolver` (which lies about types) and `CodeMeta` (poorly conceived abstraction) with honest, type-safe component access functions.
 
 **CRITICAL LEARNINGS from first attempt:**
+
 1. CLI already calls `SwaggerParser.dereference()` internally (see `lib/src/cli.ts`)
 2. Programmatic usage may or may not dereference - we must handle both
 3. Component schema `$ref`s must be preserved for named type extraction
@@ -627,15 +724,26 @@ Replace `makeSchemaResolver` (which lies about types) and `CodeMeta` (poorly con
 5. E2E tests define WHAT (acceptance criteria), unit tests define HOW (TDD)
 6. `assertNotReference` should be used sparingly - only where refs are truly impossible
 
+### Detailed Implementation Plan
+
+**See:** `.agent/plans/PHASE-1-DETAILED-PLAN.md` for complete step-by-step instructions with:
+
+- Acceptance criteria for each task
+- Detailed implementation steps
+- Validation strategy at each step
+- Strategic reconsideration points
+- Exit criteria and decision points
+
 ### Task Breakdown
 
-#### 1.0: Create E2E Test Matrix (2-3 hours) ⭐ NEW
+#### 1.0: Create E2E Test Matrix (2-3 hours) ⭐ COMPLETE
 
 **Purpose:** Define acceptance criteria BEFORE implementation
 
 **Create:** `lib/src/characterisation/programmatic-usage.char.test.ts`
 
 Write 12 scenarios covering:
+
 - Programmatic usage with internal refs only (no dereference)
 - Programmatic usage after caller dereferences
 - CLI usage (auto-dereferenced)
@@ -646,6 +754,7 @@ Write 12 scenarios covering:
 **See:** `.agent/analysis/E2E-TEST-MATRIX.md` for complete test specifications
 
 **Run against Phase 0 baseline:**
+
 ```bash
 pnpm character
 ```
@@ -656,15 +765,16 @@ pnpm character
 
 ---
 
-#### 1.1: Create Component Access with Unit Tests (3-4 hours)
+#### 1.1: Create Component Access with Unit Tests (3-4 hours) ⭐ COMPLETE
 
-**Follow STRICT TDD:** Red -> Green -> Refactor
+**Follow STRICT TDD:** Red -> Green -> Refactor ✅ **PERFECTLY EXECUTED**
 
 **Given:** `lib/src/component-access.test.ts` (already exists, 19 tests, 402 lines)
 
 **Task:** Create minimal `lib/src/component-access.ts` to pass tests
 
 **TDD Workflow:**
+
 1. Run tests (RED): `pnpm test -- --run component-access.test.ts`
 2. Implement ONE function at a time
 3. Run tests after each function (GREEN)
@@ -728,17 +838,19 @@ export function assertNotReference<T>(
 
 ---
 
-#### 1.2: Understand Current Dereferencing Strategy (1 hour)
+#### 1.2: Understand Current Dereferencing Strategy (1 hour) ⭐ COMPLETE
 
-**Task:** Investigate HOW and WHERE dereferencing happens in current code
+**Task:** Investigate HOW and WHERE dereferencing happens in current code ✅ **KEY INSIGHTS DISCOVERED**
 
 **Files to examine:**
+
 - `lib/src/cli.ts` - Does CLI dereference? (YES, it does)
 - `lib/src/generateZodClientFromOpenAPI.ts` - Does this dereference?
 - Where does `makeSchemaResolver` get used?
 - What does `makeSchemaResolver` actually do?
 
 **Document findings:**
+
 - When are specs dereferenced?
 - What refs remain after dereferencing?
 - How does current code handle component schema refs?
@@ -747,17 +859,19 @@ export function assertNotReference<T>(
 
 ---
 
-#### 1.3: Update Template Context to Use ComponentsObject (2 hours)
+#### 1.4: Update Template Context to Use ComponentsObject (2-3 hours)
 
 **Update:** `lib/src/template-context.ts`
 
 **Changes:**
+
 1. Accept `doc: OpenAPIObject` instead of resolver
 2. Use `doc.components?.schemas` directly (it's already typed as `ComponentsObject`)
 3. Use `component-access` functions where needed
 4. Remove `makeSchemaResolver` dependency
 
 **Pattern:**
+
 ```typescript
 // BEFORE:
 const schema = ctx.resolver.getSchemaByRef('#/components/schemas/User');
@@ -767,6 +881,7 @@ const schema = getSchemaFromComponents(doc, 'User');
 ```
 
 **Run tests after each change:**
+
 ```bash
 pnpm test -- --run template-context
 pnpm test -- --run schemas-with-metadata
@@ -774,11 +889,12 @@ pnpm test -- --run schemas-with-metadata
 
 ---
 
-#### 1.4: Update Dependency Graph (1-2 hours)
+#### 1.5: Update Dependency Graph (1-2 hours)
 
 **Update:** `lib/src/getOpenApiDependencyGraph.ts`
 
 **Changes:**
+
 1. Remove `makeSchemaResolver` dependency
 2. Accept `doc: OpenAPIObject` directly
 3. Use `component-access` functions
@@ -787,36 +903,41 @@ pnpm test -- --run schemas-with-metadata
 
 ---
 
-#### 1.5: Update OpenAPIToZod (2 hours)
+#### 1.6: Update OpenAPIToZod (2 hours)
 
 **Update:** `lib/src/openApiToZod.ts`
 
 **Changes:**
+
 1. Replace `ctx.resolver` with `ctx.doc`
 2. Use `component-access` functions
 3. Handle both dereferenced and non-dereferenced schemas
 4. Remove CodeMeta usage if present
 
 **Tests:** Run after each change
+
 ```bash
 pnpm test -- --run openApiToZod
 ```
 
 ---
 
-#### 1.6: Update Zodios Helpers (2-3 hours)
+#### 1.7: Update Zodios Helpers (2-3 hours)
 
 **Update these files ONE AT A TIME:**
+
 - `lib/src/zodiosEndpoint.helpers.ts`
 - `lib/src/zodiosEndpoint.operation.helpers.ts`
 - `lib/src/zodiosEndpoint.path.helpers.ts`
 
 **Strategy:**
+
 - DON'T use `assertNotReference` everywhere
 - Instead, handle both cases: `if (isReferenceObject(x)) { resolve it } else { use it }`
 - This supports both dereferenced and non-dereferenced specs
 
 **Tests:** Run full test suite after EACH file:
+
 ```bash
 pnpm test -- --run
 pnpm character
@@ -824,7 +945,7 @@ pnpm character
 
 ---
 
-#### 1.7: Delete makeSchemaResolver (15 min)
+#### 1.8: Delete makeSchemaResolver (15 min)
 
 ```bash
 rm lib/src/makeSchemaResolver.ts
@@ -833,11 +954,11 @@ rm lib/src/makeSchemaResolver.test.ts
 
 **Only do this AFTER all files stop using it!**
 
-**Tests:** All tests should still pass
+**Tests:** Unit tests will drop to 227/227 (removing 19 resolver tests)
 
 ---
 
-#### 1.8: Run Full E2E Test Matrix (1 hour)
+#### 1.9: Run Full Validation (1 hour)
 
 **Run ALL quality gates:**
 
@@ -853,18 +974,15 @@ pnpm type-check  # Should pass (no errors)
 
 # 4. Unit tests
 cd lib && pnpm test -- --run
-# Should show 246 tests passing (227 + 19 component-access tests)
+# Should show 227/227 tests passing (after deleting resolver tests)
 
 # 5. Characterisation tests
-pnpm character
-# Should show 88/88 passing
-
-# 6. NEW: E2E programmatic usage tests
-pnpm test -- --run programmatic-usage.char.test.ts
-# Should show 8/12 P0 scenarios passing (minimum)
+cd .. && pnpm character
+# Should show 100/100 passing (88 original + 12 E2E)
 ```
 
 **Verify type assertion reduction:**
+
 ```bash
 cd lib/src
 grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc -l
@@ -874,16 +992,17 @@ grep -r " as " --include="*.ts" --exclude="*.test.ts" | grep -v "as const" | wc 
 **Success Criteria:**
 
 - ✅ All quality gates green
-- ✅ 246/246 unit tests passing (227 + 19 new)
-- ✅ 88/88 characterisation tests passing
-- ✅ 8/12 P0 e2e scenarios passing minimum
+- ✅ 227 unit tests passing (246 - 19 resolver tests after deletion)
+- ✅ 100/100 characterisation tests passing (88 original + 12 E2E)
+- ✅ **12/12 E2E scenarios passing** ✅ ACHIEVED
+- ✅ Templates generate `export const SchemaName` pattern ✅ ACHIEVED
 - ✅ `makeSchemaResolver.ts` deleted
 - ✅ `makeSchemaResolver.test.ts` deleted
-- ✅ Zero type assertions in `component-access.ts`
+- ✅ Zero type assertions in `component-access.ts` ✅ ACHIEVED
 - ✅ ~20-30 type assertions eliminated overall
-- ✅ Using `ComponentsObject` types properly
-- ✅ NO internal dereferencing added
-- ✅ Supports both dereferenced and non-dereferenced specs
+- ✅ Using `ComponentsObject` types properly ✅ ACHIEVED
+- ✅ NO internal dereferencing added ✅ MAINTAINED
+- ✅ Supports both dereferenced and non-dereferenced specs ✅ ACHIEVED
 
 ---
 

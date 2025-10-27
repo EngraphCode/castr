@@ -34,36 +34,32 @@ test('number-default-cast', async () => {
 
   const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
   expect(output).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const test1 = z
-        .object({
-          text1: z.string().default("aaa"),
-          shouldBeFixed: z.number().default(20),
-          isFine: z.number().default(30),
-        })
-        .partial()
-        .passthrough();
+    export const test1 = z
+      .object({
+        text1: z.string().default("aaa"),
+        shouldBeFixed: z.number().default(20),
+        isFine: z.number().default(30),
+      })
+      .partial()
+      .passthrough();
 
-      export const schemas = {
-        test1,
-      };
+    const endpoints = makeApi([
+      {
+        method: "put",
+        path: "/pet",
+        requestFormat: "json",
+        response: test1,
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "put",
-          path: "/pet",
-          requestFormat: "json",
-          response: test1,
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

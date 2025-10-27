@@ -52,41 +52,39 @@ test('array-body-with-chains-tag-group-strategy', async () => {
     options: { groupStrategy: 'tag-file' },
   });
   expect(output).toMatchInlineSnapshot(`
+    {
+        "Test": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
+
+    export const putTest_Body = z.array(
+      z.object({ testItem: z.string() }).partial(),
+    );
+
+    const endpoints = makeApi([
       {
-          "Test": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+        method: "put",
+        path: "/test",
+        description: \`Test\`,
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "body",
+            type: "Body",
+            schema: putTest_Body.min(1).max(10),
+          },
+        ],
+        response: z.void(),
+      },
+    ]);
 
-      const putTest_Body = z.array(z.object({ testItem: z.string() }).partial());
+    export const TestApi = new Zodios(endpoints);
 
-      export const schemas = {
-        putTest_Body,
-      };
-
-      const endpoints = makeApi([
-        {
-          method: "put",
-          path: "/test",
-          description: \`Test\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "body",
-              type: "Body",
-              schema: putTest_Body.min(1).max(10),
-            },
-          ],
-          response: z.void(),
-        },
-      ]);
-
-      export const TestApi = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      ",
-          "__index": "export { TestApi } from "./Test";
-      ",
-      }
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    ",
+        "__index": "export { TestApi } from "./Test";
+    ",
+    }
+  `);
 });

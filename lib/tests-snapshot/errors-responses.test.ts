@@ -173,67 +173,60 @@ it('determines which status are considered errors-responses', async () => {
   });
 
   expect(result).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
-      const DeeplyNested = z.array(VeryDeeplyNested);
-      const Main = z.object({ str: z.string(), nb: z.number() }).passthrough();
-      const Nested = z
-        .object({
-          nested_prop: z.boolean().optional(),
-          deeplyNested: DeeplyNested.optional(),
-          circularToMain: Main.optional(),
-          requiredProp: z.string(),
-        })
-        .passthrough();
+    export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
+    export const DeeplyNested = z.array(VeryDeeplyNested);
+    export const Main = z.object({ str: z.string(), nb: z.number() }).passthrough();
+    export const Nested = z
+      .object({
+        nested_prop: z.boolean().optional(),
+        deeplyNested: DeeplyNested.optional(),
+        circularToMain: Main.optional(),
+        requiredProp: z.string(),
+      })
+      .passthrough();
 
-      export const schemas = {
-        VeryDeeplyNested,
-        DeeplyNested,
-        Main,
-        Nested,
-      };
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/example",
+        requestFormat: "json",
+        response: z.object({ str: z.string(), nb: z.number() }).passthrough(),
+        errors: [
+          {
+            status: 400,
+            description: \`Bad request\`,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .passthrough(),
+          },
+          {
+            status: 404,
+            description: \`Not found\`,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .passthrough(),
+          },
+          {
+            status: 500,
+            description: \`Internal server error\`,
+            schema: z.string(),
+          },
+        ],
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/example",
-          requestFormat: "json",
-          response: z.object({ str: z.string(), nb: z.number() }).passthrough(),
-          errors: [
-            {
-              status: 400,
-              description: \`Bad request\`,
-              schema: z
-                .object({ is400: z.boolean(), nested: Nested })
-                .partial()
-                .passthrough(),
-            },
-            {
-              status: 404,
-              description: \`Not found\`,
-              schema: z
-                .object({ is400: z.boolean(), nested: Nested })
-                .partial()
-                .passthrough(),
-            },
-            {
-              status: 500,
-              description: \`Internal server error\`,
-              schema: z.string(),
-            },
-          ],
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 
   expect(
     await generateZodClientFromOpenAPI({
@@ -244,65 +237,58 @@ it('determines which status are considered errors-responses', async () => {
       openApiDoc,
     }),
   ).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
-      const DeeplyNested = z.array(VeryDeeplyNested);
-      const Main = z.object({ str: z.string(), nb: z.number() }).passthrough();
-      const Nested = z
-        .object({
-          nested_prop: z.boolean().optional(),
-          deeplyNested: DeeplyNested.optional(),
-          circularToMain: Main.optional(),
-          requiredProp: z.string(),
-        })
-        .passthrough();
+    export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
+    export const DeeplyNested = z.array(VeryDeeplyNested);
+    export const Main = z.object({ str: z.string(), nb: z.number() }).passthrough();
+    export const Nested = z
+      .object({
+        nested_prop: z.boolean().optional(),
+        deeplyNested: DeeplyNested.optional(),
+        circularToMain: Main.optional(),
+        requiredProp: z.string(),
+      })
+      .passthrough();
 
-      export const schemas = {
-        VeryDeeplyNested,
-        DeeplyNested,
-        Main,
-        Nested,
-      };
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/example",
+        requestFormat: "json",
+        response: z.object({ str: z.string(), nb: z.number() }).passthrough(),
+        errors: [
+          {
+            status: 400,
+            description: \`Bad request\`,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .passthrough(),
+          },
+          {
+            status: 404,
+            description: \`Not found\`,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .passthrough(),
+          },
+          {
+            status: 500,
+            description: \`Internal server error\`,
+            schema: z.string(),
+          },
+        ],
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/example",
-          requestFormat: "json",
-          response: z.object({ str: z.string(), nb: z.number() }).passthrough(),
-          errors: [
-            {
-              status: 400,
-              description: \`Bad request\`,
-              schema: z
-                .object({ is400: z.boolean(), nested: Nested })
-                .partial()
-                .passthrough(),
-            },
-            {
-              status: 404,
-              description: \`Not found\`,
-              schema: z
-                .object({ is400: z.boolean(), nested: Nested })
-                .partial()
-                .passthrough(),
-            },
-            {
-              status: 500,
-              description: \`Internal server error\`,
-              schema: z.string(),
-            },
-          ],
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

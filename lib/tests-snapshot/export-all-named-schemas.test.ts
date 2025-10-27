@@ -189,86 +189,81 @@ test('export-all-named-schemas', async () => {
   });
 
   expect(result).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const sameSchemaSameName = z.enum(["xxx", "yyy", "zzz"]).optional();
-      const schemaNameAlreadyUsed = z.enum(["ggg", "hhh", "iii"]).optional();
-      const schemaNameAlreadyUsed__2 = z.enum(["aaa", "bbb", "ccc"]).optional();
-      const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
+    export const sameSchemaSameName = z.enum(["xxx", "yyy", "zzz"]).optional();
+    export const schemaNameAlreadyUsed = z.enum(["ggg", "hhh", "iii"]).optional();
+    export const schemaNameAlreadyUsed__2 = z
+      .enum(["aaa", "bbb", "ccc"])
+      .optional();
+    export const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
 
-      export const schemas = {
-        sameSchemaSameName,
-        schemaNameAlreadyUsed,
-        schemaNameAlreadyUsed__2,
-        sameSchemaDifferentName,
-      };
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/export-all-named-schemas",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "sameSchemaSameName",
+            type: "Query",
+            schema: sameSchemaSameName,
+          },
+        ],
+        response: z.string(),
+      },
+      {
+        method: "post",
+        path: "/export-all-named-schemas",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "schemaNameAlreadyUsed",
+            type: "Query",
+            schema: schemaNameAlreadyUsed,
+          },
+        ],
+        response: z.string(),
+      },
+      {
+        method: "put",
+        path: "/export-all-named-schemas",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "schemaNameAlreadyUsed",
+            type: "Query",
+            schema: schemaNameAlreadyUsed__2,
+          },
+        ],
+        response: z.string(),
+      },
+      {
+        method: "delete",
+        path: "/export-all-named-schemas",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "sameSchemaDifferentName",
+            type: "Query",
+            schema: sameSchemaDifferentName,
+          },
+          {
+            name: "sameSchemaSameName",
+            type: "Query",
+            schema: sameSchemaSameName,
+          },
+        ],
+        response: z.string(),
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/export-all-named-schemas",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "sameSchemaSameName",
-              type: "Query",
-              schema: sameSchemaSameName,
-            },
-          ],
-          response: z.string(),
-        },
-        {
-          method: "post",
-          path: "/export-all-named-schemas",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "schemaNameAlreadyUsed",
-              type: "Query",
-              schema: schemaNameAlreadyUsed,
-            },
-          ],
-          response: z.string(),
-        },
-        {
-          method: "put",
-          path: "/export-all-named-schemas",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "schemaNameAlreadyUsed",
-              type: "Query",
-              schema: schemaNameAlreadyUsed__2,
-            },
-          ],
-          response: z.string(),
-        },
-        {
-          method: "delete",
-          path: "/export-all-named-schemas",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "sameSchemaDifferentName",
-              type: "Query",
-              schema: sameSchemaDifferentName,
-            },
-            {
-              name: "sameSchemaSameName",
-              type: "Query",
-              schema: sameSchemaSameName,
-            },
-          ],
-          response: z.string(),
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

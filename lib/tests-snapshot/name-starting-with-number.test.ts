@@ -46,30 +46,26 @@ test('operationId-starting-with-number', async () => {
     options: { withAlias: true },
   });
   expect(result).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const Basic = z.string();
+    export const Basic = z.string();
 
-      export const schemas = {
-        Basic,
-      };
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/operationId-starting-with-number",
+        alias: "123_example",
+        requestFormat: "json",
+        response: z.string(),
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/operationId-starting-with-number",
-          alias: "123_example",
-          requestFormat: "json",
-          response: z.string(),
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

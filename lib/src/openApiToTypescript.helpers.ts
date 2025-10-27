@@ -10,6 +10,19 @@ import { t, ts } from 'tanu';
 
 import type { TsConversionContext, TsConversionOutput } from './openApiToTypescript.js';
 import { wrapWithQuotesIfNeeded } from './utils.js';
+import { getSchemaFromComponents } from './component-access.js';
+
+/**
+ * Extract schema name from a component schema $ref
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    throw new Error(`Invalid schema $ref: ${ref}`);
+  }
+  return name;
+};
 
 /**
  * Primitive schema types (subset of SchemaObjectType from openapi3-ts)
@@ -53,12 +66,12 @@ export function handleReferenceObject(
   ctx: TsConversionContext | undefined,
   resolveRecursively: (schema: SchemaObject) => unknown,
 ): ts.Node | string {
-  if (!ctx?.visitedRefs || !ctx?.resolver) {
+  if (!ctx?.visitedRefs || !ctx?.doc) {
     throw new Error('Context is required for OpenAPI $ref');
   }
 
   // Check if we're in a circular reference
-  const schemaName = ctx.resolver.resolveRef(schema.$ref)?.normalized;
+  const schemaName = getSchemaNameFromRef(schema.$ref);
   if (ctx.visitedRefs[schema.$ref]) {
     return t.reference(schemaName);
   }
@@ -66,7 +79,7 @@ export function handleReferenceObject(
   // Resolve the actual schema if not yet resolved
   const result = ctx.nodeByRef[schema.$ref];
   if (!result) {
-    const actualSchema = ctx.resolver.getSchemaByRef(schema.$ref);
+    const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
     if (!actualSchema) {
       throw new Error(`Schema ${schema.$ref} not found`);
     }
@@ -272,7 +285,7 @@ export function convertObjectProperties(
   schema: SchemaObject,
   isPartial: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-  ctx: { resolver?: unknown } | undefined,
+  ctx: TsConversionContext | undefined,
 ): Record<string, t.TypeDefinition> {
   return Object.fromEntries(
     Object.entries(properties).map(([prop, propSchema]) => {
@@ -293,7 +306,7 @@ export function handleArraySchema(
   schema: SchemaObject,
   shouldWrapReadonly: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-  ctx: { resolver?: unknown } | undefined,
+  ctx: TsConversionContext | undefined,
 ): ts.Node | t.TypeDefinitionObject {
   let arrayOfType: ts.Node | t.TypeDefinition;
 

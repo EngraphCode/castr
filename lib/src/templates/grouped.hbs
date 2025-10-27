@@ -8,16 +8,8 @@ import { z } from "zod";
 {{/if}}
 
 {{#each schemas}}
-const {{@key}}{{#if (lookup ../emittedType @key)}}: z.ZodType<{{@key}}>{{/if}} = {{{this}}};
+export const {{@key}}{{#if (lookup ../emittedType @key)}}: z.ZodType<{{@key}}>{{/if}} = {{{this}}};
 {{/each}}
-
-{{#ifNotEmptyObj schemas}}
-export const schemas = {
-{{#each schemas}}
-	{{@key}},
-{{/each}}
-};
-{{/ifNotEmptyObj}}
 
 {{#each endpointsGroups}}
 const {{@key}}Endpoints = makeApi([

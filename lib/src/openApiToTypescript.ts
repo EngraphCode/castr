@@ -1,8 +1,7 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
 import { t, ts } from 'tanu';
 
-import type { DocumentResolver } from './makeSchemaResolver.js';
 import type { TemplateContext } from './template-context.js';
 import { inferRequiredSchema } from './inferRequiredOnly.js';
 
@@ -39,7 +38,7 @@ type TsConversionArgs = {
 
 export type TsConversionContext = {
   nodeByRef: Record<string, ts.Node>;
-  resolver: DocumentResolver;
+  doc: OpenAPIObject;
   rootRef?: string;
   visitedRefs?: Record<string, boolean>;
 };
@@ -106,7 +105,7 @@ export const getTypescriptFromOpenApi = ({
 
       const types = convertSchemasToTypes(noRequiredOnlyAllof, (prop) => {
         const type = getTypescriptFromOpenApi({ schema: prop, ctx, meta, options });
-        ctx?.resolver && patchRequiredSchemaInLoop(prop, ctx.resolver);
+        ctx?.doc && patchRequiredSchemaInLoop(prop, ctx.doc);
         // Narrow ONCE: convert string to reference
         return typeof type === 'string' ? t.reference(type) : type;
       });

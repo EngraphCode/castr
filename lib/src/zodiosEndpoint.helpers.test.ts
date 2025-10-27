@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 
 import { CodeMeta } from './CodeMeta.js';
 import {
@@ -10,6 +10,23 @@ import {
   registerSchemaName,
   shouldInlineSchema,
 } from './zodiosEndpoint.helpers.js';
+
+const mockDoc: OpenAPIObject = {
+  openapi: '3.0.0',
+  info: { title: 'Test', version: '1.0.0' },
+  paths: {},
+  components: {
+    schemas: {
+      Pet: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          name: { type: 'string' },
+        },
+      },
+    },
+  },
+};
 
 describe('zodiosEndpoint.helpers', () => {
   describe('shouldInlineSchema', () => {
@@ -71,14 +88,10 @@ describe('zodiosEndpoint.helpers', () => {
 
   describe('registerSchemaName', () => {
     it('should register schema in context', () => {
-      const ctx: {
-        zodSchemaByName: Record<string, string>;
-        schemaByName: Record<string, string>;
-        resolver: never;
-      } = {
+      const ctx = {
         zodSchemaByName: {},
         schemaByName: {},
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       registerSchemaName(ctx, 'Pet', 'z.object({ id: z.number() })', false);
@@ -89,10 +102,10 @@ describe('zodiosEndpoint.helpers', () => {
 
     it('should register in schemasByName when exportAllNamedSchemas is true', () => {
       const ctx = {
-        zodSchemaByName: {} as Record<string, string>,
-        schemaByName: {} as Record<string, string>,
+        zodSchemaByName: {},
+        schemaByName: {},
         schemasByName: {} as Record<string, string[]>,
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       registerSchemaName(ctx, 'Pet', 'z.object(...)', true);
@@ -102,10 +115,10 @@ describe('zodiosEndpoint.helpers', () => {
 
     it('should append to existing schemasByName array', () => {
       const ctx = {
-        zodSchemaByName: {} as Record<string, string>,
-        schemaByName: {} as Record<string, string>,
-        schemasByName: { 'z.object(...)': ['Pet'] } as Record<string, string[]>,
-        resolver: {} as never,
+        zodSchemaByName: {},
+        schemaByName: {},
+        schemasByName: { 'z.object(...)': ['Pet'] },
+        doc: mockDoc,
       };
 
       registerSchemaName(ctx, 'Pet2', 'z.object(...)', true);
@@ -121,7 +134,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: {},
         schemaByName: {},
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       const result = handleInlineEverything(input, 'z.string()', ctx);
@@ -134,7 +147,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: { Pet: 'z.object({ id: z.number() })' },
         schemaByName: {},
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       const result = handleInlineEverything(input, 'Pet', ctx);
@@ -147,7 +160,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: {},
         schemaByName: {},
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       expect(() => handleInlineEverything(input, 'Pet', ctx)).toThrow(
@@ -161,7 +174,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: {},
         schemaByName: { 'z.object(...)': 'Pet' },
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       const result = findExistingSchemaVar('z.object(...)', ctx, true);
@@ -172,7 +185,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: {},
         schemaByName: { 'z.object(...)': 'Pet' },
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       const result = findExistingSchemaVar('z.object(...)', ctx, false);
@@ -183,7 +196,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: {},
         schemaByName: {},
-        resolver: {} as never,
+        doc: mockDoc,
       };
 
       const result = findExistingSchemaVar('z.object(...)', ctx, false);
@@ -198,10 +211,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: { Pet: 'z.string()' },
         schemaByName: {},
-        resolver: {
-          resolveRef: () => ({ name: 'Pet' }),
-          getSchemaByRef: () => ({ type: 'string' as const }),
-        },
+        doc: mockDoc,
       };
 
       const result = handleRefSchema(input, 'Pet', ctx, 5);
@@ -214,13 +224,7 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: { Pet: 'z.object({ id: z.number(), name: z.string() })' },
         schemaByName: {},
-        resolver: {
-          resolveRef: () => ({ name: 'Pet' }),
-          getSchemaByRef: () => ({
-            type: 'object' as const,
-            properties: { id: { type: 'integer' as const }, name: { type: 'string' as const } },
-          }),
-        },
+        doc: mockDoc,
       };
 
       const result = handleRefSchema(input, 'Pet', ctx, 2);
@@ -233,13 +237,10 @@ describe('zodiosEndpoint.helpers', () => {
       const ctx = {
         zodSchemaByName: {},
         schemaByName: {},
-        resolver: {
-          resolveRef: () => ({ name: 'Invalid' }),
-          getSchemaByRef: () => undefined as never,
-        },
+        doc: mockDoc,
       };
 
-      expect(() => handleRefSchema(input, 'Invalid', ctx, 5)).toThrow('Invalid ref:');
+      expect(() => handleRefSchema(input, 'Invalid', ctx, 5)).toThrow("Schema 'Invalid' not found");
     });
   });
 });

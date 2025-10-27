@@ -51,13 +51,9 @@ describe('file group strategy with multi-props object as query parameter', async
     const expectedApiValue = `import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
-const req = z
+export const req = z
   .object({ prop1: z.number().int(), prop2: z.number().int() })
   .passthrough();
-
-export const schemas = {
-  req,
-};
 
 const endpoints = makeApi([
   {

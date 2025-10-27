@@ -1,5 +1,22 @@
-import { type SchemaObject, type ReferenceObject, isReferenceObject } from 'openapi3-ts/oas30';
-import type { DocumentResolver } from './makeSchemaResolver.js';
+import {
+  type OpenAPIObject,
+  type SchemaObject,
+  type ReferenceObject,
+  isReferenceObject,
+} from 'openapi3-ts/oas30';
+import { getSchemaFromComponents } from './component-access.js';
+
+/**
+ * Extract schema name from a component schema $ref
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    throw new Error(`Invalid schema $ref: ${ref}`);
+  }
+  return name;
+};
 
 const isBrokenAllOfItem = (item: SchemaObject | ReferenceObject): item is SchemaObject => {
   return (
@@ -48,12 +65,10 @@ export function inferRequiredSchema(schema: SchemaObject) {
   return {
     noRequiredOnlyAllof,
     composedRequiredSchema,
-    patchRequiredSchemaInLoop: (
-      prop: SchemaObject | ReferenceObject,
-      resolver: DocumentResolver,
-    ) => {
+    patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, doc: OpenAPIObject) => {
       if (isReferenceObject(prop)) {
-        const refType = resolver.getSchemaByRef(prop.$ref);
+        const schemaName = getSchemaNameFromRef(prop.$ref);
+        const refType = getSchemaFromComponents(doc, schemaName);
         if (refType && !isReferenceObject(refType)) {
           composedRequiredSchema.required.forEach((required) => {
             composedRequiredSchema.properties[required] = refType.properties?.[required] ?? {};

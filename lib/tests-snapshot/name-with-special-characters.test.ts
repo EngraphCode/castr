@@ -45,29 +45,25 @@ test('name-with-special-characters', async () => {
 
   const result = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
   expect(result).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const _1Name_With_Special_Characters = z.string();
+    export const _1Name_With_Special_Characters = z.string();
 
-      export const schemas = {
-        _1Name_With_Special_Characters,
-      };
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/name-with-special-characters",
+        requestFormat: "json",
+        response: z.string(),
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/name-with-special-characters",
-          requestFormat: "json",
-          response: z.string(),
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

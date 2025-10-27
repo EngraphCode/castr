@@ -115,59 +115,54 @@ test('same-schema-different-name', async () => {
     options: { complexityThreshold: 2 },
   });
   expect(result).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const differentNameSameSchema = z.enum(["aaa", "bbb", "ccc"]).optional();
-      const anotherDifferentNameWithSlightlyDifferentSchema = z
-        .enum(["aaa", "bbb", "ccc"])
-        .optional()
-        .default("aaa");
+    export const differentNameSameSchema = z.enum(["aaa", "bbb", "ccc"]).optional();
+    export const anotherDifferentNameWithSlightlyDifferentSchema = z
+      .enum(["aaa", "bbb", "ccc"])
+      .optional()
+      .default("aaa");
 
-      export const schemas = {
-        differentNameSameSchema,
-        anotherDifferentNameWithSlightlyDifferentSchema,
-      };
+    const endpoints = makeApi([
+      {
+        method: "post",
+        path: "/same-schema-different-name",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "differentNameSameSchema",
+            type: "Query",
+            schema: differentNameSameSchema,
+          },
+          {
+            name: "anotherDifferentNameWithSlightlyDifferentSchema",
+            type: "Query",
+            schema: anotherDifferentNameWithSlightlyDifferentSchema,
+          },
+        ],
+        response: z.string(),
+      },
+      {
+        method: "put",
+        path: "/same-schema-different-name",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "sameSchemaDifferentName",
+            type: "Query",
+            schema: differentNameSameSchema,
+          },
+        ],
+        response: z.string(),
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "post",
-          path: "/same-schema-different-name",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "differentNameSameSchema",
-              type: "Query",
-              schema: differentNameSameSchema,
-            },
-            {
-              name: "anotherDifferentNameWithSlightlyDifferentSchema",
-              type: "Query",
-              schema: anotherDifferentNameWithSlightlyDifferentSchema,
-            },
-          ],
-          response: z.string(),
-        },
-        {
-          method: "put",
-          path: "/same-schema-different-name",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "sameSchemaDifferentName",
-              type: "Query",
-              schema: differentNameSameSchema,
-            },
-          ],
-          response: z.string(),
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

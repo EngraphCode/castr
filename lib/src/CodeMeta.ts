@@ -1,11 +1,22 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
 
-import type { DocumentResolver } from './makeSchemaResolver.js';
 import { getSchemaComplexity } from './schema-complexity.js';
 
+/**
+ * Extract schema name from a component schema $ref
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    return ref; // Fallback to ref if can't extract name
+  }
+  return name;
+};
+
 export type ConversionTypeContext = {
-  resolver: DocumentResolver;
+  doc: OpenAPIObject;
   zodSchemaByName: Record<string, string>;
   schemaByName: Record<string, string>;
   schemasByName?: Record<string, string[]>;
@@ -53,7 +64,7 @@ export class CodeMeta {
     if (this.code) return this.code;
 
     if (!this.ref) return '';
-    return this.ctx ? this.ctx.resolver.resolveRef(this.ref).normalized : this.ref;
+    return getSchemaNameFromRef(this.ref);
   }
 
   get complexity(): number {

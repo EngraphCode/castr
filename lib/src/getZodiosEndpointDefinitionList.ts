@@ -6,7 +6,6 @@ import { match, P } from 'ts-pattern';
 
 import type { CodeMeta, ConversionTypeContext } from './CodeMeta.js';
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
-import { makeSchemaResolver } from './makeSchemaResolver.js';
 import type { TemplateContext } from './template-context.js';
 import { getSchemaVarName } from './zodiosEndpoint.helpers.js';
 import { processOperation } from './zodiosEndpoint.path.helpers.js';
@@ -72,10 +71,9 @@ export const getZodiosEndpointDefinitionList = (
   doc: OpenAPIObject,
   options?: TemplateContext['options'],
 ) => {
-  const resolver = makeSchemaResolver(doc);
   const graphs = getOpenApiDependencyGraph(
     Object.keys(doc.components?.schemas ?? {}).map((name) => asComponentSchema(name)),
-    resolver.getSchemaByRef,
+    doc,
   );
 
   const endpoints = [];
@@ -89,7 +87,7 @@ export const getZodiosEndpointDefinitionList = (
     )
     .otherwise((fn) => fn);
 
-  const ctx: ConversionTypeContext = { resolver, zodSchemaByName: {}, schemaByName: {} };
+  const ctx: ConversionTypeContext = { doc, zodSchemaByName: {}, schemaByName: {} };
   if (options?.exportAllNamedSchemas) {
     ctx.schemasByName = {};
   }

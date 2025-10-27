@@ -5,20 +5,30 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 
 import type { CodeMeta } from './CodeMeta.js';
 import { getSchemaComplexity } from './schema-complexity.js';
 import { normalizeString } from './utils.js';
+import { getSchemaFromComponents } from './component-access.js';
+
+/**
+ * Extract schema name from a component schema $ref
+ */
+const getSchemaNameFromRef = (ref: string): string => {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    return ref; // Fallback to ref if can't extract name
+  }
+  return name;
+};
 
 type ZodiosContext = {
   zodSchemaByName: Record<string, string>;
   schemaByName: Record<string, string>;
   schemasByName?: Record<string, string[]>;
-  resolver: {
-    resolveRef: (ref: string) => { name: string };
-    getSchemaByRef: (ref: string) => SchemaObject | ReferenceObject;
-  };
+  doc: OpenAPIObject;
 };
 
 /**
@@ -134,14 +144,15 @@ export function handleRefSchema(
 
   // Try to resolve ref if schema not found directly
   if (!schema && input.ref) {
-    const refInfo = ctx.resolver.resolveRef(input.ref);
-    schema = ctx.zodSchemaByName[refInfo.name];
+    const schemaName = getSchemaNameFromRef(input.ref);
+    schema = ctx.zodSchemaByName[schemaName];
   }
 
   if (input.ref && schema) {
+    const schemaName = getSchemaNameFromRef(input.ref);
     const complexity = getSchemaComplexity({
       current: 0,
-      schema: ctx.resolver.getSchemaByRef(input.ref),
+      schema: getSchemaFromComponents(ctx.doc, schemaName),
     });
 
     // Simple refs can be inlined

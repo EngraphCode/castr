@@ -230,45 +230,39 @@ describe('anyOf behavior', () => {
 
     const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
     expect(output).toMatchInlineSnapshot(`
-          "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-          import { z } from "zod";
+      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+      import { z } from "zod";
 
-          const PetByAge = z
-            .object({ age: z.number().int(), nickname: z.string().optional() })
-            .passthrough();
-          const PetByType = z
-            .object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() })
-            .passthrough();
-          const anyOfRef = z.union([PetByAge, PetByType]).optional();
+      export const PetByAge = z
+        .object({ age: z.number().int(), nickname: z.string().optional() })
+        .passthrough();
+      export const PetByType = z
+        .object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() })
+        .passthrough();
+      export const anyOfRef = z.union([PetByAge, PetByType]).optional();
 
-          export const schemas = {
-            PetByAge,
-            PetByType,
-            anyOfRef,
-          };
-
-          const endpoints = makeApi([
+      const endpoints = makeApi([
+        {
+          method: "get",
+          path: "/test",
+          requestFormat: "json",
+          parameters: [
             {
-              method: "get",
-              path: "/test",
-              requestFormat: "json",
-              parameters: [
-                {
-                  name: "anyOfRef",
-                  type: "Query",
-                  schema: anyOfRef,
-                },
-              ],
-              response: z.void(),
+              name: "anyOfRef",
+              type: "Query",
+              schema: anyOfRef,
             },
-          ]);
+          ],
+          response: z.void(),
+        },
+      ]);
 
-          export const api = new Zodios(endpoints);
+      export const api = new Zodios(endpoints);
 
-          export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-            return new Zodios(baseUrl, endpoints, options);
-          }
-          "
-        `);
+      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+        return new Zodios(baseUrl, endpoints, options);
+      }
+      "
+    `);
   });
 });

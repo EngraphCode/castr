@@ -172,89 +172,79 @@ describe('export-all-types', () => {
       },
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-          "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-          import { z } from "zod";
+      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+      import { z } from "zod";
 
-          type Playlist = Partial<{
-            name: string;
-            author: Author;
-            songs: Array<Song>;
-          }> &
-            Settings;
-          type Author = Partial<{
-            name: (string | null) | number | null;
-            title: Title;
-            id: Id;
-            mail: string;
-            settings: Settings;
-          }>;
-          type Title = string;
-          type Id = number;
-          type Settings = Partial<{
-            theme_color: string;
-            features: Features;
-          }>;
-          type Features = Array<string>;
-          type Song = Partial<{
-            name: string;
-            duration: number;
-          }>;
+      type Playlist = Partial<{
+        name: string;
+        author: Author;
+        songs: Array<Song>;
+      }> &
+        Settings;
+      type Author = Partial<{
+        name: (string | null) | number | null;
+        title: Title;
+        id: Id;
+        mail: string;
+        settings: Settings;
+      }>;
+      type Title = string;
+      type Id = number;
+      type Settings = Partial<{
+        theme_color: string;
+        features: Features;
+      }>;
+      type Features = Array<string>;
+      type Song = Partial<{
+        name: string;
+        duration: number;
+      }>;
 
-          const Title = z.string();
-          const Id = z.number();
-          const Features = z.array(z.string());
-          const Settings: z.ZodType<Settings> = z
-            .object({ theme_color: z.string(), features: Features.min(1) })
+      export const Title = z.string();
+      export const Id = z.number();
+      export const Features = z.array(z.string());
+      export const Settings: z.ZodType<Settings> = z
+        .object({ theme_color: z.string(), features: Features.min(1) })
+        .partial()
+        .passthrough();
+      export const Author: z.ZodType<Author> = z
+        .object({
+          name: z.union([z.string(), z.number()]).nullable(),
+          title: Title.min(1).max(30),
+          id: Id,
+          mail: z.string(),
+          settings: Settings,
+        })
+        .partial()
+        .passthrough();
+      export const Song: z.ZodType<Song> = z
+        .object({ name: z.string(), duration: z.number() })
+        .partial()
+        .passthrough();
+      export const Playlist: z.ZodType<Playlist> = z
+        .object({ name: z.string(), author: Author, songs: z.array(Song) })
+        .partial()
+        .passthrough()
+        .and(Settings);
+
+      const endpoints = makeApi([
+        {
+          method: "get",
+          path: "/example",
+          requestFormat: "json",
+          response: z
+            .object({ playlist: Playlist, by_author: Author })
             .partial()
-            .passthrough();
-          const Author: z.ZodType<Author> = z
-            .object({
-              name: z.union([z.string(), z.number()]).nullable(),
-              title: Title.min(1).max(30),
-              id: Id,
-              mail: z.string(),
-              settings: Settings,
-            })
-            .partial()
-            .passthrough();
-          const Song: z.ZodType<Song> = z
-            .object({ name: z.string(), duration: z.number() })
-            .partial()
-            .passthrough();
-          const Playlist: z.ZodType<Playlist> = z
-            .object({ name: z.string(), author: Author, songs: z.array(Song) })
-            .partial()
-            .passthrough()
-            .and(Settings);
+            .passthrough(),
+        },
+      ]);
 
-          export const schemas = {
-            Title,
-            Id,
-            Features,
-            Settings,
-            Author,
-            Song,
-            Playlist,
-          };
+      export const api = new Zodios(endpoints);
 
-          const endpoints = makeApi([
-            {
-              method: "get",
-              path: "/example",
-              requestFormat: "json",
-              response: z
-                .object({ playlist: Playlist, by_author: Author })
-                .partial()
-                .passthrough(),
-            },
-          ]);
-
-          export const api = new Zodios(endpoints);
-
-          export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-            return new Zodios(baseUrl, endpoints, options);
-          }
-          "
-        `);
+      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+        return new Zodios(baseUrl, endpoints, options);
+      }
+      "
+    `);
   });
 });

@@ -102,45 +102,39 @@ test('handle-refs-with-dots-in-name', async () => {
 
   const output = await generateZodClientFromOpenAPI({ openApiDoc: doc, disableWriteToFile: true });
   expect(output).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+    import { z } from "zod";
 
-      const Basic = z.string();
-      const Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj = z
-        .object({ aaa: z.string(), bbb: z.string() })
-        .partial()
-        .passthrough();
-      const Basic_Thing = z
-        .object({ thing: Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj })
-        .partial()
-        .passthrough();
+    export const Basic = z.string();
+    export const Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj = z
+      .object({ aaa: z.string(), bbb: z.string() })
+      .partial()
+      .passthrough();
+    export const Basic_Thing = z
+      .object({ thing: Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj })
+      .partial()
+      .passthrough();
 
-      export const schemas = {
-        Basic,
-        Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj,
-        Basic_Thing,
-      };
+    const endpoints = makeApi([
+      {
+        method: "get",
+        path: "/ref-with-dot-in-name",
+        requestFormat: "json",
+        response: Basic_Thing,
+      },
+      {
+        method: "get",
+        path: "/usual-ref-format",
+        requestFormat: "json",
+        response: z.string(),
+      },
+    ]);
 
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/ref-with-dot-in-name",
-          requestFormat: "json",
-          response: Basic_Thing,
-        },
-        {
-          method: "get",
-          path: "/usual-ref-format",
-          requestFormat: "json",
-          response: z.string(),
-        },
-      ]);
+    export const api = new Zodios(endpoints);
 
-      export const api = new Zodios(endpoints);
-
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
-      "
-    `);
+    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+      return new Zodios(baseUrl, endpoints, options);
+    }
+    "
+  `);
 });

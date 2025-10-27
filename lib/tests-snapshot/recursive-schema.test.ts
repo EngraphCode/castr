@@ -130,48 +130,43 @@ describe('recursive-schema', () => {
       disableWriteToFile: true,
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-          "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-          import { z } from "zod";
+      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+      import { z } from "zod";
 
-          type User = Partial<{
-            name: string;
-            middle: Middle;
-          }>;
-          type Middle = Partial<{
-            user: User;
-          }>;
+      type User = Partial<{
+        name: string;
+        middle: Middle;
+      }>;
+      type Middle = Partial<{
+        user: User;
+      }>;
 
-          const Middle: z.ZodType<Middle> = z.lazy(() =>
-            z.object({ user: User }).partial().passthrough(),
-          );
-          const User: z.ZodType<User> = z.lazy(() =>
-            z.object({ name: z.string(), middle: Middle }).partial().passthrough(),
-          );
+      export const Middle: z.ZodType<Middle> = z.lazy(() =>
+        z.object({ user: User }).partial().passthrough(),
+      );
+      export const User: z.ZodType<User> = z.lazy(() =>
+        z.object({ name: z.string(), middle: Middle }).partial().passthrough(),
+      );
 
-          export const schemas = {
-            Middle,
-            User,
-          };
+      const endpoints = makeApi([
+        {
+          method: "get",
+          path: "/example",
+          requestFormat: "json",
+          response: z
+            .object({ recursive: User, basic: z.number() })
+            .partial()
+            .passthrough(),
+        },
+      ]);
 
-          const endpoints = makeApi([
-            {
-              method: "get",
-              path: "/example",
-              requestFormat: "json",
-              response: z
-                .object({ recursive: User, basic: z.number() })
-                .partial()
-                .passthrough(),
-            },
-          ]);
+      export const api = new Zodios(endpoints);
 
-          export const api = new Zodios(endpoints);
-
-          export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-            return new Zodios(baseUrl, endpoints, options);
-          }
-          "
-        `);
+      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+        return new Zodios(baseUrl, endpoints, options);
+      }
+      "
+    `);
   });
 
   const ObjectWithRecursiveArray = {
@@ -491,75 +486,70 @@ describe('recursive-schema', () => {
       disableWriteToFile: true,
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-          "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-          import { z } from "zod";
+      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+      import { z } from "zod";
 
-          type User = Partial<{
-            name: string;
-            parent: User;
-          }>;
-          type UserWithFriends = Partial<{
-            name: string;
-            parent: UserWithFriends;
-            friends: Array<Friend>;
-            bestFriend: Friend;
-          }>;
-          type Friend = Partial<{
-            nickname: string;
-            user: UserWithFriends;
-            circle: Array<Friend>;
-          }>;
-          type ObjectWithRecursiveArray = Partial<{
-            isInsideObjectWithRecursiveArray: boolean;
-            array: Array<ObjectWithRecursiveArray>;
-          }>;
+      type User = Partial<{
+        name: string;
+        parent: User;
+      }>;
+      type UserWithFriends = Partial<{
+        name: string;
+        parent: UserWithFriends;
+        friends: Array<Friend>;
+        bestFriend: Friend;
+      }>;
+      type Friend = Partial<{
+        nickname: string;
+        user: UserWithFriends;
+        circle: Array<Friend>;
+      }>;
+      type ObjectWithRecursiveArray = Partial<{
+        isInsideObjectWithRecursiveArray: boolean;
+        array: Array<ObjectWithRecursiveArray>;
+      }>;
 
-          const Friend: z.ZodType<Friend> = z.lazy(() =>
-            z
-              .object({
-                nickname: z.string(),
-                user: UserWithFriends,
-                circle: z.array(Friend),
-              })
-              .partial()
-              .passthrough(),
-          );
-          const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
-            z
-              .object({
-                name: z.string(),
-                parent: UserWithFriends,
-                friends: z.array(Friend),
-                bestFriend: Friend,
-              })
-              .partial()
-              .passthrough(),
-          );
+      export const Friend: z.ZodType<Friend> = z.lazy(() =>
+        z
+          .object({
+            nickname: z.string(),
+            user: UserWithFriends,
+            circle: z.array(Friend),
+          })
+          .partial()
+          .passthrough(),
+      );
+      export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
+        z
+          .object({
+            name: z.string(),
+            parent: UserWithFriends,
+            friends: z.array(Friend),
+            bestFriend: Friend,
+          })
+          .partial()
+          .passthrough(),
+      );
 
-          export const schemas = {
-            Friend,
-            UserWithFriends,
-          };
+      const endpoints = makeApi([
+        {
+          method: "get",
+          path: "/example",
+          requestFormat: "json",
+          response: z
+            .object({ someUser: UserWithFriends, someProp: z.boolean() })
+            .partial()
+            .passthrough(),
+        },
+      ]);
 
-          const endpoints = makeApi([
-            {
-              method: "get",
-              path: "/example",
-              requestFormat: "json",
-              response: z
-                .object({ someUser: UserWithFriends, someProp: z.boolean() })
-                .partial()
-                .passthrough(),
-            },
-          ]);
+      export const api = new Zodios(endpoints);
 
-          export const api = new Zodios(endpoints);
-
-          export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-            return new Zodios(baseUrl, endpoints, options);
-          }
-          "
-        `);
+      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+        return new Zodios(baseUrl, endpoints, options);
+      }
+      "
+    `);
   });
 
   test('recursive schema with $ref to another simple schema should still generate and output that simple schema and its dependencies', async () => {
@@ -637,75 +627,71 @@ describe('recursive-schema', () => {
       disableWriteToFile: true,
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-          "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-          import { z } from "zod";
+      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+      import { z } from "zod";
 
-          type Playlist = Partial<{
-            name: string;
-            author: Author;
-            songs: Array<Song>;
-          }>;
-          type Author = Partial<{
-            name: string;
-            mail: string;
-            settings: Settings;
-          }>;
-          type Settings = Partial<{
-            theme_color: string;
-          }>;
-          type Song = Partial<{
-            name: string;
-            duration: number;
-            in_playlists: Array<Playlist>;
-          }>;
+      type Playlist = Partial<{
+        name: string;
+        author: Author;
+        songs: Array<Song>;
+      }>;
+      type Author = Partial<{
+        name: string;
+        mail: string;
+        settings: Settings;
+      }>;
+      type Settings = Partial<{
+        theme_color: string;
+      }>;
+      type Song = Partial<{
+        name: string;
+        duration: number;
+        in_playlists: Array<Playlist>;
+      }>;
 
-          const Settings = z.object({ theme_color: z.string() }).partial().passthrough();
-          const Author = z
-            .object({ name: z.string(), mail: z.string(), settings: Settings })
+      export const Settings = z
+        .object({ theme_color: z.string() })
+        .partial()
+        .passthrough();
+      export const Author = z
+        .object({ name: z.string(), mail: z.string(), settings: Settings })
+        .partial()
+        .passthrough();
+      export const Song: z.ZodType<Song> = z.lazy(() =>
+        z
+          .object({
+            name: z.string(),
+            duration: z.number(),
+            in_playlists: z.array(Playlist),
+          })
+          .partial()
+          .passthrough(),
+      );
+      export const Playlist: z.ZodType<Playlist> = z.lazy(() =>
+        z
+          .object({ name: z.string(), author: Author, songs: z.array(Song) })
+          .partial()
+          .passthrough(),
+      );
+
+      const endpoints = makeApi([
+        {
+          method: "get",
+          path: "/example",
+          requestFormat: "json",
+          response: z
+            .object({ playlist: Playlist, by_author: Author })
             .partial()
-            .passthrough();
-          const Song: z.ZodType<Song> = z.lazy(() =>
-            z
-              .object({
-                name: z.string(),
-                duration: z.number(),
-                in_playlists: z.array(Playlist),
-              })
-              .partial()
-              .passthrough(),
-          );
-          const Playlist: z.ZodType<Playlist> = z.lazy(() =>
-            z
-              .object({ name: z.string(), author: Author, songs: z.array(Song) })
-              .partial()
-              .passthrough(),
-          );
+            .passthrough(),
+        },
+      ]);
 
-          export const schemas = {
-            Settings,
-            Author,
-            Song,
-            Playlist,
-          };
+      export const api = new Zodios(endpoints);
 
-          const endpoints = makeApi([
-            {
-              method: "get",
-              path: "/example",
-              requestFormat: "json",
-              response: z
-                .object({ playlist: Playlist, by_author: Author })
-                .partial()
-                .passthrough(),
-            },
-          ]);
-
-          export const api = new Zodios(endpoints);
-
-          export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-            return new Zodios(baseUrl, endpoints, options);
-          }
-          "
-        `);
+      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+        return new Zodios(baseUrl, endpoints, options);
+      }
+      "
+    `);
   });
 });
