@@ -5,6 +5,7 @@
 **Prerequisites:** ✅ Part 1 complete (115/115 char tests, 0 type errors, 552/552 total tests)
 
 **⚠️ STRATEGY CHANGE:** Switched from incremental to all-in non-incremental approach.
+
 - **Why:** Incremental created 45 lines of bridge code, 14 lint errors, bugs in new code
 - **New Approach:** Delete bridge code, rewrite all 19 helpers at once using TDD
 - **Benefit:** No technical debt, clean before/after, single comprehensive commit
@@ -162,12 +163,14 @@ function primitiveToTypeScript(type: PrimitiveSchemaType): string {
 **Decision:** Rewrite all helpers at once instead of incremental migration.
 
 **Rationale:**
+
 - Incremental approach created 45 lines of bridge code (3 duplicate blocks)
 - Added 14 lint errors from "temporary" conversions
 - Introduced bugs in new code (inverted logic in `handleObjectType`)
 - Unclear how to handle remaining 18 functions without more bridge debt
 
 **Strategy:**
+
 - Delete ALL bridge code
 - Rewrite all 19 helper functions in one pass
 - Use TDD with unit tests of pure functions
@@ -412,54 +415,54 @@ pnpm build  # Verify no build issues
 
    File: `lib/src/openApiToTypescript.string-helpers.test.ts`
    Status: All 97 tests passing (foundation for new helpers)
-   
+
    **Note:** These tests define the API for string-based helpers. We'll use them
    to guide the rewrite, adding more tests as needed for integration points.
 
 2. **Non-Incremental Migration Steps:**
-   
+
    **Step 1: Prepare (30 min)**
    - Delete ALL bridge code from `openApiToTypescript.ts` (lines 191-238)
    - Delete ALL bridge code from `openApiToTypescript.helpers.ts` (wrapTypeIfNeeded conversion logic)
    - Commit: "refactor: Remove incremental bridge code, prepare for all-in migration"
    - **Tests WILL fail** - this is expected and correct
-   
+
    **Step 2: Rewrite Helpers (2-3 hours, TDD)**
 
-   For each helper function, write unit tests first (if not already covered by 
+   For each helper function, write unit tests first (if not already covered by
    the 97 foundation tests), then implement string-based version:
-   
+
    **Group 1: Pure String Generation (no deps)**
    - `handleBasicPrimitive` - ✅ Already done (use string-helpers version)
    - `handleReferenceObject` - Extract name from $ref, return string
    - `isPrimitiveSchemaType` - Already correct (type predicate)
    - `isPropertyRequired` - Already correct (pure utility)
-   
+
    **Group 2: Simple Transformations**
    - `addNullToUnionIfNeeded` - Call `wrapNullable()` from string-helpers
    - `maybeWrapReadonly` - Call `wrapReadonly()` from string-helpers
    - `handlePrimitiveEnum` - Call appropriate enum helper from string-helpers
    - `resolveAdditionalPropertiesType` - Return string type or call helpers
-   
+
    **Group 3: Collections & Compositions**
    - `handleArraySchema` - Call `handleArrayType()` or `handleReadonlyArray()`
    - `handleOneOf` - Call `handleUnion()` from string-helpers
    - `handleTypeArray` - Call `handleUnion()` for array of types
    - `handleAnyOf` - Call `handleUnion()` with mapped types
-   
+
    **Group 4: Objects (most complex)**
    - `convertObjectProperties` - Return `Record<string, string>` for properties
    - `buildObjectType` - Use `handleObjectType()` + `mergeObjectWithAdditionalProps()`
    - `wrapObjectTypeForOutput` - Use `handlePartialObject()` from string-helpers
    - `createAdditionalPropertiesSignature` - Use `handleAdditionalProperties()`
    - `convertPropertyType` - Remove tanu conversion, pass through or wrap
-   
+
    **Group 5: Integration (call sites)**
    - Delete `wrapTypeIfNeeded` entirely
    - Update `openApiToTypescript.ts` to use strings directly
    - Inline declaration logic at call sites (no wrapper)
    - Remove all bridge code
-   
+
    **Step 3: Integration & Validation (1-2 hours)**
    - Update all call sites in `openApiToTypescript.ts`
    - Update type definitions: `TsConversionOutput = string`
@@ -478,22 +481,23 @@ pnpm build  # Verify no build issues
    ```
 
 4. **Single comprehensive commit after all work complete:**
+
    ```bash
    git add -A
    git commit -m "feat: Migrate all helpers to string-based generation (eliminate tanu)
-   
+
    - Delete all bridge code (45 lines removed)
    - Rewrite 19 helper functions to return strings
    - Update openApiToTypescript.ts integration
    - Remove wrapTypeIfNeeded wrapper
    - Clean type system: TsConversionOutput = string
-   
+
    Quality Gates:
    ✅ 680 tests passing (409 unit + 115 char + 151 snapshot + 5 new)
    ✅ Type-check: 0 errors
    ✅ Lint: Improved from 138 to [target <120]
    ✅ Zero bridge code, zero technical debt
-   
+
    Breaking Changes: None (internal refactoring only)"
    ```
 
@@ -501,8 +505,8 @@ pnpm build  # Verify no build issues
 
 ### Task 2.4: MERGED INTO TASK 2.3
 
-**Note:** Task 2.4 (refactoring `openApiToTypescript.ts`) is now integrated into 
-Task 2.3's all-in approach. The call site updates happen simultaneously with the 
+**Note:** Task 2.4 (refactoring `openApiToTypescript.ts`) is now integrated into
+Task 2.3's all-in approach. The call site updates happen simultaneously with the
 helper rewrites to avoid intermediate states.
 
 ---

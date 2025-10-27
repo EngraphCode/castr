@@ -12,6 +12,7 @@
 **Current Task:** Task 2.3 - NON-INCREMENTAL migration (all 19 helpers at once)
 
 **⚠️ CRITICAL STRATEGY PIVOT:**
+
 - **Attempted:** Incremental migration (1 function at a time)
 - **Result:** 45 lines bridge code, 14 lint errors, bugs in new code
 - **Decision:** Switch to non-incremental (delete bridge, rewrite all at once)

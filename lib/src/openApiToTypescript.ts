@@ -18,6 +18,7 @@ import {
   convertSchemasToTypes,
   handleAnyOf,
   handleArraySchema,
+  handleBasicPrimitive,
   handleOneOf,
   handlePrimitiveEnum,
   handleReferenceObject,
@@ -27,7 +28,6 @@ import {
   wrapObjectTypeForOutput,
   wrapTypeIfNeeded,
 } from './openApiToTypescript.helpers.js';
-import { handleBasicPrimitive } from './openApiToTypescript.string-helpers.js';
 
 type TsConversionArgs = {
   schema: SchemaObject | ReferenceObject;
@@ -182,60 +182,19 @@ export const getTypescriptFromOpenApi = ({
 
   let tsResult = getTs();
 
-  // Add JSDoc comments
+  // Add JSDoc comments (only works with tanu nodes, not strings)
   if (options?.withDocs && !isReferenceObject(schema)) {
     const jsDocComments = generateJSDocArray(schema);
 
-    if (jsDocComments.length > 0) {
-      // Convert string to node if needed before adding JSDoc
-      if (typeof tsResult === 'string') {
-        let node: ts.Node;
-        if (tsResult === 'string') node = t.string();
-        else if (tsResult === 'number') node = t.number();
-        else if (tsResult === 'boolean') node = t.boolean();
-        else if (tsResult === 'null') node = t.reference('null');
-        else if (tsResult.includes(' | ')) {
-          const types = tsResult.split(' | ').map((type) => {
-            if (type === 'string') return t.string();
-            if (type === 'number') return t.number();
-            if (type === 'boolean') return t.boolean();
-            if (type === 'null') return t.reference('null');
-            return t.reference(type);
-          });
-          node = t.union(types as t.TypeDefinition[]);
-        } else {
-          node = t.reference(tsResult);
-        }
-        tsResult = t.comment(node, jsDocComments);
-      } else if (
-        typeof tsResult === 'object' &&
-        tsResult.kind !== ts.SyntaxKind.TypeAliasDeclaration
-      ) {
-        tsResult = t.comment(tsResult, jsDocComments);
-      }
+    if (
+      jsDocComments.length > 0 &&
+      typeof tsResult === 'object' &&
+      tsResult.kind !== ts.SyntaxKind.TypeAliasDeclaration
+    ) {
+      tsResult = t.comment(tsResult, jsDocComments);
     }
   }
 
-  // wrapTypeIfNeeded now accepts the honest TsConversionOutput type and handles narrowing internally
-  if (!canBeWrapped && typeof tsResult === 'string') {
-    // When returning inline, convert string to appropriate node (temporary bridge for incremental migration)
-    if (tsResult === 'string') return t.string();
-    if (tsResult === 'number') return t.number();
-    if (tsResult === 'boolean') return t.boolean();
-    if (tsResult === 'null') return t.reference('null');
-    if (tsResult.includes(' | ')) {
-      // Handle union types
-      const types = tsResult.split(' | ').map((type) => {
-        if (type === 'string') return t.string();
-        if (type === 'number') return t.number();
-        if (type === 'boolean') return t.boolean();
-        if (type === 'null') return t.reference('null');
-        return t.reference(type);
-      });
-      return t.union(types as t.TypeDefinition[]);
-    }
-    return t.reference(tsResult);
-  }
-
+  // TODO: This will be replaced with string-based logic in all-in migration
   return canBeWrapped ? wrapTypeIfNeeded(isInline, inheritedMeta?.name, tsResult) : tsResult;
 };
