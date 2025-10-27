@@ -52,19 +52,19 @@ test('deps-graph-with-additionalProperties', async () => {
       openApiDoc,
     ),
   ).toMatchInlineSnapshot(`
-          {
-              "deepDependencyGraph": {
-                  "ResponsesMap": Set {
-                      "Something",
-                      "ResponseItem",
-                  },
-              },
-              "refsDependencyGraph": {
-                  "ResponsesMap": Set {
-                      "Something",
-                      "ResponseItem",
-                  },
-              },
-          }
-        `);
+    {
+        "deepDependencyGraph": {
+            "#/components/schemas/ResponsesMap": Set {
+                "Something",
+                "ResponseItem",
+            },
+        },
+        "refsDependencyGraph": {
+            "#/components/schemas/ResponsesMap": Set {
+                "Something",
+                "ResponseItem",
+            },
+        },
+    }
+  `);
 });

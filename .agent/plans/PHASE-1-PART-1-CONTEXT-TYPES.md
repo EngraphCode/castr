@@ -12,7 +12,7 @@
 **Problem:** `makeSchemaResolver` is a "type lie" - claims to return `SchemaObject` but actually returns any component type. This creates:
 
 - 74 type assertions (blocker for extraction)
-- Unpredictable behavior at runtime
+- Unpredictable behaviour at runtime
 - Difficulty reasoning about code correctness
 
 **Impact:** Eliminating `makeSchemaResolver` and replacing with direct `OpenAPIObject` access will:
@@ -34,7 +34,7 @@
    - ❌ All production code compiles with zero type errors
    - ❌ Zero uses of `makeSchemaResolver` in `src/` (excluding tests)
 
-2. **Behavioral Correctness:**
+2. **Behavioural Correctness:**
    - ❌ All 246 unit tests passing
    - ❌ All 100 characterisation tests passing
    - ✅ All 12 E2E scenarios passing (when helpers fixed)
@@ -196,7 +196,7 @@ const getSchemaNameFromRef = (ref: string): string => {
    - Update context creation: `{ resolver, ... }` → `{ doc, ... }`
 
 2. **Update assertions:**
-   - Tests should verify BEHAVIOR (dependency graphs, generated code)
+   - Tests should verify BEHAVIOUR (dependency graphs, generated code)
    - NOT implementation details (how schemas are resolved)
 
 3. **Validate:**
@@ -319,6 +319,14 @@ pnpm character     # All tests must pass
 3. **✅ Validate at boundaries** - Check all dependencies before declaring complete
 4. **✅ Full quality gates after each task** - Not just at the end
 
+### Mitigations When Violations Detected
+
+1. Stop violating TDD
+2. Write comprehensive unit tests right now
+3. Refactor the code to be more testable
+4. Make sure the tests still pass
+5. Repeat until the tests and the code are excellent
+
 ---
 
 ## 🔗 Related Documents
@@ -327,4 +335,3 @@ pnpm character     # All tests must pass
 - **Requirements:** `.agent/plans/requirements.md` (Req 7, 8)
 - **ADR:** `.agent/adr/ADR-015-eliminate-make-schema-resolver.md`
 - **RULES:** `.agent/RULES.md` (TDD mandate, type system discipline)
-

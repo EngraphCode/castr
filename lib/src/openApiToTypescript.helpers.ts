@@ -265,7 +265,7 @@ export function addNullToUnionIfNeeded(
  */
 export function convertPropertyType(
   propType: unknown,
-  ctx: { resolver?: unknown } | undefined,
+  ctx: TsConversionContext | undefined,
 ): ts.Node | t.TypeDefinition {
   if (typeof propType === 'string') {
     if (!ctx) {

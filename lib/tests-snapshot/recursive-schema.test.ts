@@ -9,7 +9,6 @@ import {
 import { generateZodClientFromOpenAPI } from '../src/generateZodClientFromOpenAPI.js';
 import { topologicalSort } from '../src/topologicalSort.js';
 import type { ConversionTypeContext } from '../src/CodeMeta.js';
-import { makeSchemaResolver } from '../src/makeSchemaResolver.js';
 import { asComponentSchema } from '../src/utils.js';
 
 // TODO recursive inline response/param ?
@@ -64,36 +63,78 @@ describe('recursive-schema', () => {
         },
       },
     } as SchemasObject;
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
       schemaByName: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     const rootSchema = schemas['Root'];
     if (!rootSchema) throw new Error('Root schema not found');
     expect(getZodSchema({ schema: rootSchema, ctx })).toMatchInlineSnapshot(
       '"z.object({ recursive: User, basic: z.number() }).partial().passthrough()"',
     );
     expect(ctx).toMatchInlineSnapshot(`
-          {
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
+      {
+          "doc": {
+              "components": {
+                  "schemas": {
+                      "Middle": {
+                          "properties": {
+                              "user": {
+                                  "$ref": "#/components/schemas/User",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "Root": {
+                          "properties": {
+                              "basic": {
+                                  "type": "number",
+                              },
+                              "recursive": {
+                                  "$ref": "#/components/schemas/User",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "User": {
+                          "properties": {
+                              "middle": {
+                                  "$ref": "#/components/schemas/Middle",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                          },
+                          "type": "object",
+                      },
+                  },
               },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "Middle": "z.object({ user: User }).partial().passthrough()",
-                  "User": "z.object({ name: z.string(), middle: Middle }).partial().passthrough()",
+              "info": {
+                  "title": "",
+                  "version": "",
               },
-          }
-        `);
+              "openapi": "3.0.0",
+              "paths": {},
+          },
+          "schemaByName": {},
+          "zodSchemaByName": {
+              "Middle": "z.object({ user: User }).partial().passthrough()",
+              "User": "z.object({ name: z.string(), middle: Middle }).partial().passthrough()",
+          },
+      }
+    `);
 
     const openApiDoc = makeOpenApiDoc(schemas, rootSchema);
     const depsGraph = getOpenApiDependencyGraph(
       Object.keys(ctx.zodSchemaByName).map((name) => asComponentSchema(name)),
-      ctx.resolver.getSchemaByRef,
+      ctx.doc,
     );
     expect(depsGraph).toMatchInlineSnapshot(`
           {
@@ -193,93 +234,310 @@ describe('recursive-schema', () => {
   } as SchemaObject;
 
   test('recursive array', () => {
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
       schemaByName: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     expect(getZodSchema({ schema: ResponseSchema, ctx })).toMatchInlineSnapshot(
       '"z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()"',
     );
     expect(ctx).toMatchInlineSnapshot(`
-          {
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
+      {
+          "doc": {
+              "components": {
+                  "schemas": {
+                      "Friend": {
+                          "properties": {
+                              "circle": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "nickname": {
+                                  "type": "string",
+                              },
+                              "user": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ObjectWithRecursiveArray": {
+                          "properties": {
+                              "array": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                  },
+                                  "type": "array",
+                              },
+                              "isInsideObjectWithRecursiveArray": {
+                                  "type": "boolean",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ResponseSchema": {
+                          "properties": {
+                              "basic": {
+                                  "type": "number",
+                              },
+                              "recursiveRef": {
+                                  "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "User": {
+                          "properties": {
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/User",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "UserWithFriends": {
+                          "properties": {
+                              "bestFriend": {
+                                  "$ref": "#/components/schemas/Friend",
+                              },
+                              "friends": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                  },
               },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+              "info": {
+                  "title": "",
+                  "version": "",
               },
-          }
-        `);
+              "openapi": "3.0.0",
+              "paths": {},
+          },
+          "schemaByName": {},
+          "zodSchemaByName": {
+              "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+          },
+      }
+    `);
 
     expect(getZodiosEndpointDefinitionList(makeOpenApiDoc(schemas2, ResponseSchema)))
       .toMatchInlineSnapshot(`
-          {
-              "deepDependencyGraph": {
-                  "#/components/schemas/ObjectWithRecursiveArray": Set {
-                      "#/components/schemas/ObjectWithRecursiveArray",
-                  },
-              },
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/example",
-                      "requestFormat": "json",
-                      "response": "z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()",
-                  },
-              ],
-              "issues": {
-                  "ignoredFallbackResponse": [],
-                  "ignoredGenericError": [],
-              },
-              "refsDependencyGraph": {
-                  "#/components/schemas/ObjectWithRecursiveArray": Set {
-                      "#/components/schemas/ObjectWithRecursiveArray",
-                  },
-              },
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
-              },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
-              },
-          }
-        `);
+        {
+            "deepDependencyGraph": {
+                "#/components/schemas/ObjectWithRecursiveArray": Set {
+                    "#/components/schemas/ObjectWithRecursiveArray",
+                },
+            },
+            "doc": {
+                "components": {
+                    "schemas": {
+                        "ObjectWithRecursiveArray": {
+                            "properties": {
+                                "array": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                    },
+                                    "type": "array",
+                                },
+                                "isInsideObjectWithRecursiveArray": {
+                                    "type": "boolean",
+                                },
+                            },
+                            "type": "object",
+                        },
+                    },
+                },
+                "info": {
+                    "title": "Swagger Petstore - OpenAPI 3.0",
+                    "version": "1.0.11",
+                },
+                "openapi": "3.0.3",
+                "paths": {
+                    "/example": {
+                        "get": {
+                            "operationId": "getExample",
+                            "responses": {
+                                "200": {
+                                    "content": {
+                                        "application/json": {
+                                            "schema": {
+                                                "properties": {
+                                                    "basic": {
+                                                        "type": "number",
+                                                    },
+                                                    "recursiveRef": {
+                                                        "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                                    },
+                                                },
+                                                "type": "object",
+                                            },
+                                        },
+                                    },
+                                    "description": "OK",
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            "endpoints": [
+                {
+                    "description": undefined,
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/example",
+                    "requestFormat": "json",
+                    "response": "z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()",
+                },
+            ],
+            "issues": {
+                "ignoredFallbackResponse": [],
+                "ignoredGenericError": [],
+            },
+            "refsDependencyGraph": {
+                "#/components/schemas/ObjectWithRecursiveArray": Set {
+                    "#/components/schemas/ObjectWithRecursiveArray",
+                },
+            },
+            "schemaByName": {},
+            "zodSchemaByName": {
+                "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+            },
+        }
+      `);
   });
 
   test('direct recursive', () => {
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
       schemaByName: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     expect(getZodSchema({ schema: UserSchema, ctx })).toMatchInlineSnapshot(
       '"z.object({ name: z.string(), parent: User }).partial().passthrough()"',
     );
     expect(ctx).toMatchInlineSnapshot(`
-          {
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
+      {
+          "doc": {
+              "components": {
+                  "schemas": {
+                      "Friend": {
+                          "properties": {
+                              "circle": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "nickname": {
+                                  "type": "string",
+                              },
+                              "user": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ObjectWithRecursiveArray": {
+                          "properties": {
+                              "array": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                  },
+                                  "type": "array",
+                              },
+                              "isInsideObjectWithRecursiveArray": {
+                                  "type": "boolean",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ResponseSchema": {
+                          "properties": {
+                              "basic": {
+                                  "type": "number",
+                              },
+                              "recursiveRef": {
+                                  "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "User": {
+                          "properties": {
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/User",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "UserWithFriends": {
+                          "properties": {
+                              "bestFriend": {
+                                  "$ref": "#/components/schemas/Friend",
+                              },
+                              "friends": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                  },
               },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "User": "z.object({ name: z.string(), parent: User }).partial().passthrough()",
+              "info": {
+                  "title": "",
+                  "version": "",
               },
-          }
-        `);
+              "openapi": "3.0.0",
+              "paths": {},
+          },
+          "schemaByName": {},
+          "zodSchemaByName": {
+              "User": "z.object({ name: z.string(), parent: User }).partial().passthrough()",
+          },
+      }
+    `);
   });
 
   const UserWithFriends = {
@@ -309,12 +567,17 @@ describe('recursive-schema', () => {
   };
 
   test('multiple recursive in one root schema', async () => {
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
       schemaByName: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     expect(
       getZodSchema({
         schema: {
@@ -332,19 +595,99 @@ describe('recursive-schema', () => {
       '"z.object({ recursiveUser: UserWithFriends, basic: z.number() }).partial().passthrough()"',
     );
     expect(ctx).toMatchInlineSnapshot(`
-          {
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
+      {
+          "doc": {
+              "components": {
+                  "schemas": {
+                      "Friend": {
+                          "properties": {
+                              "circle": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "nickname": {
+                                  "type": "string",
+                              },
+                              "user": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ObjectWithRecursiveArray": {
+                          "properties": {
+                              "array": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                  },
+                                  "type": "array",
+                              },
+                              "isInsideObjectWithRecursiveArray": {
+                                  "type": "boolean",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ResponseSchema": {
+                          "properties": {
+                              "basic": {
+                                  "type": "number",
+                              },
+                              "recursiveRef": {
+                                  "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "User": {
+                          "properties": {
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/User",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "UserWithFriends": {
+                          "properties": {
+                              "bestFriend": {
+                                  "$ref": "#/components/schemas/Friend",
+                              },
+                              "friends": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                  },
               },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
-                  "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+              "info": {
+                  "title": "",
+                  "version": "",
               },
-          }
-        `);
+              "openapi": "3.0.0",
+              "paths": {},
+          },
+          "schemaByName": {},
+          "zodSchemaByName": {
+              "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
+              "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+          },
+      }
+    `);
 
     const openApiDoc = makeOpenApiDoc(schemas, {
       type: 'object',
@@ -357,72 +700,178 @@ describe('recursive-schema', () => {
     });
 
     expect(getZodiosEndpointDefinitionList(openApiDoc)).toMatchInlineSnapshot(`
-          {
-              "deepDependencyGraph": {
-                  "#/components/schemas/Friend": Set {
-                      "#/components/schemas/UserWithFriends",
-                      "#/components/schemas/Friend",
-                  },
-                  "#/components/schemas/ObjectWithRecursiveArray": Set {
-                      "#/components/schemas/ObjectWithRecursiveArray",
-                  },
-                  "#/components/schemas/ResponseSchema": Set {
-                      "#/components/schemas/ObjectWithRecursiveArray",
-                  },
-                  "#/components/schemas/User": Set {
-                      "#/components/schemas/User",
-                  },
-                  "#/components/schemas/UserWithFriends": Set {
-                      "#/components/schemas/UserWithFriends",
-                      "#/components/schemas/Friend",
+      {
+          "deepDependencyGraph": {
+              "#/components/schemas/Friend": Set {
+                  "#/components/schemas/UserWithFriends",
+                  "#/components/schemas/Friend",
+              },
+              "#/components/schemas/ObjectWithRecursiveArray": Set {
+                  "#/components/schemas/ObjectWithRecursiveArray",
+              },
+              "#/components/schemas/ResponseSchema": Set {
+                  "#/components/schemas/ObjectWithRecursiveArray",
+              },
+              "#/components/schemas/User": Set {
+                  "#/components/schemas/User",
+              },
+              "#/components/schemas/UserWithFriends": Set {
+                  "#/components/schemas/UserWithFriends",
+                  "#/components/schemas/Friend",
+              },
+          },
+          "doc": {
+              "components": {
+                  "schemas": {
+                      "Friend": {
+                          "properties": {
+                              "circle": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "nickname": {
+                                  "type": "string",
+                              },
+                              "user": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ObjectWithRecursiveArray": {
+                          "properties": {
+                              "array": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                  },
+                                  "type": "array",
+                              },
+                              "isInsideObjectWithRecursiveArray": {
+                                  "type": "boolean",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "ResponseSchema": {
+                          "properties": {
+                              "basic": {
+                                  "type": "number",
+                              },
+                              "recursiveRef": {
+                                  "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "User": {
+                          "properties": {
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/User",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "UserWithFriends": {
+                          "properties": {
+                              "bestFriend": {
+                                  "$ref": "#/components/schemas/Friend",
+                              },
+                              "friends": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Friend",
+                                  },
+                                  "type": "array",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                              "parent": {
+                                  "$ref": "#/components/schemas/UserWithFriends",
+                              },
+                          },
+                          "type": "object",
+                      },
                   },
               },
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/example",
-                      "requestFormat": "json",
-                      "response": "z.object({ someUser: UserWithFriends, someProp: z.boolean() }).partial().passthrough()",
-                  },
-              ],
-              "issues": {
-                  "ignoredFallbackResponse": [],
-                  "ignoredGenericError": [],
+              "info": {
+                  "title": "Swagger Petstore - OpenAPI 3.0",
+                  "version": "1.0.11",
               },
-              "refsDependencyGraph": {
-                  "#/components/schemas/Friend": Set {
-                      "#/components/schemas/UserWithFriends",
-                      "#/components/schemas/Friend",
-                  },
-                  "#/components/schemas/ObjectWithRecursiveArray": Set {
-                      "#/components/schemas/ObjectWithRecursiveArray",
-                  },
-                  "#/components/schemas/ResponseSchema": Set {
-                      "#/components/schemas/ObjectWithRecursiveArray",
-                  },
-                  "#/components/schemas/User": Set {
-                      "#/components/schemas/User",
-                  },
-                  "#/components/schemas/UserWithFriends": Set {
-                      "#/components/schemas/UserWithFriends",
-                      "#/components/schemas/Friend",
+              "openapi": "3.0.3",
+              "paths": {
+                  "/example": {
+                      "get": {
+                          "operationId": "getExample",
+                          "responses": {
+                              "200": {
+                                  "content": {
+                                      "application/json": {
+                                          "schema": {
+                                              "properties": {
+                                                  "someProp": {
+                                                      "type": "boolean",
+                                                  },
+                                                  "someUser": {
+                                                      "$ref": "#/components/schemas/UserWithFriends",
+                                                  },
+                                              },
+                                              "type": "object",
+                                          },
+                                      },
+                                  },
+                                  "description": "OK",
+                              },
+                          },
+                      },
                   },
               },
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
+          },
+          "endpoints": [
+              {
+                  "description": undefined,
+                  "errors": [],
+                  "method": "get",
+                  "parameters": [],
+                  "path": "/example",
+                  "requestFormat": "json",
+                  "response": "z.object({ someUser: UserWithFriends, someProp: z.boolean() }).partial().passthrough()",
               },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
-                  "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+          ],
+          "issues": {
+              "ignoredFallbackResponse": [],
+              "ignoredGenericError": [],
+          },
+          "refsDependencyGraph": {
+              "#/components/schemas/Friend": Set {
+                  "#/components/schemas/UserWithFriends",
+                  "#/components/schemas/Friend",
               },
-          }
-        `);
+              "#/components/schemas/ObjectWithRecursiveArray": Set {
+                  "#/components/schemas/ObjectWithRecursiveArray",
+              },
+              "#/components/schemas/ResponseSchema": Set {
+                  "#/components/schemas/ObjectWithRecursiveArray",
+              },
+              "#/components/schemas/User": Set {
+                  "#/components/schemas/User",
+              },
+              "#/components/schemas/UserWithFriends": Set {
+                  "#/components/schemas/UserWithFriends",
+                  "#/components/schemas/Friend",
+              },
+          },
+          "schemaByName": {},
+          "zodSchemaByName": {
+              "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
+              "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+          },
+      }
+    `);
 
     const templateCtx = getZodClientTemplateContext(openApiDoc);
     expect(templateCtx).toMatchInlineSnapshot(`
@@ -587,12 +1036,17 @@ describe('recursive-schema', () => {
     } as SchemaObject;
     const schemas = { Playlist, Song, Author, Settings };
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
       schemaByName: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
 
     const RootSchema = {
       type: 'object',
@@ -605,21 +1059,84 @@ describe('recursive-schema', () => {
       '"z.object({ playlist: Playlist, by_author: Author }).partial().passthrough()"',
     );
     expect(ctx).toMatchInlineSnapshot(`
-          {
-              "resolver": {
-                  "getSchemaByRef": [Function],
-                  "resolveRef": [Function],
-                  "resolveSchemaName": [Function],
+      {
+          "doc": {
+              "components": {
+                  "schemas": {
+                      "Author": {
+                          "properties": {
+                              "mail": {
+                                  "type": "string",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                              "settings": {
+                                  "$ref": "#/components/schemas/Settings",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "Playlist": {
+                          "properties": {
+                              "author": {
+                                  "$ref": "#/components/schemas/Author",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                              "songs": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Song",
+                                  },
+                                  "type": "array",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "Settings": {
+                          "properties": {
+                              "theme_color": {
+                                  "type": "string",
+                              },
+                          },
+                          "type": "object",
+                      },
+                      "Song": {
+                          "properties": {
+                              "duration": {
+                                  "type": "number",
+                              },
+                              "in_playlists": {
+                                  "items": {
+                                      "$ref": "#/components/schemas/Playlist",
+                                  },
+                                  "type": "array",
+                              },
+                              "name": {
+                                  "type": "string",
+                              },
+                          },
+                          "type": "object",
+                      },
+                  },
               },
-              "schemaByName": {},
-              "zodSchemaByName": {
-                  "Author": "z.object({ name: z.string(), mail: z.string(), settings: Settings }).partial().passthrough()",
-                  "Playlist": "z.object({ name: z.string(), author: Author, songs: z.array(Song) }).partial().passthrough()",
-                  "Settings": "z.object({ theme_color: z.string() }).partial().passthrough()",
-                  "Song": "z.object({ name: z.string(), duration: z.number(), in_playlists: z.array(Playlist) }).partial().passthrough()",
+              "info": {
+                  "title": "",
+                  "version": "",
               },
-          }
-        `);
+              "openapi": "3.0.0",
+              "paths": {},
+          },
+          "schemaByName": {},
+          "zodSchemaByName": {
+              "Author": "z.object({ name: z.string(), mail: z.string(), settings: Settings }).partial().passthrough()",
+              "Playlist": "z.object({ name: z.string(), author: Author, songs: z.array(Song) }).partial().passthrough()",
+              "Settings": "z.object({ theme_color: z.string() }).partial().passthrough()",
+              "Song": "z.object({ name: z.string(), duration: z.number(), in_playlists: z.array(Playlist) }).partial().passthrough()",
+          },
+      }
+    `);
 
     const openApiDoc = makeOpenApiDoc(schemas, RootSchema);
     const prettyOutput = await generateZodClientFromOpenAPI({

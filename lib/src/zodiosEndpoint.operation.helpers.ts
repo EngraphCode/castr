@@ -20,6 +20,7 @@ import type { TemplateContext } from './template-context.js';
 import type { DefaultStatusBehavior } from './template-context.types.js';
 import { pathParamToVariableName } from './utils.js';
 import { isReferenceObject } from './openapi-type-guards.js';
+import { getComponentByRef } from './component-access.js';
 
 const voidSchema = 'z.void()';
 
@@ -82,14 +83,17 @@ export function processRequestBody(
 
   let requestBody: RequestBodyObject;
   if (isReferenceObject(operation.requestBody)) {
-    const resolved = ctx.resolver.getSchemaByRef(operation.requestBody.$ref);
+    const resolved = getComponentByRef<RequestBodyObject | ReferenceObject>(
+      ctx.doc,
+      operation.requestBody.$ref,
+    );
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in requestBody: ${operation.requestBody.$ref}. Use SwaggerParser.bundle() to dereference.`,
       );
     }
 
-    requestBody = resolved as unknown as RequestBodyObject;
+    requestBody = resolved;
   } else {
     requestBody = operation.requestBody;
   }
@@ -120,7 +124,7 @@ export function processRequestBody(
     getZodVarName(bodyCode, operationName + '_Body') +
     getZodChain({
       schema: isReferenceObject(bodySchema)
-        ? ctx.resolver.getSchemaByRef(bodySchema.$ref)
+        ? getComponentByRef<SchemaObject>(ctx.doc, bodySchema.$ref)
         : bodySchema,
       meta: bodyCode.meta,
     });
@@ -148,15 +152,13 @@ export function processParameter(
 ): EndpointParameter | undefined {
   let paramItem: ParameterObject;
   if (isReferenceObject(param)) {
-    const resolved = ctx.resolver.getSchemaByRef(param.$ref);
+    const resolved = getComponentByRef<ParameterObject | ReferenceObject>(ctx.doc, param.$ref);
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in parameter: ${param.$ref}. Use SwaggerParser.bundle() to dereference.`,
       );
     }
-    // Resolver returns generic SchemaObject; assert it's ParameterObject at runtime
-    // This is safe because OpenAPI spec guarantees $ref resolution type consistency
-    paramItem = resolved as unknown as ParameterObject;
+    paramItem = resolved;
   } else {
     paramItem = param;
   }
@@ -197,7 +199,7 @@ export function processParameter(
     paramSchema = mediaTypeObject.schema;
   } else if (paramItem.schema) {
     paramSchema = isReferenceObject(paramItem.schema)
-      ? ctx.resolver.getSchemaByRef(paramItem.schema.$ref)
+      ? getComponentByRef<SchemaObject>(ctx.doc, paramItem.schema.$ref)
       : paramItem.schema;
   } else {
     // OpenAPI spec requires parameters to have either 'schema' or 'content'
@@ -222,7 +224,7 @@ export function processParameter(
 
   // Resolve ref if needed, fallback to default (unknown) value if needed
   paramSchema = isReferenceObject(paramSchema)
-    ? ctx.resolver.getSchemaByRef(paramSchema.$ref)
+    ? getComponentByRef<SchemaObject>(ctx.doc, paramSchema.$ref)
     : paramSchema;
 
   const paramCode = getZodSchema({
@@ -271,15 +273,13 @@ export function processResponse(
 } {
   let responseItem: ResponseObject;
   if (isReferenceObject(responseObj)) {
-    const resolved = ctx.resolver.getSchemaByRef(responseObj.$ref);
+    const resolved = getComponentByRef<ResponseObject | ReferenceObject>(ctx.doc, responseObj.$ref);
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in response: ${responseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
       );
     }
-    // Resolver returns generic SchemaObject; assert it's ResponseObject at runtime
-    // This is safe because OpenAPI spec guarantees $ref resolution type consistency
-    responseItem = resolved as ResponseObject;
+    responseItem = resolved;
   } else {
     responseItem = responseObj;
   }
@@ -297,7 +297,7 @@ export function processResponse(
       (schema.ref ? getZodVarName(schema) : schema.toString()) +
       getZodChain({
         schema: isReferenceObject(maybeSchema)
-          ? ctx.resolver.getSchemaByRef(maybeSchema.$ref)
+          ? getComponentByRef<SchemaObject>(ctx.doc, maybeSchema.$ref)
           : maybeSchema,
         meta: schema.meta,
       });
@@ -366,7 +366,7 @@ export function processDefaultResponse(
       (schema.ref ? getZodVarName(schema) : schema.toString()) +
       getZodChain({
         schema: isReferenceObject(maybeSchema)
-          ? ctx.resolver.getSchemaByRef(maybeSchema.$ref)
+          ? getComponentByRef<SchemaObject>(ctx.doc, maybeSchema.$ref)
           : maybeSchema,
         meta: schema.meta,
       });

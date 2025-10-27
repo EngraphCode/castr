@@ -445,4 +445,3 @@ pnpm lint        # ⚠️ Improved vs baseline
 - **Requirements:** `.agent/plans/requirements.md` (Req 7: Zero type assertions)
 - **ADR:** `.agent/adr/ADR-014-migrate-tanu-to-ts-morph.md`
 - **RULES:** `.agent/RULES.md` (TDD mandate, pure functions)
-

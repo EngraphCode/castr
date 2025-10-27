@@ -3,8 +3,6 @@ import { getTypescriptFromOpenApi, type TsConversionContext } from '../src/openA
 import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas30';
 import { ts } from 'tanu';
 import { describe, expect, test } from 'vitest';
-import { makeSchemaResolver } from '../src/makeSchemaResolver.js';
-import { asComponentSchema } from '../src/utils.js';
 import type { TemplateContext } from '../src/template-context.js';
 
 const makeSchema = (schema: SchemaObject) => schema;
@@ -376,12 +374,17 @@ describe('getSchemaAsTsString with context', () => {
       },
     } as SchemasObject;
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: TsConversionContext = {
       nodeByRef: {},
       visitedRefs: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     expect(
       printTs(
         getTypescriptFromOpenApi({
@@ -426,12 +429,17 @@ describe('getSchemaAsTsString with context', () => {
       },
     } as SchemasObject;
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: TsConversionContext = {
       nodeByRef: {},
       visitedRefs: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     expect(
       printTs(
         getTypescriptFromOpenApi({
@@ -469,12 +477,17 @@ describe('getSchemaAsTsString with context', () => {
       },
     } as SchemasObject;
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: TsConversionContext = {
       nodeByRef: {},
       visitedRefs: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
 
     expect(
       printTs(
@@ -515,12 +528,17 @@ describe('getSchemaAsTsString with context', () => {
       },
     } as SchemasObject;
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: TsConversionContext = {
       nodeByRef: {},
       visitedRefs: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     const result = getTypescriptFromOpenApi({
       schema: schemas['Root4']!,
       meta: { name: 'Root4', $ref: '#/components/schemas/Root4' },
@@ -564,12 +582,17 @@ describe('getSchemaAsTsString with context', () => {
       },
     } as SchemasObject;
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: TsConversionContext = {
       nodeByRef: {},
       visitedRefs: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     const result = getTypescriptFromOpenApi({
       schema: schemas['Root']!,
       meta: { name: 'Root', $ref: '#/components/schemas/Root' },
@@ -618,12 +641,17 @@ describe('getSchemaAsTsString with context', () => {
       },
     } as SchemasObject;
 
+    const doc = {
+      openapi: '3.0.0',
+      info: { title: '', version: '' },
+      paths: {},
+      components: { schemas },
+    } as const;
     const ctx: TsConversionContext = {
       nodeByRef: {},
       visitedRefs: {},
-      resolver: makeSchemaResolver({ components: { schemas } } as any),
+      doc,
     };
-    Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
     const result = getTypescriptFromOpenApi({
       schema: schemas['Root']!,
       meta: { name: 'Root', $ref: '#/components/schemas/Root' },

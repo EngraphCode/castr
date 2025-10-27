@@ -135,13 +135,13 @@ describe('Characterisation: Error Handling', () => {
       };
 
       // generateZodClientFromOpenAPI should throw for missing refs
-      // (the resolver correctly fails-fast when a ref doesn't exist)
+      // (fails-fast when a ref doesn't exist)
       await expect(
         generateZodClientFromOpenAPI({
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
-      ).rejects.toThrow('Unable to resolve $ref: #/components/schemas/DoesNotExist');
+      ).rejects.toThrow("Schema 'DoesNotExist' not found in components.schemas");
     });
   });
 

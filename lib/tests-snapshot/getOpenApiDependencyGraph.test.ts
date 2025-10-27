@@ -104,57 +104,68 @@ test('complex relations', () => {
     openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
-      {
-          "#/components/schemas/ObjectWithArrayOfRef": Set {
-              "#/components/schemas/WithNested",
-              "#/components/schemas/Basic",
-          },
-          "#/components/schemas/Root": Set {
-              "#/components/schemas/ObjectWithArrayOfRef",
-              "WithNested",
-              "Basic",
-          },
-          "WithNested": Set {
-              "DeepNested",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/ObjectWithArrayOfRef": Set {
+            "WithNested",
+            "Basic",
+        },
+        "#/components/schemas/Root": Set {
+            "ObjectWithArrayOfRef",
+            "WithNested",
+            "Basic",
+        },
+        "#/components/schemas/WithNested": Set {
+            "DeepNested",
+        },
+        "ObjectWithArrayOfRef": Set {
+            "WithNested",
+            "Basic",
+        },
+        "WithNested": Set {
+            "DeepNested",
+        },
+    }
+  `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
-      [
-          "DeepNested",
-          "WithNested",
-          "Basic",
-          "ObjectWithArrayOfRef",
-          "Root",
-      ]
-    `);
+    [
+        "DeepNested",
+        "#/components/schemas/WithNested",
+        "WithNested",
+        "Basic",
+        "#/components/schemas/ObjectWithArrayOfRef",
+        "ObjectWithArrayOfRef",
+        "#/components/schemas/Root",
+    ]
+  `);
   expect(deepDependencyGraph).toMatchInlineSnapshot(`
-      {
-          "ObjectWithArrayOfRef": Set {
-              "WithNested",
-              "DeepNested",
-              "Basic",
-          },
-          "Root": Set {
-              "ObjectWithArrayOfRef",
-              "WithNested",
-              "DeepNested",
-              "Basic",
-          },
-          "WithNested": Set {
-              "DeepNested",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/ObjectWithArrayOfRef": Set {
+            "WithNested",
+            "DeepNested",
+            "Basic",
+        },
+        "#/components/schemas/Root": Set {
+            "ObjectWithArrayOfRef",
+            "WithNested",
+            "DeepNested",
+            "Basic",
+        },
+        "#/components/schemas/WithNested": Set {
+            "DeepNested",
+        },
+    }
+  `);
   expect(topologicalSort(deepDependencyGraph)).toMatchInlineSnapshot(`
-      [
-          "DeepNested",
-          "WithNested",
-          "Basic",
-          "ObjectWithArrayOfRef",
-          "Root",
-      ]
-    `);
+    [
+        "DeepNested",
+        "#/components/schemas/WithNested",
+        "WithNested",
+        "Basic",
+        "#/components/schemas/ObjectWithArrayOfRef",
+        "ObjectWithArrayOfRef",
+        "#/components/schemas/Root",
+    ]
+  `);
 });
 
 test('recursive relations', () => {
@@ -184,41 +195,53 @@ test('recursive relations', () => {
     openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
-      {
-          "Friend": Set {
-              "UserWithFriends",
-              "Friend",
-          },
-          "UserWithFriends": Set {
-              "UserWithFriends",
-              "Friend",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/Friend": Set {
+            "UserWithFriends",
+            "Friend",
+        },
+        "#/components/schemas/UserWithFriends": Set {
+            "UserWithFriends",
+            "Friend",
+        },
+        "Friend": Set {
+            "UserWithFriends",
+            "Friend",
+        },
+        "UserWithFriends": Set {
+            "UserWithFriends",
+            "Friend",
+        },
+    }
+  `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
-      [
-          "Friend",
-          "UserWithFriends",
-      ]
-    `);
+    [
+        "Friend",
+        "UserWithFriends",
+        "#/components/schemas/UserWithFriends",
+        "#/components/schemas/Friend",
+    ]
+  `);
   expect(deepDependencyGraph).toMatchInlineSnapshot(`
-      {
-          "Friend": Set {
-              "UserWithFriends",
-              "Friend",
-          },
-          "UserWithFriends": Set {
-              "UserWithFriends",
-              "Friend",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/Friend": Set {
+            "UserWithFriends",
+            "Friend",
+        },
+        "#/components/schemas/UserWithFriends": Set {
+            "UserWithFriends",
+            "Friend",
+        },
+    }
+  `);
   expect(topologicalSort(deepDependencyGraph)).toMatchInlineSnapshot(`
-      [
-          "Friend",
-          "UserWithFriends",
-      ]
-    `);
+    [
+        "UserWithFriends",
+        "Friend",
+        "#/components/schemas/UserWithFriends",
+        "#/components/schemas/Friend",
+    ]
+  `);
 });
 
 test('recursive relations along with some basics schemas', () => {
@@ -283,83 +306,108 @@ test('recursive relations along with some basics schemas', () => {
     openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
-      {
-          "#/components/schemas/Friend": Set {
-              "#/components/schemas/UserWithFriends",
-              "#/components/schemas/Friend",
-              "Basic",
-          },
-          "ObjectWithArrayOfRef": Set {
-              "WithNested",
-              "Basic",
-          },
-          "Root": Set {
-              "ObjectWithArrayOfRef",
-              "WithNested",
-              "Basic",
-          },
-          "UserWithFriends": Set {
-              "UserWithFriends",
-              "Friend",
-              "WithNested",
-          },
-          "WithNested": Set {
-              "DeepNested",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/Friend": Set {
+            "UserWithFriends",
+            "Friend",
+            "Basic",
+        },
+        "#/components/schemas/ObjectWithArrayOfRef": Set {
+            "WithNested",
+            "Basic",
+        },
+        "#/components/schemas/Root": Set {
+            "ObjectWithArrayOfRef",
+            "WithNested",
+            "Basic",
+        },
+        "#/components/schemas/UserWithFriends": Set {
+            "UserWithFriends",
+            "Friend",
+            "WithNested",
+        },
+        "#/components/schemas/WithNested": Set {
+            "DeepNested",
+        },
+        "Friend": Set {
+            "UserWithFriends",
+            "Friend",
+            "Basic",
+        },
+        "ObjectWithArrayOfRef": Set {
+            "WithNested",
+            "Basic",
+        },
+        "UserWithFriends": Set {
+            "UserWithFriends",
+            "Friend",
+            "WithNested",
+        },
+        "WithNested": Set {
+            "DeepNested",
+        },
+    }
+  `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
-      [
-          "Basic",
-          "Friend",
-          "DeepNested",
-          "WithNested",
-          "UserWithFriends",
-          "ObjectWithArrayOfRef",
-          "Root",
-      ]
-    `);
+    [
+        "Basic",
+        "Friend",
+        "DeepNested",
+        "WithNested",
+        "UserWithFriends",
+        "#/components/schemas/UserWithFriends",
+        "#/components/schemas/Friend",
+        "#/components/schemas/WithNested",
+        "#/components/schemas/ObjectWithArrayOfRef",
+        "ObjectWithArrayOfRef",
+        "#/components/schemas/Root",
+    ]
+  `);
   expect(deepDependencyGraph).toMatchInlineSnapshot(`
-      {
-          "Friend": Set {
-              "UserWithFriends",
-              "Friend",
-              "WithNested",
-              "DeepNested",
-              "Basic",
-          },
-          "ObjectWithArrayOfRef": Set {
-              "WithNested",
-              "DeepNested",
-              "Basic",
-          },
-          "Root": Set {
-              "ObjectWithArrayOfRef",
-              "WithNested",
-              "DeepNested",
-              "Basic",
-          },
-          "UserWithFriends": Set {
-              "UserWithFriends",
-              "Friend",
-              "Basic",
-              "WithNested",
-              "DeepNested",
-          },
-          "WithNested": Set {
-              "DeepNested",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/Friend": Set {
+            "UserWithFriends",
+            "Friend",
+            "Basic",
+            "WithNested",
+            "DeepNested",
+        },
+        "#/components/schemas/ObjectWithArrayOfRef": Set {
+            "WithNested",
+            "DeepNested",
+            "Basic",
+        },
+        "#/components/schemas/Root": Set {
+            "ObjectWithArrayOfRef",
+            "WithNested",
+            "DeepNested",
+            "Basic",
+        },
+        "#/components/schemas/UserWithFriends": Set {
+            "UserWithFriends",
+            "Friend",
+            "Basic",
+            "WithNested",
+            "DeepNested",
+        },
+        "#/components/schemas/WithNested": Set {
+            "DeepNested",
+        },
+    }
+  `);
   expect(topologicalSort(deepDependencyGraph)).toMatchInlineSnapshot(`
-      [
-          "DeepNested",
-          "WithNested",
-          "Basic",
-          "Friend",
-          "UserWithFriends",
-          "ObjectWithArrayOfRef",
-          "Root",
-      ]
-    `);
+    [
+        "UserWithFriends",
+        "Friend",
+        "Basic",
+        "WithNested",
+        "DeepNested",
+        "#/components/schemas/UserWithFriends",
+        "#/components/schemas/Friend",
+        "#/components/schemas/WithNested",
+        "#/components/schemas/ObjectWithArrayOfRef",
+        "ObjectWithArrayOfRef",
+        "#/components/schemas/Root",
+    ]
+  `);
 });

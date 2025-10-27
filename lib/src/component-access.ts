@@ -161,3 +161,58 @@ export function assertNotReference<T>(
     );
   }
 }
+
+/**
+ * Generic helper to get component from OpenAPI document by $ref.
+ *
+ * Supports all component types: schemas, responses, parameters, requestBodies, etc.
+ * Extracts the component type and name from the $ref and looks it up in doc.components.
+ *
+ * @param doc - The OpenAPI document
+ * @param ref - The $ref string (e.g., "#/components/schemas/User")
+ * @returns The resolved component
+ * @throws {Error} If $ref format is invalid or component not found
+ *
+ * @example
+ * ```typescript
+ * const schema = getComponentByRef(doc, '#/components/schemas/User');
+ * const param = getComponentByRef(doc, '#/components/parameters/UserId');
+ * const response = getComponentByRef(doc, '#/components/responses/Success');
+ * ```
+ */
+export function getComponentByRef<T = unknown>(doc: OpenAPIObject, ref: string): T {
+  // Parse $ref format: #/components/{type}/{name} (per OpenAPI 3.0 spec)
+  const refPattern = /^#\/components\/([^/]+)\/(.+)$/;
+  const match = ref.match(refPattern);
+
+  if (!match || !match[1] || !match[2]) {
+    throw new Error(`Invalid component $ref: ${ref}. Expected format: #/components/{type}/{name}`);
+  }
+
+  const componentType = match[1];
+  const componentName = match[2];
+
+  // Check if components and the specific component type exist
+  if (!doc.components) {
+    throw new Error(
+      `Component '${componentName}' of type '${componentType}' not found: doc.components is undefined`,
+    );
+  }
+
+  const componentMap = doc.components[componentType as keyof typeof doc.components];
+  if (!componentMap || typeof componentMap !== 'object') {
+    throw new Error(
+      `Component type '${componentType}' not found in doc.components for ref: ${ref}`,
+    );
+  }
+
+  const component = (componentMap as Record<string, unknown>)[componentName];
+
+  if (!component) {
+    throw new Error(
+      `Component '${componentName}' not found in doc.components.${componentType} for ref: ${ref}`,
+    );
+  }
+
+  return component as T;
+}

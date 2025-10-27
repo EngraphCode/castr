@@ -2,8 +2,6 @@ import type { SchemaObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
 import { getZodSchema } from '../src/openApiToZod.js';
 import type { CodeMetaData, ConversionTypeContext } from '../src/CodeMeta.js';
-import { makeSchemaResolver } from '../src/makeSchemaResolver.js';
-import { asComponentSchema } from '../src/utils.js';
 
 const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData) =>
@@ -332,8 +330,14 @@ test('getSchemaWithChainableAsZodString', () => {
 });
 
 test('CodeMeta with missing ref', () => {
+  const doc = {
+    openapi: '3.0.0',
+    info: { title: '', version: '' },
+    paths: {},
+    components: { schemas: {} },
+  } as const;
   const ctx: ConversionTypeContext = {
-    resolver: makeSchemaResolver({ components: { schemas: {} } } as any),
+    doc,
     zodSchemaByName: {},
     schemaByName: {},
   };
@@ -357,7 +361,7 @@ test('CodeMeta with missing ref', () => {
       }),
       ctx,
     }),
-  ).toThrowErrorMatchingInlineSnapshot(`[Error: Schema not found for $ref: Example]`);
+  ).toThrowErrorMatchingInlineSnapshot(`[Error: Schema 'Example' not found in components.schemas]`);
 });
 
 test('CodeMeta with ref', () => {
@@ -370,12 +374,17 @@ test('CodeMeta with ref', () => {
       },
     },
   } as Record<string, SchemaObject>;
+  const doc = {
+    openapi: '3.0.0',
+    info: { title: '', version: '' },
+    paths: {},
+    components: { schemas },
+  } as const;
   const ctx: ConversionTypeContext = {
-    resolver: makeSchemaResolver({ components: { schemas } } as any),
+    doc,
     zodSchemaByName: {},
     schemaByName: {},
   };
-  Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
 
   const code = getZodSchema({
     schema: makeSchema({
@@ -428,12 +437,17 @@ test('CodeMeta with nested refs', () => {
     },
     DeepNested: { type: 'object', properties: { deep: { type: 'boolean' } } },
   } as Record<string, SchemaObject>;
+  const doc = {
+    openapi: '3.0.0',
+    info: { title: '', version: '' },
+    paths: {},
+    components: { schemas },
+  } as const;
   const ctx: ConversionTypeContext = {
-    resolver: makeSchemaResolver({ components: { schemas } } as any),
+    doc,
     zodSchemaByName: {},
     schemaByName: {},
   };
-  Object.keys(schemas).forEach((key) => ctx.resolver.getSchemaByRef(asComponentSchema(key)));
 
   const code = getZodSchema({
     schema: makeSchema({
@@ -470,19 +484,76 @@ test('CodeMeta with nested refs', () => {
       ]
     `);
   expect(ctx).toMatchInlineSnapshot(`
-      {
-          "resolver": {
-              "getSchemaByRef": [Function],
-              "resolveRef": [Function],
-              "resolveSchemaName": [Function],
-          },
-          "schemaByName": {},
-          "zodSchemaByName": {
-              "Basic": "z.object({ prop: z.string(), second: z.number() }).partial().passthrough()",
-              "DeepNested": "z.object({ deep: z.boolean() }).partial().passthrough()",
-              "ObjectWithArrayOfRef": "z.object({ exampleProp: z.string(), another: z.number(), link: z.array(WithNested), someReference: Basic }).partial().passthrough()",
-              "WithNested": "z.object({ nested: z.string(), nestedRef: DeepNested }).partial().passthrough()",
-          },
-      }
-    `);
+    {
+        "doc": {
+            "components": {
+                "schemas": {
+                    "Basic": {
+                        "properties": {
+                            "prop": {
+                                "type": "string",
+                            },
+                            "second": {
+                                "type": "number",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "DeepNested": {
+                        "properties": {
+                            "deep": {
+                                "type": "boolean",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "ObjectWithArrayOfRef": {
+                        "properties": {
+                            "another": {
+                                "type": "number",
+                            },
+                            "exampleProp": {
+                                "type": "string",
+                            },
+                            "link": {
+                                "items": {
+                                    "$ref": "#/components/schemas/WithNested",
+                                },
+                                "type": "array",
+                            },
+                            "someReference": {
+                                "$ref": "#/components/schemas/Basic",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "WithNested": {
+                        "properties": {
+                            "nested": {
+                                "type": "string",
+                            },
+                            "nestedRef": {
+                                "$ref": "#/components/schemas/DeepNested",
+                            },
+                        },
+                        "type": "object",
+                    },
+                },
+            },
+            "info": {
+                "title": "",
+                "version": "",
+            },
+            "openapi": "3.0.0",
+            "paths": {},
+        },
+        "schemaByName": {},
+        "zodSchemaByName": {
+            "Basic": "z.object({ prop: z.string(), second: z.number() }).partial().passthrough()",
+            "DeepNested": "z.object({ deep: z.boolean() }).partial().passthrough()",
+            "ObjectWithArrayOfRef": "z.object({ exampleProp: z.string(), another: z.number(), link: z.array(WithNested), someReference: Basic }).partial().passthrough()",
+            "WithNested": "z.object({ nested: z.string(), nestedRef: DeepNested }).partial().passthrough()",
+        },
+    }
+  `);
 });

@@ -26,35 +26,62 @@ test('refine-default-endpoint-callback', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-      {
-          "deepDependencyGraph": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/basic-schema",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-          ],
-          "issues": {
-              "ignoredFallbackResponse": [],
-              "ignoredGenericError": [],
-          },
-          "refsDependencyGraph": {},
-          "resolver": {
-              "getSchemaByRef": [Function],
-              "resolveRef": [Function],
-              "resolveSchemaName": [Function],
-          },
-          "schemaByName": {},
-          "zodSchemaByName": {
-              "Basic": "z.string()",
-          },
-      }
-    `);
+    {
+        "deepDependencyGraph": {},
+        "doc": {
+            "components": {
+                "schemas": {
+                    "Basic": {
+                        "type": "string",
+                    },
+                },
+            },
+            "info": {
+                "title": "Example API",
+                "version": "1",
+            },
+            "openapi": "3.0.3",
+            "paths": {
+                "/basic-schema": {
+                    "get": {
+                        "operationId": "getBasicSchema",
+                        "responses": {
+                            "200": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Basic",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        "endpoints": [
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/basic-schema",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+        ],
+        "issues": {
+            "ignoredFallbackResponse": [],
+            "ignoredGenericError": [],
+        },
+        "refsDependencyGraph": {},
+        "schemaByName": {},
+        "zodSchemaByName": {
+            "Basic": "z.string()",
+        },
+    }
+  `);
 
   // With the refiner function passed.
   expect(
@@ -96,41 +123,75 @@ test('refine-default-endpoint-callback', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-      {
-          "deepDependencyGraph": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "operationId": "getBasicSchema",
-                  "parameters": [],
-                  "path": "/basic-schema",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-                  "security": [
-                      {
-                          "petstore_auth": [
-                              "read:schema",
-                          ],
-                      },
-                  ],
-              },
-          ],
-          "issues": {
-              "ignoredFallbackResponse": [],
-              "ignoredGenericError": [],
-          },
-          "refsDependencyGraph": {},
-          "resolver": {
-              "getSchemaByRef": [Function],
-              "resolveRef": [Function],
-              "resolveSchemaName": [Function],
-          },
-          "schemaByName": {},
-          "zodSchemaByName": {
-              "Basic": "z.string()",
-          },
-      }
-    `);
+    {
+        "deepDependencyGraph": {},
+        "doc": {
+            "components": {
+                "schemas": {
+                    "Basic": {
+                        "type": "string",
+                    },
+                },
+            },
+            "info": {
+                "title": "Example API",
+                "version": "1",
+            },
+            "openapi": "3.0.3",
+            "paths": {
+                "/basic-schema": {
+                    "get": {
+                        "operationId": "getBasicSchema",
+                        "responses": {
+                            "200": {
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Basic",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "security": [
+                            {
+                                "petstore_auth": [
+                                    "read:schema",
+                                ],
+                            },
+                        ],
+                    },
+                },
+            },
+        },
+        "endpoints": [
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "operationId": "getBasicSchema",
+                "parameters": [],
+                "path": "/basic-schema",
+                "requestFormat": "json",
+                "response": "z.string()",
+                "security": [
+                    {
+                        "petstore_auth": [
+                            "read:schema",
+                        ],
+                    },
+                ],
+            },
+        ],
+        "issues": {
+            "ignoredFallbackResponse": [],
+            "ignoredGenericError": [],
+        },
+        "refsDependencyGraph": {},
+        "schemaByName": {},
+        "zodSchemaByName": {
+            "Basic": "z.string()",
+        },
+    }
+  `);
 });

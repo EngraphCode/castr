@@ -13,8 +13,8 @@ test('is-media-type-allowed', () => {
           responses: {
             '200': {
               content: {
-                'application/json': { schema: { $ref: '#components/schemas/Basic' } },
-                'application/json-ld': { schema: { $ref: '#components/schemas/CustomMediaType' } },
+                'application/json': { schema: { $ref: '#/components/schemas/Basic' } },
+                'application/json-ld': { schema: { $ref: '#/components/schemas/CustomMediaType' } },
               },
             },
           },

@@ -12,6 +12,7 @@
 **Next Priority:** Fix helper files and tests following TDD to restore green quality gates
 
 **Timeline Remaining:**
+
 - Phase 1 Part 1: 4-6 hours (context types & `makeSchemaResolver` elimination)
 - Phase 1 Part 2: 6-8 hours (ts-morph migration)
 - Phase 1 Part 3: 4-6 hours (Zodios removal)
@@ -22,20 +23,24 @@
 ## What's Been Done (Phase 1 Journey)
 
 **Phase 0 (COMPLETE)** ✅
+
 - 88/88 characterisation tests passing
 - System fully documented and understood
 
 **Phase 1 First Attempt (FAILED)** ❌
+
 - Added internal dereferencing - broke semantic naming
 - 40/88 tests failed
 - Root cause: removed `$ref`s needed for component schema naming
 
 **Revert & Redesign (COMPLETE)** ✅
+
 - Identified root cause
 - Created E2E test matrix (12 scenarios)
 - Revised approach with proper principles
 
 **Phase 1 Part 1 (60% COMPLETE)** 🔧
+
 - ✅ Core type system refactored: `resolver` → `doc`
 - ✅ 11 files updated with new context types
 - ❌ 2 helper files incomplete (13 locations)
@@ -43,6 +48,7 @@
 - ⚠️ **Violated TDD** - changed API before writing tests
 
 **Current Quality Gates (FAILING):**
+
 ```
 ✅ format:      PASSING
 ✅ build:       PASSING
@@ -56,6 +62,7 @@
 ## Architecture Principles (Critical!)
 
 **DO ✅**
+
 - Use `ComponentsObject` from `openapi3-ts/oas30`
 - Preserve component schema `$ref`s (needed for naming)
 - Handle both dereferenced AND non-dereferenced specs
@@ -63,6 +70,7 @@
 - Test after EVERY change
 
 **DON'T ❌**
+
 - Add internal `SwaggerParser.dereference()` calls
 - Use `assertNotReference` everywhere (too aggressive)
 - Create ad-hoc types instead of `ComponentsObject`
@@ -201,11 +209,11 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ```json
 {
-  "openapi3-ts": "^4.5.0",    // Updated from v3
-  "zod": "^4.1.12",            // Updated from v3
-  "@zodios/core": "^10.9.6",  // To be removed in Part 3
-  "tanu": "^0.2.0",            // To be replaced with ts-morph in Part 2
-  "handlebars": "^4.7.8"       // Template engine
+  "openapi3-ts": "^4.5.0", // Updated from v3
+  "zod": "^4.1.12", // Updated from v3
+  "@zodios/core": "^10.9.6", // To be removed in Part 3
+  "tanu": "^0.2.0", // To be replaced with ts-morph in Part 2
+  "handlebars": "^4.7.8" // Template engine
 }
 ```
 
@@ -216,16 +224,19 @@ All documented in `.agent/adr/` (12 ADRs):
 ## 🎯 What's Next
 
 **Immediate (Next 4-6 hours):**
+
 - Fix helper files following TDD (write tests first!)
 - Update test files to use new context types
 - Restore green quality gates (100/100 char tests, 246/246 unit tests)
 - Complete Phase 1 Part 1
 
 **After Part 1 Complete:**
+
 - Part 2: ts-morph migration (6-8 hours)
 - Part 3: Zodios removal (4-6 hours)
 
 **Future Work:**
+
 - Phase 2: MCP Enhancements (see `PHASE-2-MCP-ENHANCEMENTS.md`)
 - Phase 3: DX Improvements (see `PHASE-3-FURTHER-ENHANCEMENTS.md`)
 
@@ -236,15 +247,18 @@ All documented in `.agent/adr/` (12 ADRs):
 ### Essential Reading
 
 **Requirements & Standards:**
+
 - **`requirements.md`** - 8 core project requirements
 - **`.agent/RULES.md`** ⭐ - Coding standards, TDD mandate (MANDATORY)
 
 **Current Work (Phase 1 - Split into 3 Parts):**
+
 - **`PHASE-1-PART-1-CONTEXT-TYPES.md`** ⭐ - **IN PROGRESS (60%)** - Eliminate makeSchemaResolver
 - **`PHASE-1-PART-2-TS-MORPH.md`** - ts-morph migration (blocked)
 - **`PHASE-1-PART-3-ZODIOS-REMOVAL.md`** - Zodios removal (blocked)
 
 **Reference:**
+
 - **`.agent/analysis/E2E-TEST-MATRIX.md`** - 12 acceptance criteria scenarios
 - **`00-STRATEGIC-OVERVIEW.md`** - Overall phases, timeline
 - **`PHASE-2-MCP-ENHANCEMENTS.md`** - Future work
@@ -295,7 +309,6 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ---
 
-
 ## 🚀 How to Continue (Fresh Chat)
 
 **🎯 Quick Start (10-15 minutes):**
@@ -312,6 +325,7 @@ All documented in `.agent/adr/` (12 ADRs):
 4. **Optional: Read requirements.md** - Project goals and constraints (5 min)
 
 **Then verify current state:**
+
 ```bash
 cd /Users/jim/code/personal/openapi-zod-client
 pnpm character  # Currently: 40/100 (60 failures)

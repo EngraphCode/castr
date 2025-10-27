@@ -89,8 +89,8 @@ describe('zodiosEndpoint.helpers', () => {
   describe('registerSchemaName', () => {
     it('should register schema in context', () => {
       const ctx = {
-        zodSchemaByName: {},
-        schemaByName: {},
+        zodSchemaByName: {} as Record<string, string>,
+        schemaByName: {} as Record<string, string>,
         doc: mockDoc,
       };
 
@@ -240,7 +240,9 @@ describe('zodiosEndpoint.helpers', () => {
         doc: mockDoc,
       };
 
-      expect(() => handleRefSchema(input, 'Invalid', ctx, 5)).toThrow("Schema 'Invalid' not found");
+      expect(() => handleRefSchema(input, 'Invalid', ctx, 5)).toThrow(
+        'Invalid ref: #/components/schemas/Invalid',
+      );
     });
   });
 });

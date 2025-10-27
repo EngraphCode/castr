@@ -474,4 +474,3 @@ Phase 1 is complete when:
 - ✅ All quality gates green
 - ✅ Zod 4 compatible (no peer warnings)
 - ✅ Ready for extraction to Engraph monorepo
-

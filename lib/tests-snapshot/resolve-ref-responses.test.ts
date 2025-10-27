@@ -29,31 +29,59 @@ test('resolve-ref-responses', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-      {
-          "deepDependencyGraph": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-          ],
-          "issues": {
-              "ignoredFallbackResponse": [],
-              "ignoredGenericError": [],
-          },
-          "refsDependencyGraph": {},
-          "resolver": {
-              "getSchemaByRef": [Function],
-              "resolveRef": [Function],
-              "resolveSchemaName": [Function],
-          },
-          "schemaByName": {},
-          "zodSchemaByName": {},
-      }
-    `);
+    {
+        "deepDependencyGraph": {},
+        "doc": {
+            "components": {
+                "responses": {
+                    "ExampleResponse": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                },
+                            },
+                        },
+                        "description": "example response",
+                    },
+                },
+            },
+            "info": {
+                "title": "Example API",
+                "version": "1",
+            },
+            "openapi": "3.0.3",
+            "paths": {
+                "/": {
+                    "get": {
+                        "operationId": "getExample",
+                        "responses": {
+                            "200": {
+                                "$ref": "#/components/responses/ExampleResponse",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        "endpoints": [
+            {
+                "description": undefined,
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+        ],
+        "issues": {
+            "ignoredFallbackResponse": [],
+            "ignoredGenericError": [],
+        },
+        "refsDependencyGraph": {},
+        "schemaByName": {},
+        "zodSchemaByName": {},
+    }
+  `);
 });

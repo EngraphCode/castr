@@ -17,6 +17,7 @@ import { replaceHyphenatedPath } from './utils.js';
 import type { AllowedMethod } from './openapi-type-guards.js';
 import { isReferenceObject } from './openapi-type-guards.js';
 import type { GetZodVarNameFn } from './zodiosEndpoint.operation.helpers.js';
+import { getComponentByRef } from './component-access.js';
 import {
   processDefaultResponse,
   processParameter,
@@ -47,15 +48,16 @@ function processResponses(
     let responseObj: ResponseObject;
     if (isReferenceObject(maybeResponseObj)) {
       // Resolve the reference
-      const resolved = ctx.resolver.getSchemaByRef(maybeResponseObj.$ref);
+      const resolved = getComponentByRef<ResponseObject | ReferenceObject>(
+        ctx.doc,
+        maybeResponseObj.$ref,
+      );
       if (isReferenceObject(resolved)) {
         throw new Error(
           `Nested $ref in response ${statusCode}: ${maybeResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
         );
       }
-      // Resolver returns generic SchemaObject; assert it's ResponseObject at runtime
-      // This is safe because OpenAPI spec guarantees $ref resolution type consistency
-      responseObj = resolved as ResponseObject;
+      responseObj = resolved;
     } else {
       // After checking it's not a ReferenceObject, maybeResponseObj must be ResponseObject
       responseObj = maybeResponseObj as ResponseObject;
@@ -102,15 +104,16 @@ function handleDefaultResponse(
   // Resolve ReferenceObject if needed
   let defaultResponse: ResponseObject;
   if (isReferenceObject(defaultResponseObj)) {
-    const resolved = ctx.resolver.getSchemaByRef(defaultResponseObj.$ref);
+    const resolved = getComponentByRef<ResponseObject | ReferenceObject>(
+      ctx.doc,
+      defaultResponseObj.$ref,
+    );
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in default response: ${defaultResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
       );
     }
-    // Resolver returns generic SchemaObject; assert it's ResponseObject at runtime
-    // This is safe because OpenAPI spec guarantees $ref resolution type consistency
-    defaultResponse = resolved as ResponseObject;
+    defaultResponse = resolved;
   } else {
     defaultResponse = defaultResponseObj;
   }
