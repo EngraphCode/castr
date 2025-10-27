@@ -70,14 +70,15 @@
 ## 🏗️ **Architectural Insight: Strings vs AST Nodes**
 
 ### **Key Realization**
+
 TypeScript type expressions are **just strings**! We don't need AST manipulation:
 
 ```typescript
 // OLD approach (tanu):
-t.union([t.string(), t.number()])  // Returns ts.Node → requires printing
+t.union([t.string(), t.number()]); // Returns ts.Node → requires printing
 
 // NEW approach (strings):
-'string | number'  // It's already valid TypeScript!
+('string | number'); // It's already valid TypeScript!
 ```
 
 ### **Layered Architecture**
@@ -104,6 +105,7 @@ t.union([t.string(), t.number()])  // Returns ts.Node → requires printing
 ### 1. **OpenAPI Version Compatibility**
 
 Support both 3.0 and 3.1+ from the start:
+
 - **3.0**: `type: "string"` + `nullable: true` → `"string | null"`
 - **3.1+**: `type: "null"` → `"null"`
 - **3.1+**: `type: ["string", "null"]` → handled by `handleTypeArray()`
@@ -313,33 +315,33 @@ pnpm build  # Verify no build issues
      it('should map string to string', () => {
        expect(primitiveToTypeScript('string')).toBe('string');
      });
-     
+
      it('should map integer to number', () => {
        expect(primitiveToTypeScript('integer')).toBe('number');
      });
-     
+
      it('should map number to number', () => {
        expect(primitiveToTypeScript('number')).toBe('number');
      });
-     
+
      it('should map boolean to boolean', () => {
        expect(primitiveToTypeScript('boolean')).toBe('boolean');
      });
-     
+
      it('should map null to null (3.1+ support)', () => {
        expect(primitiveToTypeScript('null')).toBe('null');
      });
    });
-   
+
    describe('handleBasicPrimitive', () => {
      it('should return string for non-nullable string', () => {
        expect(handleBasicPrimitive('string', false)).toBe('string');
      });
-     
+
      it('should return union with null for nullable string', () => {
        expect(handleBasicPrimitive('string', true)).toBe('string | null');
      });
-     
+
      it('should return number for integer', () => {
        expect(handleBasicPrimitive('integer', false)).toBe('number');
      });
@@ -360,7 +362,7 @@ pnpm build  # Verify no build issues
    export function primitiveToTypeScript(type: PrimitiveSchemaType): string {
      return type === 'integer' ? 'number' : type;
    }
-   
+
    export function handleBasicPrimitive(
      schemaType: PrimitiveSchemaType,
      isNullable: boolean,

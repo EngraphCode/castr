@@ -1,8 +1,8 @@
 /**
  * Comprehensive test suite for string-based TypeScript type generation
- * 
+ *
  * TDD: These tests define the new API before implementation
- * 
+ *
  * Design Goal: Convert OpenAPI schemas → TypeScript type strings
  * - Eliminate tanu dependency
  * - Zero type assertions
@@ -12,6 +12,29 @@
 
 import { describe, it, expect } from 'vitest';
 import type { SchemaObject } from 'openapi3-ts/oas30';
+import {
+  PRIMITIVE_SCHEMA_TYPES,
+  type PrimitiveSchemaType,
+  primitiveToTypeScript,
+  handleBasicPrimitive,
+  handleStringEnum,
+  handleNumericEnum,
+  handleMixedEnum,
+  handleArrayType,
+  handleReadonlyArray,
+  handleUnion,
+  handleIntersection,
+  handleObjectType,
+  handlePartialObject,
+  handleAdditionalProperties,
+  mergeObjectWithAdditionalProps,
+  handleReference,
+  handleUnknownType,
+  handleNeverType,
+  handleAnyType,
+  wrapNullable,
+  wrapReadonly,
+} from './openApiToTypescript.string-helpers.js';
 
 // =============================================================================
 // 1. PRIMITIVE TYPES
@@ -96,9 +119,7 @@ describe('Enum Types', () => {
     });
 
     it('should handle special characters', () => {
-      expect(handleStringEnum(['hello-world', 'foo_bar'])).toBe(
-        '"hello-world" | "foo_bar"',
-      );
+      expect(handleStringEnum(['hello-world', 'foo_bar'])).toBe('"hello-world" | "foo_bar"');
     });
   });
 
@@ -174,9 +195,7 @@ describe('Union Types', () => {
     });
 
     it('should create union of multiple types', () => {
-      expect(handleUnion(['string', 'number', 'boolean'])).toBe(
-        'string | number | boolean',
-      );
+      expect(handleUnion(['string', 'number', 'boolean'])).toBe('string | number | boolean');
     });
 
     it('should handle single type (degenerate union)', () => {
@@ -184,9 +203,9 @@ describe('Union Types', () => {
     });
 
     it('should handle complex type unions', () => {
-      expect(
-        handleUnion(['{ type: "user" }', '{ type: "admin" }', '{ type: "guest" }']),
-      ).toBe('{ type: "user" } | { type: "admin" } | { type: "guest" }');
+      expect(handleUnion(['{ type: "user" }', '{ type: "admin" }', '{ type: "guest" }'])).toBe(
+        '{ type: "user" } | { type: "admin" } | { type: "guest" }',
+      );
     });
 
     it('should add null to union when nullable (3.0)', () => {
@@ -216,9 +235,7 @@ describe('Intersection Types', () => {
     });
 
     it('should add null union when nullable (3.0)', () => {
-      expect(handleIntersection(['Base', 'Extended'], true)).toBe(
-        '(Base & Extended) | null',
-      );
+      expect(handleIntersection(['Base', 'Extended'], true)).toBe('(Base & Extended) | null');
     });
   });
 });
@@ -307,20 +324,15 @@ describe('Object Types', () => {
     });
 
     it('should handle complex value types', () => {
-      expect(handleAdditionalProperties('User | Admin')).toBe(
-        '{ [key: string]: User | Admin }',
-      );
+      expect(handleAdditionalProperties('User | Admin')).toBe('{ [key: string]: User | Admin }');
     });
   });
 
   describe('mergeObjectWithAdditionalProps', () => {
     it('should combine object props with additional properties', () => {
-      expect(
-        mergeObjectWithAdditionalProps(
-          '{ id: number }',
-          '{ [key: string]: any }',
-        ),
-      ).toBe('{ id: number } & { [key: string]: any }');
+      expect(mergeObjectWithAdditionalProps('{ id: number }', '{ [key: string]: any }')).toBe(
+        '{ id: number } & { [key: string]: any }',
+      );
     });
   });
 });
@@ -344,9 +356,7 @@ describe('Reference Types', () => {
     });
 
     it('should handle parameters ref', () => {
-      expect(handleReference('#/components/parameters/PaginationParams')).toBe(
-        'PaginationParams',
-      );
+      expect(handleReference('#/components/parameters/PaginationParams')).toBe('PaginationParams');
     });
   });
 });
@@ -416,10 +426,7 @@ describe('Type Modifiers', () => {
 describe('Complex Type Combinations', () => {
   describe('Nested union with nullable', () => {
     it('should handle union of objects with nullable', () => {
-      const union = handleUnion([
-        '{ type: "user"; id: number }',
-        '{ type: "guest" }',
-      ]);
+      const union = handleUnion(['{ type: "user"; id: number }', '{ type: "guest" }']);
       expect(wrapNullable(union, true)).toBe(
         '({ type: "user"; id: number } | { type: "guest" }) | null',
       );
@@ -459,33 +466,4 @@ describe('Complex Type Combinations', () => {
   });
 });
 
-// =============================================================================
-// TYPE IMPORTS (will be implemented)
-// =============================================================================
-
-type PrimitiveSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'null';
-
-// =============================================================================
-// FUNCTION DECLARATIONS (to be implemented)
-// =============================================================================
-
-declare function primitiveToTypeScript(type: PrimitiveSchemaType): string;
-declare function handleBasicPrimitive(type: PrimitiveSchemaType, isNullable: boolean): string;
-declare function handleStringEnum(values: string[]): string;
-declare function handleNumericEnum(values: number[]): string;
-declare function handleMixedEnum(values: Array<string | number | boolean | null>): string;
-declare function handleArrayType(itemType: string): string;
-declare function handleReadonlyArray(itemType: string): string;
-declare function handleUnion(types: string[], isNullable?: boolean): string;
-declare function handleIntersection(types: string[], isNullable?: boolean): string;
-declare function handleObjectType(properties: Record<string, string>): string;
-declare function handlePartialObject(objectType: string): string;
-declare function handleAdditionalProperties(valueType: string): string;
-declare function mergeObjectWithAdditionalProps(objectType: string, additionalProps: string): string;
-declare function handleReference(ref: string): string;
-declare function handleUnknownType(): string;
-declare function handleNeverType(): string;
-declare function handleAnyType(): string;
-declare function wrapNullable(type: string, isNullable: boolean): string;
-declare function wrapReadonly(type: string, isReadonly: boolean): string;
-
+// All functions are now imported from the implementation file above ⬆️
