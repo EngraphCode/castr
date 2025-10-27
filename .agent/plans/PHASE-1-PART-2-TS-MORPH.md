@@ -70,24 +70,28 @@
 ## ⚠️ Critical Considerations
 
 ### 1. **Breaking Changes in Output Format**
+
 - ts-morph may format code differently than tanu
 - Expect snapshot tests to need updating
 - Budget additional time for snapshot regeneration
 - Verify generated code is functionally equivalent
 
 ### 2. **Complexity Management**
+
 - `openApiToTypescript.helpers.ts` is likely complex
 - May need to break into smaller modules during refactoring
 - Monitor cognitive complexity metrics
 - Target: <50 lines per function, <10 cognitive complexity
 
 ### 3. **Test Strategy**
+
 - **Existing snapshot tests:** Will catch output regressions
 - **New unit tests:** Focus on AstBuilder methods (isolated)
 - **Characterization tests:** Capture current tanu behavior before changes
 - **Integration tests:** Verify end-to-end TypeScript generation
 
 ### 4. **Incremental Approach**
+
 - Replace one function at a time
 - Keep all tests passing after each change
 - Don't refactor multiple files simultaneously

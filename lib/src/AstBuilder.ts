@@ -1,9 +1,9 @@
 /**
  * AstBuilder - A type-safe, fluent wrapper around ts-morph
- * 
+ *
  * Provides a simple API for generating TypeScript type declarations
  * without the complexity of direct ts-morph usage.
- * 
+ *
  * Design goals:
  * - Zero type assertions
  * - Fluent API (method chaining)
@@ -47,7 +47,7 @@ export type InterfaceOptions = {
 
 /**
  * AstBuilder - Fluent API for generating TypeScript declarations
- * 
+ *
  * @example
  * ```typescript
  * const builder = new AstBuilder();
@@ -58,7 +58,7 @@ export type InterfaceOptions = {
  *     { name: 'id', type: 'string' },
  *     { name: 'name', type: 'string' },
  *   ]);
- * 
+ *
  * const output = builder.toString();
  * ```
  */
@@ -74,11 +74,11 @@ export class AstBuilder {
 
   /**
    * Add named imports from a module
-   * 
+   *
    * @param moduleSpecifier - The module to import from (e.g., 'zod')
    * @param namedImports - Array of named exports to import
    * @returns this for method chaining
-   * 
+   *
    * @example
    * ```typescript
    * builder.addImport('zod', ['z', 'ZodType']);
@@ -95,12 +95,12 @@ export class AstBuilder {
 
   /**
    * Add a type alias declaration
-   * 
+   *
    * @param name - The name of the type
    * @param type - The type definition as a string
    * @param options - Optional configuration (exported, docs)
    * @returns this for method chaining
-   * 
+   *
    * @example
    * ```typescript
    * builder.addTypeAlias('User', '{ id: string; name: string }', {
@@ -127,12 +127,12 @@ export class AstBuilder {
 
   /**
    * Add an interface declaration
-   * 
+   *
    * @param name - The name of the interface
    * @param properties - Array of property definitions
    * @param options - Optional configuration (exported, docs, indexSignature)
    * @returns this for method chaining
-   * 
+   *
    * @example
    * ```typescript
    * builder.addInterface('Person', [
@@ -146,7 +146,11 @@ export class AstBuilder {
    * // }
    * ```
    */
-  addInterface(name: string, properties: PropertyDefinition[], options: InterfaceOptions = {}): this {
+  addInterface(
+    name: string,
+    properties: PropertyDefinition[],
+    options: InterfaceOptions = {},
+  ): this {
     const { exported = true, docs, indexSignature } = options;
 
     this.sourceFile.addInterface({
@@ -177,9 +181,9 @@ export class AstBuilder {
 
   /**
    * Get the generated TypeScript code as a string
-   * 
+   *
    * @returns The complete TypeScript code with all declarations
-   * 
+   *
    * @example
    * ```typescript
    * const output = builder.toString();
@@ -193,11 +197,10 @@ export class AstBuilder {
   /**
    * Alias for toString() for clarity
    * Same as toString(), provided for better readability
-   * 
+   *
    * @returns The complete TypeScript code with all declarations
    */
   getFullText(): string {
     return this.toString();
   }
 }
-

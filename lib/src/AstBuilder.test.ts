@@ -1,8 +1,8 @@
 /**
  * Unit tests for AstBuilder - A type-safe wrapper around ts-morph
- * 
+ *
  * TDD: These tests define the API before implementation
- * 
+ *
  * Design Goals:
  * - Zero type assertions
  * - Fluent API (method chaining)
@@ -10,7 +10,7 @@
  * - Hide ts-morph complexity
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { AstBuilder } from './AstBuilder.js';
 
 describe('AstBuilder', () => {
@@ -31,7 +31,7 @@ describe('AstBuilder', () => {
     it('should add named imports', () => {
       const builder = new AstBuilder();
       builder.addImport('zod', ['z', 'ZodType']);
-      
+
       const output = builder.toString();
       expect(output).toContain('import { z, ZodType } from "zod"');
     });
@@ -39,7 +39,7 @@ describe('AstBuilder', () => {
     it('should add single named import', () => {
       const builder = new AstBuilder();
       builder.addImport('openapi3-ts/oas30', ['OpenAPIObject']);
-      
+
       const output = builder.toString();
       expect(output).toContain('import { OpenAPIObject } from "openapi3-ts/oas30"');
     });
@@ -47,16 +47,14 @@ describe('AstBuilder', () => {
     it('should support method chaining', () => {
       const builder = new AstBuilder();
       const result = builder.addImport('zod', ['z']);
-      
+
       expect(result).toBe(builder); // Returns this for chaining
     });
 
     it('should add multiple imports separately', () => {
       const builder = new AstBuilder();
-      builder
-        .addImport('zod', ['z'])
-        .addImport('axios', ['AxiosResponse']);
-      
+      builder.addImport('zod', ['z']).addImport('axios', ['AxiosResponse']);
+
       const output = builder.toString();
       expect(output).toContain('import { z } from "zod"');
       expect(output).toContain('import { AxiosResponse } from "axios"');
@@ -67,7 +65,7 @@ describe('AstBuilder', () => {
     it('should add simple type alias', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('UserId', 'string');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type UserId = string');
     });
@@ -75,7 +73,7 @@ describe('AstBuilder', () => {
     it('should add object type alias', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('User', '{ id: number; name: string }');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type User');
       expect(output).toContain('id: number');
@@ -85,7 +83,7 @@ describe('AstBuilder', () => {
     it('should add union type alias', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Status', '"active" | "inactive" | "pending"');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type Status');
       expect(output).toContain('"active"');
@@ -95,7 +93,7 @@ describe('AstBuilder', () => {
     it('should add intersection type alias', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Extended', 'Base & { extra: string }');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type Extended = Base & { extra: string }');
     });
@@ -103,7 +101,7 @@ describe('AstBuilder', () => {
     it('should support non-exported types', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Internal', 'string', { exported: false });
-      
+
       const output = builder.toString();
       expect(output).toContain('type Internal = string');
       expect(output).not.toContain('export type Internal');
@@ -112,7 +110,7 @@ describe('AstBuilder', () => {
     it('should support method chaining', () => {
       const builder = new AstBuilder();
       const result = builder.addTypeAlias('User', 'string');
-      
+
       expect(result).toBe(builder);
     });
 
@@ -121,7 +119,7 @@ describe('AstBuilder', () => {
       builder.addTypeAlias('User', '{ id: number }', {
         docs: ['Represents a user in the system'],
       });
-      
+
       const output = builder.toString();
       expect(output).toContain('/**');
       expect(output).toContain('* Represents a user in the system');
@@ -131,13 +129,9 @@ describe('AstBuilder', () => {
     it('should add multiple JSDoc lines', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Config', '{ timeout: number }', {
-        docs: [
-          'Configuration object',
-          '@example',
-          '{ timeout: 5000 }',
-        ],
+        docs: ['Configuration object', '@example', '{ timeout: 5000 }'],
       });
-      
+
       const output = builder.toString();
       expect(output).toContain('Configuration object');
       expect(output).toContain('@example');
@@ -152,7 +146,7 @@ describe('AstBuilder', () => {
         { name: 'id', type: 'number' },
         { name: 'name', type: 'string' },
       ]);
-      
+
       const output = builder.toString();
       expect(output).toContain('export interface Person');
       expect(output).toContain('id: number');
@@ -165,7 +159,7 @@ describe('AstBuilder', () => {
         { name: 'id', type: 'number' },
         { name: 'email', type: 'string', optional: true },
       ]);
-      
+
       const output = builder.toString();
       expect(output).toContain('id: number');
       expect(output).toContain('email?: string');
@@ -173,10 +167,8 @@ describe('AstBuilder', () => {
 
     it('should add readonly properties', () => {
       const builder = new AstBuilder();
-      builder.addInterface('ImmutableUser', [
-        { name: 'id', type: 'number', readonly: true },
-      ]);
-      
+      builder.addInterface('ImmutableUser', [{ name: 'id', type: 'number', readonly: true }]);
+
       const output = builder.toString();
       expect(output).toContain('readonly id: number');
     });
@@ -184,7 +176,7 @@ describe('AstBuilder', () => {
     it('should support method chaining', () => {
       const builder = new AstBuilder();
       const result = builder.addInterface('User', [{ name: 'id', type: 'number' }]);
-      
+
       expect(result).toBe(builder);
     });
 
@@ -193,7 +185,7 @@ describe('AstBuilder', () => {
       builder.addInterface('Dictionary', [], {
         indexSignature: { keyName: 'key', keyType: 'string', returnType: 'any' },
       });
-      
+
       const output = builder.toString();
       expect(output).toContain('[key: string]: any');
     });
@@ -201,7 +193,7 @@ describe('AstBuilder', () => {
     it('should support non-exported interfaces', () => {
       const builder = new AstBuilder();
       builder.addInterface('Internal', [{ name: 'id', type: 'number' }], { exported: false });
-      
+
       const output = builder.toString();
       expect(output).toContain('interface Internal');
       expect(output).not.toContain('export interface Internal');
@@ -212,7 +204,7 @@ describe('AstBuilder', () => {
       builder.addInterface('User', [{ name: 'id', type: 'number' }], {
         docs: ['User interface'],
       });
-      
+
       const output = builder.toString();
       expect(output).toContain('/**');
       expect(output).toContain('* User interface');
@@ -223,7 +215,7 @@ describe('AstBuilder', () => {
     it('should handle nested object types', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('User', '{ id: number; profile: { name: string; age: number } }');
-      
+
       const output = builder.toString();
       expect(output).toContain('profile: { name: string; age: number }');
     });
@@ -231,7 +223,7 @@ describe('AstBuilder', () => {
     it('should handle array types', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Users', 'User[]');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type Users = User[]');
     });
@@ -239,7 +231,7 @@ describe('AstBuilder', () => {
     it('should handle tuple types', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Point', '[number, number]');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type Point = [number, number]');
     });
@@ -247,7 +239,7 @@ describe('AstBuilder', () => {
     it('should handle generic types', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Result', 'Promise<User>');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type Result = Promise<User>');
     });
@@ -255,7 +247,7 @@ describe('AstBuilder', () => {
     it('should handle readonly array types', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('ReadonlyUsers', 'readonly User[]');
-      
+
       const output = builder.toString();
       expect(output).toContain('readonly User[]');
     });
@@ -263,7 +255,7 @@ describe('AstBuilder', () => {
     it('should handle Partial utility type', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('PartialUser', 'Partial<User>');
-      
+
       const output = builder.toString();
       expect(output).toContain('Partial<User>');
     });
@@ -276,7 +268,7 @@ describe('AstBuilder', () => {
         .addTypeAlias('UserId', 'string')
         .addTypeAlias('UserName', 'string')
         .addTypeAlias('User', '{ id: UserId; name: UserName }');
-      
+
       const output = builder.toString();
       expect(output).toContain('export type UserId');
       expect(output).toContain('export type UserName');
@@ -289,12 +281,12 @@ describe('AstBuilder', () => {
         .addImport('zod', ['z'])
         .addTypeAlias('Schema', 'z.ZodType<User>')
         .addTypeAlias('User', '{ id: string }');
-      
+
       const output = builder.toString();
       const importIndex = output.indexOf('import');
       const schemaIndex = output.indexOf('type Schema');
       const userIndex = output.indexOf('type User');
-      
+
       expect(importIndex).toBeLessThan(schemaIndex);
       expect(schemaIndex).toBeLessThan(userIndex);
     });
@@ -304,7 +296,7 @@ describe('AstBuilder', () => {
       builder
         .addInterface('IPerson', [{ name: 'id', type: 'number' }])
         .addTypeAlias('PersonId', 'IPerson["id"]');
-      
+
       const output = builder.toString();
       expect(output).toContain('interface IPerson');
       expect(output).toContain('type PersonId');
@@ -315,7 +307,7 @@ describe('AstBuilder', () => {
     it('should return formatted TypeScript code', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('User', 'string');
-      
+
       const output = builder.toString();
       expect(typeof output).toBe('string');
       expect(output.length).toBeGreaterThan(0);
@@ -328,7 +320,7 @@ describe('AstBuilder', () => {
         .addTypeAlias('A', 'string')
         .addTypeAlias('B', 'number')
         .addInterface('C', [{ name: 'x', type: 'boolean' }]);
-      
+
       const output = builder.toString();
       expect(output).toContain('import');
       expect(output).toContain('type A');
@@ -339,10 +331,10 @@ describe('AstBuilder', () => {
     it('should be callable multiple times with same result', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('User', 'string');
-      
+
       const output1 = builder.toString();
       const output2 = builder.toString();
-      
+
       expect(output1).toBe(output2);
     });
   });
@@ -352,7 +344,7 @@ describe('AstBuilder', () => {
       const builder = new AstBuilder();
       // This is technically invalid TypeScript, but builder shouldn't crash
       builder.addTypeAlias('Empty', '');
-      
+
       const output = builder.toString();
       expect(output).toContain('type Empty');
     });
@@ -361,16 +353,17 @@ describe('AstBuilder', () => {
       const builder = new AstBuilder();
       // $ is valid in TypeScript identifiers
       builder.addTypeAlias('$User', 'string');
-      
+
       const output = builder.toString();
       expect(output).toContain('$User');
     });
 
     it('should handle very long type expressions', () => {
       const builder = new AstBuilder();
-      const longType = '{ ' + Array.from({ length: 100 }, (_, i) => `prop${i}: string`).join('; ') + ' }';
+      const longType =
+        '{ ' + Array.from({ length: 100 }, (_, i) => `prop${i}: string`).join('; ') + ' }';
       builder.addTypeAlias('LongType', longType);
-      
+
       const output = builder.toString();
       expect(output).toContain('type LongType');
       expect(output).toContain('prop0');
@@ -381,8 +374,11 @@ describe('AstBuilder', () => {
   describe('real-world usage patterns', () => {
     it('should support OpenAPI schema type alias pattern', () => {
       const builder = new AstBuilder();
-      builder.addTypeAlias('Pet', '{ id: number; name: string; status: "available" | "pending" | "sold" }');
-      
+      builder.addTypeAlias(
+        'Pet',
+        '{ id: number; name: string; status: "available" | "pending" | "sold" }',
+      );
+
       const output = builder.toString();
       expect(output).toContain('export type Pet');
       expect(output).toContain('"available"');
@@ -395,7 +391,7 @@ describe('AstBuilder', () => {
         .addTypeAlias('PetId', 'string')
         .addTypeAlias('Pet', '{ id: PetId; name: string }')
         .addTypeAlias('PetResponse', '{ data: Pet; status: number }');
-      
+
       const output = builder.toString();
       expect(output).toContain('type PetId');
       expect(output).toContain('type Pet');
@@ -407,7 +403,7 @@ describe('AstBuilder', () => {
     it('should support nullable types (union with null)', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('NullableString', 'string | null');
-      
+
       const output = builder.toString();
       expect(output).toContain('string | null');
     });
@@ -415,7 +411,7 @@ describe('AstBuilder', () => {
     it('should support allOf intersection pattern', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('ExtendedPet', 'Pet & { category: string }');
-      
+
       const output = builder.toString();
       expect(output).toContain('Pet & { category: string }');
     });
@@ -423,10 +419,9 @@ describe('AstBuilder', () => {
     it('should support oneOf union pattern', () => {
       const builder = new AstBuilder();
       builder.addTypeAlias('Response', 'SuccessResponse | ErrorResponse');
-      
+
       const output = builder.toString();
       expect(output).toContain('SuccessResponse | ErrorResponse');
     });
   });
 });
-

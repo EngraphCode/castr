@@ -27,6 +27,7 @@ sourceFile.addTypeAlias({
 ```
 
 **Supports:**
+
 - Simple object types
 - Union types (`"active" | "inactive" | "pending"`)
 - Intersection types (`Base & { extra: string }`)
@@ -45,13 +46,12 @@ sourceFile.addInterface({
     { name: 'email', type: 'string', hasQuestionToken: true }, // optional
     { name: 'data', type: 'Data', isReadonly: true }, // readonly
   ],
-  indexSignatures: [
-    { keyName: 'key', keyType: 'string', returnType: 'any' }
-  ],
+  indexSignatures: [{ keyName: 'key', keyType: 'string', returnType: 'any' }],
 });
 ```
 
 **Supports:**
+
 - Required properties
 - Optional properties (`?:`)
 - Readonly properties
@@ -143,6 +143,7 @@ sourceFile.addInterface({
 4. **Whitespace:** Clean, consistent spacing
 
 **Impact on Project:**
+
 - Snapshot tests will need updating (different formatting than `tanu`)
 - Generated code will be **more consistent** with TypeScript standards
 - No need to worry about formatting - ts-morph handles it
@@ -173,10 +174,20 @@ export class AstBuilder {
   addInterface(name: string, properties: Property[], options?: InterfaceOptions): this;
 
   // Variable generation
-  addConstant(name: string, initializer: string, options?: { type?: string; exported?: boolean }): this;
+  addConstant(
+    name: string,
+    initializer: string,
+    options?: { type?: string; exported?: boolean },
+  ): this;
 
   // Function generation (if needed)
-  addFunction(name: string, params: Parameter[], returnType: string, body: string, options?: FunctionOptions): this;
+  addFunction(
+    name: string,
+    params: Parameter[],
+    returnType: string,
+    body: string,
+    options?: FunctionOptions,
+  ): this;
 
   // Output
   toString(): string;
@@ -196,15 +207,15 @@ export class AstBuilder {
 
 ## 🔍 Comparison: tanu vs ts-morph
 
-| Feature | tanu | ts-morph |
-|---------|------|----------|
-| **Type Safety** | Poor (requires assertions) | Excellent (zero assertions) |
-| **Documentation** | Minimal | Comprehensive |
-| **API Style** | Functional, mixed | Object-oriented, consistent |
-| **Community** | Small | Large, active |
-| **Maturity** | Lower | High (built on TS compiler) |
-| **Output Format** | Varies | Consistent |
-| **Learning Curve** | Medium | Low (intuitive API) |
+| Feature            | tanu                       | ts-morph                    |
+| ------------------ | -------------------------- | --------------------------- |
+| **Type Safety**    | Poor (requires assertions) | Excellent (zero assertions) |
+| **Documentation**  | Minimal                    | Comprehensive               |
+| **API Style**      | Functional, mixed          | Object-oriented, consistent |
+| **Community**      | Small                      | Large, active               |
+| **Maturity**       | Lower                      | High (built on TS compiler) |
+| **Output Format**  | Varies                     | Consistent                  |
+| **Learning Curve** | Medium                     | Low (intuitive API)         |
 
 ---
 
@@ -213,6 +224,7 @@ export class AstBuilder {
 **None identified for our use case!**
 
 ts-morph provides everything we need for OpenAPI → TypeScript generation:
+
 - ✅ Type aliases (our primary need)
 - ✅ Interfaces (alternative representation)
 - ✅ Imports (for referencing types)
@@ -249,10 +261,12 @@ Replace `tanu` calls with AstBuilder:
 **Target:** Eliminate 30 type assertions from TypeScript generation files
 
 **Current Baseline:**
+
 - `openApiToTypescript.helpers.ts`: 28 assertions
 - `openApiToTypescript.ts`: 2 assertions
 
 **Expected After:**
+
 - Both files: 0 assertions
 - All tests passing
 - Generated TypeScript improved consistency
@@ -268,4 +282,3 @@ Replace `tanu` calls with AstBuilder:
 ---
 
 **Conclusion:** ts-morph is **ideal** for our needs. Proceed with full confidence!
-

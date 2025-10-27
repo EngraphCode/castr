@@ -1,4 +1,4 @@
-import { Project } from 'ts-morph';
+import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, it, expect } from 'vitest';
 
 /**
@@ -142,7 +142,7 @@ describe('ts-morph API exploration', () => {
       const sourceFile = project.createSourceFile('test.ts', '', { overwrite: true });
 
       sourceFile.addVariableStatement({
-        declarationKind: 'const' as const,
+        declarationKind: VariableDeclarationKind.Const,
         isExported: true,
         declarations: [
           {
@@ -162,7 +162,7 @@ describe('ts-morph API exploration', () => {
       const sourceFile = project.createSourceFile('test.ts', '', { overwrite: true });
 
       sourceFile.addVariableStatement({
-        declarationKind: 'const' as const,
+        declarationKind: VariableDeclarationKind.Const,
         isExported: true,
         declarations: [
           {
@@ -340,4 +340,3 @@ describe('ts-morph API exploration', () => {
     });
   });
 });
-
