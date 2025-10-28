@@ -1,8 +1,13 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { readdir, rm } from 'node:fs/promises';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import degit from 'degit';
+
+// Get the directory where this script is located
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Configuration for fetching OpenAPI examples from official sources.
@@ -10,10 +15,10 @@ import degit from 'degit';
 const EXAMPLES_CONFIG = {
   /** GitHub repository containing official OpenAPI examples */
   sourceRepo: 'OAI/learn.openapis.org/examples',
-  /** Local directory where OpenAPI v3.x examples will be stored */
-  targetDir: './examples/openapi',
-  /** Temporary clone directory */
-  tempDir: './.temp-examples',
+  /** Local directory where OpenAPI v3.x examples will be stored (relative to script location) */
+  targetDir: resolve(__dirname, './examples/openapi'),
+  /** Temporary clone directory (relative to script location) */
+  tempDir: resolve(__dirname, './.temp-examples'),
 } as const;
 
 /**
@@ -89,8 +94,11 @@ async function cleanExistingExamples(): Promise<void> {
 async function cloneExamplesFromGitHub(): Promise<void> {
   console.log(`📥 Cloning from: ${EXAMPLES_CONFIG.sourceRepo}...`);
 
-  const emitter = degit(EXAMPLES_CONFIG.sourceRepo, {
-    cache: true,
+  // Clone full repo to a temp location, then move just the examples subdirectory
+  const fullRepoTemp = resolve(__dirname, './.temp-full-repo');
+
+  const emitter = degit('OAI/learn.openapis.org', {
+    cache: false, // Disable cache to avoid corruption issues
     force: true,
     verbose: false,
   });
@@ -99,8 +107,17 @@ async function cloneExamplesFromGitHub(): Promise<void> {
     console.log(`   ${info.message}`);
   });
 
-  await emitter.clone(EXAMPLES_CONFIG.tempDir);
-  console.log(`   Cloned to: ${EXAMPLES_CONFIG.tempDir}`);
+  await emitter.clone(fullRepoTemp);
+  console.log(`   Cloned full repo to: ${fullRepoTemp}`);
+
+  // Move just the examples subdirectory to our temp location
+  spawnSync('mv', [join(fullRepoTemp, 'examples'), EXAMPLES_CONFIG.tempDir], {
+    stdio: 'inherit',
+  });
+
+  // Clean up the rest of the repo
+  await rm(fullRepoTemp, { recursive: true, force: true });
+  console.log(`   Extracted examples to: ${EXAMPLES_CONFIG.tempDir}`);
 }
 
 /**
