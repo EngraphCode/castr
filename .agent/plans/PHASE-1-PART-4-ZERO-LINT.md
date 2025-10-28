@@ -1,59 +1,98 @@
 # Phase 1 Part 4: Zero Lint Errors (Perfect)
 
 **Status:** NOT STARTED  
-**Estimated Duration:** 19-23 hours  
+**Estimated Duration:** 36-45 hours (Pragmatic Hybrid: Production Perfect + Critical Test Issues)  
 **Prerequisites:** Parts 1-3 complete, all tests passing
 
 ---
 
 ## 🎯 WHY: The Extraction Blocker
 
-**Current State:** 105 lint errors (53 type safety violations in production code)
+**Current State:** 271 lint errors (after tightening rules to production standards)
+
+**Previous:** 105 errors (lax rules)  
+**Current:** 271 errors (strict Engraph-ready rules)  
+**Delta:** +166 errors from stricter complexity/quality standards
 
 **Problem:**
 
-- `as` type assertions: 45 in production code → Type safety illusion
-- `any` types: 3 explicit → Type information loss
-- `Record<string,unknown>`: 4 → Type destruction
-- God functions: 3 with extreme complexity → Unmaintainable
-- Test quality issues: 20 → Technical debt
+- **Size/Structure:** 123 errors (45%) - Functions/files too large
+  - openApiToZod.ts:47: 323 lines (6.5x over limit!)
+  - template-context.ts:73: 251 lines (5x over!)
+  - 6 files >250 lines, 20+ functions >50 lines
+- **Complexity:** 51 errors (19%) - Cyclomatic/cognitive complexity
+  - openApiToZod.ts:47: 69 cyclomatic (8.6x over!)
+  - openApiToZod.ts:47: 90 cognitive (11.25x over!)
+  - 20+ functions with complexity 9-69
+- **Missing Return Types:** 18 errors (7%) - NEW strict rule
+- **Type Safety:** 15 errors (6%) - Type assertions, `any`, `Record<string,unknown>`
+- **Console Statements:** 8 errors (3%) - NEW strict rule
+- **Test Issues:** 40 errors (15%) - Very long test files/functions
+- **Other Quality:** 16 errors (6%) - Best practices, RegExp, etc.
 
 **Impact of NOT fixing:**
 
 - **Cannot extract to Engraph** with confidence
 - Type assertions mask runtime errors
-- Complex functions resist modification
-- Technical debt compounds over time
-- Current lint config is lax - Engraph will be stricter
+- God functions resist modification and understanding
+- Missing return types lose IDE assistance
+- Console statements inappropriate for library code
+- Current rules match Engraph standards - must be 0 before extraction
 
-**Success Metric:** 0 lint errors, 100% type-safe production code, all functions <100 lines
+**Success Metric:** 0 lint errors in production code, <5 acceptable quality issues in tests
 
 ---
 
 ## ✅ Acceptance Criteria
 
-1. **Type Safety (Zero Tolerance):**
+### Production Code (Zero Tolerance)
+
+1. **Type Safety:**
    - Zero `as` type assertions (except `as const`)
    - Zero explicit `any` types
    - Zero `Record<string,unknown>` without justification
    - Proper type guards for all runtime checks
 
-2. **Code Complexity (Maintainability):**
-   - All functions <100 lines
-   - All functions <30 statements
-   - All functions <29 cyclomatic complexity
-   - All files <350 lines
+2. **Code Size (Strict):**
+   - All functions <50 lines (NEW: down from 100)
+   - All files <250 lines (NEW: down from 350)
+   - All functions <20 statements (NEW: down from 30)
+   - All functions <3 nesting depth (NEW: enforced)
 
-3. **Quality Gates:**
-   - Lint: 0 errors, 0 warnings
-   - Tests: All passing
+3. **Code Complexity (Strict):**
+   - All functions <8 cyclomatic complexity (NEW: down from 29)
+   - All functions <8 cognitive complexity (NEW: down from 29)
+
+4. **Type Annotations:**
+   - All exported functions have explicit return types (NEW)
+
+5. **Logging (NEW):**
+   - Zero `console.*` statements in production code
+   - Use `logger` from `lib/src/utils/logger.ts` instead
+   - Logger supports: `info`, `warn`, `error` methods
+   - Tests and scripts: `console.*` allowed (via eslint config)
+
+### Test Code (Pragmatic)
+
+6. **Critical Test Issues:**
+   - Zero files >2000 lines
+   - Zero `@ts-nocheck` pragmas
+   - Zero unresolved TODOs
+   - Zero missing `await` on async operations
+
+7. **Acceptable Test Quality:**
+   - Test functions 200-400 lines: acceptable
+   - Test files 1000-1500 lines: acceptable
+   - (Will be improved in future refactoring)
+
+### Quality Gates
+
+8. **All Gates Green:**
+   - Lint: 0 errors in `src/`, <5 acceptable warnings in tests
+   - Tests: All passing (103/103 files)
    - Type-check: 0 errors
    - Build: Success
-
-4. **Documentation:**
-   - All complex type guards documented
-   - All intentional complexity justified
-   - Migration notes for future maintainers
+   - Format: Pass
 
 ---
 
@@ -79,6 +118,172 @@
 5. **VALIDATE** - All tests pass, complexity reduced
 
 **No exceptions.** Every change requires tests first.
+
+---
+
+## 🪵 Logging Solution (NEW)
+
+Before removing console statements, we need a proper logging solution.
+
+### Requirements
+
+1. **Production Code:** Use logger, not console
+2. **Tests/Scripts:** Continue using console (allowed via eslint)
+3. **Future-proof:** Easy to swap with Engraph's logger workspace after extraction
+
+### Implementation: Task 4.0 (Prerequisite)
+
+**Duration:** 1 hour  
+**Priority:** PREREQUISITE for Task 4.4
+
+#### Subtask 4.0.1: Create Basic Logger
+
+**TDD Workflow:**
+
+1. **Write Tests (RED):**
+
+   ```typescript
+   // lib/src/utils/logger.test.ts
+   describe('Logger', () => {
+     beforeEach(() => {
+       vi.spyOn(console, 'info').mockImplementation(() => {});
+       vi.spyOn(console, 'warn').mockImplementation(() => {});
+       vi.spyOn(console, 'error').mockImplementation(() => {});
+     });
+
+     it('should log info messages', () => {
+       logger.info('test message');
+       expect(console.info).toHaveBeenCalledWith('[INFO]', 'test message');
+     });
+
+     it('should log warn messages', () => {
+       logger.warn('warning');
+       expect(console.warn).toHaveBeenCalledWith('[WARN]', 'warning');
+     });
+
+     it('should log error messages', () => {
+       logger.error('error');
+       expect(console.error).toHaveBeenCalledWith('[ERROR]', 'error');
+     });
+   });
+   ```
+
+2. **Implement Logger (GREEN):**
+
+   ````typescript
+   // lib/src/utils/logger.ts
+   /**
+    * Basic logging utility for openapi-zod-client.
+    *
+    * This is a temporary logger that uses console under the hood.
+    * After extraction to Engraph monorepo, this will be replaced
+    * with the workspace logger.
+    *
+    * @example
+    * ```typescript
+    * import { logger } from './utils/logger.js';
+    *
+    * logger.info('Starting generation...');
+    * logger.warn('Deprecated feature used');
+    * logger.error('Failed to parse schema');
+    * ```
+    */
+   export const logger = {
+     /**
+      * Log informational message
+      */
+     info: (...args: unknown[]): void => {
+       console.info('[INFO]', ...args);
+     },
+
+     /**
+      * Log warning message
+      */
+     warn: (...args: unknown[]): void => {
+       console.warn('[WARN]', ...args);
+     },
+
+     /**
+      * Log error message
+      */
+     error: (...args: unknown[]): void => {
+       console.error('[ERROR]', ...args);
+     },
+   } as const;
+   ````
+
+3. **Update ESLint Config (allow console in tests/scripts):**
+
+   ```typescript
+   // lib/eslint.config.ts
+   {
+     files: ['**/*.test.ts', '**/tests-snapshot/**/*.ts', '**/characterisation/**/*.ts'],
+     rules: {
+       'no-console': 'off', // Tests can use console
+       // ... other test rules
+     },
+   },
+   {
+     files: ['**/cli.ts', '**/bin.cjs'],
+     rules: {
+       'no-console': 'off', // CLI scripts can use console
+       // ... other script rules
+     },
+   },
+   ```
+
+4. **Export from index.ts:**
+
+   ```typescript
+   // lib/src/index.ts
+   export { logger } from './utils/logger.js';
+   ```
+
+**Validation:**
+
+```bash
+pnpm test -- --run logger.test.ts
+pnpm lint lib/src/utils/logger.ts  # Should pass
+pnpm build
+```
+
+**Time Estimate:** 1 hour
+
+---
+
+#### Subtask 4.0.2: Replace Console Statements (8 occurrences)
+
+**Files to Update:**
+
+```
+cli.ts                          2 console.log → keep (CLI script, allowed)
+getZodiosEndpointDefinitionList 2 console.warn → logger.warn
+generateZodClientFromOpenAPI    1 console.log → logger.info
+template-context.ts             2 console.warn → logger.warn
+zodiosEndpoint.helpers.ts       1 console.warn → logger.warn
+```
+
+**Example Migration:**
+
+```typescript
+// OLD:
+console.warn('Deprecated operationId format:', operationId);
+
+// NEW:
+import { logger } from './utils/logger.js';
+logger.warn('Deprecated operationId format:', operationId);
+```
+
+**Note:** `cli.ts` console statements remain unchanged (CLI allowed by eslint)
+
+**Validation:**
+
+```bash
+pnpm lint  # Should show -6 console errors (2 in cli.ts are allowed)
+pnpm test:all  # All tests pass
+```
+
+**Time Estimate:** 30 minutes
 
 ---
 
@@ -352,21 +557,31 @@ Line 276: as SchemaObject
 
 ---
 
-### Task 4.2: Decompose God Functions (14 issues)
+### Task 4.2: Decompose God Functions (123 size + 51 complexity issues)
 
-**Duration:** 8-10 hours  
-**Priority:** HIGH - Maintainability blocker
+**Duration:** 16-20 hours  
+**Priority:** CRITICAL - 64% of all errors
+
+**Scope Change:** With stricter limits (50 lines, 8 complexity), many more functions need decomposition:
+
+- openApiToZod.ts:47 (THE BIG ONE): 323 lines, 97 statements, 69 complexity
+- template-context.ts:73: 251 lines, 41 statements
+- openApiToTypescript.ts:67: 126 lines, 50 statements, 35 complexity
+- openApiToTypescript.ts:50: 157 lines, 3x over
+- Plus 20+ more functions exceeding new limits
 
 #### Subtask 4.2.1: Decompose openApiToZod.ts:47 (THE BIG ONE)
 
 **Current Stats:**
 
-- 323 lines (limit 100)
-- 97 statements (limit 30)
-- 69 cyclomatic complexity (limit 29)
-- 90 cognitive complexity (limit 29)
+- 323 lines (limit 50) - 6.5x over!
+- 97 statements (limit 20) - 4.85x over!
+- 69 cyclomatic complexity (limit 8) - 8.6x over!
+- 90 cognitive complexity (limit 8) - 11.25x over!
 
 **This function handles ALL OpenAPI → Zod conversions**
+
+**Impact:** Fixing this one function resolves 4 error categories simultaneously
 
 **Strategy: Extract Schema Type Handlers**
 
@@ -478,11 +693,11 @@ Line 276: as SchemaObject
 
 **Expected Result:**
 
-- Main function: ~50 lines, <15 complexity
+- Main function: ~40 lines, <8 complexity (stricter target!)
 - 8-10 focused helper functions
-- Each helper: <50 lines, <10 complexity
+- Each helper: <40 lines, <8 complexity
 
-**Time Estimate:** 4-6 hours
+**Time Estimate:** 6-8 hours (increased due to stricter limits)
 
 ---
 
@@ -490,10 +705,11 @@ Line 276: as SchemaObject
 
 **Current Stats:**
 
-- 251 lines (limit 100)
-- 41 statements (limit 30)
+- 251 lines (limit 50) - 5x over!
+- 41 statements (limit 20) - 2x over!
+- Also has 3 nesting depth violations (depth 4-5)
 
-**Strategy: Extract Endpoint Processing**
+**Strategy: Extract Endpoint Processing + Fix Nesting**
 
 1. **Extract Helper Functions:**
 
@@ -505,6 +721,7 @@ Line 276: as SchemaObject
    ```
 
 2. **Main function becomes coordinator:**
+
    ```typescript
    function buildTemplateContext(doc, options) {
      const endpoints = [];
@@ -517,17 +734,27 @@ Line 276: as SchemaObject
    }
    ```
 
-**Time Estimate:** 2-3 hours
+3. **Fix deep nesting by extracting guard clauses:**
+   - Convert nested if/else to early returns
+   - Extract conditional logic to helper functions
+
+**Time Estimate:** 3-4 hours (increased for nesting fixes)
 
 ---
 
-#### Subtask 4.2.3: Decompose openApiToTypescript.ts:67
+#### Subtask 4.2.3: Decompose openApiToTypescript.ts:67 & :50
 
-**Current Stats:**
+**Current Stats (two functions in this file):**
 
-- 126 lines (limit 100)
-- 50 statements (limit 30)
-- 35 complexity (limit 29)
+Function :67:
+
+- 126 lines (limit 50) - 2.5x over!
+- 50 statements (limit 20) - 2.5x over!
+- 35 complexity (limit 8) - 4.4x over!
+
+Function :50:
+
+- 157 lines (limit 50) - 3x over!
 
 **Strategy: Extract Type Conversion Handlers**
 
@@ -539,54 +766,135 @@ Line 276: as SchemaObject
    function convertCompositionType(schema, ctx) {} // oneOf, anyOf, allOf
    ```
 
+**Time Estimate:** 3-4 hours (increased for stricter limits + 2nd function)
+
+---
+
+#### Subtask 4.2.4: Decompose Other Complex Functions (~20 functions)
+
+**Major Targets:**
+
+- `generateZodClientFromOpenAPI.ts` (146 lines, 45 statements, 23 complexity)
+- `getZodiosEndpointDefinitionList.ts` (124 lines, 39 statements, 26 complexity)
+- `schema-complexity.ts:48` (116 lines, 21 complexity)
+- `validateOpenApiSpec.ts:62` (92 lines, 22 complexity)
+- `cli.ts:142` (30 complexity)
+- Plus ~15 more functions with 50-90 lines or 9-21 complexity
+
+**Strategy:**
+
+- Group by file to maximize efficiency
+- Extract helper functions aggressively
+- Target <40 lines, <8 complexity for each
+
+**Time Estimate:** 4-6 hours (batch approach to ~20 functions)
+
+---
+
+### Task 4.3: Fix File Size Issues (6 production + 5 test files)
+
+**Duration:** 3-5 hours
+
+**Strategy: Split Large Files**
+
+**Production Files (>250 lines):**
+
+1. **openApiToZod.ts (552 lines → split):**
+   - After Task 4.2.1, may naturally reduce to <250 lines
+   - If not, extract: `openApiToZod.handlers.ts`, `openApiToZod.composition.ts`
+
+2. **template-context.ts (546 lines → split):**
+   - Extract: `template-context.endpoints.ts`, `template-context.schemas.ts`
+   - Main file: orchestration only (<100 lines)
+
+3. **zodiosEndpoint.operation.helpers.ts (397 lines → split):**
+   - Extract: `zodiosEndpoint.parameters.ts`, `zodiosEndpoint.body.ts`
+
+4. **openApiToTypescript.string-helpers.ts (375 lines → split):**
+   - Extract: `openApiToTypescript.primitives.ts`, `openApiToTypescript.objects.ts`
+
+5. **generateZodClientFromOpenAPI.ts (287 lines → split):**
+   - Extract: `generateZodClient.validation.ts`, `generateZodClient.templating.ts`
+
+6. **openApiToTypescript.helpers.ts (285 lines → split):**
+   - Extract: `openApiToTypescript.enums.ts`, `openApiToTypescript.composition.ts`
+
+**Critical Test Files (>2000 lines - Pragmatic Hybrid scope):**
+
+7. **generateZodClientFromOpenAPI.test.ts (3927 lines → split):**
+   - Split by feature: `basic.test.ts`, `templates.test.ts`, `options.test.ts`, `validation.test.ts`
+
+8. **getZodiosEndpointDefinitionList.test.ts (3526 lines → split):**
+   - Split by: `parameters.test.ts`, `responses.test.ts`, `requestFormat.test.ts`
+
+9. **group-strategy.test.ts (1846 lines → split):**
+   - Split by strategy: `tag.test.ts`, `file.test.ts`, `combined.test.ts`
+
+10. **recursive-schema.test.ts (1367 lines → split):**
+    - Split by: `simple-recursive.test.ts`, `complex-recursive.test.ts`, `circular.test.ts`
+
+11. **samples.test.ts (1063 lines → just over limit):**
+    - Leave as-is (acceptable at 1063 lines)
+
+**Time Estimate:** 3-5 hours (3 hours for production, 2 hours for critical test files)
+
+---
+
+### Task 4.4: Add Explicit Return Types (18 functions)
+
+**Duration:** 2 hours  
+**Priority:** HIGH - New strict rule
+
+**Files Affected:**
+
+```
+CodeMeta.ts                     4 functions
+utils.ts                        7 functions
+getHandlebars.ts                1 function
+topologicalSort.ts              1 function
+getOpenApiDependencyGraph.ts    1 function
+getZodiosEndpointDefinitionList 1 function
+inferRequiredOnly.ts            1 function
+openApiToZod.ts                 2 functions
+```
+
+**Strategy:**
+
+1. **TDD: Verify current behavior first:**
+
+   ```bash
+   pnpm test -- --run CodeMeta.test.ts utils.test.ts
+   ```
+
+2. **Add return types systematically:**
+
+   ```typescript
+   // Before:
+   export function generateUniqueVarName(name: string, existingNames: Set<string>) {
+     // ...
+   }
+
+   // After:
+   export function generateUniqueVarName(name: string, existingNames: Set<string>): string {
+     // ...
+   }
+   ```
+
+3. **Batch by file for efficiency**
+
+**Validation:**
+
+```bash
+pnpm type-check  # Should still pass
+pnpm test:all    # Should still pass
+pnpm lint        # Should show -18 errors
+```
+
 **Time Estimate:** 2 hours
 
 ---
 
-#### Subtask 4.2.4: Decompose Other Complex Functions (5 functions)
-
-**Targets:**
-
-- `generateZodClientFromOpenAPI.ts:142` (146 lines)
-- `getZodiosEndpointDefinitionList.ts:70` (124 lines)
-- `schema-complexity.ts:48` (116 lines)
-- `zodiosEndpoint.operation.helpers.ts:147` (110 lines)
-- `cli.ts:142` (33 statements, 30 complexity)
-
-**Strategy:** Extract helper functions, reduce to <100 lines each
-
-**Time Estimate:** 3-4 hours per function = 3-4 hours (do fastest ones)
-
----
-
-### Task 4.3: Fix File Size Issues (4 files)
-
-**Duration:** 2-3 hours
-
-**Strategy: Split Large Files**
-
-1. **openApiToZod.ts (552 lines → split):**
-   - After Task 4.2.1, should naturally reduce to <350 lines
-   - If not, extract helpers to separate file: `openApiToZod.helpers.ts`
-
-2. **template-context.ts (546 lines → split):**
-   - Extract endpoint processing: `template-context.endpoints.ts`
-   - Extract schema processing: `template-context.schemas.ts`
-   - Main file: orchestration only
-
-3. **zodiosEndpoint.operation.helpers.ts (397 lines → split):**
-   - Extract parameter processing: `zodiosEndpoint.parameters.ts`
-   - Extract body processing: `zodiosEndpoint.body.ts`
-
-4. **openApiToTypescript.string-helpers.ts (375 lines → split):**
-   - Extract primitive helpers: `openApiToTypescript.primitives.ts`
-   - Extract object helpers: `openApiToTypescript.objects.ts`
-
-**Time Estimate:** 2-3 hours
-
----
-
-### Task 4.4: Fix Deprecated Types (10 issues)
+### Task 4.5: Fix Deprecated Types (10 issues)
 
 **Duration:** 15 minutes  
 **Priority:** TRIVIAL - Quick win
@@ -614,11 +922,14 @@ pnpm lint  # Should show -10 errors
 
 ---
 
-### Task 4.5: Fix Test Quality Issues (20 issues)
+### Task 4.6: Fix Test Quality Issues (Critical Only - Pragmatic Hybrid)
 
-**Duration:** 2-3 hours
+**Duration:** 1-2 hours (reduced scope - only critical issues)
 
-#### Subtask 4.5.1: Fix Missing Awaits (8 issues)
+**Note:** Most test quality issues are handled by Task 4.3 (splitting large test files).
+This task focuses on remaining critical issues in tests.
+
+#### Subtask 4.6.1: Fix Missing Awaits (3 critical issues)
 
 **Strategy:** Add await or remove async:
 
@@ -636,11 +947,11 @@ it('should do something', () => {
 });
 ```
 
-**Time Estimate:** 1 hour
+**Time Estimate:** 30 minutes
 
 ---
 
-#### Subtask 4.5.2: Complete TODOs (4 issues)
+#### Subtask 4.6.2: Complete TODOs (4 issues)
 
 **Files:**
 
@@ -658,7 +969,7 @@ it('should do something', () => {
 
 ---
 
-#### Subtask 4.5.3: Remove @ts-nocheck (2 issues)
+#### Subtask 4.6.3: Remove @ts-nocheck (2 issues)
 
 **Files:**
 
@@ -675,42 +986,7 @@ it('should do something', () => {
 
 ---
 
-#### Subtask 4.5.4: Reduce Test Statement Counts (4 issues)
-
-**Strategy:** Extract helper functions:
-
-```typescript
-// Before (43 statements):
-it('big test', () => {
-  // ... 43 lines of setup and assertions
-});
-
-// After:
-function setupTestData() {
-  /* ... */
-}
-function assertExpectedResults(result) {
-  /* ... */
-}
-
-it('big test', () => {
-  const data = setupTestData();
-  const result = process(data);
-  assertExpectedResults(result);
-});
-```
-
-**Time Estimate:** 1 hour
-
----
-
-#### Subtask 4.5.5: Fix Misc Test Issues (2 issues)
-
-**Time Estimate:** 30 minutes
-
----
-
-### Task 4.6: Fix Best Practice Violations (16 issues)
+### Task 4.7: Fix Best Practice Violations (16 issues)
 
 **Duration:** 2-3 hours
 
@@ -730,11 +1006,11 @@ Quick fixes for:
 
 ---
 
-### Task 4.7: Fix Sorting & String Safety (9 issues)
+### Task 4.8: Fix Sorting & String Safety (9 issues)
 
-**Duration:** 1 hour
+**Duration:** 30 minutes
 
-#### Subtask 4.7.1: Control Characters in utils.ts (7 issues)
+#### Subtask 4.8.1: Control Characters in utils.ts (7 issues)
 
 **Context:** Line 119 has intentional control characters for sanitization
 
@@ -768,9 +1044,9 @@ const sorted = items.toSorted((a, b) => a.localeCompare(b));
 
 ---
 
-### Task 4.8: Final Validation & Documentation
+### Task 4.9: Final Validation & Documentation
 
-**Duration:** 2 hours
+**Duration:** 2-3 hours
 
 1. **Run Full Quality Gates:**
 
@@ -833,63 +1109,112 @@ pnpm lint        # ✅ 0 errors (THE GOAL!)
 
 ## 📊 Success Metrics
 
-### Before (Current State)
+### Before (Current State - Strict Rules)
 
 ```
-Lint errors:                 105
-├─ Type Safety:              15  (in production code)
-├─ Architectural:            31  (complexity, file size)
-└─ Code Quality:             59  (tests, best practices)
+Lint errors:                 271  (after tightening rules to Engraph standards)
+├─ Size/Structure:           123  (45%) - functions/files too large
+├─ Complexity:               51   (19%) - cyclomatic/cognitive complexity
+├─ Missing Return Types:     18   (7%) - NEW strict rule
+├─ Type Safety:              15   (6%) - assertions, any, Record<string,unknown>
+├─ Console Statements:       8    (3%) - NEW strict rule
+├─ Test Issues:              40   (15%) - very long test files/functions
+└─ Other Quality:            16   (6%) - best practices, RegExp, etc.
 
-Type assertions (as):        45  (excluding "as const")
-Explicit any:                3
-Record<string,unknown>:      4
+Type assertions (as):        11   (excluding "as const")
+Explicit any:                2
+Record<string,unknown>:      2
+Console statements:          8    (6 in production, 2 in CLI)
 
-God Functions:
-├─ openApiToZod.ts:47        323 lines, 97 statements, 69 complexity
-├─ template-context.ts:73    251 lines, 41 statements
-└─ openApiToTypescript.ts:67 126 lines, 50 statements, 35 complexity
+God Functions (NEW stricter limits):
+├─ openApiToZod.ts:47        323 lines (6.5x over!), 97 statements, 69 complexity
+├─ template-context.ts:73    251 lines (5x over!), 41 statements
+├─ openApiToTypescript.ts:67 126 lines (2.5x over!), 50 statements, 35 complexity
+├─ openApiToTypescript.ts:50 157 lines (3x over!)
+└─ Plus ~20 more functions exceeding new strict limits
 
-Large Files:
-├─ openApiToZod.ts           552 lines
-├─ template-context.ts       546 lines
-├─ zodiosEndpoint...ts       397 lines
-└─ openApiToTypescript...ts  375 lines
+Large Files (>250 lines production, >2000 lines tests):
+├─ openApiToZod.ts           552 lines (2.2x over!)
+├─ template-context.ts       546 lines (2.2x over!)
+├─ zodiosEndpoint...ts       397 lines (1.6x over!)
+├─ openApiToTypescript...ts  375 lines (1.5x over!)
+├─ generateZodClient...ts    287 lines (1.15x over!)
+├─ openApiToTypescript...ts  285 lines (1.14x over!)
+├─ Test: generateZodClient   3927 lines (3.9x over!)
+├─ Test: getZodiosEndpoint   3526 lines (3.5x over!)
+└─ Plus 3 more test files >1300 lines
 ```
 
-### After (Target)
+### After (Target - Pragmatic Hybrid)
+
+**Production Code: PERFECT**
 
 ```
-Lint errors:                 0    ← THE GOAL
+Lint errors in src/:         0    ← THE GOAL
 ├─ Type Safety:              0    ← ZERO TOLERANCE
-├─ Architectural:            0    ← CLEAN DESIGN
-└─ Code Quality:             0    ← PRODUCTION READY
+├─ Size/Structure:           0    ← ALL FUNCTIONS <50 lines
+├─ Complexity:               0    ← ALL <8 complexity
+├─ Return Types:             0    ← ALL EXPLICIT
+├─ Console Statements:       0    ← USE LOGGER
+└─ Quality:                  0    ← PRODUCTION READY
 
 Type assertions (as):        0    ← (only "as const" allowed)
 Explicit any:                0    ← FULLY TYPED
-Record<string,unknown>:      0    ← (or properly typed)
+Record<string,unknown>:      0    ← (or properly typed with justification)
 
 All Functions:
-├─ Max lines:                <100
-├─ Max statements:           <30
-└─ Max complexity:           <29
+├─ Max lines:                <50  (NEW: stricter than before)
+├─ Max statements:           <20  (NEW: stricter than before)
+├─ Max complexity:           <8   (NEW: stricter than before)
+├─ Max cognitive:            <8   (NEW: enforced)
+└─ Max nesting depth:        <3   (NEW: enforced)
 
 All Files:
-└─ Max lines:                <350
+└─ Max lines:                <250 (NEW: stricter than before)
 
-Tests:
-├─ All passing:              ✅
-├─ No @ts-nocheck:           ✅
-└─ No missing awaits:        ✅
+Logging:
+├─ Production code:          Uses logger (not console)
+├─ Tests/Scripts:            Can use console (allowed by eslint)
+└─ Future-proof:             Easy to swap with Engraph logger
+```
+
+**Test Code: GOOD ENOUGH**
+
+```
+Critical issues fixed:
+├─ Files >2000 lines:        Split to <1500 lines
+├─ @ts-nocheck:              Removed (0 remaining)
+├─ TODOs:                    Resolved (0 unresolved)
+└─ Missing awaits:           Fixed (0 remaining)
+
+Acceptable quality:
+├─ Test functions:           200-400 lines OK
+├─ Test files:               1000-1500 lines OK
+└─ Future improvement:       Can refactor in later phase
+```
+
+**Quality Gates: ALL GREEN**
+
+```
+✅ Lint:         0 errors in src/, <5 acceptable in tests
+✅ Tests:        All passing (103/103 files)
+✅ Type-check:   0 errors
+✅ Build:        Success
+✅ Format:       Pass
 ```
 
 ---
 
 ## 📈 Progress Tracking
 
-### Task Completion Checklist
+### Task Completion Checklist (Pragmatic Hybrid Approach)
 
 ```
+Task 4.0: Logging Solution (PREREQUISITE)
+├─ [ ] 4.0.1: Create basic logger (1h)
+└─ [ ] 4.0.2: Replace console statements (30min)
+Total: 1.5 hours
+
 Task 4.1: Type Safety Violations
 ├─ [ ] 4.1.1: component-access.ts (2-3h)
 ├─ [ ] 4.1.2: validateOpenApiSpec.ts (2h)
@@ -897,70 +1222,98 @@ Task 4.1: Type Safety Violations
 └─ [ ] 4.1.4: Remaining assertions (1-2h)
 Total: 6-7 hours
 
-Task 4.2: Decompose God Functions
-├─ [ ] 4.2.1: openApiToZod.ts (4-6h) ← BIGGEST
-├─ [ ] 4.2.2: template-context.ts (2-3h)
-├─ [ ] 4.2.3: openApiToTypescript.ts (2h)
-└─ [ ] 4.2.4: Others (3-4h)
-Total: 11-15 hours
+Task 4.2: Decompose God Functions (BIGGEST - 64% of errors)
+├─ [ ] 4.2.1: openApiToZod.ts (6-8h) ← THE BIG ONE
+├─ [ ] 4.2.2: template-context.ts (3-4h)
+├─ [ ] 4.2.3: openApiToTypescript.ts (3-4h)
+└─ [ ] 4.2.4: ~20 other complex functions (4-6h)
+Total: 16-20 hours
 
-Task 4.3: File Size Issues
-└─ [ ] Split 4 large files (2-3h)
+Task 4.3: File Size Issues (Production + Critical Tests)
+├─ [ ] Split 6 production files >250 lines (3h)
+└─ [ ] Split 4 critical test files >2000 lines (2h)
+Total: 3-5 hours
 
-Task 4.4: Deprecated Types
-└─ [ ] Find-replace (15min)
+Task 4.4: Add Explicit Return Types (NEW)
+└─ [ ] 18 functions need return types (2h)
+Total: 2 hours
 
-Task 4.5: Test Quality
-├─ [ ] 4.5.1: Missing awaits (1h)
-├─ [ ] 4.5.2: TODOs (30min)
-├─ [ ] 4.5.3: @ts-nocheck (30min)
-├─ [ ] 4.5.4: Statement counts (1h)
-└─ [ ] 4.5.5: Misc (30min)
-Total: 3-4 hours
+Task 4.5: Deprecated Types
+└─ [ ] Find-replace EndpointDefinitionWithRefs (15min)
+Total: 15 minutes
 
-Task 4.6: Best Practices
+Task 4.6: Test Quality (Critical Only)
+├─ [ ] 4.6.1: Missing awaits (30min)
+├─ [ ] 4.6.2: TODOs (30min)
+└─ [ ] 4.6.3: @ts-nocheck (30min)
+Total: 1-2 hours
+
+Task 4.7: Best Practices
 └─ [ ] 16 violations (2-3h)
+Total: 2-3 hours
 
-Task 4.7: Sorting & Safety
+Task 4.8: Sorting & Safety
 ├─ [ ] Control chars (15min)
 └─ [ ] Array sorting (15min)
-Total: 30min
+Total: 30 minutes
 
-Task 4.8: Final Validation
-└─ [ ] Quality gates + docs (2h)
+Task 4.9: Final Validation
+└─ [ ] Quality gates + docs (2-3h)
+Total: 2-3 hours
 
-═══════════════════════════════
-TOTAL ESTIMATE: 25-33 hours
-REALISTIC: ~30 hours
+═══════════════════════════════════
+TOTAL ESTIMATE: 36-45 hours
+REALISTIC: ~40 hours (2 weeks focused work)
+
+Breakdown:
+- Prerequisite (Logging):      1.5h
+- Type Safety:                  6-7h
+- Decomposition (64% of work):  16-20h
+- File Splitting:               3-5h
+- Return Types (NEW):           2h
+- Deprecated Types:             15min
+- Test Quality:                 1-2h
+- Best Practices:               2-3h
+- Sorting/Safety:               30min
+- Final Validation:             2-3h
+═══════════════════════════════════
 ```
 
 ---
 
 ## 🎯 Execution Strategy
 
-### Recommended Order (By Impact)
+### Recommended Order (By Impact & Dependencies)
 
-**Week 1: Critical Path (Type Safety + God Functions)**
+**Week 1: Prerequisites + Type Safety + God Functions (Core Refactoring)**
 
-- Day 1: Task 4.1.1 - component-access.ts (3h)
-- Day 2: Task 4.1.2 - validateOpenApiSpec.ts (2h)
-- Day 2: Task 4.1.3 - openApiToTypescript.helpers.ts (1h)
-- Day 3: Task 4.1.4 - Remaining assertions (2h)
-- Day 3: Task 4.4 - Deprecated types (15min)
-- Day 4-5: Task 4.2.1 - Decompose openApiToZod.ts (6h)
-- Day 6: Task 4.2.2 - Decompose template-context.ts (3h)
-- Day 7: Task 4.2.3 - Decompose openApiToTypescript.ts (2h)
+- Day 1 AM: Task 4.0 - Create logging solution (1.5h) **← PREREQUISITE**
+- Day 1 PM: Task 4.1.1 - component-access.ts (2-3h)
+- Day 2: Task 4.1.2 - validateOpenApiSpec.ts (2h) + Task 4.1.3 - openApiToTypescript.helpers.ts (1h)
+- Day 3: Task 4.1.4 - Remaining assertions (2h) + Task 4.5 - Deprecated types (15min)
+- Day 4-5: Task 4.2.1 - Decompose openApiToZod.ts (6-8h) **← THE BIG ONE (64% of complexity)**
+- Day 6: Task 4.2.2 - Decompose template-context.ts (3-4h)
+- Day 7: Task 4.2.3 - Decompose openApiToTypescript.ts (3-4h)
 
-**Week 2: Cleanup**
+**Week 2: Remaining Decomposition + File Splitting + Quality**
 
-- Day 8: Task 4.2.4 - Other complex functions (4h)
-- Day 9: Task 4.3 - File size (3h)
-- Day 10: Task 4.5 - Test quality (4h)
-- Day 11: Task 4.6 - Best practices (3h)
-- Day 11: Task 4.7 - Sorting/safety (30min)
-- Day 12: Task 4.8 - Final validation (2h)
+- Day 8: Task 4.2.4 - Other complex functions (~20 functions, 4-6h)
+- Day 9: Task 4.3 - Split large files (3-5h)
+- Day 10: Task 4.4 - Add return types (2h) + Task 4.6 - Critical test quality (1-2h)
+- Day 11: Task 4.7 - Best practices (2-3h) + Task 4.8 - Sorting/safety (30min)
+- Day 12: Task 4.9 - Final validation & documentation (2-3h)
 
-**Total: ~12 working days (30 hours)**
+**Total: ~12 working days (40 hours of focused work)**
+
+### Parallel Work Opportunities
+
+Some tasks can be done in parallel if working with a team:
+
+- **Track A (Core):** Type safety (Tasks 4.1) + God function decomposition (Task 4.2)
+- **Track B (Quality):** Return types (Task 4.4) + Test quality (Task 4.6)
+- **Track C (Infrastructure):** Logging (Task 4.0) + File splitting (Task 4.3)
+
+With 2-3 people, could reduce to ~7-9 working days.
 
 ---
 
@@ -968,7 +1321,8 @@ REALISTIC: ~30 hours
 
 - **Previous:** `PHASE-1-PART-3-ZODIOS-REMOVAL.md` (must be complete)
 - **Next:** `PHASE-1-PART-5-UNIFIED-INPUT.md`
-- **Analysis:** `.agent/analysis/LINT-ANALYSIS-COMPREHENSIVE.md`
+- **Analysis (Original):** `.agent/analysis/LINT-ANALYSIS-COMPREHENSIVE.md` (105 errors, lax rules)
+- **Analysis (Updated):** `.agent/analysis/LINT-ANALYSIS-271-STRICT.md` (271 errors, strict Engraph rules) **← CURRENT**
 - **Requirements:** `.agent/plans/requirements.md`
 - **RULES:** `.agent/RULES.md` (TDD mandate)
 
@@ -1044,18 +1398,53 @@ Phase 1 Part 4 is complete when:
 
 ## 🚀 Why This Matters
 
-The Engraph monorepo will have **stricter standards** than our current setup:
+### The Engraph Standard
 
-- More stringent lint rules
-- Zero tolerance for type unsafety
-- Mandatory code review
-- Higher complexity thresholds
+The Engraph monorepo has **production-grade standards** that we must meet:
 
-**By achieving zero lint errors now, we:**
+- **Function size:** <50 lines (not 100)
+- **Complexity:** <8 (not 29)
+- **File size:** <250 lines (not 350)
+- **Type safety:** Zero assertions, zero `any`
+- **Code quality:** Zero console, explicit return types
+- **Nesting depth:** <3 levels
 
-1. Prevent rework later
-2. Build muscle memory for quality
-3. Create a foundation for growth
-4. Demonstrate engineering excellence
+**We updated our linting rules to match Engraph:** 105 errors → 271 errors (2.6x increase)
 
-**Zero lint errors = Extraction ready = Engraph ready**
+### Why We Tightened Rules NOW
+
+1. **No surprises later:** Find all issues before extraction, not during
+2. **Better codebase:** Stricter rules = more maintainable code
+3. **Extraction confidence:** We know exactly what needs fixing
+4. **Engineering excellence:** Set the bar high from the start
+
+### Why "Pragmatic Hybrid" (Not "Full Perfect" for Tests)
+
+**Production code:** Must be perfect (0 errors) - this is non-negotiable  
+**Test code:** Critical issues fixed, medium issues acceptable
+
+**Rationale:**
+
+- Very long test files (3000+ lines) are maintenance problems → **Fix these**
+- Medium test files (1000-1500 lines) are acceptable → **Defer these**
+- Test functions 200-400 lines are common in integration tests → **Acceptable**
+
+**Result:**
+
+- Production extraction-ready in 36-45 hours (2 weeks)
+- vs. 49-66 hours for absolute perfection (2.5-3 weeks)
+- Balances quality with pragmatic time management
+
+### By Achieving Zero Lint Errors (Production), We:
+
+1. **Prevent rework** - No surprises during Engraph extraction
+2. **Build confidence** - Every line meets production standards
+3. **Create foundation** - Clean code enables future growth
+4. **Demonstrate excellence** - Show commitment to quality
+5. **Enable extraction** - Ready for Engraph monorepo integration
+
+**Zero production lint errors + acceptable test quality = Extraction ready = Engraph ready**
+
+---
+
+**This is the standard we hold ourselves to. Production code: Perfect. Test code: Excellent.**
