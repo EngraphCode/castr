@@ -30,33 +30,31 @@ test('is-media-type-allowed', () => {
   };
   const defaultResult = getZodiosEndpointDefinitionList(doc);
   expect(defaultResult.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/unusual-ref-format",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/unusual-ref-format",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 
   const withCustomOption = getZodiosEndpointDefinitionList(doc, {
     isMediaTypeAllowed: (mediaType) => mediaType === 'application/json-ld',
   });
   expect(withCustomOption.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/unusual-ref-format",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/unusual-ref-format",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 });

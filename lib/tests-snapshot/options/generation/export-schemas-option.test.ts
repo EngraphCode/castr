@@ -41,18 +41,17 @@ test('export-schemas-option', async () => {
 
   const ctx = getZodClientTemplateContext(openApiDoc, { shouldExportAllSchemas: true });
   expect(ctx.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/export-schemas-option",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/export-schemas-option",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 
   expect(ctx.schemas).toMatchInlineSnapshot(`
       {

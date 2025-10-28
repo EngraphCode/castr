@@ -8,6 +8,7 @@
 **Current Phase:** **PHASE 1 PART 3 - READY TO START! 🚀**
 
 **Previous Completions:**
+
 - Phase 1 Part 1: ✅ COMPLETE (100%)
 - Phase 1 Part 2: ✅ COMPLETE (100%)
 
@@ -264,25 +265,20 @@ All documented in `.agent/adr/` (12 ADRs):
 - **Task 3.1:** Audit Zodios usage (30 min)
   - Find all @zodios/core references
   - Document replacement strategy
-  
 - **Task 3.2:** Define local types (1 hour, TDD)
   - Create `EndpointDefinition` type
   - Replace `ZodiosEndpointDefinition` imports
   - Update all type references
-  
 - **Task 3.3:** Delete Zodios templates (30 min)
   - Remove `default.hbs` and `grouped.hbs`
   - Update template registry
-  
 - **Task 3.4:** Create simple client template (2-3 hours, TDD)
   - Design fetch-based client API
   - Generate type-safe methods
   - Request/response validation
-  
 - **Task 3.5:** Update CLI & defaults (30 min)
   - Default: `schemas-with-client`
   - `--no-client`: `schemas-with-metadata`
-  
 - **Task 3.6:** Remove dependency & validate (1 hour)
   - Remove @zodios/core
   - Full quality gates

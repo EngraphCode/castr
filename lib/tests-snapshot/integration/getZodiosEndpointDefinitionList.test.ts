@@ -2841,7 +2841,6 @@ test('petstore.yaml', async () => {
                 "response": "Pet",
             },
             {
-                "description": "",
                 "errors": [
                     {
                         "description": "Invalid input",
@@ -2898,7 +2897,6 @@ test('petstore.yaml', async () => {
                 "response": "z.void()",
             },
             {
-                "description": "",
                 "errors": [],
                 "method": "post",
                 "parameters": [
@@ -3039,7 +3037,6 @@ test('petstore.yaml', async () => {
                 "response": "User",
             },
             {
-                "description": "",
                 "errors": [
                     {
                         "description": "Invalid username/password supplied",
@@ -3065,7 +3062,6 @@ test('petstore.yaml', async () => {
                 "response": "z.string()",
             },
             {
-                "description": "",
                 "errors": [],
                 "method": "get",
                 "parameters": [],
@@ -3074,7 +3070,6 @@ test('petstore.yaml', async () => {
                 "response": "z.void()",
             },
             {
-                "description": "",
                 "errors": [
                     {
                         "description": "Invalid username supplied",

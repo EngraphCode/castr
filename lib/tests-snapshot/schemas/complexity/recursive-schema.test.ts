@@ -399,7 +399,6 @@ describe('recursive-schema', () => {
             },
             "endpoints": [
                 {
-                    "description": undefined,
                     "errors": [],
                     "method": "get",
                     "parameters": [],
@@ -828,7 +827,6 @@ describe('recursive-schema', () => {
           },
           "endpoints": [
               {
-                  "description": undefined,
                   "errors": [],
                   "method": "get",
                   "parameters": [],
@@ -883,7 +881,6 @@ describe('recursive-schema', () => {
           },
           "endpoints": [
               {
-                  "description": undefined,
                   "errors": [],
                   "method": "get",
                   "parameters": [],

@@ -7,6 +7,15 @@ export {
   type EndpointDefinitionWithRefs,
   getZodiosEndpointDefinitionList,
 } from './getZodiosEndpointDefinitionList.js';
+export type {
+  EndpointDefinition,
+  EndpointParameter,
+  EndpointError,
+  EndpointResponse,
+  HttpMethod,
+  RequestFormat,
+  ParameterType,
+} from './endpoint-definition.types.js';
 export { maybePretty } from './maybePretty.js';
 export { getZodSchema } from './openApiToZod.js';
 export {

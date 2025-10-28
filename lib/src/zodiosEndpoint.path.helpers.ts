@@ -178,7 +178,7 @@ export function processOperation({
     method,
     path: replaceHyphenatedPath(path),
     ...(options?.withAlias && { alias: operationName }),
-    description: operation.description,
+    ...(operation.description && { description: operation.description }),
     requestFormat: 'json',
     parameters: [],
     errors: [],

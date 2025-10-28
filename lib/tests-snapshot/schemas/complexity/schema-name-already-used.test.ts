@@ -89,85 +89,81 @@ test('schema-name-already-used', async () => {
   };
   const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
   expect(ctx).toMatchInlineSnapshot(`
-      {
-          "circularTypeByName": {},
-          "emittedType": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [
-                      {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/schema-name-already-used",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "post",
-                  "parameters": [
-                      {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed__2",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/schema-name-already-used",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "put",
-                  "parameters": [
-                      {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed__3",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/schema-name-already-used",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "delete",
-                  "parameters": [
-                      {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed__4",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/schema-name-already-used",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-          ],
-          "endpointsGroups": {},
-          "options": {
-              "baseUrl": "",
-              "withAlias": false,
-          },
-          "schemas": {
-              "schemaNameAlreadyUsed": "z.enum(["xxx", "yyy", "zzz"]).optional()",
-              "schemaNameAlreadyUsed__2": "z.enum(["ggg", "hhh", "iii"]).optional()",
-              "schemaNameAlreadyUsed__3": "z.enum(["aaa", "bbb", "ccc"]).optional()",
-              "schemaNameAlreadyUsed__4": "z.enum(["ddd", "eee", "fff"]).optional()",
-          },
-          "types": {},
-      }
-    `);
+    {
+        "circularTypeByName": {},
+        "emittedType": {},
+        "endpoints": [
+            {
+                "errors": [],
+                "method": "get",
+                "parameters": [
+                    {
+                        "name": "schemaNameAlreadyUsed",
+                        "schema": "schemaNameAlreadyUsed",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/schema-name-already-used",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "post",
+                "parameters": [
+                    {
+                        "name": "schemaNameAlreadyUsed",
+                        "schema": "schemaNameAlreadyUsed__2",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/schema-name-already-used",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "put",
+                "parameters": [
+                    {
+                        "name": "schemaNameAlreadyUsed",
+                        "schema": "schemaNameAlreadyUsed__3",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/schema-name-already-used",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "delete",
+                "parameters": [
+                    {
+                        "name": "schemaNameAlreadyUsed",
+                        "schema": "schemaNameAlreadyUsed__4",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/schema-name-already-used",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+        ],
+        "endpointsGroups": {},
+        "options": {
+            "baseUrl": "",
+            "withAlias": false,
+        },
+        "schemas": {
+            "schemaNameAlreadyUsed": "z.enum(["xxx", "yyy", "zzz"]).optional()",
+            "schemaNameAlreadyUsed__2": "z.enum(["ggg", "hhh", "iii"]).optional()",
+            "schemaNameAlreadyUsed__3": "z.enum(["aaa", "bbb", "ccc"]).optional()",
+            "schemaNameAlreadyUsed__4": "z.enum(["ddd", "eee", "fff"]).optional()",
+        },
+        "types": {},
+    }
+  `);
 
   const result = await generateZodClientFromOpenAPI({
     disableWriteToFile: true,

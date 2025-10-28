@@ -56,58 +56,56 @@ test('same-schema-different-name', async () => {
   };
   const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
   expect(ctx).toMatchInlineSnapshot(`
-      {
-          "circularTypeByName": {},
-          "emittedType": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "post",
-                  "parameters": [
-                      {
-                          "name": "differentNameSameSchema",
-                          "schema": "differentNameSameSchema",
-                          "type": "Query",
-                      },
-                      {
-                          "name": "anotherDifferentNameWithSlightlyDifferentSchema",
-                          "schema": "anotherDifferentNameWithSlightlyDifferentSchema",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/same-schema-different-name",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "put",
-                  "parameters": [
-                      {
-                          "name": "sameSchemaDifferentName",
-                          "schema": "differentNameSameSchema",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/same-schema-different-name",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-          ],
-          "endpointsGroups": {},
-          "options": {
-              "baseUrl": "",
-              "withAlias": false,
-          },
-          "schemas": {
-              "anotherDifferentNameWithSlightlyDifferentSchema": "z.enum(["aaa", "bbb", "ccc"]).optional().default("aaa")",
-              "differentNameSameSchema": "z.enum(["aaa", "bbb", "ccc"]).optional()",
-          },
-          "types": {},
-      }
-    `);
+    {
+        "circularTypeByName": {},
+        "emittedType": {},
+        "endpoints": [
+            {
+                "errors": [],
+                "method": "post",
+                "parameters": [
+                    {
+                        "name": "differentNameSameSchema",
+                        "schema": "differentNameSameSchema",
+                        "type": "Query",
+                    },
+                    {
+                        "name": "anotherDifferentNameWithSlightlyDifferentSchema",
+                        "schema": "anotherDifferentNameWithSlightlyDifferentSchema",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/same-schema-different-name",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "put",
+                "parameters": [
+                    {
+                        "name": "sameSchemaDifferentName",
+                        "schema": "differentNameSameSchema",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/same-schema-different-name",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+        ],
+        "endpointsGroups": {},
+        "options": {
+            "baseUrl": "",
+            "withAlias": false,
+        },
+        "schemas": {
+            "anotherDifferentNameWithSlightlyDifferentSchema": "z.enum(["aaa", "bbb", "ccc"]).optional().default("aaa")",
+            "differentNameSameSchema": "z.enum(["aaa", "bbb", "ccc"]).optional()",
+        },
+        "types": {},
+    }
+  `);
 
   const result = await generateZodClientFromOpenAPI({
     disableWriteToFile: true,

@@ -25,42 +25,39 @@ test('with-deprecated', () => {
 
   const defaultResult = getZodiosEndpointDefinitionList(doc);
   expect(defaultResult.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/new-endpoint",
-              "requestFormat": "json",
-              "response": "z.number()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/new-endpoint",
+            "requestFormat": "json",
+            "response": "z.number()",
+        },
+    ]
+  `);
 
   const withCustomOption = getZodiosEndpointDefinitionList(doc, {
     withDeprecatedEndpoints: true,
   });
   expect(withCustomOption.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/deprecated-endpoint",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/new-endpoint",
-              "requestFormat": "json",
-              "response": "z.number()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/deprecated-endpoint",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/new-endpoint",
+            "requestFormat": "json",
+            "response": "z.number()",
+        },
+    ]
+  `);
 });

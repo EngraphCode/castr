@@ -66,7 +66,6 @@ test('resolve-ref-responses', () => {
         },
         "endpoints": [
             {
-                "description": undefined,
                 "errors": [],
                 "method": "get",
                 "parameters": [],

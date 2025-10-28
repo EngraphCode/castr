@@ -129,7 +129,6 @@ test('handle-refs-with-dots-in-name', async () => {
         },
         "endpoints": [
             {
-                "description": undefined,
                 "errors": [],
                 "method": "get",
                 "parameters": [],
@@ -138,7 +137,6 @@ test('handle-refs-with-dots-in-name', async () => {
                 "response": "z.string()",
             },
             {
-                "description": undefined,
                 "errors": [],
                 "method": "get",
                 "parameters": [],

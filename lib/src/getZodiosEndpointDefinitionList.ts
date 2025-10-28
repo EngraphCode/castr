@@ -1,10 +1,10 @@
-import type { ZodiosEndpointDefinition } from '@zodios/core';
 import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
 import { pick } from 'lodash-es';
 import { match, P } from 'ts-pattern';
 
 import type { CodeMeta, ConversionTypeContext } from './CodeMeta.js';
+import type { EndpointDefinition } from './endpoint-definition.types.js';
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
 import type { TemplateContext } from './template-context.js';
 import { getSchemaVarName } from './zodiosEndpoint.helpers.js';
@@ -200,21 +200,8 @@ const getParametersMap = (parameters: NonNullable<PathItemObject['parameters']>)
   );
 };
 
-export type EndpointDefinitionWithRefs = Omit<
-  ZodiosEndpointDefinition<unknown>,
-  'response' | 'parameters' | 'errors' | 'description'
-> & {
-  response: string;
-  description?: string | undefined;
-  parameters: Array<
-    Omit<Required<ZodiosEndpointDefinition<unknown>>['parameters'][number], 'schema'> & {
-      schema: string;
-    }
-  >;
-  errors: Array<
-    Omit<Required<ZodiosEndpointDefinition<unknown>>['errors'][number], 'schema'> & {
-      schema: string;
-    }
-  >;
-  responses?: Array<{ statusCode: string; schema: string; description?: string }>;
-};
+/**
+ * @deprecated Use `EndpointDefinition` from './endpoint-definition.types.js' instead
+ * This type alias is kept for backward compatibility during migration
+ */
+export type EndpointDefinitionWithRefs = EndpointDefinition;

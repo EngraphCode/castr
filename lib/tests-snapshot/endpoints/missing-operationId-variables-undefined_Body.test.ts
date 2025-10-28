@@ -27,23 +27,22 @@ test("missing operationId outputs variables['undefined_Body']", () => {
     },
   });
   expect(result.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "put",
-              "parameters": [
-                  {
-                      "description": "",
-                      "name": "body",
-                      "schema": "z.string()",
-                      "type": "Body",
-                  },
-              ],
-              "path": "/media-objects/:id",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "put",
+            "parameters": [
+                {
+                    "description": "",
+                    "name": "body",
+                    "schema": "z.string()",
+                    "type": "Body",
+                },
+            ],
+            "path": "/media-objects/:id",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 });

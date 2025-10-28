@@ -62,7 +62,6 @@ test('refine-default-endpoint-callback', () => {
         },
         "endpoints": [
             {
-                "description": undefined,
                 "errors": [],
                 "method": "get",
                 "parameters": [],
@@ -166,7 +165,6 @@ test('refine-default-endpoint-callback', () => {
         },
         "endpoints": [
             {
-                "description": undefined,
                 "errors": [],
                 "method": "get",
                 "operationId": "getBasicSchema",

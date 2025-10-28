@@ -30,18 +30,17 @@ test('name-with-special-characters', async () => {
   };
   const ctx = getZodClientTemplateContext(openApiDoc);
   expect(ctx.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/name-with-special-characters",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/name-with-special-characters",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 
   const result = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
   expect(result).toMatchInlineSnapshot(`

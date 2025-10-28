@@ -26,18 +26,17 @@ test('operationId-starting-with-number', async () => {
   };
   const ctx = getZodClientTemplateContext(openApiDoc);
   expect(ctx.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/operationId-starting-with-number",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/operationId-starting-with-number",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 
   // TODO fix
   const result = await generateZodClientFromOpenAPI({

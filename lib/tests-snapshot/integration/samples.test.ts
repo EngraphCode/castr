@@ -353,15 +353,22 @@ describe('openapi-examples', async () => {
             {
               name: "limit",
               type: "Query",
-              schema: z.number().int().optional(),
+              schema: z.number().int().lte(100).optional(),
             },
           ],
-          response: z.array(Pet),
+          response: z.array(Pet).max(100),
         },
         {
           method: "post",
           path: "/pets",
           requestFormat: "json",
+          parameters: [
+            {
+              name: "body",
+              type: "Body",
+              schema: Pet,
+            },
+          ],
           response: z.void(),
         },
         {
@@ -494,6 +501,91 @@ describe('openapi-examples', async () => {
           path: "/users",
           requestFormat: "json",
           response: z.void(),
+        },
+      ]);
+
+      export const api = new Zodios(endpoints);
+
+      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
+        return new Zodios(baseUrl, endpoints, options);
+      }
+      ",
+          "v3.1/tictactoe.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
+      import { z } from "zod";
+
+      export const winner = z.enum([".", "X", "O"]);
+      export const mark = z.enum([".", "X", "O"]);
+      export const board = z.array(z.array(mark).min(3).max(3));
+      export const status = z
+        .object({ winner: winner, board: board.min(3).max(3) })
+        .partial()
+        .passthrough();
+      export const errorMessage = z.string();
+
+      const endpoints = makeApi([
+        {
+          method: "get",
+          path: "/board",
+          description: \`Retrieves the current state of the board and the winner.\`,
+          requestFormat: "json",
+          response: status,
+        },
+        {
+          method: "get",
+          path: "/board/:row/:column",
+          description: \`Retrieves the requested square.\`,
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "row",
+              type: "Path",
+              schema: z.number().int().gte(1).lte(3),
+            },
+            {
+              name: "column",
+              type: "Path",
+              schema: z.number().int().gte(1).lte(3),
+            },
+          ],
+          response: z.enum([".", "X", "O"]),
+          errors: [
+            {
+              status: 400,
+              description: \`The provided parameters are incorrect\`,
+              schema: z.string().max(256),
+            },
+          ],
+        },
+        {
+          method: "put",
+          path: "/board/:row/:column",
+          description: \`Places a mark on the board and retrieves the whole board and the winner (if any).\`,
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "body",
+              type: "Body",
+              schema: z.enum([".", "X", "O"]),
+            },
+            {
+              name: "row",
+              type: "Path",
+              schema: z.number().int().gte(1).lte(3),
+            },
+            {
+              name: "column",
+              type: "Path",
+              schema: z.number().int().gte(1).lte(3),
+            },
+          ],
+          response: status,
+          errors: [
+            {
+              status: 400,
+              description: \`The provided parameters are incorrect\`,
+              schema: z.string().max(256),
+            },
+          ],
         },
       ]);
 

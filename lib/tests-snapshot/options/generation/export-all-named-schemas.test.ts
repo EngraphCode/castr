@@ -97,90 +97,86 @@ test('export-all-named-schemas', async () => {
     exportAllNamedSchemas: true,
   });
   expect(ctx).toMatchInlineSnapshot(`
-      {
-          "circularTypeByName": {},
-          "emittedType": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [
-                      {
-                          "name": "sameSchemaSameName",
-                          "schema": "sameSchemaSameName",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/export-all-named-schemas",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "post",
-                  "parameters": [
-                      {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/export-all-named-schemas",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "put",
-                  "parameters": [
-                      {
-                          "name": "schemaNameAlreadyUsed",
-                          "schema": "schemaNameAlreadyUsed__2",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/export-all-named-schemas",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "delete",
-                  "parameters": [
-                      {
-                          "name": "sameSchemaDifferentName",
-                          "schema": "sameSchemaDifferentName",
-                          "type": "Query",
-                      },
-                      {
-                          "name": "sameSchemaSameName",
-                          "schema": "sameSchemaSameName",
-                          "type": "Query",
-                      },
-                  ],
-                  "path": "/export-all-named-schemas",
-                  "requestFormat": "json",
-                  "response": "z.string()",
-              },
-          ],
-          "endpointsGroups": {},
-          "options": {
-              "baseUrl": "",
-              "withAlias": false,
-          },
-          "schemas": {
-              "sameSchemaDifferentName": "z.enum(["xxx", "yyy", "zzz"]).optional()",
-              "sameSchemaSameName": "z.enum(["xxx", "yyy", "zzz"]).optional()",
-              "schemaNameAlreadyUsed": "z.enum(["ggg", "hhh", "iii"]).optional()",
-              "schemaNameAlreadyUsed__2": "z.enum(["aaa", "bbb", "ccc"]).optional()",
-          },
-          "types": {},
-      }
-    `);
+    {
+        "circularTypeByName": {},
+        "emittedType": {},
+        "endpoints": [
+            {
+                "errors": [],
+                "method": "get",
+                "parameters": [
+                    {
+                        "name": "sameSchemaSameName",
+                        "schema": "sameSchemaSameName",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/export-all-named-schemas",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "post",
+                "parameters": [
+                    {
+                        "name": "schemaNameAlreadyUsed",
+                        "schema": "schemaNameAlreadyUsed",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/export-all-named-schemas",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "put",
+                "parameters": [
+                    {
+                        "name": "schemaNameAlreadyUsed",
+                        "schema": "schemaNameAlreadyUsed__2",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/export-all-named-schemas",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+            {
+                "errors": [],
+                "method": "delete",
+                "parameters": [
+                    {
+                        "name": "sameSchemaDifferentName",
+                        "schema": "sameSchemaDifferentName",
+                        "type": "Query",
+                    },
+                    {
+                        "name": "sameSchemaSameName",
+                        "schema": "sameSchemaSameName",
+                        "type": "Query",
+                    },
+                ],
+                "path": "/export-all-named-schemas",
+                "requestFormat": "json",
+                "response": "z.string()",
+            },
+        ],
+        "endpointsGroups": {},
+        "options": {
+            "baseUrl": "",
+            "withAlias": false,
+        },
+        "schemas": {
+            "sameSchemaDifferentName": "z.enum(["xxx", "yyy", "zzz"]).optional()",
+            "sameSchemaSameName": "z.enum(["xxx", "yyy", "zzz"]).optional()",
+            "schemaNameAlreadyUsed": "z.enum(["ggg", "hhh", "iii"]).optional()",
+            "schemaNameAlreadyUsed__2": "z.enum(["aaa", "bbb", "ccc"]).optional()",
+        },
+        "types": {},
+    }
+  `);
 
   const result = await generateZodClientFromOpenAPI({
     disableWriteToFile: true,

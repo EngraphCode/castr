@@ -83,141 +83,129 @@ test('group-strategy', async () => {
 
   const ctxByTag = getZodClientTemplateContext(openApiDoc, { groupStrategy: 'tag' });
   expect(ctxByTag.endpointsGroups).toMatchInlineSnapshot(`
-      {
-          "Default": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/no-tags",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/no-tags",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-              ],
-              "schemas": {},
-              "types": {},
-          },
-          "pet": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/pet",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/pet",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/pet/all",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/pet/all",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-              ],
-              "schemas": {},
-              "types": {},
-          },
-          "store": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/store",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/store",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-              ],
-              "schemas": {},
-              "types": {},
-          },
-          "user": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/user",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/user",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/user/pets",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/user/pets",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-              ],
-              "schemas": {},
-              "types": {},
-          },
-      }
-    `);
+    {
+        "Default": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/no-tags",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/no-tags",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+            ],
+            "schemas": {},
+            "types": {},
+        },
+        "pet": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/pet",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/pet",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/pet/all",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/pet/all",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+            ],
+            "schemas": {},
+            "types": {},
+        },
+        "store": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/store",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/store",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+            ],
+            "schemas": {},
+            "types": {},
+        },
+        "user": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/user",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/user",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/user/pets",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/user/pets",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+            ],
+            "schemas": {},
+            "types": {},
+        },
+    }
+  `);
 
   const resultGroupedByTag = await generateZodClientFromOpenAPI({
     openApiDoc,
@@ -328,129 +316,117 @@ test('group-strategy', async () => {
 
   const ctxByMethod = getZodClientTemplateContext(openApiDoc, { groupStrategy: 'method' });
   expect(ctxByMethod.endpointsGroups).toMatchInlineSnapshot(`
-      {
-          "get": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/pet",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/pet/all",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/store",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/user",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/user/pets",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/no-tags",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-              ],
-              "schemas": {},
-              "types": {},
-          },
-          "put": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/pet",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/pet/all",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/store",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/user",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/user/pets",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/no-tags",
-                      "requestFormat": "json",
-                      "response": "z.string()",
-                  },
-              ],
-              "schemas": {},
-              "types": {},
-          },
-      }
-    `);
+    {
+        "get": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/pet",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/pet/all",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/store",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/user",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/user/pets",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/no-tags",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+            ],
+            "schemas": {},
+            "types": {},
+        },
+        "put": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/pet",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/pet/all",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/store",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/user",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/user/pets",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/no-tags",
+                    "requestFormat": "json",
+                    "response": "z.string()",
+                },
+            ],
+            "schemas": {},
+            "types": {},
+        },
+    }
+  `);
 
   const resultGroupedByMethod = await generateZodClientFromOpenAPI({
     openApiDoc,
@@ -1234,132 +1210,123 @@ test('group-strategy with complex schemas + split files', async () => {
 
   const ctxByTag = getZodClientTemplateContext(openApiDoc, { groupStrategy: 'tag-file' });
   expect(ctxByTag.endpointsGroups).toMatchInlineSnapshot(`
-      {
-          "Default": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/countries",
-                      "requestFormat": "json",
-                      "response": "Country",
-                  },
-              ],
-              "imports": {
-                  "Country": "common",
-                  "Store": "common",
-                  "User": "common",
-              },
-              "schemas": {},
-              "types": {},
-          },
-          "pet": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/pet",
-                      "requestFormat": "json",
-                      "response": "Pet",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/pet",
-                      "requestFormat": "json",
-                      "response": "Pet",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/pet/all",
-                      "requestFormat": "json",
-                      "response": "z.array(Pet)",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "post",
-                      "parameters": [],
-                      "path": "/pet/all",
-                      "requestFormat": "json",
-                      "response": "Pet",
-                  },
-              ],
-              "imports": {
-                  "User": "common",
-              },
-              "schemas": {
-                  "Pet": "z.object({ id: z.number().int(), nickname: z.string(), owner: User }).partial().passthrough()",
-              },
-              "types": {},
-          },
-          "store": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/store",
-                      "requestFormat": "json",
-                      "response": "Store",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/store",
-                      "requestFormat": "json",
-                      "response": "Store",
-                  },
-              ],
-              "imports": {
-                  "Country": "common",
-                  "Store": "common",
-                  "User": "common",
-              },
-              "schemas": {},
-              "types": {},
-          },
-          "user": {
-              "endpoints": [
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "get",
-                      "parameters": [],
-                      "path": "/user",
-                      "requestFormat": "json",
-                      "response": "User",
-                  },
-                  {
-                      "description": undefined,
-                      "errors": [],
-                      "method": "put",
-                      "parameters": [],
-                      "path": "/user",
-                      "requestFormat": "json",
-                      "response": "User",
-                  },
-              ],
-              "imports": {
-                  "User": "common",
-              },
-              "schemas": {},
-              "types": {},
-          },
-      }
-    `);
+    {
+        "Default": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/countries",
+                    "requestFormat": "json",
+                    "response": "Country",
+                },
+            ],
+            "imports": {
+                "Country": "common",
+                "Store": "common",
+                "User": "common",
+            },
+            "schemas": {},
+            "types": {},
+        },
+        "pet": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/pet",
+                    "requestFormat": "json",
+                    "response": "Pet",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/pet",
+                    "requestFormat": "json",
+                    "response": "Pet",
+                },
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/pet/all",
+                    "requestFormat": "json",
+                    "response": "z.array(Pet)",
+                },
+                {
+                    "errors": [],
+                    "method": "post",
+                    "parameters": [],
+                    "path": "/pet/all",
+                    "requestFormat": "json",
+                    "response": "Pet",
+                },
+            ],
+            "imports": {
+                "User": "common",
+            },
+            "schemas": {
+                "Pet": "z.object({ id: z.number().int(), nickname: z.string(), owner: User }).partial().passthrough()",
+            },
+            "types": {},
+        },
+        "store": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/store",
+                    "requestFormat": "json",
+                    "response": "Store",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/store",
+                    "requestFormat": "json",
+                    "response": "Store",
+                },
+            ],
+            "imports": {
+                "Country": "common",
+                "Store": "common",
+                "User": "common",
+            },
+            "schemas": {},
+            "types": {},
+        },
+        "user": {
+            "endpoints": [
+                {
+                    "errors": [],
+                    "method": "get",
+                    "parameters": [],
+                    "path": "/user",
+                    "requestFormat": "json",
+                    "response": "User",
+                },
+                {
+                    "errors": [],
+                    "method": "put",
+                    "parameters": [],
+                    "path": "/user",
+                    "requestFormat": "json",
+                    "response": "User",
+                },
+            ],
+            "imports": {
+                "User": "common",
+            },
+            "schemas": {},
+            "types": {},
+        },
+    }
+  `);
 
   const resultGroupedByTagSplitByFiles = await generateZodClientFromOpenAPI({
     openApiDoc,

@@ -38,57 +38,53 @@ test('defaut-status-behavior', () => {
 
   const defaultResult = getZodClientTemplateContext(doc);
   expect(defaultResult.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/with-default-error",
-              "requestFormat": "json",
-              "response": "z.number()",
-          },
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/with-default-response",
-              "requestFormat": "json",
-              "response": "z.void()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/with-default-error",
+            "requestFormat": "json",
+            "response": "z.number()",
+        },
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/with-default-response",
+            "requestFormat": "json",
+            "response": "z.void()",
+        },
+    ]
+  `);
 
   const withAutoCorrectResult = getZodClientTemplateContext(doc, {
     defaultStatusBehavior: 'auto-correct',
   });
   expect(withAutoCorrectResult.endpoints).toMatchInlineSnapshot(`
-      [
-          {
-              "description": undefined,
-              "errors": [
-                  {
-                      "description": "Default error",
-                      "schema": "z.string()",
-                      "status": "default",
-                  },
-              ],
-              "method": "get",
-              "parameters": [],
-              "path": "/with-default-error",
-              "requestFormat": "json",
-              "response": "z.number()",
-          },
-          {
-              "description": undefined,
-              "errors": [],
-              "method": "get",
-              "parameters": [],
-              "path": "/with-default-response",
-              "requestFormat": "json",
-              "response": "z.string()",
-          },
-      ]
-    `);
+    [
+        {
+            "errors": [
+                {
+                    "description": "Default error",
+                    "schema": "z.string()",
+                    "status": "default",
+                },
+            ],
+            "method": "get",
+            "parameters": [],
+            "path": "/with-default-error",
+            "requestFormat": "json",
+            "response": "z.number()",
+        },
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/with-default-response",
+            "requestFormat": "json",
+            "response": "z.string()",
+        },
+    ]
+  `);
 });

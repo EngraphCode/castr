@@ -29,29 +29,28 @@ test('handle-refs-without-var-name', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-      {
-          "circularTypeByName": {},
-          "emittedType": {},
-          "endpoints": [
-              {
-                  "description": undefined,
-                  "errors": [],
-                  "method": "get",
-                  "parameters": [],
-                  "path": "/something",
-                  "requestFormat": "json",
-                  "response": "z.array(Basic)",
-              },
-          ],
-          "endpointsGroups": {},
-          "options": {
-              "baseUrl": "",
-              "withAlias": false,
-          },
-          "schemas": {
-              "Basic": "z.object({}).partial().passthrough()",
-          },
-          "types": {},
-      }
-    `);
+    {
+        "circularTypeByName": {},
+        "emittedType": {},
+        "endpoints": [
+            {
+                "errors": [],
+                "method": "get",
+                "parameters": [],
+                "path": "/something",
+                "requestFormat": "json",
+                "response": "z.array(Basic)",
+            },
+        ],
+        "endpointsGroups": {},
+        "options": {
+            "baseUrl": "",
+            "withAlias": false,
+        },
+        "schemas": {
+            "Basic": "z.object({}).partial().passthrough()",
+        },
+        "types": {},
+    }
+  `);
 });
