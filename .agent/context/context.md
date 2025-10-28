@@ -5,39 +5,41 @@
 
 ## 🚨 CRITICAL STATUS FOR FRESH CHAT
 
-**Current Phase:** **PHASE 1 PART 2 - 85% COMPLETE! 🎉**
+**Current Phase:** **PHASE 1 PART 3 - READY TO START! 🚀**
 
-**Previous Completion:** Phase 1 Part 1 - ✅ COMPLETE (100%) - All quality gates green!
+**Previous Completions:**
+- Phase 1 Part 1: ✅ COMPLETE (100%)
+- Phase 1 Part 2: ✅ COMPLETE (100%)
 
-**Current Task:** Task 2.3 - NON-INCREMENTAL migration - **MAJOR MILESTONE ACHIEVED!**
+**Next Task:** Complete Zodios removal + Simple client generation
 
-**🎉 BREAKTHROUGH ACHIEVEMENT:**
+**🎉 PART 2 COMPLETE - MAJOR SUCCESS:**
 
-- **✅ COMPLETED:** ALL tanu eliminated from `openApiToTypescript.ts`!
+- **✅ COMPLETED:** ALL tanu eliminated from entire codebase!
 - **✅ RESULT:** String-based type generation fully operational
-- **✅ QUALITY:** 151/151 snapshots, 406 unit, 115 char tests ALL PASSING
-- **✅ IMPROVEMENT:** 0 type errors, lint 126→122, net code reduction
+- **✅ QUALITY:** 669/669 tests ALL PASSING (403 unit + 115 char + 151 snapshot)
+- **✅ IMPROVEMENT:** 0 type errors, lint 126→99 (-18.8%), net -179 lines
+- **✅ SPEED:** Completed in 1.5 hours (estimated 6-8 hours!)
 
-**Current Status (85% Complete):**
+**Current Status (Ready for Part 3):**
 
-- ✅ Tasks 2.0-2.2: COMPLETE (ts-morph installed, AstBuilder built)
-- ✅ Task 2.3: 85% COMPLETE (main file clean, helpers need final cleanup)
-- ⏳ **Remaining:** Clean up `openApiToTypescript.helpers.ts` (6 tanu refs)
-- ⏳ Tasks 2.5-2.6: Remove tanu dependency, final validation (1-2 hours)
+- ✅ Part 1: Context types refactored, makeSchemaResolver removed
+- ✅ Part 2: Tanu completely removed, string-based generation proven
+- 🎯 Part 3: Remove Zodios, create simple fetch-based client (4-6 hours)
 
 **Key Architecture Success:**
 
 - String-based generation: PROVEN and working perfectly!
 - All-in non-incremental strategy: VINDICATED - no tech debt
 - TDD throughout: All tests green, zero regressions
-- Net code reduction: 404 insertions, 722 deletions
+- Zero tanu references: Completely eliminated
 
 **Timeline Update:**
 
 - Phase 1 Part 1: ✅ COMPLETE
-- Phase 1 Part 2: 🎯 1-2 hours remaining (was 6-8, made huge progress!)
-- Phase 1 Part 3: 4-6 hours (Zodios removal)
-- **Total:** ~5-8 hours remaining
+- Phase 1 Part 2: ✅ COMPLETE (ahead of schedule!)
+- Phase 1 Part 3: 🎯 4-6 hours (Zodios removal + simple client)
+- **Total Remaining:** ~4-6 hours
 
 ---
 
@@ -137,11 +139,12 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 ```bash
 ✅ format      - Passing
 ✅ build       - Passing (ESM + CJS + DTS)
-✅ type-check  - Passing (0 errors) - IMPROVED from 8 errors
-⚠️  lint       - 122 issues (down from 126, down from 136) - IMPROVING!
-✅ test        - Passing (552 tests) - 100% passing throughout migration
-✅ snapshot    - Passing (151/151) - All updated for string-based output
-✅ character   - Passing (115/115) - Rock solid
+✅ type-check  - Passing (0 errors)
+✅ lint        - 99 issues (down from 122, down from 136) - IMPROVED by 23!
+✅ test        - Passing (669 tests) - 100% passing
+✅ snapshot    - Passing (151/151)
+✅ character   - Passing (115/115)
+✅ unit        - Passing (403/403)
 ```
 
 **Definition of Done:**
@@ -152,33 +155,35 @@ pnpm format && pnpm build && pnpm type-check && pnpm test:all
 
 ✅ **Currently passing** (maintained throughout ALL of Task 2.3!)
 
-### Lint Status (IMPROVING! 🎯)
+### Lint Status (IMPROVED! ✅)
 
-- **Total:** 122 issues (down from 126, from 136, from 147)
-- **Fixed in Task 2.3:** 4 issues (type assertions eliminated from openApiToTypescript.ts!)
-- **Total Fixed:** 27 issues since project start
+- **Total:** 99 issues (down from 122, from 136, from 147)
+- **Part 2 Impact:** Fixed 23 issues (-18.8%)
+- **Total Fixed:** 48 issues since project start
 
-**EXTRACTION BLOCKER STATUS - IMPROVING:**
+**EXTRACTION BLOCKER STATUS - MAJOR IMPROVEMENT:**
 
-- **Type assertions:** ~50 remaining (down from 62, from 74!)
-- **Task 2.3 Impact:** Eliminated ALL type assertions from `openApiToTypescript.ts` (was 17!)
-- **Remaining hotspots:**
-  - `openApiToTypescript.helpers.ts` (~22, needs final cleanup)
-  - `getZodiosEndpointDefinitionList.ts` (8 assertions)
-  - `inferRequiredOnly.ts` (7 assertions)
-  - Other files (scattered)
+- **Type assertions:** 44 remaining (down from 62, from 74!)
+- **Part 2 Impact:** Eliminated 26 type assertions from TS generation (-86.7%)
+- **Current distribution:**
+  - `openApiToTypescript.ts` - 0 (was 17!)
+  - `openApiToTypescript.helpers.ts` - 4 (was 28!, legitimate narrowing only)
+  - `getZodiosEndpointDefinitionList.ts` - 8 assertions
+  - `inferRequiredOnly.ts` - 7 assertions
+  - Other files - 25 (scattered)
 
-**Recent Progress (Task 2.3):**
+**Recent Progress (Part 2):**
 
-- ✅ `openApiToTypescript.ts` - **ZERO type assertions** (was 17!)
-- ✅ Code quality improved - net reduction of 318 lines
-- ✅ Type safety improved - eliminated tanu type lies
-- ⏳ `openApiToTypescript.helpers.ts` - needs final cleanup (6 tanu refs)
+- ✅ ALL tanu removed from codebase
+- ✅ TS generation: 4 assertions (down from 30, -86.7%)
+- ✅ Code quality: net -179 lines
+- ✅ Type safety: eliminated tanu type lies
+- ✅ Lint: 99 issues (target <100 achieved!)
 
-**Target After Task 2.5:**
+**Target After Part 3:**
 
-- Type assertions: ~32 (eliminate all 30 from TypeScript generation)
-- Lint total: <100 issues
+- Type assertions: ~35-40 (may reduce a few more in Zodios removal)
+- Lint total: Maintain <100 issues
 - Ready for extraction to target monorepo
 
 **Remaining Critical Issues:**
@@ -243,7 +248,7 @@ All documented in `.agent/adr/` (12 ADRs):
   "openapi3-ts": "^4.5.0", // Updated from v3
   "zod": "^4.1.12", // Updated from v3
   "@zodios/core": "^10.9.6", // To be removed in Part 3
-  "tanu": "^0.2.0", // To be replaced with ts-morph in Part 2
+  "typescript": "^5.x", // Native TS compiler API (replaced tanu)
   "handlebars": "^4.7.8" // Template engine
 }
 ```
@@ -254,34 +259,41 @@ All documented in `.agent/adr/` (12 ADRs):
 
 ## 🎯 What's Next
 
-**Immediate (Next 1-2 hours):**
+**Immediate (Next 4-6 hours): Part 3 - Zodios Removal**
 
-- **🎯 Finish Task 2.3:** Clean up `openApiToTypescript.helpers.ts`
-  - Remove 6 remaining tanu references
-  - Convert hybrid functions to pure string functions
-  - Delete tanu conversion bridge logic
-- **Task 2.5:** Remove tanu dependency (15 min)
-  - Verify zero usage with grep
-  - Remove from package.json
-  - Run full validation
-- **Task 2.6:** Final validation (30 min)
-  - Count type assertions (target: ~32)
-  - Verify all quality gates green
-  - Document final metrics
-
-**After Part 2 Complete (1-2 hours from now!):**
-
-- **Part 3:** Zodios removal (4-6 hours)
-  - Extract Zodios-free core
-  - Simplify API surface
-  - Prepare for monorepo extraction
+- **Task 3.1:** Audit Zodios usage (30 min)
+  - Find all @zodios/core references
+  - Document replacement strategy
+  
+- **Task 3.2:** Define local types (1 hour, TDD)
+  - Create `EndpointDefinition` type
+  - Replace `ZodiosEndpointDefinition` imports
+  - Update all type references
+  
+- **Task 3.3:** Delete Zodios templates (30 min)
+  - Remove `default.hbs` and `grouped.hbs`
+  - Update template registry
+  
+- **Task 3.4:** Create simple client template (2-3 hours, TDD)
+  - Design fetch-based client API
+  - Generate type-safe methods
+  - Request/response validation
+  
+- **Task 3.5:** Update CLI & defaults (30 min)
+  - Default: `schemas-with-client`
+  - `--no-client`: `schemas-with-metadata`
+  
+- **Task 3.6:** Remove dependency & validate (1 hour)
+  - Remove @zodios/core
+  - Full quality gates
+  - Zero peer dependency warnings
 
 **Future Work:**
 
 - Phase 2: MCP Enhancements
 - Phase 3: DX Improvements
 
-**🎉 Major Achievement:** We're 85% through Part 2, ahead of schedule!
+**🎉 Achievement:** Part 2 complete ahead of schedule! (1.5 hours vs 6-8 estimated)
 
 ---
 
@@ -297,8 +309,8 @@ All documented in `.agent/adr/` (12 ADRs):
 **Current Work (Phase 1 - Split into 3 Parts):**
 
 - **`PHASE-1-PART-1-CONTEXT-TYPES.md`** - ✅ COMPLETE - Eliminated makeSchemaResolver, unified validation
-- **`PHASE-1-PART-2-TS-MORPH.md`** ⭐ - **NEXT** - ts-morph migration (ready to start)
-- **`PHASE-1-PART-3-ZODIOS-REMOVAL.md`** - Zodios removal (blocked on Part 2)
+- **`PHASE-1-PART-2-TS-MORPH.md`** - ✅ COMPLETE - Tanu eliminated, string-based generation proven
+- **`PHASE-1-PART-3-ZODIOS-REMOVAL.md`** ⭐ - **NEXT** - Zodios removal + simple client (ready to start)
 
 **Reference:**
 
