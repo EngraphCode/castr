@@ -298,14 +298,13 @@ describe('schemas-with-client template', () => {
 
       // Extract only the endpoint methods section (user-facing code)
       // Skip the validate helper which legitimately needs "as T" for type safety
-      const userCodeStart = result.indexOf(
-        '// ============================================================\n// Endpoint Metadata',
-      );
-      const userCode = userCodeStart >= 0 ? result.slice(userCodeStart) : result;
+      const startMarker = '// ============================================================\n// Endpoint Metadata';
+      const userCodeStart = (result as string).indexOf(startMarker);
+      const userCode = userCodeStart >= 0 ? (result as string).slice(userCodeStart) : result;
 
       // No "as any", "as unknown", etc. in user-facing code
       // Allow "as T" in validate function (helper code)
-      const nonConstAssertions = userCode.match(/ as (?!(const|T)\b)/g);
+      const nonConstAssertions = (userCode as string).match(/ as (?!(const|T)\b)/g);
       expect(nonConstAssertions).toBeNull();
     });
   });

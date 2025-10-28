@@ -195,19 +195,26 @@ program
 
     // Build generation args with proper type
     // We construct only the properties that are defined to satisfy exactOptionalPropertyTypes
-    
+
     // Determine if template option is a name or a path
-    const isTemplateName = options.template && ['schemas-only', 'schemas-with-metadata', 'schemas-with-client'].includes(options.template);
-    
+    const isTemplateName =
+      options.template &&
+      ['schemas-only', 'schemas-with-metadata', 'schemas-with-client'].includes(options.template);
+
     const generationArgs: GenerateZodClientFromOpenApiArgs = {
       openApiDoc,
       distPath,
       options: generationOptions,
       ...(prettierConfig && { prettierConfig }),
-      ...(options.template && (isTemplateName 
-        ? { template: options.template as 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client' }
-        : { templatePath: options.template }
-      )),
+      ...(options.template &&
+        (isTemplateName
+          ? {
+              template: options.template as
+                | 'schemas-only'
+                | 'schemas-with-metadata'
+                | 'schemas-with-client',
+            }
+          : { templatePath: options.template })),
       ...(options.noClient && { noClient: options.noClient }),
       ...(options.withValidationHelpers && {
         withValidationHelpers: options.withValidationHelpers,
