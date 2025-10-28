@@ -1,7 +1,4 @@
-import {
-  generateZodClientFromOpenAPI,
-  getEndpointDefinitionList,
-} from '../../../src/index.js';
+import { generateZodClientFromOpenAPI, getEndpointDefinitionList } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 

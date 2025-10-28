@@ -204,7 +204,9 @@ export function getParameterByRef(
   }
 
   if (!doc.components?.parameters) {
-    throw new Error(`Parameter '${componentName}' not found: doc.components.parameters is undefined`);
+    throw new Error(
+      `Parameter '${componentName}' not found: doc.components.parameters is undefined`,
+    );
   }
 
   const parameter = doc.components.parameters[componentName];

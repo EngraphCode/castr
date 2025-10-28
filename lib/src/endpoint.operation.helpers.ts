@@ -20,11 +20,7 @@ import type { TemplateContext } from './template-context.js';
 import type { DefaultStatusBehavior } from './template-context.types.js';
 import { pathParamToVariableName } from './utils.js';
 import { isReferenceObject } from './openapi-type-guards.js';
-import {
-  getRequestBodyByRef,
-  getParameterByRef,
-  getResponseByRef,
-} from './component-access.js';
+import { getRequestBodyByRef, getParameterByRef, getResponseByRef } from './component-access.js';
 import { resolveSchemaRef } from './component-access.js';
 
 const voidSchema = 'z.void()';
