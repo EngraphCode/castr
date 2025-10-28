@@ -25,12 +25,10 @@ import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/o
  * @returns True if the value has a $ref property
  */
 function isReferenceObject(obj: unknown): obj is ReferenceObject {
-  return (
-    obj != null &&
-    typeof obj === 'object' &&
-    '$ref' in obj &&
-    typeof (obj as ReferenceObject).$ref === 'string'
-  );
+  if (obj == null || typeof obj !== 'object') return false;
+  if (!('$ref' in obj)) return false;
+  const candidate = obj as { $ref: unknown };
+  return typeof candidate.$ref === 'string';
 }
 
 /**
@@ -106,7 +104,7 @@ export function resolveSchemaRef(
 
   // Validate $ref format: must be #/components/schemas/{name}
   const schemaRefPattern = /^#\/components\/schemas\/(.+)$/;
-  const match = ref.match(schemaRefPattern);
+  const match = schemaRefPattern.exec(ref);
 
   if (!match || !match[1]) {
     throw new Error(`Invalid schema $ref: ${ref}`);
@@ -183,7 +181,7 @@ export function assertNotReference<T>(
 export function getComponentByRef<T = unknown>(doc: OpenAPIObject, ref: string): T {
   // Parse $ref format: #/components/{type}/{name} (per OpenAPI 3.0 spec)
   const refPattern = /^#\/components\/([^/]+)\/(.+)$/;
-  const match = ref.match(refPattern);
+  const match = refPattern.exec(ref);
 
   if (!match || !match[1] || !match[2]) {
     throw new Error(`Invalid component $ref: ${ref}. Expected format: #/components/{type}/{name}`);
@@ -192,27 +190,58 @@ export function getComponentByRef<T = unknown>(doc: OpenAPIObject, ref: string):
   const componentType = match[1];
   const componentName = match[2];
 
-  // Check if components and the specific component type exist
+  // Check if components exists
   if (!doc.components) {
     throw new Error(
       `Component '${componentName}' of type '${componentType}' not found: doc.components is undefined`,
     );
   }
 
-  const componentMap = doc.components[componentType as keyof typeof doc.components];
+  // Validate component type exists in spec
+  const validComponentTypes = [
+    'schemas',
+    'responses',
+    'parameters',
+    'examples',
+    'requestBodies',
+    'headers',
+    'securitySchemes',
+    'links',
+    'callbacks',
+  ] as const;
+
+  if (!validComponentTypes.includes(componentType as typeof validComponentTypes[number])) {
+    throw new Error(
+      `Invalid component type '${componentType}' in ref: ${ref}. Valid types: ${validComponentTypes.join(', ')}`,
+    );
+  }
+
+  // Access component map with validated key
+  const components = doc.components;
+  const componentMap = components[componentType as keyof typeof components];
+
   if (!componentMap || typeof componentMap !== 'object') {
     throw new Error(
       `Component type '${componentType}' not found in doc.components for ref: ${ref}`,
     );
   }
 
-  const component = (componentMap as Record<string, unknown>)[componentName];
-
-  if (!component) {
+  // Access component from map
+  if (!(componentName in componentMap)) {
     throw new Error(
       `Component '${componentName}' not found in doc.components.${componentType} for ref: ${ref}`,
     );
   }
 
+  const component = componentMap[componentName as keyof typeof componentMap];
+
+  if (component === undefined) {
+    throw new Error(
+      `Component '${componentName}' is undefined in doc.components.${componentType} for ref: ${ref}`,
+    );
+  }
+
+  // Return component with explicit cast - we've validated it exists
+  // The generic T allows callers to specify expected type
   return component as T;
 }
