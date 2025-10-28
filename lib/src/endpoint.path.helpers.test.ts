@@ -1,5 +1,5 @@
 /**
- * Unit tests for zodiosEndpoint.path.helpers
+ * Unit tests for endpoint.path.helpers
  *
  * These tests define the expected behavior with the new doc-based context API.
  * Tests are written FIRST (TDD) to define the desired system state.
@@ -7,7 +7,7 @@
 
 import { describe, test, expect } from 'vitest';
 import type { OpenAPIObject, OperationObject, SchemaObject } from 'openapi3-ts/oas30';
-import { processOperation } from './zodiosEndpoint.path.helpers.js';
+import { processOperation } from './endpoint.path.helpers.js';
 import type { ConversionTypeContext } from './CodeMeta.js';
 
 /**
@@ -28,7 +28,7 @@ const mockGetZodVarName = (_input: { toString: () => string }, fallbackName?: st
   return fallbackName ?? 'MockVarName';
 };
 
-describe('zodiosEndpoint.path.helpers with doc-based context', () => {
+describe('endpoint.path.helpers with doc-based context', () => {
   describe('processOperation', () => {
     test('should process operation with inline schemas', () => {
       const doc: OpenAPIObject = {

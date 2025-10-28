@@ -1,5 +1,5 @@
 /**
- * Unit tests for zodiosEndpoint.operation.helpers
+ * Unit tests for endpoint.operation.helpers
  *
  * These tests define the expected behavior with the new doc-based context API.
  * Tests are written FIRST (TDD) to define the desired system state.
@@ -17,7 +17,7 @@ import {
   processParameter,
   processResponse,
   processDefaultResponse,
-} from './zodiosEndpoint.operation.helpers.js';
+} from './endpoint.operation.helpers.js';
 import type { ConversionTypeContext } from './CodeMeta.js';
 
 /**
@@ -38,7 +38,7 @@ const mockGetZodVarName = (_input: { toString: () => string }, fallbackName?: st
   return fallbackName ?? 'MockVarName';
 };
 
-describe('zodiosEndpoint.operation.helpers with doc-based context', () => {
+describe('endpoint.operation.helpers with doc-based context', () => {
   describe('processRequestBody', () => {
     test('should handle inline request body schema', () => {
       const doc: OpenAPIObject = {

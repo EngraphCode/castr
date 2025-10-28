@@ -1,6 +1,6 @@
 /**
- * Pure helper functions for processing individual Zodios endpoint operations
- * Extracted to reduce cognitive complexity in getZodiosEndpointDefinitionList.ts main loop
+ * Pure helper functions for processing individual endpoint operations
+ * Extracted to reduce cognitive complexity in getEndpointDefinitionList.ts main loop
  */
 
 import type {

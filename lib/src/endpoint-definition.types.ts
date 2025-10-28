@@ -1,7 +1,6 @@
 /**
  * Local type definitions for endpoint metadata
- * Previously used ZodiosEndpointDefinition from @zodios/core
- * Now using local definitions for independence
+ * These types define the structure of API endpoints for code generation
  */
 
 /**
@@ -60,8 +59,7 @@ export type EndpointResponse = {
 
 /**
  * Complete endpoint definition with all metadata
- * This type replaces ZodiosEndpointDefinition but with schemas as string references
- * instead of actual Zod schemas
+ * Schemas are represented as string references for code generation
  */
 export type EndpointDefinition = {
   /** HTTP method */

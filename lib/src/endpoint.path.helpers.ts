@@ -1,5 +1,5 @@
 /**
- * Helpers for processing operations within getZodiosEndpointDefinitionList
+ * Helpers for processing operations within getEndpointDefinitionList
  * Extracted to reduce cognitive complexity in the main function
  */
 
@@ -12,18 +12,18 @@ import type {
 import type { TemplateContext } from './template-context.js';
 import type { DefaultStatusBehavior } from './template-context.types.js';
 import type { ConversionTypeContext } from './CodeMeta.js';
-import type { EndpointDefinitionWithRefs } from './getZodiosEndpointDefinitionList.js';
+import type { EndpointDefinitionWithRefs } from './getEndpointDefinitionList.js';
 import { replaceHyphenatedPath } from './utils.js';
 import type { AllowedMethod } from './openapi-type-guards.js';
 import { isReferenceObject } from './openapi-type-guards.js';
-import type { GetZodVarNameFn } from './zodiosEndpoint.operation.helpers.js';
+import type { GetZodVarNameFn } from './endpoint.operation.helpers.js';
 import { getComponentByRef } from './component-access.js';
 import {
   processDefaultResponse,
   processParameter,
   processRequestBody,
   processResponse,
-} from './zodiosEndpoint.operation.helpers.js';
+} from './endpoint.operation.helpers.js';
 
 const voidSchema = 'z.void()';
 

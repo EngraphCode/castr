@@ -8,8 +8,8 @@ import type { EndpointDefinition } from './endpoint-definition.types.js';
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
 import { logger } from './utils/logger.js';
 import type { TemplateContext } from './template-context.js';
-import { getSchemaVarName } from './zodiosEndpoint.helpers.js';
-import { processOperation } from './zodiosEndpoint.path.helpers.js';
+import { getSchemaVarName } from './endpoint.helpers.js';
+import { processOperation } from './endpoint.path.helpers.js';
 import { asComponentSchema, pathToVariableName } from './utils.js';
 import {
   ALLOWED_METHODS,
@@ -43,10 +43,10 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
  * @example Basic usage
  * ```typescript
  * import SwaggerParser from "@apidevtools/swagger-parser";
- * import { getZodiosEndpointDefinitionList } from "openapi-zod-client";
+ * import { getEndpointDefinitionList } from "openapi-zod-client";
  *
  * const openApiDoc = await SwaggerParser.parse("./openapi.yaml");
- * const endpoints = getZodiosEndpointDefinitionList(openApiDoc);
+ * const endpoints = getEndpointDefinitionList(openApiDoc);
  *
  * // Each endpoint contains runtime Zod schemas:
  * endpoints.forEach(endpoint => {
@@ -60,7 +60,7 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
  *
  * @example With options
  * ```typescript
- * const endpoints = getZodiosEndpointDefinitionList(openApiDoc, {
+ * const endpoints = getEndpointDefinitionList(openApiDoc, {
  *   withAlias: true,
  *   exportSchemas: true,
  *   complexityThreshold: 3,
@@ -68,7 +68,7 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
  * ```
  */
 
-export const getZodiosEndpointDefinitionList = (
+export const getEndpointDefinitionList = (
   doc: OpenAPIObject,
   options?: TemplateContext['options'],
 ) => {

@@ -1,4 +1,4 @@
-import { getZodiosEndpointDefinitionList } from '../../../src/index.js';
+import { getEndpointDefinitionList } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 import { type OpenAPIObject } from 'openapi3-ts/oas30';
 
@@ -23,7 +23,7 @@ test('with-deprecated', () => {
     },
   };
 
-  const defaultResult = getZodiosEndpointDefinitionList(doc);
+  const defaultResult = getEndpointDefinitionList(doc);
   expect(defaultResult.endpoints).toMatchInlineSnapshot(`
     [
         {
@@ -37,7 +37,7 @@ test('with-deprecated', () => {
     ]
   `);
 
-  const withCustomOption = getZodiosEndpointDefinitionList(doc, {
+  const withCustomOption = getEndpointDefinitionList(doc, {
     withDeprecatedEndpoints: true,
   });
   expect(withCustomOption.endpoints).toMatchInlineSnapshot(`

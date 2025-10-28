@@ -1,6 +1,6 @@
 import {
   generateZodClientFromOpenAPI,
-  getZodiosEndpointDefinitionList,
+  getEndpointDefinitionList,
 } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
@@ -53,7 +53,7 @@ test('handle-refs-with-dots-in-name', async () => {
     },
   } as OpenAPIObject;
 
-  expect(getZodiosEndpointDefinitionList(doc)).toMatchInlineSnapshot(`
+  expect(getEndpointDefinitionList(doc)).toMatchInlineSnapshot(`
     {
         "deepDependencyGraph": {
             "#/components/schemas/Basic.Thing": Set {

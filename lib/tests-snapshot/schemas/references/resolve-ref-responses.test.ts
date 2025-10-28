@@ -1,10 +1,10 @@
-import { getZodiosEndpointDefinitionList } from '../../../src/index.js';
+import { getEndpointDefinitionList } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 
 test('resolve-ref-responses', () => {
   // Without the refiner function passed.
   expect(
-    getZodiosEndpointDefinitionList({
+    getEndpointDefinitionList({
       openapi: '3.0.3',
       info: { version: '1', title: 'Example API' },
       paths: {

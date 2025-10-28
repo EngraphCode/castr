@@ -5,8 +5,8 @@ export { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
 export { ValidationError, validateOpenApiSpec } from './validateOpenApiSpec.js';
 export {
   type EndpointDefinitionWithRefs,
-  getZodiosEndpointDefinitionList,
-} from './getZodiosEndpointDefinitionList.js';
+  getEndpointDefinitionList,
+} from './getEndpointDefinitionList.js';
 export type {
   EndpointDefinition,
   EndpointParameter,

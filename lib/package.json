@@ -96,9 +96,9 @@
     "swagger",
     "zod",
     "client",
-    "zodios",
     "generator",
-    "typescript"
+    "typescript",
+    "validation"
   ],
   "sideEffects": false,
   "publishConfig": {

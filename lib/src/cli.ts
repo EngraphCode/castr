@@ -61,12 +61,12 @@ const program = new Command();
 
 program
   .name('openapi-zod-client')
-  .description('Generate a Zodios API client from an OpenAPI specification')
+  .description('Generate a type-safe API client with Zod validation from an OpenAPI specification')
   .version(getPackageVersion())
   .argument('<input>', 'path/url to OpenAPI/Swagger document as json/yaml')
   .option(
     '-o, --output <path>',
-    'Output path for the zodios api client ts file (defaults to `<input>.client.ts`)',
+    'Output path for the generated client ts file (defaults to `<input>.client.ts`)',
   )
   .option(
     '-t, --template <name|path>',

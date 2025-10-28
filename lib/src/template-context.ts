@@ -15,8 +15,8 @@ import {
   sortSchemaNamesByDependencyOrder,
 } from './utils/schema-sorting.js';
 import { logger } from './utils/logger.js';
-import type { EndpointDefinitionWithRefs } from './getZodiosEndpointDefinitionList.js';
-import { getZodiosEndpointDefinitionList } from './getZodiosEndpointDefinitionList.js';
+import type { EndpointDefinitionWithRefs } from './getEndpointDefinitionList.js';
+import { getEndpointDefinitionList } from './getEndpointDefinitionList.js';
 import type { TsConversionContext } from './openApiToTypescript.js';
 import { getTypescriptFromOpenApi } from './openApiToTypescript.js';
 import { getZodSchema } from './openApiToZod.js';
@@ -75,7 +75,7 @@ export const getZodClientTemplateContext = (
   openApiDoc: OpenAPIObject,
   options?: TemplateContext['options'],
 ) => {
-  const result = getZodiosEndpointDefinitionList(openApiDoc, options);
+  const result = getEndpointDefinitionList(openApiDoc, options);
   const data = makeTemplateContext();
 
   const docSchemas = openApiDoc.components?.schemas ?? {};
@@ -379,7 +379,7 @@ export type TemplateContextOptions = {
    * @default "schemas-with-metadata"
    */
   template?: 'schemas-only' | 'schemas-with-metadata';
-  /** @see https://www.zodios.org/docs/client#baseurl */
+  /** Base URL for API requests (if generating client) */
   baseUrl?: string;
   /**
    * When true, will either use the `operationId` as `alias`, or auto-generate it from the method and path.
@@ -389,7 +389,7 @@ export type TemplateContextOptions = {
    * `OperationObject` is the OpenAPI operation object as defined in `openapi3-ts` npm package.
    * @see https://github.com/metadevpro/openapi3-ts/blob/master/src/model/OpenApi.ts#L110
    *
-   * @see https://www.zodios.org/docs/client#zodiosalias
+   * Generate operation IDs as endpoint aliases for easier reference
    * @default true
    */
   withAlias?: boolean | ((path: string, method: string, operation: OperationObject) => string);
@@ -400,10 +400,8 @@ export type TemplateContextOptions = {
    */
   apiClientName?: string;
   /**
-   * when defined, will be used to pick which endpoint to use as the main one and set to `ZodiosEndpointDefinition["response"]`
-   * will use `default` status code as fallback
-   *
-   * @see https://www.zodios.org/docs/api/api-definition#api-definition-structure
+   * When defined, will be used to pick which endpoint to use as the main one and set to `EndpointDefinition["response"]`
+   * Will use `default` status code as fallback
    *
    * works like `validateStatus` from axios
    * @see https://github.com/axios/axios#handling-errors
@@ -412,10 +410,8 @@ export type TemplateContextOptions = {
    */
   isMainResponseStatus?: string | ((status: number) => boolean);
   /**
-   * when defined, will be used to pick which endpoints should be included in the `ZodiosEndpointDefinition["errors"]` array
-   * ignores `default` status
-   *
-   * @see https://www.zodios.org/docs/api/api-definition#errors
+   * When defined, will be used to pick which endpoints should be included in the `EndpointDefinition["errors"]` array
+   * Ignores `default` status
    *
    * works like `validateStatus` from axios
    * @see https://github.com/axios/axios#handling-errors
@@ -434,7 +430,7 @@ export type TemplateContextOptions = {
    * @default `mediaType === "application/json"`
    */
   isMediaTypeAllowed?: string | ((mediaType: string) => boolean);
-  /** if OperationObject["description"] is not defined but the main ResponseObject["description"] is defined, use the latter as ZodiosEndpointDefinition["description"] */
+  /** If OperationObject["description"] is not defined but the main ResponseObject["description"] is defined, use the latter as EndpointDefinition["description"] */
   useMainResponseDescriptionAsEndpointDefinitionFallback?: boolean;
   /**
    * when true, will export all `#/components/schemas` even when not used in any PathItemObject

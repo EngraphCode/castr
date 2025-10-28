@@ -9,7 +9,7 @@ import {
   handleRefSchema,
   registerSchemaName,
   shouldInlineSchema,
-} from './zodiosEndpoint.helpers.js';
+} from './endpoint.helpers.js';
 
 const mockDoc: OpenAPIObject = {
   openapi: '3.0.0',
@@ -28,7 +28,7 @@ const mockDoc: OpenAPIObject = {
   },
 };
 
-describe('zodiosEndpoint.helpers', () => {
+describe('endpoint.helpers', () => {
   describe('shouldInlineSchema', () => {
     it('should return true when threshold is -1 (inline everything)', () => {
       expect(shouldInlineSchema(10, -1)).toBe(true);

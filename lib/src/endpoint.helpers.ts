@@ -1,6 +1,6 @@
 /**
- * Pure helper functions for Zodios endpoint generation
- * Extracted to reduce cognitive complexity in getZodiosEndpointDefinitionList.ts
+ * Pure helper functions for endpoint generation
+ * Extracted to reduce cognitive complexity in getEndpointDefinitionList.ts
  *
  * Each function has a single responsibility and is < 50 lines
  */
@@ -24,7 +24,7 @@ const getSchemaNameFromRef = (ref: string): string => {
   return name;
 };
 
-type ZodiosContext = {
+type EndpointContext = {
   zodSchemaByName: Record<string, string>;
   schemaByName: Record<string, string>;
   schemasByName?: Record<string, string[]>;
@@ -83,7 +83,7 @@ export function generateUniqueVarName(
  * Registers a schema name in the context for reuse
  */
 export function registerSchemaName(
-  ctx: ZodiosContext,
+  ctx: EndpointContext,
   varName: string,
   schemaResult: string,
   exportAllNamedSchemas: boolean,
@@ -103,7 +103,7 @@ export function registerSchemaName(
 export function handleInlineEverything(
   input: CodeMeta,
   result: string,
-  ctx: ZodiosContext,
+  ctx: EndpointContext,
 ): string {
   if (input.ref) {
     const zodSchema = ctx.zodSchemaByName[result];
@@ -121,7 +121,7 @@ export function handleInlineEverything(
  */
 export function findExistingSchemaVar(
   result: string,
-  ctx: ZodiosContext,
+  ctx: EndpointContext,
   exportAllNamedSchemas: boolean,
 ): string | undefined {
   if (!exportAllNamedSchemas && ctx.schemaByName[result]) {
@@ -137,7 +137,7 @@ export function findExistingSchemaVar(
 export function handleRefSchema(
   input: CodeMeta,
   result: string,
-  ctx: ZodiosContext,
+  ctx: EndpointContext,
   complexityThreshold: number,
 ): string {
   let schema = ctx.zodSchemaByName[result];
@@ -176,7 +176,7 @@ export function handleRefSchema(
  */
 export function getSchemaVarName(
   input: CodeMeta,
-  ctx: ZodiosContext,
+  ctx: EndpointContext,
   complexityThreshold: number,
   fallbackName: string | undefined,
   options: { exportAllNamedSchemas?: boolean } | undefined,
