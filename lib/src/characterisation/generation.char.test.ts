@@ -553,7 +553,7 @@ describe('Characterisation: Full Generation Pipeline', () => {
   });
 
   describe('Template Options', () => {
-    it('should generate default template correctly', async () => {
+    it('should generate schemas-with-metadata as default template', async () => {
       // Arrange
       const spec: OpenAPIObject = {
         openapi: '3.0.0',
@@ -584,9 +584,11 @@ describe('Characterisation: Full Generation Pipeline', () => {
         disableWriteToFile: true,
       });
 
-      // Assert: Default template includes Zodios client
+      // Assert: Default template is now schemas-with-metadata (no Zodios)
       expect(result).toContain('import { z }');
-      expect(result).toContain('makeApi'); // Default template has Zodios API
+      expect(result).toContain('export const endpoints'); // endpoints array without Zodios
+      expect(result).not.toContain('makeApi'); // No Zodios client
+      expect(result).not.toContain('@zodios'); // No Zodios import
       expect(result).not.toContain('as unknown as');
     });
 

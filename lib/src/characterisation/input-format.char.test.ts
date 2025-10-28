@@ -51,10 +51,10 @@ describe('Input Format Support', () => {
         disableWriteToFile: true,
       });
 
-      // Should generate valid TypeScript
+      // Should generate valid TypeScript with new default template (schemas-with-metadata)
       expect(typeof result).toBe('string');
-      expect(result).toContain('import { makeApi');
-      expect(result).toContain('export const');
+      expect(result).toContain('export const endpoints');
+      expect(result).toContain('import { z }');
     });
 
     it('should generate endpoints from JSON spec', async () => {
@@ -65,10 +65,10 @@ describe('Input Format Support', () => {
         disableWriteToFile: true,
       });
 
-      // Verify endpoints are generated
+      // Verify endpoints are generated (schemas-with-metadata template)
       expect(result).toContain('method: "get"');
       expect(result).toContain('path: "/pets"');
-      expect(result).toContain('makeApi');
+      expect(result).toContain('export const endpoints');
     });
   });
 
@@ -87,10 +87,10 @@ describe('Input Format Support', () => {
         disableWriteToFile: true,
       });
 
-      // Should generate valid TypeScript
+      // Should generate valid TypeScript with new default template (schemas-with-metadata)
       expect(typeof result).toBe('string');
-      expect(result).toContain('import { makeApi');
-      expect(result).toContain('export const');
+      expect(result).toContain('export const endpoints');
+      expect(result).toContain('import { z }');
     });
 
     it('should generate endpoints from YAML spec', async () => {
@@ -101,10 +101,10 @@ describe('Input Format Support', () => {
         disableWriteToFile: true,
       });
 
-      // Verify endpoints are generated
+      // Verify endpoints are generated (schemas-with-metadata template)
       expect(result).toContain('method: "get"');
       expect(result).toContain('path: "/pets"');
-      expect(result).toContain('makeApi');
+      expect(result).toContain('export const endpoints');
     });
   });
 
@@ -129,11 +129,11 @@ describe('Input Format Support', () => {
       expect(typeof jsonResult).toBe('string');
       expect(typeof yamlResult).toBe('string');
 
-      // Both should have similar structure (imports, exports, makeApi)
-      expect(jsonResult).toContain('import { makeApi');
-      expect(yamlResult).toContain('import { makeApi');
-      expect(jsonResult).toContain('export const');
-      expect(yamlResult).toContain('export const');
+      // Both should have similar structure (schemas-with-metadata template)
+      expect(jsonResult).toContain('export const endpoints');
+      expect(yamlResult).toContain('export const endpoints');
+      expect(jsonResult).toContain('import { z }');
+      expect(yamlResult).toContain('import { z }');
 
       // Note: petstore.json and petstore.yaml have slightly different content
       // (JSON has requestBody for POST /pets, YAML doesn't), so we don't expect

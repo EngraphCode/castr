@@ -126,14 +126,10 @@ test('inline-simple-schemas', async () => {
 
   const ctx = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
   expect(ctx).toMatchInlineSnapshot(`
-    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-    import { z } from "zod";
+    "import { z } from "zod";
 
     export const BasicString = z.string();
-    export const SimpleObject = z
-      .object({ str: z.string() })
-      .partial()
-      .passthrough();
+    export const SimpleObject = z.object({ str: z.string() }).partial().strict();
     export const ComplexObject = z
       .object({
         str: z.string(),
@@ -144,56 +140,96 @@ test('inline-simple-schemas', async () => {
         refArray: z.array(SimpleObject),
       })
       .partial()
-      .passthrough();
+      .strict();
 
-    const endpoints = makeApi([
+    export const endpoints = [
       {
-        method: "get",
+        method: "get" as const,
         path: "/inline-simple-schemas",
-        requestFormat: "json",
-        response: z.string(),
-        errors: [
-          {
-            status: 400,
-            schema: z.enum(["xxx", "yyy", "zzz"]),
+        operationId: "123_example",
+        request: {},
+        responses: {
+          200: { schema: z.string() },
+          400: { schema: z.enum(["xxx", "yyy", "zzz"]) },
+          401: { schema: z.enum(["xxx", "yyy", "zzz"]) },
+          402: { schema: z.array(z.string()) },
+          403: { schema: z.object({ str: z.string() }).partial().strict() },
+          404: { schema: z.object({ str: z.string() }).partial().strict() },
+          405: { schema: z.array(SimpleObject) },
+          406: {
+            schema: z.array(z.object({ str: z.string() }).partial().strict()),
           },
-          {
-            status: 401,
-            schema: z.enum(["xxx", "yyy", "zzz"]),
+          407: { schema: z.array(ComplexObject) },
+          400: { schema: z.enum(["xxx", "yyy", "zzz"]) },
+          401: { schema: z.enum(["xxx", "yyy", "zzz"]) },
+          402: { schema: z.array(z.string()) },
+          403: { schema: z.object({ str: z.string() }).partial().strict() },
+          404: { schema: z.object({ str: z.string() }).partial().strict() },
+          405: { schema: z.array(SimpleObject) },
+          406: {
+            schema: z.array(z.object({ str: z.string() }).partial().strict()),
           },
-          {
-            status: 402,
-            schema: z.array(z.string()),
-          },
-          {
-            status: 403,
-            schema: z.object({ str: z.string() }).partial().passthrough(),
-          },
-          {
-            status: 404,
-            schema: z.object({ str: z.string() }).partial().passthrough(),
-          },
-          {
-            status: 405,
-            schema: z.array(SimpleObject),
-          },
-          {
-            status: 406,
-            schema: z.array(z.object({ str: z.string() }).partial().passthrough()),
-          },
-          {
-            status: 407,
-            schema: z.array(ComplexObject),
-          },
-        ],
+          407: { schema: z.array(ComplexObject) },
+        },
       },
-    ]);
+    ] as const;
 
-    export const api = new Zodios(endpoints);
+    /**
+     * MCP (Model Context Protocol) compatible tool definitions.
+     *
+     * Each endpoint is transformed into an MCP tool with:
+     * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+     * - \`description\`: Human-readable description of the tool's purpose
+     * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+     * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+     *
+     * MCP tools use a consolidated input structure (all params in one object) rather than
+     * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+     * The output schema focuses on the "happy path" (primary success response). Error handling
+     * is typically done at the protocol level.
+     *
+     * @see https://anthropic.com/mcp - Model Context Protocol specification
+     * @example
+     * \`\`\`typescript
+     * import { mcpTools } from "./api";
+     *
+     * // AI assistant discovers and validates tool usage
+     * const tool = mcpTools.find(t => t.name === "getUserById");
+     * const input = tool.inputSchema.parse({
+     *   path: { userId: "123" },
+     *   query: { include: "profile" }
+     * });
+     * \`\`\`
+     */
+    export const mcpTools = endpoints.map((endpoint) => {
+      // Build consolidated params object from all request parameter types
+      // MCP requires a single inputSchema, not separated path/query/headers/body
+      const params: Record<string, z.ZodTypeAny> = {};
+      if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+      if (endpoint.request?.queryParams)
+        params.query = endpoint.request.queryParams;
+      if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+      if (endpoint.request?.body) params.body = endpoint.request.body;
 
-    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-      return new Zodios(baseUrl, endpoints, options);
-    }
+      return {
+        // Use operationId for the canonical name, with fallback to generated name
+        name:
+          endpoint.operationId ||
+          \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+        // Provide description for AI context
+        description:
+          endpoint.description ||
+          \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+        // Consolidated input schema (path, query, headers, body all nested)
+        inputSchema:
+          Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+        // Primary success response (200 or 201), fallback to z.unknown() for safety
+        outputSchema:
+          endpoint.responses[200]?.schema ||
+          endpoint.responses[201]?.schema ||
+          z.unknown(),
+      };
+    }) as const;
     "
   `);
 });

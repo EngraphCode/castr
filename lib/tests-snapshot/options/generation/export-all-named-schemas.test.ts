@@ -185,8 +185,7 @@ test('export-all-named-schemas', async () => {
   });
 
   expect(result).toMatchInlineSnapshot(`
-    "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-    import { z } from "zod";
+    "import { z } from "zod";
 
     export const sameSchemaSameName = z.enum(["xxx", "yyy", "zzz"]).optional();
     export const schemaNameAlreadyUsed = z.enum(["ggg", "hhh", "iii"]).optional();
@@ -195,71 +194,118 @@ test('export-all-named-schemas', async () => {
       .optional();
     export const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
 
-    const endpoints = makeApi([
+    export const endpoints = [
       {
-        method: "get",
+        method: "get" as const,
         path: "/export-all-named-schemas",
-        requestFormat: "json",
-        parameters: [
-          {
-            name: "sameSchemaSameName",
-            type: "Query",
-            schema: sameSchemaSameName,
-          },
-        ],
-        response: z.string(),
+        operationId: "getSchemaNameAlreadyUsed",
+        request: {
+          queryParams: z
+            .object({ sameSchemaSameName: sameSchemaSameName })
+            .optional(),
+        },
+        responses: { 200: { schema: z.string() } },
       },
       {
-        method: "post",
+        method: "post" as const,
         path: "/export-all-named-schemas",
-        requestFormat: "json",
-        parameters: [
-          {
-            name: "schemaNameAlreadyUsed",
-            type: "Query",
-            schema: schemaNameAlreadyUsed,
-          },
-        ],
-        response: z.string(),
+        operationId: "postSchemaNameAlreadyUsed",
+        request: {
+          queryParams: z
+            .object({ schemaNameAlreadyUsed: schemaNameAlreadyUsed })
+            .optional(),
+        },
+        responses: { 200: { schema: z.string() } },
       },
       {
-        method: "put",
+        method: "put" as const,
         path: "/export-all-named-schemas",
-        requestFormat: "json",
-        parameters: [
-          {
-            name: "schemaNameAlreadyUsed",
-            type: "Query",
-            schema: schemaNameAlreadyUsed__2,
-          },
-        ],
-        response: z.string(),
+        operationId: "putSchemaNameAlreadyUsed",
+        request: {
+          queryParams: z
+            .object({ schemaNameAlreadyUsed: schemaNameAlreadyUsed__2 })
+            .optional(),
+        },
+        responses: { 200: { schema: z.string() } },
       },
       {
-        method: "delete",
+        method: "delete" as const,
         path: "/export-all-named-schemas",
-        requestFormat: "json",
-        parameters: [
-          {
-            name: "sameSchemaDifferentName",
-            type: "Query",
-            schema: sameSchemaDifferentName,
-          },
-          {
-            name: "sameSchemaSameName",
-            type: "Query",
-            schema: sameSchemaSameName,
-          },
-        ],
-        response: z.string(),
+        operationId: "deleteSchemaNameAlreadyUsed",
+        request: {
+          queryParams: z
+            .object({
+              sameSchemaDifferentName: sameSchemaDifferentName,
+              sameSchemaSameName: sameSchemaSameName,
+            })
+            .optional(),
+          queryParams: z
+            .object({
+              sameSchemaDifferentName: sameSchemaDifferentName,
+              sameSchemaSameName: sameSchemaSameName,
+            })
+            .optional(),
+        },
+        responses: { 200: { schema: z.string() } },
       },
-    ]);
+    ] as const;
 
-    export const api = new Zodios(endpoints);
+    /**
+     * MCP (Model Context Protocol) compatible tool definitions.
+     *
+     * Each endpoint is transformed into an MCP tool with:
+     * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+     * - \`description\`: Human-readable description of the tool's purpose
+     * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+     * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+     *
+     * MCP tools use a consolidated input structure (all params in one object) rather than
+     * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+     * The output schema focuses on the "happy path" (primary success response). Error handling
+     * is typically done at the protocol level.
+     *
+     * @see https://anthropic.com/mcp - Model Context Protocol specification
+     * @example
+     * \`\`\`typescript
+     * import { mcpTools } from "./api";
+     *
+     * // AI assistant discovers and validates tool usage
+     * const tool = mcpTools.find(t => t.name === "getUserById");
+     * const input = tool.inputSchema.parse({
+     *   path: { userId: "123" },
+     *   query: { include: "profile" }
+     * });
+     * \`\`\`
+     */
+    export const mcpTools = endpoints.map((endpoint) => {
+      // Build consolidated params object from all request parameter types
+      // MCP requires a single inputSchema, not separated path/query/headers/body
+      const params: Record<string, z.ZodTypeAny> = {};
+      if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+      if (endpoint.request?.queryParams)
+        params.query = endpoint.request.queryParams;
+      if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+      if (endpoint.request?.body) params.body = endpoint.request.body;
 
-    export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-      return new Zodios(baseUrl, endpoints, options);
-    }
+      return {
+        // Use operationId for the canonical name, with fallback to generated name
+        name:
+          endpoint.operationId ||
+          \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+        // Provide description for AI context
+        description:
+          endpoint.description ||
+          \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+        // Consolidated input schema (path, query, headers, body all nested)
+        inputSchema:
+          Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+        // Primary success response (200 or 201), fallback to z.unknown() for safety
+        outputSchema:
+          endpoint.responses[200]?.schema ||
+          endpoint.responses[201]?.schema ||
+          z.unknown(),
+      };
+    }) as const;
     "
   `);
 });

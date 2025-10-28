@@ -83,4 +83,3 @@ export type EndpointDefinition = {
   /** Optional array of all responses (when --with-all-responses is enabled) */
   responses?: EndpointResponse[];
 };
-

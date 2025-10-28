@@ -122,7 +122,7 @@ export const endpoints = [
  * 
  * MCP tools use a consolidated input structure (all params in one object) rather than 
  * the separated structure in `endpoints`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response) as error handling
+ * The output schema focuses on the "happy path" (primary success response). Error handling
  * is typically done at the protocol level.
  * 
  * @see https://anthropic.com/mcp - Model Context Protocol specification
@@ -148,7 +148,7 @@ export const mcpTools = endpoints.map(endpoint => {
 	if (endpoint.request?.body) params.body = endpoint.request.body;
 	
 	return {
-		// Use operationId as canonical name, fallback to generated name
+		// Use operationId for the canonical name, with fallback to generated name
 		name: endpoint.operationId || `${endpoint.method}_${endpoint.path.replace(/[\/{}]/g, '_')}`,
 		// Provide description for AI context
 		description: endpoint.description || `${endpoint.method.toUpperCase()} ${endpoint.path}`,

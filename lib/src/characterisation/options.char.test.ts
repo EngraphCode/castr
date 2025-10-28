@@ -85,7 +85,7 @@ function createBasicSpec(): OpenAPIObject {
 
 describe('Characterisation: Options & Configuration', () => {
   describe('Template Options', () => {
-    it('should use default template when not specified', async () => {
+    it('should use schemas-with-metadata template as default when not specified', async () => {
       const spec = createBasicSpec();
       // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
@@ -93,8 +93,10 @@ describe('Characterisation: Options & Configuration', () => {
         disableWriteToFile: true,
       });
 
-      expect(result).toContain('makeApi');
-      expect(result).toContain('import { z }');
+      // Default template is now schemas-with-metadata (no Zodios)
+      expect(result).toContain('export const endpoints');
+      expect(result).not.toContain('makeApi');
+      expect(result).not.toContain('@zodios');
     });
 
     it('should use schemas-only template when specified', async () => {

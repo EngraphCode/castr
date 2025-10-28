@@ -22,7 +22,9 @@ describe('openapi-examples', async () => {
   const examplesPath = path.resolve(pkgRoot, String.raw`./examples/openapi/v3\.*/**/*.yaml`);
   const list = fg.sync([examplesPath]);
 
-  const template = getHandlebars().compile(readFileSync('./src/templates/default.hbs', 'utf8'));
+  const template = getHandlebars().compile(
+    readFileSync('./src/templates/schemas-with-metadata.hbs', 'utf8'),
+  );
   const resultByFile = {} as Record<string, string>;
 
   for (const docPath of list) {
@@ -50,58 +52,167 @@ describe('openapi-examples', async () => {
       ),
     ).toMatchInlineSnapshot(`
       {
-          "v3.0/api-with-examples.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.0/api-with-examples.": "import { z } from "zod";
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/",
-          requestFormat: "json",
-          response: z.void(),
+          request: {},
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.void(),
+            },
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/v2",
-          requestFormat: "json",
-          response: z.void(),
+          request: {},
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.void(),
+            },
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.0/callback-example.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.0/callback-example.": "import { z } from "zod";
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "post",
+          method: "post" as const,
           path: "/streams",
           description: \`subscribes a client to receive out-of-band data\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "callbackUrl",
-              type: "Query",
-              schema: z.string().url(),
+          request: {
+            queryParams: z.object({ callbackUrl: z.string().url() }).optional(),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.object({ subscriptionId: z.string() }).passthrough(),
             },
-          ],
-          response: z.object({ subscriptionId: z.string() }).passthrough(),
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.0/link-example.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.0/link-example.": "import { z } from "zod";
 
       export const user = z
         .object({ username: z.string(), uuid: z.string() })
@@ -121,130 +232,174 @@ describe('openapi-examples', async () => {
         .partial()
         .passthrough();
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/2.0/repositories/:username",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "username",
-              type: "Path",
-              schema: z.string(),
+          request: { pathParams: z.object({ username: z.string() }) },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.array(repository),
             },
-          ],
-          response: z.array(repository),
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/2.0/repositories/:username/:slug",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "username",
-              type: "Path",
-              schema: z.string(),
+          request: {
+            pathParams: z.object({ username: z.string(), slug: z.string() }),
+            pathParams: z.object({ username: z.string(), slug: z.string() }),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: repository,
             },
-            {
-              name: "slug",
-              type: "Path",
-              schema: z.string(),
-            },
-          ],
-          response: repository,
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/2.0/repositories/:username/:slug/pullrequests",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "username",
-              type: "Path",
-              schema: z.string(),
+          request: {
+            pathParams: z.object({ username: z.string(), slug: z.string() }),
+            pathParams: z.object({ username: z.string(), slug: z.string() }),
+            queryParams: z
+              .object({ state: z.enum(["open", "merged", "declined"]).optional() })
+              .optional(),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.array(pullrequest),
             },
-            {
-              name: "slug",
-              type: "Path",
-              schema: z.string(),
-            },
-            {
-              name: "state",
-              type: "Query",
-              schema: z.enum(["open", "merged", "declined"]).optional(),
-            },
-          ],
-          response: z.array(pullrequest),
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/2.0/repositories/:username/:slug/pullrequests/:pid",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "username",
-              type: "Path",
-              schema: z.string(),
+          request: {
+            pathParams: z.object({
+              username: z.string(),
+              slug: z.string(),
+              pid: z.string(),
+            }),
+            pathParams: z.object({
+              username: z.string(),
+              slug: z.string(),
+              pid: z.string(),
+            }),
+            pathParams: z.object({
+              username: z.string(),
+              slug: z.string(),
+              pid: z.string(),
+            }),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: pullrequest,
             },
-            {
-              name: "slug",
-              type: "Path",
-              schema: z.string(),
-            },
-            {
-              name: "pid",
-              type: "Path",
-              schema: z.string(),
-            },
-          ],
-          response: pullrequest,
+          },
         },
         {
-          method: "post",
+          method: "post" as const,
           path: "/2.0/repositories/:username/:slug/pullrequests/:pid/merge",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "username",
-              type: "Path",
-              schema: z.string(),
+          request: {
+            pathParams: z.object({
+              username: z.string(),
+              slug: z.string(),
+              pid: z.string(),
+            }),
+            pathParams: z.object({
+              username: z.string(),
+              slug: z.string(),
+              pid: z.string(),
+            }),
+            pathParams: z.object({
+              username: z.string(),
+              slug: z.string(),
+              pid: z.string(),
+            }),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.void(),
             },
-            {
-              name: "slug",
-              type: "Path",
-              schema: z.string(),
-            },
-            {
-              name: "pid",
-              type: "Path",
-              schema: z.string(),
-            },
-          ],
-          response: z.void(),
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/2.0/users/:username",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "username",
-              type: "Path",
-              schema: z.string(),
+          request: { pathParams: z.object({ username: z.string() }) },
+          responses: {
+            200: {
+              description: "Success",
+              schema: user,
             },
-          ],
-          response: user,
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.0/petstore-expanded.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.0/petstore-expanded.": "import { z } from "zod";
 
       export const NewPet = z
         .object({ name: z.string(), tag: z.string().optional() })
@@ -254,83 +409,132 @@ describe('openapi-examples', async () => {
         .object({ code: z.number().int(), message: z.string() })
         .passthrough();
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/pets",
           description: \`Returns all pets from the system that the user has access to
       Nam sed condimentum est. Maecenas tempor sagittis sapien, nec rhoncus sem sagittis sit amet. Aenean at gravida augue, ac iaculis sem. Curabitur odio lorem, ornare eget elementum nec, cursus id lectus. Duis mi turpis, pulvinar ac eros ac, tincidunt varius justo. In hac habitasse platea dictumst. Integer at adipiscing ante, a sagittis ligula. Aenean pharetra tempor ante molestie imperdiet. Vivamus id aliquam diam. Cras quis velit non tortor eleifend sagittis. Praesent at enim pharetra urna volutpat venenatis eget eget mauris. In eleifend fermentum facilisis. Praesent enim enim, gravida ac sodales sed, placerat id erat. Suspendisse lacus dolor, consectetur non augue vel, vehicula interdum libero. Morbi euismod sagittis libero sed lacinia.
 
       Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condimentum ligula luctus nec. Phasellus semper velit eget aliquet faucibus. In a mattis elit. Phasellus vel urna viverra, condimentum lorem id, rhoncus nibh. Ut pellentesque posuere elementum. Sed a varius odio. Morbi rhoncus ligula libero, vel eleifend nunc tristique vitae. Fusce et sem dui. Aenean nec scelerisque tortor. Fusce malesuada accumsan magna vel tempus. Quisque mollis felis eu dolor tristique, sit amet auctor felis gravida. Sed libero lorem, molestie sed nisl in, accumsan tempor nisi. Fusce sollicitudin massa ut lacinia mattis. Sed vel eleifend lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod sapien.
       \`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "tags",
-              type: "Query",
-              schema: z.array(z.string()).optional(),
+          request: {
+            queryParams: z
+              .object({
+                tags: z.array(z.string()).optional(),
+                limit: z.number().int().optional(),
+              })
+              .optional(),
+            queryParams: z
+              .object({
+                tags: z.array(z.string()).optional(),
+                limit: z.number().int().optional(),
+              })
+              .optional(),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.array(Pet),
             },
-            {
-              name: "limit",
-              type: "Query",
-              schema: z.number().int().optional(),
-            },
-          ],
-          response: z.array(Pet),
+          },
         },
         {
-          method: "post",
+          method: "post" as const,
           path: "/pets",
           description: \`Creates a new pet in the store. Duplicates are allowed\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "body",
-              description: \`Pet to add to the store\`,
-              type: "Body",
-              schema: NewPet,
+          request: { body: NewPet },
+          responses: {
+            200: {
+              description: "Success",
+              schema: Pet,
             },
-          ],
-          response: Pet,
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/pets/:id",
           description: \`Returns a user based on a single ID, if the user does not have access to the pet\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "id",
-              type: "Path",
-              schema: z.number().int(),
+          request: { pathParams: z.object({ id: z.number().int() }) },
+          responses: {
+            200: {
+              description: "Success",
+              schema: Pet,
             },
-          ],
-          response: Pet,
+          },
         },
         {
-          method: "delete",
+          method: "delete" as const,
           path: "/pets/:id",
           description: \`deletes a single pet based on the ID supplied\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "id",
-              type: "Path",
-              schema: z.number().int(),
+          request: { pathParams: z.object({ id: z.number().int() }) },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.void(),
             },
-          ],
-          response: z.void(),
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.0/petstore.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.0/petstore.": "import { z } from "zod";
 
       export const Pet = z
         .object({
@@ -344,56 +548,104 @@ describe('openapi-examples', async () => {
         .object({ code: z.number().int(), message: z.string() })
         .passthrough();
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/pets",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "limit",
-              type: "Query",
-              schema: z.number().int().lte(100).optional(),
+          request: {
+            queryParams: z
+              .object({ limit: z.number().int().lte(100).optional() })
+              .optional(),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.array(Pet).max(100),
             },
-          ],
-          response: z.array(Pet).max(100),
+          },
         },
         {
-          method: "post",
+          method: "post" as const,
           path: "/pets",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "body",
-              type: "Body",
+          request: { body: Pet },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.void(),
+            },
+          },
+        },
+        {
+          method: "get" as const,
+          path: "/pets/:petId",
+          request: { pathParams: z.object({ petId: z.string() }) },
+          responses: {
+            200: {
+              description: "Success",
               schema: Pet,
             },
-          ],
-          response: z.void(),
+          },
         },
-        {
-          method: "get",
-          path: "/pets/:petId",
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "petId",
-              type: "Path",
-              schema: z.string(),
-            },
-          ],
-          response: Pet,
-        },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.0/uspto.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.0/uspto.": "import { z } from "zod";
 
       export const dataSetList = z
         .object({
@@ -420,98 +672,197 @@ describe('openapi-examples', async () => {
         })
         .passthrough();
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/",
-          requestFormat: "json",
-          response: dataSetList,
+          request: {},
+          responses: {
+            200: {
+              description: "Success",
+              schema: dataSetList,
+            },
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/:dataset/:version/fields",
           description: \`This GET API returns the list of all the searchable field names that are in the oa_citations. Please see the &#x27;fields&#x27; attribute which returns an array of field names. Each field or a combination of fields can be searched using the syntax options shown below.\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "dataset",
-              type: "Path",
+          request: {
+            pathParams: z.object({ dataset: z.string(), version: z.string() }),
+            pathParams: z.object({ dataset: z.string(), version: z.string() }),
+          },
+          responses: {
+            200: {
+              description: "Success",
               schema: z.string(),
             },
-            {
-              name: "version",
-              type: "Path",
+            404: {
+              description:
+                "The combination of dataset name and version is not found in the system or it is not published yet to be consumed by public.",
               schema: z.string(),
             },
-          ],
-          response: z.string(),
-          errors: [
-            {
-              status: 404,
-              description: \`The combination of dataset name and version is not found in the system or it is not published yet to be consumed by public.\`,
-              schema: z.string(),
-            },
-          ],
+          },
         },
         {
-          method: "post",
+          method: "post" as const,
           path: "/:dataset/:version/records",
           description: \`This API is based on Solr/Lucene Search. The data is indexed using SOLR. This GET API returns the list of all the searchable field names that are in the Solr Index. Please see the &#x27;fields&#x27; attribute which returns an array of field names. Each field or a combination of fields can be searched using the Solr/Lucene Syntax. Please refer https://lucene.apache.org/core/3_6_2/queryparsersyntax.html#Overview for the query syntax. List of field names that are searchable can be determined using above GET api.\`,
-          requestFormat: "form-url",
-          parameters: [
-            {
-              name: "body",
-              type: "Body",
-              schema: perform_search_Body,
+          request: {
+            pathParams: z.object({
+              version: z.string().default("v1"),
+              dataset: z.string().default("oa_citations"),
+            }),
+            pathParams: z.object({
+              version: z.string().default("v1"),
+              dataset: z.string().default("oa_citations"),
+            }),
+            body: perform_search_Body,
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.array(z.record(z.object({}).partial().passthrough())),
             },
-            {
-              name: "version",
-              type: "Path",
-              schema: z.string().default("v1"),
-            },
-            {
-              name: "dataset",
-              type: "Path",
-              schema: z.string().default("oa_citations"),
-            },
-          ],
-          response: z.array(z.record(z.object({}).partial().passthrough())),
-          errors: [
-            {
-              status: 404,
-              description: \`No matching record found for the given criteria.\`,
+            404: {
+              description: "No matching record found for the given criteria.",
               schema: z.void(),
             },
-          ],
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.1/non-oauth-scopes.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.1/non-oauth-scopes.": "import { z } from "zod";
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/users",
-          requestFormat: "json",
-          response: z.void(),
+          request: {},
+          responses: {
+            200: {
+              description: "Success",
+              schema: z.void(),
+            },
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.1/tictactoe.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.1/tictactoe.": "import { z } from "zod";
 
       export const winner = z.enum([".", "X", "O"]);
       export const mark = z.enum([".", "X", "O"]);
@@ -522,89 +873,189 @@ describe('openapi-examples', async () => {
         .passthrough();
       export const errorMessage = z.string();
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/board",
           description: \`Retrieves the current state of the board and the winner.\`,
-          requestFormat: "json",
-          response: status,
+          request: {},
+          responses: {
+            200: {
+              description: "Success",
+              schema: status,
+            },
+          },
         },
         {
-          method: "get",
+          method: "get" as const,
           path: "/board/:row/:column",
           description: \`Retrieves the requested square.\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "row",
-              type: "Path",
-              schema: z.number().int().gte(1).lte(3),
-            },
-            {
-              name: "column",
-              type: "Path",
-              schema: z.number().int().gte(1).lte(3),
-            },
-          ],
-          response: z.enum([".", "X", "O"]),
-          errors: [
-            {
-              status: 400,
-              description: \`The provided parameters are incorrect\`,
-              schema: z.string().max(256),
-            },
-          ],
-        },
-        {
-          method: "put",
-          path: "/board/:row/:column",
-          description: \`Places a mark on the board and retrieves the whole board and the winner (if any).\`,
-          requestFormat: "json",
-          parameters: [
-            {
-              name: "body",
-              type: "Body",
+          request: {
+            pathParams: z.object({
+              row: z.number().int().gte(1).lte(3),
+              column: z.number().int().gte(1).lte(3),
+            }),
+            pathParams: z.object({
+              row: z.number().int().gte(1).lte(3),
+              column: z.number().int().gte(1).lte(3),
+            }),
+          },
+          responses: {
+            200: {
+              description: "Success",
               schema: z.enum([".", "X", "O"]),
             },
-            {
-              name: "row",
-              type: "Path",
-              schema: z.number().int().gte(1).lte(3),
-            },
-            {
-              name: "column",
-              type: "Path",
-              schema: z.number().int().gte(1).lte(3),
-            },
-          ],
-          response: status,
-          errors: [
-            {
-              status: 400,
-              description: \`The provided parameters are incorrect\`,
+            400: {
+              description: "The provided parameters are incorrect",
               schema: z.string().max(256),
             },
-          ],
+          },
         },
-      ]);
+        {
+          method: "put" as const,
+          path: "/board/:row/:column",
+          description: \`Places a mark on the board and retrieves the whole board and the winner (if any).\`,
+          request: {
+            pathParams: z.object({
+              row: z.number().int().gte(1).lte(3),
+              column: z.number().int().gte(1).lte(3),
+            }),
+            pathParams: z.object({
+              row: z.number().int().gte(1).lte(3),
+              column: z.number().int().gte(1).lte(3),
+            }),
+            body: z.enum([".", "X", "O"]),
+          },
+          responses: {
+            200: {
+              description: "Success",
+              schema: status,
+            },
+            400: {
+              description: "The provided parameters are incorrect",
+              schema: z.string().max(256),
+            },
+          },
+        },
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
-          "v3.1/webhook-example.": "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+          "v3.1/webhook-example.": "import { z } from "zod";
 
-      const endpoints = makeApi([]);
+      export const endpoints = [] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       ",
       }
     `);

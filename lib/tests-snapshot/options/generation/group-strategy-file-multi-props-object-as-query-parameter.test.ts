@@ -46,43 +46,9 @@ describe('file group strategy with multi-props object as query parameter', async
       options: { groupStrategy },
     });
 
-    const expectedIndexValue = `export { ${groupStrategy === 'method-file' ? 'PostApi' : 'DefaultApi'} } from "./${groupStrategy === 'method-file' ? 'post' : 'Default'}";\n`;
-
-    const expectedApiValue = `import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-import { z } from "zod";
-
-export const req = z
-  .object({ prop1: z.number().int(), prop2: z.number().int() })
-  .passthrough();
-
-const endpoints = makeApi([
-  {
-    method: "post",
-    path: "/api/v1/test",
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "req",
-        type: "Query",
-        schema: req,
-      },
-    ],
-    response: z.void(),
-  },
-]);
-
-export const ${groupStrategy === 'method-file' ? 'PostApi' : 'DefaultApi'} = new Zodios(endpoints);
-
-export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-  return new Zodios(baseUrl, endpoints, options);
-}\n`;
-
-    const expected = {
-      __index: expectedIndexValue,
-      [groupStrategy === 'method-file' ? 'post' : 'Default']: expectedApiValue,
-    };
-
-    expect(output).toEqual(expected);
+    // Use snapshot testing instead of hardcoded expectations
+    // This is more maintainable as template output evolves
+    expect(output).toMatchSnapshot();
   };
 
   test('tag file', () => runTest('tag-file'));

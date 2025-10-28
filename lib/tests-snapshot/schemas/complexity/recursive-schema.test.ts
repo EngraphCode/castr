@@ -171,36 +171,96 @@ describe('recursive-schema', () => {
       disableWriteToFile: true,
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+      "import { z } from "zod";
 
       type User = Partial<{ name: string; middle: Middle }>;
       type Middle = Partial<{ user: User }>;
 
       export const Middle: z.ZodType<Middle> = z.lazy(() =>
-        z.object({ user: User }).partial().passthrough(),
+        z.object({ user: User }).partial().strict(),
       );
       export const User: z.ZodType<User> = z.lazy(() =>
-        z.object({ name: z.string(), middle: Middle }).partial().passthrough(),
+        z.object({ name: z.string(), middle: Middle }).partial().strict(),
       );
+      export const Root = z
+        .object({ recursive: User, basic: z.number() })
+        .partial()
+        .strict();
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/example",
-          requestFormat: "json",
-          response: z
-            .object({ recursive: User, basic: z.number() })
-            .partial()
-            .passthrough(),
+          operationId: "getExample",
+          request: {},
+          responses: {
+            200: {
+              description: "OK",
+              schema: z
+                .object({ recursive: User, basic: z.number() })
+                .partial()
+                .strict(),
+            },
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       "
     `);
   });
@@ -912,8 +972,7 @@ describe('recursive-schema', () => {
       disableWriteToFile: true,
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+      "import { z } from "zod";
 
       type User = Partial<{ name: string; parent: User }>;
       type UserWithFriends = Partial<{
@@ -940,7 +999,7 @@ describe('recursive-schema', () => {
             circle: z.array(Friend),
           })
           .partial()
-          .passthrough(),
+          .strict(),
       );
       export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
         z
@@ -951,26 +1010,100 @@ describe('recursive-schema', () => {
             bestFriend: Friend,
           })
           .partial()
-          .passthrough(),
+          .strict(),
       );
-
-      const endpoints = makeApi([
-        {
-          method: "get",
-          path: "/example",
-          requestFormat: "json",
-          response: z
-            .object({ someUser: UserWithFriends, someProp: z.boolean() })
+      export const User: z.ZodType<User> = z.lazy(() =>
+        z.object({ name: z.string(), parent: User }).partial().strict(),
+      );
+      export const ObjectWithRecursiveArray: z.ZodType<ObjectWithRecursiveArray> =
+        z.lazy(() =>
+          z
+            .object({
+              isInsideObjectWithRecursiveArray: z.boolean(),
+              array: z.array(ObjectWithRecursiveArray),
+            })
             .partial()
-            .passthrough(),
+            .strict(),
+        );
+      export const ResponseSchema = z
+        .object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() })
+        .partial()
+        .strict();
+
+      export const endpoints = [
+        {
+          method: "get" as const,
+          path: "/example",
+          operationId: "getExample",
+          request: {},
+          responses: {
+            200: {
+              description: "OK",
+              schema: z
+                .object({ someUser: UserWithFriends, someProp: z.boolean() })
+                .partial()
+                .strict(),
+            },
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       "
     `);
   });
@@ -1118,8 +1251,7 @@ describe('recursive-schema', () => {
       disableWriteToFile: true,
     });
     expect(prettyOutput).toMatchInlineSnapshot(`
-      "import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
-      import { z } from "zod";
+      "import { z } from "zod";
 
       type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }>;
       type Author = Partial<{ name: string; mail: string; settings: Settings }>;
@@ -1133,11 +1265,11 @@ describe('recursive-schema', () => {
       export const Settings = z
         .object({ theme_color: z.string() })
         .partial()
-        .passthrough();
+        .strict();
       export const Author = z
         .object({ name: z.string(), mail: z.string(), settings: Settings })
         .partial()
-        .passthrough();
+        .strict();
       export const Song: z.ZodType<Song> = z.lazy(() =>
         z
           .object({
@@ -1146,32 +1278,89 @@ describe('recursive-schema', () => {
             in_playlists: z.array(Playlist),
           })
           .partial()
-          .passthrough(),
+          .strict(),
       );
       export const Playlist: z.ZodType<Playlist> = z.lazy(() =>
         z
           .object({ name: z.string(), author: Author, songs: z.array(Song) })
           .partial()
-          .passthrough(),
+          .strict(),
       );
 
-      const endpoints = makeApi([
+      export const endpoints = [
         {
-          method: "get",
+          method: "get" as const,
           path: "/example",
-          requestFormat: "json",
-          response: z
-            .object({ playlist: Playlist, by_author: Author })
-            .partial()
-            .passthrough(),
+          operationId: "getExample",
+          request: {},
+          responses: {
+            200: {
+              description: "OK",
+              schema: z
+                .object({ playlist: Playlist, by_author: Author })
+                .partial()
+                .strict(),
+            },
+          },
         },
-      ]);
+      ] as const;
 
-      export const api = new Zodios(endpoints);
+      /**
+       * MCP (Model Context Protocol) compatible tool definitions.
+       *
+       * Each endpoint is transformed into an MCP tool with:
+       * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+       * - \`description\`: Human-readable description of the tool's purpose
+       * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+       * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+       *
+       * MCP tools use a consolidated input structure (all params in one object) rather than
+       * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+       * The output schema focuses on the "happy path" (primary success response). Error handling
+       * is typically done at the protocol level.
+       *
+       * @see https://anthropic.com/mcp - Model Context Protocol specification
+       * @example
+       * \`\`\`typescript
+       * import { mcpTools } from "./api";
+       *
+       * // AI assistant discovers and validates tool usage
+       * const tool = mcpTools.find(t => t.name === "getUserById");
+       * const input = tool.inputSchema.parse({
+       *   path: { userId: "123" },
+       *   query: { include: "profile" }
+       * });
+       * \`\`\`
+       */
+      export const mcpTools = endpoints.map((endpoint) => {
+        // Build consolidated params object from all request parameter types
+        // MCP requires a single inputSchema, not separated path/query/headers/body
+        const params: Record<string, z.ZodTypeAny> = {};
+        if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+        if (endpoint.request?.queryParams)
+          params.query = endpoint.request.queryParams;
+        if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+        if (endpoint.request?.body) params.body = endpoint.request.body;
 
-      export function createApiClient(baseUrl: string, options?: ZodiosOptions) {
-        return new Zodios(baseUrl, endpoints, options);
-      }
+        return {
+          // Use operationId for the canonical name, with fallback to generated name
+          name:
+            endpoint.operationId ||
+            \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+          // Provide description for AI context
+          description:
+            endpoint.description ||
+            \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+          // Consolidated input schema (path, query, headers, body all nested)
+          inputSchema:
+            Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+          // Primary success response (200 or 201), fallback to z.unknown() for safety
+          outputSchema:
+            endpoint.responses[200]?.schema ||
+            endpoint.responses[201]?.schema ||
+            z.unknown(),
+        };
+      }) as const;
       "
     `);
   });

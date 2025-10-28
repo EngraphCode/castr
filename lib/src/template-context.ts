@@ -373,12 +373,11 @@ export type TemplateContextGroupStrategy = 'none' | 'tag' | 'method' | 'tag-file
 export type TemplateContextOptions = {
   /**
    * Template to use for code generation
-   * - "default": Full Zodios HTTP client
+   * - "schemas-with-metadata": Schemas + endpoint metadata (default)
    * - "schemas-only": Pure Zod schemas
-   * - "schemas-with-metadata": Schemas + endpoint metadata without Zodios
-   * @default "default"
+   * @default "schemas-with-metadata"
    */
-  template?: 'default' | 'schemas-only' | 'schemas-with-metadata';
+  template?: 'schemas-only' | 'schemas-with-metadata';
   /** @see https://www.zodios.org/docs/client#baseurl */
   baseUrl?: string;
   /**
