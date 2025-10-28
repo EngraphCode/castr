@@ -1,20 +1,19 @@
 {
-  "name": "openapi-zod-client",
+  "name": "openapi-zod-validation",
   "version": "1.18.3",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/astahmer/openapi-zod-client.git"
+    "url": "https://github.com/jimcresswell/openapi-zod-validation.git"
   },
-  "author": "Alexandre Stahmer <alexandre.stahmer@gmail.com>",
-  "main": "dist/openapi-zod-client.cjs",
-  "module": "dist/openapi-zod-client.js",
-  "types": "dist/openapi-zod-client.d.ts",
+  "main": "dist/openapi-zod-validation.cjs",
+  "module": "dist/openapi-zod-validation.js",
+  "types": "dist/openapi-zod-validation.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/openapi-zod-client.d.ts",
-      "import": "./dist/openapi-zod-client.js",
-      "require": "./dist/openapi-zod-client.cjs"
+      "types": "./dist/openapi-zod-validation.d.ts",
+      "import": "./dist/openapi-zod-validation.js",
+      "require": "./dist/openapi-zod-validation.cjs"
     },
     "./cli": {
       "types": "./dist/cli.d.ts",
@@ -22,9 +21,9 @@
       "require": "./dist/cli.cjs"
     }
   },
-  "homepage": "https://github.com/astahmer/openapi-zod-client",
+  "homepage": "https://github.com/jimcresswell/openapi-zod-validation",
   "bin": {
-    "openapi-zod-client": "./bin.cjs"
+    "openapi-zod-validation": "./bin.cjs"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -43,7 +42,7 @@
     "character:watch": "vitest --config vitest.characterisation.config.ts",
     "fetch:examples": "tsx ./examples-fetcher.mts"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@apidevtools/swagger-parser": "^12.1.0",
     "commander": "^14.0.2",

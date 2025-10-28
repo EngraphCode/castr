@@ -1,10 +1,6 @@
-[![npm version](https://img.shields.io/npm/v/openapi-zod-client.svg)](https://www.npmjs.com/package/openapi-zod-client)
+# openapi-zod-validation
 
-# openapi-zod-client
-
-[![Screenshot 2022-11-12 at 18 52 25](https://user-images.githubusercontent.com/47224540/201487856-ffc4c862-6f31-4de1-8ef1-3981fabf3416.png)](https://openapi-zod-client.vercel.app/)
-
-Generates a [zodios](https://github.com/ecyrbe/zodios) (_typescript http client with zod validation_) from a (json/yaml) [OpenAPI spec](https://github.com/OAI/OpenAPI-Specification) **(or just use the generated schemas/endpoints/etc !)**
+This was originally forked from [openapi-zod-client](https://github.com/astahmer/openapi-zod-client). The code has been extensively rewritten as part of an effort to support automatic generation of MCP tools from OpenAPI specs.
 
 - can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
 - or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
@@ -16,45 +12,40 @@ Generates a [zodios](https://github.com/ecyrbe/zodios) (_typescript http client 
 
 Sometimes you don't have control on your API, maybe you need to consume APIs from other teams (who might each use a different language/framework), you only have their Open API spec as source of truth, then this might help 😇
 
-You could use `openapi-zod-client` to automate the API integration part (doesn't matter if you consume it in your front or back-end, zodios is agnostic) on your CI and just import the generated `api` client
+You could use `openapi-zod-validation` to automate the API integration part (doesn't matter if you consume it in your front or back-end, zodios is agnostic) on your CI and just import the generated `api` client
 
 ## Comparison vs tRPC zodios ts-rest etc
 
-If you do have control on your API/back-end, you should probably use a RPC-like solution like [tRPC](https://github.com/trpc/trpc), [zodios](https://www.zodios.org/) or [ts-rest](https://ts-rest.com/) instead of this.
-
-# Comparison vs typed-openapi
-
-- `openapi-zod-client` is a CLI that generates a [zodios](https://www.zodios.org/) API client (typescript http client with zod validation), currently using axios as http client
-- [`typed-openapi`](https://github.com/astahmer/typed-openapi) is a CLI/library that generates a headless (bring your own fetcher : fetch, axios, ky, etc...) Typescript API client from an OpenAPI spec, that can output schemas as either just TS types (providing instant suggestions in your IDE) or different runtime validation schemas (zod, typebox, arktype, valibot, io-ts, yup)
+If you do have control on your API/back-end, you should probably use a RPC-like solution like [tRPC](https://github.com/trpc/trpc) or [ts-rest](https://ts-rest.com/) instead of this.
 
 # Usage
 
 with local install:
 
-- `pnpm i -D openapi-zod-client`
-- `pnpm openapi-zod-client "./input/file.json" -o "./output/client.ts"`
+- `pnpm i -D openapi-zod-validation`
+- `pnpm openapi-zod-validation "./input/file.json" -o "./output/client.ts"`
 
 or directly (no install)
 
-- `pnpx openapi-zod-client "./input/file.yaml" -o "./output/client.ts"`
+- `pnpx openapi-zod-validation "./input/file.yaml" -o "./output/client.ts"`
 
 # auto-generated doc
 
-https://paka.dev/npm/openapi-zod-client
+https://paka.dev/npm/openapi-zod-validation
 
 ## CLI
 
 ```sh
-openapi-zod-client/1.15.0
+openapi-zod-validation/1.15.0
 
 Usage:
-  $ openapi-zod-client <input>
+  $ openapi-zod-validation <input>
 
 Commands:
   <input>  path/url to OpenAPI/Swagger document as json/yaml
 
 For more info, run any command with the `--help` flag:
-  $ openapi-zod-client --help
+  $ openapi-zod-validation --help
 
 Options:
   -o, --output <path>               Output path for the zodios api client ts file (defaults to `<input>.client.ts`)
@@ -85,7 +76,7 @@ Options:
 
 ## Templates
 
-`openapi-zod-client` supports multiple output templates to suit different use cases:
+`openapi-zod-validation` supports multiple output templates to suit different use cases:
 
 ### Available Templates
 
@@ -96,9 +87,9 @@ Generates a complete Zodios API client with HTTP methods, validation, and type s
 **Use when**: You want a ready-to-use HTTP client with runtime validation.
 
 ```bash
-pnpx openapi-zod-client ./petstore.yaml -o ./client.ts
+pnpx openapi-zod-validation ./petstore.yaml -o ./client.ts
 # or explicitly:
-pnpx openapi-zod-client ./petstore.yaml -o ./client.ts --template default
+pnpx openapi-zod-validation ./petstore.yaml -o ./client.ts --template default
 ```
 
 #### 2. **`schemas-only`** - Pure Zod Schemas
@@ -108,7 +99,7 @@ Generates only the Zod schemas without any HTTP client code.
 **Use when**: You only need the validation schemas, not the HTTP client.
 
 ```bash
-pnpx openapi-zod-client ./petstore.yaml -o ./schemas.ts --template schemas-only
+pnpx openapi-zod-validation ./petstore.yaml -o ./schemas.ts --template schemas-only
 ```
 
 Example output in [./examples/schemas-only/petstore-schemas.ts](./examples/schemas-only/petstore-schemas.ts)
@@ -137,16 +128,16 @@ Generates Zod schemas, endpoint metadata, and optional validation helpers **with
 
 ```bash
 # Basic usage
-pnpx openapi-zod-client ./petstore.yaml -o ./api-schemas.ts --no-client
+pnpx openapi-zod-validation ./petstore.yaml -o ./api-schemas.ts --no-client
 
 # With validation helpers
-pnpx openapi-zod-client ./petstore.yaml -o ./api.ts --no-client --with-validation-helpers
+pnpx openapi-zod-validation ./petstore.yaml -o ./api.ts --no-client --with-validation-helpers
 
 # With schema registry
-pnpx openapi-zod-client ./petstore.yaml -o ./api.ts --no-client --with-schema-registry
+pnpx openapi-zod-validation ./petstore.yaml -o ./api.ts --no-client --with-schema-registry
 
 # All features
-pnpx openapi-zod-client ./petstore.yaml -o ./api.ts \
+pnpx openapi-zod-validation ./petstore.yaml -o ./api.ts \
   --no-client \
   --with-validation-helpers \
   --with-schema-registry
@@ -232,7 +223,7 @@ export function buildSchemaRegistry(options?: { rename?: (key: string) => string
 
 You can also pass a custom [handlebars](https://handlebarsjs.com/) template and/or a [custom prettier config](https://prettier.io/docs/en/configuration.html) with something like:
 
-`pnpm openapi-zod-client ./example/petstore.yaml -o ./example/petstore-schemas.ts -t ./example/schemas-only.hbs -p ./example/prettier-custom.json --export-schemas`
+`pnpm openapi-zod-validation ./example/petstore.yaml -o ./example/petstore-schemas.ts -t ./example/schemas-only.hbs -p ./example/prettier-custom.json --export-schemas`
 
 ### MCP (Model Context Protocol) Integration
 
@@ -393,12 +384,12 @@ const response = await fetch(`https://api.example.com/users/${input.path.userId}
 const data = tool.outputSchema.parse(await response.json());
 ```
 
-This structure aligns perfectly with how MCP servers expose tools to AI assistants, making `openapi-zod-client` a powerful bridge between OpenAPI specs and AI tool integration.
+This structure aligns perfectly with how MCP servers expose tools to AI assistants, making `openapi-zod-validation` a powerful bridge between OpenAPI specs and AI tool integration.
 
 ## When using the CLI
 
-- `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
-- `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-client/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
+- `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-validation/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
+- `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-validation/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
 
 You can pass an expression that will be safely evaluted (thanks to [whence](https://github.com/jonschlinkert/whence/)) and works like `validateStatus` from axios to determine which OpenAPI `ResponseItem` should be picked as the main one for the `ZodiosEndpoint["response"]` and which ones will be added to the `ZodiosEndpoint["errors"]` array.
 
@@ -406,11 +397,11 @@ Exemple: `--success-expr "status >= 200 && status < 300"`
 
 ## Tips
 
-- You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-client ./input.yaml` will generate a `./input.yaml.ts` file
+- You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-validation ./input.yaml` will generate a `./input.yaml.ts` file
 - Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
-  `pnpx openapi-zod-client https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
+  `pnpx openapi-zod-validation https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
 
-- Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-client` could help
+- Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-validation` could help
 - If you only need a few portions of your OpenAPI spec (i.e. only using a few endpoints from the [GitHub REST API OpenAPI Spec](https://github.com/OAI/OpenAPI-Specification)), consider using [openapi-endpoint-trimmer](https://github.com/aacitelli/openapi-endpoint-trimmer) to trim unneeded paths from your spec first. It supports prefix-based omitting of paths, helping significantly cut down on the length of your output types file, which generally improves editor speed and compilation times.
 
 ## Example
