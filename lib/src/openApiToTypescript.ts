@@ -137,11 +137,8 @@ export const getTypescriptFromOpenApi = ({
     }
 
     if (schemaType === 'array') {
-      return handleArraySchema(
-        schema,
-        options?.allReadonly ?? false,
-        (items) => getTypescriptFromOpenApi({ schema: items, ctx, meta, options }),
-        ctx,
+      return handleArraySchema(schema, options?.allReadonly ?? false, (items) =>
+        getTypescriptFromOpenApi({ schema: items, ctx, meta, options }),
       );
     }
 

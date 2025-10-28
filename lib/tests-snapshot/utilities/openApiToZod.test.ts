@@ -16,8 +16,6 @@ test('getSchemaAsZodString', () => {
   expect(getSchemaAsZodString({ type: 'string' })).toMatchInlineSnapshot('"z.string()"');
   expect(getSchemaAsZodString({ type: 'number' })).toMatchInlineSnapshot('"z.number()"');
   expect(getSchemaAsZodString({ type: 'integer' })).toMatchInlineSnapshot('"z.number()"');
-  // expect(getSchemaAsZodString({ type: "string", format: "date-time" })).toMatchInlineSnapshot('"z.string().datetime()"');
-  // expect(getSchemaAsZodString({ type: "number", nullable: true, minimum: 0 })).toMatchInlineSnapshot('"z.number().nullable().gte(0)"');
 
   expect(getSchemaAsZodString({ type: 'array', items: { type: 'string' } })).toMatchInlineSnapshot(
     '"z.array(z.string())"',

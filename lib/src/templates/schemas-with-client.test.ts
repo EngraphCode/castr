@@ -298,7 +298,8 @@ describe('schemas-with-client template', () => {
 
       // Extract only the endpoint methods section (user-facing code)
       // Skip the validate helper which legitimately needs "as T" for type safety
-      const startMarker = '// ============================================================\n// Endpoint Metadata';
+      const startMarker =
+        '// ============================================================\n// Endpoint Metadata';
       const userCodeStart = (result as string).indexOf(startMarker);
       const userCode = userCodeStart >= 0 ? (result as string).slice(userCodeStart) : result;
 

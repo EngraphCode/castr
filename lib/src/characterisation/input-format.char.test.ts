@@ -162,13 +162,13 @@ describe('Input Format Support', () => {
 
       // Test JSON
       const jsonPath = './examples/openapi/v3.0/petstore.json';
-      const jsonBundled = await SwaggerParser.bundle(jsonPath);
+      const jsonBundled = (await SwaggerParser.bundle(jsonPath)) as OpenAPIObject;
       expect(jsonBundled).toBeDefined();
       expect(jsonBundled.openapi).toBe('3.0.0');
 
       // Test YAML
       const yamlPath = './examples/openapi/v3.0/petstore.yaml';
-      const yamlBundled = await SwaggerParser.bundle(yamlPath);
+      const yamlBundled = (await SwaggerParser.bundle(yamlPath)) as OpenAPIObject;
       expect(yamlBundled).toBeDefined();
       expect(yamlBundled.openapi).toBe('3.0.0');
     });

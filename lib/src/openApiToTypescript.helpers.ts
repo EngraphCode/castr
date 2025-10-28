@@ -208,7 +208,6 @@ export function handleArraySchema(
   schema: SchemaObject,
   shouldWrapReadonly: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => unknown,
-  _ctx: TsConversionContext | undefined,
 ): string {
   const rawType = schema.items ? convertSchema(schema.items) : 'any';
   const itemType = typeof rawType === 'string' ? rawType : String(rawType);

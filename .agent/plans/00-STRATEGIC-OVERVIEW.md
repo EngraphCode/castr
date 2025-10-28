@@ -83,12 +83,12 @@ This strategic plan ensures all 8 requirements are met:
 
 ## Strategic Phases
 
-### Phase 1: Foundation (✅ COMPLETE)
+### Phase 1: Foundation (🔄 IN PROGRESS - Part 4)
 
-**Status:** Complete  
-**Duration:** October 22-24, 2025
+**Status:** Parts 1-3 Complete, Part 4 Planned  
+**Duration:** October 22-28, 2025
 
-**Achievements:**
+**Parts 1-3 Complete:**
 
 - Modernized all developer tooling
 - Migrated to pure ESM with NodeNext resolution
@@ -97,6 +97,15 @@ This strategic plan ensures all 8 requirements are met:
 - Established comprehensive testing (297 tests)
 - Created 12 Architecture Decision Records
 - Documented all coding standards (RULES.md)
+
+**Part 4 (In Progress - 6-8 hours):**
+
+- ⏳ **Unified Input Handling** - Extract SwaggerParser logic from CLI
+- ⏳ Support both file paths and pre-parsed specs in programmatic API
+- ⏳ 4 use case matrix: [CLI, Import] × [With Refs, Without Refs]
+- ⏳ Characterisation tests for all use cases
+- ⏳ Deep TDD with unit tests for parseOpenApiInput helper
+- ⏳ Maintain backward compatibility (openApiDoc still works)
 
 **Key Decisions:**
 
@@ -108,6 +117,7 @@ This strategic plan ensures all 8 requirements are met:
 - Replace cac with commander (ADR-008)
 - Replace Preconstruct with tsup (ADR-009)
 - Use Turborepo for orchestration (ADR-010)
+- Unified input handling across entry points (Part 4)
 
 ---
 
@@ -433,10 +443,18 @@ This strategic plan ensures all 8 requirements are met:
 
 ## Timeline
 
-**Phase 2 (Current):** 2-3 weeks remaining
+**Phase 1 Part 4 (Current):** 6-8 hours (1-2 days)
 
-- ✅ Week 1: Pre-work complete (analysis, dependency updates, templates)
-- ⏳ Week 2-3: Architecture Rewrite (26-38 hours)
+- ⏳ Unified input handling implementation
+- ⏳ 4 use case characterisation tests
+- ⏳ parseOpenApiInput helper with deep unit tests
+- ⏳ Update CLI and programmatic API
+- ⏳ Documentation updates
+
+**Phase 2 (Next):** 2-3 weeks after Part 4
+
+- Week 1: Pre-work complete (analysis, dependency updates, templates) ✅
+- Week 2-3: Architecture Rewrite (26-38 hours)
   - Phase 0: Comprehensive test suite (8-12 hours)
   - Phase 1: Eliminate resolver & CodeMeta (8-12 hours)
   - Phase 2: Migrate tanu → ts-morph (6-8 hours)
@@ -474,6 +492,10 @@ This strategic plan ensures all 8 requirements are met:
 ### Plans (This Directory)
 
 - **This file:** Strategic overview
+- **PHASE-1-PART-1-CONTEXT-TYPES.md:** Part 1 - Context & type safety (✅ complete)
+- **PHASE-1-PART-2-TS-MORPH.md:** Part 2 - TypeScript AST migration (✅ complete)
+- **PHASE-1-PART-3-ZODIOS-REMOVAL.md:** Part 3 - Remove Zodios dependencies (✅ complete)
+- **PHASE-1-PART-4-UNIFIED-INPUT.md:** Part 4 - Unified input handling (⏳ current)
 - **01-CURRENT-IMPLEMENTATION.md:** Architecture Rewrite plan (complete details)
 - **COMPLETED_WORK.md:** Historical archive (all Phase 1 & 2 pre-work)
 - **02-MCP-ENHANCEMENTS.md:** Phase 2B MCP-specific enhancements (optional, after rewrite)

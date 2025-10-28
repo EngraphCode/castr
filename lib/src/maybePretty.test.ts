@@ -106,7 +106,7 @@ describe('maybePretty', () => {
 
   test('handles undefined options', async () => {
     const input = `const x = 1;`;
-    const result = await maybePretty(input, undefined);
+    const result = await maybePretty(input);
 
     expect(result).toBe('const x = 1;\n');
   });
