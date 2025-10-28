@@ -129,7 +129,8 @@ export const getEndpointDefinitionList = (
       // Is this behaviour compliant with the OpenAPI schema?
       if (!operation) continue;
 
-      // Should we allow this deprecated endpoint, or should we fail fast with a clear error message?
+      // Design choice: Skip deprecated endpoints by default (OpenAPI best practice)
+      // Users can include them by setting withDeprecatedEndpoints: true
       if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
 
       const parameters = Object.values({
@@ -152,12 +153,14 @@ export const getEndpointDefinitionList = (
 
       endpoints.push(result.endpoint);
 
-      // Should we allow this ignored fallback response, or should we fail fast with a clear error message?
+      // Track endpoints with only 'default' status code
+      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
       if (result.ignoredFallback) {
         ignoredFallbackResponse.push(result.ignoredFallback);
       }
 
-      // Should we allow this ignored generic error, or should we fail fast with a clear error message?
+      // Track endpoints where generic error responses could be added
+      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
       if (result.ignoredGeneric) {
         ignoredGenericError.push(result.ignoredGeneric);
       }
