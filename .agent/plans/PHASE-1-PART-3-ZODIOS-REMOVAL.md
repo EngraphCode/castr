@@ -240,42 +240,83 @@
 
 ---
 
-### Task 3.4: Update Template Context (TDD Required)
+### Task 3.4: Create openapi-fetch Wrapper Template (TDD Required)
 
-**Duration:** 1 hour
+**Duration:** 2-3 hours  
+**Detailed Plan:** See `TASK-3.4-OPENAPI-FETCH-INTEGRATION.md`
+
+**Goal:** Create `schemas-with-client.hbs` template that generates a type-safe API client by wrapping [openapi-fetch](https://github.com/openapi-ts/openapi-typescript/tree/main/packages/openapi-fetch) with our Zod validation.
+
+**Why openapi-fetch instead of building our own?**
+- ✅ Battle-tested HTTP client logic (don't reinvent the wheel)
+- ✅ Minimal code generation (we just add validation)
+- ✅ Type-safe at compile-time (openapi-typescript) + runtime (Zod)
+- ✅ Low maintenance (HTTP logic maintained by openapi-ts team)
+
+**Architecture:**
+```
+User Code
+    ↓ calls
+Generated Wrapper (our code)
+    ↓ validates with Zod
+    ↓ calls
+openapi-fetch (peer dep)
+    ↓ uses types from
+openapi-typescript (peer dep)
+```
 
 **TDD Workflow:**
 
-1. **Write tests first:**
-
+1. **RED - Write tests first:**
    ```typescript
-   describe('getZodClientTemplateContext (post-Zodios)', () => {
-     it('should not include Zodios-specific metadata', () => {
-       const context = getZodClientTemplateContext(openApiDoc);
-
-       expect(context).not.toHaveProperty('zodiosEndpoints');
-       expect(context.endpoints).toBeDefined();
-       // Each endpoint should have pure Zod schemas
+   // lib/src/templates/schemas-with-client.test.ts
+   describe('schemas-with-client template', () => {
+     it('should generate openapi-fetch wrapper', async () => {
+       const result = await generateZodClientFromOpenAPI({
+         openApiDoc: minimalSpec,
+         template: 'schemas-with-client',
+         disableWriteToFile: true
+       });
+       
+       expect(result).toContain("import createClient from 'openapi-fetch'");
+       expect(result).toContain('export function createApiClient(');
+       expect(result).toContain('.safeParse('); // Zod validation
      });
    });
    ```
 
-2. **Update implementation:**
-   - Remove Zodios endpoint generation
-   - Keep Zod schema generation
-   - Preserve all useful metadata
+2. **GREEN - Create template:**
+   - Create `lib/src/templates/schemas-with-client.hbs`
+   - Generate Zod schemas (reuse existing logic)
+   - Generate endpoint metadata (reuse existing logic)
+   - Generate `createApiClient()` function that wraps openapi-fetch
+   - Add validation for requests and responses
 
-3. **Validate:**
-   ```bash
-   pnpm test -- --run template-context.test.ts
-   pnpm test -- --run
-   ```
+3. **REFACTOR - Polish:**
+   - Add comprehensive JSDoc
+   - Error handling
+   - Configuration options (validation modes)
+   - Export `_raw` client for advanced use cases
+
+**See `TASK-3.4-OPENAPI-FETCH-INTEGRATION.md` for full implementation details.**
 
 ---
 
-### Task 3.5: Remove Zodios Dependency
+### Task 3.5: Update CLI Defaults
 
 **Duration:** 30 minutes
+
+**Goal:** Update CLI to support new template and improve defaults.
+
+**Changes:**
+1. Add `--template` flag that accepts: `schemas-only`, `schemas-with-metadata`, `schemas-with-client`
+2. Default to `schemas-with-metadata` (current behavior)
+3. Map `--no-client` to `schemas-with-metadata` (for backward compat)
+4. Update help text and examples
+
+### Task 3.6: Remove Zodios Dependency
+
+**Duration:** 15 minutes
 
 **Steps:**
 
@@ -304,7 +345,7 @@
 
 ---
 
-### Task 3.6: Final Validation
+### Task 3.7: Final Validation
 
 **Duration:** 1 hour
 
