@@ -1,9 +1,8 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, unlinkSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { readdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import degit from 'degit';
-import fg from 'fast-glob';
 
 /**
  * Configuration for fetching OpenAPI examples from official sources.
@@ -54,12 +53,9 @@ async function fetchOpenApiExamples(): Promise<void> {
     await cloneExamplesFromGitHub();
 
     // Step 3: Filter to OpenAPI 3.x only (remove Swagger v2.0)
-    await removeSwaggerV2Examples();
+    removeSwaggerV2Examples();
 
-    // Step 4: Remove JSON files (keep only YAML)
-    await removeJsonExamples();
-
-    // Step 5: Move from temp to final location
+    // Step 4: Move from temp to final location
     await moveToFinalLocation();
 
     console.log('\n✅ Successfully fetched OpenAPI examples!');
@@ -110,7 +106,7 @@ async function cloneExamplesFromGitHub(): Promise<void> {
 /**
  * Removes Swagger v2.0 examples, keeping only OpenAPI 3.0+ specs.
  */
-async function removeSwaggerV2Examples(): Promise<void> {
+function removeSwaggerV2Examples(): void {
   console.log('🗑️  Removing Swagger v2.0 examples (keeping OpenAPI 3.x only)...');
 
   const v2Path = join(EXAMPLES_CONFIG.tempDir, 'v2.0');
@@ -123,30 +119,6 @@ async function removeSwaggerV2Examples(): Promise<void> {
   } else {
     console.log('   No v2.0 directory found (already clean)');
   }
-}
-
-/**
- * Removes JSON example files, keeping only YAML versions.
- *
- * @remarks
- * Many examples have both YAML and JSON variants. We keep only YAML
- * for consistency and to reduce test execution time.
- */
-async function removeJsonExamples(): Promise<void> {
-  console.log('🗑️  Removing JSON examples (keeping YAML only)...');
-
-  const jsonFiles = fg.sync([`${EXAMPLES_CONFIG.tempDir}/v3.*/**/*.json`]);
-
-  if (jsonFiles.length === 0) {
-    console.log('   No JSON files found');
-    return;
-  }
-
-  jsonFiles.forEach((jsonPath) => {
-    unlinkSync(jsonPath);
-  });
-
-  console.log(`   Removed: ${jsonFiles.length} JSON file(s)`);
 }
 
 /**
@@ -164,6 +136,7 @@ async function moveToFinalLocation(): Promise<void> {
   console.log(`   Found ${v3Dirs.length} OpenAPI 3.x directories`);
 
   // Move temp to final location
+  // eslint-disable-next-line sonarjs/no-os-command-from-path -- safe
   spawnSync('mv', [EXAMPLES_CONFIG.tempDir, EXAMPLES_CONFIG.targetDir], {
     stdio: 'inherit',
   });

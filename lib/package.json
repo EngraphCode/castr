@@ -40,7 +40,8 @@
     "test:snapshot": "vitest run --config vitest.snapshot.config.ts",
     "test:snapshot:watch": "vitest --config vitest.snapshot.config.ts",
     "character": "vitest run --config vitest.characterisation.config.ts",
-    "character:watch": "vitest --config vitest.characterisation.config.ts"
+    "character:watch": "vitest --config vitest.characterisation.config.ts",
+    "fetch:examples": "tsx ./examples-fetcher.mts"
   },
   "license": "ISC",
   "dependencies": {

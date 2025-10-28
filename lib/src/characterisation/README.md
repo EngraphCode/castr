@@ -28,6 +28,9 @@ characterisation/
 ├── cli.char.test.ts                    # CLI behavior tests (15 tests)
 ├── error-handling.char.test.ts         # Error handling tests (10 tests)
 ├── edge-cases.char.test.ts             # Edge cases tests (10 tests)
+├── input-format.char.test.ts           # JSON vs YAML input tests (9 tests)
+├── bundled-spec-assumptions.char.test.ts # SwaggerParser behavior (6 tests)
+├── programmatic-usage.char.test.ts     # E2E programmatic API (12 tests)
 └── test-output/                        # Generated test output (git-ignored)
 ```
 

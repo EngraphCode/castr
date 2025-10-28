@@ -49,8 +49,10 @@ This will:
 
 1. Clone the latest examples from GitHub
 2. Remove Swagger v2.0 specs (we only test OpenAPI 3.x)
-3. Remove JSON files (we only use YAML)
+3. Remove JSON files (we only use YAML to avoid duplicate tests)
 4. Place them in `lib/examples/openapi/`
+
+**Note:** While we store only YAML examples, openapi-zod-client **fully supports both JSON and YAML** input formats. This is verified in `src/characterisation/input-format.char.test.ts`.
 
 ## Swagger Examples (`swagger/`)
 

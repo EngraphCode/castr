@@ -20,6 +20,6 @@
     "strictPropertyInitialization": false,
     "baseUrl": "./"
   },
-  "include": ["src", "eslint.config.ts"],
+  "include": ["src", "eslint.config.ts", "examples-fetcher.mts"],
   "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist", "bin.cjs"]
 }

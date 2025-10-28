@@ -44,6 +44,10 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "fetch:examples": {
+      "cache": false,
+      "outputs": []
     }
   }
 }
