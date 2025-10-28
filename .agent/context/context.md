@@ -160,7 +160,7 @@ pnpm format && pnpm build && pnpm type-check && pnpm test:all
 
 **EXTRACTION BLOCKER STATUS - IMPROVING:**
 
-- **Type assertions:** ~50 remaining (down from 62, from 74!) 
+- **Type assertions:** ~50 remaining (down from 62, from 74!)
 - **Task 2.3 Impact:** Eliminated ALL type assertions from `openApiToTypescript.ts` (was 17!)
 - **Remaining hotspots:**
   - `openApiToTypescript.helpers.ts` (~22, needs final cleanup)
@@ -260,12 +260,10 @@ All documented in `.agent/adr/` (12 ADRs):
   - Remove 6 remaining tanu references
   - Convert hybrid functions to pure string functions
   - Delete tanu conversion bridge logic
-  
 - **Task 2.5:** Remove tanu dependency (15 min)
   - Verify zero usage with grep
   - Remove from package.json
   - Run full validation
-  
 - **Task 2.6:** Final validation (30 min)
   - Count type assertions (target: ~32)
   - Verify all quality gates green

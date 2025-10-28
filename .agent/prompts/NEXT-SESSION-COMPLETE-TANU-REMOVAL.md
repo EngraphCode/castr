@@ -9,24 +9,28 @@
 ## 📋 READ THESE DOCS IN ORDER (15-20 minutes)
 
 ### 1. **Current State** (5 min)
-   - **`.agent/context/context.md`** - Current accurate state (85% complete!)
-   - Focus on: "Current Status" and "What's Next" sections
-   - Key metric: 6 tanu references remaining, down from 20+
+
+- **`.agent/context/context.md`** - Current accurate state (85% complete!)
+- Focus on: "Current Status" and "What's Next" sections
+- Key metric: 6 tanu references remaining, down from 20+
 
 ### 2. **Coding Standards** (5 min) ⭐ MANDATORY
-   - **`.agent/RULES.md`** - TDD requirement, coding conventions
-   - Critical: ALL work must follow TDD (write tests FIRST)
-   - Key principle: Type safety without assertions
+
+- **`.agent/RULES.md`** - TDD requirement, coding conventions
+- Critical: ALL work must follow TDD (write tests FIRST)
+- Key principle: Type safety without assertions
 
 ### 3. **Current Task Details** (5 min)
-   - **`.agent/plans/PHASE-1-PART-2-TS-MORPH.md`**
-   - Section: "📊 Current Progress" - See what's done and what's left
-   - Section: "🎯 Remaining Work" - Your roadmap (1-2 hours)
-   - Section: "Task 2.5" and "Task 2.6" - Specific steps
+
+- **`.agent/plans/PHASE-1-PART-2-TS-MORPH.md`**
+- Section: "📊 Current Progress" - See what's done and what's left
+- Section: "🎯 Remaining Work" - Your roadmap (1-2 hours)
+- Section: "Task 2.5" and "Task 2.6" - Specific steps
 
 ### 4. **Project Requirements** (5 min)
-   - **`.agent/plans/requirements.md`** - Core requirements
-   - Key: Requirement 7 (Zero type assertions)
+
+- **`.agent/plans/requirements.md`** - Core requirements
+- Key: Requirement 7 (Zero type assertions)
 
 ---
 
@@ -43,6 +47,7 @@
 - ✅ **Net code reduction:** 404 insertions, 722 deletions (-318 lines!)
 
 **Architecture Success:**
+
 - String-based type generation: PROVEN
 - All-in non-incremental strategy: VINDICATED
 - TDD throughout: Zero regressions
@@ -63,12 +68,14 @@ lib/src/template-context.ts:                  import { ts } from 'tanu';        
 ```
 
 **Why they still exist:**
+
 - `openApiToTypescript.helpers.ts` contains "hybrid" functions
 - These accept/return both strings AND tanu nodes
 - Created during migration for backward compatibility
 - Now that main file is clean, these can be removed!
 
 **Package dependency:**
+
 - `lib/package.json` - tanu still listed in dependencies
 
 ---
@@ -100,6 +107,7 @@ The file has 6 tanu references and several "hybrid" functions that accept/return
 **Specific Changes Needed:**
 
 1. **Remove tanu imports** (line ~3)
+
    ```typescript
    // DELETE:
    import { t, ts } from 'tanu';
@@ -107,7 +115,7 @@ The file has 6 tanu references and several "hybrid" functions that accept/return
 
 2. **Clean up hybrid functions** - Convert these to pure string functions:
    - `addNullToUnionIfNeeded` - Remove tanu node handling, strings only
-   - `maybeWrapReadonly` - Remove tanu node handling, strings only  
+   - `maybeWrapReadonly` - Remove tanu node handling, strings only
    - `handlePrimitiveEnum` - Already returns strings, clean up any tanu refs
    - `handleOneOf` - Already returns strings, clean up any tanu refs
    - `handleAnyOf` - Already returns strings, clean up any tanu refs
@@ -131,6 +139,7 @@ The file has 6 tanu references and several "hybrid" functions that accept/return
    - Use string helpers instead
 
 **TDD Approach:**
+
 ```bash
 # Run tests frequently as you clean up
 pnpm test -- openApiToTypescript.helpers.test.ts --run
@@ -138,6 +147,7 @@ pnpm type-check  # After each change
 ```
 
 **Expected Impact:**
+
 - Type errors: Should stay 0
 - Lint errors: Should IMPROVE (reduce type assertions)
 - Tests: All 409 unit tests should keep passing
@@ -150,24 +160,27 @@ pnpm type-check  # After each change
 **Steps:**
 
 1. **Verify no usage:**
+
    ```bash
    cd /Users/jim/code/personal/openapi-zod-client/lib
-   
+
    # Should find NOTHING:
    grep -r "from 'tanu'" src --include="*.ts"
    grep -r "import.*tanu" src --include="*.ts"
    grep -r "tanu" src --include="*.ts"
-   
+
    # If any found, go back and clean them up first!
    ```
 
 2. **Remove from package.json:**
+
    ```bash
    cd /Users/jim/code/personal/openapi-zod-client/lib
    pnpm remove tanu
    ```
 
 3. **Validate:**
+
    ```bash
    pnpm install       # Clean install
    pnpm build         # Should pass
@@ -177,6 +190,7 @@ pnpm type-check  # After each change
    ```
 
 4. **Commit:**
+
    ```bash
    git add -A
    git commit -m "feat: Remove tanu dependency completely
@@ -184,13 +198,13 @@ pnpm type-check  # After each change
    - Removed tanu from package.json
    - All TypeScript generation now string-based
    - Zero tanu references remaining
-   
+
    Quality Gates:
    ✅ Type-check: 0 errors
    ✅ Tests: 552/552 passing
    ✅ Lint: <122 issues (improved)
    ✅ Build: Passing
-   
+
    Impact:
    - Type assertions eliminated: ~30 (all TS generation)
    - Code simpler, more maintainable
@@ -307,12 +321,14 @@ Next: Phase 1 Part 3 - Zodios removal (4-6 hours)"
 **Before declaring COMPLETE, verify:**
 
 1. **Zero tanu references:**
+
    ```bash
    grep -r "tanu" lib/src --include="*.ts" --exclude="*.test.ts"
    # Should return: NO RESULTS
    ```
 
 2. **Package clean:**
+
    ```bash
    cat lib/package.json | grep tanu
    # Should return: NO RESULTS
@@ -320,7 +336,7 @@ Next: Phase 1 Part 3 - Zodios removal (4-6 hours)"
 
 3. **All quality gates GREEN:**
    - ✅ format: Passing
-   - ✅ build: Passing  
+   - ✅ build: Passing
    - ✅ type-check: 0 errors
    - ✅ lint: <100 issues (stretch: <90)
    - ✅ test: 409/409 unit tests
@@ -354,6 +370,7 @@ Every change must follow:
 6. **Run all tests** - ensure no regression
 
 **For this cleanup work:**
+
 - Existing tests should cover the behavior
 - Run tests after EVERY file change
 - If tests fail, fix the code (not the tests!)
@@ -364,16 +381,19 @@ Every change must follow:
 ## 🚦 VALIDATION GATES
 
 **After EVERY file modified:**
+
 ```bash
 pnpm type-check && pnpm test -- --run <test-file>
 ```
 
 **After each task complete:**
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test -- --run
 ```
 
 **Before final commit:**
+
 ```bash
 pnpm test:all && pnpm type-check && pnpm lint
 # ALL must pass
@@ -384,17 +404,20 @@ pnpm test:all && pnpm type-check && pnpm lint
 ## 🎯 KEY DECISIONS & CONSTRAINTS
 
 **From requirements.md:**
+
 1. **No type assertions** - Eliminate all from TS generation (Req 7)
 2. **Type safety** - Use proper TypeScript types (Req 2)
 3. **All quality gates green** - No regressions allowed (Req 8)
 
 **From RULES.md:**
+
 1. **TDD mandatory** - No exceptions
 2. **Pure functions** - Where possible
 3. **Explicit > Implicit** - Clear intent
 4. **Fail fast** - With helpful errors
 
 **From ADRs:**
+
 - **ADR-014:** Migrate from tanu to ts-morph (the ADR for this work!)
 - **ADR-004:** Pure functions <50 lines where possible
 
@@ -419,7 +442,7 @@ When you're done, you should be able to say:
 When you start the next session:
 
 - [ ] Read context.md (5 min)
-- [ ] Read RULES.md TDD section (5 min)  
+- [ ] Read RULES.md TDD section (5 min)
 - [ ] Read PHASE-1-PART-2-TS-MORPH.md "Current Progress" (5 min)
 - [ ] Verify current state (`pnpm test:all`) (2 min)
 - [ ] Search for tanu refs (`grep -r "tanu" lib/src`) (1 min)
@@ -443,4 +466,3 @@ When you start the next session:
 ---
 
 **This is the final push! You've got this! 🚀**
-

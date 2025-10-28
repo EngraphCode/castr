@@ -6,7 +6,7 @@
 
 **🎉 BREAKTHROUGH:** All-in non-incremental strategy **SUCCESSFUL!**
 
-- **Achievement:** ALL tanu eliminated from `openApiToTypescript.ts`! 
+- **Achievement:** ALL tanu eliminated from `openApiToTypescript.ts`!
 - **Result:** Type-safe string-based generation working perfectly
 - **Quality:** 151/151 snapshot tests passing, 406/406 unit tests, 115/115 char tests
 - **Benefit:** NO technical debt, clean architecture, net code reduction (404+/-722)
@@ -18,20 +18,24 @@
 ### ✅ Completed Tasks
 
 **Task 2.0: Install ts-morph** ✅
+
 - ts-morph installed and working
 - All quality gates green
 
 **Task 2.1: Research & Design** ✅
+
 - Created `ast-builder.test.ts` with exploratory tests
 - Documented ts-morph API patterns
 - Validated approach
 
 **Task 2.2: Create AstBuilder** ✅
+
 - Implemented full AstBuilder class with TDD
 - 100% test coverage
 - Clean API for type/interface generation
 
 **Task 2.3: ALL-IN Migration** ✅ 85% COMPLETE
+
 - ✅ **MAJOR:** Eliminated ALL tanu from `openApiToTypescript.ts`
 - ✅ Migrated 15 helper functions to string-based generation
 - ✅ Updated all snapshot tests (151/151 passing)
@@ -42,25 +46,24 @@
 ### 🎯 Remaining Work (1-2 hours)
 
 **Current Challenge:**
+
 - `openApiToTypescript.helpers.ts` still has 6 tanu references
 - File contains hybrid functions that accept/return both strings AND tanu nodes
 - These are "bridge" functions for backward compatibility during migration
 - Template-context.ts still imports tanu for printing nodes
 
 **Next Steps:**
+
 1. **Clean up helpers.ts** (30-45 min)
    - Remove all tanu imports
    - Convert all hybrid functions to pure string functions
    - Delete any remaining tanu conversion logic
-   
 2. **Clean up template-context.ts** (15 min)
    - Remove tanu imports
    - Update `tsResultToString` to handle strings only
-   
 3. **Task 2.5: Remove tanu dependency** (15 min)
    - Verify no usage: `grep -r "tanu" lib/src`
    - Remove from package.json
-   
 4. **Task 2.6: Final validation** (30 min)
    - Full quality gate suite
    - Count type assertions (should be ~32, down from 62)
@@ -69,6 +72,7 @@
 ### 📈 Quality Metrics
 
 **Before Task 2.3:**
+
 - Type errors: 8
 - Lint errors: 126
 - Type assertions: 62 (30 in TS generation)
@@ -76,6 +80,7 @@
 - tanu usage: Heavy (20+ files)
 
 **After Task 2.3 (Current):**
+
 - Type errors: 0 ✅
 - Lint errors: 122 ✅ (improved!)
 - Type assertions: ~50 (estimated, down from 62)
@@ -83,6 +88,7 @@
 - tanu usage: 6 files (mostly cleanup)
 
 **Target (After Task 2.5):**
+
 - Type errors: 0
 - Lint errors: <100
 - Type assertions: ~32 (all 30 TS generation eliminated)

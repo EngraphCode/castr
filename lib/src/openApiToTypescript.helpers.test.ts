@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { SchemaObject } from 'openapi3-ts/oas30';
-import { t } from 'tanu';
 
 import {
-  createAdditionalPropertiesSignature,
   handlePrimitiveEnum,
   isPrimitiveSchemaType,
   isPropertyRequired,
-  maybeWrapReadonly,
   resolveAdditionalPropertiesType,
 } from './openApiToTypescript.helpers.js';
 
@@ -81,21 +78,6 @@ describe('openApiToTypescript.helpers', () => {
     });
   });
 
-  describe('maybeWrapReadonly', () => {
-    it('should wrap type in readonly when flag is true', () => {
-      const baseType = t.string();
-      const result = maybeWrapReadonly(baseType, true);
-      expect(result).toBeDefined();
-      // Should be readonly(baseType)
-    });
-
-    it('should return type unchanged when flag is false', () => {
-      const baseType = t.string();
-      const result = maybeWrapReadonly(baseType, false);
-      expect(result).toBe(baseType);
-    });
-  });
-
   describe('isPropertyRequired', () => {
     it('should return true when property is in required array', () => {
       const schema: SchemaObject = {
@@ -134,34 +116,25 @@ describe('openApiToTypescript.helpers', () => {
 
   describe('resolveAdditionalPropertiesType', () => {
     it('should return undefined when additionalProperties is false or missing', () => {
-      expect(resolveAdditionalPropertiesType(undefined, () => ({}))).toBeUndefined();
-      expect(resolveAdditionalPropertiesType(false, () => ({}))).toBeUndefined();
+      expect(resolveAdditionalPropertiesType(undefined, () => 'string')).toBeUndefined();
+      expect(resolveAdditionalPropertiesType(false, () => 'string')).toBeUndefined();
     });
 
-    it('should return any() when additionalProperties is true', () => {
-      const result = resolveAdditionalPropertiesType(true, () => ({}));
-      expect(result).toBeDefined();
+    it('should return "any" when additionalProperties is true', () => {
+      const result = resolveAdditionalPropertiesType(true, () => 'string');
+      expect(result).toBe('any');
     });
 
-    it('should return any() when additionalProperties is empty object', () => {
-      const result = resolveAdditionalPropertiesType({}, () => ({}));
-      expect(result).toBeDefined();
+    it('should return "any" when additionalProperties is empty object', () => {
+      const result = resolveAdditionalPropertiesType({}, () => 'string');
+      expect(result).toBe('any');
     });
 
     it('should convert schema when additionalProperties is a schema', () => {
       const schema: SchemaObject = { type: 'string' };
-      const mockConvert = () => t.string();
+      const mockConvert = () => 'string';
       const result = resolveAdditionalPropertiesType(schema, mockConvert);
-      expect(result).toBeDefined();
-    });
-  });
-
-  describe('createAdditionalPropertiesSignature', () => {
-    it('should create index signature for additional properties', () => {
-      const propType = t.string();
-      const result = createAdditionalPropertiesSignature(propType);
-      expect(result).toBeDefined();
-      // Should be a TypeLiteralNode with an index signature
+      expect(result).toBe('string');
     });
   });
 });

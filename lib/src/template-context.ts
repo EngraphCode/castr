@@ -6,7 +6,7 @@ import type {
 } from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
 import { sortBy } from 'lodash-es';
-import { ts } from 'tanu';
+import * as ts from 'typescript';
 import { match } from 'ts-pattern';
 
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
@@ -24,7 +24,7 @@ import { asComponentSchema, normalizeString } from './utils.js';
 import type { CodeMetaData } from './CodeMeta.js';
 import { getSchemaFromComponents } from './component-access.js';
 
-const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, true);
+const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
 const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, node, file);
 
