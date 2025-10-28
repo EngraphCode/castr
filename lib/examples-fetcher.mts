@@ -111,6 +111,7 @@ async function cloneExamplesFromGitHub(): Promise<void> {
   console.log(`   Cloned full repo to: ${fullRepoTemp}`);
 
   // Move just the examples subdirectory to our temp location
+  // eslint-disable-next-line sonarjs/no-os-command-from-path -- safe
   spawnSync('mv', [join(fullRepoTemp, 'examples'), EXAMPLES_CONFIG.tempDir], {
     stdio: 'inherit',
   });
