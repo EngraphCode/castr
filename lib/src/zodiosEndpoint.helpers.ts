@@ -167,7 +167,6 @@ export function handleRefSchema(
     return result;
   }
 
-  console.log({ ref: input.ref, result });
   throw new Error('Invalid ref: ' + input.ref);
 }
 

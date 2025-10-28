@@ -101,7 +101,12 @@ export default defineConfig(
 
   {
     // Test files - more relaxed rules
-    files: ['**/*.test.ts', 'tests/**/*.ts'],
+    files: [
+      '**/*.test.ts',
+      'tests/**/*.ts',
+      '**/tests-snapshot/**/*.ts',
+      '**/characterisation/**/*.ts',
+    ],
     rules: {
       'max-lines-per-function': ['error', 200],
       'max-lines': ['error', 1000],
@@ -115,7 +120,23 @@ export default defineConfig(
       '@typescript-eslint/no-unsafe-return': 'off',
       'sonarjs/cognitive-complexity': 'off',
       'sonarjs/no-duplicate-string': 'off',
-      'no-console': 'off',
+      'no-console': 'off', // Tests can use console for debugging
+    },
+  },
+
+  {
+    // CLI and script files - console allowed for user output
+    files: ['**/cli.ts', '**/bin.cjs'],
+    rules: {
+      'no-console': 'off', // CLI scripts need console for user interaction
+    },
+  },
+
+  {
+    // Logger utility - console allowed (it's the logger implementation)
+    files: ['**/utils/logger.ts'],
+    rules: {
+      'no-console': 'off', // Logger uses console under the hood
     },
   },
 );

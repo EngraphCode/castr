@@ -6,6 +6,7 @@ import { match, P } from 'ts-pattern';
 import type { CodeMeta, ConversionTypeContext } from './CodeMeta.js';
 import type { EndpointDefinition } from './endpoint-definition.types.js';
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
+import { logger } from './utils/logger.js';
 import type { TemplateContext } from './template-context.js';
 import { getSchemaVarName } from './zodiosEndpoint.helpers.js';
 import { processOperation } from './zodiosEndpoint.path.helpers.js';
@@ -165,7 +166,7 @@ export const getZodiosEndpointDefinitionList = (
 
   if (options?.willSuppressWarnings !== true) {
     if (ignoredFallbackResponse.length > 0) {
-      console.warn(
+      logger.warn(
         `The following endpoints have no status code other than \`default\` and were ignored as the OpenAPI spec recommends. However they could be added by setting \`defaultStatusBehavior\` to \`auto-correct\`: ${ignoredGenericError.join(
           ', ',
         )}`,
@@ -173,7 +174,7 @@ export const getZodiosEndpointDefinitionList = (
     }
 
     if (ignoredGenericError.length > 0) {
-      console.warn(
+      logger.warn(
         `The following endpoints could have had a generic error response added by setting \`defaultStatusBehavior\` to \`auto-correct\` ${ignoredGenericError.join(
           ', ',
         )}`,

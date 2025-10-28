@@ -14,6 +14,7 @@ import {
   sortSchemasByDependencyOrder,
   sortSchemaNamesByDependencyOrder,
 } from './utils/schema-sorting.js';
+import { logger } from './utils/logger.js';
 import type { EndpointDefinitionWithRefs } from './getZodiosEndpointDefinitionList.js';
 import { getZodiosEndpointDefinitionList } from './getZodiosEndpointDefinitionList.js';
 import type { TsConversionContext } from './openApiToTypescript.js';
@@ -184,14 +185,14 @@ export const getZodClientTemplateContext = (
 
       // Skip if missing or is a reference (paths should not be refs, but be defensive)
       if (!pathItem || isReferenceObject(pathItem)) {
-        console.warn('Missing path', endpoint.path);
+        logger.warn('Missing path', endpoint.path);
         return;
       }
 
       // After isReferenceObject check, TypeScript knows it's PathItemObject
       const operation = pathItem[endpoint.method];
       if (!operation) {
-        console.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
+        logger.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
         return;
       }
       const baseName = match(groupStrategy)

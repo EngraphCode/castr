@@ -23,3 +23,4 @@ export {
   type TemplateContextOptions,
   getZodClientTemplateContext,
 } from './template-context.js';
+export { logger } from './utils/logger.js';

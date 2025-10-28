@@ -7,6 +7,7 @@ import { capitalize } from './utils.js';
 import type { Options } from 'prettier';
 
 import { getHandlebars } from './getHandlebars.js';
+import { logger } from './utils/logger.js';
 import { maybePretty } from './maybePretty.js';
 import type { TemplateContext } from './template-context.js';
 import { getZodClientTemplateContext } from './template-context.js';
@@ -260,7 +261,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
       outputByGroupName[groupName] = prettyGroupOutput;
 
       if (willWriteToFile) {
-        console.log('Writing to', path.join(distPath, `${groupName}.ts`));
+        logger.info('Writing to', path.join(distPath, `${groupName}.ts`));
         await fs.writeFile(path.join(distPath, `${groupName}.ts`), prettyGroupOutput);
       }
     }
