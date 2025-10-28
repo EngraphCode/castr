@@ -108,6 +108,33 @@ export function handleReferenceObject(
 }
 
 /**
+ * Type guard to check if array contains only strings
+ */
+function isStringArray(arr: readonly unknown[]): arr is string[] {
+  return arr.every((item) => typeof item === 'string');
+}
+
+/**
+ * Type guard to check if array contains only numbers (including booleans for numeric enum)
+ */
+function isNumberArray(arr: readonly unknown[]): arr is number[] {
+  return arr.every((item) => typeof item === 'number' || typeof item === 'boolean');
+}
+
+/**
+ * Type guard to check if array contains mixed enum values
+ */
+function isMixedEnumArray(arr: readonly unknown[]): arr is Array<string | number | boolean | null> {
+  return arr.every(
+    (item) =>
+      typeof item === 'string' ||
+      typeof item === 'number' ||
+      typeof item === 'boolean' ||
+      item === null,
+  );
+}
+
+/**
  * Handles primitive type enums, returning union types
  * MIGRATED: Now returns strings using string-helpers
  */
@@ -129,17 +156,17 @@ export function handlePrimitiveEnum(
   // Filter out null values for processing
   const withoutNull = enumValues.filter((e) => e !== null);
 
-  // Determine enum type and call appropriate helper
-  const allStrings = withoutNull.every((e) => typeof e === 'string');
-  const allNumbers = withoutNull.every((e) => typeof e === 'number' || typeof e === 'boolean');
-
+  // Determine enum type using type guards and call appropriate helper
   let enumType: string;
-  if (allStrings) {
+  if (isStringArray(withoutNull)) {
     enumType = handleStringEnum(withoutNull);
-  } else if (allNumbers) {
-    enumType = handleNumericEnum(withoutNull as number[]);
+  } else if (isNumberArray(withoutNull)) {
+    enumType = handleNumericEnum(withoutNull);
+  } else if (isMixedEnumArray(withoutNull)) {
+    enumType = handleMixedEnum(withoutNull);
   } else {
-    enumType = handleMixedEnum(withoutNull as Array<string | number | boolean | null>);
+    // Fallback: should not happen with valid OpenAPI specs
+    throw new Error(`Unexpected enum values: ${JSON.stringify(withoutNull)}`);
   }
 
   return wrapNullable(enumType, isNullable);
@@ -264,6 +291,16 @@ export function handleAnyOf(
 }
 
 /**
+ * Creates a new schema with a specific type value
+ * Safe because input types come from validated SchemaObject.type array
+ */
+function createSchemaWithType(baseSchema: SchemaObject, type: string): SchemaObject {
+  // type comes from SchemaObject.type array, which is SchemaObjectType[]
+  // Spreading and overwriting maintains SchemaObject structure
+  return { ...baseSchema, type };
+}
+
+/**
  * Handles array of types (OpenAPI 3.1 feature) by creating a union
  * MIGRATED: Now returns strings using handleUnion
  */
@@ -273,7 +310,10 @@ export function handleTypeArray(
   isNullable: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
 ): string {
-  const typeSchemas = types.map((type) => ({ ...schema, type }) as SchemaObject);
+  // Types array comes from schema.type (validated SchemaObjectType[])
+  // Each type is a valid SchemaObjectType, safe to create new schemas
+  const typeSchemas = types.map((type) => createSchemaWithType(schema, type));
+  
   const results = convertSchemasToTypes(typeSchemas, (schema) => {
     const result = convertSchema(schema);
     if (typeof result === 'string') return result;

@@ -508,6 +508,7 @@ pnpm test -- input-handling.char.test.ts
 **Rationale:**
 
 `validateOpenApiSpec` currently does TWO things:
+
 1. **Validation** - ❌ Redundant (SwaggerParser already validates)
 2. **Type boundary** - ✅ Necessary (openapi-types → openapi3-ts)
 
@@ -565,7 +566,7 @@ describe('assertOpenApiType', () => {
 
 **Location:** `lib/src/assertOpenApiType.ts`
 
-```typescript
+````typescript
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 
 /**
@@ -600,16 +601,14 @@ import type { OpenAPIObject } from 'openapi3-ts/oas30';
 export function assertOpenApiType(spec: unknown): OpenAPIObject {
   // Minimal sanity check (should never fail if SwaggerParser ran)
   if (!spec || typeof spec !== 'object') {
-    throw new Error(
-      'Invalid spec from SwaggerParser: expected object, got ' + typeof spec,
-    );
+    throw new Error('Invalid spec from SwaggerParser: expected object, got ' + typeof spec);
   }
 
   // Safe assertion: SwaggerParser guarantees valid OpenAPI structure
   // We're just bridging the type boundary between openapi-types and openapi3-ts
   return spec as OpenAPIObject;
 }
-```
+````
 
 **Step 3: Run tests - expect success:**
 
@@ -964,9 +963,9 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   }
 
   // Parse input if provided, otherwise assert type boundary for provided spec
-  const openApiDoc = input 
-    ? await parseOpenApiInput(input)              // Already validated by SwaggerParser
-    : assertOpenApiType(providedOpenApiDoc);      // Type boundary for pre-parsed spec
+  const openApiDoc = input
+    ? await parseOpenApiInput(input) // Already validated by SwaggerParser
+    : assertOpenApiType(providedOpenApiDoc); // Type boundary for pre-parsed spec
 
   // No additional validation needed - parseOpenApiInput already handled it
   // (SwaggerParser validated thoroughly, we just narrow the type)
