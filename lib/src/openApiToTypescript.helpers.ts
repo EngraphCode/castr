@@ -294,10 +294,7 @@ export function handleAnyOf(
  * Creates a new schema with a specific type value
  * We're overwriting the type property, so the result has the specific type we provide
  */
-function createSchemaWithType(
-  baseSchema: SchemaObject,
-  type: SchemaObjectType,
-): SchemaObject {
+function createSchemaWithType(baseSchema: SchemaObject, type: SchemaObjectType): SchemaObject {
   // Spread operator + explicit type override
   // Result: all properties from baseSchema, but type is the provided value
   return { ...baseSchema, type } as SchemaObject;
@@ -315,9 +312,7 @@ export function handleTypeArray(
 ): string {
   // Types array comes from schema.type (validated SchemaObjectType[])
   // Type assertion is safe: openapi3-ts guarantees schema.type elements are SchemaObjectType
-  const typeSchemas = types.map((type) =>
-    createSchemaWithType(schema, type as SchemaObjectType),
-  );
+  const typeSchemas = types.map((type) => createSchemaWithType(schema, type as SchemaObjectType));
 
   const results = convertSchemasToTypes(typeSchemas, (schema) => {
     const result = convertSchema(schema);
