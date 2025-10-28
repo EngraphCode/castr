@@ -46,7 +46,6 @@
   "license": "ISC",
   "dependencies": {
     "@apidevtools/swagger-parser": "^12.1.0",
-    "@zodios/core": "^10.9.6",
     "commander": "^14.0.2",
     "handlebars": "^4.7.8",
     "lodash-es": "^4.17.21",
