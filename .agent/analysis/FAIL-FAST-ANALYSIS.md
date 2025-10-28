@@ -18,6 +18,7 @@ if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
 ```
 
 **Analysis:**
+
 - ✅ This is correct behavior
 - Deprecated ≠ Invalid
 - User has explicit control via `withDeprecatedEndpoints`
@@ -45,6 +46,7 @@ if (!options?.willSuppressWarnings) {
 ```
 
 **Analysis:**
+
 - ✅ This is correct behavior
 - Having only `default` status is valid per OpenAPI spec
 - We make a design choice to ignore by default (OpenAPI spec recommends this)
@@ -73,6 +75,7 @@ if (!options?.willSuppressWarnings) {
 ```
 
 **Analysis:**
+
 - ✅ This is correct behavior
 - This is an optional enhancement, not an error
 - Warning provides actionable guidance
@@ -85,12 +88,14 @@ if (!options?.willSuppressWarnings) {
 ### When to Fail Fast ✅
 
 **At boundaries (input validation):**
+
 - Invalid OpenAPI structure → `validateOpenApiSpec()` throws `ValidationError`
 - Null/undefined spec → Fail immediately
 - Missing required fields → Fail immediately
 - Nested `$ref` without preprocessing → Fail with clear error + guidance
 
 **Example (correct fail-fast):**
+
 ```typescript
 // lib/src/generateZodClientFromOpenAPI.ts:156
 validateOpenApiSpec(openApiDoc); // Fail fast at entry point
@@ -99,11 +104,13 @@ validateOpenApiSpec(openApiDoc); // Fail fast at entry point
 ### When NOT to Fail Fast ✅
 
 **For design choices with user control:**
+
 - Deprecated endpoints (user can opt-in)
 - Ambiguous OpenAPI patterns (warn + provide guidance)
 - Optional enhancements (user can enable)
 
 **Why this is correct:**
+
 1. **Not actual errors** - These are valid OpenAPI patterns
 2. **User control** - Options exist to change behavior
 3. **Actionable guidance** - Warnings tell users how to adjust
@@ -112,18 +119,22 @@ validateOpenApiSpec(openApiDoc); // Fail fast at entry point
 ## Comparison: Before vs After Philosophy
 
 ### Before (unclear)
+
 ```typescript
 // Should we allow X, or should we fail fast?
 ```
+
 - Implies uncertainty
 - Suggests one-size-fits-all approach
 - No context on why current behavior was chosen
 
 ### After (clear)
+
 ```typescript
 // Design choice: Skip deprecated endpoints by default (OpenAPI best practice)
 // Users can include them by setting withDeprecatedEndpoints: true
 ```
+
 - Explains the reasoning
 - Shows user control exists
 - Documents the design decision
@@ -131,6 +142,7 @@ validateOpenApiSpec(openApiDoc); // Fail fast at entry point
 ## Recommended Comment Updates
 
 ### 1. Deprecated Endpoints
+
 ```typescript
 // Design choice: Skip deprecated endpoints by default (OpenAPI best practice)
 // Users can include them by setting withDeprecatedEndpoints: true
@@ -138,6 +150,7 @@ if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
 ```
 
 ### 2. Ignored Fallback Responses
+
 ```typescript
 // Track endpoints with only 'default' status code
 // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
@@ -147,6 +160,7 @@ if (result.ignoredFallback) {
 ```
 
 ### 3. Ignored Generic Errors
+
 ```typescript
 // Track endpoints where generic error responses could be added
 // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
@@ -168,4 +182,3 @@ These situations represent **design choices** with **user control**, not **valid
 - **Give users control** (options to change behavior) ✅ Already doing this
 
 The comments just need updating to reflect confidence in these decisions.
-

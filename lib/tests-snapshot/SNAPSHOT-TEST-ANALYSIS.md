@@ -31,7 +31,7 @@ When tests were moved from `lib/tests/` to `lib/tests-snapshot/`, the YAML fixtu
    - Issue: Test tries to load `./tests/petstore.yaml`
    - Impact: 1 test fails
 
-3. **tests-snapshot/getZodiosEndpointDefinitionList.test.ts**
+3. **tests-snapshot/getEndpointDefinitionList.test.ts**
    - Status: ❌ FAIL
    - Issue: Test tries to load `./tests/petstore.yaml`
    - Impact: 1 test fails

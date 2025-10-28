@@ -93,10 +93,8 @@ describe('Characterisation: Options & Configuration', () => {
         disableWriteToFile: true,
       });
 
-      // Default template is now schemas-with-metadata (no Zodios)
+      // Default template is now schemas-with-metadata
       expect(result).toContain('export const endpoints');
-      expect(result).not.toContain('makeApi');
-      expect(result).not.toContain('@zodios');
     });
 
     it('should use schemas-only template when specified', async () => {
@@ -109,7 +107,6 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       expect(result).toContain('User');
-      expect(result).not.toContain('makeApi');
     });
 
     it('should use schemas-with-metadata template when specified', async () => {
@@ -122,7 +119,6 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       expect(result).toContain('User');
-      expect(result).not.toContain('makeApi');
     });
   });
 

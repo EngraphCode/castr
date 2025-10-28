@@ -582,7 +582,6 @@ describe('E2E: Templates', () => {
    *
    * Acceptance Criteria:
    * - Named schemas exported
-   * - No @zodios in output (different template)
    * - No type assertions
    */
   it('should preserve schema names in schemas-with-metadata template', async () => {
@@ -608,7 +607,6 @@ describe('E2E: Templates', () => {
 
     // Acceptance criteria:
     expect(result).toContain('export const User');
-    expect(result).not.toContain('@zodios');
     expect(result).not.toContain('as unknown as');
   });
 });

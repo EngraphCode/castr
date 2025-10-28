@@ -31,7 +31,7 @@ tests-snapshot/
 End-to-end tests that exercise the complete generation pipeline:
 
 - **`generateZodClientFromOpenAPI.test.ts`** - Full pipeline with petstore spec
-- **`getZodiosEndpointDefinitionList.test.ts`** - Endpoint list generation
+- **`getEndpointDefinitionList.test.ts`** - Endpoint list generation
 - **`getOpenApiDependencyGraph.test.ts`** - Dependency graph generation
 - **`samples.test.ts`** - Official OpenAPI examples (8 specs from OAI)
 

@@ -42,7 +42,7 @@ Updated path references in 4 test files:
 # Files fixed:
 - tests-snapshot/generateZodClientFromOpenAPI.test.ts  (10 tests were skipped)
 - tests-snapshot/getOpenApiDependencyGraph.test.ts     (1 test failing)
-- tests-snapshot/getZodiosEndpointDefinitionList.test.ts (1 test failing)
+- tests-snapshot/getEndpointDefinitionList.test.ts (1 test failing)
 - tests-snapshot/group-strategy.test.ts                (1 test failing)
 ```
 
@@ -101,7 +101,7 @@ These snapshot tests validate complete generated output:
 
 - `tests-snapshot/generateZodClientFromOpenAPI.test.ts`
 - `tests-snapshot/getOpenApiDependencyGraph.test.ts`
-- `tests-snapshot/getZodiosEndpointDefinitionList.test.ts`
+- `tests-snapshot/getEndpointDefinitionList.test.ts`
 - `tests-snapshot/group-strategy.test.ts`
 
 **Change**: Single string replacement per file (`./tests/` → `./tests-snapshot/`)
@@ -112,7 +112,7 @@ These snapshot tests validate complete generated output:
 $ pnpm test:snapshot
  ✓ tests-snapshot/generateZodClientFromOpenAPI.test.ts (10 tests)
  ✓ tests-snapshot/getOpenApiDependencyGraph.test.ts (1 test)
- ✓ tests-snapshot/getZodiosEndpointDefinitionList.test.ts (1 test)
+ ✓ tests-snapshot/getEndpointDefinitionList.test.ts (1 test)
  ✓ tests-snapshot/group-strategy.test.ts (1 test)
  # ... 71 other test files ...
 

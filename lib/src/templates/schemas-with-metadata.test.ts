@@ -4,7 +4,7 @@ import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js
 
 describe('schemas-with-metadata template', () => {
   describe('Core Template Functionality', () => {
-    it('should generate schemas without Zodios import', async () => {
+    it('should generate schemas with Zod', async () => {
       const openApiDoc = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -55,12 +55,6 @@ describe('schemas-with-metadata template', () => {
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
-
-      // MUST NOT import Zodios
-      expect(result).not.toContain('@zodios/core');
-      expect(result).not.toContain('import { Zodios');
-      expect(result).not.toContain('makeApi');
-      expect(result).not.toContain('new Zodios');
 
       // MUST import Zod
       expect(result).toContain('import { z } from "zod"');
@@ -201,9 +195,6 @@ describe('schemas-with-metadata template', () => {
       // MUST export endpoints directly
       expect(result).toContain('export const endpoints = [');
 
-      // MUST NOT use makeApi
-      expect(result).not.toContain('makeApi');
-
       // MUST include endpoint metadata
       expect(result).toContain('method:');
       expect(result).toContain('path:');
@@ -300,11 +291,7 @@ describe('schemas-with-metadata template', () => {
         disableWriteToFile: true,
       });
 
-      // When noClient is true, should NOT have Zodios even with default template
-      expect(result).not.toContain('@zodios/core');
-      expect(result).not.toContain('new Zodios');
-
-      // Should have individual exports and endpoints
+      // When noClient is true, should generate schemas and endpoints
       expect(result).toContain('export const'); // Has exports
       expect(result).toContain('export const endpoints'); // Has endpoints array
     });

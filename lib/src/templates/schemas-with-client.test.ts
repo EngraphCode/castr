@@ -125,14 +125,6 @@ describe('schemas-with-client template', () => {
 
       expect(result).toContain('import { z } from "zod"');
     });
-
-    it('should NOT import @zodios/core', async () => {
-      const result = await generateWithOptions(minimalSpec);
-
-      expect(result).not.toContain('@zodios/core');
-      expect(result).not.toContain('Zodios');
-      expect(result).not.toContain('makeApi');
-    });
   });
 
   describe('Zod Schemas', () => {
@@ -311,18 +303,6 @@ describe('schemas-with-client template', () => {
   });
 
   describe('Generated Code Quality', () => {
-    it('should not contain makeApi', async () => {
-      const result = await generateWithOptions(minimalSpec);
-
-      expect(result).not.toContain('makeApi');
-    });
-
-    it('should not contain Zodios constructor', async () => {
-      const result = await generateWithOptions(minimalSpec);
-
-      expect(result).not.toContain('new Zodios');
-    });
-
     it('should create openapi-fetch client', async () => {
       const result = await generateWithOptions(minimalSpec);
 

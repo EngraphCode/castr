@@ -5,16 +5,17 @@ This was originally forked from [openapi-zod-client](https://github.com/astahmer
 - can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
 - or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
 
-- client typesafety and runtime validation using [zodios](https://github.com/ecyrbe/zodios)
+- runtime validation using Zod schemas
+- optional type-safe HTTP client using openapi-fetch
 - tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas)
 
 # Why this exists
 
 Sometimes you don't have control on your API, maybe you need to consume APIs from other teams (who might each use a different language/framework), you only have their Open API spec as source of truth, then this might help 😇
 
-You could use `openapi-zod-validation` to automate the API integration part (doesn't matter if you consume it in your front or back-end, zodios is agnostic) on your CI and just import the generated `api` client
+You could use `openapi-zod-validation` to automate the API integration part (doesn't matter if you consume it in your front or back-end) on your CI and just import the generated schemas and optional client.
 
-## Comparison vs tRPC zodios ts-rest etc
+## Comparison vs tRPC ts-rest etc
 
 If you do have control on your API/back-end, you should probably use a RPC-like solution like [tRPC](https://github.com/trpc/trpc) or [ts-rest](https://ts-rest.com/) instead of this.
 
@@ -48,7 +49,7 @@ For more info, run any command with the `--help` flag:
   $ openapi-zod-validation --help
 
 Options:
-  -o, --output <path>               Output path for the zodios api client ts file (defaults to `<input>.client.ts`)
+  -o, --output <path>               Output path for the generated client ts file (defaults to `<input>.client.ts`)
   -t, --template <path>             Template path for the handlebars template that will be used to generate the output
   -p, --prettier <path>             Prettier config path that will be used to format the output client file
   -b, --base-url <url>              Base url for the api
@@ -80,16 +81,16 @@ Options:
 
 ### Available Templates
 
-#### 1. **`default`** - Full Zodios HTTP Client (default)
+#### 1. **`schemas-with-metadata`** - Schemas + Metadata (default) ⭐
 
-Generates a complete Zodios API client with HTTP methods, validation, and type safety.
+Generates Zod schemas and endpoint metadata without HTTP client dependencies.
 
-**Use when**: You want a ready-to-use HTTP client with runtime validation.
+**Use when**: You want schemas and metadata to build your own client, or for SDK/tooling generation.
 
 ```bash
 pnpx openapi-zod-validation ./petstore.yaml -o ./client.ts
 # or explicitly:
-pnpx openapi-zod-validation ./petstore.yaml -o ./client.ts --template default
+pnpx openapi-zod-validation ./petstore.yaml -o ./client.ts --template schemas-with-metadata
 ```
 
 #### 2. **`schemas-only`** - Pure Zod Schemas
@@ -104,9 +105,9 @@ pnpx openapi-zod-validation ./petstore.yaml -o ./schemas.ts --template schemas-o
 
 Example output in [./examples/schemas-only/petstore-schemas.ts](./examples/schemas-only/petstore-schemas.ts)
 
-#### 3. **`schemas-with-metadata`** - Schemas + Metadata (No HTTP Client) ⭐ NEW
+#### 3. **`schemas-with-client`** - Full Client with openapi-fetch
 
-Generates Zod schemas, endpoint metadata, and optional validation helpers **without** Zodios HTTP client dependencies.
+Generates a complete HTTP client using openapi-fetch with Zod validation.
 
 **Use when**:
 
@@ -124,7 +125,6 @@ Generates Zod schemas, endpoint metadata, and optional validation helpers **with
 - ✅ Optional validation helper functions
 - ✅ Optional schema registry builder (with key sanitization)
 - ✅ MCP-compatible tool definitions
-- ✅ Zero Zodios dependencies
 
 ```bash
 # Basic usage
@@ -215,7 +215,7 @@ export function buildSchemaRegistry(options?: { rename?: (key: string) => string
 
 - 🚀 Bring your own HTTP client (any library)
 - 🔒 Full type safety with runtime validation
-- 📦 Smaller bundle size (no Zodios/axios dependencies)
+- 📦 Smaller bundle size (no unnecessary HTTP client dependencies)
 - 🛠️ Perfect for SDK generation or code tooling
 - 🤖 MCP-ready for AI assistant integrations
 
@@ -391,9 +391,9 @@ This structure aligns perfectly with how MCP servers expose tools to AI assistan
 - `--success-expr` is bound to [`isMainResponseStatus`](https://github.com/astahmer/openapi-zod-validation/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L234-L244)
 - `--error-expr` is bound to [`isErrorStatus`](https://github.com/astahmer/openapi-zod-validation/blob/b7717b53023728d077ceb2f451e4787f32945b3d/src/generateZodClientFromOpenAPI.ts#L245-L256)
 
-You can pass an expression that will be safely evaluted (thanks to [whence](https://github.com/jonschlinkert/whence/)) and works like `validateStatus` from axios to determine which OpenAPI `ResponseItem` should be picked as the main one for the `ZodiosEndpoint["response"]` and which ones will be added to the `ZodiosEndpoint["errors"]` array.
+You can pass an expression that will be safely evaluated (thanks to [whence](https://github.com/jonschlinkert/whence/)) to determine which OpenAPI `ResponseItem` should be picked as the main success response and which ones should be treated as errors.
 
-Exemple: `--success-expr "status >= 200 && status < 300"`
+Example: `--success-expr "status >= 200 && status < 300"`
 
 ## Tips
 
@@ -531,7 +531,6 @@ components:
 output:
 
 ```ts
-import { makeApi, Zodios } from '@zodios/core';
 import { z } from 'zod';
 
 const Pet = z.object({ id: z.number().int(), name: z.string(), tag: z.string().optional() });
@@ -578,12 +577,6 @@ const endpoints = makeApi([
     response: Pet,
   },
 ]);
-
-export const api = new Zodios(endpoints);
-
-export function createApiClient(baseUrl: string) {
-  return new Zodios(baseUrl, endpoints);
-}
 ```
 
 # TODO

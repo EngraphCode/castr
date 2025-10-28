@@ -584,11 +584,9 @@ describe('Characterisation: Full Generation Pipeline', () => {
         disableWriteToFile: true,
       });
 
-      // Assert: Default template is now schemas-with-metadata (no Zodios)
+      // Assert: Default template is now schemas-with-metadata
       expect(result).toContain('import { z }');
-      expect(result).toContain('export const endpoints'); // endpoints array without Zodios
-      expect(result).not.toContain('makeApi'); // No Zodios client
-      expect(result).not.toContain('@zodios'); // No Zodios import
+      expect(result).toContain('export const endpoints');
       expect(result).not.toContain('as unknown as');
     });
 
@@ -636,10 +634,9 @@ describe('Characterisation: Full Generation Pipeline', () => {
         template: 'schemas-only',
       });
 
-      // Assert: Schemas-only template has no API client
+      // Assert: Schemas-only template has schemas
       expect(result).toContain('import { z }');
       expect(result).toContain('User');
-      expect(result).not.toContain('makeApi'); // No Zodios client
       expect(result).not.toContain('as unknown as');
     });
 
@@ -690,7 +687,6 @@ describe('Characterisation: Full Generation Pipeline', () => {
       // Assert: Has schemas and metadata
       expect(result).toContain('import { z }');
       expect(result).toContain('User');
-      expect(result).not.toContain('makeApi'); // No Zodios client
       expect(result).not.toContain('as unknown as');
     });
   });
