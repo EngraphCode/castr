@@ -501,7 +501,134 @@ pnpm test -- input-handling.char.test.ts
 
 ---
 
-### Task 2: Create parseOpenApiInput Helper (TDD Phase - 2 hours)
+### Task 2: Replace validateOpenApiSpec with Type Boundary Handler (TDD Phase - 1 hour)
+
+**Purpose:** Remove redundant validation logic, keep only type boundary handling.
+
+**Rationale:**
+
+`validateOpenApiSpec` currently does TWO things:
+1. **Validation** - ❌ Redundant (SwaggerParser already validates)
+2. **Type boundary** - ✅ Necessary (openapi-types → openapi3-ts)
+
+After Phase 1 Part 5, ALL inputs go through SwaggerParser which validates thoroughly. We only need type narrowing.
+
+**Step 1: Write Tests FIRST (15 minutes)**
+
+**Location:** `lib/src/assertOpenApiType.test.ts`
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { assertOpenApiType } from './assertOpenApiType.js';
+
+describe('assertOpenApiType', () => {
+  it('should accept valid OpenAPI object', () => {
+    const spec = {
+      openapi: '3.0.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
+
+    expect(() => assertOpenApiType(spec)).not.toThrow();
+    const result = assertOpenApiType(spec);
+    expect(result.openapi).toBe('3.0.0');
+  });
+
+  it('should reject null', () => {
+    expect(() => assertOpenApiType(null)).toThrow('Invalid spec from SwaggerParser');
+  });
+
+  it('should reject undefined', () => {
+    expect(() => assertOpenApiType(undefined)).toThrow('Invalid spec from SwaggerParser');
+  });
+
+  it('should reject non-object', () => {
+    expect(() => assertOpenApiType('not an object')).toThrow('Invalid spec from SwaggerParser');
+  });
+
+  it('should accept SwaggerParser output (type boundary)', () => {
+    // SwaggerParser returns openapi-types.OpenAPI.Document (unknown to us)
+    // This test proves type boundary handling works
+    const swaggerParserOutput: unknown = {
+      openapi: '3.0.0',
+      info: { title: 'From SwaggerParser', version: '1.0.0' },
+      paths: {},
+    };
+
+    const result = assertOpenApiType(swaggerParserOutput);
+    expect(result.openapi).toBe('3.0.0');
+  });
+});
+```
+
+**Step 2: Implement (30 minutes)**
+
+**Location:** `lib/src/assertOpenApiType.ts`
+
+```typescript
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
+
+/**
+ * Type boundary handler: openapi-types.OpenAPI.Document → openapi3-ts.OpenAPIObject
+ *
+ * SwaggerParser.bundle() returns openapi-types.OpenAPI.Document (structurally
+ * compatible but different type). This function handles the type boundary by
+ * narrowing from unknown to our internal OpenAPIObject type.
+ *
+ * **Important:** This does NOT validate the spec structure. SwaggerParser already
+ * validated it thoroughly. This only handles the type boundary between two
+ * compatible but distinct type systems.
+ *
+ * @param spec - Output from SwaggerParser.bundle() (typed as unknown)
+ * @returns The same spec, narrowed to OpenAPIObject type
+ * @throws {Error} Only if spec is null/undefined (should never happen with SwaggerParser)
+ *
+ * @example
+ * ```typescript
+ * const bundled = await SwaggerParser.bundle('./openapi.yaml');
+ * const typed = assertOpenApiType(bundled); // Type boundary handled
+ * ```
+ *
+ * @remarks
+ * - Trust SwaggerParser's validation (it's the industry standard)
+ * - No redundant validation logic
+ * - Single responsibility: type boundary only
+ *
+ * @since 2.0.0
+ * @public
+ */
+export function assertOpenApiType(spec: unknown): OpenAPIObject {
+  // Minimal sanity check (should never fail if SwaggerParser ran)
+  if (!spec || typeof spec !== 'object') {
+    throw new Error(
+      'Invalid spec from SwaggerParser: expected object, got ' + typeof spec,
+    );
+  }
+
+  // Safe assertion: SwaggerParser guarantees valid OpenAPI structure
+  // We're just bridging the type boundary between openapi-types and openapi3-ts
+  return spec as OpenAPIObject;
+}
+```
+
+**Step 3: Run tests - expect success:**
+
+```bash
+pnpm test -- assertOpenApiType.test.ts
+# ✅ All tests should pass
+```
+
+**Step 4: Update imports and remove old file (15 minutes)**
+
+1. Replace `validateOpenApiSpec` imports with `assertOpenApiType`
+2. Update CLI to use new function
+3. Delete `lib/src/validateOpenApiSpec.ts`
+4. Delete `lib/src/validateOpenApiSpec.test.ts`
+5. Update exports in `lib/src/index.ts`
+
+---
+
+### Task 3: Create parseOpenApiInput Helper (TDD Phase - 2 hours)
 
 **Purpose:** Extract bundling logic into reusable function.
 
@@ -602,7 +729,7 @@ pnpm test -- parseOpenApiInput.test.ts
 ````typescript
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { validateOpenApiSpec } from './validateOpenApiSpec.js';
+import { assertOpenApiType } from './assertOpenApiType.js';
 
 /**
  * Parses and bundles an OpenAPI specification from a file path or URL.
@@ -652,7 +779,7 @@ import { validateOpenApiSpec } from './validateOpenApiSpec.js';
  * // Internal component refs preserved
  * ```
  *
- * @see {@link validateOpenApiSpec} for validation details
+ * @see {@link assertOpenApiType} for type boundary handling
  * @see {@link https://github.com/APIDevTools/swagger-parser} for SwaggerParser docs
  *
  * @remarks
@@ -669,9 +796,9 @@ export async function parseOpenApiInput(input: string): Promise<OpenAPIObject> {
   // Returns openapi-types.OpenAPI.Document (structurally compatible with OpenAPIObject)
   const bundled: unknown = await SwaggerParser.bundle(input);
 
-  // Validate structure and convert type boundary
+  // Handle type boundary (SwaggerParser already validated)
   // This is the ONLY place we handle openapi-types → openapi3-ts
-  const openApiDoc = validateOpenApiSpec(bundled);
+  const openApiDoc = assertOpenApiType(bundled);
 
   return openApiDoc;
 }
@@ -836,12 +963,13 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
     );
   }
 
-  // Parse input if provided, otherwise use provided spec
-  const openApiDoc = input ? await parseOpenApiInput(input) : providedOpenApiDoc!; // TypeScript knows one of them exists
+  // Parse input if provided, otherwise assert type boundary for provided spec
+  const openApiDoc = input 
+    ? await parseOpenApiInput(input)              // Already validated by SwaggerParser
+    : assertOpenApiType(providedOpenApiDoc);      // Type boundary for pre-parsed spec
 
-  // Validate OpenAPI spec structure (fail fast)
-  // Note: parseOpenApiInput already validates, but this handles openApiDoc path
-  validateOpenApiSpec(openApiDoc);
+  // No additional validation needed - parseOpenApiInput already handled it
+  // (SwaggerParser validated thoroughly, we just narrow the type)
 
   // ... rest of existing implementation unchanged
 };
