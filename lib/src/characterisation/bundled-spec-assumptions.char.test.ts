@@ -380,7 +380,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
     it('should generate code from dereferenced petstore without errors', async () => {
       // Dereference the spec (resolve all $refs)
       const bundled = (await SwaggerParser.dereference(
-        './tests-snapshot/petstore.yaml',
+        './examples/swagger/petstore.yaml',
       )) as OpenAPIObject;
 
       // Prove our code works with dereferenced output
@@ -418,9 +418,9 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
 
     it('should generate code from all sample specs using dereferenced input', async () => {
       const specs = [
-        '../samples/v3.0/petstore.yaml',
-        '../samples/v3.0/petstore-expanded.yaml',
-        '../samples/v3.0/uspto.yaml',
+        './examples/openapi/v3.0/petstore.yaml',
+        './examples/openapi/v3.0/petstore-expanded.yaml',
+        './examples/openapi/v3.0/uspto.yaml',
       ];
 
       for (const specPath of specs) {

@@ -9,6 +9,9 @@ node_modules
 coverage
 lib/src/characterisation/test-output
 
+# examples (fetched from external sources)
+.temp-examples
+
 # next.js
 .next/
 out/

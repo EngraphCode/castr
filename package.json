@@ -27,7 +27,7 @@
     "clean": "turbo clean",
     "qg": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm test:all",
     "check": "pnpm clean && pnpm install && pnpm qg",
-    "gen:samples": "rm -rf ./samples && tsx ./lib/samples-generator.ts"
+    "fetch:examples": "tsx ./lib/examples-fetcher.ts"
   },
   "license": "ISC",
   "pnpm": {

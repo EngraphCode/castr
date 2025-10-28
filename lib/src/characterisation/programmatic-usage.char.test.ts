@@ -259,7 +259,7 @@ describe('E2E: Programmatic Usage - After SwaggerParser.dereference()', () => {
    */
   it('should work with external refs after dereferencing', async () => {
     // This test uses actual files with external $refs
-    const spec = await dereferenceSpec('../samples/v3.0/petstore.yaml');
+    const spec = await dereferenceSpec('./examples/openapi/v3.0/petstore.yaml');
 
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: spec,
@@ -291,7 +291,7 @@ describe('E2E: CLI Usage', () => {
    */
   it('should handle external refs via CLI path', async () => {
     // CLI automatically calls SwaggerParser.dereference()
-    const spec = await dereferenceSpec('../samples/v3.0/petstore.yaml');
+    const spec = await dereferenceSpec('./examples/openapi/v3.0/petstore.yaml');
 
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: spec,
