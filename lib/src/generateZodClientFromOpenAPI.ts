@@ -20,8 +20,9 @@ export type GenerateZodClientFromOpenApiArgs<
    * Template name to use for generation
    * - "schemas-only": Pure Zod schemas
    * - "schemas-with-metadata": Schemas + endpoint metadata (default)
+   * - "schemas-with-client": Full client with openapi-fetch + Zod validation
    */
-  template?: 'schemas-only' | 'schemas-with-metadata';
+  template?: 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
   /** Path to a custom template file (overrides template name) */
   templatePath?: string;
   /**
@@ -56,7 +57,8 @@ export type GenerateZodClientFromOpenApiArgs<
  *
  * Supports multiple output templates:
  * - **schemas-with-metadata**: Schemas + endpoint metadata (default, perfect for custom clients)
- * - **schemas-only**: Pure Zod schemas without HTTP client
+ * - **schemas-only**: Pure Zod schemas without endpoint metadata
+ * - **schemas-with-client**: Full client with openapi-fetch + Zod validation
  *
  * @example Basic usage (default template - schemas with metadata)
  * ```typescript

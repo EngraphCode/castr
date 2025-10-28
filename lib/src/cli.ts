@@ -69,8 +69,8 @@ program
     'Output path for the zodios api client ts file (defaults to `<input>.client.ts`)',
   )
   .option(
-    '-t, --template <path>',
-    'Template path for the handlebars template that will be used to generate the output',
+    '-t, --template <name|path>',
+    'Template to use: "schemas-only", "schemas-with-metadata" (default), "schemas-with-client", or path to custom .hbs file',
   )
   .option(
     '-p, --prettier <path>',
@@ -195,12 +195,19 @@ program
 
     // Build generation args with proper type
     // We construct only the properties that are defined to satisfy exactOptionalPropertyTypes
+    
+    // Determine if template option is a name or a path
+    const isTemplateName = options.template && ['schemas-only', 'schemas-with-metadata', 'schemas-with-client'].includes(options.template);
+    
     const generationArgs: GenerateZodClientFromOpenApiArgs = {
       openApiDoc,
       distPath,
       options: generationOptions,
       ...(prettierConfig && { prettierConfig }),
-      ...(options.template && { templatePath: options.template }),
+      ...(options.template && (isTemplateName 
+        ? { template: options.template as 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client' }
+        : { templatePath: options.template }
+      )),
       ...(options.noClient && { noClient: options.noClient }),
       ...(options.withValidationHelpers && {
         withValidationHelpers: options.withValidationHelpers,
