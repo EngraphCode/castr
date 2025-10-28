@@ -17,7 +17,7 @@ import { replaceHyphenatedPath } from './utils.js';
 import type { AllowedMethod } from './openapi-type-guards.js';
 import { isReferenceObject } from './openapi-type-guards.js';
 import type { GetZodVarNameFn } from './endpoint.operation.helpers.js';
-import { getComponentByRef } from './component-access.js';
+import { getResponseByRef } from './component-access.js';
 import {
   processDefaultResponse,
   processParameter,
@@ -48,10 +48,7 @@ function processResponses(
     let responseObj: ResponseObject;
     if (isReferenceObject(maybeResponseObj)) {
       // Resolve the reference
-      const resolved = getComponentByRef<ResponseObject | ReferenceObject>(
-        ctx.doc,
-        maybeResponseObj.$ref,
-      );
+      const resolved = getResponseByRef(ctx.doc, maybeResponseObj.$ref);
       if (isReferenceObject(resolved)) {
         throw new Error(
           `Nested $ref in response ${statusCode}: ${maybeResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
@@ -104,10 +101,7 @@ function handleDefaultResponse(
   // Resolve ReferenceObject if needed
   let defaultResponse: ResponseObject;
   if (isReferenceObject(defaultResponseObj)) {
-    const resolved = getComponentByRef<ResponseObject | ReferenceObject>(
-      ctx.doc,
-      defaultResponseObj.$ref,
-    );
+    const resolved = getResponseByRef(ctx.doc, defaultResponseObj.$ref);
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in default response: ${defaultResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,

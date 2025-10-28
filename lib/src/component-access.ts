@@ -16,20 +16,15 @@
  * @see .agent/analysis/E2E-TEST-MATRIX.md
  */
 
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas30';
-
-/**
- * Type guard to check if a value is a ReferenceObject.
- *
- * @param obj - Value to check
- * @returns True if the value has a $ref property
- */
-function isReferenceObject(obj: unknown): obj is ReferenceObject {
-  if (obj == null || typeof obj !== 'object') return false;
-  if (!('$ref' in obj)) return false;
-  const candidate = obj as { $ref: unknown };
-  return typeof candidate.$ref === 'string';
-}
+import type {
+  OpenAPIObject,
+  SchemaObject,
+  ReferenceObject,
+  ParameterObject,
+  ResponseObject,
+  RequestBodyObject,
+} from 'openapi3-ts/oas30';
+import { isReferenceObject } from 'openapi3-ts/oas30';
 
 /**
  * Get a schema from components.schemas by name.
@@ -161,25 +156,15 @@ export function assertNotReference<T>(
 }
 
 /**
- * Generic helper to get component from OpenAPI document by $ref.
+ * Parse a component $ref into its type and name.
  *
- * Supports all component types: schemas, responses, parameters, requestBodies, etc.
- * Extracts the component type and name from the $ref and looks it up in doc.components.
- *
- * @param doc - The OpenAPI document
  * @param ref - The $ref string (e.g., "#/components/schemas/User")
- * @returns The resolved component
- * @throws {Error} If $ref format is invalid or component not found
+ * @returns Object with componentType and componentName
+ * @throws {Error} If $ref format is invalid
  *
- * @example
- * ```typescript
- * const schema = getComponentByRef(doc, '#/components/schemas/User');
- * const param = getComponentByRef(doc, '#/components/parameters/UserId');
- * const response = getComponentByRef(doc, '#/components/responses/Success');
- * ```
+ * @internal
  */
-export function getComponentByRef<T = unknown>(doc: OpenAPIObject, ref: string): T {
-  // Parse $ref format: #/components/{type}/{name} (per OpenAPI 3.0 spec)
+function parseComponentRef(ref: string): { componentType: string; componentName: string } {
   const refPattern = /^#\/components\/([^/]+)\/(.+)$/;
   const match = refPattern.exec(ref);
 
@@ -187,61 +172,124 @@ export function getComponentByRef<T = unknown>(doc: OpenAPIObject, ref: string):
     throw new Error(`Invalid component $ref: ${ref}. Expected format: #/components/{type}/{name}`);
   }
 
-  const componentType = match[1];
-  const componentName = match[2];
+  return {
+    componentType: match[1],
+    componentName: match[2],
+  };
+}
 
-  // Check if components exists
-  if (!doc.components) {
+/**
+ * Get a parameter from components.parameters by $ref.
+ * Preserves exact type information - returns ParameterObject | ReferenceObject.
+ *
+ * @param doc - The OpenAPI document
+ * @param ref - The $ref string (e.g., "#/components/parameters/UserId")
+ * @returns The parameter definition
+ * @throws {Error} If $ref is invalid or parameter not found
+ *
+ * @example
+ * ```typescript
+ * const param = getParameterByRef(doc, '#/components/parameters/UserId');
+ * // Type: ParameterObject | ReferenceObject (exact types from openapi3-ts)
+ * ```
+ */
+export function getParameterByRef(
+  doc: OpenAPIObject,
+  ref: string,
+): ParameterObject | ReferenceObject {
+  const { componentType, componentName } = parseComponentRef(ref);
+
+  if (componentType !== 'parameters') {
+    throw new Error(`Expected parameter $ref, got: ${ref}`);
+  }
+
+  if (!doc.components?.parameters) {
+    throw new Error(`Parameter '${componentName}' not found: doc.components.parameters is undefined`);
+  }
+
+  const parameter = doc.components.parameters[componentName];
+
+  if (!parameter) {
+    throw new Error(`Parameter '${componentName}' not found in doc.components.parameters`);
+  }
+
+  return parameter;
+}
+
+/**
+ * Get a response from components.responses by $ref.
+ * Preserves exact type information - returns ResponseObject | ReferenceObject.
+ *
+ * @param doc - The OpenAPI document
+ * @param ref - The $ref string (e.g., "#/components/responses/Success")
+ * @returns The response definition
+ * @throws {Error} If $ref is invalid or response not found
+ *
+ * @example
+ * ```typescript
+ * const response = getResponseByRef(doc, '#/components/responses/Success');
+ * // Type: ResponseObject | ReferenceObject (exact types from openapi3-ts)
+ * ```
+ */
+export function getResponseByRef(
+  doc: OpenAPIObject,
+  ref: string,
+): ResponseObject | ReferenceObject {
+  const { componentType, componentName } = parseComponentRef(ref);
+
+  if (componentType !== 'responses') {
+    throw new Error(`Expected response $ref, got: ${ref}`);
+  }
+
+  if (!doc.components?.responses) {
+    throw new Error(`Response '${componentName}' not found: doc.components.responses is undefined`);
+  }
+
+  const response = doc.components.responses[componentName];
+
+  if (!response) {
+    throw new Error(`Response '${componentName}' not found in doc.components.responses`);
+  }
+
+  return response;
+}
+
+/**
+ * Get a request body from components.requestBodies by $ref.
+ * Preserves exact type information - returns RequestBodyObject | ReferenceObject.
+ *
+ * @param doc - The OpenAPI document
+ * @param ref - The $ref string (e.g., "#/components/requestBodies/UserBody")
+ * @returns The request body definition
+ * @throws {Error} If $ref is invalid or request body not found
+ *
+ * @example
+ * ```typescript
+ * const body = getRequestBodyByRef(doc, '#/components/requestBodies/UserBody');
+ * // Type: RequestBodyObject | ReferenceObject (exact types from openapi3-ts)
+ * ```
+ */
+export function getRequestBodyByRef(
+  doc: OpenAPIObject,
+  ref: string,
+): RequestBodyObject | ReferenceObject {
+  const { componentType, componentName } = parseComponentRef(ref);
+
+  if (componentType !== 'requestBodies') {
+    throw new Error(`Expected requestBody $ref, got: ${ref}`);
+  }
+
+  if (!doc.components?.requestBodies) {
     throw new Error(
-      `Component '${componentName}' of type '${componentType}' not found: doc.components is undefined`,
+      `RequestBody '${componentName}' not found: doc.components.requestBodies is undefined`,
     );
   }
 
-  // Validate component type exists in spec
-  const validComponentTypes = [
-    'schemas',
-    'responses',
-    'parameters',
-    'examples',
-    'requestBodies',
-    'headers',
-    'securitySchemes',
-    'links',
-    'callbacks',
-  ] as const;
+  const requestBody = doc.components.requestBodies[componentName];
 
-  if (!validComponentTypes.includes(componentType as typeof validComponentTypes[number])) {
-    throw new Error(
-      `Invalid component type '${componentType}' in ref: ${ref}. Valid types: ${validComponentTypes.join(', ')}`,
-    );
+  if (!requestBody) {
+    throw new Error(`RequestBody '${componentName}' not found in doc.components.requestBodies`);
   }
 
-  // Access component map with validated key
-  const components = doc.components;
-  const componentMap = components[componentType as keyof typeof components];
-
-  if (!componentMap || typeof componentMap !== 'object') {
-    throw new Error(
-      `Component type '${componentType}' not found in doc.components for ref: ${ref}`,
-    );
-  }
-
-  // Access component from map
-  if (!(componentName in componentMap)) {
-    throw new Error(
-      `Component '${componentName}' not found in doc.components.${componentType} for ref: ${ref}`,
-    );
-  }
-
-  const component = componentMap[componentName as keyof typeof componentMap];
-
-  if (component === undefined) {
-    throw new Error(
-      `Component '${componentName}' is undefined in doc.components.${componentType} for ref: ${ref}`,
-    );
-  }
-
-  // Return component with explicit cast - we've validated it exists
-  // The generic T allows callers to specify expected type
-  return component as T;
+  return requestBody;
 }

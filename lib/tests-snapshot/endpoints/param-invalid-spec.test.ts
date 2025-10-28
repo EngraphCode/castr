@@ -73,6 +73,6 @@ describe('param-invalid-spec', () => {
 
     await expect(
       generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
-    ).rejects.toThrow(/Component 'NonExistentSchema' of type 'schemas' not found/);
+    ).rejects.toThrow(/Schema 'NonExistentSchema' not found in components\.schemas/);
   });
 });

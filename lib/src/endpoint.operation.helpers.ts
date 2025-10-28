@@ -20,7 +20,12 @@ import type { TemplateContext } from './template-context.js';
 import type { DefaultStatusBehavior } from './template-context.types.js';
 import { pathParamToVariableName } from './utils.js';
 import { isReferenceObject } from './openapi-type-guards.js';
-import { getComponentByRef } from './component-access.js';
+import {
+  getRequestBodyByRef,
+  getParameterByRef,
+  getResponseByRef,
+} from './component-access.js';
+import { resolveSchemaRef } from './component-access.js';
 
 const voidSchema = 'z.void()';
 
@@ -83,10 +88,7 @@ export function processRequestBody(
 
   let requestBody: RequestBodyObject;
   if (isReferenceObject(operation.requestBody)) {
-    const resolved = getComponentByRef<RequestBodyObject | ReferenceObject>(
-      ctx.doc,
-      operation.requestBody.$ref,
-    );
+    const resolved = getRequestBodyByRef(ctx.doc, operation.requestBody.$ref);
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in requestBody: ${operation.requestBody.$ref}. Use SwaggerParser.bundle() to dereference.`,
@@ -123,9 +125,7 @@ export function processRequestBody(
   const schema =
     getZodVarName(bodyCode, operationName + '_Body') +
     getZodChain({
-      schema: isReferenceObject(bodySchema)
-        ? getComponentByRef<SchemaObject>(ctx.doc, bodySchema.$ref)
-        : bodySchema,
+      schema: resolveSchemaRef(ctx.doc, bodySchema),
       meta: bodyCode.meta,
     });
 
@@ -152,7 +152,7 @@ export function processParameter(
 ): EndpointParameter | undefined {
   let paramItem: ParameterObject;
   if (isReferenceObject(param)) {
-    const resolved = getComponentByRef<ParameterObject | ReferenceObject>(ctx.doc, param.$ref);
+    const resolved = getParameterByRef(ctx.doc, param.$ref);
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in parameter: ${param.$ref}. Use SwaggerParser.bundle() to dereference.`,
@@ -198,9 +198,7 @@ export function processParameter(
 
     paramSchema = mediaTypeObject.schema;
   } else if (paramItem.schema) {
-    paramSchema = isReferenceObject(paramItem.schema)
-      ? getComponentByRef<SchemaObject>(ctx.doc, paramItem.schema.$ref)
-      : paramItem.schema;
+    paramSchema = resolveSchemaRef(ctx.doc, paramItem.schema);
   } else {
     // OpenAPI spec requires parameters to have either 'schema' or 'content'
     // Per SchemaXORContent constraint in OAS 3.0+ spec
@@ -223,9 +221,7 @@ export function processParameter(
   }
 
   // Resolve ref if needed, fallback to default (unknown) value if needed
-  paramSchema = isReferenceObject(paramSchema)
-    ? getComponentByRef<SchemaObject>(ctx.doc, paramSchema.$ref)
-    : paramSchema;
+  paramSchema = resolveSchemaRef(ctx.doc, paramSchema);
 
   const paramCode = getZodSchema({
     schema: paramSchema,
@@ -273,7 +269,7 @@ export function processResponse(
 } {
   let responseItem: ResponseObject;
   if (isReferenceObject(responseObj)) {
-    const resolved = getComponentByRef<ResponseObject | ReferenceObject>(ctx.doc, responseObj.$ref);
+    const resolved = getResponseByRef(ctx.doc, responseObj.$ref);
     if (isReferenceObject(resolved)) {
       throw new Error(
         `Nested $ref in response: ${responseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
@@ -296,9 +292,7 @@ export function processResponse(
     schemaString =
       (schema.ref ? getZodVarName(schema) : schema.toString()) +
       getZodChain({
-        schema: isReferenceObject(maybeSchema)
-          ? getComponentByRef<SchemaObject>(ctx.doc, maybeSchema.$ref)
-          : maybeSchema,
+        schema: resolveSchemaRef(ctx.doc, maybeSchema),
         meta: schema.meta,
       });
   }
@@ -365,9 +359,7 @@ export function processDefaultResponse(
     schemaString =
       (schema.ref ? getZodVarName(schema) : schema.toString()) +
       getZodChain({
-        schema: isReferenceObject(maybeSchema)
-          ? getComponentByRef<SchemaObject>(ctx.doc, maybeSchema.$ref)
-          : maybeSchema,
+        schema: resolveSchemaRef(ctx.doc, maybeSchema),
         meta: schema.meta,
       });
   }
