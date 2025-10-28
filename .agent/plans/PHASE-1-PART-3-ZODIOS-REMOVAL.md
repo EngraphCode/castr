@@ -248,12 +248,14 @@
 **Goal:** Create `schemas-with-client.hbs` template that generates a type-safe API client by wrapping [openapi-fetch](https://github.com/openapi-ts/openapi-typescript/tree/main/packages/openapi-fetch) with our Zod validation.
 
 **Why openapi-fetch instead of building our own?**
+
 - ✅ Battle-tested HTTP client logic (don't reinvent the wheel)
 - ✅ Minimal code generation (we just add validation)
 - ✅ Type-safe at compile-time (openapi-typescript) + runtime (Zod)
 - ✅ Low maintenance (HTTP logic maintained by openapi-ts team)
 
 **Architecture:**
+
 ```
 User Code
     ↓ calls
@@ -268,6 +270,7 @@ openapi-typescript (peer dep)
 **TDD Workflow:**
 
 1. **RED - Write tests first:**
+
    ```typescript
    // lib/src/templates/schemas-with-client.test.ts
    describe('schemas-with-client template', () => {
@@ -275,9 +278,9 @@ openapi-typescript (peer dep)
        const result = await generateZodClientFromOpenAPI({
          openApiDoc: minimalSpec,
          template: 'schemas-with-client',
-         disableWriteToFile: true
+         disableWriteToFile: true,
        });
-       
+
        expect(result).toContain("import createClient from 'openapi-fetch'");
        expect(result).toContain('export function createApiClient(');
        expect(result).toContain('.safeParse('); // Zod validation
@@ -309,6 +312,7 @@ openapi-typescript (peer dep)
 **Goal:** Update CLI to support new template and improve defaults.
 
 **Changes:**
+
 1. Add `--template` flag that accepts: `schemas-only`, `schemas-with-metadata`, `schemas-with-client`
 2. Default to `schemas-with-metadata` (current behavior)
 3. Map `--no-client` to `schemas-with-metadata` (for backward compat)
