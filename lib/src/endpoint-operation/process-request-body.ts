@@ -11,8 +11,6 @@
 import type {
   OperationObject,
   RequestBodyObject,
-  SchemaObject,
-  ReferenceObject,
 } from 'openapi3-ts/oas30';
 import { match, P } from 'ts-pattern';
 
@@ -158,4 +156,3 @@ export function processRequestBody(
     requestFormat,
   };
 }
-
