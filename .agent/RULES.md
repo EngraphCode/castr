@@ -1088,7 +1088,7 @@ export function getZodSchema(args: ConversionArgs): ZodSchema {
  * @throws {Error} When template is not found or invalid
  * @throws {ValidationError} When MCP validation fails (if enabled)
  *
- * @example Basic usage with Zodios client
+ * @example Basic usage with schemas and metadata
  * ```typescript
  * import SwaggerParser from "@apidevtools/swagger-parser";
  * import { generateZodClientFromOpenAPI } from "openapi-zod-client";
@@ -1098,7 +1098,7 @@ export function getZodSchema(args: ConversionArgs): ZodSchema {
  *   openApiDoc,
  *   distPath: "./src/api-client.ts",
  * });
- * // Generates full Zodios HTTP client with validation
+ * // Generates Zod schemas and endpoint metadata
  * ```
  *
  * @example SDK generation without HTTP client
@@ -1210,11 +1210,11 @@ export interface GenerateZodClientOptions {
   /**
    * Template to use for code generation.
    *
-   * - `"default"` - Full Zodios HTTP client with runtime validation
-   * - `"schemas-only"` - Pure Zod schemas without client
-   * - `"schemas-with-metadata"` - Schemas + metadata without Zodios
+   * - `"schemas-with-metadata"` - Schemas + endpoint metadata (default)
+   * - `"schemas-only"` - Pure Zod schemas without metadata
+   * - `"schemas-with-client"` - Full openapi-fetch HTTP client with validation
    *
-   * @defaultValue "default"
+   * @defaultValue "schemas-with-metadata"
    */
   template?: 'default' | 'schemas-only' | 'schemas-with-metadata';
 
