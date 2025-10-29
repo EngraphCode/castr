@@ -1,4 +1,5 @@
 import { expect, test, describe } from 'vitest';
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { generateZodClientFromOpenAPI, ValidationError } from '../../src/index.js';
 
 /**
@@ -13,6 +14,8 @@ import { generateZodClientFromOpenAPI, ValidationError } from '../../src/index.j
  * 1. OpenAPI 3.0.x: supported, generates code
  * 2. OpenAPI 3.1.x: explicitly rejected with ValidationError
  * 3. Error messages guide users to use 3.0.x instead
+ * 
+ * Note: Type assertions as OpenAPIObject are used for test fixtures only
  *
  * Note: Test fixtures use partial OpenAPI objects for brevity.
  * Type warnings are expected but don't affect runtime behavior.
@@ -60,7 +63,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject });
 
     // Should generate gt() for exclusive minimum with boolean
     expect(output).toContain('gt(18)');
@@ -109,15 +112,15 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
 
     // OpenAPI 3.1.x is not supported - should reject with ValidationError
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow(ValidationError);
 
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
 
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow('only supports OpenAPI 3.0.x');
   });
 
@@ -157,7 +160,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject });
 
     // Should generate .nullable() for nullable property
     expect(output).toContain('nullable()');
@@ -200,11 +203,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
 
     // OpenAPI 3.1.x is not supported - should reject with ValidationError
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow(ValidationError);
 
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 
@@ -239,11 +242,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
 
     // OpenAPI 3.1.x is not supported - should reject with ValidationError
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow(ValidationError);
 
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 
@@ -278,11 +281,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
 
     // OpenAPI 3.1.x is not supported - should reject with ValidationError
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow(ValidationError);
 
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 
@@ -334,11 +337,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
 
     // OpenAPI 3.1.x is not supported - should reject with ValidationError
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow(ValidationError);
 
     await expect(
-      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc: openApiDoc as unknown as OpenAPIObject }),
     ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
   });
 });

@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
 
 // Note: Test fixtures use partial OpenAPI objects for brevity
 // They contain enough structure for the generator to work correctly
+// Type assertions as OpenAPIObject are used for test fixtures only
 describe('schemas-with-metadata template', () => {
   describe('Core Template Functionality', () => {
     it('should generate schemas with Zod', async () => {
@@ -52,7 +54,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
@@ -116,7 +118,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
@@ -188,7 +190,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
@@ -243,7 +245,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
@@ -286,8 +288,7 @@ describe('schemas-with-metadata template', () => {
 
       // Test that noClient option uses schemas-with-metadata template
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
-        template: 'default',
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         noClient: true,
         disableWriteToFile: true,
       });
@@ -341,7 +342,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
@@ -410,7 +411,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
@@ -463,7 +464,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         withValidationHelpers: true,
         disableWriteToFile: true,
@@ -507,7 +508,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         withValidationHelpers: false,
         disableWriteToFile: true,
@@ -542,7 +543,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         withSchemaRegistry: true,
         disableWriteToFile: true,
@@ -580,7 +581,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         withSchemaRegistry: false,
         disableWriteToFile: true,
@@ -621,7 +622,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         withValidationHelpers: true,
         disableWriteToFile: true,
@@ -665,7 +666,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         withValidationHelpers: true,
         disableWriteToFile: true,
@@ -716,7 +717,7 @@ describe('schemas-with-metadata template', () => {
       };
 
       const result = await generateZodClientFromOpenAPI({
-        openApiDoc,
+        openApiDoc: openApiDoc as unknown as OpenAPIObject,
         template: 'schemas-with-metadata',
         disableWriteToFile: true,
       });
