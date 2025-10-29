@@ -249,6 +249,45 @@ function handleArraySchema(
 }
 
 /**
+ * Handle primitive type schema (string, number, integer, boolean)
+ * Pure function: generates z.string(), z.number(), etc. with enum support
+ * Handles special formats (binary → File) and invalid enum combinations
+ * 
+ * @returns Zod code string for primitive type
+ */
+function handlePrimitiveSchema(
+  schema: SchemaObject,
+  code: CodeMeta,
+  schemaType: string,
+): CodeMeta {
+  if (schema.enum) {
+    // Handle string enums
+    if (schemaType === 'string') {
+      return code.assign(generateStringEnumZodCode(schema.enum));
+    }
+
+    // Non-string enums with string values are invalid
+    if (shouldEnumBeNever(schemaType, schema.enum)) {
+      return code.assign('z.never()');
+    }
+
+    // Handle number/integer enums
+    return code.assign(generateNonStringEnumZodCode(schema.enum));
+  }
+
+  return code.assign(
+    match(schemaType)
+      .with('integer', () => 'z.number()')
+      .with('string', () =>
+        match(schema.format)
+          .with('binary', () => 'z.instanceof(File)')
+          .otherwise(() => 'z.string()'),
+      )
+      .otherwise((type) => `z.${type}()`),
+  );
+}
+
+/**
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
@@ -327,31 +366,7 @@ export function getZodSchema({
 
   const schemaType = schema.type?.toLowerCase();
   if (schemaType && isPrimitiveSchemaType(schemaType)) {
-    if (schema.enum) {
-      // Handle string enums
-      if (schemaType === 'string') {
-        return code.assign(generateStringEnumZodCode(schema.enum));
-      }
-
-      // Non-string enums with string values are invalid
-      if (shouldEnumBeNever(schemaType, schema.enum)) {
-        return code.assign('z.never()');
-      }
-
-      // Handle number/integer enums
-      return code.assign(generateNonStringEnumZodCode(schema.enum));
-    }
-
-    return code.assign(
-      match(schemaType)
-        .with('integer', () => 'z.number()')
-        .with('string', () =>
-          match(schema.format)
-            .with('binary', () => 'z.instanceof(File)')
-            .otherwise(() => 'z.string()'),
-        )
-        .otherwise((type) => `z.${type}()`),
-    );
+    return handlePrimitiveSchema(schema, code, schemaType);
   }
 
   if (schemaType === 'array') {
