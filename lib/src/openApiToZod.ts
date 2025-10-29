@@ -454,21 +454,22 @@ function handleCompositionSchemaIfPresent(
 }
 
 /**
- * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
- * @see https://github.com/colinhacks/zod
+ * Prepare schema conversion context
+ * Pure function: validates schema, applies refiner, builds CodeMeta and metadata
+ * 
+ * @returns Prepared schema, code, meta, and refsPath for conversion
  */
-/**
- * Convert an OpenAPI Schema to a Zod schema
- *
- * Per OAS 3.0+ spec: A Schema is always an object (possibly empty), never null.
- * The 'nullable' property indicates the VALUE can be null, not the schema itself.
- */
-export function getZodSchema({
-  schema: $schema,
-  ctx,
-  meta: inheritedMeta,
-  options,
-}: ConversionArgs): CodeMeta {
+function prepareSchemaContext(
+  $schema: SchemaObject | ReferenceObject | null | undefined,
+  ctx: ConversionTypeContext | undefined,
+  inheritedMeta: CodeMetaData | undefined,
+  options?: TemplateContext['options'],
+): {
+  schema: SchemaObject | ReferenceObject;
+  code: CodeMeta;
+  meta: CodeMetaData;
+  refsPath: string[];
+} {
   // Per OpenAPI spec: Schema is always an object, never null
   // Empty schema {} is valid and represents "any value" (z.unknown())
   if (!$schema) {
@@ -494,6 +495,27 @@ export function getZodSchema({
       return getSchemaNameFromRef(prev.ref);
     })
     .filter(Boolean);
+
+  return { schema, code, meta, refsPath };
+}
+
+/**
+ * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
+ * @see https://github.com/colinhacks/zod
+ */
+/**
+ * Convert an OpenAPI Schema to a Zod schema
+ *
+ * Per OAS 3.0+ spec: A Schema is always an object (possibly empty), never null.
+ * The 'nullable' property indicates the VALUE can be null, not the schema itself.
+ */
+export function getZodSchema({
+  schema: $schema,
+  ctx,
+  meta: inheritedMeta,
+  options,
+}: ConversionArgs): CodeMeta {
+  const { schema, code, meta, refsPath } = prepareSchemaContext($schema, ctx, inheritedMeta, options);
 
   if (isReferenceObject(schema)) {
     if (!ctx) throw new Error('Context is required');
