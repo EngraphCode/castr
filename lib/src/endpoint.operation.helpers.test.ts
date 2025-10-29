@@ -155,7 +155,7 @@ describe('endpoint.operation.helpers with doc-based context', () => {
       };
 
       expect(() => processRequestBody(operation, ctx, 'createUser', mockGetZodVarName)).toThrow(
-        /Nested \$ref/,
+        /Unexpected \$ref/,
       );
     });
 

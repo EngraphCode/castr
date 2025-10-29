@@ -11,6 +11,9 @@
 import type {
   OperationObject,
   RequestBodyObject,
+  OpenAPIObject,
+  SchemaObject,
+  ReferenceObject,
 } from 'openapi3-ts/oas30';
 import { match, P } from 'ts-pattern';
 
@@ -18,7 +21,11 @@ import type { CodeMeta, ConversionTypeContext } from '../CodeMeta.js';
 import { getZodChain, getZodSchema } from '../openApiToZod.js';
 import type { TemplateContext } from '../template-context.js';
 import { isReferenceObject } from '../openapi-type-guards.js';
-import { getRequestBodyByRef, resolveSchemaRef } from '../component-access.js';
+import {
+  getRequestBodyByRef,
+  resolveSchemaRef,
+  assertNotReference,
+} from '../component-access.js';
 
 /**
  * Function type for getting Zod variable names
@@ -37,10 +44,6 @@ export type EndpointParameter = {
 
 /**
  * Checks if a media type is allowed for request parameters
- *
- * @param mediaType - Media type string (e.g., "application/json")
- * @returns True if the media type is supported
- *
  * @internal
  */
 function isAllowedParamMediaTypes(mediaType: string): boolean {
@@ -52,6 +55,62 @@ function isAllowedParamMediaTypes(mediaType: string): boolean {
     mediaType.includes('octet-stream') ||
     mediaType.includes('text/')
   );
+}
+
+/**
+ * Resolve request body reference to RequestBodyObject
+ * @internal
+ */
+function resolveRequestBodyRef(operation: OperationObject, doc: OpenAPIObject): RequestBodyObject {
+  const requestBodyRef = operation.requestBody;
+  if (!requestBodyRef) {
+    throw new Error('Request body is undefined');
+  }
+
+  if (!isReferenceObject(requestBodyRef)) {
+    return requestBodyRef;
+  }
+
+  const resolved = getRequestBodyByRef(doc, requestBodyRef.$ref);
+  assertNotReference(
+    resolved,
+    `requestBody ${requestBodyRef.$ref} (use SwaggerParser.bundle() to dereference)`,
+  );
+
+  return resolved;
+}
+
+/**
+ * Extract schema from request body content by media type
+ * @internal
+ */
+function extractRequestBodySchema(
+  requestBody: RequestBodyObject,
+): { schema: SchemaObject | ReferenceObject; mediaType: string } | null {
+  const mediaTypes = Object.keys(requestBody.content ?? {});
+  const matchingMediaType = mediaTypes.find(isAllowedParamMediaTypes);
+  const bodySchema = matchingMediaType && requestBody.content?.[matchingMediaType]?.schema;
+
+  if (!bodySchema) {
+    return null;
+  }
+
+  return { schema: bodySchema, mediaType: matchingMediaType };
+}
+
+/**
+ * Determine request format from media type
+ * @internal
+ */
+function determineRequestFormat(
+  mediaType: string,
+): 'json' | 'binary' | 'form-url' | 'form-data' | 'text' {
+  return match(mediaType)
+    .with('application/octet-stream', () => 'binary' as const)
+    .with('application/x-www-form-urlencoded', () => 'form-url' as const)
+    .with('multipart/form-data', () => 'form-data' as const)
+    .with(P.string.includes('json'), () => 'json' as const)
+    .otherwise(() => 'text' as const);
 }
 
 /**
@@ -67,24 +126,7 @@ function isAllowedParamMediaTypes(mediaType: string): boolean {
  * @param getZodVarName - Function to generate Zod variable names
  * @param options - Optional template context options
  * @returns Object with parameter and request format, or undefined if no body
- *
  * @throws {Error} When nested $ref is found (spec not properly dereferenced)
- *
- * @example
- * ```typescript
- * const result = processRequestBody(
- *   operation,
- *   ctx,
- *   'createUser',
- *   getZodVarName,
- *   options
- * );
- * // Returns: {
- * //   parameter: { name: 'body', type: 'Body', schema: 'z.object(...)' },
- * //   requestFormat: 'json'
- * // }
- * ```
- *
  * @public
  */
 export function processRequestBody(
@@ -99,39 +141,13 @@ export function processRequestBody(
       requestFormat: 'json' | 'binary' | 'form-url' | 'form-data' | 'text';
     }
   | undefined {
-  if (!operation.requestBody) {
-    return undefined;
-  }
+  if (!operation.requestBody) return undefined;
 
-  let requestBody: RequestBodyObject;
-  if (isReferenceObject(operation.requestBody)) {
-    const resolved = getRequestBodyByRef(ctx.doc, operation.requestBody.$ref);
-    if (isReferenceObject(resolved)) {
-      throw new Error(
-        `Nested $ref in requestBody: ${operation.requestBody.$ref}. Use SwaggerParser.bundle() to dereference.`,
-      );
-    }
+  const requestBody = resolveRequestBodyRef(operation, ctx.doc);
+  const extracted = extractRequestBodySchema(requestBody);
+  if (!extracted) return undefined;
 
-    requestBody = resolved;
-  } else {
-    requestBody = operation.requestBody;
-  }
-
-  const mediaTypes = Object.keys(requestBody.content ?? {});
-  const matchingMediaType = mediaTypes.find(isAllowedParamMediaTypes);
-  const bodySchema = matchingMediaType && requestBody.content?.[matchingMediaType]?.schema;
-
-  if (!bodySchema) {
-    return undefined;
-  }
-
-  const requestFormat = match(matchingMediaType)
-    .with('application/octet-stream', () => 'binary' as const)
-    .with('application/x-www-form-urlencoded', () => 'form-url' as const)
-    .with('multipart/form-data', () => 'form-data' as const)
-    .with(P.string.includes('json'), () => 'json' as const)
-    .otherwise(() => 'text' as const);
-
+  const { schema: bodySchema, mediaType } = extracted;
   const bodyCode = getZodSchema({
     schema: bodySchema,
     ctx,
@@ -153,6 +169,6 @@ export function processRequestBody(
       description: requestBody.description ?? '',
       schema,
     },
-    requestFormat,
+    requestFormat: determineRequestFormat(mediaType),
   };
 }

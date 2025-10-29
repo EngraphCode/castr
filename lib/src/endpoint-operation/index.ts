@@ -29,13 +29,8 @@ export type { EndpointParameter, GetZodVarNameFn } from './process-parameter.js'
 
 // Responses
 export { processResponse } from './process-response.js';
-export type {
-  EndpointResponse,
-  EndpointError,
-  ProcessResponseResult,
-} from './process-response.js';
+export type { EndpointResponse, EndpointError, ProcessResponseResult } from './process-response.js';
 
 // Default Response
-export { processDefaultResponse } from './process-default-response.ts';
+export { processDefaultResponse } from './process-default-response.js';
 export type { ProcessDefaultResponseResult } from './process-default-response.js';
-

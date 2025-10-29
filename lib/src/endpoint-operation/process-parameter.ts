@@ -28,6 +28,15 @@ export interface EndpointParameter {
  * @internal
  */
 const allowedPathInValues = ['header', 'query', 'path'] as const;
+type AllowedParameterLocation = (typeof allowedPathInValues)[number];
+
+/**
+ * Type guard to check if parameter location is allowed
+ * @internal
+ */
+function isAllowedParameterLocation(location: string): location is AllowedParameterLocation {
+  return (allowedPathInValues as readonly string[]).includes(location);
+}
 
 /**
  * Check if media type is allowed for parameters
@@ -128,7 +137,7 @@ export function processParameter(
   }
 
   // Filter: Only process header, query, and path parameters
-  if (!allowedPathInValues.includes(paramItem.in)) {
+  if (!isAllowedParameterLocation(paramItem.in)) {
     return undefined;
   }
 
@@ -221,4 +230,3 @@ export function processParameter(
 
   return { name, type, schema };
 }
-
