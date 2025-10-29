@@ -4,13 +4,6 @@ import { isReferenceObject } from 'openapi3-ts/oas30';
 import type { TemplateContext } from './template-context.js';
 import { inferRequiredSchema } from './inferRequiredOnly.js';
 
-/**
- * Type representing the output of TypeScript conversion from OpenAPI schemas
- * Returns string-based TypeScript type expressions
- * MIGRATED: Now returns only strings (no more tanu nodes)
- */
-export type TsConversionOutput = string;
-
 import {
   convertSchemasToTypes,
   handleAnyOf,
@@ -52,7 +45,7 @@ export const getTypescriptFromOpenApi = ({
   meta: inheritedMeta,
   ctx,
   options,
-}: TsConversionArgs): TsConversionOutput => {
+}: TsConversionArgs): string => {
   const meta: TsConversionArgs['meta'] = {};
 
   if (ctx?.visitedRefs && inheritedMeta?.$ref) {

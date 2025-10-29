@@ -7,7 +7,7 @@
 
 import { type ReferenceObject, type SchemaObject } from 'openapi3-ts/oas30';
 
-import type { TsConversionContext, TsConversionOutput } from './openApiToTypescript.js';
+import type { TsConversionContext } from './openApiToTypescript.js';
 import { getSchemaFromComponents } from './component-access.js';
 import {
   handleBasicPrimitive as handleBasicPrimitiveString,
@@ -197,7 +197,7 @@ export function isPropertyRequired(
  */
 export function resolveAdditionalPropertiesType(
   additionalProperties: SchemaObject['additionalProperties'],
-  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string | undefined {
   if (!additionalProperties) return undefined;
 
@@ -250,7 +250,7 @@ export function handleArraySchema(
 export function handleOneOf(
   schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
   isNullable: boolean,
-  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string {
   const results = convertSchemasToTypes(schemas, (schema) => {
     const result = convertSchema(schema);
@@ -274,7 +274,7 @@ export function handleAnyOf(
   schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
   isNullable: boolean,
   shouldWrapReadonly: boolean,
-  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string {
   const results = convertSchemasToTypes(schemas, (schema) => {
     const result = convertSchema(schema);
@@ -308,7 +308,7 @@ export function handleTypeArray(
   types: ReadonlyArray<string>,
   schema: SchemaObject,
   isNullable: boolean,
-  convertSchema: (schema: SchemaObject | ReferenceObject) => TsConversionOutput,
+  convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string {
   // Types array comes from schema.type (validated SchemaObjectType[])
   // Type assertion is safe: openapi3-ts guarantees schema.type elements are SchemaObjectType
