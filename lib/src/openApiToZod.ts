@@ -356,6 +356,49 @@ function buildObjectPropertiesString(
 }
 
 /**
+ * Handle additionalProperties when it's an object schema
+ * Pure function: generates z.record() for object-type additionalProperties
+ * Resolves references and applies validation chains
+ * 
+ * @returns Zod code string for z.record() or undefined if not applicable
+ */
+function handleAdditionalPropertiesAsRecord(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta | undefined {
+  if (
+    !(
+      typeof schema.additionalProperties === 'object' &&
+      Object.keys(schema.additionalProperties).length > 0
+    )
+  ) {
+    return undefined;
+  }
+
+  // Resolve ref if needed for getZodChain (which needs .type property)
+  const additionalPropsResolved: SchemaObject | ReferenceObject =
+    isReferenceObject(schema.additionalProperties) && ctx?.doc
+      ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.additionalProperties.$ref))
+      : schema.additionalProperties;
+
+  const additionalPropsZod = getZodSchema({
+    schema: schema.additionalProperties,
+    ctx,
+    meta,
+    options,
+  });
+  const additionalPropsChain = getZodChain({
+    schema: additionalPropsResolved,
+    meta: { ...meta, isRequired: true },
+    options,
+  });
+  return code.assign(`z.record(${additionalPropsZod.toString()}${additionalPropsChain})`);
+}
+
+/**
  * Handle object type schema
  * Pure function: generates z.object() with properties, additionalProperties, and modifiers
  * Complex logic for required/optional props, partial, strict, readonly, passthrough
@@ -371,6 +414,10 @@ function handleObjectSchema(
 ): CodeMeta {
   const readonly = options?.allReadonly ? '.readonly()' : '';
 
+  // Check if additionalProperties is an object schema → z.record()
+  const recordResult = handleAdditionalPropertiesAsRecord(schema, code, ctx, meta, options);
+  if (recordResult) return recordResult;
+
   // additional properties default to true if additionalPropertiesDefaultValue not provided
   const additionalPropsDefaultValue =
     options?.additionalPropertiesDefaultValue === undefined
@@ -383,30 +430,6 @@ function handleObjectSchema(
   // When strictObjects is enabled, don't add .passthrough() (use .strict() instead)
   const additionalPropsSchema =
     additionalProps === false || options?.strictObjects ? '' : '.passthrough()';
-
-  if (
-    typeof schema.additionalProperties === 'object' &&
-    Object.keys(schema.additionalProperties).length > 0
-  ) {
-    // Resolve ref if needed for getZodChain (which needs .type property)
-    const additionalPropsResolved: SchemaObject | ReferenceObject =
-      isReferenceObject(schema.additionalProperties) && ctx?.doc
-        ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.additionalProperties.$ref))
-        : schema.additionalProperties;
-
-    const additionalPropsZod = getZodSchema({
-      schema: schema.additionalProperties,
-      ctx,
-      meta,
-      options,
-    });
-    const additionalPropsChain = getZodChain({
-      schema: additionalPropsResolved,
-      meta: { ...meta, isRequired: true },
-      options,
-    });
-    return code.assign(`z.record(${additionalPropsZod.toString()}${additionalPropsChain})`);
-  }
 
   const hasRequiredArray = !!(schema.required && schema.required.length > 0);
   const isPartial = !!(options?.withImplicitRequiredProps ? false : !schema.required?.length);
