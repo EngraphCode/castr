@@ -156,6 +156,63 @@ function handleAnyOfSchema(
 }
 
 /**
+ * Handle allOf composition schema
+ * Pure function: generates intersection of all allOf schemas with .and()
+ * Handles required schema inference for proper type composition
+ * 
+ * @returns Zod code string for allOf intersection
+ */
+function handleAllOfSchema(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta {
+  if (!schema.allOf || schema.allOf.length === 0) {
+    throw new Error('Invalid allOf: array is empty or undefined');
+  }
+
+  if (schema.allOf.length === 1) {
+    const firstSchema = schema.allOf[0];
+    if (!firstSchema) throw new Error('allOf array has invalid first element');
+    const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
+    return code.assign(type.toString());
+  }
+
+  const { patchRequiredSchemaInLoop, noRequiredOnlyAllof, composedRequiredSchema } =
+    inferRequiredSchema(schema);
+
+  const types = noRequiredOnlyAllof.map((prop) => {
+    const zodSchema = getZodSchema({ schema: prop, ctx, meta, options });
+    if (ctx?.doc) {
+      patchRequiredSchemaInLoop(prop, ctx.doc);
+    }
+    return zodSchema;
+  });
+
+  if (composedRequiredSchema.required.length > 0) {
+    types.push(
+      getZodSchema({
+        schema: composedRequiredSchema,
+        ctx,
+        meta,
+        options,
+      }),
+    );
+  }
+
+  const first = types.at(0);
+  if (!first) throw new Error('allOf schemas list is empty');
+  const rest = types
+    .slice(1)
+    .map((type) => `and(${type.toString()})`)
+    .join('.');
+
+  return code.assign(`${first.toString()}.${rest}`);
+}
+
+/**
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
@@ -229,41 +286,7 @@ export function getZodSchema({
   }
 
   if (schema.allOf) {
-    if (schema.allOf.length === 1) {
-      const firstSchema = schema.allOf[0];
-      if (!firstSchema) throw new Error('allOf array has invalid first element');
-      const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
-      return code.assign(type.toString());
-    }
-    const { patchRequiredSchemaInLoop, noRequiredOnlyAllof, composedRequiredSchema } =
-      inferRequiredSchema(schema);
-
-    const types = noRequiredOnlyAllof.map((prop) => {
-      const zodSchema = getZodSchema({ schema: prop, ctx, meta, options });
-      if (ctx?.doc) {
-        patchRequiredSchemaInLoop(prop, ctx.doc);
-      }
-      return zodSchema;
-    });
-
-    if (composedRequiredSchema.required.length > 0) {
-      types.push(
-        getZodSchema({
-          schema: composedRequiredSchema,
-          ctx,
-          meta,
-          options,
-        }),
-      );
-    }
-    const first = types.at(0);
-    if (!first) throw new Error('allOf schemas list is empty');
-    const rest = types
-      .slice(1)
-      .map((type) => `and(${type.toString()})`)
-      .join('.');
-
-    return code.assign(`${first.toString()}.${rest}`);
+    return handleAllOfSchema(schema, code, ctx, meta, options);
   }
 
   const schemaType = schema.type?.toLowerCase();
