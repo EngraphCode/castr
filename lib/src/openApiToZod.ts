@@ -35,6 +35,127 @@ type ConversionArgs = {
 };
 
 /**
+ * Handle reference object resolution with circular reference detection
+ * Pure function: only mutates ctx.zodSchemaByName (passed by reference)
+ * 
+ * @returns CodeMeta with the resolved reference, or null if not a reference
+ */
+function handleReferenceObject(
+  schema: ReferenceObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext,
+  refsPath: string[],
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta {
+  const schemaName = getSchemaNameFromRef(schema.$ref);
+
+  // circular(=recursive) reference
+  if (refsPath.length > 1 && refsPath.includes(schemaName)) {
+    // In circular references, code.ref and the schema must exist
+    // The non-null assertions are safe here because we're inside a reference object check
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return code.assign(ctx.zodSchemaByName[code.ref!]!);
+  }
+
+  let result = ctx.zodSchemaByName[schema.$ref];
+  if (!result) {
+    const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
+    if (!actualSchema) {
+      throw new Error(`Schema ${schema.$ref} not found`);
+    }
+
+    result = getZodSchema({ schema: actualSchema, ctx, meta, options }).toString();
+  }
+
+  if (ctx.zodSchemaByName[schemaName]) {
+    return code;
+  }
+
+  ctx.zodSchemaByName[schemaName] = result;
+
+  return code;
+}
+
+/**
+ * Handle oneOf composition schema
+ * Pure function: generates discriminated union or regular union based on schema
+ * 
+ * @returns Zod code string for oneOf union
+ */
+function handleOneOfSchema(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta {
+  if (!schema.oneOf || schema.oneOf.length === 0) {
+    throw new Error('Invalid oneOf: array is empty or undefined');
+  }
+
+  if (schema.oneOf.length === 1) {
+    const firstSchema = schema.oneOf[0];
+    if (!firstSchema) throw new Error('oneOf array has invalid first element');
+    const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
+    return code.assign(type.toString());
+  }
+
+  /* when there are multiple allOf we are unable to use a discriminatedUnion as this library adds an
+   *   'z.and' to the schema that it creates which breaks type inference */
+  const hasMultipleAllOf = schema.oneOf.some(
+    (obj) => isSchemaObject(obj) && (obj?.allOf || []).length > 1,
+  );
+
+  if (schema.discriminator && !hasMultipleAllOf) {
+    const propertyName = schema.discriminator.propertyName;
+
+    return code.assign(`
+                z.discriminatedUnion("${propertyName}", [${schema.oneOf
+                  .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
+                  .join(', ')}])
+            `);
+  }
+
+  return code.assign(
+    `z.union([${schema.oneOf.map((prop) => getZodSchema({ schema: prop, ctx, meta, options })).join(', ')}])`,
+  );
+}
+
+/**
+ * Handle anyOf composition schema
+ * Pure function: generates union of all anyOf options
+ * anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
+ * 
+ * @returns Zod code string for anyOf union
+ */
+function handleAnyOfSchema(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta {
+  if (!schema.anyOf || schema.anyOf.length === 0) {
+    throw new Error('Invalid anyOf: array is empty or undefined');
+  }
+
+  if (schema.anyOf.length === 1) {
+    const firstSchema = schema.anyOf[0];
+    if (!firstSchema) throw new Error('anyOf array has invalid first element');
+    const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
+    return code.assign(type.toString());
+  }
+
+  const types = schema.anyOf
+    .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
+    .map((type) => type.toString())
+    .join(', ');
+
+  return code.assign(`z.union([${types}])`);
+}
+
+/**
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
@@ -78,34 +199,7 @@ export function getZodSchema({
 
   if (isReferenceObject(schema)) {
     if (!ctx) throw new Error('Context is required');
-
-    const schemaName = getSchemaNameFromRef(schema.$ref);
-
-    // circular(=recursive) reference
-    if (refsPath.length > 1 && refsPath.includes(schemaName)) {
-      // In circular references, code.ref and the schema must exist
-      // The non-null assertions are safe here because we're inside a reference object check
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return code.assign(ctx.zodSchemaByName[code.ref!]!);
-    }
-
-    let result = ctx.zodSchemaByName[schema.$ref];
-    if (!result) {
-      const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
-      if (!actualSchema) {
-        throw new Error(`Schema ${schema.$ref} not found`);
-      }
-
-      result = getZodSchema({ schema: actualSchema, ctx, meta, options }).toString();
-    }
-
-    if (ctx.zodSchemaByName[schemaName]) {
-      return code;
-    }
-
-    ctx.zodSchemaByName[schemaName] = result;
-
-    return code;
+    return handleReferenceObject(schema, code, ctx, refsPath, meta, options);
   }
 
   if (Array.isArray(schema.type)) {
@@ -127,48 +221,11 @@ export function getZodSchema({
   }
 
   if (schema.oneOf) {
-    if (schema.oneOf.length === 1) {
-      const firstSchema = schema.oneOf[0];
-      if (!firstSchema) throw new Error('oneOf array has invalid first element');
-      const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
-      return code.assign(type.toString());
-    }
-
-    /* when there are multiple allOf we are unable to use a discriminatedUnion as this library adds an
-     *   'z.and' to the schema that it creates which breaks type inference */
-    const hasMultipleAllOf = schema.oneOf?.some(
-      (obj) => isSchemaObject(obj) && (obj?.allOf || []).length > 1,
-    );
-    if (schema.discriminator && !hasMultipleAllOf) {
-      const propertyName = schema.discriminator.propertyName;
-
-      return code.assign(`
-                z.discriminatedUnion("${propertyName}", [${schema.oneOf
-                  .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
-                  .join(', ')}])
-            `);
-    }
-
-    return code.assign(
-      `z.union([${schema.oneOf.map((prop) => getZodSchema({ schema: prop, ctx, meta, options })).join(', ')}])`,
-    );
+    return handleOneOfSchema(schema, code, ctx, meta, options);
   }
 
-  // anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
   if (schema.anyOf) {
-    if (schema.anyOf.length === 1) {
-      const firstSchema = schema.anyOf[0];
-      if (!firstSchema) throw new Error('anyOf array has invalid first element');
-      const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
-      return code.assign(type.toString());
-    }
-
-    const types = schema.anyOf
-      .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
-      .map((type) => type.toString())
-      .join(', ');
-
-    return code.assign(`z.union([${types}])`);
+    return handleAnyOfSchema(schema, code, ctx, meta, options);
   }
 
   if (schema.allOf) {
