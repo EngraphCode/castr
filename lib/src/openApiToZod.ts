@@ -288,6 +288,74 @@ function handlePrimitiveSchema(
 }
 
 /**
+ * Build properties string for z.object()
+ * Pure function: converts OpenAPI properties to Zod object property definitions
+ * Handles required/optional determination and reference resolution
+ * 
+ * @returns Properties string like "{ prop1: z.string(), prop2: z.number().optional() }"
+ */
+function buildObjectPropertiesString(
+  properties: Record<string, SchemaObject | ReferenceObject>,
+  schema: SchemaObject,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  isPartial: boolean,
+  hasRequiredArray: boolean,
+  options?: TemplateContext['options'],
+): string {
+  const propsMap = Object.entries(properties).map(([prop, propSchema]) => {
+    // Determine if this property is required
+    let propIsRequired: boolean | undefined;
+    if (isPartial) {
+      propIsRequired = true;
+    } else if (hasRequiredArray) {
+      propIsRequired = schema.required?.includes(prop);
+    } else {
+      propIsRequired = options?.withImplicitRequiredProps;
+    }
+
+    // Build metadata, only including isRequired if defined (exactOptionalPropertyTypes)
+    const propMetadata: CodeMetaData = {
+      ...meta,
+      name: prop,
+    };
+    if (propIsRequired !== undefined) {
+      propMetadata.isRequired = propIsRequired;
+    }
+
+    // Resolve reference for getZodChain (which needs .type property)
+    const propActualSchema: SchemaObject | ReferenceObject =
+      isReferenceObject(propSchema) && ctx?.doc
+        ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(propSchema.$ref))
+        : propSchema;
+
+    const propZodSchema = getZodSchema({
+      schema: propSchema,
+      ctx,
+      meta: propMetadata,
+      options,
+    });
+    const propChain = getZodChain({
+      schema: propActualSchema,
+      meta: propMetadata,
+      options,
+    });
+    const propCode = `${propZodSchema.toString()}${propChain}`;
+
+    return [prop, propCode];
+  });
+
+  return (
+    '{ ' +
+    propsMap
+      .filter((entry): entry is [string, string] => entry[0] !== undefined)
+      .map(([prop, propSchema]) => `${wrapWithQuotesIfNeeded(prop)}: ${propSchema}`)
+      .join(', ') +
+    ' }'
+  );
+}
+
+/**
  * Handle object type schema
  * Pure function: generates z.object() with properties, additionalProperties, and modifiers
  * Complex logic for required/optional props, partial, strict, readonly, passthrough
@@ -340,61 +408,11 @@ function handleObjectSchema(
     return code.assign(`z.record(${additionalPropsZod.toString()}${additionalPropsChain})`);
   }
 
-  const hasRequiredArray = schema.required && schema.required.length > 0;
-  const isPartial = options?.withImplicitRequiredProps ? false : !schema.required?.length;
-  let properties = '{}';
-
-  if (schema.properties) {
-    const propsMap = Object.entries(schema.properties).map(([prop, propSchema]) => {
-      // Determine if this property is required
-      let propIsRequired: boolean | undefined;
-      if (isPartial) {
-        propIsRequired = true;
-      } else if (hasRequiredArray) {
-        propIsRequired = schema.required?.includes(prop);
-      } else {
-        propIsRequired = options?.withImplicitRequiredProps;
-      }
-
-      // Build metadata, only including isRequired if defined (exactOptionalPropertyTypes)
-      const propMetadata: CodeMetaData = {
-        ...meta,
-        name: prop,
-      };
-      if (propIsRequired !== undefined) {
-        propMetadata.isRequired = propIsRequired;
-      }
-
-      // Resolve reference for getZodChain (which needs .type property)
-      const propActualSchema: SchemaObject | ReferenceObject =
-        isReferenceObject(propSchema) && ctx?.doc
-          ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(propSchema.$ref))
-          : propSchema;
-
-      const propZodSchema = getZodSchema({
-        schema: propSchema,
-        ctx,
-        meta: propMetadata,
-        options,
-      });
-      const propChain = getZodChain({
-        schema: propActualSchema,
-        meta: propMetadata,
-        options,
-      });
-      const propCode = `${propZodSchema.toString()}${propChain}`;
-
-      return [prop, propCode];
-    });
-
-    properties =
-      '{ ' +
-      propsMap
-        .filter((entry): entry is [string, string] => entry[0] !== undefined)
-        .map(([prop, propSchema]) => `${wrapWithQuotesIfNeeded(prop)}: ${propSchema}`)
-        .join(', ') +
-      ' }';
-  }
+  const hasRequiredArray = !!(schema.required && schema.required.length > 0);
+  const isPartial = !!(options?.withImplicitRequiredProps ? false : !schema.required?.length);
+  const properties = schema.properties
+    ? buildObjectPropertiesString(schema.properties, schema, ctx, meta, isPartial, hasRequiredArray, options)
+    : '{}';
 
   const partial = isPartial ? '.partial()' : '';
   const strict = options?.strictObjects ? '.strict()' : '';
