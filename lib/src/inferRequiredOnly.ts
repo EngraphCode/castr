@@ -30,7 +30,15 @@ const isBrokenAllOfItem = (item: SchemaObject | ReferenceObject): item is Schema
   );
 };
 
-export function inferRequiredSchema(schema: SchemaObject) {
+export function inferRequiredSchema(schema: SchemaObject): {
+  noRequiredOnlyAllof: (SchemaObject | ReferenceObject)[];
+  composedRequiredSchema: {
+    properties: Record<string, SchemaObject | ReferenceObject>;
+    type: 'object';
+    required: string[];
+  };
+  patchRequiredSchemaInLoop: (prop: SchemaObject | ReferenceObject, doc: OpenAPIObject) => void;
+} {
   if (!schema.allOf) {
     throw new Error(
       'function inferRequiredSchema is specialized to handle item with required only in an allOf array.',

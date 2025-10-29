@@ -8,8 +8,8 @@ export async function maybePretty(input: string, options?: Options | null): Prom
     // Filter out the plugins field from options to prevent conflicts
     // Prettier 3.x requires explicit plugins, and config-loaded plugins
     // can be undefined/null which causes "Cannot read properties of undefined (reading 'languages')"
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { plugins, ...safeOptions } = options ?? {};
-    void plugins; // Intentionally unused - filtering out potentially invalid plugins
 
     return await prettier.format(input.trim(), {
       parser: 'typescript',

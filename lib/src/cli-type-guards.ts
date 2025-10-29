@@ -5,6 +5,8 @@
  * without using type assertions.
  */
 
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
+
 /**
  * Valid group strategy values per CLI documentation
  */
@@ -64,7 +66,7 @@ export function hasVersionProperty(obj: unknown): obj is { version?: unknown } {
  * @param obj - Object to check (typically from SwaggerParser.bundle())
  * @returns True if the object has required OpenAPI 3.0 properties
  */
-export function isOpenAPIObject(obj: unknown): obj is import('openapi3-ts/oas30').OpenAPIObject {
+export function isOpenAPIObject(obj: unknown): obj is OpenAPIObject {
   if (typeof obj !== 'object' || obj === null) {
     return false;
   }

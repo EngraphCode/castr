@@ -1,62 +1,70 @@
 # Phase 1 Part 4: Zero Lint Errors (Perfect)
 
-**Status:** IN PROGRESS (25% complete)
+**Status:** IN PROGRESS (35% complete)
 **Estimated Duration:** 36-45 hours (Pragmatic Hybrid: Production Perfect + Critical Test Issues)  
 **Prerequisites:** Parts 1-3 complete, all tests passing ✅
 
 **Current Progress:**
+
 - ✅ endpoint-operation/ directory: ZERO errors (was 12+)
-- ✅ All quality gates green for completed work
-- ✅ 605/605 tests passing
-- 🔄 Next: endpoint.path.helpers.ts (5 errors)
+- ✅ `endpoint.path.helpers.ts`: 245 lines (was 303), no assertions, only tracked deprecation notices remain
+- ✅ Quick wins cleared: `CodeMeta.ts`, `cli-type-guards.ts`, `maybePretty.ts`, return-type fix in `inferRequiredOnly.ts`
+- ✅ All quality gates green for completed work (format, build, type-check, test)
+- ✅ 605/605 tests passing (unit + snapshot + characterisation)
+- 🔄 Next: Reduce remaining production lint errors (~38 across 19 files)
 
 **Completed Files (Zero Errors):**
+
 1. ✅ `endpoint-operation/index.ts` (37 lines)
 2. ✅ `endpoint-operation/process-request-body.ts` (196 lines)
 3. ✅ `endpoint-operation/process-parameter.ts` (215 lines)
 4. ✅ `endpoint-operation/process-response.ts` (213 lines)
 5. ✅ `endpoint-operation/process-default-response.ts` (217 lines)
+6. ✅ `endpoint.path.helpers.ts` (245 lines)
 
-**Remaining Production Files (52 errors across 21 files):**
+**Remaining Production Files (~38 errors across 19 files):**
 
 **High Priority (Next Up):**
-- 🔄 `endpoint.path.helpers.ts` (5 errors: size + complexity)
-- `endpoint.helpers.ts` (4 errors: complexity)
-- `component-access.ts` (1 error: file size 297 lines)
+
+- `generateZodClientFromOpenAPI.ts` (size + complexity + console usage)
+- `openApiToTypescript.helpers.ts` (enum handling assertions, function size)
+- `template-context.ts` (file size, complexity, nested logic)
+- `openApiToZod.ts` (god function: size + complexity + assertions)
 
 **Medium Priority (Core Generation):**
-- `generateZodClientFromOpenAPI.ts` (6 errors)
-- `getEndpointDefinitionList.ts` (3 errors: type assertions)
-- `openApiToTypescript.helpers.ts` (3 errors + file size)
-- `getOpenApiDependencyGraph.ts` (5 errors)
+
+- `getEndpointDefinitionList.ts` (type assertions, deprecations)
+- `openApiToTypescript.ts` (multiple functions over limits)
+- `getOpenApiDependencyGraph.ts` (size + complexity)
+- `endpoint.helpers.ts` (complexity warnings)
 
 **The Big Ones (Decomposition Needed):**
+
 - `openApiToTypescript.string-helpers.ts` (375 lines, 2 errors)
 - `cli.ts` (6 errors, complexity 30!)
-- `openApiToZod.ts` (needs investigation)
+- `openApiToZod.ts` (central hotspot – see Task 4.2.1)
 
 **Minor/Quick Wins:**
-- `CodeMeta.ts` (4 errors: missing return types)
-- `cli-type-guards.ts` (1 error: import type)
-- `generateJSDocArray.ts` (1 error: function size)
-- `inferRequiredOnly.ts` (2 errors)
-- `maybePretty.ts` (1 error)
-- Others (1-2 errors each)
+
+- `generateJSDocArray.ts` (function over 50 lines)
+- `inferRequiredOnly.ts` (function length + complexity still to tackle after return-type fix)
+- Control character lint suppressions in `utils.ts`
+- Sorting warnings in `schema-sorting.test.ts`
 
 ---
 
 ## 🎯 WHY: The Extraction Blocker
 
-**Current State:** 271 lint errors (after tightening rules to production standards)
+**Current State:** 259 lint errors (strict Engraph-standard ruleset; was 271 at session start)
 
 **Previous:** 105 errors (lax rules)  
-**Current:** 271 errors (strict Engraph-ready rules)  
-**Delta:** +166 errors from stricter complexity/quality standards
+**Current:** 259 errors (strict Engraph-ready rules)  
+**Delta:** +154 errors from stricter complexity/quality standards (–12 resolved this session)
 
 **Problem:**
 
 - **Size/Structure:** 123 errors (45%) - Functions/files too large
-  - openApiToZod.ts:47: 323 lines (6.5x over limit!)
+  - openApiToZod.ts:47: 323 lines (6.5x over!)
   - template-context.ts:73: 251 lines (5x over!)
   - 6 files >250 lines, 20+ functions >50 lines
 - **Complexity:** 51 errors (19%) - Cyclomatic/cognitive complexity

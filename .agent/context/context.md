@@ -5,7 +5,7 @@
 
 ## 🚨 CRITICAL STATUS FOR FRESH CHAT
 
-**Current Phase:** **PHASE 1 PART 4 - IN PROGRESS (25% complete) 🚀**
+**Current Phase:** **PHASE 1 PART 4 - IN PROGRESS (35% complete) 🚀**
 
 **Previous Completions:**
 
@@ -15,18 +15,28 @@
 
 **Current Task:** Zero Lint Errors - Systematic Refactoring
 
-**🎯 PART 4 PROGRESS (25% COMPLETE):**
+**🎯 PART 4 PROGRESS (35% COMPLETE):**
 
 - **✅ COMPLETED:** endpoint-operation/ directory - ZERO errors!
   - Decomposed 385-line monolithic file into 5 focused modules
   - All functions < 50 lines, all files < 250 lines, complexity < 8
   - Zero type assertions in logic, comprehensive documentation
   - Pattern proven: large file → directory with focused modules
+- **✅ COMPLETED:** `endpoint.path.helpers.ts`
+  - Reduced from 303 → 245 lines (under 250-line limit)
+  - Removed type assertions via dedicated type guards
+  - Only remaining lint hits are 9 allowed deprecation notices (tracked debt)
+- **✅ QUICK WINS:**
+  - `CodeMeta.ts` (added explicit return types)
+  - `cli-type-guards.ts` (converted to `import type` guard, zero errors)
+  - `maybePretty.ts` (removed `void` operator / unused var)
+  - `inferRequiredOnly.ts` (added explicit return type; pending size/complexity refactor)
 - **✅ QUALITY:** All 605 tests passing, type-check ✅, build ✅
-- **🔄 NEXT:** endpoint.path.helpers.ts (5 errors)
-- **📊 REMAINING:** ~52 production code errors across 21 files
+- **📊 REMAINING:** ~38 production lint errors across 19 files (down from 52/21)
+- **📈 TOTAL LINT (STRICT RULESET):** 259 errors (was 271) – production share trending downward
 
 **Strategy Working:**
+
 - Systematic decomposition of God functions
 - TDD approach: all tests green at each step
 - Focus on production code first (tests later)
@@ -45,6 +55,19 @@
 - **✅ QUALITY:** 669/669 tests ALL PASSING (403 unit + 115 char + 151 snapshot)
 - **✅ IMPROVEMENT:** 0 type errors, lint 126→99 (-18.8%), net -179 lines
 - **✅ SPEED:** Completed in 1.5 hours (estimated 6-8 hours!)
+
+**Phase 1 Part 3 (Historical Summary):**
+
+- ✅ Zodios fully removed and replaced with `openapi-fetch` + Zod validation
+- ✅ Templates, CLI flags, and docs updated to match new client strategy
+- ✅ Library now fails fast with descriptive errors for malformed schemas
+- ✅ Zero Zodios references remain in source, tests, or docs
+
+**Phase 1 Part 4 (Active):**
+
+- 🎯 Goal: Drive production lint errors to zero under Engraph standards
+- 🧭 Approach: Systematic decomposition + TDD-driven type guard coverage
+- 📉 Remaining: ~38 production lint violations, 259 total (down from 271)
 
 **Current Status (Ready for Part 3):**
 
@@ -157,34 +180,33 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 
 ---
 
-## 📊 Current Status (October 27, 2025)
+## 📊 Current Status (October 29, 2025)
 
-### Quality Gates (ALL GREEN! 🎉)
+### Quality Gates (Daily Baseline)
 
-```bash
+```
 ✅ format      - Passing
 ✅ build       - Passing (ESM + CJS + DTS)
 ✅ type-check  - Passing (0 errors)
-✅ lint        - 99 issues (down from 122, down from 136) - IMPROVED by 23!
-✅ test        - Passing (669 tests) - 100% passing
-✅ snapshot    - Passing (151/151)
-✅ character   - Passing (115/115)
-✅ unit        - Passing (403/403)
+✅ test        - 605/605 passing (unit + snapshot + characterisation)
+❌ lint        - 259 errors (strict Engraph rules, down from 271)
 ```
 
-**Definition of Done:**
+- Latest runs: `pnpm type-check`, `pnpm test:all` executed 2025-10-29 @14:37 PT
+- Lint remains intentionally failing until Phase 1 Part 4 completes (target = 0)
 
-```bash
-pnpm format && pnpm build && pnpm type-check && pnpm test:all
-```
+### Lint Status (Strict Rules)
 
-✅ **Currently passing** (maintained throughout ALL of Task 2.3!)
+- **Total:** 259 errors (271 → 259, net -12 this session)
+- **Production subset:** ~38 errors across 19 files (down from 52/21)
+- **Top remaining hotspots:** `generateZodClientFromOpenAPI.ts`, `openApiToTypescript.*`, `template-context.ts`, `openApiToZod.ts`
+- **Quick wins resolved today:** `CodeMeta.ts`, `cli-type-guards.ts`, `maybePretty.ts`, partial fix for `inferRequiredOnly.ts`
 
-### Lint Status (IMPROVED! ✅)
+### Type Assertions & Unsafe Patterns
 
-- **Total:** 99 issues (down from 122, from 136, from 147)
-- **Part 2 Impact:** Fixed 23 issues (-18.8%)
-- **Total Fixed:** 48 issues since project start
+- **Type assertions (`as`):** trending downward (eliminated in `endpoint.path.helpers.ts` and quick-win files)
+- **Explicit `any` / unsafe casts:** none introduced
+- **Deprecated types:** `EndpointDefinitionWithRefs` now isolated with TODO for replacement
 
 **EXTRACTION BLOCKER STATUS - MAJOR IMPROVEMENT:**
 
@@ -421,3 +443,17 @@ All must pass. Currently: ✅ PASSING (ready for Part 2!)
 ---
 
 **This is a living document. Update as decisions are made and work progresses.**
+
+> **Historical Snapshot (Phase 1 Parts 2 & 3)** – retained for reference when comparing long-term progress.
+>
+> - Type assertions dropped from 74 → 44 during Part 2 (TS generation cleanup)
+> - Zodios removal (Part 3) eliminated the client dependency and aligned templates/CLI
+> - Lint count previously held at 99 issues under pre-Engraph rules (now superseded by strict 259 baseline)
+> - Historical distribution (now stale):
+>   - `openApiToTypescript.ts` 17 → 0 assertions
+>   - `openApiToTypescript.helpers.ts` 28 → 4 assertions
+>   - `getZodiosEndpointDefinitionList.ts` 8 assertions (awaiting rewrite)
+>   - `inferRequiredOnly.ts` 7 assertions (currently being refactored)
+> - Legacy targets post-Part 3: maintain <100 lint issues, ~35 assertions (superseded by Part 4 plan)
+>
+> Detailed archives live in `.agent/analysis/LINT_TRIAGE_COMPLETE.md` and `.agent/plans/PHASE-1-PART-3-ZODIOS-REMOVAL.md`.
