@@ -78,7 +78,10 @@ function resolveParameterRef(
   }
 
   const resolved = getParameterByRef(doc, param.$ref);
-  assertNotReference(resolved, `parameter ${param.$ref} (use SwaggerParser.bundle() to dereference)`);
+  assertNotReference(
+    resolved,
+    `parameter ${param.$ref} (use SwaggerParser.bundle() to dereference)`,
+  );
 
   return resolved;
 }

@@ -118,6 +118,8 @@ Migrate from dual-format (ESM + CJS) to ESM-only output, remove unnecessary CJS 
 - `files: []` + `references`: Converts to "solution" file for project references
 - Keeps all existing strictness settings
 
+**Note on Import Extensions**: This configuration **does NOT change** the existing requirement for `.js` extensions in relative imports. The codebase already uses `import { foo } from './bar.js'` syntax due to `"moduleResolution": "NodeNext"`, and this remains unchanged. The `.js` extension requirement is part of the Node.js ESM specification and ensures output works in Node.js without bundling.
+
 #### 1.2 Library `lib/tsconfig.json` Optimization
 
 **Changes**:
@@ -434,6 +436,8 @@ export default defineConfig([
 
 - [ ] Run `pnpm type-check` - should pass with new settings
 - [ ] Fix any new `verbatimModuleSyntax` errors (add `import type` where needed)
+  - Note: Codebase already uses `.js` extensions, no changes needed there
+  - Only type-only imports need `import type { ... }` syntax
 - [ ] Run `pnpm lint` - should pass
 - [ ] Fix any new strict type errors if `strictPropertyInitialization` re-enabled
 

@@ -86,7 +86,10 @@ function resolveResponseRef(
   }
 
   const resolved = getResponseByRef(doc, responseObj.$ref);
-  assertNotReference(resolved, `response ${responseObj.$ref} (use SwaggerParser.bundle() to dereference)`);
+  assertNotReference(
+    resolved,
+    `response ${responseObj.$ref} (use SwaggerParser.bundle() to dereference)`,
+  );
 
   return resolved;
 }
@@ -133,7 +136,8 @@ function categorizeResponse(
   responseItem: ResponseObject,
   options?: TemplateContext['options'],
 ): Pick<ProcessResponseResult, 'mainResponse' | 'mainResponseDescription' | 'error'> {
-  const result: Pick<ProcessResponseResult, 'mainResponse' | 'mainResponseDescription' | 'error'> = {};
+  const result: Pick<ProcessResponseResult, 'mainResponse' | 'mainResponseDescription' | 'error'> =
+    {};
   const status = Number(statusCode);
 
   if (isMainResponseStatus(status)) {
