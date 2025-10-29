@@ -213,6 +213,42 @@ function handleAllOfSchema(
 }
 
 /**
+ * Handle array type schema
+ * Pure function: generates z.array() with optional readonly modifier
+ * Resolves item schema references and applies chain validations
+ * 
+ * @returns Zod code string for array type
+ */
+function handleArraySchema(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta {
+  const readonly = options?.allReadonly ? '.readonly()' : '';
+
+  if (!schema.items) {
+    return code.assign(`z.array(z.any())${readonly}`);
+  }
+
+  // Resolve ref if needed for getZodChain (which needs .type property)
+  const itemsSchema: SchemaObject | ReferenceObject =
+    isReferenceObject(schema.items) && ctx?.doc
+      ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.items.$ref))
+      : schema.items;
+
+  const itemZodSchema = getZodSchema({ schema: schema.items, ctx, meta, options }).toString();
+  const zodChain = getZodChain({
+    schema: itemsSchema,
+    meta: { ...meta, isRequired: true },
+    options,
+  });
+
+  return code.assign(`z.array(${itemZodSchema}${zodChain})${readonly}`);
+}
+
+/**
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
@@ -318,29 +354,11 @@ export function getZodSchema({
     );
   }
 
-  const readonly = options?.allReadonly ? '.readonly()' : '';
-
   if (schemaType === 'array') {
-    if (schema.items) {
-      // Resolve ref if needed for getZodChain (which needs .type property)
-      const itemsSchema: SchemaObject | ReferenceObject =
-        isReferenceObject(schema.items) && ctx?.doc
-          ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.items.$ref))
-          : schema.items;
-
-      return code.assign(
-        `z.array(${getZodSchema({ schema: schema.items, ctx, meta, options }).toString()}${getZodChain(
-          {
-            schema: itemsSchema,
-            meta: { ...meta, isRequired: true },
-            options,
-          },
-        )})${readonly}`,
-      );
-    }
-
-    return code.assign(`z.array(z.any())${readonly}`);
+    return handleArraySchema(schema, code, ctx, meta, options);
   }
+
+  const readonly = options?.allReadonly ? '.readonly()' : '';
 
   if (schemaType === 'object' || schema.properties || schema.additionalProperties) {
     // additional properties default to true if additionalPropertiesDefaultValue not provided
