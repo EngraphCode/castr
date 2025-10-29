@@ -5,7 +5,7 @@ import { getSchemaComplexity } from '../../../src/schema-complexity.js';
 
 const getComplexity = (schema: SchemaObject) => getSchemaComplexity({ schema: schema, current: 0 });
 
-test('getSchemaComplexity', async () => {
+test('getSchemaComplexity', () => {
   expect(getComplexity({ type: 'null' })).toMatchInlineSnapshot('1');
   expect(getComplexity({ type: 'boolean' })).toMatchInlineSnapshot('1');
   expect(getComplexity({ type: 'string' })).toMatchInlineSnapshot('1');

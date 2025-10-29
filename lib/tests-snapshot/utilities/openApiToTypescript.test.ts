@@ -390,7 +390,7 @@ describe('getSchemaAsTsString with context', () => {
     );
   });
 
-  test('with indirect recursive ref', async () => {
+  test('with indirect recursive ref', () => {
     const schemas = {
       Root3: {
         type: 'object',
@@ -433,7 +433,7 @@ describe('getSchemaAsTsString with context', () => {
     );
   });
 
-  test('with direct (self) recursive ref', async () => {
+  test('with direct (self) recursive ref', () => {
     const schemas = {
       Root4: {
         type: 'object',

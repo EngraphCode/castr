@@ -21,7 +21,7 @@ const makeOpenApiDoc = (
   components: { schemas },
 });
 
-test('deps-graph-with-additionalProperties', async () => {
+test('deps-graph-with-additionalProperties', () => {
   const schemas = {
     ResponseItem: {
       type: 'object',

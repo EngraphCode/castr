@@ -18,7 +18,7 @@ beforeAll(async () => {
   prettierConfig = await resolveConfig(path.resolve(pkgRoot, '../'));
 });
 
-describe('openapi-examples', async () => {
+describe('openapi-examples', () => {
   const examplesPath = path.resolve(pkgRoot, String.raw`./examples/openapi/v3\.*/**/*.yaml`);
   const list = fg.sync([examplesPath]);
 

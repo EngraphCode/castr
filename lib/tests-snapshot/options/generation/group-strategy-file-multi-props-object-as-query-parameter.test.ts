@@ -4,7 +4,7 @@ import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 import type { TemplateContextGroupStrategy } from '../../../src/template-context.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/157
-describe('file group strategy with multi-props object as query parameter', async () => {
+describe('file group strategy with multi-props object as query parameter', () => {
   const openApiDoc: OpenAPIObject = {
     openapi: '3.0.1',
     info: {

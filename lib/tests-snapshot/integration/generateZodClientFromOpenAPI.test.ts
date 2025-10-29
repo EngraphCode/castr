@@ -10,7 +10,7 @@ beforeAll(async () => {
   openApiDoc = (await SwaggerParser.parse('./examples/swagger/petstore.yaml')) as OpenAPIObject;
 });
 
-test('getZodClientTemplateContext', async () => {
+test('getZodClientTemplateContext', () => {
   const result = getZodClientTemplateContext(openApiDoc);
   expect(result).toMatchInlineSnapshot(`
     {
@@ -3475,7 +3475,7 @@ test('with optional, partial, all required objects', async () => {
   `);
 });
 
-test('getZodClientTemplateContext with allReadonly', async () => {
+test('getZodClientTemplateContext with allReadonly', () => {
   const result = getZodClientTemplateContext(openApiDoc, {
     allReadonly: true,
   });
