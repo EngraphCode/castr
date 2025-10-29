@@ -404,6 +404,37 @@ function handleObjectSchema(
 }
 
 /**
+ * Handle multiple type schema (OpenAPI 3.1 feature)
+ * Pure function: generates union of all possible types when type is an array
+ * Single type arrays are simplified to just that type
+ * 
+ * @returns Zod code string for multiple type union or single type
+ */
+function handleMultipleTypeSchema(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta {
+  if (!Array.isArray(schema.type)) {
+    throw new Error('handleMultipleTypeSchema requires schema.type to be an array');
+  }
+
+  if (schema.type.length === 1) {
+    const firstType = schema.type[0];
+    if (!firstType) throw new Error('Schema type array has invalid first element');
+    return getZodSchema({ schema: { ...schema, type: firstType }, ctx, meta, options });
+  }
+
+  return code.assign(
+    `z.union([${schema.type
+      .map((prop) => getZodSchema({ schema: { ...schema, type: prop }, ctx, meta, options }))
+      .join(', ')}])`,
+  );
+}
+
+/**
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
@@ -451,17 +482,7 @@ export function getZodSchema({
   }
 
   if (Array.isArray(schema.type)) {
-    if (schema.type.length === 1) {
-      const firstType = schema.type[0];
-      if (!firstType) throw new Error('Schema type array has invalid first element');
-      return getZodSchema({ schema: { ...schema, type: firstType }, ctx, meta, options });
-    }
-
-    return code.assign(
-      `z.union([${schema.type
-        .map((prop) => getZodSchema({ schema: { ...schema, type: prop }, ctx, meta, options }))
-        .join(', ')}])`,
-    );
+    return handleMultipleTypeSchema(schema, code, ctx, meta, options);
   }
 
   if (schema.type === 'null') {
