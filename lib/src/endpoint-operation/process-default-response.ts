@@ -40,11 +40,73 @@ const voidSchema = 'z.void()';
 
 /**
  * Check if media type is allowed for response content
- * Allows JSON and text media types
  * @internal
  */
 function isMediaTypeAllowed(mediaType: string): boolean {
   return mediaType.includes('json') || mediaType.includes('text/');
+}
+
+/**
+ * Extract and generate Zod schema string from default response
+ * @internal
+ */
+function generateDefaultResponseSchema(
+  defaultResponse: ResponseObject,
+  ctx: ConversionTypeContext,
+  getZodVarName: GetZodVarNameFn,
+  options?: TemplateContext['options'],
+): string | null {
+  const mediaTypes = Object.keys(defaultResponse.content ?? {});
+  const matchingMediaType = mediaTypes.find(isMediaTypeAllowed);
+  const maybeSchema = matchingMediaType && defaultResponse.content?.[matchingMediaType]?.schema;
+
+  if (!matchingMediaType) {
+    return voidSchema;
+  }
+
+  if (!maybeSchema) {
+    return null;
+  }
+
+  const schema = getZodSchema({ schema: maybeSchema, ctx, meta: { isRequired: true }, options });
+  return (
+    (schema.ref ? getZodVarName(schema) : schema.toString()) +
+    getZodChain({
+      schema: resolveSchemaRef(ctx.doc, maybeSchema),
+      meta: schema.meta,
+    })
+  );
+}
+
+/**
+ * Determine result based on default status behavior mode
+ * @internal
+ */
+function determineDefaultBehavior(
+  schemaString: string,
+  defaultResponse: ResponseObject,
+  hasMainResponse: boolean,
+  defaultStatusBehavior: DefaultStatusBehavior,
+): ProcessDefaultResponseResult {
+  // Auto-correct mode: try to infer intent from context
+  if (defaultStatusBehavior === 'auto-correct') {
+    if (hasMainResponse) {
+      return {
+        error: {
+          schema: schemaString,
+          status: 'default',
+          description: defaultResponse.description,
+        },
+      };
+    }
+    return { mainResponse: schemaString };
+  }
+
+  // Spec-compliant mode: ignore ambiguous defaults
+  if (hasMainResponse) {
+    return { shouldIgnoreFallback: true };
+  }
+  return { shouldIgnoreGeneric: true };
 }
 
 /**
@@ -139,48 +201,16 @@ export function processDefaultResponse(
   defaultStatusBehavior: DefaultStatusBehavior,
   options?: TemplateContext['options'],
 ): ProcessDefaultResponseResult {
-  // Extract schema from supported media types
-  const mediaTypes = Object.keys(defaultResponse.content ?? {});
-  const matchingMediaType = mediaTypes.find(isMediaTypeAllowed);
-  const maybeSchema = matchingMediaType && defaultResponse.content?.[matchingMediaType]?.schema;
+  const schemaString = generateDefaultResponseSchema(defaultResponse, ctx, getZodVarName, options);
 
-  let schemaString = matchingMediaType ? undefined : voidSchema;
-  let schema: CodeMeta | undefined;
-
-  if (maybeSchema) {
-    schema = getZodSchema({ schema: maybeSchema, ctx, meta: { isRequired: true }, options });
-    schemaString =
-      (schema.ref ? getZodVarName(schema) : schema.toString()) +
-      getZodChain({
-        schema: resolveSchemaRef(ctx.doc, maybeSchema),
-        meta: schema.meta,
-      });
-  }
-
-  // No schema to process
   if (!schemaString) {
     return {};
   }
 
-  // Auto-correct mode: try to infer intent from context
-  if (defaultStatusBehavior === 'auto-correct') {
-    if (hasMainResponse) {
-      // Assume default is for errors when success is already defined
-      return {
-        error: {
-          schema: schemaString,
-          status: 'default',
-          description: defaultResponse.description,
-        },
-      };
-    }
-    // Assume default is the success response when no 2xx is defined
-    return { mainResponse: schemaString };
-  }
-
-  // Spec-compliant mode: ignore ambiguous defaults
-  if (hasMainResponse) {
-    return { shouldIgnoreFallback: true };
-  }
-  return { shouldIgnoreGeneric: true };
+  return determineDefaultBehavior(
+    schemaString,
+    defaultResponse,
+    hasMainResponse,
+    defaultStatusBehavior,
+  );
 }

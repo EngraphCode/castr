@@ -515,7 +515,7 @@ describe('endpoint.operation.helpers with doc-based context', () => {
       const responseObj = { $ref: '#/components/responses/SuccessResponse' };
 
       expect(() => processResponse('200', responseObj, ctx, mockGetZodVarName)).toThrow(
-        /Nested \$ref/,
+        /Unexpected \$ref/,
       );
     });
   });
