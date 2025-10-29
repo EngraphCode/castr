@@ -246,7 +246,7 @@ describe('endpoint.path.helpers with doc-based context', () => {
           getZodVarName: mockGetZodVarName,
           defaultStatusBehavior: 'auto-correct',
         }),
-      ).toThrow(/Nested \$ref/);
+      ).toThrow(/Unexpected \$ref/);
     });
 
     test('should process operation with request body', () => {

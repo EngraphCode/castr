@@ -1,7 +1,4 @@
-/**
- * Helpers for processing operations within getEndpointDefinitionList
- * Extracted to reduce cognitive complexity in the main function
- */
+/** Helpers for processing operations within getEndpointDefinitionList */
 
 import type {
   OperationObject,
@@ -17,7 +14,7 @@ import { replaceHyphenatedPath } from './utils.js';
 import type { AllowedMethod } from './openapi-type-guards.js';
 import { isReferenceObject } from './openapi-type-guards.js';
 import type { GetZodVarNameFn } from './endpoint.operation.helpers.js';
-import { getResponseByRef } from './component-access.js';
+import { getResponseByRef, assertNotReference } from './component-access.js';
 import {
   processDefaultResponse,
   processParameter,
@@ -27,9 +24,43 @@ import {
 
 const voidSchema = 'z.void()';
 
-/**
- * Processes all responses for an operation, collecting main response, errors, and response entries
- */
+/** Resolve response reference to ResponseObject @internal */
+function resolveResponse(
+  maybeResponseObj: unknown,
+  statusCode: string,
+  ctx: ConversionTypeContext,
+): ResponseObject {
+  if (!maybeResponseObj) {
+    throw new Error(`Response object for status ${statusCode} is null/undefined`);
+  }
+  if (!isReferenceObject(maybeResponseObj)) return maybeResponseObj;
+
+  const resolved = getResponseByRef(ctx.doc, maybeResponseObj.$ref);
+  assertNotReference(
+    resolved,
+    `response ${statusCode} ${maybeResponseObj.$ref} (use SwaggerParser.bundle() to dereference)`,
+  );
+  return resolved;
+}
+
+/** Update endpoint definition with response results @internal */
+function updateEndpointWithResponse(
+  endpointDefinition: EndpointDefinitionWithRefs,
+  result: ReturnType<typeof processResponse>,
+): void {
+  if (result.responseEntry && endpointDefinition.responses !== undefined) {
+    endpointDefinition.responses.push(result.responseEntry);
+  }
+  if (result.mainResponse && !endpointDefinition.response) {
+    endpointDefinition.response = result.mainResponse;
+    if (!endpointDefinition.description && result.mainResponseDescription) {
+      endpointDefinition.description = result.mainResponseDescription;
+    }
+  }
+  if (result.error) endpointDefinition.errors.push(result.error);
+}
+
+/** Processes all responses for an operation @internal */
 function processResponses(
   operation: OperationObject,
   endpointDefinition: EndpointDefinitionWithRefs,
@@ -39,50 +70,47 @@ function processResponses(
 ): void {
   for (const statusCode in operation.responses) {
     const maybeResponseObj: unknown = operation.responses[statusCode];
+    if (!maybeResponseObj) continue;
 
-    if (!maybeResponseObj) {
-      continue;
-    }
-
-    // Handle both ResponseObject and ReferenceObject (like handleDefaultResponse does)
-    let responseObj: ResponseObject;
-    if (isReferenceObject(maybeResponseObj)) {
-      // Resolve the reference
-      const resolved = getResponseByRef(ctx.doc, maybeResponseObj.$ref);
-      if (isReferenceObject(resolved)) {
-        throw new Error(
-          `Nested $ref in response ${statusCode}: ${maybeResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
-        );
-      }
-      responseObj = resolved;
-    } else {
-      // After checking it's not a ReferenceObject, maybeResponseObj must be ResponseObject
-      responseObj = maybeResponseObj as ResponseObject;
-    }
-
-    // processResponse handles ResponseObject | ReferenceObject union
+    const responseObj = resolveResponse(maybeResponseObj, statusCode, ctx);
     const result = processResponse(statusCode, responseObj, ctx, getZodVarName, options);
-
-    if (result.responseEntry && endpointDefinition.responses !== undefined) {
-      endpointDefinition.responses.push(result.responseEntry);
-    }
-
-    if (result.mainResponse && !endpointDefinition.response) {
-      endpointDefinition.response = result.mainResponse;
-      if (!endpointDefinition.description && result.mainResponseDescription) {
-        endpointDefinition.description = result.mainResponseDescription;
-      }
-    }
-
-    if (result.error) {
-      endpointDefinition.errors.push(result.error);
-    }
+    updateEndpointWithResponse(endpointDefinition, result);
   }
 }
 
-/**
- * Processes default response and returns warnings if needed
- */
+/** Resolve default response reference @internal */
+function resolveDefaultResponse(
+  operation: OperationObject,
+  ctx: ConversionTypeContext,
+): ResponseObject | null {
+  if (!operation.responses?.default) return null;
+  const defaultResponseObj = operation.responses.default;
+  if (!isReferenceObject(defaultResponseObj)) return defaultResponseObj;
+
+  const resolved = getResponseByRef(ctx.doc, defaultResponseObj.$ref);
+  assertNotReference(
+    resolved,
+    `default response ${defaultResponseObj.$ref} (use SwaggerParser.bundle() to dereference)`,
+  );
+  return resolved;
+}
+
+/** Update endpoint with default response results @internal */
+function updateEndpointWithDefaultResponse(
+  endpointDefinition: EndpointDefinitionWithRefs,
+  defaultResult: ReturnType<typeof processDefaultResponse>,
+  operationName: string,
+): { ignoredFallback?: string; ignoredGeneric?: string } {
+  if (defaultResult.mainResponse) endpointDefinition.response = defaultResult.mainResponse;
+  if (defaultResult.error) endpointDefinition.errors.push(defaultResult.error);
+
+  return {
+    ignoredFallback: defaultResult.shouldIgnoreFallback ? operationName : undefined,
+    ignoredGeneric: defaultResult.shouldIgnoreGeneric ? operationName : undefined,
+  };
+}
+
+/** Processes default response and returns warnings if needed @internal */
 function handleDefaultResponse(
   operation: OperationObject,
   endpointDefinition: EndpointDefinitionWithRefs,
@@ -92,25 +120,8 @@ function handleDefaultResponse(
   defaultStatusBehavior: DefaultStatusBehavior | undefined,
   options?: TemplateContext['options'],
 ): { ignoredFallback?: string | undefined; ignoredGeneric?: string | undefined } {
-  if (!operation.responses?.default) {
-    return {};
-  }
-
-  const defaultResponseObj = operation.responses.default;
-
-  // Resolve ReferenceObject if needed
-  let defaultResponse: ResponseObject;
-  if (isReferenceObject(defaultResponseObj)) {
-    const resolved = getResponseByRef(ctx.doc, defaultResponseObj.$ref);
-    if (isReferenceObject(resolved)) {
-      throw new Error(
-        `Nested $ref in default response: ${defaultResponseObj.$ref}. Use SwaggerParser.bundle() to dereference.`,
-      );
-    }
-    defaultResponse = resolved;
-  } else {
-    defaultResponse = defaultResponseObj;
-  }
+  const defaultResponse = resolveDefaultResponse(operation, ctx);
+  if (!defaultResponse) return {};
 
   const defaultResult = processDefaultResponse(
     defaultResponse,
@@ -120,19 +131,7 @@ function handleDefaultResponse(
     defaultStatusBehavior ?? 'spec-compliant',
     options,
   );
-
-  if (defaultResult.mainResponse) {
-    endpointDefinition.response = defaultResult.mainResponse;
-  }
-
-  if (defaultResult.error) {
-    endpointDefinition.errors.push(defaultResult.error);
-  }
-
-  return {
-    ignoredFallback: defaultResult.shouldIgnoreFallback ? operationName : undefined,
-    ignoredGeneric: defaultResult.shouldIgnoreGeneric ? operationName : undefined,
-  };
+  return updateEndpointWithDefaultResponse(endpointDefinition, defaultResult, operationName);
 }
 
 type ProcessOperationParams = {
@@ -153,6 +152,55 @@ type ProcessOperationResult = {
   ignoredGeneric?: string | undefined;
 };
 
+/** Create initial endpoint definition @internal */
+function createInitialEndpoint(
+  path: string,
+  method: AllowedMethod,
+  operation: OperationObject,
+  operationName: string,
+  options?: TemplateContext['options'],
+): EndpointDefinitionWithRefs {
+  return {
+    method,
+    path: replaceHyphenatedPath(path),
+    ...(options?.withAlias && { alias: operationName }),
+    ...(operation.description && { description: operation.description }),
+    requestFormat: 'json',
+    parameters: [],
+    errors: [],
+    response: '',
+  };
+}
+
+/** Process parameters and add to endpoint @internal */
+function addParametersToEndpoint(
+  endpointDefinition: EndpointDefinitionWithRefs,
+  parameters: ReadonlyArray<ParameterObject | ReferenceObject>,
+  ctx: ConversionTypeContext,
+  getZodVarName: GetZodVarNameFn,
+  options?: TemplateContext['options'],
+): void {
+  for (const param of parameters) {
+    const paramDef = processParameter(param, ctx, getZodVarName, options);
+    if (paramDef) {
+      endpointDefinition.parameters.push(paramDef);
+    }
+  }
+}
+
+/** Finalize endpoint definition @internal */
+function finalizeEndpoint(
+  endpointDefinition: EndpointDefinitionWithRefs,
+  operation: OperationObject,
+  options?: TemplateContext['options'],
+): void {
+  if (!endpointDefinition.response) endpointDefinition.response = voidSchema;
+  if (options?.endpointDefinitionRefiner) {
+    const refined = options.endpointDefinitionRefiner(endpointDefinition, operation);
+    if (refined) Object.assign(endpointDefinition, refined);
+  }
+}
+
 /**
  * Processes a single operation to create an endpoint definition
  * Handles request body, parameters, responses, and default responses
@@ -168,16 +216,7 @@ export function processOperation({
   defaultStatusBehavior,
   options,
 }: ProcessOperationParams): ProcessOperationResult {
-  let endpointDefinition: EndpointDefinitionWithRefs = {
-    method,
-    path: replaceHyphenatedPath(path),
-    ...(options?.withAlias && { alias: operationName }),
-    ...(operation.description && { description: operation.description }),
-    requestFormat: 'json',
-    parameters: [],
-    errors: [],
-    response: '',
-  };
+  const endpointDefinition = createInitialEndpoint(path, method, operation, operationName, options);
 
   const bodyResult = processRequestBody(operation, ctx, operationName, getZodVarName, options);
   if (bodyResult) {
@@ -185,17 +224,9 @@ export function processOperation({
     endpointDefinition.parameters.push(bodyResult.parameter);
   }
 
-  for (const param of parameters) {
-    // processParameter handles ParameterObject | ReferenceObject union
-    const paramDef = processParameter(param, ctx, getZodVarName, options);
-    if (paramDef) {
-      endpointDefinition.parameters.push(paramDef);
-    }
-  }
+  addParametersToEndpoint(endpointDefinition, parameters, ctx, getZodVarName, options);
 
-  if (options?.withAllResponses) {
-    endpointDefinition.responses = [];
-  }
+  if (options?.withAllResponses) endpointDefinition.responses = [];
 
   processResponses(operation, endpointDefinition, ctx, getZodVarName, options);
 
@@ -209,16 +240,7 @@ export function processOperation({
     options,
   );
 
-  if (!endpointDefinition.response) {
-    endpointDefinition.response = voidSchema;
-  }
-
-  if (options?.endpointDefinitionRefiner) {
-    const refined = options.endpointDefinitionRefiner(endpointDefinition, operation);
-    if (refined) {
-      endpointDefinition = refined;
-    }
-  }
+  finalizeEndpoint(endpointDefinition, operation, options);
 
   return { endpoint: endpointDefinition, ignoredFallback, ignoredGeneric };
 }
