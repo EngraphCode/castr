@@ -12,18 +12,15 @@ export const getHandlebars = (): typeof Handlebars => {
     // @ts-expect-error - Handlebars HelperOptions.inverse expects context as 'any', but we're in strict mode
     return options.inverse(this);
   });
-  instance.registerHelper(
-    'ifNotEmptyObj',
-    function (obj: Record<string, unknown>, options: HelperOptions) {
-      if (typeof obj === 'object' && Object.keys(obj).length > 0) {
-        // @ts-expect-error - Handlebars HelperOptions.fn expects context as 'any', but we're in strict mode
-        return options.fn(this);
-      }
+  instance.registerHelper('ifNotEmptyObj', function (obj: object, options: HelperOptions) {
+    if (typeof obj === 'object' && Object.keys(obj).length > 0) {
+      // @ts-expect-error - Handlebars HelperOptions.fn expects context as 'any', but we're in strict mode
+      return options.fn(this);
+    }
 
-      // @ts-expect-error - Handlebars HelperOptions.inverse expects context as 'any', but we're in strict mode
-      return options.inverse(this);
-    },
-  );
+    // @ts-expect-error - Handlebars HelperOptions.inverse expects context as 'any', but we're in strict mode
+    return options.inverse(this);
+  });
   instance.registerHelper('toCamelCase', function (input: string) {
     // Check if input string is already in camelCase
     if (/^[a-z][a-zA-Z0-9]*$/.test(input)) {

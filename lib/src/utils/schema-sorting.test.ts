@@ -38,7 +38,7 @@ describe('schema-sorting', () => {
       const result = sortSchemasByDependencyOrder(schemas, []);
 
       // All schemas should be preserved, order is undefined but all should be present
-      expect(Object.keys(result).toSorted((a, b) => a.localeCompare(b))).toEqual(['A', 'B', 'C']);
+      expect([...Object.keys(result)].sort((a, b) => a.localeCompare(b))).toEqual(['A', 'B', 'C']);
     });
 
     it('should preserve all schema values after sorting', () => {
@@ -88,7 +88,7 @@ describe('schema-sorting', () => {
       const result = sortSchemaNamesByDependencyOrder(names, []);
 
       // All names should be preserved, order is undefined but all should be present
-      expect(result.toSorted((a, b) => a.localeCompare(b))).toEqual(['A', 'B', 'C']);
+      expect([...result].sort((a, b) => a.localeCompare(b))).toEqual(['A', 'B', 'C']);
     });
 
     it('should preserve all names after sorting', () => {
