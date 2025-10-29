@@ -16,7 +16,13 @@ const getSchemaNameFromRef = (ref: string): string => {
   return name;
 };
 
-export const getOpenApiDependencyGraph = (schemaRef: string[], doc: OpenAPIObject) => {
+export const getOpenApiDependencyGraph = (
+  schemaRef: string[],
+  doc: OpenAPIObject,
+): {
+  refsDependencyGraph: Record<string, Set<string>>;
+  deepDependencyGraph: Record<string, Set<string>>;
+} => {
   const visitedsRefs: Record<string, boolean> = {};
   const refsDependencyGraph: Record<string, Set<string>> = {};
 

@@ -46,6 +46,28 @@ export function shouldInlineSchema(complexity: number, complexityThreshold: numb
 }
 
 /**
+ * Checks if a name can be reused based on export strategy
+ */
+function canReuseExistingName(
+  formattedName: string,
+  baseName: string,
+  existingNames: Record<string, string>,
+  options?: {
+    exportAllNamedSchemas?: boolean;
+    schemasByName?: Record<string, string[]>;
+    schemaKey?: string;
+  },
+): boolean {
+  // Check for reuse with exportAllNamedSchemas
+  if (options?.exportAllNamedSchemas && options.schemasByName && options.schemaKey) {
+    return options.schemasByName[options.schemaKey]?.includes(formattedName) ?? false;
+  }
+
+  // Check for standard reuse (same base name)
+  return existingNames[formattedName] === baseName;
+}
+
+/**
  * Generates a unique variable name with collision detection
  * Iteratively adds suffix numbers until a unique name is found
  */
@@ -63,11 +85,7 @@ export function generateUniqueVarName(
 
   while (existingNames[formattedName]) {
     // Check if we can reuse this name
-    if (options?.exportAllNamedSchemas && options.schemasByName && options.schemaKey) {
-      if (options.schemasByName[options.schemaKey]?.includes(formattedName)) {
-        return formattedName;
-      }
-    } else if (existingNames[formattedName] === baseName) {
+    if (canReuseExistingName(formattedName, baseName, existingNames, options)) {
       return formattedName;
     }
 
@@ -131,6 +149,25 @@ export function findExistingSchemaVar(
 }
 
 /**
+ * Resolves schema from context, trying both direct lookup and ref resolution
+ */
+function resolveSchemaFromContext(
+  result: string,
+  inputRef: string | undefined,
+  ctx: EndpointContext,
+): string | undefined {
+  let schema = ctx.zodSchemaByName[result];
+
+  // Try to resolve ref if schema not found directly
+  if (!schema && inputRef) {
+    const schemaName = getSchemaNameFromRef(inputRef);
+    schema = ctx.zodSchemaByName[schemaName];
+  }
+
+  return schema;
+}
+
+/**
  * Handles reference schema variable naming
  * Resolves refs and checks complexity
  */
@@ -140,34 +177,66 @@ export function handleRefSchema(
   ctx: EndpointContext,
   complexityThreshold: number,
 ): string {
-  let schema = ctx.zodSchemaByName[result];
+  const schema = resolveSchemaFromContext(result, input.ref, ctx);
 
-  // Try to resolve ref if schema not found directly
-  if (!schema && input.ref) {
-    const schemaName = getSchemaNameFromRef(input.ref);
-    schema = ctx.zodSchemaByName[schemaName];
+  if (!input.ref || !schema) {
+    throw new Error('Invalid ref: ' + input.ref);
   }
 
-  if (input.ref && schema) {
-    const schemaName = getSchemaNameFromRef(input.ref);
-    const complexity = getSchemaComplexity({
-      current: 0,
-      schema: getSchemaFromComponents(ctx.doc, schemaName),
-    });
+  const schemaName = getSchemaNameFromRef(input.ref);
+  const complexity = getSchemaComplexity({
+    current: 0,
+    schema: getSchemaFromComponents(ctx.doc, schemaName),
+  });
 
-    // Simple refs can be inlined
-    if (complexity < complexityThreshold) {
-      const zodSchema = ctx.zodSchemaByName[result];
-      if (!zodSchema) {
-        throw new Error(`Zod schema not found for ref: ${result}`);
-      }
-      return zodSchema;
+  // Simple refs can be inlined
+  if (complexity < complexityThreshold) {
+    const zodSchema = ctx.zodSchemaByName[result];
+    if (!zodSchema) {
+      throw new Error(`Zod schema not found for ref: ${result}`);
     }
+    return zodSchema;
+  }
 
+  return result;
+}
+
+/**
+ * Handles simple schemas with fallback names
+ * Creates or reuses variable names for non-ref schemas
+ */
+function handleSimpleSchemaWithFallback(
+  input: CodeMeta,
+  result: string,
+  ctx: EndpointContext,
+  complexityThreshold: number,
+  fallbackName: string,
+  options: { exportAllNamedSchemas?: boolean } | undefined,
+): string {
+  // Inline if simple enough
+  if (input.complexity < complexityThreshold) {
     return result;
   }
 
-  throw new Error('Invalid ref: ' + input.ref);
+  const safeName = normalizeString(fallbackName);
+
+  // Check if already exists
+  const existing = findExistingSchemaVar(result, ctx, Boolean(options?.exportAllNamedSchemas));
+  if (existing) {
+    return existing;
+  }
+
+  // Generate unique name and register
+  const varName = ctx.schemasByName
+    ? generateUniqueVarName(safeName, ctx.zodSchemaByName, {
+        exportAllNamedSchemas: options?.exportAllNamedSchemas ?? false,
+        schemasByName: ctx.schemasByName,
+        schemaKey: result,
+      })
+    : generateUniqueVarName(safeName, ctx.zodSchemaByName);
+
+  registerSchemaName(ctx, varName, result, options?.exportAllNamedSchemas ?? false);
+  return varName;
 }
 
 /**
@@ -190,30 +259,14 @@ export function getSchemaVarName(
 
   // Handle simple schemas with fallback names
   if ((result.startsWith('z.') || input.ref === undefined) && fallbackName) {
-    // Inline if simple enough
-    if (input.complexity < complexityThreshold) {
-      return result;
-    }
-
-    const safeName = normalizeString(fallbackName);
-
-    // Check if already exists
-    const existing = findExistingSchemaVar(result, ctx, Boolean(options?.exportAllNamedSchemas));
-    if (existing) {
-      return existing;
-    }
-
-    // Generate unique name and register
-    const varName = ctx.schemasByName
-      ? generateUniqueVarName(safeName, ctx.zodSchemaByName, {
-          exportAllNamedSchemas: options?.exportAllNamedSchemas ?? false,
-          schemasByName: ctx.schemasByName,
-          schemaKey: result,
-        })
-      : generateUniqueVarName(safeName, ctx.zodSchemaByName);
-
-    registerSchemaName(ctx, varName, result, options?.exportAllNamedSchemas ?? false);
-    return varName;
+    return handleSimpleSchemaWithFallback(
+      input,
+      result,
+      ctx,
+      complexityThreshold,
+      fallbackName,
+      options,
+    );
   }
 
   // Handle reference schemas

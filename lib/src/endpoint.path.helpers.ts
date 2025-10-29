@@ -7,7 +7,7 @@ import type {
 import type { TemplateContext } from './template-context.js';
 import type { DefaultStatusBehavior } from './template-context.types.js';
 import type { ConversionTypeContext } from './CodeMeta.js';
-import type { EndpointDefinitionWithRefs } from './getEndpointDefinitionList.js';
+import type { EndpointDefinition } from './endpoint-definition.types.js';
 import { replaceHyphenatedPath } from './utils.js';
 import type { AllowedMethod } from './openapi-type-guards.js';
 import { isReferenceObject } from './openapi-type-guards.js';
@@ -52,7 +52,7 @@ function resolveResponse(
 
 /** Update endpoint definition with response results @internal */
 function updateEndpointWithResponse(
-  endpointDefinition: EndpointDefinitionWithRefs,
+  endpointDefinition: EndpointDefinition,
   result: ReturnType<typeof processResponse>,
 ): void {
   if (result.responseEntry && endpointDefinition.responses !== undefined) {
@@ -70,7 +70,7 @@ function updateEndpointWithResponse(
 /** Processes all responses for an operation @internal */
 function processResponses(
   operation: OperationObject,
-  endpointDefinition: EndpointDefinitionWithRefs,
+  endpointDefinition: EndpointDefinition,
   ctx: ConversionTypeContext,
   getZodVarName: GetZodVarNameFn,
   options?: TemplateContext['options'],
@@ -102,7 +102,7 @@ function resolveDefaultResponse(
 
 /** Update endpoint with default response results @internal */
 function updateEndpointWithDefaultResponse(
-  endpointDefinition: EndpointDefinitionWithRefs,
+  endpointDefinition: EndpointDefinition,
   defaultResult: ReturnType<typeof processDefaultResponse>,
   operationName: string,
 ): { ignoredFallback?: string; ignoredGeneric?: string } {
@@ -117,7 +117,7 @@ function updateEndpointWithDefaultResponse(
 /** Processes default response and returns warnings if needed @internal */
 function handleDefaultResponse(
   operation: OperationObject,
-  endpointDefinition: EndpointDefinitionWithRefs,
+  endpointDefinition: EndpointDefinition,
   operationName: string,
   ctx: ConversionTypeContext,
   getZodVarName: GetZodVarNameFn,
@@ -150,7 +150,7 @@ type ProcessOperationParams = {
 };
 
 type ProcessOperationResult = {
-  endpoint: EndpointDefinitionWithRefs;
+  endpoint: EndpointDefinition;
   ignoredFallback?: string;
   ignoredGeneric?: string;
 };
@@ -162,7 +162,7 @@ function createInitialEndpoint(
   operation: OperationObject,
   operationName: string,
   options?: TemplateContext['options'],
-): EndpointDefinitionWithRefs {
+): EndpointDefinition {
   return {
     method,
     path: replaceHyphenatedPath(path),
@@ -177,7 +177,7 @@ function createInitialEndpoint(
 
 /** Process parameters and add to endpoint @internal */
 function addParametersToEndpoint(
-  endpointDefinition: EndpointDefinitionWithRefs,
+  endpointDefinition: EndpointDefinition,
   parameters: ReadonlyArray<ParameterObject | ReferenceObject>,
   ctx: ConversionTypeContext,
   getZodVarName: GetZodVarNameFn,
@@ -191,7 +191,7 @@ function addParametersToEndpoint(
 
 /** Finalize endpoint definition @internal */
 function finalizeEndpoint(
-  endpointDefinition: EndpointDefinitionWithRefs,
+  endpointDefinition: EndpointDefinition,
   operation: OperationObject,
   options?: TemplateContext['options'],
 ): void {

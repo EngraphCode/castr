@@ -37,7 +37,7 @@ test('validations', () => {
           arrayWithMin: { type: 'array', items: { type: 'string' }, minItems: 3 },
           arrayWithMax: { type: 'array', items: { type: 'string' }, maxItems: 3 },
           arrayWithFormat: { type: 'array', items: { type: 'string', format: 'uuid' } },
-          // TODO ?
+          // Note: uniqueItems validation not yet implemented
           // arrayWithUnique: { type: "array", items: { type: "string" }, uniqueItems: true },
           //
           object: { type: 'object', properties: { str: { type: 'string' } } },
@@ -46,7 +46,7 @@ test('validations', () => {
             properties: { str: { type: 'string' } },
             required: ['str'],
           },
-          // TODO ?
+          // Note: minProperties/maxProperties validation not yet implemented
           // objectWithMin: { type: "object", properties: { str: { type: "string" } }, minProperties: 3 },
           // objectWithMax: { type: "object", properties: { str: { type: "string" } }, maxProperties: 3 },
           //

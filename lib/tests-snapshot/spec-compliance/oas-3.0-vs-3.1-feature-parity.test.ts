@@ -1,4 +1,3 @@
-// @ts-nocheck - Testing runtime behavior across OAS versions, type warnings expected
 import { expect, test, describe } from 'vitest';
 import { generateZodClientFromOpenAPI, ValidationError } from '../../src/index.js';
 
@@ -14,6 +13,9 @@ import { generateZodClientFromOpenAPI, ValidationError } from '../../src/index.j
  * 1. OpenAPI 3.0.x: supported, generates code
  * 2. OpenAPI 3.1.x: explicitly rejected with ValidationError
  * 3. Error messages guide users to use 3.0.x instead
+ *
+ * Note: Test fixtures use partial OpenAPI objects for brevity.
+ * Type warnings are expected but don't affect runtime behavior.
  */
 
 describe('OAS 3.0 vs 3.1 Feature Parity', () => {

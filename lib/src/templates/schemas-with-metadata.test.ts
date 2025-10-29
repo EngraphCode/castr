@@ -1,7 +1,8 @@
-// @ts-nocheck - OpenAPI test fixtures have type mismatches with strict oas30 types
 import { describe, it, expect } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
 
+// Note: Test fixtures use partial OpenAPI objects for brevity
+// They contain enough structure for the generator to work correctly
 describe('schemas-with-metadata template', () => {
   describe('Core Template Functionality', () => {
     it('should generate schemas with Zod', async () => {

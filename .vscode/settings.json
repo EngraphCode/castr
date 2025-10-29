@@ -7,6 +7,7 @@
     "sonarjs",
     "Stahmer",
     "tanu",
+    "worktree",
     "zodios"
   ],
   "typescript.tsdk": "node_modules/typescript/lib"

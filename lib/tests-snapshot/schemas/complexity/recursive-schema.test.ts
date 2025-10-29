@@ -11,7 +11,7 @@ import { topologicalSort } from '../../../src/topologicalSort.js';
 import type { ConversionTypeContext } from '../../../src/CodeMeta.js';
 import { asComponentSchema } from '../../../src/utils.js';
 
-// TODO recursive inline response/param ?
+// Note: Recursive inline response/param schemas are a potential future enhancement
 
 const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) => ({
   openapi: '3.0.3',

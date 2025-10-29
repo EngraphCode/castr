@@ -4,8 +4,8 @@ export { getHandlebars } from './getHandlebars.js';
 export { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
 export { ValidationError, validateOpenApiSpec } from './validateOpenApiSpec.js';
 export {
-  type EndpointDefinitionWithRefs,
   getEndpointDefinitionList,
+  type EndpointDefinitionListResult,
 } from './getEndpointDefinitionList.js';
 export type {
   EndpointDefinition,

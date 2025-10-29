@@ -38,7 +38,6 @@ test('operationId-starting-with-number', async () => {
     ]
   `);
 
-  // TODO fix
   const result = await generateZodClientFromOpenAPI({
     disableWriteToFile: true,
     openApiDoc,

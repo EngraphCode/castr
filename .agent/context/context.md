@@ -5,7 +5,7 @@
 
 ## 🚨 CRITICAL STATUS FOR FRESH CHAT
 
-**Current Phase:** **PHASE 1 PART 4 - IN PROGRESS (35% complete) 🚀**
+**Current Phase:** **PHASE 1 PART 4 - IN PROGRESS (40% complete) 🚀**
 
 **Previous Completions:**
 
@@ -15,7 +15,7 @@
 
 **Current Task:** Zero Lint Errors - Systematic Refactoring
 
-**🎯 PART 4 PROGRESS (35% COMPLETE):**
+**🎯 PART 4 PROGRESS (40% COMPLETE - Latest: 2025-10-29 PM):**
 
 - **✅ COMPLETED:** endpoint-operation/ directory - ZERO errors!
   - Decomposed 385-line monolithic file into 5 focused modules
@@ -26,14 +26,23 @@
   - Reduced from 303 → 245 lines (under 250-line limit)
   - Removed type assertions via dedicated type guards
   - Only remaining lint hits are 9 allowed deprecation notices (tracked debt)
+- **✅ COMPLETED:** Task 4.5 - Deprecated Types
+  - Replaced all `EndpointDefinitionWithRefs` with `EndpointDefinition`
+  - Added proper return type to `getEndpointDefinitionList`
+  - Created and exported `EndpointDefinitionListResult` type
+  - **Impact:** -14 lint errors
+- **✅ COMPLETED:** Task 4.4 - Explicit Return Types
+  - Added return types to 10 functions across 4 files
+  - Files: `getHandlebars.ts`, `topologicalSort.ts`, `utils.ts` (7 functions), `getOpenApiDependencyGraph.ts`
+  - **Impact:** -10 lint errors
 - **✅ QUICK WINS:**
   - `CodeMeta.ts` (added explicit return types)
   - `cli-type-guards.ts` (converted to `import type` guard, zero errors)
   - `maybePretty.ts` (removed `void` operator / unused var)
   - `inferRequiredOnly.ts` (added explicit return type; pending size/complexity refactor)
-- **✅ QUALITY:** All 605 tests passing, type-check ✅, build ✅
-- **📊 REMAINING:** ~38 production lint errors across 19 files (down from 52/21)
-- **📈 TOTAL LINT (STRICT RULESET):** 259 errors (was 271) – production share trending downward
+- **✅ QUALITY:** All 729 tests passing (20+10+74 files), type-check ✅, build ✅
+- **📊 SESSION PROGRESS:** 263 → 249 → 239 errors (-24 total, -9.1%)
+- **📈 TOTAL LINT (STRICT RULESET):** 239 errors – steady progress toward zero
 
 **Strategy Working:**
 
@@ -188,19 +197,19 @@ The extracted components will generate strict Zod schemas and MCP tool validatio
 ✅ format      - Passing
 ✅ build       - Passing (ESM + CJS + DTS)
 ✅ type-check  - Passing (0 errors)
-✅ test        - 605/605 passing (unit + snapshot + characterisation)
-❌ lint        - 259 errors (strict Engraph rules, down from 271)
+✅ test        - 729/729 passing (453 unit + 124 char + 152 snapshot across 104 files)
+❌ lint        - 239 errors (strict Engraph rules, down from 263)
 ```
 
-- Latest runs: `pnpm type-check`, `pnpm test:all` executed 2025-10-29 @14:37 PT
+- Latest runs: `pnpm type-check`, `pnpm test:all` executed 2025-10-29 PM
 - Lint remains intentionally failing until Phase 1 Part 4 completes (target = 0)
 
 ### Lint Status (Strict Rules)
 
-- **Total:** 259 errors (271 → 259, net -12 this session)
-- **Production subset:** ~38 errors across 19 files (down from 52/21)
+- **Total:** 239 errors (263 → 249 → 239, net -24 this session, -9.1%)
+- **Session wins:** Task 4.5 (deprecated types, -14) + Task 4.4 (return types, -10)
 - **Top remaining hotspots:** `generateZodClientFromOpenAPI.ts`, `openApiToTypescript.*`, `template-context.ts`, `openApiToZod.ts`
-- **Quick wins resolved today:** `CodeMeta.ts`, `cli-type-guards.ts`, `maybePretty.ts`, partial fix for `inferRequiredOnly.ts`
+- **Files touched:** `endpoint.path.helpers.ts`, `template-context.ts`, `index.ts`, `getEndpointDefinitionList.ts`, `getHandlebars.ts`, `topologicalSort.ts`, `utils.ts`, `getOpenApiDependencyGraph.ts`
 
 ### Type Assertions & Unsafe Patterns
 

@@ -15,7 +15,7 @@ import {
   sortSchemaNamesByDependencyOrder,
 } from './utils/schema-sorting.js';
 import { logger } from './utils/logger.js';
-import type { EndpointDefinitionWithRefs } from './getEndpointDefinitionList.js';
+import type { EndpointDefinition } from './endpoint-definition.types.js';
 import { getEndpointDefinitionList } from './getEndpointDefinitionList.js';
 import type { TsConversionContext } from './openApiToTypescript.js';
 import { getTypescriptFromOpenApi } from './openApiToTypescript.js';
@@ -360,7 +360,7 @@ const getPureSchemaNames = (fullSchemaNames: string[]) =>
 
 export type TemplateContext = {
   schemas: Record<string, string>;
-  endpoints: EndpointDefinitionWithRefs[];
+  endpoints: EndpointDefinition[];
   endpointsGroups: Record<string, MinimalTemplateContext>;
   types: Record<string, string>;
   circularTypeByName: Record<string, true>;
@@ -502,9 +502,9 @@ export type TemplateContextOptions = {
    * that aren't defined yet in the default definition.
    */
   endpointDefinitionRefiner?: (
-    defaultDefinition: EndpointDefinitionWithRefs,
+    defaultDefinition: EndpointDefinition,
     operation: OperationObject,
-  ) => EndpointDefinitionWithRefs | undefined;
+  ) => EndpointDefinition | undefined;
 
   /**
    * When true, all generated objects and arrays will be readonly.

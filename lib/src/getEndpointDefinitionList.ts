@@ -6,6 +6,20 @@ import { match, P } from 'ts-pattern';
 import type { CodeMeta, ConversionTypeContext } from './CodeMeta.js';
 import type { EndpointDefinition } from './endpoint-definition.types.js';
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
+
+/**
+ * Result returned by getEndpointDefinitionList
+ * Contains endpoints plus metadata needed for code generation
+ */
+export type EndpointDefinitionListResult = Required<ConversionTypeContext> & {
+  refsDependencyGraph: Record<string, Set<string>>;
+  deepDependencyGraph: Record<string, Set<string>>;
+  endpoints: EndpointDefinition[];
+  issues: {
+    ignoredFallbackResponse: string[];
+    ignoredGenericError: string[];
+  };
+};
 import { logger } from './utils/logger.js';
 import type { TemplateContext } from './template-context.js';
 import { getSchemaVarName } from './endpoint.helpers.js';
@@ -71,7 +85,7 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
 export const getEndpointDefinitionList = (
   doc: OpenAPIObject,
   options?: TemplateContext['options'],
-) => {
+): EndpointDefinitionListResult => {
   const graphs = getOpenApiDependencyGraph(
     Object.keys(doc.components?.schemas ?? {}).map((name) => asComponentSchema(name)),
     doc,
@@ -203,9 +217,3 @@ const getParametersMap = (parameters: NonNullable<PathItemObject['parameters']>)
     ),
   );
 };
-
-/**
- * @deprecated Use `EndpointDefinition` from './endpoint-definition.types.js' instead
- * This type alias is kept for backward compatibility during migration
- */
-export type EndpointDefinitionWithRefs = EndpointDefinition;

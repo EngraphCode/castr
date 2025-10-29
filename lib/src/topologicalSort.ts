@@ -1,4 +1,4 @@
-export function topologicalSort(graph: Record<string, Set<string>>) {
+export function topologicalSort(graph: Record<string, Set<string>>): string[] {
   const sorted: string[] = [], // sorted list of IDs ( returned value )
     visited: Record<string, boolean> = {}; // hash: id of already visited node => true
 

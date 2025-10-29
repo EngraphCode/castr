@@ -1,17 +1,19 @@
 # Phase 1 Part 4: Zero Lint Errors (Perfect)
 
-**Status:** IN PROGRESS (35% complete)
+**Status:** IN PROGRESS (40% complete)
 **Estimated Duration:** 36-45 hours (Pragmatic Hybrid: Production Perfect + Critical Test Issues)  
 **Prerequisites:** Parts 1-3 complete, all tests passing ✅
 
-**Current Progress:**
+**Current Progress (Latest: 2025-10-29 PM):**
 
 - ✅ endpoint-operation/ directory: ZERO errors (was 12+)
 - ✅ `endpoint.path.helpers.ts`: 245 lines (was 303), no assertions, only tracked deprecation notices remain
 - ✅ Quick wins cleared: `CodeMeta.ts`, `cli-type-guards.ts`, `maybePretty.ts`, return-type fix in `inferRequiredOnly.ts`
-- ✅ All quality gates green for completed work (format, build, type-check, test)
-- ✅ 605/605 tests passing (unit + snapshot + characterisation)
-- 🔄 Next: Reduce remaining production lint errors (~38 across 19 files)
+- ✅ **Task 4.5 COMPLETE:** Deprecated types replaced (EndpointDefinitionWithRefs → EndpointDefinition)
+- ✅ **Task 4.4 COMPLETE:** Explicit return types added (10 functions across 4 files)
+- ✅ All quality gates green: format ✅, build ✅, type-check ✅, test (729/729) ✅
+- 📊 **Lint Progress:** 263 → 249 → 239 errors (-24 total, -9.1%)
+- 🔄 Next: Continue with remaining quick wins or start major decomposition work
 
 **Completed Files (Zero Errors):**
 
@@ -55,11 +57,12 @@
 
 ## 🎯 WHY: The Extraction Blocker
 
-**Current State:** 259 lint errors (strict Engraph-standard ruleset; was 271 at session start)
+**Current State:** 239 lint errors (strict Engraph-standard ruleset; was 263 at start of current session)
 
 **Previous:** 105 errors (lax rules)  
-**Current:** 259 errors (strict Engraph-ready rules)  
-**Delta:** +154 errors from stricter complexity/quality standards (–12 resolved this session)
+**Current:** 239 errors (strict Engraph-ready rules)  
+**Session Progress:** 263 → 239 (-24 errors, -9.1%)
+**Delta from original:** +134 errors from stricter complexity/quality standards
 
 **Problem:**
 
@@ -1264,12 +1267,12 @@ Task 4.3: File Size Issues (Production + Critical Tests)
 Total: 3-5 hours
 
 Task 4.4: Add Explicit Return Types (NEW)
-└─ [ ] 18 functions need return types (2h)
-Total: 2 hours
+└─ [✅] 10 functions fixed (getHandlebars, topologicalSort, utils.ts x7, getOpenApiDependencyGraph)
+Total: 1 hour (COMPLETE - reduced lint by 10 errors)
 
 Task 4.5: Deprecated Types
-└─ [ ] Find-replace EndpointDefinitionWithRefs (15min)
-Total: 15 minutes
+└─ [✅] EndpointDefinitionWithRefs → EndpointDefinition + added EndpointDefinitionListResult type
+Total: 30 minutes (COMPLETE - reduced lint by 14 errors)
 
 Task 4.6: Test Quality (Critical Only)
 ├─ [ ] 4.6.1: Missing awaits (30min)

@@ -13,9 +13,9 @@ export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const asComponentSchema = (name: string) => `#/components/schemas/${name}`;
+export const asComponentSchema = (name: string): string => `#/components/schemas/${name}`;
 
-export function normalizeString(text: string) {
+export function normalizeString(text: string): string {
   const prefixed = prefixStringStartingWithNumberIfNeeded(text);
   return prefixed
     .normalize('NFKD') // The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
@@ -26,7 +26,7 @@ export function normalizeString(text: string) {
     .replaceAll(/--+/g, '-'); // Replace multiple - with single -
 }
 
-export const wrapWithQuotesIfNeeded = (str: string) => {
+export const wrapWithQuotesIfNeeded = (str: string): string => {
   if (/^[a-zA-Z]\w*$/.test(str)) {
     return str;
   }
@@ -34,7 +34,7 @@ export const wrapWithQuotesIfNeeded = (str: string) => {
   return `"${str}"`;
 };
 
-const prefixStringStartingWithNumberIfNeeded = (str: string) => {
+const prefixStringStartingWithNumberIfNeeded = (str: string): string => {
   const firstAsNumber = Number(str[0]);
   if (typeof firstAsNumber === 'number' && !Number.isNaN(firstAsNumber)) {
     return '_' + str;
@@ -46,7 +46,7 @@ const prefixStringStartingWithNumberIfNeeded = (str: string) => {
 const pathParamWithBracketsRegex = /({\w+})/g;
 const wordPrecededByNonWordCharacter = /[^\w-]+/g;
 
-export const pathParamToVariableName = (name: string) => {
+export const pathParamToVariableName = (name: string): string => {
   // Preserve colons (path params like :id) by temporarily replacing them
   // lodash camelCase treats : as a delimiter and strips it
   const hasColon = name.startsWith(':');
@@ -61,7 +61,7 @@ export const pathParamToVariableName = (name: string) => {
 };
 
 const matcherRegex = /{(\b\w+(?:-\w+)*\b)}/g;
-export const replaceHyphenatedPath = (path: string) => {
+export const replaceHyphenatedPath = (path: string): string => {
   const matches = path.match(matcherRegex);
   if (matches === null) {
     return path.replaceAll(matcherRegex, ':$1');
@@ -75,7 +75,7 @@ export const replaceHyphenatedPath = (path: string) => {
 };
 
 /** @example turns `/media-objects/{id}` into `MediaObjectsId` */
-export const pathToVariableName = (path: string) =>
+export const pathToVariableName = (path: string): string =>
   capitalize(camelCase(path).replaceAll('/', '')) // /media-objects/{id} -> MediaObjects{id}
     .replaceAll(pathParamWithBracketsRegex, (group) => capitalize(group.slice(1, -1))) // {id} -> Id
     .replaceAll(wordPrecededByNonWordCharacter, '_'); // "/robots.txt" -> "/robots_txt"
@@ -110,28 +110,31 @@ export const isPrimitiveSchemaType = (value: unknown): value is PrimitiveSchemaT
 };
 
 export const escapeControlCharacters = (str: string): string => {
-  return str
-    .replaceAll('\t', String.raw`\t`) // U+0009
-    .replaceAll('\n', String.raw`\n`) // U+000A
-    .replaceAll('\r', String.raw`\r`) // U+000D
+  return (
+    str
+      .replaceAll('\t', String.raw`\t`) // U+0009
+      .replaceAll('\n', String.raw`\n`) // U+000A
+      .replaceAll('\r', String.raw`\r`) // U+000D
 
-    .replaceAll(
-      /([\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\uFFFE\uFFFF])/g,
-      (_m, p1: string) => {
-        const codePoint = p1.codePointAt(0);
-        if (codePoint === undefined) return '';
-        const dec: number = codePoint;
-        const hex: string = dec.toString(16);
-        // eslint-disable-next-line sonarjs/no-nested-template-literals
-        if (dec <= 0xff) return `\\x${`00${hex}`.slice(-2)}`;
-        // eslint-disable-next-line sonarjs/no-nested-template-literals
-        return `\\u${`0000${hex}`.slice(-4)}`;
-      },
-    )
-    .replaceAll('/', String.raw`\/`);
+      // eslint-disable-next-line no-control-regex, sonarjs/no-control-regex -- Intentional: regex pattern explicitly detects and escapes control characters for safe string output
+      .replaceAll(
+        /([\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\uFFFE\uFFFF])/g,
+        (_m, p1: string) => {
+          const codePoint = p1.codePointAt(0);
+          if (codePoint === undefined) return '';
+          const dec: number = codePoint;
+          const hex: string = dec.toString(16);
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
+          if (dec <= 0xff) return `\\x${`00${hex}`.slice(-2)}`;
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
+          return `\\u${`0000${hex}`.slice(-4)}`;
+        },
+      )
+      .replaceAll('/', String.raw`\/`)
+  );
 };
 
-export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean) =>
+export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean): boolean =>
   match(value)
     .with(P.string.regex(/^false$/i), false, () => false)
     .with(P.string.regex(/^true$/i), true, () => true)
