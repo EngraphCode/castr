@@ -6,5 +6,5 @@
     "rootDir": "."
   },
   "include": ["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx", "test/**/*.ts"],
-  "exclude": ["node_modules", "**/*.typegen.ts", "example", "dist", "bin.cjs"]
+  "exclude": ["node_modules", "**/*.typegen.ts", "example", "dist"]
 }

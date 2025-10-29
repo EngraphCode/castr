@@ -3,6 +3,6 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["lib/**/*.ts", "examples/**/*.ts", "test/**/*.ts", "src/**/*.ts", "**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", ".agent"]
 }

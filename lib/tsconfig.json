@@ -5,8 +5,8 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "declarationMap": true,
+    "verbatimModuleSyntax": true,
     "sourceMap": true,
     "declaration": true,
     "pretty": true,
@@ -16,10 +16,9 @@
     "rootDir": ".",
     "lib": ["ES2022"],
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "strictPropertyInitialization": false,
     "baseUrl": "./"
   },
-  "include": ["src", "eslint.config.ts", "examples-fetcher.mts"],
-  "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist", "bin.cjs"]
+  "include": ["src/**/*", "eslint.config.ts", "examples-fetcher.mts"],
+  "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist"]
 }

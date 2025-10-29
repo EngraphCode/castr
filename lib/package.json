@@ -6,24 +6,22 @@
     "type": "git",
     "url": "https://github.com/jimcresswell/openapi-zod-validation.git"
   },
-  "main": "dist/openapi-zod-validation.cjs",
+  "main": "dist/openapi-zod-validation.js",
   "module": "dist/openapi-zod-validation.js",
   "types": "dist/openapi-zod-validation.d.ts",
   "exports": {
     ".": {
       "types": "./dist/openapi-zod-validation.d.ts",
-      "import": "./dist/openapi-zod-validation.js",
-      "require": "./dist/openapi-zod-validation.cjs"
+      "import": "./dist/openapi-zod-validation.js"
     },
     "./cli": {
       "types": "./dist/cli.d.ts",
-      "import": "./dist/cli.js",
-      "require": "./dist/cli.cjs"
+      "import": "./dist/cli.js"
     }
   },
   "homepage": "https://github.com/jimcresswell/openapi-zod-validation",
   "bin": {
-    "openapi-zod-validation": "./bin.cjs"
+    "openapi-zod-validation": "./dist/cli.cjs"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -85,10 +83,8 @@
     "vitest": "^4.0.3"
   },
   "files": [
-    "bin.cjs",
     "src",
     "dist",
-    "cli",
     "README.md"
   ],
   "keywords": [

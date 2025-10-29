@@ -17,10 +17,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    //
     "isolatedModules": true, // https://preconstruct.tools/guides/building-typescript-packages
+    "verbatimModuleSyntax": true, // TypeScript 5.0+: Explicit type-only imports for ESM
     "noEmit": true
   },
   "display": "Strictest",
+  "files": [],
+  "references": [{ "path": "./lib" }],
   "exclude": [".agent"]
 }
