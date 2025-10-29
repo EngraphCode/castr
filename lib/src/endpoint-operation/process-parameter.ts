@@ -1,9 +1,14 @@
-import type { ParameterObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type {
+  ParameterObject,
+  ReferenceObject,
+  SchemaObject,
+  OpenAPIObject,
+} from 'openapi3-ts/oas30';
 import { isReferenceObject, isSchemaObject } from 'openapi3-ts/oas30';
 import { match } from 'ts-pattern';
 import type { CodeMeta, ConversionTypeContext } from '../CodeMeta.js';
 import type { TemplateContext } from '../template-context.js';
-import { getParameterByRef, resolveSchemaRef } from '../component-access.js';
+import { getParameterByRef, resolveSchemaRef, assertNotReference } from '../component-access.js';
 import { getZodSchema, getZodChain } from '../openApiToZod.js';
 import { pathParamToVariableName } from '../utils.js';
 
@@ -14,12 +19,18 @@ import { pathParamToVariableName } from '../utils.js';
 export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
 
 /**
+ * Parameter type enum
+ * @public
+ */
+export type ParameterType = 'Header' | 'Query' | 'Path';
+
+/**
  * Parameter definition for an endpoint
  * @public
  */
 export interface EndpointParameter {
   name: string;
-  type: 'Header' | 'Query' | 'Path';
+  type: ParameterType;
   schema: string;
 }
 
@@ -35,12 +46,12 @@ type AllowedParameterLocation = (typeof allowedPathInValues)[number];
  * @internal
  */
 function isAllowedParameterLocation(location: string): location is AllowedParameterLocation {
-  return (allowedPathInValues as readonly string[]).includes(location);
+  const stringAllowedPathInValues: readonly string[] = allowedPathInValues;
+  return stringAllowedPathInValues.includes(location);
 }
 
 /**
  * Check if media type is allowed for parameters
- * Supports: wildcard (*\/*), JSON, form data, octet-stream
  * @internal
  */
 function isAllowedParamMediaTypes(mediaType: string): boolean {
@@ -55,95 +66,32 @@ function isAllowedParamMediaTypes(mediaType: string): boolean {
 }
 
 /**
- * Process a single parameter for an endpoint operation
- *
- * This function handles all parameter types (path, query, header) according to
- * OpenAPI 3.0 spec. It resolves references, extracts schemas from either the
- * `schema` or `content` property, and generates corresponding Zod validation code.
- *
- * **Parameter Schema Resolution:**
- * - If `content` property exists: extracts schema from supported media types
- * - If `schema` property exists: uses schema directly
- * - Per OAS 3.0 SchemaXORContent constraint, exactly one must be present
- *
- * **Required vs Optional:**
- * - Path parameters are always required (per spec)
- * - Query/header parameters use the `required` field (defaults to false)
- *
- * @param param - The parameter object or reference to process
- * @param ctx - Conversion context with OpenAPI document
- * @param getZodVarName - Function to generate Zod variable names
- * @param options - Template context options (e.g., withDescription)
- * @returns Parameter definition with name, type, and Zod schema, or undefined if skipped
- * @throws {Error} If parameter has invalid structure or unsupported media type
- *
- * @example Basic usage
- * ```typescript
- * const param: ParameterObject = {
- *   name: 'userId',
- *   in: 'path',
- *   required: true,
- *   schema: { type: 'string' }
- * };
- *
- * const result = processParameter(param, ctx, getZodVarName);
- * // result = {
- * //   name: 'userId',
- * //   type: 'Path',
- * //   schema: 'z.string()'
- * // }
- * ```
- *
- * @example With content property
- * ```typescript
- * const param: ParameterObject = {
- *   name: 'filter',
- *   in: 'query',
- *   content: {
- *     'application/json': {
- *       schema: { type: 'object', properties: { ... } }
- *     }
- *   }
- * };
- *
- * const result = processParameter(param, ctx, getZodVarName);
- * // Extracts schema from content media type
- * ```
- *
- * @see {@link https://spec.openapis.org/oas/v3.0.3#parameter-object|OpenAPI Parameter Object}
- * @see {@link https://spec.openapis.org/oas/v3.0.3#media-type-object|OpenAPI Media Type Object}
- *
- * @public
- * @since 2.0.0
+ * Resolve parameter reference to ParameterObject
+ * @internal
  */
-export function processParameter(
+function resolveParameterRef(
   param: ParameterObject | ReferenceObject,
-  ctx: ConversionTypeContext,
-  getZodVarName: GetZodVarNameFn,
-  options?: TemplateContext['options'],
-): EndpointParameter | undefined {
-  // Resolve parameter reference if needed
-  let paramItem: ParameterObject;
-  if (isReferenceObject(param)) {
-    const resolved = getParameterByRef(ctx.doc, param.$ref);
-    if (isReferenceObject(resolved)) {
-      throw new Error(
-        `Nested $ref in parameter: ${param.$ref}. Use SwaggerParser.bundle() to dereference.`,
-      );
-    }
-    paramItem = resolved;
-  } else {
-    paramItem = param;
+  doc: OpenAPIObject,
+): ParameterObject {
+  if (!isReferenceObject(param)) {
+    return param;
   }
 
-  // Filter: Only process header, query, and path parameters
-  if (!isAllowedParameterLocation(paramItem.in)) {
-    return undefined;
-  }
+  const resolved = getParameterByRef(doc, param.$ref);
+  assertNotReference(resolved, `parameter ${param.$ref} (use SwaggerParser.bundle() to dereference)`);
 
-  let paramSchema: SchemaObject | ReferenceObject | undefined;
+  return resolved;
+}
 
-  // Extract schema from either 'content' or 'schema' property
+/**
+ * Extract schema from parameter content or schema property
+ * @internal
+ */
+function extractParameterSchema(
+  paramItem: ParameterObject,
+  doc: OpenAPIObject,
+): SchemaObject | ReferenceObject {
+  // Extract from 'content' property
   if (paramItem.content) {
     const mediaTypes = Object.keys(paramItem.content ?? {});
     const matchingMediaType = mediaTypes.find(isAllowedParamMediaTypes);
@@ -161,8 +109,6 @@ export function processParameter(
       );
     }
 
-    // Per OAS 3.0 spec: MediaType.schema must be Schema | Reference
-    // $ref should be inside the schema property, not at the MediaType level
     if (!mediaTypeObject.schema) {
       throw new Error(
         `Invalid OpenAPI specification: mediaTypeObject for parameter "${paramItem.name}" ` +
@@ -171,32 +117,81 @@ export function processParameter(
       );
     }
 
-    paramSchema = mediaTypeObject.schema;
-  } else if (paramItem.schema) {
-    paramSchema = resolveSchemaRef(ctx.doc, paramItem.schema);
-  } else {
-    // OpenAPI spec requires parameters to have either 'schema' or 'content'
-    // Per SchemaXORContent constraint in OAS 3.0+ spec
-    throw new Error(
-      `Invalid OpenAPI specification: Parameter "${paramItem.name}" (in: ${paramItem.in}) must have either 'schema' or 'content' property. ` +
-        `See: https://spec.openapis.org/oas/v3.0.3#parameter-object`,
-    );
+    return mediaTypeObject.schema;
   }
 
-  // Ensure schema was successfully resolved from references
-  if (!paramSchema) {
-    throw new Error(
-      `Invalid OpenAPI specification: Could not resolve schema for parameter "${paramItem.name}" (in: ${paramItem.in}). ` +
-        `This may indicate a missing or invalid $ref target.`,
-    );
+  // Extract from 'schema' property
+  if (paramItem.schema) {
+    return resolveSchemaRef(doc, paramItem.schema);
   }
+
+  // Neither 'content' nor 'schema' present - invalid per OAS spec
+  throw new Error(
+    `Invalid OpenAPI specification: Parameter "${paramItem.name}" (in: ${paramItem.in}) must have either 'schema' or 'content' property. ` +
+      `See: https://spec.openapis.org/oas/v3.0.3#parameter-object`,
+  );
+}
+
+/**
+ * Convert parameter location to type enum
+ * @internal
+ */
+function parameterLocationToType(location: AllowedParameterLocation): ParameterType {
+  return match<AllowedParameterLocation, ParameterType>(location)
+    .with('header', () => 'Header' as const)
+    .with('query', () => 'Query' as const)
+    .with('path', () => 'Path' as const)
+    .exhaustive();
+}
+
+/**
+ * Process a single parameter for an endpoint operation
+ *
+ * Handles all parameter types (path, query, header) per OpenAPI 3.0 spec.
+ * Resolves references, extracts schemas from `schema` or `content` property,
+ * and generates Zod validation code.
+ *
+ * @param param - Parameter object or reference to process
+ * @param ctx - Conversion context with OpenAPI document
+ * @param getZodVarName - Function to generate Zod variable names
+ * @param options - Template context options
+ * @returns Parameter definition or undefined if skipped
+ * @throws {Error} If parameter has invalid structure
+ *
+ * @example
+ * ```typescript
+ * const param: ParameterObject = {
+ *   name: 'userId',
+ *   in: 'path',
+ *   required: true,
+ *   schema: { type: 'string' }
+ * };
+ * const result = processParameter(param, ctx, getZodVarName);
+ * // { name: 'userId', type: 'Path', schema: 'z.string()' }
+ * ```
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.0.3#parameter-object|OAS Parameter Object}
+ * @public
+ */
+export function processParameter(
+  param: ParameterObject | ReferenceObject,
+  ctx: ConversionTypeContext,
+  getZodVarName: GetZodVarNameFn,
+  options?: TemplateContext['options'],
+): EndpointParameter | undefined {
+  const paramItem = resolveParameterRef(param, ctx.doc);
+
+  // Filter: Only process header, query, and path parameters
+  if (!isAllowedParameterLocation(paramItem.in)) return undefined;
+
+  // Extract and resolve schema
+  let paramSchema = extractParameterSchema(paramItem, ctx.doc);
 
   // Optionally add parameter description to schema
   if (options?.withDescription && isSchemaObject(paramSchema)) {
     paramSchema.description = (paramItem.description ?? '').trim();
   }
 
-  // Resolve ref if needed, fallback to default (unknown) value if needed
   paramSchema = resolveSchemaRef(ctx.doc, paramSchema);
 
   // Generate Zod schema code
@@ -207,20 +202,6 @@ export function processParameter(
     options,
   });
 
-  // Convert parameter name to variable name (path params get special treatment)
-  const name = match(paramItem.in)
-    .with('path', () => pathParamToVariableName(paramItem.name))
-    .otherwise(() => paramItem.name);
-
-  // Convert parameter location to type enum
-  // Safe: We've already filtered for allowed values (header, query, path) above
-  const type = match<string, 'Header' | 'Query' | 'Path'>(paramItem.in)
-    .with('header', () => 'Header')
-    .with('query', () => 'Query')
-    .with('path', () => 'Path')
-    .otherwise(() => 'Query'); // Fallback (unreachable due to filter above)
-
-  // Generate final schema with chains (e.g., .optional(), .describe())
   const schema = getZodVarName(
     paramCode.assign(
       paramCode.toString() + getZodChain({ schema: paramSchema, meta: paramCode.meta, options }),
@@ -228,5 +209,10 @@ export function processParameter(
     paramItem.name,
   );
 
-  return { name, type, schema };
+  // Convert parameter name (path params get special treatment)
+  const name = match(paramItem.in)
+    .with('path', () => pathParamToVariableName(paramItem.name))
+    .otherwise(() => paramItem.name);
+
+  return { name, type: parameterLocationToType(paramItem.in), schema };
 }

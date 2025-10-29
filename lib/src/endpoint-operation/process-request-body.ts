@@ -21,11 +21,7 @@ import type { CodeMeta, ConversionTypeContext } from '../CodeMeta.js';
 import { getZodChain, getZodSchema } from '../openApiToZod.js';
 import type { TemplateContext } from '../template-context.js';
 import { isReferenceObject } from '../openapi-type-guards.js';
-import {
-  getRequestBodyByRef,
-  resolveSchemaRef,
-  assertNotReference,
-} from '../component-access.js';
+import { getRequestBodyByRef, resolveSchemaRef, assertNotReference } from '../component-access.js';
 
 /**
  * Function type for getting Zod variable names

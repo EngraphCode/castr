@@ -347,7 +347,7 @@ describe('endpoint.operation.helpers with doc-based context', () => {
 
       const param = { $ref: '#/components/parameters/UserId' };
 
-      expect(() => processParameter(param, ctx, mockGetZodVarName)).toThrow(/Nested \$ref/);
+      expect(() => processParameter(param, ctx, mockGetZodVarName)).toThrow(/Unexpected \$ref/);
     });
 
     test('should throw on parameter without schema or content', () => {
