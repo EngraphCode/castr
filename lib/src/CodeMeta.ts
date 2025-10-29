@@ -71,24 +71,23 @@ export class CodeMeta {
     return getSchemaComplexity({ current: 0, schema: this.schema });
   }
 
-  assign(code: string) {
+  assign(code: string): this {
     this.code = code;
-
     return this;
   }
 
-  inherit(parent?: CodeMeta) {
+  inherit(parent?: CodeMeta): this {
     if (parent) {
       parent.children.push(this);
     }
-
     return this;
   }
 
-  toString() {
+  toString(): string {
     return this.codeString;
   }
-  toJSON() {
+
+  toJSON(): string {
     return this.codeString;
   }
 }
