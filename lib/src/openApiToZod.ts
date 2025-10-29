@@ -435,6 +435,25 @@ function handleMultipleTypeSchema(
 }
 
 /**
+ * Route composition schemas (oneOf/anyOf/allOf) to their handlers
+ * Pure router function: delegates to specific composition handler
+ * 
+ * @returns Zod code string for composition or undefined if not a composition schema
+ */
+function handleCompositionSchemaIfPresent(
+  schema: SchemaObject,
+  code: CodeMeta,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  options?: TemplateContext['options'],
+): CodeMeta | undefined {
+  if (schema.oneOf) return handleOneOfSchema(schema, code, ctx, meta, options);
+  if (schema.anyOf) return handleAnyOfSchema(schema, code, ctx, meta, options);
+  if (schema.allOf) return handleAllOfSchema(schema, code, ctx, meta, options);
+  return undefined;
+}
+
+/**
  * @see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md#schemaObject
  * @see https://github.com/colinhacks/zod
  */
@@ -489,17 +508,8 @@ export function getZodSchema({
     return code.assign('z.null()');
   }
 
-  if (schema.oneOf) {
-    return handleOneOfSchema(schema, code, ctx, meta, options);
-  }
-
-  if (schema.anyOf) {
-    return handleAnyOfSchema(schema, code, ctx, meta, options);
-  }
-
-  if (schema.allOf) {
-    return handleAllOfSchema(schema, code, ctx, meta, options);
-  }
+  const compositionResult = handleCompositionSchemaIfPresent(schema, code, ctx, meta, options);
+  if (compositionResult) return compositionResult;
 
   const schemaType = schema.type?.toLowerCase();
   if (schemaType && isPrimitiveSchemaType(schemaType)) {
