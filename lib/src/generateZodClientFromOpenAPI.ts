@@ -9,9 +9,11 @@ import type { Options } from 'prettier';
 import { getHandlebars } from './getHandlebars.js';
 import { logger } from './utils/logger.js';
 import { maybePretty } from './maybePretty.js';
-import type { TemplateContext } from './template-context.js';
+import type { TemplateContext, TemplateContextOptions } from './template-context.js';
 import { getZodClientTemplateContext } from './template-context.js';
 import { validateOpenApiSpec } from './validateOpenApiSpec.js';
+
+type TemplateName = 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
 
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
@@ -52,6 +54,235 @@ export type GenerateZodClientFromOpenApiArgs<
     }
   | { distPath: string; disableWriteToFile?: false }
 );
+
+/**
+ * Determine the effective template to use based on inputs
+ */
+function determineEffectiveTemplate(
+  noClient: boolean | undefined,
+  template: GenerateZodClientFromOpenApiArgs['template'],
+  optionsTemplate: TemplateContextOptions['template'] | undefined,
+): TemplateName {
+  if (noClient) return 'schemas-with-metadata';
+  if (template) return template;
+  // optionsTemplate is 'schemas-only' | 'schemas-with-metadata' | undefined
+  // Both non-undefined values are valid TemplateName values
+  if (optionsTemplate === 'schemas-only') return 'schemas-only';
+  if (optionsTemplate === 'schemas-with-metadata') return 'schemas-with-metadata';
+  return 'schemas-with-metadata';
+}
+
+/**
+ * Build effective options with auto-enabled features for schemas-with-metadata template
+ */
+function buildEffectiveOptions<TOptions extends TemplateContext['options']>(
+  effectiveTemplate: TemplateName,
+  options: TOptions | undefined,
+): TemplateContext['options'] {
+  if (effectiveTemplate === 'schemas-with-metadata') {
+    return {
+      ...options,
+      withAllResponses: true,
+      strictObjects: true,
+      withAlias: true,
+      shouldExportAllSchemas: true,
+    };
+  }
+  return options;
+}
+
+/**
+ * Resolve template path from template name or custom path
+ */
+function resolveTemplatePath(
+  templatePath: string | undefined,
+  effectiveTemplate: TemplateName,
+): string {
+  if (templatePath) return templatePath;
+  return path.join(__dirname, `../src/templates/${effectiveTemplate}.hbs`);
+}
+
+/**
+ * Generate index file for grouped output
+ */
+async function generateIndexFile(
+  data: TemplateContext,
+  distPath: string | undefined,
+  prettierConfig: Options | null | undefined,
+  hbs: ReturnType<typeof getHandlebars>,
+  willWriteToFile: boolean,
+): Promise<string> {
+  const groupNames = Object.fromEntries(
+    Object.keys(data.endpointsGroups).map((groupName) => [
+      `${capitalize(groupName)}Api`,
+      groupName,
+    ]),
+  );
+
+  const indexSource = await fs.readFile(
+    path.join(__dirname, '../src/templates/grouped-index.hbs'),
+    'utf8',
+  );
+  const indexTemplate = hbs.compile(indexSource);
+  const indexOutput = await maybePretty(indexTemplate({ groupNames }), prettierConfig);
+
+  if (willWriteToFile && distPath) {
+    await fs.writeFile(path.join(distPath, 'index.ts'), indexOutput);
+  }
+
+  return indexOutput;
+}
+
+/**
+ * Generate common schemas file for grouped output
+ */
+async function generateCommonFile(
+  data: TemplateContext,
+  distPath: string | undefined,
+  prettierConfig: Options | null | undefined,
+  hbs: ReturnType<typeof getHandlebars>,
+  willWriteToFile: boolean,
+): Promise<string | null> {
+  const commonSchemaNames = [...(data.commonSchemaNames ?? [])];
+  if (commonSchemaNames.length === 0) return null;
+
+  const commonSource = await fs.readFile(
+    path.join(__dirname, '../src/templates/grouped-common.hbs'),
+    'utf8',
+  );
+  const commonTemplate = hbs.compile(commonSource);
+  const commonOutput = await maybePretty(
+    commonTemplate({
+      schemas: pick(data.schemas, commonSchemaNames),
+      types: pick(data.types, commonSchemaNames),
+    }),
+    prettierConfig,
+  );
+
+  if (willWriteToFile && distPath) {
+    await fs.writeFile(path.join(distPath, 'common.ts'), commonOutput);
+  }
+
+  return commonOutput;
+}
+
+/**
+ * Generate group files for grouped output
+ */
+async function generateGroupFiles(
+  data: TemplateContext,
+  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
+  effectiveOptions: TemplateContext['options'],
+  withValidationHelpers: boolean | undefined,
+  withSchemaRegistry: boolean | undefined,
+  distPath: string | undefined,
+  prettierConfig: Options | null | undefined,
+  willWriteToFile: boolean,
+): Promise<Record<string, string>> {
+  const outputByGroupName: Record<string, string> = {};
+
+  for (const groupName in data.endpointsGroups) {
+    const groupOutput = compiledTemplate({
+      ...data,
+      ...data.endpointsGroups[groupName],
+      options: {
+        ...effectiveOptions,
+        groupStrategy: 'none',
+        apiClientName: `${capitalize(groupName)}Api`,
+        withValidationHelpers,
+        withSchemaRegistry,
+      },
+    });
+    const prettyGroupOutput = await maybePretty(groupOutput, prettierConfig);
+    outputByGroupName[groupName] = prettyGroupOutput;
+
+    if (willWriteToFile && distPath) {
+      logger.info('Writing to', path.join(distPath, `${groupName}.ts`));
+      await fs.writeFile(path.join(distPath, `${groupName}.ts`), prettyGroupOutput);
+    }
+  }
+
+  return outputByGroupName;
+}
+
+/**
+ * Handle file grouping output strategy
+ */
+async function handleFileGrouping(
+  data: TemplateContext,
+  effectiveOptions: TemplateContext['options'],
+  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
+  withValidationHelpers: boolean | undefined,
+  withSchemaRegistry: boolean | undefined,
+  distPath: string | undefined,
+  prettierConfig: Options | null | undefined,
+  hbs: ReturnType<typeof getHandlebars>,
+  willWriteToFile: boolean,
+): Promise<Record<string, string>> {
+  const outputByGroupName: Record<string, string> = {};
+
+  if (willWriteToFile && distPath) {
+    await fs.mkdir(path.dirname(distPath), { recursive: true });
+  }
+
+  const indexOutput = await generateIndexFile(data, distPath, prettierConfig, hbs, willWriteToFile);
+  outputByGroupName['__index'] = indexOutput;
+
+  const commonOutput = await generateCommonFile(
+    data,
+    distPath,
+    prettierConfig,
+    hbs,
+    willWriteToFile,
+  );
+  if (commonOutput !== null) {
+    outputByGroupName['__common'] = commonOutput;
+  }
+
+  const groupFiles = await generateGroupFiles(
+    data,
+    compiledTemplate,
+    effectiveOptions,
+    withValidationHelpers,
+    withSchemaRegistry,
+    distPath,
+    prettierConfig,
+    willWriteToFile,
+  );
+
+  return { ...outputByGroupName, ...groupFiles };
+}
+
+/**
+ * Handle single file output strategy
+ */
+async function handleSingleFileOutput(
+  data: TemplateContext,
+  effectiveOptions: TemplateContext['options'],
+  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
+  withValidationHelpers: boolean | undefined,
+  withSchemaRegistry: boolean | undefined,
+  distPath: string | undefined,
+  prettierConfig: Options | null | undefined,
+  willWriteToFile: boolean,
+): Promise<string> {
+  const output = compiledTemplate({
+    ...data,
+    options: {
+      ...effectiveOptions,
+      apiClientName: effectiveOptions?.apiClientName ?? 'api',
+      withValidationHelpers,
+      withSchemaRegistry,
+    },
+  });
+  const prettyOutput = await maybePretty(output, prettierConfig);
+
+  if (willWriteToFile && distPath) {
+    await fs.writeFile(distPath, prettyOutput);
+  }
+
+  return prettyOutput;
+}
 
 /**
  * Generate a Zod client from an OpenAPI specification.
@@ -153,136 +384,39 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   disableWriteToFile,
   handlebars,
 }: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<string | Record<string, string>> => {
-  // Validate OpenAPI spec structure at entry point (fail fast)
-  // This ensures both CLI and programmatic APIs have consistent validation
   validateOpenApiSpec(openApiDoc);
-
-  // Auto-switch to schemas-with-metadata template if noClient is set
-  // Default to schemas-with-metadata if no template specified
-  const effectiveTemplate = noClient
-    ? 'schemas-with-metadata'
-    : template || options?.template || 'schemas-with-metadata';
-
-  // Auto-enable required options for schemas-with-metadata template:
-  // - withAllResponses: Include all response status codes (not just errors)
-  // - strictObjects: Use strict schemas for fail-fast validation
-  // - withAlias: Include operationId for endpoint identification
-  // - shouldExportAllSchemas: Export all component schemas (even if unused)
-  const effectiveOptions: TemplateContext['options'] =
-    effectiveTemplate === 'schemas-with-metadata'
-      ? {
-          ...options,
-          withAllResponses: true,
-          strictObjects: true,
-          withAlias: true,
-          shouldExportAllSchemas: true,
-        }
-      : options;
-
+  const effectiveTemplate = determineEffectiveTemplate(noClient, template, options?.template);
+  const effectiveOptions = buildEffectiveOptions(effectiveTemplate, options);
   const data = getZodClientTemplateContext(openApiDoc, effectiveOptions);
   const groupStrategy = effectiveOptions?.groupStrategy ?? 'none';
-
-  if (!templatePath) {
-    // Template name is always defined (has default), so use it directly
-    templatePath = path.join(__dirname, `../src/templates/${effectiveTemplate}.hbs`);
-  }
-
-  // TypeScript needs to know templatePath is definitely defined here
-  if (!templatePath) {
-    throw new Error('No template path could be determined');
-  }
-
-  const source = await fs.readFile(templatePath, 'utf8');
+  const resolvedTemplatePath = resolveTemplatePath(templatePath, effectiveTemplate);
+  const source = await fs.readFile(resolvedTemplatePath, 'utf8');
   const hbs = handlebars ?? getHandlebars();
   const compiledTemplate = hbs.compile(source);
-  const willWriteToFile = !disableWriteToFile && distPath;
+  const willWriteToFile = Boolean(!disableWriteToFile && distPath);
 
   if (groupStrategy.includes('file')) {
-    const outputByGroupName: Record<string, string> = {};
-
-    if (willWriteToFile) {
-      await fs.mkdir(path.dirname(distPath), { recursive: true });
-    }
-
-    const groupNames = Object.fromEntries(
-      Object.keys(data.endpointsGroups).map((groupName) => [
-        `${capitalize(groupName)}Api`,
-        groupName,
-      ]),
-    );
-
-    const indexSource = await fs.readFile(
-      path.join(__dirname, '../src/templates/grouped-index.hbs'),
-      'utf8',
-    );
-    const indexTemplate = hbs.compile(indexSource);
-    const indexOutput = await maybePretty(indexTemplate({ groupNames }), prettierConfig);
-    outputByGroupName['__index'] = indexOutput;
-
-    if (willWriteToFile) {
-      await fs.writeFile(path.join(distPath, 'index.ts'), indexOutput);
-    }
-
-    const commonSource = await fs.readFile(
-      path.join(__dirname, '../src/templates/grouped-common.hbs'),
-      'utf8',
-    );
-    const commonTemplate = hbs.compile(commonSource);
-    const commonSchemaNames = [...(data.commonSchemaNames ?? [])];
-
-    if (commonSchemaNames.length > 0) {
-      const commonOutput = await maybePretty(
-        commonTemplate({
-          schemas: pick(data.schemas, commonSchemaNames),
-          types: pick(data.types, commonSchemaNames),
-        }),
-        prettierConfig,
-      );
-      outputByGroupName['__common'] = commonOutput;
-
-      if (willWriteToFile) {
-        await fs.writeFile(path.join(distPath, 'common.ts'), commonOutput);
-      }
-    }
-
-    for (const groupName in data.endpointsGroups) {
-      const groupOutput = compiledTemplate({
-        ...data,
-        ...data.endpointsGroups[groupName],
-        options: {
-          ...effectiveOptions,
-          groupStrategy: 'none',
-          apiClientName: `${capitalize(groupName)}Api`,
-          withValidationHelpers,
-          withSchemaRegistry,
-        },
-      });
-      const prettyGroupOutput = await maybePretty(groupOutput, prettierConfig);
-      outputByGroupName[groupName] = prettyGroupOutput;
-
-      if (willWriteToFile) {
-        logger.info('Writing to', path.join(distPath, `${groupName}.ts`));
-        await fs.writeFile(path.join(distPath, `${groupName}.ts`), prettyGroupOutput);
-      }
-    }
-
-    return outputByGroupName;
-  }
-
-  const output = compiledTemplate({
-    ...data,
-    options: {
-      ...effectiveOptions,
-      apiClientName: effectiveOptions?.apiClientName ?? 'api',
+    return handleFileGrouping(
+      data,
+      effectiveOptions,
+      compiledTemplate,
       withValidationHelpers,
       withSchemaRegistry,
-    },
-  });
-  const prettyOutput = await maybePretty(output, prettierConfig);
-
-  if (willWriteToFile) {
-    await fs.writeFile(distPath, prettyOutput);
+      distPath,
+      prettierConfig,
+      hbs,
+      willWriteToFile,
+    );
   }
 
-  return prettyOutput;
+  return handleSingleFileOutput(
+    data,
+    effectiveOptions,
+    compiledTemplate,
+    withValidationHelpers,
+    withSchemaRegistry,
+    distPath,
+    prettierConfig,
+    willWriteToFile,
+  );
 };
