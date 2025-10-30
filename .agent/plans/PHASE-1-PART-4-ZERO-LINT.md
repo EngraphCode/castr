@@ -25,7 +25,7 @@
   - **BEHAVIOR PRESERVED:** All 152 snapshot tests passing
   - Pattern: Schema processing, type processing, endpoint grouping, common schemas
   - Impact: 13→**0 errors** (-13 errors, **-100%!**) 🎉
-  - **ZERO LINT ERRORS IN template-context.* FILES!**
+  - **ZERO LINT ERRORS IN template-context.\* FILES!**
 
 - ✅ **openApiToZod.ts** - COMPLETE DECOMPOSITION (12 TDD Phases):
   - Main `getZodSchema`: 323→<50 lines (-85%!) ✅
