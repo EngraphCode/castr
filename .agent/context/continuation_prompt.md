@@ -6,7 +6,22 @@
 
 ## Prompt for AI Assistant
 
-I'm working on the `openapi-zod-validation` modernization (branch `feat/rewrite`). We are mid-way through **Phase 1 Part 4**, whose objective is to drive **all production lint errors to zero** under Engraph's strict standards while keeping every quality gate green.
+I'm working on the `openapi-zod-validation` modernization project. This is a TypeScript library that generates Zod validation schemas and type-safe API clients from OpenAPI 3.0/3.1 specifications.
+
+**Project Context:**
+- **Repository:** Local fork at `/Users/jim/code/personal/openapi-zod-client`
+- **Branch:** `feat/rewrite`
+- **Goal:** Modernize and extract to Engraph monorepo
+- **Tech Stack:** TypeScript, Zod, OpenAPI 3.x, Handlebars (future: ts-morph), Vitest
+
+**Journey So Far:**
+- ✅ Phase 1 Part 1: Context types refactored
+- ✅ Phase 1 Part 2: Tanu eliminated, string-based TS generation
+- ✅ Phase 1 Part 3: Zodios removed, openapi-fetch integration
+- 🎯 Phase 1 Part 4: **IN PROGRESS (55% complete)** - Drive all production lint errors to zero
+
+**Current Objective:**
+We are mid-way through **Phase 1 Part 4**, whose goal is to drive **all production lint errors to zero** under Engraph's strict standards while keeping every quality gate green.
 
 ### Required Reading (in order)
 
@@ -128,20 +143,94 @@ function assembleSchemaContext(schemas, options) { /* just assemble */ }
 - Updated documentation (`context.md`, `PHASE-1-PART-4-ZERO-LINT.md`)
 - Commit message summarising scope + metrics
 
+### 🚀 IMMEDIATE ACTIONS (First 10 Minutes)
+
+**Step 1: Orient Yourself (5 min)**
+```bash
+cd /Users/jim/code/personal/openapi-zod-client
+git status    # Should be on feat/rewrite, clean working tree
+pnpm lint 2>&1 | head -50  # Confirm 207 errors baseline
+```
+
+**Step 2: Review Documentation (5 min)**
+- Read `.agent/context/context.md` - current state, recent wins
+- Skim `.agent/plans/PHASE-1-PART-4-ZERO-LINT.md` - focus on template-context.ts section
+- Glance at `.agent/RULES.md` - TDD mandate, coding standards
+
+**Step 3: Start Working**
+Pick the highest-impact task (template-context.ts) and begin TDD decomposition.
+
+### Key Codebase Structure
+
+```
+lib/src/
+├── openApiToZod.ts              # ✅ Main decomposed! (16 errors remain: file size)
+├── getEndpointDefinitionList.ts # ✅ Main decomposed! (6 errors in helper)
+├── template-context.ts          # 🎯 NEXT: 13 errors, 251-line function
+├── generateZodClientFromOpenAPI.ts # 7 errors (template-related)
+├── openApiToTypescript.ts       # 8 errors (2 god functions)
+├── schema-complexity.ts         # 4 errors (116-line function)
+├── cli.ts                       # 6 errors (86-line function, complexity 30)
+├── endpoint.helpers.ts          # 2 errors (file size + complexity)
+├── utils.ts                     # 6 errors (control chars - quick win)
+└── endpoint-operation/          # ✅ COMPLETE: ZERO errors!
+```
+
 ### Starting Point Checklist
 
-- [ ] Review latest context + plan
-- [ ] Re-run `pnpm lint` to confirm baseline (207 errors)
-- [ ] Pick the next highest-impact task from remaining work:
-  - **🎯 Highest Impact:** template-context.ts (13 errors, 251-line function, complexity 28)
-  - **High Impact:** generateZodClientFromOpenAPI.ts (7 errors), schema-complexity.ts (4 errors)
-  - **Medium Impact:** openApiToTypescript.ts (8 errors), cli.ts (6 errors)
-  - **Quick Wins:** utils.ts (6 errors - just needs eslint-disable comments)
+- [ ] Run `pnpm lint` to confirm baseline (207 errors)
+- [ ] Read template-context.ts section in PHASE-1-PART-4-ZERO-LINT.md
+- [ ] Pick the next highest-impact task:
+  - **🎯 HIGHEST IMPACT:** template-context.ts (13 errors, strategic priority)
+  - **HIGH IMPACT:** generateZodClientFromOpenAPI.ts (7 errors, also template-related)
+  - **MEDIUM IMPACT:** schema-complexity.ts (4 errors), openApiToTypescript.ts (8 errors)
+  - **QUICK WIN:** utils.ts (6 errors - just needs eslint-disable comments)
 - [ ] Follow proven TDD pattern:
-  1. Characterize current behavior with tests
-  2. Extract pure helper functions (RED → GREEN → REFACTOR)
-  3. Refactor main function to use helpers
-  4. Validate: tests pass, lint improves, quality gates green
+  1. **Characterize:** Write tests for current behavior
+  2. **Extract:** Create pure helper functions (RED → GREEN → REFACTOR)
+  3. **Refactor:** Main function becomes coordinator (<30 lines for template code)
+  4. **Validate:** All tests pass, lint improves, quality gates green
+
+### 🎓 Proven Patterns (From Recent Sessions)
+
+**Pattern 1: God Function Decomposition (WORKS!)**
+- Used successfully on openApiToZod (323→<50 lines) and getEndpointDefinitionList (127→<50 lines)
+- Process: Characterize → Extract helpers (10-15 functions) → Refactor main → Validate
+- Results: Complexity 28-69 → <8, all tests passing, zero regressions
+- Key: TDD at every step, one helper at a time
+
+**Pattern 2: Helper Function Extraction**
+- Make each helper do ONE thing only
+- Keep helpers pure (no side effects)
+- Target: <30 lines, <5 complexity for template code
+- Test each helper independently
+
+**Pattern 3: Quality Gate Discipline**
+- Run tests after EVERY extraction
+- Run full quality gates after each task cluster
+- Never skip type-check
+- Document progress immediately
+
+**Common Pitfall to Avoid:**
+- Don't extract helpers without tests first
+- Don't combine multiple concerns in one function
+- Don't skip characterization tests
+- Don't forget to update docs after completing a file
+
+### Success Metrics & Progress Tracking
+
+**Current Session:**
+- Start: 263 errors
+- Current: 207 errors
+- Progress: -56 (-21.3%)
+- Commits: 18 clean TDD commits
+
+**Files Completed (Zero Errors):**
+1. ✅ getOpenApiDependencyGraph.ts
+2. ✅ endpoint-operation/ (5 files)
+3. ✅ getEndpointDefinitionList.ts main function
+
+**Estimated Remaining:** 26-37 hours (2-3 focused sessions)
 
 ### When Declaring Phase 1 Part 4 Complete
 
@@ -152,6 +241,42 @@ All of the following must be true:
 - No type assertions or console usage remain in production code
 - Documentation captures final metrics (type assertion count, lint delta, LOC delta)
 
+### Tools & Commands Reference
+
+**Quality Gates:**
+```bash
+pnpm format                       # Prettier formatting
+pnpm build                        # ESM + CJS + DTS build
+pnpm type-check                   # TypeScript type checking
+pnpm test:all                     # All tests (744 total)
+pnpm lint                         # ESLint (target: 0 errors)
+```
+
+**Full Quality Sweep:**
+```bash
+pnpm format && pnpm build && pnpm type-check && pnpm test:all && pnpm lint
+```
+
+**Targeted Testing:**
+```bash
+pnpm test -- --run template-context.test.ts  # Single test file
+pnpm test -- --run lib/src/                  # Directory
+```
+
+**Commit Pattern:**
+```bash
+git add -A
+git commit -m "refactor(lint): <file> - <what you did>
+
+<details>
+- Main function: X→Y lines
+- Helpers: Z new functions extracted
+- Lint: A→B errors (-C)
+Tests ✅ Build ✅"
+```
+
 ---
 
-Use this prompt verbatim to rehydrate the next session. It ensures every new assistant enters with the same mission, constraints, and current metrics.
+**📋 IMPORTANT: This prompt is self-contained. You have all the information needed to start working immediately. Read the three key docs (context.md, PHASE-1-PART-4-ZERO-LINT.md, RULES.md) for details, then begin with template-context.ts decomposition.**
+
+Use this prompt verbatim to rehydrate any new session. It ensures every new assistant enters with the same mission, constraints, patterns, and current metrics.
