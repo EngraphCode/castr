@@ -37,7 +37,7 @@ type ConversionArgs = {
 /**
  * Handle reference object resolution with circular reference detection
  * Pure function: only mutates ctx.zodSchemaByName (passed by reference)
- * 
+ *
  * @returns CodeMeta with the resolved reference, or null if not a reference
  */
 function handleReferenceObject(
@@ -80,7 +80,7 @@ function handleReferenceObject(
 /**
  * Handle oneOf composition schema
  * Pure function: generates discriminated union or regular union based on schema
- * 
+ *
  * @returns Zod code string for oneOf union
  */
 function handleOneOfSchema(
@@ -126,7 +126,7 @@ function handleOneOfSchema(
  * Handle anyOf composition schema
  * Pure function: generates union of all anyOf options
  * anyOf = oneOf but with 1 or more = `T extends oneOf ? T | T[] : never`
- * 
+ *
  * @returns Zod code string for anyOf union
  */
 function handleAnyOfSchema(
@@ -159,7 +159,7 @@ function handleAnyOfSchema(
  * Handle allOf composition schema
  * Pure function: generates intersection of all allOf schemas with .and()
  * Handles required schema inference for proper type composition
- * 
+ *
  * @returns Zod code string for allOf intersection
  */
 function handleAllOfSchema(
@@ -216,7 +216,7 @@ function handleAllOfSchema(
  * Handle array type schema
  * Pure function: generates z.array() with optional readonly modifier
  * Resolves item schema references and applies chain validations
- * 
+ *
  * @returns Zod code string for array type
  */
 function handleArraySchema(
@@ -252,14 +252,10 @@ function handleArraySchema(
  * Handle primitive type schema (string, number, integer, boolean)
  * Pure function: generates z.string(), z.number(), etc. with enum support
  * Handles special formats (binary → File) and invalid enum combinations
- * 
+ *
  * @returns Zod code string for primitive type
  */
-function handlePrimitiveSchema(
-  schema: SchemaObject,
-  code: CodeMeta,
-  schemaType: string,
-): CodeMeta {
+function handlePrimitiveSchema(schema: SchemaObject, code: CodeMeta, schemaType: string): CodeMeta {
   if (schema.enum) {
     // Handle string enums
     if (schemaType === 'string') {
@@ -288,6 +284,64 @@ function handlePrimitiveSchema(
 }
 
 /**
+ * Build a single property entry for z.object()
+ * Pure function: converts one OpenAPI property to Zod code with metadata
+ * Determines required/optional and resolves references
+ * 
+ * @returns Tuple of [propertyName, zodCode]
+ */
+function buildPropertyEntry(
+  prop: string,
+  propSchema: SchemaObject | ReferenceObject,
+  schema: SchemaObject,
+  ctx: ConversionTypeContext | undefined,
+  meta: CodeMetaData,
+  isPartial: boolean,
+  hasRequiredArray: boolean,
+  options?: TemplateContext['options'],
+): [string, string] {
+  // Determine if this property is required
+  let propIsRequired: boolean | undefined;
+  if (isPartial) {
+    propIsRequired = true;
+  } else if (hasRequiredArray) {
+    propIsRequired = schema.required?.includes(prop);
+  } else {
+    propIsRequired = options?.withImplicitRequiredProps;
+  }
+
+  // Build metadata, only including isRequired if defined (exactOptionalPropertyTypes)
+  const propMetadata: CodeMetaData = {
+    ...meta,
+    name: prop,
+  };
+  if (propIsRequired !== undefined) {
+    propMetadata.isRequired = propIsRequired;
+  }
+
+  // Resolve reference for getZodChain (which needs .type property)
+  const propActualSchema: SchemaObject | ReferenceObject =
+    isReferenceObject(propSchema) && ctx?.doc
+      ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(propSchema.$ref))
+      : propSchema;
+
+  const propZodSchema = getZodSchema({
+    schema: propSchema,
+    ctx,
+    meta: propMetadata,
+    options,
+  });
+  const propChain = getZodChain({
+    schema: propActualSchema,
+    meta: propMetadata,
+    options,
+  });
+  const propCode = `${propZodSchema.toString()}${propChain}`;
+
+  return [prop, propCode];
+}
+
+/**
  * Build properties string for z.object()
  * Pure function: converts OpenAPI properties to Zod object property definitions
  * Handles required/optional determination and reference resolution
@@ -303,47 +357,9 @@ function buildObjectPropertiesString(
   hasRequiredArray: boolean,
   options?: TemplateContext['options'],
 ): string {
-  const propsMap = Object.entries(properties).map(([prop, propSchema]) => {
-    // Determine if this property is required
-    let propIsRequired: boolean | undefined;
-    if (isPartial) {
-      propIsRequired = true;
-    } else if (hasRequiredArray) {
-      propIsRequired = schema.required?.includes(prop);
-    } else {
-      propIsRequired = options?.withImplicitRequiredProps;
-    }
-
-    // Build metadata, only including isRequired if defined (exactOptionalPropertyTypes)
-    const propMetadata: CodeMetaData = {
-      ...meta,
-      name: prop,
-    };
-    if (propIsRequired !== undefined) {
-      propMetadata.isRequired = propIsRequired;
-    }
-
-    // Resolve reference for getZodChain (which needs .type property)
-    const propActualSchema: SchemaObject | ReferenceObject =
-      isReferenceObject(propSchema) && ctx?.doc
-        ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(propSchema.$ref))
-        : propSchema;
-
-    const propZodSchema = getZodSchema({
-      schema: propSchema,
-      ctx,
-      meta: propMetadata,
-      options,
-    });
-    const propChain = getZodChain({
-      schema: propActualSchema,
-      meta: propMetadata,
-      options,
-    });
-    const propCode = `${propZodSchema.toString()}${propChain}`;
-
-    return [prop, propCode];
-  });
+  const propsMap = Object.entries(properties).map(([prop, propSchema]) =>
+    buildPropertyEntry(prop, propSchema, schema, ctx, meta, isPartial, hasRequiredArray, options),
+  );
 
   return (
     '{ ' +
@@ -359,7 +375,7 @@ function buildObjectPropertiesString(
  * Handle additionalProperties when it's an object schema
  * Pure function: generates z.record() for object-type additionalProperties
  * Resolves references and applies validation chains
- * 
+ *
  * @returns Zod code string for z.record() or undefined if not applicable
  */
 function handleAdditionalPropertiesAsRecord(
@@ -402,7 +418,7 @@ function handleAdditionalPropertiesAsRecord(
  * Handle object type schema
  * Pure function: generates z.object() with properties, additionalProperties, and modifiers
  * Complex logic for required/optional props, partial, strict, readonly, passthrough
- * 
+ *
  * @returns Zod code string for object type
  */
 function handleObjectSchema(
@@ -424,9 +440,7 @@ function handleObjectSchema(
       ? true
       : options?.additionalPropertiesDefaultValue;
   const additionalProps =
-    schema.additionalProperties == null
-      ? additionalPropsDefaultValue
-      : schema.additionalProperties;
+    schema.additionalProperties == null ? additionalPropsDefaultValue : schema.additionalProperties;
   // When strictObjects is enabled, don't add .passthrough() (use .strict() instead)
   const additionalPropsSchema =
     additionalProps === false || options?.strictObjects ? '' : '.passthrough()';
@@ -434,7 +448,15 @@ function handleObjectSchema(
   const hasRequiredArray = !!(schema.required && schema.required.length > 0);
   const isPartial = !!(options?.withImplicitRequiredProps ? false : !schema.required?.length);
   const properties = schema.properties
-    ? buildObjectPropertiesString(schema.properties, schema, ctx, meta, isPartial, hasRequiredArray, options)
+    ? buildObjectPropertiesString(
+        schema.properties,
+        schema,
+        ctx,
+        meta,
+        isPartial,
+        hasRequiredArray,
+        options,
+      )
     : '{}';
 
   const partial = isPartial ? '.partial()' : '';
@@ -448,7 +470,7 @@ function handleObjectSchema(
  * Handle multiple type schema (OpenAPI 3.1 feature)
  * Pure function: generates union of all possible types when type is an array
  * Single type arrays are simplified to just that type
- * 
+ *
  * @returns Zod code string for multiple type union or single type
  */
 function handleMultipleTypeSchema(
@@ -478,7 +500,7 @@ function handleMultipleTypeSchema(
 /**
  * Route composition schemas (oneOf/anyOf/allOf) to their handlers
  * Pure router function: delegates to specific composition handler
- * 
+ *
  * @returns Zod code string for composition or undefined if not a composition schema
  */
 function handleCompositionSchemaIfPresent(
@@ -497,7 +519,7 @@ function handleCompositionSchemaIfPresent(
 /**
  * Prepare schema conversion context
  * Pure function: validates schema, applies refiner, builds CodeMeta and metadata
- * 
+ *
  * @returns Prepared schema, code, meta, and refsPath for conversion
  */
 function prepareSchemaContext(
@@ -556,7 +578,12 @@ export function getZodSchema({
   meta: inheritedMeta,
   options,
 }: ConversionArgs): CodeMeta {
-  const { schema, code, meta, refsPath } = prepareSchemaContext($schema, ctx, inheritedMeta, options);
+  const { schema, code, meta, refsPath } = prepareSchemaContext(
+    $schema,
+    ctx,
+    inheritedMeta,
+    options,
+  );
 
   if (isReferenceObject(schema)) {
     if (!ctx) throw new Error('Context is required');
