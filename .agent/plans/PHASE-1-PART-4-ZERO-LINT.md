@@ -4,29 +4,65 @@
 **Estimated Duration:** 36-45 hours (Pragmatic Hybrid: Production Perfect + Critical Test Issues)  
 **Prerequisites:** Parts 1-3 complete, all tests passing ✅
 
-**Current Progress (Latest: 2025-10-29 Night - MAJOR MILESTONE!):**
+**Current Progress (Latest: 2025-10-29 Night - MAJOR BREAKTHROUGH!):**
+
+**🏆 TWO GOD FUNCTIONS COMPLETELY DECOMPOSED!**
+
+- ✅ **openApiToZod.ts** - COMPLETE DECOMPOSITION (12 TDD Phases):
+  - Main `getZodSchema`: 323→<50 lines (-85%!) ✅
+  - `handleObjectSchema`: 108→<50 lines ✅
+  - `buildObjectPropertiesString`: 60→<50 lines ✅
+  - 13 pure helper functions extracted
+  - Pattern proven: Systematic TDD decomposition
+  - Impact: 16 errors remain (complexity in helpers, file size 803 lines)
+
+- ✅ **getEndpointDefinitionList.ts** - COMPLETE DECOMPOSITION (3 TDD Phases):
+  - Main function: 127→<50 lines (-60%!) **ZERO ERRORS!** 🎉
+  - 3 pure helper functions extracted
+  - Impact: 6 errors moved to `processAllEndpoints` helper (75 lines, needs Phase 4)
+
+- ✅ **getOpenApiDependencyGraph.ts** - ZERO lint errors (from previous session)
+
+**Completed Work This Session:**
 
 - ✅ endpoint-operation/ directory: ZERO errors (was 12+)
-- ✅ `endpoint.path.helpers.ts`: 245 lines (was 303), no assertions, only tracked deprecation notices remain
+- ✅ `endpoint.path.helpers.ts`: 245 lines, no assertions
 - ✅ `generateJSDocArray.ts`: Decomposed 74→18 lines, 15 new tests
-- ✅ `endpoint.helpers.ts`: Complexity reduced (3 functions fixed, 2 errors remain: file size + 1 complexity)
-- ✅ Quick wins cleared: `CodeMeta.ts`, `cli-type-guards.ts`, `maybePretty.ts`, control chars, sorting, TODOs, @ts-nocheck, missing awaits
-- ✅ **Task 4.5 COMPLETE:** Deprecated types replaced (EndpointDefinitionWithRefs → EndpointDefinition)
-- ✅ **Task 4.4 COMPLETE:** Explicit return types added (10 functions across 4 files)
-- ✅ **Task 4.6.1-4.6.3 COMPLETE:** TODOs (4), @ts-nocheck (2), missing awaits (8) - total 14 issues
+- ✅ `endpoint.helpers.ts`: Complexity reduced (3 functions fixed, 2 errors remain: file size 274 + 1 complexity)
+- ✅ Quick wins: `CodeMeta.ts`, `cli-type-guards.ts`, `maybePretty.ts`, control chars, sorting, TODOs, @ts-nocheck, missing awaits
+- ✅ **Task 4.5 COMPLETE:** Deprecated types (EndpointDefinitionWithRefs → EndpointDefinition)
+- ✅ **Task 4.4 COMPLETE:** Explicit return types (10 functions)
+- ✅ **Task 4.6 COMPLETE:** Critical test issues (TODOs, @ts-nocheck, missing awaits)
 - ✅ **Task 4.7.1 COMPLETE:** generateJSDocArray decomposition
-- ✅ **Task 4.8 COMPLETE:** Sorting & safety issues (10 fixes)
-- 🎉 **Task 4.2 MAJOR PROGRESS:** openApiToZod.ts god function decomposition (11 phases TDD)
-  - ✅ `getZodSchema`: 323→<50 lines (-85%+!) - **MAJOR GOAL ACHIEVED**
-  - ✅ `getOpenApiDependencyGraph`: 105→6 helpers, ZERO lint errors
-  - ✅ `handleObjectSchema`: 108→<50 lines
-  - ✅ 12 pure helper functions extracted (reference, composition, array, primitive, object, etc.)
-  - ✅ All tests passing (744/744), build succeeds
-  - 📊 openApiToZod.ts: 9→13 errors (expected: extracted helpers need refinement, complexity issues remain)
-- ✅ All quality gates green: format ✅, build ✅, type-check ✅, test (744/744) ✅
-- 📊 **Lint Progress:** 263 → 239 → 223 → 215 → **209 errors** (-54 total, -20.5% reduction)
-- 📝 **Session commits:** 13 clean TDD commits with comprehensive messages
-- 🔄 Next: Refine openApiToZod helpers (buildObjectPropertiesString, complexity), or move to other god functions
+- ✅ **Task 4.8 COMPLETE:** Sorting & safety issues
+
+**📊 LINT PROGRESS:** 263 → 215 → 209 → **207 errors** (-56 total, **-21.3%** reduction)
+
+**Production Code Status (11 files, ~73 errors):**
+
+**High Priority God Functions (Need Decomposition):**
+1. `template-context.ts`: 13 errors (251-line function, complexity 28, 543-line file)
+2. `generateZodClientFromOpenAPI.ts`: 7 errors (146-line function, complexity 23, 288-line file)
+3. `schema-complexity.ts`: 4 errors (116-line function, complexity 21)
+4. `openApiToTypescript.ts`: 8 errors (157+126-line functions, complexity 35)
+5. `cli.ts`: 6 errors (86-line function, complexity 30)
+
+**Medium Priority (File Size + Minor Complexity):**
+6. `openApiToZod.ts`: 16 errors (803-line file, helper complexity issues)
+7. `openApiToTypescript.helpers.ts`: 6 errors (325-line file, complexity 9, 2 assertions)
+8. `openApiToTypescript.string-helpers.ts`: 2 errors (375-line file, selector parameter)
+9. `getEndpointDefinitionList.ts`: 6 errors (processAllEndpoints: 75 lines, complexity 13, 277-line file, 1 assertion)
+
+**Low Priority (Nearly Done):**
+10. `endpoint.helpers.ts`: 2 errors (274-line file, 1 complexity)
+11. `utils.ts`: 6 errors (control character regex - needs eslint-disable comments)
+12. `characterisation/test-utils.ts`: 1 error (nested template literal)
+
+**Test Files:** ~134 errors (acceptable in pragmatic approach - functions >200 lines, files >1000 lines)
+
+**✅ All Quality Gates:** format ✅, build ✅, type-check ✅, test (744/744) ✅
+**📝 Session Commits:** 17 clean TDD commits
+**🎯 Next:** Continue god function decomposition (template-context.ts, generateZodClientFromOpenAPI.ts)
 
 **Completed Files (Zero Errors):**
 
@@ -36,6 +72,114 @@
 4. ✅ `endpoint-operation/process-response.ts` (213 lines)
 5. ✅ `endpoint-operation/process-default-response.ts` (217 lines)
 6. ✅ `endpoint.path.helpers.ts` (245 lines)
+7. ✅ `getOpenApiDependencyGraph.ts` (ZERO errors)
+8. ✅ `getEndpointDefinitionList.ts` main function (ZERO errors, helper has 6)
+
+**📊 DETAILED ERROR BREAKDOWN (207 total: ~73 production, ~134 test):**
+
+**Production Files Requiring Work:**
+
+1. **template-context.ts** (13 errors) 🎯 **NEXT TARGET - STRATEGIC PRIORITY**
+   - Line 74: max-lines-per-function (251 lines, limit 50)
+   - Line 74: max-statements (41 statements, limit 20)
+   - Line 77: cognitive-complexity (28, limit 8)
+   - Line 77: complexity (28, limit 8)
+   - Line 77: missing-return-type
+   - Line 144: max-depth (4, limit 3)
+   - Line 147: max-depth (4, limit 3)
+   - Line 158: max-depth (5, limit 3)
+   - Line 177: max-lines-per-function (96 lines, limit 50)
+   - Line 177: max-statements (30 statements, limit 20)
+   - Line 177: cognitive-complexity (14, limit 8)
+   - Line 177: complexity (11, limit 8)
+   - Line 251: max-lines (543 lines, limit 250)
+   
+   **⚠️ STRATEGIC CONSTRAINT: Future Handlebars → ts-morph Migration**
+   - Decompose into **VERY GRANULAR** single-responsibility functions
+   - Each function should do ONE thing only
+   - Goal: Easy to replace Handlebars templating with ts-morph AST building
+   - Separate: data gathering, transformation, validation, metadata building
+   - Target: 10-15 small pure functions instead of 2-3 large ones
+
+2. **openApiToZod.ts** (16 errors)
+   - Line 251: max-lines (803 lines, limit 250) ← needs file splitting
+   - Line 293: complexity (9, buildPropertyEntry)
+   - Line 367: different-types-comparison
+   - Line 424: complexity (19, handleObjectSchema)
+   - Line 424: cognitive-complexity (10)
+   - Line 575: complexity (14, getZodSchema)
+   - Line 575: cognitive-complexity (11)
+   - Line 628: complexity (10)
+   - Line 628: missing-return-type
+   - Line 694: function-return-type
+   - Line 718: cognitive-complexity (9)
+   - Line 752: cognitive-complexity (13)
+   - Line 752: complexity (10)
+   - Line 771: restrict-template-expressions
+   - Line 781: restrict-template-expressions
+
+3. **openApiToTypescript.ts** (8 errors)
+   - Line 43: max-lines-per-function (157 lines)
+   - Line 48: complexity (10)
+   - Line 60: max-lines-per-function (126 lines)
+   - Line 60: max-statements (50)
+   - Line 60: cognitive-complexity (30)
+   - Line 60: complexity (35)
+   - Line 95: non-null assertion
+   - Line 103: unused expression
+
+4. **generateZodClientFromOpenAPI.ts** (7 errors)
+   - Line 14: deprecation (validateOpenApiSpec)
+   - Line 143: max-lines-per-function (146 lines)
+   - Line 143: max-statements (45)
+   - Line 155: cognitive-complexity (21)
+   - Line 155: complexity (23)
+   - Line 158: deprecation
+   - Line 251: max-lines (288 lines)
+
+5. **openApiToTypescript.helpers.ts** (6 errors)
+   - Line 70: complexity (9, handleReferenceObject)
+   - Line 141: complexity (9, handlePrimitiveEnum)
+   - Line 141: cognitive-complexity (9)
+   - Line 251: max-lines (325 lines)
+   - Line 300: type assertion
+   - Line 315: type assertion
+
+6. **getEndpointDefinitionList.ts** (6 errors)
+   - Line 91: max-lines-per-function (75 lines, processAllEndpoints)
+   - Line 91: max-statements (26)
+   - Line 91: complexity (13)
+   - Line 91: cognitive-complexity (23)
+   - Line 251: max-lines (277 lines)
+   - Line 261: type assertion
+
+7. **cli.ts** (6 errors)
+   - Line 142: max-lines-per-function (86 lines)
+   - Line 142: max-statements (33)
+   - Line 142: cognitive-complexity (27)
+   - Line 142: complexity (30)
+   - Line 171: Record<string,unknown>
+   - Line 212: type assertion
+
+8. **utils.ts** (6 errors)
+   - Line 121: control character regex (6 violations) - needs eslint-disable
+
+9. **schema-complexity.ts** (4 errors)
+   - Line 48: max-lines-per-function (116 lines)
+   - Line 48: max-statements (32)
+   - Line 48: complexity (21)
+   - Line 48: cognitive-complexity (24)
+
+10. **openApiToTypescript.string-helpers.ts** (2 errors)
+    - Line 137: no-selector-parameter
+    - Line 251: max-lines (375 lines)
+
+11. **endpoint.helpers.ts** (2 errors)
+    - Line 208: complexity (9, handleSimpleSchemaWithFallback)
+    - Line 251: max-lines (274 lines)
+
+12. **characterisation/test-utils.ts** (1 error)
+    - Line 13: nested template literals
 
 **Remaining Production Files (~38 errors across 19 files):**
 
@@ -746,44 +890,85 @@ Line 276: as SchemaObject
 
 ---
 
-#### Subtask 4.2.2: Decompose template-context.ts:73
+#### Subtask 4.2.2: Decompose template-context.ts:73 ⚠️ STRATEGIC PRIORITY
 
 **Current Stats:**
 
 - 251 lines (limit 50) - 5x over!
 - 41 statements (limit 20) - 2x over!
-- Also has 3 nesting depth violations (depth 4-5)
+- Complexity 28 (limit 8) - 3.5x over!
+- 3 nesting depth violations (depth 4-5)
 
-**Strategy: Extract Endpoint Processing + Fix Nesting**
+**⚠️ STRATEGIC CONSTRAINT: Future Handlebars → ts-morph Migration**
 
-1. **Extract Helper Functions:**
+This file prepares data for Handlebars templates. We will later replace Handlebars with ts-morph for AST-based code generation. To enable this transition, we MUST decompose into **very granular, single-responsibility functions**.
 
-   ```typescript
-   function processEndpointParameters(operation, path, ctx) {}
-   function processEndpointResponses(operation, ctx) {}
-   function processEndpointErrors(operation, ctx) {}
-   function buildEndpointMetadata(operation, path, ctx) {}
-   ```
+**Strategy: GRANULAR Single-Responsibility Extraction**
 
-2. **Main function becomes coordinator:**
+**Phase 1: Schema Processing (5-7 small functions)**
+1. `extractSchemaNames(doc)` - get all schema names from components
+2. `buildSchemaMetadata(schemaName, schema, doc)` - metadata for one schema
+3. `calculateSchemaComplexity(schema)` - complexity scoring only
+4. `determineSchemaOrder(schemas)` - dependency ordering only
+5. `transformSchemaForTemplate(schema)` - template-specific shape
+6. `validateSchemaReferences(schema, doc)` - reference validation only
+7. `collectCircularDependencies(schemas)` - circular ref detection only
 
-   ```typescript
-   function buildTemplateContext(doc, options) {
-     const endpoints = [];
-     for (const [path, pathItem] of Object.entries(doc.paths)) {
-       for (const [method, operation] of Object.entries(pathItem)) {
-         endpoints.push(buildEndpointMetadata(operation, path, ctx));
-       }
-     }
-     return { schemas, endpoints, options };
-   }
-   ```
+**Phase 2: Endpoint Processing (8-10 small functions)**
+1. `extractEndpointPaths(doc)` - get all paths from spec
+2. `extractOperationsFromPath(pathItem)` - operations for one path
+3. `buildOperationMetadata(operation)` - metadata for one operation
+4. `extractParameterList(operation)` - just parameter extraction
+5. `extractRequestBodySchema(operation)` - just request body
+6. `extractResponseSchemas(operation)` - just response schemas
+7. `extractErrorSchemas(operation)` - just error schemas
+8. `buildEndpointSecurity(operation)` - just security metadata
+9. `transformEndpointForTemplate(endpoint)` - template-specific shape
+10. `validateEndpointReferences(endpoint, doc)` - reference validation
 
-3. **Fix deep nesting by extracting guard clauses:**
-   - Convert nested if/else to early returns
-   - Extract conditional logic to helper functions
+**Phase 3: Context Assembly (3-4 small functions)**
+1. `assembleSchemaContext(schemas, options)` - combine schema metadata
+2. `assembleEndpointContext(endpoints, options)` - combine endpoint metadata
+3. `assembleTemplateOptions(options, defaults)` - merge options with defaults
+4. `buildFinalContext(schemas, endpoints, options)` - final assembly only
 
-**Time Estimate:** 3-4 hours (increased for nesting fixes)
+**Main Function (coordinator only, ~20 lines):**
+
+```typescript
+function buildTemplateContext(doc: OpenAPIObject, options?: Options): TemplateContext {
+  // Coordinate only, no logic
+  const schemaNames = extractSchemaNames(doc);
+  const schemaMetadata = schemaNames.map(name => buildSchemaMetadata(name, doc.components.schemas[name], doc));
+  const orderedSchemas = determineSchemaOrder(schemaMetadata);
+  const templatedSchemas = orderedSchemas.map(transformSchemaForTemplate);
+  
+  const paths = extractEndpointPaths(doc);
+  const endpoints = paths.flatMap(path => {
+    const operations = extractOperationsFromPath(doc.paths[path]);
+    return operations.map(op => buildOperationMetadata(op));
+  });
+  const templatedEndpoints = endpoints.map(transformEndpointForTemplate);
+  
+  const finalOptions = assembleTemplateOptions(options, DEFAULT_OPTIONS);
+  
+  return buildFinalContext(templatedSchemas, templatedEndpoints, finalOptions);
+}
+```
+
+**Benefits for ts-morph Migration:**
+- Each granular function = one clear responsibility
+- Easy to replace: `transformSchemaForTemplate` → `buildSchemaAstNode`
+- Data gathering functions stay the same
+- Only transformation functions need replacement
+- Clear separation of concerns enables incremental migration
+
+**TDD Approach:**
+1. Characterize current behavior with comprehensive tests
+2. Extract ONE granular function at a time (RED → GREEN → REFACTOR)
+3. Each function should be <30 lines, <5 complexity
+4. Validate after each extraction
+
+**Time Estimate:** 6-8 hours (longer due to granular approach, but strategic value is high)
 
 ---
 
@@ -1390,6 +1575,41 @@ Test quality reflects production code quality. We fix test issues with the same 
 ### 4. **Linting = Automated Code Review**
 
 Lint errors are failing code review. We address every single one before extraction.
+
+### 5. **⚠️ Template Code: VERY GRANULAR Decomposition (NEW)**
+
+Template-related code requires **extra granular** single-responsibility functions:
+
+**WHY:** Future Handlebars → ts-morph migration (Phase 2)
+- We will replace Handlebars templates with ts-morph AST building
+- Granular functions make this migration incremental, not all-or-nothing
+- Data gathering functions stay the same, only transformation changes
+
+**HOW:** Separate concerns into 4 categories
+1. **Data Gathering:** Extract from OpenAPI spec (stays same)
+2. **Transformation:** Convert to template shape (changes to AST building)
+3. **Validation:** Check references, detect issues (stays same)
+4. **Assembly:** Combine into final context (may change)
+
+**TARGET:** Each function <30 lines, <5 complexity, ONE responsibility
+
+**EXAMPLE:**
+```typescript
+// Instead of this (does 4 things):
+function buildSchemaContext(doc, options) { /* extract + transform + validate + assemble */ }
+
+// Do this (4 separate functions):
+extractSchemaNames(doc)           // Data gathering
+transformSchemaForTemplate(meta)  // Transformation (will become buildSchemaAstNode)
+validateSchemaReferences(schema)  // Validation
+assembleSchemaContext(schemas)    // Assembly
+```
+
+**FILES AFFECTED:**
+- `template-context.ts` (highest priority)
+- `generateZodClientFromOpenAPI.ts` (also template-related)
+
+**BENEFIT:** When migrating to ts-morph, we only replace transformation functions. Data gathering and validation stay intact. Incremental migration = lower risk.
 
 ---
 

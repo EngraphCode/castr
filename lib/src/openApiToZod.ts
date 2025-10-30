@@ -287,7 +287,7 @@ function handlePrimitiveSchema(schema: SchemaObject, code: CodeMeta, schemaType:
  * Build a single property entry for z.object()
  * Pure function: converts one OpenAPI property to Zod code with metadata
  * Determines required/optional and resolves references
- * 
+ *
  * @returns Tuple of [propertyName, zodCode]
  */
 function buildPropertyEntry(
@@ -345,7 +345,7 @@ function buildPropertyEntry(
  * Build properties string for z.object()
  * Pure function: converts OpenAPI properties to Zod object property definitions
  * Handles required/optional determination and reference resolution
- * 
+ *
  * @returns Properties string like "{ prop1: z.string(), prop2: z.number().optional() }"
  */
 function buildObjectPropertiesString(

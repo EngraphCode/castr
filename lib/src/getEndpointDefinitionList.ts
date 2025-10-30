@@ -47,13 +47,10 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
 /**
  * Prepare conversion context for endpoint processing
  * Pure function: initializes context, operation alias resolver, and helper functions
- * 
+ *
  * @returns Processing context with helpers and configuration
  */
-function prepareEndpointContext(
-  doc: OpenAPIObject,
-  options?: TemplateContext['options'],
-) {
+function prepareEndpointContext(doc: OpenAPIObject, options?: TemplateContext['options']) {
   const getOperationAlias = match(options?.withAlias)
     .with(
       P.boolean,
@@ -88,7 +85,7 @@ function prepareEndpointContext(
 /**
  * Process all endpoints from OpenAPI paths
  * Pure function: iterates all paths/operations and builds endpoint list
- * 
+ *
  * @returns Endpoints and arrays of ignored responses
  */
 function processAllEndpoints(
@@ -170,7 +167,7 @@ function processAllEndpoints(
 /**
  * Emit warnings for ignored responses
  * Pure function: logs conditional warnings based on configuration
- * 
+ *
  * @returns void (side effect: logger warnings)
  */
 function emitResponseWarnings(
@@ -244,7 +241,10 @@ export const getEndpointDefinitionList = (
     doc,
   );
 
-  const { ctx, getOperationAlias, getZodVarName, defaultStatusBehavior } = prepareEndpointContext(doc, options);
+  const { ctx, getOperationAlias, getZodVarName, defaultStatusBehavior } = prepareEndpointContext(
+    doc,
+    options,
+  );
 
   const { endpoints, ignoredFallbackResponse, ignoredGenericError } = processAllEndpoints(
     doc,
