@@ -9,12 +9,14 @@
 I'm working on the `openapi-zod-validation` modernization project. This is a TypeScript library that generates Zod validation schemas and type-safe API clients from OpenAPI 3.0/3.1 specifications.
 
 **Project Context:**
+
 - **Repository:** Local fork at `/Users/jim/code/personal/openapi-zod-client`
 - **Branch:** `feat/rewrite`
 - **Goal:** Modernize and extract to Engraph monorepo
 - **Tech Stack:** TypeScript, Zod, OpenAPI 3.x, Handlebars (future: ts-morph), Vitest
 
 **Journey So Far:**
+
 - ✅ Phase 1 Part 1: Context types refactored
 - ✅ Phase 1 Part 2: Tanu eliminated, string-based TS generation
 - ✅ Phase 1 Part 3: Zodios removed, openapi-fetch integration
@@ -62,21 +64,13 @@ Finish Phase 1 Part 4 by eliminating the remaining production lint violations th
    - Target: 15-20 small pure functions (<30 lines, <5 complexity each)
    - Separate: data gathering, transformation, validation, assembly
    - Goal: Easy to replace transformation layer without rewriting data layer
-   
 2. `generateZodClientFromOpenAPI.ts`: 7 errors (146-line function, complexity 23)
    - Also template-related, same granular decomposition approach
-   
 3. `schema-complexity.ts`: 4 errors (116-line function, complexity 21)
 4. `openApiToTypescript.ts`: 8 errors (157+126-line functions, complexity 35)
 5. `cli.ts`: 6 errors (86-line function, complexity 30)
 
-**File Size + Minor Issues:**
-6. `openApiToZod.ts`: 16 errors (803-line file - needs splitting into focused modules)
-7. `openApiToTypescript.helpers.ts`: 6 errors (325-line file, complexity 9, 2 assertions)
-8. `openApiToTypescript.string-helpers.ts`: 2 errors (375-line file, selector parameter)
-9. `getEndpointDefinitionList.ts`: 6 errors (processAllEndpoints: 75 lines, complexity 13, 1 assertion)
-10. `endpoint.helpers.ts`: 2 errors (274-line file, handleSimpleSchemaWithFallback: complexity 9)
-11. `utils.ts`: 6 errors (control character regex - needs eslint-disable comments with justification)
+**File Size + Minor Issues:** 6. `openApiToZod.ts`: 16 errors (803-line file - needs splitting into focused modules) 7. `openApiToTypescript.helpers.ts`: 6 errors (325-line file, complexity 9, 2 assertions) 8. `openApiToTypescript.string-helpers.ts`: 2 errors (375-line file, selector parameter) 9. `getEndpointDefinitionList.ts`: 6 errors (processAllEndpoints: 75 lines, complexity 13, 1 assertion) 10. `endpoint.helpers.ts`: 2 errors (274-line file, handleSimpleSchemaWithFallback: complexity 9) 11. `utils.ts`: 6 errors (control character regex - needs eslint-disable comments with justification)
 
 **Test Files:** ~134 errors (acceptable in pragmatic approach)
 
@@ -93,17 +87,20 @@ Finish Phase 1 Part 4 by eliminating the remaining production lint violations th
 For template-related code (template-context.ts, generateZodClientFromOpenAPI.ts):
 
 **Principle: VERY GRANULAR Single-Responsibility Functions**
+
 - Each function does ONE thing only
 - Target: <30 lines, <5 complexity per function
 - NO multi-step logic in single functions
 
 **Pattern: Separate Concerns**
+
 1. **Data Gathering:** Extract raw data from OpenAPI spec (stays same in ts-morph)
 2. **Transformation:** Convert to template shape (will change to AST building)
 3. **Validation:** Check references, detect issues (stays same in ts-morph)
 4. **Assembly:** Combine into final context (may change in ts-morph)
 
 **Example Decomposition:**
+
 ```typescript
 // BAD: Does too much
 function buildSchemaContext(doc, options) {
@@ -111,14 +108,25 @@ function buildSchemaContext(doc, options) {
 }
 
 // GOOD: Single responsibility each
-function extractSchemaNames(doc) { /* just extraction */ }
-function buildSchemaMetadata(name, schema) { /* just one schema */ }
-function transformSchemaForTemplate(metadata) { /* just transform */ }
-function validateSchemaReferences(schema, doc) { /* just validate */ }
-function assembleSchemaContext(schemas, options) { /* just assemble */ }
+function extractSchemaNames(doc) {
+  /* just extraction */
+}
+function buildSchemaMetadata(name, schema) {
+  /* just one schema */
+}
+function transformSchemaForTemplate(metadata) {
+  /* just transform */
+}
+function validateSchemaReferences(schema, doc) {
+  /* just validate */
+}
+function assembleSchemaContext(schemas, options) {
+  /* just assemble */
+}
 ```
 
 **Migration Benefit:**
+
 - Keep: `extractSchemaNames`, `buildSchemaMetadata`, `validateSchemaReferences`
 - Replace: `transformSchemaForTemplate` → `buildSchemaAstNode`
 - Incremental, not all-or-nothing rewrite
@@ -146,6 +154,7 @@ function assembleSchemaContext(schemas, options) { /* just assemble */ }
 ### 🚀 IMMEDIATE ACTIONS (First 10 Minutes)
 
 **Step 1: Orient Yourself (5 min)**
+
 ```bash
 cd /Users/jim/code/personal/openapi-zod-client
 git status    # Should be on feat/rewrite, clean working tree
@@ -153,6 +162,7 @@ pnpm lint 2>&1 | head -50  # Confirm 207 errors baseline
 ```
 
 **Step 2: Review Documentation (5 min)**
+
 - Read `.agent/context/context.md` - current state, recent wins
 - Skim `.agent/plans/PHASE-1-PART-4-ZERO-LINT.md` - focus on template-context.ts section
 - Glance at `.agent/RULES.md` - TDD mandate, coding standards
@@ -194,24 +204,28 @@ lib/src/
 ### 🎓 Proven Patterns (From Recent Sessions)
 
 **Pattern 1: God Function Decomposition (WORKS!)**
+
 - Used successfully on openApiToZod (323→<50 lines) and getEndpointDefinitionList (127→<50 lines)
 - Process: Characterize → Extract helpers (10-15 functions) → Refactor main → Validate
 - Results: Complexity 28-69 → <8, all tests passing, zero regressions
 - Key: TDD at every step, one helper at a time
 
 **Pattern 2: Helper Function Extraction**
+
 - Make each helper do ONE thing only
 - Keep helpers pure (no side effects)
 - Target: <30 lines, <5 complexity for template code
 - Test each helper independently
 
 **Pattern 3: Quality Gate Discipline**
+
 - Run tests after EVERY extraction
 - Run full quality gates after each task cluster
 - Never skip type-check
 - Document progress immediately
 
 **Common Pitfall to Avoid:**
+
 - Don't extract helpers without tests first
 - Don't combine multiple concerns in one function
 - Don't skip characterization tests
@@ -220,12 +234,14 @@ lib/src/
 ### Success Metrics & Progress Tracking
 
 **Current Session:**
+
 - Start: 263 errors
 - Current: 207 errors
 - Progress: -56 (-21.3%)
 - Commits: 18 clean TDD commits
 
 **Files Completed (Zero Errors):**
+
 1. ✅ getOpenApiDependencyGraph.ts
 2. ✅ endpoint-operation/ (5 files)
 3. ✅ getEndpointDefinitionList.ts main function
@@ -244,6 +260,7 @@ All of the following must be true:
 ### Tools & Commands Reference
 
 **Quality Gates:**
+
 ```bash
 pnpm format                       # Prettier formatting
 pnpm build                        # ESM + CJS + DTS build
@@ -253,17 +270,20 @@ pnpm lint                         # ESLint (target: 0 errors)
 ```
 
 **Full Quality Sweep:**
+
 ```bash
 pnpm format && pnpm build && pnpm type-check && pnpm test:all && pnpm lint
 ```
 
 **Targeted Testing:**
+
 ```bash
 pnpm test -- --run template-context.test.ts  # Single test file
 pnpm test -- --run lib/src/                  # Directory
 ```
 
 **Commit Pattern:**
+
 ```bash
 git add -A
 git commit -m "refactor(lint): <file> - <what you did>

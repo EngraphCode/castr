@@ -7,7 +7,6 @@ import type {
 import { isReferenceObject } from 'openapi3-ts/oas30';
 import { sortBy } from 'lodash-es';
 import * as ts from 'typescript';
-import { match } from 'ts-pattern';
 
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
 import {
@@ -71,252 +70,826 @@ const getSchemaNameFromRef = (ref: string): string => {
   return name;
 };
 
-export const getZodClientTemplateContext = (
-  openApiDoc: OpenAPIObject,
-  options?: TemplateContext['options'],
-) => {
-  const result = getEndpointDefinitionList(openApiDoc, options);
-  const data = makeTemplateContext();
+/**
+ * Extract schema names from OpenAPI document components.
+ * Pure function that gathers data from the spec.
+ *
+ * @param doc - The OpenAPI document
+ * @returns Array of schema names found in components.schemas
+ *
+ * @internal
+ */
+export const extractSchemaNamesFromDoc = (doc: OpenAPIObject): string[] => {
+  const schemas = doc.components?.schemas ?? {};
+  return Object.keys(schemas);
+};
 
-  const docSchemas = openApiDoc.components?.schemas ?? {};
-  const depsGraphs = getOpenApiDependencyGraph(
-    Object.keys(docSchemas).map((name) => asComponentSchema(name)),
-    openApiDoc,
-  );
+/**
+ * Build dependency graph for component schemas.
+ * Wraps getOpenApiDependencyGraph with schema name conversion.
+ *
+ * @param schemaNames - Array of schema names from components
+ * @param doc - The OpenAPI document
+ * @returns Dependency graph with refsDependencyGraph and deepDependencyGraph
+ *
+ * @internal
+ */
+export const buildDependencyGraphForSchemas = (
+  schemaNames: string[],
+  doc: OpenAPIObject,
+): {
+  refsDependencyGraph: Record<string, Set<string>>;
+  deepDependencyGraph: Record<string, Set<string>>;
+} => {
+  const schemaRefs = schemaNames.map((name) => asComponentSchema(name));
+  return getOpenApiDependencyGraph(schemaRefs, doc);
+};
 
-  if (options?.shouldExportAllSchemas) {
-    Object.entries(docSchemas).forEach(([name, schema]) => {
-      if (!result.zodSchemaByName[name]) {
-        const schemaArgs = { schema, ctx: result, options };
-        const zodSchema = getZodSchema(schemaArgs);
-        const zodSchemaString = zodSchema.toString();
-        if (!zodSchemaString) {
-          throw new Error(
-            `Could not get Zod schema string for schema: ${name}, with value: ${JSON.stringify(schema)}`,
-          );
-        }
-        result.zodSchemaByName[name] = zodSchemaString;
-      }
-    });
+/**
+ * Check if a schema has a circular reference.
+ * Pure validation function.
+ *
+ * @param ref - Schema reference like '#/components/schemas/User'
+ * @param dependencyGraph - The deep dependency graph
+ * @returns true if schema references itself
+ *
+ * @internal
+ */
+export const checkIfSchemaIsCircular = (
+  ref: string,
+  dependencyGraph: Record<string, Set<string>>,
+): boolean => {
+  return Boolean(ref && dependencyGraph[ref]?.has(ref));
+};
+
+/**
+ * Wrap schema code with z.lazy() if it has circular references.
+ * Transformation function for template generation.
+ *
+ * @param schemaName - Name of the schema
+ * @param schemaCode - Generated Zod schema code string
+ * @param dependencyGraph - The deep dependency graph
+ * @param circularTypes - Record to update with circular type markers
+ * @returns Wrapped or unwrapped schema code
+ *
+ * @internal
+ */
+export const wrapSchemaWithLazyIfNeeded = (
+  schemaName: string,
+  schemaCode: string,
+  dependencyGraph: Record<string, Set<string>>,
+  circularTypes: Record<string, true>,
+): string => {
+  const ref = asComponentSchema(schemaName);
+  const isCircular = checkIfSchemaIsCircular(ref, dependencyGraph);
+
+  if (isCircular) {
+    circularTypes[schemaName] = true;
+    return `z.lazy(() => ${schemaCode})`;
   }
 
-  const wrapWithLazyIfNeeded = (schemaName: string) => {
-    const code = result.zodSchemaByName[schemaName];
+  return schemaCode;
+};
+
+/**
+ * Build schemas map from Zod schema names, wrapping with lazy if needed.
+ * Transformation function that builds the final schemas object for templates.
+ *
+ * @param zodSchemasByName - Map of schema names to Zod schema code strings
+ * @param dependencyGraph - The deep dependency graph
+ * @param circularTypes - Record to update with circular type markers
+ * @returns Map of normalized schema names to wrapped/unwrapped schema code
+ *
+ * @internal
+ */
+export const buildSchemasMap = (
+  zodSchemasByName: Record<string, string>,
+  dependencyGraph: Record<string, Set<string>>,
+  circularTypes: Record<string, true>,
+): Record<string, string> => {
+  const schemas: Record<string, string> = {};
+
+  for (const name in zodSchemasByName) {
+    const code = zodSchemasByName[name];
     if (!code) {
-      throw new Error(`Zod schema not found for name: ${schemaName}`);
+      throw new Error(`Zod schema not found for name: ${name}`);
     }
 
-    // Convert schema name to ref
-    const ref = asComponentSchema(schemaName);
-
-    const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
-    if (isCircular) {
-      data.circularTypeByName[schemaName] = true;
-    }
-
-    return isCircular ? `z.lazy(() => ${code})` : code;
-  };
-
-  for (const name in result.zodSchemaByName) {
-    data.schemas[normalizeString(name)] = wrapWithLazyIfNeeded(name);
+    const normalizedName = normalizeString(name);
+    schemas[normalizedName] = wrapSchemaWithLazyIfNeeded(
+      name,
+      code,
+      dependencyGraph,
+      circularTypes,
+    );
   }
 
-  for (const ref in depsGraphs.deepDependencyGraph) {
-    const isCircular = ref && depsGraphs.deepDependencyGraph[ref]?.has(ref);
-    const ctx: TsConversionContext = { nodeByRef: {}, doc: openApiDoc, visitedRefs: {} };
+  return schemas;
+};
 
-    // Specifically check isCircular if shouldExportAllTypes is false. Either should cause shouldGenerateType to be true.
-
-    const shouldGenerateType = options?.shouldExportAllTypes || isCircular;
-    const schemaName = shouldGenerateType ? getSchemaNameFromRef(ref) : undefined;
-    if (shouldGenerateType && schemaName && !data.types[schemaName]) {
-      const tsResult = getTypescriptFromOpenApi({
-        schema: getSchemaFromComponents(openApiDoc, schemaName),
-        ctx,
-        meta: { name: schemaName },
+/**
+ * Export unused schemas by generating Zod schemas for them.
+ * Mutates result.zodSchemaByName to add schemas not already present.
+ *
+ * @param docSchemas - Map of schema names to OpenAPI schema objects
+ * @param result - Endpoint definition list result (mutated)
+ * @param doc - The OpenAPI document
+ * @param options - Template context options
+ *
+ * @internal
+ */
+export const exportUnusedSchemas = (
+  docSchemas: Record<string, SchemaObject | ReferenceObject>,
+  result: {
+    zodSchemaByName: Record<string, string>;
+  },
+  doc: OpenAPIObject,
+  options?: TemplateContext['options'],
+): void => {
+  Object.entries(docSchemas).forEach(([name, schema]) => {
+    if (!result.zodSchemaByName[name]) {
+      const schemaArgs = {
+        schema,
+        ctx: {
+          doc,
+          zodSchemaByName: result.zodSchemaByName,
+          schemaByName: result.zodSchemaByName,
+        },
         options,
-      });
-      data.types[schemaName] = tsResultToString(tsResult).replace('export ', '');
-      data.emittedType[schemaName] = true;
+      };
+      const zodSchema = getZodSchema(schemaArgs);
+      const zodSchemaString = zodSchema.toString();
+      if (!zodSchemaString) {
+        throw new Error(
+          `Could not get Zod schema string for schema: ${name}, with value: ${JSON.stringify(schema)}`,
+        );
+      }
+      result.zodSchemaByName[name] = zodSchemaString;
+    }
+  });
+};
 
-      for (const depRef of depsGraphs.deepDependencyGraph[ref] ?? []) {
-        const depSchemaName = getSchemaNameFromRef(depRef);
-        if (!depSchemaName) continue;
-        const isDepCircular = depsGraphs.deepDependencyGraph[depRef]?.has(depRef);
+/**
+ * Determine if a type should be generated for a schema.
+ * Pure validation function.
+ *
+ * @param ref - Schema reference
+ * @param dependencyGraph - The deep dependency graph
+ * @param options - Template context options
+ * @returns true if type should be generated
+ *
+ * @internal
+ */
+export const shouldGenerateTypeForSchema = (
+  ref: string,
+  dependencyGraph: Record<string, Set<string>>,
+  options?: TemplateContext['options'],
+): boolean => {
+  const isCircular = checkIfSchemaIsCircular(ref, dependencyGraph);
+  return Boolean(options?.shouldExportAllTypes || isCircular);
+};
 
-        if (!isDepCircular && !data.types[depSchemaName]) {
-          const nodeSchema = getSchemaFromComponents(openApiDoc, depSchemaName);
-          const tsResult = getTypescriptFromOpenApi({
-            schema: nodeSchema,
-            ctx,
-            meta: { name: depSchemaName },
-            options,
-          });
-          data.types[depSchemaName] = tsResultToString(tsResult).replace('export ', '');
-          // defining types for strings and using the `z.ZodType<string>` type for their schema
-          // prevents consumers of the type from adding zod validations like `.min()` to the type
-          if (
-            options?.shouldExportAllTypes &&
-            !isReferenceObject(nodeSchema) &&
-            nodeSchema.type === 'object'
-          ) {
-            data.emittedType[depSchemaName] = true;
-          }
-        }
+/**
+ * Generate TypeScript type string for a schema.
+ * Transformation function for template generation.
+ *
+ * @param schemaName - Name of the schema
+ * @param schema - The OpenAPI schema object
+ * @param ctx - TypeScript conversion context
+ * @param options - Template context options
+ * @returns TypeScript type string without 'export' keyword
+ *
+ * @internal
+ */
+export const generateTypeForSchema = (
+  schemaName: string,
+  schema: SchemaObject | ReferenceObject,
+  ctx: TsConversionContext,
+  options?: TemplateContext['options'],
+): string => {
+  const tsResult = getTypescriptFromOpenApi({
+    schema,
+    ctx,
+    meta: { name: schemaName },
+    options,
+  });
+  return tsResultToString(tsResult).replace('export ', '');
+};
+
+/**
+ * Determine if a type should be emitted (marked in emittedType).
+ * Pure validation function.
+ *
+ * @param schema - The OpenAPI schema object
+ * @param options - Template context options
+ * @returns true if type should be emitted
+ *
+ * @internal
+ */
+export const shouldEmitTypeForSchema = (
+  schema: SchemaObject | ReferenceObject,
+  options?: TemplateContext['options'],
+): boolean => {
+  return (
+    Boolean(options?.shouldExportAllTypes) && !isReferenceObject(schema) && schema.type === 'object'
+  );
+};
+
+/**
+ * Sort schemas by their dependency order.
+ * Transformation function that orders schemas for template generation.
+ *
+ * @param schemas - Map of schema names to schema code strings
+ * @param dependencyGraph - The deep dependency graph
+ * @returns Sorted schemas map
+ *
+ * @internal
+ */
+export const sortSchemasByDependencies = (
+  schemas: Record<string, string>,
+  dependencyGraph: Record<string, Set<string>>,
+): Record<string, string> => {
+  const schemaOrderedByDependencies = topologicalSort(dependencyGraph);
+  return sortSchemasByDependencyOrder(schemas, schemaOrderedByDependencies);
+};
+
+/**
+ * Convert path with colons to OpenAPI bracket format.
+ * Example: '/pet/:petId' -> '/pet/{petId}'
+ *
+ * @param path - Path with colon parameters
+ * @returns Path with bracket parameters
+ *
+ * @internal
+ */
+export const getOriginalPathWithBrackets = (path: string): string => {
+  const originalPathParam = /:(\w+)/g;
+  return path.replaceAll(originalPathParam, '{$1}');
+};
+
+/**
+ * Extract pure schema names from full ref paths.
+ * Example: '#/components/schemas/Category' -> 'Category'
+ *
+ * @param fullSchemaNames - Array of full schema ref paths
+ * @returns Array of schema names only
+ *
+ * @internal
+ */
+export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
+  return fullSchemaNames.map((name) => {
+    const parts = name.split('/');
+    const lastPart = parts.at(-1);
+    if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
+    return lastPart;
+  });
+};
+
+/**
+ * Determine group name based on grouping strategy.
+ * Data gathering function that extracts group name from operation/endpoint.
+ *
+ * @param groupStrategy - The grouping strategy to use
+ * @param operation - The OpenAPI operation object
+ * @param endpoint - The endpoint definition
+ * @returns Group name (normalized)
+ *
+ * @internal
+ */
+export const determineGroupName = (
+  groupStrategy: TemplateContextGroupStrategy,
+  operation: OperationObject,
+  endpoint: EndpointDefinition,
+): string => {
+  if (groupStrategy === 'tag' || groupStrategy === 'tag-file') {
+    return normalizeString(operation.tags?.[0] ?? 'Default');
+  }
+  if (groupStrategy === 'method' || groupStrategy === 'method-file') {
+    return normalizeString(endpoint.method);
+  }
+  return normalizeString('Default');
+};
+
+/**
+ * Normalize schema name for dependency tracking.
+ * Extracts base schema name from potentially chained schema names.
+ *
+ * @param schemaName - Schema name (may include chains like "User.address")
+ * @returns Normalized schema name or null if invalid
+ *
+ * @internal
+ */
+export const normalizeSchemaNameForDependency = (schemaName: string): string | null => {
+  if (!schemaName) return null;
+  if (schemaName.startsWith('z.')) return null;
+  // Sometimes the schema includes a chain that should be removed from the dependency
+  const [normalizedSchemaName] = schemaName.split('.');
+  return normalizedSchemaName || null;
+};
+
+/**
+ * Collect schema dependencies from an endpoint.
+ * Data gathering function that extracts dependency names.
+ *
+ * @param endpoint - The endpoint definition
+ * @returns Array of schema names used by the endpoint
+ *
+ * @internal
+ */
+export const collectEndpointDependencies = (endpoint: EndpointDefinition): string[] => {
+  const dependencies: string[] = [];
+
+  if (endpoint.response) {
+    const normalized = normalizeSchemaNameForDependency(endpoint.response);
+    if (normalized) dependencies.push(normalized);
+  }
+
+  endpoint.parameters.forEach((param) => {
+    const normalized = normalizeSchemaNameForDependency(param.schema);
+    if (normalized) dependencies.push(normalized);
+  });
+
+  endpoint.errors.forEach((error) => {
+    const normalized = normalizeSchemaNameForDependency(error.schema);
+    if (normalized) dependencies.push(normalized);
+  });
+
+  return dependencies;
+};
+
+/**
+ * Get operation object from OpenAPI document for an endpoint.
+ * Data gathering function that extracts operation from paths.
+ *
+ * @param openApiDoc - The OpenAPI document
+ * @param endpoint - The endpoint definition
+ * @returns Operation object or null if not found
+ *
+ * @internal
+ */
+export const getOperationForEndpoint = (
+  openApiDoc: OpenAPIObject,
+  endpoint: EndpointDefinition,
+): OperationObject | null => {
+  const operationPath = getOriginalPathWithBrackets(endpoint.path);
+  const pathItem = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
+
+  if (!pathItem || isReferenceObject(pathItem)) {
+    logger.warn('Missing path', endpoint.path);
+    return null;
+  }
+
+  const operation = pathItem[endpoint.method];
+  if (!operation) {
+    logger.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
+    return null;
+  }
+
+  return operation;
+};
+
+/**
+ * Ensure a group exists in endpointsGroups, creating it if needed.
+ * Assembly function that manages group structure.
+ *
+ * @param groupName - Name of the group
+ * @param endpointsGroups - Map of group names to template contexts
+ * @returns The group template context
+ *
+ * @internal
+ */
+export const ensureGroupExists = (
+  groupName: string,
+  endpointsGroups: Record<string, MinimalTemplateContext>,
+): MinimalTemplateContext => {
+  if (!endpointsGroups[groupName]) {
+    endpointsGroups[groupName] = makeEndpointTemplateContext();
+  }
+  const group = endpointsGroups[groupName];
+  if (!group) {
+    throw new Error(`Failed to create group: ${groupName}`);
+  }
+  return group;
+};
+
+/**
+ * Ensure a dependencies set exists for a group, creating it if needed.
+ * Assembly function that manages dependencies tracking.
+ *
+ * @param groupName - Name of the group
+ * @param dependenciesByGroupName - Map of group names to dependency sets
+ * @returns The dependencies set for the group
+ *
+ * @internal
+ */
+export const ensureDependenciesSetExists = (
+  groupName: string,
+  dependenciesByGroupName: Map<string, Set<string>>,
+): Set<string> => {
+  if (!dependenciesByGroupName.has(groupName)) {
+    dependenciesByGroupName.set(groupName, new Set());
+  }
+  const dependencies = dependenciesByGroupName.get(groupName);
+  if (!dependencies) {
+    throw new Error(`Dependencies not found for group: ${groupName}`);
+  }
+  return dependencies;
+};
+
+/**
+ * Add dependencies to a group's schemas.
+ * Transformation function that adds schemas to group context.
+ *
+ * @param dependencies - Set of schema names
+ * @param schemas - Map of all schemas
+ * @param group - The group template context to update
+ *
+ * @internal
+ */
+export const addDependenciesToGroup = (
+  dependencies: Set<string>,
+  schemas: Record<string, string>,
+  group: MinimalTemplateContext,
+): void => {
+  dependencies.forEach((schemaName) => {
+    const schema = schemas[schemaName];
+    if (schema) {
+      group.schemas[schemaName] = schema;
+    }
+  });
+};
+
+/**
+ * Process transitive dependencies for a schema and add them to group.
+ * Transformation function that processes deep dependencies.
+ *
+ * @param schemaName - Name of the schema
+ * @param dependencyGraph - The deep dependency graph
+ * @param types - Map of all types
+ * @param schemas - Map of all schemas
+ * @param dependencies - Set to add transitive dependencies to
+ * @param group - The group template context to update
+ *
+ * @internal
+ */
+export const processTransitiveDependenciesForGroup = (
+  schemaName: string,
+  dependencyGraph: Record<string, Set<string>>,
+  types: Record<string, string>,
+  schemas: Record<string, string>,
+  dependencies: Set<string>,
+  group: MinimalTemplateContext,
+): void => {
+  const resolvedRef = asComponentSchema(schemaName);
+  const transitiveRefs = dependencyGraph[resolvedRef];
+
+  if (!transitiveRefs) return;
+
+  transitiveRefs.forEach((transitiveRef) => {
+    const transitiveSchemaName = getSchemaNameFromRef(transitiveRef);
+    if (!transitiveSchemaName) return;
+
+    const normalized = normalizeSchemaNameForDependency(transitiveSchemaName);
+    if (normalized) {
+      dependencies.add(normalized);
+    }
+
+    const transitiveType = types[transitiveSchemaName];
+    if (transitiveType) {
+      group.types[transitiveSchemaName] = transitiveType;
+    }
+
+    const transitiveSchema = schemas[transitiveSchemaName];
+    if (transitiveSchema) {
+      group.schemas[transitiveSchemaName] = transitiveSchema;
+    }
+  });
+};
+
+/**
+ * Calculate dependency counts across all groups.
+ * Data gathering function that counts how many groups use each schema.
+ *
+ * @param dependenciesByGroupName - Map of group names to dependency sets
+ * @returns Map of schema names to count of groups using them
+ *
+ * @internal
+ */
+export const calculateDependencyCounts = (
+  dependenciesByGroupName: Map<string, Set<string>>,
+): Map<string, number> => {
+  const dependenciesCount = new Map<string, number>();
+  dependenciesByGroupName.forEach((deps) => {
+    deps.forEach((dep) => {
+      dependenciesCount.set(dep, (dependenciesCount.get(dep) ?? -1) + 1);
+    });
+  });
+  return dependenciesCount;
+};
+
+/**
+ * Separate common schemas from group-specific schemas.
+ * Transformation function that categorizes schemas for file grouping.
+ *
+ * @param groupSchemas - Map of schema names to schema code strings
+ * @param dependencyCounts - Map of schema names to usage counts
+ * @param groupTypes - Map of schema names to type strings
+ * @returns Separated schemas and types with common schemas identified
+ *
+ * @internal
+ */
+export const separateCommonAndGroupSchemas = (
+  groupSchemas: Record<string, string>,
+  dependencyCounts: Map<string, number>,
+  groupTypes: Record<string, string>,
+): {
+  groupSchemas: Record<string, string>;
+  groupTypes: Record<string, string>;
+  commonSchemaNames: Set<string>;
+} => {
+  const separatedSchemas: Record<string, string> = {};
+  const separatedTypes: Record<string, string> = {};
+  const commonSchemaNames = new Set<string>();
+
+  Object.entries(groupSchemas).forEach(([name, schema]) => {
+    const count = dependencyCounts.get(name) ?? 0;
+    if (count >= 1) {
+      commonSchemaNames.add(name);
+    } else {
+      separatedSchemas[name] = schema;
+      const groupType = groupTypes[name];
+      if (groupType) {
+        separatedTypes[name] = groupType;
       }
     }
+  });
+
+  return {
+    groupSchemas: separatedSchemas,
+    groupTypes: separatedTypes,
+    commonSchemaNames,
+  };
+};
+
+/**
+ * Process types for all schemas in dependency graph.
+ * Transformation function that generates TypeScript types.
+ *
+ * @param dependencyGraph - The deep dependency graph
+ * @param doc - The OpenAPI document
+ * @param options - Template context options
+ * @returns Map of schema names to type strings and emitted types
+ *
+ * @internal
+ */
+export const processTypesForSchemas = (
+  dependencyGraph: Record<string, Set<string>>,
+  doc: OpenAPIObject,
+  options?: TemplateContext['options'],
+): {
+  types: Record<string, string>;
+  emittedType: Record<string, true>;
+} => {
+  const types: Record<string, string> = {};
+  const emittedType: Record<string, true> = {};
+  const ctx: TsConversionContext = { nodeByRef: {}, doc, visitedRefs: {} };
+
+  for (const ref in dependencyGraph) {
+    const shouldGenerateType = shouldGenerateTypeForSchema(ref, dependencyGraph, options);
+    const schemaName = shouldGenerateType ? getSchemaNameFromRef(ref) : undefined;
+
+    if (shouldGenerateType && schemaName && !types[schemaName]) {
+      const schema = getSchemaFromComponents(doc, schemaName);
+      types[schemaName] = generateTypeForSchema(schemaName, schema, ctx, options);
+      emittedType[schemaName] = true;
+
+      processDependentTypes(ref, dependencyGraph, doc, ctx, types, emittedType, options);
+    }
   }
 
-  // NOTE: Topological sort ensures schemas are ordered by their dependencies
-  const schemaOrderedByDependencies = topologicalSort(depsGraphs.deepDependencyGraph);
-  data.schemas = sortSchemasByDependencyOrder(data.schemas, schemaOrderedByDependencies);
+  return { types, emittedType };
+};
 
-  const groupStrategy = options?.groupStrategy ?? 'none';
+/**
+ * Process dependent types for a schema.
+ * Transformation function that generates types for dependencies.
+ *
+ * @param ref - Schema reference
+ * @param dependencyGraph - The deep dependency graph
+ * @param doc - The OpenAPI document
+ * @param ctx - TypeScript conversion context
+ * @param types - Map of types (mutated)
+ * @param emittedType - Map of emitted types (mutated)
+ * @param options - Template context options
+ *
+ * @internal
+ */
+export const processDependentTypes = (
+  ref: string,
+  dependencyGraph: Record<string, Set<string>>,
+  doc: OpenAPIObject,
+  ctx: TsConversionContext,
+  types: Record<string, string>,
+  emittedType: Record<string, true>,
+  options?: TemplateContext['options'],
+): void => {
+  const depRefs = dependencyGraph[ref];
+  if (!depRefs) return;
+
+  for (const depRef of depRefs) {
+    const depSchemaName = getSchemaNameFromRef(depRef);
+    if (!depSchemaName) continue;
+
+    const isDepCircular = checkIfSchemaIsCircular(depRef, dependencyGraph);
+    if (isDepCircular || types[depSchemaName]) continue;
+
+    const depSchema = getSchemaFromComponents(doc, depSchemaName);
+    types[depSchemaName] = generateTypeForSchema(depSchemaName, depSchema, ctx, options);
+
+    if (shouldEmitTypeForSchema(depSchema, options)) {
+      emittedType[depSchemaName] = true;
+    }
+  }
+};
+
+/**
+ * Process endpoint grouping and dependencies.
+ * Transformation function that builds endpoint groups.
+ *
+ * @param endpoints - Array of endpoint definitions
+ * @param openApiDoc - The OpenAPI document
+ * @param groupStrategy - The grouping strategy
+ * @param dependencyGraph - The deep dependency graph
+ * @param schemas - Map of all schemas
+ * @param types - Map of all types
+ * @param endpointsGroups - Map of group names to template contexts (mutated)
+ * @returns Map of group names to dependency sets
+ *
+ * @internal
+ */
+export const processEndpointGrouping = (
+  endpoints: EndpointDefinition[],
+  openApiDoc: OpenAPIObject,
+  groupStrategy: TemplateContextGroupStrategy,
+  dependencyGraph: Record<string, Set<string>>,
+  schemas: Record<string, string>,
+  types: Record<string, string>,
+  endpointsGroups: Record<string, MinimalTemplateContext>,
+): Map<string, Set<string>> => {
   const dependenciesByGroupName = new Map<string, Set<string>>();
 
-  result.endpoints.forEach((endpoint) => {
+  endpoints.forEach((endpoint) => {
     if (!endpoint.response) return;
 
-    data.endpoints.push(endpoint);
-
     if (groupStrategy !== 'none') {
-      const operationPath = getOriginalPathWithBrackets(endpoint.path);
-      const pathItem = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
+      const operation = getOperationForEndpoint(openApiDoc, endpoint);
+      if (!operation) return;
 
-      // Skip if missing or is a reference (paths should not be refs, but be defensive)
-      if (!pathItem || isReferenceObject(pathItem)) {
-        logger.warn('Missing path', endpoint.path);
-        return;
-      }
-
-      // After isReferenceObject check, TypeScript knows it's PathItemObject
-      const operation = pathItem[endpoint.method];
-      if (!operation) {
-        logger.warn(`Missing operation ${endpoint.method} for path ${endpoint.path}`);
-        return;
-      }
-      const baseName = match(groupStrategy)
-        .with('tag', 'tag-file', () => operation.tags?.[0] ?? 'Default')
-        .with('method', 'method-file', () => endpoint.method)
-        .exhaustive();
-      const groupName = normalizeString(baseName);
-
-      if (!data.endpointsGroups[groupName]) {
-        data.endpointsGroups[groupName] = makeEndpointTemplateContext();
-      }
-
-      const group = data.endpointsGroups[groupName];
+      const groupName = determineGroupName(groupStrategy, operation, endpoint);
+      const group = ensureGroupExists(groupName, endpointsGroups);
       group.endpoints.push(endpoint);
 
-      if (!dependenciesByGroupName.has(groupName)) {
-        dependenciesByGroupName.set(groupName, new Set());
-      }
+      const dependencies = ensureDependenciesSetExists(groupName, dependenciesByGroupName);
+      const endpointDeps = collectEndpointDependencies(endpoint);
+      endpointDeps.forEach((dep) => dependencies.add(dep));
 
-      const dependencies = dependenciesByGroupName.get(groupName);
-      if (!dependencies) {
-        throw new Error(`Dependencies not found for group: ${groupName}`);
-      }
+      addDependenciesToGroup(dependencies, schemas, group);
 
-      const addDependencyIfNeeded = (schemaName: string) => {
-        if (!schemaName) return;
-        if (schemaName.startsWith('z.')) return;
-        // Sometimes the schema includes a chain that should be removed from the dependency
-        const [normalizedSchemaName] = schemaName.split('.');
-        if (normalizedSchemaName) {
-          dependencies.add(normalizedSchemaName);
-        }
-      };
-
-      addDependencyIfNeeded(endpoint.response);
-      endpoint.parameters.forEach((param) => addDependencyIfNeeded(param.schema));
-      endpoint.errors.forEach((param) => addDependencyIfNeeded(param.schema));
-      dependencies.forEach((schemaName) => {
-        const schema = data.schemas[schemaName];
-        if (schema) {
-          group.schemas[schemaName] = schema;
-        }
-      });
-
-      // reduce types/schemas for each group using prev computed deep dependencies
+      // Process transitive dependencies for file grouping
       if (groupStrategy.includes('file')) {
         [...dependencies].forEach((schemaName) => {
-          const schemaType = data.types[schemaName];
+          const schemaType = types[schemaName];
           if (schemaType) {
             group.types[schemaName] = schemaType;
           }
 
-          const schema = data.schemas[schemaName];
+          const schema = schemas[schemaName];
           if (schema) {
             group.schemas[schemaName] = schema;
           }
 
-          // Convert schema name to ref
-          const resolvedRef = asComponentSchema(schemaName);
-
-          depsGraphs.deepDependencyGraph[resolvedRef]?.forEach((transitiveRef) => {
-            const transitiveSchemaName = getSchemaNameFromRef(transitiveRef);
-            if (!transitiveSchemaName) return;
-            addDependencyIfNeeded(transitiveSchemaName);
-            const transitiveType = data.types[transitiveSchemaName];
-            if (transitiveType) {
-              group.types[transitiveSchemaName] = transitiveType;
-            }
-            const transitiveSchema = data.schemas[transitiveSchemaName];
-            if (transitiveSchema) {
-              group.schemas[transitiveSchemaName] = transitiveSchema;
-            }
-          });
+          processTransitiveDependenciesForGroup(
+            schemaName,
+            dependencyGraph,
+            types,
+            schemas,
+            dependencies,
+            group,
+          );
         });
       }
     }
   });
 
+  return dependenciesByGroupName;
+};
+
+/**
+ * Process common schemas for file grouping strategy.
+ * Transformation function that identifies and separates common schemas.
+ *
+ * @param endpointsGroups - Map of group names to template contexts
+ * @param dependenciesByGroupName - Map of group names to dependency sets
+ * @param dependencyGraph - The deep dependency graph
+ * @returns Set of common schema names
+ *
+ * @internal
+ */
+export const processCommonSchemasForGroups = (
+  endpointsGroups: Record<string, MinimalTemplateContext>,
+  dependenciesByGroupName: Map<string, Set<string>>,
+  dependencyGraph: Record<string, Set<string>>,
+): Set<string> => {
+  const schemaOrderedByDependencies = topologicalSort(dependencyGraph);
+  const dependenciesCount = calculateDependencyCounts(dependenciesByGroupName);
+  const allCommonSchemaNames = new Set<string>();
+
+  Object.keys(endpointsGroups).forEach((groupName) => {
+    const group = endpointsGroups[groupName];
+    if (!group) return;
+    group.imports = {};
+
+    const separated = separateCommonAndGroupSchemas(group.schemas, dependenciesCount, group.types);
+
+    separated.commonSchemaNames.forEach((name) => {
+      if (group.imports) {
+        group.imports[name] = 'common';
+      }
+      allCommonSchemaNames.add(name);
+    });
+
+    group.schemas = sortSchemasByDependencyOrder(
+      separated.groupSchemas,
+      getPureSchemaNames(schemaOrderedByDependencies),
+    );
+    group.types = separated.groupTypes;
+  });
+
+  return new Set(
+    sortSchemaNamesByDependencyOrder(
+      [...allCommonSchemaNames],
+      getPureSchemaNames(schemaOrderedByDependencies),
+    ),
+  );
+};
+
+export const getZodClientTemplateContext = (
+  openApiDoc: OpenAPIObject,
+  options?: TemplateContext['options'],
+): TemplateContext => {
+  const result = getEndpointDefinitionList(openApiDoc, options);
+  const data = makeTemplateContext();
+
+  const docSchemas = openApiDoc.components?.schemas ?? {};
+  const schemaNames = extractSchemaNamesFromDoc(openApiDoc);
+  const depsGraphs = buildDependencyGraphForSchemas(schemaNames, openApiDoc);
+
+  if (options?.shouldExportAllSchemas) {
+    exportUnusedSchemas(docSchemas, result, openApiDoc, options);
+  }
+
+  data.schemas = buildSchemasMap(
+    result.zodSchemaByName,
+    depsGraphs.deepDependencyGraph,
+    data.circularTypeByName,
+  );
+
+  // Process types for schemas in dependency graph
+  const typesResult = processTypesForSchemas(depsGraphs.deepDependencyGraph, openApiDoc, options);
+  data.types = typesResult.types;
+  data.emittedType = typesResult.emittedType;
+
+  // NOTE: Topological sort ensures schemas are ordered by their dependencies
+  data.schemas = sortSchemasByDependencies(data.schemas, depsGraphs.deepDependencyGraph);
+
+  const groupStrategy = options?.groupStrategy ?? 'none';
+
+  // Process endpoint grouping
+  const dependenciesByGroupName = processEndpointGrouping(
+    result.endpoints,
+    openApiDoc,
+    groupStrategy,
+    depsGraphs.deepDependencyGraph,
+    data.schemas,
+    data.types,
+    data.endpointsGroups,
+  );
+
+  // Add all endpoints to main list
+  result.endpoints.forEach((endpoint) => {
+    if (endpoint.response) {
+      data.endpoints.push(endpoint);
+    }
+  });
+
   data.endpoints = sortBy(data.endpoints, 'path');
 
+  // Process common schemas for file grouping
   if (groupStrategy.includes('file')) {
-    const dependenciesCount = new Map<string, number>();
-    dependenciesByGroupName.forEach((deps) => {
-      deps.forEach((dep) => {
-        dependenciesCount.set(dep, (dependenciesCount.get(dep) ?? -1) + 1);
-      });
-    });
-
-    const commonSchemaNames = new Set<string>();
-    Object.keys(data.endpointsGroups).forEach((groupName) => {
-      const group = data.endpointsGroups[groupName];
-      if (!group) return;
-      group.imports = {};
-
-      const groupSchemas: Record<string, string> = {};
-      const groupTypes: Record<string, string> = {};
-      Object.entries(group.schemas).forEach(([name, schema]) => {
-        const count = dependenciesCount.get(name) ?? 0;
-        if (count >= 1) {
-          if (group.imports) {
-            group.imports[name] = 'common';
-          }
-          commonSchemaNames.add(name);
-        } else {
-          groupSchemas[name] = schema;
-
-          const groupType = group.types[name];
-          if (groupType) {
-            groupTypes[name] = groupType;
-          }
-        }
-      });
-
-      group.schemas = sortSchemasByDependencyOrder(
-        groupSchemas,
-        getPureSchemaNames(schemaOrderedByDependencies),
-      );
-      group.types = groupTypes;
-    });
-    data.commonSchemaNames = new Set(
-      sortSchemaNamesByDependencyOrder(
-        [...commonSchemaNames],
-        getPureSchemaNames(schemaOrderedByDependencies),
-      ),
+    data.commonSchemaNames = processCommonSchemasForGroups(
+      data.endpointsGroups,
+      dependenciesByGroupName,
+      depsGraphs.deepDependencyGraph,
     );
   }
 
@@ -342,21 +915,6 @@ const makeTemplateContext = (): TemplateContext => {
     options: { withAlias: false, baseUrl: '' },
   };
 };
-
-const originalPathParam = /:(\w+)/g;
-const getOriginalPathWithBrackets = (path: string) => path.replaceAll(originalPathParam, '{$1}');
-// Example full schema name is like: #/components/schemas/Category.
-// We only want to get the "Category".
-//
-// This is because when using `sortSchemasByDependencyOrder`, the string array needs to be exactly the same
-// like the object keys. Otherwise, the object keys won't be re-ordered.
-const getPureSchemaNames = (fullSchemaNames: string[]) =>
-  fullSchemaNames.map((name) => {
-    const parts = name.split('/');
-    const lastPart = parts.at(-1);
-    if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
-    return lastPart;
-  });
 
 export type TemplateContext = {
   schemas: Record<string, string>;
