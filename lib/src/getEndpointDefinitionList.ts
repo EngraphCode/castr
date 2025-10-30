@@ -86,6 +86,88 @@ function prepareEndpointContext(
 }
 
 /**
+ * Process all endpoints from OpenAPI paths
+ * Pure function: iterates all paths/operations and builds endpoint list
+ * 
+ * @returns Endpoints and arrays of ignored responses
+ */
+function processAllEndpoints(
+  doc: OpenAPIObject,
+  ctx: ConversionTypeContext,
+  getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
+  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
+  defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
+  options?: TemplateContext['options'],
+): {
+  endpoints: EndpointDefinition[];
+  ignoredFallbackResponse: string[];
+  ignoredGenericError: string[];
+} {
+  const endpoints: EndpointDefinition[] = [];
+  const ignoredFallbackResponse: string[] = [];
+  const ignoredGenericError: string[] = [];
+
+  for (const path in doc.paths) {
+    const maybePathItemObj = doc.paths[path];
+    if (!isPathItemObject(maybePathItemObj)) {
+      throw new TypeError(`Invalid path item object: ${path}`);
+    }
+    const pathItemObj: PathItemObject = maybePathItemObj;
+    const pathItem: PathItem = pick(pathItemObj, ALLOWED_METHODS);
+    const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
+
+    for (const maybeMethod in pathItem) {
+      if (!isAllowedMethod(maybeMethod)) {
+        throw new TypeError(`Invalid method: ${maybeMethod}`);
+      }
+      const method: AllowedMethod = maybeMethod;
+      const operation = pathItem[method];
+
+      // Is this behaviour compliant with the OpenAPI schema?
+      if (!operation) continue;
+
+      // Design choice: Skip deprecated endpoints by default (OpenAPI best practice)
+      // Users can include them by setting withDeprecatedEndpoints: true
+      if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
+
+      const parameters = Object.values({
+        ...parametersMap,
+        ...getParametersMap(operation.parameters ?? []),
+      });
+      const operationName = getOperationAlias(path, method, operation);
+
+      const result = processOperation({
+        path,
+        method,
+        operation,
+        operationName,
+        parameters,
+        ctx,
+        getZodVarName,
+        defaultStatusBehavior,
+        options,
+      });
+
+      endpoints.push(result.endpoint);
+
+      // Track endpoints with only 'default' status code
+      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
+      if (result.ignoredFallback) {
+        ignoredFallbackResponse.push(result.ignoredFallback);
+      }
+
+      // Track endpoints where generic error responses could be added
+      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
+      if (result.ignoredGeneric) {
+        ignoredGenericError.push(result.ignoredGeneric);
+      }
+    }
+  }
+
+  return { endpoints, ignoredFallbackResponse, ignoredGenericError };
+}
+
+/**
  * Emit warnings for ignored responses
  * Pure function: logs conditional warnings based on configuration
  * 
@@ -162,68 +244,16 @@ export const getEndpointDefinitionList = (
     doc,
   );
 
-  const endpoints = [];
   const { ctx, getOperationAlias, getZodVarName, defaultStatusBehavior } = prepareEndpointContext(doc, options);
 
-  const ignoredFallbackResponse = [] as string[];
-  const ignoredGenericError = [] as string[];
-
-  for (const path in doc.paths) {
-    const maybePathItemObj = doc.paths[path];
-    if (!isPathItemObject(maybePathItemObj)) {
-      throw new TypeError(`Invalid path item object: ${path}`);
-    }
-    const pathItemObj: PathItemObject = maybePathItemObj;
-    const pathItem: PathItem = pick(pathItemObj, ALLOWED_METHODS);
-    const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
-
-    for (const maybeMethod in pathItem) {
-      if (!isAllowedMethod(maybeMethod)) {
-        throw new TypeError(`Invalid method: ${maybeMethod}`);
-      }
-      const method: AllowedMethod = maybeMethod;
-      const operation = pathItem[method];
-
-      // Is this behaviour compliant with the OpenAPI schema?
-      if (!operation) continue;
-
-      // Design choice: Skip deprecated endpoints by default (OpenAPI best practice)
-      // Users can include them by setting withDeprecatedEndpoints: true
-      if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
-
-      const parameters = Object.values({
-        ...parametersMap,
-        ...getParametersMap(operation.parameters ?? []),
-      });
-      const operationName = getOperationAlias(path, method, operation);
-
-      const result = processOperation({
-        path,
-        method,
-        operation,
-        operationName,
-        parameters,
-        ctx,
-        getZodVarName,
-        defaultStatusBehavior,
-        options,
-      });
-
-      endpoints.push(result.endpoint);
-
-      // Track endpoints with only 'default' status code
-      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
-      if (result.ignoredFallback) {
-        ignoredFallbackResponse.push(result.ignoredFallback);
-      }
-
-      // Track endpoints where generic error responses could be added
-      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
-      if (result.ignoredGeneric) {
-        ignoredGenericError.push(result.ignoredGeneric);
-      }
-    }
-  }
+  const { endpoints, ignoredFallbackResponse, ignoredGenericError } = processAllEndpoints(
+    doc,
+    ctx,
+    getOperationAlias,
+    getZodVarName,
+    defaultStatusBehavior,
+    options,
+  );
 
   emitResponseWarnings(ignoredFallbackResponse, ignoredGenericError, options);
 
