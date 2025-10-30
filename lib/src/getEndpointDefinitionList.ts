@@ -45,6 +45,77 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
 }
 
 /**
+ * Prepare conversion context for endpoint processing
+ * Pure function: initializes context, operation alias resolver, and helper functions
+ * 
+ * @returns Processing context with helpers and configuration
+ */
+function prepareEndpointContext(
+  doc: OpenAPIObject,
+  options?: TemplateContext['options'],
+) {
+  const getOperationAlias = match(options?.withAlias)
+    .with(
+      P.boolean,
+      P.nullish,
+      () => (path: string, method: string, operation: OperationObject) =>
+        operation.operationId ?? method + pathToVariableName(path),
+    )
+    .otherwise((fn) => fn);
+
+  const ctx: ConversionTypeContext = { doc, zodSchemaByName: {}, schemaByName: {} };
+  if (options?.exportAllNamedSchemas) {
+    ctx.schemasByName = {};
+  }
+
+  const complexityThreshold = options?.complexityThreshold ?? 4;
+  const getZodVarName = (input: CodeMeta, fallbackName?: string) =>
+    getSchemaVarName(
+      input,
+      ctx,
+      complexityThreshold,
+      fallbackName,
+      options?.exportAllNamedSchemas !== undefined
+        ? { exportAllNamedSchemas: options.exportAllNamedSchemas }
+        : undefined,
+    );
+
+  const defaultStatusBehavior = options?.defaultStatusBehavior ?? 'spec-compliant';
+
+  return { ctx, getOperationAlias, getZodVarName, defaultStatusBehavior };
+}
+
+/**
+ * Emit warnings for ignored responses
+ * Pure function: logs conditional warnings based on configuration
+ * 
+ * @returns void (side effect: logger warnings)
+ */
+function emitResponseWarnings(
+  ignoredFallbackResponse: string[],
+  ignoredGenericError: string[],
+  options?: TemplateContext['options'],
+): void {
+  if (options?.willSuppressWarnings === true) return;
+
+  if (ignoredFallbackResponse.length > 0) {
+    logger.warn(
+      `The following endpoints have no status code other than \`default\` and were ignored as the OpenAPI spec recommends. However they could be added by setting \`defaultStatusBehavior\` to \`auto-correct\`: ${ignoredGenericError.join(
+        ', ',
+      )}`,
+    );
+  }
+
+  if (ignoredGenericError.length > 0) {
+    logger.warn(
+      `The following endpoints could have had a generic error response added by setting \`defaultStatusBehavior\` to \`auto-correct\` ${ignoredGenericError.join(
+        ', ',
+      )}`,
+    );
+  }
+}
+
+/**
  * Extract endpoint definitions with runtime Zod schemas from an OpenAPI specification.
  *
  * This function returns an array of endpoint definitions where each endpoint includes:
@@ -92,34 +163,7 @@ export const getEndpointDefinitionList = (
   );
 
   const endpoints = [];
-
-  const getOperationAlias = match(options?.withAlias)
-    .with(
-      P.boolean,
-      P.nullish,
-      () => (path: string, method: string, operation: OperationObject) =>
-        operation.operationId ?? method + pathToVariableName(path),
-    )
-    .otherwise((fn) => fn);
-
-  const ctx: ConversionTypeContext = { doc, zodSchemaByName: {}, schemaByName: {} };
-  if (options?.exportAllNamedSchemas) {
-    ctx.schemasByName = {};
-  }
-
-  const complexityThreshold = options?.complexityThreshold ?? 4;
-  const getZodVarName = (input: CodeMeta, fallbackName?: string) =>
-    getSchemaVarName(
-      input,
-      ctx,
-      complexityThreshold,
-      fallbackName,
-      options?.exportAllNamedSchemas !== undefined
-        ? { exportAllNamedSchemas: options.exportAllNamedSchemas }
-        : undefined,
-    );
-
-  const defaultStatusBehavior = options?.defaultStatusBehavior ?? 'spec-compliant';
+  const { ctx, getOperationAlias, getZodVarName, defaultStatusBehavior } = prepareEndpointContext(doc, options);
 
   const ignoredFallbackResponse = [] as string[];
   const ignoredGenericError = [] as string[];
@@ -181,23 +225,7 @@ export const getEndpointDefinitionList = (
     }
   }
 
-  if (options?.willSuppressWarnings !== true) {
-    if (ignoredFallbackResponse.length > 0) {
-      logger.warn(
-        `The following endpoints have no status code other than \`default\` and were ignored as the OpenAPI spec recommends. However they could be added by setting \`defaultStatusBehavior\` to \`auto-correct\`: ${ignoredGenericError.join(
-          ', ',
-        )}`,
-      );
-    }
-
-    if (ignoredGenericError.length > 0) {
-      logger.warn(
-        `The following endpoints could have had a generic error response added by setting \`defaultStatusBehavior\` to \`auto-correct\` ${ignoredGenericError.join(
-          ', ',
-        )}`,
-      );
-    }
-  }
+  emitResponseWarnings(ignoredFallbackResponse, ignoredGenericError, options);
 
   return {
     ...(ctx as Required<ConversionTypeContext>),
