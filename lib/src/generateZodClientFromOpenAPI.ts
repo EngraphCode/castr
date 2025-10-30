@@ -79,8 +79,15 @@ function buildEffectiveOptions<TOptions extends TemplateContext['options']>(
   effectiveTemplate: TemplateName,
   options: TOptions | undefined,
 ): TemplateContext['options'] {
+  // Base defaults that should always be present in options
+  const baseDefaults = {
+    baseUrl: '',
+    withAlias: false,
+  };
+
   if (effectiveTemplate === 'schemas-with-metadata') {
     return {
+      ...baseDefaults,
       ...options,
       withAllResponses: true,
       strictObjects: true,
@@ -88,7 +95,13 @@ function buildEffectiveOptions<TOptions extends TemplateContext['options']>(
       shouldExportAllSchemas: true,
     };
   }
-  return options;
+
+  // For other templates, merge with base defaults but don't add template-specific options
+  // unless they're explicitly set by the user
+  return {
+    ...baseDefaults,
+    ...options,
+  };
 }
 
 /**

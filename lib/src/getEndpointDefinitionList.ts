@@ -1,4 +1,10 @@
-import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas30';
+import type {
+  OpenAPIObject,
+  OperationObject,
+  ParameterObject,
+  PathItemObject,
+  ReferenceObject,
+} from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
 import { pick } from 'lodash-es';
 import { match, P } from 'ts-pattern';
@@ -11,7 +17,11 @@ import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
  * Result returned by getEndpointDefinitionList
  * Contains endpoints plus metadata needed for code generation
  */
-export type EndpointDefinitionListResult = Required<ConversionTypeContext> & {
+export type EndpointDefinitionListResult = Required<
+  Omit<ConversionTypeContext, 'schemasByName'>
+> & {
+  schemasByName?: Record<string, string[]>;
+} & {
   refsDependencyGraph: Record<string, Set<string>>;
   deepDependencyGraph: Record<string, Set<string>>;
   endpoints: EndpointDefinition[];
@@ -50,7 +60,15 @@ function isPathItemObject(maybePathItemObj: unknown): maybePathItemObj is PathIt
  *
  * @returns Processing context with helpers and configuration
  */
-function prepareEndpointContext(doc: OpenAPIObject, options?: TemplateContext['options']) {
+function prepareEndpointContext(
+  doc: OpenAPIObject,
+  options?: TemplateContext['options'],
+): {
+  ctx: Required<ConversionTypeContext>;
+  getOperationAlias: (path: string, method: string, operation: OperationObject) => string;
+  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>;
+  defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'];
+} {
   const getOperationAlias = match(options?.withAlias)
     .with(
       P.boolean,
@@ -60,10 +78,12 @@ function prepareEndpointContext(doc: OpenAPIObject, options?: TemplateContext['o
     )
     .otherwise((fn) => fn);
 
-  const ctx: ConversionTypeContext = { doc, zodSchemaByName: {}, schemaByName: {} };
-  if (options?.exportAllNamedSchemas) {
-    ctx.schemasByName = {};
-  }
+  const ctx: Required<ConversionTypeContext> = {
+    doc,
+    zodSchemaByName: {},
+    schemaByName: {},
+    schemasByName: {},
+  };
 
   const complexityThreshold = options?.complexityThreshold ?? 4;
   const getZodVarName = (input: CodeMeta, fallbackName?: string) =>
@@ -83,14 +103,97 @@ function prepareEndpointContext(doc: OpenAPIObject, options?: TemplateContext['o
 }
 
 /**
- * Process all endpoints from OpenAPI paths
- * Pure function: iterates all paths/operations and builds endpoint list
- *
- * @returns Endpoints and arrays of ignored responses
+ * Check if an operation should be skipped.
+ * @internal
  */
-function processAllEndpoints(
-  doc: OpenAPIObject,
-  ctx: ConversionTypeContext,
+function shouldSkipOperation(
+  operation: OperationObject | undefined,
+  options?: TemplateContext['options'],
+): boolean {
+  if (!operation) {
+    return true;
+  }
+
+  if (options?.withDeprecatedEndpoints ? false : operation.deprecated) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Process a single operation and collect results.
+ * @internal
+ */
+function processSingleOperation(
+  path: string,
+  method: AllowedMethod,
+  operation: OperationObject,
+  parametersMap: Record<string, ParameterObject | ReferenceObject>,
+  ctx: Required<ConversionTypeContext>,
+  getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
+  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
+  defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
+  options?: TemplateContext['options'],
+): {
+  endpoint: EndpointDefinition;
+  ignoredFallback?: string | undefined;
+  ignoredGeneric?: string | undefined;
+} {
+  const parameters = Object.values({
+    ...parametersMap,
+    ...getParametersMap(operation.parameters ?? []),
+  });
+  const operationName = getOperationAlias(path, method, operation);
+
+  const result = processOperation({
+    path,
+    method,
+    operation,
+    operationName,
+    parameters,
+    ctx,
+    getZodVarName,
+    defaultStatusBehavior,
+    options,
+  });
+
+  return {
+    endpoint: result.endpoint,
+    ...(result.ignoredFallback ? { ignoredFallback: result.ignoredFallback } : {}),
+    ...(result.ignoredGeneric ? { ignoredGeneric: result.ignoredGeneric } : {}),
+  };
+}
+
+/**
+ * Collect ignored response information from operation result.
+ * @internal
+ */
+function collectIgnoredResponses(
+  result: {
+    ignoredFallback?: string | undefined;
+    ignoredGeneric?: string | undefined;
+  },
+  ignoredFallbackResponse: string[],
+  ignoredGenericError: string[],
+): void {
+  if (result.ignoredFallback !== undefined) {
+    ignoredFallbackResponse.push(result.ignoredFallback);
+  }
+
+  if (result.ignoredGeneric !== undefined) {
+    ignoredGenericError.push(result.ignoredGeneric);
+  }
+}
+
+/**
+ * Process all operations for a single path item.
+ * @internal
+ */
+function processPathItemOperations(
+  path: string,
+  pathItemObj: PathItemObject,
+  ctx: Required<ConversionTypeContext>,
   getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
   getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
   defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
@@ -104,64 +207,87 @@ function processAllEndpoints(
   const ignoredFallbackResponse: string[] = [];
   const ignoredGenericError: string[] = [];
 
+  const pathItem: PathItem = pick(pathItemObj, ALLOWED_METHODS);
+  const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
+
+  for (const maybeMethod in pathItem) {
+    if (!isAllowedMethod(maybeMethod)) {
+      throw new TypeError(`Invalid method: ${maybeMethod}`);
+    }
+    const method: AllowedMethod = maybeMethod;
+    const operation = pathItem[method];
+
+    if (!operation || shouldSkipOperation(operation, options)) {
+      continue;
+    }
+
+    const result = processSingleOperation(
+      path,
+      method,
+      operation,
+      parametersMap,
+      ctx,
+      getOperationAlias,
+      getZodVarName,
+      defaultStatusBehavior,
+      options,
+    );
+
+    endpoints.push(result.endpoint);
+    collectIgnoredResponses(result, ignoredFallbackResponse, ignoredGenericError);
+  }
+
+  return { endpoints, ignoredFallbackResponse, ignoredGenericError };
+}
+
+/**
+ * Process all endpoints from OpenAPI paths
+ * Pure function: iterates all paths/operations and builds endpoint list
+ *
+ * @returns Endpoints and arrays of ignored responses
+ */
+function processAllEndpoints(
+  doc: OpenAPIObject,
+  ctx: Required<ConversionTypeContext>,
+  getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
+  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
+  defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
+  options?: TemplateContext['options'],
+): {
+  endpoints: EndpointDefinition[];
+  ignoredFallbackResponse: string[];
+  ignoredGenericError: string[];
+} {
+  const allEndpoints: EndpointDefinition[] = [];
+  const allIgnoredFallbackResponse: string[] = [];
+  const allIgnoredGenericError: string[] = [];
+
   for (const path in doc.paths) {
     const maybePathItemObj = doc.paths[path];
     if (!isPathItemObject(maybePathItemObj)) {
       throw new TypeError(`Invalid path item object: ${path}`);
     }
-    const pathItemObj: PathItemObject = maybePathItemObj;
-    const pathItem: PathItem = pick(pathItemObj, ALLOWED_METHODS);
-    const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
 
-    for (const maybeMethod in pathItem) {
-      if (!isAllowedMethod(maybeMethod)) {
-        throw new TypeError(`Invalid method: ${maybeMethod}`);
-      }
-      const method: AllowedMethod = maybeMethod;
-      const operation = pathItem[method];
+    const pathResult = processPathItemOperations(
+      path,
+      maybePathItemObj,
+      ctx,
+      getOperationAlias,
+      getZodVarName,
+      defaultStatusBehavior,
+      options,
+    );
 
-      // Is this behaviour compliant with the OpenAPI schema?
-      if (!operation) continue;
-
-      // Design choice: Skip deprecated endpoints by default (OpenAPI best practice)
-      // Users can include them by setting withDeprecatedEndpoints: true
-      if (options?.withDeprecatedEndpoints ? false : operation.deprecated) continue;
-
-      const parameters = Object.values({
-        ...parametersMap,
-        ...getParametersMap(operation.parameters ?? []),
-      });
-      const operationName = getOperationAlias(path, method, operation);
-
-      const result = processOperation({
-        path,
-        method,
-        operation,
-        operationName,
-        parameters,
-        ctx,
-        getZodVarName,
-        defaultStatusBehavior,
-        options,
-      });
-
-      endpoints.push(result.endpoint);
-
-      // Track endpoints with only 'default' status code
-      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
-      if (result.ignoredFallback) {
-        ignoredFallbackResponse.push(result.ignoredFallback);
-      }
-
-      // Track endpoints where generic error responses could be added
-      // Will warn users later (they can enable via defaultStatusBehavior: 'auto-correct')
-      if (result.ignoredGeneric) {
-        ignoredGenericError.push(result.ignoredGeneric);
-      }
-    }
+    allEndpoints.push(...pathResult.endpoints);
+    allIgnoredFallbackResponse.push(...pathResult.ignoredFallbackResponse);
+    allIgnoredGenericError.push(...pathResult.ignoredGenericError);
   }
 
-  return { endpoints, ignoredFallbackResponse, ignoredGenericError };
+  return {
+    endpoints: allEndpoints,
+    ignoredFallbackResponse: allIgnoredFallbackResponse,
+    ignoredGenericError: allIgnoredGenericError,
+  };
 }
 
 /**
@@ -258,7 +384,10 @@ export const getEndpointDefinitionList = (
   emitResponseWarnings(ignoredFallbackResponse, ignoredGenericError, options);
 
   return {
-    ...(ctx as Required<ConversionTypeContext>),
+    doc: ctx.doc,
+    zodSchemaByName: ctx.zodSchemaByName,
+    schemaByName: ctx.schemaByName,
+    ...(options?.exportAllNamedSchemas ? { schemasByName: ctx.schemasByName } : {}),
     ...graphs,
     endpoints,
     issues: {
@@ -268,7 +397,9 @@ export const getEndpointDefinitionList = (
   };
 };
 
-const getParametersMap = (parameters: NonNullable<PathItemObject['parameters']>) => {
+const getParametersMap = (
+  parameters: NonNullable<PathItemObject['parameters']>,
+): Record<string, ParameterObject | ReferenceObject> => {
   return Object.fromEntries(
     (parameters ?? []).map(
       (param) => [isReferenceObject(param) ? param.$ref : param.name, param] as const,

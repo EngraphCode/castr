@@ -16,6 +16,7 @@ import {
   isDefaultStatusBehavior,
   isOpenAPIObject,
 } from './cli-type-guards.js';
+import type { TemplateContextOptions } from './template-context.js';
 
 interface CliOptions {
   output?: string;
@@ -55,6 +56,137 @@ function getPackageVersion(): string {
   } catch {
     return '0.0.0';
   }
+}
+
+/**
+ * Parse and validate CLI options (groupStrategy, complexityThreshold, defaultStatus)
+ */
+function parseCliOptions(options: CliOptions): {
+  groupStrategy: TemplateContextOptions['groupStrategy'];
+  complexityThreshold: number | undefined;
+  defaultStatusBehavior: TemplateContextOptions['defaultStatusBehavior'];
+} {
+  const groupStrategy = isGroupStrategy(options.groupStrategy) ? options.groupStrategy : undefined;
+  const complexityThreshold =
+    options.complexityThreshold !== undefined
+      ? parseInt(options.complexityThreshold, 10)
+      : undefined;
+  const defaultStatusBehavior = isDefaultStatusBehavior(options.defaultStatus)
+    ? options.defaultStatus
+    : undefined;
+
+  return { groupStrategy, complexityThreshold, defaultStatusBehavior };
+}
+
+/**
+ * Add optional string properties to generation options
+ */
+function addStringOptions(
+  options: CliOptions,
+  generationOptions: Partial<TemplateContextOptions>,
+): void {
+  if (options.baseUrl) generationOptions.baseUrl = options.baseUrl;
+  if (options.apiClientName) generationOptions.apiClientName = options.apiClientName;
+  if (options.errorExpr) generationOptions.isErrorStatus = options.errorExpr;
+  if (options.successExpr) generationOptions.isMainResponseStatus = options.successExpr;
+  if (options.mediaTypeExpr) generationOptions.isMediaTypeAllowed = options.mediaTypeExpr;
+}
+
+/**
+ * Add optional boolean properties to generation options
+ */
+function addBooleanOptions(
+  options: CliOptions,
+  generationOptions: Partial<TemplateContextOptions>,
+): void {
+  if (options.exportSchemas) generationOptions.shouldExportAllSchemas = options.exportSchemas;
+  if (options.exportTypes) generationOptions.shouldExportAllTypes = options.exportTypes;
+  if (options.implicitRequired)
+    generationOptions.withImplicitRequiredProps = options.implicitRequired;
+  if (options.withDeprecated) generationOptions.withDeprecatedEndpoints = options.withDeprecated;
+}
+
+/**
+ * Add parsed options to generation options
+ */
+function addParsedOptions(
+  parsedOptions: ReturnType<typeof parseCliOptions>,
+  generationOptions: Partial<TemplateContextOptions>,
+): void {
+  const { groupStrategy, complexityThreshold, defaultStatusBehavior } = parsedOptions;
+  if (groupStrategy) generationOptions.groupStrategy = groupStrategy;
+  if (complexityThreshold !== undefined)
+    generationOptions.complexityThreshold = complexityThreshold;
+  if (defaultStatusBehavior) generationOptions.defaultStatusBehavior = defaultStatusBehavior;
+}
+
+/**
+ * Build generation options from CLI options
+ * Only includes defined values to satisfy exactOptionalPropertyTypes
+ */
+function buildGenerationOptions(
+  options: CliOptions,
+  parsedOptions: ReturnType<typeof parseCliOptions>,
+): Partial<TemplateContextOptions> {
+  const withAlias = toBoolean(options.withAlias, true);
+  const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
+
+  const generationOptions: Partial<TemplateContextOptions> = {
+    withAlias,
+    additionalPropertiesDefaultValue,
+  };
+
+  addStringOptions(options, generationOptions);
+  addBooleanOptions(options, generationOptions);
+  if (options.withDocs) generationOptions.withDocs = options.withDocs;
+  if (options.withDescription) generationOptions.withDescription = options.withDescription;
+  if (options.allReadonly) generationOptions.allReadonly = options.allReadonly;
+  if (options.strictObjects) generationOptions.strictObjects = options.strictObjects;
+  addParsedOptions(parsedOptions, generationOptions);
+
+  return generationOptions;
+}
+
+/**
+ * Type guard to check if a template string is a valid template name
+ */
+function isTemplateName(
+  template: string | undefined,
+): template is 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client' {
+  return (
+    template === 'schemas-only' ||
+    template === 'schemas-with-metadata' ||
+    template === 'schemas-with-client'
+  );
+}
+
+/**
+ * Build generation args from CLI options and parsed data
+ */
+function buildGenerationArgs(
+  openApiDoc: Parameters<typeof generateZodClientFromOpenAPI>[0]['openApiDoc'],
+  distPath: string,
+  prettierConfig: Awaited<ReturnType<typeof resolveConfig>> | null,
+  options: CliOptions,
+  generationOptions: Partial<TemplateContextOptions>,
+): GenerateZodClientFromOpenApiArgs {
+  const generationArgs: GenerateZodClientFromOpenApiArgs = {
+    openApiDoc,
+    distPath,
+    options: generationOptions,
+    ...(prettierConfig && { prettierConfig }),
+    ...(options.template &&
+      (isTemplateName(options.template)
+        ? { template: options.template }
+        : { templatePath: options.template })),
+    ...(options.noClient && { noClient: options.noClient }),
+    ...(options.withValidationHelpers && {
+      withValidationHelpers: options.withValidationHelpers,
+    }),
+    ...(options.withSchemaRegistry && { withSchemaRegistry: options.withSchemaRegistry }),
+  };
+
+  return generationArgs;
 }
 
 const program = new Command();
@@ -141,8 +273,6 @@ program
   )
   .action(async (input: string, options: CliOptions) => {
     console.log('Retrieving OpenAPI document from', input);
-    // SwaggerParser.bundle returns its own OpenAPI type, structurally compatible with openapi3-ts
-    // We validate the structure with a type guard
     const bundled: unknown = await SwaggerParser.bundle(input);
     if (!isOpenAPIObject(bundled)) {
       throw new Error(
@@ -152,75 +282,16 @@ program
     const openApiDoc = bundled;
     const prettierConfig = await resolveConfig(options.prettier ?? './');
     const distPath = options.output ?? input + '.client.ts';
-    const withAlias = toBoolean(options.withAlias, true);
-    const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
 
-    // Parse and validate CLI options
-    const groupStrategy = isGroupStrategy(options.groupStrategy)
-      ? options.groupStrategy
-      : undefined;
-    const complexityThreshold =
-      options.complexityThreshold !== undefined
-        ? parseInt(options.complexityThreshold, 10)
-        : undefined;
-    const defaultStatusBehavior = isDefaultStatusBehavior(options.defaultStatus)
-      ? options.defaultStatus
-      : undefined;
-
-    // Build generation options (for exactOptionalPropertyTypes: only include defined values)
-    const generationOptions: Record<string, unknown> = {
-      withAlias,
-      additionalPropertiesDefaultValue,
-    };
-
-    if (options.baseUrl) generationOptions['baseUrl'] = options.baseUrl;
-    if (options.apiClientName) generationOptions['apiClientName'] = options.apiClientName;
-    if (options.errorExpr) generationOptions['isErrorStatus'] = options.errorExpr;
-    if (options.successExpr) generationOptions['isMainResponseStatus'] = options.successExpr;
-    if (options.exportSchemas) generationOptions['shouldExportAllSchemas'] = options.exportSchemas;
-    if (options.exportTypes) generationOptions['shouldExportAllTypes'] = options.exportTypes;
-    if (options.mediaTypeExpr) generationOptions['isMediaTypeAllowed'] = options.mediaTypeExpr;
-    if (options.implicitRequired)
-      generationOptions['withImplicitRequiredProps'] = options.implicitRequired;
-    if (options.withDeprecated)
-      generationOptions['withDeprecatedEndpoints'] = options.withDeprecated;
-    if (options.withDocs) generationOptions['withDocs'] = options.withDocs;
-    if (groupStrategy) generationOptions['groupStrategy'] = groupStrategy;
-    if (complexityThreshold !== undefined)
-      generationOptions['complexityThreshold'] = complexityThreshold;
-    if (defaultStatusBehavior) generationOptions['defaultStatusBehavior'] = defaultStatusBehavior;
-    if (options.withDescription) generationOptions['withDescription'] = options.withDescription;
-    if (options.allReadonly) generationOptions['allReadonly'] = options.allReadonly;
-    if (options.strictObjects) generationOptions['strictObjects'] = options.strictObjects;
-
-    // Build generation args with proper type
-    // We construct only the properties that are defined to satisfy exactOptionalPropertyTypes
-
-    // Determine if template option is a name or a path
-    const isTemplateName =
-      options.template &&
-      ['schemas-only', 'schemas-with-metadata', 'schemas-with-client'].includes(options.template);
-
-    const generationArgs: GenerateZodClientFromOpenApiArgs = {
+    const parsedOptions = parseCliOptions(options);
+    const generationOptions = buildGenerationOptions(options, parsedOptions);
+    const generationArgs = buildGenerationArgs(
       openApiDoc,
       distPath,
-      options: generationOptions,
-      ...(prettierConfig && { prettierConfig }),
-      ...(options.template &&
-        (isTemplateName
-          ? {
-              template: options.template as
-                | 'schemas-only'
-                | 'schemas-with-metadata'
-                | 'schemas-with-client',
-            }
-          : { templatePath: options.template })),
-      ...(options.noClient && { noClient: options.noClient }),
-      ...(options.withValidationHelpers && {
-        withValidationHelpers: options.withValidationHelpers,
-      }),
-      ...(options.withSchemaRegistry && { withSchemaRegistry: options.withSchemaRegistry }),
-    };
+      prettierConfig,
+      options,
+      generationOptions,
+    );
 
     await generateZodClientFromOpenAPI(generationArgs);
     console.log(`Done generating <${distPath}> !`);

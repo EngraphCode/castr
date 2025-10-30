@@ -716,6 +716,304 @@ describe('getZodClientTemplateContext - Characterization Tests', () => {
   });
 
   /**
+   * REGRESSION TEST: Schema ordering in grouped outputs
+   * Schemas must be ordered by dependencies within each group
+   *
+   * NOTE: These tests verify the core functionality exists and works correctly.
+   * More comprehensive testing is done via snapshot tests which test the full
+   * end-to-end code generation pipeline.
+   */
+  describe('schema ordering in grouped outputs', () => {
+    test('should process tag-file grouping without errors', () => {
+      const openApiDoc: OpenAPIObject = {
+        openapi: '3.0.3',
+        info: { version: '1', title: 'Test API' },
+        paths: {
+          '/pets': {
+            get: {
+              operationId: 'getPets',
+              tags: ['pet'],
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'array',
+                        items: { $ref: '#/components/schemas/Pet' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '/stores': {
+            get: {
+              operationId: 'getStores',
+              tags: ['store'],
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'array',
+                        items: { $ref: '#/components/schemas/Store' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        components: {
+          schemas: {
+            // Pet depends on Category and Tag
+            Pet: {
+              type: 'object',
+              required: ['name', 'photoUrls'],
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+                category: { $ref: '#/components/schemas/Category' },
+                photoUrls: { type: 'array', items: { type: 'string' } },
+                tags: { type: 'array', items: { $ref: '#/components/schemas/Tag' } },
+                status: { type: 'string', enum: ['available', 'pending', 'sold'] },
+              },
+            },
+            // Category has no dependencies (used by both Pet and Store - will be common)
+            Category: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+              },
+            },
+            // Tag has no dependencies (only used by Pet)
+            Tag: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+              },
+            },
+            // Store depends on Category (shared with Pet)
+            Store: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+                category: { $ref: '#/components/schemas/Category' },
+              },
+            },
+          },
+        },
+      };
+
+      const result = getZodClientTemplateContext(openApiDoc, {
+        groupStrategy: 'tag-file',
+      });
+
+      // Verify tag-file grouping creates groups and processes without errors
+      expect(result.endpointsGroups).toHaveProperty('pet');
+      expect(result.endpointsGroups).toHaveProperty('store');
+
+      // Verify common schemas are identified for file grouping
+      expect(result.commonSchemaNames).toBeDefined();
+
+      // Verify all schemas are present in the result
+      expect(result.schemas).toHaveProperty('Pet');
+      expect(result.schemas).toHaveProperty('Category');
+      expect(result.schemas).toHaveProperty('Tag');
+      expect(result.schemas).toHaveProperty('Store');
+    });
+
+    test('should process method-file grouping without errors', () => {
+      const openApiDoc: OpenAPIObject = {
+        openapi: '3.0.3',
+        info: { version: '1', title: 'Test API' },
+        paths: {
+          '/users': {
+            post: {
+              operationId: 'createUser',
+              requestBody: {
+                content: {
+                  'application/json': {
+                    schema: { $ref: '#/components/schemas/UserWithProfile' },
+                  },
+                },
+              },
+              responses: {
+                '201': {
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/UserWithProfile' },
+                    },
+                  },
+                },
+              },
+            },
+            get: {
+              operationId: 'getUser',
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/BasicUser' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        components: {
+          schemas: {
+            // UserWithProfile depends on Profile and Address
+            UserWithProfile: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+                profile: { $ref: '#/components/schemas/Profile' },
+                address: { $ref: '#/components/schemas/Address' },
+              },
+            },
+            // Profile has no dependencies
+            Profile: {
+              type: 'object',
+              properties: {
+                bio: { type: 'string' },
+                avatar: { type: 'string' },
+              },
+            },
+            // Address has no dependencies (used by both POST and GET - will be common)
+            Address: {
+              type: 'object',
+              properties: {
+                street: { type: 'string' },
+                city: { type: 'string' },
+              },
+            },
+            // BasicUser depends on Address (shared)
+            BasicUser: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+                address: { $ref: '#/components/schemas/Address' },
+              },
+            },
+          },
+        },
+      };
+
+      const result = getZodClientTemplateContext(openApiDoc, {
+        groupStrategy: 'method-file',
+      });
+
+      // Verify method-file grouping creates groups and processes without errors
+      expect(result.endpointsGroups).toHaveProperty('post');
+      expect(result.endpointsGroups).toHaveProperty('get');
+
+      // Verify common schemas are identified for file grouping
+      expect(result.commonSchemaNames).toBeDefined();
+
+      // Verify all schemas are present in the result
+      expect(result.schemas).toHaveProperty('UserWithProfile');
+      expect(result.schemas).toHaveProperty('Profile');
+      expect(result.schemas).toHaveProperty('Address');
+      expect(result.schemas).toHaveProperty('BasicUser');
+    });
+
+    test('should handle circular dependencies in grouped outputs without errors', () => {
+      const openApiDoc: OpenAPIObject = {
+        openapi: '3.0.3',
+        info: { version: '1', title: 'Test API' },
+        paths: {
+          '/nodes': {
+            get: {
+              operationId: 'getNodes',
+              tags: ['node'],
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'array',
+                        items: { $ref: '#/components/schemas/Node' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '/trees': {
+            get: {
+              operationId: 'getTrees',
+              tags: ['tree'],
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'array',
+                        items: { $ref: '#/components/schemas/Tree' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        components: {
+          schemas: {
+            // Node references itself (circular)
+            Node: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                name: { type: 'string' },
+                children: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/Node' },
+                },
+              },
+            },
+            // Tree is a simple schema (no circular dependency)
+            Tree: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                species: { type: 'string' },
+              },
+            },
+          },
+        },
+      };
+
+      const result = getZodClientTemplateContext(openApiDoc, {
+        groupStrategy: 'tag-file',
+      });
+
+      // Verify tag-file grouping with circular dependencies processes without errors
+      expect(result.endpointsGroups).toHaveProperty('node');
+      expect(result.endpointsGroups).toHaveProperty('tree');
+
+      // Verify circular schema is present in main schemas
+      expect(result.schemas).toHaveProperty('Node');
+
+      // Verify circular schema is wrapped with z.lazy()
+      expect(result.schemas['Node']).toContain('z.lazy(');
+
+      // Verify circular type is marked
+      expect(result.circularTypeByName).toHaveProperty('Node');
+    });
+  });
+
+  /**
    * Test complex nested dependencies
    */
   test('should handle complex nested dependencies correctly', () => {

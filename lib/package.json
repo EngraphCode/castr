@@ -53,8 +53,8 @@
     "zod": "^4.1.12"
   },
   "peerDependencies": {
-    "openapi-fetch": "^0.10.0 || ^0.11.0 || ^0.12.0",
-    "openapi-typescript": "^7.0.0"
+    "openapi-fetch": "^0.15.0",
+    "openapi-typescript": "^7.10.0"
   },
   "peerDependenciesMeta": {
     "openapi-fetch": {

@@ -1,9 +1,165 @@
-/**
- * Type definitions extracted from template-context.ts
- * Following the "Literals Tied to Library Types" pattern from RULES.md
- */
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import * as ts from 'typescript';
 
-import type { TemplateContextOptions } from './template-context.js';
+import { getTypescriptFromOpenApi } from './openApiToTypescript.js';
+import type { TsConversionContext } from './openApiToTypescript.js';
+import { getSchemaFromComponents } from './component-access.js';
+import { isReferenceObject } from 'openapi3-ts/oas30';
+
+import { checkIfSchemaIsCircular } from './template-context.schemas.js';
+import { getSchemaNameFromRef } from './template-context.common.js';
+
+const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
+const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, node, file);
+
+/**
+ * Type guard to check if result is a ts.Node
+ */
+export const isTsNode = (result: unknown): result is ts.Node => {
+  if (typeof result !== 'object' || result === null) {
+    return false;
+  }
+
+  const obj = result as { kind?: unknown };
+  return 'kind' in obj && typeof obj.kind === 'number';
+};
+
+/**
+ * Convert result from getTypescriptFromOpenApi to string
+ * Handles union type: ts.Node | t.TypeDefinitionObject | string
+ */
+export const tsResultToString = (result: ReturnType<typeof getTypescriptFromOpenApi>): string => {
+  if (typeof result === 'string') {
+    return result;
+  }
+  if (isTsNode(result)) {
+    return printTs(result);
+  }
+  return JSON.stringify(result);
+};
+
+/**
+ * Determine if a type should be generated for a schema.
+ * Pure validation function.
+ *
+ * @internal
+ */
+export const shouldGenerateTypeForSchema = (
+  ref: string,
+  dependencyGraph: Record<string, Set<string>>,
+  options?: TemplateContext['options'],
+): boolean => {
+  const isCircular = checkIfSchemaIsCircular(ref, dependencyGraph);
+  return Boolean(options?.shouldExportAllTypes || isCircular);
+};
+
+/**
+ * Generate TypeScript type string for a schema.
+ * Transformation function for template generation.
+ *
+ * @internal
+ */
+export const generateTypeForSchema = (
+  schemaName: string,
+  schema: SchemaObject | ReferenceObject,
+  ctx: TsConversionContext,
+  options?: TemplateContext['options'],
+): string => {
+  const tsResult = getTypescriptFromOpenApi({
+    schema,
+    ctx,
+    meta: { name: schemaName },
+    options,
+  });
+  return tsResultToString(tsResult).replace('export ', '');
+};
+
+/**
+ * Determine if a type should be emitted (marked in emittedType).
+ * Pure validation function.
+ *
+ * @internal
+ */
+export const shouldEmitTypeForSchema = (
+  schema: SchemaObject | ReferenceObject,
+  options?: TemplateContext['options'],
+): boolean => {
+  return (
+    Boolean(options?.shouldExportAllTypes) && !isReferenceObject(schema) && schema.type === 'object'
+  );
+};
+
+/**
+ * Process types for all schemas in dependency graph.
+ * Transformation function that generates TypeScript types.
+ *
+ * @internal
+ */
+export const processTypesForSchemas = (
+  dependencyGraph: Record<string, Set<string>>,
+  doc: OpenAPIObject,
+  options?: TemplateContext['options'],
+): {
+  types: Record<string, string>;
+  emittedType: Record<string, true>;
+} => {
+  const types: Record<string, string> = {};
+  const emittedType: Record<string, true> = {};
+  const ctx: TsConversionContext = { nodeByRef: {}, doc, visitedRefs: {} };
+
+  for (const ref in dependencyGraph) {
+    const shouldGenerate = shouldGenerateTypeForSchema(ref, dependencyGraph, options);
+    const schemaName = shouldGenerate ? getSchemaNameFromRef(ref) : undefined;
+
+    if (shouldGenerate && schemaName && !types[schemaName]) {
+      const schema = getSchemaFromComponents(doc, schemaName);
+      types[schemaName] = generateTypeForSchema(schemaName, schema, ctx, options);
+      emittedType[schemaName] = true;
+
+      processDependentTypes(ref, dependencyGraph, doc, ctx, types, emittedType, options);
+    }
+  }
+
+  return { types, emittedType };
+};
+
+/**
+ * Process dependent types for a schema.
+ * Transformation function that generates types for dependencies.
+ *
+ * @internal
+ */
+export const processDependentTypes = (
+  ref: string,
+  dependencyGraph: Record<string, Set<string>>,
+  doc: OpenAPIObject,
+  ctx: TsConversionContext,
+  types: Record<string, string>,
+  emittedType: Record<string, true>,
+  options?: TemplateContext['options'],
+): void => {
+  const depRefs = dependencyGraph[ref];
+  if (!depRefs) return;
+
+  for (const depRef of depRefs) {
+    const depSchemaName = getSchemaNameFromRef(depRef);
+    if (!depSchemaName) continue;
+
+    const isDepCircular = checkIfSchemaIsCircular(depRef, dependencyGraph);
+    if (isDepCircular || types[depSchemaName]) continue;
+
+    const depSchema = getSchemaFromComponents(doc, depSchemaName);
+    types[depSchemaName] = generateTypeForSchema(depSchemaName, depSchema, ctx, options);
+
+    if (shouldEmitTypeForSchema(depSchema, options)) {
+      emittedType[depSchemaName] = true;
+    }
+  }
+};
+
+// Import types from main file to avoid circular deps
+import type { TemplateContext, TemplateContextOptions } from './template-context.js';
 
 /**
  * Extract defaultStatusBehavior type from TemplateContextOptions
