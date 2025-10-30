@@ -15,18 +15,29 @@
 
 **Current Task:** Zero Lint Errors - Systematic Refactoring
 
-**🎯 PART 4 PROGRESS (70% COMPLETE - Latest: 2025-10-29 Night - MAJOR BREAKTHROUGH!):**
+**🎯 PART 4 PROGRESS (75% COMPLETE - Latest: 2025-10-30 - TEMPLATE-CONTEXT COMPLETE!):**
 
-**🏆 MAJOR ACHIEVEMENT: FIVE GOD FUNCTIONS COMPLETELY DECOMPOSED!**
+**🏆 MAJOR ACHIEVEMENT: SIX GOD FUNCTIONS COMPLETELY DECOMPOSED!**
 
-- **✅ template-context.ts** - MAJOR DECOMPOSITION (8 TDD Phases):
-  - Main `getZodClientTemplateContext`: 251→66 lines (-74%!) 🎉
-  - Complexity: 28→19 (significantly reduced)
-  - 25+ granular helper functions extracted (VERY GRANULAR - strategic for ts-morph migration!)
+- **✅ template-context.ts** - **COMPLETE DECOMPOSITION + FILE SPLITTING** (9 TDD Phases):
+  - Main `getTemplateContext`: 251→47 lines (-81%!) ✅ **UNDER 50 LINES!**
+  - Complexity: 28→under 8 ✅
+  - **FILE SPLIT INTO 5 FOCUSED MODULES:**
+    - `template-context.ts` - Main coordinator (197 lines) ✅
+    - `template-context.schemas.ts` - Schema processing (6 functions)
+    - `template-context.types.ts` - Type processing (5 functions)
+    - `template-context.endpoints.ts` - Endpoint grouping (orchestration)
+    - `template-context.endpoints.helpers.ts` - Endpoint helpers (11 functions)
+    - `template-context.common.ts` - Common schemas (3 functions)
+  - **CRITICAL FIX:** Schema ordering regression resolved
+    - Wrong `processCommonSchemasForGroups` was being used
+    - Fixed by importing correct version with topological sorting
+    - Added 3 regression tests to prevent future issues
+  - **BEHAVIOR PRESERVED:** All 152 snapshot tests passing
   - Pattern: Schema processing, type processing, endpoint grouping, common schemas
-  - Impact: 13→3 errors (-10 errors, -77%!)
-  - All 486 tests passing, build ✅, type-check ✅, strict type safety maintained
-  - Remaining: File size (1101 lines - needs splitting), 2 functions slightly over limit
+  - Impact: 13→**0 errors** (-13 errors, **-100%!**) 🎉
+  - All 489 tests passing, build ✅, type-check ✅, strict type safety maintained
+  - **ZERO LINT ERRORS IN template-context.* FILES!**
 
 - **✅ openApiToZod.ts** - COMPLETE DECOMPOSITION (12 TDD Phases, 15 commits):
   - Main `getZodSchema`: 323→<50 lines (-85%!) 🎉
@@ -96,23 +107,24 @@
 - ✅ **Task 4.6:** Critical test issues (-14 errors)
 - ✅ **Task 4.8:** Sorting & safety (-10 errors)
 
-**📊 LINT PROGRESS:** 263 → 215 → 209 → 207 → 198 → 185 → **~178 errors** (-85 total, **-32.3%** reduction)
+**📊 LINT PROGRESS:** 263 → 215 → 209 → 207 → 198 → 185 → 178 → **~165 errors** (-98 total, **-37.3%** reduction)
 
-**Production Status (11 files, ~48 errors):**
+**Production Status (10 files, ~35 errors):**
 
 **Remaining God Functions (Priority Order):**
 
-1. `template-context.ts`: **3 errors** ✅ **MAJOR PROGRESS!** (66-line function ✅, file size 1101 lines)
-   - ✅ **COMPLETE:** Decomposed into VERY GRANULAR single-responsibility functions
-   - ✅ 25+ helper functions extracted (strategic for ts-morph migration!)
-   - ✅ Main function: 251→66 lines (-74%!)
-   - ✅ Complexity: 28→19 (significantly reduced)
-   - 🎯 **NEXT:** Split file into modules OR refine 2 helpers slightly over limit
-2. `generateZodClientFromOpenAPI.ts`: **3 errors** ✅ **MAJOR PROGRESS!** (49-line function ✅, file size 422 lines, 2 deprecation warnings)
-3. `cli.ts`: **1 error** ✅ **MAJOR PROGRESS!** (23-line function ✅, file size 300 lines)
+1. `generateZodClientFromOpenAPI.ts`: **3 errors** ✅ **MAJOR PROGRESS!** (49-line function ✅, file size 436 lines, 2 deprecation warnings)
+2. `cli.ts`: **1 error** ✅ **MAJOR PROGRESS!** (23-line function ✅, file size 300 lines)
 
-**Completed God Functions (Zero Errors or Major Progress):**
+**Completed God Functions (Zero Errors!):**
 
+- ✅ **template-context.ts** - **COMPLETE (0 errors)** 🎉 **NEW!**
+  - ✅ **COMPLETE:** Decomposed + file split into 5 focused modules
+  - ✅ 25+ helper functions extracted (strategic for ts-morph migration!)
+  - ✅ Main function: 251→47 lines (-81%!)
+  - ✅ Complexity: 28→under 8
+  - ✅ Schema ordering regression fixed with tests
+  - ✅ All 489 unit tests + 152 snapshot tests passing
 - ✅ **schema-complexity.ts** - COMPLETE (0 errors) 🎉
 - ✅ **openApiToTypescript.ts** - MAJOR PROGRESS (1 error remaining: file size 434 lines) 🎉
 
@@ -120,9 +132,9 @@
 
 **Test Files:** ~134 errors (acceptable - pragmatic approach)
 
-**✅ All Quality Gates:** format ✅, build ✅, type-check ✅, test (486/486 + 152 snapshot = 638 total) ✅
-**📝 Session Commits:** 18+ clean TDD commits
-**🎯 Next Target:** File splitting (Task 4.3) OR continue with remaining god functions
+**✅ All Quality Gates:** format ✅, build ✅, type-check ✅, test (489/489 + 152 snapshot = 641 total) ✅
+**📝 Session Commits:** 19+ clean TDD commits
+**🎯 Next Target:** Continue with remaining god functions OR file splitting (Task 4.3)
 
 **Strategy Working:**
 

@@ -4,17 +4,28 @@
 **Estimated Duration:** 36-45 hours (Pragmatic Hybrid: Production Perfect + Critical Test Issues)  
 **Prerequisites:** Parts 1-3 complete, all tests passing ✅
 
-**Current Progress (Latest: 2025-10-29 Night - MAJOR BREAKTHROUGH!):**
+**Current Progress (Latest: 2025-10-30 - TEMPLATE-CONTEXT COMPLETE!):**
 
-**🏆 FIVE GOD FUNCTIONS COMPLETELY DECOMPOSED!**
+**🏆 SIX GOD FUNCTIONS COMPLETELY DECOMPOSED!**
 
-- ✅ **template-context.ts** - MAJOR DECOMPOSITION (8 TDD Phases):
-  - Main `getZodClientTemplateContext`: 251→66 lines (-74%!) ✅
-  - Complexity: 28→19 (significantly reduced)
-  - 25+ pure helper functions extracted (VERY GRANULAR - strategic for ts-morph migration!)
+- ✅ **template-context.ts** - **COMPLETE DECOMPOSITION + FILE SPLITTING** (9 TDD Phases):
+  - Main `getTemplateContext`: 251→47 lines (-81%!) ✅ **UNDER 50 LINES!**
+  - Complexity: 28→under 8 ✅
+  - **FILE SPLIT INTO 5 FOCUSED MODULES:**
+    - `template-context.ts` - Main coordinator (197 lines) ✅
+    - `template-context.schemas.ts` - Schema processing (6 functions)
+    - `template-context.types.ts` - Type processing (5 functions)
+    - `template-context.endpoints.ts` - Endpoint grouping (orchestration)
+    - `template-context.endpoints.helpers.ts` - Endpoint helpers (11 functions)
+    - `template-context.common.ts` - Common schemas (3 functions)
+  - **CRITICAL FIX:** Schema ordering regression resolved
+    - Wrong `processCommonSchemasForGroups` was being used
+    - Fixed by importing correct version with topological sorting
+    - Added 3 regression tests to prevent future issues
+  - **BEHAVIOR PRESERVED:** All 152 snapshot tests passing
   - Pattern: Schema processing, type processing, endpoint grouping, common schemas
-  - Impact: 13→3 errors (-10 errors, -77%!)
-  - Remaining: File size (1101 lines), 2 functions slightly over limit (56 & 62 lines)
+  - Impact: 13→**0 errors** (-13 errors, **-100%!**) 🎉
+  - **ZERO LINT ERRORS IN template-context.* FILES!**
 
 - ✅ **openApiToZod.ts** - COMPLETE DECOMPOSITION (12 TDD Phases):
   - Main `getZodSchema`: 323→<50 lines (-85%!) ✅
@@ -77,18 +88,18 @@
 - ✅ **Task 4.7.1 COMPLETE:** generateJSDocArray decomposition
 - ✅ **Task 4.8 COMPLETE:** Sorting & safety issues
 
-**📊 LINT PROGRESS:** 263 → 215 → 209 → 207 → 198 → 185 → **~178 errors** (-85 total, **-32.3%** reduction)
+**📊 LINT PROGRESS:** 263 → 215 → 209 → 207 → 198 → 185 → 178 → **~165 errors** (-98 total, **-37.3%** reduction)
 
-**Production Code Status (11 files, ~48 errors):**
+**Production Code Status (10 files, ~35 errors):**
 
 **High Priority God Functions (Need Decomposition):**
 
-1. `template-context.ts`: **3 errors** (66-line function ✅, file size 1101 lines, 2 helpers slightly over limit)
-2. `generateZodClientFromOpenAPI.ts`: **3 errors** (49-line function ✅, file size 422 lines, 2 deprecation warnings)
-3. `cli.ts`: **1 error** (23-line function ✅, file size 300 lines)
+1. `generateZodClientFromOpenAPI.ts`: **3 errors** (49-line function ✅, file size 436 lines, 2 deprecation warnings)
+2. `cli.ts`: **1 error** (23-line function ✅, file size 300 lines)
 
-**Completed God Functions (Zero Errors or Major Progress):**
+**Completed God Functions (Zero Errors!):**
 
+- ✅ **template-context.ts** - **COMPLETE (0 errors)** 🎉 **NEW!**
 - ✅ **schema-complexity.ts** - COMPLETE (0 errors) 🎉
 - ✅ **openApiToTypescript.ts** - MAJOR PROGRESS (1 error remaining: file size 434 lines) 🎉
 
@@ -98,9 +109,9 @@
 
 **Test Files:** ~134 errors (acceptable in pragmatic approach - functions >200 lines, files >1000 lines)
 
-**✅ All Quality Gates:** format ✅, build ✅, type-check ✅, test (486/486 + 152 snapshot = 638 total) ✅
-**📝 Session Commits:** 18+ clean TDD commits
-**🎯 Next:** File splitting (Task 4.3) OR continue with remaining god functions
+**✅ All Quality Gates:** format ✅, build ✅, type-check ✅, test (489/489 + 152 snapshot = 641 total) ✅
+**📝 Session Commits:** 19+ clean TDD commits
+**🎯 Next:** Continue with remaining god functions OR file splitting (Task 4.3)
 
 **Completed Files (Zero Errors):**
 
@@ -112,9 +123,14 @@
 6. ✅ `endpoint.path.helpers.ts` (245 lines)
 7. ✅ `getOpenApiDependencyGraph.ts` (ZERO errors)
 8. ✅ `getEndpointDefinitionList.ts` main function (ZERO errors, helper has 6)
-9. ✅ `template-context.ts` main function (66 lines ✅, file needs splitting)
-10. ✅ **openApiToTypescript.ts** main function (18 lines ✅, file needs splitting)
-11. ✅ **schema-complexity.ts** (ZERO errors - COMPLETE!) 🎉
+9. ✅ **template-context.ts** - **COMPLETE (0 errors)** 🎉 **NEW!**
+10. ✅ **template-context.schemas.ts** - COMPLETE (0 errors) 🎉 **NEW!**
+11. ✅ **template-context.types.ts** - COMPLETE (0 errors) 🎉 **NEW!**
+12. ✅ **template-context.endpoints.ts** - COMPLETE (0 errors) 🎉 **NEW!**
+13. ✅ **template-context.endpoints.helpers.ts** - COMPLETE (0 errors) 🎉 **NEW!**
+14. ✅ **template-context.common.ts** - COMPLETE (0 errors) 🎉 **NEW!**
+15. ✅ **openApiToTypescript.ts** main function (18 lines ✅, file needs splitting)
+16. ✅ **schema-complexity.ts** (ZERO errors - COMPLETE!) 🎉
 
 **📊 DETAILED ERROR BREAKDOWN (~178 total: ~48 production, ~130 test):**
 
