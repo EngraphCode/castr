@@ -20,7 +20,7 @@ test('schema-type-wrong-case', async () => {
     },
     components: {
       schemas: {
-        test1: { type: 'object', properties: { text1: { type: 'Integer' as any } } },
+        test1: { type: 'object', properties: { text1: { type: 'Integer' as unknown } } },
       },
     },
   };

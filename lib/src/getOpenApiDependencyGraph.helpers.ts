@@ -11,7 +11,7 @@ type VisitFn = (schema: SchemaObject | ReferenceObject, fromRef: string) => void
  * Visits all schemas in a composition array (allOf, oneOf, anyOf)
  */
 export function visitComposition(
-  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  schemas: readonly (SchemaObject | ReferenceObject)[],
   fromRef: string,
   visit: VisitFn,
 ): void {

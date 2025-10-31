@@ -90,11 +90,15 @@ export const processEndpointGrouping = (
   const dependenciesByGroupName = new Map<string, Set<string>>();
 
   endpoints.forEach((endpoint) => {
-    if (!endpoint.response) return;
+    if (!endpoint.response) {
+      return;
+    }
 
     if (groupStrategy !== 'none') {
       const operation = getOperationForEndpoint(openApiDoc, endpoint);
-      if (!operation) return;
+      if (!operation) {
+        return;
+      }
 
       const groupName = determineGroupName(groupStrategy, operation, endpoint);
       const group = ensureGroupExists(groupName, endpointsGroups);
@@ -114,6 +118,75 @@ export const processEndpointGrouping = (
 
   return dependenciesByGroupName;
 };
+
+/**
+ * Process endpoint grouping and common schemas.
+ * Helper function to reduce complexity of getTemplateContext.
+ *
+ * @param endpoints - Array of endpoint definitions
+ * @param doc - The OpenAPI document
+ * @param groupStrategy - The grouping strategy to use
+ * @param deepDependencyGraph - The deep dependency graph
+ * @param sortedSchemas - Map of sorted schemas
+ * @param types - Map of all types
+ * @returns Object with endpointsGroups and commonSchemaNames
+ *
+ * @internal
+ */
+export function processEndpointGroupingAndCommonSchemas(
+  endpoints: EndpointDefinition[],
+  doc: OpenAPIObject,
+  groupStrategy: string,
+  deepDependencyGraph: Record<string, Set<string>>,
+  sortedSchemas: Record<string, string>,
+  types: Record<string, string>,
+): {
+  endpointsGroups: Record<string, MinimalTemplateContext>;
+  commonSchemaNames?: Set<string> | undefined;
+} {
+  // Create endpointsGroups before calling processEndpointGrouping (it mutates this object)
+  const endpointsGroups: Record<string, MinimalTemplateContext> = {};
+
+  // Validate and narrow groupStrategy type
+  function isValidGroupStrategy(strategy: string): strategy is TemplateContextGroupStrategy {
+    const validStrategies: TemplateContextGroupStrategy[] = [
+      'none',
+      'tag',
+      'method',
+      'tag-file',
+      'method-file',
+    ];
+    const strategies: readonly string[] = validStrategies;
+    return strategies.includes(strategy);
+  }
+
+  if (!isValidGroupStrategy(groupStrategy)) {
+    throw new Error(`Invalid group strategy: ${groupStrategy}`);
+  }
+
+  // Process endpoint grouping (mutates endpointsGroups)
+  const dependenciesByGroupName = processEndpointGrouping(
+    endpoints,
+    doc,
+    groupStrategy,
+    deepDependencyGraph,
+    sortedSchemas,
+    types,
+    endpointsGroups,
+  );
+
+  // Process common schemas for file grouping (sorts schemas by dependencies)
+  if (groupStrategy.includes('file')) {
+    const commonSchemaNames = processCommonSchemasForGroups(
+      endpointsGroups,
+      dependenciesByGroupName,
+      deepDependencyGraph,
+    );
+    return { endpointsGroups, commonSchemaNames };
+  }
+
+  return { endpointsGroups };
+}
 
 // Note: processCommonSchemasForGroups is imported from template-context.common.ts
 // and re-exported below for backward compatibility

@@ -73,7 +73,7 @@ function runCli(args: string[]): { stdout: string; exitCode: number } {
       stdio: 'pipe',
     });
     return { stdout: result, exitCode: 0 };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       stdout: error.stdout?.toString() || '',
       exitCode: error.status || 1,
@@ -246,7 +246,7 @@ describe('Characterisation: CLI Behavior', () => {
         },
       };
 
-      const inputPath = createTestSpec('complex-test.json', complexSpec as any);
+      const inputPath = createTestSpec('complex-test.json', complexSpec as unknown);
       const outputPath = join(TEST_OUTPUT_DIR, 'complex-output.ts');
 
       runCli([inputPath, '-o', outputPath]);

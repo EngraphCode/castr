@@ -9,7 +9,9 @@ import { match, P } from 'ts-pattern';
  * @example capitalize("world") → "World"
  */
 export const capitalize = (str: string): string => {
-  if (!str) return str;
+  if (!str) {
+    return str;
+  }
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
@@ -104,7 +106,9 @@ const PRIMITIVE_SCHEMA_TYPES: readonly PrimitiveSchemaType[] = [
  * Pattern: literals tied to library types per RULES.md §5
  */
 export const isPrimitiveSchemaType = (value: unknown): value is PrimitiveSchemaType => {
-  if (typeof value !== 'string') return false;
+  if (typeof value !== 'string') {
+    return false;
+  }
   const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
   return typeStrings.includes(value);
 };
@@ -120,13 +124,18 @@ export const escapeControlCharacters = (str: string): string => {
       /([\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\uFFFE\uFFFF])/g,
       (_m, p1: string) => {
         const codePoint = p1.codePointAt(0);
-        if (codePoint === undefined) return '';
+        if (codePoint === undefined) {
+          return '';
+        }
         const dec: number = codePoint;
         const hex: string = dec.toString(16);
-        // eslint-disable-next-line sonarjs/no-nested-template-literals
-        if (dec <= 0xff) return `\\x${`00${hex}`.slice(-2)}`;
-        // eslint-disable-next-line sonarjs/no-nested-template-literals
-        return `\\u${`0000${hex}`.slice(-4)}`;
+
+        if (dec <= 0xff) {
+          const paddedHex = `00${hex}`.slice(-2);
+          return `\\x${paddedHex}`;
+        }
+        const paddedHex = `0000${hex}`.slice(-4);
+        return `\\u${paddedHex}`;
       },
     )
     .replaceAll('/', String.raw`\/`);

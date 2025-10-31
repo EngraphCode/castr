@@ -2,8 +2,10 @@ export function topologicalSort(graph: Record<string, Set<string>>): string[] {
   const sorted: string[] = [], // sorted list of IDs ( returned value )
     visited: Record<string, boolean> = {}; // hash: id of already visited node => true
 
-  function visit(name: string, ancestors: string[]) {
-    if (!Array.isArray(ancestors)) ancestors = [];
+  function visit(name: string, ancestors: string[]): void {
+    if (!Array.isArray(ancestors)) {
+      ancestors = [];
+    }
     ancestors.push(name);
     visited[name] = true;
 
@@ -15,12 +17,16 @@ export function topologicalSort(graph: Record<string, Set<string>>): string[] {
         }
 
         // if already exists, do nothing
-        if (visited[dep]) return;
+        if (visited[dep]) {
+          return;
+        }
         visit(dep, [...ancestors]); // recursive call
       });
     }
 
-    if (!sorted.includes(name)) sorted.push(name);
+    if (!sorted.includes(name)) {
+      sorted.push(name);
+    }
   }
 
   // 2. topological sort

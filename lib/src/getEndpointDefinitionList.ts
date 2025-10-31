@@ -86,7 +86,10 @@ function prepareEndpointContext(
   };
 
   const complexityThreshold = options?.complexityThreshold ?? 4;
-  const getZodVarName = (input: CodeMeta, fallbackName?: string) =>
+  const getZodVarName = (
+    input: CodeMeta,
+    fallbackName?: string,
+  ): ReturnType<typeof getSchemaVarName> =>
     getSchemaVarName(
       input,
       ctx,
@@ -301,7 +304,9 @@ function emitResponseWarnings(
   ignoredGenericError: string[],
   options?: TemplateContext['options'],
 ): void {
-  if (options?.willSuppressWarnings === true) return;
+  if (options?.willSuppressWarnings === true) {
+    return;
+  }
 
   if (ignoredFallbackResponse.length > 0) {
     logger.warn(

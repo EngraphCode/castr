@@ -35,7 +35,9 @@ const handleReferenceInGraph = (
 
   refsDependencyGraph[fromRef].add(schema.$ref);
 
-  if (visitedsRefs[schema.$ref]) return;
+  if (visitedsRefs[schema.$ref]) {
+    return;
+  }
 
   visitedsRefs[fromRef] = true;
   const schemaName = getSchemaNameFromRef(schema.$ref);
@@ -70,7 +72,9 @@ const handleCompositionIfPresent = (
  */
 const handleSchemaType = (schema: SchemaObject, fromRef: string, visit: VisitFn): void => {
   // Handle composition schemas first
-  if (handleCompositionIfPresent(schema, fromRef, visit)) return;
+  if (handleCompositionIfPresent(schema, fromRef, visit)) {
+    return;
+  }
 
   // Handle array schemas
   if (schema.type === 'array' && schema.items) {
@@ -95,7 +99,9 @@ const buildDirectDependencyGraph = (
   const refsDependencyGraph: Record<string, Set<string>> = {};
 
   const visit: VisitFn = (schema, fromRef) => {
-    if (!schema) return;
+    if (!schema) {
+      return;
+    }
 
     if (isReferenceObject(schema)) {
       handleReferenceInGraph(schema, fromRef, refsDependencyGraph, visitedsRefs, doc, visit);
@@ -124,7 +130,9 @@ const buildDeepDependencyGraph = (
 
   schemaRefs.forEach((ref) => {
     const deps = refsDependencyGraph[ref];
-    if (!deps) return;
+    if (!deps) {
+      return;
+    }
     if (!deepDependencyGraph[ref]) {
       deepDependencyGraph[ref] = new Set();
     }
@@ -136,7 +144,9 @@ const buildDeepDependencyGraph = (
       }
       if (refsDependencyGraph[dep] && ref !== dep) {
         refsDependencyGraph[dep].forEach((transitive: string) => {
-          if (visitedsDeepRefs[ref + '__' + transitive]) return;
+          if (visitedsDeepRefs[ref + '__' + transitive]) {
+            return;
+          }
           visitedsDeepRefs[ref + '__' + transitive] = true;
           visit(transitive);
         });

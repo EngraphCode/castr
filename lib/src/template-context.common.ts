@@ -92,7 +92,9 @@ export const processCommonSchemasForGroups = (
 
   Object.keys(endpointsGroups).forEach((groupName) => {
     const group = endpointsGroups[groupName];
-    if (!group) return;
+    if (!group) {
+      return;
+    }
     group.imports = {};
 
     const separated = separateCommonAndGroupSchemas(group.schemas, dependenciesCount, group.types);
@@ -120,18 +122,20 @@ export const processCommonSchemasForGroups = (
 };
 
 // Local helpers/types to avoid circular imports
-export type MinimalTemplateContext = {
+export interface MinimalTemplateContext {
   schemas: Record<string, string>;
-  endpoints: Array<unknown>;
+  endpoints: unknown[];
   types: Record<string, string>;
   imports?: Record<string, string>;
-};
+}
 
 export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
   return fullSchemaNames.map((name) => {
     const parts = name.split('/');
     const lastPart = parts.at(-1);
-    if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
+    if (!lastPart) {
+      throw new Error(`Invalid schema name: ${name}`);
+    }
     return lastPart;
   });
 };

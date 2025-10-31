@@ -30,12 +30,12 @@ import {
  * Type for conversion arguments passed through the conversion pipeline.
  * @internal
  */
-export type TsConversionArgs = {
+export interface TsConversionArgs {
   schema: SchemaObject | ReferenceObject;
   ctx?: TsConversionContext | undefined;
   meta?: { name?: string; $ref?: string; isInline?: boolean } | undefined;
   options?: TemplateContext['options'];
-};
+}
 
 /**
  * Type for schema handler function that converts schemas to TypeScript types.
@@ -52,12 +52,12 @@ export type SchemaHandler = (
  * Context for TypeScript conversion tracking visited references and node mappings.
  * @public
  */
-export type TsConversionContext = {
+export interface TsConversionContext {
   nodeByRef: Record<string, string>;
   doc: OpenAPIObject;
   rootRef?: string;
   visitedRefs?: Record<string, boolean>;
-};
+}
 
 /**
  * Handle reference object schema.

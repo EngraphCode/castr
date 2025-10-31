@@ -15,19 +15,19 @@ const getSchemaNameFromRef = (ref: string): string => {
   return name;
 };
 
-export type ConversionTypeContext = {
+export interface ConversionTypeContext {
   doc: OpenAPIObject;
   zodSchemaByName: Record<string, string>;
   schemaByName: Record<string, string>;
   schemasByName?: Record<string, string[]>;
-};
+}
 
-export type CodeMetaData = {
+export interface CodeMetaData {
   isRequired?: boolean;
   name?: string;
   parent?: CodeMeta;
   referencedBy?: CodeMeta[];
-};
+}
 
 type DefinedCodeMetaProps = 'referencedBy';
 type DefinedCodeMetaData = Pick<Required<CodeMetaData>, DefinedCodeMetaProps> &
@@ -61,9 +61,13 @@ export class CodeMeta {
   }
 
   get codeString(): string {
-    if (this.code) return this.code;
+    if (this.code) {
+      return this.code;
+    }
 
-    if (!this.ref) return '';
+    if (!this.ref) {
+      return '';
+    }
     return getSchemaNameFromRef(this.ref);
   }
 

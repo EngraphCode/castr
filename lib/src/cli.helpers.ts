@@ -4,8 +4,10 @@ import { resolve } from 'node:path';
 import type { resolveConfig } from 'prettier';
 
 import { toBoolean } from './utils.js';
-import type { GenerateZodClientFromOpenApiArgs } from './generateZodClientFromOpenAPI.js';
-import type { generateZodClientFromOpenAPI } from './generateZodClientFromOpenAPI.js';
+import type {
+  GenerateZodClientFromOpenApiArgs,
+  generateZodClientFromOpenAPI,
+} from './generateZodClientFromOpenAPI.js';
 import { hasVersionProperty, isGroupStrategy, isDefaultStatusBehavior } from './cli-type-guards.js';
 import type { TemplateContextOptions } from './template-context.js';
 
@@ -91,11 +93,21 @@ export function addStringOptions(
   options: CliOptions,
   generationOptions: Partial<TemplateContextOptions>,
 ): void {
-  if (options.baseUrl) generationOptions.baseUrl = options.baseUrl;
-  if (options.apiClientName) generationOptions.apiClientName = options.apiClientName;
-  if (options.errorExpr) generationOptions.isErrorStatus = options.errorExpr;
-  if (options.successExpr) generationOptions.isMainResponseStatus = options.successExpr;
-  if (options.mediaTypeExpr) generationOptions.isMediaTypeAllowed = options.mediaTypeExpr;
+  if (options.baseUrl) {
+    generationOptions.baseUrl = options.baseUrl;
+  }
+  if (options.apiClientName) {
+    generationOptions.apiClientName = options.apiClientName;
+  }
+  if (options.errorExpr) {
+    generationOptions.isErrorStatus = options.errorExpr;
+  }
+  if (options.successExpr) {
+    generationOptions.isMainResponseStatus = options.successExpr;
+  }
+  if (options.mediaTypeExpr) {
+    generationOptions.isMediaTypeAllowed = options.mediaTypeExpr;
+  }
 }
 
 /**
@@ -108,11 +120,18 @@ export function addBooleanOptions(
   options: CliOptions,
   generationOptions: Partial<TemplateContextOptions>,
 ): void {
-  if (options.exportSchemas) generationOptions.shouldExportAllSchemas = options.exportSchemas;
-  if (options.exportTypes) generationOptions.shouldExportAllTypes = options.exportTypes;
-  if (options.implicitRequired)
+  if (options.exportSchemas) {
+    generationOptions.shouldExportAllSchemas = options.exportSchemas;
+  }
+  if (options.exportTypes) {
+    generationOptions.shouldExportAllTypes = options.exportTypes;
+  }
+  if (options.implicitRequired) {
     generationOptions.withImplicitRequiredProps = options.implicitRequired;
-  if (options.withDeprecated) generationOptions.withDeprecatedEndpoints = options.withDeprecated;
+  }
+  if (options.withDeprecated) {
+    generationOptions.withDeprecatedEndpoints = options.withDeprecated;
+  }
 }
 
 /**
@@ -126,10 +145,15 @@ export function addParsedOptions(
   generationOptions: Partial<TemplateContextOptions>,
 ): void {
   const { groupStrategy, complexityThreshold, defaultStatusBehavior } = parsedOptions;
-  if (groupStrategy) generationOptions.groupStrategy = groupStrategy;
-  if (complexityThreshold !== undefined)
+  if (groupStrategy) {
+    generationOptions.groupStrategy = groupStrategy;
+  }
+  if (complexityThreshold !== undefined) {
     generationOptions.complexityThreshold = complexityThreshold;
-  if (defaultStatusBehavior) generationOptions.defaultStatusBehavior = defaultStatusBehavior;
+  }
+  if (defaultStatusBehavior) {
+    generationOptions.defaultStatusBehavior = defaultStatusBehavior;
+  }
 }
 
 /**
@@ -155,10 +179,18 @@ export function buildGenerationOptions(
 
   addStringOptions(options, generationOptions);
   addBooleanOptions(options, generationOptions);
-  if (options.withDocs) generationOptions.withDocs = options.withDocs;
-  if (options.withDescription) generationOptions.withDescription = options.withDescription;
-  if (options.allReadonly) generationOptions.allReadonly = options.allReadonly;
-  if (options.strictObjects) generationOptions.strictObjects = options.strictObjects;
+  if (options.withDocs) {
+    generationOptions.withDocs = options.withDocs;
+  }
+  if (options.withDescription) {
+    generationOptions.withDescription = options.withDescription;
+  }
+  if (options.allReadonly) {
+    generationOptions.allReadonly = options.allReadonly;
+  }
+  if (options.strictObjects) {
+    generationOptions.strictObjects = options.strictObjects;
+  }
   addParsedOptions(parsedOptions, generationOptions);
 
   return generationOptions;

@@ -24,12 +24,12 @@ const getSchemaNameFromRef = (ref: string): string => {
   return name;
 };
 
-type EndpointContext = {
+interface EndpointContext {
   zodSchemaByName: Record<string, string>;
   schemaByName: Record<string, string>;
   schemasByName?: Record<string, string[]>;
   doc: OpenAPIObject;
-};
+}
 
 /**
  * Checks if schema should be inlined (no variable extraction)

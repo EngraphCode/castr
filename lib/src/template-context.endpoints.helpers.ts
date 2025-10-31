@@ -9,12 +9,12 @@ import { asComponentSchema, normalizeString } from './utils.js';
 
 export type TemplateContextGroupStrategy = 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
 
-export type MinimalTemplateContext = {
+export interface MinimalTemplateContext {
   schemas: Record<string, string>;
   endpoints: EndpointDefinition[];
   types: Record<string, string>;
   imports?: Record<string, string>;
-};
+}
 
 export const makeEndpointTemplateContext = (): MinimalTemplateContext => ({
   schemas: {},
@@ -43,7 +43,9 @@ export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
   return fullSchemaNames.map((name) => {
     const parts = name.split('/');
     const lastPart = parts.at(-1);
-    if (!lastPart) throw new Error(`Invalid schema name: ${name}`);
+    if (!lastPart) {
+      throw new Error(`Invalid schema name: ${name}`);
+    }
     return lastPart;
   });
 };
@@ -83,8 +85,12 @@ export const determineGroupName = (
  * @internal
  */
 export const normalizeSchemaNameForDependency = (schemaName: string): string | null => {
-  if (!schemaName) return null;
-  if (schemaName.startsWith('z.')) return null;
+  if (!schemaName) {
+    return null;
+  }
+  if (schemaName.startsWith('z.')) {
+    return null;
+  }
   // Sometimes the schema includes a chain that should be removed from the dependency
   const [normalizedSchemaName] = schemaName.split('.');
   return normalizedSchemaName || null;
@@ -104,17 +110,23 @@ export const collectEndpointDependencies = (endpoint: EndpointDefinition): strin
 
   if (endpoint.response) {
     const normalized = normalizeSchemaNameForDependency(endpoint.response);
-    if (normalized) dependencies.push(normalized);
+    if (normalized) {
+      dependencies.push(normalized);
+    }
   }
 
   endpoint.parameters.forEach((param) => {
     const normalized = normalizeSchemaNameForDependency(param.schema);
-    if (normalized) dependencies.push(normalized);
+    if (normalized) {
+      dependencies.push(normalized);
+    }
   });
 
   endpoint.errors.forEach((error) => {
     const normalized = normalizeSchemaNameForDependency(error.schema);
-    if (normalized) dependencies.push(normalized);
+    if (normalized) {
+      dependencies.push(normalized);
+    }
   });
 
   return dependencies;
@@ -246,11 +258,15 @@ export const processTransitiveDependenciesForGroup = (
   const resolvedRef = asComponentSchema(schemaName);
   const transitiveRefs = dependencyGraph[resolvedRef];
 
-  if (!transitiveRefs) return;
+  if (!transitiveRefs) {
+    return;
+  }
 
   transitiveRefs.forEach((transitiveRef) => {
     const transitiveSchemaName = getSchemaNameFromRef(transitiveRef);
-    if (!transitiveSchemaName) return;
+    if (!transitiveSchemaName) {
+      return;
+    }
 
     const normalized = normalizeSchemaNameForDependency(transitiveSchemaName);
     if (normalized) {

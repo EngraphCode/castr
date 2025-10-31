@@ -37,7 +37,9 @@ const complexityByType = (type: PrimitiveSchemaType): number => {
 };
 
 const complexityByComposite = (from?: CompositeType): number => {
-  if (!from) return 0;
+  if (!from) {
+    return 0;
+  }
 
   return match(from)
     .with('oneOf', () => 2)
@@ -75,7 +77,9 @@ function handleCompositionSchema(
   getSchemaComplexity: ComplexityFn,
 ): number {
   const schemas = schema[compositionType];
-  if (!schemas) return current;
+  if (!schemas) {
+    return current;
+  }
 
   return calculateCompositionComplexity(
     schemas,
@@ -97,7 +101,9 @@ function handleEnumWithoutType(current: number): number {
  * Handle primitive schema type with optional enum
  */
 function handlePrimitiveSchema(schema: SchemaObject, current: number): number {
-  if (!isPrimitiveSchemaType(schema.type)) return current;
+  if (!isPrimitiveSchemaType(schema.type)) {
+    return current;
+  }
 
   const baseComplexity = complexityByType(schema.type);
   if (schema.enum) {
@@ -115,7 +121,9 @@ function handleArraySchema(
   current: number,
   getSchemaComplexity: ComplexityFn,
 ): number {
-  if (schema.type !== 'array') return current;
+  if (schema.type !== 'array') {
+    return current;
+  }
 
   const arrayComplexity = complexityByComposite('array');
   if (schema.items) {
@@ -134,7 +142,9 @@ function handleObjectSchema(
   getSchemaComplexity: ComplexityFn,
 ): number {
   const isObjectType = schema.type === 'object' || schema.properties || schema.additionalProperties;
-  if (!isObjectType) return current;
+  if (!isObjectType) {
+    return current;
+  }
 
   if (schema.additionalProperties) {
     if (schema.additionalProperties === true) {
@@ -172,7 +182,9 @@ function tryCompositionHandlers(
 ): number {
   for (const compositionType of ['oneOf', 'anyOf', 'allOf'] as const) {
     const result = handleCompositionSchema(schema, compositionType, current, getSchemaComplexity);
-    if (result !== current) return result;
+    if (result !== current) {
+      return result;
+    }
   }
   return current;
 }
@@ -187,25 +199,37 @@ function trySchemaTypeHandlers(
   getSchemaComplexity: ComplexityFn,
 ): number {
   // Handle null type
-  if (schema.type === 'null') return handleNullTypeSchema(current);
+  if (schema.type === 'null') {
+    return handleNullTypeSchema(current);
+  }
 
   // Handle composition types (oneOf, anyOf, allOf)
   const compositionResult = tryCompositionHandlers(schema, current, getSchemaComplexity);
-  if (compositionResult !== current) return compositionResult;
+  if (compositionResult !== current) {
+    return compositionResult;
+  }
 
   // Handle enum without explicit type BEFORE early return
-  if (schema.enum && !schema.type) return handleEnumWithoutType(current);
+  if (schema.enum && !schema.type) {
+    return handleEnumWithoutType(current);
+  }
 
   // Early return if no type
-  if (!schema.type) return current;
+  if (!schema.type) {
+    return current;
+  }
 
   // Handle primitive types (with optional enum)
   const primitiveResult = handlePrimitiveSchema(schema, current);
-  if (primitiveResult !== current) return primitiveResult;
+  if (primitiveResult !== current) {
+    return primitiveResult;
+  }
 
   // Handle array type
   const arrayResult = handleArraySchema(schema, current, getSchemaComplexity);
-  if (arrayResult !== current) return arrayResult;
+  if (arrayResult !== current) {
+    return arrayResult;
+  }
 
   // Handle object type (properties, additionalProperties, empty)
   return handleObjectSchema(schema, current, getSchemaComplexity);
@@ -219,8 +243,12 @@ export function getSchemaComplexity({
   schema: SchemaObject | ReferenceObject | undefined;
 }): number {
   // Early returns for null/undefined and references
-  if (!schema) return current;
-  if (isReferenceObject(schema)) return handleReferenceSchema(current);
+  if (!schema) {
+    return current;
+  }
+  if (isReferenceObject(schema)) {
+    return handleReferenceSchema(current);
+  }
 
   // Handle type array (OpenAPI 3.1 feature)
   if (Array.isArray(schema.type)) {

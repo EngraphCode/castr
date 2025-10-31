@@ -161,7 +161,7 @@ describe('schema-complexity: enum calculations', () => {
 
     test('enum with mixed types (string and number)', () => {
       // Note: This might not be valid OpenAPI, but we should handle it
-      expect(getComplexity({ enum: ['a', 1, 'b', 2] as any })).toBe(2);
+      expect(getComplexity({ enum: ['a', 1, 'b', 2] as unknown })).toBe(2);
     });
   });
 });

@@ -25,8 +25,8 @@ import type { ValidateFunction } from 'ajv';
 import { generateZodClientFromOpenAPI } from '../../src/generateZodClientFromOpenAPI.js';
 
 // Handle CJS/ESM interop for default exports
-const Ajv04 = (Ajv04Module as any).default || Ajv04Module;
-const addFormats = (addFormatsModule as any).default || addFormatsModule;
+const Ajv04 = (Ajv04Module as unknown).default || Ajv04Module;
+const addFormats = (addFormatsModule as unknown).default || addFormatsModule;
 
 // Load official OpenAPI schemas
 const SCHEMA_DIR = join(process.cwd(), '../.agent/reference/openapi_schema');

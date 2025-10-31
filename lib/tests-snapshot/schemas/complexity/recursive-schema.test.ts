@@ -75,7 +75,9 @@ describe('recursive-schema', () => {
       doc,
     };
     const rootSchema = schemas['Root'];
-    if (!rootSchema) throw new Error('Root schema not found');
+    if (!rootSchema) {
+      throw new Error('Root schema not found');
+    }
     expect(getZodSchema({ schema: rootSchema, ctx })).toMatchInlineSnapshot(
       '"z.object({ recursive: User, basic: z.number() }).partial().passthrough()"',
     );

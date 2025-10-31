@@ -396,7 +396,7 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle many schemas (50+)', async () => {
-      const schemas: Record<string, any> = {};
+      const schemas: Record<string, unknown> = {};
       for (let i = 0; i < 50; i++) {
         schemas[`Schema${i}`] = {
           type: 'object',

@@ -1,142 +1,187 @@
+// eslint.config.ts
+import type { Linter } from 'eslint';
 import { defineConfig } from 'eslint/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { configs as tsEslintConfigs } from 'typescript-eslint';
+import tsParser from '@typescript-eslint/parser';
 import { configs as sonarjsConfigs } from 'eslint-plugin-sonarjs';
 import eslint from '@eslint/js';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import { importX } from 'eslint-plugin-import-x';
+import globals from 'globals';
 
-const baseDirectory = path.dirname(fileURLToPath(import.meta.url));
+const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig(
-  // Base ESLint recommended rules
+/* -------------------------------------------------------------------------- */
+/* Base setup                                                                 */
+/* -------------------------------------------------------------------------- */
+
+const baseLanguageOptions: Linter.LanguageOptions = {
+  globals: { ...globals.node, ...globals.es2022 },
+};
+
+const baseIgnores = [
+  '**/dist/**',
+  '**/node_modules/**',
+  '**/build/**',
+  '**/.turbo/**',
+  '**/coverage/**',
+  '**/*.typegen.ts',
+  '**/*.d.ts',
+  'bin.cjs',
+  'examples/**',
+  '**/*.md',
+  '**/*.json',
+  '**/*.yaml',
+  '**/*.yml',
+  '**/.prettierignore',
+  '**/.eslintignore',
+  '**/.vscode/**',
+  '**/package.json',
+  '**/pnpm-lock.yaml',
+  '**/.DS_Store',
+  '**/*.hbs',
+];
+
+const testGlobs = [
+  '**/*.test.{ts,tsx}',
+  '**/*.spec.{ts,tsx}',
+  '**/test-*.ts',
+  '**/__tests__/**',
+  '**/tests-snapshot/**/*.ts',
+  '**/characterisation/**/*.ts',
+];
+
+const baseConfig = [
   eslint.configs.recommended,
-
-  // TypeScript recommended rules with type checking
-  tsEslintConfigs.recommendedTypeChecked,
-
-  // Sonarjs recommended rules for code complexity and quality
+  importX.flatConfigs.recommended,
   sonarjsConfigs.recommended,
+  prettierRecommended,
+] as const;
 
-  {
-    // Global language options for TypeScript
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.lint.json',
-        tsconfigRootDir: baseDirectory,
+/* -------------------------------------------------------------------------- */
+/* Presets                                                                    */
+/* -------------------------------------------------------------------------- */
+
+const tsUntypedPresets = [
+  importX.flatConfigs.typescript,
+  ...tsEslintConfigs.recommended,
+  ...tsEslintConfigs.stylistic,
+] as const;
+
+/* -------------------------------------------------------------------------- */
+/* Rules                                                                      */
+/* -------------------------------------------------------------------------- */
+
+const baseRules: Linter.RulesRecord = {
+  'no-console': 'error',
+  'no-debugger': 'error',
+  'no-empty': 'error',
+  'no-empty-function': 'error',
+  'no-constant-condition': 'error',
+  'prefer-const': 'error',
+  'no-var': 'error',
+};
+
+const untypedTsRules: Linter.RulesRecord = {
+  'no-unused-vars': 'off',
+  '@typescript-eslint/no-unused-vars': ['error', {}],
+  '@typescript-eslint/no-explicit-any': ['error', { fixToUnknown: true }],
+  '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
+  '@typescript-eslint/consistent-type-imports': [
+    'error',
+    { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
+  ],
+  '@typescript-eslint/explicit-module-boundary-types': 'error',
+  '@typescript-eslint/no-non-null-assertion': 'error',
+  '@typescript-eslint/no-restricted-types': [
+    'error',
+    {
+      types: {
+        'Record<string, unknown>': {
+          message:
+            'Avoid Record<string, unknown>. It destroys type information. Refactor or use a defined type.',
+        },
       },
     },
-  },
+  ],
+  complexity: ['error', 8],
+  'sonarjs/cognitive-complexity': ['error', 8],
+  'max-lines': ['error', 250],
+  'max-lines-per-function': ['error', 50],
+  'max-statements': ['error', 20],
+  'max-depth': ['error', 3],
 
-  {
-    // Global ignores
-    ignores: [
-      '**/dist/**',
-      '**/node_modules/**',
-      '**/*.typegen.ts',
-      '**/coverage/**',
-      '**/*.d.ts',
-      'bin.cjs',
-    ],
-  },
+  curly: 'error',
+  'prettier/prettier': 'error',
+};
 
-  {
-    // Main rules for all TypeScript files
-    files: ['**/*.ts'],
-    rules: {
-      // Consistency rules
-      '@typescript-eslint/consistent-type-assertions': [
-        'error',
-        {
-          assertionStyle: 'never',
-        },
-      ],
-      '@typescript-eslint/no-restricted-types': [
-        'error',
-        {
-          types: {
-            'Record<string, unknown>': {
-              message:
-                'Avoid Record<string, unknown>. It destroys type information. Refactor, or use an existing internal or library type where possible.',
-            },
-            'Record<string, undefined>': {
-              message:
-                'Avoid Record<string, undefined>. It destroys type information. Refactor, or use an existing internal or library type where possible.',
-            },
-            'Readonly<Record<string, undefined>>': {
-              message:
-                'Avoid Readonly<Record<string, undefined>>. It destroys type information. Refactor, or use an existing internal or library type where possible.',
-            },
-            'Record<PropertyKey, undefined>': {
-              message:
-                'Avoid Record<PropertyKey, undefined>. It destroys type information. Refactor, or use an existing internal or library type where possible.',
-            },
-          },
-        },
-      ],
-
-      // TypeScript rules
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'error',
-      '@typescript-eslint/no-non-null-assertion': 'error',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['error'],
-      '@typescript-eslint/consistent-type-imports': ['error'],
-
-      // Complexity
-      complexity: ['error', 8], // Target 8
-      'sonarjs/cognitive-complexity': ['error', 8], // Target 8
-      'max-depth': ['error', 3], // Target 3
-      'max-statements': ['error', 20], // Target 20
-      'max-lines-per-function': ['error', 50], // Target 50
-      'max-lines': ['error', 250], // Target 250
-
-      // Code quality
-      'no-console': 'error',
-      'no-debugger': 'error',
-      'no-empty': ['error'],
-      'prefer-const': 'error',
-      'no-var': 'error',
+const typedTsRules: Linter.RulesRecord = {
+  '@typescript-eslint/await-thenable': 'error',
+  '@typescript-eslint/no-unsafe-assignment': 'error',
+  '@typescript-eslint/no-unsafe-return': 'error',
+  '@typescript-eslint/no-unsafe-member-access': 'error',
+  '@typescript-eslint/no-unsafe-argument': 'error',
+  '@typescript-eslint/no-unsafe-call': 'error',
+  '@typescript-eslint/no-deprecated': 'error',
+  '@typescript-eslint/consistent-return': 'error',
+  '@typescript-eslint/no-floating-promises': 'error',
+  '@typescript-eslint/require-await': 'error',
+  '@typescript-eslint/explicit-function-return-type': [
+    'error',
+    {
+      allowExpressions: true,
+      allowTypedFunctionExpressions: true,
+      allowHigherOrderFunctions: true,
+      allowDirectConstAssertionInArrowFunctions: true,
     },
-  },
+  ],
+};
 
-  {
-    // Test files - more relaxed rules
-    files: [
-      '**/*.test.ts',
-      'tests/**/*.ts',
-      '**/tests-snapshot/**/*.ts',
-      '**/characterisation/**/*.ts',
-    ],
-    rules: {
-      'max-lines-per-function': ['error', 200],
-      'max-lines': ['error', 1000],
-      '@typescript-eslint/consistent-type-assertions': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      'sonarjs/cognitive-complexity': 'off',
-      'sonarjs/no-duplicate-string': 'off',
-      'no-console': 'off', // Tests can use console for debugging
-    },
-  },
+const testRules: Linter.RulesRecord = {
+  'max-lines': ['error', 1000],
+  'max-lines-per-function': ['error', 500],
+  'max-statements': ['error', 50],
+  'max-depth': ['error', 5],
+};
 
-  {
-    // CLI and script files - console allowed for user output
-    files: ['**/cli.ts', '**/bin.cjs'],
-    rules: {
-      'no-console': 'off', // CLI scripts need console for user interaction
-    },
-  },
+/* -------------------------------------------------------------------------- */
+/* Export                                                                     */
+/* -------------------------------------------------------------------------- */
 
+export default defineConfig(
+  { ignores: baseIgnores },
+
+  // @ts-expect-error temporary type gap between ESLint 9 and TS-ESLint 8
+  ...baseConfig,
+
+  { languageOptions: baseLanguageOptions, rules: baseRules },
+
+  // Untyped checks everywhere
+  ...tsUntypedPresets,
+  { files: ['**/*.{ts,tsx,mts,cts}'], rules: untypedTsRules },
+
+  // Test file relaxations
+  { files: testGlobs, rules: testRules },
+
+  // Scripts / configs / CLI / logger / generated
   {
-    // Logger utility - console allowed (it's the logger implementation)
-    files: ['**/utils/logger.ts'],
-    rules: {
-      'no-console': 'off', // Logger uses console under the hood
+    files: ['**/*.config.{ts,js}', 'scripts/**/*.{ts,js,mts,mjs}'],
+    rules: { 'no-console': 'off' },
+  },
+  { files: ['**/cli.{ts,js,cjs}'], rules: { 'no-console': 'off' } },
+  { files: ['**/logger.{ts,js}', '**/utils/logger.ts'], rules: { 'no-console': 'off' } },
+  { files: ['**/generated/**'], rules: { curly: 'off' } },
+
+  // Typed checks only for src/**
+  {
+    files: ['src/**/*.{ts,tsx,mts,cts}'],
+    ignores: [...testGlobs, '**/*.d.ts', '**/dist/**', '**/generated/**', '**/node_modules/**'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: { projectService: true, tsconfigRootDir: baseDir },
     },
+    rules: typedTsRules,
   },
 );

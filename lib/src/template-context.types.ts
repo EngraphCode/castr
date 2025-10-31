@@ -11,7 +11,7 @@ import { getSchemaNameFromRef } from './template-context.common.js';
 
 const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
 const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
-const printTs = (node: ts.Node) => printer.printNode(ts.EmitHint.Unspecified, node, file);
+const printTs = (node: ts.Node): string => printer.printNode(ts.EmitHint.Unspecified, node, file);
 
 /**
  * Type guard to check if result is a ts.Node
@@ -21,8 +21,14 @@ export const isTsNode = (result: unknown): result is ts.Node => {
     return false;
   }
 
-  const obj = result as { kind?: unknown };
-  return 'kind' in obj && typeof obj.kind === 'number';
+  // Check if object has 'kind' property that is a number (ts.Node requirement)
+  const hasKind = 'kind' in result;
+  if (!hasKind) {
+    return false;
+  }
+
+  const obj: { kind?: unknown } = result;
+  return typeof obj.kind === 'number';
 };
 
 /**
@@ -140,14 +146,20 @@ export const processDependentTypes = (
   options?: TemplateContext['options'],
 ): void => {
   const depRefs = dependencyGraph[ref];
-  if (!depRefs) return;
+  if (!depRefs) {
+    return;
+  }
 
   for (const depRef of depRefs) {
     const depSchemaName = getSchemaNameFromRef(depRef);
-    if (!depSchemaName) continue;
+    if (!depSchemaName) {
+      continue;
+    }
 
     const isDepCircular = checkIfSchemaIsCircular(depRef, dependencyGraph);
-    if (isDepCircular || types[depSchemaName]) continue;
+    if (isDepCircular || types[depSchemaName]) {
+      continue;
+    }
 
     const depSchema = getSchemaFromComponents(doc, depSchemaName);
     types[depSchemaName] = generateTypeForSchema(depSchemaName, depSchema, ctx, options);
@@ -181,7 +193,9 @@ const DEFAULT_STATUS_BEHAVIORS = [
  * Narrows `unknown` to `DefaultStatusBehavior`
  */
 export function isDefaultStatusBehavior(value: unknown): value is DefaultStatusBehavior {
-  if (typeof value !== 'string') return false;
+  if (typeof value !== 'string') {
+    return false;
+  }
   const behaviors: readonly string[] = DEFAULT_STATUS_BEHAVIORS;
   return behaviors.includes(value);
 }

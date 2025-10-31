@@ -64,7 +64,9 @@ function updateEndpointWithResponse(
       endpointDefinition.description = result.mainResponseDescription;
     }
   }
-  if (result.error) endpointDefinition.errors.push(result.error);
+  if (result.error) {
+    endpointDefinition.errors.push(result.error);
+  }
 }
 
 /** Processes all responses for an operation @internal */
@@ -77,7 +79,9 @@ function processResponses(
 ): void {
   for (const statusCode in operation.responses) {
     const maybeResponseObj: unknown = operation.responses[statusCode];
-    if (!maybeResponseObj) continue;
+    if (!maybeResponseObj) {
+      continue;
+    }
     const responseObj = resolveResponse(maybeResponseObj, statusCode, ctx);
     const result = processResponse(statusCode, responseObj, ctx, getZodVarName, options);
     updateEndpointWithResponse(endpointDefinition, result);
@@ -89,9 +93,13 @@ function resolveDefaultResponse(
   operation: OperationObject,
   ctx: ConversionTypeContext,
 ): ResponseObject | null {
-  if (!operation.responses?.default) return null;
+  if (!operation.responses?.default) {
+    return null;
+  }
   const defaultResponseObj = operation.responses.default;
-  if (!isReferenceObject(defaultResponseObj)) return defaultResponseObj;
+  if (!isReferenceObject(defaultResponseObj)) {
+    return defaultResponseObj;
+  }
   const resolved = getResponseByRef(ctx.doc, defaultResponseObj.$ref);
   assertNotReference(
     resolved,
@@ -106,8 +114,12 @@ function updateEndpointWithDefaultResponse(
   defaultResult: ReturnType<typeof processDefaultResponse>,
   operationName: string,
 ): { ignoredFallback?: string; ignoredGeneric?: string } {
-  if (defaultResult.mainResponse) endpointDefinition.response = defaultResult.mainResponse;
-  if (defaultResult.error) endpointDefinition.errors.push(defaultResult.error);
+  if (defaultResult.mainResponse) {
+    endpointDefinition.response = defaultResult.mainResponse;
+  }
+  if (defaultResult.error) {
+    endpointDefinition.errors.push(defaultResult.error);
+  }
   return {
     ...(defaultResult.shouldIgnoreFallback && { ignoredFallback: operationName }),
     ...(defaultResult.shouldIgnoreGeneric && { ignoredGeneric: operationName }),
@@ -125,7 +137,9 @@ function handleDefaultResponse(
   options?: TemplateContext['options'],
 ): { ignoredFallback?: string; ignoredGeneric?: string } {
   const defaultResponse = resolveDefaultResponse(operation, ctx);
-  if (!defaultResponse) return {};
+  if (!defaultResponse) {
+    return {};
+  }
   const defaultResult = processDefaultResponse(
     defaultResponse,
     ctx,
@@ -137,23 +151,23 @@ function handleDefaultResponse(
   return updateEndpointWithDefaultResponse(endpointDefinition, defaultResult, operationName);
 }
 
-type ProcessOperationParams = {
+interface ProcessOperationParams {
   path: string;
   method: AllowedMethod;
   operation: OperationObject;
   operationName: string;
-  parameters: ReadonlyArray<ParameterObject | ReferenceObject>;
+  parameters: readonly (ParameterObject | ReferenceObject)[];
   ctx: ConversionTypeContext;
   getZodVarName: GetZodVarNameFn;
   defaultStatusBehavior: DefaultStatusBehavior | undefined;
   options?: TemplateContext['options'];
-};
+}
 
-type ProcessOperationResult = {
+interface ProcessOperationResult {
   endpoint: EndpointDefinition;
   ignoredFallback?: string;
   ignoredGeneric?: string;
-};
+}
 
 /** Create initial endpoint definition @internal */
 function createInitialEndpoint(
@@ -178,14 +192,16 @@ function createInitialEndpoint(
 /** Process parameters and add to endpoint @internal */
 function addParametersToEndpoint(
   endpointDefinition: EndpointDefinition,
-  parameters: ReadonlyArray<ParameterObject | ReferenceObject>,
+  parameters: readonly (ParameterObject | ReferenceObject)[],
   ctx: ConversionTypeContext,
   getZodVarName: GetZodVarNameFn,
   options?: TemplateContext['options'],
 ): void {
   for (const param of parameters) {
     const paramDef = processParameter(param, ctx, getZodVarName, options);
-    if (paramDef) endpointDefinition.parameters.push(paramDef);
+    if (paramDef) {
+      endpointDefinition.parameters.push(paramDef);
+    }
   }
 }
 
@@ -195,10 +211,14 @@ function finalizeEndpoint(
   operation: OperationObject,
   options?: TemplateContext['options'],
 ): void {
-  if (!endpointDefinition.response) endpointDefinition.response = voidSchema;
+  if (!endpointDefinition.response) {
+    endpointDefinition.response = voidSchema;
+  }
   if (options?.endpointDefinitionRefiner) {
     const refined = options.endpointDefinitionRefiner(endpointDefinition, operation);
-    if (refined) Object.assign(endpointDefinition, refined);
+    if (refined) {
+      Object.assign(endpointDefinition, refined);
+    }
   }
 }
 
@@ -221,7 +241,9 @@ export function processOperation({
     endpointDefinition.parameters.push(bodyResult.parameter);
   }
   addParametersToEndpoint(endpointDefinition, parameters, ctx, getZodVarName, options);
-  if (options?.withAllResponses) endpointDefinition.responses = [];
+  if (options?.withAllResponses) {
+    endpointDefinition.responses = [];
+  }
   processResponses(operation, endpointDefinition, ctx, getZodVarName, options);
   const { ignoredFallback, ignoredGeneric } = handleDefaultResponse(
     operation,

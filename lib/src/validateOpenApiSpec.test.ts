@@ -73,22 +73,22 @@ describe('validateOpenApiSpec', () => {
 
   describe('Invalid Specs - Missing Required Properties', () => {
     it('should reject null spec', () => {
-      expect(() => validateOpenApiSpec(null as any)).toThrow(ValidationError);
-      expect(() => validateOpenApiSpec(null as any)).toThrow(
+      expect(() => validateOpenApiSpec(null as unknown)).toThrow(ValidationError);
+      expect(() => validateOpenApiSpec(null as unknown)).toThrow(
         'Invalid OpenAPI document: expected an object, received null',
       );
     });
 
     it('should reject undefined spec', () => {
-      expect(() => validateOpenApiSpec(undefined as any)).toThrow(ValidationError);
-      expect(() => validateOpenApiSpec(undefined as any)).toThrow(
+      expect(() => validateOpenApiSpec(undefined as unknown)).toThrow(ValidationError);
+      expect(() => validateOpenApiSpec(undefined as unknown)).toThrow(
         'Invalid OpenAPI document: expected an object, received undefined',
       );
     });
 
     it('should reject non-object spec', () => {
-      expect(() => validateOpenApiSpec('not an object' as any)).toThrow(ValidationError);
-      expect(() => validateOpenApiSpec('not an object' as any)).toThrow(
+      expect(() => validateOpenApiSpec('not an object' as unknown)).toThrow(ValidationError);
+      expect(() => validateOpenApiSpec('not an object' as unknown)).toThrow(
         'Invalid OpenAPI document: expected an object, received string',
       );
     });
@@ -97,7 +97,7 @@ describe('validateOpenApiSpec', () => {
       const spec = {
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -109,7 +109,7 @@ describe('validateOpenApiSpec', () => {
       const spec = {
         openapi: '3.0.0',
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -121,7 +121,7 @@ describe('validateOpenApiSpec', () => {
       const spec = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -136,7 +136,7 @@ describe('validateOpenApiSpec', () => {
         openapi: 3.0,
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -149,7 +149,7 @@ describe('validateOpenApiSpec', () => {
         openapi: '3.0.0',
         info: 'not an object',
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -162,7 +162,7 @@ describe('validateOpenApiSpec', () => {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: [],
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -177,7 +177,7 @@ describe('validateOpenApiSpec', () => {
         swagger: '2.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -190,7 +190,7 @@ describe('validateOpenApiSpec', () => {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -203,7 +203,7 @@ describe('validateOpenApiSpec', () => {
         openapi: 'v3',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow(ValidationError);
       expect(() => validateOpenApiSpec(spec)).toThrow(
@@ -240,7 +240,7 @@ describe('validateOpenApiSpec', () => {
       const spec = {
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       try {
         validateOpenApiSpec(spec);
@@ -254,8 +254,8 @@ describe('validateOpenApiSpec', () => {
     });
 
     it('should distinguish between null and undefined', () => {
-      expect(() => validateOpenApiSpec(null as any)).toThrow('received null');
-      expect(() => validateOpenApiSpec(undefined as any)).toThrow('received undefined');
+      expect(() => validateOpenApiSpec(null as unknown)).toThrow('received null');
+      expect(() => validateOpenApiSpec(undefined as unknown)).toThrow('received undefined');
     });
 
     it('should identify array vs object confusion', () => {
@@ -263,7 +263,7 @@ describe('validateOpenApiSpec', () => {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: [],
-      } as any;
+      } as unknown;
 
       expect(() => validateOpenApiSpec(spec)).toThrow('received array');
     });

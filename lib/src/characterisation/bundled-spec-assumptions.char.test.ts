@@ -58,7 +58,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
       const operation = bundled.paths?.['/users/{userId}']?.get as OperationObject;
 
       // CRITICAL: After dereference(), parameters should NOT be $refs
@@ -99,7 +99,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
       const operation = bundled.paths?.['/users']?.post as OperationObject;
 
       // CRITICAL: After dereference(), requestBody should NOT be a $ref
@@ -139,7 +139,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
       const operation = bundled.paths?.['/users']?.get as OperationObject;
 
       // CRITICAL: After dereference(), responses should NOT be $refs
@@ -215,7 +215,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
 
       // Check GET operation
       const getOp = bundled.paths?.['/users']?.get as OperationObject;
@@ -285,7 +285,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
 
       // All operations should have resolved refs
       const operations = [
@@ -327,7 +327,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         paths: {},
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
 
       // Component schemas SHOULD preserve $refs (for topological sorting)
       const userSchema = bundled.components?.schemas?.['User'];
@@ -368,7 +368,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         paths: {},
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
 
       const extendedSchema = bundled.components?.schemas?.['Extended'];
       expect(extendedSchema).toBeDefined();
@@ -475,7 +475,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
 
       // Prove we can access operation properties directly
       const operation = bundled.paths?.['/users/{userId}']?.get as OperationObject;
@@ -575,7 +575,7 @@ describe('Dereferenced Spec Guarantees - Our Code Integration', () => {
         },
       };
 
-      const bundled = (await SwaggerParser.dereference(spec as any)) as OpenAPIObject;
+      const bundled = (await SwaggerParser.dereference(spec as unknown)) as OpenAPIObject;
 
       // Verify our code can generate from this complex dereferenced spec
       const result = await generateZodClientFromOpenAPI({

@@ -25,7 +25,7 @@ describe('param-invalid-spec', () => {
                 description: 'This parameter is invalid per OpenAPI spec',
                 in: 'query',
                 // Missing both 'schema' and 'content' - violates SchemaXORContent constraint
-              } as any,
+              } as unknown,
             ],
             responses: {
               '200': {

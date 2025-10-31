@@ -24,7 +24,7 @@ type CompositeType =
  * Handles both single-item and multi-item compositions
  */
 export function calculateCompositionComplexity(
-  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  schemas: readonly (SchemaObject | ReferenceObject)[],
   compositeType: CompositeType,
   current: number,
   complexityByComposite: (type: CompositeType) => number,
@@ -52,7 +52,7 @@ export function calculateCompositionComplexity(
  * @param types - Array of schema types from schema.type (when schema.type is an array in OAS 3.1)
  */
 export function calculateTypeArrayComplexity(
-  types: ReadonlyArray<NonNullable<SchemaObject['type']>>,
+  types: readonly NonNullable<SchemaObject['type']>[],
   schema: SchemaObject,
   current: number,
   complexityByComposite: (type: CompositeType) => number,
@@ -60,7 +60,9 @@ export function calculateTypeArrayComplexity(
 ): number {
   if (types.length === 1) {
     const firstType = types[0];
-    if (!firstType) return current;
+    if (!firstType) {
+      return current;
+    }
     return (
       complexityByComposite('oneOf') +
       getSchemaComplexity({

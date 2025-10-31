@@ -50,7 +50,7 @@ describe('maybePretty', () => {
     const input = `const x: string = "hello";`;
     // Simulate a prettier config that might have plugins: undefined
     const result = await maybePretty(input, {
-      plugins: undefined as any,
+      plugins: undefined as unknown,
       printWidth: 80,
     });
 
@@ -61,7 +61,7 @@ describe('maybePretty', () => {
   test('handles prettier config with empty plugins array', async () => {
     const input = `const x: string = "hello";`;
     const result = await maybePretty(input, {
-      plugins: [] as any,
+      plugins: [] as unknown,
       printWidth: 80,
     });
 
@@ -72,7 +72,7 @@ describe('maybePretty', () => {
   test('handles prettier config with invalid plugins gracefully', async () => {
     const input = `const x: string = "hello";`;
     const result = await maybePretty(input, {
-      plugins: [null, undefined] as any,
+      plugins: [null, undefined] as unknown,
       printWidth: 80,
     });
 

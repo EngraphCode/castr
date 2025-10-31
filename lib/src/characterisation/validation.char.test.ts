@@ -85,14 +85,14 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     it('should reject null spec with ValidationError', async () => {
       await expect(
         generateZodClientFromOpenAPI({
-          openApiDoc: null as any,
+          openApiDoc: null as unknown,
           disableWriteToFile: true,
         }),
       ).rejects.toThrow(ValidationError);
 
       await expect(
         generateZodClientFromOpenAPI({
-          openApiDoc: null as any,
+          openApiDoc: null as unknown,
           disableWriteToFile: true,
         }),
       ).rejects.toThrow('Invalid OpenAPI document: expected an object, received null');
@@ -101,14 +101,14 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     it('should reject undefined spec with ValidationError', async () => {
       await expect(
         generateZodClientFromOpenAPI({
-          openApiDoc: undefined as any,
+          openApiDoc: undefined as unknown,
           disableWriteToFile: true,
         }),
       ).rejects.toThrow(ValidationError);
 
       await expect(
         generateZodClientFromOpenAPI({
-          openApiDoc: undefined as any,
+          openApiDoc: undefined as unknown,
           disableWriteToFile: true,
         }),
       ).rejects.toThrow('Invalid OpenAPI document: expected an object, received undefined');
@@ -118,7 +118,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       const spec = {
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -139,7 +139,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       const spec = {
         openapi: '3.0.0',
         paths: {},
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -160,7 +160,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       const spec = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -184,7 +184,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
         swagger: '2.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -213,7 +213,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -263,7 +263,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
         openapi: 3.0,
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -281,7 +281,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     });
 
     it('should reject spec with array instead of object', async () => {
-      const spec = [] as any;
+      const spec = [] as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -303,7 +303,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: [],
-      } as any;
+      } as unknown;
 
       await expect(
         generateZodClientFromOpenAPI({
@@ -345,7 +345,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       for (const { spec, expectedKeywords } of testCases) {
         try {
           await generateZodClientFromOpenAPI({
-            openApiDoc: spec as any,
+            openApiDoc: spec as unknown,
             disableWriteToFile: true,
           });
           expect.fail('Should have thrown ValidationError');
@@ -368,7 +368,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       const invalidSpec = {
         openapi: '3.0.0',
         // Missing info and paths
-      } as any;
+      } as unknown;
 
       const startTime = Date.now();
 

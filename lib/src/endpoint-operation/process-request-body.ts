@@ -31,12 +31,12 @@ export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string
 /**
  * Represents a processed endpoint parameter
  */
-export type EndpointParameter = {
+export interface EndpointParameter {
   name: string;
   type: 'Body' | 'Header' | 'Query' | 'Path';
   description?: string;
   schema: string;
-};
+}
 
 /**
  * Checks if a media type is allowed for request parameters
@@ -137,11 +137,15 @@ export function processRequestBody(
       requestFormat: 'json' | 'binary' | 'form-url' | 'form-data' | 'text';
     }
   | undefined {
-  if (!operation.requestBody) return undefined;
+  if (!operation.requestBody) {
+    return undefined;
+  }
 
   const requestBody = resolveRequestBodyRef(operation, ctx.doc);
   const extracted = extractRequestBodySchema(requestBody);
-  if (!extracted) return undefined;
+  if (!extracted) {
+    return undefined;
+  }
 
   const { schema: bodySchema, mediaType } = extracted;
   const bodyCode = getZodSchema({

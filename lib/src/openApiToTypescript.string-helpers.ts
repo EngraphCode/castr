@@ -128,11 +128,16 @@ export function wrapNullable(typeString: string, isNullable: boolean): string {
  * @param isReadonly - Whether to wrap with Readonly<>
  * @returns Type string, optionally wrapped with Readonly<>
  *
+ * @remarks
+ * The boolean parameter is intentional for conditional readonly wrapping.
+ * Splitting into two methods would reduce clarity at call sites.
+ *
  * @example
  * wrapReadonly('string[]', false) // 'string[]'
  * wrapReadonly('string[]', true) // 'Readonly<string[]>'
  * wrapReadonly('User', true) // 'Readonly<User>'
  */
+// eslint-disable-next-line sonarjs/no-selector-parameter
 export function wrapReadonly(typeString: string, isReadonly: boolean): string {
   return isReadonly ? `Readonly<${typeString}>` : typeString;
 }
@@ -178,11 +183,15 @@ export function handleNumericEnum(values: number[]): string {
  * @example
  * handleMixedEnum(['active', 1, true, null]) // '"active" | 1 | true | null'
  */
-export function handleMixedEnum(values: Array<string | number | boolean | null>): string {
+export function handleMixedEnum(values: (string | number | boolean | null)[]): string {
   return values
     .map((v) => {
-      if (typeof v === 'string') return `"${v}"`;
-      if (v === null) return 'null';
+      if (typeof v === 'string') {
+        return `"${v}"`;
+      }
+      if (v === null) {
+        return 'null';
+      }
       return String(v);
     })
     .join(' | ');

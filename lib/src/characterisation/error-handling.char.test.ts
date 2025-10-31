@@ -25,7 +25,7 @@ describe('Characterisation: Error Handling', () => {
       const invalidSpec = {
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
-      } as any;
+      } as unknown;
 
       // Fail fast: reject invalid specs at the boundary with ValidationError
       await expect(
@@ -47,7 +47,7 @@ describe('Characterisation: Error Handling', () => {
       const invalidSpec = {
         openapi: '3.0.0',
         paths: {},
-      } as any;
+      } as unknown;
 
       // Fail fast: reject invalid specs at the boundary with ValidationError
       await expect(
@@ -69,7 +69,7 @@ describe('Characterisation: Error Handling', () => {
       const invalidSpec = {
         openapi: '3.0.0',
         info: { title: 'Test', version: '1.0.0' },
-      } as any;
+      } as unknown;
 
       // Fail fast: reject invalid specs at the boundary with ValidationError
       await expect(
@@ -178,7 +178,7 @@ describe('Characterisation: Error Handling', () => {
               properties: {
                 name: { type: 'string' },
               },
-            } as any,
+            } as unknown,
           },
         },
         paths: {
@@ -288,7 +288,7 @@ describe('Characterisation: Error Handling', () => {
               parameters: [
                 {
                   name: 'invalid',
-                  in: 'invalid-location' as any,
+                  in: 'invalid-location' as unknown,
                   schema: { type: 'string' },
                 },
               ],
@@ -331,7 +331,7 @@ describe('Characterisation: Error Handling', () => {
               properties: {
                 // Properties on string type (conflicting)
                 name: { type: 'string' },
-              } as any,
+              } as unknown,
             },
           },
         },

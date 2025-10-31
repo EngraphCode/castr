@@ -47,7 +47,9 @@ export function resolveSchemaRef(
   doc: OpenAPIObject,
   schema: SchemaObject | ReferenceObject,
 ): SchemaObject {
-  if (!isReferenceObject(schema)) return schema;
+  if (!isReferenceObject(schema)) {
+    return schema;
+  }
 
   const ref = schema.$ref;
   const schemaRefPattern = /^#\/components\/schemas\/(.+)$/;

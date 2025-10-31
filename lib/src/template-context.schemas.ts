@@ -1,9 +1,11 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
 
 import { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
+import { getZodSchema } from './openApiToZod.js';
 import { topologicalSort } from './topologicalSort.js';
 import { asComponentSchema, normalizeString } from './utils.js';
 import { sortSchemasByDependencyOrder } from './utils/schema-sorting.js';
+import type { TemplateContext } from './template-context.js';
 
 /**
  * Extract schema names from OpenAPI document components.
@@ -113,3 +115,45 @@ export const sortSchemasByDependencies = (
   const schemaOrderedByDependencies = topologicalSort(dependencyGraph);
   return sortSchemasByDependencyOrder(schemas, schemaOrderedByDependencies);
 };
+
+/**
+ * Export unused schemas by generating Zod schemas for them.
+ * Mutates result.zodSchemaByName to add schemas not already present.
+ *
+ * @param docSchemas - Map of schema names to OpenAPI schema objects
+ * @param result - Endpoint definition list result (mutated)
+ * @param doc - The OpenAPI document
+ * @param options - Template context options
+ *
+ * @internal
+ */
+export function exportUnusedSchemas(
+  docSchemas: Record<string, SchemaObject | ReferenceObject>,
+  result: {
+    zodSchemaByName: Record<string, string>;
+  },
+  doc: OpenAPIObject,
+  options?: TemplateContext['options'],
+): void {
+  Object.entries(docSchemas).forEach(([name, schema]) => {
+    if (!result.zodSchemaByName[name]) {
+      const schemaArgs = {
+        schema,
+        ctx: {
+          doc,
+          zodSchemaByName: result.zodSchemaByName,
+          schemaByName: result.zodSchemaByName,
+        },
+        options,
+      };
+      const zodSchema = getZodSchema(schemaArgs);
+      const zodSchemaString = zodSchema.toString();
+      if (!zodSchemaString) {
+        throw new Error(
+          `Could not get Zod schema string for schema: ${name}, with value: ${JSON.stringify(schema)}`,
+        );
+      }
+      result.zodSchemaByName[name] = zodSchemaString;
+    }
+  });
+}

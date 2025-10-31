@@ -53,7 +53,13 @@ const separateBrokenAllOfItems = (
 /**
  * Create a composed required schema from standalone required property names
  */
-const createComposedRequiredSchema = (standaloneRequisites: string[]) => {
+const createComposedRequiredSchema = (
+  standaloneRequisites: string[],
+): {
+  properties: Record<string, SchemaObject | ReferenceObject>;
+  type: 'object';
+  required: string[];
+} => {
   return {
     properties: standaloneRequisites.reduce<Record<string, SchemaObject | ReferenceObject>>(
       (acc, cur) => {

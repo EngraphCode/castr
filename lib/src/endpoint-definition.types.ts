@@ -21,7 +21,7 @@ export type ParameterType = 'Path' | 'Query' | 'Header' | 'Body';
 /**
  * Endpoint parameter with schema as string reference
  */
-export type EndpointParameter = {
+export interface EndpointParameter {
   /** Parameter name */
   name: string;
   /** Parameter location (Path, Query, Header, Body) */
@@ -30,38 +30,38 @@ export type EndpointParameter = {
   schema: string;
   /** Optional description */
   description?: string;
-};
+}
 
 /**
  * Endpoint error response with schema as string reference
  */
-export type EndpointError = {
+export interface EndpointError {
   /** HTTP status code or 'default' */
   status: number | 'default';
   /** Schema reference as string (e.g., 'ErrorSchema') */
   schema: string;
   /** Optional description */
   description?: string;
-};
+}
 
 /**
  * Endpoint response with schema as string reference
  * Used with --with-all-responses option
  */
-export type EndpointResponse = {
+export interface EndpointResponse {
   /** HTTP status code as string (e.g., '200', '404') */
   statusCode: string;
   /** Schema reference as string (e.g., 'UserSchema') */
   schema: string;
   /** Optional description */
   description?: string;
-};
+}
 
 /**
  * Complete endpoint definition with all metadata
  * Schemas are represented as string references for code generation
  */
-export type EndpointDefinition = {
+export interface EndpointDefinition {
   /** HTTP method */
   method: HttpMethod;
   /** API path with parameter placeholders (e.g., '/users/:id') */
@@ -80,4 +80,4 @@ export type EndpointDefinition = {
   response: string;
   /** Optional array of all responses (when --with-all-responses is enabled) */
   responses?: EndpointResponse[];
-};
+}

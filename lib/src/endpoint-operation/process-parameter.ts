@@ -185,7 +185,9 @@ export function processParameter(
   const paramItem = resolveParameterRef(param, ctx.doc);
 
   // Filter: Only process header, query, and path parameters
-  if (!isAllowedParameterLocation(paramItem.in)) return undefined;
+  if (!isAllowedParameterLocation(paramItem.in)) {
+    return undefined;
+  }
 
   // Extract and resolve schema
   let paramSchema = extractParameterSchema(paramItem, ctx.doc);

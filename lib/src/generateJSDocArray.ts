@@ -13,7 +13,9 @@ function addCommentIfExists(
   formatter: CommentFormatter,
 ): void {
   const value: unknown = schema[key];
-  if (value === undefined) return;
+  if (value === undefined) {
+    return;
+  }
 
   const result = formatter(value);
   if (Array.isArray(result)) {
@@ -49,8 +51,12 @@ function addBasicDocComments(comments: string[], schema: SchemaObject): void {
  */
 function addTypeComments(comments: string[], schema: SchemaObject): void {
   addCommentIfExists(comments, schema, 'type', (value) => {
-    if (typeof value === 'string') return `@type {${value}}`;
-    if (Array.isArray(value)) return `@type {${value.join('|')}}`;
+    if (typeof value === 'string') {
+      return `@type {${value}}`;
+    }
+    if (Array.isArray(value)) {
+      return `@type {${value.join('|')}}`;
+    }
     return undefined;
   });
   addCommentIfExists(comments, schema, 'format', (value) =>

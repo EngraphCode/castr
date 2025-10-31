@@ -58,7 +58,9 @@ type PrimitiveSchemaType = (typeof PRIMITIVE_SCHEMA_TYPES)[number];
  * Pattern: literals tied to library types per RULES.md §5
  */
 export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaType {
-  if (typeof value !== 'string') return false;
+  if (typeof value !== 'string') {
+    return false;
+  }
   const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
   return typeStrings.includes(value);
 }
@@ -124,7 +126,7 @@ function isNumberArray(arr: readonly unknown[]): arr is number[] {
 /**
  * Type guard to check if array contains mixed enum values
  */
-function isMixedEnumArray(arr: readonly unknown[]): arr is Array<string | number | boolean | null> {
+function isMixedEnumArray(arr: readonly unknown[]): arr is (string | number | boolean | null)[] {
   return arr.every(
     (item) =>
       typeof item === 'string' ||
@@ -142,7 +144,9 @@ export function handlePrimitiveEnum(
   schema: SchemaObject,
   schemaType: PrimitiveSchemaType,
 ): string | null {
-  if (!schema.enum) return null;
+  if (!schema.enum) {
+    return null;
+  }
 
   // Invalid: non-string type with string enum values
   if (schemaType !== 'string' && schema.enum.some((e) => typeof e === 'string')) {
@@ -199,7 +203,9 @@ export function resolveAdditionalPropertiesType(
   additionalProperties: SchemaObject['additionalProperties'],
   convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string | undefined {
-  if (!additionalProperties) return undefined;
+  if (!additionalProperties) {
+    return undefined;
+  }
 
   // Boolean true or empty object means any type
   if (
@@ -222,7 +228,7 @@ export function resolveAdditionalPropertiesType(
  * Used by oneOf, anyOf, allOf composition handlers
  */
 export function convertSchemasToTypes<T>(
-  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  schemas: readonly (SchemaObject | ReferenceObject)[],
   convertFn: (schema: SchemaObject | ReferenceObject) => T,
 ): T[] {
   return schemas.map((schema) => convertFn(schema));
@@ -248,14 +254,16 @@ export function handleArraySchema(
  * Handles oneOf composition by creating a union type
  */
 export function handleOneOf(
-  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  schemas: readonly (SchemaObject | ReferenceObject)[],
   isNullable: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string {
   const results = convertSchemasToTypes(schemas, (schema) => {
     const result = convertSchema(schema);
     // Convert to string if needed
-    if (typeof result === 'string') return result;
+    if (typeof result === 'string') {
+      return result;
+    }
     // For now, can't convert nodes to strings - this path should not be hit
     // once all helpers return strings
     throw new Error('handleOneOf: Expected string from convertSchema during migration');
@@ -271,14 +279,16 @@ export function handleOneOf(
  * MIGRATED: Now returns strings
  */
 export function handleAnyOf(
-  schemas: ReadonlyArray<SchemaObject | ReferenceObject>,
+  schemas: readonly (SchemaObject | ReferenceObject)[],
   isNullable: boolean,
   shouldWrapReadonly: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => string,
 ): string {
   const results = convertSchemasToTypes(schemas, (schema) => {
     const result = convertSchema(schema);
-    if (typeof result === 'string') return result;
+    if (typeof result === 'string') {
+      return result;
+    }
     throw new Error('handleAnyOf: Expected string from convertSchema during migration');
   });
 
@@ -305,7 +315,7 @@ function createSchemaWithType(baseSchema: SchemaObject, type: SchemaObjectType):
  * MIGRATED: Now returns strings using handleUnion
  */
 export function handleTypeArray(
-  types: ReadonlyArray<string>,
+  types: readonly string[],
   schema: SchemaObject,
   isNullable: boolean,
   convertSchema: (schema: SchemaObject | ReferenceObject) => string,
@@ -316,7 +326,9 @@ export function handleTypeArray(
 
   const results = convertSchemasToTypes(typeSchemas, (schema) => {
     const result = convertSchema(schema);
-    if (typeof result === 'string') return result;
+    if (typeof result === 'string') {
+      return result;
+    }
     throw new Error('handleTypeArray: Expected string from convertSchema during migration');
   });
 

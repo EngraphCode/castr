@@ -16,26 +16,26 @@ import { Project, type SourceFile } from 'ts-morph';
 /**
  * Property definition for interfaces
  */
-export type PropertyDefinition = {
+export interface PropertyDefinition {
   name: string;
   type: string;
   optional?: boolean;
   readonly?: boolean;
   docs?: string[];
-};
+}
 
 /**
  * Options for type aliases
  */
-export type TypeAliasOptions = {
+export interface TypeAliasOptions {
   exported?: boolean;
   docs?: string[];
-};
+}
 
 /**
  * Options for interfaces
  */
-export type InterfaceOptions = {
+export interface InterfaceOptions {
   exported?: boolean;
   docs?: string[];
   indexSignature?: {
@@ -43,7 +43,7 @@ export type InterfaceOptions = {
     keyType: string;
     returnType: string;
   };
-};
+}
 
 /**
  * AstBuilder - Fluent API for generating TypeScript declarations

@@ -10,6 +10,7 @@
  */
 export function assertIsString(value: unknown, context?: string): asserts value is string {
   if (typeof value !== 'string') {
-    throw new Error(`Expected string${context ? ` for ${context}` : ''}, got ${typeof value}`);
+    const contextPart = context ? ` for ${context}` : '';
+    throw new Error(`Expected string${contextPart}, got ${typeof value}`);
   }
 }
