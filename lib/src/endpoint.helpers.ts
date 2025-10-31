@@ -202,6 +202,26 @@ export function handleRefSchema(
 }
 
 /**
+ * Generate unique variable name with optional schema tracking
+ * @internal
+ */
+function generateVarName(
+  safeName: string,
+  ctx: EndpointContext,
+  result: string,
+  options: { exportAllNamedSchemas?: boolean } | undefined,
+): string {
+  if (ctx.schemasByName) {
+    return generateUniqueVarName(safeName, ctx.zodSchemaByName, {
+      exportAllNamedSchemas: options?.exportAllNamedSchemas ?? false,
+      schemasByName: ctx.schemasByName,
+      schemaKey: result,
+    });
+  }
+  return generateUniqueVarName(safeName, ctx.zodSchemaByName);
+}
+
+/**
  * Handles simple schemas with fallback names
  * Creates or reuses variable names for non-ref schemas
  */
@@ -227,13 +247,7 @@ function handleSimpleSchemaWithFallback(
   }
 
   // Generate unique name and register
-  const varName = ctx.schemasByName
-    ? generateUniqueVarName(safeName, ctx.zodSchemaByName, {
-        exportAllNamedSchemas: options?.exportAllNamedSchemas ?? false,
-        schemasByName: ctx.schemasByName,
-        schemaKey: result,
-      })
-    : generateUniqueVarName(safeName, ctx.zodSchemaByName);
+  const varName = generateVarName(safeName, ctx, result, options);
 
   registerSchemaName(ctx, varName, result, options?.exportAllNamedSchemas ?? false);
   return varName;
