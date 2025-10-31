@@ -140,6 +140,8 @@ const typedTsRules: Linter.RulesRecord = {
 };
 
 const testRules: Linter.RulesRecord = {
+  // Allow 'as' type assertions in test files
+  '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'as' }],
   'max-lines': ['error', 1000],
   'max-lines-per-function': ['error', 500],
   'max-statements': ['error', 50],

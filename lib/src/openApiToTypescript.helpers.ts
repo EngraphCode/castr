@@ -66,6 +66,35 @@ export function isPrimitiveSchemaType(value: unknown): value is PrimitiveSchemaT
 }
 
 /**
+ * Resolve and validate schema from $ref
+ * @internal
+ */
+function resolveSchemaFromRef(
+  ref: string,
+  schemaName: string,
+  ctx: Required<Pick<TsConversionContext, 'doc' | 'visitedRefs'>>,
+  resolveRecursively: (schema: SchemaObject) => unknown,
+): void {
+  const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
+  if (!actualSchema) {
+    throw new Error(`Schema ${ref} not found`);
+  }
+
+  // Nested $refs are VALID per OpenAPI spec, but we require preprocessing.
+  // This is an intentional design choice: dereferencing is SwaggerParser's job,
+  // code generation is our job. Fail fast with clear error directing users to
+  // the correct preprocessing workflow. See: .agent/analysis/NESTED_REFS_ANALYSIS.md
+  if ('$ref' in actualSchema) {
+    throw new Error(
+      `Nested $ref found: ${ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference before passing the spec to this library.`,
+    );
+  }
+
+  ctx.visitedRefs[ref] = true;
+  resolveRecursively(actualSchema);
+}
+
+/**
  * Handles OpenAPI $ref objects, returning the referenced schema name
  * MIGRATED: Now returns string (schema name) instead of tanu reference node
  */
@@ -87,23 +116,7 @@ export function handleReferenceObject(
   // Resolve the actual schema if not yet resolved
   const result = ctx.nodeByRef[schema.$ref];
   if (!result) {
-    const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
-    if (!actualSchema) {
-      throw new Error(`Schema ${schema.$ref} not found`);
-    }
-
-    // Nested $refs are VALID per OpenAPI spec, but we require preprocessing.
-    // This is an intentional design choice: dereferencing is SwaggerParser's job,
-    // code generation is our job. Fail fast with clear error directing users to
-    // the correct preprocessing workflow. See: .agent/analysis/NESTED_REFS_ANALYSIS.md
-    if ('$ref' in actualSchema) {
-      throw new Error(
-        `Nested $ref found: ${schema.$ref} -> ${actualSchema.$ref}. Use SwaggerParser.bundle() to dereference before passing the spec to this library.`,
-      );
-    }
-
-    ctx.visitedRefs[schema.$ref] = true;
-    resolveRecursively(actualSchema);
+    resolveSchemaFromRef(schema.$ref, schemaName, ctx, resolveRecursively);
   }
 
   return schemaName; // Return name directly, not t.reference
@@ -137,6 +150,24 @@ function isMixedEnumArray(arr: readonly unknown[]): arr is (string | number | bo
 }
 
 /**
+ * Determine enum type and generate TypeScript union string
+ * @internal
+ */
+function determineEnumType(withoutNull: unknown[]): string {
+  if (isStringArray(withoutNull)) {
+    return handleStringEnum(withoutNull);
+  }
+  if (isNumberArray(withoutNull)) {
+    return handleNumericEnum(withoutNull);
+  }
+  if (isMixedEnumArray(withoutNull)) {
+    return handleMixedEnum(withoutNull);
+  }
+  // Fallback: should not happen with valid OpenAPI specs
+  throw new Error(`Unexpected enum values: ${JSON.stringify(withoutNull)}`);
+}
+
+/**
  * Handles primitive type enums, returning union types
  * MIGRATED: Now returns strings using string-helpers
  */
@@ -161,17 +192,7 @@ export function handlePrimitiveEnum(
   const withoutNull = enumValues.filter((e) => e !== null);
 
   // Determine enum type using type guards and call appropriate helper
-  let enumType: string;
-  if (isStringArray(withoutNull)) {
-    enumType = handleStringEnum(withoutNull);
-  } else if (isNumberArray(withoutNull)) {
-    enumType = handleNumericEnum(withoutNull);
-  } else if (isMixedEnumArray(withoutNull)) {
-    enumType = handleMixedEnum(withoutNull);
-  } else {
-    // Fallback: should not happen with valid OpenAPI specs
-    throw new Error(`Unexpected enum values: ${JSON.stringify(withoutNull)}`);
-  }
+  const enumType = determineEnumType(withoutNull);
 
   return wrapNullable(enumType, isNullable);
 }

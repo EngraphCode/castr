@@ -5,7 +5,7 @@ import { getZodClientTemplateContext } from '../../src/template-context.js';
 import { getHandlebars } from '../../src/getHandlebars.js';
 import { maybePretty } from '../../src/maybePretty.js';
 
-import fg from 'fast-glob';
+import { sync } from 'fast-glob';
 
 import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
@@ -20,7 +20,7 @@ beforeAll(async () => {
 
 describe('openapi-examples', () => {
   const examplesPath = path.resolve(pkgRoot, String.raw`./examples/openapi/v3\.*/**/*.yaml`);
-  const list = fg.sync([examplesPath]);
+  const list = sync([examplesPath]);
 
   const template = getHandlebars().compile(
     readFileSync('./src/templates/schemas-with-metadata.hbs', 'utf8'),

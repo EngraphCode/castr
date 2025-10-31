@@ -137,7 +137,7 @@ export function wrapNullable(typeString: string, isNullable: boolean): string {
  * wrapReadonly('string[]', true) // 'Readonly<string[]>'
  * wrapReadonly('User', true) // 'Readonly<User>'
  */
-// eslint-disable-next-line sonarjs/no-selector-parameter
+
 export function wrapReadonly(typeString: string, isReadonly: boolean): string {
   return isReadonly ? `Readonly<${typeString}>` : typeString;
 }
