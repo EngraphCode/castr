@@ -120,6 +120,22 @@ export const processEndpointGrouping = (
 };
 
 /**
+ * Validate and narrow groupStrategy type
+ * @internal
+ */
+function isValidGroupStrategy(strategy: string): strategy is TemplateContextGroupStrategy {
+  const validStrategies: TemplateContextGroupStrategy[] = [
+    'none',
+    'tag',
+    'method',
+    'tag-file',
+    'method-file',
+  ];
+  const strategies: readonly string[] = validStrategies;
+  return strategies.includes(strategy);
+}
+
+/**
  * Process endpoint grouping and common schemas.
  * Helper function to reduce complexity of getTemplateContext.
  *
@@ -146,19 +162,6 @@ export function processEndpointGroupingAndCommonSchemas(
 } {
   // Create endpointsGroups before calling processEndpointGrouping (it mutates this object)
   const endpointsGroups: Record<string, MinimalTemplateContext> = {};
-
-  // Validate and narrow groupStrategy type
-  function isValidGroupStrategy(strategy: string): strategy is TemplateContextGroupStrategy {
-    const validStrategies: TemplateContextGroupStrategy[] = [
-      'none',
-      'tag',
-      'method',
-      'tag-file',
-      'method-file',
-    ];
-    const strategies: readonly string[] = validStrategies;
-    return strategies.includes(strategy);
-  }
 
   if (!isValidGroupStrategy(groupStrategy)) {
     throw new Error(`Invalid group strategy: ${groupStrategy}`);
