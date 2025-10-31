@@ -32,79 +32,65 @@ We are mid-way through **Phase 1 Part 4**, whose goal is to drive **all producti
 3. `.agent/plans/PHASE-1-PART-4-ZERO-LINT.md` – Active plan with task breakdown (10 min)
 4. `.agent/plans/requirements.md` – Project-level constraints (optional refresher)
 
-### Current State (2025-10-29 Night)
+### Current State (2025-10-30)
 
-- ✅ `pnpm format`, `pnpm build`, `pnpm type-check`, `pnpm test:all` (638/638 passing: 486 unit + 152 snapshot)
-- ❌ `pnpm lint` → **~178 errors** (strict Engraph rules; 263 at session start)
-- **Session Progress:** 263 → 215 → 209 → 207 → 198 → 185 → 178 (-85 errors, **-32.3%**)
-- **🏆 MAJOR BREAKTHROUGH: FIVE GOD FUNCTIONS COMPLETELY DECOMPOSED!**
-  - ✅ **openApiToZod.ts**: Main function 323→<50 lines (-85%!) via 12 TDD phases, 13 pure helpers extracted
-  - ✅ **getEndpointDefinitionList.ts**: Main function + processAllEndpoints 127→<50 lines each (-60%+!) via TDD, 5 helpers extracted
-  - ✅ **schema-complexity.ts**: Main function 116→18 lines (-84%!) **ZERO ERRORS**, 9 helpers extracted
-  - ✅ **openApiToTypescript.ts**: Main function 157→18 lines (-89%!), inner getTs 126→26 lines (-79%!) **MAJOR PROGRESS**, 13+ helpers extracted (1 error remaining: file size)
-  - ✅ **generateZodClientFromOpenAPI.ts**: Main function 146→49 lines (-66%!), 8 helpers extracted (3 errors remaining)
-  - ✅ **cli.ts**: Main function 86→23 lines (-73%!), 7 helpers extracted (1 error remaining)
-  - ✅ **getOpenApiDependencyGraph.ts**: ZERO lint errors (from previous session)
-- **Pattern Proven:** Systematic TDD decomposition works for god functions
-- **Latest Completions:**
-  - ✅ Task 4.2.1: openApiToZod decomposed (16 errors remain: file size + helpers)
-  - ✅ Task 4.2.3: openApiToTypescript.ts COMPLETE DECOMPOSITION (1 error remaining: file size)
-  - ✅ Task 4.2.4 (partial): schema-complexity.ts COMPLETE (0 errors), getEndpointDefinitionList.ts processAllEndpoints decomposed, generateZodClientFromOpenAPI.ts MAJOR PROGRESS (3 errors), cli.ts MAJOR PROGRESS (1 error)
-  - ✅ Task 4.5: Deprecated types (-14 errors)
-  - ✅ Task 4.4: Explicit return types (-10 errors)
-  - ✅ Task 4.6: Critical test issues (-14 errors)
-  - ✅ Task 4.8: Sorting & safety (-10 errors)
+- ✅ `pnpm format`, `pnpm build`, `pnpm type-check`, `pnpm test:all` (641/641 passing: 489 unit + 152 snapshot)
+- ❌ `pnpm lint` → **169 errors** (strict Engraph rules; 263 at session start)
+- **Session Progress:** 263 → 169 (-94 errors, **-35.7%** reduction)
+- **Production:** 29 errors (11 files) | **Tests:** 140 errors (acceptable)
+
+**🏆 MAJOR ACHIEVEMENTS:**
+
+**God Functions Decomposed (6 complete):**
+- ✅ **template-context.ts**: 251→47 lines, split into 5 modules, 0 errors in split files
+- ✅ **openApiToZod.ts**: 323→<50 lines (main decomposed, helpers need work)
+- ✅ **openApiToTypescript.ts**: 157→18 lines, split into 2 files
+- ✅ **cli.ts**: 86→23 lines, split into 2 files, 0 errors
+- ✅ **schema-complexity.ts**: 116→18 lines, 0 errors
+- ✅ **generateZodClientFromOpenAPI.ts**: 146→49 lines (needs file split)
+
+**Files with Zero Errors (16 production files):**
+- cli.ts, cli.helpers.ts, openApiToTypescript.ts
+- template-context.schemas.ts, template-context.common.ts, template-context.endpoints.ts
+- schema-complexity.ts, endpoint-operation/ (5 files)
+- getOpenApiDependencyGraph.ts, endpoint.path.helpers.ts
+
+**Latest Completions:**
+- ✅ File splitting: openApiToTypescript.ts (435→79 lines), cli.ts (301→124 lines)
+- ✅ Template-context: Complete decomposition + file splitting (13→0 errors)
+- ✅ Control chars fix: utils.ts (-6 errors)
+- ✅ All quality gates passing
 
 ### Immediate Goal
 
 Finish Phase 1 Part 4 by eliminating the remaining production lint violations through TDD-driven refactors (size, complexity, assertions, logging). Test code quality can remain “pragmatic” once critical issues are cleared.
 
-### High-Priority Targets (11 production files, ~48 errors)
+### Remaining Work (29 production errors, 11 files)
 
-**Remaining God Functions (Priority Order):**
+**Priority 1: File Splitting (9 errors, 8 files) - 6-8 hours**
+1. `openApiToZod.ts` (803 lines) → 3 modules
+2. `openApiToTypescript.core.ts` (428 lines) → 2 modules
+3. `generateZodClientFromOpenAPI.ts` (435 lines) → 2 modules
+4. `openApiToTypescript.helpers.ts` (325 lines) → refine
+5. `openApiToTypescript.string-helpers.ts` (375 lines) → refine
+6. `getEndpointDefinitionList.ts` (408 lines) → refine
+7. `template-context.endpoints.helpers.ts` (270 lines) → refine
+8. `endpoint.helpers.ts` (274 lines) → refine
 
-1. **`template-context.ts`: 3 errors** ✅ **MAJOR PROGRESS - STRATEGIC DECOMPOSITION COMPLETE**
-   - ✅ Main function: 251→66 lines (-74%!)
-   - ✅ Complexity: 28→19 (significantly reduced)
-   - ✅ 25+ granular helper functions extracted (VERY GRANULAR - strategic for ts-morph migration!)
-   - ⚠️ **SPECIAL CONSTRAINT: Future Handlebars → ts-morph Migration**
-   - **Must decompose into VERY GRANULAR single-responsibility functions**
-   - Target: 15-20 small pure functions (<30 lines, <5 complexity each)
-   - Separate: data gathering, transformation, validation, assembly
-   - Goal: Easy to replace transformation layer without rewriting data layer
-   - Remaining: File size (1101 lines), 2 functions slightly over limit
-2. **`generateZodClientFromOpenAPI.ts`: 3 errors** ✅ **MAJOR PROGRESS**
-   - ✅ Main function: 146→49 lines (-66%!)
-   - ✅ Complexity: 23→under 8
-   - ✅ 8 helper functions extracted
-   - Remaining: File size (422 lines), 2 deprecation warnings (deferred to Phase 1 Part 5)
-3. **`cli.ts`: 1 error** ✅ **MAJOR PROGRESS**
-   - ✅ Main function: 86→23 lines (-73%!)
-   - ✅ Complexity: 30→under 8
-   - ✅ 7 helper functions extracted
-   - ✅ All type safety issues resolved
-   - Remaining: File size (300 lines)
+**Priority 2: Complexity Reduction (15 errors) - 4-6 hours**
+- `openApiToZod.ts`: 6 functions (complexity 9-19, cognitive 9-13)
+- `openApiToTypescript.helpers.ts`: 2 functions (complexity 9)
+- `endpoint.helpers.ts`: 1 function (complexity 9)
+- `template-context.ts`: 1 helper (78 lines→<50)
 
-**Completed God Functions (Zero Errors or Major Progress):**
+**Priority 3: Type Safety (5 errors) - 2-3 hours**
+- Type assertions: 3 errors
+- Type issues: 2 errors
 
-- ✅ **schema-complexity.ts** - COMPLETE (0 errors) 🎉
-  - Main function: 116→18 lines (-84%!)
-  - Complexity: 21→under 8
-  - 9 helper functions extracted
-- ✅ **openApiToTypescript.ts** - MAJOR PROGRESS (1 error remaining: file size 434 lines) 🎉
-  - Main function: 157→18 lines (-89%!)
-  - Inner function: 126→26 lines (-79%!)
-  - Complexity: 35→under 8
-  - 13+ helper functions extracted
-- ✅ **getEndpointDefinitionList.ts** - MAJOR PROGRESS (1 error remaining: file size 408 lines) 🎉
-  - Main function: 127→<50 lines
-  - processAllEndpoints: 75→~30 lines (-60%!)
-  - Complexity: 13→under 8
-  - 5 helper functions extracted
-
-**File Size + Minor Issues:** 5. `openApiToZod.ts`: 16 errors (803-line file - needs splitting into focused modules) 6. `openApiToTypescript.helpers.ts`: 6 errors (325-line file, complexity 9, 2 assertions) 7. `openApiToTypescript.string-helpers.ts`: 2 errors (375-line file, selector parameter) 8. `endpoint.helpers.ts`: 2 errors (274-line file, handleSimpleSchemaWithFallback: complexity 9) 9. `utils.ts`: 6 errors (control character regex - needs eslint-disable comments with justification)
-
-**Test Files:** ~130 errors (acceptable in pragmatic approach)
+**Test Files:** 140 errors (acceptable - pragmatic approach)
+- 6 massive files >1000 lines (split if time allows)
+- Long functions 200-1000 lines: ACCEPTABLE
+- 36 deprecation warnings: will fix with production code
 
 ### Non-Negotiables (from `.agent/RULES.md`)
 
@@ -265,28 +251,23 @@ lib/src/
 
 ### Success Metrics & Progress Tracking
 
-**Current Session:**
+**Session Progress:**
+- Start: 263 errors | Current: 169 errors
+- Progress: -94 errors (-35.7%)
+- Commits: 24+ clean TDD commits
+- Production: 29 errors (11 files)
+- Tests: 140 errors (acceptable)
 
-- Start: 263 errors
-- Current: ~178 errors
-- Progress: -85 (-32.3%)
-- Commits: 20+ clean TDD commits
+**Files with Zero Errors (16 production files):**
+- cli.ts, cli.helpers.ts, openApiToTypescript.ts
+- template-context.schemas.ts, template-context.common.ts, template-context.endpoints.ts
+- schema-complexity.ts, endpoint-operation/ (5 files)
+- getOpenApiDependencyGraph.ts, endpoint.path.helpers.ts
 
-**Files Completed (Zero Errors):**
-
-1. ✅ getOpenApiDependencyGraph.ts
-2. ✅ endpoint-operation/ (5 files)
-3. ✅ getEndpointDefinitionList.ts main function
-4. ✅ **schema-complexity.ts** (COMPLETE - 0 errors!) 🎉
-
-**Files Major Progress:**
-
-- ✅ openApiToTypescript.ts (8→1 error)
-- ✅ getEndpointDefinitionList.ts processAllEndpoints (6→1 error)
-- ✅ generateZodClientFromOpenAPI.ts (7→3 errors)
-- ✅ cli.ts (6→1 error)
-
-**Estimated Remaining:** 20-30 hours (1.5-2 focused sessions)
+**Estimated Remaining:** 12-17 hours (1.5-2 focused sessions)
+- File splitting: 6-8 hours
+- Complexity reduction: 4-6 hours
+- Type safety: 2-3 hours
 
 ### When Declaring Phase 1 Part 4 Complete
 

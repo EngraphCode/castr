@@ -5,7 +5,7 @@ import type { resolveConfig } from 'prettier';
 
 import { toBoolean } from './utils.js';
 import type { GenerateZodClientFromOpenApiArgs } from './generateZodClientFromOpenAPI.js';
-import { generateZodClientFromOpenAPI } from './generateZodClientFromOpenAPI.js';
+import type { generateZodClientFromOpenAPI } from './generateZodClientFromOpenAPI.js';
 import { hasVersionProperty, isGroupStrategy, isDefaultStatusBehavior } from './cli-type-guards.js';
 import type { TemplateContextOptions } from './template-context.js';
 
