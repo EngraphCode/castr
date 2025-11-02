@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas30';
 import { isReferenceObject } from 'openapi3-ts/oas30';
-import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import {
   assertParameterNotRef,
   assertRequestBodyNotRef,

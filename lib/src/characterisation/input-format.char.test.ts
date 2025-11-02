@@ -24,7 +24,7 @@
 import { describe, it, expect } from 'vitest';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 
 /**
  * Helper to parse and validate OpenAPI spec regardless of format.

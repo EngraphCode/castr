@@ -1,4 +1,4 @@
-import { getZodSchema } from '../../../src/openApiToZod.js';
+import { getZodSchema } from '../../../src/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 
 test('use-union-only-when-multiple-choices', () => {

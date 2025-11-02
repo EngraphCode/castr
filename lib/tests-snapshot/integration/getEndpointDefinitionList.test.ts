@@ -1,7 +1,7 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
-import { getEndpointDefinitionList } from '../../src/getEndpointDefinitionList.js';
+import { getEndpointDefinitionList } from '../../src/endpoints/index.js';
 
 const baseDoc = {
   openapi: '3.0.3',

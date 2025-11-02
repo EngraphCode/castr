@@ -8,7 +8,7 @@
 
 import { expect, test, describe } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { generateZodClientFromOpenAPI } from '../../src/generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
 
 describe('param-invalid-spec', () => {
   test('parameter without schema or content should throw helpful error', async () => {

@@ -1,26 +1,15 @@
-export { type CodeMeta, type CodeMetaData, type ConversionTypeContext } from './CodeMeta.js';
-export { generateZodClientFromOpenAPI } from './generateZodClientFromOpenAPI.js';
-export { getHandlebars } from './getHandlebars.js';
-export { getOpenApiDependencyGraph } from './getOpenApiDependencyGraph.js';
-export { ValidationError, validateOpenApiSpec } from './validateOpenApiSpec.js';
 export {
-  getEndpointDefinitionList,
-  type EndpointDefinitionListResult,
-} from './getEndpointDefinitionList.js';
-export type {
-  EndpointDefinition,
-  EndpointParameter,
-  EndpointError,
-  EndpointResponse,
-  HttpMethod,
-  RequestFormat,
-  ParameterType,
-} from './endpoint-definition.types.js';
-export { maybePretty } from './maybePretty.js';
-export { getZodSchema } from './openApiToZod.js';
-export {
-  type TemplateContext,
-  type TemplateContextOptions,
-  getZodClientTemplateContext,
-} from './template-context.js';
-export { logger } from './utils/logger.js';
+  type CodeMeta,
+  type CodeMetaData,
+  type ConversionTypeContext,
+} from './shared/code-meta.js';
+export { generateZodClientFromOpenAPI } from './rendering/index.js';
+export type { GenerateZodClientFromOpenApiArgs } from './rendering/index.js';
+export { getHandlebars } from './rendering/index.js';
+export { getOpenApiDependencyGraph } from './shared/index.js';
+export { ValidationError, validateOpenApiSpec } from './validation/index.js';
+export * from './endpoints/index.js';
+export { maybePretty } from './shared/index.js';
+export { getZodSchema } from './conversion/zod/index.js';
+export * from './context/index.js';
+export { logger } from './shared/index.js';

@@ -88,9 +88,11 @@ function runCli(args: string[]): { stdout: string; exitCode: number } {
     // @ts-expect-error TS2571 - execSync errors have stdout/stderr/status properties, but TypeScript doesn't know this
     const stdout = error.stdout?.toString() || '';
     // @ts-expect-error TS2571 - execSync errors have stdout/stderr/status properties, but TypeScript doesn't know this
+    const stderr = error.stderr?.toString() || '';
+    // @ts-expect-error TS2571 - execSync errors have stdout/stderr/status properties, but TypeScript doesn't know this
     const exitCode = error.status || 1;
     return {
-      stdout,
+      stdout: stdout + '\nSTDERR:\n' + stderr,
       exitCode,
     };
   }

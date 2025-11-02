@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import {
   createMinimalSpec,
   createSpecWithSchema,

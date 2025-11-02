@@ -1,9 +1,9 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
-import { getOpenApiDependencyGraph } from '../../src/getOpenApiDependencyGraph.js';
-import { topologicalSort } from '../../src/topologicalSort.js';
-import { asComponentSchema } from '../../src/utils.js';
+import { getOpenApiDependencyGraph } from '../../src/shared/dependency-graph.js';
+import { topologicalSort } from '../../src/shared/topological-sort.js';
+import { asComponentSchema } from '../../src/shared/utils/index.js';
 
 /** Helper to wrap test schemas in OpenAPIObject */
 const makeTestDoc = (schemas: Record<string, SchemaObject>): OpenAPIObject => ({

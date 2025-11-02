@@ -1,9 +1,9 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject, SchemasObject } from 'openapi3-ts/oas30';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../../src/generateZodClientFromOpenAPI.js';
-import { getZodClientTemplateContext } from '../../src/template-context.js';
-import { pathToVariableName } from '../../src/utils.js';
+import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
+import { getZodClientTemplateContext } from '../../src/context/index.js';
+import { pathToVariableName } from '../../src/shared/utils/index.js';
 
 let openApiDoc: OpenAPIObject;
 beforeAll(async () => {

@@ -1,5 +1,5 @@
 import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas30';
-import { getZodSchema } from '../../../src/openApiToZod.js';
+import { getZodSchema } from '../../../src/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 
 test('schema-refiner', () => {

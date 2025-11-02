@@ -1,9 +1,9 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { type Options, resolveConfig } from 'prettier';
-import { getZodClientTemplateContext } from '../../src/template-context.js';
-import { getHandlebars } from '../../src/getHandlebars.js';
-import { maybePretty } from '../../src/maybePretty.js';
+import { getZodClientTemplateContext } from '../../src/context/index.js';
+import { getHandlebars } from '../../src/rendering/index.js';
+import { maybePretty } from '../../src/shared/maybe-pretty.js';
 
 import { sync } from 'fast-glob';
 
@@ -23,7 +23,7 @@ describe('openapi-examples', () => {
   const list = sync([examplesPath]);
 
   const template = getHandlebars().compile(
-    readFileSync('./src/templates/schemas-with-metadata.hbs', 'utf8'),
+    readFileSync('./src/rendering/templates/schemas-with-metadata.hbs', 'utf8'),
   );
   const resultByFile = {} as Record<string, string>;
 

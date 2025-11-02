@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { toBoolean } from '../../src/utils.js';
+import { toBoolean } from '../../src/shared/utils/index.js';
 
 describe('toBoolean', () => {
   test("returns boolean true, when string value 'true'", () => {

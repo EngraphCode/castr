@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { assertIsString } from './test-utils.js';
 
 /**

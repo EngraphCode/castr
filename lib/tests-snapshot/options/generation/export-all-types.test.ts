@@ -1,7 +1,7 @@
 import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas30';
 import { describe, expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../../../src/generateZodClientFromOpenAPI.js';
-import { getZodClientTemplateContext } from '../../../src/template-context.js';
+import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
+import { getZodClientTemplateContext } from '../../../src/context/index.js';
 
 const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) => ({
   openapi: '3.0.3',

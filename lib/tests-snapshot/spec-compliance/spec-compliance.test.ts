@@ -12,7 +12,7 @@
 
 import { expect, test, describe } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { generateZodClientFromOpenAPI } from '../../src/generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
 
 describe('spec-compliance', () => {
   describe('MediaType schema property', () => {

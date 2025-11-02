@@ -1,7 +1,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { describe, expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
-import type { TemplateContextGroupStrategy } from '../../../src/template-context.js';
+import type { TemplateContextGroupStrategy } from '../../../src/context/template-context.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/157
 describe('file group strategy with multi-props object as query parameter', () => {

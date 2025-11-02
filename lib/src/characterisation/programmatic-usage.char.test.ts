@@ -14,7 +14,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import SwaggerParser from '@apidevtools/swagger-parser';
-import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 
 /**
  * Type guard to assert that generateZodClientFromOpenAPI returned a string.

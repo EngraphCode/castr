@@ -1,11 +1,11 @@
 import {
   getTypescriptFromOpenApi,
   type TsConversionContext,
-} from '../../src/openApiToTypescript.js';
+} from '../../src/conversion/typescript/index.js';
 
 import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas30';
 import { describe, expect, test } from 'vitest';
-import type { TemplateContext } from '../../src/template-context.js';
+import type { TemplateContext } from '../../src/context/template-context.js';
 
 const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsTsString = (
