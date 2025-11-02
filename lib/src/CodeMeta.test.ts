@@ -224,7 +224,11 @@ describe('CodeMeta', () => {
 
       // Reference objects add themselves to referencedBy
       expect(meta.meta.referencedBy).toHaveLength(1);
-      expect(meta.meta.referencedBy[0]!.ref).toBe('#/components/schemas/Pet');
+      const firstRef = meta.meta.referencedBy[0];
+      if (!firstRef) {
+        throw new Error('Expected referencedBy to contain at least one element');
+      }
+      expect(firstRef.ref).toBe('#/components/schemas/Pet');
     });
 
     it('should preserve reference chain through nested metadata', () => {

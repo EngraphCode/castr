@@ -31,6 +31,7 @@ describe('spec-compliance', () => {
                   content: {
                     // Per OAS 3.0 spec: MediaType.schema must be Schema | Reference
                     // This is a $ref at the MediaType level, not inside schema
+                    // @ts-expect-error TS2322 - Testing invalid spec ($ref at MediaType level) to verify error handling
                     '*/*': { $ref: '#/components/schemas/Pet' } as unknown,
                   },
                 },

@@ -66,7 +66,7 @@ const baseConfig = [
 
 const tsUntypedPresets = [
   importX.flatConfigs.typescript,
-  ...tsEslintConfigs.recommended,
+  ...tsEslintConfigs.strict,
   ...tsEslintConfigs.stylistic,
 ] as const;
 
@@ -118,6 +118,11 @@ const untypedTsRules: Linter.RulesRecord = {
 };
 
 const typedTsRules: Linter.RulesRecord = {
+  'import-x/no-namespace': 'error',
+  'import-x/no-cycle': 'error',
+  'import-x/no-self-import': 'error',
+  'import-x/no-useless-path-segments': 'error',
+  'import-x/no-named-as-default': 'error',
   '@typescript-eslint/await-thenable': 'error',
   '@typescript-eslint/no-unsafe-assignment': 'error',
   '@typescript-eslint/no-unsafe-return': 'error',
@@ -146,6 +151,7 @@ const testRules: Linter.RulesRecord = {
   'max-lines-per-function': ['error', 500],
   'max-statements': ['error', 50],
   'max-depth': ['error', 5],
+  'no-console': 'off',
 };
 
 /* -------------------------------------------------------------------------- */

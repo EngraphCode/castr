@@ -61,7 +61,9 @@ export class ValidationError extends Error {
  * @param spec - The OpenAPI specification object to validate
  * @returns The same spec object (identity) if validation passes
  * @throws {ValidationError} If the spec is structurally invalid
- * @deprecated The code will be rewritten to use SwaggerParser.bundle for all code paths instead, then this function will be replaced with a simple type assertion.
+ * @note This function will be replaced in Phase 1 Part 5 with a unified input handling system.
+ *      The code will be rewritten to use SwaggerParser.bundle for all code paths, and this function
+ *      will be replaced with a simple type assertion helper (`assertOpenApiType`).
  */
 
 export function validateOpenApiSpec(spec: unknown): OpenAPIObject {

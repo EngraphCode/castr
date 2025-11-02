@@ -32,12 +32,12 @@ We are mid-way through **Phase 1 Part 4**, whose goal is to drive **all producti
 3. `.agent/plans/PHASE-1-PART-4-ZERO-LINT.md` – Active plan with task breakdown (10 min)
 4. `.agent/plans/requirements.md` – Project-level constraints (optional refresher)
 
-### Current State (2025-10-31 - LINT RULES UPDATED!)
+### Current State (2025-10-31 - MASSIVE SESSION PROGRESS!)
 
-- ✅ `pnpm format`, `pnpm build`, `pnpm type-check`, `pnpm test:all` (641/641 passing: 489 unit + 152 snapshot)
-- ❌ `pnpm lint` → **326 total** (20 production + 19 script + 287 test)
-- **🎉 MASSIVE IMPROVEMENT:** 263 → **20 production errors** (-243, **-92.4%** reduction!)
-- **Production:** 20 errors (12 files) | **Scripts:** 19 errors | **Tests:** 287 errors (acceptable)
+- ✅ `pnpm format`, `pnpm build`, `pnpm type-check`, `pnpm test:all` (152/152 passing)
+- ❌ `pnpm lint` → **83 total errors** (19 source + 64 test)
+- **🎉 SESSION ACHIEVEMENT:** 318 → 83 errors (-235, **-73.9%** reduction!)
+- **Source:** 19 errors (10 files) - TARGET: ZERO | **Tests:** 64 errors - BLOCKING (must be resolved alongside source)
 
 **🏆 MAJOR ACHIEVEMENTS:**
 
@@ -73,54 +73,56 @@ We are mid-way through **Phase 1 Part 4**, whose goal is to drive **all producti
 - ✅ All quality gates passing
 - ✅ Lint rule changes made testing much more pragmatic
 
+### Quality Gate Policy (Updated)
+
+- All quality gate failures (`pnpm format`, `pnpm build`, `pnpm type-check`, `pnpm test:all`, `pnpm lint`) are blocking with no exceptions. When any gate fails, the system is red until the failure is fixed.
+- Production, test, and script code are equally critical. Issues in one area are treated as system-wide blockers even if a different area currently has focus.
+- We sequence work for flow efficiency, but nothing is marked “acceptable” while outstanding; every failure is tracked, prioritised, and resolved before we can claim success.
+
 ### Immediate Goal
 
-Finish Phase 1 Part 4 by eliminating the remaining production lint violations through TDD-driven refactors (size, complexity, assertions, logging). Test code quality can remain “pragmatic” once critical issues are cleared.
+Finish Phase 1 Part 4 by eliminating the remaining lint violations—across production, test, and script code—through TDD-driven refactors (size, complexity, assertions, logging). Production hotspots stay first in line, but no outstanding issue is optional.
 
-### Remaining Work (20 production errors, 12 files) - FINAL SPRINT!
+### Remaining Work (83 Errors - 4-6 Hours Estimated)
 
-**Priority 1: Missing Return Types (6 errors, 5 files) - QUICK WIN! <1 hour**
+**Source Files: 19 Errors (TARGET: ZERO)**
 
-- `getEndpointDefinitionList.ts:89` - missing return type
-- `inferRequiredOnly.ts:56` - missing return type
-- `template-context.types.ts:14` - missing return type
-- `topologicalSort.ts:5` - missing return type
-- `openApiToZod.chain.ts:39` - function return type inconsistent
-- `openApiToZod.chain.ts:54` - function return type inconsistent
+**Priority 1: Code Quality Quick Wins (3 errors) - 30 minutes**
 
-**Priority 2: Complexity Issues (5 errors, 3 files) - MEDIUM: 2-3 hours**
+- `openApiToTypescript.string-helpers.ts:142` - selector parameter (document)
+- `openApiToZod.chain.ts:39,54` - inconsistent return types (add explicit unions)
 
-- `endpoint.helpers.ts:208` - complexity 9 (handleSimpleSchemaWithFallback)
-- `openApiToTypescript.helpers.ts:72` - complexity 9 (handleReferenceObject)
-- `openApiToTypescript.helpers.ts:143` - complexity 9 + cognitive 9 (handlePrimitiveEnum)
-- `openApiToZod.chain.ts:88` - cognitive complexity 9
+**Priority 2: Type Safety (2 errors) - 40 minutes**
 
-**Priority 3: Type Assertions (3 errors, 2 files) - MEDIUM: 1-2 hours**
+- `openApiToTypescript.helpers.ts:310,325` - replace enum assertions with type guards
 
-- `openApiToTypescript.helpers.ts:310` - type assertion
-- `openApiToTypescript.helpers.ts:325` - type assertion
-- `template-context.endpoints.ts:159` - type assertion
+**Priority 3: Complexity (4 errors) - 3 hours**
 
-**Priority 4: Code Quality (2 errors, 2 files) - QUICK WIN: <30 min**
+- `endpoint.helpers.ts:208` - extract `generateVariableName` helper
+- `openApiToTypescript.helpers.ts:72,143` - extract `resolveReference` and `determineEnumType`
+- `openApiToZod.chain.ts:88` - extract validation step builders
 
-- `openApiToTypescript.string-helpers.ts:137` - selector parameter
-- `utils.ts:134` - nested template literals
+**Priority 4: File Size (9 errors) - 5 hours**
 
-**Priority 5: Deprecation (4 errors, 2 files) - DEFERRED to Phase 1 Part 5**
+- Split 9 files >250 lines into focused modules:
+  - `openApiToTypescript.core.ts` (452 lines)
+  - `getEndpointDefinitionList.ts` (425 lines)
+  - `openApiToTypescript.string-helpers.ts` (384 lines)
+  - `openApiToTypescript.helpers.ts` (348 lines)
+  - 5 more files (252-288 lines each)
 
-- `generateZodClientFromOpenAPI.ts` - 3 validateOpenApiSpec deprecation warnings
-- `index.ts` - 1 validateOpenApiSpec deprecation warning
+**Priority 5: Deprecation (1 error) - DEFERRED**
 
-**Script Files (19 errors) - CONFIG FIX: 15 minutes**
+- `index.ts:1` - deprecated export (Phase 1 Part 5)
 
-- `examples-fetcher.mts`: 19 console statements (need eslint.config.ts update)
+**Total Source Time:** 8-9 hours to zero (excluding deferred)
 
-**Test Files (287 errors) - ACCEPTABLE with new pragmatic rules**
+**Test Files: 64 Errors - BLOCKING (Resolve After Production Hotspots)**
 
-- ~250 type assertions in test fixtures (needed for OpenAPI test data)
-- 13 long test functions 500-2700 lines (comprehensive integration tests)
-- 5 large test files 1000-3900 lines (extensive snapshot suites)
-- Function limit raised to 500 lines (was 200) - much more pragmatic!
+- Large test functions/files: 13 errors – Blockers to schedule once production lint reaches zero; require refactors or alternative strategies.
+- Non-null assertions: 10 errors – Replace with safe guards or explicit checks; cannot remain in final state.
+- HTTP/code eval/complexity: 5 errors – Investigate and resolve; these failures keep the lint gate red.
+- Logger test console issues: 7 errors – Fix during upcoming test-quality pass (estimated 30 minutes) to restore clean lint runs.
 
 ### Non-Negotiables (from `.agent/RULES.md`)
 

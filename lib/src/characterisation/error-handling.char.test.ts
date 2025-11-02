@@ -30,6 +30,7 @@ describe('Characterisation: Error Handling', () => {
       // Fail fast: reject invalid specs at the boundary with ValidationError
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -37,6 +38,7 @@ describe('Characterisation: Error Handling', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -52,6 +54,7 @@ describe('Characterisation: Error Handling', () => {
       // Fail fast: reject invalid specs at the boundary with ValidationError
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -59,6 +62,7 @@ describe('Characterisation: Error Handling', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -74,6 +78,7 @@ describe('Characterisation: Error Handling', () => {
       // Fail fast: reject invalid specs at the boundary with ValidationError
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -81,6 +86,7 @@ describe('Characterisation: Error Handling', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         }),
@@ -174,6 +180,7 @@ describe('Characterisation: Error Handling', () => {
         info: { title: 'Test API', version: '1.0.0' },
         components: {
           schemas: {
+            // @ts-expect-error TS2322 - Testing invalid schema (missing type property) to verify error handling
             NoType: {
               properties: {
                 name: { type: 'string' },
@@ -288,6 +295,7 @@ describe('Characterisation: Error Handling', () => {
               parameters: [
                 {
                   name: 'invalid',
+                  // @ts-expect-error TS2322 - Testing invalid parameter location to verify error handling
                   in: 'invalid-location' as unknown,
                   schema: { type: 'string' },
                 },
@@ -328,6 +336,7 @@ describe('Characterisation: Error Handling', () => {
           schemas: {
             Conflicting: {
               type: 'string',
+              // @ts-expect-error TS2322 - Testing conflicting properties on string type to verify error handling
               properties: {
                 // Properties on string type (conflicting)
                 name: { type: 'string' },

@@ -3,7 +3,6 @@ import fs from 'node:fs/promises';
 
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import type { Options } from 'prettier';
-
 import { getHandlebars } from './getHandlebars.js';
 import type { TemplateContext, TemplateContextOptions } from './template-context.js';
 import { getZodClientTemplateContext } from './template-context.js';

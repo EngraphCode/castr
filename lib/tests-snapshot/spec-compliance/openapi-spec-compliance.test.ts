@@ -25,7 +25,9 @@ import type { ValidateFunction } from 'ajv';
 import { generateZodClientFromOpenAPI } from '../../src/generateZodClientFromOpenAPI.js';
 
 // Handle CJS/ESM interop for default exports
+// @ts-expect-error TS2571 - Ajv04Module may have default export (CJS) or be direct export (ESM)
 const Ajv04 = (Ajv04Module as unknown).default || Ajv04Module;
+// @ts-expect-error TS2571 - addFormatsModule may have default export (CJS) or be direct export (ESM)
 const addFormats = (addFormatsModule as unknown).default || addFormatsModule;
 
 // Load official OpenAPI schemas

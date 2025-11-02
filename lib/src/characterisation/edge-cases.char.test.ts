@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
+import {
+  createMinimalSpec,
+  createSpecWithSchema,
+  createSpecWithSchemas,
+  createResponseWithSchema,
+  createMultipleSchemas,
+} from './__fixtures__/edge-cases-helpers.js';
 
 /**
  * Characterisation Tests: Edge Cases
@@ -20,13 +26,10 @@ import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js
 describe('Characterisation: Edge Cases', () => {
   describe('Empty/Minimal Specs', () => {
     it('should handle spec with no operations', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
+      const spec = createMinimalSpec({
         info: { title: 'Empty API', version: '1.0.0' },
-        paths: {},
-      };
+      });
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -38,23 +41,17 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle spec with only schemas, no paths', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Schemas Only', version: '1.0.0' },
-        components: {
-          schemas: {
-            User: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-              },
-            },
+      const spec = createSpecWithSchema(
+        'User',
+        {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
           },
         },
-        paths: {},
-      };
+        {},
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -62,15 +59,12 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      // Note: Unused schemas may not be exported by default
       expect(result).toContain('import { z }');
       expect(result).not.toContain('as unknown as');
     });
 
     it('should handle single operation spec', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Single Op', version: '1.0.0' },
+      const spec = createMinimalSpec({
         paths: {
           '/': {
             get: {
@@ -88,55 +82,39 @@ describe('Characterisation: Edge Cases', () => {
             },
           },
         },
-      };
+      });
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('/'); // Path is in output
+      expect(result).toContain('/');
       expect(result).not.toContain('as unknown as');
     });
   });
 
   describe('Special Characters in Names', () => {
     it('should handle schemas with hyphens in names', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: {
-          schemas: {
-            'User-Profile': {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-              },
-            },
+      const spec = createSpecWithSchema(
+        'User-Profile',
+        {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
           },
         },
-        paths: {
+        {
           '/users': {
             get: {
               operationId: 'getUsers',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: '#/components/schemas/User-Profile' },
-                    },
-                  },
-                },
-              },
+              responses: createResponseWithSchema('#/components/schemas/User-Profile'),
             },
           },
         },
-      };
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -147,9 +125,7 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle paths with special characters', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
+      const spec = createMinimalSpec({
         paths: {
           '/users/{user-id}/profiles/{profile.id}': {
             get: {
@@ -181,9 +157,8 @@ describe('Characterisation: Edge Cases', () => {
             },
           },
         },
-      };
+      });
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -194,42 +169,27 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle property names with special characters', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: {
-          schemas: {
-            SpecialProps: {
-              type: 'object',
-              properties: {
-                'kebab-case': { type: 'string' },
-                'dot.notation': { type: 'number' },
-                '@special': { type: 'boolean' },
-                $reserved: { type: 'string' },
-              },
-            },
+      const spec = createSpecWithSchema(
+        'SpecialProps',
+        {
+          type: 'object',
+          properties: {
+            'kebab-case': { type: 'string' },
+            'dot.notation': { type: 'number' },
+            '@special': { type: 'boolean' },
+            $reserved: { type: 'string' },
           },
         },
-        paths: {
+        {
           '/test': {
             get: {
               operationId: 'getTest',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: '#/components/schemas/SpecialProps' },
-                    },
-                  },
-                },
-              },
+              responses: createResponseWithSchema('#/components/schemas/SpecialProps'),
             },
           },
         },
-      };
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -241,45 +201,31 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle schema names that are JavaScript reserved words', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: {
-          schemas: {
-            class: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-              },
+      const spec = createSpecWithSchemas(
+        {
+          class: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
             },
-            function: {
-              type: 'object',
-              properties: {
-                name: { type: 'string' },
-              },
+          },
+          function: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
             },
           },
         },
-        paths: {
+        {
           '/test': {
             get: {
               operationId: 'getTest',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: '#/components/schemas/class' },
-                    },
-                  },
-                },
-              },
+              responses: createResponseWithSchema('#/components/schemas/class'),
             },
           },
         },
-      };
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -292,9 +238,7 @@ describe('Characterisation: Edge Cases', () => {
 
   describe('Complex Scenarios', () => {
     it('should handle deeply nested inline schemas', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
+      const spec = createMinimalSpec({
         paths: {
           '/nested': {
             get: {
@@ -337,9 +281,8 @@ describe('Characterisation: Edge Cases', () => {
             },
           },
         },
-      };
+      });
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -352,39 +295,24 @@ describe('Characterisation: Edge Cases', () => {
 
     it('should handle schemas with very long names', async () => {
       const longName = 'VeryLongSchemaNameThatExceedsNormalLimitsAndTestsEdgeCasesForNameHandling';
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: {
-          schemas: {
-            [longName]: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-              },
-            },
+      const spec = createSpecWithSchema(
+        longName,
+        {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
           },
         },
-        paths: {
+        {
           '/test': {
             get: {
               operationId: 'getTest',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: `#/components/schemas/${longName}` },
-                    },
-                  },
-                },
-              },
+              responses: createResponseWithSchema(`#/components/schemas/${longName}`),
             },
           },
         },
-      };
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -396,41 +324,23 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle many schemas (50+)', async () => {
-      const schemas: Record<string, unknown> = {};
-      for (let i = 0; i < 50; i++) {
-        schemas[`Schema${i}`] = {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-            value: { type: 'number' },
-          },
-        };
-      }
+      const schemas = createMultipleSchemas(50, () => ({
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          value: { type: 'number' },
+        },
+      }));
 
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: { schemas },
-        paths: {
-          '/test': {
-            get: {
-              operationId: 'getTest',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: '#/components/schemas/Schema0' },
-                    },
-                  },
-                },
-              },
-            },
+      const spec = createSpecWithSchemas(schemas, {
+        '/test': {
+          get: {
+            operationId: 'getTest',
+            responses: createResponseWithSchema('#/components/schemas/Schema0'),
           },
         },
-      };
+      });
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -438,42 +348,26 @@ describe('Characterisation: Edge Cases', () => {
 
       expect(result).toBeTruthy();
       expect(result).toContain('Schema0');
-      // Note: Unused schemas may not all be included by default
       expect(result).not.toContain('as unknown as');
     });
 
     it('should handle empty string as enum value', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: {
-          schemas: {
-            EmptyEnum: {
-              type: 'string',
-              enum: ['', 'value1', 'value2'],
-            },
-          },
+      const spec = createSpecWithSchema(
+        'EmptyEnum',
+        {
+          type: 'string',
+          enum: ['', 'value1', 'value2'],
         },
-        paths: {
+        {
           '/test': {
             get: {
               operationId: 'getTest',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: '#/components/schemas/EmptyEnum' },
-                    },
-                  },
-                },
-              },
+              responses: createResponseWithSchema('#/components/schemas/EmptyEnum'),
             },
           },
         },
-      };
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
@@ -485,40 +379,25 @@ describe('Characterisation: Edge Cases', () => {
     });
 
     it('should handle schema with nullable type (OpenAPI 3.0 style)', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        components: {
-          schemas: {
-            NullableField: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-                optionalField: { type: 'string', nullable: true },
-              },
-            },
+      const spec = createSpecWithSchema(
+        'NullableField',
+        {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            optionalField: { type: 'string', nullable: true },
           },
         },
-        paths: {
+        {
           '/test': {
             get: {
               operationId: 'getTest',
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { $ref: '#/components/schemas/NullableField' },
-                    },
-                  },
-                },
-              },
+              responses: createResponseWithSchema('#/components/schemas/NullableField'),
             },
           },
         },
-      };
+      );
 
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,

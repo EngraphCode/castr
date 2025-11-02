@@ -330,9 +330,13 @@ describe('getSchemaAsTsString with context', () => {
       visitedRefs: {},
       doc,
     };
+    const rootSchema = schemas['Root'];
+    if (!rootSchema) {
+      throw new Error("Expected 'Root' schema to exist");
+    }
     expect(
       getTypescriptFromOpenApi({
-        schema: schemas['Root']!,
+        schema: rootSchema,
         meta: { name: 'Root' },
         ctx,
       }),
@@ -379,9 +383,13 @@ describe('getSchemaAsTsString with context', () => {
       visitedRefs: {},
       doc,
     };
+    const root2Schema = schemas['Root2'];
+    if (!root2Schema) {
+      throw new Error("Expected 'Root2' schema to exist");
+    }
     expect(
       getTypescriptFromOpenApi({
-        schema: schemas['Root2']!,
+        schema: root2Schema,
         meta: { name: 'Root2' },
         ctx,
       }),
@@ -422,9 +430,13 @@ describe('getSchemaAsTsString with context', () => {
       doc,
     };
 
+    const root3Schema = schemas['Root3'];
+    if (!root3Schema) {
+      throw new Error("Expected 'Root3' schema to exist");
+    }
     expect(
       getTypescriptFromOpenApi({
-        schema: schemas['Root3']!,
+        schema: root3Schema,
         meta: { name: 'Root3', $ref: '#/components/schemas/Root3' },
         ctx,
       }),
@@ -465,8 +477,12 @@ describe('getSchemaAsTsString with context', () => {
       visitedRefs: {},
       doc,
     };
+    const root4Schema = schemas['Root4'];
+    if (!root4Schema) {
+      throw new Error("Expected 'Root4' schema to exist");
+    }
     const result = getTypescriptFromOpenApi({
-      schema: schemas['Root4']!,
+      schema: root4Schema,
       meta: { name: 'Root4', $ref: '#/components/schemas/Root4' },
       ctx,
     });
@@ -513,8 +529,12 @@ describe('getSchemaAsTsString with context', () => {
       visitedRefs: {},
       doc,
     };
+    const rootSchema = schemas['Root'];
+    if (!rootSchema) {
+      throw new Error("Expected 'Root' schema to exist");
+    }
     const result = getTypescriptFromOpenApi({
-      schema: schemas['Root']!,
+      schema: rootSchema,
       meta: { name: 'Root', $ref: '#/components/schemas/Root' },
       ctx,
     });
@@ -569,8 +589,12 @@ describe('getSchemaAsTsString with context', () => {
       visitedRefs: {},
       doc,
     };
+    const rootSchema = schemas['Root'];
+    if (!rootSchema) {
+      throw new Error("Expected 'Root' schema to exist");
+    }
     const result = getTypescriptFromOpenApi({
-      schema: schemas['Root']!,
+      schema: rootSchema,
       meta: { name: 'Root', $ref: '#/components/schemas/Root' },
       ctx,
     });

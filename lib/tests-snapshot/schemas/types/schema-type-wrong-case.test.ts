@@ -20,6 +20,7 @@ test('schema-type-wrong-case', async () => {
     },
     components: {
       schemas: {
+        // @ts-expect-error TS2322 - Testing invalid schema type ('Integer' instead of 'integer') to verify error handling
         test1: { type: 'object', properties: { text1: { type: 'Integer' as unknown } } },
       },
     },

@@ -1,0 +1,977 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`recursive-schema - direct recursive > should handle direct recursive schemas 1`] = `"z.object({ name: z.string(), parent: User }).partial().passthrough()"`;
+
+exports[`recursive-schema - direct recursive > should handle direct recursive schemas 2`] = `
+{
+    "doc": {
+        "components": {
+            "schemas": {
+                "User": {
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                        },
+                        "parent": {
+                            "$ref": "#/components/schemas/User",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "",
+            "version": "",
+        },
+        "openapi": "3.0.0",
+        "paths": {},
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "User": "z.object({ name: z.string(), parent: User }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 1`] = `"z.object({ recursive: User, basic: z.number() }).partial().passthrough()"`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 2`] = `
+{
+    "doc": {
+        "components": {
+            "schemas": {
+                "Middle": {
+                    "properties": {
+                        "user": {
+                            "$ref": "#/components/schemas/User",
+                        },
+                    },
+                    "type": "object",
+                },
+                "Root": {
+                    "properties": {
+                        "basic": {
+                            "type": "number",
+                        },
+                        "recursive": {
+                            "$ref": "#/components/schemas/User",
+                        },
+                    },
+                    "type": "object",
+                },
+                "User": {
+                    "properties": {
+                        "middle": {
+                            "$ref": "#/components/schemas/Middle",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "",
+            "version": "",
+        },
+        "openapi": "3.0.0",
+        "paths": {},
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "Middle": "z.object({ user: User }).partial().passthrough()",
+        "User": "z.object({ name: z.string(), middle: Middle }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 3`] = `
+{
+    "deepDependencyGraph": {
+        "#/components/schemas/Middle": Set {
+            "#/components/schemas/User",
+            "#/components/schemas/Middle",
+        },
+        "#/components/schemas/User": Set {
+            "#/components/schemas/Middle",
+            "#/components/schemas/User",
+        },
+    },
+    "refsDependencyGraph": {
+        "#/components/schemas/Middle": Set {
+            "#/components/schemas/User",
+        },
+        "#/components/schemas/User": Set {
+            "#/components/schemas/Middle",
+        },
+    },
+}
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 4`] = `
+[
+    "#/components/schemas/User",
+    "#/components/schemas/Middle",
+]
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 5`] = `
+"import { z } from "zod";
+
+type User = Partial<{ name: string; middle: Middle }>;
+type Middle = Partial<{ user: User }>;
+
+export const Middle: z.ZodType<Middle> = z.lazy(() =>
+  z.object({ user: User }).partial().strict(),
+);
+export const User: z.ZodType<User> = z.lazy(() =>
+  z.object({ name: z.string(), middle: Middle }).partial().strict(),
+);
+export const Root = z
+  .object({ recursive: User, basic: z.number() })
+  .partial()
+  .strict();
+
+export const endpoints = [
+  {
+    method: "get" as const,
+    path: "/example",
+    operationId: "getExample",
+    request: {},
+    responses: {
+      200: {
+        description: "OK",
+        schema: z
+          .object({ recursive: User, basic: z.number() })
+          .partial()
+          .strict(),
+      },
+    },
+  },
+] as const;
+
+/**
+ * MCP (Model Context Protocol) compatible tool definitions.
+ *
+ * Each endpoint is transformed into an MCP tool with:
+ * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+ * - \`description\`: Human-readable description of the tool's purpose
+ * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+ * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ *
+ * MCP tools use a consolidated input structure (all params in one object) rather than
+ * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+ * The output schema focuses on the "happy path" (primary success response). Error handling
+ * is typically done at the protocol level.
+ *
+ * @see https://anthropic.com/mcp - Model Context Protocol specification
+ * @example
+ * \`\`\`typescript
+ * import { mcpTools } from "./api";
+ *
+ * // AI assistant discovers and validates tool usage
+ * const tool = mcpTools.find(t => t.name === "getUserById");
+ * const input = tool.inputSchema.parse({
+ *   path: { userId: "123" },
+ *   query: { include: "profile" }
+ * });
+ * \`\`\`
+ */
+export const mcpTools = endpoints.map((endpoint) => {
+  // Build consolidated params object from all request parameter types
+  // MCP requires a single inputSchema, not separated path/query/headers/body
+  const params: Record<string, z.ZodTypeAny> = {};
+  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+  if (endpoint.request?.queryParams)
+    params.query = endpoint.request.queryParams;
+  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+  if (endpoint.request?.body) params.body = endpoint.request.body;
+
+  return {
+    // Use operationId for the canonical name, with fallback to generated name
+    name:
+      endpoint.operationId ||
+      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+    // Provide description for AI context
+    description:
+      endpoint.description ||
+      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+    // Consolidated input schema (path, query, headers, body all nested)
+    inputSchema:
+      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+    // Primary success response (200 or 201), fallback to z.unknown() for safety
+    outputSchema:
+      endpoint.responses[200]?.schema ||
+      endpoint.responses[201]?.schema ||
+      z.unknown(),
+  };
+}) as const;
+"
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 1`] = `"z.object({ recursiveUser: UserWithFriends, basic: z.number() }).partial().passthrough()"`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 2`] = `
+{
+    "doc": {
+        "components": {
+            "schemas": {
+                "Friend": {
+                    "properties": {
+                        "circle": {
+                            "items": {
+                                "$ref": "#/components/schemas/Friend",
+                            },
+                            "type": "array",
+                        },
+                        "nickname": {
+                            "type": "string",
+                        },
+                        "user": {
+                            "$ref": "#/components/schemas/UserWithFriends",
+                        },
+                    },
+                    "type": "object",
+                },
+                "ObjectWithRecursiveArray": {
+                    "properties": {
+                        "array": {
+                            "items": {
+                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                            },
+                            "type": "array",
+                        },
+                        "isInsideObjectWithRecursiveArray": {
+                            "type": "boolean",
+                        },
+                    },
+                    "type": "object",
+                },
+                "ResponseSchema": {
+                    "properties": {
+                        "basic": {
+                            "type": "number",
+                        },
+                        "recursiveRef": {
+                            "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                        },
+                    },
+                    "type": "object",
+                },
+                "User": {
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                        },
+                        "parent": {
+                            "$ref": "#/components/schemas/User",
+                        },
+                    },
+                    "type": "object",
+                },
+                "UserWithFriends": {
+                    "properties": {
+                        "bestFriend": {
+                            "$ref": "#/components/schemas/Friend",
+                        },
+                        "friends": {
+                            "items": {
+                                "$ref": "#/components/schemas/Friend",
+                            },
+                            "type": "array",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                        "parent": {
+                            "$ref": "#/components/schemas/UserWithFriends",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "",
+            "version": "",
+        },
+        "openapi": "3.0.0",
+        "paths": {},
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
+        "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 3`] = `
+{
+    "deepDependencyGraph": {
+        "#/components/schemas/Friend": Set {
+            "#/components/schemas/UserWithFriends",
+            "#/components/schemas/Friend",
+        },
+        "#/components/schemas/ObjectWithRecursiveArray": Set {
+            "#/components/schemas/ObjectWithRecursiveArray",
+        },
+        "#/components/schemas/ResponseSchema": Set {
+            "#/components/schemas/ObjectWithRecursiveArray",
+        },
+        "#/components/schemas/User": Set {
+            "#/components/schemas/User",
+        },
+        "#/components/schemas/UserWithFriends": Set {
+            "#/components/schemas/UserWithFriends",
+            "#/components/schemas/Friend",
+        },
+    },
+    "doc": {
+        "components": {
+            "schemas": {
+                "Friend": {
+                    "properties": {
+                        "circle": {
+                            "items": {
+                                "$ref": "#/components/schemas/Friend",
+                            },
+                            "type": "array",
+                        },
+                        "nickname": {
+                            "type": "string",
+                        },
+                        "user": {
+                            "$ref": "#/components/schemas/UserWithFriends",
+                        },
+                    },
+                    "type": "object",
+                },
+                "ObjectWithRecursiveArray": {
+                    "properties": {
+                        "array": {
+                            "items": {
+                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                            },
+                            "type": "array",
+                        },
+                        "isInsideObjectWithRecursiveArray": {
+                            "type": "boolean",
+                        },
+                    },
+                    "type": "object",
+                },
+                "ResponseSchema": {
+                    "properties": {
+                        "basic": {
+                            "type": "number",
+                        },
+                        "recursiveRef": {
+                            "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                        },
+                    },
+                    "type": "object",
+                },
+                "User": {
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                        },
+                        "parent": {
+                            "$ref": "#/components/schemas/User",
+                        },
+                    },
+                    "type": "object",
+                },
+                "UserWithFriends": {
+                    "properties": {
+                        "bestFriend": {
+                            "$ref": "#/components/schemas/Friend",
+                        },
+                        "friends": {
+                            "items": {
+                                "$ref": "#/components/schemas/Friend",
+                            },
+                            "type": "array",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                        "parent": {
+                            "$ref": "#/components/schemas/UserWithFriends",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "Swagger Petstore - OpenAPI 3.0",
+            "version": "1.0.11",
+        },
+        "openapi": "3.0.3",
+        "paths": {
+            "/example": {
+                "get": {
+                    "operationId": "getExample",
+                    "responses": {
+                        "200": {
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "properties": {
+                                            "someProp": {
+                                                "type": "boolean",
+                                            },
+                                            "someUser": {
+                                                "$ref": "#/components/schemas/UserWithFriends",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                },
+                            },
+                            "description": "OK",
+                        },
+                    },
+                },
+            },
+        },
+    },
+    "endpoints": [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/example",
+            "requestFormat": "json",
+            "response": "z.object({ someUser: UserWithFriends, someProp: z.boolean() }).partial().passthrough()",
+        },
+    ],
+    "issues": {
+        "ignoredFallbackResponse": [],
+        "ignoredGenericError": [],
+    },
+    "refsDependencyGraph": {
+        "#/components/schemas/Friend": Set {
+            "#/components/schemas/UserWithFriends",
+            "#/components/schemas/Friend",
+        },
+        "#/components/schemas/ObjectWithRecursiveArray": Set {
+            "#/components/schemas/ObjectWithRecursiveArray",
+        },
+        "#/components/schemas/ResponseSchema": Set {
+            "#/components/schemas/ObjectWithRecursiveArray",
+        },
+        "#/components/schemas/User": Set {
+            "#/components/schemas/User",
+        },
+        "#/components/schemas/UserWithFriends": Set {
+            "#/components/schemas/UserWithFriends",
+            "#/components/schemas/Friend",
+        },
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
+        "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 4`] = `
+{
+    "circularTypeByName": {
+        "Friend": true,
+        "UserWithFriends": true,
+    },
+    "emittedType": {
+        "Friend": true,
+        "ObjectWithRecursiveArray": true,
+        "User": true,
+        "UserWithFriends": true,
+    },
+    "endpoints": [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/example",
+            "requestFormat": "json",
+            "response": "z.object({ someUser: UserWithFriends, someProp: z.boolean() }).partial().passthrough()",
+        },
+    ],
+    "endpointsGroups": {},
+    "options": {
+        "baseUrl": "",
+        "withAlias": false,
+    },
+    "schemas": {
+        "Friend": "z.lazy(() => z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough())",
+        "UserWithFriends": "z.lazy(() => z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough())",
+    },
+    "types": {
+        "Friend": "type Friend = Partial<{ nickname: string; user: UserWithFriends; circle: Array<Friend> }>;",
+        "ObjectWithRecursiveArray": "type ObjectWithRecursiveArray = Partial<{ isInsideObjectWithRecursiveArray: boolean; array: Array<ObjectWithRecursiveArray> }>;",
+        "User": "type User = Partial<{ name: string; parent: User }>;",
+        "UserWithFriends": "type UserWithFriends = Partial<{ name: string; parent: UserWithFriends; friends: Array<Friend>; bestFriend: Friend }>;",
+    },
+}
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 5`] = `
+"import { z } from "zod";
+
+type User = Partial<{ name: string; parent: User }>;
+type UserWithFriends = Partial<{
+  name: string;
+  parent: UserWithFriends;
+  friends: Array<Friend>;
+  bestFriend: Friend;
+}>;
+type Friend = Partial<{
+  nickname: string;
+  user: UserWithFriends;
+  circle: Array<Friend>;
+}>;
+type ObjectWithRecursiveArray = Partial<{
+  isInsideObjectWithRecursiveArray: boolean;
+  array: Array<ObjectWithRecursiveArray>;
+}>;
+
+export const Friend: z.ZodType<Friend> = z.lazy(() =>
+  z
+    .object({
+      nickname: z.string(),
+      user: UserWithFriends,
+      circle: z.array(Friend),
+    })
+    .partial()
+    .strict(),
+);
+export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
+  z
+    .object({
+      name: z.string(),
+      parent: UserWithFriends,
+      friends: z.array(Friend),
+      bestFriend: Friend,
+    })
+    .partial()
+    .strict(),
+);
+export const User: z.ZodType<User> = z.lazy(() =>
+  z.object({ name: z.string(), parent: User }).partial().strict(),
+);
+export const ObjectWithRecursiveArray: z.ZodType<ObjectWithRecursiveArray> =
+  z.lazy(() =>
+    z
+      .object({
+        isInsideObjectWithRecursiveArray: z.boolean(),
+        array: z.array(ObjectWithRecursiveArray),
+      })
+      .partial()
+      .strict(),
+  );
+export const ResponseSchema = z
+  .object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() })
+  .partial()
+  .strict();
+
+export const endpoints = [
+  {
+    method: "get" as const,
+    path: "/example",
+    operationId: "getExample",
+    request: {},
+    responses: {
+      200: {
+        description: "OK",
+        schema: z
+          .object({ someUser: UserWithFriends, someProp: z.boolean() })
+          .partial()
+          .strict(),
+      },
+    },
+  },
+] as const;
+
+/**
+ * MCP (Model Context Protocol) compatible tool definitions.
+ *
+ * Each endpoint is transformed into an MCP tool with:
+ * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+ * - \`description\`: Human-readable description of the tool's purpose
+ * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+ * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ *
+ * MCP tools use a consolidated input structure (all params in one object) rather than
+ * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+ * The output schema focuses on the "happy path" (primary success response). Error handling
+ * is typically done at the protocol level.
+ *
+ * @see https://anthropic.com/mcp - Model Context Protocol specification
+ * @example
+ * \`\`\`typescript
+ * import { mcpTools } from "./api";
+ *
+ * // AI assistant discovers and validates tool usage
+ * const tool = mcpTools.find(t => t.name === "getUserById");
+ * const input = tool.inputSchema.parse({
+ *   path: { userId: "123" },
+ *   query: { include: "profile" }
+ * });
+ * \`\`\`
+ */
+export const mcpTools = endpoints.map((endpoint) => {
+  // Build consolidated params object from all request parameter types
+  // MCP requires a single inputSchema, not separated path/query/headers/body
+  const params: Record<string, z.ZodTypeAny> = {};
+  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+  if (endpoint.request?.queryParams)
+    params.query = endpoint.request.queryParams;
+  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+  if (endpoint.request?.body) params.body = endpoint.request.body;
+
+  return {
+    // Use operationId for the canonical name, with fallback to generated name
+    name:
+      endpoint.operationId ||
+      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+    // Provide description for AI context
+    description:
+      endpoint.description ||
+      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+    // Consolidated input schema (path, query, headers, body all nested)
+    inputSchema:
+      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+    // Primary success response (200 or 201), fallback to z.unknown() for safety
+    outputSchema:
+      endpoint.responses[200]?.schema ||
+      endpoint.responses[201]?.schema ||
+      z.unknown(),
+  };
+}) as const;
+"
+`;
+
+exports[`recursive-schema - recursive array > should handle recursive array schemas 1`] = `"z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()"`;
+
+exports[`recursive-schema - recursive array > should handle recursive array schemas 2`] = `
+{
+    "doc": {
+        "components": {
+            "schemas": {
+                "ObjectWithRecursiveArray": {
+                    "properties": {
+                        "array": {
+                            "items": {
+                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                            },
+                            "type": "array",
+                        },
+                        "isInsideObjectWithRecursiveArray": {
+                            "type": "boolean",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "",
+            "version": "",
+        },
+        "openapi": "3.0.0",
+        "paths": {},
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - recursive array > should handle recursive array schemas 3`] = `
+{
+    "deepDependencyGraph": {
+        "#/components/schemas/ObjectWithRecursiveArray": Set {
+            "#/components/schemas/ObjectWithRecursiveArray",
+        },
+    },
+    "doc": {
+        "components": {
+            "schemas": {
+                "ObjectWithRecursiveArray": {
+                    "properties": {
+                        "array": {
+                            "items": {
+                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                            },
+                            "type": "array",
+                        },
+                        "isInsideObjectWithRecursiveArray": {
+                            "type": "boolean",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "Swagger Petstore - OpenAPI 3.0",
+            "version": "1.0.11",
+        },
+        "openapi": "3.0.3",
+        "paths": {
+            "/example": {
+                "get": {
+                    "operationId": "getExample",
+                    "responses": {
+                        "200": {
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "properties": {
+                                            "basic": {
+                                                "type": "number",
+                                            },
+                                            "recursiveRef": {
+                                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                },
+                            },
+                            "description": "OK",
+                        },
+                    },
+                },
+            },
+        },
+    },
+    "endpoints": [
+        {
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/example",
+            "requestFormat": "json",
+            "response": "z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()",
+        },
+    ],
+    "issues": {
+        "ignoredFallbackResponse": [],
+        "ignoredGenericError": [],
+    },
+    "refsDependencyGraph": {
+        "#/components/schemas/ObjectWithRecursiveArray": Set {
+            "#/components/schemas/ObjectWithRecursiveArray",
+        },
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 1`] = `"z.object({ playlist: Playlist, by_author: Author }).partial().passthrough()"`;
+
+exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 2`] = `
+{
+    "doc": {
+        "components": {
+            "schemas": {
+                "Author": {
+                    "properties": {
+                        "mail": {
+                            "type": "string",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                        "settings": {
+                            "$ref": "#/components/schemas/Settings",
+                        },
+                    },
+                    "type": "object",
+                },
+                "Playlist": {
+                    "properties": {
+                        "author": {
+                            "$ref": "#/components/schemas/Author",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                        "songs": {
+                            "items": {
+                                "$ref": "#/components/schemas/Song",
+                            },
+                            "type": "array",
+                        },
+                    },
+                    "type": "object",
+                },
+                "Settings": {
+                    "properties": {
+                        "theme_color": {
+                            "type": "string",
+                        },
+                    },
+                    "type": "object",
+                },
+                "Song": {
+                    "properties": {
+                        "duration": {
+                            "type": "number",
+                        },
+                        "in_playlists": {
+                            "items": {
+                                "$ref": "#/components/schemas/Playlist",
+                            },
+                            "type": "array",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+        "info": {
+            "title": "",
+            "version": "",
+        },
+        "openapi": "3.0.0",
+        "paths": {},
+    },
+    "schemaByName": {},
+    "zodSchemaByName": {
+        "Author": "z.object({ name: z.string(), mail: z.string(), settings: Settings }).partial().passthrough()",
+        "Playlist": "z.object({ name: z.string(), author: Author, songs: z.array(Song) }).partial().passthrough()",
+        "Settings": "z.object({ theme_color: z.string() }).partial().passthrough()",
+        "Song": "z.object({ name: z.string(), duration: z.number(), in_playlists: z.array(Playlist) }).partial().passthrough()",
+    },
+}
+`;
+
+exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 3`] = `
+"import { z } from "zod";
+
+type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }>;
+type Author = Partial<{ name: string; mail: string; settings: Settings }>;
+type Settings = Partial<{ theme_color: string }>;
+type Song = Partial<{
+  name: string;
+  duration: number;
+  in_playlists: Array<Playlist>;
+}>;
+
+export const Settings = z
+  .object({ theme_color: z.string() })
+  .partial()
+  .strict();
+export const Author = z
+  .object({ name: z.string(), mail: z.string(), settings: Settings })
+  .partial()
+  .strict();
+export const Song: z.ZodType<Song> = z.lazy(() =>
+  z
+    .object({
+      name: z.string(),
+      duration: z.number(),
+      in_playlists: z.array(Playlist),
+    })
+    .partial()
+    .strict(),
+);
+export const Playlist: z.ZodType<Playlist> = z.lazy(() =>
+  z
+    .object({ name: z.string(), author: Author, songs: z.array(Song) })
+    .partial()
+    .strict(),
+);
+
+export const endpoints = [
+  {
+    method: "get" as const,
+    path: "/example",
+    operationId: "getExample",
+    request: {},
+    responses: {
+      200: {
+        description: "OK",
+        schema: z
+          .object({ playlist: Playlist, by_author: Author })
+          .partial()
+          .strict(),
+      },
+    },
+  },
+] as const;
+
+/**
+ * MCP (Model Context Protocol) compatible tool definitions.
+ *
+ * Each endpoint is transformed into an MCP tool with:
+ * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+ * - \`description\`: Human-readable description of the tool's purpose
+ * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+ * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ *
+ * MCP tools use a consolidated input structure (all params in one object) rather than
+ * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+ * The output schema focuses on the "happy path" (primary success response). Error handling
+ * is typically done at the protocol level.
+ *
+ * @see https://anthropic.com/mcp - Model Context Protocol specification
+ * @example
+ * \`\`\`typescript
+ * import { mcpTools } from "./api";
+ *
+ * // AI assistant discovers and validates tool usage
+ * const tool = mcpTools.find(t => t.name === "getUserById");
+ * const input = tool.inputSchema.parse({
+ *   path: { userId: "123" },
+ *   query: { include: "profile" }
+ * });
+ * \`\`\`
+ */
+export const mcpTools = endpoints.map((endpoint) => {
+  // Build consolidated params object from all request parameter types
+  // MCP requires a single inputSchema, not separated path/query/headers/body
+  const params: Record<string, z.ZodTypeAny> = {};
+  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+  if (endpoint.request?.queryParams)
+    params.query = endpoint.request.queryParams;
+  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+  if (endpoint.request?.body) params.body = endpoint.request.body;
+
+  return {
+    // Use operationId for the canonical name, with fallback to generated name
+    name:
+      endpoint.operationId ||
+      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+    // Provide description for AI context
+    description:
+      endpoint.description ||
+      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+    // Consolidated input schema (path, query, headers, body all nested)
+    inputSchema:
+      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+    // Primary success response (200 or 201), fallback to z.unknown() for safety
+    outputSchema:
+      endpoint.responses[200]?.schema ||
+      endpoint.responses[201]?.schema ||
+      z.unknown(),
+  };
+}) as const;
+"
+`;

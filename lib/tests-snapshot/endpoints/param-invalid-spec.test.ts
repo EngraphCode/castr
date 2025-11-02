@@ -20,6 +20,7 @@ describe('param-invalid-spec', () => {
           put: {
             operationId: 'updatePet',
             parameters: [
+              // @ts-expect-error TS2322 - Testing invalid parameter (missing schema/content) to verify error handling
               {
                 name: 'invalid-param',
                 description: 'This parameter is invalid per OpenAPI spec',

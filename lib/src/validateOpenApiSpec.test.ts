@@ -59,7 +59,7 @@ describe('validateOpenApiSpec', () => {
     it('should accept all valid OpenAPI 3.0.x versions', () => {
       const versions = ['3.0.0', '3.0.1', '3.0.2', '3.0.3'];
 
-      versions.forEach((version) => {
+      for (const version of versions) {
         const spec: OpenAPIObject = {
           openapi: version,
           info: { title: 'Test API', version: '1.0.0' },
@@ -67,7 +67,7 @@ describe('validateOpenApiSpec', () => {
         };
 
         expect(() => validateOpenApiSpec(spec)).not.toThrow();
-      });
+      }
     });
   });
 

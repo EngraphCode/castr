@@ -85,6 +85,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     it('should reject null spec with ValidationError', async () => {
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid input (null) to verify error handling
           openApiDoc: null as unknown,
           disableWriteToFile: true,
         }),
@@ -92,6 +93,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid input (null) to verify error handling
           openApiDoc: null as unknown,
           disableWriteToFile: true,
         }),
@@ -101,6 +103,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
     it('should reject undefined spec with ValidationError', async () => {
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid input (undefined) to verify error handling
           openApiDoc: undefined as unknown,
           disableWriteToFile: true,
         }),
@@ -108,6 +111,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid input (undefined) to verify error handling
           openApiDoc: undefined as unknown,
           disableWriteToFile: true,
         }),
@@ -122,6 +126,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -129,6 +134,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -143,6 +149,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -150,6 +157,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -164,6 +172,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -171,6 +180,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required property) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -188,6 +198,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 2.0) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -195,6 +206,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 2.0) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -202,6 +214,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 2.0) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -217,6 +230,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 3.1.0) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -224,6 +238,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 3.1.0) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -231,6 +246,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 3.1.0) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -267,6 +283,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (non-string openapi) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -274,6 +291,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (non-string openapi) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -285,6 +303,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (array instead of object) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -292,6 +311,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (array instead of object) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -307,6 +327,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (paths as array) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -314,6 +335,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       await expect(
         generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (paths as array) to verify error handling
           openApiDoc: spec,
           disableWriteToFile: true,
         }),
@@ -345,6 +367,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       for (const { spec, expectedKeywords } of testCases) {
         try {
           await generateZodClientFromOpenAPI({
+            // @ts-expect-error TS2322 - Testing invalid specs in loop to verify error handling
             openApiDoc: spec as unknown,
             disableWriteToFile: true,
           });
@@ -374,6 +397,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
 
       try {
         await generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (missing required properties) to verify error handling
           openApiDoc: invalidSpec,
           disableWriteToFile: true,
         });

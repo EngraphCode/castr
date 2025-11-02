@@ -1,5 +1,13 @@
 import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
-import * as ts from 'typescript';
+import {
+  type Node,
+  EmitHint,
+  NewLineKind,
+  ScriptKind,
+  ScriptTarget,
+  createPrinter,
+  createSourceFile,
+} from 'typescript';
 
 import { getTypescriptFromOpenApi } from './openApiToTypescript.js';
 import type { TsConversionContext } from './openApiToTypescript.js';
@@ -9,19 +17,19 @@ import { isReferenceObject } from 'openapi3-ts/oas30';
 import { checkIfSchemaIsCircular } from './template-context.schemas.js';
 import { getSchemaNameFromRef } from './template-context.common.js';
 
-const file = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
-const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
-const printTs = (node: ts.Node): string => printer.printNode(ts.EmitHint.Unspecified, node, file);
+const file = createSourceFile('', '', ScriptTarget.ESNext, true, ScriptKind.TS);
+const printer = createPrinter({ newLine: NewLineKind.LineFeed });
+const printTs = (node: Node): string => printer.printNode(EmitHint.Unspecified, node, file);
 
 /**
  * Type guard to check if result is a ts.Node
  */
-export const isTsNode = (result: unknown): result is ts.Node => {
+export const isTsNode = (result: unknown): result is Node => {
   if (typeof result !== 'object' || result === null) {
     return false;
   }
 
-  // Check if object has 'kind' property that is a number (ts.Node requirement)
+  // Check if object has 'kind' property that is a number (Node requirement)
   const hasKind = 'kind' in result;
   if (!hasKind) {
     return false;
@@ -33,7 +41,7 @@ export const isTsNode = (result: unknown): result is ts.Node => {
 
 /**
  * Convert result from getTypescriptFromOpenApi to string
- * Handles union type: ts.Node | t.TypeDefinitionObject | string
+ * Handles union type: Node | t.TypeDefinitionObject | string
  */
 export const tsResultToString = (result: ReturnType<typeof getTypescriptFromOpenApi>): string => {
   if (typeof result === 'string') {

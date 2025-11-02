@@ -6,6 +6,20 @@
 
 ---
 
+## Quality Gates
+
+The quality gates are package.json scripts that are run to verify the codebase is in a desirable state.
+
+```bash
+pnpm build
+pnpm type-check
+pnpm format
+pnpm lint
+pnpm test:all
+```
+
+All quality gate issues are blocking at ALL times, regardless of where or why they happen. This rule is absolute and unwavering.
+
 ## Testing Standards
 
 ### 🎯 **MANDATORY: Test-Driven Development (TDD)**

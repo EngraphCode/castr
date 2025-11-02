@@ -49,10 +49,12 @@ describe('maybePretty', () => {
   test('handles prettier config with undefined plugins gracefully', async () => {
     const input = `const x: string = "hello";`;
     // Simulate a prettier config that might have plugins: undefined
-    const result = await maybePretty(input, {
+    const invalidOptions = {
       plugins: undefined as unknown,
       printWidth: 80,
-    });
+    };
+    // @ts-expect-error TS2345 - Testing invalid plugins input (undefined as unknown) to verify graceful handling
+    const result = await maybePretty(input, invalidOptions);
 
     expect(result).toContain('const x: string');
     expect(result).not.toBe(input);
@@ -60,10 +62,12 @@ describe('maybePretty', () => {
 
   test('handles prettier config with empty plugins array', async () => {
     const input = `const x: string = "hello";`;
-    const result = await maybePretty(input, {
+    const invalidOptions = {
       plugins: [] as unknown,
       printWidth: 80,
-    });
+    };
+    // @ts-expect-error TS2345 - Testing invalid plugins input (empty array as unknown) to verify graceful handling
+    const result = await maybePretty(input, invalidOptions);
 
     expect(result).toContain('const x: string');
     expect(result).not.toBe(input);
@@ -71,10 +75,12 @@ describe('maybePretty', () => {
 
   test('handles prettier config with invalid plugins gracefully', async () => {
     const input = `const x: string = "hello";`;
-    const result = await maybePretty(input, {
+    const invalidOptions = {
       plugins: [null, undefined] as unknown,
       printWidth: 80,
-    });
+    };
+    // @ts-expect-error TS2345 - Testing invalid plugins input (array with null/undefined as unknown) to verify graceful handling
+    const result = await maybePretty(input, invalidOptions);
 
     expect(result).toContain('const x: string');
     expect(result).not.toBe(input);

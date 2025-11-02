@@ -45,6 +45,8 @@ function assertIsString(value: unknown, context: string): asserts value is strin
  * @param pathOrSpec - Either a file path string or an OpenAPIObject to dereference
  */
 async function dereferenceSpec(pathOrSpec: string | OpenAPIObject): Promise<OpenAPIObject> {
+  // @ts-expect-error TS2345 - SwaggerParser.dereference() accepts openapi-types, not openapi3-ts types
+  // Both are structurally compatible (same OpenAPI 3.0 spec), but TypeScript treats them as incompatible
   const spec = await SwaggerParser.dereference(pathOrSpec as unknown);
   // Explicit type boundary: openapi-types -> openapi3-ts
   // Safe because both packages model the same OpenAPI 3.0 spec

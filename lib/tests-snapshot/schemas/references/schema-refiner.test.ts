@@ -1,8 +1,29 @@
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas30';
 import { getZodSchema } from '../../../src/openApiToZod.js';
 import { test, expect } from 'vitest';
 
 test('schema-refiner', () => {
+  const makeNullableIfNotRequired = (
+    properties: SchemaObject['properties'],
+  ): SchemaObject['properties'] => {
+    if (!properties) {
+      return properties;
+    }
+    const modified: NonNullable<SchemaObject['properties']> = {};
+    for (const key in properties) {
+      const prop = properties[key];
+      if (!prop) {
+        continue;
+      }
+      if (isReferenceObject(prop)) {
+        modified[key] = prop;
+      } else {
+        modified[key] = { ...prop, nullable: true };
+      }
+    }
+    return modified;
+  };
+
   expect(
     getZodSchema({
       schema: {
@@ -17,21 +38,22 @@ test('schema-refiner', () => {
       },
       options: {
         schemaRefiner(schema) {
-          if (isReferenceObject(schema) || !schema.properties) {
+          if (isReferenceObject(schema)) {
             return schema;
           }
 
-          if (!schema.required && schema.properties) {
-            for (const key in schema.properties) {
-              const prop = schema.properties[key];
-
-              if (prop && !isReferenceObject(prop)) {
-                prop.nullable = true;
-              }
-            }
+          if (!schema.properties) {
+            return schema;
           }
 
-          return schema;
+          if (schema.required) {
+            return schema;
+          }
+
+          return {
+            ...schema,
+            properties: makeNullableIfNotRequired(schema.properties),
+          };
         },
       },
     }),
