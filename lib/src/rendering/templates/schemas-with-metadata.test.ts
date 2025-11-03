@@ -105,6 +105,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
           get: {
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { $ref: '#/components/schemas/User' },
@@ -143,6 +144,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
             description: 'Get all users',
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'array' as const, items: { type: 'object' as const } },
@@ -155,6 +157,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
             operationId: 'createUser',
             responses: {
               '201': {
+                description: 'Created',
                 content: {
                   'application/json': {
                     schema: { type: 'object' as const },
@@ -177,6 +180,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
             ],
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' as const },
@@ -274,6 +278,7 @@ describe('schemas-with-metadata template - CLI Flag Integration', () => {
           get: {
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'array' },
@@ -329,6 +334,7 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
             ],
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -451,6 +457,7 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
             },
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -495,6 +502,7 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
           get: {
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -530,6 +538,7 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
           get: {
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -568,6 +577,7 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
           get: {
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -609,6 +619,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
             },
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -653,6 +664,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
             },
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { type: 'object' },
@@ -704,6 +716,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
           get: {
             responses: {
               '200': {
+                description: 'Success',
                 content: {
                   'application/json': {
                     schema: { $ref: '#/components/schemas/User' },

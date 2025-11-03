@@ -19,6 +19,47 @@ You could use `openapi-zod-validation` to automate the API integration part (doe
 
 If you do have control on your API/back-end, you should probably use a RPC-like solution like [tRPC](https://github.com/trpc/trpc) or [ts-rest](https://ts-rest.com/) instead of this.
 
+# OpenAPI Input Pipeline
+
+`openapi-zod-validation` uses a **unified OpenAPI input pipeline** that ensures consistent, deterministic behavior across all entry points (CLI and programmatic API).
+
+## Architecture
+
+All OpenAPI documents—whether from file paths, URLs, or in-memory objects—flow through a single preparation pipeline:
+
+1. **Input Normalization**: Accepts file paths, URLs, or pre-parsed OpenAPI objects
+2. **Validation & Bundling**: Uses `@apidevtools/swagger-parser` to validate and bundle the spec
+3. **Type Safety**: Bridges between SwaggerParser's types and our internal types
+4. **Deterministic Output**: Ensures identical processing for identical inputs
+
+## Key Features
+
+- **Single SwaggerParser Usage Point**: All OpenAPI processing happens in one place (`prepareOpenApiDocument`), ensuring consistent behavior
+- **Bundle Mode**: Uses SwaggerParser's `bundle()` mode which:
+  - Resolves external `$ref`s (file references, URLs)
+  - Preserves internal `$ref`s (essential for circular references and dependency tracking)
+  - Validates the document structure
+- **Circular Reference Handling**: Properly handles schemas that reference themselves (directly or indirectly) using Zod's `z.lazy()` mechanism
+- **OpenAPI 3.0.x & 3.1.x Support**: Fully supports both OpenAPI 3.0.x (3.0.0-3.0.3) and 3.1.x specifications
+
+## Why Bundle Mode?
+
+We use `bundle()` mode (not `dereference()`) because:
+
+1. **Circular References**: Dereferencing creates circular JavaScript object references that cause stack overflows during Zod schema generation. Bundle mode preserves `$ref` strings, allowing us to detect cycles and use `z.lazy()` appropriately.
+2. **Dependency Tracking**: Our dependency graph relies on `$ref` strings to determine schema ordering. After dereferencing, these `$ref`s are gone, making it impossible to determine which schemas depend on which.
+3. **Code Generation**: The Zod conversion code expects `$ref`s, not inlined schemas. It handles `$ref`s by generating references to other schema constants, maintaining clean, readable generated code.
+
+## OpenAPI Version Support
+
+- ✅ **OpenAPI 3.0.x**: Fully supported (3.0.0, 3.0.1, 3.0.2, 3.0.3)
+- ✅ **OpenAPI 3.1.x**: Fully supported (3.1.0+) including:
+  - Type arrays (e.g., `type: ['string', 'null']`)
+  - Standalone `type: 'null'`
+  - `exclusiveMinimum`/`exclusiveMaximum` as numbers (not just booleans)
+  - Mixed 3.0/3.1 features in the same spec
+- ❌ **OpenAPI 2.x (Swagger)**: Not supported—please migrate to OpenAPI 3.0+ using the [official Swagger Editor](https://editor.swagger.io/)
+
 # Usage
 
 with local install:
@@ -398,10 +439,15 @@ Example: `--success-expr "status >= 200 && status < 300"`
 ## Tips
 
 - You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-validation ./input.yaml` will generate a `./input.yaml.ts` file
-- Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
-  `pnpx openapi-zod-validation https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
+- **URLs as Input**: The unified pipeline accepts URLs directly. The pipeline automatically downloads and validates the spec:
 
-- Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-validation` could help
+  ```bash
+  pnpx openapi-zod-validation https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts
+  ```
+
+- **Multi-file Documents**: The pipeline automatically resolves external `$ref`s (file references, URLs) via SwaggerParser's bundle mode. Your multi-file OpenAPI specs should work out-of-the-box without manual dereferencing.
+
+- **Circular References**: The pipeline properly handles schemas that reference themselves (e.g., a `Node` schema with a `next: Node` property). These are automatically converted to Zod's `z.lazy()` for correct runtime behavior.
 - If you only need a few portions of your OpenAPI spec (i.e. only using a few endpoints from the [GitHub REST API OpenAPI Spec](https://github.com/OAI/OpenAPI-Specification)), consider using [openapi-endpoint-trimmer](https://github.com/aacitelli/openapi-endpoint-trimmer) to trim unneeded paths from your spec first. It supports prefix-based omitting of paths, helping significantly cut down on the length of your output types file, which generally improves editor speed and compilation times.
 
 ## Example
@@ -586,9 +632,12 @@ const endpoints = makeApi([
 
 # Caveats
 
-NOT tested/expected to work with OpenAPI before v3, please migrate your specs to v3+ if you want to use this
+**OpenAPI Version Support:**
 
-You can do so by using the official Swagger Editor: https://editor.swagger.io/ using the Edit -> Convert to OpenAPI 3.0 menu
+- ✅ **OpenAPI 3.0.x and 3.1.x**: Fully supported and tested
+- ❌ **OpenAPI 2.x (Swagger)**: Not supported—please migrate to OpenAPI 3.0+
+
+You can migrate Swagger 2.0 specs to OpenAPI 3.0+ using the [official Swagger Editor](https://editor.swagger.io/) using the Edit -> Convert to OpenAPI 3.0 menu.
 
 ## Contributing:
 

@@ -246,11 +246,11 @@ it('determines which status are considered errors-responses', async () => {
         requiredProp: z.string(),
       })
       .strict();
-    export const AnotherSuccess = z.number();
     export const Error400 = z
       .object({ is400: z.boolean(), nested: Nested })
       .partial()
       .strict();
+    export const AnotherSuccess = z.number();
     export const Error404 = z.null();
     export const Error500 = z.string();
 
@@ -381,11 +381,11 @@ it('determines which status are considered errors-responses', async () => {
         requiredProp: z.string(),
       })
       .strict();
-    export const AnotherSuccess = z.number();
     export const Error400 = z
       .object({ is400: z.boolean(), nested: Nested })
       .partial()
       .strict();
+    export const AnotherSuccess = z.number();
     export const Error404 = z.null();
     export const Error500 = z.string();
 

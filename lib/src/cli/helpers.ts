@@ -2,11 +2,9 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import type { resolveConfig } from 'prettier';
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
 
-import type {
-  GenerateZodClientFromOpenApiArgs,
-  generateZodClientFromOpenAPI,
-} from '../rendering/index.js';
+import type { GenerateZodClientFromOpenApiArgs } from '../rendering/index.js';
 import {
   hasVersionProperty,
   isGroupStrategy,
@@ -79,7 +77,7 @@ export function isTemplateName(
 /**
  * Build generation args from CLI options and parsed data.
  *
- * @param openApiDoc - Parsed OpenAPI document
+ * @param openApiDoc - Parsed OpenAPI document (required for CLI path)
  * @param distPath - Output file path
  * @param prettierConfig - Prettier configuration
  * @param options - CLI options
@@ -88,7 +86,7 @@ export function isTemplateName(
  * @internal
  */
 export function buildGenerationArgs(
-  openApiDoc: Parameters<typeof generateZodClientFromOpenAPI>[0]['openApiDoc'],
+  openApiDoc: OpenAPIObject,
   distPath: string,
   prettierConfig: Awaited<ReturnType<typeof resolveConfig>> | null,
   options: CliOptions,

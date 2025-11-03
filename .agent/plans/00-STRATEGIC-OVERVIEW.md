@@ -4,6 +4,9 @@
 **Status:** Active Implementation  
 **Goal:** Modernize codebase for extraction to Engraph monorepo
 
+> **Intended Impact**  
+> Every consumer—CLI, programmatic API, or downstream MCP tooling—must experience the same predictable, spec-compliant behaviour whenever they hand us an OpenAPI document. Valid specs sail straight through and produce deterministic artefacts; invalid specs fail fast with actionable guidance direct from the official schema. Comprehensive tests and documentation make that contract boringly reliable, unlocking the rest of the modernization roadmap.
+
 ---
 
 ## Executive Summary

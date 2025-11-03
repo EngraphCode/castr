@@ -814,9 +814,9 @@ export const mcpTools = endpoints.map((endpoint) => {
 ",
     "v3.1/tictactoe.": "import { z } from "zod";
 
-export const winner = z.enum([".", "X", "O"]);
 export const mark = z.enum([".", "X", "O"]);
 export const board = z.array(z.array(mark).min(3).max(3));
+export const winner = z.enum([".", "X", "O"]);
 export const status = z
   .object({ winner: winner, board: board.min(3).max(3) })
   .partial()

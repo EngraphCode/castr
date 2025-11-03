@@ -92,7 +92,7 @@ function processSchemas(
     deepDependencyGraph,
     circularTypeByName,
   );
-  const sortedSchemas = sortSchemasByDependencies(schemas, deepDependencyGraph);
+  let sortedSchemas = sortSchemasByDependencies(schemas, deepDependencyGraph);
 
   if (options?.shouldExportAllSchemas) {
     const docSchemas = doc.components?.schemas ?? {};
@@ -102,7 +102,8 @@ function processSchemas(
       deepDependencyGraph,
       circularTypeByName,
     );
-    Object.assign(sortedSchemas, allSchemas);
+    // Sort all schemas (including newly exported ones) by dependencies
+    sortedSchemas = sortSchemasByDependencies(allSchemas, deepDependencyGraph);
   }
 
   return { sortedSchemas, circularTypeByName };

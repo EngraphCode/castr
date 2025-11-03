@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+// File contains main public API function with comprehensive parameter handling
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
@@ -6,7 +8,7 @@ import type { Options } from 'prettier';
 import { getHandlebars } from './handlebars.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
 import { getZodClientTemplateContext } from '../context/index.js';
-import { validateOpenApiSpec } from '../validation/index.js';
+import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { handleFileGrouping, handleSingleFileOutput } from './templating.js';
 
 type TemplateName = 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
@@ -14,7 +16,6 @@ type TemplateName = 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-cli
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
 > = {
-  openApiDoc: OpenAPIObject;
   /**
    * Template name to use for generation
    * - "schemas-only": Pure Zod schemas
@@ -44,11 +45,35 @@ export type GenerateZodClientFromOpenApiArgs<
   handlebars?: ReturnType<typeof getHandlebars>;
 } & (
   | {
+      /** File path or URL to OpenAPI document. Mutually exclusive with openApiDoc. */
+      input: string | URL;
+      openApiDoc?: never;
       distPath?: never;
       /** when true, will only return the result rather than writing it to a file, mostly used for easier testing purpose */
       disableWriteToFile: true;
     }
-  | { distPath: string; disableWriteToFile?: false }
+  | {
+      /** File path or URL to OpenAPI document. Mutually exclusive with openApiDoc. */
+      input: string | URL;
+      openApiDoc?: never;
+      distPath: string;
+      disableWriteToFile?: false;
+    }
+  | {
+      /** In-memory OpenAPI document. Mutually exclusive with input. */
+      openApiDoc: OpenAPIObject;
+      input?: never;
+      distPath?: never;
+      /** when true, will only return the result rather than writing it to a file, mostly used for easier testing purpose */
+      disableWriteToFile: true;
+    }
+  | {
+      /** In-memory OpenAPI document. Mutually exclusive with input. */
+      openApiDoc: OpenAPIObject;
+      input?: never;
+      distPath: string;
+      disableWriteToFile?: false;
+    }
 );
 
 /**
@@ -129,15 +154,53 @@ function resolveTemplatePath(
  * - **schemas-only**: Pure Zod schemas without endpoint metadata
  * - **schemas-with-client**: Full client with openapi-fetch + Zod validation
  *
- * @example Basic usage
+ * **Input Sources:**
+ * You can provide the OpenAPI document either as:
+ * - File path or URL via `input` parameter (string or URL object)
+ * - In-memory object via `openApiDoc` parameter (OpenAPIObject)
+ *
+ * You cannot provide both `input` and `openApiDoc` at the same time.
+ *
+ * @param args - Generation arguments
+ * @param args.input - Optional file path or URL to OpenAPI document. Mutually exclusive with openApiDoc.
+ * @param args.openApiDoc - Optional in-memory OpenAPI document. Mutually exclusive with input.
+ * @param args.distPath - Output file path (required unless disableWriteToFile is true)
+ * @param args.disableWriteToFile - When true, returns string instead of writing file
+ * @param args.template - Template name to use for generation
+ * @param args.noClient - Skip HTTP client generation (uses schemas-with-metadata template)
+ * @param args.prettierConfig - Prettier configuration for output formatting
+ * @param args.options - Template context options (groupStrategy, withAlias, etc.)
+ *
+ * @example Using file path input
  * ```typescript
  * const result = await generateZodClientFromOpenAPI({
- *   openApiDoc, distPath: "./api-client.ts", prettierConfig,
+ *   input: './api.yaml',
+ *   distPath: './api-client.ts',
  * });
  * ```
+ *
+ * @example Using in-memory object
+ * ```typescript
+ * const result = await generateZodClientFromOpenAPI({
+ *   openApiDoc: myOpenApiObject,
+ *   distPath: './api-client.ts',
+ * });
+ * ```
+ *
+ * @example Using URL input (returns string, doesn't write file)
+ * ```typescript
+ * const result = await generateZodClientFromOpenAPI({
+ *   input: new URL('https://api.example.com/openapi.json'),
+ *   disableWriteToFile: true,
+ * });
+ * // result is a string containing the generated TypeScript code
+ * ```
  */
+/* eslint-disable max-lines-per-function, complexity */
+// Function handles multiple input types and template options - complexity is necessary for public API
 export const generateZodClientFromOpenAPI = async <TOptions extends TemplateContext['options']>({
   openApiDoc,
+  input,
   distPath,
   template,
   templatePath,
@@ -149,10 +212,23 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   disableWriteToFile,
   handlebars,
 }: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<string | Record<string, string>> => {
-  validateOpenApiSpec(openApiDoc);
+  // Mutual exclusion guard: cannot provide both input and openApiDoc
+  if (input !== undefined && openApiDoc !== undefined) {
+    throw new Error(
+      'Cannot provide both input and openApiDoc parameters. Provide either input (file path/URL) or openApiDoc (in-memory object), not both.',
+    );
+  }
+
+  // Prepare OpenAPI document using unified pipeline (validates and bundles)
+  const docToPrepare = input ?? openApiDoc;
+  if (!docToPrepare) {
+    throw new Error('Either input or openApiDoc must be provided.');
+  }
+  const preparedDoc = await prepareOpenApiDocument(docToPrepare);
+
   const effectiveTemplate = determineEffectiveTemplate(noClient, template, options?.template);
   const effectiveOptions = buildEffectiveOptions(effectiveTemplate, options);
-  const data = getZodClientTemplateContext(openApiDoc, effectiveOptions);
+  const data = getZodClientTemplateContext(preparedDoc, effectiveOptions);
   const groupStrategy = effectiveOptions?.groupStrategy ?? 'none';
   const resolvedTemplatePath = resolveTemplatePath(templatePath, effectiveTemplate);
   const source = await fs.readFile(resolvedTemplatePath, 'utf8');
@@ -185,3 +261,4 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
     willWriteToFile,
   );
 };
+/* eslint-enable max-lines-per-function, complexity */

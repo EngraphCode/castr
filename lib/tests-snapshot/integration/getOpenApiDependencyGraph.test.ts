@@ -119,13 +119,6 @@ test('complex relations', () => {
         "#/components/schemas/WithNested": Set {
             "DeepNested",
         },
-        "ObjectWithArrayOfRef": Set {
-            "WithNested",
-            "Basic",
-        },
-        "WithNested": Set {
-            "DeepNested",
-        },
     }
   `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
@@ -143,13 +136,11 @@ test('complex relations', () => {
     {
         "#/components/schemas/ObjectWithArrayOfRef": Set {
             "WithNested",
-            "DeepNested",
             "Basic",
         },
         "#/components/schemas/Root": Set {
             "ObjectWithArrayOfRef",
             "WithNested",
-            "DeepNested",
             "Basic",
         },
         "#/components/schemas/WithNested": Set {
@@ -198,10 +189,6 @@ test('recursive relations', () => {
   );
   expect(result).toMatchInlineSnapshot(`
     {
-        "#/components/schemas/Friend": Set {
-            "UserWithFriends",
-            "Friend",
-        },
         "#/components/schemas/UserWithFriends": Set {
             "UserWithFriends",
             "Friend",
@@ -210,26 +197,17 @@ test('recursive relations', () => {
             "UserWithFriends",
             "Friend",
         },
-        "UserWithFriends": Set {
-            "UserWithFriends",
-            "Friend",
-        },
     }
   `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
     [
-        "Friend",
         "UserWithFriends",
+        "Friend",
         "#/components/schemas/UserWithFriends",
-        "#/components/schemas/Friend",
     ]
   `);
   expect(deepDependencyGraph).toMatchInlineSnapshot(`
     {
-        "#/components/schemas/Friend": Set {
-            "UserWithFriends",
-            "Friend",
-        },
         "#/components/schemas/UserWithFriends": Set {
             "UserWithFriends",
             "Friend",
@@ -241,7 +219,6 @@ test('recursive relations', () => {
         "UserWithFriends",
         "Friend",
         "#/components/schemas/UserWithFriends",
-        "#/components/schemas/Friend",
     ]
   `);
 });
@@ -309,11 +286,6 @@ test('recursive relations along with some basics schemas', () => {
   );
   expect(result).toMatchInlineSnapshot(`
     {
-        "#/components/schemas/Friend": Set {
-            "UserWithFriends",
-            "Friend",
-            "Basic",
-        },
         "#/components/schemas/ObjectWithArrayOfRef": Set {
             "WithNested",
             "Basic",
@@ -328,22 +300,10 @@ test('recursive relations along with some basics schemas', () => {
             "Friend",
             "WithNested",
         },
-        "#/components/schemas/WithNested": Set {
-            "DeepNested",
-        },
         "Friend": Set {
             "UserWithFriends",
             "Friend",
             "Basic",
-        },
-        "ObjectWithArrayOfRef": Set {
-            "WithNested",
-            "Basic",
-        },
-        "UserWithFriends": Set {
-            "UserWithFriends",
-            "Friend",
-            "WithNested",
         },
         "WithNested": Set {
             "DeepNested",
@@ -352,14 +312,12 @@ test('recursive relations along with some basics schemas', () => {
   `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
     [
+        "UserWithFriends",
         "Basic",
         "Friend",
         "DeepNested",
         "WithNested",
-        "UserWithFriends",
         "#/components/schemas/UserWithFriends",
-        "#/components/schemas/Friend",
-        "#/components/schemas/WithNested",
         "#/components/schemas/ObjectWithArrayOfRef",
         "ObjectWithArrayOfRef",
         "#/components/schemas/Root",
@@ -367,13 +325,6 @@ test('recursive relations along with some basics schemas', () => {
   `);
   expect(deepDependencyGraph).toMatchInlineSnapshot(`
     {
-        "#/components/schemas/Friend": Set {
-            "UserWithFriends",
-            "Friend",
-            "Basic",
-            "WithNested",
-            "DeepNested",
-        },
         "#/components/schemas/ObjectWithArrayOfRef": Set {
             "WithNested",
             "DeepNested",
@@ -390,9 +341,6 @@ test('recursive relations along with some basics schemas', () => {
             "Friend",
             "Basic",
             "WithNested",
-            "DeepNested",
-        },
-        "#/components/schemas/WithNested": Set {
             "DeepNested",
         },
     }
@@ -405,8 +353,6 @@ test('recursive relations along with some basics schemas', () => {
         "WithNested",
         "DeepNested",
         "#/components/schemas/UserWithFriends",
-        "#/components/schemas/Friend",
-        "#/components/schemas/WithNested",
         "#/components/schemas/ObjectWithArrayOfRef",
         "ObjectWithArrayOfRef",
         "#/components/schemas/Root",

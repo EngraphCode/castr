@@ -164,7 +164,6 @@ test('handle-refs-with-dots-in-name', async () => {
   expect(output).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
-    export const Basic = z.string();
     export const Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj = z
       .object({ aaa: z.string(), bbb: z.string() })
       .partial()
@@ -173,6 +172,7 @@ test('handle-refs-with-dots-in-name', async () => {
       .object({ thing: Aaa - bbb.CccDdd_eee.Fff_ggg.HhhIiii_jjj })
       .partial()
       .strict();
+    export const Basic = z.string();
 
     export const endpoints = [
       {

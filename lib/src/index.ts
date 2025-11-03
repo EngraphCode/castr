@@ -7,7 +7,8 @@ export { generateZodClientFromOpenAPI } from './rendering/index.js';
 export type { GenerateZodClientFromOpenApiArgs } from './rendering/index.js';
 export { getHandlebars } from './rendering/index.js';
 export { getOpenApiDependencyGraph } from './shared/index.js';
-export { ValidationError, validateOpenApiSpec } from './validation/index.js';
+// Note: validateOpenApiSpec and ValidationError removed in Phase 1 Part 5
+// Replaced by prepareOpenApiDocument helper (internal) which uses SwaggerParser
 export * from './endpoints/index.js';
 export { maybePretty } from './shared/index.js';
 export { getZodSchema } from './conversion/zod/index.js';

@@ -3,6 +3,23 @@
 exports[`generateZodClientFromOpenAPI - with baseUrl > should generate client with base URL 1`] = `
 "import { z } from "zod";
 
+export const Address = z
+  .object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+  })
+  .partial()
+  .strict();
+export const Customer = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    address: z.array(Address),
+  })
+  .partial()
+  .strict();
 export const Category = z
   .object({ id: z.number().int(), name: z.string() })
   .partial()
@@ -46,23 +63,6 @@ export const User = z
     password: z.string(),
     phone: z.string(),
     userStatus: z.number().int(),
-  })
-  .partial()
-  .strict();
-export const Address = z
-  .object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  })
-  .partial()
-  .strict();
-export const Customer = z
-  .object({
-    id: z.number().int(),
-    username: z.string(),
-    address: z.array(Address),
   })
   .partial()
   .strict();
@@ -620,6 +620,23 @@ export const mcpTools = endpoints.map((endpoint) => {
 exports[`generateZodClientFromOpenAPI - withAlias as custom function > should generate client with custom alias function 1`] = `
 "import { z } from "zod";
 
+export const Address = z
+  .object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+  })
+  .partial()
+  .strict();
+export const Customer = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    address: z.array(Address),
+  })
+  .partial()
+  .strict();
 export const Category = z
   .object({ id: z.number().int(), name: z.string() })
   .partial()
@@ -663,23 +680,6 @@ export const User = z
     password: z.string(),
     phone: z.string(),
     userStatus: z.number().int(),
-  })
-  .partial()
-  .strict();
-export const Address = z
-  .object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  })
-  .partial()
-  .strict();
-export const Customer = z
-  .object({
-    id: z.number().int(),
-    username: z.string(),
-    address: z.array(Address),
   })
   .partial()
   .strict();
@@ -1023,6 +1023,23 @@ export const mcpTools = endpoints.map((endpoint) => {
 exports[`generateZodClientFromOpenAPI - withAlias as false > should generate client with alias disabled 1`] = `
 "import { z } from "zod";
 
+export const Address = z
+  .object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+  })
+  .partial()
+  .strict();
+export const Customer = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    address: z.array(Address),
+  })
+  .partial()
+  .strict();
 export const Category = z
   .object({ id: z.number().int(), name: z.string() })
   .partial()
@@ -1066,23 +1083,6 @@ export const User = z
     password: z.string(),
     phone: z.string(),
     userStatus: z.number().int(),
-  })
-  .partial()
-  .strict();
-export const Address = z
-  .object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  })
-  .partial()
-  .strict();
-export const Customer = z
-  .object({
-    id: z.number().int(),
-    username: z.string(),
-    address: z.array(Address),
   })
   .partial()
   .strict();
@@ -1426,6 +1426,23 @@ export const mcpTools = endpoints.map((endpoint) => {
 exports[`generateZodClientFromOpenAPI - withAlias as true > should generate client with alias enabled 1`] = `
 "import { z } from "zod";
 
+export const Address = z
+  .object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+  })
+  .partial()
+  .strict();
+export const Customer = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    address: z.array(Address),
+  })
+  .partial()
+  .strict();
 export const Category = z
   .object({ id: z.number().int(), name: z.string() })
   .partial()
@@ -1469,23 +1486,6 @@ export const User = z
     password: z.string(),
     phone: z.string(),
     userStatus: z.number().int(),
-  })
-  .partial()
-  .strict();
-export const Address = z
-  .object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  })
-  .partial()
-  .strict();
-export const Customer = z
-  .object({
-    id: z.number().int(),
-    username: z.string(),
-    address: z.array(Address),
   })
   .partial()
   .strict();
@@ -1829,6 +1829,23 @@ export const mcpTools = endpoints.map((endpoint) => {
 exports[`generateZodClientFromOpenAPI - without default values > should generate client without default values 1`] = `
 "import { z } from "zod";
 
+export const Address = z
+  .object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+  })
+  .partial()
+  .strict();
+export const Customer = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    address: z.array(Address),
+  })
+  .partial()
+  .strict();
 export const Category = z
   .object({ id: z.number().int(), name: z.string() })
   .partial()
@@ -1872,23 +1889,6 @@ export const User = z
     password: z.string(),
     phone: z.string(),
     userStatus: z.number().int(),
-  })
-  .partial()
-  .strict();
-export const Address = z
-  .object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  })
-  .partial()
-  .strict();
-export const Customer = z
-  .object({
-    id: z.number().int(),
-    username: z.string(),
-    address: z.array(Address),
   })
   .partial()
   .strict();
@@ -2227,6 +2227,23 @@ export const mcpTools = endpoints.map((endpoint) => {
 exports[`generateZodClientFromOpenAPI - without options > should generate client without options 1`] = `
 "import { z } from "zod";
 
+export const Address = z
+  .object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zip: z.string(),
+  })
+  .partial()
+  .strict();
+export const Customer = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    address: z.array(Address),
+  })
+  .partial()
+  .strict();
 export const Category = z
   .object({ id: z.number().int(), name: z.string() })
   .partial()
@@ -2270,23 +2287,6 @@ export const User = z
     password: z.string(),
     phone: z.string(),
     userStatus: z.number().int(),
-  })
-  .partial()
-  .strict();
-export const Address = z
-  .object({
-    street: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip: z.string(),
-  })
-  .partial()
-  .strict();
-export const Customer = z
-  .object({
-    id: z.number().int(),
-    username: z.string(),
-    address: z.array(Address),
   })
   .partial()
   .strict();
@@ -3611,6 +3611,16 @@ export const PartialObject = z
   .object({ something: z.string(), another: z.number() })
   .partial()
   .strict();
+export const Nested2: z.ZodType<Nested2> = z.lazy(() =>
+  z
+    .object({
+      nested_prop: z.boolean().optional(),
+      deeplyNested: DeeplyNested.optional(),
+      circularToRoot: Root2.optional(),
+      requiredProp: z.string(),
+    })
+    .strict(),
+);
 export const Root2: z.ZodType<Root2> = z.lazy(() =>
   z
     .object({
@@ -3619,16 +3629,6 @@ export const Root2: z.ZodType<Root2> = z.lazy(() =>
       nested: Nested2,
       partial: PartialObject.optional(),
       optionalProp: z.string().optional(),
-    })
-    .strict(),
-);
-export const Nested2: z.ZodType<Nested2> = z.lazy(() =>
-  z
-    .object({
-      nested_prop: z.boolean().optional(),
-      deeplyNested: DeeplyNested.optional(),
-      circularToRoot: Root2.optional(),
-      requiredProp: z.string(),
     })
     .strict(),
 );

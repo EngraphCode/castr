@@ -1,19 +1,18 @@
 import { expect, test, describe } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { generateZodClientFromOpenAPI, ValidationError } from '../../src/index.js';
+import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 /**
  * OAS 3.0 vs 3.1 Feature Parity Test
  *
- * Purpose: Verify that the codebase correctly handles OpenAPI 3.0 specs and
- * REJECTS OpenAPI 3.1 specs with clear error messages.
+ * Purpose: Verify that the codebase correctly handles both OpenAPI 3.0 and 3.1 specs.
  *
- * This library only supports OpenAPI 3.0.x (3.0.0 - 3.0.3).
+ * This library supports OpenAPI 3.0.x and 3.1.x.
  *
  * Key Differences Tested:
  * 1. OpenAPI 3.0.x: supported, generates code
- * 2. OpenAPI 3.1.x: explicitly rejected with ValidationError
- * 3. Error messages guide users to use 3.0.x instead
+ * 2. OpenAPI 3.1.x: supported, generates code with 3.1-specific features
+ * 3. Both versions produce valid Zod schemas
  *
  * Note: Type assertions as OpenAPIObject are used for test fixtures only
  *
@@ -113,27 +112,16 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    // OpenAPI 3.1.x is not supported - should reject with ValidationError
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow(ValidationError);
+    // OpenAPI 3.1.x is now supported - should generate code successfully
+    const output = await generateZodClientFromOpenAPI({
+      disableWriteToFile: true,
+      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+    });
 
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
-
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow('only supports OpenAPI 3.0.x');
+    // Should generate gt() for exclusive minimum
+    expect(output).toContain('gt(18)');
+    // Should generate lt() for exclusive maximum
+    expect(output).toContain('lt(100)');
   });
 
   test('OAS 3.0: nullable property', async () => {
@@ -216,20 +204,16 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    // OpenAPI 3.1.x is not supported - should reject with ValidationError
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow(ValidationError);
+    // OpenAPI 3.1.x is now supported - should generate code successfully
+    const output = await generateZodClientFromOpenAPI({
+      disableWriteToFile: true,
+      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+    });
 
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
+    // Should generate valid Zod schema
+    expect(output).toBeDefined();
+    expect(typeof output).toBe('string');
+    expect(output).toContain('z.');
   });
 
   test('OAS 3.1: standalone type null', async () => {
@@ -261,20 +245,16 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    // OpenAPI 3.1.x is not supported - should reject with ValidationError
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow(ValidationError);
+    // OpenAPI 3.1.x is now supported - should generate code successfully
+    const output = await generateZodClientFromOpenAPI({
+      disableWriteToFile: true,
+      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+    });
 
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
+    // Should generate valid Zod schema
+    expect(output).toBeDefined();
+    expect(typeof output).toBe('string');
+    expect(output).toContain('z.');
   });
 
   test('OAS 3.1: multiple types in array', async () => {
@@ -306,20 +286,16 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    // OpenAPI 3.1.x is not supported - should reject with ValidationError
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow(ValidationError);
+    // OpenAPI 3.1.x is now supported - should generate code successfully
+    const output = await generateZodClientFromOpenAPI({
+      disableWriteToFile: true,
+      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+    });
 
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
+    // Should generate valid Zod schema
+    expect(output).toBeDefined();
+    expect(typeof output).toBe('string');
+    expect(output).toContain('z.');
   });
 
   test('Mixed: Both OAS 3.0 and 3.1 features in same spec', async () => {
@@ -368,19 +344,15 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    // OpenAPI 3.1.x is not supported - should reject with ValidationError
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow(ValidationError);
+    // OpenAPI 3.1.x is now supported - should generate code successfully
+    const output = await generateZodClientFromOpenAPI({
+      disableWriteToFile: true,
+      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+    });
 
-    await expect(
-      generateZodClientFromOpenAPI({
-        disableWriteToFile: true,
-        openApiDoc: openApiDoc as unknown as OpenAPIObject,
-      }),
-    ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
+    // Should generate valid Zod schema
+    expect(output).toBeDefined();
+    expect(typeof output).toBe('string');
+    expect(output).toContain('z.');
   });
 });

@@ -542,6 +542,9 @@ type ObjectWithRecursiveArray = Partial<{
   array: Array<ObjectWithRecursiveArray>;
 }>;
 
+export const User: z.ZodType<User> = z.lazy(() =>
+  z.object({ name: z.string(), parent: User }).partial().strict(),
+);
 export const Friend: z.ZodType<Friend> = z.lazy(() =>
   z
     .object({
@@ -562,9 +565,6 @@ export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
     })
     .partial()
     .strict(),
-);
-export const User: z.ZodType<User> = z.lazy(() =>
-  z.object({ name: z.string(), parent: User }).partial().strict(),
 );
 export const ObjectWithRecursiveArray: z.ZodType<ObjectWithRecursiveArray> =
   z.lazy(() =>

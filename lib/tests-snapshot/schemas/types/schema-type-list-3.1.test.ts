@@ -1,9 +1,9 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 import { expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI, ValidationError } from '../../../src/index.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/60
-// Note: OpenAPI 3.1 is not supported - this test verifies we reject it properly
+// OpenAPI 3.1 is now supported - this test verifies type arrays work correctly
 test('schema-type-list-3.1', async () => {
   const openApiDoc: OpenAPIObject = {
     openapi: '3.1.0',
@@ -43,16 +43,13 @@ test('schema-type-list-3.1', async () => {
     },
   };
 
-  // OpenAPI 3.1.x is not supported - should reject with ValidationError
-  await expect(
-    generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
-  ).rejects.toThrow(ValidationError);
+  // OpenAPI 3.1.x is now supported - should generate code successfully
+  const result = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
 
-  await expect(
-    generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
-  ).rejects.toThrow('Unsupported OpenAPI version: 3.1.0');
-
-  await expect(
-    generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
-  ).rejects.toThrow('only supports OpenAPI 3.0.x');
+  expect(result).toBeDefined();
+  expect(typeof result).toBe('string');
+  expect(result).toContain('test1');
+  expect(result).toContain('test2');
+  expect(result).toContain('test3');
+  expect(result).toContain('test4');
 });

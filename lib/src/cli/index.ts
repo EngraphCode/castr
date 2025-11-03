@@ -1,9 +1,8 @@
-import SwaggerParser from '@apidevtools/swagger-parser';
 import { Command } from 'commander';
 import { resolveConfig } from 'prettier';
 
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { isOpenAPIObject } from '../validation/cli-type-guards.js';
+import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import type { CliOptions } from './helpers.js';
 import {
   getPackageVersion,
@@ -97,13 +96,7 @@ program
   .action(async (input: string, options: CliOptions) => {
     // eslint-disable-next-line no-console -- CLI output: inform user of operation start
     console.log('Retrieving OpenAPI document from', input);
-    const bundled: unknown = await SwaggerParser.bundle(input);
-    if (!isOpenAPIObject(bundled)) {
-      throw new Error(
-        `Invalid OpenAPI document: missing required properties (openapi, info, paths)`,
-      );
-    }
-    const openApiDoc = bundled;
+    const openApiDoc = await prepareOpenApiDocument(input);
     const prettierConfig = await resolveConfig(options.prettier ?? './');
     const distPath = options.output ?? input + '.client.ts';
 

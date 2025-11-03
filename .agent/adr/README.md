@@ -63,6 +63,10 @@ What becomes easier or more difficult as a result of this decision?
 - [ADR-015: Eliminate makeSchemaResolver](./ADR-015-eliminate-make-schema-resolver.md) - **Accepted**
 - [ADR-016: Remove Zodios Dependencies](./ADR-016-remove-zodios-dependencies.md) - **Accepted**
 
+### Unified OpenAPI Input Pipeline
+
+- [ADR-017: Unified Bundle-Only OpenAPI Input Pipeline](./ADR-017-unified-bundle-only-pipeline.md) - **Accepted**
+
 ---
 
 ## Timeline
@@ -77,6 +81,13 @@ What becomes easier or more difficult as a result of this decision?
   - 4-phase comprehensive rewrite planned (26-36 hours)
   - 373 tests passing
   - Ready to execute Phase 0
+
+- **January 2025**: Phase 1 Part 5 - Unified OpenAPI Input Pipeline
+  - ADR-017 accepted
+  - Fixed circular reference bug (SwaggerParser.validate() mutation)
+  - Removed --input-mode CLI flag (bundle-only pipeline)
+  - Discovered OpenAPI 3.1.x support
+  - All tests passing (100%)
 
 ## Status Legend
 

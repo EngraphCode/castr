@@ -1,4 +1,18 @@
 import { sortBy } from 'lodash-es';
+import { normalizeString } from './string-utils.js';
+
+/**
+ * Extract and normalize schema name from a component schema $ref
+ * @internal
+ */
+function getSchemaNameFromRef(ref: string): string {
+  const parts = ref.split('/');
+  const name = parts[parts.length - 1];
+  if (!name) {
+    return ref; // If not a ref, return as-is
+  }
+  return normalizeString(name);
+}
 
 /**
  * Sort schema code dictionary by dependency order
@@ -19,7 +33,8 @@ export function sortSchemasByDependencyOrder(
   schemas: Record<string, string>,
   dependencyOrder: readonly string[],
 ): Record<string, string> {
-  const orderMap = new Map(dependencyOrder.map((key, idx) => [key, idx]));
+  // Convert refs to schema names for matching
+  const orderMap = new Map(dependencyOrder.map((ref, idx) => [getSchemaNameFromRef(ref), idx]));
   const entries = sortBy(Object.entries(schemas), ([key]) => orderMap.get(key) ?? Infinity);
   return Object.fromEntries(entries);
 }

@@ -90,6 +90,9 @@ const handleSchemaType = (schema: SchemaObject, fromRef: string, visit: VisitFn)
 
 /**
  * Build direct dependency graph by visiting all schemas and their immediate dependencies
+ *
+ * Handles both $ref-based dependencies (from bundle mode) and circular object references
+ * (from dereference mode) by tracking visited objects to prevent infinite recursion.
  */
 const buildDirectDependencyGraph = (
   schemaRefs: string[],
@@ -97,10 +100,22 @@ const buildDirectDependencyGraph = (
 ): Record<string, Set<string>> => {
   const visitedsRefs: Record<string, boolean> = {};
   const refsDependencyGraph: Record<string, Set<string>> = {};
+  // Track visited objects to handle circular references after dereferencing
+  const visitedObjects = new WeakSet<object>();
 
   const visit: VisitFn = (schema, fromRef) => {
     if (!schema) {
       return;
+    }
+
+    // Check if we've already visited this object (handles circular references)
+    if (typeof schema === 'object' && visitedObjects.has(schema)) {
+      return;
+    }
+
+    // Mark this object as visited
+    if (typeof schema === 'object') {
+      visitedObjects.add(schema);
     }
 
     if (isReferenceObject(schema)) {

@@ -23,8 +23,7 @@ describe('Public API Preservation', () => {
     expect(typeof publicApi.getHandlebars).toBe('function');
     expect(publicApi).toHaveProperty('getOpenApiDependencyGraph');
     expect(typeof publicApi.getOpenApiDependencyGraph).toBe('function');
-    expect(publicApi).toHaveProperty('validateOpenApiSpec');
-    expect(typeof publicApi.validateOpenApiSpec).toBe('function');
+    // validateOpenApiSpec removed in Phase 1 Part 5 (replaced by prepareOpenApiDocument internally)
     expect(publicApi).toHaveProperty('getEndpointDefinitionList');
     expect(typeof publicApi.getEndpointDefinitionList).toBe('function');
     expect(publicApi).toHaveProperty('maybePretty');
@@ -34,9 +33,7 @@ describe('Public API Preservation', () => {
     expect(publicApi).toHaveProperty('getZodClientTemplateContext');
     expect(typeof publicApi.getZodClientTemplateContext).toBe('function');
 
-    // Classes
-    expect(publicApi).toHaveProperty('ValidationError');
-    expect(typeof publicApi.ValidationError).toBe('function');
+    // ValidationError removed in Phase 1 Part 5 (replaced by prepareOpenApiDocument internally)
 
     // Note: Type-only exports (EndpointDefinition, TemplateContext, etc.) are validated
     // by TypeScript compilation. Type-check gate ensures they remain exported.
@@ -46,12 +43,7 @@ describe('Public API Preservation', () => {
     expect(typeof publicApi.logger).toBe('object');
   });
 
-  test('ValidationError is a constructor', () => {
-    const error = new publicApi.ValidationError('test message');
-    expect(error).toBeInstanceOf(Error);
-    expect(error).toBeInstanceOf(publicApi.ValidationError);
-    expect(error.message).toBe('test message');
-  });
+  // ValidationError test removed - class no longer exported (removed in Phase 1 Part 5)
 
   test('logger has expected methods', () => {
     expect(publicApi.logger).toHaveProperty('info');

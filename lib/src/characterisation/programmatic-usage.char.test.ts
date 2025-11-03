@@ -159,6 +159,8 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
    * Acceptance Criteria:
    * - Uses z.lazy() for circular references
    * - Named schema exported
+   *
+   * Note: Circular references require dereference mode to avoid stack overflow in SwaggerParser.bundle()
    */
   it('should handle circular references with z.lazy()', async () => {
     const spec: OpenAPIObject = {
@@ -183,6 +185,7 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
 
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: spec,
+      // Note: Pipeline uses bundle mode which preserves $refs, allowing proper circular ref handling with z.lazy()
       disableWriteToFile: true,
       options: { shouldExportAllSchemas: true }, // Export schemas even with no endpoints
     });
