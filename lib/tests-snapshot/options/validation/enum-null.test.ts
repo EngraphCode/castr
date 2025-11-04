@@ -23,12 +23,10 @@ test('enum-null', async () => {
         Null3: {
           type: 'string',
           enum: ['a', null],
-          nullable: true,
         },
         Null4: {
           type: 'string',
           enum: [null],
-          nullable: true,
         },
         Compound: {
           type: 'object',
@@ -140,22 +138,16 @@ test('enum-null', async () => {
           400: { description: "null with a string", schema: z.enum(["a", null]) },
           401: {
             description: "null with a string and nullable",
-            schema: z.enum(["a", null]).nullable(),
+            schema: z.enum(["a", null]),
           },
-          402: {
-            description: "null with nullable",
-            schema: z.literal(null).nullable(),
-          },
+          402: { description: "null with nullable", schema: z.literal(null) },
           403: { description: "object that references null", schema: Compound },
           400: { description: "null with a string", schema: z.enum(["a", null]) },
           401: {
             description: "null with a string and nullable",
-            schema: z.enum(["a", null]).nullable(),
+            schema: z.enum(["a", null]),
           },
-          402: {
-            description: "null with nullable",
-            schema: z.literal(null).nullable(),
-          },
+          402: { description: "null with nullable", schema: z.literal(null) },
           403: { description: "object that references null", schema: Compound },
         },
       },

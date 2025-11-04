@@ -2,6 +2,18 @@ import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
 import { getZodSchema } from '../../../src/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 
+// Helper to convert a schema property to nullable OpenAPI 3.1 style
+function convertToNullableProperty(prop: SchemaObject): SchemaObject {
+  const propType = prop.type;
+  if (propType === undefined) {
+    return prop;
+  }
+  const nullableType: SchemaObject['type'] = Array.isArray(propType)
+    ? [...propType, 'null']
+    : [propType, 'null'];
+  return { ...prop, type: nullableType };
+}
+
 test('schema-refiner', () => {
   const makeNullableIfNotRequired = (
     properties: SchemaObject['properties'],
@@ -15,11 +27,7 @@ test('schema-refiner', () => {
       if (!prop) {
         continue;
       }
-      if (isReferenceObject(prop)) {
-        modified[key] = prop;
-      } else {
-        modified[key] = { ...prop, nullable: true };
-      }
+      modified[key] = isReferenceObject(prop) ? prop : convertToNullableProperty(prop);
     }
     return modified;
   };
@@ -58,6 +66,6 @@ test('schema-refiner', () => {
       },
     }),
   ).toMatchInlineSnapshot(
-    '"z.object({ name: z.string().nullable(), email: z.string().nullable() }).partial().passthrough()"',
+    `"z.object({ name: z.union([z.string(), z.null()]).nullable(), email: z.union([z.string(), z.null()]).nullable() }).partial().passthrough()"`,
   );
 });

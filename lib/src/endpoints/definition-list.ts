@@ -39,10 +39,9 @@ export type EndpointDefinitionListResult = Required<
  *
  * @example Basic usage
  * ```typescript
- * import SwaggerParser from "@apidevtools/swagger-parser";
- * import { getEndpointDefinitionList } from "openapi-zod-client";
+ * import { prepareOpenApiDocument, getEndpointDefinitionList } from "openapi-zod-client";
  *
- * const openApiDoc = await SwaggerParser.parse("./openapi.yaml");
+ * const openApiDoc = await prepareOpenApiDocument("./openapi.yaml");
  * const endpoints = getEndpointDefinitionList(openApiDoc);
  *
  * // Each endpoint contains runtime Zod schemas:

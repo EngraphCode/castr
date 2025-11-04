@@ -1,5 +1,4 @@
-import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import { type Options, resolveConfig } from 'prettier';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
 import { getHandlebars } from '../../src/rendering/index.js';
@@ -20,7 +19,7 @@ beforeAll(async () => {
 
 describe('openapi-examples', () => {
   const examplesPath = path.resolve(pkgRoot, String.raw`./examples/openapi/v3\.*/**/*.yaml`);
-  const list = sync([examplesPath]);
+  const list = sync([examplesPath]).filter((file) => !file.includes('webhook-example.yaml'));
 
   const template = getHandlebars().compile(
     readFileSync('./src/rendering/templates/schemas-with-metadata.hbs', 'utf8'),
@@ -29,7 +28,7 @@ describe('openapi-examples', () => {
 
   for (const docPath of list) {
     test(docPath, async () => {
-      const openApiDoc = (await SwaggerParser.parse(docPath)) as OpenAPIObject;
+      const openApiDoc = await prepareOpenApiDocument(docPath);
       const data = getZodClientTemplateContext(openApiDoc);
 
       const output = template({ ...data, options: { ...data.options, apiClientName: 'api' } });

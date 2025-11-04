@@ -1412,19 +1412,27 @@ exports[`petstore.yaml 1`] = `
                 "Address": {
                     "properties": {
                         "city": {
-                            "example": "Palo Alto",
+                            "examples": [
+                                "Palo Alto",
+                            ],
                             "type": "string",
                         },
                         "state": {
-                            "example": "CA",
+                            "examples": [
+                                "CA",
+                            ],
                             "type": "string",
                         },
                         "street": {
-                            "example": "437 Lytton",
+                            "examples": [
+                                "437 Lytton",
+                            ],
                             "type": "string",
                         },
                         "zip": {
-                            "example": "94301",
+                            "examples": [
+                                "94301",
+                            ],
                             "type": "string",
                         },
                     },
@@ -1454,12 +1462,16 @@ exports[`petstore.yaml 1`] = `
                 "Category": {
                     "properties": {
                         "id": {
-                            "example": 1,
+                            "examples": [
+                                1,
+                            ],
                             "format": "int64",
                             "type": "integer",
                         },
                         "name": {
-                            "example": "Dogs",
+                            "examples": [
+                                "Dogs",
+                            ],
                             "type": "string",
                         },
                     },
@@ -1481,12 +1493,16 @@ exports[`petstore.yaml 1`] = `
                             },
                         },
                         "id": {
-                            "example": 100000,
+                            "examples": [
+                                100000,
+                            ],
                             "format": "int64",
                             "type": "integer",
                         },
                         "username": {
-                            "example": "fehguy",
+                            "examples": [
+                                "fehguy",
+                            ],
                             "type": "string",
                         },
                     },
@@ -1501,17 +1517,23 @@ exports[`petstore.yaml 1`] = `
                             "type": "boolean",
                         },
                         "id": {
-                            "example": 10,
+                            "examples": [
+                                10,
+                            ],
                             "format": "int64",
                             "type": "integer",
                         },
                         "petId": {
-                            "example": 198772,
+                            "examples": [
+                                198772,
+                            ],
                             "format": "int64",
                             "type": "integer",
                         },
                         "quantity": {
-                            "example": 7,
+                            "examples": [
+                                7,
+                            ],
                             "format": "int32",
                             "type": "integer",
                         },
@@ -1526,7 +1548,9 @@ exports[`petstore.yaml 1`] = `
                                 "approved",
                                 "delivered",
                             ],
-                            "example": "approved",
+                            "examples": [
+                                "approved",
+                            ],
                             "type": "string",
                         },
                     },
@@ -1541,12 +1565,16 @@ exports[`petstore.yaml 1`] = `
                             "$ref": "#/components/schemas/Category",
                         },
                         "id": {
-                            "example": 10,
+                            "examples": [
+                                10,
+                            ],
                             "format": "int64",
                             "type": "integer",
                         },
                         "name": {
-                            "example": "doggie",
+                            "examples": [
+                                "doggie",
+                            ],
                             "type": "string",
                         },
                         "photoUrls": {
@@ -1607,38 +1635,54 @@ exports[`petstore.yaml 1`] = `
                 "User": {
                     "properties": {
                         "email": {
-                            "example": "john@email.com",
+                            "examples": [
+                                "john@email.com",
+                            ],
                             "type": "string",
                         },
                         "firstName": {
-                            "example": "John",
+                            "examples": [
+                                "John",
+                            ],
                             "type": "string",
                         },
                         "id": {
-                            "example": 10,
+                            "examples": [
+                                10,
+                            ],
                             "format": "int64",
                             "type": "integer",
                         },
                         "lastName": {
-                            "example": "James",
+                            "examples": [
+                                "James",
+                            ],
                             "type": "string",
                         },
                         "password": {
-                            "example": "12345",
+                            "examples": [
+                                "12345",
+                            ],
                             "type": "string",
                         },
                         "phone": {
-                            "example": "12345",
+                            "examples": [
+                                "12345",
+                            ],
                             "type": "string",
                         },
                         "userStatus": {
                             "description": "User Status",
-                            "example": 1,
+                            "examples": [
+                                1,
+                            ],
                             "format": "int32",
                             "type": "integer",
                         },
                         "username": {
-                            "example": "theUser",
+                            "examples": [
+                                "theUser",
+                            ],
                             "type": "string",
                         },
                     },
@@ -1694,7 +1738,7 @@ Some useful links:
             "title": "Swagger Petstore - OpenAPI 3.0",
             "version": "1.0.11",
         },
-        "openapi": "3.0.3",
+        "openapi": "3.1.1",
         "paths": {
             "/pet": {
                 "post": {
@@ -2113,12 +2157,7 @@ Some useful links:
                     ],
                     "requestBody": {
                         "content": {
-                            "application/octet-stream": {
-                                "schema": {
-                                    "format": "binary",
-                                    "type": "string",
-                                },
-                            },
+                            "application/octet-stream": {},
                         },
                     },
                     "responses": {
@@ -2609,6 +2648,7 @@ Some useful links:
                 "name": "user",
             },
         ],
+        "x-ext-urls": {},
     },
     "endpoints": [
         {
@@ -2794,12 +2834,6 @@ Some useful links:
             "method": "post",
             "parameters": [
                 {
-                    "description": "",
-                    "name": "body",
-                    "schema": "z.instanceof(File)",
-                    "type": "Body",
-                },
-                {
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -2811,7 +2845,7 @@ Some useful links:
                 },
             ],
             "path": "/pet/:petId/uploadImage",
-            "requestFormat": "binary",
+            "requestFormat": "json",
             "response": "ApiResponse",
         },
         {

@@ -1,4 +1,4 @@
-import SwaggerParser from '@apidevtools/swagger-parser';
+import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import type { OpenAPIObject, SchemasObject } from 'openapi3-ts/oas31';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
@@ -7,7 +7,7 @@ import { pathToVariableName } from '../../src/shared/utils/index.js';
 
 let openApiDoc: OpenAPIObject;
 beforeAll(async () => {
-  openApiDoc = (await SwaggerParser.parse('./examples/swagger/petstore.yaml')) as OpenAPIObject;
+  openApiDoc = await prepareOpenApiDocument('./examples/swagger/petstore.yaml');
 });
 
 test('getZodClientTemplateContext', () => {

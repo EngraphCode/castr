@@ -79,6 +79,31 @@ function isMixedEnumArray(arr: readonly unknown[]): arr is (string | number | bo
 }
 
 /**
+ * Checks if a schema allows null values (OpenAPI 3.1 style).
+ *
+ * In OpenAPI 3.1, nullable is expressed as `type: ['string', 'null']`
+ * rather than the OpenAPI 3.0 `nullable: true` property.
+ *
+ * @param schema - The schema object to check
+ * @returns true if the schema's type array includes 'null'
+ *
+ * @example
+ * ```typescript
+ * isNullableType({ type: ['string', 'null'] }) // true
+ * isNullableType({ type: 'string' }) // false
+ * isNullableType({ type: ['number', 'null'] }) // true
+ * ```
+ *
+ * @public
+ */
+export function isNullableType(schema: SchemaObject): boolean {
+  if (Array.isArray(schema.type)) {
+    return schema.type.includes('null');
+  }
+  return schema.type === 'null';
+}
+
+/**
  * Determine enum type and generate TypeScript union string
  * @internal
  */
@@ -110,12 +135,12 @@ export function handlePrimitiveEnum(
 
   // Invalid: non-string type with string enum values
   if (schemaType !== 'string' && schema.enum.some((e) => typeof e === 'string')) {
-    return schema.nullable ? 'never | null' : 'never';
+    return isNullableType(schema) ? 'never | null' : 'never';
   }
 
   const enumValues = schema.enum;
   const hasNull = enumValues.includes(null);
-  const isNullable = schema.nullable || hasNull;
+  const isNullable = isNullableType(schema) || hasNull;
 
   // Filter out null values for processing
   const withoutNull = enumValues.filter((e) => e !== null);

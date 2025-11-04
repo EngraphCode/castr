@@ -205,30 +205,30 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(`"export type StringAndNumber = string & number;"`);
 
   expect(
-    getSchemaAsTsString({ nullable: true, anyOf: [{ type: 'string' }, { type: 'number' }] }),
-  ).toMatchInlineSnapshot(`"(string | number | Array<string | number>) | null"`);
+    getSchemaAsTsString({ anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
+  ).toMatchInlineSnapshot(`"string | number | null | Array<string | number | null>"`);
   expect(
-    getSchemaAsTsString({ nullable: true, oneOf: [{ type: 'string' }, { type: 'number' }] }),
-  ).toMatchInlineSnapshot(`"(string | number) | null"`);
+    getSchemaAsTsString({ oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
+  ).toMatchInlineSnapshot(`"string | number | null"`);
   expect(
     getSchemaAsTsString(
-      { nullable: true, oneOf: [{ type: 'string' }, { type: 'number' }] },
+      { oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       { name: 'StringOrNumber' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringOrNumber = (string | number) | null;"`);
+  ).toMatchInlineSnapshot(`"export type StringOrNumber = string | number | null;"`);
 
   expect(
-    getSchemaAsTsString({ nullable: true, allOf: [{ type: 'string' }, { type: 'number' }] }),
-  ).toMatchInlineSnapshot('"(string & number) | null"');
+    getSchemaAsTsString({ allOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
+  ).toMatchInlineSnapshot(`"string & number & null"`);
   expect(
     getSchemaAsTsString(
-      { nullable: true, allOf: [{ type: 'string' }, { type: 'number' }] },
+      { allOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       { name: 'StringAndNumber' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringAndNumber = (string & number) | null;"`);
+  ).toMatchInlineSnapshot(`"export type StringAndNumber = string & number & null;"`);
   expect(
-    getSchemaAsTsString({ nullable: true, anyOf: [{ type: 'string' }, { type: 'number' }] }),
-  ).toMatchInlineSnapshot(`"(string | number | Array<string | number>) | null"`);
+    getSchemaAsTsString({ anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
+  ).toMatchInlineSnapshot(`"string | number | null | Array<string | number | null>"`);
   expect(
     getSchemaAsTsString(
       { anyOf: [{ type: 'string' }, { type: 'number' }] },
@@ -280,16 +280,13 @@ test('getSchemaAsTsString', () => {
         required: ['propNumber', 'propString', 'propBoolean'],
         properties: {
           propNumber: {
-            type: ['number'],
-            nullable: true,
+            type: ['number', 'null'],
           },
           propString: {
-            type: ['string'],
-            nullable: true,
+            type: ['string', 'null'],
           },
           propBoolean: {
-            type: ['boolean'],
-            nullable: true,
+            type: ['boolean', 'null'],
           },
         },
       },
@@ -839,47 +836,47 @@ test('getSchemaAsTsString with readonly', () => {
 
   expect(
     getSchemaAsTsString(
-      { nullable: true, anyOf: [{ type: 'string' }, { type: 'number' }] },
+      { anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       undefined,
       options,
     ),
-  ).toMatchInlineSnapshot(`"(string | number | readonly (string | number)[]) | null"`);
+  ).toMatchInlineSnapshot(`"string | number | null | readonly (string | number | null)[]"`);
   expect(
     getSchemaAsTsString(
-      { nullable: true, oneOf: [{ type: 'string' }, { type: 'number' }] },
+      { oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       undefined,
       options,
     ),
-  ).toMatchInlineSnapshot(`"(string | number) | null"`);
+  ).toMatchInlineSnapshot(`"string | number | null"`);
   expect(
     getSchemaAsTsString(
-      { nullable: true, oneOf: [{ type: 'string' }, { type: 'number' }] },
+      { oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       { name: 'StringOrNumber' },
       options,
     ),
-  ).toMatchInlineSnapshot(`"export type StringOrNumber = (string | number) | null;"`);
+  ).toMatchInlineSnapshot(`"export type StringOrNumber = string | number | null;"`);
 
   expect(
     getSchemaAsTsString(
-      { nullable: true, allOf: [{ type: 'string' }, { type: 'number' }] },
+      { allOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       undefined,
       options,
     ),
-  ).toMatchInlineSnapshot('"(string & number) | null"');
+  ).toMatchInlineSnapshot(`"string & number & null"`);
   expect(
     getSchemaAsTsString(
-      { nullable: true, allOf: [{ type: 'string' }, { type: 'number' }] },
+      { allOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       { name: 'StringAndNumber' },
       options,
     ),
-  ).toMatchInlineSnapshot(`"export type StringAndNumber = (string & number) | null;"`);
+  ).toMatchInlineSnapshot(`"export type StringAndNumber = string & number & null;"`);
   expect(
     getSchemaAsTsString(
-      { nullable: true, anyOf: [{ type: 'string' }, { type: 'number' }] },
+      { anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       undefined,
       options,
     ),
-  ).toMatchInlineSnapshot(`"(string | number | readonly (string | number)[]) | null"`);
+  ).toMatchInlineSnapshot(`"string | number | null | readonly (string | number | null)[]"`);
   expect(
     getSchemaAsTsString(
       { anyOf: [{ type: 'string' }, { type: 'number' }] },
@@ -934,16 +931,13 @@ test('getSchemaAsTsString with readonly', () => {
         required: ['propNumber', 'propString', 'propBoolean'],
         properties: {
           propNumber: {
-            type: ['number'],
-            nullable: true,
+            type: ['number', 'null'],
           },
           propString: {
-            type: ['string'],
-            nullable: true,
+            type: ['string', 'null'],
           },
           propBoolean: {
-            type: ['boolean'],
-            nullable: true,
+            type: ['boolean', 'null'],
           },
         },
       },

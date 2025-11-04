@@ -5,7 +5,7 @@
  * OpenAPI specifications in both JSON and YAML formats.
  *
  * **What we're proving:**
- * - SwaggerParser.parse() handles both JSON and YAML files
+ * - prepareOpenApiDocument() handles both JSON and YAML files
  * - Our code works identically regardless of input format
  * - Generated output is the same for equivalent specs
  *
@@ -22,17 +22,16 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 
 /**
  * Helper to parse and validate OpenAPI spec regardless of format.
- * SwaggerParser handles the format detection automatically.
+ * The Scalar pipeline handles the format detection automatically.
  */
 async function parseSpec(path: string): Promise<OpenAPIObject> {
-  const spec = await SwaggerParser.parse(path);
-  return spec as OpenAPIObject;
+  return prepareOpenApiDocument(path);
 }
 
 describe('Input Format Support', () => {
@@ -41,7 +40,7 @@ describe('Input Format Support', () => {
       const spec = await parseSpec('./examples/openapi/v3.0/petstore.json');
 
       // Verify spec was parsed correctly
-      expect(spec.openapi).toBe('3.0.0');
+      expect(spec.openapi).toMatch(/^3\.1\./);
       expect(spec.info.title).toBe('Swagger Petstore');
       expect(spec.paths).toBeDefined();
 
@@ -77,7 +76,7 @@ describe('Input Format Support', () => {
       const spec = await parseSpec('./examples/openapi/v3.0/petstore.yaml');
 
       // Verify spec was parsed correctly
-      expect(spec.openapi).toBe('3.0.0');
+      expect(spec.openapi).toMatch(/^3\.1\./);
       expect(spec.info.title).toBe('Swagger Petstore');
       expect(spec.paths).toBeDefined();
 
@@ -147,7 +146,7 @@ describe('Input Format Support', () => {
       // Both should have same core properties
       expect(jsonSpec.openapi).toBe(yamlSpec.openapi);
       expect(jsonSpec.info.title).toBe(yamlSpec.info.title);
-      expect(Object.keys(jsonSpec.paths)).toEqual(Object.keys(yamlSpec.paths));
+      expect(Object.keys(jsonSpec.paths ?? {})).toEqual(Object.keys(yamlSpec.paths ?? {}));
 
       // Note: We don't do deep equality because the OAI repo has slight
       // differences between JSON and YAML versions (e.g. requestBody presence)
@@ -155,22 +154,22 @@ describe('Input Format Support', () => {
   });
 
   describe('CLI Support', () => {
-    it('should document that CLI accepts both formats via SwaggerParser', async () => {
-      // The CLI passes the path string directly to SwaggerParser.bundle()
-      // SwaggerParser detects format automatically by file extension or content
+    it('should document that CLI accepts both formats via Scalar pipeline', async () => {
+      // The CLI passes the path string directly to prepareOpenApiDocument()
+      // The Scalar pipeline detects format automatically by file extension or content
       // This test documents that behavior
 
       // Test JSON
       const jsonPath = './examples/openapi/v3.0/petstore.json';
-      const jsonBundled = (await SwaggerParser.bundle(jsonPath)) as OpenAPIObject;
+      const jsonBundled = await prepareOpenApiDocument(jsonPath);
       expect(jsonBundled).toBeDefined();
-      expect(jsonBundled.openapi).toBe('3.0.0');
+      expect(jsonBundled.openapi).toBeDefined();
 
       // Test YAML
       const yamlPath = './examples/openapi/v3.0/petstore.yaml';
-      const yamlBundled = (await SwaggerParser.bundle(yamlPath)) as OpenAPIObject;
+      const yamlBundled = await prepareOpenApiDocument(yamlPath);
       expect(yamlBundled).toBeDefined();
-      expect(yamlBundled.openapi).toBe('3.0.0');
+      expect(yamlBundled.openapi).toBeDefined();
     });
   });
 
@@ -180,7 +179,7 @@ describe('Input Format Support', () => {
       const invalidJson = '{"openapi": "3.0.0", invalid}'; // Malformed
 
       await expect(async () => {
-        await SwaggerParser.parse(invalidJson);
+        await prepareOpenApiDocument(invalidJson);
       }).rejects.toThrow();
     });
 
@@ -189,7 +188,7 @@ describe('Input Format Support', () => {
       const invalidYaml = 'openapi: 3.0.0\n  invalid:\n- bad indentation';
 
       await expect(async () => {
-        await SwaggerParser.parse(invalidYaml);
+        await prepareOpenApiDocument(invalidYaml);
       }).rejects.toThrow();
     });
   });

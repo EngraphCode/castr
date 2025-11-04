@@ -178,128 +178,177 @@ Each session is designed to be self-contained, follow TDD, and minimise context 
   2. `pnpm test --filter characterisation -- load` (targeted characterisation that exercises new loader)
   3. Manual smoke: run CLI against a multi-file spec (`pnpm openapi-zod-validation tests/petstore.yaml -o /tmp/out.ts`) and inspect bundle metadata logs.
 
-#### **Session 3 – Type System Cleanup & Test Modernization**
+#### **Session 3 – Complete Technical Resolution (All Green)**
 
-- **Focus:** Eliminate ALL 3.0 type assumptions, fix ALL type/lint errors, modernize test fixtures to 3.1.
+- **Focus:** Eliminate ALL type/lint errors, modernize ALL test fixtures to 3.1, migrate ALL SwaggerParser tests to Scalar pipeline.
 - **Current State:** 77 type errors across 21 files, 18 lint errors across 10 files
+- **Target State:** 0 type errors, 0 lint errors, ALL tests passing with working code
 
-**Implementation Summary:**
-1. **Create helper function** for 3.1 nullable checks → fixes 8 source + 8 lint errors
-2. **Modernize test fixtures** with search-replace patterns → fixes 47 type errors
-3. **Fix Vitest v4 mocks** with proper generic syntax → fixes 16 type errors
-4. **Skip/rewrite SwaggerParser tests** → fixes 9 type + 9 lint errors
-5. **Add undefined guards** for optional 3.1 properties → fixes 5 type errors
+**Implementation Strategy:**
 
-- **Acceptance Criteria**
-  
-  **A. TypeScript Conversion Cleanup (8 source errors + 8 lint errors)**
-  - **Strategy:** Create a helper function to check nullability in 3.1 style, reuse across all converters
-  - Remove all `schema.nullable` checks from `lib/src/conversion/typescript/` files (8 type errors):
-    - `core.converters.ts`: 5 occurrences (lines 57, 84, 103, 148, 166)
-    - `helpers.composition.ts`: 1 occurrence (line 36)
-    - `helpers.primitives.ts`: 2 occurrences (lines 113, 118)
-  - **Implementation pattern:**
-    ```typescript
-    // Helper function (add to helpers.primitives.ts or new helpers.types.ts)
-    function isNullableType(schema: SchemaObject): boolean {
-      const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
-      return types.includes('null');
-    }
-    
-    // Replace: schema.nullable ?? false
-    // With: isNullableType(schema)
-    ```
-  
-  **B. Test Fixture Modernization (47 type errors in test files)**
-  - **Strategy:** Systematic search-replace across test files to modernize OpenAPI 3.0 fixtures to 3.1
-  - **Pattern 1 - Nullable types:**
-    ```typescript
-    // Before (3.0): { type: 'string', nullable: true }
-    // After (3.1):  { type: ['string', 'null'] }
-    ```
-  - **Pattern 2 - Exclusive bounds:**
-    ```typescript
-    // Before (3.0): { minimum: 5, exclusiveMinimum: true }
-    // After (3.1):  { exclusiveMinimum: 5 }
-    
-    // Before (3.0): { maximum: 10, exclusiveMaximum: false }
-    // After (3.1):  { maximum: 10 }
-    ```
-  - Files requiring updates (47 occurrences total):
-    - `tests-snapshot/utilities/openApiToTypescript.test.ts`: 18 errors (nullable)
-    - `tests-snapshot/utilities/openApiToZod.test.ts`: 4 errors (nullable)
-    - `tests-snapshot/options/validation/validations.test.ts`: 7 errors (6 exclusive bounds + 1 nullable)
-    - `tests-snapshot/options/validation/enum-null.test.ts`: 2 errors (nullable)
-    - `tests-snapshot/edge-cases/missing-zod-chains.test.ts`: 2 errors (nullable)
-    - `src/conversion/typescript/helpers.test.ts`: 3 errors (nullable)
-    - `src/characterisation/edge-cases.char.test.ts`: 1 error (nullable)
-    - `tests-snapshot/schemas/references/schema-refiner.test.ts`: 1 error (nullable)
-  
-  **C. Load Document Test Fixes (16 type errors)**
-  - **Strategy:** Fix Vitest v4 mock typing - use proper generic syntax and infer types from library
-  - **Implementation steps:**
-    1. Change `vi.fn<[params], ReturnType>()` → `vi.fn<ReturnType>()` (Vitest v4 syntax)
-    2. Remove manual `BundleConfig` interface, use `Parameters<typeof bundle>[1]` directly
-    3. Fix plugin exec calls - cast to `LoaderPlugin` type explicitly: `(plugin as LoaderPlugin).exec(...)`
-    4. Update `expectBundleConfig` to use inferred config type: `config: Parameters<typeof bundle>[1]`
-  - Files: `lib/src/shared/load-openapi-document.test.ts` (16 errors total)
-  
-  **D. SwaggerParser Test Cleanup (9 type errors + 9 lint errors)**
-  - **Strategy:** Skip or rewrite tests using removed SwaggerParser dependency
-  - **Option 1 (Quick):** Add `describe.skip()` or `it.skip()` to affected tests with TODO comments for Session 4
-  - **Option 2 (Better):** Rewrite tests to use `prepareOpenApiDocument` (which now uses Scalar internally)
-  - **Files to address:**
-    - Characterisation (3 files): `bundled-spec-assumptions.char.test.ts`, `input-format.char.test.ts`, `programmatic-usage.char.test.ts`
-    - Integration (6 files): `generateZodClientFromOpenAPI.test.ts`, `getEndpointDefinitionList.test.ts`, `getOpenApiDependencyGraph.test.ts`, `samples.test.ts`, `group-strategy.test.ts`, `ref-in-another-file.test.ts`
-  - **Also remove:** 2 unused `@ts-expect-error` directives (now obsolete since SwaggerParser is gone)
-  
-  **E. Strict Type Safety (5 type errors)**
-  - **Strategy:** Add proper undefined checks for optional OpenAPI 3.1 properties
-  - **Implementation pattern:**
-    ```typescript
-    // Before: operation.responses['200']
-    // After:  operation.responses?.['200']
-    
-    // Before: Object.keys(spec.paths)
-    // After:  Object.keys(spec.paths ?? {})
-    
-    // Before: interface BundleResult { [key: string]: unknown; }
-    // After:  type BundleResult = Record<string, unknown>; // (with eslint-disable comment if needed)
-    ```
-  - Files:
-    - `bundled-spec-assumptions.char.test.ts`: 2 errors (add `?.` for `operation.responses`)
-    - `input-format.char.test.ts`: 2 errors (add `?? {}` for `spec.paths`)
-    - `load-openapi-document.test.ts`: 1 lint error (change index signature to Record type)
-  
-  **F. Quality Gates**
-  - **Zero tolerance:** NO `@ts-expect-error` pragmas allowed in source code
-  - `pnpm type-check` → 0 errors
-  - `pnpm lint` → 0 errors  
-  - `pnpm test -- load-openapi-document.test.ts` → all pass
-  - Document test coverage gaps for Session 4
-  
-- **Validation Steps**
-  1. `pnpm type-check` → must show "Found 0 errors"
-  2. `pnpm lint` → must show "✖ 0 problems"
-  3. `pnpm test -- load-openapi-document.test.ts` → all pass
-  4. `pnpm test` → run full suite, document any failures for Session 4
-  5. Commit with message documenting all 77 type errors and 18 lint errors resolved
+This session achieves complete technical resolution by fixing all source code, modernizing all test fixtures, and migrating all tests to the Scalar pipeline. The work is systematic with clear patterns.
 
-#### **Session 4 – Integration & Cleanup**
+**A. TypeScript Conversion Cleanup (16 errors: 8 source + 8 lint)**
 
-- **Focus:** Remove legacy pipeline, satisfy guard, and update documentation.
-- **Acceptance Criteria**
-  - `prepareOpenApiDocument` replaced entirely by the new pipeline (no feature flags, no compatibility layer).
-  - Guard passes: no source imports of `@apidevtools/swagger-parser` or legacy `openapi-types`; dependencies removed from `lib/package.json`.
-  - Full characterisation and unit suite green.
-  - README/API docs updated to explain new options (`--sanitize`, `--upgrade`) and pipeline behaviour.
-  - Follow-up items (e.g., future json-magic enhancements) captured in TODO/backlog.
-- **Validation Steps**
-  1. `pnpm test -- --run` (full suite)
-  2. `pnpm lint`
-  3. `pnpm type-check`
-  4. Verify guard (`pnpm test:scalar-guard`) now passes.
-  5. Manual CLI smoke tests (local file, remote URL, pre-parsed object) documented in release notes.
+**Strategy:** Create helper function for 3.1 nullable checks, replace all `schema.nullable` usage
+
+**Steps:**
+1. Add `isNullableType()` helper to `lib/src/conversion/typescript/helpers.primitives.ts`:
+   ```typescript
+   /**
+    * Checks if a schema allows null values (OpenAPI 3.1 style).
+    * In OpenAPI 3.1, nullable is expressed as `type: ['string', 'null']`.
+    * 
+    * @param schema - The schema to check
+    * @returns true if the schema type array includes 'null'
+    */
+   export function isNullableType(schema: SchemaObject): boolean {
+     const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
+     return types.includes('null');
+   }
+   ```
+
+2. Replace `schema.nullable ?? false` with `isNullableType(schema)` in:
+   - `lib/src/conversion/typescript/core.converters.ts`: 5 occurrences (lines 57, 84, 103, 148, 166)
+   - `lib/src/conversion/typescript/helpers.composition.ts`: 1 occurrence (line 36)
+   - `lib/src/conversion/typescript/helpers.primitives.ts`: 2 occurrences (lines 113, 118)
+
+3. Add import: `import { isNullableType } from './helpers.primitives.js';` where needed
+
+**B. Test Fixture Modernization (47 type errors)**
+
+**Strategy:** Systematic search-replace patterns across test files
+
+**Pattern 1 - Nullable types:**
+```typescript
+// Find:    { type: 'string', nullable: true }
+// Replace: { type: ['string', 'null'] }
+```
+
+**Pattern 2 - Exclusive bounds (boolean → number):**
+```typescript
+// Find:    { minimum: N, exclusiveMinimum: true }
+// Replace: { exclusiveMinimum: N }
+
+// Find:    { maximum: N, exclusiveMaximum: false }
+// Replace: { maximum: N }
+```
+
+**Files to update (47 occurrences):**
+- `tests-snapshot/utilities/openApiToTypescript.test.ts`: 18 errors (nullable)
+- `tests-snapshot/utilities/openApiToZod.test.ts`: 4 errors (nullable)
+- `tests-snapshot/options/validation/validations.test.ts`: 7 errors (6 exclusive bounds + 1 nullable)
+- `tests-snapshot/options/validation/enum-null.test.ts`: 2 errors (nullable)
+- `tests-snapshot/edge-cases/missing-zod-chains.test.ts`: 2 errors (nullable)
+- `src/conversion/typescript/helpers.test.ts`: 3 errors (nullable)
+- `src/characterisation/edge-cases.char.test.ts`: 1 error (nullable)
+- `tests-snapshot/schemas/references/schema-refiner.test.ts`: 1 error (nullable)
+
+**C. Vitest v4 Mock Fixes (16 type errors)**
+
+**Strategy:** Update to Vitest v4 generic syntax, infer types from library
+
+**File:** `lib/src/shared/load-openapi-document.test.ts`
+
+**Changes:**
+1. Change `vi.fn<[params], ReturnType>()` → `vi.fn<ReturnType>()`
+2. Remove manual `BundleConfig` interface, use: `Parameters<typeof bundle>[1]`
+3. Fix plugin exec calls with explicit cast: `(plugin as LoaderPlugin).exec(...)`
+4. Update `expectBundleConfig` signature: `config: Parameters<typeof bundle>[1]`
+
+**D. SwaggerParser Test Migration (18 errors: 9 type + 9 lint)**
+
+**Strategy:** Rewrite all tests to use `prepareOpenApiDocument` (which now uses Scalar internally)
+
+**Critical characterisation tests (3 files):**
+- `lib/src/characterisation/bundled-spec-assumptions.char.test.ts`
+- `lib/src/characterisation/input-format.char.test.ts`
+- `lib/src/characterisation/programmatic-usage.char.test.ts`
+
+**Integration tests (6 files):**
+- `lib/tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts`
+- `lib/tests-snapshot/integration/getEndpointDefinitionList.test.ts`
+- `lib/tests-snapshot/integration/getOpenApiDependencyGraph.test.ts`
+- `lib/tests-snapshot/integration/samples.test.ts`
+- `lib/tests-snapshot/options/generation/group-strategy.test.ts`
+- `lib/tests-snapshot/schemas/references/ref-in-another-file.test.ts`
+
+**Migration pattern:**
+```typescript
+// Before:
+import SwaggerParser from '@apidevtools/swagger-parser';
+const doc = await SwaggerParser.parse('./spec.yaml');
+
+// After:
+import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
+const doc = await prepareOpenApiDocument({ input: './spec.yaml' });
+```
+
+**Also:**
+- Remove 2 unused `@ts-expect-error` directives (obsolete with SwaggerParser gone)
+- Update JSDoc example in `lib/src/endpoints/definition-list.ts` (line 42)
+
+**E. Undefined Guards (5 type errors)**
+
+**Strategy:** Add optional chaining for OpenAPI 3.1 optional properties
+
+**Changes:**
+- `bundled-spec-assumptions.char.test.ts`: Add `?.` for `operation.responses` (2 occurrences)
+- `input-format.char.test.ts`: Add `?? {}` for `spec.paths` (2 occurrences)
+- `load-openapi-document.test.ts`: Change index signature to `Record<string, unknown>` (1 lint error)
+
+**Pattern:**
+```typescript
+// Before: operation.responses['200']
+// After:  operation.responses?.['200']
+
+// Before: Object.keys(spec.paths)
+// After:  Object.keys(spec.paths ?? {})
+```
+
+**Acceptance Criteria:**
+- ✅ `pnpm type-check` → 0 errors
+- ✅ `pnpm lint` → 0 errors
+- ✅ `pnpm test -- --run` → ALL tests passing
+- ✅ NO `@ts-expect-error` pragmas in source code
+- ✅ All test fixtures use 3.1 syntax
+- ✅ All tests use Scalar pipeline (no SwaggerParser)
+
+**Validation Steps:**
+1. `pnpm type-check` → must show "Found 0 errors"
+2. `pnpm lint` → must show "✖ 0 problems"
+3. `pnpm test -- --run` → must show all green
+4. `pnpm format && pnpm build` → must pass
+5. Commit with message: "feat(types): complete OpenAPI 3.1 migration - resolve all type/lint errors"
+
+**Estimated Effort:** 5-7 hours (systematic work with clear patterns)
+
+#### **Session 4 – Documentation & Final Cleanup**
+
+- **Focus:** Update all documentation, remove guard, document follow-ups
+- **Prerequisites:** Session 3 complete (all tests green, 0 errors)
+
+**Acceptance Criteria:**
+- Remove SwaggerParser guard test (`lib/src/validation/scalar-guard.test.ts`) - no longer needed
+- Update README.md with:
+  - New Scalar pipeline architecture
+  - OpenAPI 3.1-first approach
+  - Migration guide for SwaggerParser users
+  - New CLI options (`--sanitize`, `--upgrade`)
+- Update API documentation (TypeDoc/JSDoc validation)
+- Update examples to use `prepareOpenApiDocument`
+- Document follow-up enhancements in TODO/backlog:
+  - Partial bundling optimization
+  - Incremental fetch for large specs
+  - Enhanced validation error messages
+
+**Validation Steps:**
+1. `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test -- --run` → all green
+2. Documentation builds without warnings
+3. Manual CLI smoke tests (local file, remote URL, pre-parsed object)
+4. Commit with message: "docs: update for Scalar pipeline and OpenAPI 3.1"
+
+**Estimated Effort:** 2-3 hours
 
 ### Deliverables
 

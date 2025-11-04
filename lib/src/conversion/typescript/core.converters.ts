@@ -19,6 +19,7 @@ import {
   handleReferenceObject,
   handleTypeArray,
   isPrimitiveSchemaType,
+  isNullableType,
 } from './helpers.js';
 import { handleIntersection, wrapNullable } from './string-helpers.js';
 
@@ -54,7 +55,7 @@ export function handleTypeArraySchema(
   if (!Array.isArray(schema.type)) {
     throw new Error('Schema type must be an array');
   }
-  return handleTypeArray(schema.type, schema, schema.nullable ?? false, (s) =>
+  return handleTypeArray(schema.type, schema, isNullableType(schema), (s) =>
     convertSchema(s, meta, ctx, options),
   );
 }
@@ -81,7 +82,7 @@ export function handleOneOfSchema(
   if (!schema.oneOf) {
     throw new Error('Schema must have oneOf property');
   }
-  return handleOneOf(schema.oneOf, schema.nullable ?? false, (s) =>
+  return handleOneOf(schema.oneOf, isNullableType(schema), (s) =>
     convertSchema(s, meta, ctx, options),
   );
 }
@@ -100,7 +101,7 @@ export function handleAnyOfSchema(
   if (!schema.anyOf) {
     throw new Error('Schema must have anyOf property');
   }
-  return handleAnyOf(schema.anyOf, schema.nullable ?? false, options?.allReadonly ?? false, (s) =>
+  return handleAnyOf(schema.anyOf, isNullableType(schema), options?.allReadonly ?? false, (s) =>
     convertSchema(s, meta, ctx, options),
   );
 }
@@ -145,7 +146,7 @@ export function handleAllOfSchema(
   }
 
   const intersection = handleIntersection(types);
-  return wrapNullable(intersection, schema.nullable ?? false);
+  return wrapNullable(intersection, isNullableType(schema));
 }
 
 /**
@@ -163,7 +164,7 @@ export function handlePrimitiveTypeSchema(schema: SchemaObject): string {
     return enumResult;
   }
 
-  return handleBasicPrimitive(schemaType, schema.nullable ?? false);
+  return handleBasicPrimitive(schemaType, isNullableType(schema));
 }
 
 /**

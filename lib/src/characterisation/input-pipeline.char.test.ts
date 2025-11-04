@@ -100,7 +100,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
     it('should validate and bundle file path input', async () => {
       const spec = await prepareOpenApiDocument('./examples/openapi/v3.0/petstore.yaml');
 
-      expect(spec.openapi).toMatch(/^3\.0\./);
+      expect(spec.openapi).toMatch(/^3\.1\./);
       expect(spec.info).toBeDefined();
       expect(spec.paths).toBeDefined();
       // Pipeline uses bundle mode to preserve internal $refs
@@ -122,7 +122,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const spec = await prepareOpenApiDocument(inputSpec);
 
       expect(spec).toBeDefined();
-      expect(spec.openapi).toBe('3.0.0');
+      expect(spec.openapi).toMatch(/^3\.1\./);
       // Pipeline uses bundle mode to preserve internal $refs
     });
 
@@ -136,7 +136,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       // OpenAPI 3.1.x is now supported
       const result = await prepareOpenApiDocument(spec31);
       expect(result).toBeDefined();
-      expect(result.openapi).toBe('3.1.0');
+      expect(result.openapi).toMatch(/^3\.1\./);
     });
 
     it('should reject malformed spec in helper', async () => {
@@ -155,7 +155,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const spec = await prepareOpenApiDocument('./examples/openapi/v3.0/petstore.yaml');
       // TypeScript should infer this as OpenAPIObject
       const typed: OpenAPIObject = spec;
-      expect(typed.openapi).toMatch(/^3\.0\./);
+      expect(typed.openapi).toMatch(/^3\.1\./);
     });
 
     it('should return OpenAPIObject from URL', async () => {
@@ -172,7 +172,7 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const inputSpec = createMinimalSpec();
       const spec = await prepareOpenApiDocument(inputSpec);
       const typed: OpenAPIObject = spec;
-      expect(typed.openapi).toBe('3.0.0');
+      expect(typed.openapi).toMatch(/^3\.1\./);
     });
   });
 });

@@ -312,19 +312,17 @@ test('getSchemaAsZodString', () => {
 });
 
 test('getSchemaWithChainableAsZodString', () => {
-  expect(getSchemaAsZodString({ type: 'string', nullable: true })).toMatchInlineSnapshot(
-    '"z.string()"',
+  expect(getSchemaAsZodString({ type: ['string', 'null'] })).toMatchInlineSnapshot(
+    `"z.union([z.string(), z.null()])"`,
   );
-  expect(getSchemaAsZodString({ type: 'string', nullable: false })).toMatchInlineSnapshot(
-    '"z.string()"',
-  );
+  expect(getSchemaAsZodString({ type: 'string' })).toMatchInlineSnapshot('"z.string()"');
 
+  expect(getSchemaAsZodString({ type: 'string' }, { isRequired: true })).toMatchInlineSnapshot(
+    '"z.string()"',
+  );
   expect(
-    getSchemaAsZodString({ type: 'string', nullable: false }, { isRequired: true }),
-  ).toMatchInlineSnapshot('"z.string()"');
-  expect(
-    getSchemaAsZodString({ type: 'string', nullable: true }, { isRequired: true }),
-  ).toMatchInlineSnapshot('"z.string()"');
+    getSchemaAsZodString({ type: ['string', 'null'] }, { isRequired: true }),
+  ).toMatchInlineSnapshot(`"z.union([z.string(), z.null()])"`);
 });
 
 test('CodeMeta with missing ref', () => {

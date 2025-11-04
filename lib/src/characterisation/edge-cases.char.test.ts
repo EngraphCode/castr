@@ -385,7 +385,7 @@ describe('Characterisation: Edge Cases', () => {
           type: 'object',
           properties: {
             id: { type: 'string' },
-            optionalField: { type: 'string', nullable: true },
+            optionalField: { type: ['string', 'null'] },
           },
         },
         {

@@ -106,7 +106,7 @@ describe('export-all-types', () => {
         Settings:
           'z.object({ theme_color: z.string(), features: Features.min(1) }).partial().passthrough()',
         Author:
-          'z.object({ name: z.union([z.string(), z.number()]).nullable(), title: Title.min(1).max(30), id: Id, mail: z.string(), settings: Settings }).partial().passthrough()',
+          'z.object({ name: z.union([z.string(), z.number()]), title: Title.min(1).max(30), id: Id, mail: z.string(), settings: Settings }).partial().passthrough()',
         Features: 'z.array(z.string())',
         Song: 'z.object({ name: z.string(), duration: z.number() }).partial().passthrough()',
         Playlist:
@@ -119,7 +119,6 @@ describe('export-all-types', () => {
           method: 'get',
           path: '/example',
           requestFormat: 'json',
-          description: undefined,
           parameters: [],
           errors: [],
           response: 'z.object({ playlist: Playlist, by_author: Author }).partial().passthrough()',
@@ -127,7 +126,7 @@ describe('export-all-types', () => {
       ],
       types: {
         Author:
-          'type Author = Partial<{ name: (string | null | number) | null; title: Title; id: Id; mail: string; settings: Settings }>;',
+          'type Author = Partial<{ name: string | number; title: Title; id: Id; mail: string; settings: Settings }>;',
         Playlist:
           'type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }> & Settings;',
         Settings: 'type Settings = Partial<{ theme_color: string; features: Features }>;',
@@ -163,7 +162,7 @@ describe('export-all-types', () => {
       type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }> &
         Settings;
       type Author = Partial<{
-        name: (string | null | number) | null;
+        name: (string | null) | null | number;
         title: Title;
         id: Id;
         mail: string;
@@ -184,7 +183,7 @@ describe('export-all-types', () => {
         .strict();
       export const Author: z.ZodType<Author> = z
         .object({
-          name: z.union([z.string(), z.number()]).nullable(),
+          name: z.union([z.union([z.string(), z.null()]), z.number()]),
           title: Title.min(1).max(30),
           id: Id,
           mail: z.string(),

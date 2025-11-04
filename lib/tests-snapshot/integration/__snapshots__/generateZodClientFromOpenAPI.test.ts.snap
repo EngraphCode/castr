@@ -151,7 +151,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -550,7 +549,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -768,7 +766,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -1171,7 +1168,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -1574,7 +1570,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -1977,7 +1972,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -2375,7 +2369,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
@@ -2773,12 +2766,6 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "post",
             "parameters": [
                 {
-                    "description": "",
-                    "name": "body",
-                    "schema": "z.instanceof(File)",
-                    "type": "Body",
-                },
-                {
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -2790,7 +2777,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
             ],
             "path": "/pet/:petId/uploadImage",
-            "requestFormat": "binary",
+            "requestFormat": "json",
             "response": "ApiResponse",
         },
         {
@@ -3219,12 +3206,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "post",
             "parameters": [
                 {
-                    "description": "",
-                    "name": "body",
-                    "schema": "z.instanceof(File)",
-                    "type": "Body",
-                },
-                {
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -3236,7 +3217,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
             ],
             "path": "/pet/:petId/uploadImage",
-            "requestFormat": "binary",
+            "requestFormat": "json",
             "response": "ApiResponse",
         },
         {

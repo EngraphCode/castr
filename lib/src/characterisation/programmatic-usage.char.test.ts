@@ -13,8 +13,8 @@
 
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import SwaggerParser from '@apidevtools/swagger-parser';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 
 /**
  * Type guard to assert that generateZodClientFromOpenAPI returned a string.
@@ -33,24 +33,15 @@ function assertIsString(value: unknown, context: string): asserts value is strin
 }
 
 /**
- * Type-safe wrapper around SwaggerParser.dereference().
+ * Wrapper around prepareOpenApiDocument that handles both file paths and objects.
  *
- * SwaggerParser uses openapi-types internally, but we use openapi3-ts throughout
- * this codebase. These types are structurally compatible (same properties) but
- * nominally different (different package origins).
+ * The Scalar pipeline (via prepareOpenApiDocument) automatically bundles and
+ * upgrades specs to OpenAPI 3.1, providing consistent dereferencing behavior.
  *
- * This wrapper explicitly handles the type boundary with `as unknown as` to avoid
- * lying about types while acknowledging this is a known-safe conversion.
- *
- * @param pathOrSpec - Either a file path string or an OpenAPIObject to dereference
+ * @param pathOrSpec - Either a file path string or an OpenAPIObject to process
  */
 async function dereferenceSpec(pathOrSpec: string | OpenAPIObject): Promise<OpenAPIObject> {
-  // @ts-expect-error TS2345 - SwaggerParser.dereference() accepts openapi-types, not openapi3-ts types
-  // Both are structurally compatible (same OpenAPI 3.0 spec), but TypeScript treats them as incompatible
-  const spec = await SwaggerParser.dereference(pathOrSpec as unknown);
-  // Explicit type boundary: openapi-types -> openapi3-ts
-  // Safe because both packages model the same OpenAPI 3.0 spec
-  return spec as unknown as OpenAPIObject;
+  return prepareOpenApiDocument(pathOrSpec);
 }
 
 /**
@@ -160,7 +151,7 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
    * - Uses z.lazy() for circular references
    * - Named schema exported
    *
-   * Note: Circular references require dereference mode to avoid stack overflow in SwaggerParser.bundle()
+   * Note: Circular references are handled by the Scalar pipeline's bundling process
    */
   it('should handle circular references with z.lazy()', async () => {
     const spec: OpenAPIObject = {
@@ -198,9 +189,9 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
 
 /**
  * Category 2: Programmatic Usage - After Dereferencing
- * Tests behavior when caller dereferences spec before passing to our API
+ * Tests behavior when caller processes spec before passing to our API
  */
-describe('E2E: Programmatic Usage - After SwaggerParser.dereference()', () => {
+describe('E2E: Programmatic Usage - After prepareOpenApiDocument()', () => {
   /**
    * Scenario 2.1 (P0): Caller dereferences spec before passing
    *
@@ -281,7 +272,7 @@ describe('E2E: Programmatic Usage - After SwaggerParser.dereference()', () => {
 /**
  * Category 3: CLI Usage
  * Tests that CLI behavior matches programmatic usage
- * Note: CLI automatically calls SwaggerParser.dereference() internally
+ * Note: CLI automatically calls prepareOpenApiDocument() internally
  */
 describe('E2E: CLI Usage', () => {
   /**
@@ -295,7 +286,7 @@ describe('E2E: CLI Usage', () => {
    * For now, we simulate CLI behavior (which auto-dereferences).
    */
   it('should handle external refs via CLI path', async () => {
-    // CLI automatically calls SwaggerParser.dereference()
+    // CLI automatically calls prepareOpenApiDocument()
     const spec = await dereferenceSpec('./examples/openapi/v3.0/petstore.yaml');
 
     const result = await generateZodClientFromOpenAPI({

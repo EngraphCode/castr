@@ -1,4 +1,4 @@
-import SwaggerParser from '@apidevtools/swagger-parser';
+import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { getEndpointDefinitionList } from '../../src/endpoints/index.js';
@@ -387,9 +387,7 @@ test('getEndpointDefinitionList /pet/findXXX', () => {
 });
 
 test('petstore.yaml', async () => {
-  const openApiDoc = (await SwaggerParser.parse(
-    './examples/swagger/petstore.yaml',
-  )) as OpenAPIObject;
+  const openApiDoc = await prepareOpenApiDocument('./examples/swagger/petstore.yaml');
   const result = getEndpointDefinitionList(openApiDoc);
   expect(result).toMatchSnapshot();
 });

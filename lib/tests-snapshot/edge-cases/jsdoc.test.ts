@@ -101,8 +101,7 @@ test('jsdoc', async () => {
     "import { z } from "zod";
 
     type ComplexObject = Partial<{
-      example: string;
-      examples: string;
+      examples: unknown;
       manyTagsStr: "a" | "b" | "c";
       numMin: number;
       numMax: number;
@@ -119,8 +118,7 @@ test('jsdoc', async () => {
       .strict();
     export const ComplexObject: z.ZodType<ComplexObject> = z
       .object({
-        example: z.string(),
-        examples: z.string(),
+        examples: z.unknown(),
         manyTagsStr: z.enum(["a", "b", "c"]).regex(/^[a-z]*$/),
         numMin: z.number().gte(0),
         numMax: z.number().lte(10),

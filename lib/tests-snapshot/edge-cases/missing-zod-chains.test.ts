@@ -18,11 +18,12 @@ test('missing-zod-chains', async () => {
             num: { type: 'integer', minimum: 10 },
           },
         },
-        nulltype: { type: 'object', nullable: true },
+        nulltype: { anyOf: [{ type: 'object' }, { type: 'null' }] },
         anyOfType: {
           anyOf: [
-            { type: 'object', nullable: true },
+            { type: 'object' },
             { type: 'object', properties: { foo: { type: 'string' } } },
+            { type: 'null' },
           ],
         },
       },
@@ -70,10 +71,11 @@ test('missing-zod-chains', async () => {
     export const test3 = z
       .object({ text: z.string().min(5), num: z.number().int().gte(10) })
       .strict();
-    export const nulltype = z.object({}).partial().strict();
+    export const nulltype = z.union([z.object({}).partial().strict(), z.null()]);
     export const anyOfType = z.union([
       z.object({}).partial().strict(),
       z.object({ foo: z.string() }).partial().strict(),
+      z.null(),
     ]);
 
     export const endpoints = [
@@ -94,10 +96,7 @@ test('missing-zod-chains', async () => {
               .object({ text: z.string().min(5), num: z.number().int().gte(10) })
               .strict(),
           },
-          403: {
-            description: "Successful operation",
-            schema: z.object({}).partial().strict().nullable(),
-          },
+          403: { description: "Successful operation", schema: nulltype },
           404: { description: "Successful operation", schema: anyOfType },
           401: {
             description: "Successful operation",
@@ -109,10 +108,7 @@ test('missing-zod-chains', async () => {
               .object({ text: z.string().min(5), num: z.number().int().gte(10) })
               .strict(),
           },
-          403: {
-            description: "Successful operation",
-            schema: z.object({}).partial().strict().nullable(),
-          },
+          403: { description: "Successful operation", schema: nulltype },
           404: { description: "Successful operation", schema: anyOfType },
         },
       },

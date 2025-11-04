@@ -1,5 +1,5 @@
 import { type OpenAPIObject, type SchemaObject } from 'openapi3-ts/oas31';
-import SwaggerParser from '@apidevtools/swagger-parser';
+import { prepareOpenApiDocument } from '../../../src/shared/prepare-openapi-document.js';
 import { expect, test } from 'vitest';
 
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../../src/index.js';
@@ -130,9 +130,7 @@ test('group-strategy', async () => {
 });
 
 test('group-strategy: tag-file with modified petstore schema', async () => {
-  const openApiDoc = (await SwaggerParser.parse(
-    './examples/swagger/petstore.yaml',
-  )) as OpenAPIObject;
+  const openApiDoc = await prepareOpenApiDocument('./examples/swagger/petstore.yaml');
 
   if (!openApiDoc.components?.schemas) {
     throw new Error('Expected openApiDoc to have components.schemas');

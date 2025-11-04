@@ -8,6 +8,7 @@
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import { wrapNullable, handleUnion } from './string-helpers.js';
+import { isNullableType } from './helpers.primitives.js';
 
 /**
  * Converts an array of schemas to TypeScript types
@@ -33,7 +34,7 @@ export function handleArraySchema(
 
   const arrayType = shouldWrapReadonly ? `readonly ${itemType}[]` : `Array<${itemType}>`;
 
-  return wrapNullable(arrayType, schema.nullable ?? false);
+  return wrapNullable(arrayType, isNullableType(schema));
 }
 
 /**

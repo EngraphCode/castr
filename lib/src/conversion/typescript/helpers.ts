@@ -13,6 +13,7 @@ import {
   handleBasicPrimitive,
   handlePrimitiveEnum,
   isPrimitiveSchemaType,
+  isNullableType,
   type PrimitiveSchemaType,
 } from './helpers.primitives.js';
 
@@ -33,6 +34,7 @@ export {
   handleBasicPrimitive,
   handlePrimitiveEnum,
   isPrimitiveSchemaType,
+  isNullableType,
   type PrimitiveSchemaType,
 };
 

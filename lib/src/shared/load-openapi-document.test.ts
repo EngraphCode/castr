@@ -5,14 +5,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { loadOpenApiDocument } from './load-openapi-document.js';
 
 // Interface for bundle result (Scalar returns loose object types)
+// We disable restricted-types here because BundleResult models Scalar's actual
+// loose return type - we validate it properly when converting to OpenAPIObject
+// eslint-disable-next-line @typescript-eslint/no-restricted-types
 type BundleResult = Record<string, unknown>;
-const bundleMock = vi.fn<[unknown, Parameters<typeof bundle>[1]], Promise<BundleResult>>();
 
 let currentReadFilesPlugin: LoaderPlugin;
 let currentFetchUrlsPlugin: LoaderPlugin;
 
+const bundleMock = vi.hoisted(() => vi.fn());
+
 vi.mock('@scalar/json-magic/bundle', () => ({
-  bundle: (...args: [unknown, Parameters<typeof bundle>[1]]) => bundleMock(...args),
+  bundle: bundleMock,
 }));
 
 vi.mock('@scalar/json-magic/bundle/plugins/node', () => ({
@@ -44,7 +48,7 @@ const createTrackingPlugin = (onExec: (value: string) => Promise<ResolveResult>)
   };
 };
 
-const expectBundleConfig = (config: BundleConfig): void => {
+const expectBundleConfig = (config: Parameters<typeof bundle>[1]): void => {
   expect(Array.isArray(config.plugins)).toBe(true);
 };
 
@@ -74,7 +78,7 @@ describe('loadOpenApiDocument', () => {
       if (!filePlugin) {
         throw new Error('File plugin is required');
       }
-      await filePlugin.exec(absoluteEntrypoint);
+      await (filePlugin as LoaderPlugin).exec(absoluteEntrypoint);
 
       return scalarDocument;
     });
@@ -111,9 +115,9 @@ describe('loadOpenApiDocument', () => {
       if (!filePlugin) {
         throw new Error('File plugin is required');
       }
-      await filePlugin.exec(referencedFile);
-      await filePlugin.exec(referencedFile);
-      await filePlugin.exec(anotherFile);
+      await (filePlugin as LoaderPlugin).exec(referencedFile);
+      await (filePlugin as LoaderPlugin).exec(referencedFile);
+      await (filePlugin as LoaderPlugin).exec(anotherFile);
       return scalarDocument;
     });
 
@@ -146,7 +150,7 @@ describe('loadOpenApiDocument', () => {
       if (!urlPlugin) {
         throw new Error('URL plugin is required');
       }
-      await urlPlugin.exec(entrypoint.toString());
+      await (urlPlugin as LoaderPlugin).exec(entrypoint.toString());
       return scalarDocument;
     });
 

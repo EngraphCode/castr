@@ -61,25 +61,25 @@ Downstream code (conversion, templates, etc.)
    - ✅ Exported new API surface with comprehensive TSDoc.
    - ✅ Updated `prepareOpenApiDocument` to use new Scalar pipeline internally.
 
-3. **Type System Cleanup & Test Modernization (⚠️ Ready to Start - Session 3)**
+3. **Complete Technical Resolution (⚠️ Ready to Start - Session 3 - Reorganized)**
    - **Current State:** 77 type errors across 21 files, 18 lint errors across 10 files
-   - **Strategy:** Detailed remediation plan in `PHASE-2-MCP-ENHANCEMENTS.md` Session 3
-   - Create helper function for 3.1 nullable checks (fixes 8 source + 8 lint errors)
+   - **Target State:** 0 type errors, 0 lint errors, ALL tests passing with working code
+   - **Strategy:** Complete all technical fixes in one comprehensive session (5-7 hours estimated)
+   - Create helper function for 3.1 nullable checks (fixes 16 errors)
    - Modernize test fixtures from 3.0 to 3.1 syntax (fixes 47 type errors)
    - Fix Vitest v4 mock typing in loader tests (fixes 16 type errors)
-   - Skip/rewrite SwaggerParser tests (fixes 9 type + 9 lint errors)
+   - Migrate ALL SwaggerParser tests to use Scalar pipeline (fixes 18 errors)
    - Add undefined guards for optional 3.1 properties (fixes 5 type errors)
+   - Update JSDoc examples to use `prepareOpenApiDocument`
    - **Zero tolerance:** NO `@ts-expect-error` pragmas allowed in source code
+   - **Deliverable:** Fully green codebase with all tests migrated to Scalar pipeline
 
-4. **Validation & Transformation (⚪ Planned - Session 4+)**
-   - Wrap `@scalar/openapi-parser.validate/sanitize/upgrade` into `validateOpenApiWithScalar`
-   - Translate AJV errors into existing CLI/programmatic messaging pattern
-   - Add characterisation tests comparing error surfaces
-
-5. **Integration & Cleanup (⚪ Planned - Session 4+)**
-   - Remove SwaggerParser guard once all tests pass
+4. **Documentation & Final Cleanup (⚪ Planned - Session 4)**
+   - Remove SwaggerParser guard test (no longer needed)
    - Update README/API docs to describe new pipeline and 3.1-first architecture
-   - Document follow-up opportunities (partial bundling, incremental fetch)
+   - Update examples to use `prepareOpenApiDocument`
+   - Document follow-up opportunities (partial bundling, incremental fetch, enhanced validation)
+   - **Estimated Effort:** 2-3 hours
 
 Quality gates (`pnpm format`, `build`, `type-check`, `lint`, `test -- --run`) must remain green after every milestone.
 
@@ -100,15 +100,22 @@ Quality gates (`pnpm format`, `build`, `type-check`, `lint`, `test -- --run`) mu
 
 ## 📌 Immediate Next Actions
 
-**Session 3 is ready to start** - detailed implementation plan in `PHASE-2-MCP-ENHANCEMENTS.md`:
+**Session 3 (Reorganized) is ready to start** - comprehensive technical resolution in one session:
 
-1. **Create nullable helper** (`isNullableType`) in TypeScript conversion layer → fixes 16 errors
-2. **Modernize test fixtures** from OpenAPI 3.0 to 3.1 syntax → fixes 47 errors
-3. **Fix Vitest v4 mocks** in loader tests → fixes 16 errors
-4. **Skip/rewrite SwaggerParser tests** → fixes 18 errors
-5. **Add undefined guards** for optional properties → fixes 5 errors
+**Goal:** Achieve fully green codebase - 0 type errors, 0 lint errors, ALL tests passing
 
-**Target:** 0 type errors, 0 lint errors, 0 `@ts-expect-error` pragmas
+**Implementation Order:**
+1. **A. Create nullable helper** (`isNullableType`) in TypeScript conversion layer → fixes 16 errors
+2. **B. Modernize test fixtures** from OpenAPI 3.0 to 3.1 syntax → fixes 47 errors
+3. **C. Fix Vitest v4 mocks** in loader tests → fixes 16 errors
+4. **D. Migrate SwaggerParser tests** to Scalar pipeline (all 9 files) → fixes 18 errors
+5. **E. Add undefined guards** for optional 3.1 properties → fixes 5 errors
+
+**Deliverable:** Fully working codebase with all tests migrated to Scalar pipeline
+
+**Detailed implementation plan in:** `PHASE-2-MCP-ENHANCEMENTS.md` Session 3
+
+**Estimated Effort:** 5-7 hours (systematic work with clear patterns)
 
 Run `pnpm type-check` and `pnpm lint` to verify current state before starting.
 
@@ -143,11 +150,11 @@ All implementation must follow TDD (write failing test → confirm failure → i
 | -------------------- | ------ | --------------------------------------------------- |
 | `pnpm format`        | ✅     | Must stay green                                     |
 | `pnpm build`         | ✅     | Produces ESM & CJS bundles + DTS                    |
-| `pnpm type-check`    | ⚠️     | 77 errors - Session 3 plan ready                    |
-| `pnpm lint`          | ⚠️     | 18 errors - Session 3 plan ready                    |
+| `pnpm type-check`    | ⚠️     | 77 errors - Session 3 (reorganized) ready           |
+| `pnpm lint`          | ⚠️     | 18 errors - Session 3 (reorganized) ready           |
 | `pnpm test -- --run` | ✅     | Unit, characterisation, snapshot suites all passing |
 
-Sessions 1 & 2 complete. Session 3 has a detailed remediation plan covering all 77 type errors and 18 lint errors. See `PHASE-2-MCP-ENHANCEMENTS.md` for implementation strategies.
+Sessions 1 & 2 complete. Session 3 reorganized to achieve complete technical resolution (all green) in one comprehensive session. Detailed plan in `PHASE-2-MCP-ENHANCEMENTS.md`.
 
 ---
 

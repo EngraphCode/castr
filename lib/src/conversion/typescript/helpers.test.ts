@@ -56,7 +56,7 @@ describe('openApiToTypescript.helpers', () => {
     });
 
     it('should handle string enums with null', () => {
-      const schema: SchemaObject = { type: 'string', enum: ['a', null, 'b'], nullable: true };
+      const schema: SchemaObject = { type: 'string', enum: ['a', null, 'b'] };
       const result = handlePrimitiveEnum(schema, 'string');
       expect(result).toBeDefined();
     });
@@ -75,7 +75,7 @@ describe('openApiToTypescript.helpers', () => {
     });
 
     it('should include null in union when nullable', () => {
-      const schema: SchemaObject = { type: 'string', enum: ['a', 'b'], nullable: true };
+      const schema: SchemaObject = { type: ['string', 'null'], enum: ['a', 'b'] };
       const result = handlePrimitiveEnum(schema, 'string');
       expect(result).toBeDefined();
     });
@@ -168,7 +168,6 @@ describe('openApiToTypescript.helpers', () => {
       const baseSchema: SchemaObject = {
         type: 'string',
         properties: { id: { type: 'number' } },
-        nullable: false,
       };
       const convertCalls: (SchemaObject | ReferenceObject)[] = [];
       const mockConvert = (schema: SchemaObject | ReferenceObject) => {

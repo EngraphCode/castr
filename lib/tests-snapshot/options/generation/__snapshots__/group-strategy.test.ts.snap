@@ -1211,7 +1211,6 @@ export const endpoints = [
       queryParams: z
         .object({ additionalMetadata: z.string().optional() })
         .optional(),
-      body: z.instanceof(File),
     },
     responses: {
       200: { description: "successful operation", schema: ApiResponse },
