@@ -1,23 +1,23 @@
 # Further Enhancements Plan: Phase 3 - DX & Quality Improvements
 
-**⚠️ PREREQUISITE:** Architecture Rewrite and Phase 2 completion required.
+**⚠️ PREREQUISITE:** Architecture Rewrite and Phase 2 (Parts 1 & 2) completion required.
 
 **See:**
 
 - `01-CURRENT-IMPLEMENTATION.md` Section 4 - Complete Architecture Rewrite plan (core architecture must be complete)
 - `00-STRATEGIC-PLAN.md` - Phase 2 must be marked complete
 
-**Timeline:** Start Phase 3 enhancements after:
+**Timeline:** Start Phase 3 after:
 
-- Architecture Rewrite Phases 0-3 complete
-- Zod v4 updated ✅
-- All Phase 2 quality gates green
+- Architecture Rewrite Phases 0-3 complete
+- Phase 2 Part 1 (Scalar pipeline) merged and stable
+- Phase 2 Part 2 (MCP enhancements) merged and quality gates green
 
 **Date:** October 25, 2025  
-**Phase:** 3 of 4 (after Architecture Rewrite and Phase 2B)  
+**Phase:** 3 of 4 (after Architecture Rewrite and Phase 2 Parts 1 & 2)  
 **Status:** Planning  
 **Estimated Duration:** 3-4 weeks (25-32 hours)  
-**Prerequisites:** Architecture Rewrite complete, All Phase 2 quality gates green  
+**Prerequisites:** Architecture Rewrite complete, Phase 2 Parts 1 & 2 complete with quality gates green  
 **Source:** Inspired by typed-openapi patterns and industry best practices
 
 ---
@@ -1201,9 +1201,9 @@ pnpm lint
 
 ## Next Steps
 
-1. **Complete Phase 2 prerequisites:**
-   - Type assertions eliminated
-   - Dependencies updated
+1. **Confirm Phase 2 completion:**
+   - Part 1 (Scalar pipeline) merged and stable
+   - Part 2 (MCP enhancements) merged with quality gates green
 
 2. **Begin Phase 3A:**
    - Start with config file support (quick win)
@@ -1226,10 +1226,10 @@ pnpm lint
 **Estimated Time:** 22-31 hours (~3-4 weeks)
 **Prerequisites:**
 
-- ✅ Phase 2 pre-work complete (dependencies updated, templates ready)
-- ⏳ Architecture Rewrite complete (Phases 0-3, see 01-CURRENT-IMPLEMENTATION.md)
-- ⏳ ts-morph migration complete (Architecture Rewrite Phase 2)
-- 📋 Phase 2B complete (recommended - MCP enhancements)
+- ✅ Phase 2 groundwork complete (dependency upgrades, template updates)
+- ⏳ Architecture Rewrite complete (Phases 0-3, see 01-CURRENT-IMPLEMENTATION.md)
+- ⏳ ts-morph migration complete (Architecture Rewrite follow-up)
+- 📋 Phase 2 Part 1 (Scalar pipeline) & Part 2 (MCP enhancements) complete
 
 **Rationale for Deferral:**
 
@@ -1381,9 +1381,9 @@ function generateSchema(schema: SchemaObject, ctx: GenerationContext): ts.Node {
 
 ### Next Steps (When Ready)
 
-1. Complete Phase 2 core tasks (2.1-2.4, 3.1-3.3)
-2. Complete ts-morph emitter migration (Task 3.2+)
-3. Complete Phase 2B MCP Enhancements (recommended)
+1. Ensure Phase 2 Parts 1 & 2 are complete and stable
+2. Complete ts-morph emitter migration (Architecture Rewrite follow-up)
+3. Reassess MCP outputs and requirements against latest roadmap
 4. Revisit this section with detailed task breakdown
 5. Begin implementation with TDD approach
 
@@ -1391,4 +1391,4 @@ function generateSchema(schema: SchemaObject, ctx: GenerationContext): ts.Node {
 
 ---
 
-**This plan complements Phase 2 and Phase 2B. Execute after core work is complete.**
+**This plan complements Phase 2 Parts 1 & 2. Execute after those deliverables are complete.**

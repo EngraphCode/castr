@@ -25,7 +25,7 @@ This fork of `openapi-zod-client` is being modernized to generate strict Zod sch
 This strategic plan ensures all 8 requirements are met:
 
 - **Req 1-3:** Core functionality (Zod generation, SDK creation, validation helpers) - Phase 1 & 2
-- **Req 4-6:** MCP integration (SDK→MCP tools, validation architecture, JSON schemas) - Phase 2B
+- **Req 4-6:** MCP integration (SDK→MCP tools, validation architecture, JSON schemas) - Phase 2 Part 2
 - **Req 7:** Fail-fast philosophy - ADR-001, enforced throughout
 - **Req 8:** Highest standards, test-defined behavior - TDD mandate, comprehensive test coverage
 
@@ -124,46 +124,40 @@ This strategic plan ensures all 8 requirements are met:
 
 ---
 
-### Phase 2: Type Safety & Dependencies (🔄 IN PROGRESS - ARCHITECTURE REWRITE)
+### Phase 2: Unified Validation & MCP Enablement (🔄 IN PROGRESS)
 
-**Status:** Ready to Execute - All Prerequisites Complete ✅  
-**Duration:** 26-38 hours over 2-3 weeks
+**Status:** Planning complete, implementation split into two parts  
+**Reference Plan:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`
 
-**Pre-Work Complete (✅ ALL TASKS):**
+| Part | Focus | Status | Key Outcomes |
+| --- | --- | --- | --- |
+| **Part 1 – Scalar Pipeline Re-architecture** | Replace `SwaggerParser.bundle()` path with staged Scalar pipeline (json-magic bundling, openapi-parser validation, normalized metadata) | 🟡 Planned | Deterministic multi-file handling, richer validation errors, preserved `$ref`s, unified `PreparedOpenApiDocument` |
+| **Part 2 – MCP Enhancements** | Build MCP-specific outputs atop the new pipeline (JSON Schema export, security metadata, MCP readiness checks) | 🟡 Planned | MCP tool generation parity, SDK→MCP validation flow, documentation updates |
 
-**Analysis (7/7 complete):**
+**Part 1 Milestones**
 
-- ✅ Lint Triage → identified 74 type assertions as BLOCKER
-- ✅ pastable Analysis → COMPLETE (removed, replaced with lodash-es)
-- ✅ openapi-types Evaluation → Decision: REMOVE (redundant)
-- ✅ @zodios/core Evaluation → KEEP for now (Phase 3 removal)
-- ✅ swagger-parser Investigation → KEEP (latest v12.1.0)
-- ✅ openapi3-ts v4 Investigation → Migration complete
-- ✅ Handlebars Evaluation → KEEP for Phase 2, ts-morph for tanu only
+1. **Foundation & Guardrails:** Inventory `prepareOpenApiDocument` usages, add Scalar dependencies, enforce lint guard against SwaggerParser.
+2. **Loading & Bundling:** Implement `loadOpenApiDocument` via `@scalar/json-magic/bundle` with filesystem/HTTP plugins and lifecycle hooks to preserve internal `$ref`s.
+3. **Validation & Transformation:** Wrap `@scalar/openapi-parser.validate/sanitize/upgrade` into `validateOpenApiWithScalar`, translating AJV errors into existing CLI/programmatic surfaces.
+4. **Normalization & Types:** Define `PreparedOpenApiDocument` (Scalar + `openapi3-ts` types + bundle metadata) and adapt downstream modules (dependency graph, conversion) to consume it.
+5. **Integration & Migration:** Replace `prepareOpenApiDocument` implementation, toggle legacy path behind feature flag during rollout, update CLI messaging (`--sanitize`, `--upgrade`).
+6. **Documentation, Cleanup & Follow-up:** Refresh README/API docs, provide code examples, remove SwaggerParser dependency, log follow-up opportunities (e.g., partial bundling, `@scalar/openapi-types/schemas` usage).
 
-**Implementation (4/4 complete):**
+**Part 2 Highlights**
 
-1. ✅ Task 2.1: openapi3-ts v3 → v4.5.0 (5 hours)
-2. ✅ Task 2.2: swagger-parser verified at latest v12.1.0 (10 min)
-3. ✅ Task 2.4: Zod v3 → v4.1.12 (30 min)
-4. ✅ Task 3.1: pastable removed, replaced with lodash-es + domain utils (3 hours)
+- JSON Schema export from Zod via `zod-to-json-schema`
+- Security metadata extraction aligned with MCP expectations
+- MCP tool predicates/assertions with richer error formatting
+- Documentation upgrades (README, CLI help, examples)
 
-**Additional Complete:**
+**Requirements Advancement**
 
-- ✅ Task 1.9: schemas-with-metadata template (Engraph-optimized, 6 hours)
-- ✅ Task 1.10: Critical lint issues fixed (35 min)
-- ✅ Task 2.3: Defer logic analysis (2 hours, no opportunities found)
-- ✅ topologicalSort modernization (45 min)
+- **Req 4–6:** SDK→MCP validation flow and JSON Schema deliverables addressed in Part 2.
+- **Req 7, 10, 13:** Scalar validation pipeline (Part 1) enforces fail-fast, helpful errors across CLI/programmatic entry points.
+- **Req 11–12:** json-magic bundling + optional dereference snapshots cover `$ref` handling.
+- **Req 14:** TDD + documentation mandates preserved across both parts.
 
-**Architecture Rewrite (Active):**
-
-- **Phase 0:** Comprehensive Public API Test Suite (8-12 hours) ⭐ **NEXT**
-- **Phase 1:** Eliminate resolver + CodeMeta (8-12 hours)
-- **Phase 2:** Migrate tanu → ts-morph (6-8 hours)
-- **Phase 3:** Remove Zodios dependencies (4-6 hours)
-
-**See:** `01-CURRENT-IMPLEMENTATION.md` (complete Architecture Rewrite plan)  
-**History:** `COMPLETED_WORK.md` (all pre-work details)
+See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for detailed task breakdowns and sequencing.
 
 ---
 
@@ -446,47 +440,13 @@ This strategic plan ensures all 8 requirements are met:
 
 ## Timeline
 
-**Phase 1 Part 4 (Current):** 6-8 hours (1-2 days)
+- **Phase 1 (Foundations)** – ✅ Complete (tooling, ESM migration, dependency upgrades, schemas-with-metadata template).
+- **Phase 2 Part 1 (Scalar pipeline)** – 🔄 In progress (2–3 weeks): integrate json-magic/openapi-parser, replace `prepareOpenApiDocument`, update docs, remove SwaggerParser.
+- **Phase 2 Part 2 (MCP enhancements)** – ⏳ Planned (2–3 weeks): JSON Schema export, security metadata, MCP tool predicates, documentation.
+- **Phase 3 (DX & Quality)** – ⏳ Planned (3–4 weeks): config discovery, watch mode, discriminated union UX, mutation testing, type-level tests, MSW integration tests.
+- **Phase 4 (Extraction Prep)** – ⏳ Planned (≈1 week): final dependency audit, performance benchmarks, extraction runbook for Engraph.
 
-- ⏳ Unified input handling implementation
-- ⏳ 4 use case characterisation tests
-- ⏳ parseOpenApiInput helper with deep unit tests
-- ⏳ Update CLI and programmatic API
-- ⏳ Documentation updates
-
-**Phase 2 (Next):** 2-3 weeks after Part 4
-
-- Week 1: Pre-work complete (analysis, dependency updates, templates) ✅
-- Week 2-3: Architecture Rewrite (26-38 hours)
-  - Phase 0: Comprehensive test suite (8-12 hours)
-  - Phase 1: Eliminate resolver & CodeMeta (8-12 hours)
-  - Phase 2: Migrate tanu → ts-morph (6-8 hours)
-  - Phase 3: Remove Zodios (4-6 hours)
-- Week 4: Final validation & documentation
-
-**Phase 2B (Optional):** 3-4 weeks
-
-- MCP Enhancements (after Architecture Rewrite)
-- See: `02-MCP-ENHANCEMENTS.md`
-
-**Phase 3:** 3-4 weeks
-
-- Week 1: Stryker setup, lint fixes, config file support
-- Week 2: Bundle analysis, watch mode, discriminated unions
-- Week 3: Type-level testing (tstyche), MSW integration tests
-- Week 4: Migration guides, final quality improvements
-
-**Phase 4:** 1 week
-
-- Final preparation and documentation
-- Extraction readiness validation
-
-**Total Estimated:** 7-9 weeks to extraction-ready state
-
-- Phase 2: 2-3 weeks (including Architecture Rewrite)
-- Phase 2B: 3-4 weeks (optional MCP enhancements)
-- Phase 3: 3-4 weeks (quality & DX improvements)
-- Phase 4: 1 week (final prep)
+Target: 7–9 weeks to extraction-ready state once Phase 2 Part 1 starts (Part 1 + Part 2 + Phase 3 + Phase 4).
 
 ---
 
@@ -498,11 +458,11 @@ This strategic plan ensures all 8 requirements are met:
 - **PHASE-1-PART-1-CONTEXT-TYPES.md:** Part 1 - Context & type safety (✅ complete)
 - **PHASE-1-PART-2-TS-MORPH.md:** Part 2 - TypeScript AST migration (✅ complete)
 - **PHASE-1-PART-3-ZODIOS-REMOVAL.md:** Part 3 - Remove Zodios dependencies (✅ complete)
-- **PHASE-1-PART-4-UNIFIED-INPUT.md:** Part 4 - Unified input handling (⏳ current)
+- **PHASE-1-PART-4-UNIFIED-INPUT.md:** Part 4 - Unified input handling (✅ complete; historical reference)
 - **01-CURRENT-IMPLEMENTATION.md:** Architecture Rewrite plan (complete details)
 - **COMPLETED_WORK.md:** Historical archive (all Phase 1 & 2 pre-work)
-- **02-MCP-ENHANCEMENTS.md:** Phase 2B MCP-specific enhancements (optional, after rewrite)
-- **03-FURTHER-ENHANCEMENTS.md:** Phase 3 DX and testing improvements
+- **PHASE-2-MCP-ENHANCEMENTS.md:** Phase 2 plan (Part 1 Scalar pipeline, Part 2 MCP enhancements) – 🔄 active
+- **PHASE-3-FURTHER-ENHANCEMENTS.md:** Phase 3 DX and testing improvements
 - **archive/:** Previous phase plans (reference only)
 
 ### Living Context
@@ -555,7 +515,7 @@ All in `.agent/analysis/`:
 2. Read this file (strategic direction - 10 min)
 3. Read `01-CURRENT-IMPLEMENTATION.md` (Architecture Rewrite plan - 15 min)
 4. Verify quality gates pass (see Prerequisites)
-5. Start with Phase 0 test suite creation
+5. Begin with Phase 2 Part 1 foundation tasks (Scalar pipeline guardrails)
 6. Follow RULES.md standards (especially TDD)
 
 **For Historical Context:**

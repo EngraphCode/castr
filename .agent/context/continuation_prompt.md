@@ -1,127 +1,94 @@
-# Unified OpenAPI Pipeline Continuation Prompt
+# Phase 2 Part 1 Continuation Prompt
 
-**Purpose:** Use this prompt to spin up a fresh chat and resume **Phase 1 Part 5 – Unified OpenAPI Input Pipeline** for the `openapi-zod-validation` modernization.
+**Purpose:** Use this prompt verbatim to resume Phase 2 Part 1 (Scalar pipeline re‑architecture) for the `openapi-zod-validation` modernization.
 
 ---
 
 > **Intended Impact**  
-> Every consumer—CLI, programmatic API, or downstream MCP tooling—must experience the same predictable, spec-compliant behaviour whenever they hand us an OpenAPI document. Valid specs sail straight through and produce deterministic artefacts; invalid specs fail fast with actionable guidance direct from the official schema. Comprehensive tests and documentation make that contract boringly reliable, unlocking the rest of the modernization roadmap.
+> Every consumer—CLI, programmatic API, or downstream MCP tooling—must experience the same predictable, spec-compliant behaviour whenever they hand us an OpenAPI document. Valid specs sail straight through and produce deterministic artefacts; invalid specs fail fast with actionable guidance direct from the official schemas. Comprehensive tests and documentation make that contract boringly reliable, unlocking MCP automation and future extraction to Engraph.
 
 ---
 
 ## Prompt for AI Assistant
 
-I'm working on the `openapi-zod-validation` modernization project. This is a TypeScript library that generates Zod validation schemas and type-safe API clients from OpenAPI 3.0 specifications.
+I'm working on the `openapi-zod-validation` modernization project. This TypeScript library generates Zod validation schemas and type-safe API clients from OpenAPI specifications. We are executing **Phase 2 Part 1** of the roadmap to replace the `SwaggerParser.bundle()` path with a Scalar-driven pipeline.
 
 **Repository & Branch**
 
 - Path: `/Users/jim/code/personal/openapi-zod-client`
 - Branch: `feat/rewrite`
 
+**Strategic References**
+
+1. `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` – authoritative plan (focus on Part 1 milestones)
+2. `.agent/plans/00-STRATEGIC-OVERVIEW.md` – high-level roadmap
+3. `.agent/plans/requirements.md` – constraints (see Phase Alignment snapshot)
+4. `.agent/RULES.md` – TDD, TSDoc, fail-fast standards
+5. `.agent/context/context.md` – current status summary (keep in sync)
+
 **Current Status**
 
-- `lib/src` folder reorganisation: ✅ complete
-- **Session 1 (Shared Preparation Helper): ✅ COMPLETE!**
-  - Fixed critical circular reference bug (SwaggerParser.validate() mutation issue)
-  - Removed 12+ brittle tests that violated RULES.md
-  - Discovered OpenAPI 3.1.x support (already working!)
-  - Confirmed single SwaggerParser usage point
-  - Updated 22 snapshots
-- **Quality gates: ALL PASSING ✅**
-  - 496/496 unit tests (100%)
-  - 134/134 characterisation tests (100%)
-  - 152/152 snapshot tests (100%)
-  - Full `pnpm check` passes
-- Public API preserved (`public-api-preservation.test.ts`)
+- Phase 1 tooling modernization is complete.
+- Phase 2 plan (Parts 1 & 2) reviewed; Session 1 groundwork delivered (callers inventoried, Scalar dependencies pinned, guard scaffolded).
+- Guard command `pnpm --filter openapi-zod-validation test:scalar-guard` intentionally fails while legacy imports remain; keep it red until Session 4 cleanup.
+- Existing pipeline still relies on `SwaggerParser.bundle()` pending Scalar loader/validator work.
+- All quality gates are currently green (`pnpm check` passes); maintain this invariant.
+- Lint/type assertion cleanup is ongoing but outside the immediate scope—do not regress.
 
-**Immediate Objective**
+**Immediate Objectives (Phase 2 Part 1)**
 
-Begin Session 3 (Documentation & Finalization):
+1. **Foundation & Guardrails (Session 1 – complete, guard red until cleanup)**
+   - Inventory captured in `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 1 notes (CLI, programmatic API, dependency graph expectations).
+   - Scalar stack (`@scalar/json-magic@0.7.0`, `@scalar/openapi-parser@0.23.0`, `@scalar/openapi-types@0.5.1`) pinned in `lib/package.json` with updated lockfile.
+   - Guard lives in `lib/src/validation/scalar-guard.test.ts` with dedicated config; run via `pnpm --filter openapi-zod-validation test:scalar-guard` (currently failing by design until legacy imports removed).
 
-1. Update README to document unified pipeline and OpenAPI 3.1.x support
-2. Review and update TSDoc examples in code
-3. Document key discoveries (SwaggerParser.validate() bug, 3.1.x support)
-4. Final validation sweep and manual smoke tests
+2. **Loading & Bundling**
+   - Implement `loadOpenApiDocument` via `@scalar/json-magic/bundle`, enabling `readFiles()`/`fetchUrls()` plugins.
+   - Configure lifecycle hooks to preserve internal `$ref`s and consolidate externals under `x-ext`.
+   - Persist bundle metadata (filesystem entries, entrypoint filename, warnings) for downstream consumers.
 
-### Required Reading (in order)
+3. **Validation & Transformation**
+   - Implement `validateOpenApiWithScalar`, wrapping `openapi-parser.validate/sanitize/upgrade`.
+   - Translate AJV errors into our existing CLI/programmatic error format and add characterisation coverage.
 
-1. `.agent/plans/PHASE-1-PART-5-UNIFIED-OPENAPI-PIPELINE.md` – plan for this phase (10 min)
-2. `.agent/RULES.md` – coding standards & TDD mandate (10 min)
-3. `.agent/plans/requirements.md` – project constraints (5 min refresher)
-4. `.agent/context/context.md` – current status summary (2 min)
+4. **Normalization & Types**
+   - Define `PreparedOpenApiDocument` (Scalar `OpenAPI.Document` + `openapi3-ts` `OpenAPIObject` + bundle metadata).
+   - Update dependency graph, conversion, and templating layers to accept the wrapper without consuming `x-ext` by default.
 
-### Plan Summary (3 Sessions)
+5. **Integration & Cleanup**
+   - Replace `prepareOpenApiDocument` with the orchestrated pipeline (keep a feature flag during rollout).
+   - Refresh README/API docs to describe new options (`--sanitize`, `--upgrade`) and error semantics.
+   - Remove SwaggerParser dependency once parity is proven; log follow-up enhancements (partial bundling, json-magic cache tuning, etc.).
 
-1. **Session 1 – Shared Preparation Helper** ✅ COMPLETE
-   - Implemented `prepareOpenApiDocument()` helper
-   - Fixed critical circular reference bug (SwaggerParser.validate() mutation)
-   - Removed brittle tests (RULES.md compliance)
-   - Discovered OpenAPI 3.1.x support
-
-2. **Session 2 – Integration** ✅ COMPLETE
-   - CLI and programmatic API both use `prepareOpenApiDocument`
-   - Removed `validateOpenApiSpec`
-   - Simplified to bundle-only mode
-   - All tests passing (782 total)
-
-3. **Session 3 – Documentation & Finalization** 🔄 NEXT
-   - Update README to document unified pipeline and 3.1.x support
-   - Review and update TSDoc examples
-   - Document key discoveries
-   - Final validation sweep
-
-See `.agent/plans/PHASE-1-PART-5-UNIFIED-OPENAPI-PIPELINE.md` for detailed Session 3 tasks.
-
-### Session 1 Remediation Items — ALL RESOLVED ✅
-
-- ✅ **Circular reference handling:** Root cause identified and fixed (SwaggerParser.validate() mutation)
-- ✅ **Schema ordering drift:** Works correctly with bundle mode
-- ✅ **Brittle tests removed:** Eliminated 12+ tests checking specific error messages (RULES.md compliance)
-- ✅ **OpenAPI 3.1.x support:** Discovered and documented—already working!
-- ✅ **Single SwaggerParser usage:** Confirmed perfect encapsulation
-- ✅ **All quality gates:** Passing at 100%
-
-### Key Discoveries
-
-1. **SwaggerParser Bug:** `validate()` mutates in-memory objects, breaking circular references
-2. **OpenAPI 3.1.x:** Already supported! No rejection logic ever existed in product code
-3. **Architecture Win:** `prepareOpenApiDocument()` is the ONLY SwaggerParser usage in product code
-
-### Non-Negotiables (RULES.md)
-
-- **TDD is mandatory**: write failing tests first, confirm failure, implement minimally, confirm success, then refactor.
-- **Comprehensive TSDoc**: public APIs need full documentation with examples; internal helpers need @param/@returns/@throws.
-- **No defensive programming**: rely on SwaggerParser for structural validation, fail fast with actionable messages.
-- **No type assertions** unless strictly necessary and justified; prefer type guards.
-- **All quality gates stay green**: `pnpm format`, `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test:all`.
-
-### Quick Orientation Checklist (first 5 minutes)
+**Execution Checklist**
 
 ```bash
 cd /Users/jim/code/personal/openapi-zod-client
-pnpm check      # EXPECT SUCCESS - all quality gates passing ✅
-# All 782 tests passing (496 unit + 134 char + 152 snapshot)
+pnpm check      # ensure green before starting
 ```
 
-### Execution Loop (per task)
+For every task:
 
-1. Read the relevant task in the plan.
-2. Implement via TDD (write failing tests → confirm failure → implement → confirm success).
-3. Run the validation commands listed in the task immediately after the change.
-4. Capture notes for any failures or manual smoke tests.
-5. Update documentation/tests as required.
-6. Repeat for the next task.
+1. Read the corresponding subsection in `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`.
+2. Follow TDD strictly: write failing tests → confirm failure → implement minimal code → confirm success → refactor.
+3. Maintain comprehensive TSDoc for new/changed APIs.
+4. Run `pnpm check` (or the specific commands listed in the plan) after each milestone.
+5. Capture notes for any deviations or manual validation runs.
 
-### Definition of Done for this Phase
+**Non-Negotiables (from `.agent/RULES.md`)**
 
-- Spec truthfulness + deterministic codegen proven via updated characterisation (official examples + Engraph fixtures).
-- `prepareOpenApiDocument()` helper implemented with exhaustive tests and TSDoc.
-- CLI + programmatic code paths rely exclusively on the helper.
-- Optional dereference mode exposed via helper options and CLI flag.
-- README/examples/TSDoc updated to reflect unified pipeline.
-- All quality gates pass on a clean tree; manual CLI smoke test results documented.
-- Public API surface remains backward compatible.
+- TDD is mandatory—no implementation without failing tests first.
+- Public APIs require full TSDoc with examples; internal helpers must include `@param/@returns/@throws`.
+- No defensive programming; rely on Scalar pipeline for validation and fail fast with helpful errors.
+- Prefer type predicates over assertions; document any unavoidable `as`.
+- Keep quality gates green at all times.
 
----
+**Definition of Done for Part 1**
 
-Use this prompt verbatim in any new chat to rehydrate context and continue the Unified OpenAPI Input Pipeline workstream.
+- `loadOpenApiDocument`, `validateOpenApiWithScalar`, and `PreparedOpenApiDocument` implemented with exhaustive tests.
+- CLI and programmatic APIs exclusively use the new pipeline (legacy path removed after feature-flagged rollout).
+- README/API docs updated; examples highlight Scalar validation, sanitisation, and upgrade options.
+- SwaggerParser dependency removed from production code.
+- Quality gates and characterisation suites pass; manual smoke tests documented.
+
+Use this prompt to rehydrate context whenever you resume Phase 2 Part 1 work.

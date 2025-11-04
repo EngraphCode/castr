@@ -15,3 +15,13 @@
 13. No defensive programming, we fail fast, we fail loud, and we do it with helpful error messages.
 14. The library must be built to the highest standards of quality, security, and reliability, and the behaviour of the library must be completely defined by the unit test suite.
 15. We must preserve the original public API of openapi-zod-client. We can add additional API surface.
+
+---
+
+## Phase Alignment Snapshot
+
+- **Phase 2 – Part 1 (Scalar Pipeline)** directly advances requirements **7–13** by delivering deterministic loading, validation, and `$ref` handling for both CLI and programmatic entry points.
+- **Phase 2 – Part 2 (MCP Enhancements)** targets requirements **4–6** by generating MCP-ready JSON Schema artefacts, security metadata, and tool predicates derived from the SDK outputs.
+- Ongoing TDD/TSDoc mandates in every phase continue to uphold requirements **14–15**.
+
+Refer to `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for the detailed task breakdown tied to these requirements.

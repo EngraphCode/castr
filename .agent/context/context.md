@@ -1,132 +1,113 @@
 # Living Context Document
 
-**Last Updated:** November 2, 2025  
-**Purpose:** Single source of truth for project state, decisions, and next steps
+**Last Updated:** November 4, 2025  
+**Purpose:** Single source of truth for the modernization programme – current status, key decisions, and next actions.
 
 ---
 
 > **Intended Impact**  
-> Every consumer—CLI, programmatic API, or downstream MCP tooling—must experience the same predictable, spec-compliant behaviour whenever they hand us an OpenAPI document. Valid specs sail straight through and produce deterministic artefacts; invalid specs fail fast with actionable guidance direct from the official schema. Comprehensive tests and documentation make that contract boringly reliable, unlocking the rest of the modernization roadmap.
+> Every consumer—CLI, programmatic API, or downstream MCP tooling—must experience the same predictable, spec‑compliant behaviour whenever they hand us an OpenAPI document. Valid specs sail straight through and produce deterministic artefacts; invalid specs fail fast with actionable guidance direct from the official schemas. Comprehensive tests and documentation make that contract boringly reliable, unlocking MCP automation and future extraction to Engraph.
 
 ---
 
-## 🚨 Current Focus
+## 🚨 Current Focus – Phase 2 Part 1: Scalar Pipeline Re‑architecture
 
-**Phase 1 Part 5: Unified OpenAPI Input Pipeline – SESSION 1 COMPLETE! ✅**
+We are executing **Phase 2 Part 1** (see `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`) to replace the legacy `SwaggerParser.bundle()` path with a deterministic Scalar-driven pipeline. Session 1 groundwork is complete: all `prepareOpenApiDocument` callers are catalogued, Scalar dependencies are pinned in `lib/package.json`, and a dedicated guard (`pnpm --filter openapi-zod-validation test:scalar-guard`) now flags any production imports of `@apidevtools/swagger-parser` or legacy `openapi-types`.
 
-**Status:** All quality gates passing, ready for Session 2
+### Objectives for Part 1
 
-**Major Achievements (November 3, 2025):**
+1. **Foundation & Guardrails**
+   - Audit every `prepareOpenApiDocument` caller (CLI + programmatic) and document expectations around `$ref`s and error surfaces.
+   - Add `@scalar/json-magic`, `@scalar/openapi-parser`, and `@scalar/openapi-types` with pinned versions (Node ≥ 20 requirement).
+   - Introduce a lint/test guard that flags any residual SwaggerParser usage.
 
-1. **Fixed Critical Circular Reference Bug:**
-   - **Root Cause:** `SwaggerParser.validate()` mutates in-memory objects by resolving `$ref` strings into circular JavaScript references
-   - **Solution:** Removed separate `validate()` call since `bundle()` validates internally
-   - **Result:** All circular reference tests now pass!
+2. **Loading & Bundling**
+   - Implement `loadOpenApiDocument` using `@scalar/json-magic/bundle` with `readFiles()`/`fetchUrls()` plugins.
+   - Configure lifecycle hooks that preserve internal `$ref`s while consolidating externals under `x-ext`.
+   - Store bundle metadata (filesystem entries, bundle warnings, entrypoint filename) for downstream consumers.
 
-2. **Removed Brittle Tests (RULES.md Compliance):**
-   - Eliminated 12+ tests that checked specific error message text
-   - Now testing **behavior** (rejection) not **implementation** (exact error wording)
-   - Tests are resilient to upstream SwaggerParser changes
+3. **Validation & Transformation**
+   - Wrap `@scalar/openapi-parser.validate/sanitize/upgrade` into `validateOpenApiWithScalar`, translating AJV errors into our existing CLI/programmatic messaging pattern.
+   - Add characterisation tests comparing SwaggerParser vs Scalar error surfaces.
 
-3. **Discovered OpenAPI 3.1.x Support:**
-   - No rejection logic ever existed in product code!
-   - Updated all tests to verify 3.1.x works correctly
-   - Supports type arrays, standalone null, numeric exclusive bounds, etc.
+4. **Normalization & Types**
+   - Define `PreparedOpenApiDocument` (Scalar `OpenAPI.Document` + `openapi3-ts` `OpenAPIObject` + bundle metadata).
+   - Update dependency-graph, conversion, and templating modules to accept the new wrapper without consuming `x-ext` by default.
 
-4. **Confirmed Single SwaggerParser Usage:**
-   - `prepareOpenApiDocument()` is the ONLY place in product code using SwaggerParser
-   - Perfect encapsulation achieved!
+5. **Integration & Cleanup**
+   - Replace the existing `prepareOpenApiDocument` implementation with the orchestrated pipeline; keep a feature flag for the legacy path during rollout.
+   - Update README/API docs to describe new pipeline options (`--sanitize`, `--upgrade`) and error semantics.
+   - Remove SwaggerParser dependency once parity is confirmed and document follow-up opportunities (partial bundling, `@scalar/openapi-types/schemas`, incremental fetch).
 
-**Final Test Status:**
-
-- ✅ All 496 unit tests passing (100%)
-- ✅ All 134 characterisation tests passing (100%)
-- ✅ All 152 snapshot tests passing (100%)
-- ✅ Full quality gate passing (`pnpm check`)
-
-**Next Steps:**
-
-Move to Session 3: Update documentation to reflect unified pipeline and OpenAPI 3.1.x support
+Quality gates (`pnpm format`, `build`, `type-check`, `lint`, `test -- --run`) must remain green after every milestone.
 
 ---
 
-## ✅ Session 1 Remediation Items — ALL RESOLVED!
+## ✅ Foundations Already in Place
 
-- ✅ **Circular reference handling:** FIXED! Removed `validate()` call that was mutating objects
-- ✅ **Schema ordering drift:** FIXED! Works correctly with bundle mode
-- ✅ **Brittle tests removed:** Eliminated tests checking specific error message text
-- ✅ **OpenAPI 3.1.x support:** Discovered and documented—already working!
-- ✅ **Single SwaggerParser usage:** Confirmed perfect encapsulation in `prepareOpenApiDocument()`
-- ✅ **All quality gates:** Passing at 100%
-
-See `.agent/plans/PHASE-1-PART-5-UNIFIED-OPENAPI-PIPELINE.md` for detailed findings.
-
----
-
-## ✅ Completed Milestones
-
-- **Folder Reorganisation (Phase 1 Part 4 precursor)** – `lib/src` now follows layered architecture (`validation/`, `shared/`, `conversion/`, `endpoints/`, `context/`, `rendering/`, `cli/`, `ast/`).
-- **Quality Gates** – Were green immediately after the reorganisation; now failing due to the new characterisation coverage (see remediation items above).
-- **Public API** – Still preserved and guarded by `public-api-preservation.test.ts`.
-
-(See archived plan `.agent/plans/archive/LIB-SRC-FOLDER-REORGANISATION.md` for historical detail.)
+- Phase 1 tooling modernization complete (ESM, commander CLI, tsup build pipeline, Turborepo orchestration).
+- Dependency updates delivered:
+  - `openapi3-ts` → v4.5.0
+  - `zod` → v4.1.12
+  - `pastable` removed in favour of lodash-es + targeted utilities
+- `schemas-with-metadata` template (Task 1.9) provides SDK-grade output and underpins MCP tooling.
+- Characterisation suite covers CLI + programmatic behaviour; public API stability enforced via `public-api-preservation.test.ts`.
 
 ---
 
-## 🔭 Immediate Objectives
+## 📌 Immediate Next Actions
 
-**Session 1: ✅ COMPLETE**
-**Session 2: ✅ COMPLETE**
+1. **Session 2 prep:** design `loadOpenApiDocument` around `@scalar/json-magic` (TDD: author failing unit tests for local + remote refs before implementation).
+2. **Guard monitoring:** keep `pnpm --filter openapi-zod-validation test:scalar-guard` red until legacy imports are removed in Session 4; re-run after major refactors to ensure no new violations appear.
+3. **Documentation sync:** continue updating plan/context entries as Session 2 work begins (json-magic lifecycle hooks, metadata structure, test strategy).
 
-**Session 3: Documentation & Finalization (Next)**
-
-1. Update README to document unified pipeline and OpenAPI 3.1.x support
-2. Review and update TSDoc examples
-3. Document key discoveries (SwaggerParser bug, 3.1.x support)
-4. Final validation sweep and manual smoke tests
+All implementation must follow TDD (write failing test → confirm failure → implement → confirm success → refactor) and comprehensive TSDoc standards (`.agent/RULES.md`).
 
 ---
 
-## 🔧 Working Agreements (from `.agent/RULES.md`)
+## 🧭 Phase Overview
 
-- **TDD is mandatory** – write failing tests first, confirm failure, implement, confirm success, then refactor. No exceptions.
-- **Comprehensive TSDoc** – public APIs require full examples/docs; internal helpers at least need @param/@returns/@throws.
-- **No defensive programming** – rely on SwaggerParser for structural validation, and fail fast with actionable errors.
-- **No type assertions** unless explicitly justified (and documented); prefer type guards.
-- **All quality gates must remain green** (`pnpm format`, `build`, `type-check`, `lint`, `test:all`).
-
----
-
-## 🔌 Current Repository State
-
-- **Branch:** `feat/rewrite`
-- **Directory:** `/Users/jim/code/personal/openapi-zod-client`
-- **Tests:** 782 total (496 unit + 134 characterisation + 152 snapshot) – **ALL PASSING ✅**
-- **Build:** ESM+CJS bundles + DTS artefacts clean
-- **Bundle size:** ~9.7 MB (library and CLI) – within baseline
-- **Quality Gates:** All green (`pnpm check` passes)
+| Phase | Purpose | Status | Reference |
+| --- | --- | --- | --- |
+| **Phase 1** | Tooling & architecture foundations | ✅ Complete (Part 4 delivered) | `.agent/plans/01-CURRENT-IMPLEMENTATION.md` |
+| **Phase 2 Part 1** | Scalar pipeline (bundling + validation) | 🟡 In progress | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` |
+| **Phase 2 Part 2** | MCP outputs (JSON Schema, security metadata, predicates) | ⚪ Planned (starts after Part 1) | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` |
+| **Phase 3** | DX & quality enhancements | ⚪ Planned (post Phase 2) | `.agent/plans/PHASE-3-FURTHER-ENHANCEMENTS.md` |
 
 ---
 
-## 🗺️ Key References
+## 📚 Key Documents
 
-- **Plan:** `.agent/plans/PHASE-1-PART-5-UNIFIED-OPENAPI-PIPELINE.md` (authoritative task list)
-- **Requirements:** `.agent/plans/requirements.md` (Req 7–12 especially)
-- **Standards:** `.agent/RULES.md`
-- **ADR Log:** `.agent/adr/` (validation, type system, tooling decisions)
-
----
-
-## 📝 Definition of Done for Part 5
-
-- Spec truthfulness and deterministic codegen are proven through updated characterisation using official examples and Engraph fixtures.
-- `prepareOpenApiDocument()` implemented with exhaustive tests and documentation.
-- CLI + programmatic APIs rely exclusively on the helper; legacy validation removed.
-- Optional dereference mode available via helper options and CLI flag.
-- Documentation/examples updated to reflect unified pipeline.
-- All quality gates pass from clean state; manual CLI smoke tests recorded.
-- Public API surface remains backward compatible.
+- **Phase Plan:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`
+- **Strategic Overview:** `.agent/plans/00-STRATEGIC-OVERVIEW.md`
+- **Requirements:** `.agent/plans/requirements.md` (see Phase Alignment snapshot)
+- **Standards:** `.agent/RULES.md` (TDD, TSDoc, fail-fast principles)
+- **Definition of Done:** `.agent/DEFINITION_OF_DONE.md`
 
 ---
 
-Use this document together with the plan to resume work quickly in any new session.
+## 🧪 Quality Gate Status
+
+| Gate | Status | Notes |
+| --- | --- | --- |
+| `pnpm format` | ✅ | Must stay green |
+| `pnpm build` | ✅ | Produces ESM & CJS bundles + DTS |
+| `pnpm type-check` | ✅ | Zero TypeScript errors |
+| `pnpm lint` | ⚠️ | Remaining lint debt (type assertions elimination continues in parallel with Phase 2) |
+| `pnpm test -- --run` | ✅ | Unit, characterisation, snapshot suites all passing |
+
+Lint/type assertion backlog remains the extraction blocker; Phase 2 Part 1 eliminates the largest remaining risk by removing direct SwaggerParser usage ahead of lint clean-up.
+
+---
+
+## 📝 Working Agreements (RULES.md Highlights)
+
+- TDD is mandatory – no implementation without failing tests first.
+- Public APIs require full TSDoc with examples; internal helpers need `@param/@returns/@throws`.
+- No defensive programming – rely on the validated pipeline, and fail loud with actionable messages.
+- Prefer type predicates over assertions; annotate and document any unavoidable `as`.
+- Keep quality gates green at all times.
+
+---
+
+Use this context together with the Phase 2 plan to resume work quickly in any new session. When Part 1 lands, update this document to pivot focus to Part 2 (MCP enhancements).

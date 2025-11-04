@@ -14,6 +14,7 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
     exclude: [
       'src/characterisation/**/*.test.ts',
+      'src/validation/scalar-guard.test.ts',
       'tests-snapshot/**/*.test.ts',
       'node_modules/**',
     ],

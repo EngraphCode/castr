@@ -36,12 +36,16 @@
     "test:watch": "vitest",
     "test:snapshot": "vitest run --config vitest.snapshot.config.ts",
     "test:snapshot:watch": "vitest --config vitest.snapshot.config.ts",
+    "test:scalar-guard": "vitest run --config vitest.scalar-guard.config.ts",
     "character": "vitest run --config vitest.characterisation.config.ts",
     "character:watch": "vitest --config vitest.characterisation.config.ts",
     "fetch:examples": "tsx ./examples-fetcher.mts"
   },
   "license": "MIT",
   "dependencies": {
+    "@scalar/json-magic": "0.7.0",
+    "@scalar/openapi-parser": "0.23.0",
+    "@scalar/openapi-types": "0.5.1",
     "@apidevtools/swagger-parser": "^12.1.0",
     "commander": "^14.0.2",
     "handlebars": "^4.7.8",
