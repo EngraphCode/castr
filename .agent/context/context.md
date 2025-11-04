@@ -67,12 +67,12 @@ All implementation must follow TDD (write failing test → confirm failure → i
 
 ## 🧭 Phase Overview
 
-| Phase | Purpose | Status | Reference |
-| --- | --- | --- | --- |
-| **Phase 1** | Tooling & architecture foundations | ✅ Complete (Part 4 delivered) | `.agent/plans/01-CURRENT-IMPLEMENTATION.md` |
-| **Phase 2 Part 1** | Scalar pipeline (bundling + validation) | 🟡 In progress | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` |
-| **Phase 2 Part 2** | MCP outputs (JSON Schema, security metadata, predicates) | ⚪ Planned (starts after Part 1) | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` |
-| **Phase 3** | DX & quality enhancements | ⚪ Planned (post Phase 2) | `.agent/plans/PHASE-3-FURTHER-ENHANCEMENTS.md` |
+| Phase              | Purpose                                                  | Status                           | Reference                                      |
+| ------------------ | -------------------------------------------------------- | -------------------------------- | ---------------------------------------------- |
+| **Phase 1**        | Tooling & architecture foundations                       | ✅ Complete (Part 4 delivered)   | `.agent/plans/01-CURRENT-IMPLEMENTATION.md`    |
+| **Phase 2 Part 1** | Scalar pipeline (bundling + validation)                  | 🟡 In progress                   | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`     |
+| **Phase 2 Part 2** | MCP outputs (JSON Schema, security metadata, predicates) | ⚪ Planned (starts after Part 1) | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`     |
+| **Phase 3**        | DX & quality enhancements                                | ⚪ Planned (post Phase 2)        | `.agent/plans/PHASE-3-FURTHER-ENHANCEMENTS.md` |
 
 ---
 
@@ -88,13 +88,13 @@ All implementation must follow TDD (write failing test → confirm failure → i
 
 ## 🧪 Quality Gate Status
 
-| Gate | Status | Notes |
-| --- | --- | --- |
-| `pnpm format` | ✅ | Must stay green |
-| `pnpm build` | ✅ | Produces ESM & CJS bundles + DTS |
-| `pnpm type-check` | ✅ | Zero TypeScript errors |
-| `pnpm lint` | ⚠️ | Remaining lint debt (type assertions elimination continues in parallel with Phase 2) |
-| `pnpm test -- --run` | ✅ | Unit, characterisation, snapshot suites all passing |
+| Gate                 | Status | Notes                                                                                |
+| -------------------- | ------ | ------------------------------------------------------------------------------------ |
+| `pnpm format`        | ✅     | Must stay green                                                                      |
+| `pnpm build`         | ✅     | Produces ESM & CJS bundles + DTS                                                     |
+| `pnpm type-check`    | ✅     | Zero TypeScript errors                                                               |
+| `pnpm lint`          | ⚠️     | Remaining lint debt (type assertions elimination continues in parallel with Phase 2) |
+| `pnpm test -- --run` | ✅     | Unit, characterisation, snapshot suites all passing                                  |
 
 Lint/type assertion backlog remains the extraction blocker; Phase 2 Part 1 eliminates the largest remaining risk by removing direct SwaggerParser usage ahead of lint clean-up.
 

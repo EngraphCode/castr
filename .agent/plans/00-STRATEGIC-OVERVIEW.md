@@ -129,10 +129,10 @@ This strategic plan ensures all 8 requirements are met:
 **Status:** Planning complete, implementation split into two parts  
 **Reference Plan:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`
 
-| Part | Focus | Status | Key Outcomes |
-| --- | --- | --- | --- |
+| Part                                         | Focus                                                                                                                                   | Status     | Key Outcomes                                                                                                      |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
 | **Part 1 – Scalar Pipeline Re-architecture** | Replace `SwaggerParser.bundle()` path with staged Scalar pipeline (json-magic bundling, openapi-parser validation, normalized metadata) | 🟡 Planned | Deterministic multi-file handling, richer validation errors, preserved `$ref`s, unified `PreparedOpenApiDocument` |
-| **Part 2 – MCP Enhancements** | Build MCP-specific outputs atop the new pipeline (JSON Schema export, security metadata, MCP readiness checks) | 🟡 Planned | MCP tool generation parity, SDK→MCP validation flow, documentation updates |
+| **Part 2 – MCP Enhancements**                | Build MCP-specific outputs atop the new pipeline (JSON Schema export, security metadata, MCP readiness checks)                          | 🟡 Planned | MCP tool generation parity, SDK→MCP validation flow, documentation updates                                        |
 
 **Part 1 Milestones**
 
