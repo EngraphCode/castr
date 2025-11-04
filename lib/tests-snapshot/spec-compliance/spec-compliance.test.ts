@@ -11,7 +11,7 @@
  */
 
 import { expect, test, describe } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
 
 describe('spec-compliance', () => {

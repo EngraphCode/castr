@@ -1,5 +1,5 @@
-import type { ResponseObject, ReferenceObject, OpenAPIObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { ResponseObject, ReferenceObject, OpenAPIObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import {

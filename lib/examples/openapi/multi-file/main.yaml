@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: Multi-file Petstore
+  version: 1.0.0
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      responses:
+        '200':
+          description: Successful response with pet collection
+          content:
+            application/json:
+              schema:
+                $ref: './components/pet.yaml#/components/schemas/PetList'
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response with a single pet
+          content:
+            application/json:
+              schema:
+                $ref: './components/pet.yaml#/components/schemas/Pet'
+components:
+  schemas:
+    PetSummary:
+      description: Delegates to external schema file to validate sharing behaviour
+      allOf:
+        - $ref: './components/pet.yaml#/components/schemas/Pet'

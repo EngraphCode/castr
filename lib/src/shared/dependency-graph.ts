@@ -1,6 +1,6 @@
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 import { visitComposition, visitObjectProperties } from './dependency-graph.helpers.js';
 import { getSchemaFromComponents } from './component-access.js';
 

@@ -1,4 +1,4 @@
-import type { OpenAPIObject, ResponsesObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ResponsesObject, SchemaObject } from 'openapi3-ts/oas31';
 
 /**
  * Creates a minimal OpenAPI spec for testing edge cases.

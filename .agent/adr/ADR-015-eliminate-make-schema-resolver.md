@@ -94,7 +94,7 @@ Analysis documented in:
 **Create `component-access.ts` module:**
 
 ````typescript
-import type { ComponentsObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas30';
+import type { ComponentsObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 
 /**
  * Gets a schema from components by $ref path.

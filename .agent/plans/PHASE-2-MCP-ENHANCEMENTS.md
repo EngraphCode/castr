@@ -1,24 +1,24 @@
 # MCP Enhancement Plan – Phase 2 (Restructured)
 
 **Date:** October 25, 2025  
-**Phase:** 2 (split into Part 1 and Part 2)  
+**Phase:** 2 (split into Part 1 and Part 2)  
 **Status:** Planning  
-**Estimated Duration:** 4–6 weeks (Part 1 ~2 weeks, Part 2 ~2–3 weeks)  
-**Prerequisites:** Architecture Rewrite Phases 0–3 complete, All quality gates green, Zod v4 update complete ✅
+**Estimated Duration:** 4–6 weeks (Part 1 ~2 weeks, Part 2 ~2–3 weeks)  
+**Prerequisites:** Architecture Rewrite Phases 0–3 complete, All quality gates green, Zod v4 update complete ✅
 
 ---
 
 ## Why the Split?
 
-Phase 2 now ships in two consecutive parts:
+Phase 2 now ships in two consecutive parts:
 
-- **Phase 2 – Part 1: Scalar Pipeline Re-architecture**  
+- **Phase 2 – Part 1: Scalar Pipeline Re-architecture**  
   Replace `SwaggerParser.bundle()` with a Scalar-based pipeline (`@scalar/json-magic`, `@scalar/openapi-parser`, `@scalar/openapi-types`) to unlock richer validation, multi-file handling, and deterministic bundling. This is the foundation every MCP feature depends on.
 
-- **Phase 2 – Part 2: MCP Enhancements**  
-  Build the MCP-specific outputs (JSON Schema export, security metadata, predicates, documentation) on top of the new pipeline. Tasks map to the previous “Phase 2B” work but now assume the Scalar pipeline is in place.
+- **Phase 2 – Part 2: MCP Enhancements**  
+  Build the MCP-specific outputs (JSON Schema export, security metadata, predicates, documentation) on top of the new pipeline. Tasks map to the previous "Phase 2B" work but now assume the Scalar pipeline is in place.
 
-The restructure keeps deliverables chronological: Part 1 provides the plumbing, Part 2 delivers the high-level MCP features.
+The restructure keeps deliverables chronological: Part 1 provides the plumbing, Part 2 delivers the high-level MCP features.
 
 ---
 
@@ -47,24 +47,81 @@ Prerequisites (Phase 2 Core & Architecture Rewrite)
 
 ---
 
-## Phase 2 – Part 1: Scalar Pipeline Re-architecture
+## Phase 2 – Part 1: Scalar Pipeline Re-architecture
 
 ### Overview
 
 Deliver a staged pipeline that:
 
 1. Loads/bundles specs (filesystem & HTTP) via `@scalar/json-magic`
-2. Validates & sanitizes via `@scalar/openapi-parser`
-3. Normalizes output while preserving internal `$ref`s for dependency graphs
-4. Exposes metadata (bundle info, warnings, version) to downstream consumers
+2. Upgrades all specs to OpenAPI 3.1 via `@scalar/openapi-parser`
+3. Validates & sanitizes via `@scalar/openapi-parser`
+4. Normalizes output while preserving internal `$ref`s for dependency graphs
+5. Exposes metadata (bundle info, warnings, version) to downstream consumers
 
-### Session Plan (Part 1)
+### Type System Architecture
+
+**Core Decision: OpenAPI 3.1 Internal Type System with Intersection Types**
+
+All OpenAPI documents are normalized to 3.1 after bundling, regardless of input version. This provides:
+
+1. **Single internal type system** - No version branching in conversion/template logic
+2. **Automatic upgrades** - 3.0 specs transparently upgraded to 3.1
+3. **Strict typing** - All code uses `openapi3-ts/oas31` types
+4. **Future-proof** - Ready for 3.1 features (webhooks, discriminator mapping, etc.)
+
+#### Pipeline Flow
+
+```
+Input (3.0 or 3.1 spec: file, URL, or object)
+    ↓
+bundle() via @scalar/json-magic
+    ↓ (resolves $refs, adds x-ext metadata)
+upgrade() via @scalar/openapi-parser
+    ↓ (normalizes to OpenAPI 3.1)
+Validate & type as intersection
+    ↓ (runtime boundary: loose → strict types)
+BundledOpenApiDocument
+    ↓ (strict openapi3-ts/oas31 + Scalar extensions)
+Downstream code (conversion, templates, etc.)
+```
+
+#### Type Strategy
+
+```typescript
+import type { OpenAPIV3_1 } from '@scalar/openapi-types';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
+
+/**
+ * Intersection type combining:
+ * - Scalar's extension-friendly OpenAPIV3_1.Document (preserves x-ext, x-ext-urls)
+ * - openapi3-ts strict OpenAPIObject (strict typing for standard fields)
+ */
+type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
+```
+
+#### Key Principles
+
+- **Boundary validation:** Type guards convert Scalar's loose types to our strict types
+- **No casting:** Type narrowing via runtime validation, never `as` assertions
+- **Extensions preserved:** Scalar's `x-ext`, `x-ext-urls` available for debugging
+- **Strict downstream:** All conversion/template code uses `openapi3-ts/oas31` types
+
+#### Implementation Notes
+
+- Scalar uses `Record<string, unknown>` internally (their escape hatch, not ours)
+- We validate at the boundary with type guards that check both type systems
+- The intersection type gives us strict typing for standard fields AND access to extensions
+- All imports use `openapi3-ts/oas31` (not `oas30`)
+- Legacy `openapi-types@12.1.3` and `@apidevtools/swagger-parser` removed from dependencies
+
+### Session Plan (Part 1)
 
 Each session is designed to be self-contained, follow TDD, and minimise context switching. Complete sessions sequentially.
 
 #### **Session 1 – Foundation & Guards**
 
-- **Focus:** Establish Scalar dependencies and enforce the “no SwaggerParser / legacy openapi-types” rule.
+- **Focus:** Establish Scalar dependencies and enforce the "no SwaggerParser / legacy openapi-types" rule.
 - **Acceptance Criteria**
   - Scalar packages (`@scalar/openapi-parser`, `@scalar/json-magic`, `@scalar/openapi-types`) added with pinned versions.
   - Inventory of every `prepareOpenApiDocument`/SwaggerParser usage documented (CLI, programmatic API, tests, fixtures).
@@ -75,7 +132,7 @@ Each session is designed to be self-contained, follow TDD, and minimise context 
   2. `pnpm lint` → ensure guard integrates with lint pipeline (if implemented as ESLint rule).
   3. Document inventory results in `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` notes section or commit message.
 
-##### Session 1 Inventory Notes (2025-11-04)
+##### Session 1 Inventory Notes (2025-11-04)
 
 - **CLI entrypoint (`lib/src/cli/index.ts`):** `prepareOpenApiDocument` receives the CLI argument string verbatim (file path or URL). Errors bubble directly to the CLI; output feeds `generateZodClientFromOpenAPI` and must preserve internal `$ref`s for downstream dependency tracking. Default output path relies on the same string input, so Scalar loader must keep path semantics unchanged.
 - **Programmatic API (`lib/src/rendering/generate-from-context.ts`):** `generateZodClientFromOpenAPI` forwards either `input` (string | `URL`) or an in-memory `OpenAPIObject`. It expects `prepareOpenApiDocument` to normalise URLs, handle local filesystem paths, accept already-parsed docs, and always return an `openapi3-ts` `OpenAPIObject`. The returned document feeds template context builders that depend on preserved `$ref`s and AJV-compatible structure.
@@ -83,24 +140,38 @@ Each session is designed to be self-contained, follow TDD, and minimise context 
 - **Characterisation suite (`lib/src/characterisation/input-pipeline.char.test.ts`):** codifies required behaviours—success for local file paths and in-memory specs, rejection when both `input` and `openApiDoc` provided, explicit support for OpenAPI 3.0.x and 3.1.x, and documented failure expectations for unreachable URLs or malformed specs. These tests will remain the regression harness during Scalar migration.
 - **Current implementation (`lib/src/shared/prepare-openapi-document.ts`):** Only production import of `@apidevtools/swagger-parser` and `openapi-types`. Performs the `openapi-types` → `openapi3-ts` boundary assertion (`as OpenAPI.Document`) and relies on `SwaggerParser.bundle()` for validation + external `$ref` resolution.
 
-##### Session 1 Dependency Pins (2025-11-04)
+##### Session 1 Dependency Pins (2025-11-04)
 
 - Added Scalar stack to `lib/package.json` with exact versions: `@scalar/json-magic@0.7.0`, `@scalar/openapi-parser@0.23.0`, `@scalar/openapi-types@0.5.1`. Pinned to satisfy deterministic bundling, AJV-backed validation, and shared type contracts.
 - `pnpm install` executed to refresh `pnpm-lock.yaml`; lockfile now records the Scalar packages for the `lib` workspace. No additional build tooling changes required; existing Node ≥20 engine requirement remains valid for Scalar packages.
 
-##### Session 1 Guard Implementation (2025-11-04)
+##### Session 1 Guard Implementation (2025-11-04)
 
 - Added `lib/src/validation/scalar-guard.test.ts` which scans all production `.ts` sources (excluding tests/fixtures) for banned imports of `@apidevtools/swagger-parser` or `openapi-types`, reporting file + line context.
 - Introduced dedicated Vitest config `vitest.scalar-guard.config.ts` and npm script `pnpm test:scalar-guard` so the guard runs outside the default unit suite; the guard currently fails as expected while legacy imports remain.
 - Default Vitest config now excludes the guard file, preventing false negatives in routine test runs while still enabling targeted enforcement.
+
+##### Session 1 Cleanup (2025-11-04)
+
+- **Type system migration:** All imports changed from `openapi3-ts/oas30` to `openapi3-ts/oas31` throughout the codebase to align with the 3.1-first architecture.
+- **Legacy dependency removal:** Removed `openapi-types@12.1.3` and `@apidevtools/swagger-parser` from `lib/package.json` and ran `pnpm install` to clean lockfile.
+- **Rationale:** With the Scalar pipeline handling bundling/upgrade and the intersection type strategy, legacy SwaggerParser types are no longer needed. All internal code now uses strict `openapi3-ts/oas31` types.
+
+##### Session 2 Loader Characterisation (2025-11-04)
+
+- Added scalar loader characterisation coverage in `lib/src/characterisation/input-pipeline.char.test.ts`, verifying the new `loadOpenApiDocument` bundles single-file specs and preserves parity with the legacy Swagger pipeline.
+- Introduced a multi-file fixture under `lib/examples/openapi/multi-file/` to exercise filesystem fan-out; tests assert external references are tracked in metadata and that generated `paths` mirror the existing pipeline (Scalar stores additional vendor data under `x-ext`, documented in the test comments).
+- Characterisation suite (`pnpm character -- input-pipeline`) now covers both programmatic entrypoints and the Scalar loader, providing regression snapshots ahead of the Session 4 cutover.
 
 #### **Session 2 – Loading & Bundling**
 
 - **Focus:** Implement `loadOpenApiDocument` via json-magic with deterministic behaviour.
 - **Acceptance Criteria**
   - `loadOpenApiDocument` wraps `@scalar/json-magic/bundle` with `readFiles()` and `fetchUrls()` plugins.
+  - Calls `@scalar/openapi-parser/upgrade` to normalize all specs to OpenAPI 3.1.
   - Lifecycle hooks preserve internal `$ref`s, consolidate externals under `x-ext`, and emit warning metadata.
   - Bundle metadata (filesystem entries, entrypoint filename, warnings) stored in a typed structure.
+  - Output typed as `BundledOpenApiDocument` (intersection of `OpenAPIV3_1.Document` & `OpenAPIObject` from `oas31`).
   - Unit tests cover local refs, remote refs (mocked), circular refs, and conflicting component names.
 - **Validation Steps**
   1. `pnpm test -- run src/shared/load-openapi-document.test.ts`
@@ -113,9 +184,9 @@ Each session is designed to be self-contained, follow TDD, and minimise context 
 - **Acceptance Criteria**
   - `validateOpenApiWithScalar` wraps `openapi-parser.validate/sanitize/upgrade` with configurable toggles.
   - AJV errors re-mapped into existing CLI/programmatic error format (method/path context, status hints).
-  - `PreparedOpenApiDocument` combines Scalar `OpenAPI.Document`, `openapi3-ts` `OpenAPIObject`, and bundle metadata.
+  - `PreparedOpenApiDocument` combines `BundledOpenApiDocument` (already 3.1) and bundle metadata.
   - Dependency graph builder, schema conversion, and template context accept the new wrapper (no legacy types remain).
-  - Guard still failing (SwaggerParser references remain) but limited to modules scheduled for Session 4 cleanup.
+  - Guard still failing (SwaggerParser references remain) but limited to modules scheduled for Session 4 cleanup.
 - **Validation Steps**
   1. `pnpm test -- run src/shared/validate-openapi-with-scalar.test.ts`
   2. `pnpm test --filter characterisation -- validation`
@@ -142,25 +213,25 @@ Each session is designed to be self-contained, follow TDD, and minimise context 
 
 - New loader/validator modules with test coverage
 - Updated `prepareOpenApiDocument`
-- Documentation (README, `.agent` context) reflecting Scalar pipeline
-- Lint/test guard ensuring no `@apidevtools/swagger-parser` or legacy `openapi-types` remain (guard passing is a Phase 1 exit criterion)
+- Documentation (README, `.agent` context) reflecting Scalar pipeline and 3.1-first architecture
+- Lint/test guard ensuring no `@apidevtools/swagger-parser` or legacy `openapi-types` remain (guard passing is a Phase 1 exit criterion)
 
 ---
 
-## Phase 2 – Part 2: MCP Enhancements (Built on Scalar Pipeline)
+## Phase 2 – Part 2: MCP Enhancements (Built on Scalar Pipeline)
 
 ### Overview
 
-Implements MCP-specific features assuming Part 1 is complete:
+Implements MCP-specific features assuming Part 1 is complete:
 
 1. Define MCP requirements & readiness checks
 2. Export JSON Schema from Zod outputs
 3. Surface security metadata
 4. Provide type guards, error formatting, and documentation for MCP consumers
 
-### Session Plan (Part 2)
+### Session Plan (Part 2)
 
-> **Note:** Task 5.2.1 (“OpenAPI Spec Validation, Fail-Fast”) is delivered by Part 1. Sessions below build on the Scalar pipeline output.
+> **Note:** Task 5.2.1 ("OpenAPI Spec Validation, Fail-Fast") is delivered by Part 1. Sessions below build on the Scalar pipeline output.
 
 #### **Session 5 – MCP Investigation**
 
@@ -205,7 +276,7 @@ Implements MCP-specific features assuming Part 1 is complete:
 - **Acceptance Criteria**
   - README/CLI documentation expanded with MCP sections, CLI flags, SDK & MCP examples.
   - TypeDoc (or documented API surface) reflects new exports and helpers.
-  - Release notes / changelog entry summarises Phase 2 deliverables.
+  - Release notes / changelog entry summarises Phase 2 deliverables.
   - Full quality gate passes from a clean tree.
 - **Validation Steps**
   1. `pnpm format && pnpm lint && pnpm build && pnpm type-check && pnpm test -- --run`
@@ -214,15 +285,15 @@ Implements MCP-specific features assuming Part 1 is complete:
 
 ---
 
-## Alignment with Phase 2 Goals
+## Alignment with Phase 2 Goals
 
-- **5.2.1 OpenAPI Spec Validation (Fail-Fast)** – Achieved via Scalar’s AJV-backed `validate()` pipeline and the structured error wrappers introduced in Part 1.
+- **5.2.1 OpenAPI Spec Validation (Fail-Fast)** – Achieved via Scalar's AJV-backed `validate()` pipeline and the structured error wrappers introduced in Part 1.
 - **5.1 Investigation Tasks** – Analysis documents (JSON Schema conversion, MCP spec, security metadata) directly inform configuration and metadata emitted by the Scalar loader.
 - **5.2.2 Enhanced Parameter Metadata / 5.3.x MCP Enhancements** – Bundle metadata (normalized specs, `x-ext`, version info) enables richer MCP outputs while ensuring templates operate on validated documents.
-- **5.3.1 JSON Schema Export** – Part 2’s `zod-to-json-schema` integration sits atop the validated Zod graphs created with the new pipeline.
-- **5.3.2 Security Metadata Extraction** – Filesystem context and version information from Part 1 simplify resolving security schemes, including external references.
+- **5.3.1 JSON Schema Export** – Part 2's `zod-to-json-schema` integration sits atop the validated Zod graphs created with the new pipeline.
+- **5.3.2 Security Metadata Extraction** – Filesystem context and version information from Part 1 simplify resolving security schemes, including external references.
 - **5.3.3 / 5.3.4 Type Guards & Error Formatting** – Improved validation detail feeds MCP readiness checks and user-facing error messaging.
-- **5.4 Documentation & Quality Gates** – Documentation updates and quality gates continue to apply across Parts 1 and 2, with the characterisation suite ensuring regressions are caught.
+- **5.4 Documentation & Quality Gates** – Documentation updates and quality gates continue to apply across Parts 1 and 2, with the characterisation suite ensuring regressions are caught.
 
 ---
 
@@ -230,16 +301,16 @@ Implements MCP-specific features assuming Part 1 is complete:
 
 | Part   | Focus                           | Key Deliverables                                                                        |
 | ------ | ------------------------------- | --------------------------------------------------------------------------------------- |
-| Part 1 | Scalar Pipeline Re-architecture | New loader/validator, `PreparedOpenApiDocument`, removal of SwaggerParser, updated docs |
-| Part 2 | MCP Enhancements                | JSON Schema export, security metadata, MCP readiness checks, TypeDoc/README updates     |
+| Part 1 | Scalar Pipeline Re-architecture | New loader/validator, `PreparedOpenApiDocument`, removal of SwaggerParser, updated docs |
+| Part 2 | MCP Enhancements                | JSON Schema export, security metadata, MCP readiness checks, TypeDoc/README updates     |
 
 ---
 
 ## Next Steps
 
-1. Confirm prerequisites are complete (Architecture Rewrite ✓, Zod v4 ✓).
-2. Start Phase 2 Part 1 milestones in order (foundation → integration).
-3. Once Part 1 is merged, kick off Part 2 tasks using the investigation documents as guides.
+1. Confirm prerequisites are complete (Architecture Rewrite ✓, Zod v4 ✓).
+2. Start Phase 2 Part 1 milestones in order (foundation → integration).
+3. Once Part 1 is merged, kick off Part 2 tasks using the investigation documents as guides.
 4. Update roadmap/changelog to reflect two-part delivery.
 
 All contributors should reference this document, `.agent/RULES.md`, and `.agent/plans/01-CURRENT-IMPLEMENTATION.md` to ensure consistency, especially around TDD and TSDoc expectations.

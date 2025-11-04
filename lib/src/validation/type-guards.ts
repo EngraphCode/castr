@@ -7,8 +7,8 @@
  * Centralized here to avoid circular import issues.
  */
 
-import type { OperationObject, ReferenceObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { OperationObject, ReferenceObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 // Re-export isReferenceObject for convenience
 export { isReferenceObject };

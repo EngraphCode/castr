@@ -11,7 +11,7 @@ import type {
   ParameterObject,
   ResponseObject,
   SchemaObject,
-} from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
 import {
   processRequestBody,
   processParameter,

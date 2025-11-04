@@ -5,7 +5,7 @@
  * @internal
  */
 
-import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas31';
 import { pick } from 'lodash-es';
 
 import type { CodeMeta, ConversionTypeContext } from '../shared/code-meta.js';

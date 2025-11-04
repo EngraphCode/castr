@@ -6,7 +6,7 @@
  */
 
 import { describe, test, expect } from 'vitest';
-import type { OpenAPIObject, OperationObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, OperationObject, SchemaObject } from 'openapi3-ts/oas31';
 import { processOperation } from './path.helpers.js';
 import type { ConversionTypeContext } from '../shared/code-meta.js';
 

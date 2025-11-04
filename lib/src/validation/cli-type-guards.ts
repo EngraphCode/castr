@@ -5,7 +5,7 @@
  * without using type assertions.
  */
 
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 /**
  * Valid group strategy values per CLI documentation

@@ -1,5 +1,5 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { CodeMetaData, ConversionTypeContext } from '../../shared/code-meta.js';
 import { CodeMeta } from '../../shared/code-meta.js';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import generateJSDocArray from './generate-jsdoc-array.js';
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 describe('generateJSDocArray', () => {
   it('should generate description comment', () => {

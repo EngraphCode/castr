@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { writeFileSync, rmSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 /**
  * Characterisation Tests: CLI Behavior

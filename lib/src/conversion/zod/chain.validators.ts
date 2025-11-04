@@ -5,7 +5,7 @@
  * These functions build type-specific validation chains for Zod schemas.
  */
 
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 import { match } from 'ts-pattern';
 
@@ -98,14 +98,13 @@ export function getZodChainableStringValidations(schema: SchemaObject): string {
 
 /**
  * Add minimum validation chain
+ *
+ * In OpenAPI 3.1, exclusiveMinimum is a number (not a boolean like in 3.0).
+ * The upgrade step converts 3.0 specs to 3.1 format before we see them.
  */
 function addMinimumValidation(schema: SchemaObject, validations: string[]): void {
   if (schema.minimum !== undefined) {
-    if (schema.exclusiveMinimum === true) {
-      validations.push(`gt(${schema.minimum})`);
-    } else {
-      validations.push(`gte(${schema.minimum})`);
-    }
+    validations.push(`gte(${schema.minimum})`);
   } else if (typeof schema.exclusiveMinimum === 'number') {
     validations.push(`gt(${schema.exclusiveMinimum})`);
   }
@@ -113,14 +112,13 @@ function addMinimumValidation(schema: SchemaObject, validations: string[]): void
 
 /**
  * Add maximum validation chain
+ *
+ * In OpenAPI 3.1, exclusiveMaximum is a number (not a boolean like in 3.0).
+ * The upgrade step converts 3.0 specs to 3.1 format before we see them.
  */
 function addMaximumValidation(schema: SchemaObject, validations: string[]): void {
   if (schema.maximum !== undefined) {
-    if (schema.exclusiveMaximum === true) {
-      validations.push(`lt(${schema.maximum})`);
-    } else {
-      validations.push(`lte(${schema.maximum})`);
-    }
+    validations.push(`lte(${schema.maximum})`);
   } else if (typeof schema.exclusiveMaximum === 'number') {
     validations.push(`lt(${schema.exclusiveMaximum})`);
   }

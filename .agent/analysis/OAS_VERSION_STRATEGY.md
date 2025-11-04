@@ -18,8 +18,8 @@ After upgrading to openapi3-ts v4.5.0, we now have access to separate type names
 
 ```typescript
 // Hard-coded to OAS 3.0 throughout codebase (93 files)
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 ```
 
 **Implications:**
@@ -89,7 +89,7 @@ export { Server, ServerVariable } from './model/server'; // Common types
 function getOpenAPITypes(spec: unknown) {
   const version = (spec as any).openapi;
   if (version.startsWith('3.0')) {
-    return import('openapi3-ts/oas30');
+    return import('openapi3-ts/oas31');
   } else if (version.startsWith('3.1')) {
     return import('openapi3-ts/oas31');
   }
@@ -153,7 +153,7 @@ generateZodClientFromOpenAPI({
 
 ```typescript
 // lib/src/generateZodClientFromOpenAPI.ts
-import * as oas30 from 'openapi3-ts/oas30';
+import * as oas30 from 'openapi3-ts/oas31';
 import * as oas31 from 'openapi3-ts/oas31';
 
 export interface GenerateZodClientFromOpenApiArgs<Options> {
@@ -360,11 +360,11 @@ function processSpec<V extends '3.0' | '3.1'>(
 
 ```typescript
 // Before (current)
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 function myFunction(spec: OpenAPIObject) {}
 
 // After (multi-version)
-import type { OpenAPIObject as OAS30 } from 'openapi3-ts/oas30';
+import type { OpenAPIObject as OAS30 } from 'openapi3-ts/oas31';
 import type { OpenAPIObject as OAS31 } from 'openapi3-ts/oas31';
 function myFunction(spec: OAS30 | OAS31) {} // Breaking!
 ```
@@ -398,7 +398,7 @@ interface GenerateZodClientFromOpenApiArgs {
 
 ```typescript
 // lib/src/oas-version-helpers.ts
-import * as oas30 from 'openapi3-ts/oas30';
+import * as oas30 from 'openapi3-ts/oas31';
 import * as oas31 from 'openapi3-ts/oas31';
 
 export type OASVersion = '3.0' | '3.1';

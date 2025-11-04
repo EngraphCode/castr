@@ -1,4 +1,4 @@
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 type CommentValue = string | string[] | undefined;
 type CommentFormatter = (value: unknown) => CommentValue;

@@ -5,7 +5,7 @@
  * Each function has a single responsibility and is < 50 lines
  */
 
-import { type ReferenceObject, type SchemaObject } from 'openapi3-ts/oas30';
+import { type ReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
 
 import type { TsConversionContext } from './index.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';

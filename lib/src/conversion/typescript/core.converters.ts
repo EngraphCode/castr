@@ -5,7 +5,7 @@
  * These functions convert specific OpenAPI schema types to TypeScript type strings.
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import type { TemplateContext } from '../../context/template-context.js';
 import { inferRequiredSchema } from '../../shared/infer-required-only.js';

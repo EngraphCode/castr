@@ -3,8 +3,8 @@ import path from 'node:path';
 import type { LoaderPlugin } from '@scalar/json-magic/bundle';
 import { bundle } from '@scalar/json-magic/bundle';
 import { fetchUrls, readFiles } from '@scalar/json-magic/bundle/plugins/node';
-import type { OpenAPI } from '@scalar/openapi-types';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import { upgrade } from '@scalar/openapi-parser';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 import type {
   BundleFileEntry,
@@ -12,6 +12,7 @@ import type {
   BundleUrlEntry,
   BundleWarning,
   LoadedOpenApiDocument,
+  BundledOpenApiDocument,
 } from './bundle-metadata.types.js';
 import { isOpenAPIObject } from '../validation/cli-type-guards.js';
 
@@ -23,19 +24,23 @@ interface NormalizedInput {
 }
 
 const IN_MEMORY_DESCRIPTOR = '[in-memory document]';
-
 interface ResolveNode {
   readonly pointer?: unknown;
   readonly $ref?: unknown;
   readonly message?: unknown;
 }
-
 const isRemoteUrl = (value: string): boolean => /^https?:\/\//iu.test(value);
 
-function assertIsOpenApiDocument(value: unknown): asserts value is OpenAPI.Document {
-  if (typeof value !== 'object' || value === null) {
-    throw new Error('Scalar bundle returned a non-object document');
+// Type guard validating a value is a valid OpenAPI 3.1 document
+function isBundledOpenApiDocument(value: unknown): value is BundledOpenApiDocument {
+  if (!isOpenAPIObject(value)) {
+    return false;
   }
+  // Ensure it's 3.1.x (upgrade() should guarantee this)
+  if (typeof value.openapi !== 'string' || !value.openapi.startsWith('3.1.')) {
+    return false;
+  }
+  return true;
 }
 
 function normalizeInput(input: string | URL | OpenAPIObject): NormalizedInput {
@@ -48,7 +53,6 @@ function normalizeInput(input: string | URL | OpenAPIObject): NormalizedInput {
       originalDescriptor: href,
     };
   }
-
   if (typeof input === 'string') {
     const descriptor = input;
     if (isRemoteUrl(input)) {
@@ -59,7 +63,6 @@ function normalizeInput(input: string | URL | OpenAPIObject): NormalizedInput {
         originalDescriptor: descriptor,
       };
     }
-
     const absolutePath = path.resolve(input);
     return {
       entrypoint: { kind: 'file', uri: absolutePath },
@@ -68,17 +71,10 @@ function normalizeInput(input: string | URL | OpenAPIObject): NormalizedInput {
       originalDescriptor: descriptor,
     };
   }
-
-  const clonedUnknown: unknown =
-    typeof structuredClone === 'function'
-      ? structuredClone(input)
-      : JSON.parse(JSON.stringify(input));
-  if (!isOpenAPIObject(clonedUnknown)) {
-    throw new Error('Failed to clone OpenAPI document for Scalar bundling');
-  }
+  // In-memory object - pass directly to Scalar
   return {
     entrypoint: { kind: 'object', uri: IN_MEMORY_DESCRIPTOR },
-    bundleInput: clonedUnknown,
+    bundleInput: input,
     originalDescriptor: IN_MEMORY_DESCRIPTOR,
   };
 }
@@ -148,20 +144,16 @@ function buildWarning(node: ResolveNode): BundleWarning {
   const pointerValue = node.pointer;
   const refValue = node.$ref;
   let pointer: string | undefined;
-
   if (typeof pointerValue === 'string') {
     pointer = pointerValue;
   } else if (typeof refValue === 'string') {
     pointer = refValue;
   }
-
   const messageValue = node.message;
   const message = typeof messageValue === 'string' ? messageValue : 'Failed to resolve reference';
-
   if (pointer === undefined) {
     return { code: 'resolve:error', message };
   }
-
   return { code: 'resolve:error', message, pointer };
 }
 
@@ -184,11 +176,20 @@ export async function loadOpenApiDocument(
 
   try {
     const bundleConfig = createBundleConfig(filePlugin, urlPlugin, origin, warnings);
-    const bundledDocument = await bundle(bundleInput, bundleConfig);
-    assertIsOpenApiDocument(bundledDocument);
+    // bundleInput is either a string (file path/URL) or OpenAPIObject
+    // Pass directly - Scalar's bundle accepts both
+    const bundledDocument = await bundle(bundleInput as Parameters<typeof bundle>[0], bundleConfig);
+
+    // Upgrade to OpenAPI 3.1
+    const { specification: upgraded } = upgrade(bundledDocument);
+
+    // Validate at boundary
+    if (!isBundledOpenApiDocument(upgraded)) {
+      throw new Error('Failed to produce valid OpenAPI 3.1 document');
+    }
 
     return {
-      document: bundledDocument,
+      document: upgraded,
       metadata: createMetadata(entrypoint, files, urls, warnings, externalReferences),
     };
   } catch (error) {

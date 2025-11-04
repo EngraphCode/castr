@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import type { resolveConfig } from 'prettier';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 import type { GenerateZodClientFromOpenApiArgs } from '../rendering/index.js';
 import {

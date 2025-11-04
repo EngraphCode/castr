@@ -205,7 +205,7 @@ This document contains the complete details of all finished work. It's organized
 
 **Key Findings:**
 
-- v4 uses namespaces: `openapi3-ts/oas30`, `openapi3-ts/oas31`
+- v4 uses namespaces: `openapi3-ts/oas31`, `openapi3-ts/oas31`
 - Better type safety with discriminated unions
 - OAS 3.1 support added
 - Type guards already available (`isReferenceObject`, etc.)
@@ -369,7 +369,7 @@ This document contains the complete details of all finished work. It's organized
 **Migration Completed:**
 
 - Updated from v3 to v4.5.0 (June 2025 release)
-- Changed all imports to `openapi3-ts/oas30` namespace (30+ files)
+- Changed all imports to `openapi3-ts/oas31` namespace (30+ files)
 - Fixed ResponseObject validations (added required `description` fields)
 - Updated test fixtures for stricter OAS 3.0 types
 

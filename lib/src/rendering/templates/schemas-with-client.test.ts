@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
 
 describe('schemas-with-client template', () => {

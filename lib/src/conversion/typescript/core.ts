@@ -1,5 +1,5 @@
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { TemplateContext } from '../../context/template-context.js';
 

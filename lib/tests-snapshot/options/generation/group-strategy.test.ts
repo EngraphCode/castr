@@ -1,4 +1,4 @@
-import { type OpenAPIObject, type SchemaObject } from 'openapi3-ts/oas30';
+import { type OpenAPIObject, type SchemaObject } from 'openapi3-ts/oas31';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { expect, test } from 'vitest';
 

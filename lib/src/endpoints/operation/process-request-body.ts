@@ -14,7 +14,7 @@ import type {
   OpenAPIObject,
   SchemaObject,
   ReferenceObject,
-} from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
 import { match, P } from 'ts-pattern';
 
 import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';

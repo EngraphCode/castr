@@ -707,7 +707,7 @@ describe('Regression Prevention', () => {
 1. **E2E tests FIRST** - Define acceptance criteria for all usage scenarios
 2. **No internal dereferencing** - Let callers control it (CLI does, programmers choose)
 3. **Preserve component schema $refs** - Critical for named type extraction
-4. **Use ComponentsObject properly** - Import from `openapi3-ts/oas30`, don't create ad-hoc
+4. **Use ComponentsObject properly** - Import from `openapi3-ts/oas31`, don't create ad-hoc
 5. **Handle both dereferenced AND non-dereferenced specs** - Be flexible
 6. **Unit tests via TDD** - Build incrementally with test coverage
 
@@ -789,8 +789,8 @@ import type {
   ComponentsObject,
   SchemaObject,
   ReferenceObject,
-} from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 /**
  * Get a schema from components.schemas by name.
@@ -828,7 +828,7 @@ export function assertNotReference<T>(
 
 **Key Design Principles:**
 
-1. **Use ComponentsObject types** - Import from `openapi3-ts/oas30`, don't create ad-hoc
+1. **Use ComponentsObject types** - Import from `openapi3-ts/oas31`, don't create ad-hoc
 2. **Preserve refs in components.schemas** - Critical for named type extraction
 3. **Handle both dereferenced and non-dereferenced specs** - Be flexible
 4. **Fail-fast with helpful errors** - Clear messages about what went wrong
@@ -1054,7 +1054,7 @@ const sourceFile = project.createSourceFile('test.ts');
 
 ```typescript
 import { Project, SourceFile, VariableDeclarationKind } from 'ts-morph';
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 export class AstBuilder {
   private project: Project;

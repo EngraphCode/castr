@@ -129,8 +129,8 @@
 ```typescript
 import { describe, it, expect } from 'vitest';
 import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
 
 /**
@@ -450,7 +450,7 @@ describe('Bundled Spec Assumptions - Our Code Integration', () => {
 import { describe, it, expect } from 'vitest';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { generateZodClientFromOpenAPI } from '../generateZodClientFromOpenAPI.js';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { existsSync } from 'node:fs';
 import { glob } from 'fast-glob';
 

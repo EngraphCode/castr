@@ -3,8 +3,8 @@ import type {
   ReferenceObject,
   SchemaObject,
   OpenAPIObject,
-} from 'openapi3-ts/oas30';
-import { isReferenceObject, isSchemaObject } from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
+import { isReferenceObject, isSchemaObject } from 'openapi3-ts/oas31';
 import { match } from 'ts-pattern';
 import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';

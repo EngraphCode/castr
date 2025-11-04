@@ -1,5 +1,5 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import { match } from 'ts-pattern';
 
@@ -21,11 +21,15 @@ interface ZodChainArgs {
  * Get presence chain (nullable/optional/nullish)
  */
 export function getZodChainablePresence(schema: SchemaObject, meta?: CodeMetaData): string {
-  if (schema.nullable && !meta?.isRequired) {
+  // In OpenAPI 3.1, nullable types use type arrays: type: ['string', 'null']
+  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
+  const isNullable = types.includes('null');
+
+  if (isNullable && !meta?.isRequired) {
     return 'nullish()';
   }
 
-  if (schema.nullable) {
+  if (isNullable) {
     return 'nullable()';
   }
 

@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 

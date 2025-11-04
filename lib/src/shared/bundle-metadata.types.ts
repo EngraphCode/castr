@@ -1,4 +1,22 @@
-import type { OpenAPI } from '@scalar/openapi-types';
+import type { OpenAPIV3_1 } from '@scalar/openapi-types';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
+
+/**
+ * A bundled and upgraded OpenAPI 3.1 document combining Scalar and openapi3-ts types.
+ *
+ * This intersection type provides:
+ * - Scalar's extension-friendly structure (x-ext, x-ext-urls, etc.)
+ * - openapi3-ts strict typing for OpenAPI 3.1 standard fields
+ *
+ * All documents are upgraded to OpenAPI 3.1 after bundling, regardless of input version.
+ *
+ * @remarks
+ * The intersection ensures:
+ * - Strict typing for standard OpenAPI 3.1 fields (paths, components, etc.)
+ * - Preserved Scalar bundling metadata (x-ext, x-ext-urls)
+ * - No casting required - validated at runtime boundary via type guards
+ */
+export type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
 
 /**
  * Describes the source supplied to {@link loadOpenApiDocument} and how it was resolved.
@@ -100,15 +118,22 @@ export interface BundleMetadata {
 }
 
 /**
- * Output of {@link loadOpenApiDocument}: the raw Scalar document plus metadata describing how it was produced.
+ * Output of {@link loadOpenApiDocument}: bundled, upgraded 3.1 document plus metadata.
  *
  * @remarks
- * The Scalar representation maintains optional and extension-friendly typing, while metadata preserves bundling context.
- * Later stages in the pipeline will transform the document into a stricter `openapi3-ts` object once validation has run.
+ * The pipeline:
+ * 1. Bundles via @scalar/json-magic (resolves $refs, adds x-ext)
+ * 2. Upgrades to OpenAPI 3.1 via @scalar/openapi-parser
+ * 3. Validates and types as intersection of Scalar + openapi3-ts
+ *
+ * Input specs can be OpenAPI 3.0.x or 3.1.x - all are normalized to 3.1.
  */
 export interface LoadedOpenApiDocument {
-  /** Raw document returned by Scalar's `bundle()` API. */
-  readonly document: OpenAPI.Document;
+  /**
+   * Bundled and upgraded OpenAPI 3.1 document.
+   * Strictly typed for 3.1 fields, with preserved Scalar extensions.
+   */
+  readonly document: BundledOpenApiDocument;
   /** Metadata detailing how the bundle was assembled. */
   readonly metadata: BundleMetadata;
 }

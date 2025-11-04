@@ -1,4 +1,4 @@
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 /**
  * Primitive schema types (subset of SchemaObjectType from openapi3-ts)

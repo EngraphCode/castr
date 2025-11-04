@@ -3,7 +3,7 @@ import type {
   ReferenceObject,
   SchemaObject,
   OperationObject,
-} from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
 
 import { getEndpointDefinitionList } from '../endpoints/index.js';
 

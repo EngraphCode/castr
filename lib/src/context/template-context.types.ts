@@ -1,4 +1,4 @@
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import {
   type Node,
   EmitHint,
@@ -12,7 +12,7 @@ import {
 import { getTypescriptFromOpenApi } from '../conversion/typescript/index.js';
 import type { TsConversionContext } from '../conversion/typescript/index.js';
 import { getSchemaFromComponents } from '../shared/component-access.js';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import { checkIfSchemaIsCircular } from './template-context.schemas.js';
 import { getSchemaNameFromRef } from './template-context.common.js';

@@ -12,11 +12,14 @@
  * - Type boundary handling (via assertOpenApiObject)
  */
 
+import path from 'node:path';
+
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { assertIsString } from './test-utils.js';
+import { loadOpenApiDocument } from '../shared/load-openapi-document.js';
 
 /**
  * Minimal valid OpenAPI 3.0 spec for testing.
@@ -171,5 +174,52 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const typed: OpenAPIObject = spec;
       expect(typed.openapi).toBe('3.0.0');
     });
+  });
+});
+
+describe('Scalar loader parity checks', () => {
+  it('bundles single-file specs without introducing external references', async () => {
+    const entrypointPath = './examples/openapi/v3.0/petstore.yaml';
+    const absoluteEntrypoint = path.resolve(entrypointPath);
+
+    const scalarResult = await loadOpenApiDocument(entrypointPath);
+    const swaggerResult = await prepareOpenApiDocument(entrypointPath);
+
+    expect(scalarResult.metadata.entrypoint).toStrictEqual({
+      kind: 'file',
+      uri: absoluteEntrypoint,
+    });
+    expect(scalarResult.metadata.files.map((file) => file.absolutePath)).toContain(
+      absoluteEntrypoint,
+    );
+    expect(scalarResult.metadata.externalReferences).toHaveLength(0);
+    expect(Object.keys(scalarResult.document.paths ?? {})).toEqual(
+      Object.keys(swaggerResult.paths ?? {}),
+    );
+  });
+
+  it('bundles multi-file specs and records filesystem metadata', async () => {
+    const entrypointPath = './examples/openapi/multi-file/main.yaml';
+    const componentPath = path.resolve('./examples/openapi/multi-file/components/pet.yaml');
+
+    const scalarResult = await loadOpenApiDocument(entrypointPath);
+    const swaggerResult = await prepareOpenApiDocument(entrypointPath);
+
+    const absoluteEntrypoint = path.resolve(entrypointPath);
+    expect(scalarResult.metadata.entrypoint).toStrictEqual({
+      kind: 'file',
+      uri: absoluteEntrypoint,
+    });
+    expect(scalarResult.metadata.files.map((file) => file.absolutePath)).toEqual(
+      expect.arrayContaining([absoluteEntrypoint, componentPath]),
+    );
+    expect(scalarResult.metadata.externalReferences).toEqual(
+      expect.arrayContaining([expect.objectContaining({ uri: componentPath })]),
+    );
+    expect(Object.keys(scalarResult.document.paths ?? {})).toEqual(
+      Object.keys(swaggerResult.paths ?? {}),
+    );
+    // Scalar keeps vendor-specific `x-ext` to preserve dependency provenance; this is expected and
+    // verified in dedicated loader unit tests. The characterisation suite focuses on behavioural parity.
   });
 });

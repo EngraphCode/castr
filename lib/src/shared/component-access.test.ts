@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import {
   getSchemaFromComponents,
   resolveSchemaRef,

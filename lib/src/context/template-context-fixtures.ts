@@ -1,4 +1,4 @@
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 
 /**
  * Creates a minimal OpenAPI document with a single endpoint

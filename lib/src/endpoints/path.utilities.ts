@@ -1,4 +1,4 @@
-import type { OperationObject, ReferenceObject, ResponseObject } from 'openapi3-ts/oas30';
+import type { OperationObject, ReferenceObject, ResponseObject } from 'openapi3-ts/oas31';
 
 import type { ConversionTypeContext } from '../shared/code-meta.js';
 import type { EndpointDefinition } from './definition.types.js';

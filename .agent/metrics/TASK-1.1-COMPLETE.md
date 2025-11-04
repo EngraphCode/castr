@@ -29,7 +29,7 @@
 
 **Key Features:**
 
-- Uses `ComponentsObject` from `openapi3-ts/oas30` (no ad-hoc types)
+- Uses `ComponentsObject` from `openapi3-ts/oas31` (no ad-hoc types)
 - Preserves component schema `$refs` (needed for semantic naming)
 - Handles both dereferenced AND non-dereferenced specs
 - Fail-fast with helpful error messages
@@ -77,7 +77,7 @@
 
 ### Type Safety
 
-- Uses proper OpenAPI types from `openapi3-ts/oas30`
+- Uses proper OpenAPI types from `openapi3-ts/oas31`
 - No type assertions or escape hatches
 - Proper type guards with `is` keyword
 - Type narrowing via assertions

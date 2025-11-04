@@ -1,7 +1,7 @@
 import { getZodSchema } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 import { getZodChain } from '../../../src/conversion/zod/index.js';
-import { type SchemaObject } from 'openapi3-ts/oas30';
+import { type SchemaObject } from 'openapi3-ts/oas31';
 
 test('unicode-pattern-regex', () => {
   const schema: SchemaObject = {

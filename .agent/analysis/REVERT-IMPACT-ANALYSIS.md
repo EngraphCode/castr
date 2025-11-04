@@ -86,7 +86,7 @@
 
 **Better approach:**
 
-- Use `ComponentsObject` type directly from `openapi3-ts/oas30`
+- Use `ComponentsObject` type directly from `openapi3-ts/oas31`
 - Don't make assumptions about dereferencing
 - Handle both dereferenced and non-dereferenced specs
 
@@ -224,7 +224,7 @@ describe('E2E: CLI Usage', () => {
 
 Based on e2e tests:
 
-- Use `ComponentsObject` type from `openapi3-ts/oas30`
+- Use `ComponentsObject` type from `openapi3-ts/oas31`
 - Don't add internal dereferencing
 - Support both dereferenced and non-dereferenced specs
 - Focus on eliminating lying types, not changing behavior

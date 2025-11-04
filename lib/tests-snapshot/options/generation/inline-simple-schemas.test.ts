@@ -1,4 +1,4 @@
-import { type OpenAPIObject } from 'openapi3-ts/oas30';
+import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 

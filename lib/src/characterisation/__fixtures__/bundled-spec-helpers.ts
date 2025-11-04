@@ -3,8 +3,8 @@
  * Extracted to reduce complexity and enable reuse across test cases
  */
 
-import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 /**
  * Type guard to check if a path item value is an operation object

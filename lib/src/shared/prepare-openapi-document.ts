@@ -5,10 +5,16 @@
  * documents from various input sources (file paths, URLs, or in-memory objects).
  * Both CLI and programmatic APIs use this helper to ensure consistent behavior.
  *
+ * **Architecture:**
+ *
+ * The pipeline uses Scalar's json-magic and openapi-parser to:
+ * 1. Bundle specs (resolves external $refs, adds x-ext metadata)
+ * 2. Upgrade all specs to OpenAPI 3.1 (3.0 specs transparently upgraded)
+ * 3. Validate and type as intersection of Scalar + openapi3-ts types
+ *
  * **Why Bundle Mode (Not Dereference)?**
  *
- * The pipeline uses SwaggerParser.bundle() which resolves external $refs but keeps
- * internal $refs intact. This is essential because:
+ * The pipeline keeps internal $refs intact. This is essential because:
  *
  * 1. **Circular References**: Dereferencing creates circular JavaScript object references
  *    (e.g., `Node.properties.next === Node`), which cause stack overflows during Zod
@@ -26,10 +32,8 @@
  * @module
  */
 
-import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPI } from 'openapi-types';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
-import { isOpenAPIObject } from '../validation/cli-type-guards.js';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { loadOpenApiDocument } from './load-openapi-document.js';
 
 // eslint-disable-next-line sonarjs/redundant-type-aliases -- it is semantically useful.
 type FilePathInput = string;
@@ -43,25 +47,21 @@ type FilePathInput = string;
  * - In-memory OpenAPI objects
  *
  * The pipeline performs:
- * 1. Bundling via SwaggerParser.bundle() (validates structure, resolves external $refs, keeps internal ones)
- * 2. Type boundary assertion to ensure openapi3-ts compatibility
- *
- * Note: We use bundle() directly (not validate() + bundle()) because bundle() performs
- * validation internally. Calling validate() separately on in-memory objects causes mutation
- * that breaks circular reference handling.
+ * 1. Bundling via @scalar/json-magic (validates structure, resolves external $refs, keeps internal ones)
+ * 2. Upgrade to OpenAPI 3.1 via @scalar/openapi-parser (3.0 specs transparently upgraded)
+ * 3. Type boundary validation to ensure openapi3-ts/oas31 compatibility
  *
  * **Processing Strategy:**
- * The function uses SwaggerParser.bundle() which resolves external $refs but preserves
+ * The function uses Scalar's bundle() which resolves external $refs but preserves
  * internal $refs. This is essential for proper handling of circular references and
  * dependency tracking (see module documentation for details).
  *
  * **Error Handling:**
- * - All errors are sourced from SwaggerParser for consistency
- * - Errors include actionable messages with file paths/URLs when available
- * - Supports OpenAPI 3.0.x and 3.1.x specifications
+ * - All errors include actionable messages with file paths/URLs when available
+ * - Supports OpenAPI 3.0.x and 3.1.x specifications (all normalized to 3.1)
  *
  * @param input - OpenAPI document source: file path string, URL object, or in-memory OpenAPIObject
- * @returns Validated and bundled OpenAPIObject with internal $refs preserved
+ * @returns Validated, bundled, and upgraded OpenAPIObject (3.1) with internal $refs preserved
  *
  * @throws {Error} When input cannot be loaded (file not found, network error, etc.)
  * @throws {Error} When OpenAPI document fails validation (structural errors)
@@ -71,7 +71,7 @@ type FilePathInput = string;
  * import { prepareOpenApiDocument } from 'openapi-zod-client';
  *
  * const spec = await prepareOpenApiDocument('./api.yaml');
- * // spec is now a validated, bundled OpenAPIObject ready for code generation
+ * // spec is now a validated, bundled OpenAPI 3.1 document ready for code generation
  * ```
  *
  * @example URL input
@@ -87,6 +87,7 @@ type FilePathInput = string;
  *   paths: {}
  * };
  * const spec = await prepareOpenApiDocument(mySpec);
+ * // Returns OpenAPI 3.1 document (automatically upgraded from 3.0)
  * ```
  *
  * @public
@@ -94,26 +95,6 @@ type FilePathInput = string;
 export async function prepareOpenApiDocument(
   input: FilePathInput | URL | OpenAPIObject,
 ): Promise<OpenAPIObject> {
-  // Normalize input: convert URL to string if needed
-  let parserInput: string | OpenAPI.Document;
-  if (input instanceof URL) {
-    parserInput = input.toString();
-  } else if (typeof input === 'string') {
-    parserInput = input;
-  } else {
-    // Handle type boundary: SwaggerParser uses openapi-types, we use openapi3-ts
-    // Both are structurally compatible but nominally different. This is the ONE place we need to assert the type.
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    parserInput = input as OpenAPI.Document;
-  }
-
-  // Bundle with SwaggerParser. Validates the document structure, resolves external $refs, and keeps internal $refs.
-  // Internal $refs are essential for circular reference handling and dependency tracking
-  const processed = await SwaggerParser.bundle(parserInput);
-
-  // Convert back to openapi3-ts types
-  if (!isOpenAPIObject(processed)) {
-    throw new Error('SwaggerParser.bundle() returned invalid OpenAPI document');
-  }
-  return processed;
+  const { document } = await loadOpenApiDocument(input);
+  return document;
 }

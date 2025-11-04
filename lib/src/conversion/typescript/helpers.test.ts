@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import type { TsConversionContext } from './index.js';
 import {

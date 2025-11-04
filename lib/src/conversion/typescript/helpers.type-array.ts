@@ -5,7 +5,7 @@
  * Handles validation and creation of schemas with type arrays (OpenAPI 3.1 feature)
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import { convertSchemasToTypes } from './helpers.composition.js';
 import { wrapNullable, handleUnion } from './string-helpers.js';

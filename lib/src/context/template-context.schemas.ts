@@ -1,4 +1,4 @@
-import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import { getOpenApiDependencyGraph } from '../shared/dependency-graph.js';
 import { getZodSchema } from '../conversion/zod/index.js';

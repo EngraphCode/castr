@@ -3,7 +3,7 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { Options } from 'prettier';
 import { getHandlebars } from './handlebars.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';

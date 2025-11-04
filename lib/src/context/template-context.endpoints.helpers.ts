@@ -1,5 +1,5 @@
-import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
 import { logger } from '../shared/utils/logger.js';
@@ -91,7 +91,7 @@ export const getOperationForEndpoint = (
   endpoint: EndpointDefinition,
 ): OperationObject | null => {
   const operationPath = getOriginalPathWithBrackets(endpoint.path);
-  const pathItem = openApiDoc.paths[endpoint.path] ?? openApiDoc.paths[operationPath];
+  const pathItem = openApiDoc.paths?.[endpoint.path] ?? openApiDoc.paths?.[operationPath];
 
   if (!pathItem || isReferenceObject(pathItem)) {
     logger.warn('Missing path', endpoint.path);

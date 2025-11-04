@@ -1,28 +1,18 @@
 import path from 'node:path';
 
 import type { LoaderPlugin, ResolveResult } from '@scalar/json-magic/bundle';
-import type { UnknownObject } from '@scalar/json-magic/dist/types.js';
+import { bundle } from '@scalar/json-magic/bundle';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { loadOpenApiDocument } from './load-openapi-document.js';
 
-interface BundleConfig {
-  readonly plugins: readonly LoaderPlugin[];
-  readonly hooks?: {
-    readonly onResolveStart?: (node: UnknownObject) => void;
-    readonly onResolveError?: (node: UnknownObject) => void;
-    readonly onResolveSuccess?: (node: UnknownObject) => void;
-    readonly onBeforeNodeProcess?: (node: UnknownObject, context: UnknownObject) => void;
-    readonly onAfterNodeProcess?: (node: UnknownObject, context: UnknownObject) => void;
-  };
-}
-
-const bundleMock = vi.fn<(input: unknown, config: BundleConfig) => Promise<UnknownObject>>();
+type BundleResult = Record<string, unknown>;
+const bundleMock = vi.fn<[unknown, Parameters<typeof bundle>[1]], Promise<BundleResult>>();
 
 let currentReadFilesPlugin: LoaderPlugin;
 let currentFetchUrlsPlugin: LoaderPlugin;
 
 vi.mock('@scalar/json-magic/bundle', () => ({
-  bundle: (...args: [unknown, BundleConfig]) => bundleMock(...args),
+  bundle: (...args: [unknown, Parameters<typeof bundle>[1]]) => bundleMock(...args),
 }));
 
 vi.mock('@scalar/json-magic/bundle/plugins/node', () => ({
@@ -32,7 +22,14 @@ vi.mock('@scalar/json-magic/bundle/plugins/node', () => ({
   parseYaml: vi.fn(),
 }));
 
-const successfulResolve = (raw: string, data: UnknownObject): ResolveResult => ({
+vi.mock('@scalar/openapi-parser', () => ({
+  upgrade: vi.fn((doc: unknown) => ({
+    specification: doc,
+    version: '3.1' as const,
+  })),
+}));
+
+const successfulResolve = (raw: string, data: BundleResult): ResolveResult => ({
   ok: true,
   raw,
   data,
@@ -63,9 +60,13 @@ describe('loadOpenApiDocument', () => {
   it('bundles a local file and records filesystem metadata', async () => {
     const entrypoint = './examples/petstore.yaml';
     const absoluteEntrypoint = path.resolve(entrypoint);
-    const scalarDocument: UnknownObject = { openapi: '3.1.0', paths: {} };
+    const scalarDocument: BundleResult = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
 
-    bundleMock.mockImplementation(async (input: unknown, config: BundleConfig) => {
+    bundleMock.mockImplementation(async (input: unknown, config: Parameters<typeof bundle>[1]) => {
       expect(String(input)).toBe(absoluteEntrypoint);
       expectBundleConfig(config);
 
@@ -90,7 +91,12 @@ describe('loadOpenApiDocument', () => {
   });
 
   it('tracks multiple local references and aggregates external reference counts', async () => {
-    const scalarDocument: UnknownObject = { openapi: '3.1.0', components: {} };
+    const scalarDocument: BundleResult = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+      components: {},
+    };
     const referencedFile = path.resolve('./schemas/pet.yaml');
     const anotherFile = path.resolve('./schemas/user.yaml');
     const execSequence: string[] = [];
@@ -100,7 +106,7 @@ describe('loadOpenApiDocument', () => {
       return successfulResolve('{"ok":true}', {});
     });
 
-    bundleMock.mockImplementation(async (_input: unknown, config: BundleConfig) => {
+    bundleMock.mockImplementation(async (_input: unknown, config: Parameters<typeof bundle>[1]) => {
       const [filePlugin] = config.plugins;
       if (!filePlugin) {
         throw new Error('File plugin is required');
@@ -122,9 +128,10 @@ describe('loadOpenApiDocument', () => {
 
   it('captures remote URL fetches when bundling HTTP entrypoints', async () => {
     const entrypoint = new URL('https://api.example.com/openapi.yaml');
-    const scalarDocument: UnknownObject = {
+    const scalarDocument: BundleResult = {
       openapi: '3.1.0',
-      info: { title: 'Remote' },
+      info: { title: 'Remote', version: '1.0.0' },
+      paths: {},
     };
 
     currentFetchUrlsPlugin = createTrackingPlugin(async (value) => {
@@ -132,7 +139,7 @@ describe('loadOpenApiDocument', () => {
       return successfulResolve('{"ok":true}', {});
     });
 
-    bundleMock.mockImplementation(async (input: unknown, config: BundleConfig) => {
+    bundleMock.mockImplementation(async (input: unknown, config: Parameters<typeof bundle>[1]) => {
       expect(String(input)).toBe(entrypoint.toString());
       expectBundleConfig(config);
       const [, urlPlugin] = config.plugins;
@@ -150,8 +157,10 @@ describe('loadOpenApiDocument', () => {
   });
 
   it('preserves internal $ref structure for circular schemas', async () => {
-    const scalarDocument: UnknownObject = {
+    const scalarDocument: BundleResult = {
       openapi: '3.1.0',
+      info: { title: 'Circular', version: '1.0.0' },
+      paths: {},
       components: {
         schemas: {
           Node: {
@@ -176,9 +185,13 @@ describe('loadOpenApiDocument', () => {
   });
 
   it('collects bundler warnings for conflicting component names', async () => {
-    const scalarDocument: UnknownObject = { openapi: '3.1.0' };
+    const scalarDocument: BundleResult = {
+      openapi: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      paths: {},
+    };
 
-    bundleMock.mockImplementation(async (_input: unknown, config: BundleConfig) => {
+    bundleMock.mockImplementation(async (_input: unknown, config: Parameters<typeof bundle>[1]) => {
       config.hooks?.onResolveError?.({
         $ref: './schemas/conflict.yaml',
         message: 'Duplicate component name',

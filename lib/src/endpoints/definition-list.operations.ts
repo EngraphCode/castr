@@ -5,7 +5,7 @@
  * @internal
  */
 
-import type { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts/oas30';
+import type { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts/oas31';
 
 import type { CodeMeta, ConversionTypeContext } from '../shared/code-meta.js';
 import type { EndpointDefinition } from './definition.types.js';

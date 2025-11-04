@@ -178,7 +178,7 @@ Add to `README.md`:
 
 ### Why TypeScript Warnings Appear
 
-The codebase uses OpenAPI 3.0 types (`openapi3-ts/oas30`) for TypeScript type-checking, but the **runtime code** handles all OAS 3.1 features correctly. This is a pragmatic choice that:
+The codebase uses OpenAPI 3.0 types (`openapi3-ts/oas31`) for TypeScript type-checking, but the **runtime code** handles all OAS 3.1 features correctly. This is a pragmatic choice that:
 
 1. ✅ Works for 95% of production APIs (which use OAS 3.0)
 2. ✅ Avoids complex TypeScript union types

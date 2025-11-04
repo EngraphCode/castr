@@ -69,7 +69,7 @@ openapi3-ts v4 provides:
 - **No schema traversal** - No built-in iteration or transformation utilities
 - **No validation** - Must use AJV or similar for runtime validation
 
-**Key exports from `openapi3-ts/oas30`:**
+**Key exports from `openapi3-ts/oas31`:**
 
 - `OpenAPIObject` - Root document type
 - `SchemaObject` - JSON Schema type

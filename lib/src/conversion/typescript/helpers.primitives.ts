@@ -5,7 +5,7 @@
  * Handles primitive types (string, number, integer, boolean, null) and their enums
  */
 
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 import {
   handleBasicPrimitive as handleBasicPrimitiveString,

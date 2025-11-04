@@ -1,5 +1,5 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { getEndpointDefinitionList } from '../../src/endpoints/index.js';
 

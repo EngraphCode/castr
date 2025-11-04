@@ -61,7 +61,7 @@ import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 import { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
 // v4 (OAS 3.0 specific)
-import { OpenAPIObject } from 'openapi3-ts/oas30';
+import { OpenAPIObject } from 'openapi3-ts/oas31';
 
 // v4 (OAS 3.1 specific)
 import { OpenAPIObject } from 'openapi3-ts/oas31';
@@ -153,7 +153,7 @@ import type { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts';
 
 // Option B: Specific to OAS 3.0
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 
 // Option C: Specific to OAS 3.1
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';

@@ -545,8 +545,8 @@ import type {
   ComponentsObject,
   SchemaObject,
   ReferenceObject,
-} from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 /**
  * DESIGN PRINCIPLE:
@@ -1095,7 +1095,7 @@ const sourceFile = project.createSourceFile('test.ts');
 
 ```typescript
 import { Project, SourceFile, VariableDeclarationKind } from 'ts-morph';
-import type { SchemaObject } from 'openapi3-ts/oas30';
+import type { SchemaObject } from 'openapi3-ts/oas31';
 
 export class AstBuilder {
   private project: Project;

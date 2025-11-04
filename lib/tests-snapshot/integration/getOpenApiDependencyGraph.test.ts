@@ -1,5 +1,5 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { getOpenApiDependencyGraph } from '../../src/shared/dependency-graph.js';
 import { topologicalSort } from '../../src/shared/topological-sort.js';

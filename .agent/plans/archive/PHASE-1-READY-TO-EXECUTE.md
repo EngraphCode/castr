@@ -79,7 +79,7 @@ Tags:   phase0-complete-working (f2b3ca7)
 1. **CLI already dereferences** (see `lib/src/cli.ts` line 65+)
 2. **Programmatic usage varies** - some callers dereference, some don't
 3. **We must handle both** - dereferenced AND non-dereferenced specs
-4. **ComponentsObject is the right type** - from `openapi3-ts/oas30`, don't create ad-hoc
+4. **ComponentsObject is the right type** - from `openapi3-ts/oas31`, don't create ad-hoc
 5. **E2E tests define WHAT** (acceptance criteria), **unit tests define HOW** (TDD)
 
 ---
@@ -206,7 +206,7 @@ touch src/characterisation/programmatic-usage.char.test.ts
 
 ### DO ✅
 
-- Use `ComponentsObject` from `openapi3-ts/oas30`
+- Use `ComponentsObject` from `openapi3-ts/oas31`
 - Preserve component schema `$ref`s (needed for naming)
 - Handle both dereferenced AND non-dereferenced specs
 - Use conditional logic: `if (isReferenceObject(x)) { resolve } else { use }`

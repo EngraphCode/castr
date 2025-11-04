@@ -5,7 +5,7 @@
  * Handles OpenAPI composition features (oneOf, anyOf) and array schema conversion
  */
 
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas30';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import { wrapNullable, handleUnion } from './string-helpers.js';
 

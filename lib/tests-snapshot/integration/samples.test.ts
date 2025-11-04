@@ -1,5 +1,5 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { type Options, resolveConfig } from 'prettier';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
 import { getHandlebars } from '../../src/rendering/index.js';

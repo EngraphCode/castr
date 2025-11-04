@@ -20,7 +20,7 @@ import * as Ajv04Module from 'ajv-draft-04';
 import * as addFormatsModule from 'ajv-formats';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { ValidateFunction } from 'ajv';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
 

@@ -172,7 +172,7 @@ npm info openapi3-ts@4
 **Key Changes in v4:**
 
 1. **Separate OAS 3.0 and 3.1 modules:**
-   - `openapi3-ts/oas30` for OpenAPI 3.0
+   - `openapi3-ts/oas31` for OpenAPI 3.0
    - `openapi3-ts/oas31` for OpenAPI 3.1
 
 2. **Import changes:**
@@ -629,7 +629,7 @@ is purely a TypeScript type change.
 If you specifically need OAS 3.0 types, use:
 
 ```typescript
-import type { OpenAPIObject } from 'openapi3-ts/oas30';
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 ```
 
 #### What Didn't Change

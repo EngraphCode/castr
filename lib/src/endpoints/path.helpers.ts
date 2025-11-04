@@ -1,4 +1,4 @@
-import type { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts/oas30';
+import type { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts/oas31';
 import type { TemplateContext } from '../context/template-context.js';
 import type { DefaultStatusBehavior } from '../context/template-context.types.js';
 import type { ConversionTypeContext } from '../shared/code-meta.js';

@@ -1,4 +1,4 @@
-import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas30';
+import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
 import { getZodSchema } from '../../../src/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 

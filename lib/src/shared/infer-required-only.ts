@@ -3,7 +3,7 @@ import {
   type SchemaObject,
   type ReferenceObject,
   isReferenceObject,
-} from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
 import { getSchemaFromComponents } from './component-access.js';
 
 /**

@@ -1243,7 +1243,7 @@ This work is intentionally deferred until after the ts-morph emitter migration b
 ### Current State (Post-Task 2.1)
 
 - ✅ **Runtime:** Full OAS 3.0 & 3.1 support verified by comprehensive tests
-- ⚠️ **Types:** Hard-coded to `openapi3-ts/oas30` for simplicity
+- ⚠️ **Types:** Hard-coded to `openapi3-ts/oas31` for simplicity
 - ⚠️ **User Control:** Cannot explicitly opt into 3.1-specific features
 - ⏳ **OAS 3.2:** Spec schemas available, implementation pending ecosystem maturity
 

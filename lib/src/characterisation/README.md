@@ -138,7 +138,7 @@ characterisation/
 
 ### The `@apidevtools/swagger-parser` vs `openapi3-ts` Type Mismatch
 
-**Problem:** `SwaggerParser.bundle()` returns its own OpenAPI type definition that is structurally compatible with `openapi3-ts/oas30`'s `OpenAPIObject`, but TypeScript treats them as incompatible.
+**Problem:** `SwaggerParser.bundle()` returns its own OpenAPI type definition that is structurally compatible with `openapi3-ts/oas31`'s `OpenAPIObject`, but TypeScript treats them as incompatible.
 
 **Solution:** We follow the pattern established in `cli.ts`:
 

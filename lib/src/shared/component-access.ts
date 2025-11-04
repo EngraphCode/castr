@@ -10,8 +10,8 @@ import type {
   ParameterObject,
   ResponseObject,
   RequestBodyObject,
-} from 'openapi3-ts/oas30';
-import { isReferenceObject } from 'openapi3-ts/oas30';
+} from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 /**
  * Get a schema from components.schemas by name.
