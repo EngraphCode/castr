@@ -18,25 +18,36 @@ interface ZodChainArgs {
 }
 
 /**
+ * Normalize schema type to array format
+ */
+function normalizeSchemaTypes(schema: SchemaObject): string[] {
+  if (Array.isArray(schema.type)) {
+    return schema.type;
+  }
+  if (schema.type) {
+    return [schema.type];
+  }
+  return [];
+}
+
+/**
  * Get presence chain (nullable/optional/nullish)
  */
 export function getZodChainablePresence(schema: SchemaObject, meta?: CodeMetaData): string {
   // In OpenAPI 3.1, nullable types use type arrays: type: ['string', 'null']
-  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
+  const types = normalizeSchemaTypes(schema);
   const isNullable = types.includes('null');
+  const isRequired = meta?.isRequired ?? false;
 
-  if (isNullable && !meta?.isRequired) {
+  if (isNullable && !isRequired) {
     return 'nullish()';
   }
-
   if (isNullable) {
     return 'nullable()';
   }
-
-  if (!meta?.isRequired) {
+  if (!isRequired) {
     return 'optional()';
   }
-
   return '';
 }
 

@@ -1,10 +1,10 @@
 import path from 'node:path';
 
-import type { LoaderPlugin, ResolveResult } from '@scalar/json-magic/bundle';
-import { bundle } from '@scalar/json-magic/bundle';
+import type { LoaderPlugin, ResolveResult, bundle } from '@scalar/json-magic/bundle';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { loadOpenApiDocument } from './load-openapi-document.js';
 
+// Interface for bundle result (Scalar returns loose object types)
 type BundleResult = Record<string, unknown>;
 const bundleMock = vi.fn<[unknown, Parameters<typeof bundle>[1]], Promise<BundleResult>>();
 

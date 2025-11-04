@@ -30,7 +30,6 @@ interface ResolveNode {
   readonly message?: unknown;
 }
 const isRemoteUrl = (value: string): boolean => /^https?:\/\//iu.test(value);
-
 // Type guard validating a value is a valid OpenAPI 3.1 document
 function isBundledOpenApiDocument(value: unknown): value is BundledOpenApiDocument {
   if (!isOpenAPIObject(value)) {
@@ -176,8 +175,9 @@ export async function loadOpenApiDocument(
 
   try {
     const bundleConfig = createBundleConfig(filePlugin, urlPlugin, origin, warnings);
-    // bundleInput is either a string (file path/URL) or OpenAPIObject
-    // Pass directly - Scalar's bundle accepts both
+    // Type boundary: bundleInput is string | OpenAPIObject, bundle expects string | UnknownObject
+    // OpenAPIObject is structurally compatible with UnknownObject (both are object types)
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const bundledDocument = await bundle(bundleInput as Parameters<typeof bundle>[0], bundleConfig);
 
     // Upgrade to OpenAPI 3.1

@@ -29,13 +29,12 @@ I'm working on the `openapi-zod-validation` modernization project. This TypeScri
 **Current Status**
 
 - Phase 1 tooling modernization is complete.
-- Phase 2 plan (Parts 1 & 2) reviewed; **Session 1 complete** (callers inventoried, Scalar dependencies pinned, guard scaffolded, type system migrated, legacy dependencies removed).
-- **Type system migrated (✅ Complete):** All imports changed from `openapi3-ts/oas30` to `openapi3-ts/oas31` throughout the entire codebase. Legacy `openapi-types@12.1.3` and `@apidevtools/swagger-parser` removed from `lib/package.json` and lockfile cleaned.
-- **Architectural decision:** All OpenAPI documents normalized to 3.1 after bundling via `@scalar/openapi-parser/upgrade`. Intersection type strategy (`OpenAPIV3_1.Document & OpenAPIObject`) provides strict typing while preserving Scalar extensions.
-- **Session 2 in progress:** Loader implemented with Scalar json-magic, including characterisation coverage for single-file and multi-file specs. Next steps: integrate upgrade(), refine types to use intersection pattern, remove casts, export API surface.
-- Existing pipeline still relies on `SwaggerParser.bundle()` pending Scalar loader/validator work.
-- All quality gates currently green except type-check (addressing type errors in loader).
-- Lint/type assertion cleanup is ongoing but outside the immediate scope—do not regress.
+- Phase 2 plan (Parts 1 & 2) reviewed; **Sessions 1 & 2 complete**.
+- **Session 1 (✅ Complete):** Callers inventoried, Scalar dependencies pinned, guard scaffolded, type system migrated to `openapi3-ts/oas31`, legacy dependencies removed (`openapi-types@12.1.3` and `@apidevtools/swagger-parser`).
+- **Session 2 (✅ Complete):** `loadOpenApiDocument` implemented with Scalar json-magic, `@scalar/openapi-parser/upgrade` integrated, intersection type strategy (`OpenAPIV3_1.Document & OpenAPIObject`) implemented with type guard, API surface exported with TSDoc, `prepareOpenApiDocument` updated to use Scalar pipeline internally.
+- **Architectural decision:** All OpenAPI documents normalized to 3.1 after bundling via `@scalar/openapi-parser/upgrade`. Intersection type strategy provides strict typing while preserving Scalar extensions.
+- **Session 3 ready to start:** 77 type errors and 18 lint errors documented with detailed remediation strategies in `PHASE-2-MCP-ENHANCEMENTS.md`.
+- Quality gates: `format` ✅, `build` ✅, `test` ✅, `type-check` ⚠️ (77 errors), `lint` ⚠️ (18 errors).
 
 **Type System Architecture**
 
@@ -72,26 +71,35 @@ Downstream code (conversion, templates, etc.)
    - ✅ Legacy dependencies removed: `openapi-types@12.1.3` and `@apidevtools/swagger-parser` removed from `lib/package.json`, lockfile cleaned.
    - ✅ Guard lives in `lib/src/validation/scalar-guard.test.ts` with dedicated config; run via `pnpm --filter openapi-zod-validation test:scalar-guard`.
 
-2. **Loading & Bundling (Session 2 – 🟡 In Progress)**
+2. **Loading & Bundling (Session 2 – ✅ Complete)**
    - ✅ `loadOpenApiDocument` implemented with Scalar json-magic, tracking filesystem/URL metadata and preserved `$ref`s.
    - ✅ Characterisation suite exercises the Scalar loader (petstore + multi-file fixture) to verify behaviour against the legacy pipeline.
-   - ⚠️ **Next:** Integration of `@scalar/openapi-parser/upgrade` to normalize to 3.1.
-   - ⚠️ **Next:** Type refinement to use intersection types (`BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject`) and remove casts.
-   - ⚠️ **Next:** Import library types directly from Scalar (use `Config` from `@scalar/json-magic/bundle`).
-   - ⚠️ **Next:** Export of new API surface with comprehensive TSDoc.
+   - ✅ Integration of `@scalar/openapi-parser/upgrade` to normalize to 3.1.
+   - ✅ Type refinement to use intersection types (`BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject`).
+   - ✅ Type guard `isBundledOpenApiDocument` for boundary validation.
+   - ✅ Export of new API surface with comprehensive TSDoc.
+   - ✅ Updated `prepareOpenApiDocument` to use Scalar pipeline internally.
 
-3. **Validation & Transformation (Session 3 – upcoming)**
+3. **Type System Cleanup & Test Modernization (Session 3 – ⚠️ Ready to Start)**
+   - **Current State:** 77 type errors across 21 files, 18 lint errors across 10 files
+   - **Detailed plan in `PHASE-2-MCP-ENHANCEMENTS.md` Session 3 with 5 remediation strategies:**
+     - A. Create helper function for 3.1 nullable checks → fixes 16 errors
+     - B. Modernize test fixtures from 3.0 to 3.1 syntax → fixes 47 errors
+     - C. Fix Vitest v4 mock typing → fixes 16 errors
+     - D. Skip/rewrite SwaggerParser tests → fixes 18 errors
+     - E. Add undefined guards for optional properties → fixes 5 errors
+   - **Zero tolerance:** NO `@ts-expect-error` pragmas allowed in source code
+   - **Target:** 0 type errors, 0 lint errors
+
+4. **Validation & Transformation (Session 4 – upcoming)**
    - Implement `validateOpenApiWithScalar`, wrapping `openapi-parser.validate/sanitize/upgrade`.
-   - Translate AJV errors into our existing CLI/programmatic error format and add characterisation coverage.
+   - Translate AJV errors into existing CLI/programmatic error format.
+   - Add characterisation tests comparing error surfaces.
 
-4. **Normalization & Types (Session 3 – upcoming)**
-   - Define `PreparedOpenApiDocument` combining `BundledOpenApiDocument` (already 3.1) and bundle metadata.
-   - Update dependency graph, conversion, and templating layers to accept the wrapper without consuming `x-ext` by default.
-
-5. **Integration & Cleanup (Session 4 – upcoming)**
-   - Replace `prepareOpenApiDocument` with the orchestrated pipeline (keep a feature flag during rollout).
-   - Refresh README/API docs to describe new options (`--sanitize`, `--upgrade`) and error semantics.
-   - Remove SwaggerParser dependency once parity is proven; log follow-up enhancements (partial bundling, json-magic cache tuning, etc.).
+5. **Integration & Cleanup (Session 4+ – upcoming)**
+   - Remove SwaggerParser guard once all tests pass.
+   - Refresh README/API docs to describe new pipeline and 3.1-first architecture.
+   - Document follow-up enhancements (partial bundling, incremental fetch).
 
 **Execution Checklist**
 
