@@ -2,9 +2,9 @@
 
 ## 1. Context
 
-- This document captures additional client-side requirements for a reworked, general-purpose successor to `openapi-zod-client` with the working title `openapi-zod-validation`.
+- This document captures additional client-side requirements for a reworked, general-purpose successor to `openapi-zod-client` with the working title `@oaknational/openapi-to-tooling`.
 - The library MUST remain vendor-agnostic. Any Oak-specific behaviour will be layered on top in the consuming repository.
-- The upstream `openapi-zod-validation` project already maintains its own requirements; this specification supplements them so that the generator can fully replace both `openapi-typescript` and the existing Zod generation steps in a single pass.
+- The upstream `@oaknational/openapi-to-tooling` project already maintains its own requirements; this specification supplements them so that the generator can fully replace both `openapi-typescript` and the existing Zod generation steps in a single pass.
 - The generator MUST ingest an OpenAPI 3.0 and 3.1 schema once and emit, in one run, every artefact required by our SDK: TypeScript types for `openapi-fetch`, compile-time constants, derived type guards, request/response metadata, Zod validators, and the inputs we use to build MCP tool definitions.
 - The generator MUST rely on `openapi3-ts@latest` as the canonical TypeScript type library for representing OpenAPI structures internally and in exported typings.
 

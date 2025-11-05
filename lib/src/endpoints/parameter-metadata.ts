@@ -47,15 +47,48 @@ export function extractDeprecated(param: ParameterObject): boolean | undefined {
 
 /**
  * Extract example value from parameter or schema.
- * Parameter example takes precedence over schema example per OpenAPI spec.
+ * Checks multiple sources in priority order per OpenAPI 3.1 spec:
+ * 1. parameter.example (3.0 style)
+ * 2. parameter.examples.default.value (3.1 style, set by Scalar upgrade)
+ * 3. schema.example (3.0 style)
+ * 4. schema.examples.default.value (3.1 style)
  *
- * @param param - Parameter object with optional example
- * @param schema - Schema object with optional example
+ * @param param - Parameter object with optional example/examples
+ * @param schema - Schema object with optional example/examples
  * @returns Example value or undefined
  * @internal
  */
 export function extractExample(param: ParameterObject, schema: SchemaObject): unknown | undefined {
-  return param.example !== undefined ? param.example : schema.example;
+  // Check parameter.example (OpenAPI 3.0)
+  if (param.example !== undefined) {
+    return param.example;
+  }
+
+  // Check parameter.examples['default'].value (OpenAPI 3.1 - Scalar converts to this)
+  if (param.examples && 'default' in param.examples) {
+    const defaultEx = param.examples['default'];
+    if (defaultEx && !isReferenceObject(defaultEx) && 'value' in defaultEx) {
+      return defaultEx.value;
+    }
+  }
+
+  // Check schema.example (OpenAPI 3.0)
+  if (schema.example !== undefined) {
+    return schema.example;
+  }
+
+  // Check schema.examples['default'] (OpenAPI 3.1)
+  if ('examples' in schema && schema.examples && !Array.isArray(schema.examples)) {
+    const examples = schema.examples as Record<string, unknown>;
+    if ('default' in examples) {
+      const defaultEx = examples['default'];
+      if (defaultEx && typeof defaultEx === 'object' && 'value' in defaultEx) {
+        return (defaultEx as { value: unknown }).value;
+      }
+    }
+  }
+
+  return undefined;
 }
 
 /**
