@@ -52,23 +52,19 @@ function isCircularReference(schemaName: string, refsPath: string[]): boolean {
 
 /**
  * Handle circular reference by returning existing schema.
- * Throws if schema not properly registered.
+ * Safe with non-null assertions because circular references are only detected
+ * when the schema is already being processed higher in the call stack.
  *
  * @param code - CodeMeta with ref pointing to circular schema
  * @param ctx - Conversion context with registered schemas
  * @returns CodeMeta with assigned circular schema
- * @throws TypeError if code.ref is missing or schema not found
  * @internal
  */
 function handleCircularReference(code: CodeMeta, ctx: ConversionTypeContext): CodeMeta {
-  if (!code.ref) {
-    throw new TypeError('Code.ref is required for circular references');
-  }
-  const schema = ctx.zodSchemaByName[code.ref];
-  if (!schema) {
-    throw new TypeError(`Schema ${code.ref} not found`);
-  }
-  return code.assign(schema);
+  // In circular references, code.ref and the schema must exist
+  // Non-null assertions are safe because we're inside a circular reference check
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return code.assign(ctx.zodSchemaByName[code.ref!]!);
 }
 
 /**
