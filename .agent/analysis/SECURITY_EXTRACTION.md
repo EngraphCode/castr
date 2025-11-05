@@ -35,6 +35,7 @@ This document defines the strategy for extracting security metadata from OpenAPI
 **Defined by:** [MCP Specification 2025-06-18](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization)
 
 **Characteristics:**
+
 - OAuth 2.1 between MCP client and MCP server
 - Authorization Code flow with PKCE
 - Dynamic client registration (RFC 7591)
@@ -48,6 +49,7 @@ This document defines the strategy for extracting security metadata from OpenAPI
 **Defined by:** OpenAPI `securitySchemes` and operation `security` fields
 
 **Characteristics:**
+
 - OAuth 2.0/OAuth 1.0
 - Bearer tokens
 - API keys
@@ -114,6 +116,7 @@ From OpenAPI specifications:
 #### 1. OAuth 2.0
 
 **OpenAPI Definition:**
+
 ```yaml
 components:
   securitySchemes:
@@ -132,6 +135,7 @@ components:
 ```
 
 **Extracted Information:**
+
 - Flow type (authorizationCode, clientCredentials, implicit, password)
 - Authorization URL
 - Token URL
@@ -139,25 +143,26 @@ components:
 - Available scopes with descriptions
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: OAuth 2.0
- * 
+ *
  * Flow: Authorization Code
  * Authorization URL: https://api.example.com/oauth/authorize
  * Token URL: https://api.example.com/oauth/token
  * Refresh URL: https://api.example.com/oauth/refresh
- * 
+ *
  * Available Scopes:
  * - read:users: Read user information
  * - write:users: Modify user information
  * - admin: Administrator access
- * 
+ *
  * Configuration:
  * Set environment variables:
  * - UPSTREAM_OAUTH_CLIENT_ID
  * - UPSTREAM_OAUTH_CLIENT_SECRET
- * 
+ *
  * Server Implementation:
  * Your MCP server must obtain OAuth access tokens and include them
  * in upstream API requests as: Authorization: Bearer <token>
@@ -167,6 +172,7 @@ components:
 #### 2. Bearer Token (HTTP)
 
 **OpenAPI Definition:**
+
 ```yaml
 components:
   securitySchemes:
@@ -177,21 +183,23 @@ components:
 ```
 
 **Extracted Information:**
+
 - Scheme type (bearer)
 - Bearer format (JWT, opaque, etc.)
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: HTTP Bearer Token
- * 
+ *
  * Format: JWT
  * Header: Authorization: Bearer <token>
- * 
+ *
  * Configuration:
  * Set environment variable:
  * - UPSTREAM_BEARER_TOKEN
- * 
+ *
  * Server Implementation:
  * Your MCP server must obtain and provide a valid bearer token
  * in the Authorization header for all upstream API requests.
@@ -201,6 +209,7 @@ components:
 #### 3. API Key
 
 **OpenAPI Definition:**
+
 ```yaml
 components:
   securitySchemes:
@@ -219,21 +228,23 @@ components:
 ```
 
 **Extracted Information:**
+
 - Key name
 - Location (header, query, cookie)
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: API Key
- * 
+ *
  * Location: Header
  * Header Name: X-API-Key
- * 
+ *
  * Configuration:
  * Set environment variable:
  * - UPSTREAM_API_KEY
- * 
+ *
  * Server Implementation:
  * Your MCP server must include the API key in every upstream request:
  * X-API-Key: <api_key_value>
@@ -243,6 +254,7 @@ components:
 #### 4. HTTP Basic Authentication
 
 **OpenAPI Definition:**
+
 ```yaml
 components:
   securitySchemes:
@@ -252,17 +264,18 @@ components:
 ```
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: HTTP Basic Auth
- * 
+ *
  * Header: Authorization: Basic <base64(username:password)>
- * 
+ *
  * Configuration:
  * Set environment variables:
  * - UPSTREAM_BASIC_AUTH_USERNAME
  * - UPSTREAM_BASIC_AUTH_PASSWORD
- * 
+ *
  * Server Implementation:
  * Your MCP server must encode credentials and include in Authorization header.
  */
@@ -271,6 +284,7 @@ components:
 #### 5. OpenID Connect
 
 **OpenAPI Definition:**
+
 ```yaml
 components:
   securitySchemes:
@@ -280,15 +294,16 @@ components:
 ```
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: OpenID Connect
- * 
+ *
  * Discovery URL: https://example.com/.well-known/openid-configuration
- * 
+ *
  * Configuration:
  * Configure OpenID Connect client with discovery URL
- * 
+ *
  * Server Implementation:
  * Your MCP server must implement OpenID Connect flow and include
  * obtained tokens in upstream API requests.
@@ -306,6 +321,7 @@ Operations can specify security requirements in three ways:
 #### 1. Use Global Security (Default)
 
 **OpenAPI:**
+
 ```yaml
 security:
   - oauth2: [read:users]
@@ -322,6 +338,7 @@ paths:
 #### 2. Override Global Security
 
 **OpenAPI:**
+
 ```yaml
 security:
   - oauth2: [read:users]
@@ -331,7 +348,7 @@ paths:
     delete:
       operationId: deleteUser
       security:
-        - oauth2: [write:users, admin]  # Override
+        - oauth2: [write:users, admin] # Override
 ```
 
 **Extracted:** Requires `write:users` and `admin` scopes (not just `read:users`)
@@ -339,6 +356,7 @@ paths:
 #### 3. No Authentication Required
 
 **OpenAPI:**
+
 ```yaml
 security:
   - oauth2: [read:users]
@@ -347,7 +365,7 @@ paths:
   /health:
     get:
       operationId: healthCheck
-      security: []  # Empty array = no auth
+      security: [] # Empty array = no auth
 ```
 
 **Extracted:** No authentication required (public endpoint)
@@ -367,14 +385,14 @@ interface SecurityScheme {
 
 function extractSecuritySchemes(spec: OpenAPIObject): Map<string, SecurityScheme> {
   const schemes = new Map();
-  
+
   for (const [name, scheme] of Object.entries(spec.components?.securitySchemes ?? {})) {
     schemes.set(name, {
       name,
-      ...scheme
+      ...scheme,
     });
   }
-  
+
   return schemes;
 }
 ```
@@ -395,32 +413,32 @@ interface OperationSecurity {
 function resolveOperationSecurity(
   operation: OperationObject,
   globalSecurity: SecurityRequirementObject[],
-  schemes: Map<string, SecurityScheme>
+  schemes: Map<string, SecurityScheme>,
 ): OperationSecurity {
   // 1. Check if operation has explicit security
   const opSecurity = operation.security;
-  
+
   // 2. Empty array = public endpoint
   if (opSecurity && opSecurity.length === 0) {
     return { schemes: [], isPublic: true, usesGlobalSecurity: false };
   }
-  
+
   // 3. Use operation security or fallback to global
   const securityToUse = opSecurity ?? globalSecurity;
-  
+
   // 4. Resolve scheme details and scopes
-  const resolvedSchemes = securityToUse.flatMap(requirement => {
+  const resolvedSchemes = securityToUse.flatMap((requirement) => {
     return Object.entries(requirement).map(([schemeName, scopes]) => ({
       schemeName,
       scheme: schemes.get(schemeName)!,
-      scopes: Array.isArray(scopes) ? scopes : []
+      scopes: Array.isArray(scopes) ? scopes : [],
     }));
   });
-  
+
   return {
     schemes: resolvedSchemes,
     isPublic: false,
-    usesGlobalSecurity: opSecurity === undefined
+    usesGlobalSecurity: opSecurity === undefined,
   };
 }
 ```
@@ -428,10 +446,7 @@ function resolveOperationSecurity(
 ### Step 3: Generate Documentation
 
 ```typescript
-function generateSecurityDocumentation(
-  operationId: string,
-  security: OperationSecurity
-): string {
+function generateSecurityDocumentation(operationId: string, security: OperationSecurity): string {
   if (security.isPublic) {
     return `/**
  * Upstream API Authentication: None (Public Endpoint)
@@ -439,13 +454,13 @@ function generateSecurityDocumentation(
  * This operation does not require authentication.
  */`;
   }
-  
+
   const docs = security.schemes.map(({ scheme, scopes }) => {
     let doc = `/**\n * Upstream API Authentication: ${formatSchemeName(scheme)}\n *\n`;
-    
+
     // Add scheme-specific details
     doc += formatSchemeDetails(scheme);
-    
+
     // Add required scopes
     if (scopes.length > 0) {
       doc += ` * Required Scopes:\n`;
@@ -454,14 +469,14 @@ function generateSecurityDocumentation(
       }
       doc += ` *\n`;
     }
-    
+
     // Add configuration guidance
     doc += formatConfigurationGuidance(scheme);
-    
+
     doc += ` */`;
     return doc;
   });
-  
+
   return docs.join('\n\n');
 }
 ```
@@ -477,35 +492,35 @@ Each MCP tool gets comprehensive security documentation:
 ```typescript
 /**
  * MCP Tool: get_user
- * 
+ *
  * OpenAPI Operation: GET /users/{id}
- * 
+ *
  * ============================================================
  * UPSTREAM API AUTHENTICATION (for MCP server implementers)
  * ============================================================
- * 
+ *
  * Method: OAuth 2.0 Authorization Code Flow
  * Required Scopes: read:users
- * 
+ *
  * Authorization URL: https://api.example.com/oauth/authorize
  * Token URL: https://api.example.com/oauth/token
- * 
+ *
  * Configuration Required:
  * Set the following environment variables in your MCP server:
  * - EXAMPLE_API_CLIENT_ID
  * - EXAMPLE_API_CLIENT_SECRET
- * 
+ *
  * Implementation Notes:
  * 1. Your MCP server must obtain OAuth credentials for the upstream API
  * 2. Include access token in Authorization: Bearer <token> header
  * 3. Ensure token has 'read:users' scope before making requests
  * 4. Implement token refresh logic for long-running operations
- * 
+ *
  * This authentication is SEPARATE from MCP protocol authentication
  * (OAuth 2.1 between MCP client and your MCP server).
  */
 export const getUserInputSchema = z.object({
-  id: z.string().describe("User ID")
+  id: z.string().describe('User ID'),
 });
 ```
 
@@ -513,7 +528,7 @@ export const getUserInputSchema = z.object({
 
 Generate a configuration documentation file:
 
-```markdown
+````markdown
 # Upstream API Authentication Configuration
 
 ## Overview
@@ -529,24 +544,27 @@ separate from MCP protocol security (Layer 1).
 The Example API uses OAuth 2.0 Authorization Code flow.
 
 **Environment Variables:**
+
 ```bash
 EXAMPLE_API_CLIENT_ID=<your_client_id>
 EXAMPLE_API_CLIENT_SECRET=<your_client_secret>
 ```
+````
 
 **OAuth Endpoints:**
+
 - Authorization: https://api.example.com/oauth/authorize
 - Token: https://api.example.com/oauth/token
 - Refresh: https://api.example.com/oauth/refresh
 
 ## Tools and Required Scopes
 
-| Tool Name | Operation | Required Scopes |
-|-----------|-----------|-----------------|
-| get_user | GET /users/{id} | read:users |
-| update_user | PUT /users/{id} | read:users, write:users |
-| delete_user | DELETE /users/{id} | admin |
-| list_users | GET /users | read:users |
+| Tool Name   | Operation          | Required Scopes         |
+| ----------- | ------------------ | ----------------------- |
+| get_user    | GET /users/{id}    | read:users              |
+| update_user | PUT /users/{id}    | read:users, write:users |
+| delete_user | DELETE /users/{id} | admin                   |
+| list_users  | GET /users         | read:users              |
 
 ## Implementation Checklist
 
@@ -565,7 +583,8 @@ EXAMPLE_API_CLIENT_SECRET=<your_client_secret>
 3. **Scope Minimization:** Request only required scopes for each operation
 4. **Error Handling:** Gracefully handle authentication failures
 5. **Audit Logging:** Log all credential usage for compliance
-```
+
+````
 
 ### 3. TypeScript Configuration Types
 
@@ -574,7 +593,7 @@ For SDK generation:
 ```typescript
 /**
  * Configuration for upstream API authentication.
- * 
+ *
  * This is separate from MCP protocol authentication.
  */
 export interface UpstreamApiConfig {
@@ -588,7 +607,7 @@ export interface UpstreamApiConfig {
     tokenUrl?: string;          // Default: from spec
     refreshUrl?: string;        // Default: from spec
   };
-  
+
   /**
    * Optional: Provide a custom token provider
    */
@@ -601,7 +620,7 @@ export interface UpstreamApiConfig {
 export function createMcpServer(config: UpstreamApiConfig): McpServer {
   // Implementation...
 }
-```
+````
 
 ---
 
@@ -610,6 +629,7 @@ export function createMcpServer(config: UpstreamApiConfig): McpServer {
 ### Multiple Security Schemes (OR Logic)
 
 **OpenAPI:**
+
 ```yaml
 paths:
   /users:
@@ -622,19 +642,20 @@ paths:
 **Meaning:** Can use **either** OAuth 2.0 **or** API key
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: Multiple Options
- * 
+ *
  * This operation accepts EITHER of the following:
- * 
+ *
  * Option 1: OAuth 2.0
  *   - Scopes: read:users
  *   - Header: Authorization: Bearer <token>
- * 
+ *
  * Option 2: API Key
  *   - Header: X-API-Key: <key>
- * 
+ *
  * Configuration:
  * Configure at least one authentication method.
  */
@@ -643,20 +664,22 @@ paths:
 ### No Security Schemes Defined
 
 **OpenAPI:**
+
 ```yaml
 # No components.securitySchemes
 # No security at root or operation level
 ```
 
 **Generated Documentation:**
+
 ```typescript
 /**
  * Upstream API Authentication: None Specified
- * 
+ *
  * WARNING: No authentication requirements found in OpenAPI spec.
  * The upstream API may be public, or authentication requirements
  * may not be documented.
- * 
+ *
  * Verify with API provider before deploying to production.
  */
 ```
@@ -664,11 +687,12 @@ paths:
 ### Legacy OpenAPI 2.0 Security
 
 **Swagger 2.0:**
+
 ```yaml
-securityDefinitions:  # Old name
+securityDefinitions: # Old name
   oauth2:
     type: oauth2
-    flow: accessCode  # Old name for authorizationCode
+    flow: accessCode # Old name for authorizationCode
 ```
 
 **Strategy:** Convert Swagger 2.0 security to OpenAPI 3.x format before extraction.
@@ -682,24 +706,24 @@ securityDefinitions:  # Old name
 ```typescript
 /**
  * Upstream API Authentication: OAuth 2.0 {flow}
- * 
+ *
  * Flow: {flowType}
  * Authorization URL: {authUrl}
  * Token URL: {tokenUrl}
  * {if refreshUrl}Refresh URL: {refreshUrl}{/if}
- * 
+ *
  * {if scopes}
  * Required Scopes:
  * {#each scopes}
  *   - {name}: {description}
  * {/each}
  * {/if}
- * 
+ *
  * Configuration:
  * Set environment variables:
  * - {SCHEME_NAME_UPPER}_CLIENT_ID
  * - {SCHEME_NAME_UPPER}_CLIENT_SECRET
- * 
+ *
  * Server Implementation:
  * Your MCP server must implement the OAuth 2.0 {flowType} flow
  * and include obtained tokens in upstream requests as:
@@ -712,16 +736,16 @@ securityDefinitions:  # Old name
 ```typescript
 /**
  * Upstream API Authentication: API Key
- * 
+ *
  * Location: {in} ({header|query|cookie})
  * {if in === 'header'}Header Name: {name}{/if}
  * {if in === 'query'}Query Parameter: {name}{/if}
  * {if in === 'cookie'}Cookie Name: {name}{/if}
- * 
+ *
  * Configuration:
  * Set environment variable:
  * - {SCHEME_NAME_UPPER}_API_KEY
- * 
+ *
  * Server Implementation:
  * Your MCP server must include the API key in every upstream request.
  */
@@ -732,14 +756,14 @@ securityDefinitions:  # Old name
 ```typescript
 /**
  * Upstream API Authentication: HTTP Bearer Token
- * 
+ *
  * {if bearerFormat}Format: {bearerFormat}{/if}
  * Header: Authorization: Bearer <token>
- * 
+ *
  * Configuration:
  * Set environment variable:
  * - {SCHEME_NAME_UPPER}_BEARER_TOKEN
- * 
+ *
  * Server Implementation:
  * Your MCP server must obtain and provide a valid bearer token
  * in the Authorization header for all upstream API requests.
@@ -779,4 +803,3 @@ securityDefinitions:  # Old name
 
 **Last Updated:** November 5, 2025  
 **Status:** Complete - Ready for implementation
-

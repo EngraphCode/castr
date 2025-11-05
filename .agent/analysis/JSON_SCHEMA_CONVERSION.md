@@ -21,6 +21,7 @@ This document defines the strategy for converting OpenAPI 3.1 Schema Objects to 
 **Rejected Approach:** OpenAPI → Zod → JSON Schema (using `zod-to-json-schema`)
 
 **Reasons for rejection:**
+
 1. **Information loss:** Zod `.transform()` and `.refine()` don't translate to JSON Schema
 2. **Limited support:** Complex Zod features have no JSON Schema equivalent
 3. **Conversion limitations:** Non-string record keys ignored, effect strategies needed
@@ -53,6 +54,7 @@ This document defines the strategy for converting OpenAPI 3.1 Schema Objects to 
 ```
 
 **Benefits:**
+
 1. **No information loss:** Direct OpenAPI → JSON Schema mapping
 2. **Optimal for each use case:** Zod for TypeScript, JSON Schema for MCP
 3. **Clean separation:** Each converter optimized for its target
@@ -67,14 +69,14 @@ This document defines the strategy for converting OpenAPI 3.1 Schema Objects to 
 
 OpenAPI 3.1 uses JSON Schema Draft 2020-12 vocabulary, but MCP requires Draft 07. Key differences:
 
-| Feature | OpenAPI 3.1 (Draft 2020-12) | JSON Schema Draft 07 | Conversion Strategy |
-|---------|----------------------------|---------------------|---------------------|
-| Nullable types | `type: ['string', 'null']` | Not native | Use type array (supported in Draft 07) |
-| Exclusive bounds | `exclusiveMinimum: 5` | `exclusiveMinimum: true, minimum: 5` | Convert to Draft 07 format |
-| `$vocabulary` | Supported | Not supported | Strip from output |
-| `$dynamicRef` | Supported | Not supported | Convert to standard `$ref` |
-| `unevaluatedProperties` | Supported | Not supported | Use `additionalProperties` |
-| `dependentSchemas` | Supported | `dependencies` | Convert to Draft 07 `dependencies` |
+| Feature                 | OpenAPI 3.1 (Draft 2020-12) | JSON Schema Draft 07                 | Conversion Strategy                    |
+| ----------------------- | --------------------------- | ------------------------------------ | -------------------------------------- |
+| Nullable types          | `type: ['string', 'null']`  | Not native                           | Use type array (supported in Draft 07) |
+| Exclusive bounds        | `exclusiveMinimum: 5`       | `exclusiveMinimum: true, minimum: 5` | Convert to Draft 07 format             |
+| `$vocabulary`           | Supported                   | Not supported                        | Strip from output                      |
+| `$dynamicRef`           | Supported                   | Not supported                        | Convert to standard `$ref`             |
+| `unevaluatedProperties` | Supported                   | Not supported                        | Use `additionalProperties`             |
+| `dependentSchemas`      | Supported                   | `dependencies`                       | Convert to Draft 07 `dependencies`     |
 
 ---
 
@@ -83,12 +85,13 @@ OpenAPI 3.1 uses JSON Schema Draft 2020-12 vocabulary, but MCP requires Draft 07
 ### Primitive Types
 
 #### String
+
 ```yaml
 # OpenAPI
 type: string
 minLength: 5
 maxLength: 100
-pattern: "^[A-Z]"
+pattern: '^[A-Z]'
 format: email
 ```
 
@@ -106,6 +109,7 @@ format: email
 **Direct mapping:** No conversion needed for basic string properties.
 
 #### Number/Integer
+
 ```yaml
 # OpenAPI
 type: number
@@ -127,6 +131,7 @@ multipleOf: 5
 **Direct mapping:** Basic numeric constraints map directly.
 
 #### Boolean
+
 ```yaml
 # OpenAPI
 type: boolean
@@ -142,6 +147,7 @@ type: boolean
 **Direct mapping:** No conversion needed.
 
 #### Null
+
 ```yaml
 # OpenAPI 3.1
 type: 'null'
@@ -161,6 +167,7 @@ type: 'null'
 ### Nullable Types
 
 **OpenAPI 3.1 style:**
+
 ```yaml
 type:
   - string
@@ -168,6 +175,7 @@ type:
 ```
 
 **JSON Schema Draft 07 conversion:**
+
 ```json
 {
   "type": ["string", "null"]
@@ -177,12 +185,14 @@ type:
 **Note:** Type arrays are supported in Draft 07, so OpenAPI 3.1 nullable syntax works directly.
 
 **Alternative OpenAPI 3.0 style (if encountered):**
+
 ```yaml
 type: string
 nullable: true
 ```
 
 **Conversion:**
+
 ```json
 {
   "type": ["string", "null"]
@@ -194,6 +204,7 @@ nullable: true
 ### Array Types
 
 #### Simple Array
+
 ```yaml
 # OpenAPI
 type: array
@@ -220,6 +231,7 @@ uniqueItems: true
 **Direct mapping:** Array constraints map directly.
 
 #### Tuple (Fixed Array)
+
 ```yaml
 # OpenAPI
 type: array
@@ -230,13 +242,11 @@ items: false
 ```
 
 **JSON Schema Draft 07 conversion:**
+
 ```json
 {
   "type": "array",
-  "items": [
-    { "type": "string" },
-    { "type": "number" }
-  ],
+  "items": [{ "type": "string" }, { "type": "number" }],
   "additionalItems": false
 }
 ```
@@ -248,6 +258,7 @@ items: false
 ### Object Types
 
 #### Basic Object
+
 ```yaml
 # OpenAPI
 type: object
@@ -277,11 +288,12 @@ additionalProperties: false
 **Direct mapping:** Object structure maps directly.
 
 #### Pattern Properties
+
 ```yaml
 # OpenAPI
 type: object
 patternProperties:
-  "^[A-Z]":
+  '^[A-Z]':
     type: string
 ```
 
@@ -306,12 +318,14 @@ patternProperties:
 #### Exclusive Minimum
 
 **OpenAPI 3.1:**
+
 ```yaml
 type: number
 exclusiveMinimum: 5
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "type": "number",
@@ -321,6 +335,7 @@ exclusiveMinimum: 5
 ```
 
 **Conversion logic:**
+
 ```typescript
 if (schema.exclusiveMinimum !== undefined && typeof schema.exclusiveMinimum === 'number') {
   jsonSchema.minimum = schema.exclusiveMinimum;
@@ -331,12 +346,14 @@ if (schema.exclusiveMinimum !== undefined && typeof schema.exclusiveMinimum === 
 #### Exclusive Maximum
 
 **OpenAPI 3.1:**
+
 ```yaml
 type: number
 exclusiveMaximum: 100
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "type": "number",
@@ -346,6 +363,7 @@ exclusiveMaximum: 100
 ```
 
 **Conversion logic:**
+
 ```typescript
 if (schema.exclusiveMaximum !== undefined && typeof schema.exclusiveMaximum === 'number') {
   jsonSchema.maximum = schema.exclusiveMaximum;
@@ -358,6 +376,7 @@ if (schema.exclusiveMaximum !== undefined && typeof schema.exclusiveMaximum === 
 ## Composition Keywords
 
 ### allOf
+
 ```yaml
 # OpenAPI
 allOf:
@@ -394,6 +413,7 @@ allOf:
 **Direct mapping:** `allOf` works the same in both versions.
 
 ### oneOf
+
 ```yaml
 # OpenAPI
 oneOf:
@@ -404,16 +424,14 @@ oneOf:
 ```json
 // JSON Schema Draft 07
 {
-  "oneOf": [
-    { "type": "string" },
-    { "type": "number" }
-  ]
+  "oneOf": [{ "type": "string" }, { "type": "number" }]
 }
 ```
 
 **Direct mapping:** `oneOf` works the same.
 
 ### anyOf
+
 ```yaml
 # OpenAPI
 anyOf:
@@ -424,16 +442,14 @@ anyOf:
 ```json
 // JSON Schema Draft 07
 {
-  "anyOf": [
-    { "type": "string" },
-    { "type": "number" }
-  ]
+  "anyOf": [{ "type": "string" }, { "type": "number" }]
 }
 ```
 
 **Direct mapping:** `anyOf` works the same.
 
 ### not
+
 ```yaml
 # OpenAPI
 not:
@@ -454,6 +470,7 @@ not:
 ## Discriminator Handling
 
 **OpenAPI discriminator:**
+
 ```yaml
 oneOf:
   - $ref: '#/components/schemas/Cat'
@@ -470,18 +487,17 @@ discriminator:
 Draft 07 doesn't have native discriminator support. Two approaches:
 
 ### Approach 1: Preserve oneOf (Recommended)
+
 ```json
 {
-  "oneOf": [
-    { "$ref": "#/definitions/Cat" },
-    { "$ref": "#/definitions/Dog" }
-  ]
+  "oneOf": [{ "$ref": "#/definitions/Cat" }, { "$ref": "#/definitions/Dog" }]
 }
 ```
 
 **Note:** Add documentation comment explaining discriminator property.
 
 ### Approach 2: Expand with Required Property
+
 ```json
 {
   "oneOf": [
@@ -510,11 +526,13 @@ Draft 07 doesn't have native discriminator support. Two approaches:
 ### Internal References
 
 **OpenAPI:**
+
 ```yaml
 $ref: '#/components/schemas/User'
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "$ref": "#/definitions/User"
@@ -526,6 +544,7 @@ $ref: '#/components/schemas/User'
 ### External References
 
 **OpenAPI:**
+
 ```yaml
 $ref: 'external.yaml#/components/schemas/User'
 ```
@@ -540,23 +559,23 @@ $ref: 'external.yaml#/components/schemas/User'
 
 ### Common Formats
 
-| OpenAPI Format | Draft 07 Support | Notes |
-|----------------|------------------|-------|
-| `date-time` | ✅ Supported | ISO 8601 date-time |
-| `date` | ✅ Supported | ISO 8601 full-date |
-| `time` | ✅ Supported | ISO 8601 time |
-| `email` | ✅ Supported | Email address |
-| `hostname` | ✅ Supported | Hostname |
-| `ipv4` | ✅ Supported | IPv4 address |
-| `ipv6` | ✅ Supported | IPv6 address |
-| `uri` | ✅ Supported | URI |
-| `uri-reference` | ✅ Supported | URI reference |
-| `json-pointer` | ✅ Supported | JSON Pointer |
-| `regex` | ✅ Supported | Regular expression |
-| `uuid` | ⚠️ Not in spec | Preserve but may not validate |
-| `byte` | ⚠️ Not in spec | Base64 encoded string |
-| `binary` | ⚠️ Not in spec | Binary data |
-| `password` | ⚠️ Not in spec | Password field hint |
+| OpenAPI Format  | Draft 07 Support | Notes                         |
+| --------------- | ---------------- | ----------------------------- |
+| `date-time`     | ✅ Supported     | ISO 8601 date-time            |
+| `date`          | ✅ Supported     | ISO 8601 full-date            |
+| `time`          | ✅ Supported     | ISO 8601 time                 |
+| `email`         | ✅ Supported     | Email address                 |
+| `hostname`      | ✅ Supported     | Hostname                      |
+| `ipv4`          | ✅ Supported     | IPv4 address                  |
+| `ipv6`          | ✅ Supported     | IPv6 address                  |
+| `uri`           | ✅ Supported     | URI                           |
+| `uri-reference` | ✅ Supported     | URI reference                 |
+| `json-pointer`  | ✅ Supported     | JSON Pointer                  |
+| `regex`         | ✅ Supported     | Regular expression            |
+| `uuid`          | ⚠️ Not in spec   | Preserve but may not validate |
+| `byte`          | ⚠️ Not in spec   | Base64 encoded string         |
+| `binary`        | ⚠️ Not in spec   | Binary data                   |
+| `password`      | ⚠️ Not in spec   | Password field hint           |
 
 **Strategy:** Preserve all format strings. Validators may support additional formats beyond spec.
 
@@ -567,11 +586,13 @@ $ref: 'external.yaml#/components/schemas/User'
 ### Empty Schema
 
 **OpenAPI:**
+
 ```yaml
 {}
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {}
 ```
@@ -581,12 +602,14 @@ $ref: 'external.yaml#/components/schemas/User'
 ### Boolean Schemas (OpenAPI 3.1)
 
 **OpenAPI:**
+
 ```yaml
 true   # Accept anything
 false  # Accept nothing
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 true   // Supported
 false  // Supported
@@ -597,12 +620,14 @@ false  // Supported
 ### const Keyword
 
 **OpenAPI:**
+
 ```yaml
 type: string
-const: "active"
+const: 'active'
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "type": "string",
@@ -615,6 +640,7 @@ const: "active"
 ### enum Keyword
 
 **OpenAPI:**
+
 ```yaml
 type: string
 enum:
@@ -624,6 +650,7 @@ enum:
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "type": "string",
@@ -636,12 +663,14 @@ enum:
 ### default Keyword
 
 **OpenAPI:**
+
 ```yaml
 type: string
-default: "active"
+default: 'active'
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "type": "string",
@@ -654,6 +683,7 @@ default: "active"
 ### readOnly/writeOnly
 
 **OpenAPI:**
+
 ```yaml
 type: object
 properties:
@@ -666,6 +696,7 @@ properties:
 ```
 
 **JSON Schema Draft 07:**
+
 ```json
 {
   "type": "object",
@@ -684,7 +715,8 @@ properties:
 
 **Direct mapping:** Both supported in Draft 07.
 
-**Context for MCP:** 
+**Context for MCP:**
+
 - `readOnly` properties in response schemas (outputSchema)
 - `writeOnly` properties in request schemas (inputSchema)
 
@@ -725,24 +757,24 @@ Test individual conversion functions:
 describe('convertOpenApiSchemaToJsonSchema', () => {
   test('converts nullable string to type array', () => {
     const openApiSchema = {
-      type: ['string', 'null']
+      type: ['string', 'null'],
     };
     const result = convertOpenApiSchemaToJsonSchema(openApiSchema);
     expect(result).toEqual({
-      type: ['string', 'null']
+      type: ['string', 'null'],
     });
   });
 
   test('converts exclusive minimum to Draft 07 format', () => {
     const openApiSchema = {
       type: 'number',
-      exclusiveMinimum: 5
+      exclusiveMinimum: 5,
     };
     const result = convertOpenApiSchemaToJsonSchema(openApiSchema);
     expect(result).toEqual({
       type: 'number',
       minimum: 5,
-      exclusiveMinimum: true
+      exclusiveMinimum: true,
     });
   });
 });
@@ -779,10 +811,10 @@ import draft07MetaSchema from 'ajv/lib/refs/json-schema-draft-07.json';
 test('generated schema is valid Draft 07', () => {
   const ajv = new Ajv();
   ajv.addMetaSchema(draft07MetaSchema);
-  
+
   const generatedSchema = convertOpenApiSchemaToJsonSchema(inputSchema);
   const valid = ajv.validateSchema(generatedSchema);
-  
+
   expect(valid).toBe(true);
   expect(ajv.errors).toBeNull();
 });
@@ -796,13 +828,13 @@ Verify that valid OpenAPI schemas produce valid JSON Schemas:
 test('round-trip validation', () => {
   const openApiSchema = { type: 'string', minLength: 5 };
   const jsonSchema = convertOpenApiSchemaToJsonSchema(openApiSchema);
-  
+
   // Validate sample data with both schemas
-  const sampleData = "hello";
-  
+  const sampleData = 'hello';
+
   // Should validate against OpenAPI schema
   expect(validateOpenApiSchema(sampleData, openApiSchema)).toBe(true);
-  
+
   // Should validate against generated JSON Schema
   expect(validateJsonSchema(sampleData, jsonSchema)).toBe(true);
 });
@@ -837,11 +869,11 @@ test('round-trip validation', () => {
 
 ```typescript
 interface JsonSchemaConversionOptions {
-  targetDraft: '07';  // Always Draft 07 for MCP
-  preserveDescription: boolean;  // Include descriptions
-  preserveExamples: boolean;  // Include example values
-  strictMode: boolean;  // Fail on unsupported features vs warn
-  inlineRefs: boolean;  // Inline $refs vs preserve
+  targetDraft: '07'; // Always Draft 07 for MCP
+  preserveDescription: boolean; // Include descriptions
+  preserveExamples: boolean; // Include example values
+  strictMode: boolean; // Fail on unsupported features vs warn
+  inlineRefs: boolean; // Inline $refs vs preserve
 }
 ```
 
@@ -858,4 +890,3 @@ interface JsonSchemaConversionOptions {
 
 **Last Updated:** November 5, 2025  
 **Status:** Complete - Ready for implementation
-

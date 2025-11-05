@@ -40,6 +40,29 @@ async function dereferenceSpec(pathOrSpec: string | OpenAPIObject): Promise<Open
 }
 
 /**
+ * Helper to verify that a component exists in the bundled spec.
+ * Reduces nesting in test assertions.
+ */
+function expectComponentExists(
+  bundled: OpenAPIObject,
+  type: 'parameters' | 'responses' | 'requestBodies',
+  name: string,
+): void {
+  expect(bundled.components?.[type]?.[name]).toBeDefined();
+}
+
+/**
+ * Helper to verify multiple components exist.
+ * Reduces test complexity by grouping related assertions.
+ */
+function expectComponentsExist(
+  bundled: OpenAPIObject,
+  checks: { type: 'parameters' | 'responses' | 'requestBodies'; name: string }[],
+): void {
+  checks.forEach(({ type, name }) => expectComponentExists(bundled, type, name));
+}
+
+/**
  * CRITICAL PHASE 0 DISCOVERY: Bundle vs Dereference
  *
  * These tests revealed a critical assumption error:
@@ -185,7 +208,6 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
     expect(bundled.components?.responses?.['UserResponse']).toBeDefined();
   });
 
-  // eslint-disable-next-line complexity
   it('should preserve multiple levels of operation $refs', async () => {
     // Test nested refs in parameters, requestBody, responses
     const spec: OpenAPIObject = {
@@ -259,18 +281,20 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
     const getOp = getOperation(bundled, '/users', 'get');
     expect(getOp.parameters).toBeDefined();
     expect(getOp.parameters?.length).toBe(2);
-    // Verify components are still defined
-    expect(bundled.components?.parameters?.['PageParam']).toBeDefined();
-    expect(bundled.components?.parameters?.['LimitParam']).toBeDefined();
-    expect(bundled.components?.responses?.['UserList']).toBeDefined();
 
     // Check POST operation
     const postOp = getOperation(bundled, '/users', 'post');
     expect(postOp.requestBody).toBeDefined();
-    expect(bundled.components?.requestBodies?.['CreateUser']).toBeDefined();
+
+    // Verify all components are still defined
+    expectComponentsExist(bundled, [
+      { type: 'parameters', name: 'PageParam' },
+      { type: 'parameters', name: 'LimitParam' },
+      { type: 'responses', name: 'UserList' },
+      { type: 'requestBodies', name: 'CreateUser' },
+    ]);
   });
 
-  // eslint-disable-next-line complexity
   it('should preserve $refs across multiple operations', async () => {
     const spec: OpenAPIObject = {
       openapi: '3.0.0',
@@ -328,8 +352,10 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
 
     // Scalar pipeline preserves $refs, verify components are defined
     expect(bundled.paths).toBeDefined();
-    expect(bundled.components?.parameters?.['UserId']).toBeDefined();
-    expect(bundled.components?.responses?.['Success']).toBeDefined();
+    expectComponentsExist(bundled, [
+      { type: 'parameters', name: 'UserId' },
+      { type: 'responses', name: 'Success' },
+    ]);
 
     // Verify all operations exist
     expect(bundled.paths?.['/users/{userId}']?.get).toBeDefined();
@@ -508,7 +534,6 @@ describe('Bundled Spec: Code Generation Integration', () => {
     expect(result).toContain('userId');
   });
 
-  // eslint-disable-next-line complexity
   it('should handle complex spec with many $refs correctly', async () => {
     const spec: OpenAPIObject = {
       openapi: '3.0.0',
@@ -597,20 +622,22 @@ describe('Bundled Spec: Code Generation Integration', () => {
       disableWriteToFile: true,
     });
 
+    // Verify generation succeeded with expected content
     expect(result).toBeDefined();
     expect(typeof result).toBe('string');
     expect(result.length).toBeGreaterThan(0);
     expect(result).toContain('import { z }');
-    // Just verify it generated something - operation IDs are transformed by templates
     expect(result).toContain('endpoints');
 
     // Verify components are defined - our makeSchemaResolver handles $refs
     expect(bundled.components?.schemas?.['Error']).toBeDefined();
     expect(bundled.components?.schemas?.['User']).toBeDefined();
-    expect(bundled.components?.parameters?.['UserId']).toBeDefined();
-    expect(bundled.components?.responses?.['ErrorResponse']).toBeDefined();
-    expect(bundled.components?.responses?.['UserResponse']).toBeDefined();
-    expect(bundled.components?.requestBodies?.['UserRequest']).toBeDefined();
+    expectComponentsExist(bundled, [
+      { type: 'parameters', name: 'UserId' },
+      { type: 'responses', name: 'ErrorResponse' },
+      { type: 'responses', name: 'UserResponse' },
+      { type: 'requestBodies', name: 'UserRequest' },
+    ]);
 
     // Verify operations exist
     const getOp = getOperation(bundled, '/users/{userId}', 'get');

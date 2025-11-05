@@ -1,5 +1,5 @@
 {
-  "name": "openapi-zod-validation-monorepo",
+  "name": "openapi-to-tooling-monorepo",
   "private": true,
   "version": "0.0.0-development",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/jimcresswell/openapi-zod-validation.git"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "packageManager": "pnpm@10.20.0",
   "scripts": {
@@ -43,5 +43,6 @@
     "tsx": "^4",
     "turbo": "^2.5.8",
     "typescript": "^5"
-  }
+  },
+  "dependencies": {}
 }

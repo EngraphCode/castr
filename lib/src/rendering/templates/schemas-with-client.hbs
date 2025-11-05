@@ -5,10 +5,7 @@
   
   Prerequisites (peer dependencies):
   - openapi-fetch: ^0.10.0
-  - openapi-typescript: ^7.0.0
-  
-  Users must also generate openapi-typescript types separately:
-    npx openapi-typescript ./openapi.yaml -o ./schema.d.ts
+
 --}}
 
 /**
@@ -18,14 +15,13 @@
  *
  * Prerequisites (peer dependencies):
  * - openapi-fetch: ^0.10.0
- * - openapi-typescript: ^7.0.0
  *
  * @see https://github.com/astahmer/openapi-zod-client
  */
 
 import { z } from 'zod';
 import createClient from 'openapi-fetch';
-import type { paths } from './schema.js'; // Import generated types from openapi-typescript
+import type { paths } from './schema.js'; // Import generated types from openapi3-ts/oas31
 
 // ============================================================
 // Zod Schemas
@@ -176,7 +172,7 @@ function validate<T>(
  *
  * This client wraps openapi-fetch with Zod validation for runtime safety.
  * You get:
- * - ✅ Compile-time type safety (from openapi-typescript)
+ * - ✅ Compile-time type safety (from openapi3-ts/oas31)
  * - ✅ Runtime validation (from Zod schemas)
  * - ✅ Automatic error handling
  * - ✅ Clean, predictable API

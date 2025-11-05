@@ -38,10 +38,87 @@ type GetZodChainFn = (args: {
 }) => string;
 
 /**
- * Handle reference object resolution with circular reference detection
- * Pure function: only mutates ctx.zodSchemaByName (passed by reference)
+ * Check if a schema reference is circular (recursive).
+ * Pure predicate function.
  *
- * @returns CodeMeta with the resolved reference, or null if not a reference
+ * @param schemaName - Name of the schema being referenced
+ * @param refsPath - Path of schema references traversed so far
+ * @returns True if this creates a circular reference
+ * @internal
+ */
+function isCircularReference(schemaName: string, refsPath: string[]): boolean {
+  return refsPath.length > 1 && refsPath.includes(schemaName);
+}
+
+/**
+ * Handle circular reference by returning existing schema.
+ * Throws if schema not properly registered.
+ *
+ * @param code - CodeMeta with ref pointing to circular schema
+ * @param ctx - Conversion context with registered schemas
+ * @returns CodeMeta with assigned circular schema
+ * @throws TypeError if code.ref is missing or schema not found
+ * @internal
+ */
+function handleCircularReference(code: CodeMeta, ctx: ConversionTypeContext): CodeMeta {
+  if (!code.ref) {
+    throw new TypeError('Code.ref is required for circular references');
+  }
+  const schema = ctx.zodSchemaByName[code.ref];
+  if (!schema) {
+    throw new TypeError(`Schema ${code.ref} not found`);
+  }
+  return code.assign(schema);
+}
+
+/**
+ * Resolve schema reference by looking up or generating Zod code.
+ * Pure function - generates new schema if not cached.
+ *
+ * @param ref - Full $ref string (e.g., "#/components/schemas/User")
+ * @param schemaName - Extracted schema name
+ * @param ctx - Conversion context
+ * @param meta - Metadata for code generation
+ * @param getZodSchema - Function to generate Zod schema
+ * @param options - Template options
+ * @returns Resolved Zod schema string
+ * @throws Error if schema not found in components
+ * @internal
+ */
+function resolveSchemaReference(
+  ref: string,
+  schemaName: string,
+  ctx: ConversionTypeContext,
+  meta: CodeMetaData,
+  getZodSchema: GetZodSchemaFn,
+  options?: TemplateContext['options'],
+): string {
+  const cached = ctx.zodSchemaByName[ref];
+  if (cached) {
+    return cached;
+  }
+
+  const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
+  if (!actualSchema) {
+    throw new Error(`Schema ${ref} not found`);
+  }
+
+  return getZodSchema({ schema: actualSchema, ctx, meta, options }).toString();
+}
+
+/**
+ * Handle reference object resolution with circular reference detection.
+ * Orchestrates circular detection, schema resolution, and caching.
+ *
+ * @param schema - ReferenceObject with $ref
+ * @param code - CodeMeta to assign result to
+ * @param ctx - Conversion context (mutated to cache schemas)
+ * @param refsPath - Path of references traversed (for circular detection)
+ * @param meta - Metadata for code generation
+ * @param getZodSchema - Function to generate Zod schema
+ * @param options - Template options
+ * @returns CodeMeta with resolved reference
+ * @public
  */
 export function handleReferenceObject(
   schema: ReferenceObject,
@@ -54,28 +131,18 @@ export function handleReferenceObject(
 ): CodeMeta {
   const schemaName = getSchemaNameFromRef(schema.$ref);
 
-  // circular(=recursive) reference
-  if (refsPath.length > 1 && refsPath.includes(schemaName)) {
-    // In circular references, code.ref and the schema must exist
-    // The non-null assertions are safe here because we're inside a reference object check
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return code.assign(ctx.zodSchemaByName[code.ref!]!);
+  if (isCircularReference(schemaName, refsPath)) {
+    return handleCircularReference(code, ctx);
   }
 
-  let result = ctx.zodSchemaByName[schema.$ref];
-  if (!result) {
-    const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
-    if (!actualSchema) {
-      throw new Error(`Schema ${schema.$ref} not found`);
-    }
+  const result = resolveSchemaReference(schema.$ref, schemaName, ctx, meta, getZodSchema, options);
 
-    result = getZodSchema({ schema: actualSchema, ctx, meta, options }).toString();
-  }
-
+  // If schema already registered, return code unchanged
   if (ctx.zodSchemaByName[schemaName]) {
     return code;
   }
 
+  // Register resolved schema
   ctx.zodSchemaByName[schemaName] = result;
 
   return code;

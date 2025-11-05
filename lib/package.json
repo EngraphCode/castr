@@ -1,5 +1,5 @@
 {
-  "name": "openapi-zod-validation",
+  "name": "@oaknational/openapi-to-tooling",
   "version": "1.18.3",
   "type": "module",
   "repository": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/jimcresswell/openapi-zod-validation",
   "bin": {
-    "openapi-zod-validation": "./dist/cli.cjs"
+    "openapi-zod-validation": "./dist/cli.js"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -43,6 +43,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.21.0",
     "@scalar/json-magic": "0.7.0",
     "@scalar/openapi-parser": "0.23.0",
     "@scalar/openapi-types": "0.5.1",
@@ -56,14 +57,10 @@
     "zod": "^4.1.12"
   },
   "peerDependencies": {
-    "openapi-fetch": "^0.15.0",
-    "openapi-typescript": "^7.10.0"
+    "openapi-fetch": "^0.15.0"
   },
   "peerDependenciesMeta": {
     "openapi-fetch": {
-      "optional": true
-    },
-    "openapi-typescript": {
       "optional": true
     }
   },

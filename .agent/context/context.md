@@ -40,33 +40,57 @@
 
 **Focus:** Enrich SDK-facing artifacts with metadata from Scalar pipeline
 
+**Critical Constraint:** Use library types exclusively - NO custom types like ParameterMetadata or ParameterConstraints. Use `Pick<ParameterObject, ...>` and `Pick<SchemaObject, ...>` patterns instead.
+
 **See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 6 for detailed acceptance criteria
 
 ---
 
 ## ⚠️ Current Blockers
 
-**None** - All quality gates green, ready to proceed with Session 5 ✅
+**Session 6 Implementation Violates Architecture Principle (November 5, 2025)**
+
+An incomplete Session 6 implementation exists with custom types (`ParameterMetadata`, `ParameterConstraints`) that violate the "No Custom Types" principle. This causes:
+
+- 1 build error: `parameter-metadata.ts(214,7)` - ExampleObject type mismatch
+- 20 lint errors in Session 6 files
+
+**Resolution:** Session 6 must be rewritten using library types exclusively:
+
+- Replace `ParameterMetadata` interface with `Pick<ParameterObject, ...> & Pick<SchemaObject, ...>`
+- Replace `ParameterConstraints` interface with `Pick<SchemaObject, 'minimum' | 'maximum' | ...>`
+- Use `ParameterObject['examples']` directly (handles `ExampleObject | ReferenceObject` union)
+
+**Do NOT proceed with Session 6 until the architectural principle is properly implemented.**
 
 ---
 
 ## 🤔 Active Decisions
 
-**None** - Phase 2 Part 1 complete, moving to Part 2 per plan
+**Type System Architecture - No Custom Types (November 5, 2025)**
+
+Critical architectural principle enforced across all sessions:
+
+- **ALWAYS use library types** from `openapi3-ts/oas31` and `@modelcontextprotocol/sdk/types.js`
+- **NEVER create custom types** where library types exist (e.g., ParameterMetadata, ParameterConstraints interfaces are FORBIDDEN)
+- **Use Pick/Extract patterns** to subset library types: `Pick<ParameterObject, 'description' | 'examples'>`
+- **Maintain unbroken chain of truth** from authoritative library sources
+
+See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for complete rationale.
 
 ---
 
 ## 🎯 Quality Gate Status
 
-| Gate              | Status | Last Check         |
-| ----------------- | ------ | ------------------ |
-| `pnpm format`     | ✅     | Nov 5, 2025 3:45pm |
-| `pnpm build`      | ✅     | Nov 5, 2025 3:45pm |
-| `pnpm type-check` | ✅     | Nov 5, 2025 3:45pm |
-| `pnpm lint`       | ✅     | Nov 5, 2025 3:45pm |
-| `pnpm test:all`   | ✅     | Nov 5, 2025 3:30pm |
+| Gate              | Status | Last Check         | Notes                            |
+| ----------------- | ------ | ------------------ | -------------------------------- |
+| `pnpm format`     | ✅     | Nov 5, 2025 9:00pm | Code formatted                   |
+| `pnpm build`      | ❌     | Nov 5, 2025 9:00pm | 1 error (Session 6 custom types) |
+| `pnpm type-check` | ❌     | Nov 5, 2025 9:00pm | 1 error (Session 6 custom types) |
+| `pnpm lint`       | ❌     | Nov 5, 2025 9:00pm | 20 errors (Session 6 files)      |
+| `pnpm test:all`   | ⏭️     | N/A                | Skipped (build must pass first)  |
 
-**Result:** 0 errors, 0 warnings, 0 skipped tests - ALL GREEN ✅
+**Result:** Build/type/lint failures in incomplete Session 6 implementation. See blockers above.
 
 ---
 

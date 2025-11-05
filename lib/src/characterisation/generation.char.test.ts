@@ -904,3 +904,5 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
     expect(result).toContain('.object');
   });
 });
+
+// Session 6 tests moved to parameter-metadata.char.test.ts

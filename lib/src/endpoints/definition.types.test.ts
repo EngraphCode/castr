@@ -4,6 +4,7 @@ import type {
   EndpointParameter,
   EndpointError,
   EndpointResponse,
+  SchemaConstraints,
 } from './definition.types.js';
 
 describe('EndpointDefinition Types', () => {
@@ -301,6 +302,91 @@ describe('EndpointDefinition Types', () => {
       expect(endpoints).toHaveLength(2);
       expect(endpoints[0]?.method).toBe('get');
       expect(endpoints[1]?.parameters).toHaveLength(1);
+    });
+  });
+
+  describe('Enhanced parameter metadata (Session 6)', () => {
+    it('should support new optional metadata fields on EndpointParameter', () => {
+      // Verify backward compatibility - all new fields are optional
+      const paramWithMetadata: EndpointParameter = {
+        name: 'age',
+        type: 'Query',
+        schema: 'z.number().int().min(0).max(120)',
+        description: 'User age',
+        deprecated: true,
+        example: 25,
+        default: 18,
+        constraints: {
+          minimum: 0,
+          maximum: 120,
+        },
+      };
+
+      expect(paramWithMetadata.name).toBe('age');
+      expect(paramWithMetadata.description).toBe('User age');
+      expect(paramWithMetadata.deprecated).toBe(true);
+      expect(paramWithMetadata.example).toBe(25);
+      expect(paramWithMetadata.default).toBe(18);
+      expect(paramWithMetadata.constraints?.minimum).toBe(0);
+      expect(paramWithMetadata.constraints?.maximum).toBe(120);
+    });
+
+    it('should support SchemaConstraints type', () => {
+      const constraints: SchemaConstraints = {
+        minimum: 0,
+        maximum: 100,
+        exclusiveMinimum: 0,
+        exclusiveMaximum: 100,
+        minLength: 3,
+        maxLength: 50,
+        pattern: '^[a-z]+$',
+        enum: ['draft', 'published'],
+        format: 'email',
+        minItems: 1,
+        maxItems: 10,
+        uniqueItems: true,
+      };
+
+      expect(constraints.minimum).toBe(0);
+      expect(constraints.maximum).toBe(100);
+      expect(constraints.minLength).toBe(3);
+      expect(constraints.maxLength).toBe(50);
+      expect(constraints.pattern).toBe('^[a-z]+$');
+      expect(constraints.enum).toEqual(['draft', 'published']);
+      expect(constraints.format).toBe('email');
+    });
+
+    it('should support examples object', () => {
+      const param: EndpointParameter = {
+        name: 'format',
+        type: 'Query',
+        schema: 'z.string()',
+        examples: {
+          json: {
+            value: 'json',
+            summary: 'JSON format',
+          },
+          xml: {
+            value: 'xml',
+            summary: 'XML format',
+            description: 'Legacy XML format',
+          },
+        },
+      };
+
+      const jsonExample = param.examples?.['json'];
+      const xmlExample = param.examples?.['xml'];
+
+      // Type guard for testing - in bundled specs examples should be resolved
+      expect(jsonExample).toBeDefined();
+      expect(xmlExample).toBeDefined();
+      if (jsonExample && !('$ref' in jsonExample)) {
+        expect(jsonExample.value).toBe('json');
+        expect(jsonExample.summary).toBe('JSON format');
+      }
+      if (xmlExample && !('$ref' in xmlExample)) {
+        expect(xmlExample.description).toBe('Legacy XML format');
+      }
     });
   });
 });

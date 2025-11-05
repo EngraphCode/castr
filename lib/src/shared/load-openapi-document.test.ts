@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import type { LoaderPlugin, ResolveResult, bundle } from '@scalar/json-magic/bundle';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { loadOpenApiDocument } from './load-openapi-document.js';
+import { loadOpenApiDocument } from './load-openapi-document/index.js';
 
 // Interface for bundle result (Scalar returns loose object types)
 // Architecture: Scalar's bundle() returns Record<string, unknown> which we then

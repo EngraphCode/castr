@@ -89,6 +89,7 @@
 **Decision:** Replace `SwaggerParser.bundle()` with Scalar's `@scalar/json-magic` + `@scalar/openapi-parser`
 
 **Rationale:**
+
 1. **Deterministic bundling** - Scalar provides consistent, repeatable results
 2. **Better validation** - AJV-backed validation with detailed error messages
 3. **Multi-file support** - Better handling of $ref resolution across files
@@ -97,6 +98,7 @@
 6. **Richer metadata** - Provides bundle metadata, warnings, and extension data
 
 **Trade-offs accepted:**
+
 - Scalar preserves internal `$ref`s (unlike SwaggerParser's full dereferencing)
 - Need to handle Scalar's extension properties (`x-ext`, `x-ext-urls`)
 - Required migration of all existing tests and fixtures
@@ -106,6 +108,7 @@
 **Decision:** Normalize ALL specs to OpenAPI 3.1 after bundling, regardless of input version
 
 **Rationale:**
+
 1. **Single type system** - Eliminates version branching in conversion logic
 2. **Automatic upgrades** - 3.0 specs transparently upgraded to 3.1
 3. **Strict typing** - Leverages `openapi3-ts/oas31` types throughout
@@ -113,6 +116,7 @@
 5. **Simpler codebase** - No need to handle multiple OpenAPI versions in business logic
 
 **How it works:**
+
 ```
 Input (3.0 or 3.1 spec)
     ↓
@@ -127,13 +131,17 @@ BundledOpenApiDocument                ← Internal type system
 All downstream code uses oas31 types  ← Single source of truth
 ```
 
-**Key principle:** Validate at boundaries, trust internally. Once a spec is bundled and upgraded, all downstream code can assume OpenAPI 3.1 semantics.
+**Key principles:**
+
+- **Validate at boundaries, trust internally** - Once a spec is bundled and upgraded, all downstream code can assume OpenAPI 3.1 semantics
+- **No custom types** - ALWAYS use library types (openapi3-ts/oas31, @modelcontextprotocol/sdk/types.js). Custom types are forbidden. Maintain unbroken chain of truth from library definitions.
 
 ### Why Intersection Type Strategy?
 
 **Decision:** Use `OpenAPIV3_1.Document & OpenAPIObject` as the internal document type
 
 **Rationale:**
+
 1. **Best of both worlds** - Scalar's extensions + strict typing
 2. **Type safety** - Compiler catches misuse of optional properties
 3. **Extension access** - Can access `x-ext`, `x-ext-urls` for debugging
@@ -141,6 +149,7 @@ All downstream code uses oas31 types  ← Single source of truth
 5. **Boundary validation** - Type guards convert Scalar's loose types to our strict types
 
 **Implementation:**
+
 ```typescript
 import type { OpenAPIV3_1 } from '@scalar/openapi-types';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
@@ -156,6 +165,76 @@ function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDocument {
 
 **Trade-off:** Need to handle Scalar's `Record<string, unknown>` boundary with type guards, but this is explicit and localized.
 
+### Why No Custom Types?
+
+**Decision:** Use library types exclusively - never create custom types where library types exist
+
+**Rationale:**
+
+1. **Unbroken chain of truth** - Types flow directly from authoritative sources
+2. **Zero drift** - Library updates automatically propagate through our code
+3. **Expert maintenance** - Domain experts maintain library types, not us
+4. **Compiler validation** - TypeScript enforces consistency at compile time
+5. **Simpler codebase** - No custom type definitions to maintain
+
+**What this means:**
+
+```typescript
+// ✅ GOOD: Use library types directly
+import type { ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { Tool, ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
+
+// Use Pick to subset library types
+function extractMetadata(
+  param: ParameterObject,
+  schema: SchemaObject,
+): Pick<ParameterObject, 'description' | 'deprecated' | 'example' | 'examples'> &
+  Pick<SchemaObject, 'default'> {
+  return {
+    description: param.description,
+    deprecated: param.deprecated,
+    example: param.example,
+    examples: param.examples,
+    default: schema.default,
+  };
+}
+
+// Use library union types directly
+function processSchema(schema: SchemaObject | ReferenceObject): void {
+  if (isReferenceObject(schema)) {
+    // Handle reference
+  }
+  // Handle schema
+}
+
+// ❌ BAD: Creating custom types
+interface ParameterMetadata {
+  // ❌ FORBIDDEN
+  description?: string;
+  deprecated?: boolean;
+  example?: unknown;
+}
+
+interface ParameterConstraints {
+  // ❌ FORBIDDEN
+  minimum?: number;
+  maximum?: number;
+}
+```
+
+**Approved patterns:**
+
+- `Pick<LibraryType, 'field1' | 'field2'>` - Subset library types
+- `Extract<LibraryType, 'value1' | 'value2'>` - Extract union members (tied to library)
+- `LibraryType['fieldName']` - Access exact library field type
+- Type guards using library types: `value is LibraryType`
+
+**Forbidden patterns:**
+
+- Creating interfaces that duplicate library fields
+- Creating types that "should" match library types
+- Extracting types into constants without library tying
+
 ---
 
 ### MCP Tool Generation Strategy
@@ -165,6 +244,7 @@ function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDocument {
 **Context:** MCP (Model Context Protocol) 2025-06-18 requires JSON Schema Draft 07 for tool `inputSchema` and `outputSchema` fields.
 
 **Rationale:**
+
 1. **No information loss** - Direct conversion preserves all OpenAPI schema information
 2. **Optimal for each format** - Zod for TypeScript runtime validation, JSON Schema for MCP protocol
 3. **Full Draft 07 control** - Can ensure compliance with MCP requirements
@@ -172,13 +252,15 @@ function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDocument {
 5. **Clean separation** - Each converter optimized for its specific target format
 
 **Rejected alternative:** OpenAPI → Zod → JSON Schema conversion
-- **Why rejected:** 
+
+- **Why rejected:**
   - Zod `.transform()` and `.refine()` don't translate to JSON Schema
   - Information loss in conversion process
   - Limited support for complex Zod features
   - Additional dependency with its own edge cases
 
 **Implementation approach:**
+
 ```
 OpenAPI Schema
     ↓
@@ -188,6 +270,7 @@ OpenAPI Schema
 ```
 
 **Key constraints enforced:**
+
 - MCP tools require `type: "object"` at root of inputSchema/outputSchema
 - Tool naming convention: operationId → snake_case (e.g., `getUser` → `get_user`)
 - ToolAnnotations generated from HTTP methods (GET → `readOnlyHint: true`, etc.)
@@ -202,21 +285,25 @@ OpenAPI Schema
 **Decision:** Extract upstream API authentication metadata for documentation, not tool-level security
 
 **Context:** Two-layer authentication model in MCP ecosystem:
+
 - **Layer 1:** MCP client ↔ MCP server (OAuth 2.1, defined by MCP spec)
 - **Layer 2:** MCP server ↔ Upstream API (defined by OpenAPI spec)
 
 **Critical distinction:**
+
 - OpenAPI security schemes describe how the **MCP server** authenticates to the **upstream API**
 - This is separate from MCP protocol security (OAuth 2.1 between client and server)
 - MCP tools themselves don't carry security metadata
 
 **What we extract:**
+
 - `components.securitySchemes` (OAuth 2.0, Bearer, API Keys, etc.)
 - Operation-level `security` requirements
 - OAuth scopes per operation
 - Token/key placement details
 
 **What we generate:**
+
 - Comprehensive documentation comments in tool definitions
 - Server implementation configuration guides
 - TypeScript configuration types for credentials
@@ -232,6 +319,7 @@ OpenAPI Schema
 ### Scalar Pipeline (3 Stages)
 
 **Stage 1: Bundle**
+
 - Uses `@scalar/json-magic/bundle` with plugins
 - Resolves external `$ref`s to absolute paths
 - Preserves internal `$ref`s for dependency tracking
@@ -239,12 +327,14 @@ OpenAPI Schema
 - Tracks filesystem entries and warnings
 
 **Stage 2: Upgrade**
+
 - Uses `@scalar/openapi-parser/upgrade`
 - Converts OpenAPI 3.0 → 3.1 transparently
 - Handles nullable types, exclusive bounds, etc.
 - Normalizes type arrays
 
 **Stage 3: Validate & Type**
+
 - Runtime validation with type guards
 - Converts Scalar's loose types to strict types
 - Ensures intersection type constraints
@@ -255,6 +345,7 @@ OpenAPI Schema
 ### Type System Migration (OpenAPI 3.0 → 3.1)
 
 **Key changes:**
+
 1. **Nullable types:**
    - 3.0: `{ type: 'string', nullable: true }`
    - 3.1: `{ type: ['string', 'null'] }`
@@ -289,6 +380,7 @@ Every code change follows the TDD cycle:
 ### Type Safety - STRICT
 
 **FORBIDDEN constructs:**
+
 - `as` (except `as const`)
 - `any`
 - `!` (non-null assertion)
@@ -296,6 +388,7 @@ Every code change follows the TDD cycle:
 - `Object.*` methods without type guards
 
 **Required patterns:**
+
 - Type predicates with `is` keyword
 - Runtime validation at boundaries
 - Type inference over annotations
@@ -305,6 +398,7 @@ Every code change follows the TDD cycle:
 ### TSDoc - COMPREHENSIVE
 
 **Public APIs require:**
+
 - Description (what, why, key behaviors)
 - All parameters with descriptions
 - Return value details
@@ -314,6 +408,7 @@ Every code change follows the TDD cycle:
 - Important behavioral notes (`@remarks`)
 
 **Internal APIs require:**
+
 - Brief description
 - Parameter types and descriptions
 - Return value
@@ -332,6 +427,7 @@ Every code change follows the TDD cycle:
 ### Quality Gates - ALWAYS GREEN
 
 Before any commit:
+
 ```bash
 pnpm format      # Format code
 pnpm build       # Verify builds
@@ -349,12 +445,14 @@ pnpm test:all    # All tests pass, 0 skipped
 ### Core Pipeline
 
 **`lib/src/shared/load-openapi-document.ts`**
+
 - Implements Scalar-based loading pipeline
 - 3-stage process: bundle → upgrade → validate
 - Type guard `isBundledOpenApiDocument` for boundary validation
 - Comprehensive TSDoc with architecture comments
 
 **`lib/src/shared/prepare-openapi-document.ts`**
+
 - Public API wrapper around `loadOpenApiDocument`
 - Accepts string path, URL, or OpenAPIObject
 - Returns normalized OpenAPI 3.1 document
@@ -363,11 +461,13 @@ pnpm test:all    # All tests pass, 0 skipped
 ### Type Conversion
 
 **`lib/src/conversion/typescript/helpers.primitives.ts`**
+
 - Contains `isNullableType()` helper for OpenAPI 3.1 nullable detection
 - Primitive type conversion utilities
 - Handles type arrays and nullable unions
 
 **`lib/src/conversion/typescript/core.converters.ts`**
+
 - Core schema → TypeScript string conversion
 - Uses `isNullableType()` throughout
 - Comprehensive type handling
@@ -375,12 +475,14 @@ pnpm test:all    # All tests pass, 0 skipped
 ### Code Generation
 
 **`lib/src/rendering/generate-from-context.ts`**
+
 - Main `generateZodClientFromOpenAPI()` function
 - Entry point for all code generation
 - Template rendering and formatting
 - Comprehensive TSDoc
 
 **`lib/src/context/template-context.ts`**
+
 - `getZodClientTemplateContext()` builds template variables
 - Includes `defaultStatusBehavior` option
 - Comprehensive TSDoc with examples
@@ -388,6 +490,7 @@ pnpm test:all    # All tests pass, 0 skipped
 ### Validation & Guards
 
 **`lib/src/validation/scalar-guard.test.ts`**
+
 - Prevents legacy SwaggerParser imports
 - Scans all production code for banned imports
 - Run via `pnpm test:scalar-guard`
@@ -402,13 +505,13 @@ pnpm test:all    # All tests pass, 0 skipped
 ```typescript
 export function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDocument {
   if (!doc || typeof doc !== 'object') return false;
-  
+
   const candidate = doc as Record<string, unknown>;
-  
+
   // Validate required OpenAPI 3.1 fields
   if (!candidate.openapi || typeof candidate.openapi !== 'string') return false;
   if (!candidate.openapi.startsWith('3.1')) return false;
-  
+
   return true;
 }
 
@@ -424,7 +527,7 @@ if (!isBundledOpenApiDocument(doc)) {
 
 ```typescript
 // NEVER do this
-const doc = await loadOpenApiDocument(input) as BundledOpenApiDocument;
+const doc = (await loadOpenApiDocument(input)) as BundledOpenApiDocument;
 // Bypasses type safety!
 ```
 
@@ -446,7 +549,8 @@ if (isNullableType(schema)) {
 
 ```typescript
 // NEVER do this (3.0 style)
-if (schema.nullable) {  // Property doesn't exist in 3.1!
+if (schema.nullable) {
+  // Property doesn't exist in 3.1!
   return `${baseType} | null`;
 }
 ```
@@ -500,6 +604,7 @@ export function isNullableType(schema: SchemaObject): boolean {
 **Goal:** Enrich SDK-facing artifacts with metadata from Scalar pipeline
 
 **Focus:**
+
 - Enhanced parameter metadata (descriptions, examples, constraints)
 - Rate-limiting/constraint metadata extraction
 - Maintain backward compatibility with existing templates
@@ -517,7 +622,6 @@ export function isNullableType(schema: SchemaObject): boolean {
   - Add tool naming converter (operationId → snake_case)
   - Generate ToolAnnotations from HTTP methods
   - Add type guards and validation helpers
-  
 - **Session 8:** Documentation & Final Validation
   - Update README with MCP sections
   - Add CLI flags for MCP generation
@@ -532,6 +636,7 @@ export function isNullableType(schema: SchemaObject): boolean {
 ### Quick Start (Warm Context)
 
 If you're continuing in the same chat:
+
 ```
 Continue with Session 6 as planned. Follow TDD and RULES.md standards.
 ```
@@ -539,6 +644,7 @@ Continue with Session 6 as planned. Follow TDD and RULES.md standards.
 ### Cold Start (Fresh Chat)
 
 If starting in a fresh chat with no context:
+
 ```
 I'm continuing development on openapi-zod-client. Please read:
 
@@ -559,6 +665,7 @@ Follow ALL standards in @RULES.md.
 ### Pre-Work Checklist
 
 Before starting any session:
+
 - [ ] Read `.agent/context/context.md` for current status
 - [ ] Read `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for session details
 - [ ] Read `.agent/RULES.md` for standards
@@ -577,6 +684,7 @@ Before starting any session:
 ### Post-Work Checklist
 
 After completing a session:
+
 - [ ] All tests passing (`pnpm test:all`)
 - [ ] 0 type errors (`pnpm type-check`)
 - [ ] 0 lint errors (`pnpm lint`)
@@ -592,26 +700,31 @@ After completing a session:
 ## Important Links
 
 **Architecture Documentation:**
+
 - `.agent/architecture/SCALAR-PIPELINE.md` - Scalar pipeline details (~3,000 words)
 - `.agent/architecture/OPENAPI-3.1-MIGRATION.md` - Type system migration guide
 - `docs/DEFAULT-RESPONSE-BEHAVIOR.md` - Default response handling
 
 **Analysis Documentation:**
+
 - `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - MCP 2025-06-18 specification analysis
 - `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 rules
 - `.agent/analysis/SECURITY_EXTRACTION.md` - Upstream API authentication extraction
 
 **Standards & Guidelines:**
+
 - `.agent/RULES.md` - Coding standards (TDD, TSDoc, type safety) - **MANDATORY**
 - `.agent/DEFINITION_OF_DONE.md` - Completion criteria
 
 **Project Context:**
+
 - `.agent/context/README.md` - Documentation system guide
 - `.agent/context/context.md` - Current status snapshot
 - `.agent/plans/00-STRATEGIC-OVERVIEW.md` - High-level roadmap
 - `.agent/plans/requirements.md` - Project constraints
 
 **Session Plans:**
+
 - `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` - Detailed session-by-session plan
 
 ---

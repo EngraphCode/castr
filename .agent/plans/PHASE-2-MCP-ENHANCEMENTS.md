@@ -106,6 +106,7 @@ type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
 - **No casting:** Type narrowing via runtime validation, never `as` assertions
 - **Extensions preserved:** Scalar's `x-ext`, `x-ext-urls` available for debugging
 - **Strict downstream:** All conversion/template code uses `openapi3-ts/oas31` types
+- **No custom types:** ALWAYS use library types (openapi3-ts, @modelcontextprotocol/sdk). Custom types are forbidden. Maintain unbroken chain of truth from library definitions.
 
 #### Implementation Notes
 
@@ -346,12 +347,14 @@ const doc = await prepareOpenApiDocument({ input: './spec.yaml' });
 **Completed Deliverables:**
 
 ✅ **Step 1: TSDoc Public API Documentation**
+
 - Enhanced `generateZodClientFromOpenAPI()` with comprehensive TSDoc
 - Enhanced `getZodClientTemplateContext()` with detailed examples
 - Enhanced `getOpenApiDependencyGraph()` with full documentation
 - Added detailed documentation for `defaultStatusBehavior` option
 
 ✅ **Step 2: Scalar Pipeline Architecture Documentation**
+
 - Created `.agent/architecture/SCALAR-PIPELINE.md` (~3,000 words)
   - Bundling vs dereferencing explained
   - 3-stage pipeline documented
@@ -360,6 +363,7 @@ const doc = await prepareOpenApiDocument({ input: './spec.yaml' });
 - Updated `lib/README.md` to remove SwaggerParser references
 
 ✅ **Step 3: OpenAPI 3.1 Type System Documentation**
+
 - Created `.agent/architecture/OPENAPI-3.1-MIGRATION.md`
   - Documented nullable types (3.0 vs 3.1)
   - Documented exclusive bounds changes
@@ -367,6 +371,7 @@ const doc = await prepareOpenApiDocument({ input: './spec.yaml' });
   - Documented `isNullableType()` helper with inline comments
 
 ✅ **Step 4: Default Response Behavior Documentation**
+
 - Created `docs/DEFAULT-RESPONSE-BEHAVIOR.md`
   - Explained the warning message
   - Documented both `defaultStatusBehavior` options
@@ -374,6 +379,7 @@ const doc = await prepareOpenApiDocument({ input: './spec.yaml' });
   - Provided comprehensive usage examples
 
 ✅ **Step 5: Code Comments & Inline Documentation**
+
 - Added 15+ substantial architectural comments across the codebase:
   - Vitest v4 hoisting patterns
   - Scalar boundary validation
@@ -388,11 +394,13 @@ const doc = await prepareOpenApiDocument({ input: './spec.yaml' });
   - Complete generation pipeline
 
 ✅ **Step 6: Final Cleanup & Polish**
+
 - No commented-out code blocks
 - No TODO/FIXME/HACK comments in source
 - All code follows RULES.md standards
 
 ✅ **Step 7: Comprehensive Quality Verification**
+
 - 0 linter errors across all source files ✅
 - 0 linter errors across all test files ✅
 - 0 type errors ✅
@@ -456,7 +464,7 @@ Implements MCP-specific features assuming Part 1 is complete:
 3. **Conversion Strategy:** OpenAPI → (Zod + JSON Schema) in parallel
    - **Rejected:** OpenAPI → Zod → JSON Schema (via `zod-to-json-schema`)
    - **Chosen:** Direct OpenAPI → JSON Schema conversion
-   - **Rationale:** 
+   - **Rationale:**
      - No information loss (Zod transforms don't translate)
      - Each converter optimized for its target format
      - Full control over Draft 07 output
@@ -497,6 +505,7 @@ Implements MCP-specific features assuming Part 1 is complete:
 - Generated tools include comprehensive authentication guidance comments
 
 **Validation:**
+
 - ✅ All three analysis documents created with comprehensive details
 - ✅ MCP spec version confirmed (2025-06-18)
 - ✅ JSON Schema version confirmed (Draft 07)
@@ -507,14 +516,21 @@ Implements MCP-specific features assuming Part 1 is complete:
 #### **Session 6 – SDK Enhancements**
 
 - **Focus:** Enrich SDK-facing artefacts with metadata unlocked by the Scalar pipeline.
+- **Design Constraint:** Use library types exclusively - `ParameterObject['examples']`, `SchemaObject['constraints']` etc. NO custom types.
 - **Acceptance Criteria**
-  - Enhanced parameter metadata (descriptions, examples, constraints) emitted by generation templates; accompanying tests cover representative specs.
-  - Rate-limiting/constraint metadata extracted when present and surfaced in template context.
-  - No regression in existing SDK outputs (schemas-with-metadata template stays stable aside from intentional additions).
+  - Enhanced parameter metadata (descriptions, examples, constraints) emitted by generation templates using library types directly
+  - Parameter metadata uses `Pick<ParameterObject, 'description' | 'deprecated' | 'example' | 'examples'>` + `Pick<SchemaObject, 'default'>` patterns
+  - Schema constraints use `Pick<SchemaObject, 'minimum' | 'maximum' | ...>` directly
+  - All types use `openapi3-ts/oas31` and `@modelcontextprotocol/sdk/types.js` imports
+  - Accompanying tests cover representative specs
+  - Rate-limiting/constraint metadata extracted when present and surfaced in template context
+  - No regression in existing SDK outputs (schemas-with-metadata template stays stable aside from intentional additions)
 - **Validation Steps**
   1. `pnpm test -- run src/context/template-context.test.ts`
-  2. Regenerate characterisation fixtures: `pnpm test --filter characterisation -- sdk`
-  3. Manual diff of generated Engraph fixture to ensure metadata additions are correct.
+  2. `pnpm test -- run src/endpoints/parameter-metadata.test.ts`
+  3. Regenerate characterisation fixtures: `pnpm test --filter characterisation -- sdk`
+  4. Manual diff of generated Engraph fixture to ensure metadata additions are correct
+  5. Verify NO custom type definitions created (ParameterMetadata, ParameterConstraints forbidden)
 
 #### **Session 7 – MCP Tool Enhancements**
 

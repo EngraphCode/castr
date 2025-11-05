@@ -8,6 +8,7 @@ import { isReferenceObject, isSchemaObject } from 'openapi3-ts/oas31';
 import { match } from 'ts-pattern';
 import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
+import type { EndpointParameter, ParameterType } from '../definition.types.js';
 import {
   getParameterByRef,
   resolveSchemaRef,
@@ -15,28 +16,13 @@ import {
 } from '../../shared/component-access.js';
 import { getZodSchema, getZodChain } from '../../conversion/zod/index.js';
 import { pathParamToVariableName } from '../../shared/utils/index.js';
+import { extractParameterMetadata } from '../parameter-metadata.js';
 
 /**
  * Type signature for function that generates Zod variable names
  * @public
  */
 export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
-
-/**
- * Parameter type enum
- * @public
- */
-export type ParameterType = 'Header' | 'Query' | 'Path';
-
-/**
- * Parameter definition for an endpoint
- * @public
- */
-export interface EndpointParameter {
-  name: string;
-  type: ParameterType;
-  schema: string;
-}
 
 /**
  * Allowed parameter locations according to OpenAPI 3.0 spec
@@ -152,20 +138,58 @@ function parameterLocationToType(location: AllowedParameterLocation): ParameterT
 }
 
 /**
+ * Get parameter name, applying transformation for path parameters.
+ * Path parameters use variable name format (e.g., ":id" -> "id").
+ *
+ * @param paramItem - Parameter object with name and location
+ * @returns Transformed parameter name
+ * @internal
+ */
+function getParameterName(paramItem: ParameterObject): string {
+  return match(paramItem.in)
+    .with('path', () => pathParamToVariableName(paramItem.name))
+    .otherwise(() => paramItem.name);
+}
+
+/**
+ * Apply parameter description to schema if withDescription option is enabled.
+ * Mutates the schema object if conditions are met.
+ *
+ * @param schema - Schema to potentially add description to
+ * @param paramItem - Parameter with description
+ * @param options - Template context options
+ * @internal
+ */
+function applyDescriptionToSchema(
+  schema: SchemaObject | ReferenceObject,
+  paramItem: ParameterObject,
+  options?: TemplateContext['options'],
+): void {
+  if (options?.withDescription && isSchemaObject(schema)) {
+    schema.description = (paramItem.description ?? '').trim();
+  }
+}
+
+/**
  * Process a single parameter for an endpoint operation
  *
  * Handles all parameter types (path, query, header) per OpenAPI 3.0 spec.
  * Resolves references, extracts schemas from `schema` or `content` property,
- * and generates Zod validation code.
+ * generates Zod validation code, and extracts rich metadata for SDK generation.
+ *
+ * **Metadata extraction includes:**
+ * - Description, deprecated flag
+ * - Examples and default values
+ * - Schema constraints (min/max, length, patterns, etc.)
  *
  * @param param - Parameter object or reference to process
  * @param ctx - Conversion context with OpenAPI document
  * @param getZodVarName - Function to generate Zod variable names
  * @param options - Template context options
- * @returns Parameter definition or undefined if skipped
+ * @returns Parameter definition with metadata, or undefined if skipped
  * @throws {Error} If parameter has invalid structure
  *
- * @example
+ * @example Basic parameter processing
  * ```typescript
  * const param: ParameterObject = {
  *   name: 'userId',
@@ -177,7 +201,34 @@ function parameterLocationToType(location: AllowedParameterLocation): ParameterT
  * // { name: 'userId', type: 'Path', schema: 'z.string()' }
  * ```
  *
+ * @example Parameter with metadata
+ * ```typescript
+ * const param: ParameterObject = {
+ *   name: 'age',
+ *   in: 'query',
+ *   description: 'User age',
+ *   example: 25,
+ *   schema: {
+ *     type: 'integer',
+ *     minimum: 0,
+ *     maximum: 120,
+ *     default: 18
+ *   }
+ * };
+ * const result = processParameter(param, ctx, getZodVarName);
+ * // {
+ * //   name: 'age',
+ * //   type: 'Query',
+ * //   schema: 'z.number().int().min(0).max(120)',
+ * //   description: 'User age',
+ * //   example: 25,
+ * //   default: 18,
+ * //   constraints: { minimum: 0, maximum: 120 }
+ * // }
+ * ```
+ *
  * @see {@link https://spec.openapis.org/oas/v3.0.3#parameter-object|OAS Parameter Object}
+ * @see {@link extractParameterMetadata}
  * @public
  */
 export function processParameter(
@@ -197,9 +248,7 @@ export function processParameter(
   let paramSchema = extractParameterSchema(paramItem, ctx.doc);
 
   // Optionally add parameter description to schema
-  if (options?.withDescription && isSchemaObject(paramSchema)) {
-    paramSchema.description = (paramItem.description ?? '').trim();
-  }
+  applyDescriptionToSchema(paramSchema, paramItem, options);
 
   paramSchema = resolveSchemaRef(ctx.doc, paramSchema);
 
@@ -218,10 +267,15 @@ export function processParameter(
     paramItem.name,
   );
 
-  // Convert parameter name (path params get special treatment)
-  const name = match(paramItem.in)
-    .with('path', () => pathParamToVariableName(paramItem.name))
-    .otherwise(() => paramItem.name);
+  // Extract metadata from parameter and schema (if schema is resolved)
+  const metadata = isSchemaObject(paramSchema)
+    ? extractParameterMetadata(paramItem, paramSchema)
+    : {};
 
-  return { name, type: parameterLocationToType(paramItem.in), schema };
+  return {
+    name: getParameterName(paramItem),
+    type: parameterLocationToType(paramItem.in),
+    schema,
+    ...metadata,
+  };
 }

@@ -1,3 +1,5 @@
+import type { ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
+
 /**
  * Local type definitions for endpoint metadata
  * These types define the structure of API endpoints for code generation
@@ -19,7 +21,32 @@ export type RequestFormat = 'json' | 'form-data' | 'form-url' | 'binary' | 'text
 export type ParameterType = 'Path' | 'Query' | 'Header' | 'Body';
 
 /**
- * Endpoint parameter with schema as string reference
+ * Schema constraints subset from OpenAPI SchemaObject.
+ * Uses library types directly - no custom types.
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-object OpenAPI Schema Object}
+ */
+export type SchemaConstraints = Pick<
+  SchemaObject,
+  | 'minimum'
+  | 'maximum'
+  | 'exclusiveMinimum'
+  | 'exclusiveMaximum'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern'
+  | 'enum'
+  | 'format'
+  | 'minItems'
+  | 'maxItems'
+  | 'uniqueItems'
+>;
+
+/**
+ * Endpoint parameter with schema as string reference.
+ * Uses OpenAPI library types for metadata fields - no custom types.
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#parameter-object OpenAPI Parameter Object}
  */
 export interface EndpointParameter {
   /** Parameter name */
@@ -28,8 +55,18 @@ export interface EndpointParameter {
   type: ParameterType;
   /** Schema reference as string (e.g., 'z.string()', 'UserSchema') */
   schema: string;
-  /** Optional description */
-  description?: string;
+  /** Optional description (from ParameterObject) */
+  description?: ParameterObject['description'];
+  /** Whether parameter is deprecated (from ParameterObject) */
+  deprecated?: ParameterObject['deprecated'];
+  /** Example value for the parameter (from ParameterObject or SchemaObject) */
+  example?: ParameterObject['example'];
+  /** Named examples (from ParameterObject.examples, resolved only) */
+  examples?: ParameterObject['examples'];
+  /** Default value from schema (from SchemaObject) */
+  default?: SchemaObject['default'];
+  /** Schema validation constraints (from SchemaObject) */
+  constraints?: SchemaConstraints;
 }
 
 /**

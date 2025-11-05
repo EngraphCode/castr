@@ -10,7 +10,15 @@ export type {
   HttpMethod,
   RequestFormat,
   ParameterType,
+  SchemaConstraints,
 } from './definition.types.js';
+
+// Parameter metadata extraction
+export {
+  extractParameterMetadata,
+  extractSchemaConstraints,
+  type ParameterMetadata,
+} from './parameter-metadata.js';
 
 // Endpoint helpers (for advanced usage)
 export type { EndpointContext } from './helpers.js';

@@ -19,6 +19,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 **Purpose:** Document MCP tool structure, JSON Schema constraints, and protocol requirements
 
 **Key Contents:**
+
 - MCP version 2025-06-18 specification details
 - JSON Schema Draft 07 requirement (not Draft 2020-12)
 - Tool structure with required/optional fields
@@ -34,6 +35,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 **Purpose:** Define OpenAPI → JSON Schema Draft 07 conversion rules
 
 **Key Contents:**
+
 - Strategic approach: parallel conversion (not Zod → JSON Schema)
 - OpenAPI 3.1 vs JSON Schema Draft 07 differences
 - Type conversions (primitives, arrays, objects, nullable)
@@ -50,6 +52,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 **Purpose:** Document upstream API authentication extraction strategy
 
 **Key Contents:**
+
 - Two-layer authentication model (critical distinction)
   - Layer 1: MCP protocol (OAuth 2.1) - NOT in OpenAPI
   - Layer 2: Upstream API (OpenAPI security) - THIS is what we extract
@@ -66,16 +69,19 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 ## Critical Research Findings
 
 ### 1. MCP Version
+
 - **Target:** Specification version 2025-06-18
 - **Reference:** `.agent/reference/reference-repos/modelcontextprotocol`
 - **Schema Location:** `schema/2025-06-18/schema.json`
 
 ### 2. JSON Schema Version
+
 - **Required:** Draft 07 (NOT Draft 2020-12)
 - **Source:** MCP schema line 2: `"$schema": "http://json-schema.org/draft-07/schema#"`
 - **Implication:** All generated schemas must conform to Draft 07 spec
 
 ### 3. Conversion Strategy Decision
+
 - **Rejected Approach:** OpenAPI → Zod → JSON Schema (using `zod-to-json-schema`)
 - **Chosen Approach:** OpenAPI → (Zod + JSON Schema) in parallel
 - **Rationale:**
@@ -86,6 +92,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
   - Clean separation of concerns
 
 ### 4. Security Architecture Clarification
+
 - **Layer 1 (MCP Protocol):**
   - OAuth 2.1 between MCP client and MCP server
   - NOT defined in OpenAPI specifications
@@ -97,6 +104,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
   - For MCP server implementers to configure backend authentication
 
 ### 5. MCP SDK Assessment
+
 - **Decision:** Not needed for this project
 - **Rationale:**
   - SDK is for runtime (server/client implementation)
@@ -105,6 +113,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
   - We only need schema definitions from spec repository
 
 ### 6. Tool Structure Constraints
+
 - `inputSchema` and `outputSchema` MUST have `"type": "object"` at root
 - Tool names conventionally use `snake_case`
 - ToolAnnotations are untrusted hints (not security guarantees)
@@ -116,11 +125,13 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 ## Architecture Decisions
 
 ### 1. Directory Structure
+
 - Create `lib/src/conversion/json-schema/` directory
 - Parallel to existing `typescript/` and `zod/` converters
 - Contains OpenAPI → JSON Schema Draft 07 conversion logic
 
 ### 2. Tool Naming Convention
+
 - Convert `operationId` to `snake_case`
 - Examples:
   - `getUser` → `get_user`
@@ -128,6 +139,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
   - `deleteResource` → `delete_resource`
 
 ### 3. Annotations Mapping
+
 - Map HTTP methods to behavior hints:
   - GET/HEAD/OPTIONS → `readOnlyHint: true`
   - DELETE → `destructiveHint: true`
@@ -135,6 +147,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 - Base on HTTP semantics and RESTful conventions
 
 ### 4. Security Documentation
+
 - Extract security schemes from `components.securitySchemes`
 - Resolve operation-level security requirements
 - Generate comprehensive documentation comments
@@ -146,6 +159,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 ## Updated Plans
 
 ### PHASE-2-MCP-ENHANCEMENTS.md
+
 - ✅ Session 5 marked complete with full research findings
 - ✅ Updated Session 7 acceptance criteria:
   - Removed `zod-to-json-schema` dependency
@@ -155,6 +169,7 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
   - Updated validation steps
 
 ### context.md
+
 - ✅ Updated "Right Now" section with Session 5 completion
 - ✅ Added Session 5 to Session Log with comprehensive summary
 - ✅ Documented key research findings and decisions
@@ -167,11 +182,13 @@ Session 5 focused on comprehensive research of the Model Context Protocol (MCP) 
 Based on the research, the implementation path for Sessions 6-7 is clear:
 
 ### Session 6: SDK Enhancements
+
 - Enhance parameter metadata extraction
 - Add rate-limiting/constraint metadata
 - Maintain backward compatibility with existing templates
 
 ### Session 7: MCP Tool Generation
+
 1. **Create JSON Schema Converter**
    - Implement `lib/src/conversion/json-schema/`
    - Handle primitive, array, object types
@@ -204,6 +221,7 @@ Based on the research, the implementation path for Sessions 6-7 is clear:
    - Distinguish protocol vs execution errors
 
 ### Session 8: Documentation & Validation
+
 - Update README with MCP sections
 - Add CLI flags for MCP generation
 - Create comprehensive examples
@@ -215,12 +233,14 @@ Based on the research, the implementation path for Sessions 6-7 is clear:
 ## Files Created/Modified
 
 ### New Files
+
 - `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md`
 - `.agent/analysis/JSON_SCHEMA_CONVERSION.md`
 - `.agent/analysis/SECURITY_EXTRACTION.md`
 - `.agent/analysis/SESSION-5-SUMMARY.md` (this file)
 
 ### Modified Files
+
 - `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`
   - Updated Session 5 with complete research findings
   - Updated Session 7 acceptance criteria
@@ -250,6 +270,7 @@ Based on the research, the implementation path for Sessions 6-7 is clear:
 ## Next Steps
 
 **Session 6 is ready to begin:**
+
 - Focus: SDK enhancements with metadata from Scalar pipeline
 - Prerequisites: All Session 5 research complete ✅
 - Reference: `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 6
@@ -257,4 +278,3 @@ Based on the research, the implementation path for Sessions 6-7 is clear:
 ---
 
 **Research Phase Complete** - All decisions documented and ready for implementation.
-

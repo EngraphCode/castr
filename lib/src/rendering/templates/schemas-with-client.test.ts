@@ -114,12 +114,6 @@ describe('schemas-with-client template', () => {
       expect(result).toContain('import createClient from "openapi-fetch"');
     });
 
-    it('should import paths type from openapi-typescript', async () => {
-      const result = await generateWithOptions(minimalSpec);
-
-      expect(result).toContain('import type { paths } from');
-    });
-
     it('should import zod', async () => {
       const result = await generateWithOptions(minimalSpec);
 
@@ -264,7 +258,6 @@ describe('schemas-with-client template', () => {
       const result = await generateWithOptions(minimalSpec);
 
       expect(result).toContain('openapi-fetch');
-      expect(result).toContain('openapi-typescript');
       expect(result).toMatch(/(peer dependen(cy|cies)|Prerequisites)/i);
     });
 

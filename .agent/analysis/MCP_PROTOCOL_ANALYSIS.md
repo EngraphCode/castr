@@ -21,13 +21,14 @@ This document analyzes the Model Context Protocol (MCP) specification version 20
 
 ```json
 {
-    "$schema": "http://json-schema.org/draft-07/schema#"
+  "$schema": "http://json-schema.org/draft-07/schema#"
 }
 ```
 
 **Source:** `.agent/reference/reference-repos/modelcontextprotocol/schema/2025-06-18/schema.json:2`
 
 **Implications:**
+
 - All generated JSON Schemas must conform to Draft 07
 - No Draft 2020-12 features (dynamic refs, `$anchor`, etc.)
 - Use Draft 07 validation keywords only
@@ -129,6 +130,7 @@ MCP tools are defined by the `Tool` type in the schema:
 ### Security Warning
 
 **From MCP Specification:**
+
 > All properties in ToolAnnotations are **hints**. They are not guaranteed to provide a faithful description of tool behavior (including descriptive properties like `title`).
 >
 > Clients should never make tool use decisions based on ToolAnnotations received from untrusted servers.
@@ -136,24 +138,28 @@ MCP tools are defined by the `Tool` type in the schema:
 ### Annotation Meanings
 
 #### `readOnlyHint` (default: false)
+
 - **True:** Tool does not modify its environment
 - **False:** Tool may modify state
 - **Use case:** Help clients understand side effects
 - **OpenAPI mapping:** `GET`, `HEAD`, `OPTIONS` operations → `true`
 
 #### `destructiveHint` (default: true)
+
 - **True:** Tool may perform destructive updates (deletes, overwrites)
 - **False:** Tool performs only additive updates
 - **Meaningful only when:** `readOnlyHint == false`
 - **OpenAPI mapping:** `DELETE` operations → `true`
 
 #### `idempotentHint` (default: false)
+
 - **True:** Repeated calls with same arguments have no additional effect
 - **False:** Each call may have different effects
 - **Meaningful only when:** `readOnlyHint == false`
 - **OpenAPI mapping:** `PUT` operations → `true` (HTTP idempotency)
 
 #### `openWorldHint` (default: true)
+
 - **True:** Tool interacts with "open world" external entities
 - **False:** Tool's domain of interaction is closed
 - **Examples:**
@@ -163,11 +169,13 @@ MCP tools are defined by the `Tool` type in the schema:
 ### Title Display Precedence
 
 **Display name resolution order:**
+
 1. `title` field (top-level)
 2. `annotations.title` field
 3. `name` field (fallback)
 
 **From MCP Specification:**
+
 > For Tool, `annotations.title` should be given precedence over using `name`, if present.
 
 ---
@@ -207,7 +215,7 @@ operationId: "deleteResource"   → name: "delete_resource"
 ```json
 {
   "inputSchema": {
-    "type": "object",  // ← REQUIRED
+    "type": "object", // ← REQUIRED
     "properties": {
       "location": { "type": "string" }
     }
@@ -224,6 +232,7 @@ operationId: "deleteResource"   → name: "delete_resource"
 ### Handling Edge Cases
 
 #### Operation with no parameters
+
 ```json
 {
   "inputSchema": {
@@ -235,7 +244,9 @@ operationId: "deleteResource"   → name: "delete_resource"
 ```
 
 #### Operation with single primitive parameter
+
 Transform from:
+
 ```yaml
 # OpenAPI
 parameters:
@@ -246,6 +257,7 @@ parameters:
 ```
 
 To:
+
 ```json
 {
   "inputSchema": {
@@ -279,11 +291,13 @@ Tool invocation returns `CallToolResult`:
 Tools can return multiple content types:
 
 1. **Text Content**
+
    ```json
    { "type": "text", "text": "Result text" }
    ```
 
 2. **Image Content**
+
    ```json
    {
      "type": "image",
@@ -293,6 +307,7 @@ Tools can return multiple content types:
    ```
 
 3. **Audio Content**
+
    ```json
    {
      "type": "audio",
@@ -313,6 +328,7 @@ Tools can return multiple content types:
 ### Structured Content
 
 When `outputSchema` is provided:
+
 - Structured results in `structuredContent` field
 - **MUST** conform to the `outputSchema`
 - For backward compatibility, **SHOULD** also provide equivalent unstructured content
@@ -326,6 +342,7 @@ When `outputSchema` is provided:
 #### 1. Protocol Errors (JSON-RPC)
 
 Standard JSON-RPC errors for:
+
 - Unknown tool names
 - Invalid arguments
 - Server errors
@@ -345,6 +362,7 @@ Standard JSON-RPC errors for:
 #### 2. Tool Execution Errors
 
 Reported in tool results with `isError: true`:
+
 - API failures
 - Invalid input data
 - Business logic errors
@@ -369,6 +387,7 @@ Reported in tool results with `isError: true`:
 ### Error Code Guidelines
 
 **JSON-RPC Error Codes:**
+
 - `-32700`: Parse error
 - `-32600`: Invalid request
 - `-32601`: Method not found
@@ -445,9 +464,11 @@ Reported in tool results with `isError: true`:
 ### User Consent Model
 
 **From MCP Specification:**
+
 > For trust & safety and security, there **SHOULD** always be a human in the loop with the ability to deny tool invocations.
 
 **Requirements for MCP clients:**
+
 - Provide UI showing which tools are exposed
 - Visual indicators when tools are invoked
 - Confirmation prompts for operations
@@ -456,6 +477,7 @@ Reported in tool results with `isError: true`:
 ### Server Requirements
 
 MCP servers **MUST**:
+
 - Validate all tool inputs
 - Implement proper access controls
 - Rate limit tool invocations
@@ -464,6 +486,7 @@ MCP servers **MUST**:
 ### Client Requirements
 
 MCP clients **SHOULD**:
+
 - Prompt for user confirmation on sensitive operations
 - Show tool inputs before calling server (prevent data exfiltration)
 - Validate tool results before passing to LLM
@@ -473,6 +496,7 @@ MCP clients **SHOULD**:
 ### Untrusted Annotations
 
 **Critical Security Note:**
+
 > Tool annotations (including descriptive properties like `title`) are **untrusted hints** unless obtained from a trusted server.
 
 Clients must not make security decisions based on annotations from untrusted servers.
@@ -517,6 +541,7 @@ Servers that declare `listChanged` capability can notify clients when tool lists
 ```
 
 **Capability Declaration:**
+
 ```json
 {
   "capabilities": {
@@ -561,4 +586,3 @@ Servers that declare `listChanged` capability can notify clients when tool lists
 
 **Last Updated:** November 5, 2025  
 **Status:** Complete - Ready for implementation
-

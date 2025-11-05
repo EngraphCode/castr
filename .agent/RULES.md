@@ -457,11 +457,13 @@ function processValue(value: any, transform: any): any {
 
 #### 5. **Defer Type Definitions to Source Libraries**
 
+Use library types and type guards everywhere. Custom types are forbidden.
+
 **Why:** Library types are maintained by domain experts, are more accurate, and reduce maintenance burden.
 
 **Core Principles:**
 
-1. **Use library types directly** - Import types from `openapi3-ts`, `zod`, `tanu`, etc.
+1. **Use library types directly** - Import types from `openapi3-ts/oas31`, `zod`, ``, etc.
 2. **Avoid complex type extractions** - No `Exclude<>`, `Extract<>`, `Pick<>` gymnastics on library types
 3. **Don't redefine library concepts** - If the library has it, use it
 4. **Accept union types** - If the spec allows `SchemaObject | ReferenceObject`, accept both
@@ -812,7 +814,7 @@ interface User {
 
 ### 4. **Defer to library types**
 
-See "Defer Type Definitions to Source Libraries" in Code Quality Standards section above. Never redefine types that libraries already provide.
+See "Defer Type Definitions to Source Libraries" in Code Quality Standards section above. Never redefine types that libraries already provide. Use library types and type guards everywhere. Custom types are forbidden.
 
 ### 5. **Validate external boundaries**
 
@@ -1558,7 +1560,7 @@ console.log(`Took ${performance.now() - start}ms`);
 4. ✅ **NEVER widen types** - Preserve literal types, avoid `: string` or `: number` parameters
 5. ✅ **Single source of truth** - Define types once, import consistently
 6. ✅ **Validate external boundaries** - Parse/validate data from network, files, user input
-7. ✅ **Defer to library types** - Use library types directly, don't redefine
+7. ✅ **Defer to library types** - ALWAYS use library types everywhere, custom type are forbidden.
 8. ✅ **No filesystem/network I/O in tests** - Mock all I/O operations
 9. ✅ **Pure functions when possible** - Same input → same output
 10. ✅ **Explicit over implicit** - No hidden dependencies
@@ -1577,7 +1579,3 @@ console.log(`Took ${performance.now() - start}ms`);
 - Ask: "Should I validate this external data?"
 - Ask: "Can I use a library type instead of defining my own?"
 - Ask: "Is this as simple as it can be?"
-
----
-
-**These rules apply to all phases of the modernization project.**

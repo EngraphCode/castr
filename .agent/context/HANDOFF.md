@@ -25,6 +25,7 @@ Phase 3: DX & Quality                   ⚪ Planned
 ### Recent Milestone
 
 **Phase 2 Part 1 Completed** - November 5, 2025
+
 - Replaced SwaggerParser with Scalar pipeline
 - Migrated to OpenAPI 3.1 internal type system
 - Resolved all type/lint errors (0 errors)
@@ -36,24 +37,31 @@ Phase 3: DX & Quality                   ⚪ Planned
 ## 🗺️ Document Navigation
 
 ### For Quick Orientation (You Are Here)
+
 - **📄 HANDOFF.md** - This document - Big picture orientation and navigation
 
 ### For Current Status & Recent Work
+
 - **📝 context.md** - Living status log with recent session changes and immediate next actions
 
 ### For Complete AI Context
+
 - **🤖 continuation_prompt.md** - Comprehensive AI rehydration with full history and architecture
 
 ### For Detailed Plans
+
 - **📋 PHASE-2-MCP-ENHANCEMENTS.md** - Session-by-session implementation plan with acceptance criteria
 
 ### For Documentation System
+
 - **📚 README.md** - How to use this three-document system effectively
 
 ### For Standards & Rules
+
 - **⚖️ RULES.md** - Coding standards (TDD, TSDoc, type safety) - **MANDATORY**
 
 ### For Architecture Details
+
 - **🏗️ SCALAR-PIPELINE.md** - Scalar pipeline architecture (~3,000 words)
 - **🔄 OPENAPI-3.1-MIGRATION.md** - Type system migration guide
 - **📖 DEFAULT-RESPONSE-BEHAVIOR.md** - Default response handling
@@ -65,6 +73,7 @@ Phase 3: DX & Quality                   ⚪ Planned
 ### Starting Fresh (Cold Start)
 
 **For AI in new chat:**
+
 ```
 I'm continuing development on openapi-zod-client. Please read:
 
@@ -83,6 +92,7 @@ Follow ALL standards in @RULES.md.
 ```
 
 **For humans:**
+
 1. Read this HANDOFF.md (5 min orientation)
 2. Check context.md for recent changes (2 min)
 3. Review PHASE-2-MCP-ENHANCEMENTS.md for next session details
@@ -91,11 +101,13 @@ Follow ALL standards in @RULES.md.
 ### Continuing Work (Warm Start)
 
 **For AI in same chat:**
+
 ```
 Continue with [next task/session] as planned. Follow TDD and RULES.md standards.
 ```
 
 **For humans:**
+
 1. Check context.md for current status
 2. Review immediate next actions
 3. Pick up where you left off
@@ -125,21 +137,31 @@ Code generation, validation, MCP tools
 ### Key Architectural Decisions
 
 **1. OpenAPI 3.1 Internal Type System**
+
 - All specs auto-upgraded to 3.1 after bundling
 - Single type system eliminates version branching
 - Simpler codebase, future-proof architecture
 
 **2. Intersection Type Strategy**
+
 - `OpenAPIV3_1.Document & OpenAPIObject`
 - Scalar's extensions + strict typing
 - Type guards at boundaries (no casting)
 
 **3. Scalar Pipeline Benefits**
+
 - Deterministic bundling
 - Better validation (AJV-backed)
 - Multi-file support
 - Richer metadata
 - Active maintenance
+
+**4. No Custom Types**
+
+- ALWAYS use library types (openapi3-ts/oas31, @modelcontextprotocol/sdk/types.js)
+- NEVER create custom types where library types exist
+- Use Pick/Extract patterns to subset library types
+- Maintain unbroken chain of truth from library definitions
 
 **See:** `.agent/architecture/SCALAR-PIPELINE.md` for complete details
 
@@ -150,16 +172,19 @@ Code generation, validation, MCP tools
 ### Production Code
 
 ✅ **Scalar Pipeline Implementation**
+
 - `lib/src/shared/load-openapi-document.ts` - Core Scalar loader
 - `lib/src/shared/prepare-openapi-document.ts` - Public API wrapper
 - 3-stage pipeline: bundle → upgrade → validate
 
 ✅ **Type System Migration**
+
 - All code uses `openapi3-ts/oas31` types
 - `isNullableType()` helper for OpenAPI 3.1 nullable detection
 - Type guards for boundary validation
 
 ✅ **Test Suite**
+
 - 0 skipped tests (strict policy)
 - All tests migrated to Scalar pipeline
 - Comprehensive characterisation coverage
@@ -167,16 +192,19 @@ Code generation, validation, MCP tools
 ### Documentation
 
 ✅ **Architecture Documentation** (~5,000 words total)
+
 - Scalar pipeline details and design decisions
 - OpenAPI 3.1 migration guide
 - Default response behavior guide
 
 ✅ **Enhanced TSDoc**
+
 - All public APIs documented with examples
 - 15+ inline architectural comments
 - Comprehensive parameter documentation
 
 ✅ **Context Documentation**
+
 - Three-document system (this HANDOFF, context, continuation_prompt)
 - README with usage patterns
 - Session-by-session plans
@@ -184,6 +212,7 @@ Code generation, validation, MCP tools
 ### Quality Verification
 
 ✅ **All Quality Gates Green**
+
 - `pnpm type-check` → 0 errors
 - `pnpm lint` → 0 errors
 - `pnpm test:all` → All passing, 0 skipped
@@ -199,12 +228,12 @@ Code generation, validation, MCP tools
 ```typescript
 export function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDocument {
   if (!doc || typeof doc !== 'object') return false;
-  
+
   const candidate = doc as Record<string, unknown>;
-  
+
   if (!candidate.openapi || typeof candidate.openapi !== 'string') return false;
   if (!candidate.openapi.startsWith('3.1')) return false;
-  
+
   return true;
 }
 ```
@@ -258,21 +287,26 @@ export function isNullableType(schema: SchemaObject): boolean {
 ## 🎓 Key Principles
 
 ### TDD (Test-Driven Development)
+
 - Write failing test FIRST, always
 - No implementation without failing tests
 - Tests prove behavior, not implementation
 
 ### Type Safety
+
 - NEVER use type escape hatches (`as`, `any`, `!`)
 - Type guards with `is` keyword
 - Validate at boundaries, trust internally
+- ALWAYS use library types - custom types are forbidden
 
 ### Documentation
+
 - Public APIs require comprehensive TSDoc with examples
 - Internal APIs need `@param`, `@returns`, `@throws`
 - Inline comments for architectural decisions
 
 ### Quality
+
 - All quality gates must pass before commit
 - No skipped tests (forbidden)
 - Fail fast with actionable error messages
@@ -290,6 +324,7 @@ export function isNullableType(schema: SchemaObject): boolean {
 **Goal:** Research and document MCP requirements
 
 **Deliverables:**
+
 1. `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md`
 2. `.agent/analysis/JSON_SCHEMA_CONVERSION.md`
 3. `.agent/analysis/SECURITY_EXTRACTION.md`
@@ -311,12 +346,14 @@ export function isNullableType(schema: SchemaObject): boolean {
 **Quality Gate:** `pnpm check` (format + build + type-check + lint + test:all)
 
 **Documentation Locations:**
+
 - `.agent/context/` - Status and context documents
 - `.agent/plans/` - Phase and session plans
 - `.agent/architecture/` - Architecture documentation
 - `docs/` - User-facing documentation
 
 **Quality Commands:**
+
 ```bash
 pnpm format      # Format code
 pnpm build       # Verify builds
@@ -330,4 +367,3 @@ pnpm check       # Run all quality gates
 
 **Welcome to the project!** 🎉  
 This HANDOFF document gives you the big picture. For recent changes, see **context.md**. For complete AI context, see **continuation_prompt.md**.
-

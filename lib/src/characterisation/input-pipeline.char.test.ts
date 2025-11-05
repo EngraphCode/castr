@@ -23,7 +23,7 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { assertIsString } from './test-utils.js';
-import { loadOpenApiDocument } from '../shared/load-openapi-document.js';
+import { loadOpenApiDocument } from '../shared/load-openapi-document/index.js';
 
 /**
  * Minimal valid OpenAPI 3.0 spec for testing.

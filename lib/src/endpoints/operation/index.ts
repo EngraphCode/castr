@@ -25,7 +25,8 @@ export type { EndpointParameter as RequestBodyParameter } from './process-reques
 
 // Parameters
 export { processParameter } from './process-parameter.js';
-export type { EndpointParameter, GetZodVarNameFn } from './process-parameter.js';
+export type { EndpointParameter } from '../definition.types.js';
+export type { GetZodVarNameFn } from './process-parameter.js';
 
 // Responses
 export { processResponse } from './process-response.js';

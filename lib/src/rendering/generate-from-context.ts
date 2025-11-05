@@ -217,7 +217,7 @@ function resolveTemplatePath(
  * // result is a string containing the generated TypeScript code
  * ```
  */
-/* eslint-disable max-lines-per-function, complexity */
+/* eslint-disable max-lines-per-function, complexity -- This is temporary until this file can be fully replaced with a TS-Morph based approach */
 // Function handles multiple input types and template options - complexity is necessary for public API
 export const generateZodClientFromOpenAPI = async <TOptions extends TemplateContext['options']>({
   openApiDoc,
