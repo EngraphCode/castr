@@ -14,7 +14,7 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
  * They must survive the architectural rewrite (Phases 1-3).
  */
 
-const CLI_PATH = join(__dirname, '../../dist/cli.cjs');
+const CLI_PATH = join(__dirname, '../../dist/cli.js');
 const TEST_OUTPUT_DIR = join(__dirname, 'test-output-cli');
 
 /**

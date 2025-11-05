@@ -161,39 +161,31 @@ See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for detailed task breakdowns and 
 
 ---
 
-### Phase 3: Quality & Testing (PLANNED)
+### Phase 3: Typed IR & ts-morph Migration (PLANNED)
 
 **Status:** Planned  
-**Duration:** Estimated 3-4 weeks (combining core quality work + DX enhancements)
+**Duration:** ~5–6 weeks (IR foundation, emitter migration, compliance tooling)
 
-**⚠️ MANDATORY: ALL tasks MUST follow TDD**
+**⚠️ MANDATORY:** All tasks follow TDD + schema validation gates.
 
-**See:** `.agent/plans/03-FURTHER-ENHANCEMENTS.md` for detailed DX & testing improvements
+**See:** `.agent/plans/PHASE-3-TS-MORPH-IR.md` for milestones and sequencing.
 
-**Core Quality Goals:**
+**Objectives:**
 
-- Add Stryker mutation testing (v9.2.0)
-- Achieve target ESLint compliance (146 → 0 issues)
-- Zero lint issues
-- Establish mutation score threshold
-- All quality gates green
-- **TDD:** Write tests that expose gaps mutation testing finds, fix code
+1. **Define & Persist IR:** Finalise a lossless intermediate representation capturing schemas, endpoints, and metadata required for round-tripping.
+2. **ts-morph Emitter:** Replace Handlebars templates with the typed emitter from `.agent/reference/openapi-zod-client-emitter-migration.md`, supporting both disk output and in-memory strings.
+3. **Full Migration:** Switch CLI/programmatic flows to the emitter, remove Handlebars assets, maintain feature parity.
+4. **Bidirectional Tooling:** Enable IR → OpenAPI regeneration, validate output against official schemas in `.agent/reference/openapi_schema/`, and document reverse workflows.
 
-**Additional Enhancements (from typed-openapi analysis):**
+**Success Criteria:**
 
-- **Tooling:** Config file support (cosmiconfig), bundle size analysis
-- **Developer Experience:** Watch mode, discriminated union errors, configurable status codes
-- **Testing Maturity:** Type-level testing (tstyche), MSW integration tests
-- **Documentation:** Migration guides, comprehensive examples
+- Handlebars removed from generation pipeline.
+- IR serialisation/API available for forward/backward transformations.
+- OpenAPI documents produced post-migration pass schema validation (3.1+ official specs).
+- Characterisation tests cover OpenAPI → IR → Zod → IR → OpenAPI round-trip.
+- Public API/CLI remain backwards compatible (cosmetic diffs allowed).
 
-**Estimated Additional Time:** 25-32 hours for DX enhancements
-
-**Optional (Phase 3 or 4):**
-
-- Evaluate ts-morph emitter architecture (22-32 hours)
-- Replace Handlebars with AST-based generation
-- Plugin API for custom templates
-- **TDD:** Build new emitter test-first, maintain backward compatibility
+**Follow-up Enhancements:** prior DX/testing backlog moved to `archive/PHASE-3-FURTHER-ENHANCEMENTS-LEGACY.md` for future consideration after the IR migration.
 
 ---
 
@@ -305,9 +297,9 @@ See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for detailed task breakdowns and 
 
 - **Why:** Template engine for code generation
 - **Status:** Stale (last update Aug 2023) but no security issues
-- **Decision Phase 2:** KEEP (not blocking, works fine)
-- **Decision Phase 3/4:** Evaluate ts-morph emitter architecture (22-32 hours)
-- **Recommendation:** AST-based generation with plugin API
+- **Decision Phase 2:** KEEP temporarily (legacy path)
+- **Phase 3 Plan:** Migrate to ts-morph emitter + persistent IR (see `.agent/plans/PHASE-3-TS-MORPH-IR.md`)
+- **Recommendation:** AST-based generation with plugin API and bidirectional support
 - **Analysis:** `.agent/analysis/HANDLEBARS_EVALUATION.md`
 - **Reference:** `.agent/reference/openapi-zod-client-emitter-migration.md`
 
@@ -394,8 +386,8 @@ See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for detailed task breakdowns and 
 
 - [ ] ⏳ Phase 0: Comprehensive test suite (50-60 tests)
 - [ ] ⏳ Phase 1: Resolver & CodeMeta eliminated
-- [ ] ⏳ Phase 2: ts-morph migration complete
-- [ ] ⏳ Phase 3: Zodios dependencies removed
+- [ ] ⏳ Phase 2: Scalar pipeline + MCP enhancements delivered
+- [ ] ⏳ Phase 3: Typed IR & ts-morph migration complete
 - [ ] ⏳ Zero type assertions (except `as const`)
 - [ ] ⏳ All quality gates green
 - [ ] ⏳ Full validation complete
@@ -404,25 +396,16 @@ See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for detailed task breakdowns and 
 
 ### Phase 3 Complete When:
 
-**Core Quality:**
+**Typed IR & Emitter:**
 
-- [ ] Stryker installed and configured
-- [ ] Mutation score threshold established
-- [ ] Mutation score meets threshold
-- [ ] All lint issues resolved (148 → 0)
-- [ ] Target ESLint config compliance achieved
-- [ ] handlebars evaluation complete
-- [ ] All quality gates green
-
-**DX Enhancements (from 03-FURTHER-ENHANCEMENTS.md):**
-
-- [ ] Config file support (cosmiconfig) implemented
-- [ ] Bundle size analysis working
-- [ ] Watch mode implemented (optional)
-- [ ] Discriminated union error handling (optional)
-- [ ] Type-level testing (tstyche) implemented
-- [ ] MSW integration tests implemented
-- [ ] Migration guides complete
+- [ ] Lossless IR schema finalised and versioned
+- [ ] IR persistence/inspection API available (e.g. JSON artefact or exported module)
+- [ ] ts-morph emitter generates grouped + single-file outputs
+- [ ] Handlebars templates removed from production pipeline
+- [ ] Round-trip tests (OpenAPI → IR → Zod → IR → OpenAPI) green
+- [ ] Regenerated OpenAPI passes validation via `.agent/reference/openapi_schema/*.json`
+- [ ] CLI/programmatic APIs maintain feature parity (cosmetic diffs documented)
+- [ ] Migration notes + documentation published
 
 ### Ready for Extraction When:
 

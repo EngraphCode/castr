@@ -1,6 +1,11 @@
 # Replacing Handlebars with a Typed Emitter (ts‑morph) in `openapi-zod-client`
 
-**Goal:** Remove Handlebars templates and introduce a small, typed _Emitter layer_ that converts the existing IR (schemas, endpoints, types) into TypeScript using **ts‑morph**. Preserve the package’s public behavior (CLI/API) while allowing rough (not byte-for-byte) output differences.
+**Goals:**
+
+- Remove Handlebars templates and introduce a typed _Emitter layer_ that converts the IR (schemas, endpoints, types) into TypeScript using **ts‑morph**.
+- Establish a **persistent, lossless IR** that can be rendered both to Zod/TypeScript and back to OpenAPI 3.1, enabling future bidirectional workflows (OpenAPI → IR ↔ Zod ↔ OpenAPI).
+- Guarantee that every reconstructed OpenAPI document validates against the official schemas in `.agent/reference/openapi_schema/` (e.g. `openapi_3_1_x_schema_with_validation.json`) by baking validation into the pipeline.
+- Preserve the package’s public behavior (CLI/API) while allowing cosmetic output differences.
 
 ---
 
@@ -13,9 +18,21 @@
 
 ---
 
+## Round-trip & Compliance Requirements
+
+- **Persist the IR:** emit an optional JSON artefact (or provide programmatic access) so that future tooling can regenerate OpenAPI from generated clients without re-parsing TypeScript.
+- **Capture provenance:** record the original `$ref`, schema titles/descriptions, parameter metadata, default status behaviour, and security/servers/tags so the reverse transformer can rebuild a spec without guessing.
+- **Validate strictly:** whenever an OpenAPI document is produced (original pipeline or reconstructed), run it through the official JSON Schemas stored in `.agent/reference/openapi_schema/` to guarantee spec compliance.
+- **Test both directions:** extend characterisation suites to cover OpenAPI → IR → Zod → IR → OpenAPI flows, protecting against silent data loss.
+
+These requirements keep the ts-morph migration aligned with the long-term bidirectional roadmap.
+
+---
+
 ## File model (internal IR)
 
-This is a _thin, stable_ interface between the conversion logic and the emitter. Your existing OpenAPI→Zod and OpenAPI→TS steps can continue producing expressions and types as strings; this IR just declares where they go and how they are named.
+This is a _thin, stable_ interface between the conversion logic and the emitter. Your existing OpenAPI→Zod and OpenAPI→TS steps can continue producing expressions and types as strings; this IR just declares where they go and how they are named.  
+The IR must also retain enough metadata (original component names, `$ref` targets, documentation, security, etc.) to support **round-tripping** back to compliant OpenAPI documents.
 
 ```ts
 // file-model.ts
