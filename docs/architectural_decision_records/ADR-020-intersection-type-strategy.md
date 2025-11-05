@@ -14,6 +14,7 @@ The adoption of the Scalar pipeline (ADR-002) introduced a type system challenge
 ### The Type Mismatch Problem
 
 **Scalar's Approach:**
+
 ```typescript
 // @scalar/openapi-types
 interface OpenAPIV3_1.Document {
@@ -25,6 +26,7 @@ interface OpenAPIV3_1.Document {
 ```
 
 **Our Requirements:**
+
 ```typescript
 // openapi3-ts/oas31
 interface OpenAPIObject {
@@ -46,18 +48,21 @@ interface OpenAPIObject {
 ### Previous Approaches (Rejected)
 
 **Type Casting (Forbidden):**
+
 ```typescript
 // ❌ NEVER ALLOWED - violates type safety rules
 const doc = scalarResult as OpenAPIObject;
 ```
 
 **Union Types (Insufficient):**
+
 ```typescript
 // ❌ Forces consumers to narrow types everywhere
 type Document = OpenAPIV3_1.Document | OpenAPIObject;
 ```
 
 **Wrapper Types (Cumbersome):**
+
 ```typescript
 // ❌ Requires unwrapping at every usage site
 interface Wrapped {
@@ -82,12 +87,12 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
  * Bundled OpenAPI 3.1 document combining:
  * - Scalar's extension-friendly OpenAPIV3_1.Document (preserves x-ext, x-ext-urls)
  * - openapi3-ts strict OpenAPIObject (strict typing for standard fields)
- * 
+ *
  * This intersection type provides:
  * - Strict typing for all standard OpenAPI 3.1 properties
  * - Access to Scalar's bundle metadata extensions
  * - Full IntelliSense support for both type systems
- * 
+ *
  * @remarks
  * The intersection is validated at runtime via `isBundledOpenApiDocument` type guard.
  * Never cast to this type - always use the type guard for narrowing.
@@ -97,17 +102,17 @@ export type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
 
 ### Type Guard for Boundary Validation
 
-```typescript
+````typescript
 /**
  * Type guard to validate and narrow bundled OpenAPI documents.
- * 
+ *
  * Checks that the document satisfies both:
  * - Scalar's OpenAPIV3_1.Document structure
  * - openapi3-ts OpenAPIObject requirements
- * 
+ *
  * @param value - Value to check (typically from Scalar's upgrade())
  * @returns True if value is a valid BundledOpenApiDocument
- * 
+ *
  * @example
  * ```typescript
  * const upgraded = upgrade(bundled);
@@ -118,13 +123,11 @@ export type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
  * const doc = upgraded.specification;
  * ```
  */
-export function isBundledOpenApiDocument(
-  value: unknown
-): value is BundledOpenApiDocument {
+export function isBundledOpenApiDocument(value: unknown): value is BundledOpenApiDocument {
   if (!value || typeof value !== 'object') return false;
-  
+
   const doc = value as Record<string, unknown>;
-  
+
   // Required OpenAPI 3.1 properties
   return (
     typeof doc.openapi === 'string' &&
@@ -134,7 +137,7 @@ export function isBundledOpenApiDocument(
     (doc.paths === undefined || typeof doc.paths === 'object')
   );
 }
-```
+````
 
 ### Usage Pattern
 
@@ -144,15 +147,15 @@ export async function loadOpenApiDocument(
 ): Promise<LoadedOpenApiDocument> {
   // 1. Bundle with Scalar (loose types)
   const bundled = await bundle(normalizedInput, config);
-  
+
   // 2. Upgrade to 3.1 (still loose types)
   const { specification: upgraded } = upgrade(bundled);
-  
+
   // 3. Validate at boundary (narrow to strict types)
   if (!isBundledOpenApiDocument(upgraded)) {
     throw new Error('Failed to produce valid OpenAPI 3.1 document');
   }
-  
+
   // 4. Now TypeScript knows it's BundledOpenApiDocument
   // Both Scalar extensions AND strict types available
   return {
@@ -197,14 +200,15 @@ export async function loadOpenApiDocument(
 TypeScript intersection types (`A & B`) create a type that has **all properties from both types**:
 
 ```typescript
-type A = { foo: string; shared: number; };
-type B = { bar: string; shared: number; };
+type A = { foo: string; shared: number };
+type B = { bar: string; shared: number };
 type C = A & B;
 
 // C has: { foo: string; bar: string; shared: number; }
 ```
 
 For our case:
+
 ```typescript
 // OpenAPIV3_1.Document has: openapi, info, paths, [x: string]: unknown
 // OpenAPIObject has: openapi, info, paths, components, servers, ...
@@ -231,7 +235,7 @@ function analyzeDocument(doc: BundledOpenApiDocument) {
   const version = doc.openapi; // Type: string
   const title = doc.info.title; // Type: string
   const paths = doc.paths; // Type: PathsObject<OperationObject> | undefined
-  
+
   // Extension access (from Scalar)
   const scalarDoc = doc as OpenAPIV3_1.Document;
   const bundleMetadata = scalarDoc['x-ext']; // Type: unknown
@@ -242,6 +246,7 @@ function analyzeDocument(doc: BundledOpenApiDocument) {
 ### Type Guard Implementation Details
 
 The type guard checks:
+
 1. **Value is object:** `typeof value === 'object' && value !== null`
 2. **Has openapi field:** `typeof doc.openapi === 'string'`
 3. **Is version 3.1:** `doc.openapi.startsWith('3.1')`
@@ -337,7 +342,6 @@ function processDoc<T extends OpenAPIObject & OpenAPIV3_1.Document>(doc: T) {
 
 ## Revision History
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-11-04 | 1.0 | Initial decision documented |
-
+| Date       | Version | Changes                     |
+| ---------- | ------- | --------------------------- |
+| 2025-11-04 | 1.0     | Initial decision documented |

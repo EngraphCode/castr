@@ -61,6 +61,8 @@ export function resolveDefaultResponse(
   operation: OperationObject,
   ctx: ConversionTypeContext,
 ): ResponseObject | null {
+  // OpenAPI 3.1 Note: operation.responses is optional per the spec
+  // Use optional chaining to safely access responses (ADR-018)
   if (!operation.responses?.default) {
     return null;
   }

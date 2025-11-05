@@ -34,6 +34,7 @@ The `openapi-zod-validation` library generates Zod validation schemas and TypeSc
 ### Problem Statement
 
 Maintaining dual type systems created:
+
 - **Code complexity:** Conditional logic throughout conversion/template layers
 - **Type safety issues:** Version-specific type guards and assertions
 - **Testing burden:** Duplicate test fixtures for 3.0 and 3.1
@@ -119,17 +120,19 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 ```typescript
 // Helper function for 3.1 nullable checks
 function isNullableType(schema: SchemaObject): boolean {
-  const types = Array.isArray(schema.type) 
-    ? schema.type 
-    : schema.type ? [schema.type] : [];
+  const types = Array.isArray(schema.type) ? schema.type : schema.type ? [schema.type] : [];
   return types.includes('null');
 }
 
 // Before (3.0 style)
-if (schema.nullable) { /* ... */ }
+if (schema.nullable) {
+  /* ... */
+}
 
 // After (3.1 style)
-if (isNullableType(schema)) { /* ... */ }
+if (isNullableType(schema)) {
+  /* ... */
+}
 ```
 
 ### Exclusive Bounds
@@ -160,13 +163,13 @@ const schema = {
   type: 'string',
   nullable: true,
   minimum: 5,
-  exclusiveMinimum: true
+  exclusiveMinimum: true,
 };
 
 // After (3.1 fixtures)
 const schema = {
   type: ['string', 'null'],
-  exclusiveMinimum: 5
+  exclusiveMinimum: 5,
 };
 ```
 
@@ -208,7 +211,6 @@ const schema = {
 
 ## Revision History
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-11-04 | 1.0 | Initial decision documented |
-
+| Date       | Version | Changes                     |
+| ---------- | ------- | --------------------------- |
+| 2025-11-04 | 1.0     | Initial decision documented |

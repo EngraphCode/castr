@@ -1,3 +1,28 @@
+/**
+ * Scalar Pipeline: OpenAPI Document Loading & Bundling
+ *
+ * Architecture:
+ * This module implements the core Scalar-based OpenAPI loading pipeline, which
+ * replaces the legacy SwaggerParser-based approach (ADR-019).
+ *
+ * Pipeline Stages:
+ * 1. Normalize Input: Accept string/URL/object, determine entry point
+ * 2. Bundle: Resolve external file/URL references via @scalar/json-magic
+ * 3. Upgrade: Convert OpenAPI 2.0/3.0 → 3.1 via @scalar/openapi-parser
+ * 4. Validate: Type-guard to ensure BundledOpenApiDocument (intersection type)
+ *
+ * Key Differences from SwaggerParser:
+ * - bundle() preserves internal $refs (doesn't fully dereference)
+ * - upgrade() automatically converts old specs to 3.1
+ * - Rich metadata tracking (files, URLs, warnings)
+ * - Type-safe at boundaries (no casting)
+ *
+ * For more details, see:
+ * - .agent/architecture/SCALAR-PIPELINE.md
+ * - ADR-019: Scalar Pipeline Adoption
+ * - ADR-020: Intersection Type Strategy
+ */
+
 import path from 'node:path';
 
 import type { LoaderPlugin } from '@scalar/json-magic/bundle';
@@ -30,7 +55,21 @@ interface ResolveNode {
   readonly message?: unknown;
 }
 const isRemoteUrl = (value: string): boolean => /^https?:\/\//iu.test(value);
-// Type guard validating a value is a valid OpenAPI 3.1 document
+
+/**
+ * Type guard for BundledOpenApiDocument (intersection type)
+ *
+ * Architecture Note:
+ * This type guard validates at the boundary between Scalar's loose types
+ * (Record<string, unknown>) and our strict types (BundledOpenApiDocument).
+ * This follows our "validate at boundaries, no casting" principle (ADR-020).
+ *
+ * Validation checks:
+ * 1. Basic OpenAPI structure (info, openapi, paths)
+ * 2. Version is 3.1.x (upgrade() should guarantee this)
+ *
+ * @internal
+ */
 function isBundledOpenApiDocument(value: unknown): value is BundledOpenApiDocument {
   if (!isOpenAPIObject(value)) {
     return false;

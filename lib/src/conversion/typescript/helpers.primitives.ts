@@ -94,9 +94,21 @@ function isMixedEnumArray(arr: readonly unknown[]): arr is (string | number | bo
  * isNullableType({ type: ['number', 'null'] }) // true
  * ```
  *
+ * @remarks
+ * This function only checks the OpenAPI 3.1 `type` array for null values.
+ * It does NOT check the legacy OpenAPI 3.0 `nullable` property, as all
+ * input specs are auto-upgraded to 3.1 by the Scalar pipeline before
+ * reaching this function.
+ *
+ * For more details on OpenAPI 3.1 nullable handling, see:
+ * `.agent/architecture/OPENAPI-3.1-MIGRATION.md`
+ *
  * @public
  */
 export function isNullableType(schema: SchemaObject): boolean {
+  // OpenAPI 3.1: Check if 'null' is in the type array
+  // Note: This intentionally does NOT check schema.nullable (OpenAPI 3.0 only)
+  // All specs are auto-upgraded to 3.1 by Scalar before reaching this code
   if (Array.isArray(schema.type)) {
     return schema.type.includes('null');
   }

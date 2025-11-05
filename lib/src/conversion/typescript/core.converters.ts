@@ -3,6 +3,13 @@
  * Extracted from openApiToTypescript.core.ts to reduce file size
  *
  * These functions convert specific OpenAPI schema types to TypeScript type strings.
+ *
+ * Architecture Note:
+ * All schemas processed here are OpenAPI 3.1 (imported from openapi3-ts/oas31).
+ * Nullable types are handled via type arrays (type: ['string', 'null']) using
+ * the isNullableType() helper, not via the legacy OpenAPI 3.0 'nullable' property.
+ *
+ * See: .agent/architecture/OPENAPI-3.1-MIGRATION.md
  */
 
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';

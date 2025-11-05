@@ -108,8 +108,8 @@ const untypedTsRules: Linter.RulesRecord = {
   ],
   complexity: ['error', 8],
   'sonarjs/cognitive-complexity': ['error', 8],
-  'max-lines': ['error', 250],
-  'max-lines-per-function': ['error', 50],
+  'max-lines': ['error', { max: 220, skipBlankLines: true, skipComments: true }],
+  'max-lines-per-function': ['error', { max: 45, skipBlankLines: true, skipComments: true }],
   'max-statements': ['error', 20],
   'max-depth': ['error', 3],
 

@@ -1,6 +1,6 @@
 # Living Context Document
 
-**Last Updated:** November 4, 2025  
+**Last Updated:** November 5, 2025  
 **Purpose:** Single source of truth for the modernization programme – current status, key decisions, and next actions.
 
 ---
@@ -10,9 +10,13 @@
 
 ---
 
-## 🚨 Current Focus – Phase 2 Part 1: Scalar Pipeline Re‑architecture
+## 🎉 Phase 2 Part 1: COMPLETE! 
 
-We are executing **Phase 2 Part 1** (see `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`) to replace the legacy `SwaggerParser.bundle()` path with a deterministic Scalar-driven pipeline. **Sessions 1 & 2 are complete**: type system migrated to OpenAPI 3.1, legacy dependencies removed, Scalar-based `loadOpenApiDocument` implemented with upgrade pipeline and intersection types. **Session 3 is ready to start**: 77 type errors and 18 lint errors documented with detailed remediation strategies in the plan.
+**Phase 2 Part 1** (Scalar Pipeline Re-architecture) is **COMPLETE** with all 4 sessions delivered successfully. The legacy `SwaggerParser.bundle()` path has been fully replaced with a deterministic Scalar-driven pipeline. All quality gates are green (0 type errors, 0 lint errors, 0 skipped tests), and comprehensive documentation is in place.
+
+## 🚨 Current Focus – Phase 2 Part 2: MCP Enhancements
+
+We are now ready to begin **Phase 2 Part 2** (see `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`) which builds MCP-specific features on top of the Scalar pipeline foundation.
 
 **Key Architectural Decision:** All OpenAPI documents are normalized to 3.1 after bundling via `@scalar/openapi-parser/upgrade`. The codebase uses `openapi3-ts/oas31` types exclusively, with an intersection type strategy (`OpenAPIV3_1.Document & OpenAPIObject`) that preserves Scalar's extensions while providing strict typing. Legacy `openapi-types@12.1.3` and `@apidevtools/swagger-parser` have been removed from dependencies.
 
@@ -41,16 +45,16 @@ Downstream code (conversion, templates, etc.)
 - Extensions preserved: Scalar's `x-ext`, `x-ext-urls` available for debugging
 - Boundary validation: Scalar uses `Record<string, unknown>` (their escape hatch), we validate at the boundary with type guards
 
-### Objectives for Part 1
+### Phase 2 Part 1 Completed Objectives
 
-1. **Foundation & Guardrails (✅ Complete)**
+1. **Session 1: Foundation & Guardrails (✅ Complete)**
    - ✅ Audited every `prepareOpenApiDocument` caller (CLI + programmatic) and documented expectations around `$ref`s and error surfaces.
    - ✅ Added `@scalar/json-magic@0.7.0`, `@scalar/openapi-parser@0.23.0`, and `@scalar/openapi-types@0.5.1` with pinned versions.
    - ✅ Introduced lint/test guard (`lib/src/validation/scalar-guard.test.ts`) that flags any residual SwaggerParser usage.
    - ✅ Type system migrated: All imports changed from `openapi3-ts/oas30` to `openapi3-ts/oas31` throughout the codebase.
    - ✅ Legacy dependencies removed: `openapi-types@12.1.3` and `@apidevtools/swagger-parser` removed from `lib/package.json` and lockfile cleaned.
 
-2. **Loading & Bundling (✅ Complete)**
+2. **Session 2: Loading & Bundling (✅ Complete)**
    - ✅ Implemented `loadOpenApiDocument` using `@scalar/json-magic/bundle` with `readFiles()`/`fetchUrls()` plugins.
    - ✅ Configured lifecycle hooks that preserve internal `$ref`s while consolidating externals under `x-ext`.
    - ✅ Store bundle metadata (filesystem entries, bundle warnings, entrypoint filename) for downstream consumers.
@@ -61,27 +65,26 @@ Downstream code (conversion, templates, etc.)
    - ✅ Exported new API surface with comprehensive TSDoc.
    - ✅ Updated `prepareOpenApiDocument` to use new Scalar pipeline internally.
 
-3. **Complete Technical Resolution (⚠️ Ready to Start - Session 3 - Reorganized)**
-   - **Current State:** 77 type errors across 21 files, 18 lint errors across 10 files
-   - **Target State:** 0 type errors, 0 lint errors, ALL tests passing with working code
-   - **Strategy:** Complete all technical fixes in one comprehensive session (5-7 hours estimated)
-   - Create helper function for 3.1 nullable checks (fixes 16 errors)
-   - Modernize test fixtures from 3.0 to 3.1 syntax (fixes 47 type errors)
-   - Fix Vitest v4 mock typing in loader tests (fixes 16 type errors)
-   - Migrate ALL SwaggerParser tests to use Scalar pipeline (fixes 18 errors)
-   - Add undefined guards for optional 3.1 properties (fixes 5 type errors)
-   - Update JSDoc examples to use `prepareOpenApiDocument`
-   - **Zero tolerance:** NO `@ts-expect-error` pragmas allowed in source code
-   - **Deliverable:** Fully green codebase with all tests migrated to Scalar pipeline
+3. **Session 3: Complete Technical Resolution (✅ Complete)**
+   - ✅ Created `isNullableType()` helper function (16 errors resolved)
+   - ✅ Modernized all test fixtures from OpenAPI 3.0 to 3.1 syntax (47 errors resolved)
+   - ✅ Fixed Vitest v4 mock typing in loader tests (16 errors resolved)
+   - ✅ Migrated ALL tests to use Scalar pipeline (18 errors resolved)
+   - ✅ Unskipped all tests (4 tests fixed, 0 skipped tests remaining)
+   - ✅ Updated JSDoc examples to use `prepareOpenApiDocument`
+   - ✅ **Result:** 0 type errors, 0 lint errors, ALL tests passing
 
-4. **Documentation & Final Cleanup (⚪ Planned - Session 4)**
-   - Remove SwaggerParser guard test (no longer needed)
-   - Update README/API docs to describe new pipeline and 3.1-first architecture
-   - Update examples to use `prepareOpenApiDocument`
-   - Document follow-up opportunities (partial bundling, incremental fetch, enhanced validation)
-   - **Estimated Effort:** 2-3 hours
+4. **Session 4: Documentation & Final Cleanup (✅ Complete)**
+   - ✅ Created comprehensive architecture documentation:
+     - `.agent/architecture/SCALAR-PIPELINE.md` (~3,000 words)
+     - `.agent/architecture/OPENAPI-3.1-MIGRATION.md`
+     - `docs/DEFAULT-RESPONSE-BEHAVIOR.md`
+   - ✅ Enhanced TSDoc for all public APIs (`generateZodClientFromOpenAPI`, `getZodClientTemplateContext`, `getOpenApiDependencyGraph`)
+   - ✅ Added 15+ inline architectural comments across critical files
+   - ✅ Updated `lib/README.md` to remove SwaggerParser references
+   - ✅ Verified all quality gates green (0 errors, 0 warnings)
 
-Quality gates (`pnpm format`, `build`, `type-check`, `lint`, `test -- --run`) must remain green after every milestone.
+**Phase 2 Part 1 Status:** ✅ **COMPLETE** - Production-ready codebase with comprehensive documentation
 
 ---
 
@@ -100,24 +103,33 @@ Quality gates (`pnpm format`, `build`, `type-check`, `lint`, `test -- --run`) mu
 
 ## 📌 Immediate Next Actions
 
-**Session 3 (Reorganized) is ready to start** - comprehensive technical resolution in one session:
+**Phase 2 Part 2 - Session 5: MCP Investigation** is ready to begin.
 
-**Goal:** Achieve fully green codebase - 0 type errors, 0 lint errors, ALL tests passing
+**Goal:** Produce analysis artefacts that drive MCP implementation
 
-**Implementation Order:**
-1. **A. Create nullable helper** (`isNullableType`) in TypeScript conversion layer → fixes 16 errors
-2. **B. Modernize test fixtures** from OpenAPI 3.0 to 3.1 syntax → fixes 47 errors
-3. **C. Fix Vitest v4 mocks** in loader tests → fixes 16 errors
-4. **D. Migrate SwaggerParser tests** to Scalar pipeline (all 9 files) → fixes 18 errors
-5. **E. Add undefined guards** for optional 3.1 properties → fixes 5 errors
+**Tasks:**
 
-**Deliverable:** Fully working codebase with all tests migrated to Scalar pipeline
+1. **MCP Protocol Analysis** - Create `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md`
+   - Document MCP tool structure
+   - Define JSON Schema constraints
+   - Outline security expectations
+   - Define error format guidance
 
-**Detailed implementation plan in:** `PHASE-2-MCP-ENHANCEMENTS.md` Session 3
+2. **JSON Schema Conversion Analysis** - Create `.agent/analysis/JSON_SCHEMA_CONVERSION.md`
+   - Record `zod-to-json-schema` configuration
+   - Document edge cases
+   - Define testing strategy
 
-**Estimated Effort:** 5-7 hours (systematic work with clear patterns)
+3. **Security Extraction Analysis** - Create `.agent/analysis/SECURITY_EXTRACTION.md`
+   - Outline security metadata extraction algorithm
+   - Document operation-level resolution
+   - Document component-level resolution
 
-Run `pnpm type-check` and `pnpm lint` to verify current state before starting.
+**Deliverable:** Three comprehensive analysis documents that guide Sessions 6-8 implementation
+
+**Detailed plan in:** `PHASE-2-MCP-ENHANCEMENTS.md` Session 5
+
+**Estimated Effort:** 3-4 hours (research and documentation)
 
 All implementation must follow TDD (write failing test → confirm failure → implement → confirm success → refactor) and comprehensive TSDoc standards (`.agent/RULES.md`).
 
@@ -125,12 +137,12 @@ All implementation must follow TDD (write failing test → confirm failure → i
 
 ## 🧭 Phase Overview
 
-| Phase              | Purpose                                                  | Status                           | Reference                                      |
-| ------------------ | -------------------------------------------------------- | -------------------------------- | ---------------------------------------------- |
-| **Phase 1**        | Tooling & architecture foundations                       | ✅ Complete (Part 4 delivered)   | `.agent/plans/01-CURRENT-IMPLEMENTATION.md`    |
-| **Phase 2 Part 1** | Scalar pipeline (bundling + validation + 3.1 upgrade)    | 🟡 In progress                   | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`     |
-| **Phase 2 Part 2** | MCP outputs (JSON Schema, security metadata, predicates) | ⚪ Planned (starts after Part 1) | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`     |
-| **Phase 3**        | DX & quality enhancements                                | ⚪ Planned (post Phase 2)        | `.agent/plans/PHASE-3-FURTHER-ENHANCEMENTS.md` |
+| Phase              | Purpose                                                  | Status                      | Reference                                      |
+| ------------------ | -------------------------------------------------------- | --------------------------- | ---------------------------------------------- |
+| **Phase 1**        | Tooling & architecture foundations                       | ✅ Complete                 | `.agent/plans/01-CURRENT-IMPLEMENTATION.md`    |
+| **Phase 2 Part 1** | Scalar pipeline (bundling + validation + 3.1 upgrade)    | ✅ Complete (Nov 5, 2025)   | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`     |
+| **Phase 2 Part 2** | MCP outputs (JSON Schema, security metadata, predicates) | 🟡 Ready to start           | `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`     |
+| **Phase 3**        | DX & quality enhancements                                | ⚪ Planned (post Phase 2)   | `.agent/plans/PHASE-3-FURTHER-ENHANCEMENTS.md` |
 
 ---
 
@@ -146,15 +158,15 @@ All implementation must follow TDD (write failing test → confirm failure → i
 
 ## 🧪 Quality Gate Status
 
-| Gate                 | Status | Notes                                               |
-| -------------------- | ------ | --------------------------------------------------- |
-| `pnpm format`        | ✅     | Must stay green                                     |
-| `pnpm build`         | ✅     | Produces ESM & CJS bundles + DTS                    |
-| `pnpm type-check`    | ⚠️     | 77 errors - Session 3 (reorganized) ready           |
-| `pnpm lint`          | ⚠️     | 18 errors - Session 3 (reorganized) ready           |
-| `pnpm test -- --run` | ✅     | Unit, characterisation, snapshot suites all passing |
+| Gate                 | Status | Notes                                                    |
+| -------------------- | ------ | -------------------------------------------------------- |
+| `pnpm format`        | ✅     | Passing                                                  |
+| `pnpm build`         | ✅     | Produces ESM & CJS bundles + DTS                         |
+| `pnpm type-check`    | ✅     | **0 errors** - All type issues resolved                  |
+| `pnpm lint`          | ✅     | **0 errors** - All lint issues resolved                  |
+| `pnpm test:all`      | ✅     | All tests passing, **0 skipped tests**                   |
 
-Sessions 1 & 2 complete. Session 3 reorganized to achieve complete technical resolution (all green) in one comprehensive session. Detailed plan in `PHASE-2-MCP-ENHANCEMENTS.md`.
+**Phase 2 Part 1 Complete:** All 4 sessions delivered. Production-ready codebase with comprehensive documentation.
 
 ---
 
@@ -169,4 +181,4 @@ Sessions 1 & 2 complete. Session 3 reorganized to achieve complete technical res
 
 ---
 
-Use this context together with the Phase 2 plan to resume work quickly in any new session. When Part 1 lands, update this document to pivot focus to Part 2 (MCP enhancements).
+Use this context together with the Phase 2 plan to resume work quickly in any new session. **Phase 2 Part 1 is complete** - pivot to Part 2 (MCP enhancements) starting with Session 5.

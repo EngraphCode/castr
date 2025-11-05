@@ -17,12 +17,14 @@ The migration to the Scalar pipeline (ADR-002) and OpenAPI 3.1-first architectur
 ### Why These Dependencies Existed
 
 **`openapi-types`:**
+
 - Provided TypeScript types for OpenAPI specifications
 - Used by `@apidevtools/swagger-parser` for its return types
 - Separate from `openapi3-ts` which we used internally
 - Created type conflicts and confusion
 
 **`@apidevtools/swagger-parser`:**
+
 - Handled OpenAPI document loading, parsing, validation, and bundling
 - Resolved `$ref` references across files and URLs
 - Validated documents against OpenAPI schemas
@@ -31,13 +33,14 @@ The migration to the Scalar pipeline (ADR-002) and OpenAPI 3.1-first architectur
 ### Problems with Legacy Dependencies
 
 1. **Type System Conflicts:**
+
    ```typescript
    // openapi-types (from SwaggerParser)
    import type { OpenAPI } from 'openapi-types';
-   
+
    // openapi3-ts (our internal types)
    import type { OpenAPIObject } from 'openapi3-ts/oas30';
-   
+
    // Required casting at boundary
    const doc = swaggerResult as OpenAPIObject; // ❌ Type escape hatch
    ```
@@ -66,10 +69,10 @@ The migration to the Scalar pipeline (ADR-002) and OpenAPI 3.1-first architectur
 
 ### Replacement Strategy
 
-| Legacy Package | Replaced By | Reason |
-|----------------|-------------|--------|
-| `openapi-types` | `@scalar/openapi-types` + `openapi3-ts/oas31` | Intersection type strategy (ADR-003) |
-| `@apidevtools/swagger-parser` | `@scalar/json-magic` + `@scalar/openapi-parser` | Scalar pipeline (ADR-002) |
+| Legacy Package                | Replaced By                                     | Reason                               |
+| ----------------------------- | ----------------------------------------------- | ------------------------------------ |
+| `openapi-types`               | `@scalar/openapi-types` + `openapi3-ts/oas31`   | Intersection type strategy (ADR-003) |
+| `@apidevtools/swagger-parser` | `@scalar/json-magic` + `@scalar/openapi-parser` | Scalar pipeline (ADR-002)            |
 
 ### Migration Path
 
@@ -93,11 +96,11 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 async function loadOpenApiDocument(input: string | URL | OpenAPIObject) {
   const bundled = await bundle(input, config);
   const { specification } = upgrade(bundled);
-  
+
   if (!isBundledOpenApiDocument(specification)) {
     throw new Error('Invalid OpenAPI 3.1 document');
   }
-  
+
   return {
     document: specification, // ✅ Type: BundledOpenApiDocument (no casting)
     metadata: createMetadata(...)
@@ -154,16 +157,19 @@ async function loadOpenApiDocument(input: string | URL | OpenAPIObject) {
 ### Import Updates
 
 **All files changed from:**
+
 ```typescript
 import type { OpenAPIObject } from 'openapi3-ts/oas30';
 ```
 
 **To:**
+
 ```typescript
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 ```
 
 **Files affected:** 50+ files across:
+
 - `lib/src/conversion/` (TypeScript and Zod converters)
 - `lib/src/context/` (Template context builders)
 - `lib/src/shared/` (Shared utilities)
@@ -178,18 +184,15 @@ Created `lib/src/validation/scalar-guard.test.ts` to prevent regression:
 ```typescript
 /**
  * Guard test ensuring no production code imports legacy dependencies.
- * 
+ *
  * Fails if any .ts file (excluding tests/fixtures) imports:
  * - @apidevtools/swagger-parser
  * - openapi-types (the 12.1.3 version, not @scalar/openapi-types)
  */
 describe('Scalar Migration Guard', () => {
   it('should not import @apidevtools/swagger-parser in production code', async () => {
-    const violations = await scanForBannedImports([
-      '@apidevtools/swagger-parser',
-      'openapi-types'
-    ]);
-    
+    const violations = await scanForBannedImports(['@apidevtools/swagger-parser', 'openapi-types']);
+
     expect(violations).toHaveLength(0);
   });
 });
@@ -200,11 +203,13 @@ Run via: `pnpm test:scalar-guard`
 ### Test Migration Strategy
 
 **Characterisation Tests (3 files):**
+
 - `bundled-spec-assumptions.char.test.ts` - Skip/rewrite in Session 3
 - `input-format.char.test.ts` - Skip/rewrite in Session 3
 - `programmatic-usage.char.test.ts` - Skip/rewrite in Session 3
 
 **Integration Tests (6 files):**
+
 - `generateZodClientFromOpenAPI.test.ts` - Skip/rewrite in Session 3
 - `getEndpointDefinitionList.test.ts` - Skip/rewrite in Session 3
 - `getOpenApiDependencyGraph.test.ts` - Skip/rewrite in Session 3
@@ -302,7 +307,6 @@ If critical issues discovered:
 
 ## Revision History
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-11-04 | 1.0 | Initial decision documented |
-
+| Date       | Version | Changes                     |
+| ---------- | ------- | --------------------------- |
+| 2025-11-04 | 1.0     | Initial decision documented |

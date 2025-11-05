@@ -27,6 +27,7 @@ Phase 2 Part 1 introduces a fundamental re-architecture of how `openapi-zod-vali
 **Decision:** Normalize all OpenAPI documents to version 3.1 immediately after bundling.
 
 **Impact:**
+
 - Single internal type system (no version branching)
 - Automatic 3.0 → 3.1 upgrades via `@scalar/openapi-parser/upgrade`
 - All conversion/template code assumes 3.1 semantics
@@ -34,6 +35,7 @@ Phase 2 Part 1 introduces a fundamental re-architecture of how `openapi-zod-vali
 - Simplified exclusive bounds: `exclusiveMinimum: 5` (number, not boolean)
 
 **Migration:**
+
 - 50+ files updated from `openapi3-ts/oas30` to `openapi3-ts/oas31`
 - Test fixtures modernized to 3.1 syntax
 - Conversion logic updated for 3.1 patterns
@@ -43,11 +45,13 @@ Phase 2 Part 1 introduces a fundamental re-architecture of how `openapi-zod-vali
 **Decision:** Replace `@apidevtools/swagger-parser` with Scalar ecosystem.
 
 **New Stack:**
+
 - `@scalar/json-magic@0.7.0` - Bundling with lifecycle hooks
 - `@scalar/openapi-parser@0.23.0` - Upgrade, validate, sanitize
 - `@scalar/openapi-types@0.5.1` - Extension-friendly types
 
 **Impact:**
+
 - Rich metadata tracking (files, URLs, warnings, external refs)
 - Deterministic bundling with `$ref` resolution control
 - Built-in 3.0 → 3.1 upgrade mechanism
@@ -55,6 +59,7 @@ Phase 2 Part 1 introduces a fundamental re-architecture of how `openapi-zod-vali
 - Preserved vendor extensions (`x-ext`, `x-ext-urls`)
 
 **New API:**
+
 ```typescript
 const result = await loadOpenApiDocument(input);
 // result.document: BundledOpenApiDocument (strict types + extensions)
@@ -66,11 +71,13 @@ const result = await loadOpenApiDocument(input);
 **Decision:** Use intersection types to combine Scalar's loose types with strict `openapi3-ts` types.
 
 **Core Type:**
+
 ```typescript
 type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
 ```
 
 **Impact:**
+
 - Best of both worlds: strict typing + extension access
 - No casting required (type guards provide narrowing)
 - Full IntelliSense for both type systems
@@ -78,6 +85,7 @@ type BundledOpenApiDocument = OpenAPIV3_1.Document & OpenAPIObject;
 - Compliant with `.agent/RULES.md` (no type escape hatches)
 
 **Pattern:**
+
 ```typescript
 const { specification } = upgrade(bundled);
 if (!isBundledOpenApiDocument(specification)) {
@@ -91,6 +99,7 @@ if (!isBundledOpenApiDocument(specification)) {
 **Decision:** Remove `openapi-types@12.1.3` and `@apidevtools/swagger-parser@10.1.0`.
 
 **Impact:**
+
 - Single type system (no conflicts)
 - No type casting at boundaries
 - Clearer intent and reduced confusion
@@ -98,6 +107,7 @@ if (!isBundledOpenApiDocument(specification)) {
 - Active maintenance (Scalar ecosystem)
 
 **Guard:**
+
 ```bash
 pnpm test:scalar-guard  # Fails if legacy imports detected
 ```
@@ -166,6 +176,7 @@ pnpm test:scalar-guard  # Fails if legacy imports detected
 ### ✅ Session 1: Foundation & Guards (Complete)
 
 **Deliverables:**
+
 - [x] Scalar dependencies added (`@scalar/json-magic`, `@scalar/openapi-parser`, `@scalar/openapi-types`)
 - [x] Type system migrated (all imports changed to `openapi3-ts/oas31`)
 - [x] Legacy dependencies removed (`openapi-types`, `@apidevtools/swagger-parser`)
@@ -177,6 +188,7 @@ pnpm test:scalar-guard  # Fails if legacy imports detected
 ### ✅ Session 2: Loading & Bundling (Complete)
 
 **Deliverables:**
+
 - [x] `loadOpenApiDocument` implemented with Scalar pipeline
 - [x] `BundledOpenApiDocument` intersection type defined
 - [x] `isBundledOpenApiDocument` type guard implemented
@@ -186,6 +198,7 @@ pnpm test:scalar-guard  # Fails if legacy imports detected
 - [x] `prepareOpenApiDocument` updated to use Scalar internally
 
 **New Files:**
+
 - `lib/src/shared/load-openapi-document.ts` (251 lines)
 - `lib/src/shared/load-openapi-document.test.ts` (241 lines)
 - `lib/src/shared/bundle-metadata.types.ts` (types)
@@ -194,10 +207,12 @@ pnpm test:scalar-guard  # Fails if legacy imports detected
 ### ⚠️ Session 3: Type System Cleanup (Ready to Start)
 
 **Current State:**
+
 - 77 type errors across 21 files
 - 18 lint errors across 10 files
 
 **Remediation Plan:**
+
 1. Create `isNullableType()` helper for 3.1 nullable checks → fixes 16 errors
 2. Modernize test fixtures from 3.0 to 3.1 syntax → fixes 47 errors
 3. Fix Vitest v4 mock typing → fixes 16 errors
@@ -211,6 +226,7 @@ pnpm test:scalar-guard  # Fails if legacy imports detected
 ### ⚪ Session 4+: Integration & Cleanup (Planned)
 
 **Objectives:**
+
 - Remove SwaggerParser guard (all tests passing)
 - Update README/API docs
 - Document follow-up opportunities
@@ -257,11 +273,11 @@ async function loadOpenApiDocument(
   // Rich metadata, automatic upgrade, no casting
   const bundled = await bundle(input, config);
   const { specification } = upgrade(bundled);
-  
+
   if (!isBundledOpenApiDocument(specification)) {
     throw new Error('Invalid OpenAPI 3.1 document');
   }
-  
+
   return {
     document: specification, // ✅ Type: BundledOpenApiDocument
     metadata: createMetadata(...) // ✅ Files, URLs, warnings
@@ -311,6 +327,7 @@ function handleNullable(schema: SchemaObject) {
 ### Immediate (Session 3)
 
 1. **Run diagnostics:**
+
    ```bash
    pnpm type-check  # See all 77 errors
    pnpm lint        # See all 18 errors
@@ -347,18 +364,21 @@ function handleNullable(schema: SchemaObject) {
 ## References
 
 ### ADRs
+
 - [ADR-018: OpenAPI 3.1-First Architecture](./ADR-018-openapi-3.1-first-architecture.md)
 - [ADR-019: Scalar Pipeline Adoption](./ADR-019-scalar-pipeline-adoption.md)
 - [ADR-020: Intersection Type Strategy](./ADR-020-intersection-type-strategy.md)
 - [ADR-021: Legacy Dependency Removal](./ADR-021-legacy-dependency-removal.md)
 
 ### Planning Documents
+
 - `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` - Detailed session plan
 - `.agent/context/context.md` - Current status
 - `.agent/context/continuation_prompt.md` - Rehydration prompt
 - `.agent/RULES.md` - Development standards
 
 ### External Resources
+
 - [OpenAPI 3.1.0 Specification](https://spec.openapis.org/oas/v3.1.0)
 - [Scalar GitHub Repository](https://github.com/scalar/scalar)
 - [openapi3-ts Library](https://github.com/metadevpro/openapi3-ts)
@@ -369,4 +389,3 @@ function handleNullable(schema: SchemaObject) {
 **Last Updated:** November 4, 2025  
 **Phase:** Phase 2 Part 1 - Sessions 1 & 2 Complete, Session 3 Ready  
 **Next Milestone:** Session 3 - Type System Cleanup (0 type errors, 0 lint errors)
-

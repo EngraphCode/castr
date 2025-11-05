@@ -38,6 +38,30 @@ export interface TemplateContext {
 export interface TemplateContextOptions {
   groupStrategy?: 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
   shouldExportAllTypes?: boolean;
+  /**
+   * Controls how endpoints with only a `default` response (no explicit status codes) are handled.
+   *
+   * - `'spec-compliant'` (default): Ignores endpoints with only default responses,
+   *   following OpenAPI specification recommendations to use explicit status codes.
+   * - `'auto-correct'`: Includes endpoints with only default responses, treating
+   *   `default` as a success response with generic error handling.
+   *
+   * @default 'spec-compliant'
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#responses-object OpenAPI Responses Object}
+   * @remarks
+   * The OpenAPI specification recommends using explicit status codes (200, 404, etc.)
+   * rather than only `default`. This option allows you to control the library's behavior
+   * when encountering such endpoints.
+   *
+   * @example
+   * ```typescript
+   * // Strict spec compliance (ignore default-only endpoints)
+   * { defaultStatusBehavior: 'spec-compliant' }
+   *
+   * // Permissive (include default-only endpoints)
+   * { defaultStatusBehavior: 'auto-correct' }
+   * ```
+   */
   defaultStatusBehavior?: 'spec-compliant' | 'auto-correct';
   willSuppressWarnings?: boolean;
   withDescription?: boolean;
@@ -193,12 +217,52 @@ export type { TemplateContextGroupStrategy } from './template-context.endpoints.
 export { extractSchemaNamesFromDoc } from './template-context.schemas.js';
 
 /**
- * Get Zod client template context.
- * Wrapper function that returns the full template context for code generation.
+ * Get Zod client template context for code generation.
  *
- * @param doc - The OpenAPI document
- * @param options - Template context options
- * @returns Complete template context for code generation
+ * Transforms an OpenAPI document into a structured template context containing:
+ * - Zod schemas for all components
+ * - Endpoint definitions with parameters, request bodies, and responses
+ * - Dependency graphs for schema ordering
+ * - TypeScript types for schemas (when enabled)
+ * - Metadata for template rendering
+ *
+ * This is the core transformation function used by {@link generateZodClientFromOpenAPI}
+ * to prepare data for Handlebars template rendering.
+ *
+ * @param doc - The OpenAPI document (should be prepared via {@link prepareOpenApiDocument})
+ * @param options - Template context options controlling code generation behavior
+ * @returns Complete template context ready for Handlebars rendering
+ *
+ * @example Basic usage
+ * ```typescript
+ * import { getZodClientTemplateContext, prepareOpenApiDocument } from 'openapi-zod-client';
+ *
+ * const doc = await prepareOpenApiDocument('./api.yaml');
+ * const context = getZodClientTemplateContext(doc, {
+ *   withAlias: true,
+ *   strictObjects: true,
+ * });
+ *
+ * // Access generated schemas
+ * console.log(context.schemas.User); // 'z.object({ ... })'
+ *
+ * // Access endpoint definitions
+ * context.endpoints.forEach(endpoint => {
+ *   console.log(`${endpoint.method} ${endpoint.path}`);
+ * });
+ * ```
+ *
+ * @example With custom options
+ * ```typescript
+ * const context = getZodClientTemplateContext(doc, {
+ *   groupStrategy: 'tag-file',
+ *   defaultStatusBehavior: 'auto-correct',
+ *   shouldExportAllTypes: true,
+ *   complexityThreshold: 5,
+ * });
+ * ```
+ *
+ * @public
  */
 export const getZodClientTemplateContext = (
   doc: OpenAPIObject,

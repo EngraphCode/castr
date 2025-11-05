@@ -1,5 +1,23 @@
-/* eslint-disable max-lines */
 // File contains main public API function with comprehensive parameter handling
+
+/**
+ * Code Generation & Rendering Module
+ *
+ * Architecture Note:
+ * This module orchestrates the complete code generation pipeline:
+ * 1. Input Processing: prepareOpenApiDocument() (Scalar bundling + upgrade to 3.1)
+ * 2. Context Building: getZodClientTemplateContext() (dependency graph, type conversion)
+ * 3. Template Rendering: Handlebars compilation with grouped/single file output
+ * 4. Post-Processing: Prettier formatting
+ *
+ * All input specs are guaranteed to be OpenAPI 3.1 by the time they reach the
+ * template context builder, thanks to Scalar's auto-upgrade behavior.
+ *
+ * See:
+ * - .agent/architecture/SCALAR-PIPELINE.md (input processing)
+ * - .agent/architecture/OPENAPI-3.1-MIGRATION.md (type system)
+ */
+
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
@@ -169,7 +187,10 @@ function resolveTemplatePath(
  * @param args.template - Template name to use for generation
  * @param args.noClient - Skip HTTP client generation (uses schemas-with-metadata template)
  * @param args.prettierConfig - Prettier configuration for output formatting
- * @param args.options - Template context options (groupStrategy, withAlias, etc.)
+ * @param args.options - Template context options (groupStrategy, withAlias, defaultStatusBehavior, etc.)
+ * @param args.options.defaultStatusBehavior - Controls handling of endpoints with only default responses.
+ *   Use 'spec-compliant' (default) to ignore them, or 'auto-correct' to include them.
+ *   See {@link TemplateContextOptions.defaultStatusBehavior} for details.
  *
  * @example Using file path input
  * ```typescript

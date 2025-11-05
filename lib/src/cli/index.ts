@@ -1,3 +1,18 @@
+/**
+ * CLI Entry Point for openapi-zod-client
+ *
+ * Architecture Note:
+ * The CLI uses prepareOpenApiDocument() for input processing, which ensures
+ * consistent behavior with the programmatic API. All specs are:
+ * 1. Bundled via Scalar (external $refs resolved, internal $refs preserved)
+ * 2. Auto-upgraded to OpenAPI 3.1 (2.0 and 3.0.x specs are transparently upgraded)
+ * 3. Type-validated at boundaries (no casting)
+ *
+ * This provides a unified pipeline for all input sources (file, URL, object).
+ *
+ * See: .agent/architecture/SCALAR-PIPELINE.md
+ */
+
 import { Command } from 'commander';
 import { resolveConfig } from 'prettier';
 

@@ -4,12 +4,16 @@
  * These tests define ACCEPTANCE CRITERIA for the unified input preparation pipeline.
  * They test WHAT the pipeline should do, not HOW it works.
  *
- * Based on: .agent/plans/PHASE-1-PART-5-UNIFIED-OPENAPI-PIPELINE.md
+ * Architecture Note:
+ * The unified pipeline uses Scalar (@scalar/json-magic + @scalar/openapi-parser)
+ * instead of SwaggerParser. Key behaviors:
+ * - Auto-upgrade: All specs converted to OpenAPI 3.1 (2.0, 3.0.x → 3.1)
+ * - Bundling: External $refs resolved, internal $refs preserved
+ * - Validation: Type-guarded at boundaries (no casting)
  *
- * The unified pipeline ensures both CLI and programmatic APIs share the same:
- * - Validation (via SwaggerParser.validate)
- * - Bundling/dereferencing (via SwaggerParser.bundle/dereference)
- * - Type boundary handling (via assertOpenApiObject)
+ * Both CLI and programmatic APIs use prepareOpenApiDocument() for consistency.
+ *
+ * See: .agent/architecture/SCALAR-PIPELINE.md
  */
 
 import path from 'node:path';

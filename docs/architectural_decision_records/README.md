@@ -28,34 +28,34 @@ Each ADR follows this structure:
 
 ### Phase 1: Architecture Rewrite & Modernization
 
-| ADR | Title | Status | Date |
-|-----|-------|--------|------|
-| [001](./ADR-001-fail-fast-spec-violations.md) | Fail Fast on Spec Violations | Accepted | - |
-| [002](./ADR-002-defer-types-to-openapi3-ts.md) | Defer Types to openapi3-ts | Accepted | - |
-| [003](./ADR-003-type-predicates-over-boolean-filters.md) | Type Predicates Over Boolean Filters | Accepted | - |
-| [004](./ADR-004-pure-functions-single-responsibility.md) | Pure Functions & Single Responsibility | Accepted | - |
-| [005](./ADR-005-enum-complexity-calculation.md) | Enum Complexity Calculation | Accepted | - |
-| [006](./ADR-006-no-unused-variables-policy.md) | No Unused Variables Policy | Accepted | - |
-| [007](./ADR-007-esm-with-nodenext-resolution.md) | ESM with NodeNext Resolution | Accepted | - |
-| [008](./ADR-008-replace-cac-with-commander.md) | Replace CAC with Commander | Accepted | - |
-| [009](./ADR-009-replace-preconstruct-with-tsup.md) | Replace Preconstruct with tsup | Accepted | - |
-| [010](./ADR-010-use-turborepo.md) | Use Turborepo | Accepted | - |
-| [011](./ADR-011-ajv-runtime-validation.md) | AJV Runtime Validation | Accepted | - |
-| [012](./ADR-012-remove-playground-examples.md) | Remove Playground Examples | Accepted | - |
-| [013](./ADR-013-architecture-rewrite-decision.md) | Architecture Rewrite Decision | Accepted | - |
-| [014](./ADR-014-migrate-tanu-to-ts-morph.md) | Migrate Tanu to ts-morph | Accepted | - |
-| [015](./ADR-015-eliminate-make-schema-resolver.md) | Eliminate makeSchemaResolver | Accepted | - |
-| [016](./ADR-016-remove-zodios-dependencies.md) | Remove Zodios Dependencies | Accepted | - |
-| [017](./ADR-017-unified-bundle-only-pipeline.md) | Unified Bundle-Only Pipeline | Accepted | - |
+| ADR                                                      | Title                                  | Status   | Date |
+| -------------------------------------------------------- | -------------------------------------- | -------- | ---- |
+| [001](./ADR-001-fail-fast-spec-violations.md)            | Fail Fast on Spec Violations           | Accepted | -    |
+| [002](./ADR-002-defer-types-to-openapi3-ts.md)           | Defer Types to openapi3-ts             | Accepted | -    |
+| [003](./ADR-003-type-predicates-over-boolean-filters.md) | Type Predicates Over Boolean Filters   | Accepted | -    |
+| [004](./ADR-004-pure-functions-single-responsibility.md) | Pure Functions & Single Responsibility | Accepted | -    |
+| [005](./ADR-005-enum-complexity-calculation.md)          | Enum Complexity Calculation            | Accepted | -    |
+| [006](./ADR-006-no-unused-variables-policy.md)           | No Unused Variables Policy             | Accepted | -    |
+| [007](./ADR-007-esm-with-nodenext-resolution.md)         | ESM with NodeNext Resolution           | Accepted | -    |
+| [008](./ADR-008-replace-cac-with-commander.md)           | Replace CAC with Commander             | Accepted | -    |
+| [009](./ADR-009-replace-preconstruct-with-tsup.md)       | Replace Preconstruct with tsup         | Accepted | -    |
+| [010](./ADR-010-use-turborepo.md)                        | Use Turborepo                          | Accepted | -    |
+| [011](./ADR-011-ajv-runtime-validation.md)               | AJV Runtime Validation                 | Accepted | -    |
+| [012](./ADR-012-remove-playground-examples.md)           | Remove Playground Examples             | Accepted | -    |
+| [013](./ADR-013-architecture-rewrite-decision.md)        | Architecture Rewrite Decision          | Accepted | -    |
+| [014](./ADR-014-migrate-tanu-to-ts-morph.md)             | Migrate Tanu to ts-morph               | Accepted | -    |
+| [015](./ADR-015-eliminate-make-schema-resolver.md)       | Eliminate makeSchemaResolver           | Accepted | -    |
+| [016](./ADR-016-remove-zodios-dependencies.md)           | Remove Zodios Dependencies             | Accepted | -    |
+| [017](./ADR-017-unified-bundle-only-pipeline.md)         | Unified Bundle-Only Pipeline           | Accepted | -    |
 
 ### Phase 2 Part 1: Scalar Pipeline Re-architecture
 
-| ADR | Title | Status | Date |
-|-----|-------|--------|------|
-| [018](./ADR-018-openapi-3.1-first-architecture.md) | OpenAPI 3.1-First Internal Type System | Accepted | 2025-11-04 |
-| [019](./ADR-019-scalar-pipeline-adoption.md) | Scalar Pipeline Adoption | Accepted | 2025-11-04 |
-| [020](./ADR-020-intersection-type-strategy.md) | Intersection Type Strategy for Type System Boundaries | Accepted | 2025-11-04 |
-| [021](./ADR-021-legacy-dependency-removal.md) | Legacy Dependency Removal | Accepted | 2025-11-04 |
+| ADR                                                | Title                                                 | Status   | Date       |
+| -------------------------------------------------- | ----------------------------------------------------- | -------- | ---------- |
+| [018](./ADR-018-openapi-3.1-first-architecture.md) | OpenAPI 3.1-First Internal Type System                | Accepted | 2025-11-04 |
+| [019](./ADR-019-scalar-pipeline-adoption.md)       | Scalar Pipeline Adoption                              | Accepted | 2025-11-04 |
+| [020](./ADR-020-intersection-type-strategy.md)     | Intersection Type Strategy for Type System Boundaries | Accepted | 2025-11-04 |
+| [021](./ADR-021-legacy-dependency-removal.md)      | Legacy Dependency Removal                             | Accepted | 2025-11-04 |
 
 ## Decision Dependencies
 
@@ -102,21 +102,24 @@ These ADRs establish the following principles:
 3. **Rich Metadata:** Track all bundling operations for debugging (ADR-019)
 4. **Standards Alignment:** JSON Schema Draft 2020-12 compatibility (ADR-018)
 5. **Deterministic Behavior:** Pinned dependencies, controlled bundling (ADR-019)
-6. **Extension Preservation:** Keep vendor extensions (x-*) for debugging (ADR-020)
+6. **Extension Preservation:** Keep vendor extensions (x-\*) for debugging (ADR-020)
 
 ## Reading Guide
 
 **For new contributors:**
+
 1. Start with [ADR-018](./ADR-018-openapi-3.1-first-architecture.md) to understand the 3.1-first approach
 2. Read [ADR-019](./ADR-019-scalar-pipeline-adoption.md) to see how documents are loaded
 3. Review [ADR-020](./ADR-020-intersection-type-strategy.md) to understand type boundaries
 4. Check [ADR-021](./ADR-021-legacy-dependency-removal.md) for migration context
 
 **For understanding type system:**
+
 - [ADR-018](./ADR-018-openapi-3.1-first-architecture.md) - Why 3.1 only
 - [ADR-020](./ADR-020-intersection-type-strategy.md) - How types work
 
 **For understanding bundling:**
+
 - [ADR-019](./ADR-019-scalar-pipeline-adoption.md) - Scalar pipeline details
 - [ADR-021](./ADR-021-legacy-dependency-removal.md) - Why we removed SwaggerParser
 
@@ -143,6 +146,7 @@ When making significant architectural decisions:
 ### When to Create an ADR
 
 Create an ADR when:
+
 - Choosing between multiple architectural approaches
 - Making decisions with long-term impact
 - Introducing new dependencies or removing old ones
@@ -152,6 +156,7 @@ Create an ADR when:
 ### When NOT to Create an ADR
 
 Don't create ADRs for:
+
 - Implementation details (use code comments)
 - Temporary workarounds (use TODO comments)
 - Bug fixes (use commit messages)
@@ -167,6 +172,7 @@ Don't create ADRs for:
 ## Questions?
 
 For questions about these decisions:
+
 1. Read the ADR's "Context" and "Consequences" sections
 2. Check related ADRs linked in the "Related" field
 3. Review the implementation in the codebase

@@ -23,12 +23,13 @@ The `openapi-zod-validation` library previously relied on `@apidevtools/swagger-
 ### Requirements for New Pipeline
 
 The modernization effort required:
+
 - **Rich Metadata:** Track which files/URLs were loaded, external references, warnings
 - **Deterministic Bundling:** Preserve internal `$ref`s for dependency graphs
 - **Version Normalization:** Automatic 3.0 → 3.1 upgrade
 - **Validation Control:** Access to AJV-backed validation with detailed errors
 - **Type Alignment:** Types compatible with our `openapi3-ts/oas31` usage
-- **Extension Preservation:** Keep vendor extensions (x-*) for debugging
+- **Extension Preservation:** Keep vendor extensions (x-\*) for debugging
 
 ---
 
@@ -58,12 +59,12 @@ The modernization effort required:
 ```typescript
 /**
  * Load and bundle an OpenAPI document with rich metadata tracking.
- * 
+ *
  * Accepts file paths, URLs, or in-memory objects. All specs are:
  * 1. Bundled via @scalar/json-magic (resolves $refs, tracks metadata)
  * 2. Upgraded to OpenAPI 3.1 via @scalar/openapi-parser
  * 3. Validated and typed as BundledOpenApiDocument
- * 
+ *
  * @param input - File path, URL, or OpenAPI object
  * @returns Bundled 3.1 document with metadata
  * @throws Error if document cannot be loaded or upgraded
@@ -168,16 +169,16 @@ Exact versions pinned in `lib/package.json` for deterministic builds:
 export interface BundleMetadata {
   /** Entry point information (URI, filename, origin) */
   readonly entrypoint: BundleEntrypoint;
-  
+
   /** All filesystem files accessed during bundling */
   readonly files: readonly BundleFileEntry[];
-  
+
   /** All HTTP(S) URLs fetched during bundling */
   readonly urls: readonly BundleUrlEntry[];
-  
+
   /** Warnings emitted during bundling (unresolved refs, etc.) */
   readonly warnings: readonly BundleWarning[];
-  
+
   /** Summary of external references by target URI */
   readonly externalReferences: readonly ExternalReferenceSummary[];
 }
@@ -200,7 +201,7 @@ const bundleConfig = {
     if (isExternalRef(context.ref)) {
       recordExternalRef(context.ref, context.target);
     }
-  }
+  },
 };
 ```
 
@@ -284,7 +285,6 @@ Added comprehensive characterisation coverage in `lib/src/characterisation/input
 
 ## Revision History
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-11-04 | 1.0 | Initial decision documented |
-
+| Date       | Version | Changes                     |
+| ---------- | ------- | --------------------------- |
+| 2025-11-04 | 1.0     | Initial decision documented |

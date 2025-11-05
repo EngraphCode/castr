@@ -1,3 +1,22 @@
+/**
+ * OpenAPI Schema Dependency Graph
+ *
+ * Architecture Note:
+ * This module builds a dependency graph by traversing schema $refs. It relies
+ * on Scalar's bundling behavior which PRESERVES internal $refs (rather than
+ * dereferencing them all).
+ *
+ * Why $refs are essential:
+ * 1. Circular reference detection (LinkedList → Node → LinkedList)
+ * 2. Topological sorting (generate schemas in correct order)
+ * 3. z.lazy() generation (break circular references in Zod)
+ *
+ * If we used full dereferencing, all $refs would be replaced with inline schemas,
+ * making dependency tracking impossible.
+ *
+ * See: .agent/architecture/SCALAR-PIPELINE.md (Bundling vs Dereferencing)
+ */
+
 import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import { isReferenceObject } from 'openapi3-ts/oas31';
@@ -175,8 +194,39 @@ const buildDeepDependencyGraph = (
 };
 
 /**
- * Build dependency graphs for OpenAPI component schemas
- * Returns both direct dependencies and transitive (deep) dependencies
+ * Build dependency graphs for OpenAPI component schemas.
+ *
+ * Analyzes schema references to build both direct and transitive dependency relationships.
+ * This is essential for:
+ * - Topological sorting of schemas (resolving dependencies before dependents)
+ * - Detecting circular references (for z.lazy() usage)
+ * - Understanding schema relationships for code generation
+ *
+ * @param schemaRef - Array of schema reference paths (e.g., ['#/components/schemas/User'])
+ * @param doc - The OpenAPI document containing schema definitions
+ * @returns Object containing both dependency graphs:
+ *   - `refsDependencyGraph`: Direct dependencies only (schema → immediate dependencies)
+ *   - `deepDependencyGraph`: Transitive dependencies (schema → all dependencies recursively)
+ *
+ * @example
+ * ```typescript
+ * import { getOpenApiDependencyGraph } from 'openapi-zod-client';
+ *
+ * const graphs = getOpenApiDependencyGraph(
+ *   ['#/components/schemas/User', '#/components/schemas/Post'],
+ *   openApiDoc
+ * );
+ *
+ * // Check direct dependencies
+ * console.log(graphs.refsDependencyGraph['#/components/schemas/User']);
+ * // Set { '#/components/schemas/Address' }
+ *
+ * // Check all transitive dependencies
+ * console.log(graphs.deepDependencyGraph['#/components/schemas/User']);
+ * // Set { '#/components/schemas/Address', '#/components/schemas/Country' }
+ * ```
+ *
+ * @public
  */
 export const getOpenApiDependencyGraph = (
   schemaRef: string[],

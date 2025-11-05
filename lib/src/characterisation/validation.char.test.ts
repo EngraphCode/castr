@@ -153,21 +153,38 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
   });
 
   describe('Version Validation', () => {
-    it.skip('should reject OpenAPI 2.0 (Swagger) - Scalar pipeline auto-upgrades', async () => {
+    it('should auto-upgrade OpenAPI 2.0 (Swagger) - Scalar pipeline auto-upgrades', async () => {
+      // Architecture Note: Scalar Auto-Upgrade Behavior
+      //
+      // The Scalar pipeline (@scalar/openapi-parser) automatically upgrades:
+      // - OpenAPI 2.0 (Swagger) → OpenAPI 3.1
+      // - OpenAPI 3.0.x → OpenAPI 3.1.0
+      //
+      // This is intentional and correct per our 3.1-first architecture (ADR-018).
+      // We don't need to manually validate or reject old versions - Scalar handles it.
+      //
+      // This test verifies that:
+      // 1. OpenAPI 2.0 specs are auto-upgraded without errors
+      // 2. The upgraded spec is valid and can generate code
+      // 3. No manual version checking is required in our code
+      //
+      // For more details, see:
+      // - .agent/architecture/SCALAR-PIPELINE.md (Auto-Upgrade section)
+      // - ADR-018: OpenAPI 3.1-First Architecture
       const spec = {
         swagger: '2.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: {},
-      } as unknown;
+      };
 
-      // Test behavior (rejection), not implementation (specific error message)
-      await expect(
-        generateZodClientFromOpenAPI({
-          // @ts-expect-error TS2322 - Testing invalid spec (OpenAPI 2.0) to verify error handling
-          openApiDoc: spec,
-          disableWriteToFile: true,
-        }),
-      ).rejects.toThrow();
+      // Should succeed (auto-upgraded by Scalar)
+      const result = await generateZodClientFromOpenAPI({
+        openApiDoc: spec as unknown as OpenAPIObject,
+        disableWriteToFile: true,
+      });
+
+      expect(result).toBeDefined();
+      expect(typeof result).toBe('string');
     });
 
     it('should accept all OpenAPI 3.x versions', async () => {

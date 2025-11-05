@@ -87,10 +87,10 @@ Exemple: `--success-expr "status >= 200 && status < 300"`
 ## Tips
 
 - You can omit the `-o` (output path) argument if you want and it will default to the input path with a `.ts` extension: `pnpm openapi-zod-client ./input.yaml` will generate a `./input.yaml.ts` file
-- Since internally we're using [swagger-parser](https://github.com/APIDevTools/swagger-parser), you should be able to use an URL as input like this:
+- The library uses the Scalar pipeline (`@scalar/openapi-parser`) for processing OpenAPI documents. You can use a URL as input like this:
   `pnpx openapi-zod-client https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml -o ./petstore.ts`
 
-- Also, multiple-files-documents ($ref pointing to another file) should work out-of-the-box as well, but if it doesn't, maybe [dereferencing](https://apitools.dev/swagger-parser/docs/swagger-parser.html#dereferenceapi-options-callback) your document before passing it to `openapi-zod-client` could help
+- Multiple-file documents ($ref pointing to another file) are automatically bundled by the Scalar pipeline, which resolves external file references while preserving internal $refs for proper dependency tracking
 
 ## Example
 

@@ -5,6 +5,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { loadOpenApiDocument } from './load-openapi-document.js';
 
 // Interface for bundle result (Scalar returns loose object types)
+// Architecture: Scalar's bundle() returns Record<string, unknown> which we then
+// validate and narrow to BundledOpenApiDocument using a type guard (see ADR-020).
+// This follows our "validate at boundaries" principle.
 // We disable restricted-types here because BundleResult models Scalar's actual
 // loose return type - we validate it properly when converting to OpenAPIObject
 // eslint-disable-next-line @typescript-eslint/no-restricted-types
@@ -13,6 +16,10 @@ type BundleResult = Record<string, unknown>;
 let currentReadFilesPlugin: LoaderPlugin;
 let currentFetchUrlsPlugin: LoaderPlugin;
 
+// Vitest v4 Mock Pattern: Use vi.hoisted() to ensure the mock is created
+// before the module is imported. This is required because vi.mock() is hoisted
+// above imports, so the mock function must also be hoisted.
+// See: https://vitest.dev/api/vi.html#vi-hoisted
 const bundleMock = vi.hoisted(() => vi.fn());
 
 vi.mock('@scalar/json-magic/bundle', () => ({
