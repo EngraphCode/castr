@@ -2,94 +2,126 @@
 
 **Purpose:** This directory contains the documentation system for continuing complex, multi-session development work with AI assistants across fresh chat contexts.
 
+**This README documents the SYSTEM itself** - how the three core documents work together.
+
 ---
 
 ## 📋 The Three-Document System
 
 This system uses three complementary documents to enable seamless context switching between AI chat sessions:
 
-### 1. **`continuation_prompt.md`** - AI Rehydration Prompt
-**Audience:** AI assistants resuming work in fresh contexts  
-**Purpose:** Comprehensive technical context for AI to "wake up" and understand the project
+### 1. **`HANDOFF.md`** - Orientation Hub 🗺️
+**Audience:** Humans + new AI contexts  
+**Purpose:** Big-picture orientation and document navigation
 
 **Contains:**
-- Complete technical background and architecture
-- Key decisions and trade-offs made
-- Current implementation status
-- Critical patterns and approaches
-- Quality standards and validation requirements
-- References to other documentation
+- Where we are (phase/session status - high level)
+- Document map (where to find everything)
+- Quick start (how to begin work)
+- Architecture overview (visual/high-level)
+- Key deliverables (what exists now)
+- Common patterns (quick reference)
+- Success criteria (how to know you're done)
 
 **Update when:**
-- Major architectural decisions are made
-- New patterns or approaches are established
-- Important trade-offs are documented
-- Phase/session boundaries are crossed
-- Critical context emerges that future AI needs to know
+- After MILESTONES (phase/major session complete)
+- Quality gates change significantly
+- Document structure changes
+- Key deliverables are completed
 
 **Characteristics:**
-- Comprehensive and technical
+- Scannable orientation guide
+- Welcoming and navigational
+- Visual/high-level architecture
+- Quick reference for patterns
+- ~250-300 lines typical
+- Read time: ~5-10 minutes
+
+**Think:** "README for current work" or "Onboarding guide"  
+**Question answered:** "Where am I?"
+
+---
+
+### 2. **`continuation_prompt.md`** - AI Rehydration 🤖
+**Audience:** AI assistants in fresh contexts (not for human reading)  
+**Purpose:** Complete AI context restoration with full history
+
+**Contains:**
+- Complete prompt structure ("I'm working on...")
+- Full historical record (all sessions with details)
+- Architectural decisions with "why" and trade-offs
+- Type system detailed architecture
+- All objectives (comprehensive checklists)
+- Execution workflow (step-by-step procedures)
+- Non-negotiables (complete rules reference)
+- Critical patterns with examples
+- Anti-patterns to avoid
+
+**Update when:**
+- After EACH SESSION (add to historical record)
+- Architectural decisions are made
+- New patterns emerge
+- Important insights are discovered
+- Trade-offs are accepted
+
+**Characteristics:**
+- Comprehensive and complete
 - Optimized for AI consumption
-- Includes "why" behind decisions
-- Self-contained (can be read standalone)
-- ~3,000-5,000 words typical
+- Formal, procedural tone
+- Includes "why" behind all decisions
+- Unlimited length (completeness over brevity)
+- Not optimized for human reading
+
+**Think:** "Structured brief for programmatic context loading"  
+**Question answered:** "What's everything?"
 
 ---
 
-### 2. **`context.md`** - Living Status Document
-**Audience:** Both humans and AI for quick orientation  
-**Purpose:** Current state snapshot and next actions
+### 3. **`context.md`** - Living Status Log 📝
+**Audience:** Everyone (humans + AI) for quick status check  
+**Purpose:** Session-by-session changelog + current status
 
 **Contains:**
-- Current phase and session
-- What's complete, what's in-progress
-- Quality gate status (type/lint/test)
-- Immediate next actions
-- Recent completions
-- Known issues or blockers
+- Right now (current task, immediate next actions)
+- Current blockers (if any)
+- Active decisions (under consideration)
+- Quality gate status (current health with timestamps)
+- Session log (recent work, chronological)
+- Recent wins (last 2-4 sessions)
 
 **Update when:**
+- After EVERY WORK SESSION (daily/hourly)
+- Quality gates are run
+- Blockers emerge or resolve
+- Next actions change
 - Session transitions occur
-- Quality gate status changes
-- Next actions are identified
-- Blockers are discovered or resolved
-- After completing significant work
 
 **Characteristics:**
-- Concise and scannable
+- Factual, chronological changelog
+- Focus on RECENT activity (not full history)
+- Quick status check
 - Always current (living document)
-- Status-focused, not history
-- Quick reference for "where are we?"
-- ~500-1,000 words typical
+- ~150-200 lines typical
+- Read time: ~2-3 minutes
+
+**Think:** "Session log" or "Daily standup notes"  
+**Question answered:** "What changed recently?"
 
 ---
 
-### 3. **Plan Document** (e.g., `PHASE-2-MCP-ENHANCEMENTS.md`)
-**Audience:** Both humans and AI for session planning  
-**Purpose:** Detailed session-by-session implementation roadmap
+## 📊 Clear Separation Matrix
 
-**Contains:**
-- Phase overview and goals
-- Session-by-session breakdown
-- Acceptance criteria for each session
-- Validation steps and quality gates
-- Dependencies between sessions
-- Estimated effort per session
-
-**Update when:**
-- Sessions are planned or reorganized
-- Sessions are completed
-- Acceptance criteria are met
-- Validation results are recorded
-- Phase scope changes
-
-**Characteristics:**
-- Structured and detailed
-- Session-focused granularity
-- Explicit acceptance criteria
-- Clear validation steps
-- Updated with completion status
-- ~2,000-4,000 words typical
+| Aspect            | `context.md`        | `HANDOFF.md`         | `continuation_prompt.md` |
+| ----------------- | ------------------- | -------------------- | ------------------------ |
+| **Purpose**       | Session changelog   | Orientation hub      | AI rehydration           |
+| **Audience**      | Everyone            | Humans + AI          | AI only                  |
+| **Update After**  | Every session       | Milestones           | Each session             |
+| **Length**        | ~150-200 lines      | ~250-300 lines       | Unlimited                |
+| **Focus**         | Recent changes      | Big picture          | Complete history         |
+| **Time to Read**  | 2-3 min             | 5-10 min             | Reference only           |
+| **Optimization**  | Recency             | Scannability         | Completeness             |
+| **Question**      | "What changed?"     | "Where am I?"        | "What's everything?"     |
+| **Tone**          | Factual log         | Welcoming guide      | Formal brief             |
 
 ---
 
@@ -102,6 +134,7 @@ When resuming work in a completely fresh AI chat with no prior context:
 ```
 I'm continuing development on openapi-zod-client. Please read these documents:
 
+@HANDOFF.md
 @continuation_prompt.md
 @context.md
 @PHASE-2-MCP-ENHANCEMENTS.md
@@ -120,12 +153,15 @@ Follow all standards in @RULES.md including TDD, type safety, and comprehensive 
 ```
 
 **What happens:**
-- AI reads `continuation_prompt.md` → understands full technical context
-- AI reads `context.md` → knows current state and next actions
-- AI reads plan document → knows session objectives
-- AI reads `RULES.md` → knows quality standards
+- AI reads `HANDOFF.md` → gets big picture orientation (5 min)
+- AI reads `continuation_prompt.md` → understands full technical context with history
+- AI reads `context.md` → knows recent changes and current status
+- AI reads plan document → knows session objectives and acceptance criteria
+- AI reads `RULES.md` → knows quality standards (TDD, TSDoc, etc.)
 - AI creates detailed implementation plan for the session
 - AI can begin work immediately with full context
+
+**Note:** You can skip `HANDOFF.md` if you're short on time and jump straight to `continuation_prompt.md` + `context.md`, but HANDOFF provides helpful orientation for complex projects.
 
 ---
 
@@ -152,28 +188,38 @@ When completing a session and preparing for next session:
 ```
 Excellent work. Please update the documentation for handoff:
 
-1. Update @PHASE-2-MCP-ENHANCEMENTS.md:
+1. Update @context.md:
+   - Add session to Session Log with what changed
+   - Update "Right Now" section for next session
+   - Update quality gate status with timestamps
+   - Note any new blockers or active decisions
+
+2. Update @continuation_prompt.md:
+   - Add any new architectural insights to "Architectural Decisions"
+   - Document critical decisions made with rationale
+   - Add new patterns or anti-patterns discovered
+   - Update "What's Next" section
+
+3. Update @PHASE-2-MCP-ENHANCEMENTS.md:
    - Mark Session X as COMPLETE
-   - Add completion date
+   - Add completion date and duration
    - Record validation results (type/lint/test status)
    - List all deliverables
 
-2. Update @continuation_prompt.md:
-   - Add any new architectural insights
-   - Document any critical decisions made
-   - Update implementation status
-
-3. Update @context.md:
-   - Update "Current Focus" to next session
+4. Update @HANDOFF.md (if milestone reached):
+   - Update phase progress overview
+   - Update key deliverables section
    - Update quality gate status
-   - List immediate next actions
-   - Update session completion status
+   - Add any new common patterns
 
-4. Commit all changes with a comprehensive commit message
+5. Commit all changes with a comprehensive commit message
 ```
 
 **What happens:**
-- Documentation is updated to reflect current state
+- `context.md` updated with session changelog (updated EVERY session)
+- `continuation_prompt.md` updated with new insights (updated EVERY session)
+- Plan document marked complete with results
+- `HANDOFF.md` updated if milestone reached (updated at MILESTONES only)
 - Next AI session will have complete context
 - Commit preserves all work and context
 - System is ready for next session (cold start)
@@ -188,6 +234,7 @@ When starting a new phase or major feature:
 I want to add [NEW FEATURE]. Please:
 
 1. Read the current documentation:
+   @HANDOFF.md
    @continuation_prompt.md
    @context.md
    @RULES.md
@@ -198,19 +245,24 @@ I want to add [NEW FEATURE]. Please:
 5. Identify dependencies and risks
 6. Estimate effort per session
 7. Update @context.md with the new plan
+8. Update @HANDOFF.md with the new phase in roadmap
 ```
 
 **What happens:**
-- AI understands existing architecture and patterns
+- AI reads `HANDOFF.md` → understands current project state and deliverables
+- AI reads `continuation_prompt.md` → understands existing architecture and patterns
+- AI reads `context.md` → knows recent work and current status
+- AI reads `RULES.md` → knows quality standards to follow
 - AI creates new plan document following established format
 - Plan is integrated into documentation system
+- `HANDOFF.md` updated with new phase
 - Ready to begin implementation
 
 ---
 
 ## 🔄 Documentation Workflow
 
-### Daily/Session Workflow
+### Daily/Session Workflow (EVERY session)
 
 ```
 ┌─────────────────────┐
@@ -226,9 +278,21 @@ I want to add [NEW FEATURE]. Please:
            │
            ▼
 ┌─────────────────────┐
-│  Update Context.md  │
-│  (Status)           │
+│  Run Quality Gates  │
+│  (type/lint/test)   │
 └──────────┬──────────┘
+           │
+           ▼
+┌────────────────────────┐
+│  Update context.md     │
+│  (Add to session log)  │
+└──────────┬─────────────┘
+           │
+           ▼
+┌──────────────────────────────┐
+│  Update continuation_prompt  │
+│  (Add insights if any)       │
+└──────────┬───────────────────┘
            │
            ▼
 ┌─────────────────────┐
@@ -236,36 +300,43 @@ I want to add [NEW FEATURE]. Please:
 └─────────────────────┘
 ```
 
-### Session Completion Workflow
+**Update every session:**
+- ✅ `context.md` - Add to session log, update "Right Now", update quality gates
+- ✅ `continuation_prompt.md` - Add new insights, patterns, or decisions (if any)
+- ⚠️ Plan document - Mark tasks complete as you go
+
+---
+
+### Session Completion Workflow (End of EACH session)
 
 ```
 ┌─────────────────────────┐
-│  Complete Session       │
-│  (All tasks done)       │
+│  Complete All Tasks     │
+│  (Session done)         │
 └──────────┬──────────────┘
            │
            ▼
 ┌─────────────────────────┐
 │  Run Quality Gates      │
-│  (type/lint/test)       │
+│  (Verify all green)     │
 └──────────┬──────────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│  Update context.md      │
+│  (Session complete)     │
+└──────────┬──────────────┘
+           │
+           ▼
+┌────────────────────────────────┐
+│  Update continuation_prompt.md │
+│  (Add session to history)      │
+└──────────┬─────────────────────┘
            │
            ▼
 ┌─────────────────────────┐
 │  Update Plan Doc        │
-│  (Mark COMPLETE)        │
-└──────────┬──────────────┘
-           │
-           ▼
-┌─────────────────────────┐
-│  Update Continuation    │
-│  (Add insights)         │
-└──────────┬──────────────┘
-           │
-           ▼
-┌─────────────────────────┐
-│  Update Context.md      │
-│  (Next session)         │
+│  (Mark session COMPLETE)│
 └──────────┬──────────────┘
            │
            ▼
@@ -274,11 +345,20 @@ I want to add [NEW FEATURE]. Please:
 └─────────────────────────┘
 ```
 
-### Phase Completion Workflow
+**Update after each session:**
+- ✅ `context.md` - Session log entry, next actions, blockers
+- ✅ `continuation_prompt.md` - Architectural insights, decisions, patterns
+- ✅ Plan document - Mark session complete with validation results
+- ❌ `HANDOFF.md` - NOT updated (wait for milestone)
+
+---
+
+### Milestone Completion Workflow (After MAJOR sessions/phases)
 
 ```
 ┌─────────────────────────┐
-│  All Sessions Complete  │
+│  Major Milestone Done   │
+│  (Phase/part complete)  │
 └──────────┬──────────────┘
            │
            ▼
@@ -295,8 +375,8 @@ I want to add [NEW FEATURE]. Please:
            │
            ▼
 ┌─────────────────────────┐
-│  Update All Docs        │
-│  (Phase complete)       │
+│  Update ALL Docs        │
+│  (Including HANDOFF)    │
 └──────────┬──────────────┘
            │
            ▼
@@ -304,6 +384,12 @@ I want to add [NEW FEATURE]. Please:
 │  Milestone Commit       │
 └─────────────────────────┘
 ```
+
+**Update at milestones:**
+- ✅ `context.md` - Updated as usual
+- ✅ `continuation_prompt.md` - Updated as usual
+- ✅ Plan document - Updated as usual
+- ✅ **`HANDOFF.md`** - NOW update (phase progress, deliverables, architecture)
 
 ---
 

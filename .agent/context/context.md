@@ -1,136 +1,160 @@
 # Living Context Document
 
-**Last Updated:** November 5, 2025  
-**Purpose:** Quick-reference status document for the modernization project.  
-**Audience:** Both humans and AI for quick orientation
+**Last Updated:** November 5, 2025 3:47 PM  
+**Purpose:** Session changelog + current status  
+**Audience:** Everyone (humans + AI)  
+**Update After:** Every work session
 
-> **For comprehensive technical context, see:** `.agent/context/continuation_prompt.md`  
-> **For detailed plans, see:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`  
-> **For usage examples, see:** `.agent/context/README.md`
+> **For big picture orientation, see:** `.agent/context/HANDOFF.md`  
+> **For complete AI context, see:** `.agent/context/continuation_prompt.md`  
+> **For session plans, see:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`
 
 ---
 
-## 📍 Current State
+## 🔥 Right Now
 
-**Phase:** Phase 2 Part 1 **COMPLETE** ✅ → Phase 2 Part 2 **READY TO START**  
-**Branch:** `feat/rewrite`  
-**Last Session:** Session 4 (Documentation & Final Cleanup) - November 5, 2025
+**Current Session:** Phase 2 Part 2 - Session 5 (Ready to Start)  
+**Active Task:** MCP Protocol Analysis  
+**Branch:** `feat/rewrite`
 
-### What Just Completed
+### Immediate Next Actions
 
-**Phase 2 Part 1: Scalar Pipeline Re-architecture** - All 4 sessions delivered successfully:
-- ✅ Session 1: Foundation & Guardrails (type system migrated to oas31, legacy deps removed)
-- ✅ Session 2: Loading & Bundling (Scalar pipeline implemented with 3.1 auto-upgrade)
-- ✅ Session 3: Complete Technical Resolution (0 type errors, 0 lint errors, all tests passing)
-- ✅ Session 4: Documentation & Final Cleanup (3 architecture docs + 15+ inline comments)
+1. **Create `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md`**
+   - Document MCP tool structure
+   - Define JSON Schema constraints
+   - Outline security expectations
+   - Define error format guidance
 
-**Achievement:** Legacy `SwaggerParser.bundle()` path fully replaced with deterministic Scalar-driven pipeline. Production-ready codebase with comprehensive documentation.
+2. **Create `.agent/analysis/JSON_SCHEMA_CONVERSION.md`**
+   - Record `zod-to-json-schema` configuration
+   - Document edge cases
+   - Define testing strategy
 
-### What's Next
+3. **Create `.agent/analysis/SECURITY_EXTRACTION.md`**
+   - Outline security metadata extraction algorithm
+   - Document operation-level resolution
+   - Document component-level resolution
 
-**Phase 2 Part 2: MCP Enhancements** - Starting Session 5
+**Estimated Effort:** 3-4 hours (research and documentation)
 
-**Session 5: MCP Investigation** (~3-4 hours)
-- Create `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md`
-- Create `.agent/analysis/JSON_SCHEMA_CONVERSION.md`
-- Create `.agent/analysis/SECURITY_EXTRACTION.md`
+**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 5 for detailed acceptance criteria
 
-**Goal:** Research and document MCP requirements to drive Sessions 6-8 implementation
+---
 
-**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 5 for detailed plan
+## ⚠️ Current Blockers
+
+**None** - All quality gates green, ready to proceed with Session 5 ✅
+
+---
+
+## 🤔 Active Decisions
+
+**None** - Phase 2 Part 1 complete, moving to Part 2 per plan
 
 ---
 
 ## 🎯 Quality Gate Status
 
-| Gate                 | Status | Notes                                        |
-| -------------------- | ------ | -------------------------------------------- |
-| `pnpm format`        | ✅     | Passing                                      |
-| `pnpm build`         | ✅     | ESM & CJS bundles + DTS                      |
-| `pnpm type-check`    | ✅     | **0 errors**                                 |
-| `pnpm lint`          | ✅     | **0 errors**                                 |
-| `pnpm test:all`      | ✅     | All passing, **0 skipped tests**             |
+| Gate              | Status | Last Check         |
+| ----------------- | ------ | ------------------ |
+| `pnpm format`     | ✅     | Nov 5, 2025 3:45pm |
+| `pnpm build`      | ✅     | Nov 5, 2025 3:45pm |
+| `pnpm type-check` | ✅     | Nov 5, 2025 3:45pm |
+| `pnpm lint`       | ✅     | Nov 5, 2025 3:45pm |
+| `pnpm test:all`   | ✅     | Nov 5, 2025 3:30pm |
 
-**All quality gates GREEN** - Ready for Phase 2 Part 2
-
----
-
-## 🏗️ Key Architecture (Phase 2 Part 1)
-
-**Type System:** OpenAPI 3.1 internal architecture with intersection types
-- All specs auto-upgraded to 3.1 via `@scalar/openapi-parser/upgrade`
-- Uses `openapi3-ts/oas31` types exclusively
-- Intersection type: `OpenAPIV3_1.Document & OpenAPIObject`
-- Type guards at boundaries (no casting)
-
-**Scalar Pipeline:** 3-stage deterministic flow
-1. Bundle via `@scalar/json-magic` (resolves external $refs)
-2. Upgrade via `@scalar/openapi-parser` (normalize to 3.1)
-3. Validate & type with intersection strategy
-
-**Legacy Removed:**
-- `@apidevtools/swagger-parser` - removed from dependencies
-- `openapi-types@12.1.3` - removed from dependencies
-- All code migrated from `oas30` to `oas31` imports
-
-**See:** `.agent/architecture/SCALAR-PIPELINE.md` for detailed documentation
+**Result:** 0 errors, 0 warnings, 0 skipped tests - ALL GREEN ✅
 
 ---
 
-## 🧭 Phase Roadmap
+## 📊 Session Log (Recent → Oldest)
 
-| Phase              | Purpose                                 | Status                      |
-| ------------------ | --------------------------------------- | --------------------------- |
-| **Phase 1**        | Tooling & architecture foundations      | ✅ Complete                 |
-| **Phase 2 Part 1** | Scalar pipeline re-architecture         | ✅ Complete (Nov 5, 2025)   |
-| **Phase 2 Part 2** | MCP enhancements (JSON Schema, etc.)    | 🟡 Ready to start           |
-| **Phase 3**        | DX & quality enhancements               | ⚪ Planned                  |
+### Session 4 - Documentation & Final Cleanup (COMPLETE)
+**Date:** November 5, 2025  
+**Duration:** ~3 hours  
+**Status:** ✅ Complete
 
----
+**What Changed:**
+- Created 3 comprehensive architecture documents (~5,000 words total):
+  - `.agent/architecture/SCALAR-PIPELINE.md` (Scalar pipeline architecture)
+  - `.agent/architecture/OPENAPI-3.1-MIGRATION.md` (Type system migration)
+  - `docs/DEFAULT-RESPONSE-BEHAVIOR.md` (Default response handling)
+- Enhanced TSDoc for all public APIs:
+  - `generateZodClientFromOpenAPI()` - comprehensive parameter docs
+  - `getZodClientTemplateContext()` - detailed examples
+  - `getOpenApiDependencyGraph()` - full documentation
+  - `defaultStatusBehavior` option - complete TSDoc
+- Added 15+ inline architectural comments across critical files
+- Updated `lib/README.md` to remove SwaggerParser references
+- Established three-document system (HANDOFF, continuation_prompt, context)
 
-## 📚 Key Documentation
+**Quality Gates:** ✅ All passing (0 type errors, 0 lint errors, all tests green)
 
-**For AI context recovery:**
-- `.agent/context/README.md` - How to use the documentation system
-- `.agent/context/continuation_prompt.md` - Comprehensive technical context for AI
-- `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` - Detailed session-by-session plan
-
-**For implementation standards:**
-- `.agent/RULES.md` - TDD, TSDoc, type safety standards (MANDATORY)
-- `.agent/architecture/SCALAR-PIPELINE.md` - Scalar pipeline architecture
-- `.agent/architecture/OPENAPI-3.1-MIGRATION.md` - Type system migration details
-
-**For strategic context:**
-- `.agent/plans/00-STRATEGIC-OVERVIEW.md` - High-level roadmap
-- `.agent/plans/requirements.md` - Project constraints
-- `.agent/DEFINITION_OF_DONE.md` - Completion criteria
+**Deliverables:** Production-ready codebase with comprehensive documentation
 
 ---
 
-## 📝 Working Agreements
+### Session 3 - Complete Technical Resolution (COMPLETE)
+**Date:** November 4, 2025  
+**Duration:** ~7 hours  
+**Status:** ✅ Complete
 
-From `.agent/RULES.md`:
-- ✅ TDD is mandatory – write failing tests FIRST, always
-- ✅ Comprehensive TSDoc for all public APIs (with examples)
-- ✅ NEVER use type escape hatches (`as`, `any`, `!`, etc.)
-- ✅ Validate at external boundaries, trust internally
-- ✅ Keep ALL quality gates green at ALL times
-- ✅ No skipped tests (forbidden)
+**What Changed:**
+- Created `isNullableType()` helper function (resolved 16 type errors)
+- Modernized ALL test fixtures from OpenAPI 3.0 to 3.1 syntax (resolved 47 errors)
+- Fixed Vitest v4 mock typing issues (resolved 16 errors)
+- Migrated ALL tests to Scalar pipeline (resolved 18 errors)
+- Unskipped ALL tests (4 tests fixed, 0 skipped remaining)
+- Updated JSDoc examples to use `prepareOpenApiDocument`
 
----
+**Quality Gates:** ✅ All passing - went from 77 type errors + 18 lint errors → 0 errors
 
-## 🔄 Recent Changes
-
-**Session 4 (November 5, 2025):**
-- Created 3 comprehensive architecture documents
-- Enhanced TSDoc for all public APIs
-- Added 15+ inline architectural comments
-- Verified 0 type/lint errors, all tests passing
-- Updated documentation structure (README, continuation prompt, context)
-
-**Ready for:** Session 5 (MCP Investigation)
+**Deliverables:** Fully green codebase with working tests
 
 ---
 
-**For comprehensive history and technical details, see:** `.agent/context/continuation_prompt.md`  
-**To start work on Session 5, see:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md`
+### Session 2 - Loading & Bundling (COMPLETE)
+**Date:** November 3-4, 2025  
+**Duration:** ~6 hours  
+**Status:** ✅ Complete
+
+**What Changed:**
+- Implemented `loadOpenApiDocument` using `@scalar/json-magic/bundle`
+- Integrated `@scalar/openapi-parser/upgrade` for automatic 3.1 normalization
+- Established intersection type strategy (`OpenAPIV3_1.Document & OpenAPIObject`)
+- Implemented type guard `isBundledOpenApiDocument` for boundary validation
+- Exported new API surface with comprehensive TSDoc
+- Updated `prepareOpenApiDocument` to use Scalar pipeline internally
+- Added characterisation tests for single-file and multi-file specs
+
+**Quality Gates:** ✅ All passing
+
+**Deliverables:** Scalar pipeline fully implemented and tested
+
+---
+
+### Session 1 - Foundation & Guardrails (COMPLETE)
+**Date:** November 2-3, 2025  
+**Duration:** ~4 hours  
+**Status:** ✅ Complete
+
+**What Changed:**
+- Migrated type system from `openapi3-ts/oas30` to `openapi3-ts/oas31`
+- Removed legacy dependencies:
+  - `@apidevtools/swagger-parser` removed from package.json
+  - `openapi-types@12.1.3` removed from package.json
+- Added Scalar packages with pinned versions:
+  - `@scalar/json-magic@0.7.0`
+  - `@scalar/openapi-parser@0.23.0`
+  - `@scalar/openapi-types@0.5.1`
+- Created guard test (`lib/src/validation/scalar-guard.test.ts`) to prevent legacy imports
+- Audited all `prepareOpenApiDocument` callers and documented expectations
+
+**Quality Gates:** ✅ All passing
+
+**Deliverables:** Type system migrated, legacy removed, guardrails in place
+
+---
+
+**For complete history, see:** `.agent/context/continuation_prompt.md`  
+**For big picture orientation, see:** `.agent/context/HANDOFF.md`
