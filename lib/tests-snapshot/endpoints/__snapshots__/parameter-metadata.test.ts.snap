@@ -72,47 +72,6 @@ exports[`Parameter Metadata Extraction - Snapshot Tests > should extract complet
 }
 `;
 
-exports[`Parameter Metadata Extraction - Snapshot Tests > should extract metadata for all parameter locations > endpoint with metadata for all parameter locations 1`] = `
-{
-    "errors": [],
-    "method": "get",
-    "parameters": [
-        {
-            "constraints": {
-                "pattern": "^item-[0-9]+$",
-            },
-            "description": "Item identifier",
-            "example": "item-123",
-            "name": "id",
-            "schema": "z.string().regex(/^item-[0-9]+$/)",
-            "type": "Path",
-        },
-        {
-            "constraints": {
-                "pattern": "^[a-z,]+$",
-            },
-            "description": "Fields to include",
-            "example": "name,price",
-            "name": "include",
-            "schema": "z.string().regex(/^[a-z,]+$/).optional()",
-            "type": "Query",
-        },
-        {
-            "constraints": {
-                "format": "uuid",
-            },
-            "description": "Request identifier",
-            "name": "X-Request-ID",
-            "schema": "z.string().uuid().optional()",
-            "type": "Header",
-        },
-    ],
-    "path": "/items/:id",
-    "requestFormat": "json",
-    "response": "z.object({}).partial().passthrough()",
-}
-`;
-
 exports[`Parameter Metadata Extraction - Snapshot Tests > should handle parameters with minimal metadata > endpoint with minimal parameter metadata 1`] = `
 {
     "errors": [],

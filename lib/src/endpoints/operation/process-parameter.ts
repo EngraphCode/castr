@@ -268,24 +268,9 @@ export function processParameter(
   );
 
   // Extract metadata from parameter and schema (if schema is resolved)
-  const isSchema = isSchemaObject(paramSchema);
-  // DEBUG: Check if schema object detection is working
-  if (paramItem.name === 'username') {
-    console.log('[DEBUG process-parameter] username param:', {
-      name: paramItem.name,
-      hasExample: !!paramItem.example,
-      example: paramItem.example,
-      hasExamples: !!paramItem.examples,
-      examples: paramItem.examples,
-      schemaExample: paramSchema && 'example' in paramSchema ? (paramSchema as { example?: unknown }).example : undefined,
-      paramItemKeys: Object.keys(paramItem).sort(),
-      isSchema,
-      paramSchemaType: typeof paramSchema,
-      paramSchemaKeys: paramSchema ? Object.keys(paramSchema).slice(0, 5) : [],
-      metadataKeys: Object.keys(isSchema ? extractParameterMetadata(paramItem, paramSchema) : {}),
-    });
-  }
-  const metadata = isSchema ? extractParameterMetadata(paramItem, paramSchema) : {};
+  const metadata = isSchemaObject(paramSchema)
+    ? extractParameterMetadata(paramItem, paramSchema)
+    : {};
 
   return {
     name: getParameterName(paramItem),

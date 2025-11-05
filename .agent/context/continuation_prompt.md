@@ -27,10 +27,10 @@
 
 ### Where We Are
 
-**Phase:** Phase 2 Part 2 - Session 5 **COMPLETE** ✅  
+**Phase:** Phase 2 Part 2 - Session 6 **COMPLETE** ✅  
 **Branch:** `feat/rewrite`  
-**Status:** MCP research complete, analysis documents ready for implementation  
-**Next:** Session 6 - SDK Enhancements
+**Status:** SDK enhancements complete, all quality gates passing  
+**Next:** Session 7 - MCP Tool Enhancements (JSON Schema conversion, security metadata)
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -65,7 +65,7 @@
 
 ### What Was Accomplished (Phase 2 Part 2)
 
-**Session 5 completed successfully (November 2025):**
+**Sessions 5-6 completed successfully (November 2025):**
 
 5. **Session 5: MCP Protocol Research & Analysis**
    - Created 3 comprehensive analysis documents (~15,000 words total):
@@ -79,6 +79,25 @@
    - Determined MCP SDK not needed for static artifact generation
    - Documented tool structure constraints (type: "object" requirement, snake_case naming)
    - **Result:** Complete implementation roadmap ready for Sessions 6-7
+
+6. **Session 6: SDK Enhancements**
+   - Implemented parameter metadata extraction using library types exclusively:
+     - `extractDescription()`, `extractDeprecated()`, `extractExample()`, `extractExamples()`, `extractDefault()`
+     - `extractSchemaConstraints()` for 11 constraint types (enum, minimum, maximum, minLength, maxLength, pattern, format, minItems, maxItems, uniqueItems)
+   - Created type-safe definitions using `Pick` patterns (zero custom types):
+     - `SchemaConstraints` = `Pick<SchemaObject, 11 constraint fields>`
+     - Parameter metadata uses `Pick<ParameterObject, ...> & Pick<SchemaObject, ...>`
+   - Implemented proper type guards (`hasExampleValue`, `isReferenceObject`) for type narrowing
+   - Refactored for complexity reduction:
+     - `extractSchemaConstraints()` to data-driven approach (complexity 16→5)
+     - `extractExample()` into pure helper functions
+     - Split `load-openapi-document.ts` into 8 single-responsibility files
+   - Architecture improvements:
+     - ESM-only build (removed bundling, preserved directory structure)
+     - Fixed `__dirname` usage for ESM (`import.meta.url`)
+     - Updated ADR-018 with "Critical Architectural Boundary" clarifying OpenAPI 3.1-only downstream
+   - Updated 7 snapshot tests with correct metadata (enum constraints, default values)
+   - **Result:** 0 type errors, 0 lint errors, all 909 tests passing (607 unit + 157 snapshot + 145 characterization)
 
 ---
 

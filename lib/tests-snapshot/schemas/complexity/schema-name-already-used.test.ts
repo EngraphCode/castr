@@ -98,6 +98,13 @@ test('schema-name-already-used', async () => {
                 "method": "get",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "xxx",
+                                "yyy",
+                                "zzz",
+                            ],
+                        },
                         "name": "schemaNameAlreadyUsed",
                         "schema": "schemaNameAlreadyUsed",
                         "type": "Query",
@@ -112,6 +119,13 @@ test('schema-name-already-used', async () => {
                 "method": "post",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "ggg",
+                                "hhh",
+                                "iii",
+                            ],
+                        },
                         "name": "schemaNameAlreadyUsed",
                         "schema": "schemaNameAlreadyUsed__2",
                         "type": "Query",
@@ -126,6 +140,13 @@ test('schema-name-already-used', async () => {
                 "method": "put",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "aaa",
+                                "bbb",
+                                "ccc",
+                            ],
+                        },
                         "name": "schemaNameAlreadyUsed",
                         "schema": "schemaNameAlreadyUsed__3",
                         "type": "Query",
@@ -140,6 +161,13 @@ test('schema-name-already-used', async () => {
                 "method": "delete",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "ddd",
+                                "eee",
+                                "fff",
+                            ],
+                        },
                         "name": "schemaNameAlreadyUsed",
                         "schema": "schemaNameAlreadyUsed__4",
                         "type": "Query",

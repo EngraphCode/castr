@@ -73,6 +73,19 @@ Downstream code (conversion, templates, etc.)
 4. **Strict Typing:** Type guards at boundaries, no escape hatches
 5. **Backward Compatible:** Users can still provide 3.0 specs as input
 
+### Critical Architectural Boundary
+
+**After `loadOpenApiDocument()` returns, ALL downstream code operates exclusively on OpenAPI 3.1 documents with `openapi3-ts/oas31` types.**
+
+This means:
+- ❌ **No checks for OpenAPI 3.0 structures** (e.g., `nullable: true`, `exclusiveMinimum: boolean`)
+- ❌ **No conditional logic based on spec version** (always 3.1.x)
+- ❌ **No fallbacks to 3.0 patterns** (e.g., `example` vs `examples`)
+- ✅ **All code assumes 3.1 semantics** (type arrays, numeric exclusive bounds, examples as objects)
+- ✅ **Import only from `openapi3-ts/oas31`** (never `oas30` or `oas2`)
+
+The upgrade happens at the document loading boundary. Once a document is loaded, it is guaranteed to be OpenAPI 3.1.
+
 ---
 
 ## Consequences

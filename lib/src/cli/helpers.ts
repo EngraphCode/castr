@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 
 import type { resolveConfig } from 'prettier';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
@@ -12,10 +12,13 @@ import {
 } from '../validation/cli-type-guards.js';
 import type { TemplateContextOptions } from '../context/index.js';
 import { buildGenerationOptions, type CliOptions } from './helpers.options.js';
+import { fileURLToPath } from 'node:url';
 
 // Re-export for use by cli.ts
 export type { CliOptions };
 export { buildGenerationOptions };
+
+const packageJsonPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../package.json');
 
 /**
  * Get package version from package.json.
@@ -24,7 +27,7 @@ export { buildGenerationOptions };
  */
 export function getPackageVersion(): string {
   try {
-    const packageJsonContent = readFileSync(resolve(__dirname, '../../package.json'), 'utf8');
+    const packageJsonContent = readFileSync(packageJsonPath, 'utf8');
     const parsed: unknown = JSON.parse(packageJsonContent);
     if (hasVersionProperty(parsed) && typeof parsed.version === 'string') {
       return parsed.version;

@@ -18,7 +18,7 @@
  * - .agent/architecture/OPENAPI-3.1-MIGRATION.md (type system)
  */
 
-import path from 'node:path';
+import path, { dirname, resolve } from 'node:path';
 import fs from 'node:fs/promises';
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
@@ -28,8 +28,11 @@ import type { TemplateContext, TemplateContextOptions } from '../context/index.j
 import { getZodClientTemplateContext } from '../context/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { handleFileGrouping, handleSingleFileOutput } from './templating.js';
+import { fileURLToPath } from 'node:url';
 
 type TemplateName = 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
+
+const templatesDir = resolve(dirname(fileURLToPath(import.meta.url)), './templates');
 
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
@@ -161,7 +164,7 @@ function resolveTemplatePath(
   if (templatePath) {
     return templatePath;
   }
-  return path.join(__dirname, `./templates/${effectiveTemplate}.hbs`);
+  return path.join(templatesDir, `${effectiveTemplate}.hbs`);
 }
 
 /**

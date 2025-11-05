@@ -46,12 +46,59 @@ export function extractDeprecated(param: ParameterObject): boolean | undefined {
 }
 
 /**
+ * Type guard: checks if value is an object with a 'value' property.
+ * Used to narrow ExampleObject after filtering out ReferenceObjects.
+ *
+ * @param value - Unknown value to check
+ * @returns True if value has a value property
+ * @internal
+ */
+function hasExampleValue(value: unknown): value is { value: unknown } {
+  return typeof value === 'object' && value !== null && 'value' in value;
+}
+
+/**
+ * Extract example value from an examples object's 'default' entry.
+ * Handles the case where Scalar upgrades examples to object format with named keys.
+ *
+ * @param examplesObj - Examples object from ParameterObject or SchemaObject
+ * @returns Example value from 'default' entry, or undefined
+ * @internal
+ */
+function extractDefaultExample(
+  examplesObj: ParameterObject['examples'] | SchemaObject['examples'],
+): unknown | undefined {
+  if (!examplesObj) {
+    return undefined;
+  }
+
+  // In OpenAPI 3.1, examples is an object with string keys
+  // Access the 'default' property if it exists
+  if (typeof examplesObj === 'object' && 'default' in examplesObj) {
+    const defaultEntry = examplesObj['default'];
+    if (!defaultEntry || isReferenceObject(defaultEntry)) {
+      return undefined;
+    }
+
+    if (hasExampleValue(defaultEntry)) {
+      return defaultEntry.value;
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * Extract example value from parameter or schema.
- * Checks multiple sources in priority order per OpenAPI 3.1 spec:
- * 1. parameter.example (3.0 style)
- * 2. parameter.examples.default.value (3.1 style, set by Scalar upgrade)
- * 3. schema.example (3.0 style)
- * 4. schema.examples.default.value (3.1 style)
+ *
+ * OpenAPI 3.1 supports both `example` (single value) and `examples` (named examples).
+ * Scalar's upgrade converts all examples to the `examples` object format with a 'default' key.
+ *
+ * Priority order:
+ * 1. parameter.example (inline single example)
+ * 2. parameter.examples['default'].value (Scalar sets this during upgrade)
+ * 3. schema.example (inline single example)
+ * 4. schema.examples['default'].value (Scalar sets this during upgrade)
  *
  * @param param - Parameter object with optional example/examples
  * @param schema - Schema object with optional example/examples
@@ -59,36 +106,24 @@ export function extractDeprecated(param: ParameterObject): boolean | undefined {
  * @internal
  */
 export function extractExample(param: ParameterObject, schema: SchemaObject): unknown | undefined {
-  // Check parameter.example (OpenAPI 3.0)
+  // Check parameter.example (inline single example)
   if (param.example !== undefined) {
     return param.example;
   }
 
-  // Check parameter.examples['default'].value (OpenAPI 3.1 - Scalar converts to this)
-  if (param.examples && 'default' in param.examples) {
-    const defaultEx = param.examples['default'];
-    if (defaultEx && !isReferenceObject(defaultEx) && 'value' in defaultEx) {
-      return defaultEx.value;
-    }
+  // Check parameter.examples['default'].value (Scalar upgrade format)
+  const paramExample = extractDefaultExample(param.examples);
+  if (paramExample !== undefined) {
+    return paramExample;
   }
 
-  // Check schema.example (OpenAPI 3.0)
+  // Check schema.example (inline single example)
   if (schema.example !== undefined) {
     return schema.example;
   }
 
-  // Check schema.examples['default'] (OpenAPI 3.1)
-  if ('examples' in schema && schema.examples && !Array.isArray(schema.examples)) {
-    const examples = schema.examples as Record<string, unknown>;
-    if ('default' in examples) {
-      const defaultEx = examples['default'];
-      if (defaultEx && typeof defaultEx === 'object' && 'value' in defaultEx) {
-        return (defaultEx as { value: unknown }).value;
-      }
-    }
-  }
-
-  return undefined;
+  // Check schema.examples['default'].value (Scalar upgrade format)
+  return extractDefaultExample(schema.examples);
 }
 
 /**

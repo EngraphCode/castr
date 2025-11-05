@@ -1,6 +1,6 @@
 # Living Context Document
 
-**Last Updated:** November 5, 2025 3:47 PM  
+**Last Updated:** November 5, 2025 10:13 PM  
 **Purpose:** Session changelog + current status  
 **Audience:** Everyone (humans + AI)  
 **Update After:** Every work session
@@ -13,55 +13,44 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 5 **COMPLETE** ✅  
-**Next Session:** Session 6 (SDK Enhancements)  
+**Current Session:** Phase 2 Part 2 - Session 6 **COMPLETE** ✅  
+**Next Session:** Session 7 (MCP Tool Enhancements)  
 **Branch:** `feat/rewrite`
 
-### Session 5 Summary (Just Completed)
+### Session 6 Summary (Just Completed)
 
-**Deliverables Created:**
+**Deliverables:**
 
-1. ✅ `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - Comprehensive MCP 2025-06-18 spec analysis
-2. ✅ `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 conversion rules
-3. ✅ `.agent/analysis/SECURITY_EXTRACTION.md` - Upstream API authentication extraction strategy
+1. ✅ Enhanced parameter metadata extraction with pure functions
+2. ✅ All 11 OpenAPI schema constraints supported
+3. ✅ Zero custom types - strict library type usage
+4. ✅ Type-safe implementation with proper type guards
+5. ✅ Pure function architecture (all extractors unit tested)
+6. ✅ ESM-only build (no bundling, directory structure preserved)
+7. ✅ Refactored `load-openapi-document` into 8 single-responsibility files
 
-**Key Research Findings:**
+**Key Achievements:**
 
-- MCP uses JSON Schema **Draft 07** (not Draft 2020-12)
-- Target MCP version: **2025-06-18**
-- **Parallel conversion strategy:** OpenAPI → (Zod + JSON Schema) directly, not via `zod-to-json-schema`
-- **Two-layer auth model:** MCP protocol (OAuth 2.1) + Upstream API (OpenAPI security)
-- MCP SDK not needed (runtime vs static generation)
-- Tool constraints: `type: "object"` required, snake_case naming
+- Parameters now include `constraints` (enum, min/max, patterns, etc.)
+- Default values extracted and preserved
+- Example extraction follows OpenAPI 3.1 priority rules
+- All complexity issues resolved through TDD refactoring
+- Updated ADR-018 with "Critical Architectural Boundary"
+- 7 snapshot tests updated with correct metadata
 
-**Actual Effort:** ~4 hours (research + 3 comprehensive analysis documents)
+**Actual Effort:** ~8 hours (implementation + architecture improvements)
 
-### Immediate Next Actions (Session 6)
+### Immediate Next Actions (Session 7)
 
-**Focus:** Enrich SDK-facing artifacts with metadata from Scalar pipeline
+**Focus:** MCP Tool Enhancements - JSON Schema conversion, security metadata, tool definitions
 
-**Critical Constraint:** Use library types exclusively - NO custom types like ParameterMetadata or ParameterConstraints. Use `Pick<ParameterObject, ...>` and `Pick<SchemaObject, ...>` patterns instead.
-
-**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 6 for detailed acceptance criteria
+**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 7 for detailed acceptance criteria
 
 ---
 
 ## ⚠️ Current Blockers
 
-**Session 6 Implementation Violates Architecture Principle (November 5, 2025)**
-
-An incomplete Session 6 implementation exists with custom types (`ParameterMetadata`, `ParameterConstraints`) that violate the "No Custom Types" principle. This causes:
-
-- 1 build error: `parameter-metadata.ts(214,7)` - ExampleObject type mismatch
-- 20 lint errors in Session 6 files
-
-**Resolution:** Session 6 must be rewritten using library types exclusively:
-
-- Replace `ParameterMetadata` interface with `Pick<ParameterObject, ...> & Pick<SchemaObject, ...>`
-- Replace `ParameterConstraints` interface with `Pick<SchemaObject, 'minimum' | 'maximum' | ...>`
-- Use `ParameterObject['examples']` directly (handles `ExampleObject | ReferenceObject` union)
-
-**Do NOT proceed with Session 6 until the architectural principle is properly implemented.**
+**None** - All quality gates passing ✅
 
 ---
 
@@ -82,19 +71,69 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate              | Status | Last Check         | Notes                            |
-| ----------------- | ------ | ------------------ | -------------------------------- |
-| `pnpm format`     | ✅     | Nov 5, 2025 9:00pm | Code formatted                   |
-| `pnpm build`      | ❌     | Nov 5, 2025 9:00pm | 1 error (Session 6 custom types) |
-| `pnpm type-check` | ❌     | Nov 5, 2025 9:00pm | 1 error (Session 6 custom types) |
-| `pnpm lint`       | ❌     | Nov 5, 2025 9:00pm | 20 errors (Session 6 files)      |
-| `pnpm test:all`   | ⏭️     | N/A                | Skipped (build must pass first)  |
+| Gate                 | Status | Last Check          | Notes                          |
+| -------------------- | ------ | ------------------- | ------------------------------ |
+| `pnpm format`        | ✅     | Nov 5, 2025 10:13pm | All files formatted            |
+| `pnpm build`         | ✅     | Nov 5, 2025 10:13pm | ESM-only build successful      |
+| `pnpm type-check`    | ✅     | Nov 5, 2025 10:13pm | 0 type errors                  |
+| `pnpm lint`          | ✅     | Nov 5, 2025 10:13pm | 0 lint errors                  |
+| `pnpm test`          | ✅     | Nov 5, 2025 10:13pm | 607/607 unit tests passing     |
+| `pnpm test:snapshot` | ✅     | Nov 5, 2025 10:13pm | 157/157 snapshot tests passing |
+| `pnpm character`     | ✅     | Nov 5, 2025 10:13pm | 145/145 char tests passing     |
 
-**Result:** Build/type/lint failures in incomplete Session 6 implementation. See blockers above.
+**Result:** All quality gates passing. Session 6 complete and production-ready.
 
 ---
 
 ## 📊 Session Log (Recent → Oldest)
+
+### Session 6 - SDK Enhancements (COMPLETE)
+
+**Date:** November 5, 2025  
+**Duration:** ~8 hours  
+**Status:** ✅ Complete
+
+**What Changed:**
+
+- Implemented parameter metadata extraction using pure functions and library types only:
+  - `extractDescription()`, `extractDeprecated()`, `extractExample()`, `extractExamples()`, `extractDefault()`
+  - `extractSchemaConstraints()` for 11 constraint types (enum, min/max, patterns, etc.)
+  - `extractParameterMetadata()` orchestrator function
+- Created type definitions using `Pick` patterns (zero custom types):
+  - `SchemaConstraints` = `Pick<SchemaObject, 11 constraint fields>`
+  - Parameter metadata uses `Pick<ParameterObject, ...> & Pick<SchemaObject, ...>`
+- Implemented proper type guards (`hasExampleValue`) for type narrowing
+- Refactored for complexity reduction:
+  - `extractSchemaConstraints()` to data-driven approach
+  - `extractExample()` into pure helper functions
+  - Split `load-openapi-document.ts` into 8 single-responsibility files
+- Architecture improvements:
+  - ESM-only build (removed bundling, preserved directory structure)
+  - Fixed `__dirname` usage for ESM (`import.meta.url`)
+  - Templates correctly placed in `dist/rendering/templates/`
+  - Updated ADR-018 with "Critical Architectural Boundary"
+- Updated 7 snapshot tests with correct Session 6 metadata
+
+**Key Deliverables:**
+
+- Enhanced parameter metadata in endpoint definitions
+- All 11 OpenAPI schema constraints extracted
+- Example extraction with proper OpenAPI 3.1 priority
+- Default values preserved in metadata
+- Pure function architecture with full test coverage
+
+**Quality Gates:** ✅ All passing (607 unit, 157 snapshot, 145 characterization tests)
+
+**Files Modified:**
+
+- `lib/src/endpoints/parameter-metadata.ts` - Pure extraction functions
+- `lib/src/endpoints/definition.types.ts` - Library-only types
+- `lib/src/endpoints/operation/process-parameter.ts` - Integration
+- `lib/src/shared/load-openapi-document/` - Refactored into 8 files
+- `lib/tsup.config.ts` - ESM-only, no bundling
+- `docs/architectural_decision_records/ADR-018-openapi-3.1-first-architecture.md`
+
+---
 
 ### Session 5 - MCP Protocol Research & Analysis (COMPLETE)
 

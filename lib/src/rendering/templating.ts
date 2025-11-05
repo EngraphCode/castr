@@ -1,4 +1,4 @@
-import path from 'node:path';
+import path, { dirname, resolve } from 'node:path';
 import fs from 'node:fs/promises';
 
 import { pick } from 'lodash-es';
@@ -9,6 +9,9 @@ import type { getHandlebars } from './handlebars.js';
 import { logger } from '../shared/utils/logger.js';
 import { maybePretty } from '../shared/maybe-pretty.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
+import { fileURLToPath } from 'node:url';
+
+const templatesDir = resolve(dirname(fileURLToPath(import.meta.url)), './templates');
 
 /**
  * Generate index file for grouped output
@@ -29,10 +32,7 @@ export async function generateIndexFile(
     ]),
   );
 
-  const indexSource = await fs.readFile(
-    path.join(__dirname, './templates/grouped-index.hbs'),
-    'utf8',
-  );
+  const indexSource = await fs.readFile(path.join(templatesDir, 'grouped-index.hbs'), 'utf8');
   const indexTemplate = hbs.compile(indexSource);
   const indexOutput = await maybePretty(indexTemplate({ groupNames }), prettierConfig);
 
@@ -60,10 +60,7 @@ export async function generateCommonFile(
     return null;
   }
 
-  const commonSource = await fs.readFile(
-    path.join(__dirname, './templates/grouped-common.hbs'),
-    'utf8',
-  );
+  const commonSource = await fs.readFile(path.join(templatesDir, 'grouped-common.hbs'), 'utf8');
   const commonTemplate = hbs.compile(commonSource);
   const commonOutput = await maybePretty(
     commonTemplate({

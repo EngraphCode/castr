@@ -1,21 +1,23 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { writeFileSync, rmSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { execSync } from 'node:child_process';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Characterisation Tests: CLI Behavior
  *
- * These tests validate that the CLI correctly drives the system.
+ * These tests validate that the BUILT CLI correctly drives the system.
  * They test ACTUAL behavior by running the CLI and verifying generated output.
  *
  * CRITICAL: These tests exercise the PRODUCT CODE through the CLI interface.
  * They must survive the architectural rewrite (Phases 1-3).
  */
 
-const CLI_PATH = join(__dirname, '../../dist/cli.js');
-const TEST_OUTPUT_DIR = join(__dirname, 'test-output-cli');
+const thisDir = dirname(fileURLToPath(import.meta.url));
+const CLI_PATH = join(thisDir, '../../dist/cli/index.js');
+const TEST_OUTPUT_DIR = join(thisDir, 'test-output-cli');
 
 /**
  * Helper: Create a test OpenAPI spec file

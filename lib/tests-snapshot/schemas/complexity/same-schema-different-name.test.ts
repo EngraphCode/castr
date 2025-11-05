@@ -65,11 +65,26 @@ test('same-schema-different-name', async () => {
                 "method": "post",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "aaa",
+                                "bbb",
+                                "ccc",
+                            ],
+                        },
                         "name": "differentNameSameSchema",
                         "schema": "differentNameSameSchema",
                         "type": "Query",
                     },
                     {
+                        "constraints": {
+                            "enum": [
+                                "aaa",
+                                "bbb",
+                                "ccc",
+                            ],
+                        },
+                        "default": "aaa",
                         "name": "anotherDifferentNameWithSlightlyDifferentSchema",
                         "schema": "anotherDifferentNameWithSlightlyDifferentSchema",
                         "type": "Query",
@@ -84,6 +99,13 @@ test('same-schema-different-name', async () => {
                 "method": "put",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "aaa",
+                                "bbb",
+                                "ccc",
+                            ],
+                        },
                         "name": "sameSchemaDifferentName",
                         "schema": "differentNameSameSchema",
                         "type": "Query",

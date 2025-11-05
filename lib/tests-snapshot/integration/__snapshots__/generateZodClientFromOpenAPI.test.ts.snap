@@ -2696,6 +2696,10 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of pet to return",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -2716,16 +2720,22 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "post",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of pet that needs to be updated",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
                 },
                 {
+                    "description": "Name of pet that needs to be updated",
                     "name": "name",
                     "schema": "z.string().optional()",
                     "type": "Query",
                 },
                 {
+                    "description": "Status of pet that needs to be updated",
                     "name": "status",
                     "schema": "z.string().optional()",
                     "type": "Query",
@@ -2752,6 +2762,10 @@ exports[`getZodClientTemplateContext 1`] = `
                     "type": "Header",
                 },
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "Pet id to delete",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -2766,11 +2780,16 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "post",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of pet to update",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
                 },
                 {
+                    "description": "Additional Metadata",
                     "name": "additionalMetadata",
                     "schema": "z.string().optional()",
                     "type": "Query",
@@ -2792,6 +2811,15 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "constraints": {
+                        "enum": [
+                            "available",
+                            "pending",
+                            "sold",
+                        ],
+                    },
+                    "default": "available",
+                    "description": "Status values that need to be considered for filter",
                     "name": "status",
                     "schema": "z.enum(["available", "pending", "sold"]).optional().default("available")",
                     "type": "Query",
@@ -2813,6 +2841,7 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "description": "Tags to filter by",
                     "name": "tags",
                     "schema": "z.array(z.string()).optional()",
                     "type": "Query",
@@ -2870,6 +2899,10 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of order that needs to be fetched",
                     "name": "orderId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -2896,6 +2929,10 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "delete",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of the order that needs to be deleted",
                     "name": "orderId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -2937,6 +2974,7 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "description": "The name that needs to be fetched. Use user1 for testing.",
                     "name": "username",
                     "schema": "z.string()",
                     "type": "Path",
@@ -2958,6 +2996,7 @@ exports[`getZodClientTemplateContext 1`] = `
                     "type": "Body",
                 },
                 {
+                    "description": "name that need to be deleted",
                     "name": "username",
                     "schema": "z.string()",
                     "type": "Path",
@@ -2984,6 +3023,7 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "delete",
             "parameters": [
                 {
+                    "description": "The name that needs to be deleted",
                     "name": "username",
                     "schema": "z.string()",
                     "type": "Path",
@@ -3020,11 +3060,13 @@ exports[`getZodClientTemplateContext 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "description": "The user name for login",
                     "name": "username",
                     "schema": "z.string().optional()",
                     "type": "Query",
                 },
                 {
+                    "description": "The password for login in clear text",
                     "name": "password",
                     "schema": "z.string().optional()",
                     "type": "Query",
@@ -3136,6 +3178,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of pet to return",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -3156,16 +3202,22 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "post",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of pet that needs to be updated",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
                 },
                 {
+                    "description": "Name of pet that needs to be updated",
                     "name": "name",
                     "schema": "z.string().optional()",
                     "type": "Query",
                 },
                 {
+                    "description": "Status of pet that needs to be updated",
                     "name": "status",
                     "schema": "z.string().optional()",
                     "type": "Query",
@@ -3192,6 +3244,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     "type": "Header",
                 },
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "Pet id to delete",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -3206,11 +3262,16 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "post",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of pet to update",
                     "name": "petId",
                     "schema": "z.number().int()",
                     "type": "Path",
                 },
                 {
+                    "description": "Additional Metadata",
                     "name": "additionalMetadata",
                     "schema": "z.string().optional()",
                     "type": "Query",
@@ -3232,6 +3293,15 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "constraints": {
+                        "enum": [
+                            "available",
+                            "pending",
+                            "sold",
+                        ],
+                    },
+                    "default": "available",
+                    "description": "Status values that need to be considered for filter",
                     "name": "status",
                     "schema": "z.enum(["available", "pending", "sold"]).optional().default("available")",
                     "type": "Query",
@@ -3253,6 +3323,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "description": "Tags to filter by",
                     "name": "tags",
                     "schema": "z.array(z.string()).readonly().optional()",
                     "type": "Query",
@@ -3310,6 +3381,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of order that needs to be fetched",
                     "name": "orderId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -3336,6 +3411,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "delete",
             "parameters": [
                 {
+                    "constraints": {
+                        "format": "int64",
+                    },
+                    "description": "ID of the order that needs to be deleted",
                     "name": "orderId",
                     "schema": "z.number().int()",
                     "type": "Path",
@@ -3377,6 +3456,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "description": "The name that needs to be fetched. Use user1 for testing.",
                     "name": "username",
                     "schema": "z.string()",
                     "type": "Path",
@@ -3398,6 +3478,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     "type": "Body",
                 },
                 {
+                    "description": "name that need to be deleted",
                     "name": "username",
                     "schema": "z.string()",
                     "type": "Path",
@@ -3424,6 +3505,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "delete",
             "parameters": [
                 {
+                    "description": "The name that needs to be deleted",
                     "name": "username",
                     "schema": "z.string()",
                     "type": "Path",
@@ -3460,11 +3542,13 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "method": "get",
             "parameters": [
                 {
+                    "description": "The user name for login",
                     "name": "username",
                     "schema": "z.string().optional()",
                     "type": "Query",
                 },
                 {
+                    "description": "The password for login in clear text",
                     "name": "password",
                     "schema": "z.string().optional()",
                     "type": "Query",

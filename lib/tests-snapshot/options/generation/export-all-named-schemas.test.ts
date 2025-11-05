@@ -106,6 +106,13 @@ test('export-all-named-schemas', async () => {
                 "method": "get",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "xxx",
+                                "yyy",
+                                "zzz",
+                            ],
+                        },
                         "name": "sameSchemaSameName",
                         "schema": "sameSchemaSameName",
                         "type": "Query",
@@ -120,6 +127,13 @@ test('export-all-named-schemas', async () => {
                 "method": "post",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "ggg",
+                                "hhh",
+                                "iii",
+                            ],
+                        },
                         "name": "schemaNameAlreadyUsed",
                         "schema": "schemaNameAlreadyUsed",
                         "type": "Query",
@@ -134,6 +148,13 @@ test('export-all-named-schemas', async () => {
                 "method": "put",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "aaa",
+                                "bbb",
+                                "ccc",
+                            ],
+                        },
                         "name": "schemaNameAlreadyUsed",
                         "schema": "schemaNameAlreadyUsed__2",
                         "type": "Query",
@@ -148,11 +169,25 @@ test('export-all-named-schemas', async () => {
                 "method": "delete",
                 "parameters": [
                     {
+                        "constraints": {
+                            "enum": [
+                                "xxx",
+                                "yyy",
+                                "zzz",
+                            ],
+                        },
                         "name": "sameSchemaDifferentName",
                         "schema": "sameSchemaDifferentName",
                         "type": "Query",
                     },
                     {
+                        "constraints": {
+                            "enum": [
+                                "xxx",
+                                "yyy",
+                                "zzz",
+                            ],
+                        },
                         "name": "sameSchemaSameName",
                         "schema": "sameSchemaSameName",
                         "type": "Query",

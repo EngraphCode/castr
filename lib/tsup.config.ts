@@ -4,23 +4,22 @@ import { join } from 'node:path';
 
 export default defineConfig({
   // All code: ESM only (library + CLI)
-  entry: {
-    'openapi-zod-validation': 'src/index.ts',
-    cli: 'src/cli/index.ts',
-  },
+  // Use glob pattern to preserve directory structure when bundle: false
+  entry: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/__tests__/**'],
   format: ['esm'],
   platform: 'node',
-  target: 'node20',
+  target: 'es2024',
   dts: true,
   sourcemap: true,
   clean: true,
+  bundle: false,
   splitting: false,
-  treeshake: true,
+  treeshake: false, // Can't tree-shake when bundle: false
   outDir: 'dist',
   onSuccess: async () => {
-    // Copy templates to dist/templates (keeping same structure as src)
+    // Copy templates to dist/rendering/templates (preserving directory structure)
     const templatesDir = 'src/rendering/templates';
-    const distTemplatesDir = 'dist/templates';
+    const distTemplatesDir = 'dist/rendering/templates';
 
     mkdirSync(distTemplatesDir, { recursive: true });
 
@@ -31,7 +30,7 @@ export default defineConfig({
       }
     }
     console.log(
-      `✅ Copied ${files.filter((f) => f.endsWith('.hbs')).length} template files to ${distTemplatesDir}`,
+      `✅ Copied ${files.filter((f: string) => f.endsWith('.hbs')).length} template files to ${distTemplatesDir}`,
     );
   },
 });
