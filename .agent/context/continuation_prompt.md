@@ -27,10 +27,10 @@
 
 ### Where We Are
 
-**Phase:** Phase 2 Part 1 **COMPLETE** ✅  
+**Phase:** Phase 2 Part 2 - Session 5 **COMPLETE** ✅  
 **Branch:** `feat/rewrite`  
-**Status:** Production-ready codebase, all quality gates green  
-**Next:** Phase 2 Part 2 - MCP Enhancements (Session 5)
+**Status:** MCP research complete, analysis documents ready for implementation  
+**Next:** Session 6 - SDK Enhancements
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -62,6 +62,23 @@
    - Added 15+ inline architectural comments
    - Updated all documentation to reflect Scalar pipeline
    - Verified production-ready state
+
+### What Was Accomplished (Phase 2 Part 2)
+
+**Session 5 completed successfully (November 2025):**
+
+5. **Session 5: MCP Protocol Research & Analysis**
+   - Created 3 comprehensive analysis documents (~15,000 words total):
+     - `MCP_PROTOCOL_ANALYSIS.md` - MCP 2025-06-18 spec, tool structure, constraints
+     - `JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 conversion rules
+     - `SECURITY_EXTRACTION.md` - Upstream API authentication extraction strategy
+   - Researched MCP specification version 2025-06-18 from official repository
+   - Confirmed JSON Schema Draft 07 requirement (not Draft 2020-12)
+   - Established parallel conversion strategy (OpenAPI → Zod + JSON Schema)
+   - Clarified two-layer authentication architecture (MCP protocol vs upstream API)
+   - Determined MCP SDK not needed for static artifact generation
+   - Documented tool structure constraints (type: "object" requirement, snake_case naming)
+   - **Result:** Complete implementation roadmap ready for Sessions 6-7
 
 ---
 
@@ -138,6 +155,75 @@ function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDocument {
 ```
 
 **Trade-off:** Need to handle Scalar's `Record<string, unknown>` boundary with type guards, but this is explicit and localized.
+
+---
+
+### MCP Tool Generation Strategy
+
+**Decision:** Generate MCP tools with direct OpenAPI → JSON Schema Draft 07 conversion (parallel to Zod conversion)
+
+**Context:** MCP (Model Context Protocol) 2025-06-18 requires JSON Schema Draft 07 for tool `inputSchema` and `outputSchema` fields.
+
+**Rationale:**
+1. **No information loss** - Direct conversion preserves all OpenAPI schema information
+2. **Optimal for each format** - Zod for TypeScript runtime validation, JSON Schema for MCP protocol
+3. **Full Draft 07 control** - Can ensure compliance with MCP requirements
+4. **No conversion dependency** - Eliminates `zod-to-json-schema` with its limitations
+5. **Clean separation** - Each converter optimized for its specific target format
+
+**Rejected alternative:** OpenAPI → Zod → JSON Schema conversion
+- **Why rejected:** 
+  - Zod `.transform()` and `.refine()` don't translate to JSON Schema
+  - Information loss in conversion process
+  - Limited support for complex Zod features
+  - Additional dependency with its own edge cases
+
+**Implementation approach:**
+```
+OpenAPI Schema
+    ↓
+    ├──→ Zod Converter ──→ Zod schemas (for TypeScript/runtime)
+    │
+    └──→ JSON Schema Converter ──→ JSON Schema Draft 07 (for MCP tools)
+```
+
+**Key constraints enforced:**
+- MCP tools require `type: "object"` at root of inputSchema/outputSchema
+- Tool naming convention: operationId → snake_case (e.g., `getUser` → `get_user`)
+- ToolAnnotations generated from HTTP methods (GET → `readOnlyHint: true`, etc.)
+- JSON Schema must conform to Draft 07 (no Draft 2020-12 features)
+
+**See:** `.agent/analysis/JSON_SCHEMA_CONVERSION.md` for complete conversion rules
+
+---
+
+### Security Architecture for MCP
+
+**Decision:** Extract upstream API authentication metadata for documentation, not tool-level security
+
+**Context:** Two-layer authentication model in MCP ecosystem:
+- **Layer 1:** MCP client ↔ MCP server (OAuth 2.1, defined by MCP spec)
+- **Layer 2:** MCP server ↔ Upstream API (defined by OpenAPI spec)
+
+**Critical distinction:**
+- OpenAPI security schemes describe how the **MCP server** authenticates to the **upstream API**
+- This is separate from MCP protocol security (OAuth 2.1 between client and server)
+- MCP tools themselves don't carry security metadata
+
+**What we extract:**
+- `components.securitySchemes` (OAuth 2.0, Bearer, API Keys, etc.)
+- Operation-level `security` requirements
+- OAuth scopes per operation
+- Token/key placement details
+
+**What we generate:**
+- Comprehensive documentation comments in tool definitions
+- Server implementation configuration guides
+- TypeScript configuration types for credentials
+
+**Purpose:** Inform MCP server implementers what credentials they need to configure for calling upstream APIs
+
+**See:** `.agent/analysis/SECURITY_EXTRACTION.md` for complete extraction algorithm
 
 ---
 
@@ -409,24 +495,35 @@ export function isNullableType(schema: SchemaObject): boolean {
 
 ## What's Next (Phase 2 Part 2)
 
-### Session 5: MCP Investigation
+### Session 6: SDK Enhancements
 
-**Goal:** Research and document MCP requirements
+**Goal:** Enrich SDK-facing artifacts with metadata from Scalar pipeline
 
-**Deliverables:**
-1. `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - MCP tool structure, JSON Schema constraints, security, errors
-2. `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - zod-to-json-schema config, edge cases, testing
-3. `.agent/analysis/SECURITY_EXTRACTION.md` - Security metadata extraction algorithm
+**Focus:**
+- Enhanced parameter metadata (descriptions, examples, constraints)
+- Rate-limiting/constraint metadata extraction
+- Maintain backward compatibility with existing templates
 
-**Estimated effort:** 3-4 hours
+**Prerequisites:** Session 5 complete ✅
 
-**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 5 for detailed plan
+**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 6 for detailed plan
 
 ### Subsequent Sessions
 
-- **Session 6:** SDK Enhancements (parameter metadata, rate limiting)
-- **Session 7:** MCP Tool Enhancements (JSON Schema export, security metadata, type guards)
+- **Session 7:** MCP Tool Enhancements
+  - Implement OpenAPI → JSON Schema Draft 07 converter
+  - Generate MCP tool definitions (inputSchema/outputSchema)
+  - Extract and document upstream API security metadata
+  - Add tool naming converter (operationId → snake_case)
+  - Generate ToolAnnotations from HTTP methods
+  - Add type guards and validation helpers
+  
 - **Session 8:** Documentation & Final Validation
+  - Update README with MCP sections
+  - Add CLI flags for MCP generation
+  - Create comprehensive examples
+  - Validate against MCP 2025-06-18 schema
+  - Run full quality gates
 
 ---
 
@@ -436,7 +533,7 @@ export function isNullableType(schema: SchemaObject): boolean {
 
 If you're continuing in the same chat:
 ```
-Continue with Session 5 as planned. Follow TDD and RULES.md standards.
+Continue with Session 6 as planned. Follow TDD and RULES.md standards.
 ```
 
 ### Cold Start (Fresh Chat)
@@ -499,6 +596,11 @@ After completing a session:
 - `.agent/architecture/OPENAPI-3.1-MIGRATION.md` - Type system migration guide
 - `docs/DEFAULT-RESPONSE-BEHAVIOR.md` - Default response handling
 
+**Analysis Documentation:**
+- `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - MCP 2025-06-18 specification analysis
+- `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 rules
+- `.agent/analysis/SECURITY_EXTRACTION.md` - Upstream API authentication extraction
+
 **Standards & Guidelines:**
 - `.agent/RULES.md` - Coding standards (TDD, TSDoc, type safety) - **MANDATORY**
 - `.agent/DEFINITION_OF_DONE.md` - Completion criteria
@@ -515,5 +617,5 @@ After completing a session:
 ---
 
 **Last Updated:** November 5, 2025  
-**Status:** Phase 2 Part 1 Complete, Part 2 Ready  
+**Status:** Phase 2 Part 2 Session 5 Complete, Session 6 Ready  
 **Quality Gates:** ALL GREEN ✅

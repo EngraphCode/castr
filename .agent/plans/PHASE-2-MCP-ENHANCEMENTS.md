@@ -432,17 +432,77 @@ Implements MCP-specific features assuming Part 1 is complete:
 
 > **Note:** Task 5.2.1 ("OpenAPI Spec Validation, Fail-Fast") is delivered by Part 1. Sessions below build on the Scalar pipeline output.
 
-#### **Session 5 – MCP Investigation**
+#### **Session 5 – MCP Investigation** ✅
 
-- **Focus:** Produce the analysis artefacts that drive implementation.
-- **Acceptance Criteria**
-  - `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` documents MCP tool structure, JSON Schema constraints, security expectations, and error format guidance.
-  - `.agent/analysis/JSON_SCHEMA_CONVERSION.md` records the `zod-to-json-schema` configuration, edge cases, and testing strategy.
-  - `.agent/analysis/SECURITY_EXTRACTION.md` outlines the security metadata extraction algorithm (operation-level + component-level resolution).
-- **Validation Steps**
-  1. Peer-check documents for completeness against MCP spec (link references).
-  2. `pnpm lint` (markdown/docs) if applicable.
-  3. Summarise key decisions in commit message or plan notes.
+**Status:** COMPLETE (November 5, 2025)
+
+- **Focus:** Research MCP protocol and produce analysis artifacts that drive implementation.
+- **Deliverables:**
+  - ✅ `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - MCP tool structure, JSON Schema Draft 07 requirements, annotations, error formats
+  - ✅ `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 conversion rules (direct, not via Zod)
+  - ✅ `.agent/analysis/SECURITY_EXTRACTION.md` - Upstream API authentication extraction (two-layer auth model)
+
+**Key Research Findings:**
+
+1. **MCP Version:** Targeting specification version 2025-06-18
+   - Reference repo checked out at `.agent/reference/reference-repos/modelcontextprotocol`
+   - Schema location: `schema/2025-06-18/schema.json`
+
+2. **JSON Schema Version:** Draft 07 (NOT Draft 2020-12)
+   - MCP schema declares: `"$schema": "http://json-schema.org/draft-07/schema#"`
+   - All generated schemas must conform to Draft 07
+   - No Draft 2020-12 features available
+
+3. **Conversion Strategy:** OpenAPI → (Zod + JSON Schema) in parallel
+   - **Rejected:** OpenAPI → Zod → JSON Schema (via `zod-to-json-schema`)
+   - **Chosen:** Direct OpenAPI → JSON Schema conversion
+   - **Rationale:** 
+     - No information loss (Zod transforms don't translate)
+     - Each converter optimized for its target format
+     - Full control over Draft 07 output
+     - No external conversion dependency
+
+4. **Security Architecture:** Two-layer authentication model
+   - **Layer 1 (MCP Protocol):** OAuth 2.1 between MCP client and server
+     - NOT in OpenAPI specs
+     - Defined by MCP specification
+     - Not our concern for code generation
+   - **Layer 2 (Upstream API):** Authentication defined in OpenAPI specs
+     - OAuth, Bearer, API keys for upstream API
+     - THIS is what we extract and document
+     - For MCP server implementers to configure backend auth
+
+5. **MCP SDK:** Not needed for this project
+   - SDK is for runtime (server/client implementation)
+   - We generate static artifacts (schemas, types, tools)
+   - No overlap with code generation functionality
+   - We only need schema definitions from spec repo
+
+6. **Tool Structure Constraints:**
+   - `inputSchema` and `outputSchema` MUST have `"type": "object"` at root
+   - Tool names conventionally use `snake_case`
+   - Annotations are untrusted hints (not security guarantees)
+   - JSON-RPC 2.0 error codes for protocol errors
+   - `isError: true` in results for execution errors
+
+**Architecture Decisions Captured:**
+
+- Create `lib/src/conversion/json-schema/` directory (parallel to `typescript/` and `zod/`)
+- Tool naming: `operationId` → `snake_case` (e.g., `getUser` → `get_user`)
+- Annotations mapping from HTTP methods:
+  - GET/HEAD/OPTIONS → `readOnlyHint: true`
+  - DELETE → `destructiveHint: true`
+  - PUT → `idempotentHint: true`
+- Security extraction focuses on upstream API auth documentation
+- Generated tools include comprehensive authentication guidance comments
+
+**Validation:**
+- ✅ All three analysis documents created with comprehensive details
+- ✅ MCP spec version confirmed (2025-06-18)
+- ✅ JSON Schema version confirmed (Draft 07)
+- ✅ Security architecture clarified (two-layer model)
+- ✅ Conversion strategy decided (parallel, not Zod → JSON Schema)
+- ✅ Ready for Session 6 implementation
 
 #### **Session 6 – SDK Enhancements**
 
@@ -460,14 +520,19 @@ Implements MCP-specific features assuming Part 1 is complete:
 
 - **Focus:** Deliver MCP-ready outputs (JSON Schema, security metadata, predicates, error formatting).
 - **Acceptance Criteria**
-  - Zod → JSON Schema conversion integrated via `zod-to-json-schema` (refs inlined, conforms to MCP requirements).
-  - Security metadata (auth schemes, scopes) attached to MCP tool definitions.
-  - Type predicates / assertion helpers (`isMcpToolInput`, `assertMcpToolInput`, `assertMcpToolOutput`) implemented with tests.
-  - Enhanced error formatting converts Zod/JSON Schema failures into MCP-friendly messages with context.
+  - OpenAPI → JSON Schema Draft 07 conversion implemented (direct, not via Zod)
+  - MCP tool definitions generated with `inputSchema`/`outputSchema` (type: "object" constraint enforced)
+  - Security metadata (upstream API auth schemes, scopes) documented in tool comments
+  - Tool naming conversion (operationId → snake_case)
+  - Annotations generated from HTTP methods (readOnly, destructive, idempotent hints)
+  - Type predicates / assertion helpers (`isMcpTool`, `isMcpToolInput`, `isMcpToolOutput`) implemented with tests
+  - Enhanced error formatting converts validation failures into MCP-friendly messages with context
 - **Validation Steps**
   1. `pnpm test -- run src/mcp/*.test.ts`
-  2. `pnpm test --filter characterisation -- mcp`
-  3. Validate JSON Schema output using a Draft 2020-12 validator (document command/output in commit notes).
+  2. `pnpm test -- run src/conversion/json-schema/*.test.ts`
+  3. `pnpm test --filter characterisation -- mcp`
+  4. Validate JSON Schema output using JSON Schema Draft 07 validator (AJV with Draft 07 meta-schema)
+  5. Verify generated tools conform to MCP 2025-06-18 schema
 
 #### **Session 8 – Documentation & Final Validation**
 

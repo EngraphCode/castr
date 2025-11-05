@@ -11,10 +11,12 @@
 This system uses three complementary documents to enable seamless context switching between AI chat sessions:
 
 ### 1. **`HANDOFF.md`** - Orientation Hub 🗺️
+
 **Audience:** Humans + new AI contexts  
 **Purpose:** Big-picture orientation and document navigation
 
 **Contains:**
+
 - Where we are (phase/session status - high level)
 - Document map (where to find everything)
 - Quick start (how to begin work)
@@ -24,12 +26,14 @@ This system uses three complementary documents to enable seamless context switch
 - Success criteria (how to know you're done)
 
 **Update when:**
+
 - After MILESTONES (phase/major session complete)
 - Quality gates change significantly
 - Document structure changes
 - Key deliverables are completed
 
 **Characteristics:**
+
 - Scannable orientation guide
 - Welcoming and navigational
 - Visual/high-level architecture
@@ -43,10 +47,12 @@ This system uses three complementary documents to enable seamless context switch
 ---
 
 ### 2. **`continuation_prompt.md`** - AI Rehydration 🤖
+
 **Audience:** AI assistants in fresh contexts (not for human reading)  
 **Purpose:** Complete AI context restoration with full history
 
 **Contains:**
+
 - Complete prompt structure ("I'm working on...")
 - Full historical record (all sessions with details)
 - Architectural decisions with "why" and trade-offs
@@ -58,6 +64,7 @@ This system uses three complementary documents to enable seamless context switch
 - Anti-patterns to avoid
 
 **Update when:**
+
 - After EACH SESSION (add to historical record)
 - Architectural decisions are made
 - New patterns emerge
@@ -65,6 +72,7 @@ This system uses three complementary documents to enable seamless context switch
 - Trade-offs are accepted
 
 **Characteristics:**
+
 - Comprehensive and complete
 - Optimized for AI consumption
 - Formal, procedural tone
@@ -78,10 +86,12 @@ This system uses three complementary documents to enable seamless context switch
 ---
 
 ### 3. **`context.md`** - Living Status Log 📝
+
 **Audience:** Everyone (humans + AI) for quick status check  
 **Purpose:** Session-by-session changelog + current status
 
 **Contains:**
+
 - Right now (current task, immediate next actions)
 - Current blockers (if any)
 - Active decisions (under consideration)
@@ -90,6 +100,7 @@ This system uses three complementary documents to enable seamless context switch
 - Recent wins (last 2-4 sessions)
 
 **Update when:**
+
 - After EVERY WORK SESSION (daily/hourly)
 - Quality gates are run
 - Blockers emerge or resolve
@@ -97,6 +108,7 @@ This system uses three complementary documents to enable seamless context switch
 - Session transitions occur
 
 **Characteristics:**
+
 - Factual, chronological changelog
 - Focus on RECENT activity (not full history)
 - Quick status check
@@ -111,17 +123,17 @@ This system uses three complementary documents to enable seamless context switch
 
 ## 📊 Clear Separation Matrix
 
-| Aspect            | `context.md`        | `HANDOFF.md`         | `continuation_prompt.md` |
-| ----------------- | ------------------- | -------------------- | ------------------------ |
-| **Purpose**       | Session changelog   | Orientation hub      | AI rehydration           |
-| **Audience**      | Everyone            | Humans + AI          | AI only                  |
-| **Update After**  | Every session       | Milestones           | Each session             |
-| **Length**        | ~150-200 lines      | ~250-300 lines       | Unlimited                |
-| **Focus**         | Recent changes      | Big picture          | Complete history         |
-| **Time to Read**  | 2-3 min             | 5-10 min             | Reference only           |
-| **Optimization**  | Recency             | Scannability         | Completeness             |
-| **Question**      | "What changed?"     | "Where am I?"        | "What's everything?"     |
-| **Tone**          | Factual log         | Welcoming guide      | Formal brief             |
+| Aspect           | `context.md`      | `HANDOFF.md`    | `continuation_prompt.md` |
+| ---------------- | ----------------- | --------------- | ------------------------ |
+| **Purpose**      | Session changelog | Orientation hub | AI rehydration           |
+| **Audience**     | Everyone          | Humans + AI     | AI only                  |
+| **Update After** | Every session     | Milestones      | Each session             |
+| **Length**       | ~150-200 lines    | ~250-300 lines  | Unlimited                |
+| **Focus**        | Recent changes    | Big picture     | Complete history         |
+| **Time to Read** | 2-3 min           | 5-10 min        | Reference only           |
+| **Optimization** | Recency           | Scannability    | Completeness             |
+| **Question**     | "What changed?"   | "Where am I?"   | "What's everything?"     |
+| **Tone**         | Factual log       | Welcoming guide | Formal brief             |
 
 ---
 
@@ -153,6 +165,7 @@ Follow all standards in @RULES.md including TDD, type safety, and comprehensive 
 ```
 
 **What happens:**
+
 - AI reads `HANDOFF.md` → gets big picture orientation (5 min)
 - AI reads `continuation_prompt.md` → understands full technical context with history
 - AI reads `context.md` → knows recent changes and current status
@@ -174,6 +187,7 @@ I'm back. What were we working on, and what's the status?
 ```
 
 **What happens:**
+
 - AI uses existing chat history (context still loaded)
 - AI can reference recent work directly
 - No need to reload documentation
@@ -216,6 +230,7 @@ Excellent work. Please update the documentation for handoff:
 ```
 
 **What happens:**
+
 - `context.md` updated with session changelog (updated EVERY session)
 - `continuation_prompt.md` updated with new insights (updated EVERY session)
 - Plan document marked complete with results
@@ -249,6 +264,7 @@ I want to add [NEW FEATURE]. Please:
 ```
 
 **What happens:**
+
 - AI reads `HANDOFF.md` → understands current project state and deliverables
 - AI reads `continuation_prompt.md` → understands existing architecture and patterns
 - AI reads `context.md` → knows recent work and current status
@@ -301,6 +317,7 @@ I want to add [NEW FEATURE]. Please:
 ```
 
 **Update every session:**
+
 - ✅ `context.md` - Add to session log, update "Right Now", update quality gates
 - ✅ `continuation_prompt.md` - Add new insights, patterns, or decisions (if any)
 - ⚠️ Plan document - Mark tasks complete as you go
@@ -346,6 +363,7 @@ I want to add [NEW FEATURE]. Please:
 ```
 
 **Update after each session:**
+
 - ✅ `context.md` - Session log entry, next actions, blockers
 - ✅ `continuation_prompt.md` - Architectural insights, decisions, patterns
 - ✅ Plan document - Mark session complete with validation results
@@ -386,6 +404,7 @@ I want to add [NEW FEATURE]. Please:
 ```
 
 **Update at milestones:**
+
 - ✅ `context.md` - Updated as usual
 - ✅ `continuation_prompt.md` - Updated as usual
 - ✅ Plan document - Updated as usual
@@ -418,26 +437,31 @@ I want to add [NEW FEATURE]. Please:
 ## 🎯 Design Principles
 
 ### 1. **Separation of Concerns**
+
 - Each document has ONE clear purpose
 - No overlap or duplication
 - Easy to find information
 
 ### 2. **Optimized for Different Audiences**
+
 - `continuation_prompt.md` → AI technical context
 - `context.md` → Quick human + AI status
 - Plan docs → Structured session planning
 
 ### 3. **Progressive Disclosure**
+
 - Start with `context.md` (quick scan)
 - Read `continuation_prompt.md` (full context)
 - Reference plan docs (detailed work breakdown)
 
 ### 4. **Living Documentation**
+
 - Always up-to-date
 - Updated as work progresses
 - Reflects current reality, not aspirations
 
 ### 5. **AI-First Design**
+
 - Optimized for AI consumption and comprehension
 - Clear structure and formatting
 - Explicit context and relationships
@@ -470,18 +494,23 @@ Before completing a session, verify:
 ## 🔍 Troubleshooting
 
 ### AI seems confused about current state
+
 **Solution:** Ensure `context.md` is up-to-date and accurately reflects status
 
 ### AI doesn't understand architectural decisions
+
 **Solution:** Check `continuation_prompt.md` has sufficient background and "why" behind decisions
 
 ### AI creates poor implementation plans
+
 **Solution:** Review plan document format and ensure RULES.md is referenced
 
 ### Documentation feels stale
+
 **Solution:** Update after each significant work session, not just at boundaries
 
 ### Too much duplication between docs
+
 **Solution:** Review separation of concerns - each doc should have ONE clear purpose
 
 ---
@@ -500,6 +529,7 @@ Before completing a session, verify:
 ### When to Archive
 
 Archive documents when:
+
 - Phase is complete and unlikely to be referenced
 - Document is superseded by newer version
 - Historical reference only (not active work)
@@ -509,6 +539,7 @@ Archive location: `.agent/context/archive/`
 ### When to Create New Plan Document
 
 Create new plan document when:
+
 - Starting a new major phase
 - Significant scope change requires new structure
 - Previous plan document is complete
@@ -520,4 +551,3 @@ Naming: `PHASE-N-FEATURE-NAME.md`
 **Last Updated:** November 5, 2025  
 **System Version:** 1.0  
 **Status:** Active
-

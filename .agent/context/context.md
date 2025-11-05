@@ -13,31 +13,34 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 5 (Ready to Start)  
-**Active Task:** MCP Protocol Analysis  
+**Current Session:** Phase 2 Part 2 - Session 5 **COMPLETE** ✅  
+**Next Session:** Session 6 (SDK Enhancements)  
 **Branch:** `feat/rewrite`
 
-### Immediate Next Actions
+### Session 5 Summary (Just Completed)
 
-1. **Create `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md`**
-   - Document MCP tool structure
-   - Define JSON Schema constraints
-   - Outline security expectations
-   - Define error format guidance
+**Deliverables Created:**
 
-2. **Create `.agent/analysis/JSON_SCHEMA_CONVERSION.md`**
-   - Record `zod-to-json-schema` configuration
-   - Document edge cases
-   - Define testing strategy
+1. ✅ `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - Comprehensive MCP 2025-06-18 spec analysis
+2. ✅ `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 conversion rules
+3. ✅ `.agent/analysis/SECURITY_EXTRACTION.md` - Upstream API authentication extraction strategy
 
-3. **Create `.agent/analysis/SECURITY_EXTRACTION.md`**
-   - Outline security metadata extraction algorithm
-   - Document operation-level resolution
-   - Document component-level resolution
+**Key Research Findings:**
 
-**Estimated Effort:** 3-4 hours (research and documentation)
+- MCP uses JSON Schema **Draft 07** (not Draft 2020-12)
+- Target MCP version: **2025-06-18**
+- **Parallel conversion strategy:** OpenAPI → (Zod + JSON Schema) directly, not via `zod-to-json-schema`
+- **Two-layer auth model:** MCP protocol (OAuth 2.1) + Upstream API (OpenAPI security)
+- MCP SDK not needed (runtime vs static generation)
+- Tool constraints: `type: "object"` required, snake_case naming
 
-**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 5 for detailed acceptance criteria
+**Actual Effort:** ~4 hours (research + 3 comprehensive analysis documents)
+
+### Immediate Next Actions (Session 6)
+
+**Focus:** Enrich SDK-facing artifacts with metadata from Scalar pipeline
+
+**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 6 for detailed acceptance criteria
 
 ---
 
@@ -69,12 +72,48 @@
 
 ## 📊 Session Log (Recent → Oldest)
 
+### Session 5 - MCP Protocol Research & Analysis (COMPLETE)
+
+**Date:** November 5, 2025  
+**Duration:** ~4 hours  
+**Status:** ✅ Complete
+
+**What Changed:**
+
+- Created 3 comprehensive analysis documents (~15,000 words total):
+  - `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - MCP 2025-06-18 specification analysis
+  - `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - OpenAPI → JSON Schema Draft 07 conversion rules
+  - `.agent/analysis/SECURITY_EXTRACTION.md` - Upstream API authentication extraction strategy
+- Researched MCP specification version 2025-06-18 from official repo
+- Confirmed JSON Schema Draft 07 requirement (not Draft 2020-12)
+- Established parallel conversion strategy (OpenAPI → Zod + JSON Schema)
+- Clarified two-layer authentication architecture (MCP protocol vs upstream API)
+- Determined MCP SDK not needed for static artifact generation
+- Documented tool structure constraints and naming conventions
+- Updated PHASE-2-MCP-ENHANCEMENTS.md Session 5 with findings
+
+**Key Decisions:**
+
+- **JSON Schema Version:** Draft 07 (per MCP schema declaration)
+- **Conversion Strategy:** Direct OpenAPI → JSON Schema (not via Zod)
+- **Security Scope:** Extract upstream API auth metadata for documentation
+- **Tool Naming:** operationId → snake_case convention
+- **Annotations:** Map HTTP methods to behavior hints
+
+**Quality Gates:** N/A (research/documentation session)
+
+**Deliverables:** 3 analysis documents ready for Session 6-7 implementation
+
+---
+
 ### Session 4 - Documentation & Final Cleanup (COMPLETE)
+
 **Date:** November 5, 2025  
 **Duration:** ~3 hours  
 **Status:** ✅ Complete
 
 **What Changed:**
+
 - Created 3 comprehensive architecture documents (~5,000 words total):
   - `.agent/architecture/SCALAR-PIPELINE.md` (Scalar pipeline architecture)
   - `.agent/architecture/OPENAPI-3.1-MIGRATION.md` (Type system migration)
@@ -95,11 +134,13 @@
 ---
 
 ### Session 3 - Complete Technical Resolution (COMPLETE)
+
 **Date:** November 4, 2025  
 **Duration:** ~7 hours  
 **Status:** ✅ Complete
 
 **What Changed:**
+
 - Created `isNullableType()` helper function (resolved 16 type errors)
 - Modernized ALL test fixtures from OpenAPI 3.0 to 3.1 syntax (resolved 47 errors)
 - Fixed Vitest v4 mock typing issues (resolved 16 errors)
@@ -114,11 +155,13 @@
 ---
 
 ### Session 2 - Loading & Bundling (COMPLETE)
+
 **Date:** November 3-4, 2025  
 **Duration:** ~6 hours  
 **Status:** ✅ Complete
 
 **What Changed:**
+
 - Implemented `loadOpenApiDocument` using `@scalar/json-magic/bundle`
 - Integrated `@scalar/openapi-parser/upgrade` for automatic 3.1 normalization
 - Established intersection type strategy (`OpenAPIV3_1.Document & OpenAPIObject`)
@@ -134,11 +177,13 @@
 ---
 
 ### Session 1 - Foundation & Guardrails (COMPLETE)
+
 **Date:** November 2-3, 2025  
 **Duration:** ~4 hours  
 **Status:** ✅ Complete
 
 **What Changed:**
+
 - Migrated type system from `openapi3-ts/oas30` to `openapi3-ts/oas31`
 - Removed legacy dependencies:
   - `@apidevtools/swagger-parser` removed from package.json
