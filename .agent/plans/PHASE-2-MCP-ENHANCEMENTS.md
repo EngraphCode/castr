@@ -1,10 +1,10 @@
 # MCP Enhancement Plan – Phase 2 (Restructured)
 
-**Date:** October 25, 2025  
+**Date:** October 25, 2025 (Plan Created), Last Updated: November 5, 2025  
 **Phase:** 2 (split into Part 1 and Part 2)  
-**Status:** Planning  
-**Estimated Duration:** 4–6 weeks (Part 1 ~2 weeks, Part 2 ~2–3 weeks)  
-**Prerequisites:** Architecture Rewrite Phases 0–3 complete, All quality gates green, Zod v4 update complete ✅
+**Status:** Part 1 Complete ✅, Part 2 In Progress (Session 6 of 9 Complete)  
+**Estimated Duration:** 6–8 weeks total (Part 1: 2 weeks ✅, Part 2: 3–4 weeks ⏳)  
+**Prerequisites:** Architecture Rewrite Phases 0–3 complete ✅, All quality gates green ✅, Zod v4 update complete ✅
 
 ---
 
@@ -436,17 +436,16 @@ Implements MCP-specific features assuming Part 1 is complete:
 3. Surface security metadata
 4. Provide type guards, error formatting, and documentation for MCP consumers
 
-### Handlebars-Compatible MCP Outputs
+### Part 2 Restructure: 9 Sessions Total
 
-While the long-term plan (Phase 3) replaces Handlebars, we can already unlock several MCP deliverables with the existing template system. The following work stays within the current architecture and must land in Phase 2 Part 2:
+Phase 2 Part 2 has been expanded from 4 sessions to 9 sessions to properly scope the MCP work:
 
-| Deliverable | Description | Acceptance Criteria |
-| --- | --- | --- |
-| MCP tool manifest (JSON) | Generate a JSON manifest describing each tool (name, summary, path/method, parameter defs, primary success response) using the existing template context. | - New CLI flag `--emit-mcp-manifest <path>`<br>- Manifest derives solely from prepared context (no additional schema pass)<br>- Snapshot coverage added in characterisation tests |
-| Handlebars partial for tool schemas | Extend templates to emit Zod-based input/output validators for each tool (mirroring current `endpoints` array) so downstream MCP scaffolding can consume the data immediately. | - Partial compiled into `schemas-with-metadata` output when `--with-validation-helpers` is set<br>- Includes request parameter Zod objects per channel and primary response schema map<br>- Tests verify presence for representative fixtures |
-| Tool naming + hints | Provide utility exported from `schemas-with-metadata` bundle that converts `operationId` + `method/path` to the canonical MCP tool name and describes read-only/destructive hints. | - Export `getMcpToolName()` and `getMcpToolHints()` helpers from generated file<br>- Helpers derived from template context (no runtime OpenAPI access)<br>- Unit tests cover GET/DELETE/PUT behaviours |
+- **Sessions 5-6:** Foundation (MCP research + SDK enhancements) ✅
+- **Session 7:** JSON Schema conversion engine (core infrastructure)
+- **Session 8:** MCP tool generation & template integration (Handlebars-compatible outputs)
+- **Session 9:** Type guards, error formatting & documentation (polish + validation)
 
-These additions should minimise rework during the Phase 3 ts-morph migration while delivering immediate value to the MCP toolchain.
+This structure ensures each session has focused, testable deliverables while maintaining compatibility with the existing Handlebars template system before the Phase 3 ts-morph migration.
 
 ### Session Plan (Part 2)
 
@@ -606,36 +605,110 @@ These additions should minimise rework during the Phase 3 ts-morph migration whi
 
 **Estimated Effort:** 6-8 hours (Actual: ~8 hours including architecture improvements)
 
-#### **Session 7 – MCP Tool Enhancements**
+#### **Session 7 – JSON Schema Conversion Engine**
 
-- **Focus:** Deliver MCP-ready outputs (JSON Schema, security metadata, predicates, error formatting).
+- **Focus:** Implement core OpenAPI → JSON Schema Draft 07 conversion and security metadata extraction.
+- **Design Constraint:** Direct conversion (NOT via Zod). Parallel converter alongside `typescript/` and `zod/` directories.
 - **Acceptance Criteria**
-  - OpenAPI → JSON Schema Draft 07 conversion implemented (direct, not via Zod)
-  - MCP tool definitions generated with `inputSchema`/`outputSchema` (type: "object" constraint enforced)
-  - Security metadata (upstream API auth schemes, scopes) documented in tool comments
-  - Tool naming conversion (operationId → snake_case)
-  - Annotations generated from HTTP methods (readOnly, destructive, idempotent hints)
-  - Type predicates / assertion helpers (`isMcpTool`, `isMcpToolInput`, `isMcpToolOutput`) implemented with tests
-  - Enhanced error formatting converts validation failures into MCP-friendly messages with context
+  - OpenAPI → JSON Schema Draft 07 conversion implemented in `lib/src/conversion/json-schema/`
+  - Core converters for primitives, objects, arrays, composition (allOf/anyOf/oneOf)
+  - Reference resolution ($ref handling) with proper Draft 07 structure
+  - Security metadata extraction from OpenAPI security schemes:
+    - Extract auth types (OAuth, Bearer, API Key, etc.)
+    - Extract scopes and requirements per operation
+    - Map to upstream API authentication model (Layer 2 per Session 5 analysis)
+  - Constraint mapping (min/max, patterns, formats) from OpenAPI to Draft 07
+  - Unit tests for all converters (TDD approach)
+  - Integration tests for complex schemas (nested objects, compositions, references)
+- **Out of Scope:** Tool generation, templates, CLI flags (Session 8)
 - **Validation Steps**
-  1. `pnpm test -- run src/mcp/*.test.ts`
-  2. `pnpm test -- run src/conversion/json-schema/*.test.ts`
-  3. `pnpm test --filter characterisation -- mcp`
-  4. Validate JSON Schema output using JSON Schema Draft 07 validator (AJV with Draft 07 meta-schema)
-  5. Verify generated tools conform to MCP 2025-06-18 schema
+  1. `pnpm test -- run src/conversion/json-schema/*.test.ts` → All unit tests passing
+  2. Validate output against JSON Schema Draft 07 meta-schema using AJV
+  3. Manual verification: Convert petstore.yaml schemas and validate structure
+  4. No regression in existing Zod/TypeScript conversion (parallel, not replacement)
 
-#### **Session 8 – Documentation & Final Validation**
+#### **Session 8 – MCP Tool Generation & Template Integration**
 
-- **Focus:** Update outward-facing docs and ensure everything ships cleanly.
+- **Focus:** Generate MCP-compliant tool definitions and integrate with Handlebars templates.
+- **Design Constraint:** Work within existing template system (Handlebars) - Phase 3 will migrate to ts-morph.
 - **Acceptance Criteria**
-  - README/CLI documentation expanded with MCP sections, CLI flags, SDK & MCP examples.
-  - TypeDoc (or documented API surface) reflects new exports and helpers.
-  - Release notes / changelog entry summarises Phase 2 deliverables.
-  - Full quality gate passes from a clean tree.
+  - **MCP Tool Definitions:**
+    - Generate tool definitions with `inputSchema`/`outputSchema` using Session 7's JSON Schema converter
+    - Enforce `"type": "object"` constraint at root level (per MCP spec)
+    - Tool naming: convert `operationId` to `snake_case` (e.g., `getUser` → `get_user`)
+    - Fallback naming: `{method}_{path_segments}` when operationId missing
+    - Annotations from HTTP methods:
+      - GET/HEAD/OPTIONS → `readOnlyHint: true`
+      - DELETE → `destructiveHint: true`
+      - PUT → `idempotentHint: true`
+      - POST → no hints (varies by operation)
+  - **MCP Tool Manifest (JSON):**
+    - New CLI flag: `--emit-mcp-manifest <path>`
+    - Generate JSON manifest with tool metadata (name, description, inputSchema, outputSchema)
+    - Include security requirements per tool (from Session 7 security extraction)
+    - Derive from template context (no additional schema pass)
+    - Snapshot coverage in characterization tests
+  - **Handlebars Template Extensions:**
+    - New partial: `mcp-tool-schemas.hbs` for tool schema emission
+    - Extend `schemas-with-metadata` template with MCP tool array
+    - Export helper functions from generated code:
+      - `getMcpToolName(operationId, method, path): string` - canonical MCP name
+      - `getMcpToolHints(method): McpToolHints` - behavior hints object
+    - Helpers use only template context data (no runtime OpenAPI access)
+  - **Template Context Enhancements:**
+    - Add `mcpTools` array to template context with tool definitions
+    - Include JSON Schema representations for parameters and responses
+    - Preserve existing context structure (backward compatible)
+- **Out of Scope:** Type predicates, error formatting, documentation (Session 9)
+- **Validation Steps**
+  1. `pnpm test -- run src/context/template-context.test.ts` → MCP tools in context
+  2. `pnpm test -- run src/rendering/templates/*.test.ts` → Template rendering with MCP data
+  3. `pnpm character -- mcp` → MCP manifest generation tests
+  4. Validate generated manifest against MCP 2025-06-18 schema structure
+  5. Manual CLI test: `pnpm cli -- petstore.yaml --emit-mcp-manifest tools.json`
+  6. Verify helper functions work in generated code (getMcpToolName, getMcpToolHints)
+
+#### **Session 9 – Type Guards, Error Formatting & Documentation**
+
+- **Focus:** Add runtime validation helpers, improve error messages, and complete documentation.
+- **Acceptance Criteria**
+  - **Type Predicates & Assertions:**
+    - Implement `isMcpTool(value): value is McpTool` type guard
+    - Implement `isMcpToolInput(value, toolName): boolean` validator
+    - Implement `isMcpToolOutput(value, toolName): boolean` validator
+    - Export from `lib/src/validation/mcp-type-guards.ts`
+    - Unit tests for all type guards with positive/negative cases
+  - **Enhanced Error Formatting:**
+    - Convert Zod validation errors to MCP-friendly error messages
+    - Include JSON path context (e.g., `inputSchema.properties.name`)
+    - Map to JSON-RPC 2.0 error codes where appropriate
+    - Preserve original error for debugging
+    - Export `formatMcpValidationError(error): McpErrorResponse` helper
+  - **Documentation Updates:**
+    - README: Add MCP section with overview, quick start, examples
+    - CLI docs: Document `--emit-mcp-manifest` flag with examples
+    - TypeDoc: Document all MCP-related exports (converters, helpers, types)
+    - Create `docs/MCP_INTEGRATION_GUIDE.md` with:
+      - MCP server implementation guide
+      - Tool manifest format explanation
+      - Security configuration guidance (upstream API auth)
+      - Example: Petstore API → MCP tools
+    - Release notes: Summarize Phase 2 Part 2 deliverables
+  - **Quality Gates:**
+    - All tests passing (unit + snapshot + characterization)
+    - 0 type errors, 0 lint errors
+    - Generated MCP tools conform to spec
+    - CLI smoke tests with representative fixtures
 - **Validation Steps**
   1. `pnpm format && pnpm lint && pnpm build && pnpm type-check && pnpm test -- --run`
-  2. Manual CLI smoke tests covering new flags (`--with-type-predicates`, `--validate-mcp-readiness`, etc.) with results recorded.
-  3. Optional: run `pnpm docs`/TypeDoc build to ensure documentation compiles.
+  2. `pnpm character` → All characterization tests passing
+  3. Manual CLI tests:
+     - Generate MCP manifest from petstore.yaml
+     - Generate MCP manifest from multi-file spec
+     - Verify helper functions in generated code
+  4. Validate all generated manifests against MCP 2025-06-18 schema
+  5. Documentation review: Verify all examples work, links valid, coverage complete
+  6. Optional: `pnpm docs` (TypeDoc build) succeeds
 
 ---
 
@@ -653,18 +726,43 @@ These additions should minimise rework during the Phase 3 ts-morph migration whi
 
 ## Deliverable Summary
 
-| Part   | Focus                           | Key Deliverables                                                                        |
-| ------ | ------------------------------- | --------------------------------------------------------------------------------------- |
-| Part 1 | Scalar Pipeline Re-architecture | New loader/validator, `PreparedOpenApiDocument`, removal of SwaggerParser, updated docs |
-| Part 2 | MCP Enhancements                | JSON Schema export, security metadata, MCP readiness checks, TypeDoc/README updates     |
+| Part   | Sessions | Focus                               | Key Deliverables                                                                                                           |
+| ------ | -------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Part 1 | 1-4 ✅   | Scalar Pipeline Re-architecture     | New loader/validator, `BundledOpenApiDocument`, removal of SwaggerParser, OpenAPI 3.1-first architecture, updated docs     |
+| Part 2 | 5-6 ✅   | Foundation (Research + SDK)         | MCP analysis documents, parameter metadata extraction, schema constraints, pure function architecture                      |
+| Part 2 | 7 ⏳     | JSON Schema Conversion              | OpenAPI → JSON Schema Draft 07 converter, security metadata extraction, parallel to Zod/TypeScript converters              |
+| Part 2 | 8 ⏳     | MCP Tool Generation & Templates     | MCP tool definitions, `--emit-mcp-manifest` CLI flag, Handlebars template extensions, helper functions (naming/hints)      |
+| Part 2 | 9 ⏳     | Type Guards, Errors & Documentation | Type predicates, MCP error formatting, comprehensive documentation (README, guides, TypeDoc), quality gates, release notes |
 
 ---
 
-## Next Steps
+## Current Status & Next Steps
 
-1. Confirm prerequisites are complete (Architecture Rewrite ✓, Zod v4 ✓).
-2. Start Phase 2 Part 1 milestones in order (foundation → integration).
-3. Once Part 1 is merged, kick off Part 2 tasks using the investigation documents as guides.
-4. Update roadmap/changelog to reflect two-part delivery.
+**Completed:**
 
-All contributors should reference this document, `.agent/RULES.md`, and `.agent/plans/01-CURRENT-IMPLEMENTATION.md` to ensure consistency, especially around TDD and TSDoc expectations.
+- ✅ Phase 2 Part 1 (Sessions 1-4): Scalar pipeline re-architecture complete
+- ✅ Session 5: MCP protocol research and analysis documents
+- ✅ Session 6: SDK enhancements with parameter metadata extraction
+
+**In Progress:**
+
+- ⏳ Session 7: JSON Schema conversion engine (next immediate task)
+
+**Upcoming:**
+
+- Session 8: MCP tool generation & template integration
+- Session 9: Type guards, error formatting & documentation
+
+**Next Actions:**
+
+1. Begin Session 7: Implement JSON Schema Draft 07 conversion engine
+2. Follow TDD approach with comprehensive unit tests
+3. Validate output against Draft 07 meta-schema
+4. Extract security metadata for upstream API authentication
+
+**References:**
+
+- `.agent/RULES.md` - Coding standards and quality gates
+- `.agent/analysis/JSON_SCHEMA_CONVERSION.md` - Conversion rules for Session 7
+- `.agent/analysis/SECURITY_EXTRACTION.md` - Security metadata guidance
+- `.agent/analysis/MCP_PROTOCOL_ANALYSIS.md` - MCP spec requirements

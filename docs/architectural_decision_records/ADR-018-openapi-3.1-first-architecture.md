@@ -78,6 +78,7 @@ Downstream code (conversion, templates, etc.)
 **After `loadOpenApiDocument()` returns, ALL downstream code operates exclusively on OpenAPI 3.1 documents with `openapi3-ts/oas31` types.**
 
 This means:
+
 - ❌ **No checks for OpenAPI 3.0 structures** (e.g., `nullable: true`, `exclusiveMinimum: boolean`)
 - ❌ **No conditional logic based on spec version** (always 3.1.x)
 - ❌ **No fallbacks to 3.0 patterns** (e.g., `example` vs `examples`)
