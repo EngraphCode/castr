@@ -8,16 +8,16 @@
 
 ## Session Summary
 
-| # | Session | Intent |
-| --- | --- | --- |
-| 3.1 | IR Schema Foundations | Define the lossless IR structure and align context builders without behavioural drift. |
-| 3.2 | IR Persistence & Validation Harness | Persist IR artefacts and prove the model can reproduce current outputs. |
-| 3.3 | ts-morph Emitter Skeleton | Implement the core emitter utilities and formatting pipeline. |
-| 3.4 | Single-File Output Migration | Port the default template strategy to the emitter using the new IR. |
-| 3.5 | Grouped Output Migration & CLI Parity | Support grouped/file strategies and keep CLI/programmatic APIs aligned. |
-| 3.6 | Handlebars Decommission | Remove legacy templates, resolve CodeMeta debt, and stabilise regressions. |
-| 3.7 | Bidirectional Tooling & Compliance | Implement reverse transforms and schema validation gates. |
-| 3.8 | Documentation & Release Prep | Update docs, ADRs, and final validation prior to release. |
+| #   | Session                               | Intent                                                                                 |
+| --- | ------------------------------------- | -------------------------------------------------------------------------------------- |
+| 3.1 | IR Schema Foundations                 | Define the lossless IR structure and align context builders without behavioural drift. |
+| 3.2 | IR Persistence & Validation Harness   | Persist IR artefacts and prove the model can reproduce current outputs.                |
+| 3.3 | ts-morph Emitter Skeleton             | Implement the core emitter utilities and formatting pipeline.                          |
+| 3.4 | Single-File Output Migration          | Port the default template strategy to the emitter using the new IR.                    |
+| 3.5 | Grouped Output Migration & CLI Parity | Support grouped/file strategies and keep CLI/programmatic APIs aligned.                |
+| 3.6 | Handlebars Decommission               | Remove legacy templates, resolve CodeMeta debt, and stabilise regressions.             |
+| 3.7 | Bidirectional Tooling & Compliance    | Implement reverse transforms and schema validation gates.                              |
+| 3.8 | Documentation & Release Prep          | Update docs, ADRs, and final validation prior to release.                              |
 
 ---
 

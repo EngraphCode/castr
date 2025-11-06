@@ -607,19 +607,27 @@ This structure ensures each session has focused, testable deliverables while mai
 
 #### **Session 7 – JSON Schema Conversion Engine**
 
-- **Focus:** Implement core OpenAPI → JSON Schema Draft 07 conversion and security metadata extraction.
+> **Detailed Plan:** See [`PHASE-2-SESSION-7-JSON-SCHEMA-CONVERSION.md`](./PHASE-2-SESSION-7-JSON-SCHEMA-CONVERSION.md) for goals, acceptance criteria, definition of done, and validation steps.
+
+- **Focus:** Implement core OpenAPI → JSON Schema Draft 07 conversion and **upstream API security metadata extraction (Layer 2)**.
 - **Design Constraint:** Direct conversion (NOT via Zod). Parallel converter alongside `typescript/` and `zod/` directories.
+- **⚠️ Security Scope:** Extract **upstream API authentication** (Layer 2 - from OpenAPI specs), NOT MCP protocol auth (Layer 1 - handled by MCP SDK).
 - **Acceptance Criteria**
   - OpenAPI → JSON Schema Draft 07 conversion implemented in `lib/src/conversion/json-schema/`
   - Core converters for primitives, objects, arrays, composition (allOf/anyOf/oneOf)
-  - Reference resolution ($ref handling) with proper Draft 07 structure
-  - Security metadata extraction from OpenAPI security schemes:
-    - Extract auth types (OAuth, Bearer, API Key, etc.)
+  - Reference resolution ($ref handling) with proper Draft 07 structure:
+    - Rewrite `#/components/schemas/*` → `#/definitions/*`
+    - Preserve circular refs (MCP handles at runtime)
+  - **Upstream API security metadata extraction** (Layer 2):
+    - Extract auth types (OAuth, Bearer, API Key, etc.) from OpenAPI `securitySchemes`
     - Extract scopes and requirements per operation
-    - Map to upstream API authentication model (Layer 2 per Session 5 analysis)
+    - Use library types only (`SecuritySchemeObject`, `SecurityRequirementObject`)
+    - TSDoc MUST warn: "Layer 2 upstream API, NOT Layer 1 MCP protocol"
   - Constraint mapping (min/max, patterns, formats) from OpenAPI to Draft 07
+  - Type arrays for nullable: `type: ['string', 'null']` → `anyOf: [{type: 'string'}, {type: 'null'}]`
   - Unit tests for all converters (TDD approach)
   - Integration tests for complex schemas (nested objects, compositions, references)
+  - AJV Draft 07 validation harness
 - **Out of Scope:** Tool generation, templates, CLI flags (Session 8)
 - **Validation Steps**
   1. `pnpm test -- run src/conversion/json-schema/*.test.ts` → All unit tests passing

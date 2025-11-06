@@ -8,14 +8,14 @@
 
 ## Session Summary
 
-| # | Session | Intent |
-| --- | --- | --- |
-| 4.1 | Writer Framework & Manifest | Introduce modular writers, manifest orchestration, and CLI/API parity. |
-| 4.2 | OpenAPI Fetch Type Suite | Emit `paths/operations/components/webhooks` types compatible with openapi-fetch. |
-| 4.3 | Constants & Guards Expansion | Generate catalogues, enums, metadata, and parameter schema maps. |
-| 4.4 | Runtime Schema & Zod Catalogue | Produce decorated schema modules, Zod outputs, and JSON Schema companions. |
-| 4.5 | Client Wrappers & MCP Tooling | Deliver client helpers plus MCP summaries, samples, and naming utilities. |
-| 4.6 | Validation, Documentation & Release Prep | Consolidate testing, documentation, and release readiness. |
+| #   | Session                                  | Intent                                                                           |
+| --- | ---------------------------------------- | -------------------------------------------------------------------------------- |
+| 4.1 | Writer Framework & Manifest              | Introduce modular writers, manifest orchestration, and CLI/API parity.           |
+| 4.2 | OpenAPI Fetch Type Suite                 | Emit `paths/operations/components/webhooks` types compatible with openapi-fetch. |
+| 4.3 | Constants & Guards Expansion             | Generate catalogues, enums, metadata, and parameter schema maps.                 |
+| 4.4 | Runtime Schema & Zod Catalogue           | Produce decorated schema modules, Zod outputs, and JSON Schema companions.       |
+| 4.5 | Client Wrappers & MCP Tooling            | Deliver client helpers plus MCP summaries, samples, and naming utilities.        |
+| 4.6 | Validation, Documentation & Release Prep | Consolidate testing, documentation, and release readiness.                       |
 
 ---
 
