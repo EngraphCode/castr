@@ -1,0 +1,130 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Characterisation: JSON Schema conversion & security extraction > converts CreateUserInput schema from multi-auth example 1`] = `
+{
+    "additionalProperties": false,
+    "properties": {
+        "age": {
+            "anyOf": [
+                {
+                    "minimum": 0,
+                    "type": "integer",
+                },
+                {
+                    "type": "null",
+                },
+            ],
+            "description": "Optional age in years",
+        },
+        "email": {
+            "format": "email",
+            "type": "string",
+        },
+        "username": {
+            "anyOf": [
+                {
+                    "minLength": 3,
+                    "type": "string",
+                },
+                {
+                    "type": "null",
+                },
+            ],
+            "description": "Unique handle for the user",
+        },
+    },
+    "required": [
+        "username",
+        "email",
+    ],
+    "type": "object",
+}
+`;
+
+exports[`Characterisation: JSON Schema conversion & security extraction > extracts Layer 2 security metadata for createUser and listUsers operations 1`] = `
+{
+    "createUserSecurity": {
+        "isPublic": false,
+        "requirementSets": [
+            {
+                "schemes": [
+                    {
+                        "scheme": {
+                            "description": "OAuth 2.0 Authorization Code flow",
+                            "flows": {
+                                "authorizationCode": {
+                                    "authorizationUrl": "https://auth.example.com/authorize",
+                                    "scopes": {
+                                        "users:read": "View user records",
+                                        "users:write": "Create or update users",
+                                    },
+                                    "tokenUrl": "https://auth.example.com/token",
+                                },
+                            },
+                            "type": "oauth2",
+                        },
+                        "schemeName": "OAuth2",
+                        "scopes": [
+                            "users:write",
+                        ],
+                    },
+                ],
+            },
+            {
+                "schemes": [
+                    {
+                        "scheme": {
+                            "description": "Static API key header",
+                            "in": "header",
+                            "name": "X-API-Key",
+                            "type": "apiKey",
+                        },
+                        "schemeName": "ApiKey",
+                        "scopes": [],
+                    },
+                ],
+            },
+            {
+                "schemes": [
+                    {
+                        "scheme": {
+                            "description": "OAuth 2.0 Authorization Code flow",
+                            "flows": {
+                                "authorizationCode": {
+                                    "authorizationUrl": "https://auth.example.com/authorize",
+                                    "scopes": {
+                                        "users:read": "View user records",
+                                        "users:write": "Create or update users",
+                                    },
+                                    "tokenUrl": "https://auth.example.com/token",
+                                },
+                            },
+                            "type": "oauth2",
+                        },
+                        "schemeName": "OAuth2",
+                        "scopes": [
+                            "users:write",
+                        ],
+                    },
+                    {
+                        "scheme": {
+                            "description": "Static API key header",
+                            "in": "header",
+                            "name": "X-API-Key",
+                            "type": "apiKey",
+                        },
+                        "schemeName": "ApiKey",
+                        "scopes": [],
+                    },
+                ],
+            },
+        ],
+        "usesGlobalSecurity": false,
+    },
+    "listUsersSecurity": {
+        "isPublic": true,
+        "requirementSets": [],
+        "usesGlobalSecurity": false,
+    },
+}
+`;

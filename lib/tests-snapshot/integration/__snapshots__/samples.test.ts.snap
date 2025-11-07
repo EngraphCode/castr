@@ -2,7 +2,97 @@
 
 exports[`openapi-examples > results by file 1`] = `
 {
-    "v3.0/api-with-examples.": "import { z } from "zod";
+    "custom/v3.1/multi-auth": "import { z } from "zod";
+
+export const CreateUserInput = z.object({
+  username: z.union([z.string(), z.unknown()]),
+  email: z.string().email(),
+  age: z.union([z.number(), z.unknown()]).optional(),
+});
+
+export const endpoints = [
+  {
+    method: "get" as const,
+    path: "/users",
+    request: {},
+    responses: {
+      200: {
+        description: "Success",
+        schema: z.array(CreateUserInput),
+      },
+    },
+  },
+  {
+    method: "post" as const,
+    path: "/users",
+    request: { body: CreateUserInput },
+    responses: {
+      200: {
+        description: "Success",
+        schema: z.object({ id: z.string().uuid() }).partial().passthrough(),
+      },
+    },
+  },
+] as const;
+
+/**
+ * MCP (Model Context Protocol) compatible tool definitions.
+ *
+ * Each endpoint is transformed into an MCP tool with:
+ * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+ * - \`description\`: Human-readable description of the tool's purpose
+ * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+ * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ *
+ * MCP tools use a consolidated input structure (all params in one object) rather than
+ * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+ * The output schema focuses on the "happy path" (primary success response). Error handling
+ * is typically done at the protocol level.
+ *
+ * @see https://anthropic.com/mcp - Model Context Protocol specification
+ * @example
+ * \`\`\`typescript
+ * import { mcpTools } from "./api";
+ *
+ * // AI assistant discovers and validates tool usage
+ * const tool = mcpTools.find(t => t.name === "getUserById");
+ * const input = tool.inputSchema.parse({
+ *   path: { userId: "123" },
+ *   query: { include: "profile" }
+ * });
+ * \`\`\`
+ */
+export const mcpTools = endpoints.map((endpoint) => {
+  // Build consolidated params object from all request parameter types
+  // MCP requires a single inputSchema, not separated path/query/headers/body
+  const params: Record<string, z.ZodTypeAny> = {};
+  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+  if (endpoint.request?.queryParams)
+    params.query = endpoint.request.queryParams;
+  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+  if (endpoint.request?.body) params.body = endpoint.request.body;
+
+  return {
+    // Use operationId for the canonical name, with fallback to generated name
+    name:
+      endpoint.operationId ||
+      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+    // Provide description for AI context
+    description:
+      endpoint.description ||
+      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+    // Consolidated input schema (path, query, headers, body all nested)
+    inputSchema:
+      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+    // Primary success response (200 or 201), fallback to z.unknown() for safety
+    outputSchema:
+      endpoint.responses[200]?.schema ||
+      endpoint.responses[201]?.schema ||
+      z.unknown(),
+  };
+}) as const;
+",
+    "v3.0/api-with-examples": "import { z } from "zod";
 
 export const endpoints = [
   {
@@ -86,7 +176,7 @@ export const mcpTools = endpoints.map((endpoint) => {
   };
 }) as const;
 ",
-    "v3.0/callback-example.": "import { z } from "zod";
+    "v3.0/callback-example": "import { z } from "zod";
 
 export const endpoints = [
   {
@@ -162,7 +252,7 @@ export const mcpTools = endpoints.map((endpoint) => {
   };
 }) as const;
 ",
-    "v3.0/link-example.": "import { z } from "zod";
+    "v3.0/link-example": "import { z } from "zod";
 
 export const user = z
   .object({ username: z.string(), uuid: z.string() })
@@ -349,7 +439,118 @@ export const mcpTools = endpoints.map((endpoint) => {
   };
 }) as const;
 ",
-    "v3.0/petstore-expanded.": "import { z } from "zod";
+    "v3.0/petstore": "import { z } from "zod";
+
+export const Pet = z
+  .object({
+    id: z.number().int(),
+    name: z.string(),
+    tag: z.string().optional(),
+  })
+  .passthrough();
+export const Pets = z.array(Pet);
+export const Error = z
+  .object({ code: z.number().int(), message: z.string() })
+  .passthrough();
+
+export const endpoints = [
+  {
+    method: "get" as const,
+    path: "/pets",
+    request: {
+      queryParams: z
+        .object({ limit: z.number().int().lte(100).optional() })
+        .optional(),
+    },
+    responses: {
+      200: {
+        description: "Success",
+        schema: z.array(Pet).max(100),
+      },
+    },
+  },
+  {
+    method: "post" as const,
+    path: "/pets",
+    request: { body: Pet },
+    responses: {
+      200: {
+        description: "Success",
+        schema: z.void(),
+      },
+    },
+  },
+  {
+    method: "get" as const,
+    path: "/pets/:petId",
+    request: { pathParams: z.object({ petId: z.string() }) },
+    responses: {
+      200: {
+        description: "Success",
+        schema: Pet,
+      },
+    },
+  },
+] as const;
+
+/**
+ * MCP (Model Context Protocol) compatible tool definitions.
+ *
+ * Each endpoint is transformed into an MCP tool with:
+ * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
+ * - \`description\`: Human-readable description of the tool's purpose
+ * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
+ * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ *
+ * MCP tools use a consolidated input structure (all params in one object) rather than
+ * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
+ * The output schema focuses on the "happy path" (primary success response). Error handling
+ * is typically done at the protocol level.
+ *
+ * @see https://anthropic.com/mcp - Model Context Protocol specification
+ * @example
+ * \`\`\`typescript
+ * import { mcpTools } from "./api";
+ *
+ * // AI assistant discovers and validates tool usage
+ * const tool = mcpTools.find(t => t.name === "getUserById");
+ * const input = tool.inputSchema.parse({
+ *   path: { userId: "123" },
+ *   query: { include: "profile" }
+ * });
+ * \`\`\`
+ */
+export const mcpTools = endpoints.map((endpoint) => {
+  // Build consolidated params object from all request parameter types
+  // MCP requires a single inputSchema, not separated path/query/headers/body
+  const params: Record<string, z.ZodTypeAny> = {};
+  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
+  if (endpoint.request?.queryParams)
+    params.query = endpoint.request.queryParams;
+  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
+  if (endpoint.request?.body) params.body = endpoint.request.body;
+
+  return {
+    // Use operationId for the canonical name, with fallback to generated name
+    name:
+      endpoint.operationId ||
+      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
+    // Provide description for AI context
+    description:
+      endpoint.description ||
+      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
+    // Consolidated input schema (path, query, headers, body all nested)
+    inputSchema:
+      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
+    // Primary success response (200 or 201), fallback to z.unknown() for safety
+    outputSchema:
+      endpoint.responses[200]?.schema ||
+      endpoint.responses[201]?.schema ||
+      z.unknown(),
+  };
+}) as const;
+",
+    "v3.0/petstore-expanded": "import { z } from "zod";
 
 export const NewPet = z
   .object({ name: z.string(), tag: z.string().optional() })
@@ -484,118 +685,7 @@ export const mcpTools = endpoints.map((endpoint) => {
   };
 }) as const;
 ",
-    "v3.0/petstore.": "import { z } from "zod";
-
-export const Pet = z
-  .object({
-    id: z.number().int(),
-    name: z.string(),
-    tag: z.string().optional(),
-  })
-  .passthrough();
-export const Pets = z.array(Pet);
-export const Error = z
-  .object({ code: z.number().int(), message: z.string() })
-  .passthrough();
-
-export const endpoints = [
-  {
-    method: "get" as const,
-    path: "/pets",
-    request: {
-      queryParams: z
-        .object({ limit: z.number().int().lte(100).optional() })
-        .optional(),
-    },
-    responses: {
-      200: {
-        description: "Success",
-        schema: z.array(Pet).max(100),
-      },
-    },
-  },
-  {
-    method: "post" as const,
-    path: "/pets",
-    request: { body: Pet },
-    responses: {
-      200: {
-        description: "Success",
-        schema: z.void(),
-      },
-    },
-  },
-  {
-    method: "get" as const,
-    path: "/pets/:petId",
-    request: { pathParams: z.object({ petId: z.string() }) },
-    responses: {
-      200: {
-        description: "Success",
-        schema: Pet,
-      },
-    },
-  },
-] as const;
-
-/**
- * MCP (Model Context Protocol) compatible tool definitions.
- *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
- *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
- */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
-",
-    "v3.0/uspto.": "import { z } from "zod";
+    "v3.0/uspto": "import { z } from "zod";
 
 export const dataSetList = z
   .object({
@@ -739,7 +829,7 @@ export const mcpTools = endpoints.map((endpoint) => {
   };
 }) as const;
 ",
-    "v3.1/non-oauth-scopes.": "import { z } from "zod";
+    "v3.1/non-oauth-scopes": "import { z } from "zod";
 
 export const endpoints = [
   {
@@ -812,7 +902,7 @@ export const mcpTools = endpoints.map((endpoint) => {
   };
 }) as const;
 ",
-    "v3.1/tictactoe.": "import { z } from "zod";
+    "v3.1/tictactoe": "import { z } from "zod";
 
 export const mark = z.enum([".", "X", "O"]);
 export const board = z.array(z.array(mark).min(3).max(3));

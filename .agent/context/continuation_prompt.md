@@ -2,7 +2,7 @@
 
 **Purpose:** Comprehensive technical context for AI assistants to resume work on the openapi-zod-client modernization project.  
 **Audience:** AI assistants in fresh chat contexts  
-**Last Updated:** November 5, 2025
+**Last Updated:** November 6, 2025
 
 > **Quick orientation needed?** See `.agent/context/context.md` for current status snapshot.  
 > **Detailed session plans?** See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for implementation roadmap.  
@@ -27,10 +27,15 @@
 
 ### Where We Are
 
-**Phase:** Phase 2 Part 2 - Session 6 **COMPLETE** ✅  
+**Phase:** Phase 2 Part 2 - Session 7 ✅ Complete  
 **Branch:** `feat/rewrite`  
-**Status:** SDK enhancements complete, all quality gates passing  
-**Next:** Session 7 - MCP Tool Enhancements (JSON Schema conversion, security metadata)
+**Status:** JSON Schema converter + security extraction delivered; helper refactor completed (no type assertions), fallback + expanded integrations in place, manual petstore verification captured, documentation refreshed  
+**Next:** Kick off Session 8 (MCP tool generation) — integrate converter outputs into MCP tool context + manifest generation
+
+**Latest Manual Verification (Nov 6, 2025 18:05):**
+
+- `pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"`  
+  Confirms `Pet` conversion rewrites `$ref` targets to `#/definitions/*`, retains `id` requirement, and passes AJV validation for composite + inline schemas.
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -98,6 +103,16 @@
      - Updated ADR-018 with "Critical Architectural Boundary" clarifying OpenAPI 3.1-only downstream
    - Updated 7 snapshot tests with correct metadata (enum constraints, default values)
    - **Result:** 0 type errors, 0 lint errors, all 909 tests passing (607 unit + 157 snapshot + 145 characterization)
+
+7. **Session 7 (Complete): JSON Schema Conversion Engine**
+   - Helper layer fully rewritten: discriminated keyword readers, no `Object.keys`/`Reflect.*`, no type assertions; array/object appliers updated accordingly.
+   - Permissive fallback emits `{}` Draft 07 schema with contextual warning; new tests exercise failure path.
+   - JSON Schema module now augmented with Draft 2020-12 keywords to keep typing strict.
+   - Integration coverage expanded (`multi-auth`, `petstore-expanded`, `tictactoe`); AJV harness tightened.
+   - Samples snapshot suite now merges official + custom fixtures and asserts the multi-auth scenario is present.
+   - Security extraction emits Layer-1 vs Layer-2 warning and throws on unresolved `$ref` schemes.
+   - Manual verification (Nov 6, 2025): `tsx --eval` inspection of `petstore-expanded.yaml` confirmed `Pet` → Draft 07 conversion (`allOf` rewrite, `id` requirement) with AJV validation for both composite and inline schemas.
+   - Documentation + plans updated (`context.md`, `HANDOFF.md`, `PHASE-2-MCP-ENHANCEMENTS.md`) — ready to kick off Session 8 (MCP tool generation).
 
 ---
 

@@ -635,6 +635,8 @@ This structure ensures each session has focused, testable deliverables while mai
   3. Manual verification: Convert petstore.yaml schemas and validate structure
   4. No regression in existing Zod/TypeScript conversion (parallel, not replacement)
 
+> **Current status (Nov 6, 2025):** Session 7 deliverables are complete. Manual petstore verification captured in the session plan (`pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"`), contextual docs refreshed, and the samples snapshot harness now enforces inclusion of the custom multi-auth fixture. Ready to begin Session 8.
+
 #### **Session 8 – MCP Tool Generation & Template Integration**
 
 - **Focus:** Generate MCP-compliant tool definitions and integrate with Handlebars templates.

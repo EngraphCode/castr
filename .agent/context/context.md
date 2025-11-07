@@ -1,6 +1,6 @@
 # Living Context Document
 
-**Last Updated:** November 5, 2025 10:13 PM  
+**Last Updated:** November 6, 2025 6:45 PM  
 **Purpose:** Session changelog + current status  
 **Audience:** Everyone (humans + AI)  
 **Update After:** Every work session
@@ -13,11 +13,33 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 6 **COMPLETE** ✅  
-**Next Session:** Session 7 (MCP Tool Enhancements)  
+**Current Session:** Phase 2 Part 2 - Session 7 (JSON Schema Conversion Engine) ✅ Complete  
+**Next Session:** Session 8 (MCP Tool Generation) – ready to kick off  
 **Branch:** `feat/rewrite`
 
-### Session 6 Summary (Just Completed)
+### Session 7 Snapshot (Complete)
+
+**What’s Done:**
+
+- Keyword helper refactor completed: no `Object.keys`/`Reflect.*`, no type assertions, and discriminated helper results to satisfy Sonar (`keyword-array.ts`, `keyword-object.ts`, `keyword-helpers.ts`).
+- Permissive fallback path implemented in `convertOpenApiSchemaToJsonSchema` with contextual warning + object schema fallback, plus new failure characterization test.
+- Added module augmentation for OpenAPI 3.1 schemas to recognise `$dynamicRef`, `unevaluated*`, and `dependentSchemas`, keeping 2020-12 keywords typed.
+- Expanded integration coverage: petstore-expanded + tictactoe fixtures now exercised through `json-schema.integration.test.ts`; AJV harness tightened to throw on async results.
+- Security extraction hardened (reference guard) and TSDoc now explicitly flags Layer‑1 vs Layer‑2 responsibilities.
+- Sample snapshot harness updated to merge official + custom fixtures, enforce presence of `custom/openapi/v3.1/multi-auth`, and regenerate snapshots.
+- Manual verification (Nov 6, 2025 18:05): Ran `tsx --eval` against `petstore-expanded.yaml` to inspect `Pet` conversion; confirmed `allOf` rewrite to `#/definitions/NewPet`, `id` requirement retention, and AJV validation success for composite + inline schemas.
+- Full quality suite rerun post-refactor (format/build/lint/type-check/test:all/character) — all green.
+
+**Next Steps:**
+
+- Begin Session 8 (MCP Tool Generation): wire converter outputs into MCP tool context, generate manifests, and extend template coverage.
+- Draft detailed Session 8 execution checklist (tests, validation, documentation) before touching code.
+- Maintain full-quality gate cadence after each major change (format → build → lint → type-check → test:all → character).
+
+**Process Reminder:** Carry the Session 7 practice forward—run the full quality suite after targeted checks:  
+`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all && pnpm character`
+
+### Session 6 Summary (Complete)
 
 **Deliverables:**
 
@@ -40,17 +62,17 @@
 
 **Actual Effort:** ~8 hours (implementation + architecture improvements)
 
-### Immediate Next Actions (Session 7)
+### Immediate Next Actions (Session 8)
 
-**Focus:** MCP Tool Enhancements - JSON Schema conversion, security metadata, tool definitions
+**Focus:** MCP Tool Generation – wire JSON Schema + security outputs into MCP tool context, emit manifests, extend template coverage
 
-**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 7 for detailed acceptance criteria
+**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 8 for detailed acceptance criteria
 
 ---
 
 ## ⚠️ Current Blockers
 
-**None** - All quality gates passing ✅
+- None — cleared to start Session 8.
 
 ---
 
@@ -71,21 +93,41 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate                 | Status | Last Check          | Notes                          |
-| -------------------- | ------ | ------------------- | ------------------------------ |
-| `pnpm format`        | ✅     | Nov 5, 2025 10:13pm | All files formatted            |
-| `pnpm build`         | ✅     | Nov 5, 2025 10:13pm | ESM-only build successful      |
-| `pnpm type-check`    | ✅     | Nov 5, 2025 10:13pm | 0 type errors                  |
-| `pnpm lint`          | ✅     | Nov 5, 2025 10:13pm | 0 lint errors                  |
-| `pnpm test`          | ✅     | Nov 5, 2025 10:13pm | 607/607 unit tests passing     |
-| `pnpm test:snapshot` | ✅     | Nov 5, 2025 10:13pm | 157/157 snapshot tests passing |
-| `pnpm character`     | ✅     | Nov 5, 2025 10:13pm | 145/145 char tests passing     |
+| Gate              | Status | Last Check          | Notes                                                                |
+| ----------------- | ------ | ------------------- | -------------------------------------------------------------------- |
+| `pnpm format`     | ✅     | Nov 6, 2025 6:32 pm | Ran Prettier root-wide (no functional diffs)                         |
+| `pnpm build`      | ✅     | Nov 6, 2025 6:34 pm | `tsup` build clean                                                   |
+| `pnpm type-check` | ✅     | Nov 6, 2025 6:36 pm | NodeNext project type-check passes                                   |
+| `pnpm lint`       | ✅     | Nov 6, 2025 6:38 pm | Sonar + ESLint satisfied with new helper structure                   |
+| `pnpm test:all`   | ✅     | Nov 6, 2025 6:41 pm | `vitest run` + `character` + snapshots all green                     |
+| `pnpm character`  | ✅     | Nov 6, 2025 6:41 pm | Triggered via `pnpm test:all`; all characterization suites succeeded |
 
-**Result:** All quality gates passing. Session 6 complete and production-ready.
+**Result:** All quality gates green. Re-run the full suite after any further edits.
 
 ---
 
 ## 📊 Session Log (Recent → Oldest)
+
+### Session 7 - JSON Schema Conversion Engine (COMPLETE)
+
+**Dates:** November 5–6, 2025  
+**Duration:** ~8 hours  
+**Status:** ✅ Complete
+
+**What Changed:**
+
+- Keyword helpers now expose `readSchemaKeyword` and discriminated result structs, eliminating type assertions and satisfying Sonar return-type rules.
+- Array/object keyword appliers rewired to operate on the new discriminated results; additional-items logic handles tuple/boolean cases explicitly.
+- New JSON Schema fallback guard logs context and returns `{}` (Draft 07 permissive object) when helper recursion throws.
+- `openapi-schema-extensions.d.ts` augments `SchemaObject` with Draft 2020-12 keywords so refactored helpers can compile without assertions.
+- Integration coverage now includes `petstore-expanded` & `tictactoe` fixtures; AJV harness tightened to throw if validation unexpectedly returns a Promise.
+- Samples snapshot harness now merges official + custom fixtures and asserts inclusion of the multi-auth scenario; snapshot regenerated.
+- Security extraction now fails fast on unresolved `$ref` schemes and TSDoc calls out Layer 1 vs Layer 2 responsibilities.
+- Manual verification recorded: `tsx --eval` inspection of `petstore-expanded.yaml` confirmed `Pet` conversion (allOf rewrite, `id` requirement) with AJV validation for composite + inline schemas.
+  - Command: `pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"` (see shell history 18:05) — captures `allOf` rewrite and AJV validation results.
+- Documentation system updated (`context.md`, `HANDOFF.md`, `continuation_prompt.md`, `PHASE-2-MCP-ENHANCEMENTS.md`) to capture Session 7 completion and lessons learned.
+
+**Quality Gates:** Full suite rerun after refactor — all green (see table above). Manual inspection noted above supplements automated validation.
 
 ### Session 6 - SDK Enhancements (COMPLETE)
 

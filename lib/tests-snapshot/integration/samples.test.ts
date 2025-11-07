@@ -18,12 +18,23 @@ beforeAll(async () => {
 });
 
 describe('openapi-examples', () => {
-  const examplesPath = path.resolve(pkgRoot, String.raw`./examples/openapi/v3\.*/**/*.yaml`);
-  const list = sync([examplesPath]).filter((file) => !file.includes('webhook-example.yaml'));
+  const standardExamplesPath = path.resolve(
+    pkgRoot,
+    String.raw`./examples/openapi/v3\.*/**/*.yaml`,
+  );
+  const customExamplesPath = path.resolve(
+    pkgRoot,
+    String.raw`./examples/custom/openapi/v3\.*/**/*.yaml`,
+  );
+
+  const list = [...sync([standardExamplesPath]), ...sync([customExamplesPath])]
+    .filter((file) => !file.includes('webhook-example.yaml'))
+    .sort();
 
   const template = getHandlebars().compile(
     readFileSync('./src/rendering/templates/schemas-with-metadata.hbs', 'utf8'),
   );
+  const examplesRoot = path.resolve(pkgRoot, './examples');
   const resultByFile = {} as Record<string, string>;
 
   for (const docPath of list) {
@@ -33,22 +44,39 @@ describe('openapi-examples', () => {
 
       const output = template({ ...data, options: { ...data.options, apiClientName: 'api' } });
       const prettyOutput = await maybePretty(output, prettierConfig);
-      const fileName = docPath.replace('yaml', '');
+      const relativePath = path.relative(examplesRoot, docPath);
+      const key = relativePath.replace(/\.ya?ml$/u, '');
 
       // means the .ts file is valid
       expect(prettyOutput).not.toBe(output);
-      resultByFile[fileName] = prettyOutput;
+      resultByFile[key] = prettyOutput;
     });
   }
 
   test('results by file', () => {
-    expect(
-      Object.fromEntries(
-        Object.entries(resultByFile).map(([key, value]) => [
-          key.split('examples/openapi/').at(1),
-          value,
-        ]),
-      ),
-    ).toMatchSnapshot();
+    const expectedKeys = list.map((docPath) =>
+      path.relative(examplesRoot, docPath).replace(/\.ya?ml$/u, ''),
+    );
+    const actualKeys = Object.keys(resultByFile).sort();
+    const sortedExpectedKeys = [...expectedKeys].sort();
+    expect(actualKeys).toEqual(sortedExpectedKeys);
+    expect(actualKeys).toContain('custom/openapi/v3.1/multi-auth');
+    for (const key of expectedKeys) {
+      expect(resultByFile[key]).toBeDefined();
+    }
+    const toDisplayKey = (key: string): string => {
+      if (key.startsWith('custom/openapi/')) {
+        return key.replace(/^custom\/openapi\//u, 'custom/');
+      }
+      if (key.startsWith('openapi/')) {
+        return key.replace(/^openapi\//u, '');
+      }
+      return key;
+    };
+
+    const snapshotObject = Object.fromEntries(
+      expectedKeys.map((key) => [toDisplayKey(key), resultByFile[key]]),
+    );
+    expect(snapshotObject).toMatchSnapshot();
   });
 });

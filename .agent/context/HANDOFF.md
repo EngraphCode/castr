@@ -1,6 +1,6 @@
 # Project Handoff & Orientation
 
-**Last Updated:** November 5, 2025  
+**Last Updated:** November 6, 2025  
 **Purpose:** Quick orientation hub and document navigation for current work  
 **Read Time:** ~5-10 minutes
 
@@ -8,29 +8,39 @@
 
 ## 📍 Where We Are
 
-**Current Phase:** Phase 2 Part 1 **COMPLETE** ✅ → Phase 2 Part 2 **READY TO START**  
+**Current Phase:** Phase 2 Part 2 – Session 7 ✅ Complete  
 **Active Branch:** `feat/rewrite`  
-**Next Session:** Session 5 (MCP Investigation)  
-**Project Status:** Production-ready codebase, all quality gates green
+**Next Session Tasks:** Kick off Session 8 (MCP Tool Generation) — integrate JSON Schema output into MCP tool context and manifest generation  
+**Project Status:** JSON Schema helper refactor complete, permissive fallback live, multi-auth fixture integrated into samples snapshots, manual petstore verification recorded, quality suite green
 
 ### Phase Progress Overview
 
 ```
 Phase 1: Tooling & Architecture         ✅ Complete
 Phase 2 Part 1: Scalar Pipeline         ✅ Complete (Sessions 1-4)
-Phase 2 Part 2: MCP Enhancements        🟡 Session 5 next
+Phase 2 Part 2: MCP Enhancements        ✅ Session 7 complete
 Phase 3: DX & Quality                   ⚪ Planned
 ```
 
 ### Recent Milestone
 
-**Phase 2 Part 1 Completed** - November 5, 2025
+**Session 7 Progress (November 6, 2025)**
 
-- Replaced SwaggerParser with Scalar pipeline
-- Migrated to OpenAPI 3.1 internal type system
-- Resolved all type/lint errors (0 errors)
-- Comprehensive documentation delivered
-- **Result:** Production-ready with all tests passing
+- Helper layer rewritten without `Object.keys`/`Reflect.*` or type assertions; discriminated keyword readers now power array/object appliers.
+- Permissive fallback implemented with contextual warning and `{}` Draft 07 schema.
+- Integration coverage expanded (multi-auth, petstore-expanded, tictactoe) with hardened AJV harness.
+- Samples snapshot suite now merges official + custom fixtures and asserts presence of the multi-auth scenario.
+- Security extraction emits Layer-1 vs Layer-2 TSDoc warning and rejects `$ref` schemes.
+- Manual verification (Nov 6, 2025): `tsx --eval` inspection of `petstore-expanded.yaml` confirmed `Pet` → Draft 07 conversion (allOf rewrite, `id` requirement) with AJV validation.
+- Documentation system updated (`context.md`, `continuation_prompt.md`, strategic plans) to lock in Session 7 outcomes. Ready to start Session 8.
+
+### Latest Manual Verification (Nov 6, 2025 18:05)
+
+```
+pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"
+```
+
+Confirms converted Draft 07 schema rewrites `$ref` targets to `#/definitions/*`, retains the `id` requirement, and validates cleanly with AJV for both composite (`Pet`) and inline (`NewPet`) schemas.
 
 ---
 
@@ -94,9 +104,9 @@ Follow ALL standards in @RULES.md.
 **For humans:**
 
 1. Read this HANDOFF.md (5 min orientation)
-2. Check context.md for recent changes (2 min)
-3. Review PHASE-2-MCP-ENHANCEMENTS.md for next session details
-4. Verify quality gates: `pnpm check`
+2. Check context.md for current status (Session 7 complete, Session 8 ready to start)
+3. Review PHASE-2-MCP-ENHANCEMENTS.md § Session 8 acceptance criteria before implementation
+4. Draft detailed Session 8 execution plan (tool context + manifest generation) and proceed with TDD
 
 ### Continuing Work (Warm Start)
 

@@ -1,6 +1,6 @@
 # Phase 2 Session 7 – JSON Schema Conversion Engine
 
-**Status:** Not started (Phase 2 Part 2)  
+**Status:** Complete (Phase 2 Part 2)  
 **Estimated Effort:** 8-10 hours (Conversion: 5-6h, Security: 2-3h, Infrastructure: 1-2h)  
 **Parent Plan:** [PHASE-2-MCP-ENHANCEMENTS.md](./PHASE-2-MCP-ENHANCEMENTS.md) § "Session 7 – JSON Schema Conversion Engine"  
 **Standards:** Must comply with [.agent/RULES.md](../RULES.md) (TDD, library types only, zero escape hatches)
@@ -13,6 +13,17 @@
 - **Surface upstream API security metadata (Layer 2)** for MCP server implementers—NOT MCP protocol auth (Layer 1, handled by MCP SDK).
 - Establish validation tooling (unit tests, integration fixtures, AJV Draft 07 assertions) to prove the converter is spec-compliant and production ready.
 - Maintain full alignment with existing architecture: Scalar-normalised OpenAPI 3.1 docs, preserved `$ref` semantics, ESM-only pure-function design.
+
+## Status
+
+- Workstream A (conversion core): ✅ Implementation + tests landed; AJV `Schema` type now used across the converter (custom `Draft07Schema` removed).
+- Workstream B (security metadata): ✅ Extraction utilities and tests complete.
+- Workstream C (validation tooling): ✅ AJV harness, integration + characterisation coverage in place.
+- **Status:** Helper refactor completed (no type assertions, no `Reflect.*`), permissive fallback implemented, security extractor hardened, integration coverage expanded. Snapshot harness now loads both official and custom fixtures and asserts presence of the multi-auth scenario.
+- Validation status: Full quality suite (`format`, `build`, `lint`, `type-check`, `test:all`, `character`) rerun on Nov 6, 2025 — all green.
+- Manual verification (Nov 6, 2025 18:05): Generated Draft 07 output for `Pet` in `petstore-expanded.yaml` via `tsx --eval`; confirmed `allOf` rewrite to `#/definitions/NewPet`, `id` requirement preservation, and AJV acceptance for both `Pet` composite and inline `NewPet`.
+- Documentation updates (Nov 6, 2025 18:20): Recorded outcomes across `context.md`, `HANDOFF.md`, `continuation_prompt.md`, and `PHASE-2-MCP-ENHANCEMENTS.md`.
+- **Process reminder:** Every future change for this session should continue to run the full quality suite after targeted checks; lint rules remain non-negotiable.
 
 ### Parallel Converter Architecture
 
@@ -58,6 +69,72 @@ Follow Session 6's proven approach:
 - Type guards for narrowing (no type assertions)
 - Orchestrator function (`convertSchema()`) delegates to specific converters
 - Comprehensive unit tests with TDD (RED → GREEN → REFACTOR)
+
+### Type System: AJV Library Types (REQUIRED)
+
+**Decision:** Use AJV's `Schema` type throughout, NOT custom `Draft07Schema` interface.
+
+**Current State (Non-Compliant):**
+
+```typescript
+// lib/src/conversion/json-schema/draft07-schema.ts
+export interface Draft07Schema {
+  // ❌ Custom type
+  $ref?: string;
+  type?: string | string[];
+  // ... 30+ specific properties
+}
+```
+
+**Required State (RULES.md Compliant):**
+
+```typescript
+import { type Schema as JsonSchema } from 'ajv';
+
+// Use AJV's library type ✅
+function convertSchema(schema: SchemaObject): JsonSchema {
+  // JsonSchema = SchemaObject | boolean
+  // SchemaObject has [x: string]: any for extensibility
+}
+```
+
+**Rationale (Aligned with RULES.md):**
+
+1. **"Use library types and type guards everywhere. Custom types are forbidden."** (RULES.md line 460)
+   - AJV provides `Schema` and `SchemaObject` types for JSON Schema
+   - Our custom `Draft07Schema` violates this rule
+   - Already using `JsonSchema` in test-utils.ts (inconsistency)
+
+2. **"Defer Type Definitions to Source Libraries"** (RULES.md line 459-587)
+   - AJV is the validation library we're using
+   - AJV's types are maintained by JSON Schema domain experts
+   - Reduces maintenance burden (no type drift)
+
+3. **Type Safety Trade-off Justified:**
+   - AJV's `SchemaObject` has `[x: string]: any` (intentionally loose)
+   - JSON Schema Draft 07 allows additional/vendor-specific properties
+   - The looseness reflects reality: schemas ARE extensible
+   - Runtime validation (via AJV) catches invalid schemas, not compile-time types
+
+4. **Validation Strategy:**
+   - Use type guards for runtime narrowing where needed
+   - AJV validation (already implemented) is the source of truth
+   - Tests verify behavior, not compile-time types
+   - Follows "validate external boundaries" principle (RULES.md line 819)
+
+**Implementation:**
+
+- Replace all 34 usages of `Draft07Schema` with `import { type Schema as JsonSchema } from 'ajv'`
+- Update TSDoc: "Uses AJV's Schema type (intentionally loose with [x: string]: any) to reflect JSON Schema extensibility. Runtime validation via AJV ensures correctness."
+- Delete `lib/src/conversion/json-schema/draft07-schema.ts`
+- Update imports across: `keyword-appliers.ts`, `convert-schema.ts`, `index.ts`
+
+**Why NOT keep custom type:**
+
+- Violates explicit RULES.md mandate: "Custom types are forbidden"
+- Creates maintenance burden (type drift from AJV updates)
+- False sense of compile-time safety (AJV validation is source of truth anyway)
+- Inconsistent with rest of codebase (Session 6 uses library types exclusively)
 
 ### Example Conversion
 
@@ -122,7 +199,7 @@ Use existing fixtures upgraded to 3.1 by Scalar pipeline:
 - `lib/examples/openapi/v3.1/tictactoe.yaml` - Simple 3.1 spec
 - `lib/examples/openapi/v3.0/petstore-expanded.yaml` - Multi-schema (auto-upgraded to 3.1)
 - `lib/examples/openapi/multi-file/main.yaml` - External refs (already resolved)
-- Create new: `lib/examples/openapi/v3.1/multi-auth.yaml` - All security scheme types
+- Create new: `lib/examples/custom/openapi/v3.1/multi-auth.yaml` - All security scheme types
 
 ### Definition of Done
 
@@ -215,7 +292,7 @@ Per-operation security summary structure (using library types only):
 
 - Security utilities live under `lib/src/conversion/json-schema/security/` and export public resolvers via the json-schema barrel.
 - Unit tests cover each scheme type and override scenario (global default, per-operation override, public endpoints).
-- Integration tests run against multi-scheme fixture (`multi-auth.yaml` created in this session).
+- Integration tests run against multi-scheme fixture (`custom/openapi/v3.1/multi-auth.yaml` created in this session).
 - Outputs integrate with existing parameter metadata (no duplication of type definitions).
 - TSDoc for security utilities MUST include:
   - ⚠️ Warning: "Extracts upstream API auth (Layer 2), NOT MCP protocol auth (Layer 1)"
@@ -287,12 +364,13 @@ Per-operation security summary structure (using library types only):
 
 ## Rule Alignment Checklist
 
-- [ ] TDD observed for every change (test RED → implementation → GREEN).
-- [ ] Library types only; no custom replacements for OpenAPI or MCP SDK types.
-- [ ] No type escape hatches or widened types.
-- [ ] Pure functions / deterministic behavior validated.
-- [ ] Comprehensive TSDoc for all exported APIs.
-- [ ] Quality gates (`pnpm format`, `pnpm lint`, `pnpm build`, `pnpm type-check`, `pnpm test:all`, `pnpm character`) passing prior to completion.
+- [x] TDD observed for every change (test RED → implementation → GREEN).
+- [x] Library types only; no custom replacements for OpenAPI or MCP SDK types.
+- [x] **AJV's `Schema` type used throughout (NOT custom `Draft07Schema`)** - 34 usages migrated.
+- [x] No type escape hatches or widened types.
+- [x] Pure functions / deterministic behavior validated.
+- [x] Comprehensive TSDoc for all exported APIs.
+- [x] Quality gates (`pnpm format`, `pnpm lint`, `pnpm build`, `pnpm type-check`, `pnpm test:all`, `pnpm character`) passing prior to completion.
 
 ---
 
@@ -302,3 +380,10 @@ Per-operation security summary structure (using library types only):
 - Validation steps executed with documented results.
 - Documentation and plan updates completed.
 - Session 7 marked complete in parent plan and next actions queued for Session 8.
+
+**Session Outcome Summary (Nov 6, 2025 18:20):**
+
+- Conversion engine + security extraction shipped with full test coverage (unit, integration, characterization, snapshots).
+- Samples snapshot harness enforces inclusion of custom multi-auth fixture; snapshots regenerated.
+- Manual Draft 07 inspection (`pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore inspection script>"`) confirmed `Pet` schema conversion and AJV validation.
+- All contextual documents updated (`context.md`, `HANDOFF.md`, `continuation_prompt.md`, parent plan) — handoff ready for Session 8 kickoff.
