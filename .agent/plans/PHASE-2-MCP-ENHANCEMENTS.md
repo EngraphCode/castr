@@ -639,6 +639,8 @@ This structure ensures each session has focused, testable deliverables while mai
 
 #### **Session 8 – MCP Tool Generation & Template Integration**
 
+> **Detailed Plan:** See [`PHASE-2-SESSION-8-MCP-TOOL-GENERATION.md`](./PHASE-2-SESSION-8-MCP-TOOL-GENERATION.md) for objectives, workstreams, validation steps, and rule checklist.
+
 - **Focus:** Generate MCP-compliant tool definitions and integrate with Handlebars templates.
 - **Design Constraint:** Work within existing template system (Handlebars) - Phase 3 will migrate to ts-morph.
 - **Acceptance Criteria**

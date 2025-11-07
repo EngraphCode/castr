@@ -33,6 +33,7 @@
 **Next Steps:**
 
 - Begin Session 8 (MCP Tool Generation): wire converter outputs into MCP tool context, generate manifests, and extend template coverage.
+- Review Session 8 plan (`.agent/plans/PHASE-2-SESSION-8-MCP-TOOL-GENERATION.md`) before implementation.
 - Draft detailed Session 8 execution checklist (tests, validation, documentation) before touching code.
 - Maintain full-quality gate cadence after each major change (format → build → lint → type-check → test:all → character).
 
