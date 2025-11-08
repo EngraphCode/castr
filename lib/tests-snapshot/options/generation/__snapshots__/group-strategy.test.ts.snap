@@ -216,61 +216,414 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "no_tags_get",
+      description: "GET /no-tags",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/no-tags",
+      originalPath: "/no-tags",
+      operationId: "noTagsGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "no_tags_put",
+      description: "PUT /no-tags",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/no-tags",
+      originalPath: "/no-tags",
+      operationId: "noTagsPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_get",
+      description: "GET /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_put",
+      description: "PUT /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_get",
+      description: "GET /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_put",
+      description: "PUT /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_get",
+      description: "GET /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storeGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_put",
+      description: "PUT /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storePut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user/pets",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/pets",
+      originalPath: "/user/pets",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user/pets",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user/pets",
+      originalPath: "/user/pets",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 "
 `;
 
@@ -478,61 +831,414 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "no_tags_get",
+      description: "GET /no-tags",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/no-tags",
+      originalPath: "/no-tags",
+      operationId: "noTagsGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "no_tags_put",
+      description: "PUT /no-tags",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/no-tags",
+      originalPath: "/no-tags",
+      operationId: "noTagsPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_get",
+      description: "GET /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_put",
+      description: "PUT /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_get",
+      description: "GET /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_put",
+      description: "PUT /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_get",
+      description: "GET /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storeGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_put",
+      description: "PUT /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storePut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user/pets",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/pets",
+      originalPath: "/user/pets",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user/pets",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user/pets",
+      originalPath: "/user/pets",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 "
 `;
 
@@ -674,61 +1380,402 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "no_tags_get",
+      description: "GET /countries",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          code: {
+            type: "string",
+          },
+          store_list: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Store",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/countries",
+      originalPath: "/countries",
+      operationId: "noTagsGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_get",
+      description: "GET /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_put",
+      description: "PUT /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_get",
+      description: "GET /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_post",
+      description: "POST /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllPost",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_get",
+      description: "GET /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storeGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_put",
+      description: "PUT /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storePut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "__common": "import { z } from "zod";
 
@@ -835,61 +1882,402 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "no_tags_get",
+      description: "GET /countries",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          code: {
+            type: "string",
+          },
+          store_list: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Store",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/countries",
+      originalPath: "/countries",
+      operationId: "noTagsGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_get",
+      description: "GET /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_put",
+      description: "PUT /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_get",
+      description: "GET /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_post",
+      description: "POST /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllPost",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_get",
+      description: "GET /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storeGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_put",
+      description: "PUT /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storePut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "store": "import { z } from "zod";
 
@@ -915,61 +2303,402 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "no_tags_get",
+      description: "GET /countries",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          code: {
+            type: "string",
+          },
+          store_list: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Store",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/countries",
+      originalPath: "/countries",
+      operationId: "noTagsGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_get",
+      description: "GET /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_put",
+      description: "PUT /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_get",
+      description: "GET /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_post",
+      description: "POST /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllPost",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_get",
+      description: "GET /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storeGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_put",
+      description: "PUT /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storePut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "user": "import { z } from "zod";
 
@@ -993,61 +2722,402 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "no_tags_get",
+      description: "GET /countries",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          code: {
+            type: "string",
+          },
+          store_list: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Store",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/countries",
+      originalPath: "/countries",
+      operationId: "noTagsGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_get",
+      description: "GET /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_put",
+      description: "PUT /pet",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "petPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_get",
+      description: "GET /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "pet_all_post",
+      description: "POST /pet/all",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          nickname: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/all",
+      originalPath: "/pet/all",
+      operationId: "petAllPost",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_get",
+      description: "GET /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storeGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "store_put",
+      description: "PUT /store",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+          country: {
+            $ref: "#/definitions/Country",
+          },
+          owner: {
+            $ref: "#/definitions/User",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/store",
+      originalPath: "/store",
+      operationId: "storePut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_get",
+      description: "GET /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userGet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "user_put",
+      description: "PUT /user",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          firstname: {
+            type: "string",
+          },
+          lastname: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          friends: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/User",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "userPut",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
 }
 `;
@@ -1219,61 +3289,1386 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "add_pet",
+      title: "Add a new pet to the store",
+      description: "Add a new pet to the store",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                $ref: "#/definitions/Category",
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/Tag",
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "addPet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "update_pet",
+      title: "Update an existing pet",
+      description: "Update an existing pet by Id",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                $ref: "#/definitions/Category",
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/Tag",
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "updatePet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_pet_by_id",
+      title: "Find pet by ID",
+      description: "Returns a single pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "getPetById",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "api_key",
+              scheme: {
+                type: "apiKey",
+                name: "api_key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "update_pet_with_form",
+      title: "Updates a pet in the store with form data",
+      description: "Updates a pet in the store with form data",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              status: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "updatePetWithForm",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "delete_pet",
+      title: "Deletes a pet",
+      description: "delete a pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          headers: {
+            type: "object",
+            properties: {
+              api_key: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "deletePet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "upload_file",
+      title: "uploads an image",
+      description: "uploads an image",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              additionalMetadata: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          code: {
+            type: "integer",
+          },
+          type: {
+            type: "string",
+          },
+          message: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/:petId/uploadImage",
+      originalPath: "/pet/{petId}/uploadImage",
+      operationId: "uploadFile",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "find_pets_by_status",
+      title: "Finds Pets by status",
+      description:
+        "Multiple status values can be provided with comma separated strings",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              status: {
+                default: "available",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/findByStatus",
+      originalPath: "/pet/findByStatus",
+      operationId: "findPetsByStatus",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "find_pets_by_tags",
+      title: "Finds Pets by tags",
+      description:
+        "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/findByTags",
+      originalPath: "/pet/findByTags",
+      operationId: "findPetsByTags",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_inventory",
+      title: "Returns pet inventories by status",
+      description: "Returns a map of status codes to quantities",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        additionalProperties: {
+          type: "integer",
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store/inventory",
+      originalPath: "/store/inventory",
+      operationId: "getInventory",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "api_key",
+              scheme: {
+                type: "apiKey",
+                name: "api_key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "place_order",
+      title: "Place an order for a pet",
+      description: "Place a new order in the store",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              petId: {
+                examples: [198772],
+                type: "integer",
+              },
+              quantity: {
+                examples: [7],
+                type: "integer",
+              },
+              shipDate: {
+                type: "string",
+                format: "date-time",
+              },
+              status: {
+                description: "Order Status",
+                examples: ["approved"],
+                type: "string",
+                enum: ["placed", "approved", "delivered"],
+              },
+              complete: {
+                type: "boolean",
+              },
+              pet: {
+                $ref: "#/definitions/Pet",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          petId: {
+            examples: [198772],
+            type: "integer",
+          },
+          quantity: {
+            examples: [7],
+            type: "integer",
+          },
+          shipDate: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            description: "Order Status",
+            examples: ["approved"],
+            type: "string",
+            enum: ["placed", "approved", "delivered"],
+          },
+          complete: {
+            type: "boolean",
+          },
+          pet: {
+            $ref: "#/definitions/Pet",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/store/order",
+      originalPath: "/store/order",
+      operationId: "placeOrder",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_order_by_id",
+      title: "Find purchase order by ID",
+      description:
+        "For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              orderId: {
+                type: "integer",
+              },
+            },
+            required: ["orderId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          petId: {
+            examples: [198772],
+            type: "integer",
+          },
+          quantity: {
+            examples: [7],
+            type: "integer",
+          },
+          shipDate: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            description: "Order Status",
+            examples: ["approved"],
+            type: "string",
+            enum: ["placed", "approved", "delivered"],
+          },
+          complete: {
+            type: "boolean",
+          },
+          pet: {
+            $ref: "#/definitions/Pet",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store/order/:orderId",
+      originalPath: "/store/order/{orderId}",
+      operationId: "getOrderById",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_order",
+      title: "Delete purchase order by ID",
+      description:
+        "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              orderId: {
+                type: "integer",
+              },
+            },
+            required: ["orderId"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/store/order/:orderId",
+      originalPath: "/store/order/{orderId}",
+      operationId: "deleteOrder",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_user",
+      title: "Create user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              username: {
+                examples: ["theUser"],
+                type: "string",
+              },
+              firstName: {
+                examples: ["John"],
+                type: "string",
+              },
+              lastName: {
+                examples: ["James"],
+                type: "string",
+              },
+              email: {
+                examples: ["john@email.com"],
+                type: "string",
+              },
+              password: {
+                examples: ["12345"],
+                type: "string",
+              },
+              phone: {
+                examples: ["12345"],
+                type: "string",
+              },
+              userStatus: {
+                description: "User Status",
+                examples: [1],
+                type: "integer",
+              },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "createUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_user_by_name",
+      title: "Get user by user name",
+      description: "Get user by user name",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          username: {
+            examples: ["theUser"],
+            type: "string",
+          },
+          firstName: {
+            examples: ["John"],
+            type: "string",
+          },
+          lastName: {
+            examples: ["James"],
+            type: "string",
+          },
+          email: {
+            examples: ["john@email.com"],
+            type: "string",
+          },
+          password: {
+            examples: ["12345"],
+            type: "string",
+          },
+          phone: {
+            examples: ["12345"],
+            type: "string",
+          },
+          userStatus: {
+            description: "User Status",
+            examples: [1],
+            type: "integer",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "getUserByName",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "update_user",
+      title: "Update user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              username: {
+                examples: ["theUser"],
+                type: "string",
+              },
+              firstName: {
+                examples: ["John"],
+                type: "string",
+              },
+              lastName: {
+                examples: ["James"],
+                type: "string",
+              },
+              email: {
+                examples: ["john@email.com"],
+                type: "string",
+              },
+              password: {
+                examples: ["12345"],
+                type: "string",
+              },
+              phone: {
+                examples: ["12345"],
+                type: "string",
+              },
+              userStatus: {
+                description: "User Status",
+                examples: [1],
+                type: "integer",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "updateUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_user",
+      title: "Delete user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "deleteUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_users_with_list_input",
+      title: "Creates list of users with given input array",
+      description: "Creates list of users with given input array",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              value: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          username: {
+            examples: ["theUser"],
+            type: "string",
+          },
+          firstName: {
+            examples: ["John"],
+            type: "string",
+          },
+          lastName: {
+            examples: ["James"],
+            type: "string",
+          },
+          email: {
+            examples: ["john@email.com"],
+            type: "string",
+          },
+          password: {
+            examples: ["12345"],
+            type: "string",
+          },
+          phone: {
+            examples: ["12345"],
+            type: "string",
+          },
+          userStatus: {
+            description: "User Status",
+            examples: [1],
+            type: "integer",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/user/createWithList",
+      originalPath: "/user/createWithList",
+      operationId: "createUsersWithListInput",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "login_user",
+      title: "Logs user into the system",
+      description: "Logs user into the system",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              password: {
+                type: "string",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/login",
+      originalPath: "/user/login",
+      operationId: "loginUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "logout_user",
+      title: "Logs out current logged in user session",
+      description: "Logs out current logged in user session",
+      inputSchema: {
+        type: "object",
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/logout",
+      originalPath: "/user/logout",
+      operationId: "logoutUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "store": "import { z } from "zod";
 
@@ -1350,61 +4745,1386 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "add_pet",
+      title: "Add a new pet to the store",
+      description: "Add a new pet to the store",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                $ref: "#/definitions/Category",
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/Tag",
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "addPet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "update_pet",
+      title: "Update an existing pet",
+      description: "Update an existing pet by Id",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                $ref: "#/definitions/Category",
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/Tag",
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "updatePet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_pet_by_id",
+      title: "Find pet by ID",
+      description: "Returns a single pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "getPetById",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "api_key",
+              scheme: {
+                type: "apiKey",
+                name: "api_key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "update_pet_with_form",
+      title: "Updates a pet in the store with form data",
+      description: "Updates a pet in the store with form data",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              status: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "updatePetWithForm",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "delete_pet",
+      title: "Deletes a pet",
+      description: "delete a pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          headers: {
+            type: "object",
+            properties: {
+              api_key: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "deletePet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "upload_file",
+      title: "uploads an image",
+      description: "uploads an image",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              additionalMetadata: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          code: {
+            type: "integer",
+          },
+          type: {
+            type: "string",
+          },
+          message: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/:petId/uploadImage",
+      originalPath: "/pet/{petId}/uploadImage",
+      operationId: "uploadFile",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "find_pets_by_status",
+      title: "Finds Pets by status",
+      description:
+        "Multiple status values can be provided with comma separated strings",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              status: {
+                default: "available",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/findByStatus",
+      originalPath: "/pet/findByStatus",
+      operationId: "findPetsByStatus",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "find_pets_by_tags",
+      title: "Finds Pets by tags",
+      description:
+        "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/findByTags",
+      originalPath: "/pet/findByTags",
+      operationId: "findPetsByTags",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_inventory",
+      title: "Returns pet inventories by status",
+      description: "Returns a map of status codes to quantities",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        additionalProperties: {
+          type: "integer",
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store/inventory",
+      originalPath: "/store/inventory",
+      operationId: "getInventory",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "api_key",
+              scheme: {
+                type: "apiKey",
+                name: "api_key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "place_order",
+      title: "Place an order for a pet",
+      description: "Place a new order in the store",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              petId: {
+                examples: [198772],
+                type: "integer",
+              },
+              quantity: {
+                examples: [7],
+                type: "integer",
+              },
+              shipDate: {
+                type: "string",
+                format: "date-time",
+              },
+              status: {
+                description: "Order Status",
+                examples: ["approved"],
+                type: "string",
+                enum: ["placed", "approved", "delivered"],
+              },
+              complete: {
+                type: "boolean",
+              },
+              pet: {
+                $ref: "#/definitions/Pet",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          petId: {
+            examples: [198772],
+            type: "integer",
+          },
+          quantity: {
+            examples: [7],
+            type: "integer",
+          },
+          shipDate: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            description: "Order Status",
+            examples: ["approved"],
+            type: "string",
+            enum: ["placed", "approved", "delivered"],
+          },
+          complete: {
+            type: "boolean",
+          },
+          pet: {
+            $ref: "#/definitions/Pet",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/store/order",
+      originalPath: "/store/order",
+      operationId: "placeOrder",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_order_by_id",
+      title: "Find purchase order by ID",
+      description:
+        "For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              orderId: {
+                type: "integer",
+              },
+            },
+            required: ["orderId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          petId: {
+            examples: [198772],
+            type: "integer",
+          },
+          quantity: {
+            examples: [7],
+            type: "integer",
+          },
+          shipDate: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            description: "Order Status",
+            examples: ["approved"],
+            type: "string",
+            enum: ["placed", "approved", "delivered"],
+          },
+          complete: {
+            type: "boolean",
+          },
+          pet: {
+            $ref: "#/definitions/Pet",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store/order/:orderId",
+      originalPath: "/store/order/{orderId}",
+      operationId: "getOrderById",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_order",
+      title: "Delete purchase order by ID",
+      description:
+        "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              orderId: {
+                type: "integer",
+              },
+            },
+            required: ["orderId"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/store/order/:orderId",
+      originalPath: "/store/order/{orderId}",
+      operationId: "deleteOrder",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_user",
+      title: "Create user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              username: {
+                examples: ["theUser"],
+                type: "string",
+              },
+              firstName: {
+                examples: ["John"],
+                type: "string",
+              },
+              lastName: {
+                examples: ["James"],
+                type: "string",
+              },
+              email: {
+                examples: ["john@email.com"],
+                type: "string",
+              },
+              password: {
+                examples: ["12345"],
+                type: "string",
+              },
+              phone: {
+                examples: ["12345"],
+                type: "string",
+              },
+              userStatus: {
+                description: "User Status",
+                examples: [1],
+                type: "integer",
+              },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "createUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_user_by_name",
+      title: "Get user by user name",
+      description: "Get user by user name",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          username: {
+            examples: ["theUser"],
+            type: "string",
+          },
+          firstName: {
+            examples: ["John"],
+            type: "string",
+          },
+          lastName: {
+            examples: ["James"],
+            type: "string",
+          },
+          email: {
+            examples: ["john@email.com"],
+            type: "string",
+          },
+          password: {
+            examples: ["12345"],
+            type: "string",
+          },
+          phone: {
+            examples: ["12345"],
+            type: "string",
+          },
+          userStatus: {
+            description: "User Status",
+            examples: [1],
+            type: "integer",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "getUserByName",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "update_user",
+      title: "Update user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              username: {
+                examples: ["theUser"],
+                type: "string",
+              },
+              firstName: {
+                examples: ["John"],
+                type: "string",
+              },
+              lastName: {
+                examples: ["James"],
+                type: "string",
+              },
+              email: {
+                examples: ["john@email.com"],
+                type: "string",
+              },
+              password: {
+                examples: ["12345"],
+                type: "string",
+              },
+              phone: {
+                examples: ["12345"],
+                type: "string",
+              },
+              userStatus: {
+                description: "User Status",
+                examples: [1],
+                type: "integer",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "updateUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_user",
+      title: "Delete user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "deleteUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_users_with_list_input",
+      title: "Creates list of users with given input array",
+      description: "Creates list of users with given input array",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              value: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          username: {
+            examples: ["theUser"],
+            type: "string",
+          },
+          firstName: {
+            examples: ["John"],
+            type: "string",
+          },
+          lastName: {
+            examples: ["James"],
+            type: "string",
+          },
+          email: {
+            examples: ["john@email.com"],
+            type: "string",
+          },
+          password: {
+            examples: ["12345"],
+            type: "string",
+          },
+          phone: {
+            examples: ["12345"],
+            type: "string",
+          },
+          userStatus: {
+            description: "User Status",
+            examples: [1],
+            type: "integer",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/user/createWithList",
+      originalPath: "/user/createWithList",
+      operationId: "createUsersWithListInput",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "login_user",
+      title: "Logs user into the system",
+      description: "Logs user into the system",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              password: {
+                type: "string",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/login",
+      originalPath: "/user/login",
+      operationId: "loginUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "logout_user",
+      title: "Logs out current logged in user session",
+      description: "Logs out current logged in user session",
+      inputSchema: {
+        type: "object",
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/logout",
+      originalPath: "/user/logout",
+      operationId: "logoutUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "user": "import { z } from "zod";
 
@@ -1522,61 +6242,1386 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "add_pet",
+      title: "Add a new pet to the store",
+      description: "Add a new pet to the store",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                $ref: "#/definitions/Category",
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/Tag",
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "addPet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "update_pet",
+      title: "Update an existing pet",
+      description: "Update an existing pet by Id",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                $ref: "#/definitions/Category",
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/Tag",
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/pet",
+      originalPath: "/pet",
+      operationId: "updatePet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_pet_by_id",
+      title: "Find pet by ID",
+      description: "Returns a single pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          name: {
+            examples: ["doggie"],
+            type: "string",
+          },
+          category: {
+            $ref: "#/definitions/Category",
+          },
+          photoUrls: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          tags: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Tag",
+            },
+          },
+          status: {
+            description: "pet status in the store",
+            type: "string",
+            enum: ["available", "pending", "sold"],
+          },
+        },
+        required: ["name", "photoUrls"],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "getPetById",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "api_key",
+              scheme: {
+                type: "apiKey",
+                name: "api_key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "update_pet_with_form",
+      title: "Updates a pet in the store with form data",
+      description: "Updates a pet in the store with form data",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              status: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "updatePetWithForm",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "delete_pet",
+      title: "Deletes a pet",
+      description: "delete a pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          headers: {
+            type: "object",
+            properties: {
+              api_key: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/pet/:petId",
+      originalPath: "/pet/{petId}",
+      operationId: "deletePet",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "upload_file",
+      title: "uploads an image",
+      description: "uploads an image",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "integer",
+              },
+            },
+            required: ["petId"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              additionalMetadata: {
+                type: "string",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          code: {
+            type: "integer",
+          },
+          type: {
+            type: "string",
+          },
+          message: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pet/:petId/uploadImage",
+      originalPath: "/pet/{petId}/uploadImage",
+      operationId: "uploadFile",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "find_pets_by_status",
+      title: "Finds Pets by status",
+      description:
+        "Multiple status values can be provided with comma separated strings",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              status: {
+                default: "available",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/findByStatus",
+      originalPath: "/pet/findByStatus",
+      operationId: "findPetsByStatus",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "find_pets_by_tags",
+      title: "Finds Pets by tags",
+      description:
+        "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pet/findByTags",
+      originalPath: "/pet/findByTags",
+      operationId: "findPetsByTags",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "petstore_auth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  implicit: {
+                    authorizationUrl:
+                      "https://petstore3.swagger.io/oauth/authorize",
+                    scopes: {
+                      "write:pets": "modify pets in your account",
+                      "read:pets": "read your pets",
+                    },
+                  },
+                },
+              },
+              scopes: ["write:pets", "read:pets"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_inventory",
+      title: "Returns pet inventories by status",
+      description: "Returns a map of status codes to quantities",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        additionalProperties: {
+          type: "integer",
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store/inventory",
+      originalPath: "/store/inventory",
+      operationId: "getInventory",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "api_key",
+              scheme: {
+                type: "apiKey",
+                name: "api_key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "place_order",
+      title: "Place an order for a pet",
+      description: "Place a new order in the store",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              petId: {
+                examples: [198772],
+                type: "integer",
+              },
+              quantity: {
+                examples: [7],
+                type: "integer",
+              },
+              shipDate: {
+                type: "string",
+                format: "date-time",
+              },
+              status: {
+                description: "Order Status",
+                examples: ["approved"],
+                type: "string",
+                enum: ["placed", "approved", "delivered"],
+              },
+              complete: {
+                type: "boolean",
+              },
+              pet: {
+                $ref: "#/definitions/Pet",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          petId: {
+            examples: [198772],
+            type: "integer",
+          },
+          quantity: {
+            examples: [7],
+            type: "integer",
+          },
+          shipDate: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            description: "Order Status",
+            examples: ["approved"],
+            type: "string",
+            enum: ["placed", "approved", "delivered"],
+          },
+          complete: {
+            type: "boolean",
+          },
+          pet: {
+            $ref: "#/definitions/Pet",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/store/order",
+      originalPath: "/store/order",
+      operationId: "placeOrder",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_order_by_id",
+      title: "Find purchase order by ID",
+      description:
+        "For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              orderId: {
+                type: "integer",
+              },
+            },
+            required: ["orderId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          petId: {
+            examples: [198772],
+            type: "integer",
+          },
+          quantity: {
+            examples: [7],
+            type: "integer",
+          },
+          shipDate: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            description: "Order Status",
+            examples: ["approved"],
+            type: "string",
+            enum: ["placed", "approved", "delivered"],
+          },
+          complete: {
+            type: "boolean",
+          },
+          pet: {
+            $ref: "#/definitions/Pet",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/store/order/:orderId",
+      originalPath: "/store/order/{orderId}",
+      operationId: "getOrderById",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_order",
+      title: "Delete purchase order by ID",
+      description:
+        "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              orderId: {
+                type: "integer",
+              },
+            },
+            required: ["orderId"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/store/order/:orderId",
+      originalPath: "/store/order/{orderId}",
+      operationId: "deleteOrder",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_user",
+      title: "Create user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              username: {
+                examples: ["theUser"],
+                type: "string",
+              },
+              firstName: {
+                examples: ["John"],
+                type: "string",
+              },
+              lastName: {
+                examples: ["James"],
+                type: "string",
+              },
+              email: {
+                examples: ["john@email.com"],
+                type: "string",
+              },
+              password: {
+                examples: ["12345"],
+                type: "string",
+              },
+              phone: {
+                examples: ["12345"],
+                type: "string",
+              },
+              userStatus: {
+                description: "User Status",
+                examples: [1],
+                type: "integer",
+              },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/user",
+      originalPath: "/user",
+      operationId: "createUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_user_by_name",
+      title: "Get user by user name",
+      description: "Get user by user name",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          username: {
+            examples: ["theUser"],
+            type: "string",
+          },
+          firstName: {
+            examples: ["John"],
+            type: "string",
+          },
+          lastName: {
+            examples: ["James"],
+            type: "string",
+          },
+          email: {
+            examples: ["john@email.com"],
+            type: "string",
+          },
+          password: {
+            examples: ["12345"],
+            type: "string",
+          },
+          phone: {
+            examples: ["12345"],
+            type: "string",
+          },
+          userStatus: {
+            description: "User Status",
+            examples: [1],
+            type: "integer",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "getUserByName",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "update_user",
+      title: "Update user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              username: {
+                examples: ["theUser"],
+                type: "string",
+              },
+              firstName: {
+                examples: ["John"],
+                type: "string",
+              },
+              lastName: {
+                examples: ["James"],
+                type: "string",
+              },
+              email: {
+                examples: ["john@email.com"],
+                type: "string",
+              },
+              password: {
+                examples: ["12345"],
+                type: "string",
+              },
+              phone: {
+                examples: ["12345"],
+                type: "string",
+              },
+              userStatus: {
+                description: "User Status",
+                examples: [1],
+                type: "integer",
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "updateUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_user",
+      title: "Delete user",
+      description: "This can only be done by the logged in user.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/user/:username",
+      originalPath: "/user/{username}",
+      operationId: "deleteUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_users_with_list_input",
+      title: "Creates list of users with given input array",
+      description: "Creates list of users with given input array",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              value: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            examples: [10],
+            type: "integer",
+          },
+          username: {
+            examples: ["theUser"],
+            type: "string",
+          },
+          firstName: {
+            examples: ["John"],
+            type: "string",
+          },
+          lastName: {
+            examples: ["James"],
+            type: "string",
+          },
+          email: {
+            examples: ["john@email.com"],
+            type: "string",
+          },
+          password: {
+            examples: ["12345"],
+            type: "string",
+          },
+          phone: {
+            examples: ["12345"],
+            type: "string",
+          },
+          userStatus: {
+            description: "User Status",
+            examples: [1],
+            type: "integer",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/user/createWithList",
+      originalPath: "/user/createWithList",
+      operationId: "createUsersWithListInput",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "login_user",
+      title: "Logs user into the system",
+      description: "Logs user into the system",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              password: {
+                type: "string",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/login",
+      originalPath: "/user/login",
+      operationId: "loginUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "logout_user",
+      title: "Logs out current logged in user session",
+      description: "Logs out current logged in user session",
+      inputSchema: {
+        type: "object",
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/user/logout",
+      originalPath: "/user/logout",
+      operationId: "logoutUser",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
 }
 `;

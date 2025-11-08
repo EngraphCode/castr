@@ -199,6 +199,200 @@ test('export-all-named-schemas', async () => {
             },
         ],
         "endpointsGroups": {},
+        "mcpTools": [
+            {
+                "method": "get",
+                "operationId": "getSchemaNameAlreadyUsed",
+                "originalPath": "/export-all-named-schemas",
+                "path": "/export-all-named-schemas",
+                "security": {
+                    "isPublic": true,
+                    "requirementSets": [],
+                    "usesGlobalSecurity": false,
+                },
+                "tool": {
+                    "annotations": {
+                        "destructiveHint": false,
+                        "idempotentHint": false,
+                        "readOnlyHint": true,
+                    },
+                    "description": "GET /export-all-named-schemas",
+                    "inputSchema": {
+                        "properties": {
+                            "query": {
+                                "properties": {
+                                    "sameSchemaSameName": {
+                                        "enum": [
+                                            "xxx",
+                                            "yyy",
+                                            "zzz",
+                                        ],
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "name": "get_schema_name_already_used",
+                    "outputSchema": {
+                        "properties": {
+                            "value": {
+                                "type": "string",
+                            },
+                        },
+                        "type": "object",
+                    },
+                },
+            },
+            {
+                "method": "post",
+                "operationId": "postSchemaNameAlreadyUsed",
+                "originalPath": "/export-all-named-schemas",
+                "path": "/export-all-named-schemas",
+                "security": {
+                    "isPublic": true,
+                    "requirementSets": [],
+                    "usesGlobalSecurity": false,
+                },
+                "tool": {
+                    "annotations": {
+                        "destructiveHint": false,
+                        "idempotentHint": false,
+                        "readOnlyHint": false,
+                    },
+                    "description": "POST /export-all-named-schemas",
+                    "inputSchema": {
+                        "properties": {
+                            "query": {
+                                "properties": {
+                                    "schemaNameAlreadyUsed": {
+                                        "enum": [
+                                            "ggg",
+                                            "hhh",
+                                            "iii",
+                                        ],
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "name": "post_schema_name_already_used",
+                    "outputSchema": {
+                        "properties": {
+                            "value": {
+                                "type": "string",
+                            },
+                        },
+                        "type": "object",
+                    },
+                },
+            },
+            {
+                "method": "put",
+                "operationId": "putSchemaNameAlreadyUsed",
+                "originalPath": "/export-all-named-schemas",
+                "path": "/export-all-named-schemas",
+                "security": {
+                    "isPublic": true,
+                    "requirementSets": [],
+                    "usesGlobalSecurity": false,
+                },
+                "tool": {
+                    "annotations": {
+                        "destructiveHint": false,
+                        "idempotentHint": true,
+                        "readOnlyHint": false,
+                    },
+                    "description": "PUT /export-all-named-schemas",
+                    "inputSchema": {
+                        "properties": {
+                            "query": {
+                                "properties": {
+                                    "schemaNameAlreadyUsed": {
+                                        "enum": [
+                                            "aaa",
+                                            "bbb",
+                                            "ccc",
+                                        ],
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "name": "put_schema_name_already_used",
+                    "outputSchema": {
+                        "properties": {
+                            "value": {
+                                "type": "string",
+                            },
+                        },
+                        "type": "object",
+                    },
+                },
+            },
+            {
+                "method": "delete",
+                "operationId": "deleteSchemaNameAlreadyUsed",
+                "originalPath": "/export-all-named-schemas",
+                "path": "/export-all-named-schemas",
+                "security": {
+                    "isPublic": true,
+                    "requirementSets": [],
+                    "usesGlobalSecurity": false,
+                },
+                "tool": {
+                    "annotations": {
+                        "destructiveHint": true,
+                        "idempotentHint": false,
+                        "readOnlyHint": false,
+                    },
+                    "description": "DELETE /export-all-named-schemas",
+                    "inputSchema": {
+                        "properties": {
+                            "query": {
+                                "properties": {
+                                    "sameSchemaDifferentName": {
+                                        "enum": [
+                                            "xxx",
+                                            "yyy",
+                                            "zzz",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "sameSchemaSameName": {
+                                        "enum": [
+                                            "xxx",
+                                            "yyy",
+                                            "zzz",
+                                        ],
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "name": "delete_schema_name_already_used",
+                    "outputSchema": {
+                        "properties": {
+                            "value": {
+                                "type": "string",
+                            },
+                        },
+                        "type": "object",
+                    },
+                },
+            },
+        ],
         "options": {
             "baseUrl": "",
             "withAlias": false,
@@ -286,61 +480,198 @@ test('export-all-named-schemas', async () => {
     ] as const;
 
     /**
-     * MCP (Model Context Protocol) compatible tool definitions.
+     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
      *
-     * Each endpoint is transformed into an MCP tool with:
-     * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
-     * - \`description\`: Human-readable description of the tool's purpose
-     * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
-     * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+     * Each entry provides:
+     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
      *
-     * MCP tools use a consolidated input structure (all params in one object) rather than
-     * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
-     * The output schema focuses on the "happy path" (primary success response). Error handling
-     * is typically done at the protocol level.
-     *
-     * @see https://anthropic.com/mcp - Model Context Protocol specification
-     * @example
-     * \`\`\`typescript
-     * import { mcpTools } from "./api";
-     *
-     * // AI assistant discovers and validates tool usage
-     * const tool = mcpTools.find(t => t.name === "getUserById");
-     * const input = tool.inputSchema.parse({
-     *   path: { userId: "123" },
-     *   query: { include: "profile" }
-     * });
-     * \`\`\`
+     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+     * additional context to operators or logging.
      */
-    export const mcpTools = endpoints.map((endpoint) => {
-      // Build consolidated params object from all request parameter types
-      // MCP requires a single inputSchema, not separated path/query/headers/body
-      const params: Record<string, z.ZodTypeAny> = {};
-      if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-      if (endpoint.request?.queryParams)
-        params.query = endpoint.request.queryParams;
-      if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-      if (endpoint.request?.body) params.body = endpoint.request.body;
-
-      return {
-        // Use operationId for the canonical name, with fallback to generated name
-        name:
-          endpoint.operationId ||
-          \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-        // Provide description for AI context
-        description:
-          endpoint.description ||
-          \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-        // Consolidated input schema (path, query, headers, body all nested)
-        inputSchema:
-          Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-        // Primary success response (200 or 201), fallback to z.unknown() for safety
-        outputSchema:
-          endpoint.responses[200]?.schema ||
-          endpoint.responses[201]?.schema ||
-          z.unknown(),
-      };
-    }) as const;
+    export const mcpTools = [
+      {
+        tool: {
+          name: "get_schema_name_already_used",
+          description: "GET /export-all-named-schemas",
+          inputSchema: {
+            type: "object",
+            properties: {
+              query: {
+                type: "object",
+                properties: {
+                  sameSchemaSameName: {
+                    type: "string",
+                    enum: ["xxx", "yyy", "zzz"],
+                  },
+                },
+              },
+            },
+          },
+          outputSchema: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          annotations: {
+            readOnlyHint: true,
+            destructiveHint: false,
+            idempotentHint: false,
+          },
+        },
+        httpOperation: {
+          method: "get" as const,
+          path: "/export-all-named-schemas",
+          originalPath: "/export-all-named-schemas",
+          operationId: "getSchemaNameAlreadyUsed",
+        },
+        security: {
+          isPublic: true,
+          usesGlobalSecurity: false,
+          requirementSets: [],
+        },
+      },
+      {
+        tool: {
+          name: "post_schema_name_already_used",
+          description: "POST /export-all-named-schemas",
+          inputSchema: {
+            type: "object",
+            properties: {
+              query: {
+                type: "object",
+                properties: {
+                  schemaNameAlreadyUsed: {
+                    type: "string",
+                    enum: ["ggg", "hhh", "iii"],
+                  },
+                },
+              },
+            },
+          },
+          outputSchema: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          annotations: {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: false,
+          },
+        },
+        httpOperation: {
+          method: "post" as const,
+          path: "/export-all-named-schemas",
+          originalPath: "/export-all-named-schemas",
+          operationId: "postSchemaNameAlreadyUsed",
+        },
+        security: {
+          isPublic: true,
+          usesGlobalSecurity: false,
+          requirementSets: [],
+        },
+      },
+      {
+        tool: {
+          name: "put_schema_name_already_used",
+          description: "PUT /export-all-named-schemas",
+          inputSchema: {
+            type: "object",
+            properties: {
+              query: {
+                type: "object",
+                properties: {
+                  schemaNameAlreadyUsed: {
+                    type: "string",
+                    enum: ["aaa", "bbb", "ccc"],
+                  },
+                },
+              },
+            },
+          },
+          outputSchema: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          annotations: {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+          },
+        },
+        httpOperation: {
+          method: "put" as const,
+          path: "/export-all-named-schemas",
+          originalPath: "/export-all-named-schemas",
+          operationId: "putSchemaNameAlreadyUsed",
+        },
+        security: {
+          isPublic: true,
+          usesGlobalSecurity: false,
+          requirementSets: [],
+        },
+      },
+      {
+        tool: {
+          name: "delete_schema_name_already_used",
+          description: "DELETE /export-all-named-schemas",
+          inputSchema: {
+            type: "object",
+            properties: {
+              query: {
+                type: "object",
+                properties: {
+                  sameSchemaDifferentName: {
+                    type: "string",
+                    enum: ["xxx", "yyy", "zzz"],
+                  },
+                  sameSchemaSameName: {
+                    type: "string",
+                    enum: ["xxx", "yyy", "zzz"],
+                  },
+                },
+              },
+            },
+          },
+          outputSchema: {
+            type: "object",
+            properties: {
+              value: {
+                type: "string",
+              },
+            },
+          },
+          annotations: {
+            readOnlyHint: false,
+            destructiveHint: true,
+            idempotentHint: false,
+          },
+        },
+        httpOperation: {
+          method: "delete" as const,
+          path: "/export-all-named-schemas",
+          originalPath: "/export-all-named-schemas",
+          operationId: "deleteSchemaNameAlreadyUsed",
+        },
+        security: {
+          isPublic: true,
+          usesGlobalSecurity: false,
+          requirementSets: [],
+        },
+      },
+    ] as const;
     "
   `);
 });

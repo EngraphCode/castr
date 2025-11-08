@@ -74,6 +74,9 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
 
     // MUST export MCP tools
     expect(result).toContain('export const mcpTools');
+    expect(result).toContain('tool: {');
+    expect(result).toContain('httpOperation: {');
+    expect(result).toContain('type: "object"');
   });
 
   it('should export schemas object with all schemas', async () => {
@@ -257,14 +260,10 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     // MUST export mcpTools
     expect(result).toContain('export const mcpTools');
 
-    // MUST be derived from endpoints
-    expect(result).toMatch(/mcpTools.*endpoints\.map/s);
-
-    // MUST include required MCP fields
-    expect(result).toContain('name:');
-    expect(result).toContain('description:');
-    expect(result).toContain('inputSchema:');
-    expect(result).toContain('outputSchema:');
+    // MUST include structured MCP metadata
+    expect(result).toContain('tool: {');
+    expect(result).toContain('httpOperation: {');
+    expect(result).toContain('security: {');
   });
 });
 

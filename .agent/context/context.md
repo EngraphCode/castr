@@ -13,28 +13,27 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 7 (JSON Schema Conversion Engine) ✅ Complete  
-**Next Session:** Session 8 (MCP Tool Generation) – ready to kick off  
+**Current Session:** Phase 2 Part 2 - Session 8 (MCP Tool Generation & Template Integration) ♻️ In Progress  
+**Next Session:** Session 8 – continue integrating MCP helpers into templates/CLI  
 **Branch:** `feat/rewrite`
 
-### Session 7 Snapshot (Complete)
+### Session 8 Snapshot (In Progress)
 
 **What’s Done:**
 
-- Keyword helper refactor completed: no `Object.keys`/`Reflect.*`, no type assertions, and discriminated helper results to satisfy Sonar (`keyword-array.ts`, `keyword-object.ts`, `keyword-helpers.ts`).
-- Permissive fallback path implemented in `convertOpenApiSchemaToJsonSchema` with contextual warning + object schema fallback, plus new failure characterization test.
-- Added module augmentation for OpenAPI 3.1 schemas to recognise `$dynamicRef`, `unevaluated*`, and `dependentSchemas`, keeping 2020-12 keywords typed.
-- Expanded integration coverage: petstore-expanded + tictactoe fixtures now exercised through `json-schema.integration.test.ts`; AJV harness tightened to throw on async results.
-- Security extraction hardened (reference guard) and TSDoc now explicitly flags Layer‑1 vs Layer‑2 responsibilities.
-- Sample snapshot harness updated to merge official + custom fixtures, enforce presence of `custom/openapi/v3.1/multi-auth`, and regenerate snapshots.
-- Manual verification (Nov 6, 2025 18:05): Ran `tsx --eval` against `petstore-expanded.yaml` to inspect `Pet` conversion; confirmed `allOf` rewrite to `#/definitions/NewPet`, `id` requirement retention, and AJV validation success for composite + inline schemas.
-- Full quality suite rerun post-refactor (format/build/lint/type-check/test:all/character) — all green.
+- Added MCP helper modules:
+  - `template-context.mcp.naming.ts` for deterministic tool names (operationId → snake_case, method/path fallback) and behavior hints (GET/HEAD/OPTIONS → `readOnlyHint`, DELETE → `destructiveHint`, PUT → `idempotentHint`).
+  - `template-context.mcp.parameters.ts`, `.responses.ts`, `.schemas.ts` aggregate path/query/header parameters, request bodies, and primary success responses into Draft 07 object schemas and reuse `resolveOperationSecurity` to attach upstream security metadata.
+- Re-exported helpers via `template-context.mcp.ts` and surfaced them in `context/index.ts` for upcoming template/manifest integration.
+- Added unit suites (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) covering naming/hints, schema wrapping, aggregated schema structure, and security extraction against the multi-auth fixture.
+- Quality gates rerun (`pnpm format`, `pnpm build`, `pnpm lint`, `pnpm type-check`, `pnpm test:all`) — all green.
+- MCP spec review (Nov 6, 2025 14:15) logged: tool IDs must be stable lowercase ASCII, annotations optional with defined defaults, input/output schemas must root at `{ type: "object" }`, manifests must satisfy `ToolSchema`, and helpers should continue to fail fast on violations.
 
 **Next Steps:**
 
-- Begin Session 8 (MCP Tool Generation): wire converter outputs into MCP tool context, generate manifests, and extend template coverage.
-- Review Session 8 plan (`.agent/plans/PHASE-2-SESSION-8-MCP-TOOL-GENERATION.md`) before implementation.
-- Draft detailed Session 8 execution checklist (tests, validation, documentation) before touching code.
+- Workstream B: extend `getZodClientTemplateContext` to surface `mcpTools`, update Handlebars templates, refresh snapshots/characterization suites.
+- Workstream C: implement `--emit-mcp-manifest <path>` CLI flag that writes MCP-compliant manifests from the enriched context.
+- Workstream D: rerun cross-cutting validation, perform manual CLI manifest verification, and update documentation/hand-off once integration completes.
 - Maintain full-quality gate cadence after each major change (format → build → lint → type-check → test:all → character).
 
 **Process Reminder:** Carry the Session 7 practice forward—run the full quality suite after targeted checks:  
@@ -63,17 +62,9 @@
 
 **Actual Effort:** ~8 hours (implementation + architecture improvements)
 
-### Immediate Next Actions (Session 8)
-
-**Focus:** MCP Tool Generation – wire JSON Schema + security outputs into MCP tool context, emit manifests, extend template coverage
-
-**See:** `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` Session 8 for detailed acceptance criteria
-
----
-
 ## ⚠️ Current Blockers
 
-- None — cleared to start Session 8.
+- None — helper groundwork complete; ready for template/CLI integration.
 
 ---
 
@@ -96,18 +87,39 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 | Gate              | Status | Last Check          | Notes                                                                |
 | ----------------- | ------ | ------------------- | -------------------------------------------------------------------- |
-| `pnpm format`     | ✅     | Nov 6, 2025 6:32 pm | Ran Prettier root-wide (no functional diffs)                         |
-| `pnpm build`      | ✅     | Nov 6, 2025 6:34 pm | `tsup` build clean                                                   |
-| `pnpm type-check` | ✅     | Nov 6, 2025 6:36 pm | NodeNext project type-check passes                                   |
-| `pnpm lint`       | ✅     | Nov 6, 2025 6:38 pm | Sonar + ESLint satisfied with new helper structure                   |
-| `pnpm test:all`   | ✅     | Nov 6, 2025 6:41 pm | `vitest run` + `character` + snapshots all green                     |
-| `pnpm character`  | ✅     | Nov 6, 2025 6:41 pm | Triggered via `pnpm test:all`; all characterization suites succeeded |
+| `pnpm format`     | ✅     | Nov 6, 2025 7:00 pm | Ran Prettier root-wide after MCP helper refactor                    |
+| `pnpm build`      | ✅     | Nov 6, 2025 7:02 pm | `tsup` build clean                                                  |
+| `pnpm type-check` | ✅     | Nov 6, 2025 7:03 pm | NodeNext project type-check passes                                  |
+| `pnpm lint`       | ✅     | Nov 6, 2025 7:04 pm | ESLint/Sonar satisfied with new MCP modules                         |
+| `pnpm test:all`   | ✅     | Nov 6, 2025 7:04 pm | `vitest run` + `character` + snapshots all green                    |
+| `pnpm character`  | ✅     | Nov 6, 2025 7:04 pm | Triggered via `pnpm test:all`; all characterization suites succeeded |
 
 **Result:** All quality gates green. Re-run the full suite after any further edits.
 
 ---
 
 ## 📊 Session Log (Recent → Oldest)
+
+### Session 8 - MCP Tool Generation & Template Integration (IN PROGRESS)
+
+**Dates:** November 6, 2025  
+**Duration:** ~1.5 hours so far  
+**Status:** ♻️ In progress (helpers complete, integration pending)
+
+**What Changed:**
+
+- Implemented modular MCP helper layer (`template-context.mcp.*`) for tool naming, behavior hints, schema aggregation, and security extraction.
+- Added unit coverage for helper behavior, schema wrapping, and aggregated tool schema output.
+- Re-exported helpers through `context/index.ts` for upcoming template/CLI usage.
+- Reran full quality suite (format/build/lint/type-check/test:all) to baseline before template integration.
+
+**Next Up:**
+
+- Wire helpers into template context and Handlebars templates (expose `mcpTools`, update snapshots).
+- Implement `--emit-mcp-manifest` CLI flag and manifest writer.
+- Conduct manual manifest verification + documentation updates post-integration.
+
+**Quality Gates:** ✅ format/build/lint/type-check/test:all on Nov 6, 2025 7:04 pm.
 
 ### Session 7 - JSON Schema Conversion Engine (COMPLETE)
 

@@ -146,10 +146,10 @@ test('getSchemaAsZodString', () => {
       discriminator: { propertyName: 'type' },
     }),
   ).toMatchInlineSnapshot(`
-      "
-                      z.discriminatedUnion("type", [z.object({ type: z.literal("a"), a: z.string() }).passthrough(), z.object({ type: z.literal("b"), b: z.string() }).passthrough()])
-                  "
-    `);
+    "
+                    z.discriminatedUnion("type", [z.object({ type: z.literal("a"), a: z.string() }).passthrough(), z.object({ type: z.literal("b"), b: z.string() }).passthrough()])
+                "
+  `);
 
   // returns z.discriminatedUnion, when allOf has single object
   expect(
@@ -196,10 +196,10 @@ test('getSchemaAsZodString', () => {
       discriminator: { propertyName: 'type' },
     }),
   ).toMatchInlineSnapshot(`
-      "
-                      z.discriminatedUnion("type", [z.object({ type: z.literal("a"), a: z.string() }).passthrough(), z.object({ type: z.literal("b"), b: z.string() }).passthrough()])
-                  "
-    `);
+    "
+                    z.discriminatedUnion("type", [z.object({ type: z.literal("a"), a: z.string() }).passthrough(), z.object({ type: z.literal("b"), b: z.string() }).passthrough()])
+                "
+  `);
 
   // returns z.union, when allOf has multiple objects
   expect(
@@ -404,12 +404,12 @@ test('CodeMeta with ref', () => {
     '"z.object({ str: z.string(), reference: Example, inline: z.object({ nested_prop: z.boolean() }).partial().passthrough() }).partial().passthrough()"',
   );
   expect(code.children).toMatchInlineSnapshot(`
-      [
-          "z.string()",
-          "Example",
-          "z.object({ nested_prop: z.boolean() }).partial().passthrough()",
-      ]
-    `);
+    [
+        "z.string()",
+        "Example",
+        "z.object({ nested_prop: z.boolean() }).partial().passthrough()",
+    ]
+  `);
 });
 
 test('CodeMeta with nested refs', () => {
@@ -470,15 +470,15 @@ test('CodeMeta with nested refs', () => {
     '"z.object({ str: z.string(), reference: ObjectWithArrayOfRef, inline: z.object({ nested_prop: z.boolean() }).partial().passthrough(), another: WithNested, basic: Basic, differentPropSameRef: Basic }).partial().passthrough()"',
   );
   expect(code.children).toMatchInlineSnapshot(`
-      [
-          "z.string()",
-          "ObjectWithArrayOfRef",
-          "z.object({ nested_prop: z.boolean() }).partial().passthrough()",
-          "WithNested",
-          "Basic",
-          "Basic",
-      ]
-    `);
+    [
+        "z.string()",
+        "ObjectWithArrayOfRef",
+        "z.object({ nested_prop: z.boolean() }).partial().passthrough()",
+        "WithNested",
+        "Basic",
+        "Basic",
+    ]
+  `);
   expect(ctx).toMatchInlineSnapshot(`
     {
         "doc": {

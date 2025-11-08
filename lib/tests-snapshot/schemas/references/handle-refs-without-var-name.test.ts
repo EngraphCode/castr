@@ -43,6 +43,42 @@ test('handle-refs-without-var-name', () => {
             },
         ],
         "endpointsGroups": {},
+        "mcpTools": [
+            {
+                "method": "get",
+                "operationId": "getSomething",
+                "originalPath": "/something",
+                "path": "/something",
+                "security": {
+                    "isPublic": true,
+                    "requirementSets": [],
+                    "usesGlobalSecurity": false,
+                },
+                "tool": {
+                    "annotations": {
+                        "destructiveHint": false,
+                        "idempotentHint": false,
+                        "readOnlyHint": true,
+                    },
+                    "description": "GET /something",
+                    "inputSchema": {
+                        "type": "object",
+                    },
+                    "name": "get_something",
+                    "outputSchema": {
+                        "properties": {
+                            "value": {
+                                "items": {
+                                    "$ref": "#/definitions/Basic",
+                                },
+                                "type": "array",
+                            },
+                        },
+                        "type": "object",
+                    },
+                },
+            },
+        ],
         "options": {
             "baseUrl": "",
             "withAlias": false,

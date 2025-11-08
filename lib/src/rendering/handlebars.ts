@@ -38,6 +38,23 @@ export const getHandlebars = (): typeof Handlebars => {
       })
       .join('');
   });
+  instance.registerHelper('json', function (value: unknown, indent?: number) {
+    const json = JSON.stringify(value, null, 2);
+    if (indent === undefined) {
+      return json;
+    }
+
+    const indentValue = Number(indent);
+    if (Number.isNaN(indentValue) || indentValue <= 0) {
+      return json;
+    }
+
+    const indentString = ' '.repeat(indentValue);
+    return json
+      .split('\n')
+      .map((line, index) => (index === 0 ? line : `${indentString}${line}`))
+      .join('\n');
+  });
 
   return instance;
 };

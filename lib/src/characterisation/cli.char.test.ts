@@ -206,6 +206,36 @@ describe('Characterisation: CLI Behavior', () => {
       expect(content).toContain('User');
       expect(content).not.toContain('as unknown as');
     });
+
+    it('should emit MCP manifest with --emit-mcp-manifest option', () => {
+      const inputPath = createTestSpec('manifest-test.json');
+      const outputPath = join(TEST_OUTPUT_DIR, 'manifest-output.ts');
+      const manifestPath = join(TEST_OUTPUT_DIR, 'manifest.json');
+
+      runCli([inputPath, '-o', outputPath, '--emit-mcp-manifest', manifestPath]);
+
+      expect(existsSync(manifestPath)).toBe(true);
+
+      const manifestRaw = readFileSync(manifestPath, 'utf8');
+      const manifest = JSON.parse(manifestRaw);
+
+      expect(Array.isArray(manifest)).toBe(true);
+      expect(manifest.length).toBeGreaterThan(0);
+
+      const firstTool = manifest[0];
+      expect(firstTool).toHaveProperty('tool');
+      expect(firstTool.tool).toMatchObject({
+        name: 'get_users',
+        inputSchema: { type: 'object' },
+      });
+      expect(firstTool.httpOperation).toMatchObject({
+        method: 'get',
+        path: '/users',
+      });
+      expect(firstTool.security).toMatchObject({
+        isPublic: true,
+      });
+    });
   });
 
   describe('Generated Code Quality', () => {

@@ -22,6 +22,7 @@ import {
 } from './template-context.endpoints.js';
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
 import type { CodeMetaData } from '../shared/code-meta.js';
+import { buildMcpTools, type TemplateContextMcpTool } from './template-context.mcp.js';
 
 // Type definitions
 export interface TemplateContext {
@@ -33,6 +34,7 @@ export interface TemplateContext {
   emittedType: Record<string, true>;
   commonSchemaNames?: Set<string>;
   options?: TemplateContextOptions | undefined;
+  mcpTools: TemplateContextMcpTool[];
 }
 
 export interface TemplateContextOptions {
@@ -147,6 +149,7 @@ function buildTemplateContextResult(
   circularTypeByName: Record<string, true>,
   emittedType: Record<string, true>,
   commonSchemaNames: Set<string> | undefined,
+  mcpTools: TemplateContextMcpTool[],
 ): TemplateContext {
   const result: TemplateContext = {
     schemas: sortedSchemas,
@@ -155,6 +158,7 @@ function buildTemplateContextResult(
     types,
     circularTypeByName,
     emittedType,
+    mcpTools,
   };
 
   if (commonSchemaNames !== undefined) {
@@ -200,6 +204,10 @@ export const getTemplateContext = (
   );
 
   const sortedEndpoints = [...endpoints.endpoints].sort((a, b) => a.path.localeCompare(b.path));
+  const mcpTools = buildMcpTools({
+    document: doc,
+    endpoints: sortedEndpoints,
+  });
 
   return buildTemplateContextResult(
     sortedSchemas,
@@ -209,6 +217,7 @@ export const getTemplateContext = (
     circularTypeByName,
     emittedType,
     commonSchemaNames,
+    mcpTools,
   );
 };
 

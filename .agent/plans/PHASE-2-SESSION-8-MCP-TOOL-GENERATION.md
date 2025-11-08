@@ -1,6 +1,6 @@
 # Phase 2 Session 8 – MCP Tool Generation & Template Integration
 
-**Status:** Not started (Phase 2 Part 2)  
+**Status:** In progress (Phase 2 Part 2)  
 **Estimated Effort:** 8–10 hours (Context helpers: 3h, Template integration: 3h, Manifest/CLI: 2h, Validation & docs: 1–2h)  
 **Parent Plan:** [PHASE-2-MCP-ENHANCEMENTS.md](./PHASE-2-MCP-ENHANCEMENTS.md) § “Session 8 – MCP Tool Generation & Template Integration”  
 **Standards:** Must comply with [.agent/RULES.md](../RULES.md) — TDD, library types only, zero escape hatches, exhaustive documentation.
@@ -18,7 +18,12 @@
 
 - Preconditions satisfied: Session 7 completed, JSON Schema converter + security extractor available (`convertOpenApiSchemaToJsonSchema`, `resolveOperationSecurity`).
 - Fixture update complete: multi-auth sample available under `examples/custom/openapi/v3.1/multi-auth.yaml`.
-- No code implemented for Session 8 yet — this plan defines upcoming work.
+- Workstream A underway:
+  - Added pure helpers for tool naming and MCP hints (`template-context.mcp.naming.ts`) with unit coverage.
+  - Implemented schema aggregation utilities (`template-context.mcp.parameters.ts`, `.responses.ts`, `.schemas.ts`) exposing `buildMcpToolSchemas`.
+  - New unit tests (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) cover naming, hints, schema wrapping, and security extraction.
+- Remaining work: wire helpers into template context, emit manifests/CLI flag, documentation updates, and full validation according to tasks below.
+- Latest MCP spec review (Nov 6, 2025 14:15): tool identifiers must be stable lowercase ASCII; tool annotations are optional hints (defaults: readOnly=false, destructive=true, idempotent=false, openWorld=true); input/output schemas must always be JSON Schema Draft 07 objects with `type: "object"` at the root; generated manifest must conform to `ToolSchema` from `@modelcontextprotocol/sdk/types.js`; enforce fail-fast errors when constraints cannot be met.
 
 ---
 

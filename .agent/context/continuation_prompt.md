@@ -27,15 +27,16 @@
 
 ### Where We Are
 
-**Phase:** Phase 2 Part 2 - Session 7 ✅ Complete  
+**Phase:** Phase 2 Part 2 - Session 8 ♻️ In Progress  
 **Branch:** `feat/rewrite`  
-**Status:** JSON Schema converter + security extraction delivered; helper refactor completed (no type assertions), fallback + expanded integrations in place, manual petstore verification captured, documentation refreshed  
-**Next:** Kick off Session 8 (MCP tool generation) — integrate converter outputs into MCP tool context + manifest generation
+**Status:** MCP helper layer implemented (naming/hints, input/output schema aggregation, security extraction) with unit coverage; ready to integrate helpers into template context, Handlebars templates, and CLI manifest emission  
+**Next:** Wire `mcpTools` into template context, update templates/snapshots, add `--emit-mcp-manifest` flag, document and validate outputs
 
-**Latest Manual Verification (Nov 6, 2025 18:05):**
+**Latest Manual Verification (Nov 6, 2025 18:05 / 19:05):**
 
 - `pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"`  
   Confirms `Pet` conversion rewrites `$ref` targets to `#/definitions/*`, retains `id` requirement, and passes AJV validation for composite + inline schemas.
+- Full quality suite rerun after MCP helper refactor (`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all`) — all green.
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -113,6 +114,13 @@
    - Security extraction emits Layer-1 vs Layer-2 warning and throws on unresolved `$ref` schemes.
    - Manual verification (Nov 6, 2025): `tsx --eval` inspection of `petstore-expanded.yaml` confirmed `Pet` → Draft 07 conversion (`allOf` rewrite, `id` requirement) with AJV validation for both composite and inline schemas.
    - Documentation + plans updated (`context.md`, `HANDOFF.md`, `PHASE-2-MCP-ENHANCEMENTS.md`) — ready to kick off Session 8 (MCP tool generation).
+   - MCP spec review (Nov 6, 2025 14:15): tool IDs must be stable lowercase ASCII strings; tool annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) are optional hints; input/output schemas emitted for tools must be JSON Schema Draft 07 objects; generated manifests must satisfy `ToolSchema` from `@modelcontextprotocol/sdk/types.js`; prefer fail-fast errors when constraints cannot be met.
+8. **Session 8 (In Progress): MCP Tool Generation & Template Integration**
+   - Introduced MCP helper modules for deterministic tool naming/hints and JSON Schema aggregation (`template-context.mcp.naming.ts`, `.parameters.ts`, `.responses.ts`, `.schemas.ts`).
+   - Added unit coverage (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) validating naming, hint mapping, schema wrapping, aggregated input/output schemas, and security metadata.
+   - Re-exported helpers via `template-context.mcp.ts` and `context/index.ts` to unblock template and CLI integration.
+   - Reran full quality suite (`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all`) after helper implementation — all green.
+   - Next: wire `mcpTools` into template context/Handlebars templates, implement `--emit-mcp-manifest`, update snapshots/docs, and perform manual manifest verification.
 
 ---
 

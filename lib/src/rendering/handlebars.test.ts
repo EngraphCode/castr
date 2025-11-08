@@ -68,4 +68,19 @@ describe('getHandlebars', () => {
     expect(instance2).toBeDefined();
     expect(instance1).not.toBe(instance2);
   });
+
+  it('should register json helper with optional indentation', () => {
+    const instance = getHandlebars();
+    const compact = instance.compile('{{{json value}}}');
+    const indented = instance.compile('{{{json value 6}}}');
+    const value = { name: 'example', nested: { flag: true } };
+
+    expect(compact({ value })).toBe(
+      '{\n  "name": "example",\n  "nested": {\n    "flag": true\n  }\n}',
+    );
+    const indentedLines = indented({ value }).split('\n');
+    expect(indentedLines[0]).toBe('{');
+    expect(indentedLines[1]).toBe('        "name": "example",');
+    expect(indentedLines[2]).toBe('        "nested": {');
+  });
 });

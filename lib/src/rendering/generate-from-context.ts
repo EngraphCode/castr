@@ -100,7 +100,7 @@ export type GenerateZodClientFromOpenApiArgs<
 /**
  * Determine the effective template to use based on inputs
  */
-function determineEffectiveTemplate(
+export function determineEffectiveTemplate(
   noClient: boolean | undefined,
   template: GenerateZodClientFromOpenApiArgs['template'],
   optionsTemplate: TemplateContextOptions['template'] | undefined,
@@ -125,7 +125,7 @@ function determineEffectiveTemplate(
 /**
  * Build effective options with auto-enabled features for schemas-with-metadata template
  */
-function buildEffectiveOptions<TOptions extends TemplateContext['options']>(
+export function buildEffectiveOptions<TOptions extends TemplateContext['options']>(
   effectiveTemplate: TemplateName,
   options: TOptions | undefined,
 ): TemplateContextOptions {

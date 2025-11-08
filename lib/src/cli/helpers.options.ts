@@ -31,6 +31,7 @@ export interface CliOptions {
   noClient?: boolean;
   withValidationHelpers?: boolean;
   withSchemaRegistry?: boolean;
+  emitMcpManifest?: string;
 }
 
 /**

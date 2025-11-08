@@ -36,61 +36,195 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "list_users",
+      description: "GET /users",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/CreateUserInput",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/users",
+      originalPath: "/users",
+      operationId: "listUsers",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_user",
+      description: "POST /users",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              username: {
+                description: "Unique handle for the user",
+                anyOf: [
+                  {
+                    type: "string",
+                    minLength: 3,
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+              email: {
+                type: "string",
+                format: "email",
+              },
+              age: {
+                description: "Optional age in years",
+                anyOf: [
+                  {
+                    type: "integer",
+                    minimum: 0,
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+            required: ["username", "email"],
+            additionalProperties: false,
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            format: "uuid",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/users",
+      originalPath: "/users",
+      operationId: "createUser",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "OAuth2",
+              scheme: {
+                type: "oauth2",
+                description: "OAuth 2.0 Authorization Code flow",
+                flows: {
+                  authorizationCode: {
+                    authorizationUrl: "https://auth.example.com/authorize",
+                    tokenUrl: "https://auth.example.com/token",
+                    scopes: {
+                      "users:write": "Create or update users",
+                      "users:read": "View user records",
+                    },
+                  },
+                },
+              },
+              scopes: ["users:write"],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "ApiKey",
+              scheme: {
+                type: "apiKey",
+                description: "Static API key header",
+                in: "header",
+                name: "X-API-Key",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "OAuth2",
+              scheme: {
+                type: "oauth2",
+                description: "OAuth 2.0 Authorization Code flow",
+                flows: {
+                  authorizationCode: {
+                    authorizationUrl: "https://auth.example.com/authorize",
+                    tokenUrl: "https://auth.example.com/token",
+                    scopes: {
+                      "users:write": "Create or update users",
+                      "users:read": "View user records",
+                    },
+                  },
+                },
+              },
+              scopes: ["users:write"],
+            },
+            {
+              schemeName: "ApiKey",
+              scheme: {
+                type: "apiKey",
+                description: "Static API key header",
+                in: "header",
+                name: "X-API-Key",
+              },
+              scopes: [],
+            },
+          ],
+        },
+      ],
+    },
+  },
+] as const;
 ",
     "v3.0/api-with-examples": "import { z } from "zod";
 
@@ -120,61 +254,70 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "list_versionsv_2",
+      title: "List API versions",
+      description: "List API versions",
+      inputSchema: {
+        type: "object",
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/",
+      originalPath: "/",
+      operationId: "listVersionsv2",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_version_detailsv_2",
+      title: "Show API version details",
+      description: "Show API version details",
+      inputSchema: {
+        type: "object",
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/v2",
+      originalPath: "/v2",
+      operationId: "getVersionDetailsv2",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "v3.0/callback-example": "import { z } from "zod";
 
@@ -196,61 +339,69 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "post_streams",
+      description: "subscribes a client to receive out-of-band data",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              callbackUrl: {
+                examples: ["https://tonys-server.com"],
+                type: "string",
+                format: "uri",
+              },
+            },
+            required: ["callbackUrl"],
+          },
+        },
+        required: ["query"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          subscriptionId: {
+            description:
+              "this unique identifier allows management of the subscription",
+            examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
+            type: "string",
+          },
+        },
+        required: ["subscriptionId"],
+        description: "subscription information",
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/streams",
+      originalPath: "/streams",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "v3.0/link-example": "import { z } from "zod";
 
@@ -383,61 +534,330 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_repositories_by_owner",
+      description: "GET /2.0/repositories/{username}",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/repository",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/2.0/repositories/:username",
+      originalPath: "/2.0/repositories/{username}",
+      operationId: "getRepositoriesByOwner",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_repository",
+      description: "GET /2.0/repositories/{username}/{slug}",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              slug: {
+                type: "string",
+              },
+            },
+            required: ["username", "slug"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          slug: {
+            type: "string",
+          },
+          owner: {
+            $ref: "#/definitions/user",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/2.0/repositories/:username/:slug",
+      originalPath: "/2.0/repositories/{username}/{slug}",
+      operationId: "getRepository",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_pull_requests_by_repository",
+      description: "GET /2.0/repositories/{username}/{slug}/pullrequests",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              slug: {
+                type: "string",
+              },
+            },
+            required: ["username", "slug"],
+          },
+          query: {
+            type: "object",
+            properties: {
+              state: {
+                type: "string",
+                enum: ["open", "merged", "declined"],
+              },
+            },
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/pullrequest",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/2.0/repositories/:username/:slug/pullrequests",
+      originalPath: "/2.0/repositories/{username}/{slug}/pullrequests",
+      operationId: "getPullRequestsByRepository",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_pull_requests_by_id",
+      description: "GET /2.0/repositories/{username}/{slug}/pullrequests/{pid}",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              slug: {
+                type: "string",
+              },
+              pid: {
+                type: "string",
+              },
+            },
+            required: ["username", "slug", "pid"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          title: {
+            type: "string",
+          },
+          repository: {
+            $ref: "#/definitions/repository",
+          },
+          author: {
+            $ref: "#/definitions/user",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/2.0/repositories/:username/:slug/pullrequests/:pid",
+      originalPath: "/2.0/repositories/{username}/{slug}/pullrequests/{pid}",
+      operationId: "getPullRequestsById",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "merge_pull_request",
+      description:
+        "POST /2.0/repositories/{username}/{slug}/pullrequests/{pid}/merge",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              slug: {
+                type: "string",
+              },
+              pid: {
+                type: "string",
+              },
+            },
+            required: ["username", "slug", "pid"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/2.0/repositories/:username/:slug/pullrequests/:pid/merge",
+      originalPath:
+        "/2.0/repositories/{username}/{slug}/pullrequests/{pid}/merge",
+      operationId: "mergePullRequest",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "get_user_by_name",
+      description: "GET /2.0/users/{username}",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+            },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          username: {
+            type: "string",
+          },
+          uuid: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/2.0/users/:username",
+      originalPath: "/2.0/users/{username}",
+      operationId: "getUserByName",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "v3.0/petstore": "import { z } from "zod";
 
@@ -494,61 +914,164 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "list_pets",
+      title: "List all pets",
+      description: "List all pets",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              limit: {
+                type: "integer",
+                maximum: 100,
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+            maxItems: 100,
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pets",
+      originalPath: "/pets",
+      operationId: "listPets",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "create_pets",
+      title: "Create a pet",
+      description: "Create a pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              tag: {
+                type: "string",
+              },
+            },
+            required: ["id", "name"],
+          },
+        },
+        required: ["body"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pets",
+      originalPath: "/pets",
+      operationId: "createPets",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "show_pet_by_id",
+      title: "Info for a specific pet",
+      description: "Info for a specific pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              petId: {
+                type: "string",
+              },
+            },
+            required: ["petId"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+          },
+          name: {
+            type: "string",
+          },
+          tag: {
+            type: "string",
+          },
+        },
+        required: ["id", "name"],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pets/:petId",
+      originalPath: "/pets/{petId}",
+      operationId: "showPetById",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "v3.0/petstore-expanded": "import { z } from "zod";
 
@@ -629,61 +1152,228 @@ Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condime
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "find_pets",
+      description:
+        "Returns all pets from the system that the user has access to\\nNam sed condimentum est. Maecenas tempor sagittis sapien, nec rhoncus sem sagittis sit amet. Aenean at gravida augue, ac iaculis sem. Curabitur odio lorem, ornare eget elementum nec, cursus id lectus. Duis mi turpis, pulvinar ac eros ac, tincidunt varius justo. In hac habitasse platea dictumst. Integer at adipiscing ante, a sagittis ligula. Aenean pharetra tempor ante molestie imperdiet. Vivamus id aliquam diam. Cras quis velit non tortor eleifend sagittis. Praesent at enim pharetra urna volutpat venenatis eget eget mauris. In eleifend fermentum facilisis. Praesent enim enim, gravida ac sodales sed, placerat id erat. Suspendisse lacus dolor, consectetur non augue vel, vehicula interdum libero. Morbi euismod sagittis libero sed lacinia.\\n\\nSed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condimentum ligula luctus nec. Phasellus semper velit eget aliquet faucibus. In a mattis elit. Phasellus vel urna viverra, condimentum lorem id, rhoncus nibh. Ut pellentesque posuere elementum. Sed a varius odio. Morbi rhoncus ligula libero, vel eleifend nunc tristique vitae. Fusce et sem dui. Aenean nec scelerisque tortor. Fusce malesuada accumsan magna vel tempus. Quisque mollis felis eu dolor tristique, sit amet auctor felis gravida. Sed libero lorem, molestie sed nisl in, accumsan tempor nisi. Fusce sollicitudin massa ut lacinia mattis. Sed vel eleifend lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod sapien.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: {
+            type: "object",
+            properties: {
+              tags: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              limit: {
+                type: "integer",
+              },
+            },
+          },
+        },
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/Pet",
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pets",
+      originalPath: "/pets",
+      operationId: "findPets",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "add_pet",
+      description: "Creates a new pet in the store. Duplicates are allowed",
+      inputSchema: {
+        type: "object",
+        properties: {
+          body: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              tag: {
+                type: "string",
+              },
+            },
+            required: ["name"],
+          },
+        },
+        required: ["body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            allOf: [
+              {
+                $ref: "#/definitions/NewPet",
+              },
+              {
+                type: "object",
+                properties: {
+                  id: {
+                    type: "integer",
+                  },
+                },
+                required: ["id"],
+              },
+            ],
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/pets",
+      originalPath: "/pets",
+      operationId: "addPet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "find_pet_by_id",
+      description:
+        "Returns a user based on a single ID, if the user does not have access to the pet",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+            },
+            required: ["id"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            allOf: [
+              {
+                $ref: "#/definitions/NewPet",
+              },
+              {
+                type: "object",
+                properties: {
+                  id: {
+                    type: "integer",
+                  },
+                },
+                required: ["id"],
+              },
+            ],
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/pets/:id",
+      originalPath: "/pets/{id}",
+      operationId: "find pet by id",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "delete_pet",
+      description: "deletes a single pet based on the ID supplied",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+            },
+            required: ["id"],
+          },
+        },
+        required: ["path"],
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "delete" as const,
+      path: "/pets/:id",
+      originalPath: "/pets/{id}",
+      operationId: "deletePet",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "v3.0/uspto": "import { z } from "zod";
 
@@ -773,61 +1463,211 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "list_data_sets",
+      title: "List available data sets",
+      description: "List available data sets",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          total: {
+            type: "integer",
+          },
+          apis: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                apiKey: {
+                  description: "To be used as a dataset parameter value",
+                  type: "string",
+                },
+                apiVersionNumber: {
+                  description: "To be used as a version parameter value",
+                  type: "string",
+                },
+                apiUrl: {
+                  description: "The URL describing the dataset's fields",
+                  type: "string",
+                  format: "uri-reference",
+                },
+                apiDocumentationUrl: {
+                  description: "A URL to the API console for each API",
+                  type: "string",
+                  format: "uri-reference",
+                },
+              },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/",
+      originalPath: "/",
+      operationId: "list-data-sets",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "list_searchable_fields",
+      title:
+        "Provides the general information about the API and the list of fields that can be used to query the dataset.",
+      description:
+        "This GET API returns the list of all the searchable field names that are in the oa_citations. Please see the 'fields' attribute which returns an array of field names. Each field or a combination of fields can be searched using the syntax options shown below.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              dataset: {
+                type: "string",
+              },
+              version: {
+                type: "string",
+              },
+            },
+            required: ["dataset", "version"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "string",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/:dataset/:version/fields",
+      originalPath: "/{dataset}/{version}/fields",
+      operationId: "list-searchable-fields",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
+      name: "perform_search",
+      title:
+        "Provides search capability for the data set with the given search criteria.",
+      description:
+        "This API is based on Solr/Lucene Search. The data is indexed using SOLR. This GET API returns the list of all the searchable field names that are in the Solr Index. Please see the 'fields' attribute which returns an array of field names. Each field or a combination of fields can be searched using the Solr/Lucene Syntax. Please refer https://lucene.apache.org/core/3_6_2/queryparsersyntax.html#Overview for the query syntax. List of field names that are searchable can be determined using above GET api.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              version: {
+                default: "v1",
+                type: "string",
+              },
+              dataset: {
+                default: "oa_citations",
+                type: "string",
+              },
+            },
+            required: ["version", "dataset"],
+          },
+          body: {
+            type: "object",
+            properties: {
+              criteria: {
+                description:
+                  "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+                default: "*:*",
+                type: "string",
+              },
+              start: {
+                description: "Starting record number. Default value is 0.",
+                default: 0,
+                type: "integer",
+              },
+              rows: {
+                description:
+                  "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+                default: 100,
+                type: "integer",
+              },
+            },
+            required: ["criteria"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: {
+                type: "object",
+              },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "post" as const,
+      path: "/:dataset/:version/records",
+      originalPath: "/{dataset}/{version}/records",
+      operationId: "perform-search",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
 ",
     "v3.1/non-oauth-scopes": "import { z } from "zod";
 
@@ -846,61 +1686,58 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_users",
+      description: "GET /users",
+      inputSchema: {
+        type: "object",
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/users",
+      originalPath: "/users",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "bearerAuth",
+              scheme: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "jwt",
+                description:
+                  "note: non-oauth scopes are not defined at the securityScheme level",
+              },
+              scopes: ["read:users", "public"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+] as const;
 ",
     "v3.1/tictactoe": "import { z } from "zod";
 
@@ -980,61 +1817,287 @@ export const endpoints = [
 ] as const;
 
 /**
- * MCP (Model Context Protocol) compatible tool definitions.
+ * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
  *
- * Each endpoint is transformed into an MCP tool with:
- * - \`name\`: Unique identifier (operationId or auto-generated from method + path)
- * - \`description\`: Human-readable description of the tool's purpose
- * - \`inputSchema\`: Consolidated Zod schema for all request parameters (path, query, headers, body)
- * - \`outputSchema\`: Zod schema for the primary success response (200/201) or z.unknown()
+ * Each entry provides:
+ * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
+ * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
+ * - \`security\`: upstream API security requirements (Layer 2 metadata only)
  *
- * MCP tools use a consolidated input structure (all params in one object) rather than
- * the separated structure in \`endpoints\`, making them optimized for AI tool integration.
- * The output schema focuses on the "happy path" (primary success response). Error handling
- * is typically done at the protocol level.
- *
- * @see https://anthropic.com/mcp - Model Context Protocol specification
- * @example
- * \`\`\`typescript
- * import { mcpTools } from "./api";
- *
- * // AI assistant discovers and validates tool usage
- * const tool = mcpTools.find(t => t.name === "getUserById");
- * const input = tool.inputSchema.parse({
- *   path: { userId: "123" },
- *   query: { include: "profile" }
- * });
- * \`\`\`
+ * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
+ * additional context to operators or logging.
  */
-export const mcpTools = endpoints.map((endpoint) => {
-  // Build consolidated params object from all request parameter types
-  // MCP requires a single inputSchema, not separated path/query/headers/body
-  const params: Record<string, z.ZodTypeAny> = {};
-  if (endpoint.request?.pathParams) params.path = endpoint.request.pathParams;
-  if (endpoint.request?.queryParams)
-    params.query = endpoint.request.queryParams;
-  if (endpoint.request?.headers) params.headers = endpoint.request.headers;
-  if (endpoint.request?.body) params.body = endpoint.request.body;
-
-  return {
-    // Use operationId for the canonical name, with fallback to generated name
-    name:
-      endpoint.operationId ||
-      \`\${endpoint.method}_\${endpoint.path.replace(/[\\/{}]/g, "_")}\`,
-    // Provide description for AI context
-    description:
-      endpoint.description ||
-      \`\${endpoint.method.toUpperCase()} \${endpoint.path}\`,
-    // Consolidated input schema (path, query, headers, body all nested)
-    inputSchema:
-      Object.keys(params).length > 0 ? z.object(params) : z.object({}),
-    // Primary success response (200 or 201), fallback to z.unknown() for safety
-    outputSchema:
-      endpoint.responses[200]?.schema ||
-      endpoint.responses[201]?.schema ||
-      z.unknown(),
-  };
-}) as const;
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_board",
+      title: "Get the whole board",
+      description: "Retrieves the current state of the board and the winner.",
+      inputSchema: {
+        type: "object",
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          winner: {
+            $ref: "#/definitions/winner",
+          },
+          board: {
+            $ref: "#/definitions/board",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/board",
+      originalPath: "/board",
+      operationId: "get-board",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "defaultApiKey",
+              scheme: {
+                description: "API key provided in console",
+                type: "apiKey",
+                name: "api-key",
+                in: "header",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "app2AppOauth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  clientCredentials: {
+                    tokenUrl: "https://learn.openapis.org/oauth/2.0/token",
+                    scopes: {
+                      "board:read": "Read the board",
+                    },
+                  },
+                },
+              },
+              scopes: ["board:read"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "get_square",
+      title: "Get a single board square",
+      description: "Retrieves the requested square.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              row: {
+                type: "integer",
+                minimum: 1,
+                maximum: 3,
+              },
+              column: {
+                type: "integer",
+                minimum: 1,
+                maximum: 3,
+              },
+            },
+            required: ["row", "column"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          value: {
+            description:
+              "Possible values for a board square. \`.\` means empty square.",
+            type: "string",
+            enum: [".", "X", "O"],
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get" as const,
+      path: "/board/:row/:column",
+      originalPath: "/board/{row}/{column}",
+      operationId: "get-square",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "bearerHttpAuthentication",
+              scheme: {
+                description: "Bearer token using a JWT",
+                type: "http",
+                scheme: "Bearer",
+                bearerFormat: "JWT",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "user2AppOauth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  authorizationCode: {
+                    authorizationUrl:
+                      "https://learn.openapis.org/oauth/2.0/auth",
+                    tokenUrl: "https://learn.openapis.org/oauth/2.0/token",
+                    scopes: {
+                      "board:read": "Read the board",
+                      "board:write": "Write to the board",
+                    },
+                  },
+                },
+              },
+              scopes: ["board:read"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    tool: {
+      name: "put_square",
+      title: "Set a single board square",
+      description:
+        "Places a mark on the board and retrieves the whole board and the winner (if any).",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: {
+              row: {
+                type: "integer",
+                minimum: 1,
+                maximum: 3,
+              },
+              column: {
+                type: "integer",
+                minimum: 1,
+                maximum: 3,
+              },
+            },
+            required: ["row", "column"],
+          },
+          body: {
+            type: "object",
+            properties: {
+              value: {
+                description:
+                  "Possible values for a board square. \`.\` means empty square.",
+                type: "string",
+                enum: [".", "X", "O"],
+              },
+            },
+          },
+        },
+        required: ["path", "body"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: {
+          winner: {
+            $ref: "#/definitions/winner",
+          },
+          board: {
+            $ref: "#/definitions/board",
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    httpOperation: {
+      method: "put" as const,
+      path: "/board/:row/:column",
+      originalPath: "/board/{row}/{column}",
+      operationId: "put-square",
+    },
+    security: {
+      isPublic: false,
+      usesGlobalSecurity: false,
+      requirementSets: [
+        {
+          schemes: [
+            {
+              schemeName: "bearerHttpAuthentication",
+              scheme: {
+                description: "Bearer token using a JWT",
+                type: "http",
+                scheme: "Bearer",
+                bearerFormat: "JWT",
+              },
+              scopes: [],
+            },
+          ],
+        },
+        {
+          schemes: [
+            {
+              schemeName: "user2AppOauth",
+              scheme: {
+                type: "oauth2",
+                flows: {
+                  authorizationCode: {
+                    authorizationUrl:
+                      "https://learn.openapis.org/oauth/2.0/auth",
+                    tokenUrl: "https://learn.openapis.org/oauth/2.0/token",
+                    scopes: {
+                      "board:read": "Read the board",
+                      "board:write": "Write to the board",
+                    },
+                  },
+                },
+              },
+              scopes: ["board:write"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+] as const;
 ",
 }
 `;

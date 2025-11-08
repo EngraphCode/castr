@@ -20,45 +20,45 @@ test('petstore.yaml', async () => {
     openApiDoc,
   );
   expect(result).toMatchInlineSnapshot(`
-      {
-          "#/components/schemas/Customer": Set {
-              "#/components/schemas/Address",
-          },
-          "#/components/schemas/Pet": Set {
-              "#/components/schemas/Category",
-              "#/components/schemas/Tag",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/Customer": Set {
+            "#/components/schemas/Address",
+        },
+        "#/components/schemas/Pet": Set {
+            "#/components/schemas/Category",
+            "#/components/schemas/Tag",
+        },
+    }
+  `);
   expect(topologicalSort(result)).toMatchInlineSnapshot(`
-      [
-          "#/components/schemas/Address",
-          "#/components/schemas/Customer",
-          "#/components/schemas/Category",
-          "#/components/schemas/Tag",
-          "#/components/schemas/Pet",
-      ]
-    `);
+    [
+        "#/components/schemas/Address",
+        "#/components/schemas/Customer",
+        "#/components/schemas/Category",
+        "#/components/schemas/Tag",
+        "#/components/schemas/Pet",
+    ]
+  `);
   expect(deepDependencyGraph).toMatchInlineSnapshot(`
-      {
-          "#/components/schemas/Customer": Set {
-              "#/components/schemas/Address",
-          },
-          "#/components/schemas/Pet": Set {
-              "#/components/schemas/Category",
-              "#/components/schemas/Tag",
-          },
-      }
-    `);
+    {
+        "#/components/schemas/Customer": Set {
+            "#/components/schemas/Address",
+        },
+        "#/components/schemas/Pet": Set {
+            "#/components/schemas/Category",
+            "#/components/schemas/Tag",
+        },
+    }
+  `);
   expect(topologicalSort(deepDependencyGraph)).toMatchInlineSnapshot(`
-      [
-          "#/components/schemas/Address",
-          "#/components/schemas/Customer",
-          "#/components/schemas/Category",
-          "#/components/schemas/Tag",
-          "#/components/schemas/Pet",
-      ]
-    `);
+    [
+        "#/components/schemas/Address",
+        "#/components/schemas/Customer",
+        "#/components/schemas/Category",
+        "#/components/schemas/Tag",
+        "#/components/schemas/Pet",
+    ]
+  `);
 });
 
 test('complex relations', () => {

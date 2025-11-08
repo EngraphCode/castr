@@ -8,39 +8,35 @@
 
 ## 📍 Where We Are
 
-**Current Phase:** Phase 2 Part 2 – Session 7 ✅ Complete  
+**Current Phase:** Phase 2 Part 2 – Session 8 ♻️ In Progress  
 **Active Branch:** `feat/rewrite`  
-**Next Session Tasks:** Kick off Session 8 (MCP Tool Generation) — integrate JSON Schema output into MCP tool context and manifest generation  
-**Project Status:** JSON Schema helper refactor complete, permissive fallback live, multi-auth fixture integrated into samples snapshots, manual petstore verification recorded, quality suite green
+**Next Session Tasks:** Wire new MCP helpers into template context/Handlebars templates, emit MCP manifest via CLI, update docs/tests  
+**Project Status:** JSON Schema converter + security extraction complete; MCP helper layer implemented (naming/hints, schema aggregation, security metadata) with unit coverage; ready to integrate helpers into generated outputs and CLI tooling
 
 ### Phase Progress Overview
 
 ```
 Phase 1: Tooling & Architecture         ✅ Complete
 Phase 2 Part 1: Scalar Pipeline         ✅ Complete (Sessions 1-4)
-Phase 2 Part 2: MCP Enhancements        ✅ Session 7 complete
+Phase 2 Part 2: MCP Enhancements        ♻️ Session 8 in progress
 Phase 3: DX & Quality                   ⚪ Planned
 ```
 
 ### Recent Milestone
-
-**Session 7 Progress (November 6, 2025)**
-
-- Helper layer rewritten without `Object.keys`/`Reflect.*` or type assertions; discriminated keyword readers now power array/object appliers.
-- Permissive fallback implemented with contextual warning and `{}` Draft 07 schema.
-- Integration coverage expanded (multi-auth, petstore-expanded, tictactoe) with hardened AJV harness.
-- Samples snapshot suite now merges official + custom fixtures and asserts presence of the multi-auth scenario.
-- Security extraction emits Layer-1 vs Layer-2 TSDoc warning and rejects `$ref` schemes.
-- Manual verification (Nov 6, 2025): `tsx --eval` inspection of `petstore-expanded.yaml` confirmed `Pet` → Draft 07 conversion (allOf rewrite, `id` requirement) with AJV validation.
-- Documentation system updated (`context.md`, `continuation_prompt.md`, strategic plans) to lock in Session 7 outcomes. Ready to start Session 8.
-
-### Latest Manual Verification (Nov 6, 2025 18:05)
 
 ```
 pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"
 ```
 
 Confirms converted Draft 07 schema rewrites `$ref` targets to `#/definitions/*`, retains the `id` requirement, and validates cleanly with AJV for both composite (`Pet`) and inline (`NewPet`) schemas.
+
+### Session 8 Progress (November 6, 2025)
+
+- Implemented MCP helper modules for tool naming/hints (`template-context.mcp.naming.ts`) and JSON Schema/security aggregation (`template-context.mcp.parameters.ts`, `.responses.ts`, `.schemas.ts`).
+- Added unit coverage (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) verifying naming behavior, schema wrapping, aggregated input/output schemas, and upstream security metadata extraction.
+- Re-exported helpers via `template-context.mcp.ts` and `context/index.ts` to unblock template/CLI integration.
+- Quality suite rerun post-helpers (`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all`) — all green.
+- Next steps: expose `mcpTools` in template context, update Handlebars templates/snapshots, add `--emit-mcp-manifest`, perform manual manifest verification, and document results.
 
 ---
 

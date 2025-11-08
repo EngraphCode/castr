@@ -14,9 +14,12 @@
  */
 
 import { Command } from 'commander';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { resolveConfig } from 'prettier';
 
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { getZodClientTemplateContext } from '../context/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import type { CliOptions } from './helpers.js';
 import {
@@ -25,6 +28,10 @@ import {
   buildGenerationOptions,
   buildGenerationArgs,
 } from './helpers.js';
+import {
+  determineEffectiveTemplate,
+  buildEffectiveOptions,
+} from '../rendering/generate-from-context.js';
 
 const program = new Command();
 
@@ -108,6 +115,10 @@ program
     '--with-schema-registry',
     'Generate schema registry builder function for dynamic schema access with optional key sanitization. Useful for SDK generation or runtime schema lookup. Only applicable when using --no-client or schemas-with-metadata template.',
   )
+  .option(
+    '--emit-mcp-manifest <path>',
+    'Emit MCP tool manifest JSON to the specified path (relative to current working directory).',
+  )
   .action(async (input: string, options: CliOptions) => {
     // eslint-disable-next-line no-console -- CLI output: inform user of operation start
     console.log('Retrieving OpenAPI document from', input);
@@ -124,6 +135,43 @@ program
       options,
       generationOptions,
     );
+
+    const effectiveTemplate = determineEffectiveTemplate(
+      generationArgs.noClient,
+      generationArgs.template,
+      generationOptions.template,
+    );
+    const effectiveOptions = buildEffectiveOptions(effectiveTemplate, generationOptions);
+
+    if (options.emitMcpManifest) {
+      const manifestPath = options.emitMcpManifest;
+      const manifestDir = dirname(manifestPath);
+      if (manifestDir && manifestDir !== '.') {
+        await mkdir(manifestDir, { recursive: true });
+      }
+
+      const context = getZodClientTemplateContext(openApiDoc, effectiveOptions);
+      const manifestEntries = context.mcpTools.map(
+        ({ tool, method, path: endpointPath, originalPath, operationId, security }) => ({
+          ...tool,
+          httpOperation: {
+            method,
+            path: endpointPath,
+            originalPath,
+            ...(operationId ? { operationId } : {}),
+          },
+          security,
+        }),
+      );
+
+      await writeFile(
+        manifestPath,
+        `${JSON.stringify(manifestEntries, null, 2)}\n`,
+        'utf8',
+      );
+      // eslint-disable-next-line no-console -- CLI output
+      console.log(`Wrote MCP manifest to ${manifestPath}`);
+    }
 
     await generateZodClientFromOpenAPI(generationArgs);
     // eslint-disable-next-line no-console -- CLI output: inform user of successful completion
