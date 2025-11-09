@@ -14,3 +14,9 @@ export { maybePretty } from './shared/index.js';
 export { getZodSchema } from './conversion/zod/index.js';
 export * from './context/index.js';
 export { logger } from './shared/index.js';
+export { isMcpTool, isMcpToolInput, isMcpToolOutput } from './validation/mcp-type-guards.js';
+export {
+  formatMcpValidationError,
+  type McpValidationError,
+  type McpValidationErrorContext,
+} from './validation/mcp-error-formatting.js';

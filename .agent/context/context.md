@@ -1,6 +1,6 @@
 # Living Context Document
 
-**Last Updated:** November 8, 2025 10:45 PM  
+**Last Updated:** November 9, 2025 2:52 PM  
 **Purpose:** Session changelog + current status  
 **Audience:** Everyone (humans + AI)  
 **Update After:** Every work session
@@ -13,30 +13,36 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ⏳ Pending kickoff  
-**Next Session:** Session 9 – prepare backlog (type guards + docs) and begin implementation  
+**Current Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ✅ Complete  
+**Next Session:** Phase 3 planning (if any) or wrap-up  
 **Branch:** `feat/rewrite`
 
-### Session 8 Snapshot (Complete – Nov 8, 2025 10:50 PM)
+### Session 9 Snapshot (Complete – Nov 9, 2025 2:52 PM)
+
+**Highlights:**
+
+- **Workstream A - MCP Type Guards:** Implemented `isMcpTool`, `isMcpToolInput`, and `isMcpToolOutput` using Ajv for JSON Schema Draft 07 validation with WeakMap caching; comprehensive TSDoc and unit coverage (30+ tests).
+- **Workstream B - Error Formatting:** Created `formatMcpValidationError()` converting Zod errors to JSON-RPC 2.0 format (-32602 code) with JSON path tracking and pointer support; validated with nested object and array test scenarios.
+- **Workstream C - Documentation:** Added MCP sections to README (quick start, validation, error formatting), created comprehensive `docs/MCP_INTEGRATION_GUIDE.md` (8000+ words covering tool generation, runtime validation, security metadata, server integration, troubleshooting, and best practices).
+- **Quality Gates:** All gates green after type-error fixes (10 type errors in test file resolved with optional chaining); format ✅, build ✅, type-check ✅, lint ✅, test ✅ (676 tests), test:snapshot ✅ (158 tests), character ✅ (148 tests).
+- **Exports:** Public API surface enhanced with `isMcpTool`, `isMcpToolInput`, `isMcpToolOutput`, and `formatMcpValidationError` in `lib/src/index.ts`.
+
+**Outcome:** Session 9 complete with runtime validation, error formatting, and comprehensive documentation all validated through full quality gate suite.
+
+### Session 8 Snapshot (Complete – Nov 8, 2025 10:50 PM)
 
 **Highlights:**
 
 - MCP helper modules (`template-context.mcp.*`) deliver deterministic naming, behavioural hints, aggregated schemas, and security metadata.
 - `mcpTools` now ships through `getZodClientTemplateContext`; Handlebars templates emit tool definitions, preserving templated/original paths.
 - CLI `--emit-mcp-manifest` flag shares the programmatic context; characterisation tests enforce parity.
-- `template-context.mcp.inline-json-schema.ts` inlines `$ref` chains into Draft 07 documents while satisfying Sonar return-type rules.
+- `template-context.mcp.inline-json-schema.ts` inlines `$ref` chains into Draft 07 documents while satisfying Sonar return-type rules.
 - Snapshot hygiene complete: high-churn suites moved to fixtures, with rationale logged for retaining `group-strategy`, `recursive-schema`, and composition suites inline.
 - Path utilities now use deterministic parsing, eliminating the slow regex and keeping MCP paths intact.
 - Manual CLI manifest runs captured for petstore (4 tools, `default`-only warning) and multi-auth (2 tools, layered security); artefacts live in `tmp/petstore.mcp.json` and `tmp/multi-auth.mcp.json`.
 - Full quality gate stack rerun after documentation updates — all green with zero skipped tests.
 
-**Outcome:** Session 8 meets its definition of done; documentation system and plans updated, artefacts archived, branch remains green.
-
-### Session 9 Prep (Pending Kickoff)
-
-- **Objective:** introduce MCP runtime type guards, refine error formatting, and document the new manifest flag + workflow.
-- **Backlog:** README/CLI help updates for `--emit-mcp-manifest`, MCP overview/examples, type guard implementations, documentation sweep.
-- **Immediate Actions:** draft TDD plan for type guards, confirm examples for README, maintain green gates before implementation.
+**Outcome:** Session 8 meets its definition of done; documentation system and plans updated, artefacts archived, branch remains green.
 
 ### Session 6 Summary (Complete)
 
@@ -63,7 +69,7 @@
 
 ## ⚠️ Current Blockers
 
-None — quality gates are all green (Nov 8, 2025 10:42 PM). The only remaining tasks for Session 8 are documentation updates and Session 9 prep notes.
+None — quality gates are all green (Nov 9, 2025 2:52 PM). Session 9 complete and ready for merge.
 
 ---
 
@@ -84,21 +90,51 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate                 | Status | Last Check           | Notes                                                                                          |
-| -------------------- | ------ | -------------------- | ---------------------------------------------------------------------------------------------- |
-| `pnpm format`        | ✅     | Nov 8, 2025 1:20 PM  | No new formatting deltas since afternoon run; repo remains clean                               |
-| `pnpm build`         | ✅     | Nov 8, 2025 10:34 PM | `tsup` build succeeded during Workstream D verification                                        |
-| `pnpm type-check`    | ✅     | Nov 8, 2025 10:36 PM | `tsc --noEmit --project tsconfig.lint.json` clean                                              |
-| `pnpm lint`          | ✅     | Nov 8, 2025 10:38 PM | `eslint . --cache --cache-location .eslintcache` all green                                     |
-| `pnpm test:all`      | ✅     | Nov 8, 2025 10:45 PM | Re-ran `pnpm test`, `pnpm test:snapshot`, `pnpm character` post-doc updates (0 failures/skips) |
-| `pnpm character`     | ✅     | Nov 8, 2025 10:45 PM | CLI parity suite passes, including `--emit-mcp-manifest` characterization                      |
-| `pnpm test:snapshot` | ✅     | Nov 8, 2025 10:45 PM | 75 snapshot suites green; fixture migrations stable                                            |
+| Gate                 | Status | Last Check          | Notes                                                                     |
+| -------------------- | ------ | ------------------- | ------------------------------------------------------------------------- |
+| `pnpm format`        | ✅     | Nov 9, 2025 2:50 PM | All files use Prettier code style                                         |
+| `pnpm build`         | ✅     | Nov 9, 2025 2:50 PM | ESM + DTS build successful (96ms + 15.6s)                                 |
+| `pnpm type-check`    | ✅     | Nov 9, 2025 2:51 PM | Zero TypeScript errors (10 test file errors fixed with optional chaining) |
+| `pnpm lint`          | ✅     | Nov 9, 2025 2:51 PM | Zero ESLint warnings/errors                                               |
+| `pnpm test`          | ✅     | Nov 9, 2025 2:51 PM | 676 tests passed across 42 files (2.98s)                                  |
+| `pnpm test:snapshot` | ✅     | Nov 9, 2025 2:52 PM | 158 tests passed across 75 files (14.85s)                                 |
+| `pnpm character`     | ✅     | Nov 9, 2025 2:52 PM | 148 tests passed across 13 files (15.75s)                                 |
 
-**Result:** All quality gates are green; proceed with documentation wrap-up before handing off to Session 9.
+**Result:** All quality gates green — Session 9 complete with 982 passing tests, 0 failures, 0 skipped.
 
 ---
 
 ## 📊 Session Log (Recent → Oldest)
+
+### Session 9 - Type Guards, Error Formatting & Documentation (COMPLETE)
+
+**Dates:** Nov 9, 2025  
+**Status:** ✅ Complete
+
+**Completed Work (this session):**
+
+- Implemented MCP runtime validation module (`lib/src/validation/mcp-type-guards.ts`) with Ajv-based JSON Schema Draft 07 validators
+- Created `isMcpTool`, `isMcpToolInput`, `isMcpToolOutput` type guards with WeakMap caching for performance
+- Developed `formatMcpValidationError` helper converting Zod errors to JSON-RPC 2.0 format with JSON path tracking
+- Enhanced README.md with MCP Quick Start section (validation, error formatting examples)
+- Authored comprehensive `docs/MCP_INTEGRATION_GUIDE.md` (8000+ words)
+- Added 30+ unit tests for type guards covering valid/invalid tools, inputs, outputs
+- Added 13 unit tests for error formatting covering simple, nested, array, edge cases
+- Fixed 10 TypeScript errors in test file with optional chaining
+- Exported all new functions through public API (`lib/src/index.ts`)
+
+**Quality Gates:** ✅ All passing (982 total tests: 676 unit + 158 snapshot + 148 characterization)
+
+**Files Created/Modified:**
+
+- `lib/src/validation/mcp-type-guards.ts` - Runtime validation (150 lines)
+- `lib/src/validation/mcp-type-guards.test.ts` - Type guard tests (105 lines)
+- `lib/src/validation/mcp-error-formatting.ts` - Error formatter (102 lines)
+- `lib/src/validation/mcp-error-formatting.test.ts` - Error format tests (193 lines)
+- `lib/src/validation/index.ts` - Module exports
+- `lib/src/index.ts` - Public API exports
+- `lib/README.md` - MCP Quick Start section
+- `docs/MCP_INTEGRATION_GUIDE.md` - Comprehensive integration guide
 
 ### Session 8 - MCP Tool Generation & Template Integration (COMPLETE)
 
@@ -113,29 +149,6 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 - Implemented CLI `--emit-mcp-manifest` flag, recorded manual runs (petstore + multi-auth), and archived manifests in `tmp/`.
 - Migrated high-churn snapshots to fixtures and documented rationale for remaining inline suites.
 - Replaced hyphenated-path regex with deterministic parser and confirmed all quality gates green post-doc updates.
-
-### Session 9 - Type Guards, Error Formatting & Documentation (PENDING)
-
-**Status:** ⏳ Planning
-
-**Focus:** Implement MCP type guards and error formatting, document manifest workflow, and run full quality suite under the new guards.
-
-**Prep Notes:**
-
-- Backlog captured in parent plan (`--emit-mcp-manifest` README/CLI docs, MCP overview/examples, runtime validators).
-- TDD will target `lib/src/validation/mcp-type-guards.ts` (new) and associated tests; ensure zero type escape hatches.
-- Plan to extend documentation once code lands (README, HANDOFF summary, continuation prompt).
-- Recorded CLI manifest outputs for petstore (4 tools, warning for `default` responses) and multi-auth (2 tools with layered security); artefacts live at `tmp/petstore.mcp.json` and `tmp/multi-auth.mcp.json`.
-- Converted high-churn snapshot suites to fixtures and evaluated the remaining large suites (`group-strategy`, `recursive-schema`, composition) — rationale captured in Session 8 plan.
-- Re-ran `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`, `pnpm test:snapshot`, and `pnpm character`; all green as of Nov 8, 2025 10:42 PM.
-
-**Outstanding / Planned:**
-
-- Thread manual manifest findings + snapshot audit notes through documentation (context, HANDOFF, continuation prompt, plans).
-- Capture README/CLI follow-ups (document `--emit-mcp-manifest`, MCP overview) for Session 9 planning.
-- Formal Session 8 close-out once documentation is merged; tee up Session 9 backlog (type guards, runtime validation, docs sweep).
-
-**Quality Gates:** ✅ format/build/type-check/lint/test/character/snapshot (Nov 8, 2025 10:42 PM).
 
 ### Session 7 - JSON Schema Conversion Engine (COMPLETE)
 

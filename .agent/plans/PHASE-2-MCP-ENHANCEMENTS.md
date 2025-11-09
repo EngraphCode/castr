@@ -682,6 +682,8 @@ This structure ensures each session has focused, testable deliverables while mai
 
 #### **Session 9 – Type Guards, Error Formatting & Documentation**
 
+> **Detailed Plan:** See [`PHASE-2-SESSION-9-MCP-TYPE-GUARDS-DOCS.md`](./PHASE-2-SESSION-9-MCP-TYPE-GUARDS-DOCS.md) for objectives, workstreams, acceptance criteria, and validation steps.
+
 - **Focus:** Add runtime validation helpers, improve error messages, and complete documentation.
 - **Acceptance Criteria**
   - **Type Predicates & Assertions:**
@@ -758,7 +760,7 @@ This structure ensures each session has focused, testable deliverables while mai
 
 **In Progress:**
 
-- ⏳ Session 9: Type guards, error formatting & documentation — kickoff pending (backlog prepared; README/CLI follow-ups and runtime validation helpers queued).
+- ♻️ Session 9: Type guards, error formatting & documentation — Workstream A delivered runtime guard helpers/tests; Workstreams B–C (error formatting + docs) pending.
 
 **Upcoming:**
 

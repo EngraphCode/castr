@@ -65,6 +65,7 @@ Options:
   --group-strategy          groups endpoints by a given strategy, possible values are: 'none' | 'tag' | 'method' | 'tag-file' | 'method-file'
   --complexity-threshold    schema complexity threshold to determine which one (using less than `<` operator) should be assigned to a variable
   --default-status          when defined as `auto-correct`, will automatically use `default` as fallback for `response` when no status code was declared
+  --emit-mcp-manifest <path> Emit MCP tool manifest JSON to the specified path (relative to current working directory)
   -v, --version             Display version number
   -h, --help                Display this message
 ```
@@ -266,6 +267,81 @@ const endpoints = makeApi([
   },
 ]);
 ```
+
+## MCP Tool Generation
+
+`openapi-zod-client` can generate MCP (Model Context Protocol) tool manifests from OpenAPI specifications, enabling AI agents to interact with your API.
+
+### Quick Start
+
+Generate an MCP manifest alongside your schemas:
+
+```bash
+pnpx openapi-zod-client ./petstore.yaml -o ./client.ts --emit-mcp-manifest ./tools.json
+```
+
+This generates:
+
+- `./client.ts` - Zod schemas and endpoint metadata
+- `./tools.json` - MCP tool manifest with JSON Schema validation
+
+### Runtime Validation
+
+Validate tool definitions and payloads at runtime:
+
+```typescript
+import { isMcpTool, isMcpToolInput, isMcpToolOutput } from 'openapi-zod-client';
+
+// Validate tool structure
+const tool = loadToolManifest();
+if (!isMcpTool(tool)) {
+  throw new Error('Invalid tool structure');
+}
+
+// Validate input payload before calling tool
+if (!isMcpToolInput(payload, tool)) {
+  throw new Error('Invalid input for tool');
+}
+
+// Validate output after tool execution
+const result = executeTool(payload);
+if (!isMcpToolOutput(result, tool)) {
+  throw new Error('Tool produced invalid output');
+}
+```
+
+### Error Formatting
+
+Convert validation errors to MCP-friendly format:
+
+```typescript
+import { isMcpToolInput, formatMcpValidationError } from 'openapi-zod-client';
+import { z } from 'zod';
+
+try {
+  const schema = z.object({ id: z.string() });
+  schema.parse(payload);
+} catch (error) {
+  if (error instanceof z.ZodError) {
+    const mcpError = formatMcpValidationError(error, {
+      toolName: 'get_user',
+      direction: 'input',
+    });
+    // Send mcpError to MCP client with JSON-RPC 2.0 format
+    return { error: mcpError };
+  }
+}
+```
+
+### Learn More
+
+See [MCP Integration Guide](../docs/MCP_INTEGRATION_GUIDE.md) for complete documentation including:
+
+- Server integration patterns
+- Manifest structure and metadata
+- Security considerations (Layer 1 vs Layer 2 authentication)
+- Complete examples with the Petstore API
+- Troubleshooting common issues
 
 # TODO
 
