@@ -2,6 +2,7 @@ import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
 import { getZodClientTemplateContext } from '../../../src/context/index.js';
+import { exportAllTypesSnapshot } from '../../__fixtures__/options/generation/export-all-types.js';
 
 const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) => ({
   openapi: '3.0.3',
@@ -143,6 +144,113 @@ describe('export-all-types', () => {
         Playlist: true,
         Song: true,
       },
+      mcpTools: [
+        {
+          tool: {
+            name: 'get_example',
+            description: 'GET /example',
+            inputSchema: {
+              type: 'object',
+            },
+            outputSchema: {
+              type: 'object',
+              properties: {
+                playlist: {
+                  allOf: [
+                    {
+                      type: 'object',
+                      properties: {
+                        name: { type: 'string' },
+                        author: {
+                          type: 'object',
+                          properties: {
+                            name: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+                            title: { type: 'string', minLength: 1, maxLength: 30 },
+                            id: { type: 'number' },
+                            mail: { type: 'string' },
+                            settings: {
+                              type: 'object',
+                              properties: {
+                                theme_color: { type: 'string' },
+                                features: {
+                                  type: 'array',
+                                  items: { type: 'string' },
+                                  minItems: 1,
+                                },
+                              },
+                            },
+                          },
+                        },
+                        songs: {
+                          type: 'array',
+                          items: {
+                            type: 'object',
+                            properties: {
+                              name: { type: 'string' },
+                              duration: { type: 'number' },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    {
+                      type: 'object',
+                      properties: {
+                        theme_color: { type: 'string' },
+                        features: {
+                          type: 'array',
+                          items: { type: 'string' },
+                          minItems: 1,
+                        },
+                      },
+                    },
+                  ],
+                },
+                by_author: {
+                  type: 'object',
+                  properties: {
+                    name: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+                    title: { type: 'string', minLength: 1, maxLength: 30 },
+                    id: { type: 'number' },
+                    mail: { type: 'string' },
+                    settings: {
+                      type: 'object',
+                      properties: {
+                        theme_color: { type: 'string' },
+                        features: {
+                          type: 'array',
+                          items: { type: 'string' },
+                          minItems: 1,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            annotations: {
+              readOnlyHint: true,
+              destructiveHint: false,
+              idempotentHint: false,
+            },
+          },
+          method: 'get',
+          path: '/example',
+          originalPath: '/example',
+          operationId: 'getExample',
+          httpOperation: {
+            method: 'get',
+            path: '/example',
+            originalPath: '/example',
+            operationId: 'getExample',
+          },
+          security: {
+            isPublic: true,
+            usesGlobalSecurity: false,
+            requirementSets: [],
+          },
+        },
+      ],
       options: {
         withAlias: false,
         baseUrl: '',
@@ -156,6 +264,6 @@ describe('export-all-types', () => {
         shouldExportAllTypes: true,
       },
     });
-    expect(prettyOutput).toMatchInlineSnapshot();
+    expect(prettyOutput).toBe(exportAllTypesSnapshot);
   });
 });

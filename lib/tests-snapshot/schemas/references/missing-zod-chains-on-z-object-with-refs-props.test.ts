@@ -134,10 +134,16 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
                     type: "object",
                     properties: {
                       email: {
-                        $ref: "#/definitions/Email",
+                        type: "string",
+                        minLength: 6,
+                        maxLength: 255,
+                        pattern: "/(EmailRegex)/",
                       },
                       password: {
-                        $ref: "#/definitions/Password",
+                        type: "string",
+                        minLength: 16,
+                        maxLength: 255,
+                        pattern: "/(PasswordRegex)/",
                       },
                     },
                     required: ["email", "password"],
@@ -178,7 +184,10 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
                     type: "object",
                     properties: {
                       email: {
-                        $ref: "#/definitions/Email",
+                        type: "string",
+                        minLength: 6,
+                        maxLength: 255,
+                        pattern: "/(EmailRegex)/",
                       },
                     },
                     required: ["email"],

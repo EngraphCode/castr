@@ -2,7 +2,7 @@
 
 **Purpose:** Comprehensive technical context for AI assistants to resume work on the openapi-zod-client modernization project.  
 **Audience:** AI assistants in fresh chat contexts  
-**Last Updated:** November 6, 2025
+**Last Updated:** November 8, 2025 (10:45 PM)
 
 > **Quick orientation needed?** See `.agent/context/context.md` for current status snapshot.  
 > **Detailed session plans?** See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for implementation roadmap.  
@@ -27,16 +27,16 @@
 
 ### Where We Are
 
-**Phase:** Phase 2 Part 2 - Session 8 ♻️ In Progress  
+**Phase:** Phase 2 Part 2 - Session 9 ⏳ Pending kickoff  
 **Branch:** `feat/rewrite`  
-**Status:** MCP helper layer implemented (naming/hints, input/output schema aggregation, security extraction) with unit coverage; ready to integrate helpers into template context, Handlebars templates, and CLI manifest emission  
-**Next:** Wire `mcpTools` into template context, update templates/snapshots, add `--emit-mcp-manifest` flag, document and validate outputs
+**Status:** Session 8 complete — MCP helper modules, CLI parity, manual manifests, and documentation updates have landed; quality gates are green.  
+**Next:** Kick off Session 9 to implement runtime type guards, refine error formatting, and expand documentation (README/CLI notes for `--emit-mcp-manifest`, MCP overview/examples).
 
-**Latest Manual Verification (Nov 6, 2025 18:05 / 19:05):**
+**Recent Verification:**
 
-- `pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"`  
-  Confirms `Pet` conversion rewrites `$ref` targets to `#/definitions/*`, retains `id` requirement, and passes AJV validation for composite + inline schemas.
-- Full quality suite rerun after MCP helper refactor (`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all`) — all green.
+- **Nov 6, 2025:** `pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"` confirmed Draft 07 conversion (`Pet` allOf rewrite, `id` requirement) with AJV validation; full quality suite green immediately after helper refactor.
+- **Nov 8, 2025:** Migrated high-churn snapshot suites to fixtures (hyphenated parameters, export-all-types, export-all-named-schemas, export-schemas-option, schema-name-already-used), replaced the slow regex in `path-utils`, and reran the full quality gate stack (`pnpm lint`, `pnpm test`, `pnpm test:snapshot`, `pnpm type-check`, `pnpm build`, `pnpm character`) — all green on `feat/rewrite`.
+- **Nov 8, 2025 (10:40 PM):** `pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/openapi/v3.0/petstore-expanded.yaml --emit-mcp-manifest ../tmp/petstore.mcp.json` and `…/multi-auth.yaml --emit-mcp-manifest ../tmp/multi-auth.mcp.json` — stored MCP manifests for Workstream D (petstore reports `default`-only warning, multi-auth surfaces layered OAuth2 + API key requirements).
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -115,12 +115,15 @@
    - Manual verification (Nov 6, 2025): `tsx --eval` inspection of `petstore-expanded.yaml` confirmed `Pet` → Draft 07 conversion (`allOf` rewrite, `id` requirement) with AJV validation for both composite and inline schemas.
    - Documentation + plans updated (`context.md`, `HANDOFF.md`, `PHASE-2-MCP-ENHANCEMENTS.md`) — ready to kick off Session 8 (MCP tool generation).
    - MCP spec review (Nov 6, 2025 14:15): tool IDs must be stable lowercase ASCII strings; tool annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) are optional hints; input/output schemas emitted for tools must be JSON Schema Draft 07 objects; generated manifests must satisfy `ToolSchema` from `@modelcontextprotocol/sdk/types.js`; prefer fail-fast errors when constraints cannot be met.
-8. **Session 8 (In Progress): MCP Tool Generation & Template Integration**
-   - Introduced MCP helper modules for deterministic tool naming/hints and JSON Schema aggregation (`template-context.mcp.naming.ts`, `.parameters.ts`, `.responses.ts`, `.schemas.ts`).
-   - Added unit coverage (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) validating naming, hint mapping, schema wrapping, aggregated input/output schemas, and security metadata.
-   - Re-exported helpers via `template-context.mcp.ts` and `context/index.ts` to unblock template and CLI integration.
-   - Reran full quality suite (`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all`) after helper implementation — all green.
-   - Next: wire `mcpTools` into template context/Handlebars templates, implement `--emit-mcp-manifest`, update snapshots/docs, and perform manual manifest verification.
+8. **Session 8 (Complete): MCP Tool Generation & Template Integration**
+   - Helper modules (naming, hints, schema aggregation, security) drive `mcpTools`; templated + original paths flow through the `httpOperation` block for manifests.
+   - CLI `--emit-mcp-manifest` now wraps the shared context; characterisation tests enforce parity with programmatic generation.
+   - `template-context.mcp.inline-json-schema.ts` inlines `$ref` chains into Draft 07 documents while satisfying Sonar return-type rules.
+   - Snapshot hygiene complete: high-churn suites migrated to fixtures; remaining inline suites (group-strategy, recursive-schema, composition) retain inline expectations with documented rationale.
+   - `path-utils.ts` now uses deterministic parsing, ensuring colonised routes remain intact in manifest metadata.
+   - Manual manifests captured via `pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js … --emit-mcp-manifest ../tmp/*.mcp.json` for petstore (4 tools; `default` warnings) and multi-auth (2 tools; layered OAuth2 + API key). Artefacts stored under `tmp/`.
+   - Quality gates (`pnpm lint`, `pnpm test`, `pnpm test:snapshot`, `pnpm type-check`, `pnpm build`, `pnpm character`) rerun post-doc updates — all green (Nov 8, 2025 10:45 PM).
+   - Hand-off ready: documentation set, plans, and manifests updated; backlog for Session 9 captured in parent plan (README/CLI docs, type guards, error formatting).
 
 ---
 

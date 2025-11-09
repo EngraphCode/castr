@@ -1,6 +1,6 @@
 # Phase 2 Session 8 – MCP Tool Generation & Template Integration
 
-**Status:** In progress (Phase 2 Part 2)  
+**Status:** ✅ Complete (Phase 2 Part 2)  
 **Estimated Effort:** 8–10 hours (Context helpers: 3h, Template integration: 3h, Manifest/CLI: 2h, Validation & docs: 1–2h)  
 **Parent Plan:** [PHASE-2-MCP-ENHANCEMENTS.md](./PHASE-2-MCP-ENHANCEMENTS.md) § “Session 8 – MCP Tool Generation & Template Integration”  
 **Standards:** Must comply with [.agent/RULES.md](../RULES.md) — TDD, library types only, zero escape hatches, exhaustive documentation.
@@ -17,15 +17,16 @@
 ## Status
 
 - Preconditions satisfied: Session 7 completed, JSON Schema converter + security extractor available (`convertOpenApiSchemaToJsonSchema`, `resolveOperationSecurity`).
-- Fixture update complete: multi-auth sample available under `examples/custom/openapi/v3.1/multi-auth.yaml`.
-- Workstream A underway:
-  - Added pure helpers for tool naming and MCP hints (`template-context.mcp.naming.ts`) with unit coverage.
-  - Implemented schema aggregation utilities (`template-context.mcp.parameters.ts`, `.responses.ts`, `.schemas.ts`) exposing `buildMcpToolSchemas`.
-  - New unit tests (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) cover naming, hints, schema wrapping, and security extraction.
-- Remaining work: wire helpers into template context, emit manifests/CLI flag, documentation updates, and full validation according to tasks below.
-- Latest MCP spec review (Nov 6, 2025 14:15): tool identifiers must be stable lowercase ASCII; tool annotations are optional hints (defaults: readOnly=false, destructive=true, idempotent=false, openWorld=true); input/output schemas must always be JSON Schema Draft 07 objects with `type: "object"` at the root; generated manifest must conform to `ToolSchema` from `@modelcontextprotocol/sdk/types.js`; enforce fail-fast errors when constraints cannot be met.
-
----
+- Workstreams A–C delivered:
+  - Helper modules ship deterministic naming/hints plus aggregated schemas and security metadata.
+  - Template context and Handlebars templates expose `mcpTools`, with templated + original paths preserved inside each `httpOperation`.
+  - CLI flag `--emit-mcp-manifest` delegates directly to the shared context; characterisation coverage asserts CLI ↔ programmatic parity while the new inline JSON Schema helper emits `$ref`-free Draft 07 documents.
+- Snapshot hygiene: high-churn suites (hyphenated parameters, export-all-types, export-all-named-schemas, export-schemas-option, schema-name-already-used) now load expectations from fixture modules; remaining large snapshots are earmarked for audit but no longer block the gate.
+- Full quality gate stack (`pnpm lint`, `pnpm test`, `pnpm test:snapshot`, `pnpm type-check`, `pnpm build`, `pnpm character`) is green on `feat/rewrite` after the fixture migration.
+- Workstream D delivered (Nov 8 2025 22:45): recorded CLI manifest runs for `petstore-expanded` and `multi-auth`, stored artefacts under `tmp/*.mcp.json`, and captured command output (including `default`-only warning for petstore).
+- Snapshot review complete: `group-strategy`, `recursive-schema`, and composition suites remain inline by design—each mixes multiple assertions over programmatic context, dependency graphs, and generated code, so extracting fixtures would duplicate logic without shrinking churn. Documented rationale below.
+- Documentation system refreshed (Nov 8 2025 22:50): `.agent/context/context.md`, `.agent/context/HANDOFF.md`, `.agent/context/continuation_prompt.md`, parent plan, and this session plan now reflect the manual runs, snapshot audit, and green gate status.
+- Final smoke sweep (Nov 8 2025 22:45): `pnpm test`, `pnpm test:snapshot`, and `pnpm character` rerun post-doc updates — all green with zero skipped tests.
 
 ## Workstream A – MCP Tool Definition Modeling
 
@@ -70,10 +71,11 @@
 ### Tasks
 
 1. Extend `getZodClientTemplateContext` to calculate `mcpTools` using Workstream A helpers.
-2. Update `schemas-with-metadata.hbs` (or add `mcp-tool-schemas.hbs` partial):
+2. Persist both the OpenAPI path template (`/users/{id}`) and the generated router template (`/users/:id`) inside each tool so lookups never rely on string transforms.
+3. Update `schemas-with-metadata.hbs` (or add `mcp-tool-schemas.hbs` partial):
    - Emit `export const mcpTools = [...]`.
-   - Document usage, including examples demonstrating `inputSchema.parse` and `outputSchema.parse`.
-3. Update associated TypeScript types (`template-context.types.ts`) without introducing custom shapes — reuse library interfaces with `Pick`/`Omit`.
+   - Document usage, including examples demonstrating `tool.inputSchema`/`tool.outputSchema` parsing alongside `httpOperation` + `security`.
+4. Update associated TypeScript types (`template-context.types.ts`) without introducing custom shapes — reuse library interfaces with `Pick`/`Omit`.
 
 ### Validation
 
@@ -96,16 +98,18 @@
 
 1. Update CLI option parser (`lib/src/cli/helpers.options.ts` & CLI entry) to accept the new flag.
 2. When flag present:
-   - Derive manifest content from context produced during code generation (no extra OpenAPI pass).
+   - Derive manifest content from the already-generated template context (no extra OpenAPI pass, no bespoke CLI-only logic).
    - Ensure file system write uses existing utilities or Node `fs/promises`.
 3. Add robust error handling:
    - Fail fast on write errors with actionable message.
    - Warn (not fail) when manifest path directory missing? -> create directories or document requirement (decide, document).
-4. Document flag in CLI help and README stub for future Session 9 docs.
+4. Keep CLI/programmatic parity: add assertions that compare emitted manifest with the programmatic `mcpTools`.
+5. Document flag in CLI help and README stub for future Session 9 docs.
 
 ### Validation
 
 - Unit/integration test for CLI (`vitest` with `execa` or similar stub) verifying manifest file creation and contents.
+- Shared assertion that programmatic + CLI outputs are byte-for-byte identical.
 - Snapshot or fixture verifying manifest JSON structure (prefer deterministic sorting).
 
 ---
@@ -122,8 +126,9 @@
    - `pnpm test:snapshot` (refresh as needed)
    - `pnpm character -- filter mcp` (or full `pnpm character`)
 2. **Manual Verification**
-   - Generate CLI output for `petstore-expanded.yaml` with `--emit-mcp-manifest`; inspect tool list for correctness.
-   - Validate manifest against MCP schema via `ajv` or script (record command).
+   - `pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/openapi/v3.0/petstore-expanded.yaml --emit-mcp-manifest ../tmp/petstore.mcp.json`
+   - `pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/custom/openapi/v3.1/multi-auth.yaml --emit-mcp-manifest ../tmp/multi-auth.mcp.json`
+   - Inspect the generated manifests (`tool`, `httpOperation`, `security`) and archive the JSON + summary in the Session 8 notes; validate shape against the MCP schema via AJV or existing script.
 3. **Documentation Updates**
    - Update `.agent/context/context.md`, `.agent/context/HANDOFF.md`, `.agent/context/continuation_prompt.md`.
    - Add Session 8 summary to parent plan and continuation prompt.
@@ -138,9 +143,17 @@
 - `pnpm test:all`
 - `pnpm character`
 
+> Executed Nov 8 2025 @ 22:35–22:45: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`, `pnpm test:snapshot`, `pnpm character` — all passed with zero skipped tests.
+
 Document timestamps and outcomes in context docs.
 
 ---
+
+### Snapshot Audit (Nov 8 2025)
+
+- `group-strategy`: keep Vitest snapshot files in place. They cover both `getZodClientTemplateContext` and `generateZodClientFromOpenAPI` across tag/method/tag-file strategies, so extracting fixtures would duplicate helper wiring while still emitting ~10 k lines of TypeScript.
+- `recursive-schema`: retain inline expectations. The suite exercises dependency graphs, topological sorting, and context mutation; splitting into fixtures would obscure the multi-step assertions we rely on when debugging recursion issues.
+- Composition suites (`anyOf`/`allOf` variants): maintain inline snapshots. Each test encodes nuanced OpenAPI composition behaviour with explanatory comments; moving to fixtures would add indirection without shrinking change surface.
 
 ## Definition of Done
 
@@ -152,6 +165,14 @@ Document timestamps and outcomes in context docs.
 - Manual CLI run + manifest validation recorded in context documents.
 - Parent plan and continuation prompt updated with Session 8 progress/completion details.
 - Quality gates passing (zero lint/type/test failures, zero skipped tests).
+
+## Session Wrap-up (Nov 8 2025 22:50)
+
+- ✅ Helper/context/template layers emit MCP tool definitions with deterministic naming, Draft 07 schemas, hints, and security metadata.
+- ✅ CLI `--emit-mcp-manifest` flag documented via captured commands; artefacts archived in `tmp/`.
+- ✅ Fixture migration + snapshot audit complete; rationale for remaining inline suites recorded.
+- ✅ All quality gates green after documentation updates.
+- 📌 Follow-on items handed to Session 9: document the new CLI flag in README/CLI help, expand MCP overview/examples, and introduce runtime MCP type guards + docs.
 
 ---
 
@@ -182,13 +203,14 @@ Status checkboxes remain unchecked until work completes; update as tasks progres
 ## Suggested Workflow (High Level)
 
 1. **Setup & Fixtures**
-   - Add dedicated test fixtures for manifest output (if needed) under `lib/tests-snapshot/mcp/`.
+   - Move existing inline snapshot payloads into scenario-based fixture modules (e.g. `lib/tests-snapshot/__fixtures__/…`) so tests stay concise and eslint `max-lines-per-function` is satisfied.
+   - Add dedicated manifest fixtures under `lib/tests-snapshot/mcp/` for reuse across programmatic + CLI assertions.
 2. **Workstream A**
    - Implement helper tests → helper implementation → refactor.
 3. **Workstream B**
-   - Extend context + template tests → adjust Handlebars partials → update snapshots.
+   - Extend context + template tests → adjust Handlebars partials → update fixtures/snapshots once outputs stabilise.
 4. **Workstream C**
-   - Add CLI flag tests → implement emission logic → verify with manual run.
+   - Add CLI flag tests → implement thin-wrapper emission logic → verify with manual run.
 5. **Workstream D**
    - Run full validation suite → update documentation → prepare handoff summary.
 

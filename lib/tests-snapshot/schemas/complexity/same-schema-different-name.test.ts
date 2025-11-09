@@ -119,6 +119,12 @@ test('same-schema-different-name', async () => {
         "endpointsGroups": {},
         "mcpTools": [
             {
+                "httpOperation": {
+                    "method": "post",
+                    "operationId": "postSameSchemaDifferentName",
+                    "originalPath": "/same-schema-different-name",
+                    "path": "/same-schema-different-name",
+                },
                 "method": "post",
                 "operationId": "postSameSchemaDifferentName",
                 "originalPath": "/same-schema-different-name",
@@ -174,6 +180,12 @@ test('same-schema-different-name', async () => {
                 },
             },
             {
+                "httpOperation": {
+                    "method": "put",
+                    "operationId": "putSameSchemaDifferentName",
+                    "originalPath": "/same-schema-different-name",
+                    "path": "/same-schema-different-name",
+                },
                 "method": "put",
                 "operationId": "putSameSchemaDifferentName",
                 "originalPath": "/same-schema-different-name",

@@ -7,7 +7,7 @@ import type {
   ParameterObject,
   PathItemObject,
   ReferenceObject,
-  SchemaObject,
+  SchemaObject as OpenApiSchemaObject,
 } from 'openapi3-ts/oas31';
 import {
   collectParameterGroups,
@@ -20,8 +20,9 @@ import {
 } from './template-context.mcp.responses.js';
 import type { OperationSecurityMetadata } from '../conversion/json-schema/security/extract-operation-security.js';
 import { resolveOperationSecurity } from '../conversion/json-schema/security/extract-operation-security.js';
+import { inlineJsonSchemaRefs } from './template-context.mcp.inline-json-schema.js';
 
-const isObjectSchema = (schema: SchemaObject | undefined): schema is SchemaObject => {
+const isObjectSchema = (schema: OpenApiSchemaObject | undefined): schema is OpenApiSchemaObject => {
   if (!schema) {
     return false;
   }
@@ -37,11 +38,11 @@ const isObjectSchema = (schema: SchemaObject | undefined): schema is SchemaObjec
   return false;
 };
 
-const wrapSchema = (schema: SchemaObject | undefined): SchemaObject => {
+const wrapSchema = (schema: OpenApiSchemaObject | undefined): OpenApiSchemaObject => {
   if (schema === undefined) {
     return {
       type: 'object',
-    } satisfies SchemaObject;
+    } satisfies OpenApiSchemaObject;
   }
 
   if (isObjectSchema(schema)) {
@@ -53,17 +54,19 @@ const wrapSchema = (schema: SchemaObject | undefined): SchemaObject => {
     properties: {
       value: schema,
     },
-  } satisfies SchemaObject;
+  } satisfies OpenApiSchemaObject;
 };
 
-export const buildInputSchemaObject = (schema: SchemaObject | undefined): SchemaObject =>
-  wrapSchema(schema);
+export const buildInputSchemaObject = (
+  schema: OpenApiSchemaObject | undefined,
+): OpenApiSchemaObject => wrapSchema(schema);
 
-export const buildOutputSchemaObject = (schema: SchemaObject | undefined): SchemaObject =>
-  wrapSchema(schema);
+export const buildOutputSchemaObject = (
+  schema: OpenApiSchemaObject | undefined,
+): OpenApiSchemaObject => wrapSchema(schema);
 
 const assignSection = (
-  targetProperties: Record<string, SchemaObject>,
+  targetProperties: Record<string, OpenApiSchemaObject>,
   requiredSections: Set<string>,
   sectionName: string,
   group?: ParameterAccumulator,
@@ -89,7 +92,7 @@ function createInputSchema(
   const parameterGroups = collectParameterGroups(document, pathParameters, operation.parameters);
   const requestBody = resolveRequestBodySchemaObject(document, operation);
 
-  const properties: Record<string, SchemaObject> = {};
+  const properties: Record<string, OpenApiSchemaObject> = {};
   const requiredSections = new Set<string>();
 
   assignSection(properties, requiredSections, 'path', parameterGroups.path);
@@ -97,20 +100,21 @@ function createInputSchema(
   assignSection(properties, requiredSections, 'headers', parameterGroups.header);
 
   if (requestBody) {
-    properties.body = buildInputSchemaObject(requestBody.schema);
+    properties['body'] = buildInputSchemaObject(requestBody.schema);
     if (requestBody.required) {
       requiredSections.add('body');
     }
   }
 
-  const inputSchemaObject: SchemaObject = {
+  const required = requiredSections.size > 0 ? [...requiredSections] : undefined;
+  const inputSchemaObject: OpenApiSchemaObject = {
     type: 'object',
     properties,
-    required: requiredSections.size > 0 ? [...requiredSections] : undefined,
+    ...(required ? { required } : {}),
   };
 
   const wrapped = buildInputSchemaObject(inputSchemaObject);
-  const converted: JsonSchema = convertOpenApiSchemaToJsonSchema(wrapped);
+  const converted = inlineJsonSchemaRefs(convertOpenApiSchemaToJsonSchema(wrapped), document);
   return converted;
 }
 
@@ -120,7 +124,10 @@ function createOutputSchema(
 ): JsonSchema | undefined {
   const successSchema = resolvePrimarySuccessResponseSchema(document, operation);
   const converted: JsonSchema | undefined = successSchema
-    ? convertOpenApiSchemaToJsonSchema(buildOutputSchemaObject(successSchema))
+    ? inlineJsonSchemaRefs(
+        convertOpenApiSchemaToJsonSchema(buildOutputSchemaObject(successSchema)),
+        document,
+      )
     : undefined;
 
   return converted;
@@ -176,9 +183,11 @@ export const buildMcpToolSchemas = ({
     throw new Error(`Missing operation for ${method.toUpperCase()} ${path}`);
   }
 
+  const inputSchema = createInputSchema(document, pathItem.parameters, operation);
+  const outputSchema = createOutputSchema(document, operation);
   return {
-    inputSchema: createInputSchema(document, pathItem.parameters, operation),
-    outputSchema: createOutputSchema(document, operation),
+    inputSchema,
+    ...(outputSchema ? { outputSchema } : {}),
     security: resolveOperationSecurity({
       document,
       operationSecurity: operation.security,

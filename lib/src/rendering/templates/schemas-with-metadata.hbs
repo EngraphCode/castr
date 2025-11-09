@@ -127,11 +127,11 @@ export const mcpTools = [
 	{
 		tool: {{{json this.tool 6}}},
 		httpOperation: {
-			method: "{{this.method}}" as const,
-			path: "{{this.path}}",
-			originalPath: "{{this.originalPath}}"
-			{{#if this.operationId}},
-			operationId: "{{this.operationId}}"
+			method: "{{this.httpOperation.method}}" as const,
+			path: "{{this.httpOperation.path}}",
+			originalPath: "{{this.httpOperation.originalPath}}"
+			{{#if this.httpOperation.operationId}},
+			operationId: "{{this.httpOperation.operationId}}"
 			{{/if}}
 		},
 		security: {{{json this.security 6}}},

@@ -214,7 +214,15 @@ test('handle-refs-with-dots-in-name', async () => {
             type: "object",
             properties: {
               thing: {
-                $ref: "#/definitions/Aaa-bbb.CccDdd_eee.Fff_ggg.HhhIiii_jjj",
+                type: "object",
+                properties: {
+                  aaa: {
+                    type: "string",
+                  },
+                  bbb: {
+                    type: "string",
+                  },
+                },
               },
             },
           },

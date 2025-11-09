@@ -176,7 +176,20 @@ export const mcpTools = [
         type: "object",
         properties: {
           recursive: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              middle: {
+                type: "object",
+                properties: {
+                  user: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
+            },
           },
           basic: {
             type: "number",
@@ -500,6 +513,12 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
     "endpointsGroups": {},
     "mcpTools": [
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getExample",
+                "originalPath": "/example",
+                "path": "/example",
+            },
             "method": "get",
             "operationId": "getExample",
             "originalPath": "/example",
@@ -526,7 +545,52 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "type": "boolean",
                         },
                         "someUser": {
-                            "$ref": "#/definitions/UserWithFriends",
+                            "properties": {
+                                "bestFriend": {
+                                    "properties": {
+                                        "circle": {
+                                            "items": {
+                                                "$ref": "#/definitions/Friend",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "nickname": {
+                                            "type": "string",
+                                        },
+                                        "user": {
+                                            "$ref": "#/definitions/UserWithFriends",
+                                        },
+                                    },
+                                    "type": "object",
+                                },
+                                "friends": {
+                                    "items": {
+                                        "properties": {
+                                            "circle": {
+                                                "items": {
+                                                    "$ref": "#/definitions/Friend",
+                                                },
+                                                "type": "array",
+                                            },
+                                            "nickname": {
+                                                "type": "string",
+                                            },
+                                            "user": {
+                                                "$ref": "#/definitions/UserWithFriends",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                    "type": "array",
+                                },
+                                "name": {
+                                    "type": "string",
+                                },
+                                "parent": {
+                                    "$ref": "#/definitions/UserWithFriends",
+                                },
+                            },
+                            "type": "object",
                         },
                     },
                     "type": "object",
@@ -651,7 +715,52 @@ export const mcpTools = [
         type: "object",
         properties: {
           someUser: {
-            $ref: "#/definitions/UserWithFriends",
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              parent: {
+                $ref: "#/definitions/UserWithFriends",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    nickname: {
+                      type: "string",
+                    },
+                    user: {
+                      $ref: "#/definitions/UserWithFriends",
+                    },
+                    circle: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Friend",
+                      },
+                    },
+                  },
+                },
+              },
+              bestFriend: {
+                type: "object",
+                properties: {
+                  nickname: {
+                    type: "string",
+                  },
+                  user: {
+                    $ref: "#/definitions/UserWithFriends",
+                  },
+                  circle: {
+                    type: "array",
+                    items: {
+                      $ref: "#/definitions/Friend",
+                    },
+                  },
+                },
+              },
+            },
           },
           someProp: {
             type: "boolean",
@@ -962,10 +1071,70 @@ export const mcpTools = [
         type: "object",
         properties: {
           playlist: {
-            $ref: "#/definitions/Playlist",
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              author: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                  mail: {
+                    type: "string",
+                  },
+                  settings: {
+                    type: "object",
+                    properties: {
+                      theme_color: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+              },
+              songs: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    duration: {
+                      type: "number",
+                    },
+                    in_playlists: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Playlist",
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           by_author: {
-            $ref: "#/definitions/Author",
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              mail: {
+                type: "string",
+              },
+              settings: {
+                type: "object",
+                properties: {
+                  theme_color: {
+                    type: "string",
+                  },
+                },
+              },
+            },
           },
         },
       },

@@ -101,5 +101,12 @@ describe('path-utils', () => {
     it('should preserve underscores in parameter names', () => {
       expect(replaceHyphenatedPath('/pet/{owner_name}')).toBe('/pet/:ownerName');
     });
+
+    it('should normalize dotted parameter names for colon paths', () => {
+      expect(replaceHyphenatedPath('/users/{profile.id}')).toBe('/users/:profileId');
+      expect(replaceHyphenatedPath('/teams/{team.slug}/members/{member_id}')).toBe(
+        '/teams/:teamSlug/members/:memberId',
+      );
+    });
   });
 });

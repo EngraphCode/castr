@@ -117,7 +117,15 @@ test('allOf-infer-required-only-item', async () => {
               user: {
                 allOf: [
                   {
-                    $ref: "#/definitions/user",
+                    type: "object",
+                    properties: {
+                      name: {
+                        type: "string",
+                      },
+                      email: {
+                        type: "string",
+                      },
+                    },
                   },
                   {
                     type: "object",

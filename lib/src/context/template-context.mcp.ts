@@ -1,12 +1,10 @@
 import { ToolSchema, type Tool } from '@modelcontextprotocol/sdk/types.js';
 import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { EndpointDefinition, HttpMethod } from '../endpoints/definition.types.js';
 import type { OperationSecurityMetadata } from '../conversion/json-schema/security/extract-operation-security.js';
-import {
-  getOperationForEndpoint,
-  getOriginalPathWithBrackets,
-} from './template-context.endpoints.helpers.js';
+import { getOriginalPathWithBrackets } from './template-context.endpoints.helpers.js';
 import { getMcpToolName, getMcpToolHints } from './template-context.mcp.naming.js';
 import {
   buildInputSchemaObject,
@@ -14,6 +12,7 @@ import {
   buildMcpToolSchemas,
   type McpToolSchemaResult,
 } from './template-context.mcp.schemas.js';
+import { replaceHyphenatedPath } from '../shared/utils/index.js';
 
 const normalizeDescription = (
   operation: OperationObject,
@@ -23,18 +22,23 @@ const normalizeDescription = (
   title?: OperationObject['summary'];
   description: string;
 } => {
-  const summary = operation.summary?.trim();
-  const primaryDescription = operation.description?.trim();
+  const normalizeText = (value: string | undefined): string | undefined => {
+    const trimmed = value?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : undefined;
+  };
+
+  const summary = normalizeText(operation.summary);
+  const primaryDescription = normalizeText(operation.description);
   const fallback = `${method.toUpperCase()} ${path}`;
 
-  if (primaryDescription && primaryDescription.length > 0) {
+  if (primaryDescription) {
     return {
-      title: summary && summary.length > 0 ? summary : undefined,
+      title: summary,
       description: primaryDescription,
     };
   }
 
-  if (summary && summary.length > 0) {
+  if (summary) {
     return {
       title: summary,
       description: summary,
@@ -46,13 +50,65 @@ const normalizeDescription = (
   };
 };
 
-export type TemplateContextMcpTool = {
+export interface TemplateContextMcpTool {
   tool: Tool;
   method: EndpointDefinition['method'];
   path: EndpointDefinition['path'];
   originalPath: string;
   operationId?: OperationObject['operationId'];
+  httpOperation: {
+    method: EndpointDefinition['method'];
+    path: EndpointDefinition['path'];
+    originalPath: string;
+    operationId?: OperationObject['operationId'];
+  };
   security: OperationSecurityMetadata;
+}
+
+const collectCandidatePaths = (
+  documentPaths: OpenAPIObject['paths'],
+  templatedPath: string,
+): string[] => {
+  const availablePaths = documentPaths ?? {};
+  const uniquePaths = new Set<string>();
+
+  const directCandidates = [templatedPath, getOriginalPathWithBrackets(templatedPath)];
+  for (const candidate of directCandidates) {
+    if (candidate && availablePaths[candidate]) {
+      uniquePaths.add(candidate);
+    }
+  }
+
+  for (const candidate of Object.keys(availablePaths)) {
+    if (replaceHyphenatedPath(candidate) === templatedPath) {
+      uniquePaths.add(candidate);
+    }
+  }
+
+  return [...uniquePaths];
+};
+
+const resolveOperationForEndpoint = (
+  document: OpenAPIObject,
+  endpoint: EndpointDefinition,
+): { operation: OperationObject; originalPath: string } => {
+  const documentPaths = document.paths ?? {};
+
+  const candidatePaths = collectCandidatePaths(documentPaths, endpoint.path);
+
+  for (const candidatePath of candidatePaths) {
+    const pathItem = documentPaths[candidatePath];
+    if (!pathItem || isReferenceObject(pathItem)) {
+      continue;
+    }
+
+    const operation = pathItem[endpoint.method];
+    if (operation) {
+      return { operation, originalPath: candidatePath };
+    }
+  }
+
+  throw new Error(`Missing operation for ${endpoint.method.toUpperCase()} ${endpoint.path}`);
 };
 
 export const buildMcpTools = ({
@@ -63,24 +119,17 @@ export const buildMcpTools = ({
   endpoints: EndpointDefinition[];
 }): TemplateContextMcpTool[] => {
   return endpoints.map((endpoint) => {
-    const operation = getOperationForEndpoint(document, endpoint);
-    if (!operation) {
-      throw new Error(`Missing operation for ${endpoint.method.toUpperCase()} ${endpoint.path}`);
-    }
-
-    const candidatePath = getOriginalPathWithBrackets(endpoint.path);
-    const hasCanonicalPath = document.paths?.[candidatePath] !== undefined;
-    const documentPath = hasCanonicalPath ? candidatePath : endpoint.path;
+    const { operation, originalPath } = resolveOperationForEndpoint(document, endpoint);
 
     const { inputSchema, outputSchema, security } = buildMcpToolSchemas({
       document,
-      path: documentPath,
+      path: originalPath,
       method: endpoint.method,
     });
 
-    const { title, description } = normalizeDescription(operation, endpoint.method, documentPath);
+    const { title, description } = normalizeDescription(operation, endpoint.method, originalPath);
     const toolCandidate = {
-      name: getMcpToolName(operation.operationId, endpoint.method, documentPath),
+      name: getMcpToolName(operation.operationId, endpoint.method, originalPath),
       ...(title ? { title } : {}),
       description,
       inputSchema,
@@ -90,12 +139,20 @@ export const buildMcpTools = ({
 
     const tool = ToolSchema.parse(toolCandidate);
 
+    const httpOperation = {
+      method: endpoint.method,
+      path: endpoint.path,
+      originalPath,
+      ...(operation.operationId ? { operationId: operation.operationId } : {}),
+    };
+
     return {
       tool,
       method: endpoint.method,
       path: endpoint.path,
-      originalPath: documentPath,
-      operationId: operation.operationId,
+      originalPath,
+      ...(operation.operationId ? { operationId: operation.operationId } : {}),
+      httpOperation,
       security,
     };
   });

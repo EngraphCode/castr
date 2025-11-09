@@ -196,7 +196,15 @@ test('object-default-values', async () => {
                     },
                     type: "object",
                     additionalProperties: {
-                      $ref: "#/definitions/MyComponent",
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "number",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                      },
                     },
                   },
                 },

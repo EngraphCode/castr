@@ -151,24 +151,13 @@ program
       }
 
       const context = getZodClientTemplateContext(openApiDoc, effectiveOptions);
-      const manifestEntries = context.mcpTools.map(
-        ({ tool, method, path: endpointPath, originalPath, operationId, security }) => ({
-          ...tool,
-          httpOperation: {
-            method,
-            path: endpointPath,
-            originalPath,
-            ...(operationId ? { operationId } : {}),
-          },
-          security,
-        }),
-      );
+      const manifestEntries = context.mcpTools.map(({ tool, httpOperation, security }) => ({
+        tool,
+        httpOperation,
+        security,
+      }));
 
-      await writeFile(
-        manifestPath,
-        `${JSON.stringify(manifestEntries, null, 2)}\n`,
-        'utf8',
-      );
+      await writeFile(manifestPath, `${JSON.stringify(manifestEntries, null, 2)}\n`, 'utf8');
       // eslint-disable-next-line no-console -- CLI output
       console.log(`Wrote MCP manifest to ${manifestPath}`);
     }

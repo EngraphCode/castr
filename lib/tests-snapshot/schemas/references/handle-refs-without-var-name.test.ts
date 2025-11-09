@@ -45,6 +45,12 @@ test('handle-refs-without-var-name', () => {
         "endpointsGroups": {},
         "mcpTools": [
             {
+                "httpOperation": {
+                    "method": "get",
+                    "operationId": "getSomething",
+                    "originalPath": "/something",
+                    "path": "/something",
+                },
                 "method": "get",
                 "operationId": "getSomething",
                 "originalPath": "/something",
@@ -69,7 +75,7 @@ test('handle-refs-without-var-name', () => {
                         "properties": {
                             "value": {
                                 "items": {
-                                    "$ref": "#/definitions/Basic",
+                                    "type": "object",
                                 },
                                 "type": "array",
                             },

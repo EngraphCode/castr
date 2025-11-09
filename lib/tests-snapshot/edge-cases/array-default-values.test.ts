@@ -287,14 +287,23 @@ test('array-default-values', async () => {
                     ],
                     type: "array",
                     items: {
-                      $ref: "#/definitions/MyComponent",
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "number",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                      },
                     },
                   },
                   "array-ref-enum": {
                     default: ["one", "two"],
                     type: "array",
                     items: {
-                      $ref: "#/definitions/MyEnum",
+                      type: "string",
+                      enum: ["one", "two", "three"],
                     },
                   },
                 },

@@ -79,13 +79,28 @@ test('allOf-missing-and', async () => {
               value: {
                 allOf: [
                   {
-                    $ref: "#/definitions/test1",
+                    type: "object",
+                    properties: {
+                      text1: {
+                        type: "string",
+                      },
+                    },
                   },
                   {
-                    $ref: "#/definitions/test2",
+                    type: "object",
+                    properties: {
+                      text2: {
+                        type: "number",
+                      },
+                    },
                   },
                   {
-                    $ref: "#/definitions/test3",
+                    type: "object",
+                    properties: {
+                      text3: {
+                        type: "boolean",
+                      },
+                    },
                   },
                 ],
               },

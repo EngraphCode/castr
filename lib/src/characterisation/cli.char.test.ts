@@ -4,6 +4,8 @@ import { dirname, join } from 'node:path';
 import { execSync } from 'node:child_process';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { fileURLToPath } from 'node:url';
+import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
+import { getZodClientTemplateContext } from '../context/index.js';
 
 /**
  * Characterisation Tests: CLI Behavior
@@ -207,8 +209,88 @@ describe('Characterisation: CLI Behavior', () => {
       expect(content).not.toContain('as unknown as');
     });
 
-    it('should emit MCP manifest with --emit-mcp-manifest option', () => {
-      const inputPath = createTestSpec('manifest-test.json');
+    it('should emit MCP manifest with --emit-mcp-manifest option', async () => {
+      const manifestSpec: Partial<OpenAPIObject> = {
+        openapi: '3.1.0',
+        info: { title: 'Profiles', version: '1.0.0' },
+        components: {
+          securitySchemes: {
+            ApiKeyAuth: {
+              type: 'apiKey',
+              in: 'header',
+              name: 'x-api-key',
+            },
+          },
+          schemas: {
+            ProfileInput: {
+              type: 'object',
+              required: ['displayName'],
+              properties: {
+                displayName: { type: 'string' },
+                biography: { type: 'string' },
+              },
+            },
+            Profile: {
+              type: 'object',
+              required: ['id'],
+              properties: {
+                id: { type: 'string', format: 'uuid' },
+                displayName: { type: 'string' },
+                biography: { type: 'string' },
+              },
+            },
+          },
+        },
+        security: [{ ApiKeyAuth: [] }],
+        paths: {
+          '/users/{userId}/profiles/{profile.id}': {
+            put: {
+              operationId: 'updateProfile',
+              summary: 'Update profile',
+              description: 'Updates a profile using a profile identifier embedded in the path.',
+              parameters: [
+                {
+                  name: 'userId',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'string' },
+                },
+                {
+                  name: 'profile.id',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'string' },
+                },
+                {
+                  name: 'locale',
+                  in: 'header',
+                  schema: { type: 'string' },
+                },
+              ],
+              requestBody: {
+                required: true,
+                content: {
+                  'application/json': {
+                    schema: { $ref: '#/components/schemas/ProfileInput' },
+                  },
+                },
+              },
+              responses: {
+                '200': {
+                  description: 'Profile updated',
+                  content: {
+                    'application/json': {
+                      schema: { $ref: '#/components/schemas/Profile' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const inputPath = createTestSpec('manifest-test.json', manifestSpec);
       const outputPath = join(TEST_OUTPUT_DIR, 'manifest-output.ts');
       const manifestPath = join(TEST_OUTPUT_DIR, 'manifest.json');
 
@@ -219,22 +301,33 @@ describe('Characterisation: CLI Behavior', () => {
       const manifestRaw = readFileSync(manifestPath, 'utf8');
       const manifest = JSON.parse(manifestRaw);
 
-      expect(Array.isArray(manifest)).toBe(true);
-      expect(manifest.length).toBeGreaterThan(0);
+      const sourceDoc = JSON.parse(readFileSync(inputPath, 'utf8')) as OpenAPIObject;
+      const preparedDoc = await prepareOpenApiDocument(sourceDoc);
+      const expectedContext = getZodClientTemplateContext(preparedDoc);
+      const expectedManifest = expectedContext.mcpTools.map(
+        ({ tool, httpOperation, security }) => ({
+          tool,
+          httpOperation,
+          security,
+        }),
+      );
 
-      const firstTool = manifest[0];
-      expect(firstTool).toHaveProperty('tool');
-      expect(firstTool.tool).toMatchObject({
-        name: 'get_users',
-        inputSchema: { type: 'object' },
+      expect(manifest).toEqual(expectedManifest);
+      expect(JSON.stringify(manifest)).not.toContain('"$ref"');
+      expect(manifest).toHaveLength(1);
+      const [entry] = manifest;
+      expect(entry.httpOperation).toMatchObject({
+        method: 'put',
+        path: '/users/:userId/profiles/:profileId',
+        originalPath: '/users/{userId}/profiles/{profile.id}',
+        operationId: 'updateProfile',
       });
-      expect(firstTool.httpOperation).toMatchObject({
-        method: 'get',
-        path: '/users',
+      expect(entry.security).toMatchObject({
+        isPublic: false,
+        usesGlobalSecurity: true,
       });
-      expect(firstTool.security).toMatchObject({
-        isPublic: true,
-      });
+      expect(entry.tool.inputSchema).toMatchObject({ type: 'object' });
+      expect(entry.tool.outputSchema).toMatchObject({ type: 'object' });
     });
   });
 

@@ -375,7 +375,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -386,7 +396,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -412,7 +430,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -423,7 +451,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -494,7 +530,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -505,7 +551,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -531,7 +585,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -542,7 +606,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -625,7 +697,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -636,7 +718,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -948,7 +1038,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -1021,7 +1160,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -1578,7 +1766,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -1904,7 +2127,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -1915,7 +2148,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -1941,7 +2182,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -1952,7 +2203,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -2023,7 +2282,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -2034,7 +2303,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -2060,7 +2337,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -2071,7 +2358,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -2154,7 +2449,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -2165,7 +2470,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -2477,7 +2790,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -2550,7 +2912,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -3107,7 +3518,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -3622,7 +4068,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -3633,7 +4089,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -3659,7 +4123,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -3670,7 +4144,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -3741,7 +4223,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -3752,7 +4244,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -3778,7 +4278,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -3789,7 +4299,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -3872,7 +4390,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -3883,7 +4411,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -4195,7 +4731,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -4268,7 +4853,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -4825,7 +5459,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -5340,7 +6009,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -5351,7 +6030,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -5377,7 +6064,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -5388,7 +6085,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -5459,7 +6164,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -5470,7 +6185,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -5496,7 +6219,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -5507,7 +6240,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -5590,7 +6331,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -5601,7 +6352,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -5913,7 +6672,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -5986,7 +6794,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -6543,7 +7400,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -7058,7 +7950,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -7069,7 +7971,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -7095,7 +8005,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -7106,7 +8026,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -7177,7 +8105,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -7188,7 +8126,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -7214,7 +8160,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -7225,7 +8181,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -7308,7 +8272,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -7319,7 +8293,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -7631,7 +8613,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -7704,7 +8735,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -8261,7 +9341,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -8771,7 +9886,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -8782,7 +9907,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -8808,7 +9941,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -8819,7 +9962,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -8890,7 +10041,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -8901,7 +10062,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -8927,7 +10096,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -8938,7 +10117,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -9021,7 +10208,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -9032,7 +10229,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -9344,7 +10549,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -9417,7 +10671,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -9974,7 +11277,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -10489,7 +11827,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -10500,7 +11848,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -10526,7 +11882,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -10537,7 +11903,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -10608,7 +11982,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -10619,7 +12003,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -10645,7 +12037,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -10656,7 +12058,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -10739,7 +12149,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -10750,7 +12170,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -11062,7 +12490,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -11135,7 +12612,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -11692,7 +13218,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -12300,6 +13861,12 @@ exports[`getZodClientTemplateContext 1`] = `
     "endpointsGroups": {},
     "mcpTools": [
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "addPet",
+                "originalPath": "/pet",
+                "path": "/pet",
+            },
             "method": "post",
             "operationId": "addPet",
             "originalPath": "/pet",
@@ -12345,7 +13912,21 @@ exports[`getZodClientTemplateContext 1`] = `
                         "body": {
                             "properties": {
                                 "category": {
-                                    "$ref": "#/definitions/Category",
+                                    "properties": {
+                                        "id": {
+                                            "examples": [
+                                                1,
+                                            ],
+                                            "type": "integer",
+                                        },
+                                        "name": {
+                                            "examples": [
+                                                "Dogs",
+                                            ],
+                                            "type": "string",
+                                        },
+                                    },
+                                    "type": "object",
                                 },
                                 "id": {
                                     "examples": [
@@ -12376,7 +13957,15 @@ exports[`getZodClientTemplateContext 1`] = `
                                 },
                                 "tags": {
                                     "items": {
-                                        "$ref": "#/definitions/Tag",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
                                     },
                                     "type": "array",
                                 },
@@ -12397,7 +13986,21 @@ exports[`getZodClientTemplateContext 1`] = `
                 "outputSchema": {
                     "properties": {
                         "category": {
-                            "$ref": "#/definitions/Category",
+                            "properties": {
+                                "id": {
+                                    "examples": [
+                                        1,
+                                    ],
+                                    "type": "integer",
+                                },
+                                "name": {
+                                    "examples": [
+                                        "Dogs",
+                                    ],
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "id": {
                             "examples": [
@@ -12428,7 +14031,15 @@ exports[`getZodClientTemplateContext 1`] = `
                         },
                         "tags": {
                             "items": {
-                                "$ref": "#/definitions/Tag",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -12443,6 +14054,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "put",
+                "operationId": "updatePet",
+                "originalPath": "/pet",
+                "path": "/pet",
+            },
             "method": "put",
             "operationId": "updatePet",
             "originalPath": "/pet",
@@ -12488,7 +14105,21 @@ exports[`getZodClientTemplateContext 1`] = `
                         "body": {
                             "properties": {
                                 "category": {
-                                    "$ref": "#/definitions/Category",
+                                    "properties": {
+                                        "id": {
+                                            "examples": [
+                                                1,
+                                            ],
+                                            "type": "integer",
+                                        },
+                                        "name": {
+                                            "examples": [
+                                                "Dogs",
+                                            ],
+                                            "type": "string",
+                                        },
+                                    },
+                                    "type": "object",
                                 },
                                 "id": {
                                     "examples": [
@@ -12519,7 +14150,15 @@ exports[`getZodClientTemplateContext 1`] = `
                                 },
                                 "tags": {
                                     "items": {
-                                        "$ref": "#/definitions/Tag",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
                                     },
                                     "type": "array",
                                 },
@@ -12540,7 +14179,21 @@ exports[`getZodClientTemplateContext 1`] = `
                 "outputSchema": {
                     "properties": {
                         "category": {
-                            "$ref": "#/definitions/Category",
+                            "properties": {
+                                "id": {
+                                    "examples": [
+                                        1,
+                                    ],
+                                    "type": "integer",
+                                },
+                                "name": {
+                                    "examples": [
+                                        "Dogs",
+                                    ],
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "id": {
                             "examples": [
@@ -12571,7 +14224,15 @@ exports[`getZodClientTemplateContext 1`] = `
                         },
                         "tags": {
                             "items": {
-                                "$ref": "#/definitions/Tag",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -12586,6 +14247,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getPetById",
+                "originalPath": "/pet/{petId}",
+                "path": "/pet/:petId",
+            },
             "method": "get",
             "operationId": "getPetById",
             "originalPath": "/pet/{petId}",
@@ -12662,7 +14329,21 @@ exports[`getZodClientTemplateContext 1`] = `
                 "outputSchema": {
                     "properties": {
                         "category": {
-                            "$ref": "#/definitions/Category",
+                            "properties": {
+                                "id": {
+                                    "examples": [
+                                        1,
+                                    ],
+                                    "type": "integer",
+                                },
+                                "name": {
+                                    "examples": [
+                                        "Dogs",
+                                    ],
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "id": {
                             "examples": [
@@ -12693,7 +14374,15 @@ exports[`getZodClientTemplateContext 1`] = `
                         },
                         "tags": {
                             "items": {
-                                "$ref": "#/definitions/Tag",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -12708,6 +14397,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "updatePetWithForm",
+                "originalPath": "/pet/{petId}",
+                "path": "/pet/:petId",
+            },
             "method": "post",
             "operationId": "updatePetWithForm",
             "originalPath": "/pet/{petId}",
@@ -12783,6 +14478,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "delete",
+                "operationId": "deletePet",
+                "originalPath": "/pet/{petId}",
+                "path": "/pet/:petId",
+            },
             "method": "delete",
             "operationId": "deletePet",
             "originalPath": "/pet/{petId}",
@@ -12855,6 +14556,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "uploadFile",
+                "originalPath": "/pet/{petId}/uploadImage",
+                "path": "/pet/:petId/uploadImage",
+            },
             "method": "post",
             "operationId": "uploadFile",
             "originalPath": "/pet/{petId}/uploadImage",
@@ -12941,6 +14648,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "findPetsByStatus",
+                "originalPath": "/pet/findByStatus",
+                "path": "/pet/findByStatus",
+            },
             "method": "get",
             "operationId": "findPetsByStatus",
             "originalPath": "/pet/findByStatus",
@@ -13005,7 +14718,71 @@ exports[`getZodClientTemplateContext 1`] = `
                     "properties": {
                         "value": {
                             "items": {
-                                "$ref": "#/definitions/Pet",
+                                "properties": {
+                                    "category": {
+                                        "properties": {
+                                            "id": {
+                                                "examples": [
+                                                    1,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "examples": [
+                                                    "Dogs",
+                                                ],
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                    "id": {
+                                        "examples": [
+                                            10,
+                                        ],
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "examples": [
+                                            "doggie",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "photoUrls": {
+                                        "items": {
+                                            "type": "string",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "status": {
+                                        "description": "pet status in the store",
+                                        "enum": [
+                                            "available",
+                                            "pending",
+                                            "sold",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "tags": {
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                },
+                                            },
+                                            "type": "object",
+                                        },
+                                        "type": "array",
+                                    },
+                                },
+                                "required": [
+                                    "name",
+                                    "photoUrls",
+                                ],
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -13016,6 +14793,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "findPetsByTags",
+                "originalPath": "/pet/findByTags",
+                "path": "/pet/findByTags",
+            },
             "method": "get",
             "operationId": "findPetsByTags",
             "originalPath": "/pet/findByTags",
@@ -13077,7 +14860,71 @@ exports[`getZodClientTemplateContext 1`] = `
                     "properties": {
                         "value": {
                             "items": {
-                                "$ref": "#/definitions/Pet",
+                                "properties": {
+                                    "category": {
+                                        "properties": {
+                                            "id": {
+                                                "examples": [
+                                                    1,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "examples": [
+                                                    "Dogs",
+                                                ],
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                    "id": {
+                                        "examples": [
+                                            10,
+                                        ],
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "examples": [
+                                            "doggie",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "photoUrls": {
+                                        "items": {
+                                            "type": "string",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "status": {
+                                        "description": "pet status in the store",
+                                        "enum": [
+                                            "available",
+                                            "pending",
+                                            "sold",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "tags": {
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                },
+                                            },
+                                            "type": "object",
+                                        },
+                                        "type": "array",
+                                    },
+                                },
+                                "required": [
+                                    "name",
+                                    "photoUrls",
+                                ],
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -13088,6 +14935,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getInventory",
+                "originalPath": "/store/inventory",
+                "path": "/store/inventory",
+            },
             "method": "get",
             "operationId": "getInventory",
             "originalPath": "/store/inventory",
@@ -13132,6 +14985,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "placeOrder",
+                "originalPath": "/store/order",
+                "path": "/store/order",
+            },
             "method": "post",
             "operationId": "placeOrder",
             "originalPath": "/store/order",
@@ -13242,6 +15101,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getOrderById",
+                "originalPath": "/store/order/{orderId}",
+                "path": "/store/order/:orderId",
+            },
             "method": "get",
             "operationId": "getOrderById",
             "originalPath": "/store/order/{orderId}",
@@ -13324,6 +15189,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "delete",
+                "operationId": "deleteOrder",
+                "originalPath": "/store/order/{orderId}",
+                "path": "/store/order/:orderId",
+            },
             "method": "delete",
             "operationId": "deleteOrder",
             "originalPath": "/store/order/{orderId}",
@@ -13364,6 +15235,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "createUser",
+                "originalPath": "/user",
+                "path": "/user",
+            },
             "method": "post",
             "operationId": "createUser",
             "originalPath": "/user",
@@ -13444,6 +15321,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getUserByName",
+                "originalPath": "/user/{username}",
+                "path": "/user/:username",
+            },
             "method": "get",
             "operationId": "getUserByName",
             "originalPath": "/user/{username}",
@@ -13538,6 +15421,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "put",
+                "operationId": "updateUser",
+                "originalPath": "/user/{username}",
+                "path": "/user/:username",
+            },
             "method": "put",
             "operationId": "updateUser",
             "originalPath": "/user/{username}",
@@ -13632,6 +15521,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "delete",
+                "operationId": "deleteUser",
+                "originalPath": "/user/{username}",
+                "path": "/user/:username",
+            },
             "method": "delete",
             "operationId": "deleteUser",
             "originalPath": "/user/{username}",
@@ -13672,6 +15567,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "createUsersWithListInput",
+                "originalPath": "/user/createWithList",
+                "path": "/user/createWithList",
+            },
             "method": "post",
             "operationId": "createUsersWithListInput",
             "originalPath": "/user/createWithList",
@@ -13694,7 +15595,58 @@ exports[`getZodClientTemplateContext 1`] = `
                             "properties": {
                                 "value": {
                                     "items": {
-                                        "$ref": "#/definitions/User",
+                                        "properties": {
+                                            "email": {
+                                                "examples": [
+                                                    "john@email.com",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "firstName": {
+                                                "examples": [
+                                                    "John",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "id": {
+                                                "examples": [
+                                                    10,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "lastName": {
+                                                "examples": [
+                                                    "James",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "password": {
+                                                "examples": [
+                                                    "12345",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "phone": {
+                                                "examples": [
+                                                    "12345",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "userStatus": {
+                                                "description": "User Status",
+                                                "examples": [
+                                                    1,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "username": {
+                                                "examples": [
+                                                    "theUser",
+                                                ],
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
                                     },
                                     "type": "array",
                                 },
@@ -13763,6 +15715,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "loginUser",
+                "originalPath": "/user/login",
+                "path": "/user/login",
+            },
             "method": "get",
             "operationId": "loginUser",
             "originalPath": "/user/login",
@@ -13808,6 +15766,12 @@ exports[`getZodClientTemplateContext 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "logoutUser",
+                "originalPath": "/user/logout",
+                "path": "/user/logout",
+            },
             "method": "get",
             "operationId": "logoutUser",
             "originalPath": "/user/logout",
@@ -14316,6 +16280,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
     "endpointsGroups": {},
     "mcpTools": [
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "addPet",
+                "originalPath": "/pet",
+                "path": "/pet",
+            },
             "method": "post",
             "operationId": "addPet",
             "originalPath": "/pet",
@@ -14361,7 +16331,21 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         "body": {
                             "properties": {
                                 "category": {
-                                    "$ref": "#/definitions/Category",
+                                    "properties": {
+                                        "id": {
+                                            "examples": [
+                                                1,
+                                            ],
+                                            "type": "integer",
+                                        },
+                                        "name": {
+                                            "examples": [
+                                                "Dogs",
+                                            ],
+                                            "type": "string",
+                                        },
+                                    },
+                                    "type": "object",
                                 },
                                 "id": {
                                     "examples": [
@@ -14392,7 +16376,15 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                 },
                                 "tags": {
                                     "items": {
-                                        "$ref": "#/definitions/Tag",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
                                     },
                                     "type": "array",
                                 },
@@ -14413,7 +16405,21 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 "outputSchema": {
                     "properties": {
                         "category": {
-                            "$ref": "#/definitions/Category",
+                            "properties": {
+                                "id": {
+                                    "examples": [
+                                        1,
+                                    ],
+                                    "type": "integer",
+                                },
+                                "name": {
+                                    "examples": [
+                                        "Dogs",
+                                    ],
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "id": {
                             "examples": [
@@ -14444,7 +16450,15 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         },
                         "tags": {
                             "items": {
-                                "$ref": "#/definitions/Tag",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -14459,6 +16473,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "put",
+                "operationId": "updatePet",
+                "originalPath": "/pet",
+                "path": "/pet",
+            },
             "method": "put",
             "operationId": "updatePet",
             "originalPath": "/pet",
@@ -14504,7 +16524,21 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         "body": {
                             "properties": {
                                 "category": {
-                                    "$ref": "#/definitions/Category",
+                                    "properties": {
+                                        "id": {
+                                            "examples": [
+                                                1,
+                                            ],
+                                            "type": "integer",
+                                        },
+                                        "name": {
+                                            "examples": [
+                                                "Dogs",
+                                            ],
+                                            "type": "string",
+                                        },
+                                    },
+                                    "type": "object",
                                 },
                                 "id": {
                                     "examples": [
@@ -14535,7 +16569,15 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                 },
                                 "tags": {
                                     "items": {
-                                        "$ref": "#/definitions/Tag",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
                                     },
                                     "type": "array",
                                 },
@@ -14556,7 +16598,21 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 "outputSchema": {
                     "properties": {
                         "category": {
-                            "$ref": "#/definitions/Category",
+                            "properties": {
+                                "id": {
+                                    "examples": [
+                                        1,
+                                    ],
+                                    "type": "integer",
+                                },
+                                "name": {
+                                    "examples": [
+                                        "Dogs",
+                                    ],
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "id": {
                             "examples": [
@@ -14587,7 +16643,15 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         },
                         "tags": {
                             "items": {
-                                "$ref": "#/definitions/Tag",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -14602,6 +16666,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getPetById",
+                "originalPath": "/pet/{petId}",
+                "path": "/pet/:petId",
+            },
             "method": "get",
             "operationId": "getPetById",
             "originalPath": "/pet/{petId}",
@@ -14678,7 +16748,21 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 "outputSchema": {
                     "properties": {
                         "category": {
-                            "$ref": "#/definitions/Category",
+                            "properties": {
+                                "id": {
+                                    "examples": [
+                                        1,
+                                    ],
+                                    "type": "integer",
+                                },
+                                "name": {
+                                    "examples": [
+                                        "Dogs",
+                                    ],
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "id": {
                             "examples": [
@@ -14709,7 +16793,15 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         },
                         "tags": {
                             "items": {
-                                "$ref": "#/definitions/Tag",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                    },
+                                },
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -14724,6 +16816,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "updatePetWithForm",
+                "originalPath": "/pet/{petId}",
+                "path": "/pet/:petId",
+            },
             "method": "post",
             "operationId": "updatePetWithForm",
             "originalPath": "/pet/{petId}",
@@ -14799,6 +16897,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "delete",
+                "operationId": "deletePet",
+                "originalPath": "/pet/{petId}",
+                "path": "/pet/:petId",
+            },
             "method": "delete",
             "operationId": "deletePet",
             "originalPath": "/pet/{petId}",
@@ -14871,6 +16975,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "uploadFile",
+                "originalPath": "/pet/{petId}/uploadImage",
+                "path": "/pet/:petId/uploadImage",
+            },
             "method": "post",
             "operationId": "uploadFile",
             "originalPath": "/pet/{petId}/uploadImage",
@@ -14957,6 +17067,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "findPetsByStatus",
+                "originalPath": "/pet/findByStatus",
+                "path": "/pet/findByStatus",
+            },
             "method": "get",
             "operationId": "findPetsByStatus",
             "originalPath": "/pet/findByStatus",
@@ -15021,7 +17137,71 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     "properties": {
                         "value": {
                             "items": {
-                                "$ref": "#/definitions/Pet",
+                                "properties": {
+                                    "category": {
+                                        "properties": {
+                                            "id": {
+                                                "examples": [
+                                                    1,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "examples": [
+                                                    "Dogs",
+                                                ],
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                    "id": {
+                                        "examples": [
+                                            10,
+                                        ],
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "examples": [
+                                            "doggie",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "photoUrls": {
+                                        "items": {
+                                            "type": "string",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "status": {
+                                        "description": "pet status in the store",
+                                        "enum": [
+                                            "available",
+                                            "pending",
+                                            "sold",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "tags": {
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                },
+                                            },
+                                            "type": "object",
+                                        },
+                                        "type": "array",
+                                    },
+                                },
+                                "required": [
+                                    "name",
+                                    "photoUrls",
+                                ],
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -15032,6 +17212,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "findPetsByTags",
+                "originalPath": "/pet/findByTags",
+                "path": "/pet/findByTags",
+            },
             "method": "get",
             "operationId": "findPetsByTags",
             "originalPath": "/pet/findByTags",
@@ -15093,7 +17279,71 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     "properties": {
                         "value": {
                             "items": {
-                                "$ref": "#/definitions/Pet",
+                                "properties": {
+                                    "category": {
+                                        "properties": {
+                                            "id": {
+                                                "examples": [
+                                                    1,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "name": {
+                                                "examples": [
+                                                    "Dogs",
+                                                ],
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                    "id": {
+                                        "examples": [
+                                            10,
+                                        ],
+                                        "type": "integer",
+                                    },
+                                    "name": {
+                                        "examples": [
+                                            "doggie",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "photoUrls": {
+                                        "items": {
+                                            "type": "string",
+                                        },
+                                        "type": "array",
+                                    },
+                                    "status": {
+                                        "description": "pet status in the store",
+                                        "enum": [
+                                            "available",
+                                            "pending",
+                                            "sold",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "tags": {
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                },
+                                            },
+                                            "type": "object",
+                                        },
+                                        "type": "array",
+                                    },
+                                },
+                                "required": [
+                                    "name",
+                                    "photoUrls",
+                                ],
+                                "type": "object",
                             },
                             "type": "array",
                         },
@@ -15104,6 +17354,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getInventory",
+                "originalPath": "/store/inventory",
+                "path": "/store/inventory",
+            },
             "method": "get",
             "operationId": "getInventory",
             "originalPath": "/store/inventory",
@@ -15148,6 +17404,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "placeOrder",
+                "originalPath": "/store/order",
+                "path": "/store/order",
+            },
             "method": "post",
             "operationId": "placeOrder",
             "originalPath": "/store/order",
@@ -15258,6 +17520,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getOrderById",
+                "originalPath": "/store/order/{orderId}",
+                "path": "/store/order/:orderId",
+            },
             "method": "get",
             "operationId": "getOrderById",
             "originalPath": "/store/order/{orderId}",
@@ -15340,6 +17608,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "delete",
+                "operationId": "deleteOrder",
+                "originalPath": "/store/order/{orderId}",
+                "path": "/store/order/:orderId",
+            },
             "method": "delete",
             "operationId": "deleteOrder",
             "originalPath": "/store/order/{orderId}",
@@ -15380,6 +17654,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "createUser",
+                "originalPath": "/user",
+                "path": "/user",
+            },
             "method": "post",
             "operationId": "createUser",
             "originalPath": "/user",
@@ -15460,6 +17740,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getUserByName",
+                "originalPath": "/user/{username}",
+                "path": "/user/:username",
+            },
             "method": "get",
             "operationId": "getUserByName",
             "originalPath": "/user/{username}",
@@ -15554,6 +17840,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "put",
+                "operationId": "updateUser",
+                "originalPath": "/user/{username}",
+                "path": "/user/:username",
+            },
             "method": "put",
             "operationId": "updateUser",
             "originalPath": "/user/{username}",
@@ -15648,6 +17940,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "delete",
+                "operationId": "deleteUser",
+                "originalPath": "/user/{username}",
+                "path": "/user/:username",
+            },
             "method": "delete",
             "operationId": "deleteUser",
             "originalPath": "/user/{username}",
@@ -15688,6 +17986,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "post",
+                "operationId": "createUsersWithListInput",
+                "originalPath": "/user/createWithList",
+                "path": "/user/createWithList",
+            },
             "method": "post",
             "operationId": "createUsersWithListInput",
             "originalPath": "/user/createWithList",
@@ -15710,7 +18014,58 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "properties": {
                                 "value": {
                                     "items": {
-                                        "$ref": "#/definitions/User",
+                                        "properties": {
+                                            "email": {
+                                                "examples": [
+                                                    "john@email.com",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "firstName": {
+                                                "examples": [
+                                                    "John",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "id": {
+                                                "examples": [
+                                                    10,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "lastName": {
+                                                "examples": [
+                                                    "James",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "password": {
+                                                "examples": [
+                                                    "12345",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "phone": {
+                                                "examples": [
+                                                    "12345",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "userStatus": {
+                                                "description": "User Status",
+                                                "examples": [
+                                                    1,
+                                                ],
+                                                "type": "integer",
+                                            },
+                                            "username": {
+                                                "examples": [
+                                                    "theUser",
+                                                ],
+                                                "type": "string",
+                                            },
+                                        },
+                                        "type": "object",
                                     },
                                     "type": "array",
                                 },
@@ -15779,6 +18134,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "loginUser",
+                "originalPath": "/user/login",
+                "path": "/user/login",
+            },
             "method": "get",
             "operationId": "loginUser",
             "originalPath": "/user/login",
@@ -15824,6 +18185,12 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "logoutUser",
+                "originalPath": "/user/logout",
+                "path": "/user/logout",
+            },
             "method": "get",
             "operationId": "logoutUser",
             "originalPath": "/user/logout",
@@ -15911,6 +18278,12 @@ exports[`with optional, partial, all required objects 1`] = `
     "endpointsGroups": {},
     "mcpTools": [
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getDeeplyNested",
+                "originalPath": "/deeplyNested",
+                "path": "/deeplyNested",
+            },
             "method": "get",
             "operationId": "getDeeplyNested",
             "originalPath": "/deeplyNested",
@@ -15935,7 +18308,12 @@ exports[`with optional, partial, all required objects 1`] = `
                     "properties": {
                         "value": {
                             "items": {
-                                "$ref": "#/definitions/VeryDeeplyNested",
+                                "enum": [
+                                    "aaa",
+                                    "bbb",
+                                    "ccc",
+                                ],
+                                "type": "string",
                             },
                             "type": "array",
                         },
@@ -15945,6 +18323,12 @@ exports[`with optional, partial, all required objects 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getNested",
+                "originalPath": "/nested",
+                "path": "/nested",
+            },
             "method": "get",
             "operationId": "getNested",
             "originalPath": "/nested",
@@ -15968,10 +18352,73 @@ exports[`with optional, partial, all required objects 1`] = `
                 "outputSchema": {
                     "properties": {
                         "circularToRoot": {
-                            "$ref": "#/definitions/Root2",
+                            "properties": {
+                                "nb": {
+                                    "type": "number",
+                                },
+                                "nested": {
+                                    "properties": {
+                                        "circularToRoot": {
+                                            "$ref": "#/definitions/Root2",
+                                        },
+                                        "deeplyNested": {
+                                            "items": {
+                                                "enum": [
+                                                    "aaa",
+                                                    "bbb",
+                                                    "ccc",
+                                                ],
+                                                "type": "string",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "nested_prop": {
+                                            "type": "boolean",
+                                        },
+                                        "requiredProp": {
+                                            "type": "string",
+                                        },
+                                    },
+                                    "required": [
+                                        "requiredProp",
+                                    ],
+                                    "type": "object",
+                                },
+                                "optionalProp": {
+                                    "type": "string",
+                                },
+                                "partial": {
+                                    "properties": {
+                                        "another": {
+                                            "type": "number",
+                                        },
+                                        "something": {
+                                            "type": "string",
+                                        },
+                                    },
+                                    "type": "object",
+                                },
+                                "str": {
+                                    "type": "string",
+                                },
+                            },
+                            "required": [
+                                "str",
+                                "nb",
+                                "nested",
+                            ],
+                            "type": "object",
                         },
                         "deeplyNested": {
-                            "$ref": "#/definitions/DeeplyNested",
+                            "items": {
+                                "enum": [
+                                    "aaa",
+                                    "bbb",
+                                    "ccc",
+                                ],
+                                "type": "string",
+                            },
+                            "type": "array",
                         },
                         "nested_prop": {
                             "type": "boolean",
@@ -15988,6 +18435,12 @@ exports[`with optional, partial, all required objects 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getRoot",
+                "originalPath": "/root",
+                "path": "/root",
+            },
             "method": "get",
             "operationId": "getRoot",
             "originalPath": "/root",
@@ -16014,13 +18467,76 @@ exports[`with optional, partial, all required objects 1`] = `
                             "type": "number",
                         },
                         "nested": {
-                            "$ref": "#/definitions/Nested2",
+                            "properties": {
+                                "circularToRoot": {
+                                    "properties": {
+                                        "nb": {
+                                            "type": "number",
+                                        },
+                                        "nested": {
+                                            "$ref": "#/definitions/Nested2",
+                                        },
+                                        "optionalProp": {
+                                            "type": "string",
+                                        },
+                                        "partial": {
+                                            "properties": {
+                                                "another": {
+                                                    "type": "number",
+                                                },
+                                                "something": {
+                                                    "type": "string",
+                                                },
+                                            },
+                                            "type": "object",
+                                        },
+                                        "str": {
+                                            "type": "string",
+                                        },
+                                    },
+                                    "required": [
+                                        "str",
+                                        "nb",
+                                        "nested",
+                                    ],
+                                    "type": "object",
+                                },
+                                "deeplyNested": {
+                                    "items": {
+                                        "enum": [
+                                            "aaa",
+                                            "bbb",
+                                            "ccc",
+                                        ],
+                                        "type": "string",
+                                    },
+                                    "type": "array",
+                                },
+                                "nested_prop": {
+                                    "type": "boolean",
+                                },
+                                "requiredProp": {
+                                    "type": "string",
+                                },
+                            },
+                            "required": [
+                                "requiredProp",
+                            ],
+                            "type": "object",
                         },
                         "optionalProp": {
                             "type": "string",
                         },
                         "partial": {
-                            "$ref": "#/definitions/PartialObject",
+                            "properties": {
+                                "another": {
+                                    "type": "number",
+                                },
+                                "something": {
+                                    "type": "string",
+                                },
+                            },
+                            "type": "object",
                         },
                         "str": {
                             "type": "string",
@@ -16036,6 +18552,12 @@ exports[`with optional, partial, all required objects 1`] = `
             },
         },
         {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getVeryDeeplyNested",
+                "originalPath": "/veryDeeplyNested",
+                "path": "/veryDeeplyNested",
+            },
             "method": "get",
             "operationId": "getVeryDeeplyNested",
             "originalPath": "/veryDeeplyNested",
@@ -16226,7 +18748,8 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/VeryDeeplyNested",
+              type: "string",
+              enum: ["aaa", "bbb", "ccc"],
             },
           },
         },
@@ -16263,10 +18786,59 @@ export const mcpTools = [
             type: "boolean",
           },
           deeplyNested: {
-            $ref: "#/definitions/DeeplyNested",
+            type: "array",
+            items: {
+              type: "string",
+              enum: ["aaa", "bbb", "ccc"],
+            },
           },
           circularToRoot: {
-            $ref: "#/definitions/Root2",
+            type: "object",
+            properties: {
+              str: {
+                type: "string",
+              },
+              nb: {
+                type: "number",
+              },
+              nested: {
+                type: "object",
+                properties: {
+                  nested_prop: {
+                    type: "boolean",
+                  },
+                  deeplyNested: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                      enum: ["aaa", "bbb", "ccc"],
+                    },
+                  },
+                  circularToRoot: {
+                    $ref: "#/definitions/Root2",
+                  },
+                  requiredProp: {
+                    type: "string",
+                  },
+                },
+                required: ["requiredProp"],
+              },
+              partial: {
+                type: "object",
+                properties: {
+                  something: {
+                    type: "string",
+                  },
+                  another: {
+                    type: "number",
+                  },
+                },
+              },
+              optionalProp: {
+                type: "string",
+              },
+            },
+            required: ["str", "nb", "nested"],
           },
           requiredProp: {
             type: "string",
@@ -16309,10 +18881,63 @@ export const mcpTools = [
             type: "number",
           },
           nested: {
-            $ref: "#/definitions/Nested2",
+            type: "object",
+            properties: {
+              nested_prop: {
+                type: "boolean",
+              },
+              deeplyNested: {
+                type: "array",
+                items: {
+                  type: "string",
+                  enum: ["aaa", "bbb", "ccc"],
+                },
+              },
+              circularToRoot: {
+                type: "object",
+                properties: {
+                  str: {
+                    type: "string",
+                  },
+                  nb: {
+                    type: "number",
+                  },
+                  nested: {
+                    $ref: "#/definitions/Nested2",
+                  },
+                  partial: {
+                    type: "object",
+                    properties: {
+                      something: {
+                        type: "string",
+                      },
+                      another: {
+                        type: "number",
+                      },
+                    },
+                  },
+                  optionalProp: {
+                    type: "string",
+                  },
+                },
+                required: ["str", "nb", "nested"],
+              },
+              requiredProp: {
+                type: "string",
+              },
+            },
+            required: ["requiredProp"],
           },
           partial: {
-            $ref: "#/definitions/PartialObject",
+            type: "object",
+            properties: {
+              something: {
+                type: "string",
+              },
+              another: {
+                type: "number",
+              },
+            },
           },
           optionalProp: {
             type: "string",

@@ -194,13 +194,23 @@ test('jsdoc', async () => {
                 type: "boolean",
               },
               ref: {
-                $ref: "#/definitions/SimpleObject",
+                type: "object",
+                properties: {
+                  str: {
+                    type: "string",
+                  },
+                },
               },
               refArray: {
                 description: "An array of SimpleObject",
                 type: "array",
                 items: {
-                  $ref: "#/definitions/SimpleObject",
+                  type: "object",
+                  properties: {
+                    str: {
+                      type: "string",
+                    },
+                  },
                 },
               },
             },

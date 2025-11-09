@@ -60,7 +60,39 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/CreateUserInput",
+              type: "object",
+              properties: {
+                username: {
+                  description: "Unique handle for the user",
+                  anyOf: [
+                    {
+                      type: "string",
+                      minLength: 3,
+                    },
+                    {
+                      type: "null",
+                    },
+                  ],
+                },
+                email: {
+                  type: "string",
+                  format: "email",
+                },
+                age: {
+                  description: "Optional age in years",
+                  anyOf: [
+                    {
+                      type: "integer",
+                      minimum: 0,
+                    },
+                    {
+                      type: "null",
+                    },
+                  ],
+                },
+              },
+              required: ["username", "email"],
+              additionalProperties: false,
             },
           },
         },
@@ -570,7 +602,23 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/repository",
+              type: "object",
+              properties: {
+                slug: {
+                  type: "string",
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    username: {
+                      type: "string",
+                    },
+                    uuid: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -622,7 +670,15 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/user",
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              uuid: {
+                type: "string",
+              },
+            },
           },
         },
       },
@@ -681,7 +737,45 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/pullrequest",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                title: {
+                  type: "string",
+                },
+                repository: {
+                  type: "object",
+                  properties: {
+                    slug: {
+                      type: "string",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        username: {
+                          type: "string",
+                        },
+                        uuid: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  },
+                },
+                author: {
+                  type: "object",
+                  properties: {
+                    username: {
+                      type: "string",
+                    },
+                    uuid: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -739,10 +833,34 @@ export const mcpTools = [
             type: "string",
           },
           repository: {
-            $ref: "#/definitions/repository",
+            type: "object",
+            properties: {
+              slug: {
+                type: "string",
+              },
+              owner: {
+                type: "object",
+                properties: {
+                  username: {
+                    type: "string",
+                  },
+                  uuid: {
+                    type: "string",
+                  },
+                },
+              },
+            },
           },
           author: {
-            $ref: "#/definitions/user",
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+              },
+              uuid: {
+                type: "string",
+              },
+            },
           },
         },
       },
@@ -950,7 +1068,19 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+                tag: {
+                  type: "string",
+                },
+              },
+              required: ["id", "name"],
             },
             maxItems: 100,
           },
@@ -1193,7 +1323,29 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              allOf: [
+                {
+                  type: "object",
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    tag: {
+                      type: "string",
+                    },
+                  },
+                  required: ["name"],
+                },
+                {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                  },
+                  required: ["id"],
+                },
+              ],
             },
           },
         },
@@ -1244,7 +1396,16 @@ export const mcpTools = [
           value: {
             allOf: [
               {
-                $ref: "#/definitions/NewPet",
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                  tag: {
+                    type: "string",
+                  },
+                },
+                required: ["name"],
               },
               {
                 type: "object",
@@ -1303,7 +1464,16 @@ export const mcpTools = [
           value: {
             allOf: [
               {
-                $ref: "#/definitions/NewPet",
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                  },
+                  tag: {
+                    type: "string",
+                  },
+                },
+                required: ["name"],
               },
               {
                 type: "object",
@@ -1840,10 +2010,25 @@ export const mcpTools = [
         type: "object",
         properties: {
           winner: {
-            $ref: "#/definitions/winner",
+            description: "Winner of the game. \`.\` means nobody has won yet.",
+            type: "string",
+            enum: [".", "X", "O"],
           },
           board: {
-            $ref: "#/definitions/board",
+            type: "array",
+            items: {
+              type: "array",
+              items: {
+                description:
+                  "Possible values for a board square. \`.\` means empty square.",
+                type: "string",
+                enum: [".", "X", "O"],
+              },
+              minItems: 3,
+              maxItems: 3,
+            },
+            minItems: 3,
+            maxItems: 3,
           },
         },
       },
@@ -2035,10 +2220,25 @@ export const mcpTools = [
         type: "object",
         properties: {
           winner: {
-            $ref: "#/definitions/winner",
+            description: "Winner of the game. \`.\` means nobody has won yet.",
+            type: "string",
+            enum: [".", "X", "O"],
           },
           board: {
-            $ref: "#/definitions/board",
+            type: "array",
+            items: {
+              type: "array",
+              items: {
+                description:
+                  "Possible values for a board square. \`.\` means empty square.",
+                type: "string",
+                enum: [".", "X", "O"],
+              },
+              minItems: 3,
+              maxItems: 3,
+            },
+            minItems: 3,
+            maxItems: 3,
           },
         },
       },

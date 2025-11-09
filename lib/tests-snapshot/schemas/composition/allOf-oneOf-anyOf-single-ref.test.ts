@@ -117,21 +117,24 @@ test('allOf-single-ref', async () => {
                   allOf_ref_param: {
                     allOf: [
                       {
-                        $ref: "#/definitions/MyComponent",
+                        type: "string",
+                        enum: ["one", "two", "three"],
                       },
                     ],
                   },
                   oneOf_ref_param: {
                     oneOf: [
                       {
-                        $ref: "#/definitions/MyComponent",
+                        type: "string",
+                        enum: ["one", "two", "three"],
                       },
                     ],
                   },
                   anyOf_ref_param: {
                     anyOf: [
                       {
-                        $ref: "#/definitions/MyComponent",
+                        type: "string",
+                        enum: ["one", "two", "three"],
                       },
                     ],
                   },

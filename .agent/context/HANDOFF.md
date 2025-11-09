@@ -1,6 +1,6 @@
 # Project Handoff & Orientation
 
-**Last Updated:** November 6, 2025  
+**Last Updated:** November 8, 2025 10:45 PM  
 **Purpose:** Quick orientation hub and document navigation for current work  
 **Read Time:** ~5-10 minutes
 
@@ -8,35 +8,39 @@
 
 ## 📍 Where We Are
 
-**Current Phase:** Phase 2 Part 2 – Session 8 ♻️ In Progress  
+**Current Phase:** Phase 2 Part 2 – Session 9 ⏳ Pending kickoff  
 **Active Branch:** `feat/rewrite`  
-**Next Session Tasks:** Wire new MCP helpers into template context/Handlebars templates, emit MCP manifest via CLI, update docs/tests  
-**Project Status:** JSON Schema converter + security extraction complete; MCP helper layer implemented (naming/hints, schema aggregation, security metadata) with unit coverage; ready to integrate helpers into generated outputs and CLI tooling
+**Next Session Tasks:** Begin Session 9 (type guards, error formatting, documentation) — scope includes MCP runtime validators, README/CLI updates for `--emit-mcp-manifest`, and a documentation sweep.
+**Project Status:** Session 8 is complete — MCP helper layer + CLI parity landed, manual manifests archived (`tmp/petstore.mcp.json`, `tmp/multi-auth.mcp.json`), fixture-driven snapshots in place, and the full quality gate stack is green on `feat/rewrite`.
 
 ### Phase Progress Overview
 
 ```
 Phase 1: Tooling & Architecture         ✅ Complete
 Phase 2 Part 1: Scalar Pipeline         ✅ Complete (Sessions 1-4)
-Phase 2 Part 2: MCP Enhancements        ♻️ Session 8 in progress
+Phase 2 Part 2: MCP Enhancements        ⏳ Session 9 pending
 Phase 3: DX & Quality                   ⚪ Planned
 ```
 
 ### Recent Milestone
 
 ```
-pnpm --filter @oaknational/openapi-to-tooling exec tsx --eval "<petstore Draft 07 inspection script>"
+pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/openapi/v3.0/petstore-expanded.yaml --emit-mcp-manifest ../tmp/petstore.mcp.json
+pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/custom/openapi/v3.1/multi-auth.yaml --emit-mcp-manifest ../tmp/multi-auth.mcp.json
 ```
 
-Confirms converted Draft 07 schema rewrites `$ref` targets to `#/definitions/*`, retains the `id` requirement, and validates cleanly with AJV for both composite (`Pet`) and inline (`NewPet`) schemas.
+Generates MCP manifests directly from the shared context. Petstore produces 4 tools (with warnings for `default`-only responses); multi-auth exercises layered security requirements. Outputs are archived under `tmp/*.mcp.json` for Workstream D notes.
 
-### Session 8 Progress (November 6, 2025)
+### Session 8 Highlights (Nov 6–8, 2025)
 
-- Implemented MCP helper modules for tool naming/hints (`template-context.mcp.naming.ts`) and JSON Schema/security aggregation (`template-context.mcp.parameters.ts`, `.responses.ts`, `.schemas.ts`).
-- Added unit coverage (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) verifying naming behavior, schema wrapping, aggregated input/output schemas, and upstream security metadata extraction.
-- Re-exported helpers via `template-context.mcp.ts` and `context/index.ts` to unblock template/CLI integration.
-- Quality suite rerun post-helpers (`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all`) — all green.
-- Next steps: expose `mcpTools` in template context, update Handlebars templates/snapshots, add `--emit-mcp-manifest`, perform manual manifest verification, and document results.
+- Helper modules for tool naming, behavioural hints, aggregated schemas, and security power `mcpTools`; template context + Handlebars exports now consume them with unit coverage.
+- CLI `--emit-mcp-manifest` is now a thin wrapper around the shared context, and characterisation tests prove CLI ↔ programmatic parity.
+- Added `template-context.mcp.inline-json-schema.ts`, ensuring manifest input/output schemas inline `$ref` chains into standalone Draft 07 objects; helper now satisfies Sonar return-type rules.
+- Snapshot hygiene push: major suites (hyphenated parameters, export-all-types, export-all-named-schemas, export-schemas-option, schema-name-already-used) now draw expectations from fixture modules instead of inline megasnapshots; remaining inline suites documented.
+- Path utilities shed the slow regex; deterministic parsing preserves both templated (`/users/:id`) and original (`/users/{id}`) forms in manifest metadata.
+- Full quality gate stack (`lint`, `test`, `test:snapshot`, `type-check`, `build`, `character`) is green on `feat/rewrite`.
+- Manual CLI manifest runs captured for `examples/openapi/v3.0/petstore-expanded.yaml` (4 tools, `default`-only response warning) and `examples/custom/openapi/v3.1/multi-auth.yaml` (2 tools, layered security); artefacts stored in `tmp/*.mcp.json`.
+- Ready to kick off Session 9: backlog includes type guards, error formatting, and README/CLI documentation for the new manifest workflow.
 
 ---
 
@@ -100,7 +104,7 @@ Follow ALL standards in @RULES.md.
 **For humans:**
 
 1. Read this HANDOFF.md (5 min orientation)
-2. Check context.md for current status (Session 7 complete, Session 8 ready to start)
+2. Check context.md for current status (Session 8 complete; Session 9 pending kickoff)
 3. Review PHASE-2-MCP-ENHANCEMENTS.md § Session 8 acceptance criteria before implementation
 4. Draft detailed Session 8 execution plan (tool context + manifest generation) and proceed with TDD
 

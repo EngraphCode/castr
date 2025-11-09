@@ -12,18 +12,32 @@ export const pathParamToVariableName = (name: string): string => {
   return hasColon ? `:${result}` : result;
 };
 
-const matcherRegex = /{(\b\w+(?:-\w+)*\b)}/g;
 export const replaceHyphenatedPath = (path: string): string => {
-  const matches = path.match(matcherRegex);
-  if (matches === null) {
-    return path.replaceAll(matcherRegex, ':$1');
+  let result = '';
+  let cursor = 0;
+
+  while (cursor < path.length) {
+    const openIndex = path.indexOf('{', cursor);
+    if (openIndex === -1) {
+      result += path.slice(cursor);
+      break;
+    }
+
+    const closeIndex = path.indexOf('}', openIndex + 1);
+    if (closeIndex === -1) {
+      result += path.slice(cursor);
+      break;
+    }
+
+    const segment = path.slice(cursor, openIndex);
+    const parameterName = path.slice(openIndex + 1, closeIndex);
+    const normalizedParameter = pathParamToVariableName(`:${parameterName}`);
+
+    result += segment + normalizedParameter;
+    cursor = closeIndex + 1;
   }
 
-  matches.forEach((match) => {
-    const replacement = pathParamToVariableName(match.replaceAll(matcherRegex, ':$1'));
-    path = path.replaceAll(match, replacement);
-  });
-  return path;
+  return result;
 };
 
 /** @example turns `/media-objects/{id}` into `MediaObjectsId` */

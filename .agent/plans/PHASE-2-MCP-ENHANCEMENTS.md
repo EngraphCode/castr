@@ -738,13 +738,13 @@ This structure ensures each session has focused, testable deliverables while mai
 
 ## Deliverable Summary
 
-| Part   | Sessions | Focus                               | Key Deliverables                                                                                                           |
-| ------ | -------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Part 1 | 1-4 ✅   | Scalar Pipeline Re-architecture     | New loader/validator, `BundledOpenApiDocument`, removal of SwaggerParser, OpenAPI 3.1-first architecture, updated docs     |
-| Part 2 | 5-6 ✅   | Foundation (Research + SDK)         | MCP analysis documents, parameter metadata extraction, schema constraints, pure function architecture                      |
-| Part 2 | 7 ⏳     | JSON Schema Conversion              | OpenAPI → JSON Schema Draft 07 converter, security metadata extraction, parallel to Zod/TypeScript converters              |
-| Part 2 | 8 ⏳     | MCP Tool Generation & Templates     | MCP tool definitions, `--emit-mcp-manifest` CLI flag, Handlebars template extensions, helper functions (naming/hints)      |
-| Part 2 | 9 ⏳     | Type Guards, Errors & Documentation | Type predicates, MCP error formatting, comprehensive documentation (README, guides, TypeDoc), quality gates, release notes |
+| Part   | Sessions | Focus                               | Key Deliverables                                                                                                                                 |
+| ------ | -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Part 1 | 1-4 ✅   | Scalar Pipeline Re-architecture     | New loader/validator, `BundledOpenApiDocument`, removal of SwaggerParser, OpenAPI 3.1-first architecture, updated docs                           |
+| Part 2 | 5-6 ✅   | Foundation (Research + SDK)         | MCP analysis documents, parameter metadata extraction, schema constraints, pure function architecture                                            |
+| Part 2 | 7 ✅     | JSON Schema Conversion              | OpenAPI → JSON Schema Draft 07 converter, security metadata extraction, parallel to Zod/TypeScript converters                                    |
+| Part 2 | 8 ✅     | MCP Tool Generation & Templates     | MCP tool definitions, `--emit-mcp-manifest` CLI flag, Handlebars template extensions, helper functions (naming/hints), inline JSON Schema helper |
+| Part 2 | 9 ⏳     | Type Guards, Errors & Documentation | Type predicates, MCP error formatting, comprehensive documentation (README, guides, TypeDoc), quality gates, release notes                       |
 
 ---
 
@@ -758,19 +758,16 @@ This structure ensures each session has focused, testable deliverables while mai
 
 **In Progress:**
 
-- ⏳ Session 7: JSON Schema conversion engine (next immediate task)
+- ⏳ Session 9: Type guards, error formatting & documentation — kickoff pending (backlog prepared; README/CLI follow-ups and runtime validation helpers queued).
 
 **Upcoming:**
 
-- Session 8: MCP tool generation & template integration
 - Session 9: Type guards, error formatting & documentation
 
 **Next Actions:**
 
-1. Begin Session 7: Implement JSON Schema Draft 07 conversion engine
-2. Follow TDD approach with comprehensive unit tests
-3. Validate output against Draft 07 meta-schema
-4. Extract security metadata for upstream API authentication
+1. Capture README/CLI follow-up items for Session 9 (document `--emit-mcp-manifest`, add MCP overview/examples to README, surface CLI flag in docs) now that MCP manifest artefacts exist.
+2. Mark Session 8 complete after documentation updates merge, then queue Session 9 kickoff (type guards + docs) with the new backlog items front-loaded.
 
 **References:**
 

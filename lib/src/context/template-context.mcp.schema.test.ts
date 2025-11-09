@@ -5,6 +5,11 @@ import {
   buildOutputSchemaObject,
   buildMcpToolSchemas,
 } from './template-context.mcp.js';
+import { getTemplateContext } from './template-context.js';
+import {
+  createParameterSectionSchema,
+  type ParameterAccumulator,
+} from './template-context.mcp.parameters.js';
 import type { HttpMethod } from '../endpoints/definition.types.js';
 
 const baseSchema: SchemaObject = {
@@ -16,6 +21,27 @@ const baseSchema: SchemaObject = {
 };
 
 describe('template-context MCP schema helpers', () => {
+  describe('createParameterSectionSchema', () => {
+    test('omits required property when there are no required parameters', () => {
+      const accumulator: ParameterAccumulator = {
+        properties: {
+          include: { type: 'string' },
+        },
+        required: new Set(),
+      };
+
+      const schema = createParameterSectionSchema(accumulator);
+
+      expect(schema).toEqual({
+        type: 'object',
+        properties: {
+          include: { type: 'string' },
+        },
+      });
+      expect(Object.hasOwn(schema, 'required')).toBe(false);
+    });
+  });
+
   describe('buildInputSchemaObject', () => {
     test('returns the input when already object typed', () => {
       expect(buildInputSchemaObject(baseSchema)).toEqual(baseSchema);
@@ -196,5 +222,186 @@ describe('buildMcpToolSchemas', () => {
         },
       ],
     });
+  });
+
+  test('inlines referenced schemas when building manifest tool schemas', () => {
+    const refDoc: OpenAPIObject = {
+      openapi: '3.1.0',
+      info: { title: 'Ref Example', version: '1.0.0' },
+      components: {
+        schemas: {
+          Pet: {
+            type: 'object',
+            required: ['id'],
+            properties: {
+              id: { type: 'integer' },
+              name: { type: 'string' },
+            },
+          },
+        },
+      },
+      paths: {
+        '/pets/{petId}': {
+          get: {
+            operationId: 'getPet',
+            parameters: [
+              {
+                name: 'petId',
+                in: 'path',
+                required: true,
+                schema: { type: 'integer' },
+              },
+            ],
+            responses: {
+              '200': {
+                description: 'Success',
+                content: {
+                  'application/json': {
+                    schema: { $ref: '#/components/schemas/Pet' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const { inputSchema, outputSchema } = buildMcpToolSchemas({
+      document: refDoc,
+      path: '/pets/{petId}',
+      method: 'get',
+    });
+
+    expect(JSON.stringify(inputSchema)).not.toContain('"$ref"');
+    expect(JSON.stringify(outputSchema)).not.toContain('"$ref"');
+  });
+
+  test('marks required request body sections and inlines component refs', () => {
+    const refDoc: OpenAPIObject = {
+      openapi: '3.1.0',
+      info: { title: 'Profiles', version: '1.0.0' },
+      components: {
+        schemas: {
+          ProfileInput: {
+            type: 'object',
+            required: ['displayName'],
+            properties: {
+              displayName: { type: 'string' },
+              biography: { type: 'string' },
+            },
+          },
+        },
+      },
+      paths: {
+        '/profiles/{profileId}': {
+          put: {
+            operationId: 'updateProfile',
+            parameters: [
+              {
+                name: 'profileId',
+                in: 'path',
+                required: true,
+                schema: { type: 'string' },
+              },
+            ],
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/ProfileInput' },
+                },
+              },
+            },
+            responses: {
+              '204': {
+                description: 'Updated',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const { inputSchema } = buildMcpToolSchemas({
+      document: refDoc,
+      path: '/profiles/{profileId}',
+      method: 'put',
+    });
+
+    expect(inputSchema).toMatchObject({
+      type: 'object',
+      required: ['path', 'body'],
+    });
+    expect(typeof inputSchema).not.toBe('boolean');
+    if (typeof inputSchema === 'boolean') {
+      throw new Error('Expected object schema');
+    }
+
+    const bodySchema = inputSchema['properties']?.body;
+    expect(bodySchema).toBeDefined();
+    if (!bodySchema || typeof bodySchema !== 'object') {
+      throw new Error('Expected body schema object');
+    }
+
+    expect('properties' in bodySchema ? bodySchema.properties : undefined).toBeDefined();
+    expect(JSON.stringify(inputSchema)).not.toContain('"$ref"');
+  });
+});
+
+describe('buildMcpTools', () => {
+  test('retains templated and original paths while resolving dotted parameters', () => {
+    const doc: OpenAPIObject = {
+      openapi: '3.1.0',
+      info: { title: 'Profiles', version: '1.0.0' },
+      paths: {
+        '/users/{userId}/profiles/{profile.id}': {
+          get: {
+            operationId: 'showProfile',
+            summary: 'Get profile',
+            parameters: [
+              {
+                name: 'userId',
+                in: 'path',
+                required: true,
+                schema: { type: 'string' },
+              },
+              {
+                name: 'profile.id',
+                in: 'path',
+                required: true,
+                schema: { type: 'string' },
+              },
+            ],
+            responses: {
+              '200': {
+                description: 'Profile',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'string' },
+                        name: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const context = getTemplateContext(doc);
+    const profileTool = context.mcpTools.find((tool) => tool.operationId === 'showProfile');
+
+    expect(profileTool).toBeDefined();
+    expect(profileTool?.httpOperation.path).toBe('/users/:userId/profiles/:profileId');
+    expect(profileTool?.httpOperation.originalPath).toBe('/users/{userId}/profiles/{profile.id}');
+    expect(profileTool?.httpOperation.method).toBe('get');
+    expect(profileTool?.tool.name).toBe('show_profile');
+    expect(JSON.stringify(profileTool?.tool)).not.toContain('"$ref"');
   });
 });

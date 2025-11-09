@@ -1413,7 +1413,61 @@ export const mcpTools = [
           store_list: {
             type: "array",
             items: {
-              $ref: "#/definitions/Store",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+                address: {
+                  type: "string",
+                },
+                country: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    code: {
+                      type: "string",
+                    },
+                    store_list: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Store",
+                      },
+                    },
+                  },
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -1453,7 +1507,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -1492,7 +1566,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -1527,7 +1621,38 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                nickname: {
+                  type: "string",
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -1567,7 +1692,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -1609,10 +1754,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -1654,10 +1873,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -1704,7 +1997,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -1752,7 +2065,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -1915,7 +2248,61 @@ export const mcpTools = [
           store_list: {
             type: "array",
             items: {
-              $ref: "#/definitions/Store",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+                address: {
+                  type: "string",
+                },
+                country: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    code: {
+                      type: "string",
+                    },
+                    store_list: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Store",
+                      },
+                    },
+                  },
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -1955,7 +2342,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -1994,7 +2401,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2029,7 +2456,38 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                nickname: {
+                  type: "string",
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -2069,7 +2527,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2111,10 +2589,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2156,10 +2708,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2206,7 +2832,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -2254,7 +2900,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -2336,7 +3002,61 @@ export const mcpTools = [
           store_list: {
             type: "array",
             items: {
-              $ref: "#/definitions/Store",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+                address: {
+                  type: "string",
+                },
+                country: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    code: {
+                      type: "string",
+                    },
+                    store_list: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Store",
+                      },
+                    },
+                  },
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -2376,7 +3096,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2415,7 +3155,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2450,7 +3210,38 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                nickname: {
+                  type: "string",
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -2490,7 +3281,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2532,10 +3343,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2577,10 +3462,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2627,7 +3586,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -2675,7 +3654,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -2755,7 +3754,61 @@ export const mcpTools = [
           store_list: {
             type: "array",
             items: {
-              $ref: "#/definitions/Store",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+                address: {
+                  type: "string",
+                },
+                country: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    code: {
+                      type: "string",
+                    },
+                    store_list: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Store",
+                      },
+                    },
+                  },
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -2795,7 +3848,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2834,7 +3907,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2869,7 +3962,38 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                nickname: {
+                  type: "string",
+                },
+                owner: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    firstname: {
+                      type: "string",
+                    },
+                    lastname: {
+                      type: "string",
+                    },
+                    email: {
+                      type: "string",
+                    },
+                    friends: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/User",
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -2909,7 +4033,27 @@ export const mcpTools = [
             type: "string",
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2951,10 +4095,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -2996,10 +4214,84 @@ export const mcpTools = [
             type: "string",
           },
           country: {
-            $ref: "#/definitions/Country",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              name: {
+                type: "string",
+              },
+              code: {
+                type: "string",
+              },
+              store_list: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                    address: {
+                      type: "string",
+                    },
+                    country: {
+                      $ref: "#/definitions/Country",
+                    },
+                    owner: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        firstname: {
+                          type: "string",
+                        },
+                        lastname: {
+                          type: "string",
+                        },
+                        email: {
+                          type: "string",
+                        },
+                        friends: {
+                          type: "array",
+                          items: {
+                            $ref: "#/definitions/User",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
           owner: {
-            $ref: "#/definitions/User",
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+              },
+              firstname: {
+                type: "string",
+              },
+              lastname: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              friends: {
+                type: "array",
+                items: {
+                  $ref: "#/definitions/User",
+                },
+              },
+            },
           },
         },
       },
@@ -3046,7 +4338,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -3094,7 +4406,27 @@ export const mcpTools = [
           friends: {
             type: "array",
             items: {
-              $ref: "#/definitions/User",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                firstname: {
+                  type: "string",
+                },
+                lastname: {
+                  type: "string",
+                },
+                email: {
+                  type: "string",
+                },
+                friends: {
+                  type: "array",
+                  items: {
+                    $ref: "#/definitions/User",
+                  },
+                },
+              },
             },
           },
         },
@@ -3320,7 +4652,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -3331,7 +4673,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -3357,7 +4707,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -3368,7 +4728,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -3439,7 +4807,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -3450,7 +4828,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -3476,7 +4862,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -3487,7 +4883,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -3570,7 +4974,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -3581,7 +4995,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -3893,7 +5315,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -3966,7 +5437,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -4094,7 +5614,56 @@ export const mcpTools = [
                 type: "boolean",
               },
               pet: {
-                $ref: "#/definitions/Pet",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [10],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["doggie"],
+                    type: "string",
+                  },
+                  category: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        examples: [1],
+                        type: "integer",
+                      },
+                      name: {
+                        examples: ["Dogs"],
+                        type: "string",
+                      },
+                    },
+                  },
+                  photoUrls: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                  tags: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  },
+                  status: {
+                    description: "pet status in the store",
+                    type: "string",
+                    enum: ["available", "pending", "sold"],
+                  },
+                },
+                required: ["name", "photoUrls"],
               },
             },
           },
@@ -4129,7 +5698,56 @@ export const mcpTools = [
             type: "boolean",
           },
           pet: {
-            $ref: "#/definitions/Pet",
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
           },
         },
       },
@@ -4201,7 +5819,56 @@ export const mcpTools = [
             type: "boolean",
           },
           pet: {
-            $ref: "#/definitions/Pet",
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
           },
         },
       },
@@ -4532,7 +6199,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -4776,7 +6478,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -4787,7 +6499,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -4813,7 +6533,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -4824,7 +6554,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -4895,7 +6633,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -4906,7 +6654,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -4932,7 +6688,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -4943,7 +6709,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -5026,7 +6800,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -5037,7 +6821,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -5349,7 +7141,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -5422,7 +7263,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -5550,7 +7440,56 @@ export const mcpTools = [
                 type: "boolean",
               },
               pet: {
-                $ref: "#/definitions/Pet",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [10],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["doggie"],
+                    type: "string",
+                  },
+                  category: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        examples: [1],
+                        type: "integer",
+                      },
+                      name: {
+                        examples: ["Dogs"],
+                        type: "string",
+                      },
+                    },
+                  },
+                  photoUrls: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                  tags: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  },
+                  status: {
+                    description: "pet status in the store",
+                    type: "string",
+                    enum: ["available", "pending", "sold"],
+                  },
+                },
+                required: ["name", "photoUrls"],
               },
             },
           },
@@ -5585,7 +7524,56 @@ export const mcpTools = [
             type: "boolean",
           },
           pet: {
-            $ref: "#/definitions/Pet",
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
           },
         },
       },
@@ -5657,7 +7645,56 @@ export const mcpTools = [
             type: "boolean",
           },
           pet: {
-            $ref: "#/definitions/Pet",
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
           },
         },
       },
@@ -5988,7 +8025,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },
@@ -6273,7 +8345,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -6284,7 +8366,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -6310,7 +8400,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -6321,7 +8421,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -6392,7 +8500,17 @@ export const mcpTools = [
                 type: "string",
               },
               category: {
-                $ref: "#/definitions/Category",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
               },
               photoUrls: {
                 type: "array",
@@ -6403,7 +8521,15 @@ export const mcpTools = [
               tags: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/Tag",
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
                 },
               },
               status: {
@@ -6429,7 +8555,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -6440,7 +8576,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -6523,7 +8667,17 @@ export const mcpTools = [
             type: "string",
           },
           category: {
-            $ref: "#/definitions/Category",
+            type: "object",
+            properties: {
+              id: {
+                examples: [1],
+                type: "integer",
+              },
+              name: {
+                examples: ["Dogs"],
+                type: "string",
+              },
+            },
           },
           photoUrls: {
             type: "array",
@@ -6534,7 +8688,15 @@ export const mcpTools = [
           tags: {
             type: "array",
             items: {
-              $ref: "#/definitions/Tag",
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                },
+                name: {
+                  type: "string",
+                },
+              },
             },
           },
           status: {
@@ -6846,7 +9008,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -6919,7 +9130,56 @@ export const mcpTools = [
           value: {
             type: "array",
             items: {
-              $ref: "#/definitions/Pet",
+              type: "object",
+              properties: {
+                id: {
+                  examples: [10],
+                  type: "integer",
+                },
+                name: {
+                  examples: ["doggie"],
+                  type: "string",
+                },
+                category: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [1],
+                      type: "integer",
+                    },
+                    name: {
+                      examples: ["Dogs"],
+                      type: "string",
+                    },
+                  },
+                },
+                photoUrls: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "integer",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                status: {
+                  description: "pet status in the store",
+                  type: "string",
+                  enum: ["available", "pending", "sold"],
+                },
+              },
+              required: ["name", "photoUrls"],
             },
           },
         },
@@ -7047,7 +9307,56 @@ export const mcpTools = [
                 type: "boolean",
               },
               pet: {
-                $ref: "#/definitions/Pet",
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [10],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["doggie"],
+                    type: "string",
+                  },
+                  category: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        examples: [1],
+                        type: "integer",
+                      },
+                      name: {
+                        examples: ["Dogs"],
+                        type: "string",
+                      },
+                    },
+                  },
+                  photoUrls: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                  tags: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: {
+                          type: "integer",
+                        },
+                        name: {
+                          type: "string",
+                        },
+                      },
+                    },
+                  },
+                  status: {
+                    description: "pet status in the store",
+                    type: "string",
+                    enum: ["available", "pending", "sold"],
+                  },
+                },
+                required: ["name", "photoUrls"],
               },
             },
           },
@@ -7082,7 +9391,56 @@ export const mcpTools = [
             type: "boolean",
           },
           pet: {
-            $ref: "#/definitions/Pet",
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
           },
         },
       },
@@ -7154,7 +9512,56 @@ export const mcpTools = [
             type: "boolean",
           },
           pet: {
-            $ref: "#/definitions/Pet",
+            type: "object",
+            properties: {
+              id: {
+                examples: [10],
+                type: "integer",
+              },
+              name: {
+                examples: ["doggie"],
+                type: "string",
+              },
+              category: {
+                type: "object",
+                properties: {
+                  id: {
+                    examples: [1],
+                    type: "integer",
+                  },
+                  name: {
+                    examples: ["Dogs"],
+                    type: "string",
+                  },
+                },
+              },
+              photoUrls: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                    },
+                    name: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+              status: {
+                description: "pet status in the store",
+                type: "string",
+                enum: ["available", "pending", "sold"],
+              },
+            },
+            required: ["name", "photoUrls"],
           },
         },
       },
@@ -7485,7 +9892,42 @@ export const mcpTools = [
               value: {
                 type: "array",
                 items: {
-                  $ref: "#/definitions/User",
+                  type: "object",
+                  properties: {
+                    id: {
+                      examples: [10],
+                      type: "integer",
+                    },
+                    username: {
+                      examples: ["theUser"],
+                      type: "string",
+                    },
+                    firstName: {
+                      examples: ["John"],
+                      type: "string",
+                    },
+                    lastName: {
+                      examples: ["James"],
+                      type: "string",
+                    },
+                    email: {
+                      examples: ["john@email.com"],
+                      type: "string",
+                    },
+                    password: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    phone: {
+                      examples: ["12345"],
+                      type: "string",
+                    },
+                    userStatus: {
+                      description: "User Status",
+                      examples: [1],
+                      type: "integer",
+                    },
+                  },
                 },
               },
             },

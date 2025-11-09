@@ -133,10 +133,12 @@ export const collectParameterGroups = (
 };
 
 export const createParameterSectionSchema = (group: ParameterAccumulator): SchemaObject => {
-  const required = group.required.size > 0 ? [...group.required] : undefined;
-  return {
+  const schema: SchemaObject = {
     type: 'object',
     properties: group.properties,
-    required,
-  } satisfies SchemaObject;
+  };
+  if (group.required.size > 0) {
+    schema.required = [...group.required];
+  }
+  return schema;
 };

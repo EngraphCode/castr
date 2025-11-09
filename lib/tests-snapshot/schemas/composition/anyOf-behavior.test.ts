@@ -231,10 +231,29 @@ describe('anyOf behavior', () => {
                     anyOfRef: {
                       anyOf: [
                         {
-                          $ref: "#/definitions/PetByAge",
+                          type: "object",
+                          properties: {
+                            age: {
+                              type: "integer",
+                            },
+                            nickname: {
+                              type: "string",
+                            },
+                          },
+                          required: ["age"],
                         },
                         {
-                          $ref: "#/definitions/PetByType",
+                          type: "object",
+                          properties: {
+                            pet_type: {
+                              type: "string",
+                              enum: ["Cat", "Dog"],
+                            },
+                            hunts: {
+                              type: "boolean",
+                            },
+                          },
+                          required: ["pet_type"],
                         },
                       ],
                     },

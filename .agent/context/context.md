@@ -1,6 +1,6 @@
 # Living Context Document
 
-**Last Updated:** November 6, 2025 6:45 PM  
+**Last Updated:** November 8, 2025 10:45 PM  
 **Purpose:** Session changelog + current status  
 **Audience:** Everyone (humans + AI)  
 **Update After:** Every work session
@@ -13,31 +13,30 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 8 (MCP Tool Generation & Template Integration) ♻️ In Progress  
-**Next Session:** Session 8 – continue integrating MCP helpers into templates/CLI  
+**Current Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ⏳ Pending kickoff  
+**Next Session:** Session 9 – prepare backlog (type guards + docs) and begin implementation  
 **Branch:** `feat/rewrite`
 
-### Session 8 Snapshot (In Progress)
+### Session 8 Snapshot (Complete – Nov 8, 2025 10:50 PM)
 
-**What’s Done:**
+**Highlights:**
 
-- Added MCP helper modules:
-  - `template-context.mcp.naming.ts` for deterministic tool names (operationId → snake_case, method/path fallback) and behavior hints (GET/HEAD/OPTIONS → `readOnlyHint`, DELETE → `destructiveHint`, PUT → `idempotentHint`).
-  - `template-context.mcp.parameters.ts`, `.responses.ts`, `.schemas.ts` aggregate path/query/header parameters, request bodies, and primary success responses into Draft 07 object schemas and reuse `resolveOperationSecurity` to attach upstream security metadata.
-- Re-exported helpers via `template-context.mcp.ts` and surfaced them in `context/index.ts` for upcoming template/manifest integration.
-- Added unit suites (`template-context.mcp.test.ts`, `template-context.mcp.schema.test.ts`) covering naming/hints, schema wrapping, aggregated schema structure, and security extraction against the multi-auth fixture.
-- Quality gates rerun (`pnpm format`, `pnpm build`, `pnpm lint`, `pnpm type-check`, `pnpm test:all`) — all green.
-- MCP spec review (Nov 6, 2025 14:15) logged: tool IDs must be stable lowercase ASCII, annotations optional with defined defaults, input/output schemas must root at `{ type: "object" }`, manifests must satisfy `ToolSchema`, and helpers should continue to fail fast on violations.
+- MCP helper modules (`template-context.mcp.*`) deliver deterministic naming, behavioural hints, aggregated schemas, and security metadata.
+- `mcpTools` now ships through `getZodClientTemplateContext`; Handlebars templates emit tool definitions, preserving templated/original paths.
+- CLI `--emit-mcp-manifest` flag shares the programmatic context; characterisation tests enforce parity.
+- `template-context.mcp.inline-json-schema.ts` inlines `$ref` chains into Draft 07 documents while satisfying Sonar return-type rules.
+- Snapshot hygiene complete: high-churn suites moved to fixtures, with rationale logged for retaining `group-strategy`, `recursive-schema`, and composition suites inline.
+- Path utilities now use deterministic parsing, eliminating the slow regex and keeping MCP paths intact.
+- Manual CLI manifest runs captured for petstore (4 tools, `default`-only warning) and multi-auth (2 tools, layered security); artefacts live in `tmp/petstore.mcp.json` and `tmp/multi-auth.mcp.json`.
+- Full quality gate stack rerun after documentation updates — all green with zero skipped tests.
 
-**Next Steps:**
+**Outcome:** Session 8 meets its definition of done; documentation system and plans updated, artefacts archived, branch remains green.
 
-- Workstream B: extend `getZodClientTemplateContext` to surface `mcpTools`, update Handlebars templates, refresh snapshots/characterization suites.
-- Workstream C: implement `--emit-mcp-manifest <path>` CLI flag that writes MCP-compliant manifests from the enriched context.
-- Workstream D: rerun cross-cutting validation, perform manual CLI manifest verification, and update documentation/hand-off once integration completes.
-- Maintain full-quality gate cadence after each major change (format → build → lint → type-check → test:all → character).
+### Session 9 Prep (Pending Kickoff)
 
-**Process Reminder:** Carry the Session 7 practice forward—run the full quality suite after targeted checks:  
-`pnpm format && pnpm build && pnpm lint && pnpm type-check && pnpm test:all && pnpm character`
+- **Objective:** introduce MCP runtime type guards, refine error formatting, and document the new manifest flag + workflow.
+- **Backlog:** README/CLI help updates for `--emit-mcp-manifest`, MCP overview/examples, type guard implementations, documentation sweep.
+- **Immediate Actions:** draft TDD plan for type guards, confirm examples for README, maintain green gates before implementation.
 
 ### Session 6 Summary (Complete)
 
@@ -64,7 +63,7 @@
 
 ## ⚠️ Current Blockers
 
-- None — helper groundwork complete; ready for template/CLI integration.
+None — quality gates are all green (Nov 8, 2025 10:42 PM). The only remaining tasks for Session 8 are documentation updates and Session 9 prep notes.
 
 ---
 
@@ -85,41 +84,58 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate              | Status | Last Check          | Notes                                                                |
-| ----------------- | ------ | ------------------- | -------------------------------------------------------------------- |
-| `pnpm format`     | ✅     | Nov 6, 2025 7:00 pm | Ran Prettier root-wide after MCP helper refactor                    |
-| `pnpm build`      | ✅     | Nov 6, 2025 7:02 pm | `tsup` build clean                                                  |
-| `pnpm type-check` | ✅     | Nov 6, 2025 7:03 pm | NodeNext project type-check passes                                  |
-| `pnpm lint`       | ✅     | Nov 6, 2025 7:04 pm | ESLint/Sonar satisfied with new MCP modules                         |
-| `pnpm test:all`   | ✅     | Nov 6, 2025 7:04 pm | `vitest run` + `character` + snapshots all green                    |
-| `pnpm character`  | ✅     | Nov 6, 2025 7:04 pm | Triggered via `pnpm test:all`; all characterization suites succeeded |
+| Gate                 | Status | Last Check           | Notes                                                                                          |
+| -------------------- | ------ | -------------------- | ---------------------------------------------------------------------------------------------- |
+| `pnpm format`        | ✅     | Nov 8, 2025 1:20 PM  | No new formatting deltas since afternoon run; repo remains clean                               |
+| `pnpm build`         | ✅     | Nov 8, 2025 10:34 PM | `tsup` build succeeded during Workstream D verification                                        |
+| `pnpm type-check`    | ✅     | Nov 8, 2025 10:36 PM | `tsc --noEmit --project tsconfig.lint.json` clean                                              |
+| `pnpm lint`          | ✅     | Nov 8, 2025 10:38 PM | `eslint . --cache --cache-location .eslintcache` all green                                     |
+| `pnpm test:all`      | ✅     | Nov 8, 2025 10:45 PM | Re-ran `pnpm test`, `pnpm test:snapshot`, `pnpm character` post-doc updates (0 failures/skips) |
+| `pnpm character`     | ✅     | Nov 8, 2025 10:45 PM | CLI parity suite passes, including `--emit-mcp-manifest` characterization                      |
+| `pnpm test:snapshot` | ✅     | Nov 8, 2025 10:45 PM | 75 snapshot suites green; fixture migrations stable                                            |
 
-**Result:** All quality gates green. Re-run the full suite after any further edits.
+**Result:** All quality gates are green; proceed with documentation wrap-up before handing off to Session 9.
 
 ---
 
 ## 📊 Session Log (Recent → Oldest)
 
-### Session 8 - MCP Tool Generation & Template Integration (IN PROGRESS)
+### Session 8 - MCP Tool Generation & Template Integration (COMPLETE)
 
-**Dates:** November 6, 2025  
-**Duration:** ~1.5 hours so far  
-**Status:** ♻️ In progress (helpers complete, integration pending)
+**Dates:** Nov 6–8, 2025  
+**Status:** ✅ Complete (helpers, CLI parity, documentation updates, and verification finished)
 
-**What Changed:**
+**Completed Work (this session):**
 
-- Implemented modular MCP helper layer (`template-context.mcp.*`) for tool naming, behavior hints, schema aggregation, and security extraction.
-- Added unit coverage for helper behavior, schema wrapping, and aggregated tool schema output.
-- Re-exported helpers through `context/index.ts` for upcoming template/CLI usage.
-- Reran full quality suite (format/build/lint/type-check/test:all) to baseline before template integration.
+- Modular MCP helper layer (`template-context.mcp.*`) for tool naming, behavioural hints, schema aggregation, and security extraction.
+- Exposed helpers through `context/index.ts`; added unit coverage for naming, schema wrapping, and aggregated tool metadata.
+- Added regression coverage for optional-only parameter groups; fixed `createParameterSectionSchema` to omit `required` when empty (restores DTS build).
+- Implemented CLI `--emit-mcp-manifest` flag, recorded manual runs (petstore + multi-auth), and archived manifests in `tmp/`.
+- Migrated high-churn snapshots to fixtures and documented rationale for remaining inline suites.
+- Replaced hyphenated-path regex with deterministic parser and confirmed all quality gates green post-doc updates.
 
-**Next Up:**
+### Session 9 - Type Guards, Error Formatting & Documentation (PENDING)
 
-- Wire helpers into template context and Handlebars templates (expose `mcpTools`, update snapshots).
-- Implement `--emit-mcp-manifest` CLI flag and manifest writer.
-- Conduct manual manifest verification + documentation updates post-integration.
+**Status:** ⏳ Planning
 
-**Quality Gates:** ✅ format/build/lint/type-check/test:all on Nov 6, 2025 7:04 pm.
+**Focus:** Implement MCP type guards and error formatting, document manifest workflow, and run full quality suite under the new guards.
+
+**Prep Notes:**
+
+- Backlog captured in parent plan (`--emit-mcp-manifest` README/CLI docs, MCP overview/examples, runtime validators).
+- TDD will target `lib/src/validation/mcp-type-guards.ts` (new) and associated tests; ensure zero type escape hatches.
+- Plan to extend documentation once code lands (README, HANDOFF summary, continuation prompt).
+- Recorded CLI manifest outputs for petstore (4 tools, warning for `default` responses) and multi-auth (2 tools with layered security); artefacts live at `tmp/petstore.mcp.json` and `tmp/multi-auth.mcp.json`.
+- Converted high-churn snapshot suites to fixtures and evaluated the remaining large suites (`group-strategy`, `recursive-schema`, composition) — rationale captured in Session 8 plan.
+- Re-ran `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`, `pnpm test:snapshot`, and `pnpm character`; all green as of Nov 8, 2025 10:42 PM.
+
+**Outstanding / Planned:**
+
+- Thread manual manifest findings + snapshot audit notes through documentation (context, HANDOFF, continuation prompt, plans).
+- Capture README/CLI follow-ups (document `--emit-mcp-manifest`, MCP overview) for Session 9 planning.
+- Formal Session 8 close-out once documentation is merged; tee up Session 9 backlog (type guards, runtime validation, docs sweep).
+
+**Quality Gates:** ✅ format/build/type-check/lint/test/character/snapshot (Nov 8, 2025 10:42 PM).
 
 ### Session 7 - JSON Schema Conversion Engine (COMPLETE)
 
