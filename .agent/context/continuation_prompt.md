@@ -774,6 +774,98 @@ After completing a session:
 
 ---
 
-**Last Updated:** November 5, 2025  
-**Status:** Phase 2 Part 2 Session 5 Complete, Session 6 Ready  
-**Quality Gates:** ALL GREEN ✅
+## 🚀 Phase 3 Readiness (November 10, 2025)
+
+**Current State:** Phase 2 COMPLETE ✅ - Ready to begin Phase 3 Session 1
+
+**Phase 2 Final Status:**
+
+- ✅ Part 1 (Sessions 1-4): Scalar pipeline architecture complete
+- ✅ Part 2 (Sessions 5-9): MCP enhancements complete
+  - Session 5: MCP protocol research & analysis
+  - Session 6: SDK enhancements with parameter metadata
+  - Session 7: JSON Schema Draft 07 converter
+  - Session 8: MCP tool generation & templates
+  - Session 9: Type guards, error formatting & comprehensive documentation
+- ✅ All quality gates GREEN: 982 tests (0 failures, 0 skipped)
+
+**Phase 3 Kickoff: Session 3.1 - CodeMeta Elimination**
+
+**Objective:** COMPLETELY DELETE the CodeMeta abstraction and extract pure functions for Zod generation.
+
+**Why This Is Critical:**
+
+- CodeMeta is poorly-conceived (ADR-013): mixes concerns, wraps strings, blocks ts-morph migration
+- Prevents modular writer architecture required for Phase 4
+- Alignment: Match the JSON Schema converter pattern (pure functions, plain objects)
+- Impact: Unblocks ts-morph migration, reduces effort by 50%
+
+**Session 3.1 Plan:** `.agent/plans/PHASE-3-SESSION-1-CODEMETA-ELIMINATION.md`
+
+**Work Sections (12-16 hours total):**
+
+1. **Section A (8-10h):** Pure Function Extraction
+   - Create `lib/src/conversion/zod/code-generation.ts`
+   - Extract all Zod string generation logic into pure, testable functions
+   - Follow TDD: write tests first, confirm RED → GREEN cycle
+   - Target 30+ unit tests for comprehensive coverage
+
+2. **Section B (2-3h):** CodeMeta Complete Deletion
+   - Delete `lib/src/shared/code-meta.ts` (159 lines)
+   - Delete `lib/src/shared/code-meta.test.ts` (246 lines)
+   - Remove all imports and public exports
+   - **Critical:** Zero mentions of "CodeMeta" must remain (verified via grep)
+
+3. **Section C (2-3h):** Plain Object Replacement
+   - Update all handlers to return `{ code: string; schema: SchemaObject; ref?: string }`
+   - Update `getZodSchema()` return type to plain object
+   - Remove all `.toString()`, `.assign()`, `.inherit()` calls
+   - Extract complexity logic to dedicated helper if needed
+
+4. **Section D (1-2h):** Quality Gates & Validation
+   - Run full quality gate suite (format, build, type-check, lint, test, snapshot, character)
+   - Verify zero behavioral changes (outputs identical)
+   - Final eradication check (automated grep verification)
+   - Prepare commit message
+
+**Validation Commands:**
+
+```bash
+# Eradication check
+test ! -f lib/src/shared/code-meta.ts && echo "✅ Deleted"
+[ $(grep -r "CodeMeta" lib/src/ --include="*.ts" 2>/dev/null | wc -l | tr -d ' ') -eq 0 ] && echo "✅ Zero mentions"
+
+# Full quality gate
+pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:snapshot && pnpm character
+```
+
+**Definition of Done:**
+
+- [ ] `lib/src/shared/code-meta.ts` does NOT exist
+- [ ] `lib/src/shared/code-meta.test.ts` does NOT exist
+- [ ] Zero mentions of "CodeMeta" in `lib/src/` (case-sensitive grep)
+- [ ] Zero mentions of "CodeMetaData" in `lib/src/` (case-sensitive grep)
+- [ ] All quality gates passing (format ✅ build ✅ type-check ✅ lint ✅ test ✅ snapshot ✅ character ✅)
+- [ ] Zero behavioral changes (outputs identical)
+- [ ] Pure functions module created: `lib/src/conversion/zod/code-generation.ts`
+- [ ] 30+ unit tests for pure functions
+- [ ] TSDoc complete for all exported functions
+- [ ] ADR-013 updated: Status → "Resolved in Session 3.1"
+
+**Phase 3 → Phase 4 Dependency Chain:**
+
+- Phase 3 eliminates CodeMeta & Handlebars, establishes lossless IR
+- Phase 4 builds modular writers consuming the IR (types, metadata, zod, client, mcp)
+- Consumer requirements (Oak National Academy): Single-pass generation, hook system, deterministic manifests
+
+**See Also:**
+
+- `.agent/plans/PHASE-3-TS-MORPH-IR.md` - Complete Phase 3 plan (9 sessions)
+- `.agent/plans/PHASE-4-ARTEFACT-EXPANSION.md` - Phase 4 scope & requirements
+- `.agent/analysis/CODEMETA_ANALYSIS.md` - CodeMeta problem analysis
+
+---
+
+**Last Updated:** November 10, 2025  
+**Status:** Phase 2 Complete ✅ | Phase 3 Session 1 Ready to Start  
+**Quality Gates:** ALL GREEN ✅ (982 tests passing)

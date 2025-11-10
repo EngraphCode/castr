@@ -1,9 +1,52 @@
 # Phase 3 Plan – Typed IR & ts-morph Migration
 
-**Status:** Draft  
-**Prerequisites:** Phase 2 architecture rewrite complete (Scalar pipeline + MCP foundations stable)  
+**Status:** Ready to Start  
+**Prerequisites:** Phase 2 complete ✅ (Scalar pipeline + MCP foundations stable)  
 **Reference:** `.agent/reference/openapi-zod-client-emitter-migration.md`  
 **Quality Gate:** `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test:all && pnpm character`
+
+---
+
+## Strategic Context
+
+### Phase 3 Purpose: Foundation for Phase 4 Expansion
+
+Phase 3 focuses on **eliminating technical debt** and **establishing the IR foundation** required for Phase 4's multi-artifact generation system. Consumer requirements (documented in `.agent/plans/feature_requests/additional_project_requirements.md` and `.agent/plans/feature_requests/mcp_ecosystem_integration_requirements.md`) describe a sophisticated writer architecture that **cannot be built** on the current Handlebars + CodeMeta system.
+
+**Why Phase 3 Must Complete First:**
+
+1. **CodeMeta Blocks Writer Architecture** - The poorly-conceived CodeMeta abstraction (ADR-013) prevents modular writers from consuming clean data structures.
+2. **IR is Foundation** - Phase 4's multiple writers (types, metadata, zod, client, mcp) require a stable, lossless IR.
+3. **ts-morph Enables Expansion** - AST-based generation is essential for complex artifacts (openapi-fetch types, parameter maps, enum catalogs).
+4. **Handlebars Limits** - Template system cannot support deterministic manifest generation, hook systems, or bidirectional transformations.
+
+**Phase 3 → Phase 4 Dependency Chain:**
+
+```
+Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
+├─ Session 3.1: Delete        ├─ Writer architecture
+│  CodeMeta completely         ├─ openapi-fetch types
+├─ Session 3.2-3.3: Define    ├─ Parameter/response maps
+│  lossless IR + persistence   ├─ Enum catalogs + guards
+├─ Session 3.4-3.6: Build     ├─ Hook system
+│  ts-morph emitter            ├─ Deterministic manifests
+├─ Session 3.7: Remove         └─ MCP tool descriptors
+│  Handlebars completely
+└─ Session 3.8-3.9: Add
+   bidirectional transforms
+```
+
+**Consumer Requirements Summary** (Full Phase 4 Scope):
+
+- Single-pass generation of types, constants, Zod, metadata, clients, MCP artifacts
+- Modular writer architecture consuming shared IR
+- Full `openapi-fetch` compatibility (`paths`, `operations`, `components`, `webhooks`)
+- Comprehensive metadata (path catalogs, operation metadata, enum constants, parameter maps)
+- Hook system for vendor-specific customizations (Oak National Academy use case)
+- Deterministic manifest output with structured file descriptions
+- MCP tooling support (operation iterators, sample utilities, tool naming helpers)
+
+**See:** `.agent/plans/PHASE-4-ARTEFACT-EXPANSION.md` for complete Phase 4 details.
 
 ---
 
@@ -43,6 +86,7 @@
 3. **Deterministic Outputs:** no behavioural drift—regressions guarded by existing characterisation tests plus new IR-focused suites.
 4. **Extensibility:** IR must support future generators (e.g. SDKs, docs) and the reverse pipeline (Zod → OpenAPI) described in the reference document.
 5. **Incremental Delivery:** migrate file groups progressively, keeping the CLI usable between milestones.
+6. **Phase 4 Readiness:** IR design must account for future writer needs (operation metadata, parameter maps, enum catalogs, response descriptors) documented in Phase 4 requirements.
 
 ---
 
