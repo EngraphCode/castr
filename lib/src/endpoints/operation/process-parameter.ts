@@ -6,7 +6,7 @@ import type {
 } from 'openapi3-ts/oas31';
 import { isReferenceObject, isSchemaObject } from 'openapi3-ts/oas31';
 import { match } from 'ts-pattern';
-import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../../conversion/zod/index.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import type { EndpointParameter, ParameterType } from '../definition.types.js';
 import {
@@ -22,7 +22,7 @@ import { extractParameterMetadata } from '../parameter-metadata.js';
  * Type signature for function that generates Zod variable names
  * @public
  */
-export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
+export type GetZodVarNameFn = (input: ZodCodeResult, fallbackName?: string) => string;
 
 /**
  * Allowed parameter locations according to OpenAPI 3.0 spec
@@ -253,17 +253,19 @@ export function processParameter(
   paramSchema = resolveSchemaRef(ctx.doc, paramSchema);
 
   // Generate Zod schema code
+  const paramMeta = { isRequired: paramItem.in === 'path' ? true : (paramItem.required ?? false) };
   const paramCode = getZodSchema({
     schema: paramSchema,
     ctx,
-    meta: { isRequired: paramItem.in === 'path' ? true : (paramItem.required ?? false) },
+    meta: paramMeta,
     options,
   });
 
   const schema = getZodVarName(
-    paramCode.assign(
-      paramCode.toString() + getZodChain({ schema: paramSchema, meta: paramCode.meta, options }),
-    ),
+    {
+      ...paramCode,
+      code: paramCode.code + getZodChain({ schema: paramSchema, meta: paramMeta, options }),
+    },
     paramItem.name,
   );
 

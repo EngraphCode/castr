@@ -3,7 +3,6 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import { match } from 'ts-pattern';
 
-import type { CodeMetaData, ConversionTypeContext, CodeMeta } from '../../shared/code-meta.js';
 import {
   generateNonStringEnumZodCode,
   generateStringEnumZodCode,
@@ -11,6 +10,7 @@ import {
 } from '../../shared/enum-helpers.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
+import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
 /**
  * Extract schema name from a component schema $ref
@@ -29,7 +29,7 @@ type GetZodSchemaFn = (args: {
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
   options?: TemplateContext['options'] | undefined;
-}) => CodeMeta;
+}) => ZodCodeResult;
 
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
@@ -55,16 +55,16 @@ function isCircularReference(schemaName: string, refsPath: string[]): boolean {
  * Safe with non-null assertions because circular references are only detected
  * when the schema is already being processed higher in the call stack.
  *
- * @param code - CodeMeta with ref pointing to circular schema
+ * @param code - ZodCodeResult with ref pointing to circular schema
  * @param ctx - Conversion context with registered schemas
- * @returns CodeMeta with assigned circular schema
+ * @returns ZodCodeResult with assigned circular schema
  * @internal
  */
-function handleCircularReference(code: CodeMeta, ctx: ConversionTypeContext): CodeMeta {
+function handleCircularReference(code: ZodCodeResult, ctx: ConversionTypeContext): ZodCodeResult {
   // In circular references, code.ref and the schema must exist
   // Non-null assertions are safe because we're inside a circular reference check
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return code.assign(ctx.zodSchemaByName[code.ref!]!);
+  return { ...code, code: ctx.zodSchemaByName[code.ref!]! };
 }
 
 /**
@@ -99,7 +99,7 @@ function resolveSchemaReference(
     throw new Error(`Schema ${ref} not found`);
   }
 
-  return getZodSchema({ schema: actualSchema, ctx, meta, options }).toString();
+  return getZodSchema({ schema: actualSchema, ctx, meta, options }).code;
 }
 
 /**
@@ -107,24 +107,24 @@ function resolveSchemaReference(
  * Orchestrates circular detection, schema resolution, and caching.
  *
  * @param schema - ReferenceObject with $ref
- * @param code - CodeMeta to assign result to
+ * @param code - ZodCodeResult to assign result to
  * @param ctx - Conversion context (mutated to cache schemas)
  * @param refsPath - Path of references traversed (for circular detection)
  * @param meta - Metadata for code generation
  * @param getZodSchema - Function to generate Zod schema
  * @param options - Template options
- * @returns CodeMeta with resolved reference
+ * @returns ZodCodeResult with resolved reference
  * @public
  */
 export function handleReferenceObject(
   schema: ReferenceObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext,
   refsPath: string[],
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   const schemaName = getSchemaNameFromRef(schema.$ref);
 
   if (isCircularReference(schemaName, refsPath)) {
@@ -133,15 +133,16 @@ export function handleReferenceObject(
 
   const result = resolveSchemaReference(schema.$ref, schemaName, ctx, meta, getZodSchema, options);
 
-  // If schema already registered, return code unchanged
+  // If schema already registered, return schema name for reference
   if (ctx.zodSchemaByName[schemaName]) {
-    return code;
+    return { ...code, code: schemaName };
   }
 
   // Register resolved schema
   ctx.zodSchemaByName[schemaName] = result;
 
-  return code;
+  // Return schema name for reference
+  return { ...code, code: schemaName };
 }
 
 /**
@@ -153,17 +154,17 @@ export function handleReferenceObject(
  */
 export function handleArraySchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   getZodChain: GetZodChainFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   const readonly = options?.allReadonly ? '.readonly()' : '';
 
   if (!schema.items) {
-    return code.assign(`z.array(z.any())${readonly}`);
+    return { ...code, code: `z.array(z.any())${readonly}` };
   }
 
   // Resolve ref if needed for getZodChain (which needs .type property)
@@ -172,14 +173,14 @@ export function handleArraySchema(
       ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.items.$ref))
       : schema.items;
 
-  const itemZodSchema = getZodSchema({ schema: schema.items, ctx, meta, options }).toString();
+  const itemZodSchema = getZodSchema({ schema: schema.items, ctx, meta, options }).code;
   const zodChain = getZodChain({
     schema: itemsSchema,
     meta: { ...meta, isRequired: true },
     options,
   });
 
-  return code.assign(`z.array(${itemZodSchema}${zodChain})${readonly}`);
+  return { ...code, code: `z.array(${itemZodSchema}${zodChain})${readonly}` };
 }
 
 /**
@@ -191,26 +192,27 @@ export function handleArraySchema(
  */
 export function handlePrimitiveSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   schemaType: string,
-): CodeMeta {
+): ZodCodeResult {
   if (schema.enum) {
     // Handle string enums
     if (schemaType === 'string') {
-      return code.assign(generateStringEnumZodCode(schema.enum));
+      return { ...code, code: generateStringEnumZodCode(schema.enum) };
     }
 
     // Non-string enums with string values are invalid
     if (shouldEnumBeNever(schemaType, schema.enum)) {
-      return code.assign('z.never()');
+      return { ...code, code: 'z.never()' };
     }
 
     // Handle number/integer enums
-    return code.assign(generateNonStringEnumZodCode(schema.enum));
+    return { ...code, code: generateNonStringEnumZodCode(schema.enum) };
   }
 
-  return code.assign(
-    match(schemaType)
+  return {
+    ...code,
+    code: match(schemaType)
       .with('integer', () => 'z.number()')
       .with('string', () =>
         match(schema.format)
@@ -218,7 +220,7 @@ export function handlePrimitiveSchema(
           .otherwise(() => 'z.string()'),
       )
       .otherwise((type) => `z.${type}()`),
-  );
+  };
 }
 
 /**
@@ -230,12 +232,12 @@ export function handlePrimitiveSchema(
  */
 export function handleMultipleTypeSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   if (!Array.isArray(schema.type)) {
     throw new Error('handleMultipleTypeSchema requires schema.type to be an array');
   }
@@ -248,9 +250,10 @@ export function handleMultipleTypeSchema(
     return getZodSchema({ schema: { ...schema, type: firstType }, ctx, meta, options });
   }
 
-  return code.assign(
-    `z.union([${schema.type
-      .map((prop) => getZodSchema({ schema: { ...schema, type: prop }, ctx, meta, options }))
+  return {
+    ...code,
+    code: `z.union([${schema.type
+      .map((prop) => getZodSchema({ schema: { ...schema, type: prop }, ctx, meta, options }).code)
       .join(', ')}])`,
-  );
+  };
 }

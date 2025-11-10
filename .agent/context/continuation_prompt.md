@@ -802,7 +802,7 @@ After completing a session:
 
 **Session 3.1 Plan:** `.agent/plans/PHASE-3-SESSION-1-CODEMETA-ELIMINATION.md`
 
-**Work Sections (12-16 hours total):**
+**Work Sections (14-19 hours total):**
 
 1. **Section A (8-10h):** Pure Function Extraction
    - Create `lib/src/conversion/zod/code-generation.ts`
@@ -822,7 +822,17 @@ After completing a session:
    - Remove all `.toString()`, `.assign()`, `.inherit()` calls
    - Extract complexity logic to dedicated helper if needed
 
-4. **Section D (1-2h):** Quality Gates & Validation
+4. **Section D0 (2-3h):** Generated Code Validation - NEW
+   - **Discovery:** During Section D work, 6 unit tests failed on quote-style mismatches, revealing tests were constraining implementation not proving behavior
+   - **Critical Gap:** We generate TypeScript/Zod code but never validate it's actually valid
+   - Create `lib/tests-e2e/generated-code-validation.gen.test.ts`
+   - Identify 5-8 representative fixtures exercising all generation paths
+   - Implement validation harness: Generate code → Write to temp file → Run validation tools
+   - Prove 4 behaviors: Syntactic validity (TS parser), Type safety (tsc), Lint compliance (ESLint), Runtime validity (import/execute)
+   - Delete 6 quote-style implementation-constraint tests
+   - **Impact:** Tests now prove behavior (does code work?) not implementation (what does it look like?)
+
+5. **Section D (1-1.5h):** Quality Gates & Validation
    - Run full quality gate suite (format, build, type-check, lint, test, snapshot, character)
    - Verify zero behavioral changes (outputs identical)
    - Final eradication check (automated grep verification)
@@ -849,6 +859,8 @@ pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm t
 - [ ] Zero behavioral changes (outputs identical)
 - [ ] Pure functions module created: `lib/src/conversion/zod/code-generation.ts`
 - [ ] 30+ unit tests for pure functions
+- [ ] Generated code validation tests passing for representative fixtures (`lib/tests-e2e/generated-code-validation.gen.test.ts`)
+- [ ] 6 quote-style implementation-constraint tests deleted
 - [ ] TSDoc complete for all exported functions
 - [ ] ADR-013 updated: Status → "Resolved in Session 3.1"
 

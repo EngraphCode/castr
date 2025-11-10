@@ -1,7 +1,7 @@
 # Phase 3 Session 1 – CodeMeta Elimination & Pure Function Extraction
 
-**Status:** Ready to Start  
-**Estimated Effort:** 12-16 hours  
+**Status:** In Progress  
+**Estimated Effort:** 14-19 hours  
 **Parent Plan:** [PHASE-3-TS-MORPH-IR.md](./PHASE-3-TS-MORPH-IR.md) § "Session 3.1 – CodeMeta Elimination & Pure Function Extract"  
 **Standards:** Must comply with [.agent/RULES.md](../RULES.md) — strict TDD, library types only, zero escape hatches, pure functions, exhaustive documentation
 
@@ -285,7 +285,113 @@ pnpm type-check 2>&1 | grep -E "(Found 0 errors|✓)"
 
 ---
 
-### Section D: Quality Gates & Final Validation (1-2 hours)
+### Section D0: Generated Code Validation (2-3 hours)
+
+**Objective:** Prove that generated TypeScript/Zod code is syntactically valid, type-safe, lintable, and executable.
+
+**Intended Impact:**
+
+- Generated code is validated to be syntactically correct TypeScript
+- Generated code type-checks without errors
+- Generated code passes all lint rules
+- Generated Zod schemas are executable at runtime
+- Quote-style and formatting implementation-constraint tests deleted
+- Test suite focuses on proving behavior, not constraining implementation
+
+**Background:**
+
+During initial Section D work, 6 unit tests failed due to quote-style mismatches (single vs double quotes). Deep analysis revealed these tests **constrain implementation** (checking string formatting) rather than **prove behavior** (does the code work?). This exposed a **critical missing test class**: we generate TypeScript/Zod code but never validate it's actually valid.
+
+**What We're Proving:**
+
+1. **Syntactic Validity** - Generated code parses as valid TypeScript (no syntax errors)
+2. **Type Safety** - Generated code type-checks without errors (proves type correctness)
+3. **Lint Compliance** - Generated code passes our lint rules (proves code quality standards)
+4. **Runtime Validity** - Generated Zod schemas are executable (imports resolve, schemas construct)
+
+**What We're NOT Testing:**
+
+- Exact string formatting (quote style, whitespace) - implementation detail
+- Generated code content matching snapshots - covered by existing snapshot tests
+- Behavior of the generated code when called - out of scope for this session
+
+**Tasks:**
+
+1. **Define Representative Test Fixtures** (30min)
+   - Identify 5-8 fixture specs that exercise all code generation paths
+   - **Simple schema:** Basic types, primitives
+   - **Complex object:** Nested objects, arrays, composition (allOf/anyOf/oneOf)
+   - **References:** `$ref` usage, circular references
+   - **Constraints:** Enums, patterns, min/max, required/optional
+   - **Edge cases:** Nullable, deprecated, examples
+   - Document the fixture list with rationale for each
+
+2. **Create Validation Harness** (1-1.5 hours)
+   - Location: `lib/tests-e2e/generated-code-validation.gen.test.ts` (new test suite)
+   - Approach: Fixture specs → Generate code → Write to temp file → Run validation tools
+   - Implement 4 validation helpers:
+     - `runTypeScriptParser()` - Parse TS and check for syntax errors
+     - `runTypeCheck()` - Execute `tsc --noEmit` on file
+     - `runLint()` - Execute ESLint on file
+     - Cleanup utilities for temp files
+   - Follow TDD: write test structure first, confirm RED, implement helpers, confirm GREEN
+
+3. **Delete Implementation-Constraint Tests** (15min)
+   - Remove 6 quote-style tests from:
+     - `lib/src/rendering/templates/schemas-with-client.test.ts`
+     - `lib/src/rendering/templates/schemas-with-metadata.test.ts`
+   - Tests to delete:
+     1. "should import openapi-fetch" (quote-style check)
+     2. "should import zod" (quote-style check)
+     3. "should include endpoint metadata with operationId" (quote-style check)
+     4. "should use 'as const' for endpoint metadata" (quote-style check)
+     5. "should use correct path for each endpoint" (quote-style check)
+     6. MCP metadata type check (quote-style check)
+   - Rationale: These tests assert string formatting (implementation) not behavior
+
+4. **Run Quality Gates** (30min)
+   - Execute full quality gate suite with new tests
+   - Verify all gates pass including new generated code validation
+   - Confirm test count adjustment (6 deleted, ~20-32 added)
+
+**Acceptance Criteria:**
+
+- [ ] 5-8 representative fixture specs identified and documented
+- [ ] New test file created: `lib/tests-e2e/generated-code-validation.gen.test.ts`
+- [ ] Test harness validates all representative fixtures
+- [ ] All 4 validation types implemented (syntax, type-check, lint, runtime)
+- [ ] Tests pass GREEN for all fixtures
+- [ ] Temp files cleaned up after each test
+- [ ] 6 quote-style tests deleted from existing test files
+- [ ] All remaining tests in those files pass
+- [ ] `pnpm test` → All tests passing (including new generated code tests)
+- [ ] Test count adjusted correctly (net change: ~14-26 tests added)
+
+**Validation Steps:**
+
+```bash
+cd /Users/jim/code/personal/openapi-zod-client
+
+# Verify new test file exists
+test -f lib/tests-e2e/generated-code-validation.gen.test.ts && echo "✅ Test file created"
+
+# Run generated code validation tests
+pnpm test -- generated-code-validation.gen.test.ts
+
+# Verify quote-style tests deleted
+! grep -r "should import openapi-fetch" lib/src/rendering/templates/*.test.ts && echo "✅ Quote tests deleted"
+
+# Run full quality gate
+pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:snapshot && pnpm character
+
+# Verify test count
+CURRENT_TESTS=$(pnpm test 2>&1 | grep -oE "[0-9]+ passed" | grep -oE "[0-9]+")
+echo "Current test count: $CURRENT_TESTS (expected: ~687-705)"
+```
+
+---
+
+### Section D: Quality Gates & Final Validation (1-1.5 hours)
 
 **Objective:** Ensure all quality gates pass and zero behavioral changes introduced.
 
@@ -427,7 +533,7 @@ Refs: ADR-013, PHASE-3-TS-MORPH-IR.md Session 3.1
 
 **Standard Completion Criteria**
 
-- [ ] All work sections (A, B, C, D) completed
+- [ ] All work sections (A, B, C, D0, D) completed
 - [ ] All acceptance criteria met for each section
 - [ ] All validation steps executed and passing
 - [ ] Quality gate passes: `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:snapshot && pnpm character`
@@ -436,6 +542,7 @@ Refs: ADR-013, PHASE-3-TS-MORPH-IR.md Session 3.1
 - [ ] All handler functions return plain objects
 - [ ] `getZodSchema()` returns plain object: `{ code: string; schema: SchemaObject; ref?: string }`
 - [ ] Comprehensive test coverage (30+ new tests for pure functions)
+- [ ] Generated code validation tests passing for representative fixtures
 - [ ] TSDoc complete for all exported functions
 - [ ] ADR-013 updated: "Resolved in Session 3.1"
 - [ ] Session plan updated: Status → "Complete"

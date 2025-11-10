@@ -18,7 +18,7 @@ import {
   processResponse,
   processDefaultResponse,
 } from './operation.helpers.js';
-import type { ConversionTypeContext } from '../shared/code-meta.js';
+import type { ConversionTypeContext } from '../conversion/zod/index.js';
 
 /**
  * Helper to create minimal ConversionTypeContext for testing
@@ -27,7 +27,6 @@ function createTestContext(doc: OpenAPIObject): ConversionTypeContext {
   return {
     doc,
     zodSchemaByName: {},
-    schemaByName: {},
   };
 }
 

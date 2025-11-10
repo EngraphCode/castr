@@ -21,7 +21,7 @@ import {
   type MinimalTemplateContext,
 } from './template-context.endpoints.js';
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
-import type { CodeMetaData } from '../shared/code-meta.js';
+import type { CodeMetaData } from '../conversion/zod/index.js';
 import { buildMcpTools, type TemplateContextMcpTool } from './template-context.mcp.js';
 
 // Type definitions

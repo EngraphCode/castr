@@ -1,8 +1,8 @@
 export {
-  type CodeMeta,
+  type ZodCodeResult,
   type CodeMetaData,
   type ConversionTypeContext,
-} from './shared/code-meta.js';
+} from './conversion/zod/index.js';
 export { generateZodClientFromOpenAPI } from './rendering/index.js';
 export type { GenerateZodClientFromOpenApiArgs } from './rendering/index.js';
 export { getHandlebars } from './rendering/index.js';

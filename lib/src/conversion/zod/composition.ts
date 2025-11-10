@@ -1,16 +1,16 @@
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import { isSchemaObject } from 'openapi3-ts/oas31';
 
-import type { CodeMetaData, ConversionTypeContext, CodeMeta } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { inferRequiredSchema } from '../../shared/infer-required-only.js';
+import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
   options?: TemplateContext['options'] | undefined;
-}) => CodeMeta;
+}) => ZodCodeResult;
 
 /**
  * Handle oneOf composition schema
@@ -20,12 +20,12 @@ type GetZodSchemaFn = (args: {
  */
 export function handleOneOfSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   if (!schema.oneOf || schema.oneOf.length === 0) {
     throw new Error('Invalid oneOf: array is empty or undefined');
   }
@@ -36,7 +36,7 @@ export function handleOneOfSchema(
       throw new Error('oneOf array has invalid first element');
     }
     const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
-    return code.assign(type.toString());
+    return { ...code, code: type.code };
   }
 
   /* when there are multiple allOf we are unable to use a discriminatedUnion as this library adds an
@@ -48,16 +48,20 @@ export function handleOneOfSchema(
   if (schema.discriminator && !hasMultipleAllOf) {
     const propertyName = schema.discriminator.propertyName;
 
-    return code.assign(`
+    return {
+      ...code,
+      code: `
                 z.discriminatedUnion("${propertyName}", [${schema.oneOf
-                  .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
+                  .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }).code)
                   .join(', ')}])
-            `);
+            `,
+    };
   }
 
-  return code.assign(
-    `z.union([${schema.oneOf.map((prop) => getZodSchema({ schema: prop, ctx, meta, options })).join(', ')}])`,
-  );
+  return {
+    ...code,
+    code: `z.union([${schema.oneOf.map((prop) => getZodSchema({ schema: prop, ctx, meta, options }).code).join(', ')}])`,
+  };
 }
 
 /**
@@ -69,12 +73,12 @@ export function handleOneOfSchema(
  */
 export function handleAnyOfSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   if (!schema.anyOf || schema.anyOf.length === 0) {
     throw new Error('Invalid anyOf: array is empty or undefined');
   }
@@ -85,15 +89,15 @@ export function handleAnyOfSchema(
       throw new Error('anyOf array has invalid first element');
     }
     const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
-    return code.assign(type.toString());
+    return { ...code, code: type.code };
   }
 
   const types = schema.anyOf
     .map((prop) => getZodSchema({ schema: prop, ctx, meta, options }))
-    .map((type) => type.toString())
+    .map((type) => type.code)
     .join(', ');
 
-  return code.assign(`z.union([${types}])`);
+  return { ...code, code: `z.union([${types}])` };
 }
 
 /**
@@ -102,18 +106,18 @@ export function handleAnyOfSchema(
  */
 function handleSingleAllOf(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   const firstSchema = schema.allOf?.[0];
   if (!firstSchema) {
     throw new Error('allOf array has invalid first element');
   }
   const type = getZodSchema({ schema: firstSchema, ctx, meta, options });
-  return code.assign(type.toString());
+  return { ...code, code: type.code };
 }
 
 /**
@@ -126,7 +130,7 @@ function processAllOfSchemas(
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta[] {
+): ZodCodeResult[] {
   const { patchRequiredSchemaInLoop, noRequiredOnlyAllof, composedRequiredSchema } =
     inferRequiredSchema(schema);
 
@@ -154,12 +158,12 @@ function processAllOfSchemas(
  */
 export function handleAllOfSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   if (!schema.allOf || schema.allOf.length === 0) {
     throw new Error('Invalid allOf: array is empty or undefined');
   }
@@ -176,10 +180,10 @@ export function handleAllOfSchema(
   }
   const rest = types
     .slice(1)
-    .map((type) => `and(${type.toString()})`)
+    .map((type) => `and(${type.code})`)
     .join('.');
 
-  return code.assign(`${first.toString()}.${rest}`);
+  return { ...code, code: `${first.code}.${rest}` };
 }
 
 /**
@@ -190,12 +194,12 @@ export function handleAllOfSchema(
  */
 export function handleCompositionSchemaIfPresent(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   options?: TemplateContext['options'],
-): CodeMeta | undefined {
+): ZodCodeResult | undefined {
   if (schema.oneOf) {
     return handleOneOfSchema(schema, code, ctx, meta, getZodSchema, options);
   }

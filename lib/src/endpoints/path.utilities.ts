@@ -1,6 +1,6 @@
 import type { OperationObject, ReferenceObject, ResponseObject } from 'openapi3-ts/oas31';
 
-import type { ConversionTypeContext } from '../shared/code-meta.js';
+import type { ConversionTypeContext } from '../conversion/zod/index.js';
 import type { EndpointDefinition } from './definition.types.js';
 import type { TemplateContext } from '../context/template-context.js';
 import type { DefaultStatusBehavior } from '../context/template-context.types.js';

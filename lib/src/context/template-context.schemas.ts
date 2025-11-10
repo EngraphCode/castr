@@ -147,7 +147,7 @@ export function exportUnusedSchemas(
         options,
       };
       const zodSchema = getZodSchema(schemaArgs);
-      const zodSchemaString = zodSchema.toString();
+      const zodSchemaString = zodSchema.code;
       if (!zodSchemaString) {
         throw new Error(
           `Could not get Zod schema string for schema: ${name}, with value: ${JSON.stringify(schema)}`,

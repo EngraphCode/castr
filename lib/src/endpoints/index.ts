@@ -23,7 +23,6 @@ export {
 // Endpoint helpers (for advanced usage)
 export type { EndpointContext } from './helpers.js';
 export {
-  findExistingSchemaVar,
   generateUniqueVarName,
   getSchemaVarName,
   handleInlineEverything,

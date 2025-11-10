@@ -3,13 +3,13 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import { match } from 'ts-pattern';
 
-import type { CodeMetaData } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import {
   getZodChainableArrayValidations,
   getZodChainableNumberValidations,
   getZodChainableStringValidations,
 } from './chain.validators.js';
+import type { CodeMetaData } from './index.js';
 
 interface ZodChainArgs {
   schema: SchemaObject | ReferenceObject;

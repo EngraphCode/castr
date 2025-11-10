@@ -153,9 +153,9 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 ### Session 3.1 – CodeMeta Elimination & Pure Function Extraction
 
-**Status:** Not started  
+**Status:** In Progress  
 **Prerequisites:** Phase 2 Part 2 complete (Sessions 5-9) ✅  
-**Estimated Effort:** 12-16 hours  
+**Estimated Effort:** 14-19 hours  
 **Can be deferred:** No - required for ts-morph migration
 
 #### Intended Impact
@@ -243,13 +243,23 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 - [ ] `.complexity` logic extracted to `lib/src/shared/schema-complexity.ts` helper if still needed
 - [ ] All handler types updated (no `CodeMeta` in type signatures)
 
-**Part D: Quality Gates & Verification**
+**Part D0: Generated Code Validation (2-3 hours)**
+
+- [ ] 5-8 representative fixture specs identified and documented
+- [ ] New test file created: `lib/tests-e2e/generated-code-validation.gen.test.ts`
+- [ ] Test harness validates all representative fixtures
+- [ ] All 4 validation types implemented (syntax, type-check, lint, runtime)
+- [ ] Tests pass GREEN for all fixtures
+- [ ] 6 quote-style implementation-constraint tests deleted from existing test files
+- [ ] Generated code validation proves behavior (syntactic validity, type safety, lint compliance, runtime validity)
+
+**Part D: Quality Gates & Verification (1-1.5 hours)**
 
 - [ ] `pnpm format` → Passes
 - [ ] `pnpm build` → Builds successfully
 - [ ] `pnpm type-check` → 0 errors (no CodeMeta type references)
 - [ ] `pnpm lint` → 0 errors
-- [ ] `pnpm test:all` → All unit tests passing (CodeMeta tests deleted, others updated)
+- [ ] `pnpm test:all` → All unit tests passing (CodeMeta tests deleted, others updated, generated code validation tests added)
 - [ ] `pnpm test:snapshot` → All snapshot tests passing
 - [ ] `pnpm character` → All characterization tests passing
 - [ ] Zero behavioral changes (all outputs identical to before)

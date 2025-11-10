@@ -1,6 +1,6 @@
 # Living Context Document
 
-**Last Updated:** November 9, 2025 2:52 PM  
+**Last Updated:** November 10, 2025  
 **Purpose:** Session changelog + current status  
 **Audience:** Everyone (humans + AI)  
 **Update After:** Every work session
@@ -13,9 +13,18 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ✅ Complete
-**Next Session:** Phase 3 Session 1 - CodeMeta Elimination & Pure Function Extraction
+**Current Session:** Phase 3 Session 1 - CodeMeta Elimination & Pure Function Extraction (In Progress)
+**Previous Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ✅ Complete
 **Branch:** `feat/rewrite`
+
+**Session 3.1 Progress Update (Nov 10, 2025):**
+
+- Sections A, B, C complete: Pure functions extracted, CodeMeta deleted, plain objects in use
+- During Section D (Quality Gates), discovered **critical missing test class**: Generated Code Validation
+- 6 unit tests failing due to quote-style mismatches revealed tests were constraining implementation, not proving behavior
+- Added Section D0 (2-3h): Generate code → validate syntax, type-check, lint, runtime execution
+- This proves generated TypeScript/Zod code is actually valid (not just string-matching snapshots)
+- Plan updated: 12-16h → 14-19h to include comprehensive generated code validation
 
 ### Session 9 Snapshot (Complete – Nov 9, 2025 2:52 PM)
 
@@ -365,12 +374,13 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 - **Objective:** COMPLETELY DELETE CodeMeta abstraction, extract pure functions for Zod generation
 - **Impact:** Unblocks ts-morph migration, aligns with JSON Schema converter pattern
 - **Detailed Plan:** `.agent/plans/PHASE-3-SESSION-1-CODEMETA-ELIMINATION.md`
-- **Estimated Effort:** 12-16 hours
+- **Estimated Effort:** 14-19 hours
 - **Work Sections:**
   - A: Pure function extraction (8-10h)
   - B: CodeMeta complete deletion (2-3h)
   - C: Plain object replacement (2-3h)
-  - D: Quality gates & validation (1-2h)
+  - D0: Generated code validation (2-3h) - NEW: discovered missing test class
+  - D: Quality gates & validation (1-1.5h)
 
 **Why Phase 3 Must Complete Before Phase 4:**
 

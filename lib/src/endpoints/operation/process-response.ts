@@ -1,6 +1,6 @@
 import type { ResponseObject, ReferenceObject, OpenAPIObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
-import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../../conversion/zod/index.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import {
   getResponseByRef,
@@ -13,7 +13,7 @@ import { getZodSchema, getZodChain } from '../../conversion/zod/index.js';
  * Type signature for function that generates Zod variable names
  * @public
  */
-export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
+export type GetZodVarNameFn = (input: ZodCodeResult, fallbackName?: string) => string;
 
 /**
  * Response entry definition for an endpoint
@@ -120,12 +120,13 @@ function generateResponseSchema(
     return undefined;
   }
 
-  const schema = getZodSchema({ schema: maybeSchema, ctx, meta: { isRequired: true }, options });
+  const responseMeta = { isRequired: true };
+  const schema = getZodSchema({ schema: maybeSchema, ctx, meta: responseMeta, options });
   return (
-    (schema.ref ? getZodVarName(schema) : schema.toString()) +
+    (schema.ref ? getZodVarName(schema) : schema.code) +
     getZodChain({
       schema: resolveSchemaRef(ctx.doc, maybeSchema),
-      meta: schema.meta,
+      meta: responseMeta,
     })
   );
 }

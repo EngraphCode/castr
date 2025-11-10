@@ -1,5 +1,5 @@
 import type { ResponseObject } from 'openapi3-ts/oas31';
-import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../../conversion/zod/index.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import type { DefaultStatusBehavior } from '../../context/template-context.types.js';
 import { resolveSchemaRef } from '../../shared/component-access.js';
@@ -9,7 +9,7 @@ import { getZodSchema, getZodChain } from '../../conversion/zod/index.js';
  * Type signature for function that generates Zod variable names
  * @public
  */
-export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
+export type GetZodVarNameFn = (input: ZodCodeResult, fallbackName?: string) => string;
 
 /**
  * Error response definition for an endpoint
@@ -70,10 +70,10 @@ function generateDefaultResponseSchema(
 
   const schema = getZodSchema({ schema: maybeSchema, ctx, meta: { isRequired: true }, options });
   return (
-    (schema.ref ? getZodVarName(schema) : schema.toString()) +
+    (schema.ref ? getZodVarName(schema) : schema.code) +
     getZodChain({
       schema: resolveSchemaRef(ctx.doc, maybeSchema),
-      meta: schema.meta,
+      meta: { isRequired: true },
     })
   );
 }

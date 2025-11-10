@@ -1,8 +1,6 @@
-import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
-import type { CodeMetaData, ConversionTypeContext } from '../../shared/code-meta.js';
-import { CodeMeta } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { isPrimitiveSchemaType } from '../../shared/utils/index.js';
 import { getZodChain } from './chain.js';
@@ -16,6 +14,41 @@ import {
 } from './handlers.js';
 import { handleCompositionSchemaIfPresent } from './composition.js';
 
+/**
+ * Metadata for Zod code generation
+ */
+export interface CodeMetaData {
+  /** Parent code result for inheritance */
+  parent?: ZodCodeResult;
+  /** Chain of references leading to this schema */
+  referencedBy?: ZodCodeResult[];
+  /** Whether this schema is required */
+  isRequired?: boolean;
+}
+
+/**
+ * Conversion context for tracking state during schema traversal
+ */
+export interface ConversionTypeContext {
+  /** OpenAPI document being converted */
+  doc: OpenAPIObject;
+  /** Cache of generated Zod schemas by name */
+  zodSchemaByName: Record<string, string>;
+}
+
+/**
+ * Result of Zod code generation - replaces CodeMeta class
+ * Plain object following functional programming principles
+ */
+export interface ZodCodeResult {
+  /** Generated Zod code string */
+  code: string;
+  /** Source OpenAPI schema */
+  schema: SchemaObject | ReferenceObject;
+  /** Reference name if this is a $ref */
+  ref?: string;
+}
+
 interface ConversionArgs {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
@@ -24,10 +57,46 @@ interface ConversionArgs {
 }
 
 /**
+ * Extract ref name from a code result for circular reference detection
+ * @internal
+ */
+function extractRefName(prev: ZodCodeResult, ctx: ConversionTypeContext | undefined): string {
+  if (!prev.ref) {
+    return '';
+  }
+  return ctx ? getSchemaNameFromRef(prev.ref) : prev.ref;
+}
+
+/**
+ * Create initial code result object from schema
+ * @internal
+ */
+function createCodeResult(schema: SchemaObject | ReferenceObject): ZodCodeResult {
+  const ref = isReferenceObject(schema) ? schema.$ref : undefined;
+  return ref ? { code: '', schema, ref } : { code: '', schema };
+}
+
+/**
+ * Build metadata with reference chain
+ * @internal
+ */
+function buildMetadata(code: ZodCodeResult, inheritedMeta: CodeMetaData | undefined): CodeMetaData {
+  const referencedBy = inheritedMeta?.referencedBy ? [...inheritedMeta.referencedBy, code] : [code];
+  const meta: CodeMetaData = { referencedBy };
+  if (inheritedMeta?.parent) {
+    meta.parent = inheritedMeta.parent;
+  }
+  if (inheritedMeta?.isRequired !== undefined) {
+    meta.isRequired = inheritedMeta.isRequired;
+  }
+  return meta;
+}
+
+/**
  * Prepare schema conversion context
- * Pure function: validates schema, applies refiner, builds CodeMeta and metadata
+ * Pure function: validates schema, applies refiner, builds result object and metadata
  *
- * @returns Prepared schema, code, meta, and refsPath for conversion
+ * @returns Prepared schema, code result, meta, and refsPath for conversion
  */
 function prepareSchemaContext(
   $schema: SchemaObject | ReferenceObject | null | undefined,
@@ -36,12 +105,11 @@ function prepareSchemaContext(
   options?: TemplateContext['options'],
 ): {
   schema: SchemaObject | ReferenceObject;
-  code: CodeMeta;
+  code: ZodCodeResult;
   meta: CodeMetaData;
   refsPath: string[];
 } {
   // Per OpenAPI spec: Schema is always an object, never null
-  // Empty schema {} is valid and represents "any value" (z.unknown())
   if (!$schema) {
     throw new Error(
       $schema === null
@@ -51,23 +119,13 @@ function prepareSchemaContext(
   }
 
   const schema = options?.schemaRefiner?.($schema, inheritedMeta) ?? $schema;
-  const code = new CodeMeta(schema, ctx, inheritedMeta);
-  const meta = {
-    parent: code.inherit(inheritedMeta?.parent),
-    referencedBy: [...code.meta.referencedBy],
-  };
+  const code = createCodeResult(schema);
+  const meta = buildMetadata(code, inheritedMeta);
 
-  const refsPath = code.meta.referencedBy
+  // Extract refs path for circular reference detection
+  const refsPath = (meta.referencedBy ?? [])
     .slice(0, -1)
-    .map((prev) => {
-      if (!prev.ref) {
-        return '';
-      }
-      if (!ctx) {
-        return prev.ref;
-      }
-      return getSchemaNameFromRef(prev.ref);
-    })
+    .map((prev) => extractRefName(prev, ctx))
     .filter((path): path is string => Boolean(path));
 
   return { schema, code, meta, refsPath };
@@ -88,7 +146,7 @@ export function getZodSchema({
   ctx,
   meta: inheritedMeta,
   options,
-}: ConversionArgs): CodeMeta {
+}: ConversionArgs): ZodCodeResult {
   const { schema, code, meta, refsPath } = prepareSchemaContext(
     $schema,
     ctx,
@@ -108,12 +166,12 @@ export function getZodSchema({
  */
 function handleReferenceSchema(
   schema: ReferenceObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   refsPath: string[],
   meta: CodeMetaData,
   options: TemplateContext['options'] | undefined,
-): CodeMeta {
+): ZodCodeResult {
   if (!ctx) {
     throw new Error('Context is required');
   }
@@ -125,17 +183,17 @@ function handleReferenceSchema(
  */
 function handleTypedSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   options: TemplateContext['options'] | undefined,
-): CodeMeta {
+): ZodCodeResult {
   if (Array.isArray(schema.type)) {
     return handleMultipleTypeSchema(schema, code, ctx, meta, getZodSchema, options);
   }
 
   if (schema.type === 'null') {
-    return code.assign('z.null()');
+    return { ...code, code: 'z.null()' };
   }
 
   const compositionResult = handleCompositionSchemaIfPresent(
@@ -158,15 +216,15 @@ function handleTypedSchema(
  */
 function handleSchemaByType(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   options: TemplateContext['options'] | undefined,
-): CodeMeta {
+): ZodCodeResult {
   const rawType = schema.type;
   if (Array.isArray(rawType)) {
     // Already handled in handleTypedSchema
-    return code.assign('z.unknown()');
+    return { ...code, code: 'z.unknown()' };
   }
 
   const schemaType = rawType?.toLowerCase();
@@ -187,18 +245,18 @@ function handleSchemaByType(
  */
 function handleObjectOrUnknownSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   options: TemplateContext['options'] | undefined,
   schemaType: string | undefined,
-): CodeMeta {
+): ZodCodeResult {
   if (schemaType === 'object' || schema.properties || schema.additionalProperties) {
     return handleObjectSchema(schema, code, ctx, meta, getZodSchema, getZodChain, options);
   }
 
   if (!schemaType) {
-    return code.assign('z.unknown()');
+    return { ...code, code: 'z.unknown()' };
   }
 
   throw new Error(`Unsupported schema type: ${schemaType}`);

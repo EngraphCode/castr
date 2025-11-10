@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ParameterObject, OpenAPIObject } from 'openapi3-ts/oas31';
 import { processParameter } from './process-parameter.js';
-import type { ConversionTypeContext } from '../../shared/code-meta.js';
+import type { ConversionTypeContext } from '../../conversion/zod/index.js';
 
 /**
  * Create a minimal OpenAPI document for testing
@@ -24,8 +24,6 @@ function createTestContext(doc: OpenAPIObject): ConversionTypeContext {
   return {
     doc,
     zodSchemaByName: {},
-    schemaByName: {},
-    schemasByName: {},
   };
 }
 

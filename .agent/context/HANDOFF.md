@@ -395,7 +395,7 @@ pnpm check       # Run all quality gates
 
 **Detailed Plan:** `.agent/plans/PHASE-3-SESSION-1-CODEMETA-ELIMINATION.md`
 
-**Estimated Effort:** 12-16 hours (4 work sections)
+**Estimated Effort:** 14-19 hours (5 work sections: A, B, C, D0, D)
 
 **Key Success Criteria:**
 
@@ -403,6 +403,7 @@ pnpm check       # Run all quality gates
 - [ ] Zero mentions of "CodeMeta" in source (verified via grep)
 - [ ] Pure functions module: `lib/src/conversion/zod/code-generation.ts`
 - [ ] 30+ unit tests for pure functions
+- [ ] Generated code validation tests passing (syntax, type-check, lint, runtime)
 - [ ] All quality gates GREEN (zero behavioral changes)
 
 **Phase 3 Impact:**

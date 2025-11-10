@@ -5,7 +5,7 @@
  * @internal
  */
 
-import type { CodeMeta, ConversionTypeContext } from '../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../conversion/zod/index.js';
 import { getSchemaComplexity } from '../shared/schema-complexity.js';
 import { getSchemaFromComponents } from '../shared/component-access.js';
 
@@ -47,7 +47,7 @@ function resolveSchemaFromContext(
  * Resolves refs and checks complexity
  */
 export function handleRefSchema(
-  input: CodeMeta,
+  input: ZodCodeResult,
   result: string,
   ctx: EndpointContext,
   complexityThreshold: number,

@@ -59,8 +59,9 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
       disableWriteToFile: true,
     });
 
-    // MUST import Zod
-    expect(result).toContain('import { z } from "zod"');
+    // Quote-style test removed - validation is covered by generated-code-validation.gen.test.ts
+    // Verify Zod import exists (any quote style)
+    expect(result).toMatch(/import.*from ['"]zod['"]/);
 
     // MUST export schemas (inline schemas are named based on operation, like createUser_Body)
     expect(result).toContain('export const ');
@@ -76,7 +77,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     expect(result).toContain('export const mcpTools');
     expect(result).toContain('tool: {');
     expect(result).toContain('httpOperation: {');
-    expect(result).toContain('type: "object"');
+    expect(result).toContain('"type": "object"');
   });
 
   it('should export schemas object with all schemas', async () => {

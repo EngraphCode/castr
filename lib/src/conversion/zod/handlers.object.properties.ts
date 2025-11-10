@@ -1,18 +1,18 @@
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
-import type { CodeMeta, CodeMetaData, ConversionTypeContext } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { wrapWithQuotesIfNeeded } from '../../shared/utils/index.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
 import { getSchemaNameFromRef } from './handlers.core.js';
+import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
   options?: TemplateContext['options'] | undefined;
-}) => CodeMeta;
+}) => ZodCodeResult;
 
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
@@ -43,13 +43,11 @@ export function determinePropertyRequired(
  * Build property metadata with required flag if defined
  */
 export function buildPropertyMetadata(
-  prop: string,
   meta: CodeMetaData,
   propIsRequired: boolean | undefined,
 ): CodeMetaData {
   const propMetadata: CodeMetaData = {
     ...meta,
-    name: prop,
   };
   if (propIsRequired !== undefined) {
     propMetadata.isRequired = propIsRequired;
@@ -93,7 +91,7 @@ export function buildPropertyZodCode(
     meta: propMetadata,
     options,
   });
-  return `${propZodSchema.toString()}${propChain}`;
+  return `${propZodSchema.code}${propChain}`;
 }
 
 /**
@@ -122,7 +120,7 @@ export function buildPropertyEntry(
     hasRequiredArray,
     options,
   );
-  const propMetadata = buildPropertyMetadata(prop, meta, propIsRequired);
+  const propMetadata = buildPropertyMetadata(meta, propIsRequired);
   const propActualSchema = resolveSchemaForChain(propSchema, ctx);
   const propCode = buildPropertyZodCode(
     propSchema,

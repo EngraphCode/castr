@@ -17,7 +17,7 @@ import type {
 } from 'openapi3-ts/oas31';
 import { match, P } from 'ts-pattern';
 
-import type { CodeMeta, ConversionTypeContext } from '../../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../../conversion/zod/index.js';
 import { getZodChain, getZodSchema } from '../../conversion/zod/index.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { isReferenceObject } from '../../validation/type-guards.js';
@@ -30,7 +30,7 @@ import {
 /**
  * Function type for getting Zod variable names
  */
-export type GetZodVarNameFn = (input: CodeMeta, fallbackName?: string) => string;
+export type GetZodVarNameFn = (input: ZodCodeResult, fallbackName?: string) => string;
 
 /**
  * Represents a processed endpoint parameter
@@ -152,10 +152,11 @@ export function processRequestBody(
   }
 
   const { schema: bodySchema, mediaType } = extracted;
+  const bodyMeta = { isRequired: requestBody.required ?? true };
   const bodyCode = getZodSchema({
     schema: bodySchema,
     ctx,
-    meta: { isRequired: requestBody.required ?? true },
+    meta: bodyMeta,
     options,
   });
 
@@ -163,7 +164,7 @@ export function processRequestBody(
     getZodVarName(bodyCode, operationName + '_Body') +
     getZodChain({
       schema: resolveSchemaRef(ctx.doc, bodySchema),
-      meta: bodyCode.meta,
+      meta: bodyMeta,
     });
 
   return {

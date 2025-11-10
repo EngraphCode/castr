@@ -15,7 +15,7 @@ import type {
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import { match, P } from 'ts-pattern';
 
-import type { CodeMeta, ConversionTypeContext } from '../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../conversion/zod/index.js';
 import type { TemplateContext } from '../context/template-context.js';
 import { getSchemaVarName } from './helpers.js';
 import { pathToVariableName } from '../shared/utils/index.js';
@@ -46,7 +46,10 @@ export function prepareEndpointContext(
 ): {
   ctx: Required<ConversionTypeContext>;
   getOperationAlias: (path: string, method: string, operation: OperationObject) => string;
-  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>;
+  getZodVarName: (
+    input: ZodCodeResult,
+    fallbackName?: string,
+  ) => ReturnType<typeof getSchemaVarName>;
   defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'];
 } {
   const getOperationAlias = match(options?.withAlias)
@@ -61,24 +64,14 @@ export function prepareEndpointContext(
   const ctx: Required<ConversionTypeContext> = {
     doc,
     zodSchemaByName: {},
-    schemaByName: {},
-    schemasByName: {},
   };
 
   const complexityThreshold = options?.complexityThreshold ?? 4;
   const getZodVarName = (
-    input: CodeMeta,
+    input: ZodCodeResult,
     fallbackName?: string,
   ): ReturnType<typeof getSchemaVarName> =>
-    getSchemaVarName(
-      input,
-      ctx,
-      complexityThreshold,
-      fallbackName,
-      options?.exportAllNamedSchemas !== undefined
-        ? { exportAllNamedSchemas: options.exportAllNamedSchemas }
-        : undefined,
-    );
+    getSchemaVarName(input, ctx, complexityThreshold, fallbackName);
 
   const defaultStatusBehavior = options?.defaultStatusBehavior ?? 'spec-compliant';
 

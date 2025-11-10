@@ -7,7 +7,6 @@
 
 export type { EndpointContext } from './helpers.naming.js';
 export {
-  findExistingSchemaVar,
   generateUniqueVarName,
   getSchemaVarName,
   handleInlineEverything,

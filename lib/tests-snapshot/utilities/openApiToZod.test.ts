@@ -1,11 +1,11 @@
 import type { SchemaObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { getZodSchema } from '../../src/conversion/zod/index.js';
-import type { CodeMetaData, ConversionTypeContext } from '../../src/shared/code-meta.js';
+import type { CodeMetaData, ConversionTypeContext } from '../../src/conversion/zod/index.js';
 
 const makeSchema = (schema: SchemaObject) => schema;
 const getSchemaAsZodString = (schema: SchemaObject, meta?: CodeMetaData) =>
-  getZodSchema({ schema: makeSchema(schema), meta }).toString();
+  getZodSchema({ schema: makeSchema(schema), meta }).code;
 
 test('getSchemaAsZodString', () => {
   expect(getSchemaAsZodString({ type: 'null' })).toMatchInlineSnapshot('"z.null()"');
@@ -335,7 +335,6 @@ test('CodeMeta with missing ref', () => {
   const ctx: ConversionTypeContext = {
     doc,
     zodSchemaByName: {},
-    schemaByName: {},
   };
 
   expect(() =>
@@ -379,7 +378,6 @@ test('CodeMeta with ref', () => {
   const ctx: ConversionTypeContext = {
     doc,
     zodSchemaByName: {},
-    schemaByName: {},
   };
 
   const code = getZodSchema({
@@ -400,16 +398,9 @@ test('CodeMeta with ref', () => {
     }),
     ctx,
   });
-  expect(code.toString()).toMatchInlineSnapshot(
+  expect(code.code).toMatchInlineSnapshot(
     '"z.object({ str: z.string(), reference: Example, inline: z.object({ nested_prop: z.boolean() }).partial().passthrough() }).partial().passthrough()"',
   );
-  expect(code.children).toMatchInlineSnapshot(`
-    [
-        "z.string()",
-        "Example",
-        "z.object({ nested_prop: z.boolean() }).partial().passthrough()",
-    ]
-  `);
 });
 
 test('CodeMeta with nested refs', () => {
@@ -442,7 +433,6 @@ test('CodeMeta with nested refs', () => {
   const ctx: ConversionTypeContext = {
     doc,
     zodSchemaByName: {},
-    schemaByName: {},
   };
 
   const code = getZodSchema({
@@ -466,19 +456,9 @@ test('CodeMeta with nested refs', () => {
     }),
     ctx,
   });
-  expect(code.toString()).toMatchInlineSnapshot(
+  expect(code.code).toMatchInlineSnapshot(
     '"z.object({ str: z.string(), reference: ObjectWithArrayOfRef, inline: z.object({ nested_prop: z.boolean() }).partial().passthrough(), another: WithNested, basic: Basic, differentPropSameRef: Basic }).partial().passthrough()"',
   );
-  expect(code.children).toMatchInlineSnapshot(`
-    [
-        "z.string()",
-        "ObjectWithArrayOfRef",
-        "z.object({ nested_prop: z.boolean() }).partial().passthrough()",
-        "WithNested",
-        "Basic",
-        "Basic",
-    ]
-  `);
   expect(ctx).toMatchInlineSnapshot(`
     {
         "doc": {

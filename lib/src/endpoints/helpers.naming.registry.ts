@@ -8,33 +8,17 @@
 import type { EndpointContext } from './helpers.naming.resolution.js';
 
 /**
- * Checks if a schema variable already exists and can be reused
- * Returns the existing variable name if found, undefined otherwise
- */
-export function findExistingSchemaVar(
-  result: string,
-  ctx: EndpointContext,
-  exportAllNamedSchemas: boolean,
-): string | undefined {
-  if (!exportAllNamedSchemas && ctx.schemaByName[result]) {
-    return ctx.schemaByName[result];
-  }
-  return undefined;
-}
-
-/**
  * Registers a schema name in the context for reuse
+ *
+ * @param ctx - The endpoint context
+ * @param varName - The variable name to register
+ * @param schemaResult - The Zod schema string to cache
+ * @internal
  */
 export function registerSchemaName(
   ctx: EndpointContext,
   varName: string,
   schemaResult: string,
-  exportAllNamedSchemas: boolean,
 ): void {
   ctx.zodSchemaByName[varName] = schemaResult;
-  ctx.schemaByName[schemaResult] = varName;
-
-  if (exportAllNamedSchemas && ctx.schemasByName) {
-    ctx.schemasByName[schemaResult] = (ctx.schemasByName[schemaResult] ?? []).concat(varName);
-  }
 }

@@ -8,7 +8,7 @@
 import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas31';
 import { pick } from 'lodash-es';
 
-import type { CodeMeta, ConversionTypeContext } from '../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../conversion/zod/index.js';
 import type { EndpointDefinition } from './definition.types.js';
 import type { TemplateContext } from '../context/template-context.js';
 import type { getSchemaVarName } from './helpers.js';
@@ -26,6 +26,50 @@ import {
 import { getParametersMap, isPathItemObject } from './definition-list.context.js';
 
 /**
+ * Process a single HTTP method operation and collect results
+ * @internal
+ */
+function processMethodAndCollect(
+  maybeMethod: string,
+  pathItem: PathItem,
+  path: string,
+  parametersMap: ReturnType<typeof getParametersMap>,
+  ctx: Required<ConversionTypeContext>,
+  getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
+  getZodVarName: (
+    input: ZodCodeResult,
+    fallbackName?: string,
+  ) => ReturnType<typeof getSchemaVarName>,
+  defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
+  options: TemplateContext['options'] | undefined,
+  endpoints: EndpointDefinition[],
+  ignoredFallbackResponse: string[],
+  ignoredGenericError: string[],
+): void {
+  if (!isAllowedMethod(maybeMethod)) {
+    throw new TypeError(`Invalid method: ${maybeMethod}`);
+  }
+  const method: AllowedMethod = maybeMethod;
+  const operation = pathItem[method];
+  if (!operation || shouldSkipOperation(operation, options)) {
+    return;
+  }
+  const result = processSingleOperation(
+    path,
+    method,
+    operation,
+    parametersMap,
+    ctx,
+    getOperationAlias,
+    getZodVarName,
+    defaultStatusBehavior,
+    options,
+  );
+  endpoints.push(result.endpoint);
+  collectIgnoredResponses(result, ignoredFallbackResponse, ignoredGenericError);
+}
+
+/**
  * Process all operations for a single path item.
  * @internal
  */
@@ -34,7 +78,10 @@ export function processPathItemOperations(
   pathItemObj: PathItemObject,
   ctx: Required<ConversionTypeContext>,
   getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
-  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
+  getZodVarName: (
+    input: ZodCodeResult,
+    fallbackName?: string,
+  ) => ReturnType<typeof getSchemaVarName>,
   defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
   options?: TemplateContext['options'],
 ): {
@@ -45,37 +92,24 @@ export function processPathItemOperations(
   const endpoints: EndpointDefinition[] = [];
   const ignoredFallbackResponse: string[] = [];
   const ignoredGenericError: string[] = [];
-
   const pathItem: PathItem = pick(pathItemObj, ALLOWED_METHODS);
   const parametersMap = getParametersMap(pathItemObj.parameters ?? []);
-
   for (const maybeMethod in pathItem) {
-    if (!isAllowedMethod(maybeMethod)) {
-      throw new TypeError(`Invalid method: ${maybeMethod}`);
-    }
-    const method: AllowedMethod = maybeMethod;
-    const operation = pathItem[method];
-
-    if (!operation || shouldSkipOperation(operation, options)) {
-      continue;
-    }
-
-    const result = processSingleOperation(
+    processMethodAndCollect(
+      maybeMethod,
+      pathItem,
       path,
-      method,
-      operation,
       parametersMap,
       ctx,
       getOperationAlias,
       getZodVarName,
       defaultStatusBehavior,
       options,
+      endpoints,
+      ignoredFallbackResponse,
+      ignoredGenericError,
     );
-
-    endpoints.push(result.endpoint);
-    collectIgnoredResponses(result, ignoredFallbackResponse, ignoredGenericError);
   }
-
   return { endpoints, ignoredFallbackResponse, ignoredGenericError };
 }
 
@@ -89,7 +123,10 @@ export function processAllEndpoints(
   doc: OpenAPIObject,
   ctx: Required<ConversionTypeContext>,
   getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
-  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
+  getZodVarName: (
+    input: ZodCodeResult,
+    fallbackName?: string,
+  ) => ReturnType<typeof getSchemaVarName>,
   defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
   options?: TemplateContext['options'],
 ): {

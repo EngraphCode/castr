@@ -1,18 +1,18 @@
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
-import type { CodeMetaData, ConversionTypeContext, CodeMeta } from '../../shared/code-meta.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
 import { getSchemaNameFromRef } from './handlers.core.js';
 import { buildObjectPropertiesString } from './handlers.object.properties.js';
+import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
   options?: TemplateContext['options'] | undefined;
-}) => CodeMeta;
+}) => ZodCodeResult;
 
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
@@ -29,13 +29,13 @@ type GetZodChainFn = (args: {
  */
 export function handleAdditionalPropertiesAsRecord(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   getZodChain: GetZodChainFn,
   options?: TemplateContext['options'],
-): CodeMeta | undefined {
+): ZodCodeResult | undefined {
   if (
     !(
       typeof schema.additionalProperties === 'object' &&
@@ -62,7 +62,7 @@ export function handleAdditionalPropertiesAsRecord(
     meta: { ...meta, isRequired: true },
     options,
   });
-  return code.assign(`z.record(${additionalPropsZod.toString()}${additionalPropsChain})`);
+  return { ...code, code: `z.record(${additionalPropsZod.code}${additionalPropsChain})` };
 }
 
 /**
@@ -145,13 +145,13 @@ function buildObjectProperties(
  */
 export function handleObjectSchema(
   schema: SchemaObject,
-  code: CodeMeta,
+  code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   getZodSchema: GetZodSchemaFn,
   getZodChain: GetZodChainFn,
   options?: TemplateContext['options'],
-): CodeMeta {
+): ZodCodeResult {
   // Check if additionalProperties is an object schema → z.record()
   const recordResult = handleAdditionalPropertiesAsRecord(
     schema,
@@ -180,5 +180,5 @@ export function handleObjectSchema(
   );
   const modifiers = buildObjectModifiers(schema, isPartial, options);
 
-  return code.assign(`z.object(${properties})${modifiers}`);
+  return { ...code, code: `z.object(${properties})${modifiers}` };
 }

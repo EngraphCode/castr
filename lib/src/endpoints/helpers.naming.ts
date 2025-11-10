@@ -7,7 +7,8 @@
  * @internal
  */
 
-import type { CodeMeta } from '../shared/code-meta.js';
+import type { ZodCodeResult } from '../conversion/zod/index.js';
+import { getSchemaNameFromRef } from '../conversion/zod/handlers.core.js';
 import { handleRefSchema, type EndpointContext } from './helpers.naming.resolution.js';
 import {
   handleInlineEverything,
@@ -21,20 +22,20 @@ export type { EndpointContext } from './helpers.naming.resolution.js';
 export { generateUniqueVarName } from './helpers.naming.core.js';
 export { handleRefSchema } from './helpers.naming.resolution.js';
 export { handleInlineEverything } from './helpers.naming.handlers.js';
-export { findExistingSchemaVar, registerSchemaName } from './helpers.naming.registry.js';
+export { registerSchemaName } from './helpers.naming.registry.js';
 
 /**
  * Main logic for determining variable name or inline schema
  * Orchestrates the various helper functions
  */
 export function getSchemaVarName(
-  input: CodeMeta,
+  input: ZodCodeResult,
   ctx: EndpointContext,
   complexityThreshold: number,
   fallbackName: string | undefined,
-  options: { exportAllNamedSchemas?: boolean } | undefined,
 ): string {
-  const result = input.toString();
+  // For refs, use schema name; for inline schemas, use the generated code
+  const result = input.ref ? getSchemaNameFromRef(input.ref) : input.code;
 
   // Handle inline-everything mode
   if (complexityThreshold === -1) {
@@ -43,14 +44,7 @@ export function getSchemaVarName(
 
   // Handle simple schemas with fallback names
   if ((result.startsWith('z.') || input.ref === undefined) && fallbackName) {
-    return handleSimpleSchemaWithFallback(
-      input,
-      result,
-      ctx,
-      complexityThreshold,
-      fallbackName,
-      options,
-    );
+    return handleSimpleSchemaWithFallback(input, result, ctx, complexityThreshold, fallbackName);
   }
 
   // Handle reference schemas

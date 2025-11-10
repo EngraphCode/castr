@@ -5,10 +5,11 @@
  * @internal
  */
 
-import type { CodeMeta } from '../shared/code-meta.js';
+import type { ZodCodeResult } from '../conversion/zod/index.js';
 import { normalizeString } from '../shared/utils/index.js';
 import { generateUniqueVarName } from './helpers.naming.core.js';
-import { findExistingSchemaVar, registerSchemaName } from './helpers.naming.registry.js';
+import { registerSchemaName } from './helpers.naming.registry.js';
+import { getSchemaComplexity } from '../shared/schema-complexity.js';
 
 import type { EndpointContext } from './helpers.naming.resolution.js';
 
@@ -16,19 +17,7 @@ import type { EndpointContext } from './helpers.naming.resolution.js';
  * Generate unique variable name with optional schema tracking
  * @internal
  */
-function generateVarName(
-  safeName: string,
-  ctx: EndpointContext,
-  result: string,
-  options: { exportAllNamedSchemas?: boolean } | undefined,
-): string {
-  if (ctx.schemasByName) {
-    return generateUniqueVarName(safeName, ctx.zodSchemaByName, {
-      exportAllNamedSchemas: options?.exportAllNamedSchemas ?? false,
-      schemasByName: ctx.schemasByName,
-      schemaKey: result,
-    });
-  }
+function generateVarName(safeName: string, ctx: EndpointContext): string {
   return generateUniqueVarName(safeName, ctx.zodSchemaByName);
 }
 
@@ -37,30 +26,26 @@ function generateVarName(
  * Creates or reuses variable names for non-ref schemas
  */
 function handleSimpleSchemaWithFallback(
-  input: CodeMeta,
+  input: ZodCodeResult,
   result: string,
   ctx: EndpointContext,
   complexityThreshold: number,
   fallbackName: string,
-  options: { exportAllNamedSchemas?: boolean } | undefined,
 ): string {
+  // Calculate complexity from schema
+  const complexity = getSchemaComplexity({ schema: input.schema, current: 0 });
+
   // Inline if simple enough
-  if (input.complexity < complexityThreshold) {
+  if (complexity < complexityThreshold) {
     return result;
   }
 
   const safeName = normalizeString(fallbackName);
 
-  // Check if already exists
-  const existing = findExistingSchemaVar(result, ctx, Boolean(options?.exportAllNamedSchemas));
-  if (existing) {
-    return existing;
-  }
-
   // Generate unique name and register
-  const varName = generateVarName(safeName, ctx, result, options);
+  const varName = generateVarName(safeName, ctx);
 
-  registerSchemaName(ctx, varName, result, options?.exportAllNamedSchemas ?? false);
+  registerSchemaName(ctx, varName, result);
   return varName;
 }
 
@@ -69,7 +54,7 @@ function handleSimpleSchemaWithFallback(
  * Returns the full schema definition or resolved reference
  */
 export function handleInlineEverything(
-  input: CodeMeta,
+  input: ZodCodeResult,
   result: string,
   ctx: EndpointContext,
 ): string {

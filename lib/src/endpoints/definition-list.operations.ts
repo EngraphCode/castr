@@ -7,7 +7,7 @@
 
 import type { OperationObject, ParameterObject, ReferenceObject } from 'openapi3-ts/oas31';
 
-import type { CodeMeta, ConversionTypeContext } from '../shared/code-meta.js';
+import type { ZodCodeResult, ConversionTypeContext } from '../conversion/zod/index.js';
 import type { EndpointDefinition } from './definition.types.js';
 import type { TemplateContext } from '../context/template-context.js';
 import type { getSchemaVarName } from './helpers.js';
@@ -45,7 +45,10 @@ export function processSingleOperation(
   parametersMap: Record<string, ParameterObject | ReferenceObject>,
   ctx: Required<ConversionTypeContext>,
   getOperationAlias: (path: string, method: string, operation: OperationObject) => string,
-  getZodVarName: (input: CodeMeta, fallbackName?: string) => ReturnType<typeof getSchemaVarName>,
+  getZodVarName: (
+    input: ZodCodeResult,
+    fallbackName?: string,
+  ) => ReturnType<typeof getSchemaVarName>,
   defaultStatusBehavior: NonNullable<TemplateContext['options']>['defaultStatusBehavior'],
   options?: TemplateContext['options'],
 ): {

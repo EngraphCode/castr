@@ -1,6 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-import type { ConversionTypeContext } from '../shared/code-meta.js';
+import type { ConversionTypeContext } from '../conversion/zod/index.js';
 import type { EndpointDefinition } from './definition.types.js';
 import { getOpenApiDependencyGraph } from '../shared/dependency-graph.js';
 import { prepareEndpointContext } from './definition-list.context.js';
@@ -13,11 +13,7 @@ import { asComponentSchema } from '../shared/utils/index.js';
  * Result returned by getEndpointDefinitionList
  * Contains endpoints plus metadata needed for code generation
  */
-export type EndpointDefinitionListResult = Required<
-  Omit<ConversionTypeContext, 'schemasByName'>
-> & {
-  schemasByName?: Record<string, string[]>;
-} & {
+export type EndpointDefinitionListResult = Required<ConversionTypeContext> & {
   refsDependencyGraph: Record<string, Set<string>>;
   deepDependencyGraph: Record<string, Set<string>>;
   endpoints: EndpointDefinition[];
@@ -92,8 +88,6 @@ export const getEndpointDefinitionList = (
   return {
     doc: ctx.doc,
     zodSchemaByName: ctx.zodSchemaByName,
-    schemaByName: ctx.schemaByName,
-    ...(options?.exportAllNamedSchemas ? { schemasByName: ctx.schemasByName } : {}),
     ...graphs,
     endpoints,
     issues: {

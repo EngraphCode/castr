@@ -8,7 +8,7 @@ import {
 } from '../../../src/index.js';
 import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
 import { topologicalSort } from '../../../src/shared/topological-sort.js';
-import type { ConversionTypeContext } from '../../../src/shared/code-meta.js';
+import type { ConversionTypeContext } from '../../../src/conversion/zod/index.js';
 import { asComponentSchema } from '../../../src/shared/utils/index.js';
 
 // Note: Recursive inline response/param schemas are a potential future enhancement
@@ -77,7 +77,6 @@ describe('recursive-schema - indirect single recursive', () => {
     } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
-      schemaByName: {},
       doc,
     };
     const rootSchema = schemas['Root'];
@@ -138,7 +137,6 @@ describe('recursive-schema - recursive array', () => {
     } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
-      schemaByName: {},
       doc,
     };
     expect(getZodSchema({ schema: ResponseSchema, ctx })).toMatchSnapshot();
@@ -159,7 +157,6 @@ describe('recursive-schema - direct recursive', () => {
     } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
-      schemaByName: {},
       doc,
     };
     expect(getZodSchema({ schema: UserSchema, ctx })).toMatchSnapshot();
@@ -211,7 +208,6 @@ describe('recursive-schema - multiple recursive in one root schema', () => {
     } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
-      schemaByName: {},
       doc,
     };
     expect(
@@ -297,7 +293,6 @@ describe('recursive-schema - with ref to simple schema', () => {
     } as const;
     const ctx: ConversionTypeContext = {
       zodSchemaByName: {},
-      schemaByName: {},
       doc,
     };
 
