@@ -153,10 +153,29 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 ### Session 3.1 – CodeMeta Elimination & Pure Function Extraction
 
-**Status:** In Progress  
+**Status:** In Progress - Section D0 (Generated Code Validation) ⏳  
 **Prerequisites:** Phase 2 Part 2 complete (Sessions 5-9) ✅  
 **Estimated Effort:** 14-19 hours  
 **Can be deferred:** No - required for ts-morph migration
+
+**Current Progress (Nov 11, 2025):**
+
+- ✅ **Sections A, B, C Complete:** Pure functions extracted, CodeMeta deleted, plain objects in use
+- ✅ **Bug Fixes Complete (2/2):**
+  - Bug Fix #1: Reference resolution in `handleReferenceObject()` ✅
+  - Bug Fix #2: Duplicate error responses in generated code ✅ (architectural fix in template logic)
+  - Test improvements: 679 unit tests passing (down from 695 baseline due to test cleanup)
+- ✅ **Section D0 Infrastructure Complete:** Generated code validation modular harness implemented
+  - Created `lib/tests-generated/` with 4 modular test files + reusable harness
+  - Created `lib/tests-generated/FIXTURES.md` documenting 5 representative fixtures
+  - Created `lib/vitest.generated.config.ts` for dedicated test suite
+  - Wired `pnpm test:gen` scripts in both `lib/package.json` and root via Turbo
+  - All 16 validation tests passing (4 fixtures × 4 validation types)
+- ⚠️ **Section D BLOCKED:** Critical issues discovered requiring investigation
+  - **Code Generation Regression:** Template changes introduced `[object Object].regex()` bug affecting 4 snapshot tests
+  - **Linting Violations:** 60 lint errors including serious RULES.md violations (console statements, type assertions, complexity)
+  - **Workspace Hygiene:** JS files present in workspace root (should be TS only)
+  - **Quality Gates:** Only build, type-check, test, test:gen passing; lint and test:snapshot FAILING
 
 #### Intended Impact
 
@@ -166,11 +185,11 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 **Success Metrics:**
 
-- **Zero mentions of CodeMeta** anywhere in codebase (complete eradication)
-- Pure function extraction complete (~100% of generation logic)
-- All handler functions use plain objects instead of CodeMeta instances
-- ts-morph migration simplified (no legacy abstractions to work around)
-- Zero behavioral changes (all tests passing)
+- **Zero mentions of CodeMeta** anywhere in codebase (complete eradication) ✅
+- Pure function extraction complete (~100% of generation logic) ✅
+- All handler functions use plain objects instead of CodeMeta instances ✅
+- ts-morph migration simplified (no legacy abstractions to work around) ✅
+- Zero behavioral changes (all tests passing) ❌ **BLOCKED - Code generation regression discovered**
 
 #### Goals
 

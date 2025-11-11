@@ -40,7 +40,47 @@ describe('anyOf behavior', () => {
     });
 
     expect(zodSchema).toMatchInlineSnapshot(
-      '"z.union([z.object({ age: z.number().int(), nickname: z.string().optional() }).passthrough(), z.object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() }).passthrough()])"',
+      `
+      {
+          "code": "z.union([z.object({ age: z.number().int(), nickname: z.string().optional() }).passthrough(), z.object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() }).passthrough()])",
+          "schema": {
+              "anyOf": [
+                  {
+                      "properties": {
+                          "age": {
+                              "type": "integer",
+                          },
+                          "nickname": {
+                              "type": "string",
+                          },
+                      },
+                      "required": [
+                          "age",
+                      ],
+                      "type": "object",
+                  },
+                  {
+                      "properties": {
+                          "hunts": {
+                              "type": "boolean",
+                          },
+                          "pet_type": {
+                              "enum": [
+                                  "Cat",
+                                  "Dog",
+                              ],
+                              "type": "string",
+                          },
+                      },
+                      "required": [
+                          "pet_type",
+                      ],
+                      "type": "object",
+                  },
+              ],
+          },
+      }
+    `,
     );
   });
 
@@ -79,7 +119,50 @@ describe('anyOf behavior', () => {
     });
 
     expect(zodSchema).toMatchInlineSnapshot(
-      '"z.union([z.object({ age: z.number().int(), nickname: z.string().optional() }).passthrough(), z.object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() }).passthrough(), z.number()])"',
+      `
+      {
+          "code": "z.union([z.object({ age: z.number().int(), nickname: z.string().optional() }).passthrough(), z.object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() }).passthrough(), z.number()])",
+          "schema": {
+              "anyOf": [
+                  {
+                      "properties": {
+                          "age": {
+                              "type": "integer",
+                          },
+                          "nickname": {
+                              "type": "string",
+                          },
+                      },
+                      "required": [
+                          "age",
+                      ],
+                      "type": "object",
+                  },
+                  {
+                      "properties": {
+                          "hunts": {
+                              "type": "boolean",
+                          },
+                          "pet_type": {
+                              "enum": [
+                                  "Cat",
+                                  "Dog",
+                              ],
+                              "type": "string",
+                          },
+                      },
+                      "required": [
+                          "pet_type",
+                      ],
+                      "type": "object",
+                  },
+                  {
+                      "type": "number",
+                  },
+              ],
+          },
+      }
+    `,
     );
   });
 
@@ -121,7 +204,56 @@ describe('anyOf behavior', () => {
     });
 
     expect(zodSchema).toMatchInlineSnapshot(
-      '"z.union([z.union([z.number(), z.boolean()]), z.object({ age: z.number().int(), nickname: z.string().optional() }).passthrough(), z.object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() }).passthrough(), z.string()])"',
+      `
+      {
+          "code": "z.union([z.union([z.number(), z.boolean()]), z.object({ age: z.number().int(), nickname: z.string().optional() }).passthrough(), z.object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() }).passthrough(), z.string()])",
+          "schema": {
+              "anyOf": [
+                  {
+                      "type": [
+                          "number",
+                          "boolean",
+                      ],
+                  },
+                  {
+                      "properties": {
+                          "age": {
+                              "type": "integer",
+                          },
+                          "nickname": {
+                              "type": "string",
+                          },
+                      },
+                      "required": [
+                          "age",
+                      ],
+                      "type": "object",
+                  },
+                  {
+                      "properties": {
+                          "hunts": {
+                              "type": "boolean",
+                          },
+                          "pet_type": {
+                              "enum": [
+                                  "Cat",
+                                  "Dog",
+                              ],
+                              "type": "string",
+                          },
+                      },
+                      "required": [
+                          "pet_type",
+                      ],
+                      "type": "object",
+                  },
+                  {
+                      "type": "string",
+                  },
+              ],
+          },
+      }
+    `,
     );
   });
 

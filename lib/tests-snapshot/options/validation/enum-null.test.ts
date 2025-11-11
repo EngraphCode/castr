@@ -142,13 +142,6 @@ test('enum-null', async () => {
           },
           402: { description: "null with nullable", schema: z.literal(null) },
           403: { description: "object that references null", schema: Compound },
-          400: { description: "null with a string", schema: z.enum(["a", null]) },
-          401: {
-            description: "null with a string and nullable",
-            schema: z.enum(["a", null]),
-          },
-          402: { description: "null with nullable", schema: z.literal(null) },
-          403: { description: "object that references null", schema: Compound },
         },
       },
     ] as const;

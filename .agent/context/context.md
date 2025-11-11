@@ -17,14 +17,35 @@
 **Previous Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ✅ Complete
 **Branch:** `feat/rewrite`
 
-**Session 3.1 Progress Update (Nov 10, 2025):**
+**Session 3.1 Progress Update (Nov 11, 2025 - Latest):**
 
-- Sections A, B, C complete: Pure functions extracted, CodeMeta deleted, plain objects in use
-- During Section D (Quality Gates), discovered **critical missing test class**: Generated Code Validation
-- 6 unit tests failing due to quote-style mismatches revealed tests were constraining implementation, not proving behavior
-- Added Section D0 (2-3h): Generate code → validate syntax, type-check, lint, runtime execution
-- This proves generated TypeScript/Zod code is actually valid (not just string-matching snapshots)
-- Plan updated: 12-16h → 14-19h to include comprehensive generated code validation
+- ✅ **Sections A, B, C Complete:** Pure functions extracted, CodeMeta deleted, plain objects in use
+- ✅ **Bug Fixes COMPLETE (2/2):**
+  - **Bug Fix #1:** Reference resolution in `handleReferenceObject()` ✅
+    - Root cause: Function returned empty `code` instead of schema name for object properties with $ref
+    - Fix: Return `{ ...code, code: schemaName }` for all reference paths in `handlers.core.ts`
+    - TDD approach: Created `handlers.core.test.ts` with 3 failing unit tests → RED → implemented fix → GREEN
+    - Impact: Eliminated syntax errors in generated code (e.g., `winner: ,` → `winner: winner`)
+  - **Bug Fix #2:** Duplicate error responses in generated code ✅
+    - Root cause: Template rendered errors from BOTH `responses` array AND `errors` array when `withAllResponses` enabled
+    - Fix: Modified `schemas-with-metadata.hbs` to only render `errors` when `responses` doesn't exist
+    - Impact: Initially 695 tests passing, but template changes introduced code generation regression
+    - **⚠️ Side effect: Template changes broke schema-to-string conversion**
+- ✅ **Section D0 Infrastructure COMPLETE:**
+  - Created `lib/tests-generated/` with modular validation structure
+  - Created reusable validation harness (`validation-harness.ts`) + temp file utilities (`temp-file-utils.ts`)
+  - Created 4 modular test files (syntax, type-check, lint, runtime validation)
+  - Documented fixtures in `FIXTURES.md` (5 fixtures, 1 temporarily disabled)
+  - Created `lib/vitest.generated.config.ts`
+  - Wired `pnpm test:gen` in both `lib/package.json` and root via Turbo
+  - Fixed 9 pre-existing type errors in test files
+  - Updated `.gitignore`, `eslint.config.ts`, `turbo.json`
+  - All 16 validation tests passing (4 fixtures × 4 validation types)
+- ⚠️ **BLOCKED - Critical Issues Discovered:**
+  - **Code Generation Regression:** Template changes broke schema-to-string conversion, resulting in `[object Object].regex()` in generated code (4 snapshot tests failing)
+  - **Linting Violations:** 60 errors including serious RULES.md violations (console statements, type assertions, complexity)
+  - **Workspace Hygiene:** JavaScript files present in workspace root
+- ⏳ **Section D (Final Quality Gates)** blocked pending issue resolution
 
 ### Session 9 Snapshot (Complete – Nov 9, 2025 2:52 PM)
 
@@ -78,7 +99,19 @@
 
 ## ⚠️ Current Blockers
 
-None — quality gates are all green (Nov 9, 2025 2:52 PM). Session 9 complete and ready for merge.
+**CRITICAL BLOCKERS (Nov 11, 2025):**
+
+1. **Code Generation Regression (URGENT):** Template changes from Bug Fix #2 introduced bug where schema objects output as `[object Object].regex()` instead of `z.string().regex()`. Affects 4 snapshot tests. Root cause needs deep investigation in template/handler pipeline.
+
+2. **Linting Violations (60 errors):** New validation code violates RULES.md:
+   - Console statements in production code (forbidden)
+   - Type assertions (`as` keyword violations)
+   - Functions exceeding complexity limits
+   - Files: `lib/tests-generated/validation-harness.ts`, `temp-file-utils.ts`, `*.gen.test.ts`
+
+3. **Workspace Hygiene:** JavaScript files present in workspace root (should be TypeScript-only)
+
+**Impact:** Cannot complete Session 3.1 until all issues resolved and full quality gate passes.
 
 ---
 
@@ -99,17 +132,18 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate                 | Status | Last Check          | Notes                                                                     |
-| -------------------- | ------ | ------------------- | ------------------------------------------------------------------------- |
-| `pnpm format`        | ✅     | Nov 9, 2025 2:50 PM | All files use Prettier code style                                         |
-| `pnpm build`         | ✅     | Nov 9, 2025 2:50 PM | ESM + DTS build successful (96ms + 15.6s)                                 |
-| `pnpm type-check`    | ✅     | Nov 9, 2025 2:51 PM | Zero TypeScript errors (10 test file errors fixed with optional chaining) |
-| `pnpm lint`          | ✅     | Nov 9, 2025 2:51 PM | Zero ESLint warnings/errors                                               |
-| `pnpm test`          | ✅     | Nov 9, 2025 2:51 PM | 676 tests passed across 42 files (2.98s)                                  |
-| `pnpm test:snapshot` | ✅     | Nov 9, 2025 2:52 PM | 158 tests passed across 75 files (14.85s)                                 |
-| `pnpm character`     | ✅     | Nov 9, 2025 2:52 PM | 148 tests passed across 13 files (15.75s)                                 |
+| Gate                 | Status | Last Check   | Notes                                                                                  |
+| -------------------- | ------ | ------------ | -------------------------------------------------------------------------------------- |
+| `pnpm format`        | ✅     | Nov 11, 2025 | Prettier applied successfully                                                          |
+| `pnpm build`         | ✅     | Nov 11, 2025 | Build successful                                                                       |
+| `pnpm type-check`    | ✅     | Nov 11, 2025 | Zero TypeScript errors (fixed 9 pre-existing test file errors)                         |
+| `pnpm lint`          | ❌     | Nov 11, 2025 | **60 errors** - console statements, type assertions, complexity, formatting violations |
+| `pnpm test`          | ✅     | Nov 11, 2025 | 679 tests passed (down from 695 due to test cleanup)                                   |
+| `pnpm test:gen`      | ✅     | Nov 11, 2025 | **NEW:** 16 tests passed (4 fixtures × 4 validation types)                             |
+| `pnpm test:snapshot` | ❌     | Nov 11, 2025 | **4 failures** - Code generation regression (`[object Object].regex()` bug)            |
+| `pnpm character`     | ⏸️     | Nov 11, 2025 | Not run (blocked by snapshot failures)                                                 |
 
-**Result:** All quality gates green — Session 9 complete with 982 passing tests, 0 failures, 0 skipped.
+**Result:** ❌ Quality gates FAILING — Section D blocked on: (1) code generation regression, (2) 60 linting violations, (3) workspace hygiene issues.
 
 ---
 

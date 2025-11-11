@@ -28,12 +28,7 @@ import type { paths } from './schema.js'; // Import generated types from openapi
 // ============================================================
 
 {{#each schemas}}
-{{#if this.description}}
-/**
- * {{this.description}}
- */
-{{/if}}
-export const {{@key}} = {{{this.schema}}};
+export const {{@key}} = {{{this}}};
 
 {{/each}}
 
@@ -53,20 +48,34 @@ export const endpoints = [
     description: '{{description}}',
     {{/if}}
     request: {
-      {{#each parameters}}
-      {{#ifeq type 'Path'}}
-      pathParams: {{{schema}}},
-      {{/ifeq}}
-      {{#ifeq type 'Query'}}
+      {{~#if parameters~}}
+      {{~#each parameters~}}
+      {{~#isFirstOfType type "Path" @../index~}}
+      pathParams: z.object({
+        {{~#each ../parameters~}}
+        {{~#ifeq type "Path"~}}
+        "{{name}}": {{{schema}}},
+        {{~/ifeq~}}
+        {{~/each~}}
+      }),
+      {{~/isFirstOfType~}}
+      {{~/each~}}
+      {{~#each parameters~}}
+      {{~#isFirstOfType type "Query" @../index~}}
       queryParams: {{{schema}}},
-      {{/ifeq}}
-      {{#ifeq type 'Header'}}
+      {{~/isFirstOfType~}}
+      {{~/each~}}
+      {{~#each parameters~}}
+      {{~#isFirstOfType type "Header" @../index~}}
       headerParams: {{{schema}}},
-      {{/ifeq}}
-      {{#ifeq type 'Body'}}
+      {{~/isFirstOfType~}}
+      {{~/each~}}
+      {{~#each parameters~}}
+      {{~#ifeq type "Body"~}}
       body: {{{schema}}},
-      {{/ifeq}}
-      {{/each}}
+      {{~/ifeq~}}
+      {{~/each~}}
+      {{~/if~}}
     },
     responses: {
       {{#each errors}}

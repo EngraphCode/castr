@@ -98,18 +98,6 @@ test('missing-zod-chains', async () => {
           },
           403: { description: "Successful operation", schema: nulltype },
           404: { description: "Successful operation", schema: anyOfType },
-          401: {
-            description: "Successful operation",
-            schema: z.number().int().gte(10),
-          },
-          402: {
-            description: "Successful operation",
-            schema: z
-              .object({ text: z.string().min(5), num: z.number().int().gte(10) })
-              .strict(),
-          },
-          403: { description: "Successful operation", schema: nulltype },
-          404: { description: "Successful operation", schema: anyOfType },
         },
       },
     ] as const;

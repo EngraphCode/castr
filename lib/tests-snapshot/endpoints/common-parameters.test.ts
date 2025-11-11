@@ -57,9 +57,6 @@ test('common-parameters', async () => {
           queryParams: z
             .object({ petId: z.string(), otherParam: z.number().optional() })
             .optional(),
-          queryParams: z
-            .object({ petId: z.string(), otherParam: z.number().optional() })
-            .optional(),
         },
         responses: {
           200: { description: "Successful operation", schema: z.boolean() },
@@ -70,20 +67,6 @@ test('common-parameters', async () => {
         path: "/pet",
         operationId: "putPet",
         request: {
-          queryParams: z
-            .object({
-              petId: z.number(),
-              otherParam: z.number().optional(),
-              personId: z.number(),
-            })
-            .optional(),
-          queryParams: z
-            .object({
-              petId: z.number(),
-              otherParam: z.number().optional(),
-              personId: z.number(),
-            })
-            .optional(),
           queryParams: z
             .object({
               petId: z.number(),

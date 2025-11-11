@@ -79,7 +79,6 @@ test('resolve-ref-responses', () => {
             "ignoredGenericError": [],
         },
         "refsDependencyGraph": {},
-        "schemaByName": {},
         "zodSchemaByName": {},
     }
   `);

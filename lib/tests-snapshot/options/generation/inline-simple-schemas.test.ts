@@ -160,16 +160,6 @@ test('inline-simple-schemas', async () => {
             schema: z.array(z.object({ str: z.string() }).partial().strict()),
           },
           407: { schema: z.array(ComplexObject) },
-          400: { schema: z.enum(["xxx", "yyy", "zzz"]) },
-          401: { schema: z.enum(["xxx", "yyy", "zzz"]) },
-          402: { schema: z.array(z.string()) },
-          403: { schema: z.object({ str: z.string() }).partial().strict() },
-          404: { schema: z.object({ str: z.string() }).partial().strict() },
-          405: { schema: z.array(SimpleObject) },
-          406: {
-            schema: z.array(z.object({ str: z.string() }).partial().strict()),
-          },
-          407: { schema: z.array(ComplexObject) },
         },
       },
     ] as const;

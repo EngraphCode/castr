@@ -16,5 +16,24 @@ test('required-additional-props-not-in-properties', () => {
         required: ['name', 'email', 'phone'],
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ name: z.string(), email: z.string() }).passthrough()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ name: z.string(), email: z.string() }).passthrough()",
+        "schema": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                },
+                "name": {
+                    "type": "string",
+                },
+            },
+            "required": [
+                "name",
+                "email",
+                "phone",
+            ],
+        },
+    }
+  `);
 });

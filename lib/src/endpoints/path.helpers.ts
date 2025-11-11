@@ -74,6 +74,7 @@ function finalizeEndpoint(
   if (!endpointDefinition.response) {
     endpointDefinition.response = voidSchema;
   }
+
   if (options?.endpointDefinitionRefiner) {
     const refined = options.endpointDefinitionRefiner(endpointDefinition, operation);
     if (refined) {

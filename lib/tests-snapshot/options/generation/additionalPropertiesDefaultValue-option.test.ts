@@ -11,7 +11,19 @@ test('additionalPropertiesDefaultValue-option', () => {
         },
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ str: z.string() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `);
   expect(
     getZodSchema({
       schema: {
@@ -24,7 +36,19 @@ test('additionalPropertiesDefaultValue-option', () => {
         additionalPropertiesDefaultValue: true,
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ str: z.string() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `);
   expect(
     getZodSchema({
       schema: {
@@ -37,7 +61,19 @@ test('additionalPropertiesDefaultValue-option', () => {
         additionalPropertiesDefaultValue: { type: 'number' },
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ str: z.string() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `);
   expect(
     getZodSchema({
       schema: {
@@ -50,5 +86,17 @@ test('additionalPropertiesDefaultValue-option', () => {
         additionalPropertiesDefaultValue: false,
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ str: z.string() }).partial()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `);
 });

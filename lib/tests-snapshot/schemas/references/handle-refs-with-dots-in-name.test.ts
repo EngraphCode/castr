@@ -151,7 +151,6 @@ test('handle-refs-with-dots-in-name', async () => {
                 "#/components/schemas/Aaa-bbb.CccDdd_eee.Fff_ggg.HhhIiii_jjj",
             },
         },
-        "schemaByName": {},
         "zodSchemaByName": {
             "Aaa-bbb.CccDdd_eee.Fff_ggg.HhhIiii_jjj": "z.object({ aaa: z.string(), bbb: z.string() }).partial().passthrough()",
             "Basic": "z.string()",

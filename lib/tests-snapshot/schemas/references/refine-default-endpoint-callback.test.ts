@@ -75,7 +75,6 @@ test('refine-default-endpoint-callback', () => {
             "ignoredGenericError": [],
         },
         "refsDependencyGraph": {},
-        "schemaByName": {},
         "zodSchemaByName": {
             "Basic": "z.string()",
         },
@@ -186,7 +185,6 @@ test('refine-default-endpoint-callback', () => {
             "ignoredGenericError": [],
         },
         "refsDependencyGraph": {},
-        "schemaByName": {},
         "zodSchemaByName": {
             "Basic": "z.string()",
         },

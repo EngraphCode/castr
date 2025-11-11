@@ -30,7 +30,7 @@ export const endpoints = [
 		request: {
 			{{~#if parameters~}}
 			{{~#each parameters~}}
-			{{~#ifeq type "Path"~}}
+			{{~#isFirstOfType type "Path" @../index~}}
 			pathParams: z.object({
 				{{~#each ../parameters~}}
 				{{~#ifeq type "Path"~}}
@@ -38,10 +38,10 @@ export const endpoints = [
 				{{~/ifeq~}}
 				{{~/each~}}
 			}),
-			{{~/ifeq~}}
+			{{~/isFirstOfType~}}
 			{{~/each~}}
 			{{~#each parameters~}}
-			{{~#ifeq type "Query"~}}
+			{{~#isFirstOfType type "Query" @../index~}}
 			queryParams: z.object({
 				{{~#each ../parameters~}}
 				{{~#ifeq type "Query"~}}
@@ -49,10 +49,10 @@ export const endpoints = [
 				{{~/ifeq~}}
 				{{~/each~}}
 			}).optional(),
-			{{~/ifeq~}}
+			{{~/isFirstOfType~}}
 			{{~/each~}}
 			{{~#each parameters~}}
-			{{~#ifeq type "Header"~}}
+			{{~#isFirstOfType type "Header" @../index~}}
 			headers: z.object({
 				{{~#each ../parameters~}}
 				{{~#ifeq type "Header"~}}
@@ -60,7 +60,7 @@ export const endpoints = [
 				{{~/ifeq~}}
 				{{~/each~}}
 			}).optional(),
-			{{~/ifeq~}}
+			{{~/isFirstOfType~}}
 			{{~/each~}}
 			{{~#each parameters~}}
 			{{~#ifeq type "Body"~}}
@@ -86,25 +86,25 @@ export const endpoints = [
 				schema: {{{response}}},
 			},
 				{{~/if~}}
-			{{~/if~}}
-			{{~#if errors~}}
-				{{~#each errors~}}
-					{{~#ifeq status "default"~}}
+				{{~#if errors~}}
+					{{~#each errors~}}
+						{{~#ifeq status "default"~}}
 			default: {
-						{{~#if description~}}
+							{{~#if description~}}
 				description: "{{description}}",
-						{{~/if~}}
+							{{~/if~}}
 				schema: {{{schema}}},
 			},
-					{{~else~}}
+						{{~else~}}
 			{{status}}: {
-						{{~#if description~}}
+							{{~#if description~}}
 				description: "{{description}}",
-						{{~/if~}}
+							{{~/if~}}
 				schema: {{{schema}}},
 			},
-					{{~/ifeq~}}
-				{{~/each~}}
+						{{~/ifeq~}}
+					{{~/each~}}
+				{{~/if~}}
 			{{~/if~}}
 		},
 	},

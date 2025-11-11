@@ -1,6 +1,21 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`recursive-schema - direct recursive > should handle direct recursive schemas 1`] = `"z.object({ name: z.string(), parent: User }).partial().passthrough()"`;
+exports[`recursive-schema - direct recursive > should handle direct recursive schemas 1`] = `
+{
+    "code": "z.object({ name: z.string(), parent: User }).partial().passthrough()",
+    "schema": {
+        "properties": {
+            "name": {
+                "type": "string",
+            },
+            "parent": {
+                "$ref": "#/components/schemas/User",
+            },
+        },
+        "type": "object",
+    },
+}
+`;
 
 exports[`recursive-schema - direct recursive > should handle direct recursive schemas 2`] = `
 {
@@ -27,14 +42,28 @@ exports[`recursive-schema - direct recursive > should handle direct recursive sc
         "openapi": "3.0.0",
         "paths": {},
     },
-    "schemaByName": {},
     "zodSchemaByName": {
-        "User": "z.object({ name: z.string(), parent: User }).partial().passthrough()",
+        "User": "z.object({ name: z.string(), parent: undefined }).partial().passthrough()",
     },
 }
 `;
 
-exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 1`] = `"z.object({ recursive: User, basic: z.number() }).partial().passthrough()"`;
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 1`] = `
+{
+    "code": "z.object({ recursive: User, basic: z.number() }).partial().passthrough()",
+    "schema": {
+        "properties": {
+            "basic": {
+                "type": "number",
+            },
+            "recursive": {
+                "$ref": "#/components/schemas/User",
+            },
+        },
+        "type": "object",
+    },
+}
+`;
 
 exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 2`] = `
 {
@@ -80,9 +109,8 @@ exports[`recursive-schema - indirect single recursive > should handle indirect s
         "openapi": "3.0.0",
         "paths": {},
     },
-    "schemaByName": {},
     "zodSchemaByName": {
-        "Middle": "z.object({ user: User }).partial().passthrough()",
+        "Middle": "z.object({ user: undefined }).partial().passthrough()",
         "User": "z.object({ name: z.string(), middle: Middle }).partial().passthrough()",
     },
 }
@@ -125,7 +153,7 @@ type User = Partial<{ name: string; middle: Middle }>;
 type Middle = Partial<{ user: User }>;
 
 export const Middle: z.ZodType<Middle> = z.lazy(() =>
-  z.object({ user: User }).partial().strict(),
+  z.object({ user: undefined }).partial().strict(),
 );
 export const User: z.ZodType<User> = z.lazy(() =>
   z.object({ name: z.string(), middle: Middle }).partial().strict(),
@@ -218,7 +246,22 @@ export const mcpTools = [
 "
 `;
 
-exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 1`] = `"z.object({ recursiveUser: UserWithFriends, basic: z.number() }).partial().passthrough()"`;
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 1`] = `
+{
+    "code": "z.object({ recursiveUser: UserWithFriends, basic: z.number() }).partial().passthrough()",
+    "schema": {
+        "properties": {
+            "basic": {
+                "type": "number",
+            },
+            "recursiveUser": {
+                "$ref": "#/components/schemas/UserWithFriends",
+            },
+        },
+        "type": "object",
+    },
+}
+`;
 
 exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 2`] = `
 {
@@ -307,10 +350,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
         "openapi": "3.0.0",
         "paths": {},
     },
-    "schemaByName": {},
     "zodSchemaByName": {
-        "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
-        "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+        "Friend": "z.object({ nickname: z.string(), user: undefined, circle: z.array(undefined) }).partial().passthrough()",
+        "UserWithFriends": "z.object({ name: z.string(), parent: undefined, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
     },
 }
 `;
@@ -480,10 +522,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
             "#/components/schemas/Friend",
         },
     },
-    "schemaByName": {},
     "zodSchemaByName": {
-        "Friend": "z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough()",
-        "UserWithFriends": "z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
+        "Friend": "z.object({ nickname: z.string(), user: undefined, circle: z.array(undefined) }).partial().passthrough()",
+        "UserWithFriends": "z.object({ name: z.string(), parent: undefined, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough()",
     },
 }
 `;
@@ -603,8 +644,8 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
         "withAlias": false,
     },
     "schemas": {
-        "Friend": "z.lazy(() => z.object({ nickname: z.string(), user: UserWithFriends, circle: z.array(Friend) }).partial().passthrough())",
-        "UserWithFriends": "z.lazy(() => z.object({ name: z.string(), parent: UserWithFriends, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough())",
+        "Friend": "z.lazy(() => z.object({ nickname: z.string(), user: undefined, circle: z.array(undefined) }).partial().passthrough())",
+        "UserWithFriends": "z.lazy(() => z.object({ name: z.string(), parent: undefined, friends: z.array(Friend), bestFriend: Friend }).partial().passthrough())",
     },
     "types": {
         "Friend": "type Friend = Partial<{ nickname: string; user: UserWithFriends; circle: Array<Friend> }>;",
@@ -642,8 +683,8 @@ export const Friend: z.ZodType<Friend> = z.lazy(() =>
   z
     .object({
       nickname: z.string(),
-      user: UserWithFriends,
-      circle: z.array(Friend),
+      user: undefined,
+      circle: z.array(undefined),
     })
     .partial()
     .strict(),
@@ -652,7 +693,7 @@ export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
   z
     .object({
       name: z.string(),
-      parent: UserWithFriends,
+      parent: undefined,
       friends: z.array(Friend),
       bestFriend: Friend,
     })
@@ -664,7 +705,7 @@ export const ObjectWithRecursiveArray: z.ZodType<ObjectWithRecursiveArray> =
     z
       .object({
         isInsideObjectWithRecursiveArray: z.boolean(),
-        array: z.array(ObjectWithRecursiveArray),
+        array: z.array(undefined),
       })
       .partial()
       .strict(),
@@ -789,7 +830,22 @@ export const mcpTools = [
 "
 `;
 
-exports[`recursive-schema - recursive array > should handle recursive array schemas 1`] = `"z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()"`;
+exports[`recursive-schema - recursive array > should handle recursive array schemas 1`] = `
+{
+    "code": "z.object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() }).partial().passthrough()",
+    "schema": {
+        "properties": {
+            "basic": {
+                "type": "number",
+            },
+            "recursiveRef": {
+                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+            },
+        },
+        "type": "object",
+    },
+}
+`;
 
 exports[`recursive-schema - recursive array > should handle recursive array schemas 2`] = `
 {
@@ -819,9 +875,8 @@ exports[`recursive-schema - recursive array > should handle recursive array sche
         "openapi": "3.0.0",
         "paths": {},
     },
-    "schemaByName": {},
     "zodSchemaByName": {
-        "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+        "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(undefined) }).partial().passthrough()",
     },
 }
 `;
@@ -904,14 +959,28 @@ exports[`recursive-schema - recursive array > should handle recursive array sche
             "#/components/schemas/ObjectWithRecursiveArray",
         },
     },
-    "schemaByName": {},
     "zodSchemaByName": {
-        "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(ObjectWithRecursiveArray) }).partial().passthrough()",
+        "ObjectWithRecursiveArray": "z.object({ isInsideObjectWithRecursiveArray: z.boolean(), array: z.array(undefined) }).partial().passthrough()",
     },
 }
 `;
 
-exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 1`] = `"z.object({ playlist: Playlist, by_author: Author }).partial().passthrough()"`;
+exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 1`] = `
+{
+    "code": "z.object({ playlist: Playlist, by_author: Author }).partial().passthrough()",
+    "schema": {
+        "properties": {
+            "by_author": {
+                "$ref": "#/components/schemas/Author",
+            },
+            "playlist": {
+                "$ref": "#/components/schemas/Playlist",
+            },
+        },
+        "type": "object",
+    },
+}
+`;
 
 exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 2`] = `
 {
@@ -983,12 +1052,11 @@ exports[`recursive-schema - with ref to simple schema > should generate simple s
         "openapi": "3.0.0",
         "paths": {},
     },
-    "schemaByName": {},
     "zodSchemaByName": {
         "Author": "z.object({ name: z.string(), mail: z.string(), settings: Settings }).partial().passthrough()",
         "Playlist": "z.object({ name: z.string(), author: Author, songs: z.array(Song) }).partial().passthrough()",
         "Settings": "z.object({ theme_color: z.string() }).partial().passthrough()",
-        "Song": "z.object({ name: z.string(), duration: z.number(), in_playlists: z.array(Playlist) }).partial().passthrough()",
+        "Song": "z.object({ name: z.string(), duration: z.number(), in_playlists: z.array(undefined) }).partial().passthrough()",
     },
 }
 `;
@@ -1018,7 +1086,7 @@ export const Song: z.ZodType<Song> = z.lazy(() =>
     .object({
       name: z.string(),
       duration: z.number(),
-      in_playlists: z.array(Playlist),
+      in_playlists: z.array(undefined),
     })
     .partial()
     .strict(),

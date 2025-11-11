@@ -42,6 +42,7 @@ const baseIgnores = [
   '**/pnpm-lock.yaml',
   '**/.DS_Store',
   '**/*.hbs',
+  '**/tests-generated/.tmp/**',
 ];
 
 const testGlobs = [

@@ -21,20 +21,20 @@ test('unicode-pattern-regex', () => {
     pattern: String.raw`\u{1F600}+`,
   };
   expect(
-    getZodSchema({ schema: schema }).toString() + getZodChain({ schema }).toString(),
+    getZodSchema({ schema: schema }).code + getZodChain({ schema }).toString(),
   ).toMatchInlineSnapshot(String.raw`"z.string().regex(/\p{L}+/u).optional()"`);
   expect(
-    getZodSchema({ schema: schemaWithSlashes }).toString() +
+    getZodSchema({ schema: schemaWithSlashes }).code +
       getZodChain({ schema: schemaWithSlashes }).toString(),
   ).toMatchInlineSnapshot(String.raw`"z.string().regex(/\p{L}+/u).optional()"`);
   expect(
-    getZodSchema({ schema: schemaWithComplexUnicodePattern }).toString() +
+    getZodSchema({ schema: schemaWithComplexUnicodePattern }).code +
       getZodChain({ schema: schemaWithComplexUnicodePattern }).toString(),
   ).toMatchInlineSnapshot(
     String.raw`"z.string().regex(/$|^[\p{L}\d]+[\p{L}\d\s.&()\*'',-;#]*|$/u).optional()"`,
   );
   expect(
-    getZodSchema({ schema: schemaWithSlashU }).toString() +
+    getZodSchema({ schema: schemaWithSlashU }).code +
       getZodChain({ schema: schemaWithSlashU }).toString(),
   ).toMatchInlineSnapshot(String.raw`"z.string().regex(/\u{1F600}+/u).optional()"`);
 });

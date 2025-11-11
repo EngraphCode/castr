@@ -17,7 +17,19 @@ test('regex-with-unnecessary-escape fails', () => {
   ).toMatchInlineSnapshot(
     // This is what it should produce, but to prioritize escaping forward slashes without an unnecessary escape,
     // we leave this is failing for now.
-    // '"z.object({ str: z.string().regex(/^\\/$/) }).partial().passthrough()"'
-    String.raw`"z.object({ str: z.string().regex(/^\\/$/) }).partial().passthrough()"`,
+    `
+    {
+        "code": "z.object({ str: z.string().regex(/^\\\\/$/) }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "pattern": "^\\/$",
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `,
   );
 });

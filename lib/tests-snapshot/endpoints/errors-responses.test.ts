@@ -80,11 +80,6 @@ it('includes errors-responses', async () => {
             schema: z.object({ is400: z.boolean() }).partial().strict(),
           },
           500: { description: "Internal server error", schema: z.string() },
-          400: {
-            description: "Bad request",
-            schema: z.object({ is400: z.boolean() }).partial().strict(),
-          },
-          500: { description: "Internal server error", schema: z.string() },
         },
       },
     ] as const;
@@ -275,21 +270,6 @@ it('determines which status are considered errors-responses', async () => {
               .strict(),
           },
           500: { description: "Internal server error", schema: z.string() },
-          400: {
-            description: "Bad request",
-            schema: z
-              .object({ is400: z.boolean(), nested: Nested })
-              .partial()
-              .strict(),
-          },
-          404: {
-            description: "Not found",
-            schema: z
-              .object({ is400: z.boolean(), nested: Nested })
-              .partial()
-              .strict(),
-          },
-          500: { description: "Internal server error", schema: z.string() },
         },
       },
     ] as const;
@@ -389,21 +369,6 @@ it('determines which status are considered errors-responses', async () => {
             schema: z.object({ str: z.string(), nb: z.number() }).strict(),
           },
           201: { description: "Created", schema: z.number() },
-          400: {
-            description: "Bad request",
-            schema: z
-              .object({ is400: z.boolean(), nested: Nested })
-              .partial()
-              .strict(),
-          },
-          404: {
-            description: "Not found",
-            schema: z
-              .object({ is400: z.boolean(), nested: Nested })
-              .partial()
-              .strict(),
-          },
-          500: { description: "Internal server error", schema: z.string() },
           400: {
             description: "Bad request",
             schema: z

@@ -19,6 +19,66 @@ test('use-union-only-when-multiple-choices', () => {
       },
     }),
   ).toMatchInlineSnapshot(
-    '"z.object({ singleOneOf: z.string(), multipleOneOf: z.union([z.string(), z.number()]), singleAnyOf: z.string(), multipleAnyOf: z.union([z.string(), z.number()]), singleAllOf: z.string(), multipleAllOf: z.string().and(z.number()) }).partial().passthrough()"',
+    `
+    {
+        "code": "z.object({ singleOneOf: z.string(), multipleOneOf: z.union([z.string(), z.number()]), singleAnyOf: z.string(), multipleAnyOf: z.union([z.string(), z.number()]), singleAllOf: z.string(), multipleAllOf: z.string().and(z.number()) }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "multipleAllOf": {
+                    "allOf": [
+                        {
+                            "type": "string",
+                        },
+                        {
+                            "type": "number",
+                        },
+                    ],
+                },
+                "multipleAnyOf": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                        },
+                        {
+                            "type": "number",
+                        },
+                    ],
+                },
+                "multipleOneOf": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                        },
+                        {
+                            "type": "number",
+                        },
+                    ],
+                },
+                "singleAllOf": {
+                    "allOf": [
+                        {
+                            "type": "string",
+                        },
+                    ],
+                },
+                "singleAnyOf": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                        },
+                    ],
+                },
+                "singleOneOf": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                        },
+                    ],
+                },
+            },
+            "type": "object",
+        },
+    }
+  `,
   );
 });

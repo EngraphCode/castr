@@ -1,6 +1,6 @@
 # Project Handoff & Orientation
 
-**Last Updated:** November 9, 2025 2:52 PM  
+**Last Updated:** November 10, 2025  
 **Purpose:** Quick orientation hub and document navigation for current work  
 **Read Time:** ~5-10 minutes
 
@@ -8,10 +8,10 @@
 
 ## 📍 Where We Are
 
-**Current Phase:** Phase 2 Part 2 – Session 9 ⏳ Pending kickoff  
+**Current Phase:** Phase 3 Session 1 - BLOCKED on Critical Issues  
 **Active Branch:** `feat/rewrite`  
-**Next Session Tasks:** Begin Session 9 (type guards, error formatting, documentation) per the new session plan — scope includes MCP runtime validators, README/CLI updates for `--emit-mcp-manifest`, a dedicated integration guide, and release notes.
-**Project Status:** Session 8 is complete — MCP helper layer + CLI parity landed, manual manifests archived (`tmp/petstore.mcp.json`, `tmp/multi-auth.mcp.json`), fixture-driven snapshots in place. Session 9 kicked off with runtime MCP type guards implemented under unit test coverage; all quality gates rerun and green on `feat/rewrite`.
+**Status:** Sections A, B, C, D0 infrastructure complete; BLOCKED by code generation regression + linting violations  
+**Next:** Investigate and fix code generation regression (`[object Object].regex()` bug), resolve 60 linting violations, clean up workspace hygiene, then complete Section D
 
 ### Phase Progress Overview
 
@@ -19,14 +19,75 @@
 Phase 1: Tooling & Architecture         ✅ Complete
 Phase 2 Part 1: Scalar Pipeline         ✅ Complete (Sessions 1-4)
 Phase 2 Part 2: MCP Enhancements        ⏳ Session 9 pending
-Phase 3: DX & Quality                   ⚪ Planned
-```
+Phase 2 Part 2: MCP Enhancements         ✅ Complete (Sessions 5-9)
+Phase 3: Session 3.1 CodeMeta Elimination ⏳ In Progress (Section D0)
+
+### Session 3.1 Progress (Nov 11, 2025)
+
+**✅ COMPLETE:**
+
+**Sections A, B, C:**
+- Pure functions extracted to `lib/src/conversion/zod/code-generation.ts`
+- CodeMeta completely deleted (0 mentions remaining)
+- All handlers return plain objects `{ code: string; schema: SchemaObject; ref?: string }`
+
+**Bug Fix #1:** Reference resolution in `handleReferenceObject()` ✅
+- Root cause: Function returned empty `code` instead of schema name for object properties with $ref
+- Fix: Return `{ ...code, code: schemaName }` for all reference paths in `handlers.core.ts`
+- TDD approach: Created `handlers.core.test.ts` with 3 failing unit tests → RED → implemented fix → GREEN
+- Impact: Eliminated syntax errors in generated code (e.g., `winner: ,` → `winner: winner`)
+
+**Bug Fix #2:** Duplicate error responses in generated code ✅
+- Root cause: Template rendered errors from BOTH `responses` array AND `errors` array when `withAllResponses` enabled
+- Fix: Modified `schemas-with-metadata.hbs` template to only render `errors` when `responses` doesn't exist
+- Impact: Initially showed 695 tests passing, but template changes introduced regression
+- **⚠️ Side effect: Introduced code generation bug (see Critical Issues below)**
+
+**Section D0:** Generated Code Validation Infrastructure ✅
+- Created `lib/tests-generated/` directory structure
+- Created modular validation harness: `validation-harness.ts`, `temp-file-utils.ts`
+- Created 4 modular test files: `syntax-validation.gen.test.ts`, `type-check-validation.gen.test.ts`, `lint-validation.gen.test.ts`, `runtime-validation.gen.test.ts`
+- Documented fixtures in `lib/tests-generated/FIXTURES.md`
+- Created `lib/vitest.generated.config.ts`
+- Wired `pnpm test:gen` scripts in both `lib/package.json` and root via Turbo
+- All 16 tests passing (4 fixtures × 4 validation types)
+- Fixed 9 pre-existing type errors in test files
+- Updated `.gitignore`, `lib/eslint.config.ts`, `turbo.json`
+
+**⚠️ CRITICAL ISSUES DISCOVERED:**
+
+**1. Code Generation Regression (BLOCKING):**
+
+Template changes from Bug Fix #2 introduced a bug where schema objects are not being properly converted to strings:
+- **Symptom:** Generated code contains `[object Object].regex()` instead of `z.string().regex()`
+- **Impact:** 4 snapshot tests failing (invalid-pattern-regex, regex-with-escapes, unicode-pattern-regex, validations)
+- **Root cause:** Schema-to-code conversion breaking somewhere in the Zod handlers or template rendering
+- **Needs:** Deep investigation to identify where `.toString()` or string conversion is missing
+
+**2. Linting Violations (60 errors):**
+
+Serious RULES.md violations discovered:
+- Console statements in production code (forbidden per @RULES.md)
+- Type assertions violating type safety rules
+- Functions exceeding complexity limits
+- Prettier formatting issues
+- **Files affected:** `lib/tests-generated/validation-harness.ts`, `temp-file-utils.ts`, `*.gen.test.ts`
+
+**3. Workspace Hygiene:**
+
+JavaScript files present in workspace root violating TypeScript-only policy
+
+**Quality Gate Status:**
+- ✅ build, type-check, test (679 passing), test:gen (16 passing)
+- ❌ lint (60 errors), test:snapshot (4 failures), character (not run)
 
 ### Recent Milestone
 
 ```
+
 pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/openapi/v3.0/petstore-expanded.yaml --emit-mcp-manifest ../tmp/petstore.mcp.json
 pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/custom/openapi/v3.1/multi-auth.yaml --emit-mcp-manifest ../tmp/multi-auth.mcp.json
+
 ```
 
 Generates MCP manifests directly from the shared context. Petstore produces 4 tools (with warnings for `default`-only responses); multi-auth exercises layered security requirements. Outputs are archived under `tmp/*.mcp.json` for Workstream D notes.
@@ -86,6 +147,7 @@ Generates MCP manifests directly from the shared context. Petstore produces 4 to
 **For AI in new chat:**
 
 ```
+
 I'm continuing development on openapi-zod-client. Please read:
 
 @continuation_prompt.md
@@ -94,12 +156,14 @@ I'm continuing development on openapi-zod-client. Please read:
 @RULES.md
 
 Then:
+
 1. Summarize current state
 2. Identify next session
 3. Create detailed implementation plan with acceptance criteria
 4. Begin work following TDD
 
 Follow ALL standards in @RULES.md.
+
 ```
 
 **For humans:**
@@ -114,7 +178,9 @@ Follow ALL standards in @RULES.md.
 **For AI in same chat:**
 
 ```
+
 Continue with [next task/session] as planned. Follow TDD and RULES.md standards.
+
 ```
 
 **For humans:**
@@ -130,20 +196,22 @@ Continue with [next task/session] as planned. Follow TDD and RULES.md standards.
 ### Core Design: Scalar Pipeline + OpenAPI 3.1
 
 ```
+
 Input (3.0 or 3.1 spec: file, URL, or object)
-    ↓
+↓
 bundle() via @scalar/json-magic
-    ↓ (resolves external $refs, preserves internal $refs)
+↓ (resolves external $refs, preserves internal $refs)
 upgrade() via @scalar/openapi-parser
-    ↓ (normalizes ALL specs to OpenAPI 3.1)
+↓ (normalizes ALL specs to OpenAPI 3.1)
 Validate & type with intersection
-    ↓ (type guard converts loose → strict types)
+↓ (type guard converts loose → strict types)
 BundledOpenApiDocument
-    ↓ (OpenAPIV3_1.Document & OpenAPIObject)
+↓ (OpenAPIV3_1.Document & OpenAPIObject)
 All downstream code uses oas31 types
-    ↓
+↓
 Code generation, validation, MCP tools
-```
+
+````
 
 ### Key Architectural Decisions
 
@@ -247,7 +315,7 @@ export function isBundledOpenApiDocument(doc: unknown): doc is BundledOpenApiDoc
 
   return true;
 }
-```
+````
 
 ### OpenAPI 3.1 Nullable Check
 

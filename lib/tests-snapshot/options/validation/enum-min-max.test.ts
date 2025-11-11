@@ -60,12 +60,6 @@ test('enum-min-max', async () => {
               bar: z.enum(["Dogs", "Cats", "Mice"]).optional(),
             })
             .optional(),
-          queryParams: z
-            .object({
-              foo: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
-              bar: z.enum(["Dogs", "Cats", "Mice"]).optional(),
-            })
-            .optional(),
         },
         responses: { 200: { description: "resoponse", schema: z.void() } },
       },

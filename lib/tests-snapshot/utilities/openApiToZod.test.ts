@@ -523,7 +523,6 @@ test('CodeMeta with nested refs', () => {
             "openapi": "3.0.0",
             "paths": {},
         },
-        "schemaByName": {},
         "zodSchemaByName": {
             "Basic": "z.object({ prop: z.string(), second: z.number() }).partial().passthrough()",
             "DeepNested": "z.object({ deep: z.boolean() }).partial().passthrough()",

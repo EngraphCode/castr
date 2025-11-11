@@ -10,7 +10,14 @@ describe('additional-properties', () => {
       },
     });
 
-    expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+    expect(schema).toMatchInlineSnapshot(`
+      {
+          "code": "z.object({}).partial().passthrough()",
+          "schema": {
+              "type": "object",
+          },
+      }
+    `);
   });
 
   test('additionalProperties is true', () => {
@@ -21,7 +28,15 @@ describe('additional-properties', () => {
       },
     });
 
-    expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+    expect(schema).toMatchInlineSnapshot(`
+      {
+          "code": "z.object({}).partial().passthrough()",
+          "schema": {
+              "additionalProperties": true,
+              "type": "object",
+          },
+      }
+    `);
   });
 
   test('additionalProperties is empty object', () => {
@@ -33,7 +48,15 @@ describe('additional-properties', () => {
       },
     });
 
-    expect(schema).toMatchInlineSnapshot('"z.object({}).partial().passthrough()"');
+    expect(schema).toMatchInlineSnapshot(`
+      {
+          "code": "z.object({}).partial().passthrough()",
+          "schema": {
+              "additionalProperties": {},
+              "type": "object",
+          },
+      }
+    `);
   });
 
   test('additional properties opt-out', () => {
@@ -44,7 +67,15 @@ describe('additional-properties', () => {
       },
     });
 
-    expect(additionalPropertiesOptOut).toMatchInlineSnapshot('"z.object({}).partial()"');
+    expect(additionalPropertiesOptOut).toMatchInlineSnapshot(`
+      {
+          "code": "z.object({}).partial()",
+          "schema": {
+              "additionalProperties": false,
+              "type": "object",
+          },
+      }
+    `);
   });
 
   test('object with some properties', () => {
@@ -59,7 +90,22 @@ describe('additional-properties', () => {
     });
 
     expect(schema).toMatchInlineSnapshot(
-      '"z.object({ foo: z.string(), bar: z.number() }).partial().passthrough()"',
+      `
+      {
+          "code": "z.object({ foo: z.string(), bar: z.number() }).partial().passthrough()",
+          "schema": {
+              "properties": {
+                  "bar": {
+                      "type": "number",
+                  },
+                  "foo": {
+                      "type": "string",
+                  },
+              },
+              "type": "object",
+          },
+      }
+    `,
     );
   });
 });

@@ -66,6 +66,26 @@ test('schema-refiner', () => {
       },
     }),
   ).toMatchInlineSnapshot(
-    `"z.object({ name: z.union([z.string(), z.null()]).nullable(), email: z.union([z.string(), z.null()]).nullable() }).partial().passthrough()"`,
+    `
+    {
+        "code": "z.object({ name: z.union([z.string(), z.null()]).nullable(), email: z.union([z.string(), z.null()]).nullable() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "email": {
+                    "type": [
+                        "string",
+                        "null",
+                    ],
+                },
+                "name": {
+                    "type": [
+                        "string",
+                        "null",
+                    ],
+                },
+            },
+        },
+    }
+  `,
   );
 });

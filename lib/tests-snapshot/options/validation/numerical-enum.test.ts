@@ -59,14 +59,6 @@ test('numerical-enum-support', async () => {
                 .optional(),
             })
             .optional(),
-          queryParams: z
-            .object({
-              foo: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
-              bar: z
-                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-                .optional(),
-            })
-            .optional(),
         },
         responses: { 200: { description: "resoponse", schema: z.void() } },
       },

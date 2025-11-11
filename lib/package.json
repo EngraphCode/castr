@@ -36,6 +36,8 @@
     "test:watch": "vitest",
     "test:snapshot": "vitest run --config vitest.snapshot.config.ts",
     "test:snapshot:watch": "vitest --config vitest.snapshot.config.ts",
+    "test:gen": "vitest run --config vitest.generated.config.ts",
+    "test:gen:watch": "vitest --config vitest.generated.config.ts",
     "test:scalar-guard": "vitest run --config vitest.scalar-guard.config.ts",
     "character": "vitest run --config vitest.characterisation.config.ts",
     "character:watch": "vitest --config vitest.characterisation.config.ts",

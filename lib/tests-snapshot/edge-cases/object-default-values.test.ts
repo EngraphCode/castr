@@ -102,46 +102,6 @@ test('object-default-values', async () => {
                 .default({ id: 1, name: "foo" }),
             })
             .optional(),
-          queryParams: z
-            .object({
-              "empty-object": z
-                .object({ foo: z.string() })
-                .partial()
-                .strict()
-                .optional()
-                .default({}),
-              "default-object": z
-                .object({ foo: z.string() })
-                .partial()
-                .strict()
-                .optional()
-                .default({ foo: "bar" }),
-              "ref-object": z
-                .record(MyComponent)
-                .optional()
-                .default({ id: 1, name: "foo" }),
-            })
-            .optional(),
-          queryParams: z
-            .object({
-              "empty-object": z
-                .object({ foo: z.string() })
-                .partial()
-                .strict()
-                .optional()
-                .default({}),
-              "default-object": z
-                .object({ foo: z.string() })
-                .partial()
-                .strict()
-                .optional()
-                .default({ foo: "bar" }),
-              "ref-object": z
-                .record(MyComponent)
-                .optional()
-                .default({ id: 1, name: "foo" }),
-            })
-            .optional(),
         },
         responses: { 200: { description: "resoponse", schema: z.void() } },
       },

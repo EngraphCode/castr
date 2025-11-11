@@ -133,7 +133,6 @@ test('ref-in-another-file', async () => {
             "ignoredGenericError": [],
         },
         "refsDependencyGraph": {},
-        "schemaByName": {},
         "zodSchemaByName": {
             "ExampleObject": "z.object({ name: z.string(), completed: z.boolean(), "0_property_starting_with_number": z.number() }).passthrough()",
         },

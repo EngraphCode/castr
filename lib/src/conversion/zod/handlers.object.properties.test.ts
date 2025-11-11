@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { buildPropertyZodCode, buildPropertyEntry } from './handlers.object.properties.js';
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import type { CodeMetaData, ConversionTypeContext } from './index.js';
-import type { TemplateContext } from '../../context/template-context.types.js';
 
 describe('buildPropertyZodCode', () => {
   it('should generate code for property with $ref', () => {
@@ -17,7 +16,7 @@ describe('buildPropertyZodCode', () => {
     const propMetadata: CodeMetaData = {
       isRequired: true,
     };
-    
+
     const mockGetZodSchema = ({ schema }: { schema: SchemaObject | ReferenceObject }) => {
       if ('$ref' in schema) {
         // For references, return the schema name
@@ -26,9 +25,9 @@ describe('buildPropertyZodCode', () => {
       }
       return { code: 'z.string()', schema };
     };
-    
+
     const mockGetZodChain = () => '';
-    
+
     // Act
     const result = buildPropertyZodCode(
       propSchema,
@@ -39,7 +38,7 @@ describe('buildPropertyZodCode', () => {
       mockGetZodChain,
       undefined,
     );
-    
+
     // Assert: should return the schema name, not an empty string
     expect(result).toBe('winner');
     expect(result).not.toBe('');
@@ -90,7 +89,6 @@ describe('buildPropertyZodCode', () => {
         winner: 'winner',
         board: 'board',
       },
-      refsPath: [],
     };
 
     const mockGetZodSchema = ({ schema }: { schema: SchemaObject | ReferenceObject }) => {
@@ -104,9 +102,16 @@ describe('buildPropertyZodCode', () => {
     const mockGetZodChain = () => '';
 
     // Act: build property entries for winner and board
+    const winnerProperty = statusSchema.properties?.['winner'];
+    const boardProperty = statusSchema.properties?.['board'];
+
+    if (!winnerProperty || !boardProperty) {
+      throw new Error('Test setup error: properties not found');
+    }
+
     const [winnerProp, winnerCode] = buildPropertyEntry(
       'winner',
-      statusSchema.properties!.winner as ReferenceObject,
+      winnerProperty as ReferenceObject,
       statusSchema,
       ctx,
       { isRequired: true },
@@ -119,7 +124,7 @@ describe('buildPropertyZodCode', () => {
 
     const [boardProp, boardCode] = buildPropertyEntry(
       'board',
-      statusSchema.properties!.board as ReferenceObject,
+      boardProperty as ReferenceObject,
       statusSchema,
       ctx,
       { isRequired: true },
@@ -140,4 +145,3 @@ describe('buildPropertyZodCode', () => {
     expect(boardCode).not.toBe('');
   });
 });
-

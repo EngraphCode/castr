@@ -12,7 +12,21 @@ test('handle-props-with-special-characters', async () => {
   } as SchemaObject;
 
   expect(getZodSchema({ schema: schemaWithSpecialCharacters })).toMatchInlineSnapshot(
-    '"z.object({ "@id": z.string(), id: z.number() }).partial().passthrough()"',
+    `
+    {
+        "code": "z.object({ "@id": z.string(), id: z.number() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "@id": {
+                    "type": "string",
+                },
+                "id": {
+                    "type": "number",
+                },
+            },
+        },
+    }
+  `,
   );
 
   const output = await generateZodClientFromOpenAPI({

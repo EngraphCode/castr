@@ -81,16 +81,6 @@ test('param-with-content', async () => {
                 .optional(),
             })
             .optional(),
-          queryParams: z
-            .object({
-              thing: z.object({ text1: z.string() }).partial().strict().optional(),
-              "wrong param": z
-                .object({ text2: z.number() })
-                .partial()
-                .strict()
-                .optional(),
-            })
-            .optional(),
           headers: z
             .object({ "Accept-Language": z.string().optional().default("EN") })
             .optional(),

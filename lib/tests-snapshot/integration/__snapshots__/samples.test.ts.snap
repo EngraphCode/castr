@@ -472,7 +472,6 @@ export const endpoints = [
     path: "/2.0/repositories/:username/:slug",
     request: {
       pathParams: z.object({ username: z.string(), slug: z.string() }),
-      pathParams: z.object({ username: z.string(), slug: z.string() }),
     },
     responses: {
       200: {
@@ -485,7 +484,6 @@ export const endpoints = [
     method: "get" as const,
     path: "/2.0/repositories/:username/:slug/pullrequests",
     request: {
-      pathParams: z.object({ username: z.string(), slug: z.string() }),
       pathParams: z.object({ username: z.string(), slug: z.string() }),
       queryParams: z
         .object({ state: z.enum(["open", "merged", "declined"]).optional() })
@@ -507,16 +505,6 @@ export const endpoints = [
         slug: z.string(),
         pid: z.string(),
       }),
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-        pid: z.string(),
-      }),
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-        pid: z.string(),
-      }),
     },
     responses: {
       200: {
@@ -529,16 +517,6 @@ export const endpoints = [
     method: "post" as const,
     path: "/2.0/repositories/:username/:slug/pullrequests/:pid/merge",
     request: {
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-        pid: z.string(),
-      }),
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-        pid: z.string(),
-      }),
       pathParams: z.object({
         username: z.string(),
         slug: z.string(),
@@ -1229,12 +1207,6 @@ Sed tempus felis lobortis leo pulvinar rutrum. Nam mattis velit nisl, eu condime
           limit: z.number().int().optional(),
         })
         .optional(),
-      queryParams: z
-        .object({
-          tags: z.array(z.string()).optional(),
-          limit: z.number().int().optional(),
-        })
-        .optional(),
     },
     responses: {
       200: {
@@ -1590,7 +1562,6 @@ export const endpoints = [
     description: \`This GET API returns the list of all the searchable field names that are in the oa_citations. Please see the &#x27;fields&#x27; attribute which returns an array of field names. Each field or a combination of fields can be searched using the syntax options shown below.\`,
     request: {
       pathParams: z.object({ dataset: z.string(), version: z.string() }),
-      pathParams: z.object({ dataset: z.string(), version: z.string() }),
     },
     responses: {
       200: {
@@ -1609,10 +1580,6 @@ export const endpoints = [
     path: "/:dataset/:version/records",
     description: \`This API is based on Solr/Lucene Search. The data is indexed using SOLR. This GET API returns the list of all the searchable field names that are in the Solr Index. Please see the &#x27;fields&#x27; attribute which returns an array of field names. Each field or a combination of fields can be searched using the Solr/Lucene Syntax. Please refer https://lucene.apache.org/core/3_6_2/queryparsersyntax.html#Overview for the query syntax. List of field names that are searchable can be determined using above GET api.\`,
     request: {
-      pathParams: z.object({
-        version: z.string().default("v1"),
-        dataset: z.string().default("oa_citations"),
-      }),
       pathParams: z.object({
         version: z.string().default("v1"),
         dataset: z.string().default("oa_citations"),
@@ -1942,10 +1909,6 @@ export const endpoints = [
         row: z.number().int().gte(1).lte(3),
         column: z.number().int().gte(1).lte(3),
       }),
-      pathParams: z.object({
-        row: z.number().int().gte(1).lte(3),
-        column: z.number().int().gte(1).lte(3),
-      }),
     },
     responses: {
       200: {
@@ -1963,10 +1926,6 @@ export const endpoints = [
     path: "/board/:row/:column",
     description: \`Places a mark on the board and retrieves the whole board and the winner (if any).\`,
     request: {
-      pathParams: z.object({
-        row: z.number().int().gte(1).lte(3),
-        column: z.number().int().gte(1).lte(3),
-      }),
       pathParams: z.object({
         row: z.number().int().gte(1).lte(3),
         column: z.number().int().gte(1).lte(3),

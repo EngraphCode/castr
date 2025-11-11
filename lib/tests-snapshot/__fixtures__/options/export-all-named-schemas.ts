@@ -1,9 +1,10 @@
 export const exportAllNamedSchemasContextSnapshot = {
   schemas: {
+    sameSchemaDifferentName: 'z.enum(["xxx", "yyy", "zzz"]).optional()',
     sameSchemaSameName: 'z.enum(["xxx", "yyy", "zzz"]).optional()',
+    sameSchemaSameName__2: 'z.enum(["xxx", "yyy", "zzz"]).optional()',
     schemaNameAlreadyUsed: 'z.enum(["ggg", "hhh", "iii"]).optional()',
     schemaNameAlreadyUsed__2: 'z.enum(["aaa", "bbb", "ccc"]).optional()',
-    sameSchemaDifferentName: 'z.enum(["xxx", "yyy", "zzz"]).optional()',
   },
   endpoints: [
     {
@@ -73,7 +74,7 @@ export const exportAllNamedSchemasContextSnapshot = {
         {
           name: 'sameSchemaSameName',
           type: 'Query',
-          schema: 'sameSchemaSameName',
+          schema: 'sameSchemaSameName__2',
           constraints: {
             enum: ['xxx', 'yyy', 'zzz'],
           },
@@ -299,6 +300,7 @@ export const schemaNameAlreadyUsed__2 = z
   .enum(["aaa", "bbb", "ccc"])
   .optional();
 export const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
+export const sameSchemaSameName__2 = z.enum(["xxx", "yyy", "zzz"]).optional();
 
 export const endpoints = [
   {
@@ -342,13 +344,7 @@ export const endpoints = [
       queryParams: z
         .object({
           sameSchemaDifferentName: sameSchemaDifferentName,
-          sameSchemaSameName: sameSchemaSameName,
-        })
-        .optional(),
-      queryParams: z
-        .object({
-          sameSchemaDifferentName: sameSchemaDifferentName,
-          sameSchemaSameName: sameSchemaSameName,
+          sameSchemaSameName: sameSchemaSameName__2,
         })
         .optional(),
     },

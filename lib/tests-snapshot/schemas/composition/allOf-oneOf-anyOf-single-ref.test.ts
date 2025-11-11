@@ -59,6 +59,8 @@ test('allOf-single-ref', async () => {
 
     export const MyComponent = z.enum(["one", "two", "three"]);
     export const allOf_ref_param = MyComponent.optional();
+    export const oneOf_ref_param = MyComponent.optional();
+    export const anyOf_ref_param = MyComponent.optional();
 
     export const endpoints = [
       {
@@ -69,22 +71,8 @@ test('allOf-single-ref', async () => {
           queryParams: z
             .object({
               allOf_ref_param: allOf_ref_param,
-              oneOf_ref_param: allOf_ref_param,
-              anyOf_ref_param: allOf_ref_param,
-            })
-            .optional(),
-          queryParams: z
-            .object({
-              allOf_ref_param: allOf_ref_param,
-              oneOf_ref_param: allOf_ref_param,
-              anyOf_ref_param: allOf_ref_param,
-            })
-            .optional(),
-          queryParams: z
-            .object({
-              allOf_ref_param: allOf_ref_param,
-              oneOf_ref_param: allOf_ref_param,
-              anyOf_ref_param: allOf_ref_param,
+              oneOf_ref_param: oneOf_ref_param,
+              anyOf_ref_param: anyOf_ref_param,
             })
             .optional(),
         },

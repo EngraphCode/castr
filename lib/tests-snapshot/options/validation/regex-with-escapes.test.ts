@@ -13,7 +13,7 @@ test('regex-with-escapes', () => {
           },
         },
       },
-    }),
+    }).code,
   ).toMatchInlineSnapshot(
     String.raw`"z.object({ str: z.string().regex(/^\/$/) }).partial().passthrough()"`,
   );

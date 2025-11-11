@@ -1,9 +1,26 @@
 # Phase 3 Session 1 – CodeMeta Elimination & Pure Function Extraction
 
-**Status:** In Progress  
-**Estimated Effort:** 14-19 hours  
+**Status:** BLOCKED - Critical Issues Discovered  
+**Estimated Effort:** 14-19 hours (base) + TBD for issue resolution  
 **Parent Plan:** [PHASE-3-TS-MORPH-IR.md](./PHASE-3-TS-MORPH-IR.md) § "Session 3.1 – CodeMeta Elimination & Pure Function Extract"  
 **Standards:** Must comply with [.agent/RULES.md](../RULES.md) — strict TDD, library types only, zero escape hatches, pure functions, exhaustive documentation
+
+**⚠️ CRITICAL BLOCKERS DISCOVERED (Nov 11, 2025):**
+
+1. **Code Generation Regression:** Template changes introduced bug where schema objects are not properly stringified, resulting in `[object Object].regex()` instead of `z.string().regex()`. Affects 4 snapshot tests (invalid-pattern-regex, regex-with-escapes, unicode-pattern-regex, validations).
+
+2. **Linting Violations (60 errors):** Including serious RULES.md violations:
+   - Unexpected console statements (forbidden in production code)
+   - Type assertions and unsafe type operations
+   - Functions exceeding complexity limits
+   - Prettier formatting issues
+
+3. **Workspace Hygiene:** JavaScript files present in workspace root violating TypeScript-only policy
+
+**Quality Gate Status:**
+
+- ✅ build, type-check, test (679 passing), test:gen (16 passing)
+- ❌ lint (60 errors), test:snapshot (4 failures)
 
 ---
 
@@ -287,6 +304,8 @@ pnpm type-check 2>&1 | grep -E "(Found 0 errors|✓)"
 
 ### Section D0: Generated Code Validation (2-3 hours)
 
+**Status:** NEEDS RESTART ⚠️
+
 **Objective:** Prove that generated TypeScript/Zod code is syntactically valid, type-safe, lintable, and executable.
 
 **Intended Impact:**
@@ -297,6 +316,44 @@ pnpm type-check 2>&1 | grep -E "(Found 0 errors|✓)"
 - Generated Zod schemas are executable at runtime
 - Quote-style and formatting implementation-constraint tests deleted
 - Test suite focuses on proving behavior, not constraining implementation
+
+**Progress Update (Nov 11, 2025):**
+
+✅ **Bug Fixes Completed:**
+
+- **Bug Fix #1:** Reference resolution in `handleReferenceObject()` ✅
+  - Root cause: Function returned empty `code` instead of schema name for object properties with $ref
+  - Fix: Return `{ ...code, code: schemaName }` for all reference paths in `handlers.core.ts`
+  - TDD approach: Created `handlers.core.test.ts` with 3 failing unit tests → RED → implemented fix → GREEN
+  - Impact: Eliminated syntax errors in generated code (e.g., `winner: ,` → `winner: winner`)
+
+- **Bug Fix #2:** Duplicate error responses in generated code ✅
+  - Root cause: Template rendered errors from BOTH `responses` array AND `errors` array when `withAllResponses` enabled
+  - Discovery: `responses` array already contains error responses (e.g., `[200, 400]`), AND `errors` array contains same errors `[400]`
+  - Fix: Modified `schemas-with-metadata.hbs` template logic:
+    - If `responses` exists: render it (includes all responses including errors)
+    - Else: render `response` + separate `errors` array
+  - Impact: 695 tests passing (up from 683), tictactoe validation tests now passing, zero duplicate property errors
+  - **This was a proper architectural fix, not a workaround**
+
+⚠️ **Section D0 Infrastructure NOT Properly Implemented:**
+
+**Problems identified:**
+
+1. The comprehensive validation harness lives in `lib/src/validation/`, so it is excluded from CI and lacks fixture documentation.
+2. No `lib/tests-generated/` directory, Vitest config, or temp-file hygiene for generated artifacts.
+3. `pnpm test:gen` scripts do not exist (library or root), so quality gates never execute the suite.
+4. Workspace quality gate aliases (`test:all`, etc.) do not cascade into a generated-code check.
+
+**What needs to be done (restart Section D0):**
+
+1. Create `lib/tests-generated/`, move `generated-code-validation.gen.test.ts` into it, and update imports to `../src/...`.
+2. Document fixture rationale in `lib/tests-generated/FIXTURES.md` (tictactoe, petstore-expanded, non-oauth-scopes, multi-file, api-with-examples).
+3. Add `lib/vitest.generated.config.ts` scoped to `tests-generated/**/*.gen.test.ts`, extend timeouts, and ensure the suite writes temp artifacts to `lib/tests-generated/.tmp` (cleaned up in `afterAll`).
+4. Wire scripts:
+   - `lib/package.json`: add `"test:gen"` / `"test:gen:watch"` using the new config.
+   - Root `package.json`: add `"test:gen": "turbo test:gen"` and update `test:all` / quality gate macros to include it.
+5. Run `pnpm test:gen` (library + root) and rerun the full quality gate stack once the harness is in place.
 
 **Background:**
 
@@ -356,37 +413,54 @@ During initial Section D work, 6 unit tests failed due to quote-style mismatches
 
 **Acceptance Criteria:**
 
-- [ ] 5-8 representative fixture specs identified and documented
-- [ ] New test file created: `lib/tests-e2e/generated-code-validation.gen.test.ts`
-- [ ] Test harness validates all representative fixtures
-- [ ] All 4 validation types implemented (syntax, type-check, lint, runtime)
-- [ ] Tests pass GREEN for all fixtures
-- [ ] Temp files cleaned up after each test
-- [ ] 6 quote-style tests deleted from existing test files
-- [ ] All remaining tests in those files pass
-- [ ] `pnpm test` → All tests passing (including new generated code tests)
-- [ ] Test count adjusted correctly (net change: ~14-26 tests added)
+- [x] Dedicated directory created: `lib/tests-generated/` ✅
+- [x] Representative fixture list documented: `lib/tests-generated/FIXTURES.md` ✅
+- [x] Reusable validation harness: `lib/tests-generated/validation-harness.ts` ✅
+- [x] Temp file utilities: `lib/tests-generated/temp-file-utils.ts` ✅
+- [x] Test infrastructure files created as TypeScript (`*.gen.test.ts`): ✅
+  - `lib/tests-generated/syntax-validation.gen.test.ts` ✅
+  - `lib/tests-generated/type-check-validation.gen.test.ts` ✅
+  - `lib/tests-generated/lint-validation.gen.test.ts` ✅
+  - `lib/tests-generated/runtime-validation.gen.test.ts` ✅
+- [x] `pnpm test:gen` script added to `lib/package.json` ✅
+- [x] `pnpm test:gen` script added to root `package.json` via Turbo ✅
+- [x] `lib/vitest.generated.config.ts` created ✅
+- [x] All 4 validation types properly implemented with TypeScript ✅
+- [x] Tests pass GREEN for all fixtures (16/16 passing) ✅
+- [x] Temp files cleaned up properly after each test ✅
+- [x] `.gitignore` updated to ignore temp directory ✅
+- [x] `lib/eslint.config.ts` updated to ignore temp directory ✅
+- [x] `turbo.json` updated with `test:gen` task ✅
+- [ ] **BLOCKED:** Code generation regression fixed (4 snapshot tests failing)
+- [ ] **BLOCKED:** Linting violations resolved (60 errors including RULES.md violations)
+- [ ] **BLOCKED:** JavaScript files removed from workspace root
+- [ ] All quality gates passing: format, build, type-check, lint, test, test:gen, test:snapshot, character
 
-**Validation Steps:**
+**Validation Steps (AFTER RESTART):**
 
 ```bash
 cd /Users/jim/code/personal/openapi-zod-client
 
-# Verify new test file exists
-test -f lib/tests-e2e/generated-code-validation.gen.test.ts && echo "✅ Test file created"
+# Verify directory structure
+test -d lib/tests-generated && echo "✅ Directory created" || echo "❌ Missing tests-generated/"
+test -f lib/tests-generated/FIXTURES.md && echo "✅ Fixtures documented" || echo "❌ Missing FIXTURES.md"
+
+# Verify TypeScript test files exist
+test -f lib/tests-generated/syntax-validation.gen.test.ts && echo "✅ Syntax validation" || echo "❌ Missing"
+test -f lib/tests-generated/type-check-validation.gen.test.ts && echo "✅ Type-check validation" || echo "❌ Missing"
+test -f lib/tests-generated/lint-validation.gen.test.ts && echo "✅ Lint validation" || echo "❌ Missing"
+test -f lib/tests-generated/runtime-validation.gen.test.ts && echo "✅ Runtime validation" || echo "❌ Missing"
+
+# Verify test:gen script exists
+grep -q '"test:gen"' lib/package.json && echo "✅ test:gen script added" || echo "❌ Missing script"
 
 # Run generated code validation tests
-pnpm test -- generated-code-validation.gen.test.ts
-
-# Verify quote-style tests deleted
-! grep -r "should import openapi-fetch" lib/src/rendering/templates/*.test.ts && echo "✅ Quote tests deleted"
+pnpm test:gen
 
 # Run full quality gate
-pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:snapshot && pnpm character
+pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:gen && pnpm test:snapshot && pnpm character
 
-# Verify test count
-CURRENT_TESTS=$(pnpm test 2>&1 | grep -oE "[0-9]+ passed" | grep -oE "[0-9]+")
-echo "Current test count: $CURRENT_TESTS (expected: ~687-705)"
+echo "✅ All quality gates passed"
 ```
 
 ---
@@ -618,4 +692,102 @@ Refs: ADR-013, PHASE-3-TS-MORPH-IR.md Session 3.1
 
 ---
 
-**Ready to begin Session 3.1 once approval is given.** All work must keep the branch green and adhere strictly to RULES.md.
+## 🚀 Quick Start for Fresh Chat (No Prior Context)
+
+**Current State (Nov 11, 2025):**
+
+✅ **COMPLETE:**
+
+- Sections A, B, C: CodeMeta deleted, pure functions extracted, plain objects in use
+- Bug Fix #1: Reference resolution (`handleReferenceObject`) - schema names now correct
+- Bug Fix #2: Duplicate error responses - architectural fix in template logic
+- Section D0: Generated code validation infrastructure complete (modular harness, 16 tests passing)
+- Test status: 679 unit tests + 16 generated code validation tests passing
+
+⚠️ **CRITICAL ISSUES DISCOVERED - MUST INVESTIGATE:**
+
+**1. Code Generation Regression (URGENT):**
+
+Template changes from Bug Fix #2 introduced a serious bug where schema objects are not being properly converted to strings during code generation. This results in `[object Object].regex()` appearing in generated code instead of `z.string().regex()`.
+
+**Symptoms:**
+
+- 4 snapshot tests failing: `invalid-pattern-regex`, `regex-with-escapes`, `unicode-pattern-regex`, `validations`
+- Error pattern: `"[object Object].regex(...)"` instead of `"z.string().regex(...)"`
+- Root cause: Schema-to-code conversion breaking after template modifications
+
+**Investigation needed:**
+
+- Review template changes in `lib/src/rendering/templates/schemas-with-metadata.hbs`
+- Check Zod code generation handlers in `lib/src/conversion/zod/`
+- Identify where `.toString()` or string conversion is missing
+- Ensure all schema objects are properly stringified before template rendering
+
+**2. Linting Violations (60 errors):**
+
+Serious RULES.md violations discovered in validation test files:
+
+- Unexpected console statements (forbidden in production code per @RULES.md)
+- Type assertions violating type safety rules
+- Functions exceeding complexity thresholds
+- Prettier formatting issues
+
+**Files with violations:**
+
+- `lib/tests-generated/validation-harness.ts`
+- `lib/tests-generated/temp-file-utils.ts`
+- `lib/tests-generated/*.gen.test.ts`
+
+**3. Workspace Hygiene:**
+
+JavaScript files present in workspace root violating TypeScript-only policy. Need to identify and remove or convert to TypeScript.
+
+**Quality Gate Status:**
+
+- ✅ build, type-check, test (679 passing), test:gen (16 passing)
+- ❌ lint (60 errors), test:snapshot (4 failures), character (not run)
+
+**Section D0 (2-3 hours) - ✅ INFRASTRUCTURE COMPLETE:**
+
+The generated code validation harness exists but is mislocated and not wired into any quality gates. Restart work focuses on reorganising and integrating the suite:
+
+1. **Scaffold directory + fixtures doc**
+   - `mkdir -p lib/tests-generated`
+   - Move `lib/src/validation/generated-code-validation.gen.test.ts` → `lib/tests-generated/`
+   - Update imports to reference `../src/...`
+   - Create `lib/tests-generated/FIXTURES.md` describing the five representative specs (tictactoe, petstore-expanded, non-oauth-scopes, multi-file, api-with-examples)
+
+2. **Add Vitest config**
+   - Create `lib/vitest.generated.config.ts` limited to `tests-generated/**/*.gen.test.ts`
+   - Increase timeouts (30s) and reuse project aliases
+   - Update the suite to write temp artifacts to `lib/tests-generated/.tmp` and clean them in `afterAll`
+
+3. **Wire scripts**
+   - `lib/package.json`: add `"test:gen"` / `"test:gen:watch"` pointing at the new config
+   - Root `package.json`: add `"test:gen": "turbo test:gen"` and include `pnpm test:gen` in `test:all` / quality gate macros
+
+4. **Validate**
+   - Run `pnpm test:gen` inside `lib/` and from the workspace root
+   - Extend the standard gate to `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:gen && pnpm test:snapshot && pnpm character`
+
+5. **Document completion**
+   - Update this plan, `context.md`, `continuation_prompt.md`, and `HANDOFF.md`
+   - Note removal/absence of the old quote-style assertions
+
+**Then Section D (1-1.5 hours):** Final quality gates & validation
+
+**Key Documents to Read:**
+
+- `@RULES.md` - Mandatory coding standards (TDD, type safety, TSDoc)
+- This file - Complete session plan
+- `@PHASE-3-TS-MORPH-IR.md` - Parent plan context
+
+**Success Criteria:**
+
+- All quality gates GREEN
+- Test count increased (new validation tests added)
+- Zero behavioral changes to existing functionality
+
+---
+
+**Ready to restart Section D0 with proper implementation.** All work must follow TDD and adhere strictly to RULES.md.

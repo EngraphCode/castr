@@ -94,69 +94,6 @@ test('description-in-zod', async () => {
               qux: z.string().optional(),
             })
             .optional(),
-          queryParams: z
-            .object({
-              foo: z
-                .union([z.literal(1), z.literal(-2), z.literal(3)])
-                .describe("foo description")
-                .optional(),
-              bar: z
-                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-                .describe("bar description")
-                .optional(),
-              baz: z
-                .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
-                .describe(
-                  \`baz
-    multiline
-    description\`,
-                )
-                .optional(),
-              qux: z.string().optional(),
-            })
-            .optional(),
-          queryParams: z
-            .object({
-              foo: z
-                .union([z.literal(1), z.literal(-2), z.literal(3)])
-                .describe("foo description")
-                .optional(),
-              bar: z
-                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-                .describe("bar description")
-                .optional(),
-              baz: z
-                .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
-                .describe(
-                  \`baz
-    multiline
-    description\`,
-                )
-                .optional(),
-              qux: z.string().optional(),
-            })
-            .optional(),
-          queryParams: z
-            .object({
-              foo: z
-                .union([z.literal(1), z.literal(-2), z.literal(3)])
-                .describe("foo description")
-                .optional(),
-              bar: z
-                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-                .describe("bar description")
-                .optional(),
-              baz: z
-                .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
-                .describe(
-                  \`baz
-    multiline
-    description\`,
-                )
-                .optional(),
-              qux: z.string().optional(),
-            })
-            .optional(),
         },
         responses: { 200: { description: "resoponse", schema: z.void() } },
       },

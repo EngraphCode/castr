@@ -13,6 +13,21 @@ test('kebab-case-in-props', () => {
       },
     }),
   ).toMatchInlineSnapshot(
-    '"z.object({ lowercase: z.string(), "kebab-case": z.number() }).partial().passthrough()"',
+    `
+    {
+        "code": "z.object({ lowercase: z.string(), "kebab-case": z.number() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "kebab-case": {
+                    "type": "number",
+                },
+                "lowercase": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `,
   );
 });

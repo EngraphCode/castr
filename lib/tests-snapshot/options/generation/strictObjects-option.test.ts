@@ -11,7 +11,19 @@ test('strictObjects-option', () => {
         },
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().passthrough()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ str: z.string() }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `);
   // When strictObjects is true, .passthrough() should NOT be added (they contradict each other)
   expect(
     getZodSchema({
@@ -25,5 +37,17 @@ test('strictObjects-option', () => {
         strictObjects: true,
       },
     }),
-  ).toMatchInlineSnapshot('"z.object({ str: z.string() }).partial().strict()"');
+  ).toMatchInlineSnapshot(`
+    {
+        "code": "z.object({ str: z.string() }).partial().strict()",
+        "schema": {
+            "properties": {
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `);
 });

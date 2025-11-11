@@ -107,7 +107,7 @@ test('same-schema-different-name', async () => {
                             ],
                         },
                         "name": "sameSchemaDifferentName",
-                        "schema": "differentNameSameSchema",
+                        "schema": "sameSchemaDifferentName",
                         "type": "Query",
                     },
                 ],
@@ -239,6 +239,7 @@ test('same-schema-different-name', async () => {
         "schemas": {
             "anotherDifferentNameWithSlightlyDifferentSchema": "z.enum(["aaa", "bbb", "ccc"]).optional().default("aaa")",
             "differentNameSameSchema": "z.enum(["aaa", "bbb", "ccc"]).optional()",
+            "sameSchemaDifferentName": "z.enum(["aaa", "bbb", "ccc"]).optional()",
         },
         "types": {},
     }
@@ -257,6 +258,7 @@ test('same-schema-different-name', async () => {
       .enum(["aaa", "bbb", "ccc"])
       .optional()
       .default("aaa");
+    export const sameSchemaDifferentName = z.enum(["aaa", "bbb", "ccc"]).optional();
 
     export const endpoints = [
       {
@@ -264,13 +266,6 @@ test('same-schema-different-name', async () => {
         path: "/same-schema-different-name",
         operationId: "postSameSchemaDifferentName",
         request: {
-          queryParams: z
-            .object({
-              differentNameSameSchema: differentNameSameSchema,
-              anotherDifferentNameWithSlightlyDifferentSchema:
-                anotherDifferentNameWithSlightlyDifferentSchema,
-            })
-            .optional(),
           queryParams: z
             .object({
               differentNameSameSchema: differentNameSameSchema,
@@ -287,7 +282,7 @@ test('same-schema-different-name', async () => {
         operationId: "putSameSchemaDifferentName",
         request: {
           queryParams: z
-            .object({ sameSchemaDifferentName: differentNameSameSchema })
+            .object({ sameSchemaDifferentName: sameSchemaDifferentName })
             .optional(),
         },
         responses: { 200: { schema: z.string() } },

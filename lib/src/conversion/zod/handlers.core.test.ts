@@ -30,7 +30,6 @@ describe('handleReferenceObject', () => {
       zodSchemaByName: {
         winner: 'winner', // Already registered
       },
-      refsPath: [],
     };
     const meta: CodeMetaData = { isRequired: true };
     const mockGetZodSchema = () => ({ code: 'winner', schema });
@@ -76,7 +75,6 @@ describe('handleReferenceObject', () => {
         },
       },
       zodSchemaByName: {}, // Not yet registered
-      refsPath: [],
     };
     const meta: CodeMetaData = { isRequired: true };
     const mockGetZodSchema = () => ({ code: 'z.array(z.array(mark))', schema });
@@ -88,7 +86,7 @@ describe('handleReferenceObject', () => {
     expect(result.code).toBe('board');
     expect(result.code).not.toBe('');
     // And it should be registered
-    expect(ctx.zodSchemaByName.board).toBeDefined();
+    expect(ctx.zodSchemaByName['board']).toBeDefined();
   });
 
   it('should handle nested object properties with references', () => {
@@ -146,7 +144,6 @@ describe('handleReferenceObject', () => {
         winner: 'winner',
         board: 'board',
       },
-      refsPath: [],
     };
     const meta: CodeMetaData = { isRequired: true };
     const mockGetZodSchema = () => ({ code: 'winner', schema: statusRef });
@@ -160,4 +157,3 @@ describe('handleReferenceObject', () => {
     expect(result.code).not.toBe('');
   });
 });
-

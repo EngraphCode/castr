@@ -37,6 +37,10 @@
       "cache": false,
       "outputs": []
     },
+    "test:gen": {
+      "cache": false,
+      "outputs": []
+    },
     "character": {
       "cache": false,
       "outputs": []

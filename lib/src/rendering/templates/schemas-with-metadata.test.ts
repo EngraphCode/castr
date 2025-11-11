@@ -77,7 +77,8 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     expect(result).toContain('export const mcpTools');
     expect(result).toContain('tool: {');
     expect(result).toContain('httpOperation: {');
-    expect(result).toContain('"type": "object"');
+    // MCP tools generate TypeScript objects (not JSON strings), so keys don't have quotes
+    expect(result).toContain('type: "object"');
   });
 
   it('should export schemas object with all schemas', async () => {

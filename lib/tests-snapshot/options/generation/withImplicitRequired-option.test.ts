@@ -15,7 +15,24 @@ test('withImplicitRequired-option', () => {
       },
     }),
   ).toMatchInlineSnapshot(
-    '"z.object({ str: z.string(), nested: z.record(z.number()) }).partial().passthrough()"',
+    `
+    {
+        "code": "z.object({ str: z.string(), nested: z.record(z.number()) }).partial().passthrough()",
+        "schema": {
+            "properties": {
+                "nested": {
+                    "additionalProperties": {
+                        "type": "number",
+                    },
+                },
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `,
   );
   expect(
     getZodSchema({
@@ -33,6 +50,23 @@ test('withImplicitRequired-option', () => {
       },
     }),
   ).toMatchInlineSnapshot(
-    '"z.object({ str: z.string(), nested: z.record(z.number()) }).passthrough()"',
+    `
+    {
+        "code": "z.object({ str: z.string(), nested: z.record(z.number()) }).passthrough()",
+        "schema": {
+            "properties": {
+                "nested": {
+                    "additionalProperties": {
+                        "type": "number",
+                    },
+                },
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `,
   );
 });
