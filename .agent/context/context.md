@@ -23,16 +23,17 @@
 
 **Session 3.2 Status (Nov 12, 2025 - READY TO START):**
 
-**Objective:** Define lossless Intermediate Representation (IR) schema that captures all OpenAPI metadata and replaces CodeMetaData with richer IR schema metadata.
+**Objective:** Define lossless Intermediate Representation (IR) schema that captures all OpenAPI metadata, replaces CodeMetaData with richer IR schema metadata, AND completely removes Handlebars.
 
 **Sections:**
 
 - A: IR Type Definitions (6-8h)
-- B: Context Builder Integration (4-6h)
+- B: IR Builder + Code Generation (8-12h)
 - C: CodeMetaData Replacement (6-8h)
-- D: Quality Gates & Validation (2-3h)
+- D: Handlebars Complete Removal (2-3h)
+- E: Quality Gates & Validation (2-3h)
 
-**Estimated Effort:** 18-24 hours
+**Estimated Effort:** 24-34 hours
 
 **Prerequisites Met:**
 
@@ -158,9 +159,11 @@
 - **Nov 11, 2025:** Linting Violations (60 errors) - Resolved through proper TypeScript Compiler API usage
 - **Nov 11, 2025:** Workspace Hygiene - Deleted 6 stray `.mjs` files from `lib/` root
 
-**Next Up:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement (estimated 18-24 hours)
+**Next Up:** Phase 3 Session 2 - IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal (estimated 24-34 hours)
 
 Ready to start: All prerequisites met, all quality gates GREEN.
+
+**CRITICAL CLARIFICATION:** Session 3.2 now includes complete Handlebars removal. IR-based code generation replaces Handlebars entirely (not runs parallel). Can run parallel temporarily during development for validation using characterization tests as safety net.
 
 ---
 
@@ -567,22 +570,23 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
   - 26 ref resolution unit tests + 20 validation tests passing
   - All quality gates GREEN (711+ tests)
   - Commit: `ad4533c`
-- ⏳ **Session 3.2 READY:** IR Schema Foundations & CodeMetaData Replacement (18-24h)
+- ⏳ **Session 3.2 READY:** IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal (24-34h)
   - Define lossless IR structure
   - Replace CodeMetaData with IR schema metadata
-  - Implement IR type definitions with versioning
-  - Adapt context builders to populate IR
-  - Prove IR can reconstruct current outputs
+  - Implement IR-based code generation (replaces Handlebars)
+  - **DELETE all Handlebars files and dependencies**
+  - Use characterization tests (148) as safety net
+  - Zero behavioral changes (outputs identical)
   - **All prerequisites met** - ready to start
 
 **Phase 3 Goal:** Eliminate technical debt and establish IR foundation for Phase 4 expansion
 
 **Why Phase 3 Must Complete Before Phase 4:**
 
-- CodeMeta blocks modular writer architecture (Phase 4 requirement) ✅ RESOLVED
-- Handlebars cannot support deterministic manifests, hook systems, bidirectional transforms (Session 3.7)
-- IR is foundation for multiple writers (types, metadata, zod, client, mcp) (Sessions 3.2-3.3)
-- ts-morph enables complex artifact generation (openapi-fetch types, parameter maps, enum catalogs) (Sessions 3.4-3.6)
+- CodeMeta blocks modular writer architecture (Phase 4 requirement) ✅ RESOLVED (Session 3.1)
+- Handlebars cannot support deterministic manifests, hook systems, bidirectional transforms ✅ RESOLVED (Session 3.2)
+- IR is foundation for multiple writers (types, metadata, zod, client, mcp) (Session 3.2-3.3)
+- Direct code generation from IR enables complex artifact generation (openapi-fetch types, parameter maps, enum catalogs) (Session 3.2+)
 
 **Consumer Requirements (Phase 4 Scope):**
 

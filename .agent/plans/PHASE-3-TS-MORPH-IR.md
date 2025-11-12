@@ -55,65 +55,64 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 | #   | Session                                      | Intent                                                                                  | Est. Effort |
 | --- | -------------------------------------------- | --------------------------------------------------------------------------------------- | ----------- |
 | 3.1 | CodeMeta Elimination & Pure Function Extract | **Delete CodeMeta completely**, extract pure functions, align with JSON Schema pattern. | 12-16h      |
-| 3.2 | IR Schema Foundations                        | Define the lossless IR structure and align context builders without behavioural drift.  | 16-24h      |
+| 3.2 | IR Schema Foundations & Handlebars Removal   | Define lossless IR, implement IR-based generation, **DELETE Handlebars completely**.    | 24-34h      |
 | 3.3 | IR Persistence & Validation Harness          | Persist IR artefacts and prove the model can reproduce current outputs.                 | 12-16h      |
-| 3.4 | ts-morph Emitter Skeleton                    | Implement the core emitter utilities and formatting pipeline.                           | 16-20h      |
-| 3.5 | Single-File Output Migration                 | Port the default template strategy to the emitter using the new IR.                     | 20-24h      |
-| 3.6 | Grouped Output Migration & CLI Parity        | Support grouped/file strategies and keep CLI/programmatic APIs aligned.                 | 16-20h      |
-| 3.7 | Handlebars Decommission & ts-morph Finalize  | Remove Handlebars templates, finalize ts-morph as only generation system.               | 6-8h        |
-| 3.8 | Bidirectional Tooling & Compliance           | Implement reverse transforms and schema validation gates.                               | 20-24h      |
-| 3.9 | Documentation & Release Prep                 | Update docs, ADRs, and final validation prior to release.                               | 8-12h       |
+| 3.4 | IR Enhancements & Additional Writers         | Enhance IR with additional metadata, implement specialized writers.                     | 16-20h      |
+| 3.5 | Bidirectional Tooling & Compliance           | Implement reverse transforms (IR → OpenAPI) and schema validation gates.                | 20-24h      |
+| 3.6 | Documentation & Release Prep                 | Update docs, ADRs, and final validation prior to release.                               | 8-12h       |
 
-**Total Estimated Effort:** 126-164 hours (5-7 weeks)
+**Total Estimated Effort:** 92-122 hours (4-5 weeks)
 
-**Note:** CodeMeta deleted in Session 3.1 (clean break, no backward compatibility). Session 3.7 simplified as a result.
+**Note:** CodeMeta deleted in Session 3.1. Handlebars deleted in Session 3.2. Original Sessions 3.4-3.7 (ts-morph migration) eliminated since IR-based generation replaces Handlebars directly.
 
 ---
 
 ## 1. Vision & Success Criteria
 
-- Replace Handlebars string templates with a typed emitter built on **ts-morph**, using a persistent intermediate representation (IR) shared by all generators.
+- Replace Handlebars string templates with **IR-based code generation**, using a persistent intermediate representation (IR) shared by all generators.
 - Enable **bidirectional transformations** between OpenAPI 3.1 documents and the generated Zod/TypeScript artefacts without information loss.
 - Guarantee compatibility with the official OpenAPI schemas in `.agent/reference/openapi_schema/` (e.g. `openapi_3_1_x_schema_with_validation.json`) through automated validation.
 - Maintain current public APIs (CLI + programmatic) while allowing new outputs (e.g. reverse OpenAPI generation, alternative clients) to be layered on the IR.
+- **Note:** Direct IR-based generation replaces Handlebars without requiring ts-morph migration (ts-morph may be added later if AST manipulation is needed).
 
 ---
 
 ## 2. Guiding Principles
 
-1. **IR First:** treat the template context as a versioned IR that fully captures operations, components, naming, refs, and metadata. The ts-morph emitter consumes this IR; round-tripping OpenAPI ↔ IR ↔ OpenAPI must be possible.
+1. **IR First:** treat the IR as a versioned, lossless representation that fully captures operations, components, naming, refs, and metadata. IR-based generators consume this IR; round-tripping OpenAPI ↔ IR ↔ OpenAPI must be possible.
 2. **Schema Authority:** validate every generated or reconstructed OpenAPI document against the official JSON Schemas shipped in `.agent/reference/openapi_schema/` to ensure compliance.
-3. **Deterministic Outputs:** no behavioural drift—regressions guarded by existing characterisation tests plus new IR-focused suites.
+3. **Deterministic Outputs:** no behavioural drift—regressions guarded by existing characterisation tests (148 tests serve as safety net).
 4. **Extensibility:** IR must support future generators (e.g. SDKs, docs) and the reverse pipeline (Zod → OpenAPI) described in the reference document.
-5. **Incremental Delivery:** migrate file groups progressively, keeping the CLI usable between milestones.
+5. **Single Generation System:** IR-based generation replaces Handlebars completely in Session 3.2 (not gradual migration).
 6. **Phase 4 Readiness:** IR design must account for future writer needs (operation metadata, parameter maps, enum catalogs, response descriptors) documented in Phase 4 requirements.
 
 ---
 
 ## 3. Milestones (High Level)
 
-### M1. IR Definition & Persistence (est. 1–2 weeks)
+### M1. IR Definition & Handlebars Replacement (est. 1–2 weeks) - Session 3.2
 
 - Finalise IR schema (components, endpoints, dependency graphs, metadata) based on the reference doc.
+- Implement IR-based code generation that produces TypeScript/Zod strings directly.
+- **DELETE all Handlebars templates, code, and dependencies.**
+- Use characterisation tests (148) to prove zero behavioral changes.
+- Switch generation pipeline to IR-based generation; retire Handlebars completely.
+
+### M2. IR Persistence & Validation (est. 1 week) - Session 3.3
+
 - Serialise the IR alongside generated outputs (e.g. optional JSON artefact) to enable reverse transformations.
-- Update context builders to populate the new IR without changing existing behaviour.
-- Add validation tests ensuring IR can reconstruct current Handlebars outputs.
-
-### M2. ts-morph Emitter Foundation (est. 2 weeks)
-
-- Implement the ts-morph emitter described in the reference doc (`emitFilesTsMorph`, `printFilesToStrings`).
-- Recreate current single-file and grouped output strategies using the IR + emitter.
+- Add validation tests ensuring IR can reconstruct current outputs.
 - Establish automated formatting via Prettier pass on emitted files.
 - Keep CLI/programmatic APIs feature-parity; guard with characterisation tests.
 
-### M3. Full Migration & Decommission Handlebars (est. 1 week)
+### M3. IR Enhancements & Additional Writers (est. 1 week) - Session 3.4
 
-- Switch generation pipeline to the ts-morph emitter by default; retire Handlebars templates.
-- Remove template assets and legacy CodeMeta-only pathways made obsolete by the IR.
+- Enhance IR with additional metadata for specialized writers.
+- Implement additional IR-based writers (types, metadata, specialized formats).
 - Update documentation and ADRs to reflect the new architecture.
 - Measure performance/regression impacts; ensure quality gates pass.
 
-### M4. Bidirectional & Compliance Tooling (est. 1–2 weeks, begins after M3)
+### M4. Bidirectional & Compliance Tooling (est. 1–2 weeks) - Session 3.5
 
 - Prototype OpenAPI regeneration (`IR → OpenAPI`) and validate with official schemas.
 - Introduce reverse adapters (e.g. Zod runtime → IR) using preserved metadata hooks.
@@ -125,11 +124,12 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 ## 4. Deliverables
 
 - Versioned IR module with types, validators, and change management policy.
-- ts-morph emitter package (supports disk + in-memory outputs).
+- IR-based code generation system (supports disk + in-memory outputs, single-file + grouped strategies).
+- **Handlebars completely removed** (templates archived to `.agent/archive/templates/` for reference).
 - Automated compliance suite leveraging official OpenAPI schemas.
 - Updated CLI/programmatic docs demonstrating IR inspection and future reverse-generation hook points.
 - Migration notes for users (breaking changes, if any, must be clearly flagged—goal is zero).
-- Archived legacy Handlebars assets and associated plans (see `.agent/plans/archive/PHASE-3-FURTHER-ENHANCEMENTS-LEGACY.md`).
+- Archived legacy Handlebars assets and associated plans (see `.agent/archive/`).
 
 ---
 
@@ -556,34 +556,36 @@ echo "=== ✅ CODEMETA COMPLETELY ERADICATED ==="
 
 ---
 
-### Session 3.2 – IR Schema Foundations & CodeMetaData Replacement
+### Session 3.2 – IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal
 
 **Status:** Ready to start  
 **Prerequisites:** Session 3.1.5 complete (multi-file refs fixed) ✅  
-**Estimated Effort:** 18-24 hours  
+**Estimated Effort:** 24-34 hours  
 **Detailed Plan:** [PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md](./PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md)
 
 #### Intended Impact
 
-Define a lossless intermediate representation (IR) that captures all OpenAPI metadata and **replaces CodeMetaData** with richer IR schema metadata. Enables bidirectional transformations and serves as the foundation for ts-morph code generation without behavioral drift from current Handlebars outputs.
+Define a lossless intermediate representation (IR) that captures all OpenAPI metadata, **replaces CodeMetaData** with richer IR schema metadata, AND **completely removes Handlebars**. Implements IR-based code generation that produces identical outputs to Handlebars (proven by 148 characterization tests). Establishes foundation for Phase 4 modular writer architecture.
 
 #### Goals
 
 1. Design IR schema covering schemas, endpoints, dependency graphs, naming decisions, and metadata
 2. Implement IR type definitions with versioning policy
 3. **Replace CodeMetaData with IR schema metadata** (IRSchemaNode)
-4. Adapt context builders to populate IR alongside template context
-5. Prove IR can reconstruct current outputs (no behavioral changes)
+4. **Implement IR-based code generation** (single-file + grouped strategies)
+5. **DELETE all Handlebars files, templates, and dependencies**
+6. Prove zero behavioral changes using characterization tests
 
 #### Acceptance Criteria
 
 - [ ] IR type definitions created in `lib/src/context/ir-schema.ts`
 - [ ] IRSchemaNode interface replaces CodeMetaData (includes required, nullable, dependency graph, inheritance, zod chain metadata)
 - [ ] **CodeMetaData interface DELETED** (zero mentions in codebase)
+- [ ] **Handlebars COMPLETELY DELETED** (5 .hbs files, handlebars.ts, dependency removed)
+- [ ] IR-based code generation working (single-file + grouped strategies)
+- [ ] Zero behavioral changes (148 characterization tests prove IR parity)
 - [ ] Versioning policy documented (semver, breaking change handling)
-- [ ] Context assembly populates IR alongside existing template context
 - [ ] All Zod conversion functions use IR metadata
-- [ ] Zero output changes (IR runs parallel, doesn't affect generation yet)
 - [ ] Tests cover representative specs (petstore, tictactoe, multi-file)
 - [ ] IR validators implemented (structure validation)
 - [ ] Metadata gaps documented in open questions

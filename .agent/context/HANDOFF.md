@@ -432,36 +432,37 @@ export function isNullableType(schema: SchemaObject): boolean {
 
 ### Immediate Next Session
 
-**Session 3.2: IR Schema Foundations & CodeMetaData Replacement** (~18-24 hours)
+**Session 3.2: IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal** (~24-34 hours)
 
-**Goal:** Define lossless Intermediate Representation (IR) that captures all OpenAPI metadata and replaces CodeMetaData
+**Goal:** Define lossless Intermediate Representation (IR) that captures all OpenAPI metadata, replaces CodeMetaData, AND completely removes Handlebars
 
 **Objectives:**
 
 1. Define IR type definitions (IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph)
 2. Replace CodeMetaData interface with richer IR schema metadata
-3. Integrate IR building into context assembly (parallel to TemplateContext)
-4. Maintain zero behavioral changes (IR runs parallel, doesn't affect generation yet)
+3. Implement IR-based code generation (replaces Handlebars)
+4. **DELETE all Handlebars files, templates, and dependencies**
+5. Zero behavioral changes (use characterization tests as safety net)
 
 **Deliverables:**
 
 1. `lib/src/context/ir-schema.ts` - IR type definitions with versioning
 2. `lib/src/context/ir-validators.ts` - Type guards and validation
-3. `lib/src/context/ir-builder.ts` - IR population
+3. `lib/src/context/ir-builder.ts` - IR-based code generation
 4. `lib/src/conversion/zod/ir-metadata-adapter.ts` - Adapter functions
 5. CodeMetaData completely deleted (replaced with IR schema metadata)
+6. **Handlebars completely deleted** (5 .hbs files, handlebars.ts, dependency removed)
 
 **See:** `.agent/plans/PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md` for detailed plan
 
 ### Upcoming Sessions
 
 - **Session 3.3:** IR Persistence & Validation Harness (~12-16 hours)
-- **Session 3.4:** ts-morph Emitter Skeleton (~16-20 hours)
-- **Session 3.5:** Single-File Output Migration (~20-24 hours)
-- **Session 3.6:** Grouped Output Migration & CLI Parity (~16-20 hours)
-- **Session 3.7:** Handlebars Decommission & ts-morph Finalization (~6-8 hours)
-- **Session 3.8:** Bidirectional Tooling & Compliance (~20-24 hours)
-- **Session 3.9:** Documentation & Release Prep (~8-12 hours)
+- **Session 3.4:** IR Enhancements & Additional Writers (~16-20 hours)
+- **Session 3.5:** Bidirectional Tooling & Compliance (~20-24 hours)
+- **Session 3.6:** Documentation & Release Prep (~8-12 hours)
+
+**Note:** Original Sessions 3.4-3.7 (ts-morph migration and Handlebars removal) are eliminated since Handlebars is removed in Session 3.2.
 
 ---
 
@@ -540,9 +541,9 @@ pnpm check       # Run all quality gates
 
 **Phase 3 Remaining Impact:**
 
-- Establish IR foundation for Phase 4 expansion (Sessions 3.2-3.3)
-- Build ts-morph emitter (Sessions 3.4-3.6)
-- Remove Handlebars completely (Session 3.7)
+- Establish IR foundation + Remove Handlebars completely (Session 3.2)
+- IR persistence and validation (Session 3.3)
+- IR enhancements and additional writers (Session 3.4)
 - Enable modular writer architecture (types, metadata, zod, client, mcp)
 
 ---

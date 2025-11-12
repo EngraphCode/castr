@@ -31,7 +31,7 @@
 **Branch:** `feat/rewrite`  
 **Last Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution  
 **Status:** Phase 2 COMPLETE ✅. Phase 3 Sessions 1 & 1.5 COMPLETE ✅. All quality gates GREEN ✅.  
-**Next:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement (estimated 18-24 hours). Define lossless IR structure, replace CodeMetaData with IR schema metadata, integrate IR building into context assembly.
+**Next:** Phase 3 Session 2 - IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal (estimated 24-34 hours). Define lossless IR structure, replace CodeMetaData with IR schema metadata, implement IR-based code generation, **DELETE all Handlebars files and dependencies**.
 
 **Recent Verification:**
 
@@ -931,6 +931,7 @@ All work sections finished, all blockers resolved, all quality gates GREEN. Comm
 **Tests:** 711+ passing (26 ref resolution unit tests + 20 validation tests + existing tests)
 
 **Impact:**
+
 - ✅ Multi-file OpenAPI specs fully supported
 - ✅ Scalar x-ext vendor extension understood throughout codebase
 - ✅ Zero code duplication for ref parsing

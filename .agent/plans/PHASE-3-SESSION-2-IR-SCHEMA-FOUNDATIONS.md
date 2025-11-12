@@ -1,12 +1,13 @@
-# Phase 3 Session 2 – IR Schema Foundations & CodeMetaData Replacement
+# Phase 3 Session 2 – IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal
 
 **Status:** Ready to Start  
-**Estimated Effort:** 18-24 hours  
-**Prerequisites:** 
+**Estimated Effort:** 24-34 hours  
+**Prerequisites:**
+
 - Phase 3 Session 1 complete (CodeMeta class deleted) ✅
 - Phase 3 Session 1.5 complete (Multi-file $ref resolution) ✅  
-**Parent Plan:** [PHASE-3-TS-MORPH-IR.md](./PHASE-3-TS-MORPH-IR.md) § "Session 3.2 – IR Schema Foundations"  
-**Standards:** Must comply with [.agent/RULES.md](../RULES.md) — strict TDD, library types only, zero escape hatches, pure functions, exhaustive documentation
+  **Parent Plan:** [PHASE-3-TS-MORPH-IR.md](./PHASE-3-TS-MORPH-IR.md) § "Session 3.2 – IR Schema Foundations"  
+  **Standards:** Must comply with [.agent/RULES.md](../RULES.md) — strict TDD, library types only, zero escape hatches, pure functions, exhaustive documentation
 
 ---
 
@@ -14,9 +15,10 @@
 
 - **Define lossless Intermediate Representation (IR)** schema that captures all OpenAPI metadata
 - **Replace CodeMetaData** interface with richer IR schema metadata
+- **Implement IR-based code generation** that replaces Handlebars completely
+- **DELETE all Handlebars files, templates, and dependencies**
 - **Enable bidirectional transformations** (OpenAPI ↔ IR ↔ Generated Code)
-- **Establish foundation** for ts-morph code generation (Session 3.4-3.6)
-- **Maintain zero behavioral changes** (IR runs parallel to existing Handlebars generation)
+- **Maintain zero behavioral changes** (use characterization tests as safety net)
 
 ---
 
@@ -40,10 +42,10 @@
 **Target State (After Session 3.2):**
 
 - Lossless IR captures ALL OpenAPI information + generation metadata
-- Context builders populate IR alongside TemplateContext (parallel operation)
+- IR-based code generation produces TypeScript/Zod strings directly (no templates)
 - CodeMetaData completely replaced with IR schema metadata
-- Foundation ready for ts-morph emitter (Sessions 3.4-3.6)
-- Handlebars decommission unblocked (Session 3.7)
+- **Handlebars completely DELETED** (templates, handlebars.ts, dependency)
+- Foundation ready for additional writers and Phase 4 expansion
 
 ### Alignment with Phase 3 Goals
 
@@ -54,14 +56,14 @@
 - IR type definitions with versioning
 - Schema node metadata (replaces CodeMetaData)
 - Dependency graph structure
-- Context builder integration
-- Zero output changes (parallel operation)
+- IR-based code generation (replaces Handlebars)
+- **Handlebars complete removal** (5 .hbs files, handlebars.ts, dependency)
+- Zero behavioral changes (characterization tests prove parity)
 
 **Enables:**
 
 - Session 3.3: IR persistence and validation
-- Session 3.4-3.6: ts-morph emitter implementation
-- Session 3.7: Handlebars complete removal
+- Session 3.4+: Additional IR-based writers
 - Phase 4: Modular writer architecture
 
 ---
@@ -156,33 +158,36 @@ pnpm type-check 2>&1 | tail -5
 
 ---
 
-### Section B: Context Builder Integration (4-6 hours)
+### Section B: IR Builder + Code Generation (8-12 hours)
 
-**Objective:** Adapt context builders to populate IR alongside existing TemplateContext.
+**Objective:** Build IR from OpenAPI and implement IR-based code generation that replaces Handlebars.
 
 **Intended Impact:**
 
-- IR populated during context building (parallel to TemplateContext)
-- Zero behavioral changes (Handlebars still uses TemplateContext)
-- IR available for inspection and validation
-- Foundation for ts-morph emitter (future sessions)
+- IR populated from OpenAPI document (lossless representation)
+- Code generated DIRECTLY from IR (not via Handlebars templates)
+- Zero behavioral changes (use characterization tests to prove parity)
+- Can run Handlebars in parallel temporarily during development for validation
+- Foundation for additional writers and Phase 4 expansion
 
 **Tasks:**
 
-1. **Create IR Builder Module** (2h)
+1. **Create IR Builder Module** (3-4h)
    - Create `lib/src/context/ir-builder.ts`
    - Implement `buildIR(doc: OpenAPIObject): IRDocument`
    - Follow existing context builder patterns
    - Follow TDD: write tests first
 
-2. **Integrate with Context Assembly** (2h)
-   - Update `lib/src/context/template-context.ts`
-   - Add `_ir?: IRDocument` to TemplateContext (optional, internal)
-   - Populate IR alongside existing template context
-   - Ensure zero behavioral changes
+2. **Implement IR-Based Code Generation** (4-6h)
+   - Create `lib/src/rendering/generate-from-ir.ts`
+   - Implement code generation functions that consume IR
+   - Generate TypeScript/Zod strings directly (no templates)
+   - Support single-file and grouped strategies
+   - Use characterization tests (148) to validate parity
 
-3. **Add IR Builder Tests** (2h)
+3. **Add IR Builder & Generator Tests** (2h)
    - Create `lib/src/context/ir-builder.test.ts`
+   - Create `lib/src/rendering/generate-from-ir.test.ts`
    - Test representative specs (petstore, tictactoe, multi-file)
    - Verify IR structure completeness
    - Verify zero output changes
@@ -190,14 +195,16 @@ pnpm type-check 2>&1 | tail -5
 **Acceptance Criteria:**
 
 - [ ] New module exists: `lib/src/context/ir-builder.ts`
+- [ ] New module exists: `lib/src/rendering/generate-from-ir.ts`
 - [ ] `buildIR()` function implemented
-- [ ] IR builder follows pure function principles
-- [ ] Context assembly populates `_ir` field in TemplateContext
-- [ ] IR population is optional (controlled by feature flag or always-on)
-- [ ] Zero behavioral changes (all existing tests pass)
+- [ ] IR-based code generation working (single-file + grouped strategies)
+- [ ] Code generated DIRECTLY from IR (not via Handlebars)
+- [ ] Zero behavioral changes (148 characterization tests pass)
 - [ ] IR builder tests: `lib/src/context/ir-builder.test.ts`
+- [ ] Generator tests: `lib/src/rendering/generate-from-ir.test.ts`
 - [ ] Tests cover representative specs (petstore, tictactoe, multi-file)
 - [ ] `pnpm test` → All passing (679+ tests)
+- [ ] `pnpm character` → All passing (148 tests proving parity)
 - [ ] `pnpm type-check` → 0 errors
 
 **Validation Steps:**
@@ -318,9 +325,88 @@ echo "=== ✅ CODEMETADATA COMPLETELY ERADICATED ==="
 
 ---
 
-### Section D: Quality Gates & Validation (2-3 hours)
+### Section D: Handlebars Complete Removal (2-3 hours)
 
-**Objective:** Ensure all quality gates pass and IR is ready for future sessions.
+**Objective:** Delete all Handlebars files, templates, and dependencies from the repository.
+
+**Intended Impact:**
+
+- Handlebars completely removed (5 .hbs files, handlebars.ts, dependency)
+- IR-based generation is the only code generation system
+- Cleaner codebase with single generation pathway
+- Foundation ready for Phase 4 modular writer architecture
+
+**Tasks:**
+
+1. **Delete Handlebars Templates** (30min)
+   - Delete all 5 `.hbs` files in `lib/src/rendering/templates/`
+   - Archive to `.agent/archive/templates/` if needed for reference
+
+2. **Delete Handlebars Code** (1h)
+   - Delete `lib/src/rendering/handlebars.ts`
+   - Delete `lib/src/rendering/handlebars.test.ts`
+   - Update `lib/src/rendering/templating.ts` to use IR-based generation
+   - Update `lib/src/rendering/generate-from-context.ts` to use IR-based generation
+   - Remove handlebars imports from all files
+
+3. **Remove Handlebars Dependency** (30min)
+   - Remove `"handlebars": "^4.7.8"` from `lib/package.json`
+   - Run `pnpm install` to update lockfile
+
+4. **Eradication Verification** (30min)
+   - Run grep checks for handlebars references
+   - Verify all handlebars imports removed
+   - Verify all .hbs files deleted
+   - Run full quality gate
+
+**Acceptance Criteria:**
+
+- [ ] Zero `.hbs` files in repository (all 5 deleted or archived)
+- [ ] `lib/src/rendering/handlebars.ts` DELETED
+- [ ] `lib/src/rendering/handlebars.test.ts` DELETED
+- [ ] `handlebars` dependency removed from `lib/package.json`
+- [ ] Zero imports/requires of `handlebars` in source code
+- [ ] Zero mentions of "handlebars" (case-insensitive) in `lib/src/`:
+  ```bash
+  grep -ri "handlebars" lib/src/ --include="*.ts" | wc -l  # Must be 0
+  find lib -name "*.hbs" | wc -l  # Must be 0
+  grep -i "handlebars" lib/package.json | wc -l  # Must be 0
+  ```
+- [ ] All quality gates passing with IR-based generation only
+- [ ] `pnpm character` → All 148 tests passing (proving IR parity)
+
+**Validation Steps:**
+
+```bash
+cd /Users/jim/code/personal/openapi-zod-client
+
+# Step 1: Verify .hbs files deleted
+find lib -name "*.hbs" | wc -l
+# Should output: 0
+
+# Step 2: Verify handlebars.ts deleted
+test ! -f lib/src/rendering/handlebars.ts && echo "✅ handlebars.ts deleted" || echo "❌ Still exists"
+test ! -f lib/src/rendering/handlebars.test.ts && echo "✅ handlebars.test.ts deleted" || echo "❌ Still exists"
+
+# Step 3: Verify no handlebars imports
+HANDLEBARS_IMPORTS=$(grep -ri "handlebars" lib/src/ --include="*.ts" 2>/dev/null | wc -l | tr -d ' ')
+[ "$HANDLEBARS_IMPORTS" -eq 0 ] && echo "✅ Zero handlebars imports" || echo "❌ Found $HANDLEBARS_IMPORTS imports"
+
+# Step 4: Verify dependency removed
+! grep -i "handlebars" lib/package.json && echo "✅ Dependency removed" || echo "❌ Still in package.json"
+
+# Step 5: Run characterization tests (prove IR parity)
+pnpm character 2>&1 | tail -10
+# Should show: 148 tests passing
+
+echo "=== ✅ HANDLEBARS COMPLETELY ERADICATED ==="
+```
+
+---
+
+### Section E: Quality Gates & Validation (2-3 hours)
+
+**Objective:** Ensure all quality gates pass with IR-based generation and Handlebars completely removed.
 
 **Intended Impact:**
 
@@ -475,33 +561,45 @@ Refs: PHASE-3-TS-MORPH-IR.md Session 3.2, ADR-013
 - [ ] Zero mentions of "codemetadata" in `lib/src/` (case-insensitive, verified via grep)
 - [ ] Eradication verification script passes (exit code 0)
 
+**CRITICAL: Complete Handlebars Eradication**
+
+- [ ] Zero `.hbs` files in repository (all 5 deleted or archived)
+- [ ] `lib/src/rendering/handlebars.ts` DELETED
+- [ ] `lib/src/rendering/handlebars.test.ts` DELETED
+- [ ] `handlebars` dependency removed from `lib/package.json`
+- [ ] Zero imports/requires of `handlebars` in source code
+- [ ] Zero mentions of "handlebars" (case-insensitive) in `lib/src/`
+- [ ] Eradication verification scripts pass (exit code 0)
+
 **IR Infrastructure Complete**
 
 - [ ] IR schema module created: `lib/src/context/ir-schema.ts`
 - [ ] IR validators module created: `lib/src/context/ir-validators.ts`
 - [ ] IR builder module created: `lib/src/context/ir-builder.ts`
+- [ ] IR-based code generator created: `lib/src/rendering/generate-from-ir.ts`
 - [ ] IR metadata adapter created: `lib/src/conversion/zod/ir-metadata-adapter.ts`
 - [ ] All core IR interfaces defined (IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph)
 - [ ] IRSchemaNode replaces CodeMetaData functionality completely
-- [ ] Context builders populate IR alongside TemplateContext
+- [ ] IR-based generation produces code (single-file + grouped strategies)
 - [ ] All Zod conversion functions use IR metadata
 
 **Standard Completion Criteria**
 
-- [ ] All work sections (A, B, C, D) completed
+- [ ] All work sections (A, B, C, D, E) completed
 - [ ] All acceptance criteria met for each section
 - [ ] All validation steps executed and passing
 - [ ] Quality gate passes: `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm test:gen && pnpm test:snapshot && pnpm character`
-- [ ] Zero behavioral changes (outputs identical to before)
+- [ ] Zero behavioral changes (outputs identical to before - proven by characterization tests)
 - [ ] Comprehensive TSDoc for all new interfaces and functions
-- [ ] Unit tests for IR builders and validators (20+ new tests)
-- [ ] ADR-013 updated: "CodeMeta resolved in Session 3.1; CodeMetaData replaced with IR in Session 3.2"
+- [ ] Unit tests for IR builders, validators, and generators (30+ new tests)
+- [ ] ADR-013 updated: "CodeMeta resolved in Session 3.1; CodeMetaData + Handlebars replaced with IR in Session 3.2"
 - [ ] Session plan updated: Status → "Complete"
 - [ ] Commit created with proper message
 
 **Breaking Changes (Accepted - Internal Only)**
 
 - CodeMetaData interface deleted (internal type, no external consumers)
+- Handlebars completely removed (internal generation system, no external consumers)
 - IR schema introduced (internal representation, no external API changes)
 - No public API changes (zero impact on consumers)
 
@@ -511,20 +609,24 @@ Refs: PHASE-3-TS-MORPH-IR.md Session 3.2, ADR-013
 
 **Quantitative:**
 
-- Lines of code added: ~400-600 (IR schema + builders + adapters + tests)
+- Lines of code added: ~600-800 (IR schema + builders + generators + adapters + tests)
+- Lines of code deleted: ~1200+ (CodeMetaData + Handlebars templates + handlebars.ts)
 - Interfaces deleted: 1 (CodeMetaData)
+- Files deleted: 7+ (5 .hbs files + handlebars.ts + handlebars.test.ts)
+- Dependencies removed: 1 (handlebars)
 - New IR interfaces: 6+ (IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph)
-- Test coverage: 20+ new tests for IR infrastructure
+- Test coverage: 30+ new tests for IR infrastructure
 - Quality gates: 8/8 passing
 
 **Qualitative:**
 
 - Lossless IR established (captures all OpenAPI metadata)
 - CodeMetaData replaced with richer IR metadata
+- **Handlebars completely removed** (single code generation system)
+- IR-based generation working (zero behavioral changes)
 - Bidirectional transformation foundation ready
-- ts-morph emitter unblocked (Sessions 3.4-3.6)
-- Handlebars decommission enabled (Session 3.7)
 - Phase 4 writer architecture foundations complete
+- Dramatically simpler architecture (one generation system, not two)
 
 ---
 
@@ -533,8 +635,10 @@ Refs: PHASE-3-TS-MORPH-IR.md Session 3.2, ADR-013
 **Risk:** Breaking existing functionality  
 **Mitigation:**
 
-- IR runs parallel to existing Handlebars system
-- Zero behavioral changes requirement (outputs must be identical)
+- IR-based generation replaces Handlebars but must produce identical outputs
+- Zero behavioral changes requirement (proven by characterization tests)
+- Can run Handlebars in parallel temporarily during development for validation
+- 148 characterization tests serve as safety net
 - Full quality gate execution after each major change
 - Comprehensive test coverage (unit + snapshot + characterization)
 
@@ -591,14 +695,16 @@ CURRENT STATE:
 OBJECTIVES:
 1. Define lossless IR schema (captures all OpenAPI metadata)
 2. Replace CodeMetaData with IR schema metadata
-3. Integrate IR building into context assembly
-4. Maintain zero behavioral changes (parallel operation)
+3. Implement IR-based code generation (replaces Handlebars)
+4. **DELETE all Handlebars files, templates, and dependencies**
+5. Maintain zero behavioral changes (use characterization tests)
 
 SECTIONS:
 - A: IR Type Definitions (6-8h)
-- B: Context Builder Integration (4-6h)
+- B: IR Builder + Code Generation (8-12h)
 - C: CodeMetaData Replacement (6-8h)
-- D: Quality Gates & Validation (2-3h)
+- D: Handlebars Complete Removal (2-3h)
+- E: Quality Gates & Validation (2-3h)
 
 CRITICAL REQUIREMENTS:
 - Follow strict TDD (write test → RED → implement → GREEN)
