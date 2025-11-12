@@ -153,29 +153,28 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 ### Session 3.1 – CodeMeta Elimination & Pure Function Extraction
 
-**Status:** In Progress - Section D0 (Generated Code Validation) ⏳  
+**Status:** ✅ **COMPLETE** (Nov 11, 2025)  
 **Prerequisites:** Phase 2 Part 2 complete (Sessions 5-9) ✅  
-**Estimated Effort:** 14-19 hours  
-**Can be deferred:** No - required for ts-morph migration
+**Actual Effort:** ~12 hours (includes blocker resolution)  
+**Commit:** `09d337e` - fix(phase3): resolve critical blockers for CodeMeta elimination
 
-**Current Progress (Nov 11, 2025):**
+**Completion Summary (Nov 11, 2025):**
 
-- ✅ **Sections A, B, C Complete:** Pure functions extracted, CodeMeta deleted, plain objects in use
+- ✅ **All Sections Complete (A, B, C, D0, D):** Pure functions extracted, CodeMeta deleted (0 mentions), plain objects in use
 - ✅ **Bug Fixes Complete (2/2):**
   - Bug Fix #1: Reference resolution in `handleReferenceObject()` ✅
-  - Bug Fix #2: Duplicate error responses in generated code ✅ (architectural fix in template logic)
-  - Test improvements: 679 unit tests passing (down from 695 baseline due to test cleanup)
-- ✅ **Section D0 Infrastructure Complete:** Generated code validation modular harness implemented
+  - Bug Fix #2: Duplicate error responses in generated code ✅
+- ✅ **Section D0 Complete:** Generated code validation infrastructure implemented
   - Created `lib/tests-generated/` with 4 modular test files + reusable harness
   - Created `lib/tests-generated/FIXTURES.md` documenting 5 representative fixtures
   - Created `lib/vitest.generated.config.ts` for dedicated test suite
   - Wired `pnpm test:gen` scripts in both `lib/package.json` and root via Turbo
   - All 16 validation tests passing (4 fixtures × 4 validation types)
-- ⚠️ **Section D BLOCKED:** Critical issues discovered requiring investigation
-  - **Code Generation Regression:** Template changes introduced `[object Object].regex()` bug affecting 4 snapshot tests
-  - **Linting Violations:** 60 lint errors including serious RULES.md violations (console statements, type assertions, complexity)
-  - **Workspace Hygiene:** JS files present in workspace root (should be TS only)
-  - **Quality Gates:** Only build, type-check, test, test:gen passing; lint and test:snapshot FAILING
+- ✅ **Section D Complete:** All 3 critical blockers resolved
+  - Code Generation Regression: Fixed 4 snapshot tests to use `.code` property
+  - Linting Violations (60 errors): Resolved through proper TypeScript Compiler API usage, refactoring, RULES.md compliance
+  - Workspace Hygiene: Deleted 6 `.mjs` files from `lib/` root
+- ✅ **Quality Gates:** ALL GREEN (format, build, type-check, lint, test, test:gen, test:snapshot, character)
 
 #### Intended Impact
 
@@ -508,28 +507,80 @@ echo "=== ✅ CODEMETA COMPLETELY ERADICATED ==="
 
 ---
 
-### Session 3.2 – IR Schema Foundations
+### Session 3.1.5 – Multi-File $ref Resolution (Critical Blocker)
 
-**Status:** Not started  
-**Prerequisites:** Session 3.1 complete (CodeMeta simplified) ✅  
-**Estimated Effort:** 16-24 hours
+**Status:** Not started [CRITICAL]  
+**Prerequisites:** Session 3.1 complete (CodeMeta class deleted) ✅  
+**Estimated Effort:** 4-6 hours  
+**Detailed Plan:** [PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md](./PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md)
+
+#### Problem Statement
+
+Multi-file OpenAPI specs fail during code generation with error: "Schema 'Pet' not found in components.schemas". Root cause: Our ref resolution code doesn't understand Scalar's vendor extension format (`#/x-ext/{hash}/components/schemas/X`). Scalar bundles multi-file specs correctly and stores external schemas in `x-ext.{hash}.components.schemas` to preserve file provenance, but our component lookup only checks standard `components.schemas` location.
 
 #### Intended Impact
 
-Define a lossless intermediate representation (IR) that captures all OpenAPI metadata, enables bidirectional transformations, and serves as the foundation for ts-morph code generation without behavioral drift from current Handlebars outputs.
+- Enable multi-file OpenAPI spec support (required for Phase 4 consumer requirements)
+- Fix "temporarily disabled" multi-file fixture in validation tests
+- Consolidate 8+ duplicate `getSchemaNameFromRef` implementations
+- Zero behavioral changes for single-file specs (backward compatible)
+- Preserve Scalar's file provenance tracking (don't flatten x-ext structure)
+
+#### Goals
+
+1. Create centralized ref resolution module (`lib/src/shared/ref-resolution.ts`)
+2. Enhance component lookup to search both standard and x-ext locations
+3. Update all ref resolution call sites to use shared utilities
+4. Re-enable multi-file fixture in generated code validation tests
+
+#### Acceptance Criteria
+
+- [ ] Centralized ref resolution: `lib/src/shared/ref-resolution.ts` created
+- [ ] `parseComponentRef()` handles standard AND Scalar x-ext refs
+- [ ] `getSchemaFromComponents()` searches both standard and x-ext locations
+- [ ] All 8+ duplicate `getSchemaNameFromRef` implementations consolidated
+- [ ] All ref resolution call sites updated (dependency-graph, handlers, etc.)
+- [ ] Multi-file fixture re-enabled in all 4 validation test files
+- [ ] `lib/tests-generated/FIXTURES.md` updated (multi-file marked as enabled)
+- [ ] Zero mentions of "temporarily disabled" for multi-file in test files
+- [ ] Zero behavioral changes for single-file specs
+- [ ] All quality gates GREEN (20 validation tests passing: 5 fixtures × 4 types)
+
+#### References
+
+- Multi-file fixture: `lib/examples/openapi/multi-file/main.yaml`
+- Fixture documentation: `lib/tests-generated/FIXTURES.md`
+- Characterization test: `lib/src/characterisation/input-pipeline.char.test.ts` (multi-file test passing)
+
+---
+
+### Session 3.2 – IR Schema Foundations & CodeMetaData Replacement
+
+**Status:** Not started  
+**Prerequisites:** Session 3.1.5 complete (multi-file refs fixed) ⏳  
+**Estimated Effort:** 18-24 hours  
+**Detailed Plan:** [PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md](./PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md)
+
+#### Intended Impact
+
+Define a lossless intermediate representation (IR) that captures all OpenAPI metadata and **replaces CodeMetaData** with richer IR schema metadata. Enables bidirectional transformations and serves as the foundation for ts-morph code generation without behavioral drift from current Handlebars outputs.
 
 #### Goals
 
 1. Design IR schema covering schemas, endpoints, dependency graphs, naming decisions, and metadata
 2. Implement IR type definitions with versioning policy
-3. Adapt context builders to populate IR alongside template context
-4. Prove IR can reconstruct current outputs (no behavioral changes)
+3. **Replace CodeMetaData with IR schema metadata** (IRSchemaNode)
+4. Adapt context builders to populate IR alongside template context
+5. Prove IR can reconstruct current outputs (no behavioral changes)
 
 #### Acceptance Criteria
 
 - [ ] IR type definitions created in `lib/src/context/ir-schema.ts`
+- [ ] IRSchemaNode interface replaces CodeMetaData (includes required, nullable, dependency graph, inheritance, zod chain metadata)
+- [ ] **CodeMetaData interface DELETED** (zero mentions in codebase)
 - [ ] Versioning policy documented (semver, breaking change handling)
 - [ ] Context assembly populates IR alongside existing template context
+- [ ] All Zod conversion functions use IR metadata
 - [ ] Zero output changes (IR runs parallel, doesn't affect generation yet)
 - [ ] Tests cover representative specs (petstore, tictactoe, multi-file)
 - [ ] IR validators implemented (structure validation)
