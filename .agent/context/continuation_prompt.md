@@ -27,11 +27,11 @@
 
 ### Where We Are
 
-**Phase:** Phase 3 Session 1 - CodeMeta Elimination ✅ **COMPLETE**  
+**Phase:** Phase 3 Session 1.5 - Multi-File $ref Resolution ✅ **COMPLETE**  
 **Branch:** `feat/rewrite`  
-**Last Commit:** `09d337e` - fix(phase3): resolve critical blockers for CodeMeta elimination  
-**Status:** Phase 2 COMPLETE ✅. Phase 3 Session 1 ALL SECTIONS COMPLETE ✅ (A, B, C, D0, D). All quality gates GREEN ✅.  
-**Next:** Phase 3 Session 1.5 - Multi-File $ref Resolution (estimated 4-6 hours) [CRITICAL BLOCKER]. Fix Scalar x-ext vendor extension ref resolution, create centralized ref-resolution module, consolidate duplicate implementations, re-enable multi-file fixture. **MUST COMPLETE BEFORE Session 3.2.**
+**Last Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution  
+**Status:** Phase 2 COMPLETE ✅. Phase 3 Sessions 1 & 1.5 COMPLETE ✅. All quality gates GREEN ✅.  
+**Next:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement (estimated 18-24 hours). Define lossless IR structure, replace CodeMetaData with IR schema metadata, integrate IR building into context assembly.
 
 **Recent Verification:**
 
@@ -39,6 +39,7 @@
 - **Nov 8, 2025:** Migrated high-churn snapshot suites to fixtures (hyphenated parameters, export-all-types, export-all-named-schemas, export-schemas-option, schema-name-already-used), replaced the slow regex in `path-utils`, and reran the full quality gate stack (`pnpm lint`, `pnpm test`, `pnpm test:snapshot`, `pnpm type-check`, `pnpm build`, `pnpm character`) — all green on `feat/rewrite`.
 - **Nov 8, 2025 (10:40 PM):** `pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/openapi/v3.0/petstore-expanded.yaml --emit-mcp-manifest ../tmp/petstore.mcp.json` and `…/multi-auth.yaml --emit-mcp-manifest ../tmp/multi-auth.mcp.json` — stored MCP manifests for Workstream D (petstore reports `default`-only warning, multi-auth surfaces layered OAuth2 + API key requirements).
 - **Nov 11, 2025:** Phase 3 Session 1 COMPLETE. Bug Fix #1 (reference resolution in `handleReferenceObject`) and Bug Fix #2 (duplicate error responses in templates) completed. All 3 critical blockers resolved (code generation regression, linting violations, workspace hygiene). All quality gates GREEN, 679 tests + 16 generated code validation tests passing. Commit `09d337e` pushed to `feat/rewrite`.
+- **Nov 12, 2025:** Phase 3 Session 1.5 COMPLETE. Created centralized ref resolution module (`lib/src/shared/ref-resolution.ts`) supporting both standard and Scalar x-ext vendor extension formats. Enhanced `getSchemaFromComponents()` with dual-path resolution (x-ext first, then standard fallback). Consolidated 8+ duplicate `getSchemaNameFromRef` implementations across 9 files. Re-enabled multi-file fixture in all 4 validation test files. 26 ref resolution unit tests + 20 validation tests passing. All quality gates GREEN (711+ tests). Commit `ad4533c` pushed to `feat/rewrite`.
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -885,11 +886,58 @@ After completing a session:
 
 All work sections finished, all blockers resolved, all quality gates GREEN. Committed as `09d337e` and pushed to `feat/rewrite`.
 
-**Known Issue Discovered:**
+### Phase 3 Session 1.5 Summary (Nov 12, 2025) - COMPLETE
 
-Multi-file OpenAPI specs fail during code generation with error "Schema 'Pet' not found in components.schemas". Root cause: Our ref resolution code doesn't understand Scalar's vendor extension format (`#/x-ext/{hash}/components/schemas/X`). Scalar bundles multi-file specs correctly, but our component lookup only checks standard `components.schemas`, not `x-ext.{hash}.components.schemas`. This blocks Phase 4 consumer requirements (multi-file spec support). **Must be fixed in Session 3.1.5 before proceeding to Session 3.2.**
+**Objective:** Fix multi-file OpenAPI spec support by implementing dual-path reference resolution for Scalar's x-ext vendor extension.
 
-**See:** `.agent/plans/PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md` for detailed fix plan.
+**Problem:** Multi-file specs failed with "Schema 'Pet' not found" because ref resolution didn't understand Scalar's `#/x-ext/{hash}/components/schemas/X` format.
+
+**Solution:** Created centralized ref resolution module with dual-path component lookup.
+
+**Deliverables:**
+
+1. **Centralized Ref Resolution Module** (`lib/src/shared/ref-resolution.ts`)
+   - `ParsedRef` interface for structured ref representation
+   - `parseComponentRef()` supporting standard (`#/components/schemas/X`), x-ext (`#/x-ext/{hash}/components/schemas/X`), bare names, and legacy formats
+   - `getSchemaNameFromRef()` convenience wrapper
+   - 26 comprehensive unit tests covering all ref formats
+
+2. **Enhanced Component Lookup** (`lib/src/shared/component-access.ts`)
+   - `getSchemaFromComponents()` now accepts optional `xExtKey` parameter
+   - Dual-path resolution: searches x-ext first, then falls back to standard `components.schemas`
+   - Clear error messages indicating which locations were checked
+   - Added targeted `eslint-disable` comments for vendor extension type assertions
+
+3. **Consolidation** (9 files updated)
+   - Consolidated 8+ duplicate `getSchemaNameFromRef` implementations
+   - Updated all call sites to use `parseComponentRef` and pass `xExtKey`:
+     - `lib/src/conversion/zod/handlers.core.ts`
+     - `lib/src/conversion/typescript/helpers.ts`
+     - `lib/src/conversion/zod/handlers.object.properties.ts`
+     - `lib/src/conversion/zod/handlers.object.schema.ts`
+     - `lib/src/endpoints/helpers.naming.resolution.ts`
+     - `lib/src/shared/dependency-graph.ts`
+     - `lib/src/shared/infer-required-only.ts`
+     - `lib/src/shared/utils/schema-sorting.ts`
+     - `lib/src/context/template-context.common.ts`
+
+4. **Multi-File Test Enablement**
+   - Re-enabled multi-file fixture in all 4 validation test files
+   - Updated `lib/tests-generated/FIXTURES.md` documentation
+   - All 20 validation tests passing (5 fixtures × 4 types, including multi-file)
+
+**Quality Gates:** All GREEN (format ✅ build ✅ type-check ✅ lint ✅ test ✅ test:gen ✅ snapshot ✅ character ✅)
+
+**Tests:** 711+ passing (26 ref resolution unit tests + 20 validation tests + existing tests)
+
+**Impact:**
+- ✅ Multi-file OpenAPI specs fully supported
+- ✅ Scalar x-ext vendor extension understood throughout codebase
+- ✅ Zero code duplication for ref parsing
+- ✅ Zero behavioral changes for single-file specs (backward compatible)
+- ✅ Phase 4 consumer requirements unblocked
+
+**See:** `.agent/plans/PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md` for detailed session plan.
 
 **Validation Commands:**
 
@@ -935,7 +983,7 @@ pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm t
 
 ---
 
-**Last Updated:** November 11, 2025  
-**Status:** Phase 2 Complete ✅ | Phase 3 Session 1 COMPLETE ✅ (ALL sections: A, B, C, D0, D) | All blockers resolved ✅  
-**Quality Gates:** ALL GREEN ✅ (679 tests + 16 generated code validation tests passing)  
-**Commit:** `09d337e` - fix(phase3): resolve critical blockers for CodeMeta elimination
+**Last Updated:** November 12, 2025  
+**Status:** Phase 2 Complete ✅ | Phase 3 Sessions 1 & 1.5 COMPLETE ✅ | All blockers resolved ✅  
+**Quality Gates:** ALL GREEN ✅ (711+ tests including ref resolution + validation tests)  
+**Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution

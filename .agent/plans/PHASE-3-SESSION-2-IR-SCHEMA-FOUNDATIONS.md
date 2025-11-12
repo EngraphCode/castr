@@ -1,8 +1,10 @@
 # Phase 3 Session 2 – IR Schema Foundations & CodeMetaData Replacement
 
-**Status:** Not Started  
+**Status:** Ready to Start  
 **Estimated Effort:** 18-24 hours  
-**Prerequisites:** Phase 3 Session 1 complete (CodeMeta class deleted) ✅  
+**Prerequisites:** 
+- Phase 3 Session 1 complete (CodeMeta class deleted) ✅
+- Phase 3 Session 1.5 complete (Multi-file $ref resolution) ✅  
 **Parent Plan:** [PHASE-3-TS-MORPH-IR.md](./PHASE-3-TS-MORPH-IR.md) § "Session 3.2 – IR Schema Foundations"  
 **Standards:** Must comply with [.agent/RULES.md](../RULES.md) — strict TDD, library types only, zero escape hatches, pure functions, exhaustive documentation
 

@@ -8,11 +8,11 @@
 
 ## 📍 Where We Are
 
-**Current Phase:** Phase 3 Session 1 ✅ **COMPLETE** - Ready for Session 3.1.5  
+**Current Phase:** Phase 3 Session 1.5 ✅ **COMPLETE** - Ready for Session 3.2  
 **Active Branch:** `feat/rewrite`  
-**Last Commit:** `09d337e` - fix(phase3): resolve critical blockers for CodeMeta elimination  
-**Status:** All sections complete (A, B, C, D0, D); All quality gates GREEN ✅  
-**Next:** Phase 3 Session 1.5 - Multi-File $ref Resolution (estimated 4-6 hours) [CRITICAL BLOCKER]
+**Last Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution  
+**Status:** All sections complete; Multi-file $ref resolution working; All quality gates GREEN ✅  
+**Next:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement (estimated 18-24 hours)
 
 ### Phase Progress Overview
 
@@ -21,13 +21,45 @@ Phase 1: Tooling & Architecture                ✅ Complete
 Phase 2 Part 1: Scalar Pipeline                ✅ Complete (Sessions 1-4)
 Phase 2 Part 2: MCP Enhancements               ✅ Complete (Sessions 5-9)
 Phase 3 Session 1: CodeMeta Elimination        ✅ Complete (ALL sections)
-Phase 3 Session 1.5: Multi-File $ref Fix      ⏳ NEXT [CRITICAL] (4-6h)
-Phase 3 Session 2: IR Schema Foundations       ⏳ Pending (18-24h)
+Phase 3 Session 1.5: Multi-File $ref Fix      ✅ Complete (Nov 12, 2025)
+Phase 3 Session 2: IR Schema Foundations       ⏳ READY TO START (18-24h)
 ```
 
-### Session 3.1 Final Status (Nov 11, 2025) - ✅ COMPLETE
+### Session 3.1.5 Final Status (Nov 12, 2025) - ✅ COMPLETE
 
-**ALL SECTIONS COMPLETE:**
+**Multi-file $ref resolution working - Scalar x-ext vendor extension fully supported**
+
+**Deliverables:**
+
+- Centralized ref resolution module: `lib/src/shared/ref-resolution.ts`
+- Enhanced component lookup with dual-path resolution (x-ext → standard fallback)
+- 8+ duplicate implementations consolidated across 9 files
+- Multi-file fixture re-enabled in all 4 validation test files
+- 26 ref resolution unit tests + 20 validation tests passing
+- All quality gates GREEN (711+ tests)
+
+**Files Created:**
+
+- `lib/src/shared/ref-resolution.ts` - `ParsedRef` interface, `parseComponentRef()`, `getSchemaNameFromRef()`
+- `lib/src/shared/ref-resolution.test.ts` - Comprehensive unit tests
+
+**Files Modified:**
+
+- Enhanced `lib/src/shared/component-access.ts` with x-ext support
+- Updated 9 ref resolution call sites across conversion and context modules
+- Re-enabled multi-file in `lib/tests-generated/*.gen.test.ts`
+- Updated `lib/tests-generated/FIXTURES.md` documentation
+
+**Impact:**
+
+- ✅ Multi-file OpenAPI specs fully supported (Phase 4 unblocked)
+- ✅ Zero behavioral changes for single-file specs (backward compatible)
+- ✅ Clear, maintainable ref resolution architecture
+- ✅ Scalar file provenance tracking preserved
+
+### Session 3.1 Summary (Nov 11, 2025) - ✅ COMPLETE
+
+**CodeMeta abstraction eliminated - Pure function architecture established**
 
 **Sections A, B, C:**
 
@@ -81,7 +113,7 @@ Phase 3 Session 2: IR Schema Foundations       ⏳ Pending (18-24h)
 
 **Quality Gate Status:**
 
-- ✅ **ALL GREEN:** format, build, type-check, lint, test (679), test:gen (16), test:snapshot (158), character (148)
+- ✅ **ALL GREEN:** format, build, type-check, lint, test (711+), test:gen (20), test:snapshot (158), character (148)
 
 ### Recent Milestone
 
@@ -400,31 +432,36 @@ export function isNullableType(schema: SchemaObject): boolean {
 
 ### Immediate Next Session
 
-**Session 3.1.5: Multi-File $ref Resolution** (~4-6 hours) [CRITICAL BLOCKER]
+**Session 3.2: IR Schema Foundations & CodeMetaData Replacement** (~18-24 hours)
 
-**Goal:** Fix multi-file OpenAPI spec support by handling Scalar's x-ext vendor extension refs
+**Goal:** Define lossless Intermediate Representation (IR) that captures all OpenAPI metadata and replaces CodeMetaData
 
-**Problem:** Multi-file specs fail with "Schema 'Pet' not found" because our code doesn't understand Scalar's `#/x-ext/{hash}/components/schemas/X` reference format.
+**Objectives:**
+
+1. Define IR type definitions (IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph)
+2. Replace CodeMetaData interface with richer IR schema metadata
+3. Integrate IR building into context assembly (parallel to TemplateContext)
+4. Maintain zero behavioral changes (IR runs parallel, doesn't affect generation yet)
 
 **Deliverables:**
 
-1. Centralized ref resolution module: `lib/src/shared/ref-resolution.ts`
-2. Enhanced component lookup (checks both standard and x-ext locations)
-3. Consolidate 8+ duplicate `getSchemaNameFromRef` implementations
-4. Re-enable multi-file fixture (currently "temporarily disabled")
+1. `lib/src/context/ir-schema.ts` - IR type definitions with versioning
+2. `lib/src/context/ir-validators.ts` - Type guards and validation
+3. `lib/src/context/ir-builder.ts` - IR population
+4. `lib/src/conversion/zod/ir-metadata-adapter.ts` - Adapter functions
+5. CodeMetaData completely deleted (replaced with IR schema metadata)
 
-**See:** `.agent/plans/PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md` for detailed plan
+**See:** `.agent/plans/PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md` for detailed plan
 
 ### Upcoming Sessions
 
-- **Session 3.2:** IR Schema Foundations & CodeMetaData Replacement (~18-24 hours)
-- **Session 3.3:** IR Persistence & Validation Harness
-- **Session 3.4:** ts-morph Emitter Skeleton
-- **Session 3.5:** Single-File Output Migration
-- **Session 3.6:** Grouped Output Migration & CLI Parity
-- **Session 3.7:** Handlebars Decommission & ts-morph Finalization
-- **Session 3.8:** Bidirectional Tooling & Compliance
-- **Session 3.9:** Documentation & Release Prep
+- **Session 3.3:** IR Persistence & Validation Harness (~12-16 hours)
+- **Session 3.4:** ts-morph Emitter Skeleton (~16-20 hours)
+- **Session 3.5:** Single-File Output Migration (~20-24 hours)
+- **Session 3.6:** Grouped Output Migration & CLI Parity (~16-20 hours)
+- **Session 3.7:** Handlebars Decommission & ts-morph Finalization (~6-8 hours)
+- **Session 3.8:** Bidirectional Tooling & Compliance (~20-24 hours)
+- **Session 3.9:** Documentation & Release Prep (~8-12 hours)
 
 ---
 
@@ -454,9 +491,9 @@ pnpm check       # Run all quality gates
 
 ---
 
-## 🚀 Phase 3 Progress (November 11, 2025)
+## 🚀 Phase 3 Progress (November 12, 2025)
 
-**Current State:** Phase 3 Session 1 COMPLETE ✅ - Ready for Session 3.2
+**Current State:** Phase 3 Session 1.5 COMPLETE ✅ - Ready for Session 3.2
 
 **Phase 2 Completion Summary:**
 
@@ -465,25 +502,33 @@ pnpm check       # Run all quality gates
 - ✅ OpenAPI 3.1-first architecture established
 - ✅ MCP tool generation with type guards, error formatting, comprehensive docs
 
-**Phase 3 Session 1 Completion:**
+**Phase 3 Sessions 1 & 1.5 Completion:**
 
-**Objective:** ✅ COMPLETED - CodeMeta abstraction DELETED, pure functions extracted
-
-**Deliverables:**
+**Session 3.1 (Nov 11):** ✅ COMPLETED - CodeMeta abstraction DELETED, pure functions extracted
 
 - [x] Zero files: `code-meta.ts`, `code-meta.test.ts` ✅
 - [x] Zero mentions of "CodeMeta" in source (verified via grep) ✅
 - [x] Pure functions module: `lib/src/conversion/zod/code-generation.ts` ✅
 - [x] 30+ unit tests for pure functions ✅
-- [x] Generated code validation tests passing (syntax, type-check, lint, runtime) ✅
-- [x] All quality gates GREEN (zero behavioral changes) ✅
+- [x] Generated code validation infrastructure complete ✅
+- [x] All quality gates GREEN ✅
+
+**Session 3.1.5 (Nov 12):** ✅ COMPLETED - Multi-file $ref resolution working
+
+- [x] Centralized ref resolution: `lib/src/shared/ref-resolution.ts` ✅
+- [x] Dual-path component lookup (x-ext → standard fallback) ✅
+- [x] 8+ duplicate implementations consolidated ✅
+- [x] Multi-file fixture re-enabled in all 4 validation test files ✅
+- [x] 26 ref resolution unit tests + 20 validation tests passing ✅
+- [x] All quality gates GREEN (711+ tests) ✅
 
 **Impact Achieved:**
 
 - ✅ CodeMeta completely eliminated (405 lines deleted)
+- ✅ Multi-file OpenAPI specs fully supported (Phase 4 unblocked)
 - ✅ ts-morph migration unblocked (no legacy abstractions)
 - ✅ Generated code validation infrastructure complete
-- ✅ Architecture aligned with JSON Schema converter pattern
+- ✅ Clear, maintainable ref resolution architecture
 
 **Next: Phase 3 Session 2 - IR Schema Foundations**
 

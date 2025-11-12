@@ -13,10 +13,55 @@
 
 ## 🔥 Right Now
 
-**Current Session:** Phase 3 Session 1 - CodeMeta Elimination & Pure Function Extraction ✅ **COMPLETE**
-**Previous Session:** Phase 2 Part 2 - Session 9 (Type Guards, Error Formatting & Documentation) ✅ Complete
-**Branch:** `feat/rewrite`
-**Last Commit:** `09d337e` - fix(phase3): resolve critical blockers for CodeMeta elimination
+**Current Session:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement ⏳ **READY TO START**
+**Previous Sessions:**
+
+- Phase 3 Session 1.5 (Multi-File $ref Resolution) ✅ Complete
+- Phase 3 Session 1 (CodeMeta Elimination & Pure Function Extraction) ✅ Complete
+  **Branch:** `feat/rewrite`
+  **Last Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution
+
+**Session 3.2 Status (Nov 12, 2025 - READY TO START):**
+
+**Objective:** Define lossless Intermediate Representation (IR) schema that captures all OpenAPI metadata and replaces CodeMetaData with richer IR schema metadata.
+
+**Sections:**
+
+- A: IR Type Definitions (6-8h)
+- B: Context Builder Integration (4-6h)
+- C: CodeMetaData Replacement (6-8h)
+- D: Quality Gates & Validation (2-3h)
+
+**Estimated Effort:** 18-24 hours
+
+**Prerequisites Met:**
+
+- ✅ Phase 3 Session 1 complete (CodeMeta class deleted)
+- ✅ Phase 3 Session 1.5 complete (Multi-file $ref resolution working)
+- ✅ All quality gates GREEN
+
+**Session 3.1.5 Final Status (Nov 12, 2025 - COMPLETE):**
+
+- ✅ **ALL SECTIONS COMPLETE:** Centralized ref resolution, x-ext support, consolidation, multi-file fixture re-enabled
+- ✅ **Section A:** Centralized Ref Resolution Module
+  - Created `lib/src/shared/ref-resolution.ts` with `ParsedRef` interface, `parseComponentRef()`, `getSchemaNameFromRef()`
+  - 26 comprehensive unit tests covering standard, x-ext, bare names, legacy formats
+  - Handles both `#/components/schemas/X` and `#/x-ext/{hash}/components/schemas/X` formats
+- ✅ **Section B:** Enhanced Component Lookup
+  - Updated `getSchemaFromComponents()` to search x-ext locations first
+  - Dual-path resolution: x-ext → standard fallback
+  - Clear error messages indicating checked locations
+- ✅ **Section C:** Integration & Consolidation
+  - Consolidated 8+ duplicate `getSchemaNameFromRef` implementations
+  - Updated 9 files to use centralized ref resolution
+  - Zero code duplication remaining
+- ✅ **Section D:** Multi-File Tests & Validation
+  - Re-enabled multi-file fixture in all 4 validation test files
+  - Updated `FIXTURES.md` documentation
+  - All 20 validation tests passing (5 fixtures × 4 types)
+- ✅ **Quality Gates:** ALL GREEN (format, build, type-check, lint, test, test:gen, snapshot, character)
+- ✅ **Tests:** 711+ passing (26 ref resolution unit tests + 20 validation tests)
+- ✅ **Zero behavioral changes** for single-file specs (backward compatible)
 
 **Session 3.1 Final Status (Nov 11, 2025 - COMPLETE):**
 
@@ -104,17 +149,18 @@
 
 ## ⚠️ Current Blockers
 
-**No blockers** (Nov 11, 2025) - Phase 3 Session 1 complete ✅
+**No blockers** (Nov 12, 2025) - Phase 3 Session 1.5 complete ✅
 
-**Previously Resolved (Nov 11, 2025):**
+**Previously Resolved:**
 
-1. ✅ **Code Generation Regression:** Fixed by updating 4 snapshot tests to access `.code` property on `ZodCodeResult` objects
-2. ✅ **Linting Violations (60 errors):** All resolved through proper TypeScript Compiler API usage, function refactoring, and RULES.md-compliant code
-3. ✅ **Workspace Hygiene:** 6 stray `.mjs` files deleted from `lib/` root
+- **Nov 12, 2025:** Multi-file $ref resolution - Fixed Scalar x-ext vendor extension ref parsing, created centralized ref-resolution module, consolidated 8+ duplicates
+- **Nov 11, 2025:** Code Generation Regression - Fixed 4 snapshot tests to use `.code` property
+- **Nov 11, 2025:** Linting Violations (60 errors) - Resolved through proper TypeScript Compiler API usage
+- **Nov 11, 2025:** Workspace Hygiene - Deleted 6 stray `.mjs` files from `lib/` root
 
-**Next Up:** Phase 3 Session 1.5 - Multi-File $ref Resolution (estimated 4-6 hours) [CRITICAL BLOCKER]
+**Next Up:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement (estimated 18-24 hours)
 
-Phase 3 Session 1.5 must be completed before Session 3.2 to unblock multi-file OpenAPI spec support.
+Ready to start: All prerequisites met, all quality gates GREEN.
 
 ---
 
@@ -135,47 +181,78 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate                 | Status | Last Check   | Notes                                         |
-| -------------------- | ------ | ------------ | --------------------------------------------- |
-| `pnpm format`        | ✅     | Nov 11, 2025 | Prettier applied successfully                 |
-| `pnpm build`         | ✅     | Nov 11, 2025 | Build successful                              |
-| `pnpm type-check`    | ✅     | Nov 11, 2025 | Zero TypeScript errors                        |
-| `pnpm lint`          | ✅     | Nov 11, 2025 | Zero lint errors (all 60 violations resolved) |
-| `pnpm test`          | ✅     | Nov 11, 2025 | 679 tests passed                              |
-| `pnpm test:gen`      | ✅     | Nov 11, 2025 | 16 generated code validation tests passed     |
-| `pnpm test:snapshot` | ✅     | Nov 11, 2025 | 158 snapshot tests passed (regression fixed)  |
-| `pnpm character`     | ✅     | Nov 11, 2025 | 148 characterization tests passed             |
+| Gate                 | Status | Last Check   | Notes                                       |
+| -------------------- | ------ | ------------ | ------------------------------------------- |
+| `pnpm format`        | ✅     | Nov 12, 2025 | Prettier applied successfully               |
+| `pnpm build`         | ✅     | Nov 12, 2025 | Build successful                            |
+| `pnpm type-check`    | ✅     | Nov 12, 2025 | Zero TypeScript errors                      |
+| `pnpm lint`          | ✅     | Nov 12, 2025 | Zero lint errors                            |
+| `pnpm test`          | ✅     | Nov 12, 2025 | 711+ tests passed (includes ref resolution) |
+| `pnpm test:gen`      | ✅     | Nov 12, 2025 | 20 generated code validation tests passed   |
+| `pnpm test:snapshot` | ✅     | Nov 12, 2025 | 158 snapshot tests passed                   |
+| `pnpm character`     | ✅     | Nov 12, 2025 | 148 characterization tests passed           |
 
-**Result:** ✅ **ALL QUALITY GATES GREEN** — Phase 3 Session 1 complete, ready for Session 2.
+**Result:** ✅ **ALL QUALITY GATES GREEN** — Phase 3 Session 1.5 complete, ready for Session 3.2.
 
 ---
 
 ## 📊 Session Log (Recent → Oldest)
 
-### Session 3.1.5 - Multi-File $ref Resolution (PLANNED - CRITICAL)
+### Session 3.1.5 - Multi-File $ref Resolution (COMPLETE)
 
-**Date:** TBD  
-**Status:** ⏳ Planned - Urgent blocker before Session 3.2  
-**Estimated Effort:** 4-6 hours
+**Date:** Nov 12, 2025  
+**Status:** ✅ Complete  
+**Actual Effort:** ~6 hours (includes comprehensive validation)  
+**Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution
 
-**Problem:**
+**Completed Work:**
 
-Multi-file OpenAPI specs fail with "Schema 'Pet' not found in components.schemas" because our ref resolution code doesn't understand Scalar's vendor extension format (`#/x-ext/{hash}/components/schemas/X`).
+- **Section A (2h):** Centralized Ref Resolution Module
+  - Created `lib/src/shared/ref-resolution.ts` with `ParsedRef` interface, `parseComponentRef()`, `getSchemaNameFromRef()`
+  - 26 comprehensive unit tests covering standard refs, x-ext refs, bare schema names, legacy malformed refs
+  - Comprehensive TSDoc with examples
+- **Section B (1h):** Enhanced Component Lookup
+  - Enhanced `getSchemaFromComponents()` to accept optional `xExtKey` parameter
+  - Dual-path resolution: searches x-ext first, then falls back to standard `components.schemas`
+  - Clear error messages indicating which locations were checked
+- **Section C (2h):** Integration & Consolidation
+  - Consolidated 8+ duplicate `getSchemaNameFromRef` implementations
+  - Updated 9 files to use centralized `parseComponentRef` and pass `xExtKey` to `getSchemaFromComponents()`
+  - Zero code duplication remaining
+- **Section D (1h):** Multi-File Tests & Validation
+  - Re-enabled multi-file fixture in all 4 validation test files (syntax, type-check, lint, runtime)
+  - Updated `lib/tests-generated/FIXTURES.md` documentation
+  - All 20 validation tests passing (5 fixtures × 4 types, including multi-file)
 
-**Scope:**
+**Quality Gates:** ✅ All passing (711+ tests: 26 ref resolution + 20 validation + existing tests)
 
-- Create centralized ref resolution module (`lib/src/shared/ref-resolution.ts`)
-- Enhance component lookup to search both standard and x-ext locations
-- Consolidate 8+ duplicate `getSchemaNameFromRef` implementations
-- Re-enable multi-file fixture (currently "temporarily disabled")
+**Files Created:**
+
+- `lib/src/shared/ref-resolution.ts` - Centralized ref parsing module
+- `lib/src/shared/ref-resolution.test.ts` - Comprehensive unit tests
+
+**Files Modified:**
+
+- `lib/src/shared/component-access.ts` - Enhanced with x-ext support
+- `lib/src/conversion/zod/handlers.core.ts` - Uses parseComponentRef
+- `lib/src/conversion/typescript/helpers.ts` - Uses parseComponentRef
+- `lib/src/conversion/zod/handlers.object.properties.ts` - Uses parseComponentRef
+- `lib/src/conversion/zod/handlers.object.schema.ts` - Uses parseComponentRef
+- `lib/src/endpoints/helpers.naming.resolution.ts` - Uses parseComponentRef
+- `lib/src/shared/dependency-graph.ts` - Uses parseComponentRef
+- `lib/src/shared/infer-required-only.ts` - Uses parseComponentRef
+- `lib/src/context/template-context.common.ts` - Re-exports centralized function
+- `lib/tests-generated/FIXTURES.md` - Updated multi-file fixture status
+- `lib/tests-generated/*.gen.test.ts` - Re-enabled multi-file in all 4 test files
 
 **Impact:**
 
-- Unblocks multi-file OpenAPI spec support (required for Phase 4)
-- Zero behavioral changes for single-file specs (backward compatible)
-- Preserves Scalar's file provenance tracking
-
-**See:** `.agent/plans/PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md`
+- ✅ Multi-file OpenAPI specs now fully supported
+- ✅ Scalar x-ext vendor extension understood throughout codebase
+- ✅ Zero code duplication for ref parsing
+- ✅ Clear, maintainable ref resolution architecture
+- ✅ Zero behavioral changes for single-file specs (backward compatible)
+- ✅ Phase 4 consumer requirements unblocked
 
 ### Session 3.1 - CodeMeta Elimination & Pure Function Extraction (COMPLETE)
 
@@ -463,9 +540,9 @@ Multi-file OpenAPI specs fail with "Schema 'Pet' not found in components.schemas
 
 ---
 
-## 🚀 Phase 3 Progress (November 11, 2025)
+## 🚀 Phase 3 Progress (November 12, 2025)
 
-**Status:** Session 3.1 ✅ COMPLETE - Ready for Session 3.2
+**Status:** Session 3.1.5 ✅ COMPLETE - Ready for Session 3.2
 
 **Phase 2 Complete:**
 
@@ -475,25 +552,28 @@ Multi-file OpenAPI specs fail with "Schema 'Pet' not found in components.schemas
 
 **Phase 3 Progress:**
 
-- ✅ **Session 3.1 COMPLETE:** CodeMeta Elimination & Pure Function Extraction
+- ✅ **Session 3.1 COMPLETE:** CodeMeta Elimination & Pure Function Extraction (Nov 11)
   - CodeMeta completely deleted (0 mentions remaining)
   - Pure functions extracted to `lib/src/conversion/zod/code-generation.ts`
   - All handler functions return plain objects
   - Generated code validation infrastructure complete (16 tests)
-  - All quality gates GREEN (format, build, type-check, lint, test, test:gen, snapshot, character)
+  - All quality gates GREEN
   - Commit: `09d337e`
-- ⏳ **Session 3.1.5 NEXT (CRITICAL):** Multi-File $ref Resolution (estimated 4-6 hours)
-  - Fix Scalar x-ext vendor extension ref resolution
-  - Create centralized ref-resolution module
-  - Consolidate 8+ duplicate implementations
-  - Re-enable multi-file fixture (currently disabled)
-  - **BLOCKS Session 3.2** - Must complete first
-- ⏳ **Session 3.2 PENDING:** IR Schema Foundations (estimated 18-24 hours)
+- ✅ **Session 3.1.5 COMPLETE:** Multi-File $ref Resolution (Nov 12)
+  - Centralized ref resolution module created (`lib/src/shared/ref-resolution.ts`)
+  - x-ext vendor extension support added to component lookup
+  - 8+ duplicate implementations consolidated
+  - Multi-file fixture re-enabled in all 4 validation test files
+  - 26 ref resolution unit tests + 20 validation tests passing
+  - All quality gates GREEN (711+ tests)
+  - Commit: `ad4533c`
+- ⏳ **Session 3.2 READY:** IR Schema Foundations & CodeMetaData Replacement (18-24h)
   - Define lossless IR structure
   - Replace CodeMetaData with IR schema metadata
   - Implement IR type definitions with versioning
   - Adapt context builders to populate IR
   - Prove IR can reconstruct current outputs
+  - **All prerequisites met** - ready to start
 
 **Phase 3 Goal:** Eliminate technical debt and establish IR foundation for Phase 4 expansion
 

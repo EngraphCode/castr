@@ -509,55 +509,57 @@ echo "=== ✅ CODEMETA COMPLETELY ERADICATED ==="
 
 ### Session 3.1.5 – Multi-File $ref Resolution (Critical Blocker)
 
-**Status:** Not started [CRITICAL]  
+**Status:** ✅ **COMPLETE** (Nov 12, 2025)  
 **Prerequisites:** Session 3.1 complete (CodeMeta class deleted) ✅  
-**Estimated Effort:** 4-6 hours  
+**Actual Effort:** ~6 hours (includes comprehensive validation)  
+**Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution  
 **Detailed Plan:** [PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md](./PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md)
 
-#### Problem Statement
+#### Completion Summary (Nov 12, 2025)
 
-Multi-file OpenAPI specs fail during code generation with error: "Schema 'Pet' not found in components.schemas". Root cause: Our ref resolution code doesn't understand Scalar's vendor extension format (`#/x-ext/{hash}/components/schemas/X`). Scalar bundles multi-file specs correctly and stores external schemas in `x-ext.{hash}.components.schemas` to preserve file provenance, but our component lookup only checks standard `components.schemas` location.
+**Problem:** Multi-file OpenAPI specs failed with "Schema 'Pet' not found in components.schemas" because ref resolution didn't understand Scalar's `#/x-ext/{hash}/components/schemas/X` vendor extension format.
 
-#### Intended Impact
+**Solution:** Implemented dual-path reference resolution supporting both standard and x-ext formats.
 
-- Enable multi-file OpenAPI spec support (required for Phase 4 consumer requirements)
-- Fix "temporarily disabled" multi-file fixture in validation tests
-- Consolidate 8+ duplicate `getSchemaNameFromRef` implementations
-- Zero behavioral changes for single-file specs (backward compatible)
-- Preserve Scalar's file provenance tracking (don't flatten x-ext structure)
+**Changes:**
 
-#### Goals
+- ✅ Created `lib/src/shared/ref-resolution.ts` - Centralized ref parsing module with `ParsedRef` interface, `parseComponentRef()`, and `getSchemaNameFromRef()`
+- ✅ Enhanced `getSchemaFromComponents()` to search x-ext locations first, then fall back to standard `components.schemas`
+- ✅ Consolidated 8+ duplicate `getSchemaNameFromRef` implementations across codebase
+- ✅ Updated 9 files to use centralized ref resolution: `handlers.core.ts`, `helpers.ts`, `handlers.object.properties.ts`, `handlers.object.schema.ts`, `helpers.naming.resolution.ts`, `dependency-graph.ts`, `infer-required-only.ts`, `template-context.common.ts`
+- ✅ Re-enabled multi-file fixture in all 4 validation test files (syntax, type-check, lint, runtime)
+- ✅ Updated `FIXTURES.md` documentation
+- ✅ 26 comprehensive unit tests for ref resolution (standard, x-ext, bare names, legacy formats)
+- ✅ Zero behavioral changes for single-file specs (backward compatible)
 
-1. Create centralized ref resolution module (`lib/src/shared/ref-resolution.ts`)
-2. Enhance component lookup to search both standard and x-ext locations
-3. Update all ref resolution call sites to use shared utilities
-4. Re-enable multi-file fixture in generated code validation tests
+**Quality Gates:** All GREEN (format ✅ build ✅ type-check ✅ lint ✅ test ✅ test:gen ✅ snapshot ✅ character ✅)
 
-#### Acceptance Criteria
+**Tests:** 711+ passing (20 validation tests: 5 fixtures × 4 types, including multi-file)
 
-- [ ] Centralized ref resolution: `lib/src/shared/ref-resolution.ts` created
-- [ ] `parseComponentRef()` handles standard AND Scalar x-ext refs
-- [ ] `getSchemaFromComponents()` searches both standard and x-ext locations
-- [ ] All 8+ duplicate `getSchemaNameFromRef` implementations consolidated
-- [ ] All ref resolution call sites updated (dependency-graph, handlers, etc.)
-- [ ] Multi-file fixture re-enabled in all 4 validation test files
-- [ ] `lib/tests-generated/FIXTURES.md` updated (multi-file marked as enabled)
-- [ ] Zero mentions of "temporarily disabled" for multi-file in test files
-- [ ] Zero behavioral changes for single-file specs
-- [ ] All quality gates GREEN (20 validation tests passing: 5 fixtures × 4 types)
+**Files Created:**
 
-#### References
+- `lib/src/shared/ref-resolution.ts` (centralized ref parsing)
+- `lib/src/shared/ref-resolution.test.ts` (26 unit tests)
 
-- Multi-file fixture: `lib/examples/openapi/multi-file/main.yaml`
-- Fixture documentation: `lib/tests-generated/FIXTURES.md`
-- Characterization test: `lib/src/characterisation/input-pipeline.char.test.ts` (multi-file test passing)
+**Files Modified:**
+
+- Enhanced `lib/src/shared/component-access.ts` with x-ext support
+- Updated 9 ref resolution call sites across conversion and context modules
+
+**Impact:**
+
+- ✅ Multi-file OpenAPI specs now fully supported
+- ✅ Scalar x-ext vendor extension understood throughout codebase
+- ✅ Zero code duplication for ref parsing
+- ✅ Clear, maintainable ref resolution architecture
+- ✅ Phase 4 consumer requirements unblocked
 
 ---
 
 ### Session 3.2 – IR Schema Foundations & CodeMetaData Replacement
 
-**Status:** Not started  
-**Prerequisites:** Session 3.1.5 complete (multi-file refs fixed) ⏳  
+**Status:** Ready to start  
+**Prerequisites:** Session 3.1.5 complete (multi-file refs fixed) ✅  
 **Estimated Effort:** 18-24 hours  
 **Detailed Plan:** [PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md](./PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md)
 
