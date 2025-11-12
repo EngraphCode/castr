@@ -23,6 +23,7 @@
 ### Current Situation
 
 **Symptom:** Multi-file OpenAPI specs fail during code generation with error:
+
 ```
 Error: Schema 'Pet' not found in components.schemas
 ```
@@ -73,6 +74,7 @@ Error: Schema 'Pet' not found in components.schemas
 **Current Workaround:**
 
 Multi-file fixture disabled in all validation tests with comment:
+
 ```typescript
 // Note: The 'multi-file' fixture is temporarily disabled due to a known issue
 // with external $ref resolution in the Scalar bundler.
@@ -89,6 +91,7 @@ But the issue is NOT in Scalar's bundler — Scalar works correctly. The issue i
 **1. Reference Parsing (8+ implementations):**
 
 Multiple `getSchemaNameFromRef` implementations throughout codebase:
+
 - `lib/src/conversion/zod/handlers.core.ts` (line 18)
 - `lib/src/conversion/typescript/helpers.ts` (line 23)
 - `lib/src/shared/dependency-graph.ts` (line 29)
@@ -98,10 +101,11 @@ Multiple `getSchemaNameFromRef` implementations throughout codebase:
 - `lib/src/endpoints/helpers.naming.resolution.ts` (line 17)
 
 All implementations do the same thing:
+
 ```typescript
 const getSchemaNameFromRef = (ref: string): string => {
   const parts = ref.split('/');
-  const name = parts[parts.length - 1];  // Just takes last part
+  const name = parts[parts.length - 1]; // Just takes last part
   return name;
 };
 ```
@@ -113,6 +117,7 @@ But breaks for `#/x-ext/425563c/components/schemas/Pet` → "Pet"
 **2. Component Lookup:**
 
 `lib/src/shared/component-access.ts` (line 33-45):
+
 ```typescript
 export function getSchemaFromComponents(
   doc: OpenAPIObject,
@@ -121,7 +126,7 @@ export function getSchemaFromComponents(
   if (!doc.components?.schemas) {
     throw new Error(`Schema '${name}' not found in components.schemas`);
   }
-  const schema = doc.components.schemas[name];  // Only looks in standard location
+  const schema = doc.components.schemas[name]; // Only looks in standard location
   if (!schema) {
     throw new Error(`Schema '${name}' not found in components.schemas`);
   }
@@ -134,9 +139,10 @@ Only searches `doc.components.schemas`, never checks `doc['x-ext']`.
 **3. Ref Pattern Matching:**
 
 `lib/src/shared/component-access.ts` (line 108-120):
+
 ```typescript
 function parseComponentRef(ref: string): { componentType: string; componentName: string } {
-  const refPattern = /^#\/components\/([^/]+)\/(.+)$/;  // Standard refs only
+  const refPattern = /^#\/components\/([^/]+)\/(.+)$/; // Standard refs only
   const match = refPattern.exec(ref);
   // ...
 }
@@ -197,12 +203,12 @@ Pattern only matches `#/components/{type}/{name}`, not `#/x-ext/{hash}/component
 
 Create centralized ref parsing utility that understands both standard and x-ext formats:
 
-```typescript
+````typescript
 // lib/src/shared/ref-resolution.ts (NEW FILE)
 
 /**
  * Parse result for a component reference.
- * Handles both standard (#/components/schemas/X) and 
+ * Handles both standard (#/components/schemas/X) and
  * Scalar vendor extension (#/x-ext/{hash}/components/schemas/X) formats.
  */
 export interface ParsedRef {
@@ -221,17 +227,17 @@ export interface ParsedRef {
 /**
  * Parse a component $ref into its constituent parts.
  * Supports both standard and Scalar x-ext formats.
- * 
+ *
  * @param ref - The $ref string
  * @returns Parsed ref information
  * @throws {Error} If $ref format is invalid
- * 
+ *
  * @example Standard ref
  * ```typescript
  * parseComponentRef('#/components/schemas/Pet')
  * // => { componentType: 'schemas', componentName: 'Pet', isExternal: false, ... }
  * ```
- * 
+ *
  * @example Scalar x-ext ref
  * ```typescript
  * parseComponentRef('#/x-ext/425563c/components/schemas/Pet')
@@ -242,7 +248,7 @@ export function parseComponentRef(ref: string): ParsedRef {
   // Pattern 1: Standard refs (#/components/{type}/{name})
   const standardPattern = /^#\/components\/([^/]+)\/(.+)$/;
   const standardMatch = standardPattern.exec(ref);
-  
+
   if (standardMatch && standardMatch[1] && standardMatch[2]) {
     return {
       componentType: standardMatch[1],
@@ -251,11 +257,11 @@ export function parseComponentRef(ref: string): ParsedRef {
       originalRef: ref,
     };
   }
-  
+
   // Pattern 2: Scalar x-ext refs (#/x-ext/{hash}/components/{type}/{name})
   const xExtPattern = /^#\/x-ext\/([^/]+)\/components\/([^/]+)\/(.+)$/;
   const xExtMatch = xExtPattern.exec(ref);
-  
+
   if (xExtMatch && xExtMatch[1] && xExtMatch[2] && xExtMatch[3]) {
     return {
       componentType: xExtMatch[2],
@@ -265,14 +271,14 @@ export function parseComponentRef(ref: string): ParsedRef {
       originalRef: ref,
     };
   }
-  
+
   // Neither pattern matched
   throw new Error(
     `Invalid component $ref: ${ref}. ` +
-    `Expected format: #/components/{type}/{name} or #/x-ext/{hash}/components/{type}/{name}`
+      `Expected format: #/components/{type}/{name} or #/x-ext/{hash}/components/{type}/{name}`,
   );
 }
-```
+````
 
 **Phase B: Enhanced Component Lookup (1-2h)**
 
@@ -282,7 +288,7 @@ Update `component-access.ts` to support dual-path lookups:
 /**
  * Get a schema from either components.schemas or x-ext locations.
  * Handles both single-file and multi-file (Scalar bundled) specs.
- * 
+ *
  * @param doc - The OpenAPI document
  * @param name - Schema name to look up
  * @param xExtKey - Optional x-ext hash key (for multi-file refs)
@@ -298,7 +304,7 @@ export function getSchemaFromComponents(
   if (xExtKey && doc['x-ext']) {
     const xExt = doc['x-ext'] as Record<string, unknown>;
     const xExtEntry = xExt[xExtKey] as Record<string, unknown> | undefined;
-    
+
     if (xExtEntry?.components) {
       const components = xExtEntry.components as Record<string, unknown>;
       if (components.schemas) {
@@ -310,7 +316,7 @@ export function getSchemaFromComponents(
       }
     }
   }
-  
+
   // Try standard location
   if (doc.components?.schemas) {
     const schema = doc.components.schemas[name];
@@ -318,9 +324,9 @@ export function getSchemaFromComponents(
       return schema;
     }
   }
-  
+
   // Not found in either location
-  const locations = xExtKey 
+  const locations = xExtKey
     ? `x-ext.${xExtKey}.components.schemas or components.schemas`
     : 'components.schemas';
   throw new Error(`Schema '${name}' not found in ${locations}`);
@@ -345,7 +351,7 @@ Replace 8+ duplicate implementations with single export from `ref-resolution.ts`
 /**
  * Extract schema name from a component schema $ref.
  * Works with both standard and x-ext refs.
- * 
+ *
  * @param ref - The $ref string
  * @returns Schema name only (e.g., 'Pet')
  */
@@ -714,6 +720,7 @@ Refs: PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md
 
 **Risk:** Breaking existing single-file specs  
 **Mitigation:**
+
 - Backward compatibility is primary design goal
 - Standard ref resolution unchanged (x-ext is additive)
 - Comprehensive test coverage for both formats
@@ -721,12 +728,14 @@ Refs: PHASE-3-SESSION-1.5-MULTI-FILE-REF-RESOLUTION.md
 
 **Risk:** Performance impact from dual-path lookups  
 **Mitigation:**
+
 - x-ext lookup only attempted when xExtKey provided
 - Standard location checked as fallback (minimal overhead)
 - No performance regression expected
 
 **Risk:** Incomplete consolidation (missing call sites)  
 **Mitigation:**
+
 - Grep verification for duplicate implementations
 - Import analysis to ensure shared version used
 - Comprehensive validation across all code paths
@@ -807,4 +816,3 @@ Ready to begin Section A: Centralized Ref Resolution.
 ---
 
 **Ready for implementation.** All work must follow TDD and adhere strictly to RULES.md.
-

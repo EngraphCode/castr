@@ -4,7 +4,7 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { TemplateContext } from '../../context/template-context.js';
 import { wrapWithQuotesIfNeeded } from '../../shared/utils/index.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
-import { getSchemaNameFromRef } from './handlers.core.js';
+import { parseComponentRef } from '../../shared/ref-resolution.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
 type GetZodSchemaFn = (args: {
@@ -63,7 +63,8 @@ export function resolveSchemaForChain(
   ctx: ConversionTypeContext | undefined,
 ): SchemaObject | ReferenceObject {
   if (isReferenceObject(propSchema) && ctx?.doc) {
-    return getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(propSchema.$ref));
+    const parsedRef = parseComponentRef(propSchema.$ref);
+    return getSchemaFromComponents(ctx.doc, parsedRef.componentName, parsedRef.xExtKey);
   }
   return propSchema;
 }

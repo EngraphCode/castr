@@ -22,18 +22,7 @@ import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/o
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import { visitComposition, visitObjectProperties } from './dependency-graph.helpers.js';
 import { getSchemaFromComponents } from './component-access.js';
-
-/**
- * Extract schema name from a component schema $ref
- */
-const getSchemaNameFromRef = (ref: string): string => {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    throw new Error(`Invalid schema $ref: ${ref}`);
-  }
-  return name;
-};
+import { parseComponentRef } from './ref-resolution.js';
 
 type VisitFn = (schema: SchemaObject | ReferenceObject, fromRef: string) => void;
 
@@ -59,8 +48,8 @@ const handleReferenceInGraph = (
   }
 
   visitedsRefs[fromRef] = true;
-  const schemaName = getSchemaNameFromRef(schema.$ref);
-  visit(getSchemaFromComponents(doc, schemaName), schema.$ref);
+  const parsedRef = parseComponentRef(schema.$ref);
+  visit(getSchemaFromComponents(doc, parsedRef.componentName, parsedRef.xExtKey), schema.$ref);
 };
 
 /**
@@ -145,8 +134,8 @@ const buildDirectDependencyGraph = (
   };
 
   schemaRefs.forEach((ref) => {
-    const schemaName = getSchemaNameFromRef(ref);
-    visit(getSchemaFromComponents(doc, schemaName), ref);
+    const parsedRef = parseComponentRef(ref);
+    visit(getSchemaFromComponents(doc, parsedRef.componentName, parsedRef.xExtKey), ref);
   });
 
   return refsDependencyGraph;

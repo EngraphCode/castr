@@ -5,18 +5,7 @@ import {
   isReferenceObject,
 } from 'openapi3-ts/oas31';
 import { getSchemaFromComponents } from './component-access.js';
-
-/**
- * Extract schema name from a component schema $ref
- */
-const getSchemaNameFromRef = (ref: string): string => {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    throw new Error(`Invalid schema $ref: ${ref}`);
-  }
-  return name;
-};
+import { parseComponentRef } from './ref-resolution.js';
 
 /**
  * Check if a schema object has no actual schema properties (type, properties, composition keywords)
@@ -82,8 +71,8 @@ const patchPropertiesFromRef = (
   doc: OpenAPIObject,
 ): void => {
   if (isReferenceObject(prop)) {
-    const schemaName = getSchemaNameFromRef(prop.$ref);
-    const refType = getSchemaFromComponents(doc, schemaName);
+    const parsedRef = parseComponentRef(prop.$ref);
+    const refType = getSchemaFromComponents(doc, parsedRef.componentName, parsedRef.xExtKey);
     if (refType && !isReferenceObject(refType)) {
       composedRequiredSchema.required.forEach((required) => {
         composedRequiredSchema.properties[required] = refType.properties?.[required] ?? {};

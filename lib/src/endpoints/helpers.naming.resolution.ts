@@ -8,20 +8,9 @@
 import type { ZodCodeResult, ConversionTypeContext } from '../conversion/zod/index.js';
 import { getSchemaComplexity } from '../shared/schema-complexity.js';
 import { getSchemaFromComponents } from '../shared/component-access.js';
+import { getSchemaNameFromRef, parseComponentRef } from '../shared/ref-resolution.js';
 
 export type EndpointContext = ConversionTypeContext;
-
-/**
- * Extract schema name from a component schema $ref
- */
-function getSchemaNameFromRef(ref: string): string {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    return ref; // Fallback to ref if can't extract name
-  }
-  return name;
-}
 
 /**
  * Resolves schema from context, trying both direct lookup and ref resolution
@@ -58,13 +47,13 @@ export function handleRefSchema(
     throw new Error('Invalid ref: ' + input.ref);
   }
 
-  const schemaName = getSchemaNameFromRef(input.ref);
+  const parsedRef = parseComponentRef(input.ref);
   if (!ctx.doc) {
     throw new Error('Context must have doc property');
   }
   const complexity = getSchemaComplexity({
     current: 0,
-    schema: getSchemaFromComponents(ctx.doc, schemaName),
+    schema: getSchemaFromComponents(ctx.doc, parsedRef.componentName, parsedRef.xExtKey),
   });
 
   // Simple refs can be inlined

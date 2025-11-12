@@ -54,7 +54,7 @@ These fixtures exercise all code generation paths to ensure that generated code 
 
 **Why selected:** Validates reference resolution and security metadata extraction.
 
-### 4. multi-file (External References) ⚠️ TEMPORARILY DISABLED
+### 4. multi-file (External References)
 
 **Path:** `examples/openapi/multi-file/main.yaml`
 
@@ -62,11 +62,10 @@ These fixtures exercise all code generation paths to ensure that generated code 
 
 - External `$ref` across multiple files
 - Cross-file schema dependencies
-- Bundled schema resolution
+- Scalar's `x-ext` vendor extension format
+- Bundled schema resolution with file provenance
 
-**Why selected:** Exercises Scalar bundling and external reference resolution.
-
-**Status:** Currently disabled due to a known issue with external `$ref` resolution in the Scalar bundler. The fixture will be re-enabled once the bundler issue is resolved.
+**Why selected:** Exercises Scalar bundling and external reference resolution using the `x-ext` vendor extension pattern for preserving file provenance in multi-file specifications.
 
 ### 5. api-with-examples (Constraints)
 

@@ -3,7 +3,7 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { TemplateContext } from '../../context/template-context.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
-import { getSchemaNameFromRef } from './handlers.core.js';
+import { parseComponentRef } from '../../shared/ref-resolution.js';
 import { buildObjectPropertiesString } from './handlers.object.properties.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
@@ -48,7 +48,10 @@ export function handleAdditionalPropertiesAsRecord(
   // Resolve ref if needed for getZodChain (which needs .type property)
   const additionalPropsResolved: SchemaObject | ReferenceObject =
     isReferenceObject(schema.additionalProperties) && ctx?.doc
-      ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.additionalProperties.$ref))
+      ? (() => {
+          const parsedRef = parseComponentRef(schema.additionalProperties.$ref);
+          return getSchemaFromComponents(ctx.doc, parsedRef.componentName, parsedRef.xExtKey);
+        })()
       : schema.additionalProperties;
 
   const additionalPropsZod = getZodSchema({

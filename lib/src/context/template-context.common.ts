@@ -4,19 +4,8 @@ import {
   sortSchemasByDependencyOrder,
 } from '../shared/utils/schema-sorting.js';
 
-/**
- * Extract schema name from a component schema $ref
- * @param ref - Full ref like '#/components/schemas/User'
- * @returns Schema name like 'User'
- */
-export const getSchemaNameFromRef = (ref: string): string => {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    throw new Error(`Invalid schema $ref: ${ref}`);
-  }
-  return name;
-};
+// Re-export from centralized ref-resolution module
+export { getSchemaNameFromRef } from '../shared/ref-resolution.js';
 
 /**
  * Calculate dependency counts across all groups.

@@ -14,10 +14,8 @@ import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './
  * - tictactoe: Simple schema with basic types (primitives, objects, arrays)
  * - petstore: Complex objects with nested structures, allOf compositions
  * - non-oauth: References ($ref) and security metadata extraction
+ * - multi-file: External $ref resolution across multiple files with x-ext vendor extension
  * - api-examples: Constraints (enum, patterns, min/max, formats, examples)
- *
- * Note: The 'multi-file' fixture is temporarily disabled due to a known issue
- * with external $ref resolution in the Scalar bundler.
  */
 describe('Generated Code - Lint Validation', () => {
   const fixtures = [
@@ -29,12 +27,17 @@ describe('Generated Code - Lint Validation', () => {
     {
       name: 'petstore',
       path: 'examples/openapi/v3.0/petstore-expanded.yaml',
-      reason: 'Complex objects with nested structures, allOf compositions',
+      reason: 'Complex objects with nested structures, allOf compositions)',
     },
     {
       name: 'non-oauth',
       path: 'examples/openapi/v3.1/non-oauth-scopes.yaml',
       reason: 'References ($ref) and security metadata extraction',
+    },
+    {
+      name: 'multi-file',
+      path: 'examples/openapi/multi-file/main.yaml',
+      reason: 'External $ref resolution across multiple files (Scalar x-ext vendor extension)',
     },
     {
       name: 'api-examples',

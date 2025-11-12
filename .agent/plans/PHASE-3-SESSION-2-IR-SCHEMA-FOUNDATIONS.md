@@ -23,10 +23,12 @@
 ### Why IR is Critical
 
 **Problem:** Current architecture has two separate issues:
+
 1. ✅ **RESOLVED (Session 3.1):** CodeMeta class was a poorly-conceived abstraction
-2. ⚠️  **REMAINING:** CodeMetaData is conversion-time metadata that's insufficient for IR needs
+2. ⚠️ **REMAINING:** CodeMetaData is conversion-time metadata that's insufficient for IR needs
 
 **Current State:**
+
 - Handlebars templates consume `TemplateContext` directly
 - CodeMetaData tracks minimal conversion metadata (isRequired, referencedBy, parent)
 - No intermediate representation between OpenAPI and code generation
@@ -34,6 +36,7 @@
 - Cannot support multiple code generators (types, zod, client, mcp)
 
 **Target State (After Session 3.2):**
+
 - Lossless IR captures ALL OpenAPI information + generation metadata
 - Context builders populate IR alongside TemplateContext (parallel operation)
 - CodeMetaData completely replaced with IR schema metadata
@@ -45,6 +48,7 @@
 **Phase 3 Goal:** Eliminate technical debt and establish IR foundation for Phase 4 expansion
 
 **Session 3.2 Deliverables:**
+
 - IR type definitions with versioning
 - Schema node metadata (replaces CodeMetaData)
 - Dependency graph structure
@@ -52,6 +56,7 @@
 - Zero output changes (parallel operation)
 
 **Enables:**
+
 - Session 3.3: IR persistence and validation
 - Session 3.4-3.6: ts-morph emitter implementation
 - Session 3.7: Handlebars complete removal
@@ -66,6 +71,7 @@
 **Objective:** Define comprehensive IR schema types that capture all OpenAPI information.
 
 **Intended Impact:**
+
 - Lossless representation of OpenAPI documents
 - Rich metadata for code generation (replaces CodeMetaData)
 - Dependency graph for circular reference handling
@@ -153,6 +159,7 @@ pnpm type-check 2>&1 | tail -5
 **Objective:** Adapt context builders to populate IR alongside existing TemplateContext.
 
 **Intended Impact:**
+
 - IR populated during context building (parallel to TemplateContext)
 - Zero behavioral changes (Handlebars still uses TemplateContext)
 - IR available for inspection and validation
@@ -219,6 +226,7 @@ pnpm type-check
 **Objective:** Replace all CodeMetaData usages with IR schema metadata.
 
 **Intended Impact:**
+
 - CodeMetaData interface completely removed
 - All conversion code uses IR schema metadata
 - Richer metadata available for code generation
@@ -313,6 +321,7 @@ echo "=== ✅ CODEMETADATA COMPLETELY ERADICATED ==="
 **Objective:** Ensure all quality gates pass and IR is ready for future sessions.
 
 **Intended Impact:**
+
 - All quality gates GREEN
 - IR infrastructure validated and ready
 - Zero behavioral changes confirmed
@@ -521,6 +530,7 @@ Refs: PHASE-3-TS-MORPH-IR.md Session 3.2, ADR-013
 
 **Risk:** Breaking existing functionality  
 **Mitigation:**
+
 - IR runs parallel to existing Handlebars system
 - Zero behavioral changes requirement (outputs must be identical)
 - Full quality gate execution after each major change
@@ -528,6 +538,7 @@ Refs: PHASE-3-TS-MORPH-IR.md Session 3.2, ADR-013
 
 **Risk:** Incomplete IR metadata  
 **Mitigation:**
+
 - Comprehensive IR schema design covering all OpenAPI features
 - Manual inspection of IR structure for representative specs
 - Gap documentation for missing metadata
@@ -535,6 +546,7 @@ Refs: PHASE-3-TS-MORPH-IR.md Session 3.2, ADR-013
 
 **Risk:** Time overrun  
 **Mitigation:**
+
 - Work sections sized for 2-4 hour chunks
 - Clear acceptance criteria for each section
 - Validation steps can be run independently
@@ -614,5 +626,3 @@ Ready to begin Section A: IR Type Definitions.
 ---
 
 **Ready for implementation.** All work must follow TDD and adhere strictly to RULES.md.
-
-

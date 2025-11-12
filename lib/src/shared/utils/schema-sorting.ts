@@ -1,16 +1,19 @@
 import { sortBy } from 'lodash-es';
 import { normalizeString } from './string-utils.js';
+import { getSchemaNameFromRef as getSchemaName } from '../ref-resolution.js';
 
 /**
  * Extract and normalize schema name from a component schema $ref
+ * Handles both full refs (#/components/schemas/Pet) and bare names (Pet)
  * @internal
  */
 function getSchemaNameFromRef(ref: string): string {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    return ref; // If not a ref, return as-is
+  // If it's not a ref (doesn't start with #/), treat it as a bare name
+  if (!ref.startsWith('#/')) {
+    return normalizeString(ref);
   }
+
+  const name = getSchemaName(ref);
   return normalizeString(name);
 }
 

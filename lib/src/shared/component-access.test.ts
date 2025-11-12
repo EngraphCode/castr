@@ -15,6 +15,7 @@ import {
  *
  * @see .agent/plans/01-CURRENT-IMPLEMENTATION.md Task 1.1
  */
+// eslint-disable-next-line max-lines-per-function
 describe('component-access', () => {
   describe('getSchemaFromComponents', () => {
     it('should return schema when it exists in components.schemas', () => {
@@ -162,10 +163,10 @@ describe('component-access', () => {
       };
 
       const ref: ReferenceObject = {
-        $ref: 'invalid-ref-format',
+        $ref: '#invalid-ref-format',
       };
 
-      expect(() => resolveSchemaRef(doc, ref)).toThrow('Invalid schema $ref: invalid-ref-format');
+      expect(() => resolveSchemaRef(doc, ref)).toThrow('Invalid component $ref');
     });
 
     it('should throw error for $ref to non-schema component', () => {
@@ -313,6 +314,179 @@ describe('component-access', () => {
       expect(() => assertNotReference(value, 'test context')).toThrow(
         'SwaggerParser.dereference()',
       );
+    });
+  });
+
+  describe('x-ext support (multi-file specs)', () => {
+    it('should return schema from x-ext location when xExtKey provided', () => {
+      const doc = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        'x-ext': {
+          '425563c': {
+            components: {
+              schemas: {
+                Pet: {
+                  type: 'object',
+                  properties: {
+                    name: { type: 'string' },
+                    tag: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      } as OpenAPIObject;
+
+      const result = getSchemaFromComponents(doc, 'Pet', '425563c');
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('type', 'object');
+      expect(result).toHaveProperty('properties');
+    });
+
+    it('should fallback to standard location when schema not in x-ext', () => {
+      const doc = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+              },
+            },
+          },
+        },
+        'x-ext': {
+          '425563c': {
+            components: {
+              schemas: {
+                Pet: {
+                  type: 'object',
+                  properties: {
+                    name: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      } as OpenAPIObject;
+
+      const result = getSchemaFromComponents(doc, 'User', '425563c');
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('type', 'object');
+      expect(result).toHaveProperty('properties.name');
+    });
+
+    it('should throw error when schema not found in x-ext or standard location', () => {
+      const doc = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {},
+        },
+        'x-ext': {
+          '425563c': {
+            components: {
+              schemas: {
+                Pet: {
+                  type: 'object',
+                  properties: {
+                    name: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      } as OpenAPIObject;
+
+      expect(() => getSchemaFromComponents(doc, 'NonExistent', '425563c')).toThrow(
+        "Schema 'NonExistent' not found in x-ext.425563c.components.schemas or components.schemas",
+      );
+    });
+
+    it('should handle x-ext location without schemas', () => {
+      const doc = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+              },
+            },
+          },
+        },
+        'x-ext': {
+          '425563c': {
+            components: {},
+          },
+        },
+      } as OpenAPIObject;
+
+      // Should fallback to standard location
+      const result = getSchemaFromComponents(doc, 'User', '425563c');
+      expect(result).toBeDefined();
+    });
+
+    it('should work without xExtKey (backward compatible)', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+              },
+            },
+          },
+        },
+      };
+
+      // Omitting xExtKey parameter - should only check standard location
+      const result = getSchemaFromComponents(doc, 'User');
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('type', 'object');
+    });
+
+    it('should return ReferenceObject from x-ext when present', () => {
+      const doc = {
+        openapi: '3.0.0',
+        info: { title: 'Test', version: '1.0.0' },
+        paths: {},
+        'x-ext': {
+          abc123: {
+            components: {
+              schemas: {
+                PetRef: {
+                  $ref: '#/components/schemas/Pet',
+                },
+              },
+            },
+          },
+        },
+      } as OpenAPIObject;
+
+      const result = getSchemaFromComponents(doc, 'PetRef', 'abc123');
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('$ref', '#/components/schemas/Pet');
     });
   });
 

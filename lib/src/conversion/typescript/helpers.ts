@@ -9,6 +9,7 @@ import { type ReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
 
 import type { TsConversionContext } from './index.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
+import { getSchemaNameFromRef, parseComponentRef } from '../../shared/ref-resolution.js';
 import {
   handleBasicPrimitive,
   handlePrimitiveEnum,
@@ -16,18 +17,6 @@ import {
   isNullableType,
   type PrimitiveSchemaType,
 } from './helpers.primitives.js';
-
-/**
- * Extract schema name from a component schema $ref
- */
-const getSchemaNameFromRef = (ref: string): string => {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    throw new Error(`Invalid schema $ref: ${ref}`);
-  }
-  return name;
-};
 
 // Re-export primitives for backward compatibility
 export {
@@ -48,7 +37,9 @@ function resolveSchemaFromRef(
   ctx: Required<Pick<TsConversionContext, 'doc' | 'visitedRefs'>>,
   resolveRecursively: (schema: SchemaObject) => unknown,
 ): void {
-  const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
+  // Parse ref to extract xExtKey (if it's an x-ext ref)
+  const parsedRef = parseComponentRef(ref);
+  const actualSchema = getSchemaFromComponents(ctx.doc, schemaName, parsedRef.xExtKey);
   if (!actualSchema) {
     throw new Error(`Schema ${ref} not found`);
   }

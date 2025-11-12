@@ -10,19 +10,11 @@ import {
 } from '../../shared/enum-helpers.js';
 import type { TemplateContext } from '../../context/template-context.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
+import { getSchemaNameFromRef, parseComponentRef } from '../../shared/ref-resolution.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 
-/**
- * Extract schema name from a component schema $ref
- */
-export function getSchemaNameFromRef(ref: string): string {
-  const parts = ref.split('/');
-  const name = parts[parts.length - 1];
-  if (!name) {
-    return ref; // Fallback to ref if can't extract name
-  }
-  return name;
-}
+// Re-export for backward compatibility
+export { getSchemaNameFromRef };
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
@@ -94,7 +86,9 @@ function resolveSchemaReference(
     return cached;
   }
 
-  const actualSchema = getSchemaFromComponents(ctx.doc, schemaName);
+  // Parse ref to extract xExtKey (if it's an x-ext ref)
+  const parsedRef = parseComponentRef(ref);
+  const actualSchema = getSchemaFromComponents(ctx.doc, schemaName, parsedRef.xExtKey);
   if (!actualSchema) {
     throw new Error(`Schema ${ref} not found`);
   }
@@ -170,7 +164,10 @@ export function handleArraySchema(
   // Resolve ref if needed for getZodChain (which needs .type property)
   const itemsSchema: SchemaObject | ReferenceObject =
     isReferenceObject(schema.items) && ctx?.doc
-      ? getSchemaFromComponents(ctx.doc, getSchemaNameFromRef(schema.items.$ref))
+      ? (() => {
+          const parsedRef = parseComponentRef(schema.items.$ref);
+          return getSchemaFromComponents(ctx.doc, parsedRef.componentName, parsedRef.xExtKey);
+        })()
       : schema.items;
 
   const itemZodSchema = getZodSchema({ schema: schema.items, ctx, meta, options }).code;

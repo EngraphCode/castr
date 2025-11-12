@@ -21,32 +21,83 @@ import type {
   RequestBodyObject,
 } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
+import { parseComponentRef } from './ref-resolution.js';
 
 /**
  * Get a schema from components.schemas by name.
  * Preserves $refs if present (needed for dependency tracking and semantic naming).
+ *
+ * Supports both standard OpenAPI location and Scalar's x-ext vendor extension
+ * for multi-file specifications. When xExtKey is provided, checks x-ext location
+ * first, then falls back to standard location.
+ *
  * @param doc - The OpenAPI document
  * @param name - Schema name to look up
+ * @param xExtKey - Optional x-ext hash key for multi-file spec external refs
  * @returns SchemaObject | ReferenceObject
- * @throws {Error} If schema not found
+ * @throws {Error} If schema not found in either location
+ *
+ * @example Standard single-file spec
+ * ```typescript
+ * const schema = getSchemaFromComponents(doc, 'Pet');
+ * // Looks in: doc.components.schemas['Pet']
+ * ```
+ *
+ * @example Multi-file spec with x-ext
+ * ```typescript
+ * const schema = getSchemaFromComponents(doc, 'Pet', '425563c');
+ * // Looks in: doc['x-ext']['425563c'].components.schemas['Pet']
+ * // Falls back to: doc.components.schemas['Pet']
+ * ```
  */
+// eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 export function getSchemaFromComponents(
   doc: OpenAPIObject,
   name: string,
+  xExtKey?: string,
 ): SchemaObject | ReferenceObject {
-  if (!doc.components?.schemas) {
-    throw new Error(`Schema '${name}' not found in components.schemas`);
+  // Try x-ext location first (if xExtKey provided)
+  if (xExtKey) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
+    const xExt = doc['x-ext'] as Record<string, unknown> | undefined;
+    if (xExt) {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
+      const xExtEntry = xExt[xExtKey] as Record<string, unknown> | undefined;
+      if (xExtEntry?.['components']) {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
+        const components = xExtEntry['components'] as Record<string, unknown>;
+        // eslint-disable-next-line max-depth
+        if (components['schemas']) {
+          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
+          const schemas = components['schemas'] as Record<string, unknown>;
+          const schema = schemas[name];
+          // eslint-disable-next-line max-depth
+          if (schema) {
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            return schema as SchemaObject | ReferenceObject;
+          }
+        }
+      }
+    }
   }
-  const schema = doc.components.schemas[name];
-  if (!schema) {
-    throw new Error(`Schema '${name}' not found in components.schemas`);
+
+  // Try standard location (or only location if xExtKey not provided)
+  const standardSchema = doc.components?.schemas?.[name];
+  if (standardSchema) {
+    return standardSchema;
   }
-  return schema;
+
+  // Not found in either location - provide helpful error message
+  const locations = xExtKey
+    ? `x-ext.${xExtKey}.components.schemas or components.schemas`
+    : 'components.schemas';
+  throw new Error(`Schema '${name}' not found in ${locations}`);
 }
 
 /**
  * Resolve a schema $ref to its definition.
  * Returns schema unchanged if not a ReferenceObject.
+ * Supports both standard refs and x-ext vendor extension refs.
  * @param doc - The OpenAPI document
  * @param schema - Schema to resolve
  * @returns Resolved SchemaObject
@@ -61,13 +112,16 @@ export function resolveSchemaRef(
   }
 
   const ref = schema.$ref;
-  const schemaRefPattern = /^#\/components\/schemas\/(.+)$/;
-  const match = schemaRefPattern.exec(ref);
-  if (!match || !match[1]) {
-    throw new Error(`Invalid schema $ref: ${ref}`);
+  const parsedRef = parseComponentRef(ref);
+
+  // Only support schema refs (not parameters, responses, etc.)
+  if (parsedRef.componentType !== 'schemas') {
+    throw new Error(
+      `Invalid schema $ref: ${ref}. Expected schema reference, got ${parsedRef.componentType}`,
+    );
   }
 
-  const resolvedSchema = getSchemaFromComponents(doc, match[1]);
+  const resolvedSchema = getSchemaFromComponents(doc, parsedRef.componentName, parsedRef.xExtKey);
   if (isReferenceObject(resolvedSchema)) {
     throw new Error(
       `Nested $ref in schema: ${ref} -> ${resolvedSchema.$ref}. ` +
@@ -94,29 +148,6 @@ export function assertNotReference<T>(
         `Ensure you called SwaggerParser.dereference() before code generation`,
     );
   }
-}
-
-/**
- * Parse a component $ref into its type and name.
- *
- * @param ref - The $ref string (e.g., "#/components/schemas/User")
- * @returns Object with componentType and componentName
- * @throws {Error} If $ref format is invalid
- *
- * @internal
- */
-function parseComponentRef(ref: string): { componentType: string; componentName: string } {
-  const refPattern = /^#\/components\/([^/]+)\/(.+)$/;
-  const match = refPattern.exec(ref);
-
-  if (!match || !match[1] || !match[2]) {
-    throw new Error(`Invalid component $ref: ${ref}. Expected format: #/components/{type}/{name}`);
-  }
-
-  return {
-    componentType: match[1],
-    componentName: match[2],
-  };
 }
 
 /**
