@@ -6,7 +6,13 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { ComponentsObject, OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import type {
+  ComponentsObject,
+  OpenAPIObject,
+  OperationObject,
+  PathsObject,
+  SchemaObject,
+} from 'openapi3-ts/oas31';
 import { buildIR, buildIRSchemas } from './ir-builder.js';
 import type { IRDocument } from './ir-schema.js';
 
@@ -393,5 +399,316 @@ describe('buildIR', () => {
 
     expect(result.components).toHaveLength(1);
     expect(result.components[0]?.name).toBe('Pet');
+  });
+});
+
+describe('buildIROperations', () => {
+  describe('simple GET endpoint', () => {
+    it('should extract operationId, method, and path from simple GET operation', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              summary: 'Get all users',
+              responses: {
+                '200': {
+                  description: 'Success',
+                },
+              },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(1);
+      expect(result.operations[0]).toMatchObject({
+        operationId: 'getUsers',
+        method: 'get',
+        path: '/users',
+      });
+    });
+
+    it('should handle GET endpoint with summary and description', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/pets/{petId}': {
+            get: {
+              operationId: 'getPetById',
+              summary: 'Get pet by ID',
+              description: 'Returns a single pet',
+              responses: {
+                '200': {
+                  description: 'Success',
+                },
+              },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(1);
+      expect(result.operations[0]).toMatchObject({
+        operationId: 'getPetById',
+        method: 'get',
+        path: '/pets/{petId}',
+        summary: 'Get pet by ID',
+        description: 'Returns a single pet',
+      });
+    });
+
+    it('should extract multiple operations from different paths', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              responses: { '200': { description: 'Success' } },
+            } as OperationObject,
+          },
+          '/pets': {
+            get: {
+              operationId: 'getPets',
+              responses: { '200': { description: 'Success' } },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(2);
+      expect(result.operations.map((op) => op.operationId)).toContain('getUsers');
+      expect(result.operations.map((op) => op.operationId)).toContain('getPets');
+    });
+
+    it('should handle multiple HTTP methods on same path', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              responses: { '200': { description: 'Success' } },
+            } as OperationObject,
+            post: {
+              operationId: 'createUser',
+              responses: { '201': { description: 'Created' } },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(2);
+      const getUsersOp = result.operations.find((op) => op.operationId === 'getUsers');
+      const createUserOp = result.operations.find((op) => op.operationId === 'createUser');
+
+      expect(getUsersOp?.method).toBe('get');
+      expect(createUserOp?.method).toBe('post');
+      expect(getUsersOp?.path).toBe('/users');
+      expect(createUserOp?.path).toBe('/users');
+    });
+  });
+
+  describe('POST with requestBody, parameters, responses, and security', () => {
+    it('should extract parameters from operation', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users/{userId}': {
+            get: {
+              operationId: 'getUserById',
+              parameters: [
+                {
+                  name: 'userId',
+                  in: 'path',
+                  required: true,
+                  schema: { type: 'string' } as SchemaObject,
+                },
+                {
+                  name: 'include',
+                  in: 'query',
+                  required: false,
+                  schema: { type: 'string' } as SchemaObject,
+                },
+              ],
+              responses: {
+                '200': {
+                  description: 'Success',
+                },
+              },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(1);
+      expect(result.operations[0]?.parameters).toHaveLength(2);
+      expect(result.operations[0]?.parameters[0]).toMatchObject({
+        name: 'userId',
+        in: 'path',
+        required: true,
+      });
+      expect(result.operations[0]?.parameters[1]).toMatchObject({
+        name: 'include',
+        in: 'query',
+        required: false,
+      });
+    });
+
+    it('should extract requestBody from POST operation', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users': {
+            post: {
+              operationId: 'createUser',
+              requestBody: {
+                required: true,
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        name: { type: 'string' },
+                        email: { type: 'string' },
+                      },
+                      required: ['name', 'email'],
+                    } as SchemaObject,
+                  },
+                },
+              },
+              responses: {
+                '201': {
+                  description: 'Created',
+                },
+              },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(1);
+      expect(result.operations[0]?.requestBody).toBeDefined();
+      expect(result.operations[0]?.requestBody?.required).toBe(true);
+      expect(result.operations[0]?.requestBody?.content).toBeDefined();
+    });
+
+    it('should extract responses from operation', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              responses: {
+                '200': {
+                  description: 'Success',
+                  content: {
+                    'application/json': {
+                      schema: {
+                        type: 'array',
+                        items: { type: 'object' } as SchemaObject,
+                      } as SchemaObject,
+                    },
+                  },
+                },
+                '400': {
+                  description: 'Bad Request',
+                },
+                '500': {
+                  description: 'Internal Server Error',
+                },
+              },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(1);
+      expect(result.operations[0]?.responses).toHaveLength(3);
+      expect(result.operations[0]?.responses.map((r) => r.statusCode)).toContain('200');
+      expect(result.operations[0]?.responses.map((r) => r.statusCode)).toContain('400');
+      expect(result.operations[0]?.responses.map((r) => r.statusCode)).toContain('500');
+    });
+
+    it('should extract security requirements from operation', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: {
+          title: 'Test API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/admin/users': {
+            post: {
+              operationId: 'createAdminUser',
+              security: [
+                {
+                  bearerAuth: [],
+                },
+                {
+                  apiKey: [],
+                },
+              ],
+              responses: {
+                '201': {
+                  description: 'Created',
+                },
+              },
+            } as OperationObject,
+          },
+        } as PathsObject,
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.operations).toHaveLength(1);
+      expect(result.operations[0]?.security).toBeDefined();
+      expect(result.operations[0]?.security).toHaveLength(2);
+    });
   });
 });

@@ -1,8 +1,8 @@
 # Phase 3 Session 2 – IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal
 
-**Status:** IN PROGRESS - Section A Complete ✅ | Section B Partial ⏳  
+**Status:** IN PROGRESS - Section A Complete ✅ | Section B1 Complete ✅ | Section B2 Complete ✅  
 **Estimated Effort:** 24-34 hours  
-**Actual Effort So Far:** ~8 hours (Section A complete, Section B1 complete)  
+**Actual Effort So Far:** ~13 hours (Section A complete, Section B1 complete, Section B2 complete including refactoring)  
 **Prerequisites:**
 
 - Phase 3 Session 1 complete (CodeMeta class deleted) ✅
@@ -196,17 +196,20 @@ pnpm type-check 2>&1 | tail -5
 **Acceptance Criteria:**
 
 - [x] New module exists: `lib/src/context/ir-builder.ts` ✅
+- [x] Modular architecture created: `ir-builder.core.ts`, `ir-builder.schemas.ts`, `ir-builder.parameters.ts`, `ir-builder.request-body.ts`, `ir-builder.responses.ts`, `ir-builder.operations.ts` ✅
 - [ ] New module exists: `lib/src/rendering/generate-from-ir.ts` ⏳ NEXT
 - [x] `buildIR()` function implemented ✅
+- [x] `buildIROperations()` function implemented ✅
 - [ ] IR-based code generation working (single-file + grouped strategies) ⏳ NEXT
 - [ ] Code generated DIRECTLY from IR (not via Handlebars) ⏳ NEXT
 - [x] Zero behavioral changes (148 characterization tests pass) ✅
-- [x] IR builder tests: `lib/src/context/ir-builder.test.ts` ✅
+- [x] IR builder tests: `lib/src/context/ir-builder.test.ts` ✅ (includes operations tests)
 - [ ] Generator tests: `lib/src/rendering/generate-from-ir.test.ts` ⏳ NEXT
 - [ ] Tests cover representative specs (petstore, tictactoe, multi-file) ⏳ NEXT
-- [x] `pnpm test:all` → All passing (715+ tests) ✅
+- [x] `pnpm test:all` → All passing (770 tests) ✅
 - [x] `pnpm character` → All passing (148 tests proving parity) ✅
 - [x] `pnpm type-check` → 0 errors ✅
+- [x] `pnpm lint` → 0 errors ✅ **RESOLVED: Proper module architecture implemented**
 
 **Validation Steps:**
 
@@ -214,6 +217,7 @@ pnpm type-check 2>&1 | tail -5
 # Step 1: Verify IR builder module
 test -f lib/src/context/ir-builder.ts && echo "✅ IR builder created" || echo "❌ Missing"
 grep "export function buildIR" lib/src/context/ir-builder.ts && echo "✅ buildIR function exported"
+grep "function buildIROperations" lib/src/context/ir-builder.ts && echo "✅ buildIROperations implemented"
 
 # Step 2: Verify test file
 test -f lib/src/context/ir-builder.test.ts && echo "✅ IR builder tests created" || echo "❌ Missing"
@@ -221,13 +225,27 @@ test -f lib/src/context/ir-builder.test.ts && echo "✅ IR builder tests created
 # Step 3: Run IR builder tests
 pnpm test -- run src/context/ir-builder.test.ts
 
-# Step 4: Verify zero behavioral changes
+# Step 4: Verify tests passing
 pnpm test 2>&1 | tail -10
-# Should show: 679+ tests passing
+# Should show: 770 tests passing
 
-# Step 5: Type check
+# Step 5: Check linting status
+pnpm lint 2>&1 | grep -E "(error|✓)" | head -20
+# Should show: 33 errors in ir-builder.ts (BLOCKER)
+
+# Step 6: Type check (should pass)
 pnpm type-check
 ```
+
+**BLOCKER RESOLVED ✅:**
+
+All 33 linting errors resolved through proper module architecture:
+
+- ✅ Created layered module architecture (8 files, all < 242 lines)
+- ✅ Reduced function complexity through focused helper functions
+- ✅ Removed all type assertions and non-null assertions
+- ✅ Eliminated circular dependencies through proper dependency flow
+- ✅ All quality gates GREEN (including lint)
 
 ---
 

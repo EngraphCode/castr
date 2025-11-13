@@ -351,13 +351,15 @@ export interface IRParameter {
 
   /**
    * Example value for the parameter.
+   * OpenAPI spec allows any JSON value.
    */
-  example?: ParameterObject['example'];
+  example?: unknown;
 
   /**
    * Multiple named examples.
+   * OpenAPI spec allows any structure for examples.
    */
-  examples?: ParameterObject['examples'];
+  examples?: Record<string, { value?: unknown; summary?: string; description?: string }>;
 
   /**
    * Style of parameter serialization.
