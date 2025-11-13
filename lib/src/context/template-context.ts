@@ -23,6 +23,8 @@ import {
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
 import type { CodeMetaData } from '../conversion/zod/index.js';
 import { buildMcpTools, type TemplateContextMcpTool } from './template-context.mcp.js';
+import { buildIR } from './ir-builder.js';
+import type { IRDocument } from './ir-schema.js';
 
 // Type definitions
 export interface TemplateContext {
@@ -35,6 +37,20 @@ export interface TemplateContext {
   commonSchemaNames?: Set<string>;
   options?: TemplateContextOptions | undefined;
   mcpTools: TemplateContextMcpTool[];
+  /**
+   * Information Retrieval (IR) document containing lossless OpenAPI metadata.
+   *
+   * This field contains the IR representation of the OpenAPI document, which includes:
+   * - All component schemas with rich metadata (IRSchemaNode)
+   * - All operations with parameters, request bodies, and responses
+   * - Dependency graph for circular reference detection
+   *
+   * The IR replaces CodeMetaData and provides richer metadata for code generation.
+   *
+   * @see {@link IRDocument} for complete IR structure
+   * @since Phase 3 Session 2
+   */
+  _ir?: IRDocument;
 }
 
 export interface TemplateContextOptions {
@@ -150,6 +166,7 @@ function buildTemplateContextResult(
   emittedType: Record<string, true>,
   commonSchemaNames: Set<string> | undefined,
   mcpTools: TemplateContextMcpTool[],
+  irDocument: IRDocument,
 ): TemplateContext {
   const result: TemplateContext = {
     schemas: sortedSchemas,
@@ -159,6 +176,7 @@ function buildTemplateContextResult(
     circularTypeByName,
     emittedType,
     mcpTools,
+    _ir: irDocument,
   };
 
   if (commonSchemaNames !== undefined) {
@@ -209,6 +227,9 @@ export const getTemplateContext = (
     endpoints: sortedEndpoints,
   });
 
+  // Build IR document for enhanced metadata
+  const irDocument = buildIR(doc);
+
   return buildTemplateContextResult(
     sortedSchemas,
     sortedEndpoints,
@@ -218,6 +239,7 @@ export const getTemplateContext = (
     emittedType,
     commonSchemaNames,
     mcpTools,
+    irDocument,
   );
 };
 

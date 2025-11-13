@@ -4,16 +4,24 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 import { match } from 'ts-pattern';
 
 import type { TemplateContext } from '../../context/template-context.js';
+import type { IRSchemaNode } from '../../context/ir-schema.js';
 import {
   getZodChainableArrayValidations,
   getZodChainableNumberValidations,
   getZodChainableStringValidations,
 } from './chain.validators.js';
 import type { CodeMetaData } from './index.js';
+import { getPresenceChainFromIR } from './ir-metadata-adapter.js';
 
 interface ZodChainArgs {
   schema: SchemaObject | ReferenceObject;
   meta?: CodeMetaData;
+  /**
+   * IR schema node with rich metadata.
+   * When present, prefer irNode over meta for metadata extraction.
+   * @since Phase 3 Session 2
+   */
+  irNode?: IRSchemaNode;
   options?: TemplateContext['options'];
 }
 
@@ -32,8 +40,23 @@ function normalizeSchemaTypes(schema: SchemaObject): string[] {
 
 /**
  * Get presence chain (nullable/optional/nullish)
+ *
+ * @param schema - OpenAPI schema object
+ * @param meta - Legacy CodeMetaData (deprecated, use irNode instead)
+ * @param irNode - IR schema node with rich metadata (preferred)
+ * @returns Zod presence chain string (e.g., 'optional()', 'nullable()', 'nullish()', or '')
  */
-export function getZodChainablePresence(schema: SchemaObject, meta?: CodeMetaData): string {
+export function getZodChainablePresence(
+  schema: SchemaObject,
+  meta?: CodeMetaData,
+  irNode?: IRSchemaNode,
+): string {
+  // Prefer IRSchemaNode when available (migration path)
+  if (irNode) {
+    return getPresenceChainFromIR(irNode);
+  }
+
+  // Legacy code path using CodeMetaData (will be removed in C6)
   // In OpenAPI 3.1, nullable types use type arrays: type: ['string', 'null']
   const types = normalizeSchemaTypes(schema);
   const isNullable = types.includes('null');
@@ -103,7 +126,7 @@ export {
  * Get Zod validation chain for a schema
  * Applies type-specific validations, descriptions, presence modifiers, and defaults
  */
-export function getZodChain({ schema, meta, options }: ZodChainArgs): string {
+export function getZodChain({ schema, meta, irNode, options }: ZodChainArgs): string {
   // ReferenceObjects don't have chainable properties, return empty
   if (isReferenceObject(schema)) {
     return '';
@@ -112,7 +135,7 @@ export function getZodChain({ schema, meta, options }: ZodChainArgs): string {
   const chains: string[] = [];
   addTypeSpecificValidations(schema, chains);
   addDescriptionIfNeeded(schema, options, chains);
-  const output = buildChainOutput(schema, meta, options, chains);
+  const output = buildChainOutput(schema, meta, irNode, options, chains);
   return output ? `.${output}` : '';
 }
 
@@ -155,12 +178,13 @@ function addDescriptionIfNeeded(
 function buildChainOutput(
   schema: SchemaObject,
   meta: CodeMetaData | undefined,
+  irNode: IRSchemaNode | undefined,
   options: TemplateContext['options'] | undefined,
   chains: string[],
 ): string {
   return chains
     .concat(
-      getZodChainablePresence(schema, meta),
+      getZodChainablePresence(schema, meta, irNode),
       options?.withDefaultValues === false ? [] : getZodChainableDefault(schema),
     )
     .filter(Boolean)

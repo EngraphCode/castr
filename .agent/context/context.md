@@ -217,16 +217,16 @@ See `.agent/context/continuation_prompt.md` § "Why No Custom Types?" for comple
 
 ## 🎯 Quality Gate Status
 
-| Gate                 | Status | Last Check   | Notes                                      |
-| -------------------- | ------ | ------------ | ------------------------------------------ |
-| `pnpm format`        | ✅     | Nov 13, 2025 | Prettier applied successfully              |
-| `pnpm build`         | ✅     | Nov 13, 2025 | Build successful                           |
-| `pnpm type-check`    | ✅     | Nov 13, 2025 | Zero TypeScript errors                     |
-| `pnpm lint`          | ✅     | Nov 13, 2025 | **Zero errors** (refactoring complete)     |
-| `pnpm test:all`      | ✅     | Nov 13, 2025 | 770 tests passed (includes operations)     |
-| `pnpm test:gen`      | ✅     | Nov 13, 2025 | 20 generated code validation tests passed  |
-| `pnpm test:snapshot` | ✅     | Nov 13, 2025 | 158 snapshot tests passed                  |
-| `pnpm character`     | ✅     | Nov 13, 2025 | 148 characterization tests passed          |
+| Gate                 | Status | Last Check   | Notes                                     |
+| -------------------- | ------ | ------------ | ----------------------------------------- |
+| `pnpm format`        | ✅     | Nov 13, 2025 | Prettier applied successfully             |
+| `pnpm build`         | ✅     | Nov 13, 2025 | Build successful                          |
+| `pnpm type-check`    | ✅     | Nov 13, 2025 | Zero TypeScript errors                    |
+| `pnpm lint`          | ✅     | Nov 13, 2025 | **Zero errors** (refactoring complete)    |
+| `pnpm test:all`      | ✅     | Nov 13, 2025 | 770 tests passed (includes operations)    |
+| `pnpm test:gen`      | ✅     | Nov 13, 2025 | 20 generated code validation tests passed |
+| `pnpm test:snapshot` | ✅     | Nov 13, 2025 | 158 snapshot tests passed                 |
+| `pnpm character`     | ✅     | Nov 13, 2025 | 148 characterization tests passed         |
 
 **Result:** ✅ **ALL QUALITY GATES GREEN** — Section B2 complete, ready for Section C.
 

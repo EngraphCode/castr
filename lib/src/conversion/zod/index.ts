@@ -2,6 +2,7 @@ import type { OpenAPIObject, ReferenceObject, SchemaObject } from 'openapi3-ts/o
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { TemplateContext } from '../../context/template-context.js';
+import type { IRSchemaNode } from '../../context/ir-schema.js';
 import { isPrimitiveSchemaType } from '../../shared/utils/index.js';
 import { getZodChain } from './chain.js';
 import {
@@ -53,6 +54,15 @@ interface ConversionArgs {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
+  /**
+   * IR schema node with rich metadata.
+   *
+   * This is the new way to pass metadata during the migration from CodeMetaData.
+   * When present, prefer irNode over meta for metadata extraction.
+   *
+   * @since Phase 3 Session 2
+   */
+  irNode?: IRSchemaNode | undefined;
   options?: TemplateContext['options'] | undefined;
 }
 

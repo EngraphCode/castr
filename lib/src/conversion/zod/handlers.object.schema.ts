@@ -6,17 +6,20 @@ import { getSchemaFromComponents } from '../../shared/component-access.js';
 import { parseComponentRef } from '../../shared/ref-resolution.js';
 import { buildObjectPropertiesString } from './handlers.object.properties.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
+import type { IRSchemaNode } from '../../context/ir-schema.js';
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
+  irNode?: IRSchemaNode | undefined;
   options?: TemplateContext['options'] | undefined;
 }) => ZodCodeResult;
 
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
   meta?: CodeMetaData;
+  irNode?: IRSchemaNode;
   options?: TemplateContext['options'];
 }) => string;
 

@@ -12,6 +12,7 @@ import type { TemplateContext } from '../../context/template-context.js';
 import { getSchemaFromComponents } from '../../shared/component-access.js';
 import { getSchemaNameFromRef, parseComponentRef } from '../../shared/ref-resolution.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
+import type { IRSchemaNode } from '../../context/ir-schema.js';
 
 // Re-export for backward compatibility
 export { getSchemaNameFromRef };
@@ -20,12 +21,14 @@ type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
+  irNode?: IRSchemaNode | undefined;
   options?: TemplateContext['options'] | undefined;
 }) => ZodCodeResult;
 
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
   meta?: CodeMetaData;
+  irNode?: IRSchemaNode;
   options?: TemplateContext['options'];
 }) => string;
 

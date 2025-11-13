@@ -4,11 +4,13 @@ import { isSchemaObject } from 'openapi3-ts/oas31';
 import type { TemplateContext } from '../../context/template-context.js';
 import { inferRequiredSchema } from '../../shared/infer-required-only.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
+import type { IRSchemaNode } from '../../context/ir-schema.js';
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
   meta?: CodeMetaData | undefined;
+  irNode?: IRSchemaNode | undefined;
   options?: TemplateContext['options'] | undefined;
 }) => ZodCodeResult;
 
