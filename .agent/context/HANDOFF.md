@@ -8,11 +8,11 @@
 
 ## 📍 Where We Are
 
-**Current Phase:** Phase 3 Session 1.5 ✅ **COMPLETE** - Ready for Session 3.2  
+**Current Phase:** Phase 3 Session 2 ⏳ **IN PROGRESS** - Section A ✅ Complete, Section B1 ✅ Complete  
 **Active Branch:** `feat/rewrite`  
-**Last Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution  
-**Status:** All sections complete; Multi-file $ref resolution working; All quality gates GREEN ✅  
-**Next:** Phase 3 Session 2 - IR Schema Foundations & CodeMetaData Replacement (estimated 18-24 hours)
+**Last Commit:** `feat(phase3): Implement Section A - IR Schema Foundations`  
+**Status:** Section A complete (IR type definitions + validators); Section B1 complete (IR builder); All quality gates GREEN ✅  
+**Next:** Section B2 - IR-Based Code Generation (`lib/src/rendering/generate-from-ir.ts`)
 
 ### Phase Progress Overview
 
@@ -22,8 +22,54 @@ Phase 2 Part 1: Scalar Pipeline                ✅ Complete (Sessions 1-4)
 Phase 2 Part 2: MCP Enhancements               ✅ Complete (Sessions 5-9)
 Phase 3 Session 1: CodeMeta Elimination        ✅ Complete (ALL sections)
 Phase 3 Session 1.5: Multi-File $ref Fix      ✅ Complete (Nov 12, 2025)
-Phase 3 Session 2: IR Schema Foundations       ⏳ READY TO START (18-24h)
+Phase 3 Session 2: IR Schema Foundations       ⏳ IN PROGRESS (Section A ✅, B1 ✅, ~8h/24-34h)
 ```
+
+### Session 3.2 Current Status (Nov 13, 2025) - ⏳ IN PROGRESS
+
+**IR Schema Foundations - Section A ✅ Complete, Section B1 ✅ Complete**
+
+**Deliverables (Completed):**
+
+- IR type definitions module: `lib/src/context/ir-schema.ts` (1058 lines)
+  - All core IR interfaces defined: IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph
+  - Supporting interfaces: IRInfo, IRParameter, IRRequestBody, IRMediaType, IRResponse, IRSecurityRequirement
+  - Metadata interfaces: IRSchemaDependencyInfo, IRInheritanceInfo, IRZodChainInfo, IRDependencyNode
+  - Comprehensive TSDoc with examples for all interfaces
+  - Versioning policy documented
+- IR validators module: `lib/src/context/ir-validators.ts` (143 lines)
+  - Type guards: isIRDocument, isIRComponent, isIROperation, isIRSchema, isIRSchemaNode
+  - Runtime validation for all IR structures
+- IR builder module: `lib/src/context/ir-builder.ts` (433 lines)
+  - Main entry: buildIR(), buildIRSchemas()
+  - Schema building: buildIRSchema(), buildIRSchemaNode()
+  - Support for primitives, objects, arrays, compositions, references
+  - Refactored into single-responsibility helper functions
+- Test files: `ir-validators.test.ts` (214 lines), `ir-builder.test.ts` (223 lines)
+  - 19 new IR tests passing
+  - All quality gates GREEN (715+ tests total)
+
+**Files Created:**
+
+- `lib/src/context/ir-schema.ts` - IR type definitions
+- `lib/src/context/ir-validators.ts` - Type guards
+- `lib/src/context/ir-validators.test.ts` - Validator tests
+- `lib/src/context/ir-builder.ts` - IR builder functions
+- `lib/src/context/ir-builder.test.ts` - Builder tests
+
+**Next Steps:**
+
+- Section B2: IR-Based Code Generation (`lib/src/rendering/generate-from-ir.ts`)
+- Section C: CodeMetaData Replacement
+- Section D: Handlebars Complete Removal
+- Section E: Quality Gates & Validation
+
+**Impact:**
+
+- ✅ Lossless IR schema established
+- ✅ IRSchemaNode ready to replace CodeMetaData
+- ✅ Type guards enable safe runtime validation
+- ✅ Foundation for IR-based code generation ready
 
 ### Session 3.1.5 Final Status (Nov 12, 2025) - ✅ COMPLETE
 
@@ -111,7 +157,11 @@ Phase 3 Session 2: IR Schema Foundations       ⏳ READY TO START (18-24h)
 
 - Deleted 6 stray `.mjs` files from `lib/` root (TypeScript-only policy enforced)
 
-**Quality Gate Status:**
+**Quality Gate Status (Session 3.2 - Nov 13):**
+
+- ✅ **ALL GREEN:** format, build, type-check, lint, test:all (715+), test:gen (20), test:snapshot (158), character (148)
+
+**Quality Gate Status (Session 3.1.5 - Nov 12):**
 
 - ✅ **ALL GREEN:** format, build, type-check, lint, test (711+), test:gen (20), test:snapshot (158), character (148)
 
@@ -430,28 +480,43 @@ export function isNullableType(schema: SchemaObject): boolean {
 
 ## 🔄 What's Next
 
-### Immediate Next Session
+### Immediate Next Task
 
-**Session 3.2: IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal** (~24-34 hours)
+**Session 3.2 - Section B2: IR-Based Code Generation** (~4-6 hours remaining in Section B)
 
-**Goal:** Define lossless Intermediate Representation (IR) that captures all OpenAPI metadata, replaces CodeMetaData, AND completely removes Handlebars
+**Goal:** Implement code generation functions that consume IR and produce TypeScript/Zod code directly (without Handlebars)
 
 **Objectives:**
 
-1. Define IR type definitions (IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph)
-2. Replace CodeMetaData interface with richer IR schema metadata
-3. Implement IR-based code generation (replaces Handlebars)
-4. **DELETE all Handlebars files, templates, and dependencies**
-5. Zero behavioral changes (use characterization tests as safety net)
+1. Create `lib/src/rendering/generate-from-ir.ts` module
+2. Implement code generation functions that consume IR structures
+3. Generate TypeScript/Zod strings directly from IR (no templates)
+4. Support single-file and grouped strategies
+5. Use characterization tests (148) to validate parity with Handlebars
 
 **Deliverables:**
 
-1. `lib/src/context/ir-schema.ts` - IR type definitions with versioning
-2. `lib/src/context/ir-validators.ts` - Type guards and validation
-3. `lib/src/context/ir-builder.ts` - IR-based code generation
-4. `lib/src/conversion/zod/ir-metadata-adapter.ts` - Adapter functions
-5. CodeMetaData completely deleted (replaced with IR schema metadata)
-6. **Handlebars completely deleted** (5 .hbs files, handlebars.ts, dependency removed)
+1. `lib/src/rendering/generate-from-ir.ts` - IR-based code generation
+2. `lib/src/rendering/generate-from-ir.test.ts` - Generator tests
+3. Tests covering representative specs (petstore, tictactoe, multi-file)
+4. Zero behavioral changes (characterization tests pass)
+
+### Remaining Session 3.2 Work
+
+**Section C: CodeMetaData Replacement** (~6-8 hours)
+- Create `lib/src/conversion/zod/ir-metadata-adapter.ts`
+- Update all Zod conversion functions to use IR metadata
+- Delete CodeMetaData interface completely
+
+**Section D: Handlebars Complete Removal** (~2-3 hours)
+- Delete all 5 .hbs files, handlebars.ts, handlebars.test.ts
+- Remove handlebars dependency from package.json
+- Verify eradication
+
+**Section E: Quality Gates & Validation** (~2-3 hours)
+- Run full quality gate suite
+- IR inspection & validation
+- Documentation updates
 
 **See:** `.agent/plans/PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md` for detailed plan
 
@@ -494,7 +559,7 @@ pnpm check       # Run all quality gates
 
 ## 🚀 Phase 3 Progress (November 12, 2025)
 
-**Current State:** Phase 3 Session 1.5 COMPLETE ✅ - Ready for Session 3.2
+**Current State:** Phase 3 Session 2 IN PROGRESS ⏳ - Section A ✅ Complete, Section B1 ✅ Complete, Section B2 ⏳ Next
 
 **Phase 2 Completion Summary:**
 
@@ -503,7 +568,18 @@ pnpm check       # Run all quality gates
 - ✅ OpenAPI 3.1-first architecture established
 - ✅ MCP tool generation with type guards, error formatting, comprehensive docs
 
-**Phase 3 Sessions 1 & 1.5 Completion:**
+**Phase 3 Sessions 1, 1.5, & 2 Progress:**
+
+**Session 3.2 (Nov 13):** ⏳ IN PROGRESS - IR Schema Foundations
+
+- [x] Section A Complete: IR type definitions (1058 lines) ✅
+- [x] Section A Complete: IR validators (143 lines) ✅
+- [x] Section B1 Complete: IR builder (433 lines) ✅
+- [ ] Section B2 Next: IR-based code generation ⏳
+- [ ] Section C Pending: CodeMetaData replacement ⏳
+- [ ] Section D Pending: Handlebars removal ⏳
+- [ ] Section E Pending: Final validation ⏳
+- [x] All quality gates GREEN (715+ tests) ✅
 
 **Session 3.1 (Nov 11):** ✅ COMPLETED - CodeMeta abstraction DELETED, pure functions extracted
 
@@ -531,13 +607,15 @@ pnpm check       # Run all quality gates
 - ✅ Generated code validation infrastructure complete
 - ✅ Clear, maintainable ref resolution architecture
 
-**Next: Phase 3 Session 2 - IR Schema Foundations**
+**Current: Phase 3 Session 2 - IR Schema Foundations (IN PROGRESS)**
 
-**Objective:** Define lossless intermediate representation (IR) structure
+**Objective:** Define lossless Information Retrieval (IR) structure, replace CodeMetaData, remove Handlebars
 
-**Detailed Plan:** `.agent/plans/PHASE-3-TS-MORPH-IR.md`
+**Status:** Section A ✅ Complete (8 hours), Section B1 ✅ Complete, Section B2 ⏳ Next
 
-**Estimated Effort:** 16-24 hours
+**Detailed Plan:** `.agent/plans/PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md`
+
+**Estimated Effort:** 24-34 hours (8 hours complete)
 
 **Phase 3 Remaining Impact:**
 

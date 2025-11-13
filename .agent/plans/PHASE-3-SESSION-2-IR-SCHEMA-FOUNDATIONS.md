@@ -1,7 +1,8 @@
 # Phase 3 Session 2 – IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal
 
-**Status:** Ready to Start  
+**Status:** IN PROGRESS - Section A Complete ✅ | Section B Partial ⏳  
 **Estimated Effort:** 24-34 hours  
+**Actual Effort So Far:** ~8 hours (Section A complete, Section B1 complete)  
 **Prerequisites:**
 
 - Phase 3 Session 1 complete (CodeMeta class deleted) ✅
@@ -109,24 +110,24 @@
 
 **Acceptance Criteria:**
 
-- [ ] New module exists: `lib/src/context/ir-schema.ts`
-- [ ] Core IR interfaces defined:
-  - [ ] `IRDocument` (top-level document representation)
-  - [ ] `IRComponent` (schemas, responses, parameters, etc.)
-  - [ ] `IROperation` (endpoint operations with metadata)
-  - [ ] `IRSchema` (schema nodes with rich metadata)
-  - [ ] `IRDependencyGraph` (reference tracking and circular detection)
-- [ ] `IRSchemaNode` interface replaces CodeMetaData functionality:
-  - [ ] `required: boolean` (from CodeMetaData.isRequired)
-  - [ ] `nullable: boolean` (computed from schema types)
-  - [ ] `dependencyGraph` (from CodeMetaData.referencedBy, enhanced)
-  - [ ] `inheritance` (from CodeMetaData.parent, enhanced)
-  - [ ] `zodChain` (presence, validations, defaults)
-- [ ] Versioning policy documented in TSDoc
-- [ ] IR validators module: `lib/src/context/ir-validators.ts`
-- [ ] Type guards implemented for all IR interfaces
-- [ ] Comprehensive TSDoc for all interfaces (with examples)
-- [ ] `pnpm type-check` → 0 errors
+- [x] New module exists: `lib/src/context/ir-schema.ts` ✅
+- [x] Core IR interfaces defined: ✅
+  - [x] `IRDocument` (top-level document representation) ✅
+  - [x] `IRComponent` (schemas, responses, parameters, etc.) ✅
+  - [x] `IROperation` (endpoint operations with metadata) ✅
+  - [x] `IRSchema` (schema nodes with rich metadata) ✅
+  - [x] `IRDependencyGraph` (reference tracking and circular detection) ✅
+- [x] `IRSchemaNode` interface replaces CodeMetaData functionality: ✅
+  - [x] `required: boolean` (from CodeMetaData.isRequired) ✅
+  - [x] `nullable: boolean` (computed from schema types) ✅
+  - [x] `dependencyGraph` (from CodeMetaData.referencedBy, enhanced) ✅
+  - [x] `inheritance` (from CodeMetaData.parent, enhanced) ✅
+  - [x] `zodChain` (presence, validations, defaults) ✅
+- [x] Versioning policy documented in TSDoc ✅
+- [x] IR validators module: `lib/src/context/ir-validators.ts` ✅
+- [x] Type guards implemented for all IR interfaces ✅
+- [x] Comprehensive TSDoc for all interfaces (with examples) ✅
+- [x] `pnpm type-check` → 0 errors ✅
 
 **Validation Steps:**
 
@@ -194,18 +195,18 @@ pnpm type-check 2>&1 | tail -5
 
 **Acceptance Criteria:**
 
-- [ ] New module exists: `lib/src/context/ir-builder.ts`
-- [ ] New module exists: `lib/src/rendering/generate-from-ir.ts`
-- [ ] `buildIR()` function implemented
-- [ ] IR-based code generation working (single-file + grouped strategies)
-- [ ] Code generated DIRECTLY from IR (not via Handlebars)
-- [ ] Zero behavioral changes (148 characterization tests pass)
-- [ ] IR builder tests: `lib/src/context/ir-builder.test.ts`
-- [ ] Generator tests: `lib/src/rendering/generate-from-ir.test.ts`
-- [ ] Tests cover representative specs (petstore, tictactoe, multi-file)
-- [ ] `pnpm test` → All passing (679+ tests)
-- [ ] `pnpm character` → All passing (148 tests proving parity)
-- [ ] `pnpm type-check` → 0 errors
+- [x] New module exists: `lib/src/context/ir-builder.ts` ✅
+- [ ] New module exists: `lib/src/rendering/generate-from-ir.ts` ⏳ NEXT
+- [x] `buildIR()` function implemented ✅
+- [ ] IR-based code generation working (single-file + grouped strategies) ⏳ NEXT
+- [ ] Code generated DIRECTLY from IR (not via Handlebars) ⏳ NEXT
+- [x] Zero behavioral changes (148 characterization tests pass) ✅
+- [x] IR builder tests: `lib/src/context/ir-builder.test.ts` ✅
+- [ ] Generator tests: `lib/src/rendering/generate-from-ir.test.ts` ⏳ NEXT
+- [ ] Tests cover representative specs (petstore, tictactoe, multi-file) ⏳ NEXT
+- [x] `pnpm test:all` → All passing (715+ tests) ✅
+- [x] `pnpm character` → All passing (148 tests proving parity) ✅
+- [x] `pnpm type-check` → 0 errors ✅
 
 **Validation Steps:**
 

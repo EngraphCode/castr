@@ -27,11 +27,11 @@
 
 ### Where We Are
 
-**Phase:** Phase 3 Session 1.5 - Multi-File $ref Resolution ✅ **COMPLETE**  
+**Phase:** Phase 3 Session 2 - IR Schema Foundations ⏳ **IN PROGRESS** (Section A ✅, B1 ✅, B2 ⏳ Next)  
 **Branch:** `feat/rewrite`  
-**Last Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution  
-**Status:** Phase 2 COMPLETE ✅. Phase 3 Sessions 1 & 1.5 COMPLETE ✅. All quality gates GREEN ✅.  
-**Next:** Phase 3 Session 2 - IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal (estimated 24-34 hours). Define lossless IR structure, replace CodeMetaData with IR schema metadata, implement IR-based code generation, **DELETE all Handlebars files and dependencies**.
+**Last Commit:** `feat(phase3): Implement Section A - IR Schema Foundations`  
+**Status:** Phase 2 COMPLETE ✅. Phase 3 Sessions 1 & 1.5 COMPLETE ✅. Session 3.2 Section A COMPLETE ✅ (IR type definitions + validators), Section B1 COMPLETE ✅ (IR builder). All quality gates GREEN ✅ (715+ tests).  
+**Next:** Section B2 - IR-Based Code Generation (`lib/src/rendering/generate-from-ir.ts`, estimated 4-6 hours). Generate TypeScript/Zod code directly from IR structures without Handlebars templates.
 
 **Recent Verification:**
 
@@ -40,6 +40,7 @@
 - **Nov 8, 2025 (10:40 PM):** `pnpm --filter @oaknational/openapi-to-tooling exec node -- ./dist/cli/index.js examples/openapi/v3.0/petstore-expanded.yaml --emit-mcp-manifest ../tmp/petstore.mcp.json` and `…/multi-auth.yaml --emit-mcp-manifest ../tmp/multi-auth.mcp.json` — stored MCP manifests for Workstream D (petstore reports `default`-only warning, multi-auth surfaces layered OAuth2 + API key requirements).
 - **Nov 11, 2025:** Phase 3 Session 1 COMPLETE. Bug Fix #1 (reference resolution in `handleReferenceObject`) and Bug Fix #2 (duplicate error responses in templates) completed. All 3 critical blockers resolved (code generation regression, linting violations, workspace hygiene). All quality gates GREEN, 679 tests + 16 generated code validation tests passing. Commit `09d337e` pushed to `feat/rewrite`.
 - **Nov 12, 2025:** Phase 3 Session 1.5 COMPLETE. Created centralized ref resolution module (`lib/src/shared/ref-resolution.ts`) supporting both standard and Scalar x-ext vendor extension formats. Enhanced `getSchemaFromComponents()` with dual-path resolution (x-ext first, then standard fallback). Consolidated 8+ duplicate `getSchemaNameFromRef` implementations across 9 files. Re-enabled multi-file fixture in all 4 validation test files. 26 ref resolution unit tests + 20 validation tests passing. All quality gates GREEN (711+ tests). Commit `ad4533c` pushed to `feat/rewrite`.
+- **Nov 13, 2025:** Phase 3 Session 2 IN PROGRESS. **Section A COMPLETE:** Created `lib/src/context/ir-schema.ts` (1058 lines) with all core IR interfaces (IRDocument, IRComponent, IROperation, IRSchema, IRSchemaNode, IRDependencyGraph) and supporting types. Created `lib/src/context/ir-validators.ts` (143 lines) with type guards for all IR structures. Created `lib/src/context/ir-validators.test.ts` (214 lines) with comprehensive tests. Updated terminology from "Intermediate Representation" to "Information Retrieval" throughout. Fixed `exactOptionalPropertyTypes` issues using bracket notation. **Section B1 COMPLETE:** Created `lib/src/context/ir-builder.ts` (433 lines) with IR construction functions: buildIR(), buildIRSchemas(), buildIRSchema(), buildIRSchemaNode(). Implemented support for primitives, objects, arrays, compositions, and references. Created `lib/src/context/ir-builder.test.ts` (223 lines) with tests for all schema types. Refactored into single-responsibility helper functions. Fixed `exactOptionalPropertyTypes` by conditionally including properties. All quality gates GREEN (715+ tests: 19 new IR tests). Commit ready to push. **Next:** Section B2 - IR-Based Code Generation.
 
 ### What Was Accomplished (Phase 2 Part 1)
 
@@ -984,7 +985,7 @@ pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test && pnpm t
 
 ---
 
-**Last Updated:** November 12, 2025  
-**Status:** Phase 2 Complete ✅ | Phase 3 Sessions 1 & 1.5 COMPLETE ✅ | All blockers resolved ✅  
-**Quality Gates:** ALL GREEN ✅ (711+ tests including ref resolution + validation tests)  
-**Commit:** `ad4533c` - fix(multi-file): resolve Scalar x-ext $ref resolution
+**Last Updated:** November 13, 2025  
+**Status:** Phase 2 Complete ✅ | Phase 3 Sessions 1 & 1.5 COMPLETE ✅ | Session 3.2 IN PROGRESS ⏳ (Section A ✅, B1 ✅, B2 ⏳ Next)  
+**Quality Gates:** ALL GREEN ✅ (715+ tests including 19 new IR tests)  
+**Commit:** Ready to commit Section A & B1 (`feat(phase3): Implement Section A - IR Schema Foundations`)
