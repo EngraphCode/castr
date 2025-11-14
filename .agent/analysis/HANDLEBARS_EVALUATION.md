@@ -531,7 +531,7 @@ A **third and superior option** exists beyond Handlebars vs Template Literals:
 Instead of string-based templates, use **AST-based code generation**:
 
 ```typescript
-// Intermediate Representation
+// information retrieval architecture
 interface FileUnit {
   path: string;
   imports: ImportSpec[];

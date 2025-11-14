@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
+import { isSingleFileResult } from '../generation-result.js';
 
 describe('schemas-with-client template', () => {
   const minimalSpec: OpenAPIObject = {
@@ -259,8 +260,11 @@ describe('schemas-with-client template', () => {
       // Skip the validate helper which legitimately needs "as T" for type safety
       const startMarker =
         '// ============================================================\n// Endpoint Metadata';
-      const userCodeStart = (result as string).indexOf(startMarker);
-      const userCode = userCodeStart >= 0 ? (result as string).slice(userCodeStart) : result;
+      if (!isSingleFileResult(result)) {
+        throw new Error('Expected single file result');
+      }
+      const userCodeStart = result.content.indexOf(startMarker);
+      const userCode = userCodeStart >= 0 ? result.content.slice(userCodeStart) : result.content;
 
       // No "as any", "as unknown", etc. in user-facing code
       // Allow "as T" in validate function (helper code)

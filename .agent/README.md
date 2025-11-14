@@ -111,13 +111,17 @@
 
 **`RULES.md`** ⭐⭐⭐
 
-- **Purpose:** Coding standards and best practices
+- **Purpose:** Non-negotiable coding standards and engineering excellence principles
 - **Contains:**
-  - Testing standards (7 principles)
-  - Code quality standards
-  - TypeScript best practices
-  - Type safety requirements
-- **Follow:** Always! Every line of code must adhere
+  - **Type System Discipline** - Zero tolerance for escape hatches
+  - **Engineering Excellence** - Clean breaks, library types first, no hacks
+  - **TDD Standards** - Comprehensive test-driven development requirements
+  - **Testing Principles** - 7 core testing standards
+  - **Code Quality Standards** - Pure functions, single responsibility, immutability
+  - **TypeScript Best Practices** - Preserve type information, discriminated unions, strict mode
+  - **Comprehensive TSDoc** - Professional documentation requirements
+- **Follow:** Always! Every line of code must adhere. Non-negotiable.
+- **Critical:** Types are our friend - they reveal problems, not create them
 
 **`DEFINITION_OF_DONE.md`**
 
@@ -227,13 +231,17 @@ All must pass (lint is exception for now, but check for new issues).
 ## 💡 Tips for Success
 
 1. **Always check context.md first** - It's the single source of truth
-2. **Follow RULES.md religiously** - Standards are non-negotiable
-3. **Document as you go** - Future you will thank present you
-4. **Run Definition of Done frequently** - Catch issues early
-5. **Update TODO list** - Track progress, stay organized
-6. **Make atomic commits** - One logical change per commit
-7. **Write helpful commit messages** - Explain why, not what
-8. **Create analysis documents** - Record investigations in `analysis/`
+2. **Follow RULES.md religiously** - Standards are non-negotiable, types are our friend
+3. **Excellence over speed** - Get it right, not fast; long-term stability over short-term hacks
+4. **Listen to type errors** - They reveal architectural problems that need solving
+5. **No escape hatches** - Fix root causes, not symptoms; no `as`, `any`, `!`, etc.
+6. **TDD always** - Write failing tests first, no exceptions, no "I'll add tests later"
+7. **Library types first** - Use `openapi3-ts/oas31` before creating custom types
+8. **Document as you go** - Future you will thank present you
+9. **Run quality gates frequently** - Catch issues early, all 8 gates must pass
+10. **Make atomic commits** - One logical change per commit
+11. **Write helpful commit messages** - Explain why, not what
+12. **Create analysis documents** - Record investigations in `analysis/`
 
 ---
 

@@ -2,6 +2,7 @@ import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-documen
 import type { OpenAPIObject, SchemasObject } from 'openapi3-ts/oas31';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
+import { isGroupedFileResult } from '../../src/rendering/generation-result.js';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
 import { pathToVariableName } from '../../src/shared/utils/index.js';
 
@@ -96,9 +97,10 @@ describe('generateZodClientFromOpenAPI - with tag-file groupStrategy', () => {
       disableWriteToFile: true,
       options: { groupStrategy: 'tag-file' },
     });
-    if (typeof prettyOutput === 'object' && prettyOutput !== null) {
-      expect(prettyOutput['pet']).toMatchSnapshot();
+    if (!isGroupedFileResult(prettyOutput)) {
+      throw new Error('Expected grouped file result');
     }
+    expect(prettyOutput.files['pet']).toMatchSnapshot();
   });
 });
 

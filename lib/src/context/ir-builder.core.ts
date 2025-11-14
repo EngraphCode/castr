@@ -18,6 +18,7 @@
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { IRSchema, IRSchemaNode } from './ir-schema.js';
+import { IRSchemaProperties } from './ir-schema-properties.js';
 import type { IRBuildContext } from './ir-builder.types.js';
 
 /**
@@ -147,6 +148,10 @@ function addConstraints(schema: SchemaObject, irSchema: IRSchema): void {
   if (schema.pattern !== undefined) {
     irSchema.pattern = schema.pattern;
   }
+  // Preserve enum values (critical for data integrity)
+  if (schema.enum !== undefined && Array.isArray(schema.enum)) {
+    irSchema.enum = Array.from(schema.enum);
+  }
 }
 
 /**
@@ -163,7 +168,7 @@ function addObjectProperties(
   }
 
   const requiredFields = schema.required ?? [];
-  const properties: Record<string, IRSchema> = {};
+  const propsRecord: Record<string, IRSchema> = {};
 
   for (const [propName, propSchema] of Object.entries(schema.properties)) {
     const isRequired = requiredFields.includes(propName);
@@ -173,10 +178,10 @@ function addObjectProperties(
       required: isRequired,
     };
 
-    properties[propName] = buildIRSchema(propSchema, propContext);
+    propsRecord[propName] = buildIRSchema(propSchema, propContext);
   }
 
-  irSchema.properties = properties;
+  irSchema.properties = new IRSchemaProperties(propsRecord);
   irSchema.required = requiredFields;
 }
 

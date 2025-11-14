@@ -294,7 +294,7 @@ const userDeclaration = createTypeDeclaration('User', userType);
 - ✅ Incremental migration path
 - ✅ Easier testing (test expressions separately from declarations)
 
-### Question 2: Object Properties Intermediate Representation
+### Question 2: Object Properties information retrieval architecture
 
 **Problem:** `convertObjectProperties()` currently returns `Record<string, t.TypeDefinition>`.
 

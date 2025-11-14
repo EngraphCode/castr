@@ -28,6 +28,7 @@ import type { TemplateContext, TemplateContextOptions } from '../context/index.j
 import { getZodClientTemplateContext } from '../context/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { handleFileGrouping, handleSingleFileOutput } from './templating.js';
+import type { GenerationResult } from './generation-result.js';
 import { fileURLToPath } from 'node:url';
 
 type TemplateName = 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
@@ -235,7 +236,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   options,
   disableWriteToFile,
   handlebars,
-}: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<string | Record<string, string>> => {
+}: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<GenerationResult> => {
   // Mutual exclusion guard: cannot provide both input and openApiDoc
   if (input !== undefined && openApiDoc !== undefined) {
     throw new Error(

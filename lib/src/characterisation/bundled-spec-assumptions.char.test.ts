@@ -25,6 +25,7 @@ import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { isSingleFileResult } from '../rendering/generation-result.js';
 import { extractAllOperations, getOperation } from './__fixtures__/bundled-spec-helpers.js';
 
 /**
@@ -624,10 +625,15 @@ describe('Bundled Spec: Code Generation Integration', () => {
 
     // Verify generation succeeded with expected content
     expect(result).toBeDefined();
-    expect(typeof result).toBe('string');
-    expect(result.length).toBeGreaterThan(0);
-    expect(result).toContain('import { z }');
-    expect(result).toContain('endpoints');
+
+    // Type guard: narrows result to single file
+    if (!isSingleFileResult(result)) {
+      throw new Error('Expected single file result');
+    }
+
+    expect(result.content.length).toBeGreaterThan(0);
+    expect(result.content).toContain('import { z }');
+    expect(result.content).toContain('endpoints');
 
     // Verify components are defined - our makeSchemaResolver handles $refs
     expect(bundled.components?.schemas?.['Error']).toBeDefined();

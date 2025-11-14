@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../src/rendering/generate-from-context.js';
+import { isSingleFileResult } from '../src/rendering/generation-result.js';
 import { join } from 'path';
 import { validateSyntax } from './validation-harness.js';
 import { createTempDir, cleanupTempDir, writeTempFile, removeTempFile } from './temp-file-utils.js';
@@ -64,13 +65,17 @@ describe('Generated Code - Syntax Validation', () => {
     beforeAll(async () => {
       try {
         const fullPath = join(process.cwd(), path);
-        const generatedCode = (await generateZodClientFromOpenAPI({
+        const result = await generateZodClientFromOpenAPI({
           input: fullPath,
           disableWriteToFile: true,
           options: {
             withAlias: true,
           },
-        })) as string;
+        });
+        if (!isSingleFileResult(result)) {
+          throw new Error('Expected single file result');
+        }
+        const generatedCode = result.content;
 
         tempFilePath = await writeTempFile(tempDir, name, generatedCode);
       } catch (error) {

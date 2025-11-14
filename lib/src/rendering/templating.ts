@@ -9,6 +9,7 @@ import type { getHandlebars } from './handlebars.js';
 import { logger } from '../shared/utils/logger.js';
 import { maybePretty } from '../shared/maybe-pretty.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
+import type { GenerationResult } from './generation-result.js';
 import { fileURLToPath } from 'node:url';
 
 const templatesDir = resolve(dirname(fileURLToPath(import.meta.url)), './templates');
@@ -133,7 +134,7 @@ export async function handleFileGrouping(
   prettierConfig: Options | null | undefined,
   hbs: ReturnType<typeof getHandlebars>,
   willWriteToFile: boolean,
-): Promise<Record<string, string>> {
+): Promise<GenerationResult> {
   const outputByGroupName: Record<string, string> = {};
 
   if (willWriteToFile && distPath) {
@@ -165,7 +166,12 @@ export async function handleFileGrouping(
     willWriteToFile,
   );
 
-  return { ...outputByGroupName, ...groupFiles };
+  const files = { ...outputByGroupName, ...groupFiles };
+  return {
+    type: 'grouped',
+    files,
+    paths: Object.keys(files),
+  };
 }
 
 /**
@@ -182,7 +188,7 @@ export async function handleSingleFileOutput(
   distPath: string | undefined,
   prettierConfig: Options | null | undefined,
   willWriteToFile: boolean,
-): Promise<string> {
+): Promise<GenerationResult> {
   const output = compiledTemplate({
     ...data,
     options: {
@@ -198,5 +204,9 @@ export async function handleSingleFileOutput(
     await fs.writeFile(distPath, prettyOutput);
   }
 
-  return prettyOutput;
+  return {
+    type: 'single',
+    content: prettyOutput,
+    path: distPath,
+  };
 }

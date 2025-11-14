@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { buildPropertyZodCode, buildPropertyEntry } from './handlers.object.properties.js';
+import { buildPropertyEntry } from './handlers.object.properties.js';
+import { buildPropertyZodCode } from './handlers.object.helpers.js';
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import type { CodeMetaData, ConversionTypeContext } from './index.js';
 

@@ -30,6 +30,111 @@ test('handle-refs-without-var-name', () => {
     }),
   ).toMatchInlineSnapshot(`
     {
+        "_ir": {
+            "components": [
+                {
+                    "metadata": {
+                        "circularReferences": [],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": false,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "optional",
+                            "validations": [],
+                        },
+                    },
+                    "name": "Basic",
+                    "schema": {
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": "optional",
+                                "validations": [],
+                            },
+                        },
+                        "type": "object",
+                    },
+                    "type": "schema",
+                },
+            ],
+            "dependencyGraph": {
+                "circularReferences": [],
+                "nodes": Map {},
+                "topologicalOrder": [],
+            },
+            "info": {
+                "title": "Example API",
+                "version": "1",
+            },
+            "openApiVersion": "3.0.3",
+            "operations": [
+                {
+                    "method": "get",
+                    "operationId": "getSomething",
+                    "parameters": [],
+                    "path": "/something",
+                    "responses": [
+                        {
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "items": {
+                                            "$ref": "#/components/schemas/Basic",
+                                            "metadata": {
+                                                "circularReferences": [],
+                                                "dependencyGraph": {
+                                                    "depth": 0,
+                                                    "referencedBy": [],
+                                                    "references": [],
+                                                },
+                                                "nullable": false,
+                                                "required": false,
+                                                "zodChain": {
+                                                    "defaults": [],
+                                                    "presence": "optional",
+                                                    "validations": [],
+                                                },
+                                            },
+                                        },
+                                        "metadata": {
+                                            "circularReferences": [],
+                                            "dependencyGraph": {
+                                                "depth": 0,
+                                                "referencedBy": [],
+                                                "references": [],
+                                            },
+                                            "nullable": false,
+                                            "required": false,
+                                            "zodChain": {
+                                                "defaults": [],
+                                                "presence": "optional",
+                                                "validations": [],
+                                            },
+                                        },
+                                        "type": "array",
+                                    },
+                                },
+                            },
+                            "statusCode": "200",
+                        },
+                    ],
+                },
+            ],
+            "version": "1.0.0",
+        },
         "circularTypeByName": {},
         "emittedType": {},
         "endpoints": [

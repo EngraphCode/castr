@@ -27,6 +27,7 @@
 /* eslint-disable complexity */
 
 import type { IRComponent, IRDocument, IROperation, IRSchema, IRSchemaNode } from './ir-schema.js';
+import { IRSchemaProperties } from './ir-schema-properties.js';
 
 /**
  * Type guard for IRDocument.
@@ -179,6 +180,13 @@ export function isIRSchema(value: unknown): value is IRSchema {
   }
 
   const obj = value as Record<string, unknown>;
+
+  // Validate properties if present
+  if ('properties' in obj && obj['properties'] !== undefined) {
+    if (!(obj['properties'] instanceof IRSchemaProperties)) {
+      return false;
+    }
+  }
 
   // The only required field in IRSchema is metadata
   // All other fields (type, properties, items, etc.) are optional

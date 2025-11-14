@@ -21,3 +21,4 @@ export type {
   OTTBundleWarning,
   OTTExternalReferenceSummary,
 } from './bundle-metadata.types.js';
+export * from './type-guards.js';

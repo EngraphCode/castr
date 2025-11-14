@@ -1,12 +1,16 @@
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
-import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import type { TemplateContext } from '../../context/template-context.js';
 import { wrapWithQuotesIfNeeded } from '../../shared/utils/index.js';
-import { getSchemaFromComponents } from '../../shared/component-access.js';
-import { parseComponentRef } from '../../shared/ref-resolution.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 import type { IRSchemaNode } from '../../context/ir-schema.js';
+import type { IRSchemaProperties } from '../../context/ir-schema-properties.js';
+import {
+  determinePropertyRequired,
+  buildPropertyMetadata,
+  resolveSchemaForChain,
+  buildPropertyZodCode,
+} from './handlers.object.helpers.js';
 
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
@@ -24,84 +28,11 @@ type GetZodChainFn = (args: {
 }) => string;
 
 /**
- * Determine if a property is required based on schema and options
- */
-export function determinePropertyRequired(
-  prop: string,
-  schema: SchemaObject,
-  isPartial: boolean,
-  hasRequiredArray: boolean,
-  options: TemplateContext['options'] | undefined,
-): boolean | undefined {
-  if (isPartial) {
-    return true;
-  }
-  if (hasRequiredArray) {
-    return schema.required?.includes(prop);
-  }
-  return options?.withImplicitRequiredProps;
-}
-
-/**
- * Build property metadata with required flag if defined
- */
-export function buildPropertyMetadata(
-  meta: CodeMetaData,
-  propIsRequired: boolean | undefined,
-): CodeMetaData {
-  const propMetadata: CodeMetaData = {
-    ...meta,
-  };
-  if (propIsRequired !== undefined) {
-    propMetadata.isRequired = propIsRequired;
-  }
-  return propMetadata;
-}
-
-/**
- * Resolve schema reference for chain validation
- */
-export function resolveSchemaForChain(
-  propSchema: SchemaObject | ReferenceObject,
-  ctx: ConversionTypeContext | undefined,
-): SchemaObject | ReferenceObject {
-  if (isReferenceObject(propSchema) && ctx?.doc) {
-    const parsedRef = parseComponentRef(propSchema.$ref);
-    return getSchemaFromComponents(ctx.doc, parsedRef.componentName, parsedRef.xExtKey);
-  }
-  return propSchema;
-}
-
-/**
- * Build Zod code for a property
- */
-export function buildPropertyZodCode(
-  propSchema: SchemaObject | ReferenceObject,
-  propActualSchema: SchemaObject | ReferenceObject,
-  propMetadata: CodeMetaData,
-  ctx: ConversionTypeContext | undefined,
-  getZodSchema: GetZodSchemaFn,
-  getZodChain: GetZodChainFn,
-  options: TemplateContext['options'] | undefined,
-): string {
-  const propZodSchema = getZodSchema({
-    schema: propSchema,
-    ctx,
-    meta: propMetadata,
-    options,
-  });
-  const propChain = getZodChain({
-    schema: propActualSchema,
-    meta: propMetadata,
-    options,
-  });
-  return `${propZodSchema.code}${propChain}`;
-}
-
-/**
  * Build a single property entry for z.object()
  * Pure function: converts one OpenAPI property to Zod code with metadata
  * Determines required/optional and resolves references
+ *
+ * Accepts IRSchema for full IR integration (IRSchema extends SchemaObject).
  *
  * @returns Tuple of [propertyName, zodCode]
  */
@@ -147,7 +78,7 @@ export function buildPropertyEntry(
  * @returns Properties string like "{ prop1: z.string(), prop2: z.number().optional() }"
  */
 export function buildObjectPropertiesString(
-  properties: Record<string, SchemaObject | ReferenceObject>,
+  properties: IRSchemaProperties,
   schema: SchemaObject,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
@@ -157,8 +88,10 @@ export function buildObjectPropertiesString(
   getZodChain: GetZodChainFn,
   options?: TemplateContext['options'],
 ): string {
-  const propsMap = Object.entries(properties).map(([prop, propSchema]) =>
-    buildPropertyEntry(
+  const propsMap = properties.entries().map(([prop, propSchema]) => {
+    // IRSchema extends SchemaObject - structurally compatible
+    // Can safely pass to function expecting SchemaObject | ReferenceObject
+    return buildPropertyEntry(
       prop,
       propSchema,
       schema,
@@ -169,8 +102,8 @@ export function buildObjectPropertiesString(
       getZodSchema,
       getZodChain,
       options,
-    ),
-  );
+    );
+  });
 
   const validProps = propsMap.filter((entry): entry is [string, string] => {
     const [prop] = entry;

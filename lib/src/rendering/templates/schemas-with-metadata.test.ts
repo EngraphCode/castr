@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
+import { isSingleFileResult } from '../generation-result.js';
 
 // Note: Test fixtures use partial OpenAPI objects for brevity
 // They contain enough structure for the generator to work correctly
@@ -741,7 +742,10 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
 
     // ❌ MUST NOT use .passthrough() by default (unless additionalProperties: true)
     // Note: This test assumes default behavior; passthrough is valid if spec says so
-    const resultString = result as string;
+    if (!isSingleFileResult(result)) {
+      throw new Error('Expected single file result');
+    }
+    const resultString = result.content;
     if (!resultString.includes('additionalProperties')) {
       expect(result).not.toMatch(/\.passthrough\(\)/);
     }

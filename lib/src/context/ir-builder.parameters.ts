@@ -153,6 +153,8 @@ function buildBaseParameter(param: ParameterObject, schema: IRSchema): IRParamet
     in: param.in,
     required: param.required ?? param.in === 'path', // Path parameters are always required
     schema,
+    // Populate metadata from schema's metadata (if available)
+    metadata: schema.metadata,
   };
 }
 

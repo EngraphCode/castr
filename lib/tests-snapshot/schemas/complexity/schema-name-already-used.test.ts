@@ -94,7 +94,10 @@ test('schema-name-already-used', async () => {
   };
 
   const ctx = getZodClientTemplateContext(openApiDoc, { complexityThreshold: 2 });
-  expect(ctx).toStrictEqual(schemaNameAlreadyUsedContextSnapshot);
+  // Exclude _ir field from comparison (internal implementation detail)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- _ir intentionally excluded from snapshot
+  const { _ir, ...ctxWithoutIR } = ctx;
+  expect(ctxWithoutIR).toStrictEqual(schemaNameAlreadyUsedContextSnapshot);
 
   const result = await generateZodClientFromOpenAPI({
     disableWriteToFile: true,

@@ -27,6 +27,7 @@
 import type { InfoObject, ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
 
 import type { HttpMethod } from '../endpoints/definition.types.js';
+import type { IRSchemaProperties } from './ir-schema-properties.js';
 
 /**
  * Top-level Information Retrieval document for an OpenAPI specification.
@@ -340,6 +341,13 @@ export interface IRParameter {
   schema: IRSchema;
 
   /**
+   * Rich metadata for code generation.
+   * Includes validation constraints, nullable status, dependencies, etc.
+   * Extracted from the parameter's schema.
+   */
+  metadata?: IRSchemaNode;
+
+  /**
    * Parameter description for documentation.
    */
   description?: string;
@@ -591,9 +599,11 @@ export interface IRSchema {
   // Object properties
   /**
    * Object properties (for type: 'object').
-   * Keys are property names, values are nested schemas.
+   * Wrapped in IRSchemaProperties for type-safe dynamic property access.
+   *
+   * @see {@link IRSchemaProperties} for type-safe access methods
    */
-  properties?: Record<string, IRSchema>;
+  properties?: IRSchemaProperties;
 
   /**
    * Required property names (for type: 'object').

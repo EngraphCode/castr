@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { IRComponent, IRDocument, IROperation, IRSchema, IRSchemaNode } from './ir-schema.js';
+import { IRSchemaProperties } from './ir-schema-properties.js';
 import {
   isIRComponent,
   isIRDocument,
@@ -313,7 +314,7 @@ describe('isIRSchema', () => {
   it('should return true for object schema', () => {
     const schema: IRSchema = {
       type: 'object',
-      properties: {
+      properties: new IRSchemaProperties({
         name: {
           type: 'string',
           metadata: {
@@ -324,7 +325,7 @@ describe('isIRSchema', () => {
             circularReferences: [],
           },
         },
-      },
+      }),
       required: ['name'],
       metadata: {
         required: false,

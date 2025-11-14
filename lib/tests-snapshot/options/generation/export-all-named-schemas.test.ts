@@ -100,7 +100,10 @@ test('export-all-named-schemas', async () => {
     complexityThreshold: 2,
     exportAllNamedSchemas: true,
   });
-  expect(ctx).toStrictEqual(exportAllNamedSchemasContextSnapshot);
+  // Exclude _ir field from comparison (internal implementation detail)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- _ir intentionally excluded from snapshot
+  const { _ir, ...ctxWithoutIR } = ctx;
+  expect(ctxWithoutIR).toStrictEqual(exportAllNamedSchemasContextSnapshot);
 
   const result = await generateZodClientFromOpenAPI({
     disableWriteToFile: true,

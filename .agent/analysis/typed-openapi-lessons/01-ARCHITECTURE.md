@@ -70,13 +70,13 @@ class Box<T extends AnyBoxDef> {
 
 #### Benefits
 
-| Benefit              | Description                            | Example Use Case                                 |
-| -------------------- | -------------------------------------- | ------------------------------------------------ |
-| **Decoupling**       | Parse once, generate multiple formats  | Support Zod, Valibot, ArkType from same parse    |
-| **Testability**      | Test parsing and generation separately | Unit test Box creation without string generation |
-| **Transformability** | Walk/modify AST before generation      | Add custom validators, modify field names        |
-| **Debuggability**    | Inspect intermediate representation    | See what was parsed before string generation     |
-| **Composability**    | Build complex types from simple boxes  | Programmatically construct schemas               |
+| Benefit              | Description                                | Example Use Case                                 |
+| -------------------- | ------------------------------------------ | ------------------------------------------------ |
+| **Decoupling**       | Parse once, generate multiple formats      | Support Zod, Valibot, ArkType from same parse    |
+| **Testability**      | Test parsing and generation separately     | Unit test Box creation without string generation |
+| **Transformability** | Walk/modify AST before generation          | Add custom validators, modify field names        |
+| **Debuggability**    | Inspect information retrieval architecture | See what was parsed before string generation     |
+| **Composability**    | Build complex types from simple boxes      | Programmatically construct schemas               |
 
 #### Real-World Impact
 

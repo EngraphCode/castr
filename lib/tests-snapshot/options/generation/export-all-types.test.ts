@@ -102,7 +102,10 @@ describe('export-all-types', () => {
 
     const data = getZodClientTemplateContext(openApiDoc, { shouldExportAllTypes: true });
 
-    expect(data).toEqual({
+    // Exclude _ir field from comparison (internal implementation detail)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- _ir intentionally excluded from snapshot
+    const { _ir, ...dataWithoutIR } = data;
+    expect(dataWithoutIR).toEqual({
       schemas: {
         Settings:
           'z.object({ theme_color: z.string(), features: Features.min(1) }).partial().passthrough()',

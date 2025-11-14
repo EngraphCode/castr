@@ -1,9 +1,38 @@
 # Phase 3 Plan – Typed IR & ts-morph Migration
 
-**Status:** Ready to Start  
+**Status:** Session 3.2 IN PROGRESS - Type Discipline Restoration  
 **Prerequisites:** Phase 2 complete ✅ (Scalar pipeline + MCP foundations stable)  
 **Reference:** `.agent/reference/openapi-zod-client-emitter-migration.md`  
 **Quality Gate:** `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test:all && pnpm character`
+
+---
+
+## 🎯 Engineering Excellence & Type Discipline
+
+> **Mission:** Excellence and long-term stability over speed, every time.
+
+This phase represents our unwavering commitment to engineering excellence and comprehensive type discipline. When critical type system violations were discovered in Session 3.2 (7 of 8 quality gates RED), we made the decision to **stop all forward progress** and restore type discipline throughout the codebase.
+
+**Core Principles:**
+
+1. **Types Are Our Friend** - Type errors reveal architectural problems, not nuisances to bypass
+2. **Zero Tolerance for Escape Hatches** - No `as`, `any`, `!`, `Record<string, unknown>`, `Object.*`, `Reflect.*`
+3. **Clean Breaks Over Hacks** - No compatibility layers, no temporary solutions, no "TODO: fix later"
+4. **Library Types First** - Use `openapi3-ts/oas31` types before creating custom types
+5. **TDD Throughout** - Write failing tests first, implement to pass, refactor for quality
+6. **Preserve Type Information** - Never widen types unnecessarily, maintain literal types
+7. **Comprehensive Documentation** - TSDoc for all public APIs with examples
+
+**Non-Negotiables:**
+
+- All quality gates must pass GREEN before proceeding
+- Zero type assertions (except `as const`)
+- Zero type widening
+- Proper type guards using library types
+- Test-driven development for all changes
+- Comprehensive test coverage
+
+This commitment to excellence may require more time, but it ensures long-term stability, maintainability, and the ability to refactor with confidence. **We choose correctness over convenience, and stability over speed.**
 
 ---
 
@@ -52,14 +81,14 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 ## Session Summary
 
-| #   | Session                                      | Intent                                                                                  | Est. Effort |
-| --- | -------------------------------------------- | --------------------------------------------------------------------------------------- | ----------- |
-| 3.1 | CodeMeta Elimination & Pure Function Extract | **Delete CodeMeta completely**, extract pure functions, align with JSON Schema pattern. | 12-16h      |
-| 3.2 | IR Schema Foundations & Handlebars Removal   | Define lossless IR, implement IR-based generation, **DELETE Handlebars completely**.    | 24-34h      |
-| 3.3 | IR Persistence & Validation Harness          | Persist IR artefacts and prove the model can reproduce current outputs.                 | 12-16h      |
-| 3.4 | IR Enhancements & Additional Writers         | Enhance IR with additional metadata, implement specialized writers.                     | 16-20h      |
-| 3.5 | Bidirectional Tooling & Compliance           | Implement reverse transforms (IR → OpenAPI) and schema validation gates.                | 20-24h      |
-| 3.6 | Documentation & Release Prep                 | Update docs, ADRs, and final validation prior to release.                               | 8-12h       |
+| #   | Session                                             | Intent                                                                                                           | Est. Effort |
+| --- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------- |
+| 3.1 | CodeMeta Elimination & Pure Function Extract        | **Delete CodeMeta completely**, extract pure functions, align with JSON Schema pattern.                          | 12-16h      |
+| 3.2 | IR Schema Foundations & Type Discipline Restoration | Define lossless IR with strict type discipline, restore engineering excellence, prepare for IR-based generation. | 40-50h      |
+| 3.3 | IR Persistence & Validation Harness                 | Persist IR artefacts and prove the model can reproduce current outputs.                                          | 12-16h      |
+| 3.4 | IR Enhancements & Additional Writers                | Enhance IR with additional metadata, implement specialized writers.                                              | 16-20h      |
+| 3.5 | Bidirectional Tooling & Compliance                  | Implement reverse transforms (IR → OpenAPI) and schema validation gates.                                         | 20-24h      |
+| 3.6 | Documentation & Release Prep                        | Update docs, ADRs, and final validation prior to release.                                                        | 8-12h       |
 
 **Total Estimated Effort:** 92-122 hours (4-5 weeks)
 
@@ -69,7 +98,7 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 ## 1. Vision & Success Criteria
 
-- Replace Handlebars string templates with **IR-based code generation**, using a persistent intermediate representation (IR) shared by all generators.
+- Replace Handlebars string templates with **IR-based code generation**, using a persistent information retrieval architecture (IR) shared by all generators.
 - Enable **bidirectional transformations** between OpenAPI 3.1 documents and the generated Zod/TypeScript artefacts without information loss.
 - Guarantee compatibility with the official OpenAPI schemas in `.agent/reference/openapi_schema/` (e.g. `openapi_3_1_x_schema_with_validation.json`) through automated validation.
 - Maintain current public APIs (CLI + programmatic) while allowing new outputs (e.g. reverse OpenAPI generation, alternative clients) to be layered on the IR.
@@ -90,13 +119,15 @@ Phase 3 (Foundation)          Phase 4 (Expansion - FUTURE)
 
 ## 3. Milestones (High Level)
 
-### M1. IR Definition & Handlebars Replacement (est. 1–2 weeks) - Session 3.2
+### M1. IR Definition & Type Discipline Restoration (est. 2–3 weeks) - Session 3.2
 
-- Finalise IR schema (components, endpoints, dependency graphs, metadata) based on the reference doc.
-- Implement IR-based code generation that produces TypeScript/Zod strings directly.
-- **DELETE all Handlebars templates, code, and dependencies.**
+- Define lossless IR schema (components, endpoints, dependency graphs, metadata) with strict type discipline.
+- Restore engineering excellence throughout codebase (eliminate all type assertions, escape hatches, type widening).
+- Establish zero-tolerance policy for type system violations per RULES.md.
+- Refactor conversion layer to accept IRSchema directly (no compatibility layers).
+- Update all test files with proper type guards for discriminated unions.
 - Use characterisation tests (148) to prove zero behavioral changes.
-- Switch generation pipeline to IR-based generation; retire Handlebars completely.
+- **Foundation for IR-based generation** (Handlebars removal deferred until generation layer complete).
 
 ### M2. IR Persistence & Validation (est. 1 week) - Session 3.3
 
@@ -565,7 +596,7 @@ echo "=== ✅ CODEMETA COMPLETELY ERADICATED ==="
 
 #### Intended Impact
 
-Define a lossless intermediate representation (IR) that captures all OpenAPI metadata, **replaces CodeMetaData** with richer IR schema metadata, AND **completely removes Handlebars**. Implements IR-based code generation that produces identical outputs to Handlebars (proven by 148 characterization tests). Establishes foundation for Phase 4 modular writer architecture.
+Define a lossless information retrieval architecture (IR) that captures all OpenAPI metadata, **replaces CodeMetaData** with richer IR schema metadata, AND **completely removes Handlebars**. Implements IR-based code generation that produces identical outputs to Handlebars (proven by 148 characterization tests). Establishes foundation for Phase 4 modular writer architecture.
 
 #### Goals
 

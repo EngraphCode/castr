@@ -176,20 +176,20 @@ From `HANDLEBARS_EVALUATION.md` and `CODEMETA_ANALYSIS.md`:
 
 - Abstract representation layer (Box)
 - Factory pattern for pluggable output generators
-- AST-like intermediate representation
+- AST-like information retrieval architecture
 - Enables multi-runtime support
 
 ### They're the SAME Architecture!
 
-| Aspect                          | Your ts-morph Plan | typed-openapi Box/Factory | Equivalent?       |
-| ------------------------------- | ------------------ | ------------------------- | ----------------- |
-| **Intermediate Representation** | TypeScript AST     | Box (custom AST)          | ✅ YES            |
-| **Avoid String Building**       | ✅ AST nodes       | ✅ Box objects            | ✅ YES            |
-| **Type Safety**                 | ✅ TypeScript AST  | ✅ Box types              | ✅ YES            |
-| **Extensibility**               | Plugin API         | Factory pattern           | ✅ YES            |
-| **Multi-Runtime**               | Could support      | ✅ Supports 6 runtimes    | ⚠️ Different goal |
-| **Parent/Child**                | Native in AST      | Box relationships         | ✅ YES            |
-| **Complexity**                  | AST depth          | Box complexity            | ✅ YES            |
+| Aspect                                 | Your ts-morph Plan | typed-openapi Box/Factory | Equivalent?       |
+| -------------------------------------- | ------------------ | ------------------------- | ----------------- |
+| **information retrieval architecture** | TypeScript AST     | Box (custom AST)          | ✅ YES            |
+| **Avoid String Building**              | ✅ AST nodes       | ✅ Box objects            | ✅ YES            |
+| **Type Safety**                        | ✅ TypeScript AST  | ✅ Box types              | ✅ YES            |
+| **Extensibility**                      | Plugin API         | Factory pattern           | ✅ YES            |
+| **Multi-Runtime**                      | Could support      | ✅ Supports 6 runtimes    | ⚠️ Different goal |
+| **Parent/Child**                       | Native in AST      | Box relationships         | ✅ YES            |
+| **Complexity**                         | AST depth          | Box complexity            | ✅ YES            |
 
 **🎉 Impact:** Your ts-morph emitter plan and typed-openapi's Box/Factory pattern are **architecturally equivalent**! This is **strong validation** that:
 

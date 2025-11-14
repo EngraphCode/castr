@@ -149,7 +149,7 @@ describe('buildIRSchemas', () => {
       expect(result[0]?.name).toBe('User');
       expect(result[0]?.schema.type).toBe('object');
       expect(result[0]?.schema.properties).toBeDefined();
-      expect(Object.keys(result[0]?.schema.properties ?? {})).toEqual(['name', 'age']);
+      expect(result[0]?.schema.properties?.keys()).toEqual(['name', 'age']);
     });
 
     it('should mark required properties correctly', () => {
@@ -169,8 +169,8 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
       const properties = result[0]?.schema.properties;
 
-      expect(properties?.['name']?.metadata.required).toBe(true);
-      expect(properties?.['tag']?.metadata.required).toBe(false);
+      expect(properties?.get('name')?.metadata.required).toBe(true);
+      expect(properties?.get('tag')?.metadata.required).toBe(false);
     });
 
     it('should handle nested object schemas', () => {
@@ -203,8 +203,8 @@ describe('buildIRSchemas', () => {
 
       expect(result).toHaveLength(2);
       const personSchema = result.find((c) => c.name === 'Person');
-      expect(personSchema?.schema.properties?.['address']?.type).toBe('object');
-      expect(personSchema?.schema.properties?.['address']?.properties).toBeDefined();
+      expect(personSchema?.schema.properties?.get('address')?.type).toBe('object');
+      expect(personSchema?.schema.properties?.get('address')?.properties).toBeDefined();
     });
 
     it('should handle empty objects', () => {
@@ -344,7 +344,9 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       const userSchema = result.find((c) => c.name === 'User');
-      expect(userSchema?.schema.properties?.['address']?.$ref).toBe('#/components/schemas/Address');
+      expect(userSchema?.schema.properties?.get('address')?.$ref).toBe(
+        '#/components/schemas/Address',
+      );
     });
   });
 });

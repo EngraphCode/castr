@@ -1,8 +1,35 @@
-# Coding Standards & Best Practices
+# Coding Standards & Engineering Excellence
 
-**Date:** October 2025  
+**Date:** October 2025 (Updated January 2025)  
 **Project:** openapi-zod-client  
-**Purpose:** Define quality standards for code and tests
+**Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
+
+---
+
+## 🎯 Core Philosophy: Engineering Excellence Over Speed
+
+> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable. Types are our friend - they reveal architectural problems that need solving, not nuisances to bypass with escape hatches.
+
+**Key Principles:**
+
+1. **Types Are Our Friend** - Type errors show us where we've made mistakes, lost type information, or have architectural problems
+2. **Clean Breaks Over Hacks** - No compatibility layers, no temporary solutions, no "TODO: fix later"
+3. **Fix Root Causes, Not Symptoms** - If types don't match, fix the architecture, don't add type assertions
+4. **Library Types First** - Defer to `openapi3-ts/oas31` and other domain expert libraries before creating custom types
+5. **Test-Driven Development** - Write failing tests first, always, no exceptions
+6. **Comprehensive Documentation** - TSDoc for all public APIs enables professional self-service adoption
+7. **Quality Gates Are Absolute** - All 8 gates must pass GREEN, no exceptions, no workarounds
+
+**The Type Discipline:**
+
+During Phase 3, we discovered critical type system violations (7 of 8 quality gates RED). The right response was to **stop all forward progress** and restore type discipline. This taught us:
+
+- Escape hatches (`as`, `any`, `!`) destroy type information permanently
+- Compatibility layers become permanent technical debt
+- Type widening loses information that can never be recovered
+- The type system reveals problems we need to fix, not hide
+
+**This document is THE authority for all code in this project. Deviations require explicit justification and must be temporary with a concrete plan for removal.**
 
 ---
 
@@ -224,9 +251,7 @@ expect(result.errors).toHaveLength(0);
 
 **When implementation testing is OK:**
 
-- Performance testing (call counts for optimization)
-- Testing specific algorithms (when algorithm IS the requirement)
-- Integration tests (verifying component connections)
+- It isn't. Ever.
 
 ---
 
@@ -349,20 +374,16 @@ if (isReferenceObject(obj)) {
 }
 ```
 
-**When casting is acceptable (RARE):**
+**Casting is never acceptable:**
 
 ```typescript
-// ✅ Testing type guards
-const result = validate(input) as ValidationResult;
-expect(isSuccess(result)).toBe(true);
-
-// ✅ as const for literal types
+// ✅ as const for literal types (not a type assertion)
 const config = { readonly: true } as const;
 
-// ✅ Narrowing from unknown AFTER validation
+// ❌ Narrowing from unknown AFTER validation - BAD, use a type guard instead
 const data: unknown = await response.json();
 const validated = UserSchema.parse(data);
-return validated as User; // Safe - already validated
+return validated as User; // unnecessary, use a type guard instead
 ```
 
 **Better alternatives:**
@@ -1550,32 +1571,46 @@ console.log(`Took ${performance.now() - start}ms`);
 
 ---
 
-## Summary
+## Summary: Engineering Excellence Checklist
+
+**Core Philosophy:**
+
+- 🎯 **Excellence over speed** - Long-term stability over short-term hacks
+- 🎯 **Types are our friend** - They reveal problems, not create them
+- 🎯 **Fix root causes** - Not symptoms, no compatibility layers, no escape hatches
+- 🎯 **Clean breaks** - No temporary solutions, no "TODO: fix later"
 
 **Key Takeaways:**
 
-1. ✅ **TDD is mandatory** - Write failing tests FIRST, always
+1. ✅ **TDD is mandatory** - Write failing tests FIRST, always, no exceptions
 2. ✅ **Test behavior, not implementation** - Tests should survive refactoring
 3. ✅ **NEVER use type escape hatches** - No `as`, `any`, `!`, `Record<string, unknown>`, `Object.*`, `Reflect.*`
 4. ✅ **NEVER widen types** - Preserve literal types, avoid `: string` or `: number` parameters
 5. ✅ **Single source of truth** - Define types once, import consistently
 6. ✅ **Validate external boundaries** - Parse/validate data from network, files, user input
-7. ✅ **Defer to library types** - ALWAYS use library types everywhere, custom type are forbidden.
+7. ✅ **Defer to library types** - ALWAYS use library types everywhere (`openapi3-ts/oas31`), custom types are forbidden
 8. ✅ **No filesystem/network I/O in tests** - Mock all I/O operations
-9. ✅ **Pure functions when possible** - Same input → same output
-10. ✅ **Explicit over implicit** - No hidden dependencies
-11. ✅ **Immutable by default** - Return new values, don't mutate
+9. ✅ **Pure functions when possible** - Same input → same output, no side effects
+10. ✅ **Explicit over implicit** - No hidden dependencies, no global state
+11. ✅ **Immutable by default** - Return new values, don't mutate inputs
 12. ✅ **Clear error handling** - Explicit Result types, never swallow errors
 13. ✅ **Comprehensive TSDoc** - All public APIs documented with examples
 14. ✅ **No unused variables** - Never use underscore prefix to hide them
+15. ✅ **All quality gates GREEN** - 8 of 8 must pass, no exceptions, no workarounds
 
 **When in doubt:**
 
+- Ask: "Am I choosing excellence over speed?"
+- Ask: "Are types showing me an architectural problem I need to fix?"
+- Ask: "Am I using an escape hatch to bypass type safety?"
 - Ask: "Does this test prove the code works?"
 - Ask: "Will this survive refactoring?"
 - Ask: "Am I preserving maximum type information?"
-- Ask: "Am I using type escape hatches that bypass safety?"
 - Ask: "Is this type widening destroying information?"
 - Ask: "Should I validate this external data?"
 - Ask: "Can I use a library type instead of defining my own?"
 - Ask: "Is this as simple as it can be?"
+- Ask: "Am I creating a temporary hack that will become permanent?"
+- Ask: "What does the type system want to teach me here?"
+
+**Remember:** The type system is not fighting you - it's protecting you. Listen to it. Fix the root cause. Choose excellence.

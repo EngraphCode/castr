@@ -31,9 +31,35 @@ This strategic plan ensures all 8 requirements are met:
 
 ---
 
-## 🎯 Development Methodology
+## 🎯 Engineering Excellence & Development Methodology
 
-**ALL implementation work MUST follow Test-Driven Development (TDD):**
+> **Core Philosophy:** Excellence and long-term stability over speed, every time. Types are our friend - they reveal architectural problems that need fixing, not nuisances to bypass.
+
+### Engineering Excellence Principles
+
+**1. Type System Discipline (Zero Tolerance)**
+
+- ❌ **FORBIDDEN:** `as` (except `as const`), `any`, `!`, `Record<string, unknown>`, `Object.*`, `Reflect.*`
+- ✅ **REQUIRED:** Library types first, proper type guards, no type widening, preserve literal types
+- ✅ **MANDATE:** Zero escape hatches - if types don't match, fix the architecture, not the types
+
+**2. Clean Breaks, Not Hacks**
+
+- No compatibility layers that become permanent
+- No "temporary" solutions that never get fixed
+- No `// TODO: refactor later` comments
+- Fix root causes, not symptoms
+
+**3. Library Types First**
+
+- Use `openapi3-ts/oas31` types before creating custom types
+- Use proper type guards from libraries where possible
+- Defer to domain experts who maintain library types
+- Custom types are a last resort requiring explicit justification
+
+### Test-Driven Development (Mandatory)
+
+**ALL implementation work MUST follow TDD:**
 
 1. **Write failing tests FIRST** - Before any implementation code
 2. **Run tests - confirm failure** - Proves tests actually validate behavior
@@ -51,6 +77,23 @@ This strategic plan ensures all 8 requirements are met:
 - Enables safe refactoring (test coverage provides confidence)
 
 **No exceptions:** "I'll add tests later" is NOT ALLOWED. See `.agent/RULES.md` for detailed TDD guidelines.
+
+### Quality Gates (Non-Negotiable)
+
+All 8 quality gates must pass GREEN before any code is considered complete:
+
+```bash
+pnpm format    # Code formatting
+pnpm build     # Compilation
+pnpm type-check # Type checking
+pnpm lint      # Code quality
+pnpm test      # Unit + integration tests
+pnpm test:gen  # Generated code validation
+pnpm test:snapshot # Snapshot tests
+pnpm character # Characterization tests
+```
+
+**Critical Learning from Phase 3:** When quality gates fail, we stop and fix the root cause. We don't add workarounds or disable checks. The type system is showing us problems we need to solve.
 
 ---
 
@@ -172,7 +215,7 @@ See `.agent/plans/PHASE-2-MCP-ENHANCEMENTS.md` for detailed task breakdowns and 
 
 **Objectives:**
 
-1. **Define & Persist IR:** Finalise a lossless intermediate representation capturing schemas, endpoints, and metadata required for round-tripping.
+1. **Define & Persist IR:** Finalise a lossless information retrieval architecture capturing schemas, endpoints, and metadata required for round-tripping.
 2. **ts-morph Emitter:** Replace Handlebars templates with the typed emitter from `.agent/reference/openapi-zod-client-emitter-migration.md`, supporting both disk output and in-memory strings.
 3. **Full Migration:** Switch CLI/programmatic flows to the emitter, remove Handlebars assets, maintain feature parity.
 4. **Bidirectional Tooling:** Enable IR → OpenAPI regeneration, validate output against official schemas in `.agent/reference/openapi_schema/`, and document reverse workflows.
