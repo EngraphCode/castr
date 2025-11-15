@@ -270,11 +270,12 @@ Per [requirements.md](./requirements.md), all work must provide **measurable imp
 
 ---
 
-### Section D: Type Discipline Restoration (IN PROGRESS ⏳)
+### Section D: Type Discipline Restoration (ACTIVE - FINAL PUSH ⏳)
 
-**Status:** ⏳ IN PROGRESS - Major Progress, Test Files Remaining  
+**Status:** ⏳ ACTIVE - Systematic 5-Phase Completion Plan In Progress  
 **Started:** 2025-01-14  
-**Current Focus:** Production code complete (0 lint errors, 0 type assertions), test files remain
+**Updated:** 2025-01-15  
+**Current Focus:** Executing comprehensive plan to achieve all 8 quality gates GREEN
 
 **Objective:** Eliminate all type system escape hatches and restore comprehensive type discipline throughout the codebase.
 
@@ -343,9 +344,46 @@ Per [requirements.md](./requirements.md), all work must provide **measurable imp
 
 - **Status:** ⏳ READY - Pattern validated, systematic rollout to ~65 files pending
 
-#### D.2: Progress Summary (2025-01-14)
+#### D.2: Strategic Execution Approach
 
-**✅ Completed Work (Phases 2.1-2.3):**
+**Principles for All Remaining Work:**
+
+1. **File-by-File Excellence** - Complete each file fully before moving to next (no partial fixes)
+   - Read entire file to understand context
+   - Break out pure functions into separate modules using TDD
+   - Run tests and linters on individual file before moving on
+   - No "TODO" comments or deferred work
+
+2. **Question Duplication** - Analyze why repeated code exists
+   - Identify what code is duplicated and why
+   - Determine the single source of truth
+   - Extract to pure functions with comprehensive tests
+   - Document why extraction improves architecture
+
+3. **Clean Breaks, No Compromises**
+   - No fallbacks or compatibility layers
+   - No "temporary" solutions that become permanent
+   - Fail fast with helpful, actionable error messages
+   - Fix root causes, not symptoms
+
+4. **Regular Commitment Checks** - Every 4th major item completed:
+   - Re-read `requirements.md` - Confirm delivering measurable impact
+   - Re-read `RULES.md` - Confirm adherence to standards
+   - Update `context.md` with progress
+   - Verify quality gates improving
+
+**This approach ensures:**
+
+- No drift from project values
+- Consistent adherence to coding standards
+- Clear architectural decisions
+- Measurable progress at each checkpoint
+
+#### D.3: Progress Summary
+
+**Latest Update:** 2025-01-15 - Phase 1 (Documentation) in progress
+
+**✅ Completed Work (Phases 2.1-2.3, completed 2025-01-14):**
 
 1. **Phase 2.1 - Handler Refactoring:**
    - Created `lib/src/conversion/zod/handlers.object.helpers.ts` with 4 pure functions
@@ -372,13 +410,183 @@ Per [requirements.md](./requirements.md), all work must provide **measurable imp
 - ✅ Comprehensive TSDoc on all public APIs
 - ✅ 4/8 quality gates GREEN (format, build, type-check, test:gen)
 
-**⏳ Remaining Work:**
+**⏳ Remaining Work (Systematic 5-Phase Plan):**
 
-- Test file complexity: 11 files
-- Test file void-use: 3 files
-- GenerationResult type guards: ~65 files
+**Phase 1: Documentation Updates** ⏳ IN PROGRESS
 
-#### D.3: Type System Violations Inventory (HISTORICAL)
+- Updating all context documents with completion plan
+- Establishing clear path to 8/8 GREEN quality gates
+
+**Phase 2: Test Helper Infrastructure** (Next, ~2-3 hours)
+
+- Create reusable assertion helper module
+- Document pattern with examples
+- Validate with 10 POC tests
+
+**Phase 3: Systematic Test Updates** (~6-8 hours, 176 failures → 0)
+
+- Unit tests: ~21 files in batches
+- Snapshot tests: ~41 files in batches
+- Character tests: 11 files file-by-file
+
+**Phase 4: Lint Cleanup** (~2-3 hours, 27 errors → 0)
+
+- Extract helpers, split large files
+- Reduce test complexity
+
+**Phase 5: Final Validation** (~1 hour)
+
+- All quality gates GREEN
+- Type discipline audit
+- Documentation complete
+
+#### D.10: Systematic 5-Phase Execution (Complete Section D)
+
+**Status:** ACTIVE - Phase 1 in progress
+
+**Complete plan detailed in:** `.agent/plans/complete-section.plan.md`
+
+**Phase Overview:**
+
+**Phase 1: Documentation Updates** (~30 minutes, IN PROGRESS ⏳)
+
+- Update context.md with systematic rollout approach
+- Update continuation_prompt.md with Phase 4 entry
+- Update HANDOFF.md with 5-phase plan
+- Update this session plan with D.10 subsection
+
+**Phase 2: Test Helper Infrastructure** (~2-3 hours)
+
+- Create `lib/tests-helpers/generation-result-assertions.ts`
+- Create `lib/tests-helpers/README.md`
+- POC with 10 unit tests
+- CHECKPOINT: Pattern validated
+
+**Phase 3: Systematic Test Updates** (~6-8 hours)
+
+- Unit tests: ~21 files, 4 batches (31 failures → 0)
+- Snapshot tests: ~41 files, 5 batches (61 failures → 0)
+- Character tests: 11 files, file-by-file (84 failures → 0)
+- CHECKPOINT: All tests GREEN (804 unit + 177 snapshot + 159 character)
+
+**Phase 4: Lint Cleanup** (~2-3 hours)
+
+- High complexity tests: Extract helpers
+- Long test files: Split by logical boundaries
+- CHECKPOINT: Lint GREEN (0 errors)
+
+**Phase 5: Final Validation** (~1 hour)
+
+- All 8 quality gates GREEN
+- Type discipline audit (verify zero escape hatches)
+- Zero behavioral changes verification (character tests prove)
+- Complete final documentation update
+- CHECKPOINT: Session COMPLETE
+
+**Success Criteria:** ALL of the following must be true:
+
+- [ ] All 8 quality gates GREEN
+- [ ] Zero lint errors (27 → 0)
+- [ ] Zero test failures (176 → 0)
+- [ ] Zero type assertions in production code (maintained)
+- [ ] Test helpers created and documented
+- [ ] All documentation updated
+- [ ] Zero behavioral changes verified
+
+#### D.4: Test File Update Strategy (Blocker #3 - Systematic Rollout)
+
+**Objective:** Update ~65 test files to use proper type guards for `GenerationResult` discriminated union
+
+**Phase 3.1: Create Reusable Pattern (~2-3 hours)**
+
+1. **Create Helper Module** (`lib/tests-helpers/generation-result-assertions.ts`)
+   - `assertSingleFileResult(result)` - Type guard + assertion
+   - `assertGroupedFileResult(result)` - Type guard + assertion
+   - `extractContent(result)` - Safe content extraction
+   - `extractFiles(result)` - Safe files extraction
+   - Comprehensive TSDoc with examples
+
+2. **Document Pattern** (`lib/tests-helpers/README.md`)
+   - Explain GenerationResult discriminated union
+   - Show before/after examples
+   - Explain why type narrowing is required
+   - Common patterns and gotchas
+
+3. **Proof of Concept** - Update 10 unit tests
+   - Apply pattern to variety of test scenarios
+   - Verify tests pass individually → GREEN
+   - Document any edge cases discovered
+   - **CHECKPOINT:** Pattern proven, ready for rollout
+
+**Phase 3.2: Systematic Unit Test Updates (~2-3 hours, ~21 files, 31 failures)**
+
+1. **Batch 1** (5-7 files) - Apply pattern, run subset tests
+2. **Batch 2** (5-7 files) - Apply pattern, run subset tests
+3. **Batch 3** (5-7 files) - Apply pattern, run subset tests
+4. **Batch 4** (Remaining) - Apply pattern, run subset tests
+5. **Validation:** Run `pnpm test` → Expect 804/804 passing (31 failures → 0)
+6. **Review:** Consistency check, proper type guards, no type assertions, TSDoc complete
+7. **CHECKPOINT:** All unit tests GREEN
+
+**Phase 3.3: Systematic Snapshot Test Updates (~2-3 hours, ~41 files, 61 failures)**
+
+1. **Batch 1** (8-10 files) - Apply pattern, update inline snapshots if needed
+2. **Batch 2** (8-10 files) - Apply pattern, update inline snapshots if needed
+3. **Batch 3** (8-10 files) - Apply pattern, update inline snapshots if needed
+4. **Batch 4** (8-10 files) - Apply pattern, update inline snapshots if needed
+5. **Batch 5** (Remaining) - Apply pattern, update inline snapshots if needed
+6. **Validation:** Run `pnpm test:snapshot` → Expect 177/177 passing (61 failures → 0)
+7. **Review:** Verify snapshots reflect type structure (not behavior), code quality unchanged
+8. **CHECKPOINT:** All snapshot tests GREEN
+
+**Phase 3.4: Systematic Character Test Updates (~2-3 hours, 11 files, 84 failures)**
+
+1. **File-by-File Approach** (most complex tests)
+   - Read entire test file to understand patterns
+   - Extract test helpers if needed (follow TDD)
+   - Apply pattern throughout file
+   - Run individual test: `pnpm test path/to/file.test.ts`
+   - Verify all tests in file pass before moving to next
+
+2. **Files to Update:**
+   - `character.exports-api.test.ts`
+   - `character.grouping-multi-file.test.ts`
+   - `character.imports-api.test.ts`
+   - `character.openapi-examples.test.ts`
+   - `character.real-world-*.test.ts` (multiple files)
+   - (11 total character test files)
+
+3. **Validation:** Run `pnpm character` → Expect 159/159 passing (84 failures → 0)
+4. **Documentation:** Note unique patterns, update character test docs, document edge cases
+5. **CHECKPOINT:** All character tests GREEN
+
+**Total Estimated Effort:** 8-12 hours for systematic rollout across all test file categories
+
+#### D.5: Validation Strategy
+
+**After Every File Fix:**
+
+1. Run linter on specific file: `pnpm eslint lib/src/path/to/file.ts`
+2. Run type-check: `pnpm type-check`
+3. Run affected tests: `pnpm test path/to/test/file.test.ts`
+4. Verify no regressions in related files
+
+**After Every Phase:**
+
+1. Run relevant quality gate (lint for Phase 2, test for Phase 3)
+2. Document progress in context.md
+3. Update success metrics
+4. Verify quality gates improving
+
+**Before Declaring Section D Complete:**
+
+1. ✅ All 8 quality gates GREEN
+2. ✅ Type discipline audit clean (zero type assertions, zero escape hatches)
+3. ✅ Zero behavioral changes verified (characterization tests)
+4. ✅ All documentation updated (context.md, continuation_prompt.md, HANDOFF.md)
+5. ✅ Success metrics achieved (quantitative + qualitative)
+
+#### D.6: Type System Violations Inventory (HISTORICAL)
 
 **Category 1: Type Assertions** — ✅ **ALL RESOLVED IN PRODUCTION CODE**
 
@@ -403,7 +611,7 @@ Locations bypassing type system:
 2. Runtime type checking (`typeof x.method === 'function'`)
 3. Unsafe optional chaining without null checks
 
-#### D.3: Test Files Requiring Type Guard Updates
+#### D.7: Test Files Requiring Type Guard Updates
 
 **Total Files:** ~65  
 **Pattern:** All call string methods on `GenerationResult` without narrowing
@@ -436,7 +644,7 @@ Locations bypassing type system:
 - `lib/src/rendering/templates/schemas-with-client.test.ts`
 - ... (full list available on request)
 
-#### D.4: Refactoring Strategy (Per RULES.md)
+#### D.8: Refactoring Strategy (Per RULES.md)
 
 **Principle:** Clean Breaks, Not Compatibility Layers
 
@@ -485,7 +693,7 @@ We **DO**:
 3. Review all changes for type discipline
 4. **Checkpoint:** ALL 8 gates GREEN ✅
 
-#### D.5: Architectural Design Decision: Conversion Layer
+#### D.9: Architectural Design Decision: Conversion Layer
 
 **The Fundamental Question:**
 

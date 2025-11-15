@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
-import { isSingleFileResult } from '../generation-result.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 describe('schemas-with-client template', () => {
   const minimalSpec: OpenAPIObject = {
@@ -93,7 +93,8 @@ describe('schemas-with-client template', () => {
         },
       });
 
-      expect(typeof result).toBe('string');
+      assertSingleFileResult(result);
+      expect(typeof result.content).toBe('string');
     });
   });
 
@@ -113,19 +114,21 @@ describe('schemas-with-client template', () => {
   describe('Zod Schemas', () => {
     it('should generate zod schemas for request/response types', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
       // Should have schemas section
-      expect(result).toContain('export const');
-      expect(result).toContain('z.object');
+      expect(result.content).toContain('export const');
+      expect(result.content).toContain('z.object');
     });
   });
 
   describe('Endpoint Metadata', () => {
     it('should export endpoints array', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('export const endpoints =');
-      expect(result).toContain('] as const');
+      expect(result.content).toContain('export const endpoints =');
+      expect(result.content).toContain('] as const');
     });
 
     // Quote-style test removed - validation is covered by generated-code-validation.gen.test.ts
@@ -134,8 +137,9 @@ describe('schemas-with-client template', () => {
   describe('Client Factory Function', () => {
     it('should export createApiClient function', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('export function createApiClient(');
+      expect(result.content).toContain('export function createApiClient(');
     });
 
     it('should accept ApiClientConfig parameter', async () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
-import { isSingleFileResult } from '../generation-result.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 // Note: Test fixtures use partial OpenAPI objects for brevity
 // They contain enough structure for the generator to work correctly
@@ -60,26 +60,28 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // Quote-style test removed - validation is covered by generated-code-validation.gen.test.ts
     // Verify Zod import exists (any quote style)
-    expect(result).toMatch(/import.*from ['"]zod['"]/);
+    expect(result.content).toMatch(/import.*from ['"]zod['"]/);
 
     // MUST export schemas (inline schemas are named based on operation, like createUser_Body)
-    expect(result).toContain('export const ');
-    expect(result).toMatch(/export const createUser_Body\s*=/);
+    expect(result.content).toContain('export const ');
+    expect(result.content).toMatch(/export const createUser_Body\s*=/);
 
     // Schemas are exported individually (not as grouped object)
-    expect(result).not.toContain('export const schemas = {');
+    expect(result.content).not.toContain('export const schemas = {');
 
     // MUST export endpoints metadata
-    expect(result).toContain('export const endpoints');
+    expect(result.content).toContain('export const endpoints');
 
     // MUST export MCP tools
-    expect(result).toContain('export const mcpTools');
-    expect(result).toContain('tool: {');
-    expect(result).toContain('httpOperation: {');
+    expect(result.content).toContain('export const mcpTools');
+    expect(result.content).toContain('tool: {');
+    expect(result.content).toContain('httpOperation: {');
     // MCP tools generate TypeScript objects (not JSON strings), so keys don't have quotes
-    expect(result).toContain('type: "object"');
+    expect(result.content).toContain('type: "object"');
   });
 
   it('should export schemas object with all schemas', async () => {
@@ -130,13 +132,15 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST have individual schema exports (not grouped)
-    expect(result).toContain('export const User');
-    expect(result).toContain('export const Error');
+    expect(result.content).toContain('export const User');
+    expect(result.content).toContain('export const Error');
 
     // MUST include schema definitions with zod
-    expect(result).toContain('z.object');
-    expect(result).toContain('.strict()'); // Schemas-with-metadata uses strict by default
+    expect(result.content).toContain('z.object');
+    expect(result.content).toContain('.strict()'); // Schemas-with-metadata uses strict by default
   });
 
   it('should export endpoints array directly without makeApi', async () => {
@@ -205,16 +209,18 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST export endpoints directly
-    expect(result).toContain('export const endpoints = [');
+    expect(result.content).toContain('export const endpoints = [');
 
     // MUST include endpoint metadata
-    expect(result).toContain('method:');
-    expect(result).toContain('path:');
-    expect(result).toContain('operationId:');
+    expect(result.content).toContain('method:');
+    expect(result.content).toContain('path:');
+    expect(result.content).toContain('operationId:');
 
     // MUST use 'as const' for endpoints
-    expect(result).toMatch(/export const endpoints = \[[\s\S]*\] as const/);
+    expect(result.content).toMatch(/export const endpoints = \[[\s\S]*\] as const/);
   });
 
   it('should generate MCP-compatible tool definitions', async () => {
@@ -260,13 +266,15 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST export mcpTools
-    expect(result).toContain('export const mcpTools');
+    expect(result.content).toContain('export const mcpTools');
 
     // MUST include structured MCP metadata
-    expect(result).toContain('tool: {');
-    expect(result).toContain('httpOperation: {');
-    expect(result).toContain('security: {');
+    expect(result.content).toContain('tool: {');
+    expect(result.content).toContain('httpOperation: {');
+    expect(result.content).toContain('security: {');
   });
 });
 
@@ -300,9 +308,11 @@ describe('schemas-with-metadata template - CLI Flag Integration', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // When noClient is true, should generate schemas and endpoints
-    expect(result).toContain('export const'); // Has exports
-    expect(result).toContain('export const endpoints'); // Has endpoints array
+    expect(result.content).toContain('export const'); // Has exports
+    expect(result.content).toContain('export const endpoints'); // Has endpoints array
   });
 });
 
@@ -355,18 +365,20 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST have request validation structure
-    expect(result).toContain('request:');
+    expect(result.content).toContain('request:');
 
     // MUST have separate schemas for each parameter type
-    expect(result).toMatch(/pathParams.*z\.object/s);
-    expect(result).toMatch(/queryParams.*z\.object/s);
-    expect(result).toMatch(/headers.*z\.object/s);
+    expect(result.content).toMatch(/pathParams.*z\.object/s);
+    expect(result.content).toMatch(/queryParams.*z\.object/s);
+    expect(result.content).toMatch(/headers.*z\.object/s);
 
     // MUST include parameter names
-    expect(result).toContain('userId');
-    expect(result).toContain('include');
-    expect(result).toContain('x-api-key');
+    expect(result.content).toContain('userId');
+    expect(result.content).toContain('include');
+    expect(result.content).toContain('x-api-key');
   });
 
   it('should generate full response validation including all error responses', async () => {
@@ -424,21 +436,23 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST have responses structure
-    expect(result).toContain('responses:');
+    expect(result.content).toContain('responses:');
 
     // MUST include ALL status codes
-    expect(result).toMatch(/201.*:/);
-    expect(result).toMatch(/400.*:/);
-    expect(result).toMatch(/401.*:/);
+    expect(result.content).toMatch(/201.*:/);
+    expect(result.content).toMatch(/400.*:/);
+    expect(result.content).toMatch(/401.*:/);
 
     // MUST include descriptions
-    expect(result).toContain('Created');
-    expect(result).toContain('Bad Request');
-    expect(result).toContain('Unauthorized');
+    expect(result.content).toContain('Created');
+    expect(result.content).toContain('Bad Request');
+    expect(result.content).toContain('Unauthorized');
 
     // MUST have schema property for each response
-    expect(result).toMatch(/schema.*:/);
+    expect(result.content).toMatch(/schema.*:/);
   });
 });
 
@@ -479,20 +493,22 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST export validateRequest helper
-    expect(result).toContain('export function validateRequest');
+    expect(result.content).toContain('export function validateRequest');
 
     // MUST have all parameter types in signature
-    expect(result).toMatch(/pathParams.*:/);
-    expect(result).toMatch(/queryParams.*:/);
-    expect(result).toMatch(/headers.*:/);
-    expect(result).toMatch(/body.*:/);
+    expect(result.content).toMatch(/pathParams.*:/);
+    expect(result.content).toMatch(/queryParams.*:/);
+    expect(result.content).toMatch(/headers.*:/);
+    expect(result.content).toMatch(/body.*:/);
 
     // MUST export validateResponse helper
-    expect(result).toContain('export function validateResponse');
+    expect(result.content).toContain('export function validateResponse');
 
     // MUST use .parse() for validation
-    expect(result).toMatch(/\.parse\(/);
+    expect(result.content).toMatch(/\.parse\(/);
   });
 
   it('should NOT generate validation helpers when flag is disabled', async () => {
@@ -560,14 +576,16 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // MUST export buildSchemaRegistry helper
-    expect(result).toContain('export function buildSchemaRegistry');
+    expect(result.content).toContain('export function buildSchemaRegistry');
 
     // MUST have rename option
-    expect(result).toMatch(/rename.*:/);
+    expect(result.content).toMatch(/rename.*:/);
 
     // MUST sanitize keys by default
-    expect(result).toMatch(/replace\(\/\[.*\]\/g/);
+    expect(result.content).toMatch(/replace\(\/\[.*\]\/g/);
   });
 
   it('should NOT generate schema registry builder when flag is disabled', async () => {
@@ -641,13 +659,15 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // ✅ MUST use 'unknown', NOT 'any'
-    expect(result).toMatch(/:\s*unknown/);
+    expect(result.content).toMatch(/:\s*unknown/);
 
     // ❌ MUST NOT contain 'any' type
-    expect(result).not.toMatch(/:\s*any[,;)\s]/);
-    expect(result).not.toContain('Record<string, any>');
-    expect(result).not.toMatch(/\)\s*:\s*any/);
+    expect(result.content).not.toMatch(/:\s*any[,;)\s]/);
+    expect(result.content).not.toContain('Record<string, any>');
+    expect(result.content).not.toMatch(/\)\s*:\s*any/);
   });
 
   it('should generate FAIL-FAST validation using .parse() not .safeParse()', async () => {
@@ -686,14 +706,16 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // ✅ MUST use .parse() for fail-fast
-    expect(result).toMatch(/\.parse\(/);
+    expect(result.content).toMatch(/\.parse\(/);
 
     // ❌ MUST NOT use .safeParse() in helpers
-    expect(result).not.toContain('.safeParse(');
+    expect(result.content).not.toContain('.safeParse(');
 
     // ✅ MUST document that it throws
-    expect(result).toMatch(/@throws/i);
+    expect(result.content).toMatch(/@throws/i);
   });
 
   it('should generate STRICT schemas with .strict() by default', async () => {
@@ -737,17 +759,16 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
       disableWriteToFile: true,
     });
 
+    assertSingleFileResult(result);
+
     // ✅ MUST use .strict() for objects (reject unknown keys)
-    expect(result).toMatch(/\.strict\(\)/);
+    expect(result.content).toMatch(/\.strict\(\)/);
 
     // ❌ MUST NOT use .passthrough() by default (unless additionalProperties: true)
     // Note: This test assumes default behavior; passthrough is valid if spec says so
-    if (!isSingleFileResult(result)) {
-      throw new Error('Expected single file result');
-    }
     const resultString = result.content;
     if (!resultString.includes('additionalProperties')) {
-      expect(result).not.toMatch(/\.passthrough\(\)/);
+      expect(result.content).not.toMatch(/\.passthrough\(\)/);
     }
   });
 });
