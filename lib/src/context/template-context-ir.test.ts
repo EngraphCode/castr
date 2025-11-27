@@ -60,7 +60,6 @@ describe('getZodClientTemplateContext - IR integration', () => {
     expect(result._ir?.operations).toBeDefined();
   });
 
-  // eslint-disable-next-line complexity
   test('should populate IR with schemas from components', () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',

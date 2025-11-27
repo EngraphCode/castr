@@ -1,0 +1,61 @@
+
+> openapi-to-tooling-monorepo@0.0.0-development lint /Users/jim/code/personal/openapi-zod-client
+> turbo lint
+
+turbo 2.5.8
+
+• Packages in scope: @oaknational/openapi-to-tooling
+• Running lint in 1 packages
+• Remote caching disabled
+@oaknational/openapi-to-tooling:lint: cache bypass, force executing 061eb87195d50b38
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: > @oaknational/openapi-to-tooling@1.18.3 lint /Users/jim/code/personal/openapi-zod-client/lib
+@oaknational/openapi-to-tooling:lint: > eslint . --cache --cache-location .eslintcache
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/ir-validation.circular.test.ts
+@oaknational/openapi-to-tooling:lint:   42:49  error  Arrow function has a complexity of 11. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/ir-validation.integration.test.ts
+@oaknational/openapi-to-tooling:lint:   15:52  error  Arrow function has a complexity of 25. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/ir-validation.operations.test.ts
+@oaknational/openapi-to-tooling:lint:    14:58  error  Arrow function has a complexity of 17. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:    82:58  error  Arrow function has a complexity of 16. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:   144:54  error  Arrow function has a complexity of 9. Maximum allowed is 8   complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/ir-validation.schema.test.ts
+@oaknational/openapi-to-tooling:lint:    77:69  error  Arrow function has a complexity of 9. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:   110:52  error  Arrow function has a complexity of 9. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:   188:49  error  Arrow function has a complexity of 9. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:   230:70  error  Arrow function has a complexity of 9. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/tests-snapshot/ir/ir-circular-refs-basic.test.ts
+@oaknational/openapi-to-tooling:lint:   60:71  error  Async arrow function has a complexity of 12. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/tests-snapshot/ir/ir-circular-refs-complex.test.ts
+@oaknational/openapi-to-tooling:lint:   119:82  error  Async arrow function has a complexity of 17. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/tests-snapshot/ir/ir-parameter-basic.test.ts
+@oaknational/openapi-to-tooling:lint:    15:73  error  Async arrow function has a complexity of 13. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:    84:74  error  Async arrow function has a complexity of 14. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:   151:73  error  Async arrow function has a complexity of 18. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/tests-snapshot/ir/ir-parameter-complex.test.ts
+@oaknational/openapi-to-tooling:lint:    15:76  error  Async arrow function has a complexity of 11. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:    85:83  error  Async arrow function has a complexity of 14. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint:   169:65  error  Async arrow function has a complexity of 12. Maximum allowed is 8  complexity
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: ✖ 17 problems (17 errors, 0 warnings)
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint:  ELIFECYCLE  Command failed with exit code 1.
+@oaknational/openapi-to-tooling:lint: ERROR: command finished with error: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+@oaknational/openapi-to-tooling#lint: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+
+ Tasks:    0 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    1.734s 
+Failed:    @oaknational/openapi-to-tooling#lint
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

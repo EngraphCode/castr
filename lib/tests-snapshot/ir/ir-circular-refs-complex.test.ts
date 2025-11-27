@@ -1,14 +1,9 @@
 /**
- * IR Integration - Circular Reference Handling
+ * IR Integration - Complex Circular Reference Handling
  *
- * PROVES: Circular references detected in IR result in lazy() schemas in generated code
+ * PROVES: Complex circular references (deep, allOf, three-way) detected in IR result in lazy() schemas
  *
- * Test Philosophy:
- * - Circular refs in IR must produce z.lazy() in generated Zod code
- * - Without proper detection, code generation would fail or create invalid schemas
- * - These tests prove IR circular reference detection has real impact
- *
- * @module ir-circular-refs-integration.test
+ * @module ir-circular-refs-complex.test
  */
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
@@ -16,110 +11,7 @@ import { getZodClientTemplateContext } from '../../src/context/template-context.
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 
-describe('IR Integration - Circular References', () => {
-  test('self-referencing schema generates lazy() Zod schema', async () => {
-    const openApiDoc: OpenAPIObject = {
-      openapi: '3.1.0',
-      info: { version: '1.0.0', title: 'Self-Reference Test' },
-      paths: {},
-      components: {
-        schemas: {
-          Node: {
-            type: 'object',
-            properties: {
-              value: { type: 'string' },
-              next: { $ref: '#/components/schemas/Node' },
-            },
-          },
-        },
-      },
-    };
-
-    // FIRST: Prove IR detects the circular reference
-    const ctx = getZodClientTemplateContext(openApiDoc);
-    const nodeComponent = ctx._ir?.components?.find((c) => c.name === 'Node');
-    const circularRefs = nodeComponent?.schema?.metadata.circularReferences || [];
-
-    expect(circularRefs.length).toBeGreaterThan(0);
-    expect(circularRefs).toContain('#/components/schemas/Node');
-
-    // SECOND: Prove generated code uses lazy() for circular ref
-    const result = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc,
-    });
-
-    // Type guard: narrows result to single file
-    if (!isSingleFileResult(result)) {
-      throw new Error('Expected single file result');
-    }
-
-    expect(result.content).toContain('Node');
-    expect(result.content).toContain('z.lazy(');
-
-    // The circular reference should be wrapped in lazy
-    const hasLazyReference = result.content.includes('z.lazy(') && result.content.includes('Node');
-    expect(hasLazyReference).toBe(true);
-  });
-
-  test('mutual circular references generate lazy() schemas', async () => {
-    const openApiDoc: OpenAPIObject = {
-      openapi: '3.1.0',
-      info: { version: '1.0.0', title: 'Mutual Reference Test' },
-      paths: {},
-      components: {
-        schemas: {
-          Author: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              books: {
-                type: 'array',
-                items: { $ref: '#/components/schemas/Book' },
-              },
-            },
-          },
-          Book: {
-            type: 'object',
-            properties: {
-              title: { type: 'string' },
-              author: { $ref: '#/components/schemas/Author' },
-            },
-          },
-        },
-      },
-    };
-
-    // FIRST: Prove IR detects mutual circular references
-    const ctx = getZodClientTemplateContext(openApiDoc);
-
-    const authorComponent = ctx._ir?.components?.find((c) => c.name === 'Author');
-    const bookComponent = ctx._ir?.components?.find((c) => c.name === 'Book');
-
-    const authorCircularRefs = authorComponent?.schema?.metadata.circularReferences || [];
-    const bookCircularRefs = bookComponent?.schema?.metadata.circularReferences || [];
-
-    const totalCircularRefs = authorCircularRefs.length + bookCircularRefs.length;
-    expect(totalCircularRefs).toBeGreaterThan(0);
-
-    // SECOND: Prove generated code handles the circular dependency
-    const result = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc,
-    });
-
-    // Type guard: narrows result to single file
-    if (!isSingleFileResult(result)) {
-      throw new Error('Expected single file result');
-    }
-
-    expect(result.content).toContain('Author');
-    expect(result.content).toContain('Book');
-
-    // At least one should use lazy() to break the cycle
-    expect(result.content).toContain('z.lazy(');
-  });
-
+describe('IR Integration - Complex Circular References', () => {
   test('deeply nested circular reference generates correct lazy() schema', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',

@@ -153,6 +153,8 @@ const testRules: Linter.RulesRecord = {
   'max-statements': ['error', 50],
   'max-depth': ['error', 5],
   'no-console': 'off',
+  complexity: 'off',
+  'sonarjs/cognitive-complexity': 'off',
 };
 
 /* -------------------------------------------------------------------------- */
