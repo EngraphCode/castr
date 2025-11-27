@@ -13197,137 +13197,139 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "complete": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "complete": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "boolean",
                             },
-                            "type": "boolean",
-                        },
-                        "id": {
-                            "examples": [
-                                10,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "id": {
+                                "examples": [
+                                    10,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "petId": {
-                            "examples": [
-                                198772,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "petId": {
+                                "examples": [
+                                    198772,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "quantity": {
-                            "examples": [
-                                7,
-                            ],
-                            "format": "int32",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "quantity": {
+                                "examples": [
+                                    7,
+                                ],
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "shipDate": {
-                            "format": "date-time",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "shipDate": {
+                                "format": "date-time",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "status": {
-                            "description": "Order Status",
-                            "enum": [
-                                "placed",
-                                "approved",
-                                "delivered",
-                            ],
-                            "examples": [
-                                "approved",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
+                            "status": {
                                 "description": "Order Status",
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                                "enum": [
+                                    "placed",
+                                    "approved",
+                                    "delivered",
+                                ],
+                                "examples": [
+                                    "approved",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "description": "Order Status",
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -13368,10 +13370,27 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "address": {
-                            "items": {
-                                "$ref": "#/components/schemas/Address",
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "address": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Address",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -13387,66 +13406,51 @@ exports[`getZodClientTemplateContext 1`] = `
                                         "validations": [],
                                     },
                                 },
+                                "type": "array",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "id": {
+                                "examples": [
+                                    100000,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "array",
-                        },
-                        "id": {
-                            "examples": [
-                                100000,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "username": {
+                                "examples": [
+                                    "fehguy",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "integer",
-                        },
-                        "username": {
-                            "examples": [
-                                "fehguy",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -13487,90 +13491,92 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "city": {
-                            "examples": [
-                                "Palo Alto",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "city": {
+                                "examples": [
+                                    "Palo Alto",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "state": {
-                            "examples": [
-                                "CA",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "state": {
+                                "examples": [
+                                    "CA",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "street": {
-                            "examples": [
-                                "437 Lytton",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "street": {
+                                "examples": [
+                                    "437 Lytton",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "zip": {
-                            "examples": [
-                                "94301",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "zip": {
+                                "examples": [
+                                    "94301",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -13611,49 +13617,51 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "id": {
-                            "examples": [
-                                1,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "id": {
+                                "examples": [
+                                    1,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "name": {
-                            "examples": [
-                                "Dogs",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "name": {
+                                "examples": [
+                                    "Dogs",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -13694,178 +13702,180 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "email": {
-                            "examples": [
-                                "john@email.com",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "email": {
+                                "examples": [
+                                    "john@email.com",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "firstName": {
-                            "examples": [
-                                "John",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "firstName": {
+                                "examples": [
+                                    "John",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "id": {
-                            "examples": [
-                                10,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "id": {
+                                "examples": [
+                                    10,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "lastName": {
-                            "examples": [
-                                "James",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "lastName": {
+                                "examples": [
+                                    "James",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "password": {
-                            "examples": [
-                                "12345",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "password": {
+                                "examples": [
+                                    "12345",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "phone": {
-                            "examples": [
-                                "12345",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "phone": {
+                                "examples": [
+                                    "12345",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "userStatus": {
-                            "description": "User Status",
-                            "examples": [
-                                1,
-                            ],
-                            "format": "int32",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
+                            "userStatus": {
                                 "description": "User Status",
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                                "examples": [
+                                    1,
+                                ],
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "description": "User Status",
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "username": {
-                            "examples": [
-                                "theUser",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "username": {
+                                "examples": [
+                                    "theUser",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -13906,43 +13916,45 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "id": {
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "id": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "name": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "name": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -13983,70 +13995,10 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "category": {
-                            "$ref": "#/components/schemas/Category",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                        },
-                        "id": {
-                            "examples": [
-                                10,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "integer",
-                        },
-                        "name": {
-                            "examples": [
-                                "doggie",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
-                        },
-                        "photoUrls": {
-                            "items": {
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "category": {
+                                "$ref": "#/components/schemas/Category",
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -14054,6 +14006,109 @@ exports[`getZodClientTemplateContext 1`] = `
                                         "referencedBy": [],
                                         "references": [],
                                     },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                            "id": {
+                                "examples": [
+                                    10,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                            "name": {
+                                "examples": [
+                                    "doggie",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                            "photoUrls": {
+                                "items": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                            "status": {
+                                "description": "pet status in the store",
+                                "enum": [
+                                    "available",
+                                    "pending",
+                                    "sold",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "description": "pet status in the store",
                                     "nullable": false,
                                     "required": false,
                                     "zodChain": {
@@ -14064,51 +14119,25 @@ exports[`getZodClientTemplateContext 1`] = `
                                 },
                                 "type": "string",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "tags": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Tag",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
                                 },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "array",
-                        },
-                        "status": {
-                            "description": "pet status in the store",
-                            "enum": [
-                                "available",
-                                "pending",
-                                "sold",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "description": "pet status in the store",
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
-                        },
-                        "tags": {
-                            "items": {
-                                "$ref": "#/components/schemas/Tag",
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -14124,23 +14153,8 @@ exports[`getZodClientTemplateContext 1`] = `
                                         "validations": [],
                                     },
                                 },
+                                "type": "array",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "array",
                         },
                     },
                     "required": [
@@ -14184,61 +14198,63 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "code": {
-                            "format": "int32",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "code": {
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "message": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "message": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "type": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "type": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -18883,137 +18899,139 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "complete": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "complete": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "boolean",
                             },
-                            "type": "boolean",
-                        },
-                        "id": {
-                            "examples": [
-                                10,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "id": {
+                                "examples": [
+                                    10,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "petId": {
-                            "examples": [
-                                198772,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "petId": {
+                                "examples": [
+                                    198772,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "quantity": {
-                            "examples": [
-                                7,
-                            ],
-                            "format": "int32",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "quantity": {
+                                "examples": [
+                                    7,
+                                ],
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "shipDate": {
-                            "format": "date-time",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "shipDate": {
+                                "format": "date-time",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "status": {
-                            "description": "Order Status",
-                            "enum": [
-                                "placed",
-                                "approved",
-                                "delivered",
-                            ],
-                            "examples": [
-                                "approved",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
+                            "status": {
                                 "description": "Order Status",
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                                "enum": [
+                                    "placed",
+                                    "approved",
+                                    "delivered",
+                                ],
+                                "examples": [
+                                    "approved",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "description": "Order Status",
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -19054,10 +19072,27 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "address": {
-                            "items": {
-                                "$ref": "#/components/schemas/Address",
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "address": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Address",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -19073,66 +19108,51 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                         "validations": [],
                                     },
                                 },
+                                "type": "array",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "id": {
+                                "examples": [
+                                    100000,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "array",
-                        },
-                        "id": {
-                            "examples": [
-                                100000,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "username": {
+                                "examples": [
+                                    "fehguy",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "integer",
-                        },
-                        "username": {
-                            "examples": [
-                                "fehguy",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -19173,90 +19193,92 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "city": {
-                            "examples": [
-                                "Palo Alto",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "city": {
+                                "examples": [
+                                    "Palo Alto",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "state": {
-                            "examples": [
-                                "CA",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "state": {
+                                "examples": [
+                                    "CA",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "street": {
-                            "examples": [
-                                "437 Lytton",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "street": {
+                                "examples": [
+                                    "437 Lytton",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "zip": {
-                            "examples": [
-                                "94301",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "zip": {
+                                "examples": [
+                                    "94301",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -19297,49 +19319,51 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "id": {
-                            "examples": [
-                                1,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "id": {
+                                "examples": [
+                                    1,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "name": {
-                            "examples": [
-                                "Dogs",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "name": {
+                                "examples": [
+                                    "Dogs",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -19380,178 +19404,180 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "email": {
-                            "examples": [
-                                "john@email.com",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "email": {
+                                "examples": [
+                                    "john@email.com",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "firstName": {
-                            "examples": [
-                                "John",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "firstName": {
+                                "examples": [
+                                    "John",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "id": {
-                            "examples": [
-                                10,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "id": {
+                                "examples": [
+                                    10,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "lastName": {
-                            "examples": [
-                                "James",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "lastName": {
+                                "examples": [
+                                    "James",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "password": {
-                            "examples": [
-                                "12345",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "password": {
+                                "examples": [
+                                    "12345",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "phone": {
-                            "examples": [
-                                "12345",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "phone": {
+                                "examples": [
+                                    "12345",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "userStatus": {
-                            "description": "User Status",
-                            "examples": [
-                                1,
-                            ],
-                            "format": "int32",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
+                            "userStatus": {
                                 "description": "User Status",
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                                "examples": [
+                                    1,
+                                ],
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "description": "User Status",
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "username": {
-                            "examples": [
-                                "theUser",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "username": {
+                                "examples": [
+                                    "theUser",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -19592,43 +19618,45 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "id": {
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "id": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "name": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "name": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -19669,70 +19697,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "category": {
-                            "$ref": "#/components/schemas/Category",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                        },
-                        "id": {
-                            "examples": [
-                                10,
-                            ],
-                            "format": "int64",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "integer",
-                        },
-                        "name": {
-                            "examples": [
-                                "doggie",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
-                        },
-                        "photoUrls": {
-                            "items": {
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "category": {
+                                "$ref": "#/components/schemas/Category",
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -19740,6 +19708,109 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                         "referencedBy": [],
                                         "references": [],
                                     },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                            "id": {
+                                "examples": [
+                                    10,
+                                ],
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                            "name": {
+                                "examples": [
+                                    "doggie",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                            "photoUrls": {
+                                "items": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                            "status": {
+                                "description": "pet status in the store",
+                                "enum": [
+                                    "available",
+                                    "pending",
+                                    "sold",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "description": "pet status in the store",
                                     "nullable": false,
                                     "required": false,
                                     "zodChain": {
@@ -19750,51 +19821,25 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                 },
                                 "type": "string",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "tags": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Tag",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
                                 },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "array",
-                        },
-                        "status": {
-                            "description": "pet status in the store",
-                            "enum": [
-                                "available",
-                                "pending",
-                                "sold",
-                            ],
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "description": "pet status in the store",
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
-                        },
-                        "tags": {
-                            "items": {
-                                "$ref": "#/components/schemas/Tag",
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -19810,23 +19855,8 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                         "validations": [],
                                     },
                                 },
+                                "type": "array",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "array",
                         },
                     },
                     "required": [
@@ -19870,61 +19900,63 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "code": {
-                            "format": "int32",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "code": {
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "integer",
                             },
-                            "type": "integer",
-                        },
-                        "message": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "message": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "type": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "type": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -24573,96 +24605,98 @@ exports[`with optional, partial, all required objects 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "nb": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "nb": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
+                                "type": "number",
+                            },
+                            "nested": {
+                                "$ref": "#/components/schemas/Nested2",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
                                 },
                             },
-                            "type": "number",
-                        },
-                        "nested": {
-                            "$ref": "#/components/schemas/Nested2",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "optionalProp": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
+                                "type": "string",
+                            },
+                            "partial": {
+                                "$ref": "#/components/schemas/PartialObject",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
-                        },
-                        "optionalProp": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "str": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "partial": {
-                            "$ref": "#/components/schemas/PartialObject",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                        },
-                        "str": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
                         },
                     },
                     "required": [
@@ -24711,78 +24745,80 @@ exports[`with optional, partial, all required objects 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "circularToRoot": {
-                            "$ref": "#/components/schemas/Root2",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                        },
-                        "deeplyNested": {
-                            "$ref": "#/components/schemas/DeeplyNested",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "circularToRoot": {
+                                "$ref": "#/components/schemas/Root2",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
-                        },
-                        "nested_prop": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "boolean",
-                        },
-                        "requiredProp": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": true,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "required",
-                                    "validations": [],
+                            "deeplyNested": {
+                                "$ref": "#/components/schemas/DeeplyNested",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
-                            "type": "string",
+                            "nested_prop": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "boolean",
+                            },
+                            "requiredProp": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
                         },
                     },
                     "required": [
@@ -24825,42 +24861,44 @@ exports[`with optional, partial, all required objects 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "another": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "another": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "number",
                             },
-                            "type": "number",
-                        },
-                        "something": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "something": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
                         },
                     },
                     "required": [],
@@ -25002,96 +25040,98 @@ exports[`with optional, partial, all required objects 1`] = `
                                             "validations": [],
                                         },
                                     },
-                                    "properties": {
-                                        "nb": {
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
+                                    "properties": IRSchemaProperties {
+                                        "props": {
+                                            "nb": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": true,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "required",
+                                                        "validations": [],
+                                                    },
                                                 },
-                                                "nullable": false,
-                                                "required": true,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "required",
-                                                    "validations": [],
+                                                "type": "number",
+                                            },
+                                            "nested": {
+                                                "$ref": "#/components/schemas/Nested2",
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": true,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "required",
+                                                        "validations": [],
+                                                    },
                                                 },
                                             },
-                                            "type": "number",
-                                        },
-                                        "nested": {
-                                            "$ref": "#/components/schemas/Nested2",
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
+                                            "optionalProp": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
                                                 },
-                                                "nullable": false,
-                                                "required": true,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "required",
-                                                    "validations": [],
+                                                "type": "string",
+                                            },
+                                            "partial": {
+                                                "$ref": "#/components/schemas/PartialObject",
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
                                                 },
                                             },
-                                        },
-                                        "optionalProp": {
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
+                                            "str": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": true,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "required",
+                                                        "validations": [],
+                                                    },
                                                 },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
-                                                },
+                                                "type": "string",
                                             },
-                                            "type": "string",
-                                        },
-                                        "partial": {
-                                            "$ref": "#/components/schemas/PartialObject",
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
-                                                },
-                                            },
-                                        },
-                                        "str": {
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": true,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "required",
-                                                    "validations": [],
-                                                },
-                                            },
-                                            "type": "string",
                                         },
                                     },
                                     "required": [
@@ -25133,78 +25173,80 @@ exports[`with optional, partial, all required objects 1`] = `
                                             "validations": [],
                                         },
                                     },
-                                    "properties": {
-                                        "circularToRoot": {
-                                            "$ref": "#/components/schemas/Root2",
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
-                                                },
-                                            },
-                                        },
-                                        "deeplyNested": {
-                                            "$ref": "#/components/schemas/DeeplyNested",
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
+                                    "properties": IRSchemaProperties {
+                                        "props": {
+                                            "circularToRoot": {
+                                                "$ref": "#/components/schemas/Root2",
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
                                                 },
                                             },
-                                        },
-                                        "nested_prop": {
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
-                                                },
-                                            },
-                                            "type": "boolean",
-                                        },
-                                        "requiredProp": {
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": true,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "required",
-                                                    "validations": [],
+                                            "deeplyNested": {
+                                                "$ref": "#/components/schemas/DeeplyNested",
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
                                                 },
                                             },
-                                            "type": "string",
+                                            "nested_prop": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
+                                                },
+                                                "type": "boolean",
+                                            },
+                                            "requiredProp": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": true,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "required",
+                                                        "validations": [],
+                                                    },
+                                                },
+                                                "type": "string",
+                                            },
                                         },
                                     },
                                     "required": [

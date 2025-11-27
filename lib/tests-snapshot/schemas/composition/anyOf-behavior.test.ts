@@ -1,4 +1,5 @@
 import { describe, test, expect } from 'vitest';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 import { getZodSchema } from '../../../src/conversion/zod/index.js';
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
@@ -317,7 +318,8 @@ describe('anyOf behavior', () => {
     };
 
     const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-    expect(output).toMatchInlineSnapshot(`
+    assertSingleFileResult(output);
+    expect(output.content).toMatchInlineSnapshot(`
       "import { z } from "zod";
 
       export const PetByAge = z

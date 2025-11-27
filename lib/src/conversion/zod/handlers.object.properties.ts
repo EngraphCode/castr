@@ -4,7 +4,6 @@ import type { TemplateContext } from '../../context/template-context.js';
 import { wrapWithQuotesIfNeeded } from '../../shared/utils/index.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
 import type { IRSchemaNode } from '../../context/ir-schema.js';
-import type { IRSchemaProperties } from '../../context/ir-schema-properties.js';
 import {
   determinePropertyRequired,
   buildPropertyMetadata,
@@ -12,6 +11,10 @@ import {
   buildPropertyZodCode,
 } from './handlers.object.helpers.js';
 
+/**
+ * Function type for Zod schema generation.
+ * Uses library types (SchemaObject | ReferenceObject) per RULES.md "Library Types First".
+ */
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
@@ -20,6 +23,10 @@ type GetZodSchemaFn = (args: {
   options?: TemplateContext['options'] | undefined;
 }) => ZodCodeResult;
 
+/**
+ * Function type for Zod chain generation.
+ * Uses library types (SchemaObject | ReferenceObject) per RULES.md "Library Types First".
+ */
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
   meta?: CodeMetaData;
@@ -71,14 +78,17 @@ export function buildPropertyEntry(
 }
 
 /**
- * Build properties string for z.object()
- * Pure function: converts OpenAPI properties to Zod object property definitions
- * Handles required/optional determination and reference resolution
+ * Build properties string for z.object().
+ * Pure function: converts OpenAPI properties to Zod object property definitions.
+ * Handles required/optional determination and reference resolution.
+ *
+ * Uses library types (Record<string, SchemaObject | ReferenceObject>) per
+ * RULES.md "Library Types First".
  *
  * @returns Properties string like "{ prop1: z.string(), prop2: z.number().optional() }"
  */
 export function buildObjectPropertiesString(
-  properties: IRSchemaProperties,
+  properties: Record<string, SchemaObject | ReferenceObject>,
   schema: SchemaObject,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
@@ -88,9 +98,8 @@ export function buildObjectPropertiesString(
   getZodChain: GetZodChainFn,
   options?: TemplateContext['options'],
 ): string {
-  const propsMap = properties.entries().map(([prop, propSchema]) => {
-    // IRSchema extends SchemaObject - structurally compatible
-    // Can safely pass to function expecting SchemaObject | ReferenceObject
+  // Process each property using library types
+  const propEntries = Object.entries(properties).map(([prop, propSchema]) => {
     return buildPropertyEntry(
       prop,
       propSchema,
@@ -105,7 +114,7 @@ export function buildObjectPropertiesString(
     );
   });
 
-  const validProps = propsMap.filter((entry): entry is [string, string] => {
+  const validProps = propEntries.filter((entry): entry is [string, string] => {
     const [prop] = entry;
     return typeof prop === 'string' && prop.length > 0;
   });

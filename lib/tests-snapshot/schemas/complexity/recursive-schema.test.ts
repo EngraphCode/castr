@@ -10,6 +10,7 @@ import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
 import { topologicalSort } from '../../../src/shared/topological-sort.js';
 import type { ConversionTypeContext } from '../../../src/conversion/zod/index.js';
 import { asComponentSchema } from '../../../src/shared/utils/index.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 // Note: Recursive inline response/param schemas are a potential future enhancement
 
@@ -99,7 +100,8 @@ describe('recursive-schema - indirect single recursive', () => {
       openApiDoc,
       disableWriteToFile: true,
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -245,7 +247,8 @@ describe('recursive-schema - multiple recursive in one root schema', () => {
       openApiDoc,
       disableWriteToFile: true,
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -311,6 +314,7 @@ describe('recursive-schema - with ref to simple schema', () => {
       openApiDoc,
       disableWriteToFile: true,
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });

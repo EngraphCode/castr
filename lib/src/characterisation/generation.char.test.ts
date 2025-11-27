@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { assertIsString } from './test-utils.js';
+import { extractContent } from '../../tests-helpers/generation-result-assertions.js';
 
 /**
  * Characterisation Tests: Full Generation Pipeline
@@ -54,20 +54,19 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
     });
 
     // Assert: Generated code characteristics (PUBLIC API BEHAVIOR)
-    expect(typeof result).toBe('string');
-    assertIsString(result, 'generation output');
-    expect(result).toContain('import { z }'); // Has Zod imports
-    expect(result).toContain('export const'); // Has exports
-    expect(result).not.toContain('as unknown as'); // NO type assertions
-    expect(result).not.toContain(' as any'); // NO any casts
+    const content = extractContent(result);
+    expect(content).toContain('import { z }'); // Has Zod imports
+    expect(content).toContain('export const'); // Has exports
+    expect(content).not.toContain('as unknown as'); // NO type assertions
+    expect(content).not.toContain(' as any'); // NO any casts
 
     // Verify no type assertions (except 'as const')
     const assertionPattern = / as (?!const\b)/g;
-    const matches = result.match(assertionPattern);
+    const matches = content.match(assertionPattern);
     expect(matches).toBeNull();
 
     // Should contain the operation path (behavior test, not exact format)
-    expect(result).toContain('/users'); // Path is in output
+    expect(content).toContain('/users'); // Path is in output
   });
 
   it('should handle schemas with $ref after bundling', async () => {
@@ -114,11 +113,12 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
     });
 
     // Assert: Schema name preserved, no type assertions
-    expect(result).toContain('User'); // Schema name in output
-    expect(result).not.toContain('as unknown as');
+    const content = extractContent(result);
+    expect(content).toContain('User'); // Schema name in output
+    expect(content).not.toContain('as unknown as');
 
     // Verify the schema structure was generated (flexible pattern)
-    expect(result).toContain('.object'); // Has object schema
+    expect(content).toContain('.object'); // Has object schema
   });
 
   it('should handle requestBody with $ref', async () => {
@@ -174,11 +174,11 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
     });
 
     // Assert: RequestBody properly resolved and generated
-    expect(result).toContain('createUser');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('createUser');
+    expect(extractContent(result)).not.toContain('as unknown as');
 
     // Should have body schema
-    expect(result).toMatch(/name.*z\.string/s);
+    expect(extractContent(result)).toMatch(/name.*z\.string/s);
   });
 
   it('should handle responses with $ref', async () => {
@@ -232,11 +232,11 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
     });
 
     // Assert: Response properly resolved
-    expect(result).toContain('/users/:id'); // Path is in output
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('/users/:id'); // Path is in output
+    expect(extractContent(result)).not.toContain('as unknown as');
 
     // Should have response schema with id field
-    expect(result).toContain('z.string()'); // Has string schema
+    expect(extractContent(result)).toContain('z.string()'); // Has string schema
   });
 
   it('should handle parameters with $ref', async () => {
@@ -292,12 +292,12 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
     });
 
     // Assert: Parameters properly resolved
-    expect(result).toContain('/users/:userId'); // Path with param is in output
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('/users/:userId'); // Path with param is in output
+    expect(extractContent(result)).not.toContain('as unknown as');
 
     // Should have parameter schemas
-    expect(result).toContain('userId'); // userId parameter
-    expect(result).toContain('page'); // page parameter
+    expect(extractContent(result)).toContain('userId'); // userId parameter
+    expect(extractContent(result)).toContain('page'); // page parameter
   });
 });
 
@@ -359,12 +359,12 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
     });
 
     // Assert: allOf properly handled
-    expect(result).toContain('User');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('User');
+    expect(extractContent(result)).not.toContain('as unknown as');
 
     // Should have merged properties from allOf
-    expect(result).toMatch(/id/);
-    expect(result).toMatch(/name/);
+    expect(extractContent(result)).toMatch(/id/);
+    expect(extractContent(result)).toMatch(/name/);
   });
 
   it('should handle oneOf unions', async () => {
@@ -425,10 +425,10 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
     });
 
     // Assert: oneOf properly handled as union
-    expect(result).toContain('Pet');
-    expect(result).toContain('Cat');
-    expect(result).toContain('Dog');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('Pet');
+    expect(extractContent(result)).toContain('Cat');
+    expect(extractContent(result)).toContain('Dog');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle circular references', async () => {
@@ -477,11 +477,11 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
     });
 
     // Assert: Circular reference handled (z.lazy)
-    expect(result).toContain('TreeNode');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('TreeNode');
+    expect(extractContent(result)).not.toContain('as unknown as');
 
     // Should use z.lazy for circular reference
-    expect(result).toMatch(/z\.lazy/);
+    expect(extractContent(result)).toMatch(/z\.lazy/);
   });
 
   it('should handle deeply nested schemas', async () => {
@@ -541,13 +541,13 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
     });
 
     // Assert: Deep nesting handled
-    expect(result).toContain('DeepNested');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('DeepNested');
+    expect(extractContent(result)).not.toContain('as unknown as');
 
     // Should contain nested properties
-    expect(result).toMatch(/level1/);
-    expect(result).toMatch(/level2/);
-    expect(result).toMatch(/level3/);
+    expect(extractContent(result)).toMatch(/level1/);
+    expect(extractContent(result)).toMatch(/level2/);
+    expect(extractContent(result)).toMatch(/level3/);
   });
 });
 
@@ -584,9 +584,9 @@ describe('Characterisation: Full Generation Pipeline - Template Options', () => 
     });
 
     // Assert: Default template is now schemas-with-metadata
-    expect(result).toContain('import { z }');
-    expect(result).toContain('export const endpoints');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('import { z }');
+    expect(extractContent(result)).toContain('export const endpoints');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should generate schemas-only template', async () => {
@@ -634,9 +634,9 @@ describe('Characterisation: Full Generation Pipeline - Template Options', () => 
     });
 
     // Assert: Schemas-only template has schemas
-    expect(result).toContain('import { z }');
-    expect(result).toContain('User');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('import { z }');
+    expect(extractContent(result)).toContain('User');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should generate schemas-with-metadata template', async () => {
@@ -684,9 +684,9 @@ describe('Characterisation: Full Generation Pipeline - Template Options', () => 
     });
 
     // Assert: Has schemas and metadata
-    expect(result).toContain('import { z }');
-    expect(result).toContain('User');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('import { z }');
+    expect(extractContent(result)).toContain('User');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 });
 
@@ -792,8 +792,8 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
     });
 
     // Assert: All HTTP methods are handled
-    expect(result).toContain('/resource/:id');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('/resource/:id');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle anyOf composition', async () => {
@@ -841,9 +841,9 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
     });
 
     // Assert: anyOf is handled (union type in Zod)
-    expect(result).toContain('StringOrNumber');
-    expect(result).toContain('Response');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('StringOrNumber');
+    expect(extractContent(result)).toContain('Response');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle multiple content types in responses', async () => {
@@ -898,10 +898,10 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
     });
 
     // Assert: Multiple content types handled
-    expect(result).toContain('/document');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('/document');
+    expect(extractContent(result)).not.toContain('as unknown as');
     // Should have generated schema (object is inlined)
-    expect(result).toContain('.object');
+    expect(extractContent(result)).toContain('.object');
   });
 });
 

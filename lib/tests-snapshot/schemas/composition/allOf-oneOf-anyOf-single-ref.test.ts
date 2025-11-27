@@ -1,5 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/49
@@ -54,7 +55,8 @@ test('allOf-single-ref', async () => {
   };
 
   const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-  expect(output).toMatchInlineSnapshot(`
+  assertSingleFileResult(output);
+  expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const MyComponent = z.enum(["one", "two", "three"]);

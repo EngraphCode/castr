@@ -15,21 +15,18 @@ import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
+import { extractContent, assertAndExtractContent } from './test-utils.js';
+import type { GenerationResult } from '../rendering/generation-result.js';
 
 /**
- * Type guard to assert that generateZodClientFromOpenAPI returned a string.
+ * Type guard to assert that generateZodClientFromOpenAPI returned a single file result.
  *
- * The function can return `string | Record<string, string>` depending on
- * whether grouped output is used. This helper makes our assumption explicit
- * and fails fast with a clear message if it's wrong.
+ * The function returns `GenerationResult` which is a discriminated union.
+ * This helper makes our assumption explicit and fails fast with a clear message
+ * if it's wrong, then extracts and returns the content.
  */
-function assertIsString(value: unknown, context: string): asserts value is string {
-  if (typeof value !== 'string') {
-    throw new Error(
-      `Expected string result in ${context}, got ${typeof value}. ` +
-        `This likely means grouped output was unexpectedly enabled.`,
-    );
-  }
+function assertAndExtractResult(value: unknown, context: string): string {
+  return assertAndExtractContent(value as GenerationResult, context);
 }
 
 /**
@@ -94,10 +91,10 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('export const User');
-    expect(result).toContain('z.object');
-    expect(result).not.toContain('as unknown as');
-    expect(result).not.toMatch(/ as (?!const\b)/); // No type assertions except 'as const'
+    expect(extractContent(result)).toContain('export const User');
+    expect(extractContent(result)).toContain('z.object');
+    expect(extractContent(result)).not.toContain('as unknown as');
+    expect(extractContent(result)).not.toMatch(/ as (?!const\b)/); // No type assertions except 'as const'
   });
 
   /**
@@ -134,12 +131,12 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
       disableWriteToFile: true,
       options: { shouldExportAllSchemas: true }, // Export schemas even with no endpoints
     });
-    assertIsString(result, 'Scenario 1.2: dependency order with $refs');
+    const content = assertAndExtractResult(result, 'Scenario 1.2: dependency order with $refs');
 
     // Acceptance criteria:
     // Address must be defined before User
-    const addressPos = result.indexOf('export const Address');
-    const userPos = result.indexOf('export const User');
+    const addressPos = content.indexOf('export const Address');
+    const userPos = content.indexOf('export const User');
     expect(addressPos).toBeGreaterThan(0);
     expect(userPos).toBeGreaterThan(addressPos);
   });
@@ -182,8 +179,8 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('z.lazy(');
-    expect(result).toContain('export const Node');
+    expect(extractContent(result)).toContain('z.lazy(');
+    expect(extractContent(result)).toContain('export const Node');
   });
 });
 
@@ -241,8 +238,8 @@ describe('E2E: Programmatic Usage - After prepareOpenApiDocument()', () => {
 
     // Acceptance criteria:
     // Even after dereference, component schemas should be extracted as named exports
-    expect(result).toContain('export const User');
-    expect(result).toContain('z.object');
+    expect(extractContent(result)).toContain('export const User');
+    expect(extractContent(result)).toContain('z.object');
   });
 
   /**
@@ -263,9 +260,9 @@ describe('E2E: Programmatic Usage - After prepareOpenApiDocument()', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('export const');
-    expect(result).not.toContain('$ref'); // Should not leak $ref into generated code
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('export const');
+    expect(extractContent(result)).not.toContain('$ref'); // Should not leak $ref into generated code
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 });
 
@@ -295,8 +292,8 @@ describe('E2E: CLI Usage', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('export const');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('export const');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   /**
@@ -348,7 +345,7 @@ describe('E2E: CLI Usage', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('export const User');
+    expect(extractContent(result)).toContain('export const User');
   });
 });
 
@@ -399,8 +396,8 @@ describe('E2E: Operation-Level Refs', () => {
 
     // Acceptance criteria:
     // After dereference, operation.parameters should NOT have $refs
-    expect(result).toContain('page');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('page');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   /**
@@ -448,8 +445,8 @@ describe('E2E: Operation-Level Refs', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('name');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('name');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   /**
@@ -505,8 +502,8 @@ describe('E2E: Operation-Level Refs', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('id');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('id');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 });
 
@@ -562,9 +559,9 @@ describe('E2E: Edge Cases', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('export const SpecialProps');
-    expect(result).toContain('kebab-case');
-    expect(result).toContain('dot.notation');
+    expect(extractContent(result)).toContain('export const SpecialProps');
+    expect(extractContent(result)).toContain('kebab-case');
+    expect(extractContent(result)).toContain('dot.notation');
   });
 });
 
@@ -602,7 +599,7 @@ describe('E2E: Templates', () => {
     });
 
     // Acceptance criteria:
-    expect(result).toContain('export const User');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('export const User');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 });

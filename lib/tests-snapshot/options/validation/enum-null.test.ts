@@ -1,6 +1,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 // https://github.com/astahmer/openapi-zod-client/issues/61
 test('enum-null', async () => {
@@ -109,7 +110,8 @@ test('enum-null', async () => {
     openApiDoc,
     options: { shouldExportAllTypes: true },
   });
-  expect(output).toMatchInlineSnapshot(`
+  assertSingleFileResult(output);
+  expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     type Compound = Partial<{ field: Null1 | Null2 | Null3 | Null4 | string }>;

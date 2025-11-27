@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
 import { getZodClientTemplateContext } from '../../../src/context/index.js';
 import { exportAllTypesSnapshot } from '../../__fixtures__/options/generation/export-all-types.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) => ({
   openapi: '3.0.3',
@@ -267,6 +268,7 @@ describe('export-all-types', () => {
         shouldExportAllTypes: true,
       },
     });
-    expect(prettyOutput).toBe(exportAllTypesSnapshot);
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toBe(exportAllTypesSnapshot);
   });
 });

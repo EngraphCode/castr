@@ -26,6 +26,7 @@
 - ✅ **All src/ files:** 0 lint errors
 
 **Files Cleaned:**
+
 - `handlers.object.schema.ts` - Eliminated type assertions, added proper type guards
 - `handlers.object.properties.ts` - Removed `toSchemaObject()` bridge function
 - `ir-builder.schemas.ts` - Fixed code smell with fail-fast pattern
@@ -36,6 +37,7 @@
 **Created:** `handlers.object.helpers.ts` - Single source of truth for shared object handling logic
 
 **Extracted Functions (All Pure, All Tested):**
+
 1. `determinePropertyRequired()` - Calculate required status for properties
 2. `buildPropertyMetadata()` - Create CodeMetaData for properties
 3. `resolveSchemaForChain()` - Resolve references for Zod chains
@@ -46,6 +48,7 @@
 ### 3. Type Guards Added (No Assertions) ✅
 
 **New Type Guards in handlers.object.schema.ts:**
+
 - `isIRSchemaProperties()` - Type-safe IRSchemaProperties check
 - `canTreatAsIRSchemaRecord()` - Structural compatibility verification
 
@@ -56,6 +59,7 @@
 **New Helper Modules:**
 
 **A. `lib/src/characterisation/ir-test-helpers.ts` (7 functions)**
+
 - `assertAndGetSingleFileContent()` - Type-safe single file result extraction
 - `findComponent()` - Safe component lookup
 - `countTotalCircularRefs()` - Aggregate circular reference counting
@@ -64,6 +68,7 @@
 - `assertContentContainsInsensitive()` - Case-insensitive content assertions
 
 **B. `lib/src/context/ir-test-helpers.ts` (7 functions)**
+
 - `getComponent()` - Type-safe component retrieval (throws on missing)
 - `getSchemaProperty()` - Type-safe property access
 - `assertPropertyRequired()` - Required status validation
@@ -75,6 +80,7 @@
 ### 5. Test Files Improved ✅
 
 **Fixed:**
+
 - `export-all-named-schemas.test.ts` - Replaced `void` with eslint-disable
 - `export-all-types.test.ts` - Replaced `void` with eslint-disable
 - `schema-name-already-used.test.ts` - Replaced `void` with eslint-disable
@@ -108,6 +114,7 @@
 ### Type Discipline Audit
 
 **Production Code (`lib/src/`):**
+
 ```bash
 grep -r "as " lib/src/ --include="*.ts" --exclude="*.test.ts"  # 0 results ✅
 grep -r ": any" lib/src/ --include="*.ts" --exclude="*.test.ts"  # 0 results ✅
@@ -123,6 +130,7 @@ grep -r "!" lib/src/ --include="*.ts" --exclude="*.test.ts"  # 0 non-null assert
 **Lower Priority** - Code quality, not type safety
 
 **Files:**
+
 1. `ir-validation.test.ts` - 687 lines, 10 complexity violations (partially refactored)
 2. `ir-circular-refs-integration.test.ts` - 2 complexity errors
 3. `ir-parameter-integration.test.ts` - 6 complexity errors
@@ -146,12 +154,14 @@ grep -r "!" lib/src/ --include="*.ts" --exclude="*.test.ts"  # 0 non-null assert
 **Test Files by Category:**
 
 **Unit Tests (~31 failures in ~21 files):**
+
 - Import/export handling tests
 - Conversion layer tests
 - Template rendering tests
 - Batched approach: 5-7 files at a time
 
 **Snapshot Tests (~61 failures in ~41 files):**
+
 - `lib/tests-snapshot/options/generation/*.test.ts`
 - `lib/tests-snapshot/schemas/complexity/*.test.ts`
 - `lib/tests-snapshot/schemas/composition/*.test.ts`
@@ -159,6 +169,7 @@ grep -r "!" lib/src/ --include="*.ts" --exclude="*.test.ts"  # 0 non-null assert
 - May require inline snapshot updates
 
 **Character Tests (84 failures in 11 files):**
+
 - `character.exports-api.test.ts`
 - `character.grouping-multi-file.test.ts`
 - `character.imports-api.test.ts`
@@ -204,6 +215,7 @@ The `toSchemaObject()` "temporary bridge" function was a red flag. We eliminated
 ### 3. Extraction Reduces Complexity AND Duplication
 
 Creating `handlers.object.helpers.ts` simultaneously:
+
 - Eliminated code duplication between properties.ts and schema.ts
 - Reduced cognitive complexity (pure functions)
 - Improved testability (isolated functions)
@@ -219,15 +231,18 @@ The 14 helper functions we created will benefit ALL future test work, not just t
 ### Option A: Complete Lint GREEN (Lower Impact)
 
 **Pros:**
+
 - Achieves checkpoint requirement (pnpm lint → GREEN)
 - Demonstrates completion of Blocker #2
 - Maintains discipline (no partial completions)
 
 **Cons:**
+
 - Lower functional impact (code quality vs functional correctness)
 - 2-3 more hours on test complexity
 
 **Steps:**
+
 1. Finish refactoring `ir-validation.test.ts` (extract more helpers)
 2. Address remaining 4 test files (break into smaller functions)
 3. Re-run `pnpm lint` → should be GREEN
@@ -235,15 +250,18 @@ The 14 helper functions we created will benefit ALL future test work, not just t
 ### Option B: Tackle GenerationResult Type Guards (Higher Impact) ✅ **RECOMMENDED**
 
 **Pros:**
+
 - Fixes 176 test failures (functional correctness)
 - Enables 3 more quality gates (test, snapshot, character)
 - Higher business value (ensures correct behavior)
 
 **Cons:**
+
 - Leaves lint at 27 errors (still need to clean up later)
 - More files to touch (~65 test files)
 
 **Steps:**
+
 1. Create `tests-helpers/generation-result-assertions.ts` with reusable assertion helpers
 2. Document pattern in `tests-helpers/README.md`
 3. POC: Update 10 unit tests to prove pattern
@@ -253,11 +271,13 @@ The 14 helper functions we created will benefit ALL future test work, not just t
 ### Option C: Document and Pause
 
 **Pros:**
+
 - Clear handoff point with comprehensive documentation
 - Allows stakeholder review and prioritization
 - Production code is clean (core mission complete)
 
 **Cons:**
+
 - Session incomplete (4/8 gates GREEN)
 - Work remains to reach all-gates-GREEN state
 
@@ -295,7 +315,7 @@ The primary goal was to restore type discipline in production code. This is **10
 
 The 27 remaining lint errors are ALL test file complexity issues, not type safety problems. The 176 test failures are due to missing type guards in test code, not production issues.
 
-**Recommendation:** 
+**Recommendation:**
 
 Move to **Option B** (GenerationResult type guards) as it has higher functional impact (ensuring test suite correctness) compared to test file complexity cleanup.
 
@@ -304,6 +324,7 @@ Move to **Option B** (GenerationResult type guards) as it has higher functional 
 ## 📋 Files Modified/Created
 
 ### Production Code (Clean ✅)
+
 1. `lib/src/conversion/zod/handlers.object.schema.ts` - Refactored, 0 type assertions
 2. `lib/src/conversion/zod/handlers.object.properties.ts` - Refactored, 0 type assertions
 3. `lib/src/conversion/zod/handlers.object.helpers.ts` - **NEW**, 4 pure functions
@@ -311,6 +332,7 @@ Move to **Option B** (GenerationResult type guards) as it has higher functional 
 5. `lib/src/context/ir-schema-properties.ts` - Added values() method
 
 ### Test Infrastructure (New ✅)
+
 6. `lib/src/characterisation/ir-test-helpers.ts` - **NEW**, 7 helper functions
 7. `lib/src/context/ir-test-helpers.ts` - **NEW**, 7 assertion helpers
 8. `lib/src/conversion/zod/handlers.object.helpers.test.ts` - **NEW**, 13 tests
@@ -318,6 +340,7 @@ Move to **Option B** (GenerationResult type guards) as it has higher functional 
 10. `lib/src/conversion/zod/handlers.object.properties.test.ts` - Updated, 2 tests
 
 ### Test Files (Refactored ✅)
+
 11. `lib/src/characterisation/ir-real-world.char.test.ts` - Refactored, 0 lint errors
 12. `lib/src/context/ir-validation.test.ts` - Partially refactored
 13. `lib/tests-snapshot/options/generation/export-all-named-schemas.test.ts` - Fixed void-use
@@ -331,10 +354,12 @@ Move to **Option B** (GenerationResult type guards) as it has higher functional 
 ## 📚 Documentation
 
 **Updated:**
+
 - `.agent/context/context.md` - Comprehensive current state
 - `.agent/context/SESSION-3.2-SUMMARY.md` - **THIS FILE**
 
 **To Update (Next Session):**
+
 - `.agent/context/continuation_prompt.md` - Technical context for next AI
 - `.agent/context/HANDOFF.md` - Quick orientation
 - `.agent/plans/PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md` - Progress tracking
@@ -344,4 +369,3 @@ Move to **Option B** (GenerationResult type guards) as it has higher functional 
 **Session End:** 2025-01-14 16:30  
 **Next Session:** Tackle GenerationResult type guards (Option B) OR complete lint cleanup (Option A)  
 **Status:** Production code 100% clean ✅, test infrastructure in place ✅, systematic rollout needed ⏳
-

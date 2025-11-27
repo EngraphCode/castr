@@ -2,6 +2,7 @@ import { getZodSchema } from '../../src/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
 test('handle-props-with-special-characters', async () => {
   const schemaWithSpecialCharacters = {
@@ -52,7 +53,8 @@ test('handle-props-with-special-characters', async () => {
     } as OpenAPIObject,
     disableWriteToFile: true,
   });
-  expect(output).toMatchInlineSnapshot(`
+  assertSingleFileResult(output);
+  expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const endpoints = [

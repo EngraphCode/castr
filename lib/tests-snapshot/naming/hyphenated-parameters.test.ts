@@ -1,5 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import { hyphenatedParametersSnapshot } from '../__fixtures__/naming/hyphenated-parameters.js';
 
@@ -50,5 +51,6 @@ test('common-parameters', async () => {
   };
 
   const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-  expect(output).toBe(hyphenatedParametersSnapshot);
+  assertSingleFileResult(output);
+  expect(output.content).toBe(hyphenatedParametersSnapshot);
 });

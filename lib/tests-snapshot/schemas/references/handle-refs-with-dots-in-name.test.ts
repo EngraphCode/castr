@@ -1,6 +1,7 @@
 import { generateZodClientFromOpenAPI, getEndpointDefinitionList } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 test('handle-refs-with-dots-in-name', async () => {
   const doc = {
@@ -160,7 +161,8 @@ test('handle-refs-with-dots-in-name', async () => {
   `);
 
   const output = await generateZodClientFromOpenAPI({ openApiDoc: doc, disableWriteToFile: true });
-  expect(output).toMatchInlineSnapshot(`
+  assertSingleFileResult(output);
+  expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj = z

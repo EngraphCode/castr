@@ -1,5 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
+import { assertGroupedFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 import type { TemplateContextGroupStrategy } from '../../../src/context/template-context.js';
 
@@ -45,10 +46,10 @@ describe('file group strategy with multi-props object as query parameter', () =>
       openApiDoc,
       options: { groupStrategy },
     });
-
+    assertGroupedFileResult(output);
     // Use snapshot testing instead of hardcoded expectations
     // This is more maintainable as template output evolves
-    expect(output).toMatchSnapshot();
+    expect(output.files).toMatchSnapshot();
   };
 
   test('tag file', () => runTest('tag-file'));

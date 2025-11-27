@@ -5,6 +5,7 @@ import {
   exportSchemasOptionContextSnapshot,
   exportSchemasOptionOutputSnapshot,
 } from '../../__fixtures__/options/export-schemas-option.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 test('export-schemas-option', async () => {
   const openApiDoc: OpenAPIObject = {
@@ -64,5 +65,6 @@ test('export-schemas-option', async () => {
     openApiDoc,
     options: { shouldExportAllSchemas: true },
   });
-  expect(result).toBe(exportSchemasOptionOutputSnapshot);
+  assertSingleFileResult(result);
+  expect(result.content).toBe(exportSchemasOptionOutputSnapshot);
 });

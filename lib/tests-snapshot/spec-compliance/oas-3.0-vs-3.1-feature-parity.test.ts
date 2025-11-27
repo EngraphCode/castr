@@ -1,6 +1,7 @@
 import { expect, test, describe } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
 /**
  * OAS 3.0 vs 3.1 Feature Parity Test
@@ -66,11 +67,12 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate gt() for exclusive minimum with boolean
-    expect(output).toContain('gt(18)');
+    expect(output.content).toContain('gt(18)');
     // Should generate lt() for exclusive maximum with boolean
-    expect(output).toContain('lt(100)');
+    expect(output.content).toContain('lt(100)');
   });
 
   test('OAS 3.1: exclusiveMinimum as number (standalone)', async () => {
@@ -117,11 +119,12 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate gt() for exclusive minimum
-    expect(output).toContain('gt(18)');
+    expect(output.content).toContain('gt(18)');
     // Should generate lt() for exclusive maximum
-    expect(output).toContain('lt(100)');
+    expect(output.content).toContain('lt(100)');
   });
 
   test('OAS 3.0: nullable property', async () => {
@@ -164,9 +167,10 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate .nullable() for nullable property
-    expect(output).toContain('nullable()');
+    expect(output.content).toContain('nullable()');
   });
 
   test('OAS 3.1: type array with null', async () => {
@@ -209,11 +213,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate valid Zod schema
-    expect(output).toBeDefined();
-    expect(typeof output).toBe('string');
-    expect(output).toContain('z.');
+    expect(output.content).toBeDefined();
+    expect(output.content).toContain('z.');
   });
 
   test('OAS 3.1: standalone type null', async () => {
@@ -250,11 +254,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate valid Zod schema
-    expect(output).toBeDefined();
-    expect(typeof output).toBe('string');
-    expect(output).toContain('z.');
+    expect(output.content).toBeDefined();
+    expect(output.content).toContain('z.');
   });
 
   test('OAS 3.1: multiple types in array', async () => {
@@ -291,11 +295,11 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate valid Zod schema
-    expect(output).toBeDefined();
-    expect(typeof output).toBe('string');
-    expect(output).toContain('z.');
+    expect(output.content).toBeDefined();
+    expect(output.content).toContain('z.');
   });
 
   test('Mixed: Both OAS 3.0 and 3.1 features in same spec', async () => {
@@ -349,10 +353,10 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       disableWriteToFile: true,
       openApiDoc: openApiDoc as unknown as OpenAPIObject,
     });
+    assertSingleFileResult(output);
 
     // Should generate valid Zod schema
-    expect(output).toBeDefined();
-    expect(typeof output).toBe('string');
-    expect(output).toContain('z.');
+    expect(output.content).toBeDefined();
+    expect(output.content).toContain('z.');
   });
 });

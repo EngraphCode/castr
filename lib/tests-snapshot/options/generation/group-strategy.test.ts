@@ -3,6 +3,10 @@ import { prepareOpenApiDocument } from '../../../src/shared/prepare-openapi-docu
 import { expect, test } from 'vitest';
 
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../../src/index.js';
+import {
+  assertSingleFileResult,
+  assertGroupedFileResult,
+} from '../../../tests-helpers/generation-result-assertions.js';
 
 test('group-strategy', async () => {
   const openApiDoc: OpenAPIObject = {
@@ -114,8 +118,8 @@ test('group-strategy', async () => {
     disableWriteToFile: true,
     options: { groupStrategy: 'tag' },
   });
-
-  expect(resultGroupedByTag).toMatchSnapshot();
+  assertSingleFileResult(resultGroupedByTag);
+  expect(resultGroupedByTag.content).toMatchSnapshot();
 
   const ctxByMethod = getZodClientTemplateContext(openApiDoc, { groupStrategy: 'method' });
   expect(ctxByMethod.endpointsGroups).toMatchSnapshot();
@@ -125,8 +129,8 @@ test('group-strategy', async () => {
     disableWriteToFile: true,
     options: { groupStrategy: 'method' },
   });
-
-  expect(resultGroupedByMethod).toMatchSnapshot();
+  assertSingleFileResult(resultGroupedByMethod);
+  expect(resultGroupedByMethod.content).toMatchSnapshot();
 });
 
 test('group-strategy: tag-file with modified petstore schema', async () => {
@@ -154,8 +158,8 @@ test('group-strategy: tag-file with modified petstore schema', async () => {
     disableWriteToFile: true,
     options: { groupStrategy: 'tag-file' },
   });
-
-  expect(result).toMatchSnapshot();
+  assertGroupedFileResult(result);
+  expect(result.files).toMatchSnapshot();
 });
 
 test('group-strategy with complex schemas + split files', async () => {
@@ -309,6 +313,6 @@ test('group-strategy with complex schemas + split files', async () => {
     disableWriteToFile: true,
     options: { groupStrategy: 'tag-file' },
   });
-
-  expect(resultGroupedByTagSplitByFiles).toMatchSnapshot();
+  assertGroupedFileResult(resultGroupedByTagSplitByFiles);
+  expect(resultGroupedByTagSplitByFiles.files).toMatchSnapshot();
 });

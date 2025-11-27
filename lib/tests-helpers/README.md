@@ -44,6 +44,7 @@ expect(result.content).toMatch(/import/); // Type-safe access to content
 **Purpose:** Assert that result is a single file result, narrow type
 
 **Usage:**
+
 ```typescript
 import { assertSingleFileResult } from '../tests-helpers/generation-result-assertions.js';
 
@@ -56,6 +57,7 @@ expect(result.content).toMatch(/export const.*Schema/);
 ```
 
 **What it does:**
+
 - Checks `result.type === 'single'`
 - Throws descriptive error if grouped
 - Narrows TypeScript type to single file variant
@@ -65,6 +67,7 @@ expect(result.content).toMatch(/export const.*Schema/);
 **Purpose:** Assert that result is a grouped file result, narrow type
 
 **Usage:**
+
 ```typescript
 import { assertGroupedFileResult } from '../tests-helpers/generation-result-assertions.js';
 
@@ -79,6 +82,7 @@ expect(Object.keys(result.files)).toHaveLength(3);
 ```
 
 **What it does:**
+
 - Checks `result.type === 'grouped'`
 - Throws descriptive error if single file
 - Narrows TypeScript type to grouped file variant
@@ -88,6 +92,7 @@ expect(Object.keys(result.files)).toHaveLength(3);
 **Purpose:** Safely extract content string from single file result
 
 **Usage:**
+
 ```typescript
 import { extractContent } from '../tests-helpers/generation-result-assertions.js';
 
@@ -98,6 +103,7 @@ expect(content).toContain('export');
 ```
 
 **What it does:**
+
 - Calls `assertSingleFileResult()` internally
 - Returns `result.content` if single file
 - Throws if grouped (explicit error vs. undefined)
@@ -107,6 +113,7 @@ expect(content).toContain('export');
 **Purpose:** Safely extract files record from grouped file result
 
 **Usage:**
+
 ```typescript
 import { extractFiles } from '../tests-helpers/generation-result-assertions.js';
 
@@ -120,6 +127,7 @@ expect(files['posts']).toContain('PostSchema');
 ```
 
 **What it does:**
+
 - Calls `assertGroupedFileResult()` internally
 - Returns `result.files` if grouped
 - Throws if single file (explicit error vs. undefined)
@@ -135,7 +143,7 @@ test('generates zod schema', async () => {
   const result = await generateZodClientFromOpenAPI({
     openApiDoc: petstore,
   });
-  
+
   assertSingleFileResult(result);
   expect(result.content).toMatch(/import.*from ['"]zod['"]/);
   expect(result.content).toContain('export const PetSchema');
@@ -152,7 +160,7 @@ test('generates grouped files by tag', async () => {
     openApiDoc: petstore,
     groupStrategy: { type: 'tag' },
   });
-  
+
   assertGroupedFileResult(result);
   expect(result.paths).toContain('pets.ts');
   expect(result.files['pets']).toContain('PetSchema');
@@ -167,7 +175,7 @@ import { extractContent } from '../tests-helpers/generation-result-assertions.js
 test('generates expected output', async () => {
   const result = await generateZodClientFromOpenAPI({...});
   const content = extractContent(result);
-  
+
   expect(content).toMatchInlineSnapshot(`...`);
 });
 ```
@@ -180,9 +188,9 @@ import { assertSingleFileResult } from '../tests-helpers/generation-result-asser
 test('includes all expected elements', async () => {
   const result = await generateZodClientFromOpenAPI({...});
   assertSingleFileResult(result);
-  
+
   const { content } = result; // Destructure after narrowing
-  
+
   expect(content).toContain('import { z }');
   expect(content).toContain('export const UserSchema');
   expect(content).toContain('export const PostSchema');
@@ -192,7 +200,7 @@ test('includes all expected elements', async () => {
 
 ## Why Not Use Type Guards Directly?
 
-You *can* use the type guards from `generation-result.ts` directly:
+You _can_ use the type guards from `generation-result.ts` directly:
 
 ```typescript
 import { isSingleFileResult } from '../rendering/generation-result.js';
@@ -279,4 +287,3 @@ the `result` parameter is guaranteed to be a single file result. This enables:
 - `lib/src/rendering/generation-result.ts` - Type definitions and type guards
 - TypeScript Handbook § Discriminated Unions - Official pattern documentation
 - `.agent/RULES.md` § Type Safety - Project type discipline standards
-

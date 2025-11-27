@@ -25,6 +25,7 @@ import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
+import { extractContent, assertSingleFileResult } from './test-utils.js';
 
 /**
  * Helper to parse and validate OpenAPI spec regardless of format.
@@ -51,9 +52,9 @@ describe('Input Format Support', () => {
       });
 
       // Should generate valid TypeScript with new default template (schemas-with-metadata)
-      expect(typeof result).toBe('string');
-      expect(result).toContain('export const endpoints');
-      expect(result).toContain('import { z }');
+      assertSingleFileResult(result);
+      expect(extractContent(result)).toContain('export const endpoints');
+      expect(extractContent(result)).toContain('import { z }');
     });
 
     it('should generate endpoints from JSON spec', async () => {
@@ -65,9 +66,9 @@ describe('Input Format Support', () => {
       });
 
       // Verify endpoints are generated (schemas-with-metadata template)
-      expect(result).toContain('method: "get"');
-      expect(result).toContain('path: "/pets"');
-      expect(result).toContain('export const endpoints');
+      expect(extractContent(result)).toContain('method: "get"');
+      expect(extractContent(result)).toContain('path: "/pets"');
+      expect(extractContent(result)).toContain('export const endpoints');
     });
   });
 
@@ -87,9 +88,9 @@ describe('Input Format Support', () => {
       });
 
       // Should generate valid TypeScript with new default template (schemas-with-metadata)
-      expect(typeof result).toBe('string');
-      expect(result).toContain('export const endpoints');
-      expect(result).toContain('import { z }');
+      assertSingleFileResult(result);
+      expect(extractContent(result)).toContain('export const endpoints');
+      expect(extractContent(result)).toContain('import { z }');
     });
 
     it('should generate endpoints from YAML spec', async () => {
@@ -101,9 +102,9 @@ describe('Input Format Support', () => {
       });
 
       // Verify endpoints are generated (schemas-with-metadata template)
-      expect(result).toContain('method: "get"');
-      expect(result).toContain('path: "/pets"');
-      expect(result).toContain('export const endpoints');
+      expect(extractContent(result)).toContain('method: "get"');
+      expect(extractContent(result)).toContain('path: "/pets"');
+      expect(extractContent(result)).toContain('export const endpoints');
     });
   });
 
@@ -124,15 +125,15 @@ describe('Input Format Support', () => {
         disableWriteToFile: true,
       });
 
-      // Both should be valid strings
-      expect(typeof jsonResult).toBe('string');
-      expect(typeof yamlResult).toBe('string');
+      // Both should be valid single file results
+      assertSingleFileResult(jsonResult);
+      assertSingleFileResult(yamlResult);
 
       // Both should have similar structure (schemas-with-metadata template)
-      expect(jsonResult).toContain('export const endpoints');
-      expect(yamlResult).toContain('export const endpoints');
-      expect(jsonResult).toContain('import { z }');
-      expect(yamlResult).toContain('import { z }');
+      expect(extractContent(jsonResult)).toContain('export const endpoints');
+      expect(extractContent(yamlResult)).toContain('export const endpoints');
+      expect(extractContent(jsonResult)).toContain('import { z }');
+      expect(extractContent(yamlResult)).toContain('import { z }');
 
       // Note: petstore.json and petstore.yaml have slightly different content
       // (JSON has requestBody for POST /pets, YAML doesn't), so we don't expect

@@ -1,5 +1,6 @@
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../src/index.js';
 
 test('operationId-starting-with-number', async () => {
@@ -43,7 +44,8 @@ test('operationId-starting-with-number', async () => {
     openApiDoc,
     options: { withAlias: true },
   });
-  expect(result).toMatchInlineSnapshot(`
+  assertSingleFileResult(result);
+  expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const Basic = z.string();

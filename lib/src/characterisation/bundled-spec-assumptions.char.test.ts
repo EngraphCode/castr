@@ -26,6 +26,7 @@ import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
+import { extractContent } from '../../tests-helpers/generation-result-assertions.js';
 import { extractAllOperations, getOperation } from './__fixtures__/bundled-spec-helpers.js';
 
 /**
@@ -447,10 +448,11 @@ describe('Bundled Spec: Code Generation Integration', () => {
       disableWriteToFile: true,
     });
 
-    // Validate our code produced expected output
+    // Validate our code produced expected output (single file result)
     expect(result).toBeDefined();
-    expect(typeof result).toBe('string');
-    expect(result).toContain('import { z }');
+    expect(isSingleFileResult(result)).toBe(true);
+    const content = extractContent(result);
+    expect(content).toContain('import { z }');
 
     // Prove bundled structure has operations
     const operations = extractAllOperations(bundled);
@@ -477,8 +479,8 @@ describe('Bundled Spec: Code Generation Integration', () => {
       });
 
       expect(result).toBeDefined();
-      expect(typeof result).toBe('string');
-      expect(result).toContain('import { z }');
+      expect(isSingleFileResult(result)).toBe(true);
+      expect(extractContent(result)).toContain('import { z }');
     }
   });
 
@@ -532,7 +534,7 @@ describe('Bundled Spec: Code Generation Integration', () => {
     });
 
     expect(result).toBeDefined();
-    expect(result).toContain('userId');
+    expect(extractContent(result)).toContain('userId');
   });
 
   it('should handle complex spec with many $refs correctly', async () => {

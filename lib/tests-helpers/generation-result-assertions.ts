@@ -79,9 +79,8 @@ export function assertGroupedFileResult(
   result: GenerationResult,
 ): asserts result is Extract<GenerationResult, { type: 'grouped' }> {
   if (!isGroupedFileResult(result)) {
-    throw new Error(
-      `Expected grouped file result but got single file result${result.path ? ` at path: ${result.path}` : ''}`,
-    );
+    const pathInfo = result.path ? ' at path: ' + result.path : '';
+    throw new Error('Expected grouped file result but got single file result' + pathInfo);
   }
 }
 
@@ -141,4 +140,3 @@ export function extractFiles(result: GenerationResult): Record<string, string> {
   assertGroupedFileResult(result);
   return result.files;
 }
-

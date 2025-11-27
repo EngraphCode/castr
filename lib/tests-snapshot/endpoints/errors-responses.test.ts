@@ -1,5 +1,6 @@
 import { type SchemasObject } from 'openapi3-ts/oas31';
 import { expect, it } from 'vitest';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 it('includes errors-responses', async () => {
@@ -55,7 +56,9 @@ it('includes errors-responses', async () => {
 
   const result = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
 
-  expect(result).toMatchInlineSnapshot(`
+  assertSingleFileResult(result);
+
+  expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const Main = z.object({ str: z.string(), nb: z.number() }).strict();
@@ -221,7 +224,9 @@ it('determines which status are considered errors-responses', async () => {
     openApiDoc,
   });
 
-  expect(result).toMatchInlineSnapshot(`
+  assertSingleFileResult(result);
+
+  expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
@@ -327,15 +332,15 @@ it('determines which status are considered errors-responses', async () => {
     "
   `);
 
-  expect(
-    await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      options: {
-        isErrorStatus: (status) => status === 400 || status === 500,
-      },
-      openApiDoc,
-    }),
-  ).toMatchInlineSnapshot(`
+  const result2 = await generateZodClientFromOpenAPI({
+    disableWriteToFile: true,
+    options: {
+      isErrorStatus: (status) => status === 400 || status === 500,
+    },
+    openApiDoc,
+  });
+  assertSingleFileResult(result2);
+  expect(result2.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);

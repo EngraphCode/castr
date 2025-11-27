@@ -22,7 +22,7 @@ import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { assertIsString } from './test-utils.js';
+import { assertAndExtractContent } from './test-utils.js';
 import { loadOpenApiDocument } from '../shared/load-openapi-document/index.js';
 
 /**
@@ -57,8 +57,8 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
       disableWriteToFile: true,
     });
 
-    assertIsString(result, 'file path input');
-    expect(result).toContain('export');
+    const content = assertAndExtractContent(result, 'file path input');
+    expect(content).toContain('export');
   });
 
   it('should accept in-memory OpenAPIObject via openApiDoc parameter', async () => {
@@ -68,8 +68,8 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
       disableWriteToFile: true,
     });
 
-    assertIsString(result, 'in-memory object');
-    expect(result).toContain('export');
+    const content = assertAndExtractContent(result, 'in-memory object');
+    expect(content).toContain('export');
   });
 
   it('should reject when both input and openApiDoc are provided', async () => {
@@ -90,8 +90,8 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
       disableWriteToFile: true,
     });
 
-    assertIsString(result, 'bundled output');
-    expect(result).toContain('export');
+    const content = assertAndExtractContent(result, 'bundled output');
+    expect(content).toContain('export');
   });
 });
 

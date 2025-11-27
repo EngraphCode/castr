@@ -10,13 +10,13 @@
 ### 1. Test Helper Infrastructure ✅
 
 **Created Files:**
+
 - `lib/tests-helpers/generation-result-assertions.ts` (152 lines)
   - `assertSingleFileResult()` - Type guard + assertion
-  - `assertGroupedFileResult()` - Type guard + assertion  
+  - `assertGroupedFileResult()` - Type guard + assertion
   - `extractContent()` - Safe content extraction
   - `extractFiles()` - Safe files extraction
   - Comprehensive TSDoc with before/after examples
-  
 - `lib/tests-helpers/README.md` (340 lines)
   - Complete documentation of GenerationResult discriminated union
   - Why helpers exist (problem statement)
@@ -28,10 +28,10 @@
 ### 2. POC Test Updates ✅
 
 **Files Updated:**
+
 1. `lib/src/rendering/templates/schemas-with-metadata.test.ts`
    - **Updated:** 9 tests (all passing)
    - **Remaining:** 5 tests (need updating)
-   
 2. `lib/src/rendering/templates/schemas-with-client.test.ts`
    - **Updated:** 4 tests (all passing)
    - **Remaining:** 16 tests (need updating)
@@ -41,10 +41,12 @@
 ### 3. Impact Assessment ✅
 
 **Test Results Before POC:**
+
 - Test Files: Many failures
 - Tests: 176 failures total
 
 **Test Results After POC:**
+
 - Test Files: 2 failed | 50 passed (52)
 - Tests: 21 failed | 807 passed (828)
 
@@ -55,12 +57,14 @@
 The POC proves the pattern works perfectly:
 
 ### Before (BROKEN)
+
 ```typescript
 const result = await generateZodClientFromOpenAPI({...});
 expect(result).toMatch(/import/); // ❌ TypeError: result.toMatch is not a function
 ```
 
 ### After (FIXED)
+
 ```typescript
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
@@ -81,6 +85,7 @@ expect(result.content).toMatch(/import/); // ✅ Type-safe access
 ### Files Still Need Updates (16 files with 174 occurrences)
 
 **Unit Tests (8 files, estimated 12 occurrences):**
+
 - `lib/src/rendering/templates/schemas-with-metadata.test.ts` (5 tests remaining)
 - `lib/src/rendering/templates/schemas-with-client.test.ts` (16 tests remaining)
 - `lib/src/context/ir-builder.test.ts` (1 occurrence)
@@ -91,6 +96,7 @@ expect(result.content).toMatch(/import/); // ✅ Type-safe access
 - Others...
 
 **Character Tests (8 files, estimated 92 occurrences):**
+
 - `lib/src/characterisation/bundled-spec-assumptions.char.test.ts` (3 occurrences)
 - `lib/src/characterisation/input-pipeline.char.test.ts` (3 occurrences)
 - `lib/src/characterisation/generation.char.test.ts` (35 occurrences)
@@ -131,6 +137,7 @@ expect(result.content).toMatch(/import/); // ✅ Type-safe access
 ## Success Criteria
 
 Phase 2 (POC) is **COMPLETE** when:
+
 - [x] Helper infrastructure created (`generation-result-assertions.ts` + README)
 - [x] 10+ POC tests passing (actual: 13)
 - [x] Pattern validated (155 tests fixed)
@@ -138,6 +145,7 @@ Phase 2 (POC) is **COMPLETE** when:
 - [x] Documentation complete
 
 Phase 3 (Systematic Rollout) is COMPLETE when:
+
 - [ ] All 21 remaining test failures fixed (21 → 0)
 - [ ] All 174 occurrences updated with helpers
 - [ ] All quality gates GREEN for tests
@@ -146,6 +154,7 @@ Phase 3 (Systematic Rollout) is COMPLETE when:
 ## Estimated Remaining Effort
 
 Based on POC performance:
+
 - **Current files completion:** 30 minutes (21 tests)
 - **Unit tests:** 1-2 hours (remaining unit tests)
 - **Character tests:** 2-3 hours (8 files, systematic)
@@ -168,4 +177,3 @@ Based on POC performance:
 ---
 
 **Conclusion:** Phase 2 POC exceeded expectations. Pattern is validated, infrastructure is complete, and we've already fixed 88% of failing tests (155/176) with partial work. Systematic rollout can proceed with confidence.
-

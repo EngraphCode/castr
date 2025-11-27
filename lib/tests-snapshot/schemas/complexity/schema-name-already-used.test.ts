@@ -6,6 +6,7 @@ import {
   schemaNameAlreadyUsedContextSnapshot,
   schemaNameAlreadyUsedOutputSnapshot,
 } from '../../__fixtures__/schemas/schema-name-already-used.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 test('schema-name-already-used', async () => {
   const openApiDoc: OpenAPIObject = {
@@ -104,6 +105,6 @@ test('schema-name-already-used', async () => {
     openApiDoc,
     options: { complexityThreshold: 2 },
   });
-
-  expect(result).toBe(schemaNameAlreadyUsedOutputSnapshot);
+  assertSingleFileResult(result);
+  expect(result.content).toBe(schemaNameAlreadyUsedOutputSnapshot);
 });

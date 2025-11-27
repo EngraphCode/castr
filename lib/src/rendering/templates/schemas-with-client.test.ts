@@ -144,113 +144,129 @@ describe('schemas-with-client template', () => {
 
     it('should accept ApiClientConfig parameter', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('config: ApiClientConfig');
+      expect(result.content).toContain('config: ApiClientConfig');
     });
 
     it('should define ApiClientConfig type', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('export type ApiClientConfig');
-      expect(result).toContain('baseUrl: string');
+      expect(result.content).toContain('export type ApiClientConfig');
+      expect(result.content).toContain('baseUrl: string');
     });
 
     it('should support validationMode configuration', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
       // Check for validationMode property (accept any quote style)
-      expect(result).toMatch(/validationMode\?:\s*['"]strict['"] \| ['"]loose['"] \| ['"]none['"]/);
+      expect(result.content).toMatch(
+        /validationMode\?:\s*['"]strict['"] \| ['"]loose['"] \| ['"]none['"]/,
+      );
     });
   });
 
   describe('Validation Logic', () => {
     it('should include validate helper function', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('function validate<T>(');
-      expect(result).toContain('.safeParse(');
+      expect(result.content).toContain('function validate<T>(');
+      expect(result.content).toContain('.safeParse(');
     });
 
     it('should validate request parameters', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('validate(');
-      expect(result).toMatch(/request (params|body|query)/);
+      expect(result.content).toContain('validate(');
+      expect(result.content).toMatch(/request (params|body|query)/);
     });
 
     it('should validate response data', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('validate(');
-      expect(result).toMatch(/response/);
+      expect(result.content).toContain('validate(');
+      expect(result.content).toMatch(/response/);
     });
   });
 
   describe('Generated API Methods', () => {
     it('should generate method for each operation', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
       // Should have methods for both operations
-      expect(result).toContain('getPet(');
-      expect(result).toContain('createPet(');
+      expect(result.content).toContain('getPet(');
+      expect(result.content).toContain('createPet(');
     });
 
     it('should be async functions', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('async getPet(');
-      expect(result).toContain('async createPet(');
+      expect(result.content).toContain('async getPet(');
+      expect(result.content).toContain('async createPet(');
     });
 
     it('should call openapi-fetch with correct method', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
       // Should call client.get for GET operation (lowercase method names in openapi-fetch)
-      expect(result).toContain('client.get(');
+      expect(result.content).toContain('client.get(');
       // Should call client.post for POST operation
-      expect(result).toContain('client.post(');
+      expect(result.content).toContain('client.post(');
     });
 
     // Quote-style test removed - validation is covered by generated-code-validation.gen.test.ts
 
     it('should handle error responses', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('if (error)');
-      expect(result).toContain('throw');
+      expect(result.content).toContain('if (error)');
+      expect(result.content).toContain('throw');
     });
   });
 
   describe('Raw Client Access', () => {
     it('should expose _raw property for direct access', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('_raw: client');
+      expect(result.content).toContain('_raw: client');
     });
   });
 
   describe('Documentation', () => {
     it('should include comprehensive JSDoc comments', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
       // Should have /** JSDoc */ style comments
-      expect(result).toContain('/**');
-      expect(result).toContain('*/');
-      expect(result).toContain('@example');
+      expect(result.content).toContain('/**');
+      expect(result.content).toContain('*/');
+      expect(result.content).toContain('@example');
     });
 
     it('should document peer dependencies', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('openapi-fetch');
-      expect(result).toMatch(/(peer dependen(cy|cies)|Prerequisites)/i);
+      expect(result.content).toContain('openapi-fetch');
+      expect(result.content).toMatch(/(peer dependen(cy|cies)|Prerequisites)/i);
     });
 
     it('should include @operationId tags in method docs', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('@operationId getPet');
-      expect(result).toContain('@operationId createPet');
+      expect(result.content).toContain('@operationId getPet');
+      expect(result.content).toContain('@operationId createPet');
     });
   });
 
@@ -259,14 +275,12 @@ describe('schemas-with-client template', () => {
 
     it('should NOT use other type assertions in user code', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
       // Extract only the endpoint methods section (user-facing code)
       // Skip the validate helper which legitimately needs "as T" for type safety
       const startMarker =
         '// ============================================================\n// Endpoint Metadata';
-      if (!isSingleFileResult(result)) {
-        throw new Error('Expected single file result');
-      }
       const userCodeStart = result.content.indexOf(startMarker);
       const userCode = userCodeStart >= 0 ? result.content.slice(userCodeStart) : result.content;
 
@@ -280,8 +294,9 @@ describe('schemas-with-client template', () => {
   describe('Generated Code Quality', () => {
     it('should create openapi-fetch client', async () => {
       const result = await generateWithOptions(minimalSpec);
+      assertSingleFileResult(result);
 
-      expect(result).toContain('createClient<paths>');
+      expect(result.content).toContain('createClient<paths>');
     });
   });
 });

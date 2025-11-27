@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { isSingleFileResult } from '../rendering/generation-result.js';
 
 /**
  * Characterization Tests: OpenAPI Spec Validation
@@ -184,7 +185,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       });
 
       expect(result).toBeDefined();
-      expect(typeof result).toBe('string');
+      expect(isSingleFileResult(result)).toBe(true);
     });
 
     it('should accept all OpenAPI 3.x versions', async () => {
@@ -254,7 +255,7 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       });
 
       expect(result).toBeDefined();
-      expect(typeof result).toBe('string');
+      expect(isSingleFileResult(result)).toBe(true);
     });
   });
 

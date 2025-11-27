@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { assertIsString } from './test-utils.js';
+import { assertAndExtractContent, extractContent } from './test-utils.js';
 
 /**
  * Characterisation Tests: Schema Dependencies
@@ -72,9 +72,9 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
     });
 
     // Assert: Address must appear before User in generated code
-    assertIsString(result, 'generated code');
-    const addressIndex = result.indexOf('Address');
-    const userIndex = result.indexOf('User');
+    const content = assertAndExtractContent(result, 'generated code');
+    const addressIndex = content.indexOf('Address');
+    const userIndex = content.indexOf('User');
     expect(addressIndex).toBeGreaterThan(-1);
     expect(userIndex).toBeGreaterThan(-1);
     expect(addressIndex).toBeLessThan(userIndex);
@@ -136,10 +136,10 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
     });
 
     // Assert: Address before User, User before Company
-    assertIsString(result, 'generated code');
-    const addressIndex = result.indexOf('Address');
-    const userIndex = result.indexOf('User');
-    const companyIndex = result.indexOf('Company');
+    const content = assertAndExtractContent(result, 'generated code');
+    const addressIndex = content.indexOf('Address');
+    const userIndex = content.indexOf('User');
+    const companyIndex = content.indexOf('Company');
 
     expect(addressIndex).toBeLessThan(userIndex);
     expect(userIndex).toBeLessThan(companyIndex);
@@ -202,10 +202,10 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
     });
 
     // Assert: Address and Contact both appear before Person
-    assertIsString(result, 'generated code');
-    const addressIndex = result.indexOf('Address');
-    const contactIndex = result.indexOf('Contact');
-    const personIndex = result.indexOf('Person');
+    const content = assertAndExtractContent(result, 'generated code');
+    const addressIndex = content.indexOf('Address');
+    const contactIndex = content.indexOf('Contact');
+    const personIndex = content.indexOf('Person');
 
     expect(addressIndex).toBeLessThan(personIndex);
     expect(contactIndex).toBeLessThan(personIndex);
@@ -263,9 +263,9 @@ describe('Characterisation: Schema Dependency Resolution - Schema Ordering', () 
     });
 
     // Assert: User appears before Group
-    assertIsString(result, 'generated code');
-    const userIndex = result.indexOf('User');
-    const groupIndex = result.indexOf('Group');
+    const content = assertAndExtractContent(result, 'generated code');
+    const userIndex = content.indexOf('User');
+    const groupIndex = content.indexOf('Group');
 
     expect(userIndex).toBeLessThan(groupIndex);
   });
@@ -318,9 +318,9 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
     });
 
     // Assert: Uses z.lazy for circular reference
-    expect(result).toContain('TreeNode');
-    expect(result).toContain('z.lazy');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('TreeNode');
+    expect(extractContent(result)).toContain('z.lazy');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle mutual circular references (A → B → A)', async () => {
@@ -379,10 +379,10 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
     });
 
     // Assert: Both schemas generated with z.lazy
-    expect(result).toContain('Author');
-    expect(result).toContain('Book');
-    expect(result).toContain('z.lazy');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('Author');
+    expect(extractContent(result)).toContain('Book');
+    expect(extractContent(result)).toContain('z.lazy');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle circular references in allOf', async () => {
@@ -438,9 +438,9 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
     });
 
     // Assert: Circular reference handled
-    expect(result).toContain('ExtendedNode');
-    expect(result).toContain('BaseNode');
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).toContain('ExtendedNode');
+    expect(extractContent(result)).toContain('BaseNode');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 });
 
@@ -491,12 +491,12 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
     });
 
     // Assert: Value appears before Dictionary
-    assertIsString(result, 'generated code');
-    const valueIndex = result.indexOf('Value');
-    const dictionaryIndex = result.indexOf('Dictionary');
+    const content = assertAndExtractContent(result, 'generated code');
+    const valueIndex = content.indexOf('Value');
+    const dictionaryIndex = content.indexOf('Dictionary');
 
     expect(valueIndex).toBeLessThan(dictionaryIndex);
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle dependencies in oneOf/anyOf union members', async () => {
@@ -552,14 +552,14 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
     });
 
     // Assert: TypeA and TypeB appear before Union
-    assertIsString(result, 'generated code');
-    const typeAIndex = result.indexOf('TypeA');
-    const typeBIndex = result.indexOf('TypeB');
-    const unionIndex = result.indexOf('Union');
+    const content = assertAndExtractContent(result, 'generated code');
+    const typeAIndex = content.indexOf('TypeA');
+    const typeBIndex = content.indexOf('TypeB');
+    const unionIndex = content.indexOf('Union');
 
     expect(typeAIndex).toBeLessThan(unionIndex);
     expect(typeBIndex).toBeLessThan(unionIndex);
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 
   it('should handle complex dependency diamond (A→B, A→C, B→D, C→D)', async () => {
@@ -625,17 +625,17 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
     });
 
     // Assert: Base appears before Left and Right, which appear before Top
-    assertIsString(result, 'generated code');
-    const baseIndex = result.indexOf('Base');
-    const leftIndex = result.indexOf('Left');
-    const rightIndex = result.indexOf('Right');
-    const topIndex = result.indexOf('Top');
+    const content = assertAndExtractContent(result, 'generated code');
+    const baseIndex = content.indexOf('Base');
+    const leftIndex = content.indexOf('Left');
+    const rightIndex = content.indexOf('Right');
+    const topIndex = content.indexOf('Top');
 
     expect(baseIndex).toBeLessThan(leftIndex);
     expect(baseIndex).toBeLessThan(rightIndex);
     expect(leftIndex).toBeLessThan(topIndex);
     expect(rightIndex).toBeLessThan(topIndex);
-    expect(result).not.toContain('as unknown as');
+    expect(extractContent(result)).not.toContain('as unknown as');
   });
 });
 

@@ -6,9 +6,12 @@ import { getSchemaFromComponents } from '../../shared/component-access.js';
 import { parseComponentRef } from '../../shared/ref-resolution.js';
 import { buildObjectPropertiesString } from './handlers.object.properties.js';
 import type { ZodCodeResult, CodeMetaData, ConversionTypeContext } from './index.js';
-import type { IRSchemaNode, IRSchema } from '../../context/ir-schema.js';
-import { IRSchemaProperties } from '../../context/ir-schema-properties.js';
+import type { IRSchemaNode } from '../../context/ir-schema.js';
 
+/**
+ * Function type for Zod schema generation.
+ * Uses library types (SchemaObject | ReferenceObject) per RULES.md "Library Types First".
+ */
 type GetZodSchemaFn = (args: {
   schema: SchemaObject | ReferenceObject;
   ctx?: ConversionTypeContext | undefined;
@@ -17,6 +20,10 @@ type GetZodSchemaFn = (args: {
   options?: TemplateContext['options'] | undefined;
 }) => ZodCodeResult;
 
+/**
+ * Function type for Zod chain generation.
+ * Uses library types (SchemaObject | ReferenceObject) per RULES.md "Library Types First".
+ */
 type GetZodChainFn = (args: {
   schema: SchemaObject | ReferenceObject;
   meta?: CodeMetaData;
@@ -25,48 +32,16 @@ type GetZodChainFn = (args: {
 }) => string;
 
 /**
- * Type guard to check if properties are already wrapped in IRSchemaProperties.
+ * Handle additionalProperties when it's an object schema.
+ * Pure function: generates z.record() for object-type additionalProperties.
+ * Resolves references and applies validation chains.
  *
- * @param properties - Properties to check
- * @returns True if properties is IRSchemaProperties instance
- * @internal
- */
-function isIRSchemaProperties(properties: unknown): properties is IRSchemaProperties {
-  return properties instanceof IRSchemaProperties;
-}
-
-/**
- * Type guard to narrow Record to IRSchema record.
- *
- * IRSchema extends SchemaObject, adding optional metadata fields.
- * This structural compatibility means a Record of SchemaObject can be
- * safely treated as a Record of IRSchema when needed.
- *
- * @param record - Record to check
- * @returns True - structurally compatible by design
- * @internal
- */
-function canTreatAsIRSchemaRecord(
-  record: Record<string, SchemaObject | ReferenceObject>,
-): record is Record<string, IRSchema> {
-  // Structural compatibility: IRSchema extends SchemaObject
-  // All SchemaObject properties exist in IRSchema
-  // Additional IRSchema fields (metadata) are optional
-  // Therefore, treating SchemaObject as IRSchema is type-safe
-  return true;
-}
-
-/**
- * Handle additionalProperties when it's an object schema
- * Pure function: generates z.record() for object-type additionalProperties
- * Resolves references and applies validation chains
- *
- * Accepts both SchemaObject and IRSchema for gradual migration.
+ * Uses library types (SchemaObject) per RULES.md "Library Types First".
  *
  * @returns Zod code string for z.record() or undefined if not applicable
  */
 export function handleAdditionalPropertiesAsRecord(
-  schema: SchemaObject | IRSchema,
+  schema: SchemaObject,
   code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
@@ -107,12 +82,11 @@ export function handleAdditionalPropertiesAsRecord(
 }
 
 /**
- * Determine additional properties schema modifier
- *
- * Accepts both SchemaObject and IRSchema for gradual migration.
+ * Determine additional properties schema modifier.
+ * Uses library types (SchemaObject) per RULES.md "Library Types First".
  */
 function getAdditionalPropertiesModifier(
-  schema: SchemaObject | IRSchema,
+  schema: SchemaObject,
   options: TemplateContext['options'] | undefined,
 ): string {
   const additionalPropsDefaultValue =
@@ -126,12 +100,11 @@ function getAdditionalPropertiesModifier(
 }
 
 /**
- * Build object schema modifiers
- *
- * Accepts both SchemaObject and IRSchema for gradual migration.
+ * Build object schema modifiers.
+ * Uses library types (SchemaObject) per RULES.md "Library Types First".
  */
 function buildObjectModifiers(
-  schema: SchemaObject | IRSchema,
+  schema: SchemaObject,
   isPartial: boolean,
   options: TemplateContext['options'] | undefined,
 ): string {
@@ -143,25 +116,22 @@ function buildObjectModifiers(
 }
 
 /**
- * Determine if schema should be partial
- *
- * Accepts both SchemaObject and IRSchema for gradual migration.
+ * Determine if schema should be partial.
+ * Uses library types (SchemaObject) per RULES.md "Library Types First".
  */
 function determineIsPartial(
-  schema: SchemaObject | IRSchema,
+  schema: SchemaObject,
   options: TemplateContext['options'] | undefined,
 ): boolean {
   return !!(options?.withImplicitRequiredProps ? false : !schema.required?.length);
 }
 
 /**
- * Build properties string for object schema
- *
- * Accepts both SchemaObject and IRSchema. Handles properties as either
- * plain Record or IRSchemaProperties wrapper without type assertions.
+ * Build properties string for object schema.
+ * Uses library types (SchemaObject) per RULES.md "Library Types First".
  */
 function buildObjectProperties(
-  schema: SchemaObject | IRSchema,
+  schema: SchemaObject,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,
   isPartial: boolean,
@@ -174,24 +144,10 @@ function buildObjectProperties(
     return '{}';
   }
 
-  // Handle properties based on type: IRSchemaProperties or plain Record
-  // IRSchema can have properties as IRSchemaProperties, SchemaObject has Record
-  let properties: IRSchemaProperties;
-
-  if (isIRSchemaProperties(schema.properties)) {
-    // Already wrapped - use directly (from IRSchema)
-    properties = schema.properties;
-  } else if (canTreatAsIRSchemaRecord(schema.properties)) {
-    // Plain Record from SchemaObject - wrap it
-    // Type guard confirms structural compatibility
-    properties = new IRSchemaProperties(schema.properties);
-  } else {
-    // Fallback for unexpected types - should never happen
-    throw new Error('Invalid schema properties: expected Record or IRSchemaProperties');
-  }
-
+  // SchemaObject.properties is Record<string, SchemaObject | ReferenceObject>
+  // Pass directly to buildObjectPropertiesString using library types
   return buildObjectPropertiesString(
-    properties,
+    schema.properties,
     schema,
     ctx,
     meta,
@@ -204,16 +160,16 @@ function buildObjectProperties(
 }
 
 /**
- * Handle object type schema
- * Pure function: generates z.object() with properties, additionalProperties, and modifiers
- * Complex logic for required/optional props, partial, strict, readonly, passthrough
+ * Handle object type schema.
+ * Pure function: generates z.object() with properties, additionalProperties, and modifiers.
+ * Complex logic for required/optional props, partial, strict, readonly, passthrough.
  *
- * Accepts both SchemaObject and IRSchema for gradual migration.
+ * Uses library types (SchemaObject) per RULES.md "Library Types First".
  *
  * @returns Zod code string for object type
  */
 export function handleObjectSchema(
-  schema: SchemaObject | IRSchema,
+  schema: SchemaObject,
   code: ZodCodeResult,
   ctx: ConversionTypeContext | undefined,
   meta: CodeMetaData,

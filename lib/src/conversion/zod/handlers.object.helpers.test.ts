@@ -124,7 +124,7 @@ describe('handlers.object.helpers', () => {
           paths: {},
           components: {
             schemas: {
-              User: { type: 'object', properties: { name: { type: 'string' } } },
+              User: { type: 'object' as const, properties: { name: { type: 'string' as const } } },
             },
           },
         },

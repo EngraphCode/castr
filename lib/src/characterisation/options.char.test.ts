@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { extractContent } from './test-utils.js';
 
 /**
  * Characterisation Tests: Options & Configuration
@@ -94,7 +95,7 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       // Default template is now schemas-with-metadata
-      expect(result).toContain('export const endpoints');
+      expect(extractContent(result)).toContain('export const endpoints');
     });
 
     it('should use schemas-only template when specified', async () => {
@@ -106,7 +107,7 @@ describe('Characterisation: Options & Configuration', () => {
         template: 'schemas-only',
       });
 
-      expect(result).toContain('User');
+      expect(extractContent(result)).toContain('User');
     });
 
     it('should use schemas-with-metadata template when specified', async () => {
@@ -118,7 +119,7 @@ describe('Characterisation: Options & Configuration', () => {
         template: 'schemas-with-metadata',
       });
 
-      expect(result).toContain('User');
+      expect(extractContent(result)).toContain('User');
     });
   });
 
@@ -135,8 +136,8 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       // With aliases, should have type definitions
-      expect(result).toContain('type');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('type');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle withAlias: false', async () => {
@@ -150,8 +151,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle withAlias as custom function', async () => {
@@ -166,8 +167,8 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       // Custom alias function should affect type names
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -183,8 +184,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).toContain('export');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).toContain('export');
     });
 
     it('should handle exportSchemas: false', async () => {
@@ -198,7 +199,7 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
+      expect(extractContent(result)).toContain('User');
     });
 
     it('should handle exportTypes: true', async () => {
@@ -213,7 +214,7 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       // Should export TypeScript types
-      expect(result).toContain('export');
+      expect(extractContent(result)).toContain('export');
     });
   });
 
@@ -229,8 +230,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle additionalPropertiesDefaultValue: false', async () => {
@@ -244,8 +245,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle strictObjects: true', async () => {
@@ -259,9 +260,9 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
+      expect(extractContent(result)).toContain('User');
       // Note: strictObjects affects object validation, may use .passthrough() or similar
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle withImplicitRequiredProps: true', async () => {
@@ -275,8 +276,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -293,8 +294,8 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       // Note: apiClientName may appear in template or be used differently
-      expect(result).toContain('import { z }');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('import { z }');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle baseUrl option', async () => {
@@ -309,8 +310,8 @@ describe('Characterisation: Options & Configuration', () => {
       });
 
       // Note: baseUrl may be used in template or initialization
-      expect(result).toContain('import { z }');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('import { z }');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -326,8 +327,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -343,8 +344,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle defaultStatusBehavior: "auto-correct"', async () => {
@@ -358,8 +359,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -375,8 +376,8 @@ describe('Characterisation: Options & Configuration', () => {
         },
       });
 
-      expect(result).toContain('User');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('User');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 });

@@ -1,5 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
+import { assertGroupedFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 test('array-body-with-chains-tag-group-strategy', async () => {
@@ -51,7 +52,8 @@ test('array-body-with-chains-tag-group-strategy', async () => {
     openApiDoc,
     options: { groupStrategy: 'tag-file' },
   });
-  expect(output).toMatchInlineSnapshot(`
+  assertGroupedFileResult(output);
+  expect(output.files).toMatchInlineSnapshot(`
     {
         "Test": "import { z } from "zod";
 

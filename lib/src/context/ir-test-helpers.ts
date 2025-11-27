@@ -7,8 +7,7 @@
  * @module ir-test-helpers
  */
 
-import type { IRComponent } from './ir-component.js';
-import type { IRSchema } from './ir-schema.js';
+import type { IRComponent, IRSchema } from './ir-schema.js';
 import { IRSchemaProperties } from './ir-schema-properties.js';
 
 /**
@@ -24,9 +23,8 @@ export function getComponent(components: IRComponent[] | undefined, name: string
   if (!components) {
     throw new Error(`Cannot find component "${name}" - components array is undefined`);
   }
-  for (let i = 0; i < components.length; i++) {
-    const component: IRComponent = components[i];
-    if (component && component.name === name) {
+  for (const component of components) {
+    if (component.name === name) {
       return component;
     }
   }
@@ -142,9 +140,8 @@ export function assertPropertiesMetadata(
  */
 export function countCircularRefs(components: IRComponent[]): number {
   let total = 0;
-  for (let i = 0; i < components.length; i++) {
-    const component: IRComponent = components[i];
-    if (component && component.schema?.metadata.circularReferences) {
+  for (const component of components) {
+    if (component.schema?.metadata.circularReferences) {
       total += component.schema.metadata.circularReferences.length;
     }
   }

@@ -5,6 +5,7 @@ import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
 import { isGroupedFileResult } from '../../src/rendering/generation-result.js';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
 import { pathToVariableName } from '../../src/shared/utils/index.js';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
 let openApiDoc: OpenAPIObject;
 beforeAll(async () => {
@@ -22,7 +23,8 @@ describe('generateZodClientFromOpenAPI - without options', () => {
       openApiDoc,
       disableWriteToFile: true,
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -33,7 +35,8 @@ describe('generateZodClientFromOpenAPI - withAlias as true', () => {
       disableWriteToFile: true,
       options: { withAlias: true },
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -44,7 +47,8 @@ describe('generateZodClientFromOpenAPI - withAlias as false', () => {
       disableWriteToFile: true,
       options: { withAlias: false },
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -60,7 +64,8 @@ describe('generateZodClientFromOpenAPI - withAlias as custom function', () => {
             : (operation?.operationId ?? method + pathToVariableName(path || '/noPath')),
       },
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -73,7 +78,8 @@ describe('generateZodClientFromOpenAPI - with baseUrl', () => {
         baseUrl: 'http://example.com',
       },
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -86,7 +92,8 @@ describe('generateZodClientFromOpenAPI - without default values', () => {
         withDefaultValues: false,
       },
     });
-    expect(prettyOutput).toMatchSnapshot();
+    assertSingleFileResult(prettyOutput);
+    expect(prettyOutput.content).toMatchSnapshot();
   });
 });
 
@@ -200,7 +207,8 @@ test('with optional, partial, all required objects', async () => {
   expect(data).toMatchSnapshot();
 
   const prettyOutput = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
-  expect(prettyOutput).toMatchSnapshot();
+  assertSingleFileResult(prettyOutput);
+  expect(prettyOutput.content).toMatchSnapshot();
 });
 
 test('getZodClientTemplateContext with allReadonly', () => {

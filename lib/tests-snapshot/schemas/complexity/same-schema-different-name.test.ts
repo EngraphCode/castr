@@ -1,6 +1,7 @@
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../../src/index.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 test('same-schema-different-name', async () => {
   const openApiDoc: OpenAPIObject = {
@@ -466,7 +467,8 @@ test('same-schema-different-name', async () => {
     openApiDoc,
     options: { complexityThreshold: 2 },
   });
-  expect(result).toMatchInlineSnapshot(`
+  assertSingleFileResult(result);
+  expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const differentNameSameSchema = z.enum(["aaa", "bbb", "ccc"]).optional();

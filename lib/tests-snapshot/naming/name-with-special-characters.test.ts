@@ -1,5 +1,6 @@
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../src/index.js';
 
 test('name-with-special-characters', async () => {
@@ -43,7 +44,8 @@ test('name-with-special-characters', async () => {
   `);
 
   const result = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-  expect(result).toMatchInlineSnapshot(`
+  assertSingleFileResult(result);
+  expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const _1Name_With_Special_Characters = z.string();

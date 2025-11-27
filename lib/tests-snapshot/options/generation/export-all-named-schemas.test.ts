@@ -5,6 +5,7 @@ import {
   exportAllNamedSchemasContextSnapshot,
   exportAllNamedSchemasOutputSnapshot,
 } from '../../__fixtures__/options/export-all-named-schemas.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 test('export-all-named-schemas', async () => {
   const openApiDoc: OpenAPIObject = {
@@ -110,6 +111,6 @@ test('export-all-named-schemas', async () => {
     openApiDoc,
     options: { complexityThreshold: 2, exportAllNamedSchemas: true },
   });
-
-  expect(result).toBe(exportAllNamedSchemasOutputSnapshot);
+  assertSingleFileResult(result);
+  expect(result.content).toBe(exportAllNamedSchemasOutputSnapshot);
 });

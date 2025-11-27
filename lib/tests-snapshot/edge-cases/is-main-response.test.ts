@@ -1,5 +1,6 @@
 import { type SchemasObject } from 'openapi3-ts/oas31';
 import { expect, it } from 'vitest';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 it('determines which one is-main-response', async () => {
@@ -44,7 +45,9 @@ it('determines which one is-main-response', async () => {
     options: { isMainResponseStatus: 'status === 201' },
   });
 
-  expect(result).toMatchInlineSnapshot(`
+  assertSingleFileResult(result);
+
+  expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const Main = z.object({ str: z.string(), nb: z.number() }).strict();

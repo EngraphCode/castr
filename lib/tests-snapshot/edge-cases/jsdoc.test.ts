@@ -1,5 +1,6 @@
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { test, expect } from 'vitest';
+import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 test('jsdoc', async () => {
@@ -97,7 +98,9 @@ test('jsdoc', async () => {
     },
   });
 
-  expect(output).toMatchInlineSnapshot(`
+  assertSingleFileResult(output);
+
+  expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     type ComplexObject = Partial<{

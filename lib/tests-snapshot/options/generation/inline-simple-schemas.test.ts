@@ -1,6 +1,7 @@
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
+import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 test('inline-simple-schemas', async () => {
   const openApiDoc: OpenAPIObject = {
@@ -125,7 +126,8 @@ test('inline-simple-schemas', async () => {
   };
 
   const ctx = await generateZodClientFromOpenAPI({ openApiDoc, disableWriteToFile: true });
-  expect(ctx).toMatchInlineSnapshot(`
+  assertSingleFileResult(ctx);
+  expect(ctx.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
 
     export const BasicString = z.string();

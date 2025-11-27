@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
+import { extractContent } from './test-utils.js';
 import {
   createMinimalSpec,
   createSpecWithSchema,
@@ -36,8 +37,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('import { z }');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('import { z }');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle spec with only schemas, no paths', async () => {
@@ -59,8 +60,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('import { z }');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('import { z }');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle single operation spec', async () => {
@@ -90,8 +91,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('/');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('/');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -121,7 +122,7 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle paths with special characters', async () => {
@@ -165,7 +166,7 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle property names with special characters', async () => {
@@ -196,8 +197,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('SpecialProps');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('SpecialProps');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle schema names that are JavaScript reserved words', async () => {
@@ -232,7 +233,7 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 
@@ -289,8 +290,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('level1');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('level1');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle schemas with very long names', async () => {
@@ -319,8 +320,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain(longName);
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain(longName);
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle many schemas (50+)', async () => {
@@ -347,8 +348,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('Schema0');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('Schema0');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle empty string as enum value', async () => {
@@ -374,8 +375,8 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('EmptyEnum');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('EmptyEnum');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
 
     it('should handle schema with nullable type (OpenAPI 3.0 style)', async () => {
@@ -404,9 +405,9 @@ describe('Characterisation: Edge Cases', () => {
       });
 
       expect(result).toBeTruthy();
-      expect(result).toContain('NullableField');
-      expect(result).toContain('nullable');
-      expect(result).not.toContain('as unknown as');
+      expect(extractContent(result)).toContain('NullableField');
+      expect(extractContent(result)).toContain('nullable');
+      expect(extractContent(result)).not.toContain('as unknown as');
     });
   });
 });

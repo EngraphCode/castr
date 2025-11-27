@@ -570,40 +570,42 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "name": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "name": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "parent": {
-                            "$ref": "#/components/schemas/User",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                            "parent": {
+                                "$ref": "#/components/schemas/User",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
                         },
@@ -652,27 +654,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "bestFriend": {
-                            "$ref": "#/components/schemas/Friend",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                        },
-                        "friends": {
-                            "items": {
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "bestFriend": {
                                 "$ref": "#/components/schemas/Friend",
                                 "metadata": {
                                     "circularReferences": [],
@@ -690,56 +674,76 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                     },
                                 },
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "friends": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Friend",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
+                                "type": "array",
                             },
-                            "type": "array",
-                        },
-                        "name": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "name": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "string",
-                        },
-                        "parent": {
-                            "$ref": "#/components/schemas/UserWithFriends",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                            "parent": {
+                                "$ref": "#/components/schemas/UserWithFriends",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
                         },
@@ -788,10 +792,27 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "circle": {
-                            "items": {
-                                "$ref": "#/components/schemas/Friend",
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "circle": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Friend",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -807,57 +828,42 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                         "validations": [],
                                     },
                                 },
+                                "type": "array",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "nickname": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "string",
                             },
-                            "type": "array",
-                        },
-                        "nickname": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "string",
-                        },
-                        "user": {
-                            "$ref": "#/components/schemas/UserWithFriends",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                            "user": {
+                                "$ref": "#/components/schemas/UserWithFriends",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
                         },
@@ -904,40 +910,42 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "basic": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "basic": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "number",
                             },
-                            "type": "number",
-                        },
-                        "recursiveRef": {
-                            "$ref": "#/components/schemas/ObjectWithRecursiveArray",
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
+                            "recursiveRef": {
+                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
                             },
                         },
@@ -984,10 +992,27 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": {
-                        "array": {
-                            "items": {
-                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                    "properties": IRSchemaProperties {
+                        "props": {
+                            "array": {
+                                "items": {
+                                    "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
                                 "metadata": {
                                     "circularReferences": [],
                                     "dependencyGraph": {
@@ -1003,41 +1028,26 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                         "validations": [],
                                     },
                                 },
+                                "type": "array",
                             },
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
+                            "isInsideObjectWithRecursiveArray": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
                                 },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
+                                "type": "boolean",
                             },
-                            "type": "array",
-                        },
-                        "isInsideObjectWithRecursiveArray": {
-                            "metadata": {
-                                "circularReferences": [],
-                                "dependencyGraph": {
-                                    "depth": 0,
-                                    "referencedBy": [],
-                                    "references": [],
-                                },
-                                "nullable": false,
-                                "required": false,
-                                "zodChain": {
-                                    "defaults": [],
-                                    "presence": "optional",
-                                    "validations": [],
-                                },
-                            },
-                            "type": "boolean",
                         },
                     },
                     "required": [],
@@ -1082,40 +1092,42 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                             "validations": [],
                                         },
                                     },
-                                    "properties": {
-                                        "someProp": {
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
+                                    "properties": IRSchemaProperties {
+                                        "props": {
+                                            "someProp": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
                                                 },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
-                                                },
+                                                "type": "boolean",
                                             },
-                                            "type": "boolean",
-                                        },
-                                        "someUser": {
-                                            "$ref": "#/components/schemas/UserWithFriends",
-                                            "metadata": {
-                                                "circularReferences": [],
-                                                "dependencyGraph": {
-                                                    "depth": 0,
-                                                    "referencedBy": [],
-                                                    "references": [],
-                                                },
-                                                "nullable": false,
-                                                "required": false,
-                                                "zodChain": {
-                                                    "defaults": [],
-                                                    "presence": "optional",
-                                                    "validations": [],
+                                            "someUser": {
+                                                "$ref": "#/components/schemas/UserWithFriends",
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": "optional",
+                                                        "validations": [],
+                                                    },
                                                 },
                                             },
                                         },

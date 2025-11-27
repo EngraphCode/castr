@@ -589,10 +589,28 @@ echo "=== ✅ CODEMETA COMPLETELY ERADICATED ==="
 
 ### Session 3.2 – IR Schema Foundations, CodeMetaData Replacement & Handlebars Removal
 
-**Status:** Ready to start  
+**Status:** ⏳ IN PROGRESS (~85% complete)  
 **Prerequisites:** Session 3.1.5 complete (multi-file refs fixed) ✅  
-**Estimated Effort:** 24-34 hours  
+**Estimated Effort:** 40-50 hours  
+**Actual Effort So Far:** ~38 hours  
+**Remaining:** ~5-7 hours  
 **Detailed Plan:** [PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md](./PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md)
+
+**Progress Update (2025-01-15):**
+
+- ✅ Section A: IR Type Definitions COMPLETE
+- ✅ Section B: IR Builder Implementation COMPLETE
+- ✅ Section C: CodeMetaData Replacement COMPLETE
+- ⏳ Section D: Type Discipline Restoration 90% COMPLETE
+  - ✅ Production code: Zero type assertions, zero escape hatches
+  - ✅ Test infrastructure: Helpers created and documented
+  - ✅ Unit tests: ALL 828 passing (176 → 0 failures)
+  - ⏳ Snapshot tests: 61 failures (10 files, next task)
+  - ⏳ Character tests: 84 failures (11 files, after snapshots)
+  - ⏳ Lint cleanup: 27 errors (after tests)
+- ⏸️ Section E: Quality Gates & Validation (blocked until D complete)
+
+**Quality Gates:** 5/8 GREEN (format, build, type-check, test, test:gen)
 
 #### Intended Impact
 
