@@ -46,7 +46,7 @@ export { buildIRSchemas } from './ir-builder.schemas.js';
  */
 export function buildIR(doc: OpenAPIObject): IRDocument {
   const components = buildIRSchemas(doc.components);
-  const operations = buildIROperations(doc.paths);
+  const operations = buildIROperations(doc);
   const dependencyGraph = buildDependencyGraph();
 
   return {

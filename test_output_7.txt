@@ -1,0 +1,84 @@
+
+> openapi-to-tooling-monorepo@0.0.0-development test /Users/jim/code/personal/openapi-zod-client
+> turbo test
+
+turbo 2.5.8
+
+• Packages in scope: @oaknational/openapi-to-tooling
+• Running test in 1 packages
+• Remote caching disabled
+@oaknational/openapi-to-tooling:test: cache bypass, force executing a7d0bb79984e772f
+@oaknational/openapi-to-tooling:test: 
+@oaknational/openapi-to-tooling:test: > @oaknational/openapi-to-tooling@1.18.3 test /Users/jim/code/personal/openapi-zod-client/lib
+@oaknational/openapi-to-tooling:test: > vitest run
+@oaknational/openapi-to-tooling:test: 
+@oaknational/openapi-to-tooling:test: 
+@oaknational/openapi-to-tooling:test: [1m[46m RUN [49m[22m [36mv4.0.3 [39m[90m/Users/jim/code/personal/openapi-zod-client/lib[39m
+@oaknational/openapi-to-tooling:test: 
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/maybe-pretty.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/validation/mcp-type-guards.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/ajv-validation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/ast/ast-builder.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/ast/builder.test.ts [2m([22m[2m41 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/json-schema.integration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 68[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/definition.types.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/schema-sorting.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/handlebars.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-builder.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.operations.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp-tools.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context-ir.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.integration.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 24[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/typescript/helpers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/bundle-infrastructure.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/validation/mcp-error-formatting.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp.schema.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/templates/schemas-with-metadata.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 227[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/convert-schema.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/typescript/string-helpers.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/parameter-metadata.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/templates/schemas-with-client.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 384[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/operation/process-parameter.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/path.helpers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/operation.helpers.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/code-generation.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/ref-resolution.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/component-access.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/logger.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/schema-types.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/generate-jsdoc-array.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/upgrade-validate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validators.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/metadata.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/ir-metadata-adapter.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/normalize-input.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/enum-helpers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.helpers.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/bundle-config.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/path-utils.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-serialization.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/helpers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/security/extract-operation-security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.schema.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.core.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.circular.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/string-utils.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/schema-complexity.enum.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/chain.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.properties.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/public-api-preservation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@oaknational/openapi-to-tooling:test: 
+@oaknational/openapi-to-tooling:test: [2m Test Files [22m [1m[32m56 passed[39m[22m[90m (56)[39m
+@oaknational/openapi-to-tooling:test: [2m      Tests [22m [1m[32m832 passed[39m[22m[90m (832)[39m
+@oaknational/openapi-to-tooling:test: [2m   Start at [22m 12:43:17
+@oaknational/openapi-to-tooling:test: [2m   Duration [22m 3.82s[2m (transform 3.29s, setup 0ms, collect 19.67s, tests 1.20s, environment 6ms, prepare 284ms)[22m
+@oaknational/openapi-to-tooling:test: 
+
+ Tasks:    1 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    4.7s 
+

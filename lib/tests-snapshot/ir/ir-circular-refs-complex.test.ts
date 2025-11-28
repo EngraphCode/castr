@@ -8,6 +8,7 @@
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import { getZodClientTemplateContext } from '../../src/context/template-context.js';
+import { assertSchemaComponent } from '../../src/context/ir-test-helpers.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 
@@ -37,7 +38,8 @@ describe('IR Integration - Complex Circular References', () => {
     // FIRST: Prove IR detects circular reference
     const ctx = getZodClientTemplateContext(openApiDoc);
     const treeComponent = ctx._ir?.components?.find((c) => c.name === 'TreeNode');
-    const circularRefs = treeComponent?.schema?.metadata.circularReferences || [];
+    const circularRefs =
+      assertSchemaComponent(treeComponent).schema.metadata.circularReferences || [];
 
     expect(circularRefs.length).toBeGreaterThan(0);
 
@@ -152,9 +154,12 @@ describe('IR Integration - Complex Circular References', () => {
     const bComponent = ctx._ir?.components?.find((c) => c.name === 'B');
     const cComponent = ctx._ir?.components?.find((c) => c.name === 'C');
 
-    const aCircularRefs = aComponent?.schema?.metadata.circularReferences || [];
-    const bCircularRefs = bComponent?.schema?.metadata.circularReferences || [];
-    const cCircularRefs = cComponent?.schema?.metadata.circularReferences || [];
+    const aCircularRefs =
+      assertSchemaComponent(aComponent).schema.metadata.circularReferences || [];
+    const bCircularRefs =
+      assertSchemaComponent(bComponent).schema.metadata.circularReferences || [];
+    const cCircularRefs =
+      assertSchemaComponent(cComponent).schema.metadata.circularReferences || [];
 
     const totalCircularRefs = aCircularRefs.length + bCircularRefs.length + cCircularRefs.length;
 
@@ -204,7 +209,8 @@ describe('IR Integration - Complex Circular References', () => {
     const listComponent = ctx._ir?.components?.find((c) => c.name === 'LinkedList');
 
     expect(listComponent).toBeDefined();
-    const circularRefs = listComponent?.schema?.metadata.circularReferences || [];
+    const circularRefs =
+      assertSchemaComponent(listComponent).schema.metadata.circularReferences || [];
     expect(circularRefs.length).toBeGreaterThan(0);
 
     // SECOND: Prove generated code handles optional circular ref correctly

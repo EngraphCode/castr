@@ -70,7 +70,7 @@ export function buildIRResponses(
  * Build a single IR response (handles references and concrete responses).
  * @internal
  */
-function buildSingleResponse(
+export function buildSingleResponse(
   statusCode: string,
   responseObj: ResponseObject | ReferenceObject,
   context: IRBuildContext,

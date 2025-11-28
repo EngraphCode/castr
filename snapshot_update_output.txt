@@ -1,0 +1,168 @@
+
+> openapi-to-tooling-monorepo@0.0.0-development test:snapshot /Users/jim/code/personal/openapi-zod-client
+> turbo test:snapshot -- -u
+
+turbo 2.5.8
+
+• Packages in scope: @oaknational/openapi-to-tooling
+• Running test:snapshot in 1 packages
+• Remote caching disabled
+@oaknational/openapi-to-tooling:test:snapshot: cache bypass, force executing 90db0f7db1a86b20
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: > @oaknational/openapi-to-tooling@1.18.3 test:snapshot /Users/jim/code/personal/openapi-zod-client/lib
+@oaknational/openapi-to-tooling:test:snapshot: > vitest run --config vitest.snapshot.config.ts -u
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [1m[46m RUN [49m[22m [36mv4.0.3 [39m[90m/Users/jim/code/personal/openapi-zod-client/lib[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgetZodClientTemplateContext
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - without options[2m > [22m[2mshould generate client without options
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - withAlias as true[2m > [22m[2mshould generate client with alias enabled
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/options/generation/group-strategy.test.ts[2m > [22m[2mgroup-strategy: tag-file with modified petstore schema
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/samples.test.ts[2m > [22m[2mopenapi-examples[2m > [22m[2m/Users/jim/code/personal/openapi-zod-client/lib/examples/openapi/v3.0/petstore-expanded.yaml
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/samples.test.ts[2m > [22m[2mopenapi-examples[2m > [22m[2m/Users/jim/code/personal/openapi-zod-client/lib/examples/openapi/v3.0/petstore.yaml
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - withAlias as false[2m > [22m[2mshould generate client with alias disabled
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/samples.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 352[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - withAlias as custom function[2m > [22m[2mshould generate client with custom alias function
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts[2m > [22m[2mopenapi-spec-compliance[2m > [22m[2mOAS 3.0.x compliance[2m > [22m[2mresponse with multiple status codes
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-parameter-basic.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 184[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 380[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-enum-integration.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 219[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/oas-3.0-vs-3.1-feature-parity.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 235[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - with baseUrl[2m > [22m[2mshould generate client with base URL
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/recursive-schema.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 218[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-circular-refs-complex.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - without default values[2m > [22m[2mshould generate client without default values
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/group-strategy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 571[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:    [33m[2m✓[22m[39m group-strategy: tag-file with modified petstore schema [33m 339[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - with tag-file groupStrategy[2m > [22m[2mshould generate client with tag-file grouping
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgetZodClientTemplateContext with allReadonly
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 774[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/same-schema-different-name.gen.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 110[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/common-parameters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 94[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/errors-responses.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 147[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/array-default-values.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 100[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-parameter-complex.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 145[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/is-main-response.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 89[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-all-named-schemas.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 102[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/jsdoc.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 78[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/anyOf-behavior.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/spec-compliance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/schema-name-already-used.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 94[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-all-types.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 95[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-oneOf-anyOf-single-ref.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 60[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/group-strategy-file-multi-props-object-as-query-parameter.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/param-with-content.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 71[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/missing-zod-chains-on-z-object-with-refs-props.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 74[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/handle-refs-with-dots-in-name.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 74[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/schema-type-wrong-case.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 54[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/main-description-as-fallback.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 72[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/schema-type-list-3.1.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/missing-zod-chains.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/enum-null.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 72[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/enum-min-max.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 66[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/hyphenated-parameters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 77[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/inline-simple-schemas.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 70[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/object-default-values.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 76[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/min-with-max.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 204[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-circular-refs-basic.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/array-body-with-chains-tag-group-strategy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 74[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/request-body-ref.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 77[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-schemas-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 64[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-missing-and.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 61[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/numerical-enum.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/handle-props-with-special-characters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/openApiToTypescript.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/number-default-as-number.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 69[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/getEndpointDefinitionList.test.ts[2m > [22m[2mpetstore.yaml
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/getEndpointDefinitionList.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/getOpenApiDependencyGraph.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/openApiToZod.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 60[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/description-in-zod.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 61[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/name-starting-with-number.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 59[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/name-with-special-characters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 72[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/schema-complexity.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 11[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/regex-with-escapes.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/parameter-metadata.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/spec-compliance/defaut-status-behavior.test.ts[2m > [22m[2mdefaut-status-behavior
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: withDefaultResponse
+@oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` withDefaultResponse
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/defaut-status-behavior.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 19[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/same-schema-different-name.ir.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 21[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/required-additional-props-not-in-properties.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/ref-in-another-file.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/refine-default-endpoint-callback.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/additionalProperties-is-default.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/withImplicitRequired-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/additionalPropertiesDefaultValue-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/use-union-only-when-multiple-choices.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/missing-operationId-variables-undefined_Body.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/with-deprecated.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/validations.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/regex-with-unnecessary-escape.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/is-media-type-allowed.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/resolve-ref-responses.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/param-invalid-spec.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/schema-refiner.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/strictObjects-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/kebab-case-in-props.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/infer-as-object-when-only-properties-set.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/utils.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/unicode-pattern-regex.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/invalid-pattern-regex.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/deps-graph-with-additionalProperties.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [2m  Snapshots [22m [1m[32m4 updated [39m[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m Test Files [22m [1m[32m81 passed[39m[22m[90m (81)[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m      Tests [22m [1m[32m178 passed[39m[22m[90m (178)[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m   Start at [22m 12:48:03
+@oaknational/openapi-to-tooling:test:snapshot: [2m   Duration [22m 12.34s[2m (transform 4.36s, setup 0ms, collect 87.40s, tests 6.75s, environment 8ms, prepare 449ms)[22m
+@oaknational/openapi-to-tooling:test:snapshot: 
+
+ Tasks:    1 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    13.083s 
+

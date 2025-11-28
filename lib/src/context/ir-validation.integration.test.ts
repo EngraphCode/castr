@@ -10,6 +10,7 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext } from './template-context.js';
 import { isIRDocument } from './ir-validators.js';
+import { assertSchemaComponent } from './ir-test-helpers.js';
 
 describe('IR Validation - Real-World Integration', () => {
   test('handles a realistic API specification', () => {
@@ -127,7 +128,7 @@ describe('IR Validation - Real-World Integration', () => {
 
     // PROVE: Complex metadata is correct (nullable field in User)
     const userComponent = ctx._ir?.components?.find((c) => c.name === 'User');
-    const userSchema = userComponent?.schema;
+    const userSchema = assertSchemaComponent(userComponent).schema;
     if (userSchema?.type === 'object' && userSchema.properties) {
       // name field is nullable
       expect(userSchema.properties.get('name')?.metadata.nullable).toBe(true);

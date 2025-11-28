@@ -7,8 +7,25 @@
  * @module ir-test-helpers
  */
 
-import type { IRComponent, IRSchema } from './ir-schema.js';
-import { IRSchemaProperties } from './ir-schema-properties.js';
+import type { IRComponent, IRSchema, IRSchemaComponent } from './ir-schema.js';
+import { IRSchemaProperties } from './ir-schema.js';
+
+/**
+ * Assert that a component is a schema component.
+ *
+ * @param component - Component to check
+ * @returns The schema component
+ * @throws Error if component is undefined or not a schema component
+ */
+export function assertSchemaComponent(component: IRComponent | undefined): IRSchemaComponent {
+  if (!component) {
+    throw new Error('Component is undefined');
+  }
+  if (component.type !== 'schema') {
+    throw new Error(`Expected component type 'schema' but got '${component.type}'`);
+  }
+  return component;
+}
 
 /**
  * Find a component by name in an IR component array.
@@ -141,7 +158,7 @@ export function assertPropertiesMetadata(
 export function countCircularRefs(components: IRComponent[]): number {
   let total = 0;
   for (const component of components) {
-    if (component.schema?.metadata.circularReferences) {
+    if (component.type === 'schema' && component.schema.metadata.circularReferences) {
       total += component.schema.metadata.circularReferences.length;
     }
   }

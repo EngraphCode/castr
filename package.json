@@ -25,6 +25,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "clean": "turbo clean",
+    "fix": "pnpm format && pnpm lint:fix",
     "qg": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm test:all",
     "check": "pnpm clean && pnpm install && pnpm qg",
     "fetch:examples": "turbo fetch:examples"

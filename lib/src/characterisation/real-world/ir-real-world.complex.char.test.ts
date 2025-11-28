@@ -17,6 +17,7 @@ import {
   assertComponentExists,
   assertContentContains,
 } from '../ir-test-helpers.js';
+import { assertSchemaComponent } from '../../context/ir-test-helpers.js';
 
 describe('IR Characterization - Real-World Specs', () => {
   describe('Complex Schema Patterns', () => {
@@ -249,7 +250,7 @@ describe('IR Characterization - Real-World Specs', () => {
       // PROVE: IR handles deep nesting
       const deepComponent = ctx._ir?.components?.find((c) => c.name === 'DeepObject');
       expect(deepComponent).toBeDefined();
-      expect(deepComponent?.schema?.metadata).toBeDefined();
+      expect(assertSchemaComponent(deepComponent).schema.metadata).toBeDefined();
 
       // PROVE: Code generation succeeds with deep nesting
       const result = await generateZodClientFromOpenAPI({

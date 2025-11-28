@@ -15,6 +15,7 @@ import {
   getSchemaProperty,
   assertPropertiesMetadata,
   assertHasIRSchemaProperties,
+  assertSchemaComponent,
 } from './ir-test-helpers.js';
 
 describe('IR Validation - Schema Representation', () => {
@@ -49,7 +50,7 @@ describe('IR Validation - Schema Representation', () => {
       const userComponent = getComponent(ctx._ir?.components, 'User');
       expect(userComponent.type).toBe('schema');
 
-      const userSchema = userComponent.schema;
+      const userSchema = assertSchemaComponent(userComponent).schema;
       expect(userSchema?.type).toBe('object');
 
       // PROVE: Metadata is correctly computed
@@ -94,8 +95,7 @@ describe('IR Validation - Schema Representation', () => {
 
       const ctx = getZodClientTemplateContext(openApiDoc);
       const component = ctx._ir?.components?.find((c) => c.name === 'NullableField');
-      const schema = component?.schema;
-
+      const schema = assertSchemaComponent(component).schema;
       // PROVE: Nullable detection works correctly
       if (schema?.type === 'object' && schema.properties) {
         expect(schema.properties.get('nullableString')?.metadata.nullable).toBe(true);
@@ -144,7 +144,7 @@ describe('IR Validation - Schema Representation', () => {
       expect(extendedComponent).toBeDefined();
 
       // PROVE: allOf structure is preserved in IR
-      const extendedSchema = extendedComponent?.schema;
+      const extendedSchema = assertSchemaComponent(extendedComponent).schema;
       expect(extendedSchema).toBeDefined();
 
       // REQUIRED BEHAVIOR: allOf MUST be represented in a way that allows reconstruction
@@ -175,7 +175,7 @@ describe('IR Validation - Schema Representation', () => {
 
       // PROVE: oneOf is captured correctly
       expect(component).toBeDefined();
-      const schema = component?.schema;
+      const schema = assertSchemaComponent(component).schema;
 
       // REQUIRED BEHAVIOR: oneOf MUST be preserved for lossless representation
       expect(schema).toBeDefined();
@@ -221,8 +221,9 @@ describe('IR Validation - Schema Representation', () => {
 
       // PROVE: Dependency tracking exists
       const level1 = ctx._ir?.components?.find((c) => c.name === 'Level1');
-      expect(level1?.schema?.metadata.dependencyGraph).toBeDefined();
-      expect(level1?.schema?.metadata.dependencyGraph.depth).toBeGreaterThanOrEqual(0);
+      const level1Schema = assertSchemaComponent(level1).schema;
+      expect(level1Schema.metadata.dependencyGraph).toBeDefined();
+      expect(level1Schema.metadata.dependencyGraph.depth).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -249,7 +250,7 @@ describe('IR Validation - Schema Representation', () => {
 
       // PROVE: Array is correctly represented
       expect(component).toBeDefined();
-      const schema = component?.schema;
+      const schema = assertSchemaComponent(component).schema;
       expect(schema?.type).toBe('array');
 
       // PROVE: Array constraints are captured
@@ -287,7 +288,7 @@ describe('IR Validation - Schema Representation', () => {
 
       // REQUIRED BEHAVIOR: Enum values MUST be preserved in IR
       expect(component).toBeDefined();
-      const schema = component?.schema;
+      const schema = assertSchemaComponent(component).schema;
 
       // The schema should have an enum field or the type should be an array including enum values
       // This is lossless representation - we MUST not lose the enum constraint

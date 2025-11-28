@@ -1,0 +1,31 @@
+
+> openapi-to-tooling-monorepo@0.0.0-development lint /Users/jim/code/personal/openapi-zod-client
+> turbo lint
+
+turbo 2.5.8
+
+• Packages in scope: @oaknational/openapi-to-tooling
+• Running lint in 1 packages
+• Remote caching disabled
+@oaknational/openapi-to-tooling:lint: cache bypass, force executing db6fbe5a4b7f0cf9
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: > @oaknational/openapi-to-tooling@1.18.3 lint /Users/jim/code/personal/openapi-zod-client/lib
+@oaknational/openapi-to-tooling:lint: > eslint . --cache --cache-location .eslintcache
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/ir-serialization.ts
+@oaknational/openapi-to-tooling:lint:   49:27  error  Don't use `Record<string,unknown>` as a type. Avoid Record<string, unknown>. It destroys type information. Refactor or use a defined type  @typescript-eslint/no-restricted-types
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: ✖ 1 problem (1 error, 0 warnings)
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint:  ELIFECYCLE  Command failed with exit code 1.
+@oaknational/openapi-to-tooling:lint: ERROR: command finished with error: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+@oaknational/openapi-to-tooling#lint: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+
+ Tasks:    0 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    1.879s 
+Failed:    @oaknational/openapi-to-tooling#lint
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

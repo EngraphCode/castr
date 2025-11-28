@@ -11,7 +11,7 @@ turbo 2.5.8
 • Packages in scope: @oaknational/openapi-to-tooling
 • Running test in 1 packages
 • Remote caching disabled
-@oaknational/openapi-to-tooling:test: cache bypass, force executing 2ad3c7c1cfb64262
+@oaknational/openapi-to-tooling:test: cache bypass, force executing a7d0bb79984e772f
 @oaknational/openapi-to-tooling:test: 
 @oaknational/openapi-to-tooling:test: > @oaknational/openapi-to-tooling@1.18.3 test /Users/jim/code/personal/openapi-zod-client/lib
 @oaknational/openapi-to-tooling:test: > vitest run
@@ -19,71 +19,72 @@ turbo 2.5.8
 @oaknational/openapi-to-tooling:test: 
 @oaknational/openapi-to-tooling:test: [1m[46m RUN [49m[22m [36mv4.0.3 [39m[90m/Users/jim/code/personal/openapi-zod-client/lib[39m
 @oaknational/openapi-to-tooling:test: 
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/maybe-pretty.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 74[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/ast/ast-builder.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 47[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/ast/builder.test.ts [2m([22m[2m41 tests[22m[2m)[22m[32m 70[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/ajv-validation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 35[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/validation/mcp-type-guards.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 17[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/json-schema.integration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 126[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/handlebars.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 18[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/validation/mcp-error-formatting.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 14[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/schema-sorting.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-builder.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context-ir.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 20[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp-tools.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 27[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.integration.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 23[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 33[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.operations.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/typescript/string-helpers.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 10[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/bundle-infrastructure.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 8[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/typescript/helpers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/maybe-pretty.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/ast/ast-builder.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/ast/builder.test.ts [2m([22m[2m41 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/ajv-validation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/json-schema.integration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/validation/mcp-error-formatting.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 11[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp.schema.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/convert-schema.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 14[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/templates/schemas-with-metadata.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 509[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/templates/schemas-with-client.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 768[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/component-access.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/schema-sorting.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/validation/mcp-type-guards.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/handlebars.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.operations.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context-ir.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp-tools.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.integration.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 19[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/convert-schema.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-builder.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 10[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/parameter-metadata.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/operation.helpers.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 10[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/ref-resolution.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 8[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/definition.types.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/logger.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/code-generation.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/path.helpers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/operation/process-parameter.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp.schema.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/templates/schemas-with-metadata.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 369[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/rendering/templates/schemas-with-client.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 498[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/bundle-infrastructure.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/typescript/helpers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/component-access.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/typescript/string-helpers.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/ref-resolution.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/operation.helpers.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/path.helpers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/ir-metadata-adapter.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/code-generation.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/upgrade-validate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/operation/process-parameter.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/definition.types.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/logger.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/enum-helpers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 5[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validators.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/bundle-config.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/enum-helpers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.helpers.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/upgrade-validate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/normalize-input.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/ir-metadata-adapter.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/helpers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/normalize-input.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/generate-jsdoc-array.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/schema-complexity.enum.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 5[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/path-utils.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/chain.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.circular.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/bundle-config.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-serialization.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.helpers.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 7[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/load-openapi-document/metadata.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/schema-types.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 3[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/ir-validation.circular.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.schema.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 12[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/security/extract-operation-security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.core.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/schema-types.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/json-schema/security/extract-operation-security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/path-utils.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/endpoints/helpers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.core.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/utils/string-utils.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.schema.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/shared/schema-complexity.enum.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/chain.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 3[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/context/template-context.mcp.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 3[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.properties.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:  [32m✓[39m src/conversion/zod/handlers.object.properties.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:  [32m✓[39m src/public-api-preservation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
 @oaknational/openapi-to-tooling:test: 
-@oaknational/openapi-to-tooling:test: [2m Test Files [22m [1m[32m55 passed[39m[22m[90m (55)[39m
-@oaknational/openapi-to-tooling:test: [2m      Tests [22m [1m[32m828 passed[39m[22m[90m (828)[39m
-@oaknational/openapi-to-tooling:test: [2m   Start at [22m 20:11:17
-@oaknational/openapi-to-tooling:test: [2m   Duration [22m 17.80s[2m (transform 12.98s, setup 0ms, collect 109.35s, tests 2.06s, environment 12ms, prepare 2.14s)[22m
+@oaknational/openapi-to-tooling:test: [2m Test Files [22m [1m[32m56 passed[39m[22m[90m (56)[39m
+@oaknational/openapi-to-tooling:test: [2m      Tests [22m [1m[32m832 passed[39m[22m[90m (832)[39m
+@oaknational/openapi-to-tooling:test: [2m   Start at [22m 12:46:27
+@oaknational/openapi-to-tooling:test: [2m   Duration [22m 5.59s[2m (transform 5.31s, setup 0ms, collect 31.58s, tests 1.45s, environment 6ms, prepare 461ms)[22m
 @oaknational/openapi-to-tooling:test: 
 
  Tasks:    1 successful, 1 total
 Cached:    0 cached, 1 total
-  Time:    22.538s 
+  Time:    6.391s 
 
 
 > openapi-to-tooling-monorepo@0.0.0-development character /Users/jim/code/personal/openapi-zod-client
@@ -94,7 +95,7 @@ turbo 2.5.8
 • Packages in scope: @oaknational/openapi-to-tooling
 • Running character in 1 packages
 • Remote caching disabled
-@oaknational/openapi-to-tooling:character: cache bypass, force executing d811ad0ce860aebd
+@oaknational/openapi-to-tooling:character: cache bypass, force executing bd02c4313fcc6954
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: > @oaknational/openapi-to-tooling@1.18.3 character /Users/jim/code/personal/openapi-zod-client/lib
 @oaknational/openapi-to-tooling:character: > vitest run --config vitest.characterisation.config.ts
@@ -115,92 +116,92 @@ turbo 2.5.8
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-pipeline.char.test.ts[2m > [22m[2mUnified OpenAPI Input Pipeline - prepareOpenApiDocument Helper[2m > [22m[2mDirect Helper Usage[2m > [22m[2mshould validate and bundle URL input
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] Failed to parse JSON/YAML from URL: https://api.example.com/openapi.json
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/bundled-spec-assumptions.char.test.ts[2m > [22m[2mBundled Spec: Code Generation Integration[2m > [22m[2mshould generate code from all sample specs using bundled input
-@oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-pipeline.char.test.ts[2m > [22m[2mUnified OpenAPI Input Pipeline - prepareOpenApiDocument Helper[2m > [22m[2mType Boundary Handling[2m > [22m[2mshould return OpenAPIObject from URL
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] Failed to parse JSON/YAML from URL: https://api.example.com/openapi.json
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/bundled-spec-assumptions.char.test.ts[2m > [22m[2mBundled Spec: Code Generation Integration[2m > [22m[2mshould generate code from all sample specs using bundled input
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/input-pipeline.char.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 351[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/bundled-spec-assumptions.char.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 365[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/input-pipeline.char.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 322[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-format.char.test.ts[2m > [22m[2mInput Format Support[2m > [22m[2mJSON Input[2m > [22m[2mshould parse and generate from JSON OpenAPI spec
+@oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:character: 
+@oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/bundled-spec-assumptions.char.test.ts[2m > [22m[2mBundled Spec: Code Generation Integration[2m > [22m[2mshould generate code from all sample specs using bundled input
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-format.char.test.ts[2m > [22m[2mInput Format Support[2m > [22m[2mJSON Input[2m > [22m[2mshould generate endpoints from JSON spec
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/bundled-spec-assumptions.char.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 499[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/programmatic-usage.char.test.ts[2m > [22m[2mE2E: Programmatic Usage - After prepareOpenApiDocument()[2m > [22m[2mshould work with external refs after dereferencing
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-format.char.test.ts[2m > [22m[2mInput Format Support[2m > [22m[2mYAML Input[2m > [22m[2mshould parse and generate from YAML OpenAPI spec
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/programmatic-usage.char.test.ts[2m > [22m[2mE2E: CLI Usage[2m > [22m[2mshould handle external refs via CLI path
-@oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/generation.char.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 509[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-format.char.test.ts[2m > [22m[2mInput Format Support[2m > [22m[2mYAML Input[2m > [22m[2mshould generate endpoints from YAML spec
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/edge-cases.char.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 480[2mms[22m[39m
+@oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/programmatic-usage.char.test.ts[2m > [22m[2mE2E: CLI Usage[2m > [22m[2mshould handle external refs via CLI path
+@oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:character: 
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/schema-dependencies.char.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 351[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-format.char.test.ts[2m > [22m[2mInput Format Support[2m > [22m[2mFormat Equivalence[2m > [22m[2mshould generate valid output from both JSON and YAML formats
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/input-format.char.test.ts[2m > [22m[2mInput Format Support[2m > [22m[2mFormat Equivalence[2m > [22m[2mshould generate valid output from both JSON and YAML formats
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/programmatic-usage.char.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 577[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/schema-dependencies.char.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 544[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/input-format.char.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 553[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/options.char.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 679[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/edge-cases.char.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 340[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/generation.char.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 425[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/programmatic-usage.char.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 376[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/input-format.char.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 399[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/options.char.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 441[2mms[22m[39m
 @oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/json-schema.char.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 19[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/parameter-metadata.char.test.ts[2m > [22m[2mCharacterisation: Parameter Metadata Extraction from Real Specs[2m > [22m[2mshould extract parameter metadata from petstore-expanded spec
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/parameter-metadata.char.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/parameter-metadata.char.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 69[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/real-world/ir-real-world.petstore.char.test.ts[2m > [22m[2mIR Characterization - Real-World Specs[2m > [22m[2mPetstore Expanded Spec[2m > [22m[2mIR captures all petstore schemas
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/real-world/ir-real-world.petstore.char.test.ts[2m > [22m[2mIR Characterization - Real-World Specs[2m > [22m[2mPetstore Expanded Spec[2m > [22m[2mpetstore schemas have correct metadata
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/validation.char.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 143[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/real-world/ir-real-world.operations.char.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/real-world/ir-real-world.complex.char.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/error-handling.char.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 146[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/real-world/ir-real-world.petstore.char.test.ts[2m > [22m[2mIR Characterization - Real-World Specs[2m > [22m[2mPetstore Expanded Spec[2m > [22m[2mpetstore operations have correct structure
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/error-handling.char.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 185[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: [90mstderr[2m | src/characterisation/real-world/ir-real-world.petstore.char.test.ts[2m > [22m[2mIR Characterization - Real-World Specs[2m > [22m[2mPetstore Expanded Spec[2m > [22m[2mpetstore generates valid Zod code
 @oaknational/openapi-to-tooling:character: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
 @oaknational/openapi-to-tooling:character: 
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/real-world/ir-real-world.petstore.char.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 237[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/validation.char.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 170[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/real-world/ir-real-world.complex.char.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 134[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/real-world/ir-real-world.operations.char.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 108[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/cli.char.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 13087[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should display help with --help [33m 2761[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should display version with --version [33m 2028[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should generate output file from OpenAPI spec [33m 1153[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --base-url option [33m 789[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --export-schemas option [33m 677[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --with-alias option [33m 775[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --no-with-alias option [33m 695[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --strict-objects option [33m 628[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should emit MCP manifest with --emit-mcp-manifest option [33m 681[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should generate valid TypeScript without type assertions [33m 679[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should handle complex schemas correctly [33m 772[2mms[22m[39m
-@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should exit successfully on valid input [33m 1432[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/real-world/ir-real-world.petstore.char.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 212[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:  [32m✓[39m src/characterisation/cli.char.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 14857[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should display help with --help [33m 1510[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should display version with --version [33m 736[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should generate output file from OpenAPI spec [33m 607[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --base-url option [33m 636[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --export-schemas option [33m 661[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --with-alias option [33m 1043[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --no-with-alias option [33m 1029[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should respect --strict-objects option [33m 779[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should emit MCP manifest with --emit-mcp-manifest option [33m 2385[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should generate valid TypeScript without type assertions [33m 3263[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should handle complex schemas correctly [33m 1412[2mms[22m[39m
+@oaknational/openapi-to-tooling:character:        [33m[2m✓[22m[39m should exit successfully on valid input [33m 787[2mms[22m[39m
 @oaknational/openapi-to-tooling:character: 
 @oaknational/openapi-to-tooling:character: [2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
 @oaknational/openapi-to-tooling:character: [2m      Tests [22m [1m[32m159 passed[39m[22m[90m (159)[39m
-@oaknational/openapi-to-tooling:character: [2m   Start at [22m 20:11:37
-@oaknational/openapi-to-tooling:character: [2m   Duration [22m 16.14s[2m (transform 6.55s, setup 0ms, collect 45.65s, tests 18.04s, environment 1ms, prepare 135ms)[22m
+@oaknational/openapi-to-tooling:character: [2m   Start at [22m 12:46:35
+@oaknational/openapi-to-tooling:character: [2m   Duration [22m 16.70s[2m (transform 4.36s, setup 0ms, collect 22.39s, tests 18.81s, environment 2ms, prepare 112ms)[22m
 @oaknational/openapi-to-tooling:character: 
 
  Tasks:    1 successful, 1 total
 Cached:    0 cached, 1 total
-  Time:    17.006s 
+  Time:    17.387s 
 
 
 > openapi-to-tooling-monorepo@0.0.0-development test:snapshot /Users/jim/code/personal/openapi-zod-client
@@ -211,7 +212,7 @@ turbo 2.5.8
 • Packages in scope: @oaknational/openapi-to-tooling
 • Running test:snapshot in 1 packages
 • Remote caching disabled
-@oaknational/openapi-to-tooling:test:snapshot: cache bypass, force executing b06716552c855854
+@oaknational/openapi-to-tooling:test:snapshot: cache bypass, force executing fdac5be82cf8823b
 @oaknational/openapi-to-tooling:test:snapshot: 
 @oaknational/openapi-to-tooling:test:snapshot: > @oaknational/openapi-to-tooling@1.18.3 test:snapshot /Users/jim/code/personal/openapi-zod-client/lib
 @oaknational/openapi-to-tooling:test:snapshot: > vitest run --config vitest.snapshot.config.ts
@@ -235,26 +236,10 @@ turbo 2.5.8
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/samples.test.ts[2m > [22m[2mopenapi-examples[2m > [22m[2m/Users/jim/code/personal/openapi-zod-client/lib/examples/openapi/v3.0/petstore-expanded.yaml
-@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/samples.test.ts[2m > [22m[2mopenapi-examples[2m > [22m[2m/Users/jim/code/personal/openapi-zod-client/lib/examples/openapi/v3.0/petstore.yaml
-@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts[2m > [22m[2mopenapi-spec-compliance[2m > [22m[2mOAS 3.0.x compliance[2m > [22m[2mresponse with multiple status codes
-@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:snapshot: 
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - withAlias as false[2m > [22m[2mshould generate client with alias disabled
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 517[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-parameter-complex.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 234[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/errors-responses.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 274[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/samples.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 558[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-enum-integration.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 289[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/recursive-schema.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 251[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/oas-3.0-vs-3.1-feature-parity.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 332[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - withAlias as custom function[2m > [22m[2mshould generate client with custom alias function
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
@@ -263,163 +248,925 @@ turbo 2.5.8
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/group-strategy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 753[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:    [33m[2m✓[22m[39m group-strategy: tag-file with modified petstore schema [33m 441[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/samples.test.ts[2m > [22m[2mopenapi-examples[2m > [22m[2m/Users/jim/code/personal/openapi-zod-client/lib/examples/openapi/v3.0/petstore-expanded.yaml
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/samples.test.ts[2m > [22m[2mopenapi-examples[2m > [22m[2m/Users/jim/code/personal/openapi-zod-client/lib/examples/openapi/v3.0/petstore.yaml
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/group-strategy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 694[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:    [33m[2m✓[22m[39m group-strategy: tag-file with modified petstore schema [33m 336[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - without default values[2m > [22m[2mshould generate client without default values
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/samples.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 567[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgenerateZodClientFromOpenAPI - with tag-file groupStrategy[2m > [22m[2mshould generate client with tag-file grouping
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts[2m > [22m[2mopenapi-spec-compliance[2m > [22m[2mOAS 3.0.x compliance[2m > [22m[2mresponse with multiple status codes
+@oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/openapi-spec-compliance.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 355[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22m[2mgetZodClientTemplateContext with allReadonly
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 1016[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/same-schema-different-name.gen.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/inline-simple-schemas.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/group-strategy-file-multi-props-object-as-query-parameter.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 104[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-missing-and.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/common-parameters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 96[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-all-types.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/anyOf-behavior.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 75[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/handle-refs-with-dots-in-name.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 85[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-all-named-schemas.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 80[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-schemas-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 82[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/object-default-values.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 90[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-parameter-basic.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 126[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-circular-refs-complex.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 126[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/schema-name-already-used.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 116[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/missing-zod-chains.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 79[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/jsdoc.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 87[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/hyphenated-parameters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 78[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/array-default-values.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/min-with-max.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 65[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/schema-type-wrong-case.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 91[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/param-with-content.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 99[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/spec-compliance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 94[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/numerical-enum.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 65[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/request-body-ref.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 60[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/missing-zod-chains-on-z-object-with-refs-props.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-circular-refs-basic.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 70[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/schema-type-list-3.1.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 72[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/name-starting-with-number.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 59[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/is-main-response.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 65[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/array-body-with-chains-tag-group-strategy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 69[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-oneOf-anyOf-single-ref.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 70[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/number-default-as-number.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 74[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/description-in-zod.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/main-description-as-fallback.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 77[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/handle-props-with-special-characters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 57[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/openApiToTypescript.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 31[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/openApiToZod.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 17[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/getOpenApiDependencyGraph.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [31m❯[39m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts [2m([22m[2m10 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 1021[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m   [31m×[31m getZodClientTemplateContext[39m[32m 58[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client without options[32m 210[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client with alias enabled[32m 115[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client with alias disabled[32m 140[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client with custom alias function[32m 90[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client with base URL[32m 144[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client without default values[32m 70[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate client with tag-file grouping[32m 132[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m   [31m×[31m with optional, partial, all required objects[39m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m   [31m×[31m getZodClientTemplateContext with allReadonly[39m[32m 18[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-parameter-complex.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/errors-responses.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 128[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [31m❯[39m tests-snapshot/schemas/complexity/recursive-schema.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 144[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should handle indirect single recursive schemas[32m 79[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should handle recursive array schemas[32m 1[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should handle direct recursive schemas[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m     [31m×[31m should handle multiple recursive references in one root schema[39m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:      [32m✓[39m should generate simple schema and dependencies when recursive schema has $ref to it[32m 47[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-enum-integration.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 181[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/oas-3.0-vs-3.1-feature-parity.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 197[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/getOpenApiDependencyGraph.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/array-default-values.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 122[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-parameter-basic.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 160[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-circular-refs-complex.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 157[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/common-parameters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 99[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/group-strategy-file-multi-props-object-as-query-parameter.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/param-with-content.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/spec-compliance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-all-types.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 90[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/same-schema-different-name.gen.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 95[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/schema-type-list-3.1.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/missing-zod-chains-on-z-object-with-refs-props.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/object-default-values.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 76[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/hyphenated-parameters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 77[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-infer-required-only-item.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 74[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-all-named-schemas.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 103[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/description-in-zod.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 65[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 64[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/anyOf-behavior.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/min-with-max.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 75[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/handle-refs-with-dots-in-name.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/schema-name-already-used.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 90[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-oneOf-anyOf-single-ref.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 89[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/is-main-response.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 108[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/missing-zod-chains.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/allOf-missing-and.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 68[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/jsdoc.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 94[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/number-default-as-number.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 66[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/enum-null.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 80[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/inline-simple-schemas.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 76[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/name-with-special-characters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 59[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/numerical-enum.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 67[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/request-body-ref.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 68[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/array-body-with-chains-tag-group-strategy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 74[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/handle-props-with-special-characters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 68[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/ir/ir-circular-refs-basic.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/openApiToTypescript.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/openApiToZod.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 26[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/integration/getEndpointDefinitionList.test.ts[2m > [22m[2mpetstore.yaml
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` createUser, logoutUser, updateUser
 @oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/getEndpointDefinitionList.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 70[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/enum-null.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 70[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/enum-min-max.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 66[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/name-with-special-characters.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/composition/array-oneOf-discriminated-union.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 63[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/same-schema-different-name.ir.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 19[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/schema-complexity.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/integration/getEndpointDefinitionList.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/schema-type-wrong-case.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/main-description-as-fallback.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 82[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/enum-min-max.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 79[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/export-schemas-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 71[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/name-starting-with-number.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 63[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/same-schema-different-name.ir.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 20[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: [90mstderr[2m | tests-snapshot/spec-compliance/defaut-status-behavior.test.ts[2m > [22m[2mdefaut-status-behavior
 @oaknational/openapi-to-tooling:test:snapshot: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: withDefaultResponse
 @oaknational/openapi-to-tooling:test:snapshot: [WARN] The following endpoints could have had a generic error response added by setting `defaultStatusBehavior` to `auto-correct` withDefaultResponse
 @oaknational/openapi-to-tooling:test:snapshot: 
 @oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/spec-compliance/defaut-status-behavior.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 21[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/parameter-metadata.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/invalid-pattern-regex.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/additionalProperties-is-default.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/schema-refiner.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/ref-in-another-file.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 9[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/validations.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/deps-graph-with-additionalProperties.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/required-additional-props-not-in-properties.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/refine-default-endpoint-callback.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 8[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/strictObjects-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/is-media-type-allowed.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/additionalPropertiesDefaultValue-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/missing-operationId-variables-undefined_Body.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/withImplicitRequired-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/resolve-ref-responses.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/with-deprecated.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/use-union-only-when-multiple-choices.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/complexity/schema-complexity.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 11[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/infer-as-object-when-only-properties-set.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/kebab-case-in-props.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/unicode-pattern-regex.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/regex-with-unnecessary-escape.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/parameter-metadata.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/validations.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/withImplicitRequired-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/handle-refs-without-var-name.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/additionalProperties-is-default.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/types/use-union-only-when-multiple-choices.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/refine-default-endpoint-callback.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/with-deprecated.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/regex-with-unnecessary-escape.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/ref-in-another-file.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/schema-refiner.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/missing-operationId-variables-undefined_Body.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/is-media-type-allowed.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/additionalPropertiesDefaultValue-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/generation/strictObjects-option.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/naming/kebab-case-in-props.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/edge-cases/required-additional-props-not-in-properties.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 8[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/regex-with-escapes.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 9[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/resolve-ref-responses.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/utilities/utils.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/regex-with-escapes.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/param-invalid-spec.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/unicode-pattern-regex.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/schemas/references/deps-graph-with-additionalProperties.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/endpoints/param-invalid-spec.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:  [32m✓[39m tests-snapshot/options/validation/invalid-pattern-regex.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
 @oaknational/openapi-to-tooling:test:snapshot: 
-@oaknational/openapi-to-tooling:test:snapshot: [2m Test Files [22m [1m[32m81 passed[39m[22m[90m (81)[39m
-@oaknational/openapi-to-tooling:test:snapshot: [2m      Tests [22m [1m[32m178 passed[39m[22m[90m (178)[39m
-@oaknational/openapi-to-tooling:test:snapshot: [2m   Start at [22m 20:11:56
-@oaknational/openapi-to-tooling:test:snapshot: [2m   Duration [22m 14.38s[2m (transform 4.79s, setup 0ms, collect 98.11s, tests 7.83s, environment 8ms, prepare 536ms)[22m
+@oaknational/openapi-to-tooling:test:snapshot: [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
 @oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [41m[1m FAIL [22m[49m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22mgetZodClientTemplateContext
+@oaknational/openapi-to-tooling:test:snapshot: [31m[1mError[22m: Snapshot `getZodClientTemplateContext 1` mismatched[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [32m- Expected[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+ Received[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -32,12 +32,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "complete": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -205,12 +206,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "address": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "items": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "$ref": "#/components/schemas/Address",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -326,12 +328,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "city": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "examples": [[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "Palo Alto",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -452,12 +455,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "id": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "examples": [[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      1,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "format": "int64",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -537,12 +541,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "email": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "examples": [[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "john@email.com",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -751,12 +756,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "id": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "format": "int64",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -830,12 +836,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "category": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "$ref": "#/components/schemas/Category",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -1033,12 +1040,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "code": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "format": "int32",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -1096,10 +1104,133 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      "required": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      "type": "object",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                  },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                  "type": "schema",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "petstore_auth",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "scheme": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "flows": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "implicit": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "scopes": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "read:pets": "read your pets",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "write:pets": "modify pets in your account",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "type": "oauth2",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "securityScheme",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "api_key",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "scheme": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "in": "header",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "name": "api_key",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "type": "apiKey",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "securityScheme",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "Pet",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "requestBody": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "content": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "application/json": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "schema": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "$ref": "#/components/schemas/Pet",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "application/xml": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "schema": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "$ref": "#/components/schemas/Pet",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "description": "Pet object that needs to be added to the store",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "requestBody",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "UserArray",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "requestBody": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "content": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "application/json": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "schema": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "items": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "$ref": "#/components/schemas/User",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "type": "array",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "description": "List of user object",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "requestBody",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m              },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m          ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m          "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m              "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m              "nodes": Map {},[22m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [36m [2m❯[22m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts:[2m17:18[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m 15| [39m[34mtest[39m([32m'getZodClientTemplateContext'[39m[33m,[39m () [33m=>[39m {
+@oaknational/openapi-to-tooling:test:snapshot:     [90m 16| [39m  [35mconst[39m result [33m=[39m [34mgetZodClientTemplateContext[39m(openApiDoc)[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m 17| [39m  [34mexpect[39m(result)[33m.[39m[34mtoMatchSnapshot[39m()[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m   | [39m                 [31m^[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m 18| [39m})[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m 19| [39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [41m[1m FAIL [22m[49m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22mwith optional, partial, all required objects
+@oaknational/openapi-to-tooling:test:snapshot: [31m[1mError[22m: Snapshot `with optional, partial, all required objects 1` mismatched[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [32m- Expected[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+ Received[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -36,12 +36,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "nb": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -176,12 +177,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "circularToRoot": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "$ref": "#/components/schemas/Root2",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -292,12 +294,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "another": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -471,12 +474,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "nb": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -604,12 +608,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "circularToRoot": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                  "$ref": "#/components/schemas/Root2",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [36m [2m❯[22m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts:[2m207:16[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m205| [39m  [35mconst[39m data [33m=[39m [34mgetZodClientTemplateContext[39m(openApiDoc)[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m206| [39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m207| [39m  [34mexpect[39m(data)[33m.[39m[34mtoMatchSnapshot[39m()[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m   | [39m               [31m^[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m208| [39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m209| [39m  const prettyOutput = await generateZodClientFromOpenAPI({ openApiDoc…
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [41m[1m FAIL [22m[49m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts[2m > [22mgetZodClientTemplateContext with allReadonly
+@oaknational/openapi-to-tooling:test:snapshot: [31m[1mError[22m: Snapshot `getZodClientTemplateContext with allReadonly 1` mismatched[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [32m- Expected[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+ Received[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -32,12 +32,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "complete": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -205,12 +206,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "address": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "items": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "$ref": "#/components/schemas/Address",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -326,12 +328,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "city": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "examples": [[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "Palo Alto",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -452,12 +455,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "id": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "examples": [[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      1,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "format": "int64",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -537,12 +541,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "email": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "examples": [[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "john@email.com",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -751,12 +756,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "id": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "format": "int64",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -830,12 +836,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "category": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "$ref": "#/components/schemas/Category",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -1033,12 +1040,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "code": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "format": "int32",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -1096,10 +1104,133 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      "required": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      "type": "object",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                  },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                  "type": "schema",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "petstore_auth",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "scheme": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "flows": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "implicit": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "scopes": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "read:pets": "read your pets",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "write:pets": "modify pets in your account",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "type": "oauth2",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "securityScheme",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "api_key",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "scheme": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "in": "header",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "name": "api_key",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "type": "apiKey",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "securityScheme",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "Pet",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "requestBody": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "content": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "application/json": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "schema": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "$ref": "#/components/schemas/Pet",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "application/xml": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "schema": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "$ref": "#/components/schemas/Pet",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "description": "Pet object that needs to be added to the store",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "requestBody",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+             {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "name": "UserArray",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "requestBody": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "content": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "application/json": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             "schema": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "items": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "$ref": "#/components/schemas/User",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                             "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "metadata": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "circularReferences": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "dependencyGraph": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "depth": 0,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "referencedBy": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "references": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "nullable": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "zodChain": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "defaults": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "presence": "optional",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "validations": [],[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                 "type": "array",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                             },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "description": "List of user object",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "required": false,[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 },[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                 "type": "requestBody",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m              },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m          ],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m          "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m              "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m              "nodes": Map {},[22m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [36m [2m❯[22m tests-snapshot/integration/generateZodClientFromOpenAPI.test.ts:[2m218:18[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m216| [39m    allReadonly[33m:[39m [35mtrue[39m[33m,[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m217| [39m  })[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m218| [39m  [34mexpect[39m(result)[33m.[39m[34mtoMatchSnapshot[39m()[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m   | [39m                 [31m^[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m219| [39m})[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m220| [39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [41m[1m FAIL [22m[49m tests-snapshot/schemas/complexity/recursive-schema.test.ts[2m > [22mrecursive-schema - multiple recursive in one root schema[2m > [22mshould handle multiple recursive references in one root schema
+@oaknational/openapi-to-tooling:test:snapshot: [31m[1mError[22m: Snapshot `recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 4` mismatched[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [32m- Expected[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+ Received[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -36,12 +36,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "name": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -120,12 +121,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "bestFriend": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "$ref": "#/components/schemas/Friend",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -258,12 +260,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "circle": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "items": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "$ref": "#/components/schemas/Friend",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -376,12 +379,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "basic": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -458,12 +462,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                              "array": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                  "items": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "$ref": "#/components/schemas/ObjectWithRecursiveArray",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [33m@@ -558,12 +563,13 @@[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "defaults": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "presence": "optional",[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "validations": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                          },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                      },[22m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                                     "properties": IRSchemaProperties {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [32m-                                         "props": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                     "properties": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "dataType": "IRSchemaProperties",[39m
+@oaknational/openapi-to-tooling:test:snapshot: [31m+                                         "value": {[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                              "someProp": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                  "metadata": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                      "circularReferences": [],[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                      "dependencyGraph": {[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m                                                          "depth": 0,[22m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [36m [2m❯[22m tests-snapshot/schemas/complexity/recursive-schema.test.ts:[2m244:25[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m242| [39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m243| [39m    [35mconst[39m templateCtx [33m=[39m [34mgetZodClientTemplateContext[39m(openApiDoc)[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m244| [39m    [34mexpect[39m(templateCtx)[33m.[39m[34mtoMatchSnapshot[39m()[33m;[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m   | [39m                        [31m^[39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m245| [39m
+@oaknational/openapi-to-tooling:test:snapshot:     [90m246| [39m    [35mconst[39m prettyOutput [33m=[39m [35mawait[39m [34mgenerateZodClientFromOpenAPI[39m({
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [2m  Snapshots [22m [1m[31m4 failed[39m[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m            [22m [1m[33m2 obsolete[39m[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m            [22m [90m↳[39m [2mtests-snapshot/integration/[22m[1mgenerateZodClientFromOpenAPI[22m[2m.test.ts[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m            [22m   [90m·[39m with optional, partial, all required objects 2
+@oaknational/openapi-to-tooling:test:snapshot: [2m            [22m [90m↳[39m [2mtests-snapshot/schemas/complexity/[22m[1mrecursive-schema[22m[2m.test.ts[22m
+@oaknational/openapi-to-tooling:test:snapshot: [2m            [22m   [90m·[39m recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 5
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot: [2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m79 passed[39m[22m[90m (81)[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m174 passed[39m[22m[90m (178)[39m
+@oaknational/openapi-to-tooling:test:snapshot: [2m   Start at [22m 12:46:54
+@oaknational/openapi-to-tooling:test:snapshot: [2m   Duration [22m 21.30s[2m (transform 6.74s, setup 0ms, collect 159.36s, tests 7.20s, environment 10ms, prepare 712ms)[22m
+@oaknational/openapi-to-tooling:test:snapshot: 
+@oaknational/openapi-to-tooling:test:snapshot:  ELIFECYCLE  Command failed with exit code 1.
+@oaknational/openapi-to-tooling:test:snapshot: ERROR: command finished with error: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run test:snapshot exited (1)
+@oaknational/openapi-to-tooling#test:snapshot: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run test:snapshot exited (1)
 
- Tasks:    1 successful, 1 total
+ Tasks:    0 successful, 1 total
 Cached:    0 cached, 1 total
-  Time:    15.14s 
+  Time:    22.631s 
+Failed:    @oaknational/openapi-to-tooling#test:snapshot
 
-
-> openapi-to-tooling-monorepo@0.0.0-development test:gen /Users/jim/code/personal/openapi-zod-client
-> turbo test:gen
-
-turbo 2.5.8
-
-• Packages in scope: @oaknational/openapi-to-tooling
-• Running test:gen in 1 packages
-• Remote caching disabled
-@oaknational/openapi-to-tooling:test:gen: cache bypass, force executing 390fb896f5b7872f
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: > @oaknational/openapi-to-tooling@1.18.3 test:gen /Users/jim/code/personal/openapi-zod-client/lib
-@oaknational/openapi-to-tooling:test:gen: > vitest run --config vitest.generated.config.ts
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: [1m[46m RUN [49m[22m [36mv4.0.3 [39m[90m/Users/jim/code/personal/openapi-zod-client/lib[39m
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: [90mstderr[2m | tests-generated/runtime-validation.gen.test.ts[2m > [22m[2mGenerated Code - Runtime Validation[2m > [22m[2mpetstore (Complex objects with nested structures, allOf compositions)
-@oaknational/openapi-to-tooling:test:gen: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen:  [32m✓[39m [30m[45m generated-code-validation [49m[39m tests-generated/runtime-validation.gen.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 220[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen: [90mstderr[2m | tests-generated/syntax-validation.gen.test.ts[2m > [22m[2mGenerated Code - Syntax Validation[2m > [22m[2m'petstore' ('Complex objects with nested structure…')
-@oaknational/openapi-to-tooling:test:gen: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: [90mstderr[2m | tests-generated/type-check-validation.gen.test.ts[2m > [22m[2mGenerated Code - Type-Check Validation[2m > [22m[2m'petstore' ('Complex objects with nested structure…')
-@oaknational/openapi-to-tooling:test:gen: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: [90mstderr[2m | tests-generated/lint-validation.gen.test.ts[2m > [22m[2mGenerated Code - Lint Validation[2m > [22m[2m'petstore' ('Complex objects with nested structure…')
-@oaknational/openapi-to-tooling:test:gen: [22m[39m[WARN] The following endpoints have no status code other than `default` and were ignored as the OpenAPI spec recommends. However they could be added by setting `defaultStatusBehavior` to `auto-correct`: 
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen:  [32m✓[39m [30m[45m generated-code-validation [49m[39m tests-generated/lint-validation.gen.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1785[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates lint-compliant code [33m 1353[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:  [32m✓[39m [30m[45m generated-code-validation [49m[39m tests-generated/syntax-validation.gen.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2366[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates syntactically valid TypeScript [33m 651[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates syntactically valid TypeScript [33m 369[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates syntactically valid TypeScript [33m 308[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates syntactically valid TypeScript [33m 562[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:  [32m✓[39m [30m[45m generated-code-validation [49m[39m tests-generated/type-check-validation.gen.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3110[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates type-safe code (no type errors) [33m 836[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates type-safe code (no type errors) [33m 506[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates type-safe code (no type errors) [33m 626[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates type-safe code (no type errors) [33m 367[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen:        [33m[2m✓[22m[39m generates type-safe code (no type errors) [33m 542[2mms[22m[39m
-@oaknational/openapi-to-tooling:test:gen: 
-@oaknational/openapi-to-tooling:test:gen: [2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
-@oaknational/openapi-to-tooling:test:gen: [2m      Tests [22m [1m[32m20 passed[39m[22m[90m (20)[39m
-@oaknational/openapi-to-tooling:test:gen: [2m   Start at [22m 20:12:12
-@oaknational/openapi-to-tooling:test:gen: [2m   Duration [22m 4.55s[2m (transform 1.78s, setup 0ms, collect 5.19s, tests 7.48s, environment 0ms, prepare 16ms)[22m
-@oaknational/openapi-to-tooling:test:gen: 
-
- Tasks:    1 successful, 1 total
-Cached:    0 cached, 1 total
-  Time:    5.363s 
-
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.

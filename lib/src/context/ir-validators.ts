@@ -27,7 +27,7 @@
 /* eslint-disable complexity */
 
 import type { IRComponent, IRDocument, IROperation, IRSchema, IRSchemaNode } from './ir-schema.js';
-import { IRSchemaProperties } from './ir-schema-properties.js';
+import { IRSchemaProperties } from './ir-schema.js';
 
 /**
  * Type guard for IRDocument.
@@ -95,20 +95,29 @@ export function isIRComponent(value: unknown): value is IRComponent {
 
   const obj = value as Record<string, unknown>;
 
-  // Validate type discriminator
-  const validTypes = ['schema', 'response', 'parameter', 'requestBody'];
-  if (typeof obj['type'] !== 'string' || !validTypes.includes(obj['type'])) {
+  if (typeof obj['name'] !== 'string') {
     return false;
   }
 
-  // Validate required fields
-  return (
-    typeof obj['name'] === 'string' &&
-    obj['schema'] != null &&
-    typeof obj['schema'] === 'object' &&
-    obj['metadata'] != null &&
-    typeof obj['metadata'] === 'object'
-  );
+  switch (obj['type']) {
+    case 'schema':
+      return (
+        obj['schema'] != null &&
+        typeof obj['schema'] === 'object' &&
+        obj['metadata'] != null &&
+        typeof obj['metadata'] === 'object'
+      );
+    case 'parameter':
+      return obj['parameter'] != null && typeof obj['parameter'] === 'object';
+    case 'response':
+      return obj['response'] != null && typeof obj['response'] === 'object';
+    case 'requestBody':
+      return obj['requestBody'] != null && typeof obj['requestBody'] === 'object';
+    case 'securityScheme':
+      return obj['scheme'] != null && typeof obj['scheme'] === 'object';
+    default:
+      return false;
+  }
 }
 
 /**

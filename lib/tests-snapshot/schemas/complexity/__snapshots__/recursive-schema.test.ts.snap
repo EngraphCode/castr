@@ -570,8 +570,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "name": {
                                 "metadata": {
                                     "circularReferences": [],
@@ -654,8 +655,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "bestFriend": {
                                 "$ref": "#/components/schemas/Friend",
                                 "metadata": {
@@ -792,8 +794,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "circle": {
                                 "items": {
                                     "$ref": "#/components/schemas/Friend",
@@ -910,8 +913,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "basic": {
                                 "metadata": {
                                     "circularReferences": [],
@@ -992,8 +996,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "array": {
                                 "items": {
                                     "$ref": "#/components/schemas/ObjectWithRecursiveArray",
@@ -1092,8 +1097,9 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                             "validations": [],
                                         },
                                     },
-                                    "properties": IRSchemaProperties {
-                                        "props": {
+                                    "properties": {
+                                        "dataType": "IRSchemaProperties",
+                                        "value": {
                                             "someProp": {
                                                 "metadata": {
                                                     "circularReferences": [],

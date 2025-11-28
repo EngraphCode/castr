@@ -53,24 +53,53 @@ export function buildIRParameters(
 }
 
 /**
- * Build a single IR parameter from an OpenAPI parameter object.
- *
- * @param param - OpenAPI parameter object or reference
- * @param context - Build context for schema resolution
- * @returns IR parameter structure
- *
+ * Build a single IR parameter from a parameter object or reference.
  * @internal
  */
-function buildSingleParameter(
+export function buildSingleParameter(
   param: ParameterObject | ReferenceObject,
   context: IRBuildContext,
 ): IRParameter {
-  // Handle $ref parameters (for now, just skip - will enhance later)
+  // Handle $ref parameters
   if (isReferenceObject(param)) {
+    const resolved = resolveParameter(param, context);
+    if (resolved) {
+      return buildConcreteParameter(resolved, context);
+    }
     return createPlaceholderParameter(context);
   }
 
   return buildConcreteParameter(param, context);
+}
+
+/**
+ * Resolve a parameter reference.
+ *
+ * @param ref - Reference object
+ * @param context - Build context containing the full document
+ * @returns Resolved parameter object or undefined if not found
+ */
+function resolveParameter(
+  ref: ReferenceObject,
+  context: IRBuildContext,
+): ParameterObject | undefined {
+  const refPath = ref.$ref;
+  if (!refPath.startsWith('#/components/parameters/')) {
+    return undefined;
+  }
+
+  const paramName = refPath.split('/').pop();
+  if (!paramName || !context.doc.components?.parameters) {
+    return undefined;
+  }
+
+  const param = context.doc.components.parameters[paramName];
+  if (isReferenceObject(param)) {
+    // Recursive resolution (though typically parameters aren't nested refs)
+    return resolveParameter(param, context);
+  }
+
+  return param;
 }
 
 /**
@@ -106,7 +135,7 @@ function createPlaceholderParameter(context: IRBuildContext): IRParameter {
 function buildConcreteParameter(param: ParameterObject, context: IRBuildContext): IRParameter {
   const parameterContext: IRBuildContext = {
     ...context,
-    required: param.required ?? false,
+    required: param.required ?? param.in === 'path',
     path: [...context.path, param.name],
   };
 

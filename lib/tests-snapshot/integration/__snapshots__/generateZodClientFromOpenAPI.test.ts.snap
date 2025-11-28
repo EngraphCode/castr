@@ -13197,8 +13197,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "complete": {
                                 "metadata": {
                                     "circularReferences": [],
@@ -13370,8 +13371,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "address": {
                                 "items": {
                                     "$ref": "#/components/schemas/Address",
@@ -13491,8 +13493,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "city": {
                                 "examples": [
                                     "Palo Alto",
@@ -13617,8 +13620,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "id": {
                                 "examples": [
                                     1,
@@ -13702,8 +13706,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "email": {
                                 "examples": [
                                     "john@email.com",
@@ -13916,8 +13921,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "id": {
                                 "format": "int64",
                                 "metadata": {
@@ -13995,8 +14001,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "category": {
                                 "$ref": "#/components/schemas/Category",
                                 "metadata": {
@@ -14198,8 +14205,9 @@ exports[`getZodClientTemplateContext 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "code": {
                                 "format": "int32",
                                 "metadata": {
@@ -14261,6 +14269,129 @@ exports[`getZodClientTemplateContext 1`] = `
                     "type": "object",
                 },
                 "type": "schema",
+            },
+            {
+                "name": "petstore_auth",
+                "scheme": {
+                    "flows": {
+                        "implicit": {
+                            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+                            "scopes": {
+                                "read:pets": "read your pets",
+                                "write:pets": "modify pets in your account",
+                            },
+                        },
+                    },
+                    "type": "oauth2",
+                },
+                "type": "securityScheme",
+            },
+            {
+                "name": "api_key",
+                "scheme": {
+                    "in": "header",
+                    "name": "api_key",
+                    "type": "apiKey",
+                },
+                "type": "securityScheme",
+            },
+            {
+                "name": "Pet",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                        "application/xml": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "description": "Pet object that needs to be added to the store",
+                    "required": false,
+                },
+                "type": "requestBody",
+            },
+            {
+                "name": "UserArray",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "items": {
+                                    "$ref": "#/components/schemas/User",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                        },
+                    },
+                    "description": "List of user object",
+                    "required": false,
+                },
+                "type": "requestBody",
             },
         ],
         "dependencyGraph": {
@@ -18899,8 +19030,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "complete": {
                                 "metadata": {
                                     "circularReferences": [],
@@ -19072,8 +19204,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "address": {
                                 "items": {
                                     "$ref": "#/components/schemas/Address",
@@ -19193,8 +19326,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "city": {
                                 "examples": [
                                     "Palo Alto",
@@ -19319,8 +19453,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "id": {
                                 "examples": [
                                     1,
@@ -19404,8 +19539,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "email": {
                                 "examples": [
                                     "john@email.com",
@@ -19618,8 +19754,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "id": {
                                 "format": "int64",
                                 "metadata": {
@@ -19697,8 +19834,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "category": {
                                 "$ref": "#/components/schemas/Category",
                                 "metadata": {
@@ -19900,8 +20038,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "code": {
                                 "format": "int32",
                                 "metadata": {
@@ -19963,6 +20102,129 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     "type": "object",
                 },
                 "type": "schema",
+            },
+            {
+                "name": "petstore_auth",
+                "scheme": {
+                    "flows": {
+                        "implicit": {
+                            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+                            "scopes": {
+                                "read:pets": "read your pets",
+                                "write:pets": "modify pets in your account",
+                            },
+                        },
+                    },
+                    "type": "oauth2",
+                },
+                "type": "securityScheme",
+            },
+            {
+                "name": "api_key",
+                "scheme": {
+                    "in": "header",
+                    "name": "api_key",
+                    "type": "apiKey",
+                },
+                "type": "securityScheme",
+            },
+            {
+                "name": "Pet",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                        "application/xml": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "description": "Pet object that needs to be added to the store",
+                    "required": false,
+                },
+                "type": "requestBody",
+            },
+            {
+                "name": "UserArray",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "items": {
+                                    "$ref": "#/components/schemas/User",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                        },
+                    },
+                    "description": "List of user object",
+                    "required": false,
+                },
+                "type": "requestBody",
             },
         ],
         "dependencyGraph": {
@@ -24605,8 +24867,9 @@ exports[`with optional, partial, all required objects 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "nb": {
                                 "metadata": {
                                     "circularReferences": [],
@@ -24745,8 +25008,9 @@ exports[`with optional, partial, all required objects 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "circularToRoot": {
                                 "$ref": "#/components/schemas/Root2",
                                 "metadata": {
@@ -24861,8 +25125,9 @@ exports[`with optional, partial, all required objects 1`] = `
                             "validations": [],
                         },
                     },
-                    "properties": IRSchemaProperties {
-                        "props": {
+                    "properties": {
+                        "dataType": "IRSchemaProperties",
+                        "value": {
                             "another": {
                                 "metadata": {
                                     "circularReferences": [],
@@ -25040,8 +25305,9 @@ exports[`with optional, partial, all required objects 1`] = `
                                             "validations": [],
                                         },
                                     },
-                                    "properties": IRSchemaProperties {
-                                        "props": {
+                                    "properties": {
+                                        "dataType": "IRSchemaProperties",
+                                        "value": {
                                             "nb": {
                                                 "metadata": {
                                                     "circularReferences": [],
@@ -25173,8 +25439,9 @@ exports[`with optional, partial, all required objects 1`] = `
                                             "validations": [],
                                         },
                                     },
-                                    "properties": IRSchemaProperties {
-                                        "props": {
+                                    "properties": {
+                                        "dataType": "IRSchemaProperties",
+                                        "value": {
                                             "circularToRoot": {
                                                 "$ref": "#/components/schemas/Root2",
                                                 "metadata": {

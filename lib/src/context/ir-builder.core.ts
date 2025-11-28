@@ -18,7 +18,7 @@
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { IRSchema, IRSchemaNode } from './ir-schema.js';
-import { IRSchemaProperties } from './ir-schema-properties.js';
+import { IRSchemaProperties } from './ir-schema.js';
 import type { IRBuildContext } from './ir-builder.types.js';
 
 /**
@@ -132,13 +132,39 @@ function addDocumentation(schema: SchemaObject, irSchema: IRSchema): void {
 }
 
 /** @internal */
+/** @internal */
 function addConstraints(schema: SchemaObject, irSchema: IRSchema): void {
+  addNumericConstraints(schema, irSchema);
+  addStringConstraints(schema, irSchema);
+  addArrayConstraints(schema, irSchema);
+
+  // Preserve enum values (critical for data integrity)
+  if (schema.enum !== undefined && Array.isArray(schema.enum)) {
+    irSchema.enum = Array.from(schema.enum);
+  }
+}
+
+/** @internal */
+function addNumericConstraints(schema: SchemaObject, irSchema: IRSchema): void {
   if (schema.minimum !== undefined) {
     irSchema.minimum = schema.minimum;
   }
   if (schema.maximum !== undefined) {
     irSchema.maximum = schema.maximum;
   }
+  if (schema.exclusiveMinimum !== undefined) {
+    irSchema.exclusiveMinimum = schema.exclusiveMinimum;
+  }
+  if (schema.exclusiveMaximum !== undefined) {
+    irSchema.exclusiveMaximum = schema.exclusiveMaximum;
+  }
+  if (schema.multipleOf !== undefined) {
+    irSchema.multipleOf = schema.multipleOf;
+  }
+}
+
+/** @internal */
+function addStringConstraints(schema: SchemaObject, irSchema: IRSchema): void {
   if (schema.minLength !== undefined) {
     irSchema.minLength = schema.minLength;
   }
@@ -148,9 +174,18 @@ function addConstraints(schema: SchemaObject, irSchema: IRSchema): void {
   if (schema.pattern !== undefined) {
     irSchema.pattern = schema.pattern;
   }
-  // Preserve enum values (critical for data integrity)
-  if (schema.enum !== undefined && Array.isArray(schema.enum)) {
-    irSchema.enum = Array.from(schema.enum);
+}
+
+/** @internal */
+function addArrayConstraints(schema: SchemaObject, irSchema: IRSchema): void {
+  if (schema.minItems !== undefined) {
+    irSchema.minItems = schema.minItems;
+  }
+  if (schema.maxItems !== undefined) {
+    irSchema.maxItems = schema.maxItems;
+  }
+  if (schema.uniqueItems !== undefined) {
+    irSchema.uniqueItems = schema.uniqueItems;
   }
 }
 

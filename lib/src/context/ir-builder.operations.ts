@@ -9,10 +9,9 @@
  */
 
 import type {
-  PathsObject,
+  OpenAPIObject,
   PathItemObject,
   OperationObject,
-  OpenAPIObject,
   SecurityRequirementObject,
 } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
@@ -47,16 +46,16 @@ import { buildIRResponses } from './ir-builder.responses.js';
  *
  * @internal
  */
-export function buildIROperations(paths: PathsObject | undefined): IROperation[] {
-  if (!paths) {
+export function buildIROperations(doc: OpenAPIObject): IROperation[] {
+  if (!doc.paths) {
     return [];
   }
 
   const operations: IROperation[] = [];
 
-  for (const [path, pathItem] of Object.entries(paths)) {
+  for (const [path, pathItem] of Object.entries(doc.paths)) {
     if (pathItem) {
-      const pathOperations = extractPathOperations(path, pathItem);
+      const pathOperations = extractPathOperations(path, pathItem, doc);
       operations.push(...pathOperations);
     }
   }
@@ -68,7 +67,11 @@ export function buildIROperations(paths: PathsObject | undefined): IROperation[]
  * Extract all operations for a single path.
  * @internal
  */
-function extractPathOperations(path: string, pathItem: PathItemObject): IROperation[] {
+function extractPathOperations(
+  path: string,
+  pathItem: PathItemObject,
+  doc: OpenAPIObject,
+): IROperation[] {
   const operations: IROperation[] = [];
   const httpMethods: HttpMethod[] = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
 
@@ -78,7 +81,20 @@ function extractPathOperations(path: string, pathItem: PathItemObject): IROperat
       continue;
     }
 
-    const irOperation = buildIROperation(method, path, operation);
+    // Merge path-level parameters with operation-level parameters
+    // Operation-level parameters take precedence (though usually they are distinct)
+    const mergedParameters = [...(pathItem.parameters || []), ...(operation.parameters || [])];
+
+    // Create a new operation object with merged parameters to avoid mutating the original
+    const operationWithoutParams = { ...operation };
+    delete operationWithoutParams.parameters;
+
+    const operationWithParams: OperationObject = {
+      ...operationWithoutParams,
+      ...(mergedParameters.length > 0 ? { parameters: mergedParameters } : {}),
+    };
+
+    const irOperation = buildIROperation(method, path, operationWithParams, doc);
     operations.push(irOperation);
   }
 
@@ -94,7 +110,7 @@ function extractPathOperations(path: string, pathItem: PathItemObject): IROperat
  * @param method - HTTP method for this operation
  * @param path - API path with parameter placeholders
  * @param operation - OpenAPI operation object
- * @param components - OpenAPI components for reference resolution
+ * @param doc - Full OpenAPI document for reference resolution
  * @returns IR operation with extracted metadata
  *
  * @internal
@@ -103,15 +119,11 @@ function buildIROperation(
   method: HttpMethod,
   path: string,
   operation: OperationObject,
+  doc: OpenAPIObject,
 ): IROperation {
   // Build minimal context for schema resolution
-  const minimalDoc: OpenAPIObject = {
-    openapi: '3.1.0',
-    info: { title: '', version: '' },
-  };
-
   const context: IRBuildContext = {
-    doc: minimalDoc,
+    doc,
     path: [path, method],
     required: false,
   };

@@ -24,177 +24,236 @@
  * @public
  */
 
-import type { InfoObject, ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
+import type {
+  InfoObject,
+  ParameterObject,
+  SchemaObject,
+  SecuritySchemeObject,
+  ReferenceObject,
+} from 'openapi3-ts/oas31';
 
-import type { HttpMethod } from '../endpoints/definition.types.js';
-import type { IRSchemaProperties } from './ir-schema-properties.js';
+// ... existing imports ...
+
+export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
 
 /**
- * Top-level Information Retrieval document for an OpenAPI specification.
+ * Map of property names to their schemas.
+ */
+/**
+ * Type-safe wrapper for IRSchema properties.
  *
- * Captures all retrieved information from an OpenAPI specification in a lossless format
- * optimized for code generation. Includes document metadata, reusable components,
- * endpoint operations, and a dependency graph for reference tracking.
+ * Provides checked access to dynamic property names without exposing
+ * index signature types that pollute the type system.
  *
  * @example
  * ```typescript
- * const ir: IRDocument = {
- *   version: '1.0.0',
- *   openApiVersion: '3.1.0',
- *   info: {
- *     title: 'Pet Store API',
- *     version: '1.0.0',
- *   },
- *   components: [
- *     {
- *       type: 'schema',
- *       name: 'Pet',
- *       schema: { ... },
- *       metadata: { ... },
- *     },
- *   ],
- *   operations: [ ... ],
- *   dependencyGraph: { ... },
- * };
+ * const props = new IRSchemaProperties({
+ *   name: { type: 'string', metadata: {...} },
+ *   age: { type: 'number', metadata: {...} },
+ * });
+ *
+ * const nameSchema = props.get('name'); // IRSchema | undefined
+ * if (props.has('email')) {
+ *   // Safe to access
+ * }
  * ```
  *
- * @see {@link IRComponent} for component definitions
- * @see {@link IROperation} for endpoint operations
- * @see {@link IRDependencyGraph} for dependency tracking
- *
  * @public
  */
-export interface IRDocument {
-  /**
-   * IR schema version (follows semver).
-   * Used to detect incompatibilities between IR producers and consumers.
-   */
-  version: string;
+export class IRSchemaProperties {
+  private readonly props: Record<string, IRSchema>;
 
   /**
-   * Original OpenAPI specification version (e.g., '3.0.3', '3.1.0').
-   * Preserved for debugging and version-specific handling.
+   * Create a new IRSchemaProperties wrapper.
+   *
+   * @param properties - The properties record to wrap
    */
-  openApiVersion: string;
+  constructor(properties: Record<string, IRSchema> = {}) {
+    this.props = properties;
+  }
 
   /**
-   * API metadata from OpenAPI info object.
-   * Includes title, version, description, contact, license, etc.
+   * Get property by name with type-safe undefined handling.
+   *
+   * @param name - Property name to retrieve
+   * @returns The schema for the property, or undefined if not found
+   *
+   * @example
+   * ```typescript
+   * const nameSchema = properties.get('name');
+   * if (nameSchema) {
+   *   console.log(nameSchema.type);
+   * }
+   * ```
    */
-  info: IRInfo;
+  get(name: string): IRSchema | undefined {
+    return this.props[name];
+  }
 
   /**
-   * Reusable component definitions (schemas, responses, parameters, requestBodies).
-   * Corresponds to OpenAPI components section.
+   * Check if property exists.
+   *
+   * @param name - Property name to check
+   * @returns True if property exists, false otherwise
+   *
+   * @example
+   * ```typescript
+   * if (properties.has('email')) {
+   *   const emailSchema = properties.get('email')!;
+   * }
+   * ```
    */
-  components: IRComponent[];
+  has(name: string): boolean {
+    return name in this.props;
+  }
 
   /**
-   * All endpoint operations extracted from paths object.
-   * Each operation represents a unique method + path combination.
+   * Get all property names.
+   *
+   * @returns Array of property names
+   *
+   * @example
+   * ```typescript
+   * const names = properties.keys(); // ['name', 'age', 'email']
+   * ```
    */
-  operations: IROperation[];
+  keys(): string[] {
+    return Object.keys(this.props);
+  }
 
   /**
-   * Dependency graph tracking schema references and circular dependencies.
-   * Used for topological sorting and z.lazy() generation.
+   * Get all properties as entries.
+   *
+   * @returns Array of [name, schema] tuples
+   *
+   * @example
+   * ```typescript
+   * for (const [name, schema] of properties.entries()) {
+   *   console.log(`${name}: ${schema.type}`);
+   * }
+   * ```
    */
-  dependencyGraph: IRDependencyGraph;
-}
+  entries(): [string, IRSchema][] {
+    return Object.entries(this.props);
+  }
 
-/**
- * API metadata from OpenAPI info object.
- *
- * Contains descriptive information about the API including title, version,
- * description, terms of service, contact information, and license.
- *
- * @see {@link https://spec.openapis.org/oas/v3.1.0#info-object OpenAPI Info Object}
- * @public
- */
-export interface IRInfo {
-  /** API title (required in OpenAPI) */
-  title: string;
+  /**
+   * Returns all property values as an array.
+   *
+   * @returns Array of IR schemas for all properties
+   *
+   * @example
+   * ```typescript
+   * const schemas = properties.values(); // [IRSchema, IRSchema, ...]
+   * for (const schema of properties.values()) {
+   *   console.log(schema.type);
+   * }
+   * ```
+   */
+  values(): IRSchema[] {
+    return Object.values(this.props);
+  }
 
-  /** API version string (required in OpenAPI) */
-  version: string;
+  /**
+   * Get raw properties record (for serialization).
+   *
+   * Returns a shallow copy to prevent external mutation.
+   *
+   * @returns Copy of the internal properties record
+   *
+   * @example
+   * ```typescript
+   * const record = properties.toRecord();
+   * JSON.stringify(record); // Safe serialization
+   * ```
+   */
+  toRecord(): Record<string, IRSchema> {
+    return { ...this.props };
+  }
 
-  /** API description (markdown supported) */
-  description?: string;
+  /**
+   * Get the number of properties.
+   *
+   * @returns Number of properties in the collection
+   */
+  get size(): number {
+    return Object.keys(this.props).length;
+  }
 
-  /** Terms of service URL */
-  termsOfService?: string;
-
-  /** Contact information for the API */
-  contact?: InfoObject['contact'];
-
-  /** License information for the API */
-  license?: InfoObject['license'];
-
-  /** Additional summary of the API (OAS 3.1.0+) */
-  summary?: string;
+  /**
+   * Custom serialization for JSON.stringify.
+   *
+   * Serializes to a structure that can be revived by deserializeIR.
+   *
+   * @returns Serialization structure with metadata
+   */
+  toJSON(): { dataType: 'IRSchemaProperties'; value: Record<string, IRSchema> } {
+    return {
+      dataType: 'IRSchemaProperties',
+      value: this.props,
+    };
+  }
 }
 
 /**
  * Reusable component definition from OpenAPI components section.
- *
- * Represents schemas, responses, parameters, and request bodies that can be
- * referenced throughout the OpenAPI document. Each component has a unique name
- * and type, along with the schema definition and generation metadata.
- *
- * @example
- * ```typescript
- * const component: IRComponent = {
- *   type: 'schema',
- *   name: 'User',
- *   schema: {
- *     type: 'object',
- *     properties: {
- *       id: { type: 'string', metadata: { required: false, nullable: false, ... } },
- *       name: { type: 'string', metadata: { required: true, nullable: false, ... } },
- *     },
- *     metadata: { required: false, nullable: false, ... },
- *   },
- *   metadata: { required: false, nullable: false, ... },
- * };
- * ```
- *
- * @see {@link IRSchema} for schema structure
- * @see {@link IRSchemaNode} for metadata
- *
- * @public
  */
-export interface IRComponent {
+export type IRComponent =
+  | IRSchemaComponent
+  | IRSecuritySchemeComponent
+  | IRParameterComponent
+  | IRResponseComponent
+  | IRRequestBodyComponent;
+
+export interface IRSchemaComponent {
   /**
    * Component type discriminator.
-   * Determines how the component is used and referenced.
    */
-  type: 'schema' | 'response' | 'parameter' | 'requestBody';
+  type: 'schema';
 
   /**
    * Component name from #/components/{type}/{name}.
-   * Used for reference resolution and code generation.
-   *
-   * @example 'Pet', 'ErrorResponse', 'PageParam'
    */
   name: string;
 
   /**
    * The actual schema definition.
-   * Structure depends on component type.
    */
   schema: IRSchema;
 
   /**
    * Rich metadata for code generation.
-   * Includes required status, nullable handling, circular refs, etc.
    */
   metadata: IRSchemaNode;
 
   /**
    * Original OpenAPI description.
-   * Preserved for TSDoc and code comments.
    */
   description?: string;
+}
+
+export interface IRSecuritySchemeComponent {
+  type: 'securityScheme';
+  name: string;
+  scheme: SecuritySchemeObject | ReferenceObject;
+}
+
+export interface IRParameterComponent {
+  type: 'parameter';
+  name: string;
+  parameter: IRParameter;
+}
+
+export interface IRResponseComponent {
+  type: 'response';
+  name: string;
+  response: IRResponse;
+}
+
+export interface IRRequestBodyComponent {
+  type: 'requestBody';
+  name: string;
+  requestBody: IRRequestBody;
 }
 
 /**
@@ -1066,4 +1125,66 @@ export interface IRDependencyNode {
    * Whether this schema is part of a circular reference.
    */
   isCircular: boolean;
+}
+
+/**
+ * Complete Information Retrieval (IR) Document.
+ *
+ * Represents the lossless intermediate representation of an OpenAPI document.
+ * Contains all schemas, operations, and metadata required for code generation.
+ *
+ * @public
+ */
+export interface IRDocument {
+  /**
+   * IR schema version.
+   *
+   * @example '1.0.0'
+   */
+  version: string;
+
+  /**
+   * OpenAPI specification version from source document.
+   *
+   * @example '3.1.0'
+   */
+  openApiVersion: string;
+
+  /**
+   * API metadata from OpenAPI Info object.
+   */
+  info: InfoObject;
+
+  /**
+   * All reusable components (schemas, responses, parameters, etc.).
+   */
+  components: IRComponent[];
+
+  /**
+   * All API operations (endpoints).
+   */
+  operations: IROperation[];
+
+  /**
+   * Dependency graph for all schemas in the document.
+   */
+  dependencyGraph: IRDependencyGraph;
+}
+
+/**
+ * Type guard for IRDocument.
+ *
+ * @param value - The value to check
+ * @returns True if the value is an IRDocument
+ */
+export function isIRDocument(value: unknown): value is IRDocument {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'version' in value &&
+    'info' in value &&
+    'components' in value &&
+    'operations' in value &&
+    'dependencyGraph' in value
+  );
 }

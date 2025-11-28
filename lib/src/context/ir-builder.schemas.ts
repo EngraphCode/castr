@@ -8,10 +8,22 @@
  * @internal
  */
 
-import type { ComponentsObject } from 'openapi3-ts/oas31';
-import type { IRComponent, IRSchema } from './ir-schema.js';
+import type {
+  ComponentsObject,
+  ParameterObject,
+  ReferenceObject,
+  RequestBodyObject,
+  ResponseObject,
+  SchemaObject,
+  SecuritySchemeObject,
+} from 'openapi3-ts/oas31';
+import type { IRComponent, IRSecuritySchemeComponent } from './ir-schema.js';
 import type { IRBuildContext } from './ir-builder.types.js';
 import { buildIRSchema } from './ir-builder.core.js';
+import { buildSingleParameter } from './ir-builder.parameters.js';
+import { buildSingleResponse } from './ir-builder.responses.js';
+import { buildIRRequestBody } from './ir-builder.request-body.js';
+import { detectCircularReferences } from './ir-builder.circular.js';
 
 /**
  * Build IR components from OpenAPI components object.
@@ -39,20 +51,42 @@ import { buildIRSchema } from './ir-builder.core.js';
  * @public
  */
 export function buildIRSchemas(components: ComponentsObject | undefined): IRComponent[] {
-  if (!components?.schemas) {
+  if (!components) {
     return [];
   }
 
-  const schemas = components.schemas;
-  const schemaNames = Object.keys(schemas);
+  const irComponents: IRComponent[] = [];
 
-  // Build all schemas first
-  const irComponents = schemaNames.map((name) => {
-    const schema = schemas[name];
-    if (!schema) {
-      throw new Error(`Schema '${name}' is undefined`);
-    }
+  if (components.schemas) {
+    irComponents.push(...buildSchemaComponents(components.schemas));
+  }
 
+  if (components.securitySchemes) {
+    irComponents.push(...buildSecurityComponents(components.securitySchemes));
+  }
+
+  if (components.parameters) {
+    irComponents.push(...buildParameterComponents(components.parameters));
+  }
+
+  if (components.responses) {
+    irComponents.push(...buildResponseComponents(components.responses));
+  }
+
+  if (components.requestBodies) {
+    irComponents.push(...buildRequestBodyComponents(components.requestBodies));
+  }
+
+  // Detect and populate circular references (only for schema components)
+  detectCircularReferences(irComponents);
+
+  return irComponents;
+}
+
+function buildSchemaComponents(
+  schemas: Record<string, SchemaObject | ReferenceObject>,
+): IRComponent[] {
+  return Object.entries(schemas).map(([name, schema]) => {
     // Build context for this schema
     const context: IRBuildContext = {
       doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
@@ -64,255 +98,78 @@ export function buildIRSchemas(components: ComponentsObject | undefined): IRComp
     const irSchema = buildIRSchema(schema, context);
 
     return {
-      type: 'schema' as const,
+      type: 'schema',
       name,
       schema: irSchema,
       metadata: irSchema.metadata,
     };
   });
-
-  // Detect and populate circular references
-  detectCircularReferences(irComponents);
-
-  return irComponents;
 }
 
-/**
- * Detect circular references in schemas using depth-first search.
- *
- * Populates the `circularReferences` array on each schema's metadata
- * when cycles are detected. Handles both self-referencing (A → A)
- * and mutually referencing (A → B → A) patterns.
- *
- * @param components - Array of IR components to analyze
- *
- * @internal
- */
-function detectCircularReferences(components: IRComponent[]): void {
-  // Build dependency graph: schema name → referenced schema names
-  const dependencyGraph = new Map<string, Set<string>>();
-
-  for (const component of components) {
-    const refs = extractSchemaReferences(component.schema);
-    dependencyGraph.set(component.name, refs);
-  }
-
-  // For each schema, detect cycles using DFS
-  for (const component of components) {
-    const cycles = findCyclesFrom(component.name, dependencyGraph);
-    if (cycles.length > 0 && component.schema.metadata) {
-      // Convert schema names to full refs
-      component.schema.metadata.circularReferences = cycles.map(
-        (name) => `#/components/schemas/${name}`,
-      );
-    }
-  }
+function buildSecurityComponents(
+  securitySchemes: Record<string, SecuritySchemeObject | ReferenceObject>,
+): IRSecuritySchemeComponent[] {
+  return Object.entries(securitySchemes).map(([name, scheme]) => {
+    return {
+      type: 'securityScheme',
+      name,
+      scheme,
+    };
+  });
 }
 
-/**
- * Extract all schema references from an IR schema.
- *
- * @param irSchema - IR schema to analyze
- * @returns Set of referenced schema names
- *
- * @internal
- */
-function extractSchemaReferences(irSchema: IRSchema): Set<string> {
-  const refs = new Set<string>();
-
-  // Check direct $ref
-  if (irSchema.$ref) {
-    const refName = extractSchemaNameFromRef(irSchema.$ref);
-    if (refName) {
-      refs.add(refName);
-    }
-  }
-
-  // Check properties (for object schemas)
-  const propertyRefs = extractPropertyReferences(irSchema.properties);
-  propertyRefs.forEach((ref) => refs.add(ref));
-
-  // Check array items
-  const itemRefs = extractItemsReferences(irSchema.items);
-  itemRefs.forEach((ref) => refs.add(ref));
-
-  // Check composition schemas (allOf, oneOf, anyOf)
-  const compositionRefs = extractCompositionReferences(irSchema);
-  compositionRefs.forEach((ref) => refs.add(ref));
-
-  return refs;
+function buildParameterComponents(
+  parameters: Record<string, ParameterObject | ReferenceObject>,
+): IRComponent[] {
+  return Object.entries(parameters).map(([name, param]) => {
+    // Create a temporary context for the parameter
+    const context: IRBuildContext = {
+      doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+      path: ['#', 'components', 'parameters', name],
+      required: false,
+    };
+    return {
+      type: 'parameter',
+      name,
+      parameter: buildSingleParameter(param, context),
+    };
+  });
 }
 
-/**
- * Extract references from object properties.
- *
- * @param properties - Schema properties to analyze
- * @returns Set of referenced schema names
- *
- * @internal
- */
-function extractPropertyReferences(properties: IRSchema['properties']): Set<string> {
-  const refs = new Set<string>();
-
-  if (properties) {
-    const values = properties.values();
-    for (const propSchema of values) {
-      const propRefs = extractSchemaReferences(propSchema);
-      propRefs.forEach((ref) => refs.add(ref));
-    }
-  }
-
-  return refs;
+function buildResponseComponents(
+  responses: Record<string, ResponseObject | ReferenceObject>,
+): IRComponent[] {
+  return Object.entries(responses).map(([name, response]) => {
+    // Create a temporary context for the response
+    const context: IRBuildContext = {
+      doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+      path: ['#', 'components', 'responses', name],
+      required: false,
+    };
+    // For responses, we need a status code, but components don't have one.
+    // We use 'default' or a placeholder as it's a reusable component.
+    return {
+      type: 'response',
+      name,
+      response: buildSingleResponse('default', response, context),
+    };
+  });
 }
 
-/**
- * Extract references from array items.
- *
- * @param items - Schema items to analyze
- * @returns Set of referenced schema names
- *
- * @internal
- */
-function extractItemsReferences(items: IRSchema['items']): Set<string> {
-  // Fail-fast: empty set for null/undefined items
-  if (!items) {
-    return new Set<string>();
-  }
-
-  const refs = new Set<string>();
-
-  if (Array.isArray(items)) {
-    for (const item of items) {
-      if (isIRSchemaLike(item)) {
-        const itemRefs = extractSchemaReferences(item);
-        itemRefs.forEach((ref) => refs.add(ref));
-      }
-    }
-  } else if (isIRSchemaLike(items)) {
-    const itemRefs = extractSchemaReferences(items);
-    itemRefs.forEach((ref) => refs.add(ref));
-  }
-
-  return refs;
-}
-
-/**
- * Extract references from composition schemas (allOf, oneOf, anyOf).
- *
- * @param irSchema - IR schema to analyze
- * @returns Set of referenced schema names
- *
- * @internal
- */
-function extractCompositionReferences(irSchema: IRSchema): Set<string> {
-  const refs = new Set<string>();
-  const compositionKeys: ('allOf' | 'oneOf' | 'anyOf')[] = ['allOf', 'oneOf', 'anyOf'];
-
-  for (const key of compositionKeys) {
-    const schemas = irSchema[key];
-    if (schemas && Array.isArray(schemas)) {
-      const compositionRefs = extractReferencesFromSchemas(schemas);
-      compositionRefs.forEach((ref) => refs.add(ref));
-    }
-  }
-
-  return refs;
-}
-
-/**
- * Extract references from an array of schemas.
- *
- * @param schemas - Array of schemas to analyze
- * @returns Set of referenced schema names
- *
- * @internal
- */
-function extractReferencesFromSchemas(schemas: unknown[]): Set<string> {
-  const refs = new Set<string>();
-
-  for (const schema of schemas) {
-    if (isIRSchemaLike(schema)) {
-      const schemaRefs = extractSchemaReferences(schema);
-      schemaRefs.forEach((ref) => refs.add(ref));
-    }
-  }
-
-  return refs;
-}
-
-/**
- * Type guard to check if value looks like an IRSchema.
- *
- * @param value - Value to check
- * @returns True if value has IRSchema structure
- *
- * @internal
- */
-function isIRSchemaLike(value: unknown): value is IRSchema {
-  return value !== null && typeof value === 'object' && 'metadata' in value;
-}
-
-/**
- * Extract schema name from a $ref string.
- *
- * @param ref - OpenAPI $ref string
- * @returns Schema name or undefined
- *
- * @internal
- */
-function extractSchemaNameFromRef(ref: string): string | undefined {
-  // Handle standard refs: #/components/schemas/SchemaName
-  const standardRegex = /#\/components\/schemas\/([^/]+)$/;
-  const standardMatch = standardRegex.exec(ref);
-  if (standardMatch) {
-    return standardMatch[1];
-  }
-  // Handle x-ext refs: #/x-ext/{hash}/components/schemas/SchemaName
-  const xExtRegex = /#\/x-ext\/[^/]+\/components\/schemas\/([^/]+)$/;
-  const xExtMatch = xExtRegex.exec(ref);
-  if (xExtMatch) {
-    return xExtMatch[1];
-  }
-  return undefined;
-}
-
-/**
- * Find all cycles starting from a given schema using DFS.
- *
- * @param startName - Schema name to start from
- * @param graph - Dependency graph (name → referenced names)
- * @returns Array of schema names that form cycles with the start schema
- *
- * @internal
- */
-function findCyclesFrom(startName: string, graph: Map<string, Set<string>>): string[] {
-  const cycles = new Set<string>();
-  const visited = new Set<string>();
-  const pathStack = new Set<string>();
-
-  function dfs(currentName: string): void {
-    if (pathStack.has(currentName)) {
-      // Found a cycle - mark this node as circular
-      cycles.add(currentName);
-      return;
-    }
-
-    if (visited.has(currentName)) {
-      return;
-    }
-
-    visited.add(currentName);
-    pathStack.add(currentName);
-
-    const dependencies = graph.get(currentName) || new Set();
-    for (const depName of dependencies) {
-      dfs(depName);
-    }
-
-    pathStack.delete(currentName);
-  }
-
-  dfs(startName);
-
-  return Array.from(cycles);
+function buildRequestBodyComponents(
+  requestBodies: Record<string, RequestBodyObject | ReferenceObject>,
+): IRComponent[] {
+  return Object.entries(requestBodies).map(([name, requestBody]) => {
+    // Create a temporary context for the requestBody
+    const context: IRBuildContext = {
+      doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
+      path: ['#', 'components', 'requestBodies', name],
+      required: false,
+    };
+    return {
+      type: 'requestBody',
+      name,
+      requestBody: buildIRRequestBody(requestBody, context),
+    };
+  });
 }

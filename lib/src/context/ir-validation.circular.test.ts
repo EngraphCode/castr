@@ -9,6 +9,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext } from './template-context.js';
+import { assertSchemaComponent } from './ir-test-helpers.js';
 
 describe('IR Validation - Circular Reference Detection', () => {
   test('detects self-referencing schemas', () => {
@@ -34,7 +35,7 @@ describe('IR Validation - Circular Reference Detection', () => {
 
     // PROVE: Circular reference is detected
     expect(nodeComponent).toBeDefined();
-    const metadata = nodeComponent?.schema?.metadata;
+    const metadata = assertSchemaComponent(nodeComponent).schema.metadata;
     expect(metadata?.circularReferences.length).toBeGreaterThan(0);
     expect(metadata?.circularReferences).toContain('#/components/schemas/Node');
   });
@@ -70,8 +71,10 @@ describe('IR Validation - Circular Reference Detection', () => {
     const authorComponent = ctx._ir?.components?.find((c) => c.name === 'Author');
     const bookComponent = ctx._ir?.components?.find((c) => c.name === 'Book');
 
-    const authorCircularRefs = authorComponent?.schema?.metadata.circularReferences || [];
-    const bookCircularRefs = bookComponent?.schema?.metadata.circularReferences || [];
+    const authorCircularRefs =
+      assertSchemaComponent(authorComponent).schema.metadata.circularReferences || [];
+    const bookCircularRefs =
+      assertSchemaComponent(bookComponent).schema.metadata.circularReferences || [];
 
     // At least one should detect the cycle
     const totalCircularRefs = authorCircularRefs.length + bookCircularRefs.length;

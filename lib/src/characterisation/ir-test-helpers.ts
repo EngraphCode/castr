@@ -54,7 +54,7 @@ export function findComponent(
 export function countTotalCircularRefs(components: (IRComponent | undefined)[]): number {
   let total = 0;
   for (const component of components) {
-    if (component?.schema?.metadata.circularReferences) {
+    if (component && component.type === 'schema' && component.schema.metadata.circularReferences) {
       total += component.schema.metadata.circularReferences.length;
     }
   }

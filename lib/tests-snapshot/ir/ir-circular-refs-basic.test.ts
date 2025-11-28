@@ -8,6 +8,7 @@
 
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import { getZodClientTemplateContext } from '../../src/context/template-context.js';
+import { assertSchemaComponent } from '../../src/context/ir-test-helpers.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 
@@ -33,7 +34,8 @@ describe('IR Integration - Basic Circular References', () => {
     // FIRST: Prove IR detects the circular reference
     const ctx = getZodClientTemplateContext(openApiDoc);
     const nodeComponent = ctx._ir?.components?.find((c) => c.name === 'Node');
-    const circularRefs = nodeComponent?.schema?.metadata.circularReferences || [];
+    const circularRefs =
+      assertSchemaComponent(nodeComponent).schema.metadata.circularReferences || [];
 
     expect(circularRefs.length).toBeGreaterThan(0);
     expect(circularRefs).toContain('#/components/schemas/Node');
@@ -91,8 +93,10 @@ describe('IR Integration - Basic Circular References', () => {
     const authorComponent = ctx._ir?.components?.find((c) => c.name === 'Author');
     const bookComponent = ctx._ir?.components?.find((c) => c.name === 'Book');
 
-    const authorCircularRefs = authorComponent?.schema?.metadata.circularReferences || [];
-    const bookCircularRefs = bookComponent?.schema?.metadata.circularReferences || [];
+    const authorCircularRefs =
+      assertSchemaComponent(authorComponent).schema.metadata.circularReferences || [];
+    const bookCircularRefs =
+      assertSchemaComponent(bookComponent).schema.metadata.circularReferences || [];
 
     const totalCircularRefs = authorCircularRefs.length + bookCircularRefs.length;
     expect(totalCircularRefs).toBeGreaterThan(0);

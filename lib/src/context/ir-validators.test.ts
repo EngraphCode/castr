@@ -7,7 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 import type { IRComponent, IRDocument, IROperation, IRSchema, IRSchemaNode } from './ir-schema.js';
-import { IRSchemaProperties } from './ir-schema-properties.js';
+import { IRSchemaProperties } from './ir-schema.js';
 import {
   isIRComponent,
   isIRDocument,
@@ -105,38 +105,60 @@ describe('isIRComponent', () => {
   });
 
   it('should return true for all component types', () => {
-    const types: ('schema' | 'response' | 'parameter' | 'requestBody')[] = [
-      'schema',
-      'response',
-      'parameter',
-      'requestBody',
-    ];
+    const mockSchema: IRSchema = {
+      type: 'string',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
 
-    types.forEach((type) => {
-      const component: IRComponent = {
-        type,
-        name: 'TestComponent',
-        schema: {
-          type: 'string',
-          metadata: {
-            required: false,
-            nullable: false,
-            zodChain: { presence: '', validations: [], defaults: [] },
-            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-            circularReferences: [],
+    const schemaComponent: IRComponent = {
+      type: 'schema',
+      name: 'TestSchema',
+      schema: mockSchema,
+      metadata: mockSchema.metadata,
+    };
+    expect(isIRComponent(schemaComponent)).toBe(true);
+
+    const parameterComponent: IRComponent = {
+      type: 'parameter',
+      name: 'TestParameter',
+      parameter: {
+        name: 'param',
+        in: 'query',
+        required: true,
+        schema: mockSchema,
+      },
+    };
+    expect(isIRComponent(parameterComponent)).toBe(true);
+
+    const responseComponent: IRComponent = {
+      type: 'response',
+      name: 'TestResponse',
+      response: {
+        statusCode: '200',
+        description: 'OK',
+      },
+    };
+    expect(isIRComponent(responseComponent)).toBe(true);
+
+    const requestBodyComponent: IRComponent = {
+      type: 'requestBody',
+      name: 'TestRequestBody',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: mockSchema,
           },
         },
-        metadata: {
-          required: false,
-          nullable: false,
-          zodChain: { presence: '', validations: [], defaults: [] },
-          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-          circularReferences: [],
-        },
-      };
-
-      expect(isIRComponent(component)).toBe(true);
-    });
+      },
+    };
+    expect(isIRComponent(requestBodyComponent)).toBe(true);
   });
 
   it('should return false for null and undefined', () => {

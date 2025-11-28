@@ -1,0 +1,48 @@
+
+> openapi-to-tooling-monorepo@0.0.0-development lint /Users/jim/code/personal/openapi-zod-client
+> turbo lint
+
+turbo 2.5.8
+
+• Packages in scope: @oaknational/openapi-to-tooling
+• Running lint in 1 packages
+• Remote caching disabled
+@oaknational/openapi-to-tooling:lint: cache bypass, force executing 25ef9cba2380937a
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: > @oaknational/openapi-to-tooling@1.18.3 lint /Users/jim/code/personal/openapi-zod-client/lib
+@oaknational/openapi-to-tooling:lint: > eslint . --cache --cache-location .eslintcache
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/converter/schema.ts
+@oaknational/openapi-to-tooling:lint:   50:1   error  Function 'copyPrimitives' has a complexity of 14. Maximum allowed is 8              complexity
+@oaknational/openapi-to-tooling:lint:   50:10  error  Refactor this function to reduce its Cognitive Complexity from 14 to the 8 allowed  sonarjs/cognitive-complexity
+@oaknational/openapi-to-tooling:lint:   66:27  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   67:29  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   68:34  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   69:26  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   70:30  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   71:31  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   72:28  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   73:31  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   74:33  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   75:31  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   76:32  error  Expected { after 'if' condition                                                     curly
+@oaknational/openapi-to-tooling:lint:   82:23  error  Unsafe member access [key] on an `any` value                                        @typescript-eslint/no-unsafe-member-access
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/rendering/generate-from-context.ts
+@oaknational/openapi-to-tooling:lint:   309:1  error  File has too many lines (235). Maximum allowed is 220  max-lines
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: ✖ 15 problems (15 errors, 0 warnings)
+@oaknational/openapi-to-tooling:lint:   11 errors and 0 warnings potentially fixable with the `--fix` option.
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint:  ELIFECYCLE  Command failed with exit code 1.
+@oaknational/openapi-to-tooling:lint: ERROR: command finished with error: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+@oaknational/openapi-to-tooling#lint: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+
+ Tasks:    0 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    7.037s 
+Failed:    @oaknational/openapi-to-tooling#lint
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

@@ -15,6 +15,7 @@ import type {
 } from 'openapi3-ts/oas31';
 import { buildIR, buildIRSchemas } from './ir-builder.js';
 import type { IRDocument } from './ir-schema.js';
+import { assertSchemaComponent } from './ir-test-helpers.js';
 
 describe('buildIRSchemas', () => {
   describe('primitive schemas', () => {
@@ -59,7 +60,7 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.type).toBe('number');
+      expect(assertSchemaComponent(result[0]).schema.type).toBe('number');
       expect(result[0]?.name).toBe('Age');
     });
 
@@ -76,7 +77,7 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.type).toBe('boolean');
+      expect(assertSchemaComponent(result[0]).schema.type).toBe('boolean');
       expect(result[0]?.name).toBe('IsActive');
     });
 
@@ -93,7 +94,7 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.type).toBe('integer');
+      expect(assertSchemaComponent(result[0]).schema.type).toBe('integer');
     });
 
     it('should handle nullable primitive types (OAS 3.1)', () => {
@@ -109,7 +110,7 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.metadata.nullable).toBe(true);
+      expect(assertSchemaComponent(result[0]).schema.metadata.nullable).toBe(true);
     });
 
     it('should handle multiple primitive schemas', () => {
@@ -147,9 +148,10 @@ describe('buildIRSchemas', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.name).toBe('User');
-      expect(result[0]?.schema.type).toBe('object');
-      expect(result[0]?.schema.properties).toBeDefined();
-      expect(result[0]?.schema.properties?.keys()).toEqual(['name', 'age']);
+      const schema = assertSchemaComponent(result[0]).schema;
+      expect(schema.type).toBe('object');
+      expect(schema.properties).toBeDefined();
+      expect(schema.properties?.keys()).toEqual(['name', 'age']);
     });
 
     it('should mark required properties correctly', () => {
@@ -167,7 +169,7 @@ describe('buildIRSchemas', () => {
       };
 
       const result = buildIRSchemas(components);
-      const properties = result[0]?.schema.properties;
+      const properties = assertSchemaComponent(result[0]).schema.properties;
 
       expect(properties?.get('name')?.metadata.required).toBe(true);
       expect(properties?.get('tag')?.metadata.required).toBe(false);
@@ -203,8 +205,9 @@ describe('buildIRSchemas', () => {
 
       expect(result).toHaveLength(2);
       const personSchema = result.find((c) => c.name === 'Person');
-      expect(personSchema?.schema.properties?.get('address')?.type).toBe('object');
-      expect(personSchema?.schema.properties?.get('address')?.properties).toBeDefined();
+      const schema = assertSchemaComponent(personSchema).schema;
+      expect(schema.properties?.get('address')?.type).toBe('object');
+      expect(schema.properties?.get('address')?.properties).toBeDefined();
     });
 
     it('should handle empty objects', () => {
@@ -219,7 +222,7 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.type).toBe('object');
+      expect(assertSchemaComponent(result[0]).schema.type).toBe('object');
     });
   });
 
@@ -237,10 +240,11 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.type).toBe('array');
-      expect(result[0]?.schema.items).toBeDefined();
-      if (!Array.isArray(result[0]?.schema.items)) {
-        expect(result[0]?.schema.items?.type).toBe('string');
+      const schema = assertSchemaComponent(result[0]).schema;
+      expect(schema.type).toBe('array');
+      expect(schema.items).toBeDefined();
+      if (!Array.isArray(schema.items)) {
+        expect(schema.items?.type).toBe('string');
       }
     });
 
@@ -260,10 +264,11 @@ describe('buildIRSchemas', () => {
       };
 
       const result = buildIRSchemas(components);
+      const schema = assertSchemaComponent(result[0]).schema;
 
-      if (!Array.isArray(result[0]?.schema.items)) {
-        expect(result[0]?.schema.items?.type).toBe('object');
-        expect(result[0]?.schema.items?.properties).toBeDefined();
+      if (!Array.isArray(schema.items)) {
+        expect(schema.items?.type).toBe('object');
+        expect(schema.items?.properties).toBeDefined();
       }
     });
   });
@@ -284,8 +289,9 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.schema.allOf).toBeDefined();
-      expect(result[0]?.schema.allOf).toHaveLength(2);
+      const schema = assertSchemaComponent(result[0]).schema;
+      expect(schema.allOf).toBeDefined();
+      expect(schema.allOf).toHaveLength(2);
     });
 
     it('should build IR for oneOf composition', () => {
@@ -301,9 +307,10 @@ describe('buildIRSchemas', () => {
       };
 
       const result = buildIRSchemas(components);
+      const schema = assertSchemaComponent(result[0]).schema;
 
-      expect(result[0]?.schema.oneOf).toBeDefined();
-      expect(result[0]?.schema.oneOf).toHaveLength(2);
+      expect(schema.oneOf).toBeDefined();
+      expect(schema.oneOf).toHaveLength(2);
     });
 
     it('should build IR for anyOf composition', () => {
@@ -316,9 +323,10 @@ describe('buildIRSchemas', () => {
       };
 
       const result = buildIRSchemas(components);
+      const schema = assertSchemaComponent(result[0]).schema;
 
-      expect(result[0]?.schema.anyOf).toBeDefined();
-      expect(result[0]?.schema.anyOf).toHaveLength(2);
+      expect(schema.anyOf).toBeDefined();
+      expect(schema.anyOf).toHaveLength(2);
     });
   });
 
@@ -344,9 +352,8 @@ describe('buildIRSchemas', () => {
       const result = buildIRSchemas(components);
 
       const userSchema = result.find((c) => c.name === 'User');
-      expect(userSchema?.schema.properties?.get('address')?.$ref).toBe(
-        '#/components/schemas/Address',
-      );
+      const schema = assertSchemaComponent(userSchema).schema;
+      expect(schema.properties?.get('address')?.$ref).toBe('#/components/schemas/Address');
     });
   });
 });

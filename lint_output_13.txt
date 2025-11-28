@@ -1,0 +1,33 @@
+
+> openapi-to-tooling-monorepo@0.0.0-development lint /Users/jim/code/personal/openapi-zod-client
+> turbo lint
+
+turbo 2.5.8
+
+• Packages in scope: @oaknational/openapi-to-tooling
+• Running lint in 1 packages
+• Remote caching disabled
+@oaknational/openapi-to-tooling:lint: cache bypass, force executing 01e6e5d1cc9785b4
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: > @oaknational/openapi-to-tooling@1.18.3 lint /Users/jim/code/personal/openapi-zod-client/lib
+@oaknational/openapi-to-tooling:lint: > eslint . --cache --cache-location .eslintcache
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: /Users/jim/code/personal/openapi-zod-client/lib/src/context/ir-serialization.ts
+@oaknational/openapi-to-tooling:lint:    54:51  error  Remove this "!==" check; it will always be true. Did you mean to use "!="?  sonarjs/different-types-comparison
+@oaknational/openapi-to-tooling:lint:    76:7   error  Unsafe return of a value of type `any`                                      @typescript-eslint/no-unsafe-return
+@oaknational/openapi-to-tooling:lint:   101:5   error  Unsafe return of a value of type `any`                                      @typescript-eslint/no-unsafe-return
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint: ✖ 3 problems (3 errors, 0 warnings)
+@oaknational/openapi-to-tooling:lint: 
+@oaknational/openapi-to-tooling:lint:  ELIFECYCLE  Command failed with exit code 1.
+@oaknational/openapi-to-tooling:lint: ERROR: command finished with error: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+@oaknational/openapi-to-tooling#lint: command (/Users/jim/code/personal/openapi-zod-client/lib) /Users/jim/code/personal/openapi-zod-client/node_modules/.bin/pnpm run lint exited (1)
+
+ Tasks:    0 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    4.02s 
+Failed:    @oaknational/openapi-to-tooling#lint
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

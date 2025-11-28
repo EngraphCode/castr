@@ -9,7 +9,7 @@
  */
 
 import type { IRSchema } from '../context/ir-schema.js';
-import { IRSchemaProperties } from '../context/ir-schema-properties.js';
+import { IRSchemaProperties } from '../context/ir-schema.js';
 
 /**
  * Type guard for string values.
