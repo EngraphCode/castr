@@ -1,29 +1,3 @@
-/**
- * Information Retrieval (IR) Schema Types
- *
- * This module defines a lossless information retrieval schema for OpenAPI documents
- * that captures all metadata required for code generation. The IR enables structured
- * retrieval of OpenAPI information, serving as a bridge between specifications and
- * generated TypeScript/Zod code:
- *
- * - Information retrieval from OpenAPI specs (OpenAPI → IR → Generated Code)
- * - Multiple code generators (types, zod, client, mcp)
- * - Rich metadata for validation and code generation
- * - Dependency graph analysis and circular reference detection
- *
- * **Versioning Policy:**
- * IR schema follows semantic versioning:
- * - MAJOR: Breaking changes to IR structure (incompatible with previous version)
- * - MINOR: Backward-compatible additions (new optional fields)
- * - PATCH: Bug fixes and clarifications (no structural changes)
- *
- * Current Version: 1.0.0
- *
- * @module ir-schema
- * @since 1.0.0
- * @public
- */
-
 import type {
   InfoObject,
   ParameterObject,
@@ -37,163 +11,14 @@ import type {
 export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
 
 /**
- * Map of property names to their schemas.
- */
-/**
  * Type-safe wrapper for IRSchema properties.
- *
- * Provides checked access to dynamic property names without exposing
- * index signature types that pollute the type system.
- *
- * @example
- * ```typescript
- * const props = new IRSchemaProperties({
- *   name: { type: 'string', metadata: {...} },
- *   age: { type: 'number', metadata: {...} },
- * });
- *
- * const nameSchema = props.get('name'); // IRSchema | undefined
- * if (props.has('email')) {
- *   // Safe to access
- * }
- * ```
+ * Provides checked access to dynamic property names.
  *
  * @public
  */
-export class IRSchemaProperties {
-  private readonly props: Record<string, IRSchema>;
+import { IRSchemaProperties } from './ir-schema-properties.js';
 
-  /**
-   * Create a new IRSchemaProperties wrapper.
-   *
-   * @param properties - The properties record to wrap
-   */
-  constructor(properties: Record<string, IRSchema> = {}) {
-    this.props = properties;
-  }
-
-  /**
-   * Get property by name with type-safe undefined handling.
-   *
-   * @param name - Property name to retrieve
-   * @returns The schema for the property, or undefined if not found
-   *
-   * @example
-   * ```typescript
-   * const nameSchema = properties.get('name');
-   * if (nameSchema) {
-   *   console.log(nameSchema.type);
-   * }
-   * ```
-   */
-  get(name: string): IRSchema | undefined {
-    return this.props[name];
-  }
-
-  /**
-   * Check if property exists.
-   *
-   * @param name - Property name to check
-   * @returns True if property exists, false otherwise
-   *
-   * @example
-   * ```typescript
-   * if (properties.has('email')) {
-   *   const emailSchema = properties.get('email')!;
-   * }
-   * ```
-   */
-  has(name: string): boolean {
-    return name in this.props;
-  }
-
-  /**
-   * Get all property names.
-   *
-   * @returns Array of property names
-   *
-   * @example
-   * ```typescript
-   * const names = properties.keys(); // ['name', 'age', 'email']
-   * ```
-   */
-  keys(): string[] {
-    return Object.keys(this.props);
-  }
-
-  /**
-   * Get all properties as entries.
-   *
-   * @returns Array of [name, schema] tuples
-   *
-   * @example
-   * ```typescript
-   * for (const [name, schema] of properties.entries()) {
-   *   console.log(`${name}: ${schema.type}`);
-   * }
-   * ```
-   */
-  entries(): [string, IRSchema][] {
-    return Object.entries(this.props);
-  }
-
-  /**
-   * Returns all property values as an array.
-   *
-   * @returns Array of IR schemas for all properties
-   *
-   * @example
-   * ```typescript
-   * const schemas = properties.values(); // [IRSchema, IRSchema, ...]
-   * for (const schema of properties.values()) {
-   *   console.log(schema.type);
-   * }
-   * ```
-   */
-  values(): IRSchema[] {
-    return Object.values(this.props);
-  }
-
-  /**
-   * Get raw properties record (for serialization).
-   *
-   * Returns a shallow copy to prevent external mutation.
-   *
-   * @returns Copy of the internal properties record
-   *
-   * @example
-   * ```typescript
-   * const record = properties.toRecord();
-   * JSON.stringify(record); // Safe serialization
-   * ```
-   */
-  toRecord(): Record<string, IRSchema> {
-    return { ...this.props };
-  }
-
-  /**
-   * Get the number of properties.
-   *
-   * @returns Number of properties in the collection
-   */
-  get size(): number {
-    return Object.keys(this.props).length;
-  }
-
-  /**
-   * Custom serialization for JSON.stringify.
-   *
-   * Serializes to a structure that can be revived by deserializeIR.
-   *
-   * @returns Serialization structure with metadata
-   */
-  toJSON(): { dataType: 'IRSchemaProperties'; value: Record<string, IRSchema> } {
-    return {
-      dataType: 'IRSchemaProperties',
-      value: this.props,
-    };
-  }
-}
+export { IRSchemaProperties };
 
 /**
  * Reusable component definition from OpenAPI components section.
@@ -333,6 +158,21 @@ export interface IROperation {
    * Ordered as they appear in the OpenAPI spec.
    */
   parameters: IRParameter[];
+
+  /**
+   * Parameters grouped by location for easier access by writers.
+   *
+   * @example
+   * ```typescript
+   * {
+   *   query: [pageParam, limitParam],
+   *   path: [idParam],
+   *   header: [authParam],
+   *   cookie: []
+   * }
+   * ```
+   */
+  parametersByLocation: Record<'query' | 'path' | 'header' | 'cookie', IRParameter[]>;
 
   /**
    * Optional request body definition.
@@ -1128,6 +968,36 @@ export interface IRDependencyNode {
 }
 
 /**
+ * Enum definition for centralized catalog.
+ *
+ * Represents a reusable enum definition extracted from schemas.
+ * Used to generate standalone enum types or objects.
+ *
+ * @public
+ */
+export interface IREnum {
+  /**
+   * Enum name (usually from schema title or component name).
+   */
+  name: string;
+
+  /**
+   * Enum values.
+   */
+  values: unknown[];
+
+  /**
+   * Enum description.
+   */
+  description?: string;
+
+  /**
+   * Schema that defined this enum.
+   */
+  schema: IRSchema;
+}
+
+/**
  * Complete Information Retrieval (IR) Document.
  *
  * Represents the lossless intermediate representation of an OpenAPI document.
@@ -1169,6 +1039,12 @@ export interface IRDocument {
    * Dependency graph for all schemas in the document.
    */
   dependencyGraph: IRDependencyGraph;
+
+  /**
+   * Catalog of all enums in the document.
+   * Key is the enum name (or unique identifier).
+   */
+  enums: Map<string, IREnum>;
 }
 
 /**
@@ -1185,6 +1061,7 @@ export function isIRDocument(value: unknown): value is IRDocument {
     'info' in value &&
     'components' in value &&
     'operations' in value &&
-    'dependencyGraph' in value
+    'dependencyGraph' in value &&
+    'enums' in value
   );
 }

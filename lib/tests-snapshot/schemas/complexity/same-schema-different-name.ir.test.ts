@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function -- long test snapshot */
+
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { getZodClientTemplateContext } from '../../../src/index.js';
@@ -63,6 +65,103 @@ test('same-schema-different-name - IR Snapshot', async () => {
                 "circularReferences": [],
                 "nodes": Map {},
                 "topologicalOrder": [],
+            },
+            "enums": Map {
+                "differentNameSameSchema" => {
+                    "name": "differentNameSameSchema",
+                    "schema": {
+                        "enum": [
+                            "aaa",
+                            "bbb",
+                            "ccc",
+                        ],
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": "optional",
+                                "validations": [],
+                            },
+                        },
+                        "type": "string",
+                    },
+                    "values": [
+                        "aaa",
+                        "bbb",
+                        "ccc",
+                    ],
+                },
+                "anotherDifferentNameWithSlightlyDifferentSchema" => {
+                    "name": "anotherDifferentNameWithSlightlyDifferentSchema",
+                    "schema": {
+                        "default": "aaa",
+                        "enum": [
+                            "aaa",
+                            "bbb",
+                            "ccc",
+                        ],
+                        "metadata": {
+                            "circularReferences": [],
+                            "default": "aaa",
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": "optional",
+                                "validations": [],
+                            },
+                        },
+                        "type": "string",
+                    },
+                    "values": [
+                        "aaa",
+                        "bbb",
+                        "ccc",
+                    ],
+                },
+                "sameSchemaDifferentName" => {
+                    "name": "sameSchemaDifferentName",
+                    "schema": {
+                        "enum": [
+                            "aaa",
+                            "bbb",
+                            "ccc",
+                        ],
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": "optional",
+                                "validations": [],
+                            },
+                        },
+                        "type": "string",
+                    },
+                    "values": [
+                        "aaa",
+                        "bbb",
+                        "ccc",
+                    ],
+                },
             },
             "info": {
                 "title": "Example API",
@@ -164,6 +263,102 @@ test('same-schema-different-name - IR Snapshot', async () => {
                             },
                         },
                     ],
+                    "parametersByLocation": {
+                        "cookie": [],
+                        "header": [],
+                        "path": [],
+                        "query": [
+                            {
+                                "in": "query",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "name": "differentNameSameSchema",
+                                "required": false,
+                                "schema": {
+                                    "enum": [
+                                        "aaa",
+                                        "bbb",
+                                        "ccc",
+                                    ],
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                            },
+                            {
+                                "in": "query",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "default": "aaa",
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "name": "anotherDifferentNameWithSlightlyDifferentSchema",
+                                "required": false,
+                                "schema": {
+                                    "default": "aaa",
+                                    "enum": [
+                                        "aaa",
+                                        "bbb",
+                                        "ccc",
+                                    ],
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "default": "aaa",
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                            },
+                        ],
+                    },
                     "path": "/same-schema-different-name",
                     "responses": [
                         {
@@ -241,6 +436,56 @@ test('same-schema-different-name - IR Snapshot', async () => {
                             },
                         },
                     ],
+                    "parametersByLocation": {
+                        "cookie": [],
+                        "header": [],
+                        "path": [],
+                        "query": [
+                            {
+                                "in": "query",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "name": "sameSchemaDifferentName",
+                                "required": false,
+                                "schema": {
+                                    "enum": [
+                                        "aaa",
+                                        "bbb",
+                                        "ccc",
+                                    ],
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                            },
+                        ],
+                    },
                     "path": "/same-schema-different-name",
                     "responses": [
                         {

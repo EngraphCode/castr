@@ -32,6 +32,7 @@ describe('isIRDocument', () => {
         topologicalOrder: [],
         circularReferences: [],
       },
+      enums: new Map(),
     };
 
     expect(isIRDocument(validDoc)).toBe(true);
@@ -197,6 +198,12 @@ describe('isIROperation', () => {
       method: 'get',
       path: '/users/{id}',
       parameters: [],
+      parametersByLocation: {
+        query: [],
+        path: [],
+        header: [],
+        cookie: [],
+      },
       responses: [],
     };
 
@@ -227,6 +234,13 @@ describe('isIROperation', () => {
           },
         },
       ],
+
+      parametersByLocation: {
+        query: [],
+        path: [],
+        header: [],
+        cookie: [],
+      },
       requestBody: {
         required: true,
         content: {
@@ -280,6 +294,12 @@ describe('isIROperation', () => {
         method,
         path: '/users',
         parameters: [],
+        parametersByLocation: {
+          query: [],
+          path: [],
+          header: [],
+          cookie: [],
+        },
         responses: [],
       };
 

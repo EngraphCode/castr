@@ -1066,6 +1066,7 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
             "nodes": Map {},
             "topologicalOrder": [],
         },
+        "enums": Map {},
         "info": {
             "title": "Swagger Petstore - OpenAPI 3.0",
             "version": "1.0.11",
@@ -1076,6 +1077,12 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                 "method": "get",
                 "operationId": "getExample",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/example",
                 "responses": [
                     {

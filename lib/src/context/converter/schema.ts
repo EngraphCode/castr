@@ -60,6 +60,18 @@ function copyPrimitives(schema: SchemaObject, rest: Partial<IRSchema>): void {
     'deprecated',
     'readOnly',
     'writeOnly',
+    '$ref',
+    'minItems',
+    'maxItems',
+    'uniqueItems',
+    'minLength',
+    'maxLength',
+    'pattern',
+    'minimum',
+    'maximum',
+    'exclusiveMinimum',
+    'exclusiveMaximum',
+    'multipleOf',
   ]);
 
   for (const key of Object.keys(rest)) {

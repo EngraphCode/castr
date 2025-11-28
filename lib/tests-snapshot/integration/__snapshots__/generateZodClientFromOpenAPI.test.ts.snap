@@ -14399,6 +14399,41 @@ exports[`getZodClientTemplateContext 1`] = `
             "nodes": Map {},
             "topologicalOrder": [],
         },
+        "enums": Map {
+            "status" => {
+                "name": "status",
+                "schema": {
+                    "default": "available",
+                    "enum": [
+                        "available",
+                        "pending",
+                        "sold",
+                    ],
+                    "metadata": {
+                        "circularReferences": [],
+                        "default": "available",
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": false,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "optional",
+                            "validations": [],
+                        },
+                    },
+                    "type": "string",
+                },
+                "values": [
+                    "available",
+                    "pending",
+                    "sold",
+                ],
+            },
+        },
         "info": {
             "contact": {
                 "email": "apiteam@swagger.io",
@@ -14428,6 +14463,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "addPet",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/pet",
                 "requestBody": {
                     "content": {
@@ -14566,6 +14607,12 @@ Some useful links:
                 "method": "put",
                 "operationId": "updatePet",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/pet",
                 "requestBody": {
                     "content": {
@@ -14761,6 +14808,61 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [
+                        {
+                            "description": "Status values that need to be considered for filter",
+                            "explode": true,
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "default": "available",
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "status",
+                            "required": false,
+                            "schema": {
+                                "default": "available",
+                                "enum": [
+                                    "available",
+                                    "pending",
+                                    "sold",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "default": "available",
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/findByStatus",
                 "responses": [
                     {
@@ -14928,6 +15030,71 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [
+                        {
+                            "description": "Tags to filter by",
+                            "explode": true,
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "tags",
+                            "required": false,
+                            "schema": {
+                                "items": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/findByTags",
                 "responses": [
                     {
@@ -15077,6 +15244,53 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of pet to return",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/pet/{petId}",
                 "responses": [
                     {
@@ -15275,6 +15489,132 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of pet that needs to be updated",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [
+                        {
+                            "description": "Name of pet that needs to be updated",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "name",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                        {
+                            "description": "Status of pet that needs to be updated",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "status",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/{petId}",
                 "responses": [
                     {
@@ -15380,6 +15720,92 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [
+                        {
+                            "in": "header",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "api_key",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "path": [
+                        {
+                            "description": "Pet id to delete",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/pet/{petId}",
                 "responses": [
                     {
@@ -15485,6 +15911,93 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of pet to update",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [
+                        {
+                            "description": "Additional Metadata",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "additionalMetadata",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/{petId}/uploadImage",
                 "requestBody": {
                     "content": {},
@@ -15537,6 +16050,12 @@ Some useful links:
                 "method": "get",
                 "operationId": "getInventory",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/store/inventory",
                 "responses": [
                     {
@@ -15582,6 +16101,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "placeOrder",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/store/order",
                 "requestBody": {
                     "content": {
@@ -15731,6 +16256,53 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of order that needs to be fetched",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "orderId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/store/order/{orderId}",
                 "responses": [
                     {
@@ -15839,6 +16411,53 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of the order that needs to be deleted",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "orderId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/store/order/{orderId}",
                 "responses": [
                     {
@@ -15860,6 +16479,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "createUser",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/user",
                 "requestBody": {
                     "content": {
@@ -15985,6 +16610,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "createUsersWithListInput",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/user/createWithList",
                 "requestBody": {
                     "content": {
@@ -16169,6 +16800,91 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [
+                        {
+                            "description": "The user name for login",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                        {
+                            "description": "The password for login in clear text",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "password",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/user/login",
                 "responses": [
                     {
@@ -16271,6 +16987,12 @@ Some useful links:
                 "method": "get",
                 "operationId": "logoutUser",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/user/logout",
                 "responses": [
                     {
@@ -16327,6 +17049,52 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "The name that needs to be fetched. Use user1 for testing. ",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": true,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/user/{username}",
                 "responses": [
                     {
@@ -16434,6 +17202,52 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "name that need to be deleted",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": true,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/user/{username}",
                 "requestBody": {
                     "content": {
@@ -16557,6 +17371,52 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "The name that needs to be deleted",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": true,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/user/{username}",
                 "responses": [
                     {
@@ -20232,6 +21092,41 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
             "nodes": Map {},
             "topologicalOrder": [],
         },
+        "enums": Map {
+            "status" => {
+                "name": "status",
+                "schema": {
+                    "default": "available",
+                    "enum": [
+                        "available",
+                        "pending",
+                        "sold",
+                    ],
+                    "metadata": {
+                        "circularReferences": [],
+                        "default": "available",
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": false,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "optional",
+                            "validations": [],
+                        },
+                    },
+                    "type": "string",
+                },
+                "values": [
+                    "available",
+                    "pending",
+                    "sold",
+                ],
+            },
+        },
         "info": {
             "contact": {
                 "email": "apiteam@swagger.io",
@@ -20261,6 +21156,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "addPet",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/pet",
                 "requestBody": {
                     "content": {
@@ -20399,6 +21300,12 @@ Some useful links:
                 "method": "put",
                 "operationId": "updatePet",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/pet",
                 "requestBody": {
                     "content": {
@@ -20594,6 +21501,61 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [
+                        {
+                            "description": "Status values that need to be considered for filter",
+                            "explode": true,
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "default": "available",
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "status",
+                            "required": false,
+                            "schema": {
+                                "default": "available",
+                                "enum": [
+                                    "available",
+                                    "pending",
+                                    "sold",
+                                ],
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "default": "available",
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/findByStatus",
                 "responses": [
                     {
@@ -20761,6 +21723,71 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [
+                        {
+                            "description": "Tags to filter by",
+                            "explode": true,
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "tags",
+                            "required": false,
+                            "schema": {
+                                "items": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": "optional",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "string",
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/findByTags",
                 "responses": [
                     {
@@ -20910,6 +21937,53 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of pet to return",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/pet/{petId}",
                 "responses": [
                     {
@@ -21108,6 +22182,132 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of pet that needs to be updated",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [
+                        {
+                            "description": "Name of pet that needs to be updated",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "name",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                        {
+                            "description": "Status of pet that needs to be updated",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "status",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/{petId}",
                 "responses": [
                     {
@@ -21213,6 +22413,92 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [
+                        {
+                            "in": "header",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "api_key",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "path": [
+                        {
+                            "description": "Pet id to delete",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/pet/{petId}",
                 "responses": [
                     {
@@ -21318,6 +22604,93 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of pet to update",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "petId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [
+                        {
+                            "description": "Additional Metadata",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "additionalMetadata",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/pet/{petId}/uploadImage",
                 "requestBody": {
                     "content": {},
@@ -21370,6 +22743,12 @@ Some useful links:
                 "method": "get",
                 "operationId": "getInventory",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/store/inventory",
                 "responses": [
                     {
@@ -21415,6 +22794,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "placeOrder",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/store/order",
                 "requestBody": {
                     "content": {
@@ -21564,6 +22949,53 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of order that needs to be fetched",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "orderId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/store/order/{orderId}",
                 "responses": [
                     {
@@ -21672,6 +23104,53 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "ID of the order that needs to be deleted",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "orderId",
+                            "required": true,
+                            "schema": {
+                                "format": "int64",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/store/order/{orderId}",
                 "responses": [
                     {
@@ -21693,6 +23172,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "createUser",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/user",
                 "requestBody": {
                     "content": {
@@ -21818,6 +23303,12 @@ Some useful links:
                 "method": "post",
                 "operationId": "createUsersWithListInput",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/user/createWithList",
                 "requestBody": {
                     "content": {
@@ -22002,6 +23493,91 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [
+                        {
+                            "description": "The user name for login",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                        {
+                            "description": "The password for login in clear text",
+                            "in": "query",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "optional",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "password",
+                            "required": false,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "optional",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                },
                 "path": "/user/login",
                 "responses": [
                     {
@@ -22104,6 +23680,12 @@ Some useful links:
                 "method": "get",
                 "operationId": "logoutUser",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/user/logout",
                 "responses": [
                     {
@@ -22160,6 +23742,52 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "The name that needs to be fetched. Use user1 for testing. ",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": true,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/user/{username}",
                 "responses": [
                     {
@@ -22267,6 +23895,52 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "name that need to be deleted",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": true,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/user/{username}",
                 "requestBody": {
                     "content": {
@@ -22390,6 +24064,52 @@ Some useful links:
                         },
                     },
                 ],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [
+                        {
+                            "description": "The name that needs to be deleted",
+                            "in": "path",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": true,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": "required",
+                                    "validations": [],
+                                },
+                            },
+                            "name": "username",
+                            "required": true,
+                            "schema": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": true,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": "required",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                        },
+                    ],
+                    "query": [],
+                },
                 "path": "/user/{username}",
                 "responses": [
                     {
@@ -25274,6 +26994,70 @@ exports[`with optional, partial, all required objects 1`] = `
             "nodes": Map {},
             "topologicalOrder": [],
         },
+        "enums": Map {
+            "VeryDeeplyNested" => {
+                "name": "VeryDeeplyNested",
+                "schema": {
+                    "enum": [
+                        "aaa",
+                        "bbb",
+                        "ccc",
+                    ],
+                    "metadata": {
+                        "circularReferences": [],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": false,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "optional",
+                            "validations": [],
+                        },
+                    },
+                    "type": "string",
+                },
+                "values": [
+                    "aaa",
+                    "bbb",
+                    "ccc",
+                ],
+            },
+            "Enum_2" => {
+                "name": "Enum_2",
+                "schema": {
+                    "enum": [
+                        "aaa",
+                        "bbb",
+                        "ccc",
+                    ],
+                    "metadata": {
+                        "circularReferences": [],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": false,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "optional",
+                            "validations": [],
+                        },
+                    },
+                    "type": "string",
+                },
+                "values": [
+                    "aaa",
+                    "bbb",
+                    "ccc",
+                ],
+            },
+        },
         "info": {
             "title": "Swagger Petstore - OpenAPI 3.0",
             "version": "1.0.11",
@@ -25284,6 +27068,12 @@ exports[`with optional, partial, all required objects 1`] = `
                 "method": "get",
                 "operationId": "getRoot",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/root",
                 "responses": [
                     {
@@ -25418,6 +27208,12 @@ exports[`with optional, partial, all required objects 1`] = `
                 "method": "get",
                 "operationId": "getNested",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/nested",
                 "responses": [
                     {
@@ -25532,6 +27328,12 @@ exports[`with optional, partial, all required objects 1`] = `
                 "method": "get",
                 "operationId": "getDeeplyNested",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/deeplyNested",
                 "responses": [
                     {
@@ -25584,6 +27386,12 @@ exports[`with optional, partial, all required objects 1`] = `
                 "method": "get",
                 "operationId": "getVeryDeeplyNested",
                 "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
                 "path": "/veryDeeplyNested",
                 "responses": [
                     {

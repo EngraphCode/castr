@@ -44,5 +44,24 @@ describe('IR Fidelity', () => {
 
     // 6. Assert Fidelity (Code B should match Code A)
     expect(codeB).toEqual(codeA);
+
+    // 7. Verify IR Enhancements
+    // Check Enums
+    expect(irDeserialized.enums).toBeDefined();
+    expect(irDeserialized.enums.size).toBeGreaterThan(0);
+
+    // 'mark' enum should exist (from components/schemas/mark)
+    const markEnum = Array.from(irDeserialized.enums.values()).find((e) => e.name === 'mark');
+    expect(markEnum).toBeDefined();
+    expect(markEnum?.values).toEqual(['.', 'X', 'O']);
+
+    // Check Parameters By Location
+    const getSquareOp = irDeserialized.operations.find((op) => op.operationId === 'get-square');
+    expect(getSquareOp).toBeDefined();
+    if (getSquareOp) {
+      expect(getSquareOp.parametersByLocation).toBeDefined();
+      expect(getSquareOp.parametersByLocation.path).toHaveLength(2); // row, column
+      expect(getSquareOp.parametersByLocation.query).toHaveLength(0);
+    }
   });
 });

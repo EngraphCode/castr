@@ -75,6 +75,7 @@ test('handle-refs-without-var-name', () => {
                 "nodes": Map {},
                 "topologicalOrder": [],
             },
+            "enums": Map {},
             "info": {
                 "title": "Example API",
                 "version": "1",
@@ -85,6 +86,12 @@ test('handle-refs-without-var-name', () => {
                     "method": "get",
                     "operationId": "getSomething",
                     "parameters": [],
+                    "parametersByLocation": {
+                        "cookie": [],
+                        "header": [],
+                        "path": [],
+                        "query": [],
+                    },
                     "path": "/something",
                     "responses": [
                         {

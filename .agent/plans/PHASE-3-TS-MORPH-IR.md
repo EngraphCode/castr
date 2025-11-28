@@ -1,7 +1,7 @@
 # Phase 3 Plan – Typed IR & Generation Architecture
 
-**Status:** Session 3.3 READY - IR Persistence & Validation Harness
-**Prerequisites:** Session 3.2 complete ✅ (IR Schema Foundations & Type Discipline Restoration)
+**Status:** Session 3.4 READY - IR Enhancements & Additional Writers
+**Prerequisites:** Session 3.3 complete ✅ (IR Persistence & Validation)
 **Reference:** `.agent/reference/openapi-zod-client-emitter-migration.md`
 **Quality Gate:** `pnpm format && pnpm build && pnpm type-check && pnpm lint && pnpm test:all && pnpm character`
 
@@ -62,8 +62,8 @@ graph TD
 | :------ | :------------------------------ | :----------------------------------------------------------------- | :-------------- |
 | **3.1** | **CodeMeta Elimination**        | Delete CodeMeta, extract pure functions.                           | ✅ **COMPLETE** |
 | **3.2** | **IR Foundations**              | Define lossless IR, replace CodeMetaData, restore type discipline. | ✅ **COMPLETE** |
-| **3.3** | **IR Persistence & Validation** | Persist IR artifacts, prove round-trip fidelity.                   | 🟢 **READY**    |
-| **3.4** | **IR Enhancements**             | Add metadata for specialized writers (Phase 4 prep).               | 📅 Planned      |
+| **3.3** | **IR Persistence & Validation** | Persist IR artifacts, prove round-trip fidelity.                   | ✅ **COMPLETE** |
+| **3.4** | **IR Enhancements**             | Add metadata for specialized writers (Phase 4 prep).               | � **READY**     |
 | **3.5** | **Bidirectional Tooling**       | Implement reverse transforms (IR → OpenAPI).                       | 📅 Planned      |
 | **3.6** | **Handlebars Decommissioning**  | Remove legacy Handlebars infrastructure.                           | 📅 Planned      |
 | **3.9** | **Release Prep**                | Documentation, ADRs, final validation.                             | 📅 Planned      |
@@ -91,74 +91,59 @@ graph TD
 **Key Deliverables:** `lib/src/context/ir-schema.ts`, `IRBuilder`, 100% Green Quality Gates.
 **Detailed Record:** [Archive](./archive/PHASE-3-SESSION-2-IR-SCHEMA-FOUNDATIONS.md)
 
+### Session 3.3 – IR Persistence & Validation Harness
+
+**Status:** ✅ **COMPLETE** (Nov 28, 2025)
+**Summary:** Implemented `IRSchemaProperties` serialization/deserialization with strict type guards, added `--debug-ir` flag, and established a fidelity test harness proving that `Generate(Deserialize(Serialize(IR))) === Generate(IR)`.
+**Key Deliverables:**
+
+- `lib/src/context/ir-serialization.ts`: Type-safe serialization logic.
+- `lib/tests-e2e/ir-fidelity.test.ts`: Round-trip fidelity verification.
+- `ir.json`: Debug artifact support.
+  **Detailed Record:** See conversation history.
+
 ---
 
 ## Active Session
 
-### Session 3.3 – IR Persistence & Validation Harness
+### Session 3.4 – IR Enhancements & Additional Writers
 
-**Goal:** Ensure the IR is a stable, serializable artifact that can fully reproduce the current outputs. This proves "Zero Information Loss" and enables future tooling (debugging, reverse-generation).
+**Intent:** Enrich the IR with metadata required for Phase 4 (e.g., parameter maps, enum catalogs) and implement specialized writers.
 
-**Prerequisites:** Session 3.2 ✅
+**Prerequisites:** Session 3.3 ✅
 
 #### 1. Requirements
 
-- **Serialization:** The `IRDocument` must be serializable to JSON (handling any circular references or non-serializable types if present).
-- **Persistence:** Add a CLI flag (`--debug-ir` or similar) to write the IR to disk alongside generated files.
-- **Fidelity Test:** A new test harness that:
-  1. Generates IR from an input spec.
-- **Serialization:** The `IRDocument` must be serializable to JSON (handling any circular references or non-serializable types if present).
-- **Persistence:** Add a CLI flag (`--debug-ir` or similar) to write the IR to disk alongside generated files.
-- **Fidelity Test:** A new test harness that:
-  1. Generates IR from an input spec.
-- **Serialization:** The `IRDocument` must be serializable to JSON (handling any circular references or non-serializable types if present).
-- **Persistence:** Add a CLI flag (`--debug-ir` or similar) to write the IR to disk alongside generated files.
-- **Fidelity Test:** A new test harness that:
-  1. Generates IR from an input spec.
-  2. Serializes -> Deserializes the IR.
-  3. Feeds the _deserialized_ IR into the generator.
-  4. Asserts the output matches the original output exactly.
+- **Operation ID Normalization:** Ensure every operation has a deterministic ID.
+- **Parameter Maps:** Group parameters by type (query, path, header, cookie) in the IR for easier access by writers.
+- **Enum Catalogs:** Extract all enums (inline and component) into a catalog for centralized generation.
+- **Documentation Writer:** A simple Markdown writer to prove the "Modular Writer" concept using the IR.
 
 #### 2. Implementation Plan (TDD)
 
-- [ ] Create `lib/src/context/ir-serialization.ts`.
-- [ ] **TDD:** Write unit tests for `serializeIR(ir: IRDocument): string` and `deserializeIR(json: string): IRDocument`.
-- [ ] Handle any `Map` or `Set` conversions if used in IR (currently IR uses arrays/objects, but verify).
-- [ ] Ensure `undefined` vs `null` is handled consistently.
-
-### B. Persistence Integration
-
-- [ ] Update `GenerateOptions` to include `debugIR?: boolean`.
-- [ ] Update `generateZodClientFromOpenAPI` to write `ir.json` if flag is set.
-- [ ] **TDD:** Integration test verifying file creation when flag is true.
-
-### C. Fidelity Harness
-
-- [ ] Create `lib/tests-e2e/ir-fidelity.test.ts`.
-- [ ] **TDD:**
-  - Load representative fixtures (Petstore, TicTacToe).
-  - Generate Code A (Standard).
-  - Generate IR -> Serialize -> Deserialize -> Generate Code B.
-  - Assert Code A === Code B.
+- [ ] **Operation IDs:**
+  - Update `IRBuilder` to ensure `operationId` is present or generated deterministically.
+  - Add `operationId` to `IROperation` if missing.
+- [ ] **Parameter Grouping:**
+  - Update `IROperation` to include `parametersByLocation: { query: [], path: [], header: [], cookie: [] }`.
+  - Update `IRBuilder` to populate this.
+- [ ] **Enum Catalog:**
+  - Create `IREnum` type.
+  - Add `enums: Map<string, IREnum>` to `IRDocument`.
+  - Populate during traversal.
+- [ ] **Markdown Writer:**
+  - Create `lib/src/writers/markdown.ts`.
+  - Implement `writeMarkdown(ir: IRDocument): string`.
+  - **TDD:** Test against fixtures.
 
 #### 3. Verification
 
 - `pnpm test:all` must pass.
-- `pnpm character` must pass (proving no side effects).
-- Manual check: Run CLI with `--debug-ir` and inspect the JSON.
+- Markdown writer output verified against snapshots.
 
 ---
 
 ## Future Sessions
-
-### Session 3.4 – IR Enhancements & Additional Writers
-
-**Intent:** Enrich the IR with metadata required for Phase 4 (e.g., parameter maps, enum catalogs) and implement specialized writers.
-**Key Tasks:**
-
-- Add `operationId` normalization metadata.
-- Add `parameter` maps (query, path, header, cookie).
-- Implement `IR -> Documentation` writer (Markdown).
 
 ### Session 3.5 – Bidirectional Tooling & Compliance
 

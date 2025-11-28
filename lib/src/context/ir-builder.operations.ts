@@ -134,8 +134,21 @@ function buildIROperation(
     method,
     path,
     parameters: buildIRParameters(operation.parameters, context),
+    parametersByLocation: {
+      query: [],
+      path: [],
+      header: [],
+      cookie: [],
+    },
     responses: buildIRResponses(operation.responses, context),
   };
+
+  // Populate parametersByLocation
+  for (const param of irOperation.parameters) {
+    if (param.in in irOperation.parametersByLocation) {
+      irOperation.parametersByLocation[param.in].push(param);
+    }
+  }
 
   // Add optional fields
   addOptionalOperationFields(irOperation, operation, context);

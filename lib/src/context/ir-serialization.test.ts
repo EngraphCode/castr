@@ -54,6 +54,12 @@ describe('IR Serialization', () => {
         method: 'get',
         path: '/test',
         parameters: [],
+        parametersByLocation: {
+          query: [],
+          path: [],
+          header: [],
+          cookie: [],
+        },
         responses: [],
         tags: ['test'],
       },
@@ -63,6 +69,7 @@ describe('IR Serialization', () => {
       topologicalOrder: [],
       circularReferences: [],
     },
+    enums: new Map(),
   };
 
   it('should serialize IRDocument to string', () => {
