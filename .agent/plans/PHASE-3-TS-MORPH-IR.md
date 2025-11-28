@@ -63,7 +63,7 @@ graph TD
 | **3.1** | **CodeMeta Elimination**        | Delete CodeMeta, extract pure functions.                           | ✅ **COMPLETE** |
 | **3.2** | **IR Foundations**              | Define lossless IR, replace CodeMetaData, restore type discipline. | ✅ **COMPLETE** |
 | **3.3** | **IR Persistence & Validation** | Persist IR artifacts, prove round-trip fidelity.                   | ✅ **COMPLETE** |
-| **3.4** | **IR Enhancements**             | Add metadata for specialized writers (Phase 4 prep).               | � **READY**     |
+| **3.4** | **IR Enhancements**             | Add metadata for specialized writers (Phase 4 prep).               | ✅ **COMPLETE** |
 | **3.5** | **Bidirectional Tooling**       | Implement reverse transforms (IR → OpenAPI).                       | 📅 Planned      |
 | **3.6** | **Handlebars Decommissioning**  | Remove legacy Handlebars infrastructure.                           | 📅 Planned      |
 | **3.9** | **Release Prep**                | Documentation, ADRs, final validation.                             | 📅 Planned      |
@@ -108,42 +108,14 @@ graph TD
 
 ### Session 3.4 – IR Enhancements & Additional Writers
 
-**Intent:** Enrich the IR with metadata required for Phase 4 (e.g., parameter maps, enum catalogs) and implement specialized writers.
+**Status:** ✅ **COMPLETE** (Nov 28, 2025)
+**Summary:** Enriched the IR with `enums` catalog and `parametersByLocation` map. Implemented a Markdown writer to demonstrate modular writer architecture. Verified with full fidelity tests.
+**Key Deliverables:**
 
-**Prerequisites:** Session 3.3 ✅
-
-#### 1. Requirements
-
-- **Operation ID Normalization:** Ensure every operation has a deterministic ID.
-- **Parameter Maps:** Group parameters by type (query, path, header, cookie) in the IR for easier access by writers.
-- **Enum Catalogs:** Extract all enums (inline and component) into a catalog for centralized generation.
-- **Documentation Writer:** A simple Markdown writer to prove the "Modular Writer" concept using the IR.
-
-#### 2. Implementation Plan (TDD)
-
-- [ ] **Operation IDs:**
-  - Update `IRBuilder` to ensure `operationId` is present or generated deterministically.
-  - Add `operationId` to `IROperation` if missing.
-- [ ] **Parameter Grouping:**
-  - Update `IROperation` to include `parametersByLocation: { query: [], path: [], header: [], cookie: [] }`.
-  - Update `IRBuilder` to populate this.
-- [ ] **Enum Catalog:**
-  - Create `IREnum` type.
-  - Add `enums: Map<string, IREnum>` to `IRDocument`.
-  - Populate during traversal.
-- [ ] **Markdown Writer:**
-  - Create `lib/src/writers/markdown.ts`.
-  - Implement `writeMarkdown(ir: IRDocument): string`.
-  - **TDD:** Test against fixtures.
-
-#### 3. Verification
-
-- `pnpm test:all` must pass.
-- Markdown writer output verified against snapshots.
-
----
-
-## Future Sessions
+- `lib/src/context/ir-enhancers/`: (Integrated into `IRBuilder` directly for simplicity)
+- `lib/src/writers/markdown.ts`: Markdown writer implementation.
+- `lib/tests-e2e/ir-fidelity.test.ts`: Updated fidelity tests.
+  **Detailed Record:** [PHASE-3-SESSION-4-IR-ENHANCEMENTS.md](./PHASE-3-SESSION-4-IR-ENHANCEMENTS.md)
 
 ### Session 3.5 – Bidirectional Tooling & Compliance
 
