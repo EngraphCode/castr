@@ -13,6 +13,7 @@ describe('IR Serialization', () => {
       version: '1.0.0',
       description: 'A test API',
     },
+    servers: [],
     components: [
       {
         type: 'schema',

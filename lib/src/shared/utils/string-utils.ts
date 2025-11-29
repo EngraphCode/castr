@@ -43,7 +43,7 @@ export const escapeControlCharacters = (str: string): string => {
     .replaceAll('\n', String.raw`\n`)
     .replaceAll('\r', String.raw`\r`)
     .replaceAll(
-      // eslint-disable-next-line no-control-regex, sonarjs/no-control-regex
+      // eslint-disable-next-line no-control-regex, sonarjs/no-control-regex -- JC: required
       /([\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\uFFFE\uFFFF])/g,
       (_m, p1: string) => {
         const codePoint = p1.codePointAt(0);

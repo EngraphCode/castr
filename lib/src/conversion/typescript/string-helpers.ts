@@ -137,7 +137,7 @@ export function wrapNullable(typeString: string, isNullable: boolean): string {
  * wrapReadonly('string[]', true) // 'Readonly<string[]>'
  * wrapReadonly('User', true) // 'Readonly<User>'
  */
-/* eslint-disable sonarjs/no-selector-parameter -- Intentional: conditional wrapping is the function's purpose */
+/* eslint-disable sonarjs/no-selector-parameter -- JC: Intentional: conditional wrapping is the function's purpose */
 export function wrapReadonly(typeString: string, isReadonly: boolean): string {
   return isReadonly ? `Readonly<${typeString}>` : typeString;
 }

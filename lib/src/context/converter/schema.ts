@@ -1,10 +1,12 @@
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import type { IRSchema, IRSchemaProperties } from '../ir-schema.js';
 
+// Remove and import the shared UnknownRecord type and UnknownRecord type predicate
+
 export function convertSchema(irSchema: IRSchema): SchemaObject | ReferenceObject {
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    metadata,
+    // metadata is unused in SchemaObject
+    // metadata is unused in SchemaObject
     properties,
     items,
     additionalProperties,
@@ -48,7 +50,7 @@ export function convertSchema(irSchema: IRSchema): SchemaObject | ReferenceObjec
 }
 
 function copyPrimitives(schema: SchemaObject, rest: Partial<IRSchema>): void {
-  const commonKeys = new Set([
+  const keys: (keyof IRSchema)[] = [
     'type',
     'format',
     'description',
@@ -72,18 +74,17 @@ function copyPrimitives(schema: SchemaObject, rest: Partial<IRSchema>): void {
     'exclusiveMinimum',
     'exclusiveMaximum',
     'multipleOf',
-  ]);
+  ];
+  const commonKeys = new Set<string>(keys);
 
-  for (const key of Object.keys(rest)) {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    const value = (rest as any)[key];
+  for (const [key, value] of Object.entries(rest)) {
     if (value === undefined) {
       continue;
     }
 
     if (commonKeys.has(key) || key.startsWith('x-')) {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-      (schema as any)[key] = value;
+      // SchemaObject allows string indexing for extensions
+      Object.assign(schema, { [key]: value });
     }
   }
 }

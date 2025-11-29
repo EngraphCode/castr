@@ -17434,6 +17434,11 @@ Some useful links:
                 ],
             },
         ],
+        "servers": [
+            {
+                "url": "https://petstore3.swagger.io/api/v3",
+            },
+        ],
         "version": "1.0.0",
     },
     "circularTypeByName": {},
@@ -24127,6 +24132,11 @@ Some useful links:
                 ],
             },
         ],
+        "servers": [
+            {
+                "url": "https://petstore3.swagger.io/api/v3",
+            },
+        ],
         "version": "1.0.0",
     },
     "circularTypeByName": {},
@@ -27428,6 +27438,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 ],
             },
         ],
+        "servers": [],
         "version": "1.0.0",
     },
     "circularTypeByName": {
@@ -27799,7 +27810,7 @@ exports[`with optional, partial, all required objects 1`] = `
         "DeeplyNested": "z.array(VeryDeeplyNested)",
         "Nested2": "z.lazy(() => z.object({ nested_prop: z.boolean().optional(), deeplyNested: DeeplyNested.optional(), circularToRoot: Root2.optional(), requiredProp: z.string() }).passthrough())",
         "PartialObject": "z.object({ something: z.string(), another: z.number() }).partial().passthrough()",
-        "Root2": "z.lazy(() => z.object({ str: z.string(), nb: z.number(), nested: undefined, partial: PartialObject.optional(), optionalProp: z.string().optional() }).passthrough())",
+        "Root2": "z.lazy(() => z.object({ str: z.string(), nb: z.number(), nested: z.lazy(() => Nested2), partial: PartialObject.optional(), optionalProp: z.string().optional() }).passthrough())",
         "VeryDeeplyNested": "z.enum(["aaa", "bbb", "ccc"])",
     },
     "types": {
@@ -27853,7 +27864,7 @@ export const Root2: z.ZodType<Root2> = z.lazy(() =>
     .object({
       str: z.string(),
       nb: z.number(),
-      nested: undefined,
+      nested: z.lazy(() => Nested2),
       partial: PartialObject.optional(),
       optionalProp: z.string().optional(),
     })

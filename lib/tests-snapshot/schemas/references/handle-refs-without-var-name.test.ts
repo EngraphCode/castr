@@ -140,6 +140,7 @@ test('handle-refs-without-var-name', () => {
                     ],
                 },
             ],
+            "servers": [],
             "version": "1.0.0",
         },
         "circularTypeByName": {},

@@ -1,4 +1,5 @@
 import { IRSchemaProperties, type IRDocument, isIRDocument, type IRSchema } from './ir-schema.js';
+import { isIRSchema } from './ir-validators.js';
 
 /**
  * Interface for a serialized Map.
@@ -8,13 +9,16 @@ interface SerializedMap {
   value: [unknown, unknown][];
 }
 
+import { type UnknownRecord, isRecord } from '../shared/types.js';
+
 /**
  * Interface for a serialized IRSchemaProperties.
  */
 interface SerializedIRSchemaProperties {
   dataType: 'IRSchemaProperties';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: Record<string, any>;
+
+  // We need to be more specific here, we know this is IRSchema don't we?
+  value: UnknownRecord;
 }
 
 /**
@@ -24,14 +28,14 @@ interface SerializedIRSchemaProperties {
  * @returns True if the value is a SerializedMap
  */
 function isSerializedMap(value: unknown): value is SerializedMap {
+  if (!isRecord(value)) {
+    return false;
+  }
   return (
-    typeof value === 'object' &&
-    value !== null &&
     'dataType' in value &&
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    (value as SerializedMap).dataType === 'Map' &&
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    Array.isArray((value as SerializedMap).value)
+    value['dataType'] === 'Map' &&
+    'value' in value &&
+    Array.isArray(value['value'])
   );
 }
 
@@ -42,17 +46,15 @@ function isSerializedMap(value: unknown): value is SerializedMap {
  * @returns True if the value is a SerializedIRSchemaProperties
  */
 function isSerializedIRSchemaProperties(value: unknown): value is SerializedIRSchemaProperties {
-  if (typeof value !== 'object' || value === null) {
+  if (!isRecord(value)) {
     return false;
   }
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-explicit-any
-  const record = value as Record<string, any>;
+  const record = value;
   return (
     'dataType' in record &&
     record['dataType'] === 'IRSchemaProperties' &&
     'value' in record &&
-    typeof record['value'] === 'object' &&
-    record['value'] !== null
+    isRecord(record['value'])
   );
 }
 
@@ -66,7 +68,7 @@ function isSerializedIRSchemaProperties(value: unknown): value is SerializedIRSc
 export function serializeIR(ir: IRDocument): string {
   return JSON.stringify(
     ir,
-    (_key, value) => {
+    (_key: string, value: unknown): unknown => {
       if (value instanceof Map) {
         const serialized: SerializedMap = {
           dataType: 'Map',
@@ -74,7 +76,6 @@ export function serializeIR(ir: IRDocument): string {
         };
         return serialized;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return value;
     },
     2,
@@ -90,17 +91,19 @@ export function serializeIR(ir: IRDocument): string {
  * @throws Error if the JSON is not a valid IRDocument
  */
 export function deserializeIR(json: string): IRDocument {
-  const parsed: unknown = JSON.parse(json, (_key, value) => {
+  const parsed: unknown = JSON.parse(json, (_key: string, value: unknown): unknown => {
     if (isSerializedMap(value)) {
       return new Map(value.value);
     }
     if (isSerializedIRSchemaProperties(value)) {
-      // We need to cast the value to the expected constructor argument type
-      // This is safe because we're reviving a trusted structure
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      return new IRSchemaProperties(value.value as Record<string, IRSchema>);
+      const props: Record<string, IRSchema> = {};
+      for (const [k, v] of Object.entries(value.value)) {
+        if (isIRSchema(v)) {
+          props[k] = v;
+        }
+      }
+      return new IRSchemaProperties(props);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return value;
   });
 

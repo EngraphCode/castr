@@ -22,6 +22,45 @@ import type {
 } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import { parseComponentRef } from './ref-resolution.js';
+import { isRecord } from './types.js';
+
+function isSchemaObjectOrRef(value: unknown): value is SchemaObject | ReferenceObject {
+  return isRecord(value) && (isReferenceObject(value) || true);
+}
+
+function getSchemaFromXExt(
+  doc: OpenAPIObject,
+  name: string,
+  xExtKey: string,
+): SchemaObject | ReferenceObject | undefined {
+  const xExt: unknown = doc['x-ext'];
+  if (!isRecord(xExt)) {
+    return undefined;
+  }
+
+  const xExtEntry = xExt[xExtKey];
+  if (!isRecord(xExtEntry)) {
+    return undefined;
+  }
+
+  const components = xExtEntry['components'];
+  if (!isRecord(components)) {
+    return undefined;
+  }
+
+  const schemas = components['schemas'];
+  if (!isRecord(schemas)) {
+    return undefined;
+  }
+
+  const schema = schemas[name];
+  // We assume if it exists in the schema map, it is a valid schema object/ref
+  // This is a safe assumption for a valid spec, but we can't easily validate the whole schema object here
+  if (isSchemaObjectOrRef(schema)) {
+    return schema;
+  }
+  return undefined;
+}
 
 /**
  * Get a schema from components.schemas by name.
@@ -50,34 +89,17 @@ import { parseComponentRef } from './ref-resolution.js';
  * // Falls back to: doc.components.schemas['Pet']
  * ```
  */
-// eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 export function getSchemaFromComponents(
   doc: OpenAPIObject,
   name: string,
   xExtKey?: string,
 ): SchemaObject | ReferenceObject {
   // Try x-ext location first (if xExtKey provided)
+  // Try x-ext location first (if xExtKey provided)
   if (xExtKey) {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
-    const xExt = doc['x-ext'] as Record<string, unknown> | undefined;
-    if (xExt) {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
-      const xExtEntry = xExt[xExtKey] as Record<string, unknown> | undefined;
-      if (xExtEntry?.['components']) {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
-        const components = xExtEntry['components'] as Record<string, unknown>;
-        // eslint-disable-next-line max-depth
-        if (components['schemas']) {
-          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
-          const schemas = components['schemas'] as Record<string, unknown>;
-          const schema = schemas[name];
-          // eslint-disable-next-line max-depth
-          if (schema) {
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            return schema as SchemaObject | ReferenceObject;
-          }
-        }
-      }
+    const schema = getSchemaFromXExt(doc, name, xExtKey);
+    if (schema) {
+      return schema;
     }
   }
 

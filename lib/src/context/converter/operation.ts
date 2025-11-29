@@ -1,4 +1,4 @@
-import type { PathsObject, PathItemObject, OperationObject } from 'openapi3-ts/oas31';
+import type { PathsObject, OperationObject } from 'openapi3-ts/oas31';
 import type { IROperation } from '../ir-schema.js';
 import { convertParameter } from './parameter.js';
 import { convertResponses } from './response.js';
@@ -7,11 +7,11 @@ import { convertRequestBody } from './content.js';
 export function convertOperations(operations: IROperation[]): PathsObject {
   const paths: PathsObject = {};
   for (const op of operations) {
-    if (!paths[op.path]) {
-      paths[op.path] = {};
+    let pathItem = paths[op.path];
+    if (!pathItem) {
+      pathItem = {};
+      paths[op.path] = pathItem;
     }
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const pathItem = paths[op.path] as PathItemObject;
     pathItem[op.method] = convertOperation(op);
   }
   return paths;
@@ -25,7 +25,6 @@ export function convertOperation(op: IROperation): OperationObject {
     ...(op.tags ? { tags: op.tags } : {}),
     parameters: op.parameters.map(convertParameter),
     responses: convertResponses(op.responses),
-    // eslint-disable-next-line @typescript-eslint/no-deprecated, sonarjs/deprecation
     ...(op.deprecated ? { deprecated: op.deprecated } : {}),
   };
 

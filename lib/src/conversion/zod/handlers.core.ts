@@ -55,11 +55,12 @@ function isCircularReference(schemaName: string, refsPath: string[]): boolean {
  * @returns ZodCodeResult with assigned circular schema
  * @internal
  */
-function handleCircularReference(code: ZodCodeResult, ctx: ConversionTypeContext): ZodCodeResult {
-  // In circular references, code.ref and the schema must exist
-  // Non-null assertions are safe because we're inside a circular reference check
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return { ...code, code: ctx.zodSchemaByName[code.ref!]! };
+function handleCircularReference(code: ZodCodeResult): ZodCodeResult {
+  if (!code.ref) {
+    throw new TypeError('Circular reference without ref');
+  }
+  const schemaName = getSchemaNameFromRef(code.ref);
+  return { ...code, code: `z.lazy(() => ${schemaName})` };
 }
 
 /**
@@ -125,7 +126,7 @@ export function handleReferenceObject(
   const schemaName = getSchemaNameFromRef(schema.$ref);
 
   if (isCircularReference(schemaName, refsPath)) {
-    return handleCircularReference(code, ctx);
+    return handleCircularReference(code);
   }
 
   const result = resolveSchemaReference(schema.$ref, schemaName, ctx, meta, getZodSchema, options);

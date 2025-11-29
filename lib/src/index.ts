@@ -22,3 +22,5 @@ export {
   type McpValidationError,
   type McpValidationErrorContext,
 } from './validation/mcp-error-formatting.js';
+export { generateOpenAPI } from './generators/openapi/index.js';
+export { loadOpenApiDocument } from './shared/load-openapi-document/orchestrator.js';

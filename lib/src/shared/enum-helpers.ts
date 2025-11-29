@@ -30,12 +30,14 @@ export function stringEnumValueToZodCode(value: unknown): string {
   return `"${safeValue}"`;
 }
 
+export type ZodLiteralValue = string | number;
+
 /**
  * Converts a non-string enum value to a Zod literal value
  * Handles null, numbers, and complex values
  */
-// eslint-disable-next-line sonarjs/function-return-type
-export function nonStringEnumValueToZodLiteral(value: unknown): string | number {
+// eslint-disable-next-line sonarjs/function-return-type -- JC: allowed
+export function nonStringEnumValueToZodLiteral(value: unknown): ZodLiteralValue {
   if (value === null) {
     return 'null';
   }

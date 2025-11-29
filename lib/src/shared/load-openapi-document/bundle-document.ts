@@ -8,6 +8,8 @@ import { bundle } from '@scalar/json-magic/bundle';
 import type { AnyObject, Filesystem } from '@scalar/openapi-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
+import type { UnknownRecord } from '../types.js';
+
 /**
  * Bundle OpenAPI document, resolving external references.
  *
@@ -27,8 +29,7 @@ export async function bundleDocument(
     return await bundle(input, config);
   }
 
-  // bundle() expects Record<string, unknown>, OpenAPIObject needs type casting
-  // This is safe as we're passing it to Scalar's own bundle function
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-restricted-types
-  return await bundle(input as unknown as Record<string, unknown>, config);
+  const payload: UnknownRecord = {};
+  Object.assign(payload, input);
+  return await bundle(payload, config);
 }

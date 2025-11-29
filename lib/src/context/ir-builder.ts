@@ -65,6 +65,7 @@ export function buildIR(doc: OpenAPIObject): IRDocument {
     version: '1.0.0', // IR schema version
     openApiVersion: doc.openapi,
     info: doc.info,
+    servers: doc.servers ?? [],
     components,
     operations,
     dependencyGraph,

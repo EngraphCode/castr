@@ -1,3 +1,0 @@
-src/openApiToTypescript.test.ts:9:import type { OpenAPIV3 } from "openapi-types";
-src/openApiToTypescript.test.ts:9:import type { OpenAPIV3 } from "openapi-types";
-src/openApiToTypescript.test.ts:11:const makeSchema = (schema: SchemaObject | OpenAPIV3.SchemaObject) => schema as SchemaObject;

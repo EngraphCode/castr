@@ -7,7 +7,7 @@
  * Centralized here to avoid circular import issues.
  */
 
-import type { OperationObject, ReferenceObject } from 'openapi3-ts/oas31';
+import type { OperationObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
 // Re-export isReferenceObject for convenience
@@ -61,15 +61,3 @@ export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMet
  * not necessarily all of them. This matches the OpenAPI spec behavior.
  */
 export type PathItem = Partial<Record<AllowedMethod, OperationObject | undefined>>;
-
-// eslint-disable-next-line sonarjs/function-return-type
-export function narrowToThingOrReference<T>(
-  thingOrReference: T | ReferenceObject,
-): T | ReferenceObject {
-  if (isReferenceObject(thingOrReference)) {
-    const reference = thingOrReference;
-    return reference;
-  }
-  const thing = thingOrReference;
-  return thing;
-}

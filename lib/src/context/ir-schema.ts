@@ -3,12 +3,14 @@ import type {
   ParameterObject,
   SchemaObject,
   SecuritySchemeObject,
+  ExampleObject,
   ReferenceObject,
+  ServerObject,
 } from 'openapi3-ts/oas31';
 
 // ... existing imports ...
 
-export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
+export type IRHttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
 
 /**
  * Type-safe wrapper for IRSchema properties.
@@ -119,6 +121,7 @@ export interface IRRequestBodyComponent {
  *
  * @public
  */
+
 export interface IROperation {
   /**
    * Unique operation identifier from OpenAPI operationId.
@@ -132,7 +135,7 @@ export interface IROperation {
    * HTTP method for this operation.
    * One of: get, post, put, patch, delete, head, options.
    */
-  method: HttpMethod;
+  method: IRHttpMethod;
 
   /**
    * API path with parameter placeholders.
@@ -200,7 +203,7 @@ export interface IROperation {
 
   /**
    * Whether this operation is deprecated.
-   * Used for @deprecated JSDoc annotations.
+   * Used for JSDoc deprecation annotations.
    */
   deprecated?: boolean;
 }
@@ -334,8 +337,7 @@ export interface IRMediaType {
   /**
    * Multiple named examples.
    */
-  // eslint-disable-next-line @typescript-eslint/no-restricted-types
-  examples?: Record<string, unknown>;
+  examples?: Record<string, ReferenceObject | ExampleObject>;
 }
 
 /**
@@ -1026,6 +1028,11 @@ export interface IRDocument {
   info: InfoObject;
 
   /**
+   * Servers from OpenAPI Servers object.
+   */
+  servers: ServerObject[];
+
+  /**
    * All reusable components (schemas, responses, parameters, etc.).
    */
   components: IRComponent[];
@@ -1053,12 +1060,18 @@ export interface IRDocument {
  * @param value - The value to check
  * @returns True if the value is an IRDocument
  */
+function isObject(value: unknown): value is object {
+  return typeof value === 'object' && value !== null;
+}
+
 export function isIRDocument(value: unknown): value is IRDocument {
+  if (!isObject(value)) {
+    return false;
+  }
   return (
-    typeof value === 'object' &&
-    value !== null &&
     'version' in value &&
     'info' in value &&
+    'servers' in value &&
     'components' in value &&
     'operations' in value &&
     'dependencyGraph' in value &&

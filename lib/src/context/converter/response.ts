@@ -1,4 +1,9 @@
-import type { ResponseObject, ReferenceObject, ResponsesObject } from 'openapi3-ts/oas31';
+import type {
+  ResponseObject,
+  ReferenceObject,
+  ResponsesObject,
+  HeaderObject,
+} from 'openapi3-ts/oas31';
 import type { IRResponse } from '../ir-schema.js';
 import { convertContent } from './content.js';
 import { convertSchema } from './schema.js';
@@ -21,14 +26,12 @@ export function convertResponse(resp: IRResponse): ResponseObject | ReferenceObj
   }
 
   if (resp.headers) {
-    responseObj.headers = Object.entries(resp.headers).reduce(
-      (acc, [key, value]) => {
-        acc[key] = { schema: convertSchema(value) };
-        return acc;
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/consistent-type-assertions
-      {} as Record<string, any>,
-    );
+    responseObj.headers = Object.entries(resp.headers).reduce<
+      Record<string, HeaderObject | ReferenceObject>
+    >((acc, [key, value]) => {
+      acc[key] = { schema: convertSchema(value) };
+      return acc;
+    }, {});
   }
 
   return responseObj;

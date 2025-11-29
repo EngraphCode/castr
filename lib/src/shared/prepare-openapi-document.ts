@@ -35,7 +35,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { loadOpenApiDocument } from './load-openapi-document/index.js';
 
-// eslint-disable-next-line sonarjs/redundant-type-aliases -- it is semantically useful.
+// eslint-disable-next-line sonarjs/redundant-type-aliases -- JC: it is semantically useful.
 type FilePathInput = string;
 
 /**

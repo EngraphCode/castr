@@ -32,9 +32,56 @@ or directly (no install)
 
 - `pnpx openapi-zod-client "./input/file.yaml" -o "./output/client.ts"`
 
+# Programmatic Usage
+
+You can use the library programmatically to transform between OpenAPI, IR (Intermediate Representation), and Zod.
+
+## OpenAPI -> Zod
+
+Generate Zod schemas and client from an OpenAPI document:
+
+```typescript
+import { generateZodClientFromOpenAPI } from 'openapi-zod-client';
+
+const result = await generateZodClientFromOpenAPI({
+  openApiDoc: './petstore.yaml',
+  distPath: './output.ts',
+  options: {
+    withAlias: true,
+  },
+});
+```
+
+## Bidirectional Transformations (OpenAPI <-> IR)
+
+The library exposes low-level tools to work with the Intermediate Representation (IR), allowing for lossless transformations.
+
+### OpenAPI -> IR
+
+```typescript
+import { loadOpenApiDocument, buildIR } from 'openapi-zod-client';
+
+// 1. Load and validate OpenAPI document (handles bundling, upgrading to 3.1)
+const loaded = await loadOpenApiDocument('./petstore.yaml');
+
+// 2. Convert to Intermediate Representation (IR)
+const ir = buildIR(loaded.document);
+
+console.log(`Loaded IR with ${ir.components.length} components`);
+```
+
+### IR -> OpenAPI
+
+```typescript
+import { generateOpenAPI } from 'openapi-zod-client';
+
+// 3. Convert IR back to OpenAPI 3.1
+const openApiDoc = generateOpenAPI(ir);
+```
+
 # auto-generated doc
 
-https://paka.dev/npm/openapi-zod-client
+<https://paka.dev/npm/openapi-zod-client>
 
 ## CLI
 
@@ -352,7 +399,7 @@ See [MCP Integration Guide](../docs/MCP_INTEGRATION_GUIDE.md) for complete docum
 
 NOT tested/expected to work with OpenAPI before v3, please migrate your specs to v3+ if you want to use this
 
-## Contributing:
+## Contributing
 
 - `pnpm i && pnpm gen`
 

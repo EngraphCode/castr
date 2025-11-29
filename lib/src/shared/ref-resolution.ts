@@ -123,51 +123,81 @@ export interface ParsedRef {
  *
  * @public
  */
-// eslint-disable-next-line complexity -- Multiple ref formats require conditional checks
+// Break down the logic into smaller, pure functions to make it easier to understand
 export function parseComponentRef(ref: string): ParsedRef {
-  // Try standard format first: #/components/{type}/{name}
+  const standard = tryParseStandardRef(ref);
+  if (standard) {
+    return standard;
+  }
+
+  const xExt = tryParseXExtRef(ref);
+  if (xExt) {
+    return xExt;
+  }
+
+  const legacy = tryParseLegacyRef(ref);
+  if (legacy) {
+    return legacy;
+  }
+
+  const bare = tryParseBareRef(ref);
+  if (bare) {
+    return bare;
+  }
+
+  throw new Error(
+    `Invalid component $ref: ${ref}. ` +
+      `Expected format: #/components/{type}/{name} or #/x-ext/{hash}/components/{type}/{name}`,
+  );
+}
+
+function tryParseStandardRef(ref: string): ParsedRef | null {
   const standardPattern = /^#\/components\/([^/]+)\/(.+)$/;
-  const standardMatch = standardPattern.exec(ref);
+  const match = standardPattern.exec(ref);
 
-  if (standardMatch && standardMatch[1] && standardMatch[2]) {
+  if (match && match[1] && match[2]) {
     return {
-      componentType: standardMatch[1],
-      componentName: standardMatch[2],
+      componentType: match[1],
+      componentName: match[2],
       isExternal: false,
       originalRef: ref,
     };
   }
+  return null;
+}
 
-  // Try x-ext format: #/x-ext/{hash}/components/{type}/{name}
+function tryParseXExtRef(ref: string): ParsedRef | null {
   const xExtPattern = /^#\/x-ext\/([^/]+)\/components\/([^/]+)\/(.+)$/;
-  const xExtMatch = xExtPattern.exec(ref);
+  const match = xExtPattern.exec(ref);
 
-  if (xExtMatch && xExtMatch[1] && xExtMatch[2] && xExtMatch[3]) {
+  if (match && match[1] && match[2] && match[3]) {
     return {
-      componentType: xExtMatch[2],
-      componentName: xExtMatch[3],
+      componentType: match[2],
+      componentName: match[3],
       isExternal: true,
-      xExtKey: xExtMatch[1],
+      xExtKey: match[1],
       originalRef: ref,
     };
   }
+  return null;
+}
 
-  // Backward compatibility: Support malformed refs missing the leading slash
-  // Pattern: #components/{type}/{name} (should be #/components/{type}/{name})
+function tryParseLegacyRef(ref: string): ParsedRef | null {
   const legacyPattern = /^#components\/([^/]+)\/(.+)$/;
-  const legacyMatch = legacyPattern.exec(ref);
+  const match = legacyPattern.exec(ref);
 
-  if (legacyMatch && legacyMatch[1] && legacyMatch[2]) {
+  if (match && match[1] && match[2]) {
     return {
-      componentType: legacyMatch[1],
-      componentName: legacyMatch[2],
+      componentType: match[1],
+      componentName: match[2],
       isExternal: false,
       originalRef: ref,
     };
   }
+  return null;
+}
 
-  // Backward compatibility: Treat strings without '#/' as bare schema names
-  // This maintains compatibility with existing code that passes bare names
+function tryParseBareRef(ref: string): ParsedRef | null {
   if (!ref.startsWith('#')) {
     return {
       componentType: 'schemas',
@@ -176,12 +206,7 @@ export function parseComponentRef(ref: string): ParsedRef {
       originalRef: ref,
     };
   }
-
-  // Neither format matched - throw with helpful error
-  throw new Error(
-    `Invalid component $ref: ${ref}. ` +
-      `Expected format: #/components/{type}/{name} or #/x-ext/{hash}/components/{type}/{name}`,
-  );
+  return null;
 }
 
 /**

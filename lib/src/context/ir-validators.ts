@@ -22,12 +22,10 @@
  * @public
  */
 
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
-/* eslint-disable @typescript-eslint/no-restricted-types */
-/* eslint-disable complexity */
-
 import type { IRComponent, IRDocument, IROperation, IRSchema, IRSchemaNode } from './ir-schema.js';
 import { IRSchemaProperties } from './ir-schema.js';
+
+import { type UnknownRecord, isRecord } from '../shared/types.js';
 
 /**
  * Type guard for IRDocument.
@@ -50,21 +48,17 @@ import { IRSchemaProperties } from './ir-schema.js';
  * @public
  */
 export function isIRDocument(value: unknown): value is IRDocument {
-  if (value == null || typeof value !== 'object') {
+  if (!isRecord(value)) {
     return false;
   }
 
-  const obj = value as Record<string, unknown>;
-
   return (
-    typeof obj['version'] === 'string' &&
-    typeof obj['openApiVersion'] === 'string' &&
-    obj['info'] != null &&
-    typeof obj['info'] === 'object' &&
-    Array.isArray(obj['components']) &&
-    Array.isArray(obj['operations']) &&
-    obj['dependencyGraph'] != null &&
-    typeof obj['dependencyGraph'] === 'object'
+    typeof value['version'] === 'string' &&
+    typeof value['openApiVersion'] === 'string' &&
+    isRecord(value['info']) &&
+    Array.isArray(value['components']) &&
+    Array.isArray(value['operations']) &&
+    isRecord(value['dependencyGraph'])
   );
 }
 
@@ -89,35 +83,32 @@ export function isIRDocument(value: unknown): value is IRDocument {
  * @public
  */
 export function isIRComponent(value: unknown): value is IRComponent {
-  if (value == null || typeof value !== 'object') {
+  if (!isRecord(value)) {
     return false;
   }
 
-  const obj = value as Record<string, unknown>;
-
-  if (typeof obj['name'] !== 'string') {
+  if (typeof value['name'] !== 'string') {
     return false;
   }
 
-  switch (obj['type']) {
+  switch (value['type']) {
     case 'schema':
-      return (
-        obj['schema'] != null &&
-        typeof obj['schema'] === 'object' &&
-        obj['metadata'] != null &&
-        typeof obj['metadata'] === 'object'
-      );
+      return isIRSchemaComponent(value);
     case 'parameter':
-      return obj['parameter'] != null && typeof obj['parameter'] === 'object';
+      return isRecord(value['parameter']);
     case 'response':
-      return obj['response'] != null && typeof obj['response'] === 'object';
+      return isRecord(value['response']);
     case 'requestBody':
-      return obj['requestBody'] != null && typeof obj['requestBody'] === 'object';
+      return isRecord(value['requestBody']);
     case 'securityScheme':
-      return obj['scheme'] != null && typeof obj['scheme'] === 'object';
+      return isRecord(value['scheme']);
     default:
       return false;
   }
+}
+
+function isIRSchemaComponent(value: UnknownRecord): boolean {
+  return isRecord(value['schema']) && isRecord(value['metadata']);
 }
 
 /**
@@ -141,24 +132,23 @@ export function isIRComponent(value: unknown): value is IRComponent {
  * @public
  */
 export function isIROperation(value: unknown): value is IROperation {
-  if (value == null || typeof value !== 'object') {
+  if (!isRecord(value)) {
     return false;
   }
 
-  const obj = value as Record<string, unknown>;
-
   // Validate HTTP method
   const validMethods = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
-  if (typeof obj['method'] !== 'string' || !validMethods.includes(obj['method'])) {
+  const method = value['method'];
+  if (typeof method !== 'string' || !validMethods.includes(method)) {
     return false;
   }
 
   // Validate required fields
   return (
-    typeof obj['operationId'] === 'string' &&
-    typeof obj['path'] === 'string' &&
-    Array.isArray(obj['parameters']) &&
-    Array.isArray(obj['responses'])
+    typeof value['operationId'] === 'string' &&
+    typeof value['path'] === 'string' &&
+    Array.isArray(value['parameters']) &&
+    Array.isArray(value['responses'])
   );
 }
 
@@ -184,22 +174,20 @@ export function isIROperation(value: unknown): value is IROperation {
  * @public
  */
 export function isIRSchema(value: unknown): value is IRSchema {
-  if (value == null || typeof value !== 'object') {
+  if (!isRecord(value)) {
     return false;
   }
 
-  const obj = value as Record<string, unknown>;
-
   // Validate properties if present
-  if ('properties' in obj && obj['properties'] !== undefined) {
-    if (!(obj['properties'] instanceof IRSchemaProperties)) {
+  if ('properties' in value && value['properties'] !== undefined) {
+    if (!(value['properties'] instanceof IRSchemaProperties)) {
       return false;
     }
   }
 
   // The only required field in IRSchema is metadata
   // All other fields (type, properties, items, etc.) are optional
-  return obj['metadata'] != null && typeof obj['metadata'] === 'object';
+  return isRecord(value['metadata']);
 }
 
 /**
@@ -227,43 +215,36 @@ export function isIRSchema(value: unknown): value is IRSchema {
  * @public
  */
 export function isIRSchemaNode(value: unknown): value is IRSchemaNode {
-  if (value == null || typeof value !== 'object') {
+  if (!isRecord(value)) {
     return false;
   }
-
-  const obj = value as Record<string, unknown>;
 
   // Validate required boolean fields
-  if (typeof obj['required'] !== 'boolean' || typeof obj['nullable'] !== 'boolean') {
+  if (typeof value['required'] !== 'boolean' || typeof value['nullable'] !== 'boolean') {
     return false;
   }
 
-  // Validate zodChain structure
-  if (
-    obj['zodChain'] == null ||
-    typeof obj['zodChain'] !== 'object' ||
-    typeof (obj['zodChain'] as Record<string, unknown>)['presence'] !== 'string' ||
-    !Array.isArray((obj['zodChain'] as Record<string, unknown>)['validations']) ||
-    !Array.isArray((obj['zodChain'] as Record<string, unknown>)['defaults'])
-  ) {
-    return false;
-  }
+  return (
+    isZodChain(value['zodChain']) &&
+    isDependencyGraph(value['dependencyGraph']) &&
+    Array.isArray(value['circularReferences'])
+  );
+}
 
-  // Validate dependencyGraph structure
-  if (
-    obj['dependencyGraph'] == null ||
-    typeof obj['dependencyGraph'] !== 'object' ||
-    !Array.isArray((obj['dependencyGraph'] as Record<string, unknown>)['references']) ||
-    !Array.isArray((obj['dependencyGraph'] as Record<string, unknown>)['referencedBy']) ||
-    typeof (obj['dependencyGraph'] as Record<string, unknown>)['depth'] !== 'number'
-  ) {
-    return false;
-  }
+function isZodChain(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value['presence'] === 'string' &&
+    Array.isArray(value['validations']) &&
+    Array.isArray(value['defaults'])
+  );
+}
 
-  // Validate circularReferences array
-  if (!Array.isArray(obj['circularReferences'])) {
-    return false;
-  }
-
-  return true;
+function isDependencyGraph(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    Array.isArray(value['references']) &&
+    Array.isArray(value['referencedBy']) &&
+    typeof value['depth'] === 'number'
+  );
 }

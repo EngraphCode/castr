@@ -1,32 +1,21 @@
-import type {
-  MediaTypeObject,
-  ExampleObject,
-  ReferenceObject,
-  RequestBodyObject,
-} from 'openapi3-ts/oas31';
-import type { IRSchema, IRRequestBody } from '../ir-schema.js';
+import type { MediaTypeObject, ReferenceObject, RequestBodyObject } from 'openapi3-ts/oas31';
+import type { IRRequestBody, IRMediaType } from '../ir-schema.js';
 import { convertSchema } from './schema.js';
 
 export function convertContent(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content: Record<string, { schema: IRSchema; example?: unknown; examples?: Record<string, any> }>,
+  content: Record<string, IRMediaType>,
 ): Record<string, MediaTypeObject> {
-  return Object.entries(content).reduce(
-    (acc, [key, value]) => {
-      const mediaType: MediaTypeObject = { schema: convertSchema(value.schema) };
-      if (value.example !== undefined) {
-        mediaType.example = value.example;
-      }
-      if (value.examples) {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        mediaType.examples = value.examples as Record<string, ExampleObject | ReferenceObject>;
-      }
-      acc[key] = mediaType;
-      return acc;
-    },
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    {} as Record<string, MediaTypeObject>,
-  );
+  return Object.entries(content).reduce<Record<string, MediaTypeObject>>((acc, [key, value]) => {
+    const mediaType: MediaTypeObject = { schema: convertSchema(value.schema) };
+    if (value.example !== undefined) {
+      mediaType.example = value.example;
+    }
+    if (value.examples) {
+      mediaType.examples = value.examples;
+    }
+    acc[key] = mediaType;
+    return acc;
+  }, {});
 }
 
 export function convertRequestBody(body: IRRequestBody): RequestBodyObject | ReferenceObject {

@@ -7,11 +7,15 @@ import Handlebars from 'handlebars';
  * NOTE: This file will be completely removed in Phase 3 Session 3.7 (Handlebars Decommission).
  * Type safety compromises here are temporary and will not exist after ts-morph migration.
  *
- * eslint-disable-next-line @typescript-eslint/no-explicit-any -- Temporary: Handlebars library uses 'any' for data context, will be removed in Phase 3.7
  */
 interface HandlebarsDataContext {
-  root?: Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-  [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-restricted-types -- JC: limitation of handlebars, will be removed in Phase 3 Session 3.7 (Handlebars Decommission)
+  root?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+function isHandlebarsDataContext(value: unknown): value is HandlebarsDataContext {
+  return typeof value === 'object' && value !== null;
 }
 
 /**
@@ -99,11 +103,7 @@ function registerIsFirstOfTypeHelper(instance: typeof Handlebars): void {
     function (currentType: string, targetType: string, scopeId: number, options: HelperOptions) {
       // Handlebars types options.data as 'any', runtime validation before narrowing
       const dataUnknown: unknown = options.data;
-      const data =
-        dataUnknown && typeof dataUnknown === 'object'
-          ? // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Temporary: Handlebars integration, will be removed in Phase 3.7
-            (dataUnknown as HandlebarsDataContext)
-          : {};
+      const data = dataUnknown && isHandlebarsDataContext(dataUnknown) ? dataUnknown : {};
       const root = data.root || {};
 
       // Use scopeId (endpoint index) to create a unique key per endpoint

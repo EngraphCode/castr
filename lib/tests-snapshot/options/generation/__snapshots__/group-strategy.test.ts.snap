@@ -2140,7 +2140,7 @@ export const User = z.lazy(() =>
       firstname: z.string(),
       lastname: z.string(),
       email: z.string(),
-      friends: z.array(undefined),
+      friends: z.array(z.lazy(() => User)),
     })
     .partial()
     .strict(),
@@ -2151,7 +2151,7 @@ export const Country = z.lazy(() =>
       id: z.number().int(),
       name: z.string(),
       code: z.string(),
-      store_list: z.array(undefined),
+      store_list: z.array(z.lazy(() => Store)),
     })
     .partial()
     .strict(),

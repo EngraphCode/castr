@@ -25,6 +25,7 @@ describe('isIRDocument', () => {
         title: 'Test API',
         version: '1.0.0',
       },
+      servers: [],
       components: [],
       operations: [],
       dependencyGraph: {

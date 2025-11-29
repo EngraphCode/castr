@@ -83,7 +83,7 @@ const assignSection = (
   }
 };
 
-/* eslint-disable sonarjs/function-return-type */
+// eslint-disable-next-line sonarjs/function-return-type -- the uncertainty of the return type can be removed with better architecture design, do so.
 function createInputSchema(
   document: OpenAPIObject,
   pathParameters: readonly (ParameterObject | ReferenceObject)[] | undefined,
@@ -118,6 +118,7 @@ function createInputSchema(
   return converted;
 }
 
+// eslint-disable-next-line sonarjs/function-return-type -- the uncertainty of the return type can be removed with better architecture design, do so.
 function createOutputSchema(
   document: OpenAPIObject,
   operation: OperationObject,
@@ -132,7 +133,6 @@ function createOutputSchema(
 
   return converted;
 }
-/* eslint-enable sonarjs/function-return-type */
 
 const getOperationFromPathItem = (
   pathItem: PathItemObject,
