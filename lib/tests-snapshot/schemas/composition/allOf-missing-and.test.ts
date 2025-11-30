@@ -40,33 +40,31 @@ test('allOf-missing-and', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const test1 = z.object({ text1: z.string() }).partial().strict();
     export const test2 = z.object({ text2: z.number() }).partial().strict();
     export const test3 = z.object({ text3: z.boolean() }).partial().strict();
     export const test4 = test1.and(test2).and(test3);
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "put" as const,
+        method: "put",
         path: "/pet",
-        operationId: "putPet",
+        requestFormat: "json",
+        parameters: [],
+        response: test4,
+        errors: [],
+        responses: {
+          200: {
+            schema: test4,
+            description: "Successful operation",
+          },
+        },
         request: {},
-        responses: { 200: { description: "Successful operation", schema: test4 } },
+        alias: "putPet",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -115,7 +113,7 @@ test('allOf-missing-and', async () => {
           },
         },
         httpOperation: {
-          method: "put" as const,
+          method: "put",
           path: "/pet",
           originalPath: "/pet",
         },

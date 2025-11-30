@@ -321,7 +321,7 @@ describe('anyOf behavior', () => {
     assertSingleFileResult(output);
     expect(output.content).toMatchInlineSnapshot(`
       "import { z } from "zod";
-
+      // Zod Schemas
       export const PetByAge = z
         .object({ age: z.number().int(), nickname: z.string().optional() })
         .strict();
@@ -329,28 +329,34 @@ describe('anyOf behavior', () => {
         .object({ pet_type: z.enum(["Cat", "Dog"]), hunts: z.boolean().optional() })
         .strict();
       export const anyOfRef = z.union([PetByAge, PetByType]).optional();
-
+      // Endpoints
       export const endpoints = [
         {
-          method: "get" as const,
+          method: "get",
           path: "/test",
-          operationId: "getTest",
-          request: { queryParams: z.object({ anyOfRef: anyOfRef }).optional() },
-          responses: { 200: { description: "Success", schema: z.void() } },
+          requestFormat: "json",
+          parameters: [
+            {
+              name: "anyOfRef",
+              type: "Query",
+              schema: anyOfRef,
+            },
+          ],
+          response: z.void(),
+          errors: [],
+          responses: {
+            200: {
+              schema: z.void(),
+              description: "Success",
+            },
+          },
+          request: {
+            queryParams: z.object({ anyOfRef: anyOfRef }),
+          },
+          alias: "getTest",
         },
       ] as const;
-
-      /**
-       * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-       *
-       * Each entry provides:
-       * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-       * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-       * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-       *
-       * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-       * additional context to operators or logging.
-       */
+      // MCP Tools
       export const mcpTools = [
         {
           tool: {
@@ -402,7 +408,7 @@ describe('anyOf behavior', () => {
             },
           },
           httpOperation: {
-            method: "get" as const,
+            method: "get",
             path: "/test",
             originalPath: "/test",
           },

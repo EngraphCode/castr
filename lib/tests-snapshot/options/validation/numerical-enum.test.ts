@@ -46,37 +46,46 @@ test('numerical-enum-support', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/sample",
-        operationId: "getSample",
-        request: {
-          queryParams: z
-            .object({
-              foo: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
-              bar: z
-                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-                .optional(),
-            })
-            .optional(),
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "foo",
+            type: "Query",
+            schema: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
+          },
+          {
+            name: "bar",
+            type: "Query",
+            schema: z
+              .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
+              .optional(),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "resoponse",
+          },
         },
-        responses: { 200: { description: "resoponse", schema: z.void() } },
+        request: {
+          queryParams: z.object({
+            foo: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
+            bar: z
+              .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
+              .optional(),
+          }),
+        },
+        alias: "getSample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -107,7 +116,7 @@ test('numerical-enum-support', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/sample",
           originalPath: "/sample",
         },

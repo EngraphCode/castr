@@ -67,7 +67,7 @@ test('missing-zod-chains', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const test1 = z.string();
     export const test2 = z.number();
     export const test3 = z
@@ -79,42 +79,67 @@ test('missing-zod-chains', async () => {
       z.object({ foo: z.string() }).partial().strict(),
       z.null(),
     ]);
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "put" as const,
+        method: "put",
         path: "/pet",
-        operationId: "putPet",
-        request: {},
-        responses: {
-          200: { description: "Successful operation", schema: z.string().min(5) },
-          401: {
-            description: "Successful operation",
+        requestFormat: "json",
+        parameters: [],
+        response: z.string().min(5),
+        errors: [
+          {
+            status: 401,
             schema: z.number().int().gte(10),
-          },
-          402: {
             description: "Successful operation",
+          },
+          {
+            status: 402,
             schema: z
               .object({ text: z.string().min(5), num: z.number().int().gte(10) })
               .strict(),
+            description: "Successful operation",
           },
-          403: { description: "Successful operation", schema: nulltype },
-          404: { description: "Successful operation", schema: anyOfType },
+          {
+            status: 403,
+            schema: nulltype,
+            description: "Successful operation",
+          },
+          {
+            status: 404,
+            schema: anyOfType,
+            description: "Successful operation",
+          },
+        ],
+        responses: {
+          200: {
+            schema: z.string().min(5),
+            description: "Successful operation",
+          },
+          401: {
+            schema: z.number().int().gte(10),
+            description: "Successful operation",
+          },
+          402: {
+            schema: z
+              .object({ text: z.string().min(5), num: z.number().int().gte(10) })
+              .strict(),
+            description: "Successful operation",
+          },
+          403: {
+            schema: nulltype,
+            description: "Successful operation",
+          },
+          404: {
+            schema: anyOfType,
+            description: "Successful operation",
+          },
         },
+        request: {},
+        alias: "putPet",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -139,7 +164,7 @@ test('missing-zod-chains', async () => {
           },
         },
         httpOperation: {
-          method: "put" as const,
+          method: "put",
           path: "/pet",
           originalPath: "/pet",
         },

@@ -50,7 +50,6 @@
     "@scalar/openapi-parser": "0.23.0",
     "@scalar/openapi-types": "0.5.1",
     "commander": "^14.0.2",
-    "handlebars": "^4.7.8",
     "lodash-es": "^4.17.21",
     "openapi3-ts": "^4.5.0",
     "prettier": "^3.6.2",

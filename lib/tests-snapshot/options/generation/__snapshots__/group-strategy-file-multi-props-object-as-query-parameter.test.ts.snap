@@ -2,35 +2,41 @@
 
 exports[`file group strategy with multi-props object as query parameter > method file 1`] = `
 {
-    "__index": "export { PostApi } from "./post";
+    "__index": "export * as PostApi from "./post";
 ",
     "post": "import { z } from "zod";
-
+// Zod Schemas
 export const req = z
   .object({ prop1: z.number().int(), prop2: z.number().int() })
   .strict();
-
+// Endpoints
 export const endpoints = [
   {
-    method: "post" as const,
+    method: "post",
     path: "/api/v1/test",
-    operationId: "postApiV1Test",
-    request: { queryParams: z.object({ req: req }).optional() },
-    responses: { 200: { description: "OK", schema: z.void() } },
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "req",
+        type: "Query",
+        schema: req,
+      },
+    ],
+    response: z.void(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.void(),
+        description: "OK",
+      },
+    },
+    request: {
+      queryParams: z.object({ req: req }),
+    },
+    alias: "postApiV1Test",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -67,7 +73,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "post" as const,
+      method: "post",
       path: "/api/v1/test",
       originalPath: "/api/v1/test",
     },
@@ -85,32 +91,38 @@ export const mcpTools = [
 exports[`file group strategy with multi-props object as query parameter > tag file 1`] = `
 {
     "Default": "import { z } from "zod";
-
+// Zod Schemas
 export const req = z
   .object({ prop1: z.number().int(), prop2: z.number().int() })
   .strict();
-
+// Endpoints
 export const endpoints = [
   {
-    method: "post" as const,
+    method: "post",
     path: "/api/v1/test",
-    operationId: "postApiV1Test",
-    request: { queryParams: z.object({ req: req }).optional() },
-    responses: { 200: { description: "OK", schema: z.void() } },
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "req",
+        type: "Query",
+        schema: req,
+      },
+    ],
+    response: z.void(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.void(),
+        description: "OK",
+      },
+    },
+    request: {
+      queryParams: z.object({ req: req }),
+    },
+    alias: "postApiV1Test",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -147,7 +159,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "post" as const,
+      method: "post",
       path: "/api/v1/test",
       originalPath: "/api/v1/test",
     },
@@ -159,7 +171,7 @@ export const mcpTools = [
   },
 ] as const;
 ",
-    "__index": "export { DefaultApi } from "./Default";
+    "__index": "export * as DefaultApi from "./Default";
 ",
 }
 `;

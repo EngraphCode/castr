@@ -19,8 +19,7 @@ describe('Public API Preservation', () => {
     // Functions
     expect(publicApi).toHaveProperty('generateZodClientFromOpenAPI');
     expect(typeof publicApi.generateZodClientFromOpenAPI).toBe('function');
-    expect(publicApi).toHaveProperty('getHandlebars');
-    expect(typeof publicApi.getHandlebars).toBe('function');
+
     expect(publicApi).toHaveProperty('getOpenApiDependencyGraph');
     expect(typeof publicApi.getOpenApiDependencyGraph).toBe('function');
     // validateOpenApiSpec removed in Phase 1 Part 5 (replaced by prepareOpenApiDocument internally)

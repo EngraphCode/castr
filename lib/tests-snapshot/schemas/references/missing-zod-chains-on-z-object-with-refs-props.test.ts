@@ -53,7 +53,7 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const Email = z.string();
     export const Password = z.string();
     export const AddUser = z
@@ -73,12 +73,36 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
           .regex(/(EmailRegex)/),
       })
       .strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "post" as const,
+        method: "post",
         path: "/user/add",
-        operationId: "postUserAdd",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "body",
+            type: "Body",
+            schema: z
+              .object({
+                email: Email.min(6)
+                  .max(255)
+                  .regex(/(EmailRegex)/),
+                password: Password.min(16)
+                  .max(255)
+                  .regex(/(PasswordRegex)/),
+              })
+              .strict(),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "foo",
+          },
+        },
         request: {
           body: z
             .object({
@@ -91,12 +115,33 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
             })
             .strict(),
         },
-        responses: { 200: { description: "foo", schema: z.void() } },
+        alias: "postUserAdd",
       },
       {
-        method: "post" as const,
+        method: "post",
         path: "/user/recover",
-        operationId: "postUserRecover",
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "body",
+            type: "Body",
+            schema: z
+              .object({
+                email: Email.min(6)
+                  .max(255)
+                  .regex(/(EmailRegex)/),
+              })
+              .strict(),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "bar",
+          },
+        },
         request: {
           body: z
             .object({
@@ -106,21 +151,10 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
             })
             .strict(),
         },
-        responses: { 200: { description: "bar", schema: z.void() } },
+        alias: "postUserRecover",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -162,7 +196,7 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
           },
         },
         httpOperation: {
-          method: "post" as const,
+          method: "post",
           path: "/user/add",
           originalPath: "/user/add",
         },
@@ -206,7 +240,7 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
           },
         },
         httpOperation: {
-          method: "post" as const,
+          method: "post",
           path: "/user/recover",
           originalPath: "/user/recover",
         },

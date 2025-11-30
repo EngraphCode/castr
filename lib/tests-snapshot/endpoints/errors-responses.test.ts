@@ -60,44 +60,54 @@ it('includes errors-responses', async () => {
 
   expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const Main = z.object({ str: z.string(), nb: z.number() }).strict();
     export const AnotherSuccess = z.number();
     export const Error400 = z.object({ is400: z.boolean() }).partial().strict();
     export const Error500 = z.string();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/example",
-        operationId: "getExample",
-        request: {},
+        requestFormat: "json",
+        parameters: [],
+        response: z.object({ str: z.string(), nb: z.number() }).strict(),
+        errors: [
+          {
+            status: 400,
+            schema: z.object({ is400: z.boolean() }).partial().strict(),
+            description: "Bad request",
+          },
+          {
+            status: 500,
+            schema: z.string(),
+            description: "Internal server error",
+          },
+        ],
         responses: {
           200: {
-            description: "OK",
             schema: z.object({ str: z.string(), nb: z.number() }).strict(),
+            description: "OK",
           },
-          201: { description: "Created", schema: z.number() },
+          201: {
+            schema: z.number(),
+            description: "Created",
+          },
           400: {
-            description: "Bad request",
             schema: z.object({ is400: z.boolean() }).partial().strict(),
+            description: "Bad request",
           },
-          500: { description: "Internal server error", schema: z.string() },
+          500: {
+            schema: z.string(),
+            description: "Internal server error",
+          },
         },
+        request: {},
+        alias: "getExample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -125,7 +135,7 @@ it('includes errors-responses', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/example",
           originalPath: "/example",
           operationId: "getExample",
@@ -228,7 +238,7 @@ it('determines which status are considered errors-responses', async () => {
 
   expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
     export const DeeplyNested = z.array(VeryDeeplyNested);
     export const Main = z.object({ str: z.string(), nb: z.number() }).strict();
@@ -247,49 +257,70 @@ it('determines which status are considered errors-responses', async () => {
     export const AnotherSuccess = z.number();
     export const Error404 = z.null();
     export const Error500 = z.string();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/example",
-        operationId: "getExample",
-        request: {},
+        requestFormat: "json",
+        parameters: [],
+        response: z.object({ str: z.string(), nb: z.number() }).strict(),
+        errors: [
+          {
+            status: 400,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .strict(),
+            description: "Bad request",
+          },
+          {
+            status: 404,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .strict(),
+            description: "Not found",
+          },
+          {
+            status: 500,
+            schema: z.string(),
+            description: "Internal server error",
+          },
+        ],
         responses: {
           200: {
-            description: "OK",
             schema: z.object({ str: z.string(), nb: z.number() }).strict(),
+            description: "OK",
           },
-          201: { description: "Created", schema: z.number() },
+          201: {
+            schema: z.number(),
+            description: "Created",
+          },
           400: {
-            description: "Bad request",
             schema: z
               .object({ is400: z.boolean(), nested: Nested })
               .partial()
               .strict(),
+            description: "Bad request",
           },
           404: {
-            description: "Not found",
             schema: z
               .object({ is400: z.boolean(), nested: Nested })
               .partial()
               .strict(),
+            description: "Not found",
           },
-          500: { description: "Internal server error", schema: z.string() },
+          500: {
+            schema: z.string(),
+            description: "Internal server error",
+          },
         },
+        request: {},
+        alias: "getExample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -317,7 +348,7 @@ it('determines which status are considered errors-responses', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/example",
           originalPath: "/example",
           operationId: "getExample",
@@ -342,7 +373,7 @@ it('determines which status are considered errors-responses', async () => {
   assertSingleFileResult(result2);
   expect(result2.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
     export const DeeplyNested = z.array(VeryDeeplyNested);
     export const Main = z.object({ str: z.string(), nb: z.number() }).strict();
@@ -361,49 +392,70 @@ it('determines which status are considered errors-responses', async () => {
     export const AnotherSuccess = z.number();
     export const Error404 = z.null();
     export const Error500 = z.string();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/example",
-        operationId: "getExample",
-        request: {},
+        requestFormat: "json",
+        parameters: [],
+        response: z.object({ str: z.string(), nb: z.number() }).strict(),
+        errors: [
+          {
+            status: 400,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .strict(),
+            description: "Bad request",
+          },
+          {
+            status: 404,
+            schema: z
+              .object({ is400: z.boolean(), nested: Nested })
+              .partial()
+              .strict(),
+            description: "Not found",
+          },
+          {
+            status: 500,
+            schema: z.string(),
+            description: "Internal server error",
+          },
+        ],
         responses: {
           200: {
-            description: "OK",
             schema: z.object({ str: z.string(), nb: z.number() }).strict(),
+            description: "OK",
           },
-          201: { description: "Created", schema: z.number() },
+          201: {
+            schema: z.number(),
+            description: "Created",
+          },
           400: {
-            description: "Bad request",
             schema: z
               .object({ is400: z.boolean(), nested: Nested })
               .partial()
               .strict(),
+            description: "Bad request",
           },
           404: {
-            description: "Not found",
             schema: z
               .object({ is400: z.boolean(), nested: Nested })
               .partial()
               .strict(),
+            description: "Not found",
           },
-          500: { description: "Internal server error", schema: z.string() },
+          500: {
+            schema: z.string(),
+            description: "Internal server error",
+          },
         },
+        request: {},
+        alias: "getExample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -431,7 +483,7 @@ it('determines which status are considered errors-responses', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/example",
           originalPath: "/example",
           operationId: "getExample",

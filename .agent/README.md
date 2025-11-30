@@ -1,7 +1,9 @@
 # .agent Directory - Navigation Guide
 
 **Purpose:** Comprehensive documentation for openapi-zod-client modernization project  
-**Last Updated:** October 24, 2025
+**Last Updated:** November 29, 2025
+
+**Library Philosophy:** This library provides **building blocks** (schemas, validation helpers, endpoint metadata, MCP tools) for creating type-safe SDKs, not complete SDK implementations. Consumers choose their own HTTP client and architecture.
 
 ---
 
@@ -10,10 +12,11 @@
 **Read these in order:**
 
 1. **`context/context.md`** - Start here! Living context document with current state
-2. **`plans/00-STRATEGIC-PLAN.md`** - High-level strategic overview and phases
+2. **`plans/00-STRATEGIC-OVERVIEW.md`** - High-level strategic overview and phases (now includes Phase 5: Full SDK Workspace)
 3. **`plans/01-CURRENT-IMPLEMENTATION.md`** - Detailed task breakdown for Phase 2
 4. **`RULES.md`** - Coding standards (MUST follow)
-5. **`DEFINITION_OF_DONE.md`** - Quality gate validation script
+5. **`requirements.md`** - Library requirements (updated with building-blocks architecture)
+6. **`DEFINITION_OF_DONE.md`** - Quality gate validation script
 
 ---
 

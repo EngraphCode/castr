@@ -1,12 +1,11 @@
 import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import { type Options, resolveConfig } from 'prettier';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
-import { getHandlebars } from '../../src/rendering/index.js';
+import { writeTypeScript } from '../../src/writers/typescript.js';
 import { maybePretty } from '../../src/shared/maybe-pretty.js';
 
 import { sync } from 'fast-glob';
 
-import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { beforeAll, describe, expect, test } from 'vitest';
 
@@ -31,9 +30,6 @@ describe('openapi-examples', () => {
     .filter((file) => !file.includes('webhook-example.yaml'))
     .sort();
 
-  const template = getHandlebars().compile(
-    readFileSync('./src/rendering/templates/schemas-with-metadata.hbs', 'utf8'),
-  );
   const examplesRoot = path.resolve(pkgRoot, './examples');
   const resultByFile = {} as Record<string, string>;
 
@@ -42,7 +38,10 @@ describe('openapi-examples', () => {
       const openApiDoc = await prepareOpenApiDocument(docPath);
       const data = getZodClientTemplateContext(openApiDoc);
 
-      const output = template({ ...data, options: { ...data.options, apiClientName: 'api' } });
+      const output = writeTypeScript({
+        ...data,
+        options: { ...data.options, apiClientName: 'api' },
+      });
       const prettyOutput = await maybePretty(output, prettierConfig);
       const relativePath = path.relative(examplesRoot, docPath);
       const key = relativePath.replace(/\.ya?ml$/u, '');

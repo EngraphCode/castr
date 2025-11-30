@@ -58,41 +58,53 @@ test('allOf-single-ref', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const MyComponent = z.enum(["one", "two", "three"]);
     export const allOf_ref_param = MyComponent.optional();
     export const oneOf_ref_param = MyComponent.optional();
     export const anyOf_ref_param = MyComponent.optional();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/test",
-        operationId: "getTest",
-        request: {
-          queryParams: z
-            .object({
-              allOf_ref_param: allOf_ref_param,
-              oneOf_ref_param: oneOf_ref_param,
-              anyOf_ref_param: anyOf_ref_param,
-            })
-            .optional(),
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "allOf_ref_param",
+            type: "Query",
+            schema: allOf_ref_param,
+          },
+          {
+            name: "oneOf_ref_param",
+            type: "Query",
+            schema: oneOf_ref_param,
+          },
+          {
+            name: "anyOf_ref_param",
+            type: "Query",
+            schema: anyOf_ref_param,
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "Success",
+          },
         },
-        responses: { 200: { description: "Success", schema: z.void() } },
+        request: {
+          queryParams: z.object({
+            allOf_ref_param: allOf_ref_param,
+            oneOf_ref_param: oneOf_ref_param,
+            anyOf_ref_param: anyOf_ref_param,
+          }),
+        },
+        alias: "getTest",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -139,7 +151,7 @@ test('allOf-single-ref', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/test",
           originalPath: "/test",
         },

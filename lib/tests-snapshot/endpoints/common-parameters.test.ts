@@ -47,53 +47,82 @@ test('common-parameters', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const paramRef = z.number();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "post" as const,
+        method: "post",
         path: "/pet",
-        operationId: "postPet",
-        request: {
-          queryParams: z
-            .object({ petId: z.string(), otherParam: z.number().optional() })
-            .optional(),
-        },
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "petId",
+            type: "Query",
+            schema: z.string(),
+          },
+          {
+            name: "otherParam",
+            type: "Query",
+            schema: z.number().optional(),
+          },
+        ],
+        response: z.boolean(),
+        errors: [],
         responses: {
-          200: { description: "Successful operation", schema: z.boolean() },
+          200: {
+            schema: z.boolean(),
+            description: "Successful operation",
+          },
         },
+        request: {
+          queryParams: z.object({
+            petId: z.string(),
+            otherParam: z.number().optional(),
+          }),
+        },
+        alias: "postPet",
       },
       {
-        method: "put" as const,
+        method: "put",
         path: "/pet",
-        operationId: "putPet",
-        request: {
-          queryParams: z
-            .object({
-              petId: z.number(),
-              otherParam: z.number().optional(),
-              personId: z.number(),
-            })
-            .optional(),
-        },
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "petId",
+            type: "Query",
+            schema: z.number(),
+          },
+          {
+            name: "otherParam",
+            type: "Query",
+            schema: z.number().optional(),
+          },
+          {
+            name: "personId",
+            type: "Query",
+            schema: z.number(),
+          },
+        ],
+        response: z.string(),
+        errors: [],
         responses: {
-          200: { description: "Successful operation", schema: z.string() },
+          200: {
+            schema: z.string(),
+            description: "Successful operation",
+          },
         },
+        request: {
+          queryParams: z.object({
+            petId: z.number(),
+            otherParam: z.number().optional(),
+            personId: z.number(),
+          }),
+        },
+        alias: "putPet",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -132,7 +161,7 @@ test('common-parameters', async () => {
           },
         },
         httpOperation: {
-          method: "post" as const,
+          method: "post",
           path: "/pet",
           originalPath: "/pet",
         },
@@ -182,7 +211,7 @@ test('common-parameters', async () => {
           },
         },
         httpOperation: {
-          method: "put" as const,
+          method: "put",
           path: "/pet",
           originalPath: "/pet",
         },

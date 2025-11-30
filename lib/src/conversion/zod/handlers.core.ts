@@ -114,6 +114,8 @@ function resolveSchemaReference(
  * @returns ZodCodeResult with resolved reference
  * @public
  */
+import { sanitizeIdentifier } from '../../shared/utils/string-utils.js';
+
 export function handleReferenceObject(
   schema: ReferenceObject,
   code: ZodCodeResult,
@@ -124,6 +126,7 @@ export function handleReferenceObject(
   options?: TemplateContext['options'],
 ): ZodCodeResult {
   const schemaName = getSchemaNameFromRef(schema.$ref);
+  const sanitizedName = sanitizeIdentifier(schemaName);
 
   if (isCircularReference(schemaName, refsPath)) {
     return handleCircularReference(code);
@@ -132,15 +135,15 @@ export function handleReferenceObject(
   const result = resolveSchemaReference(schema.$ref, schemaName, ctx, meta, getZodSchema, options);
 
   // If schema already registered, return schema name for reference
-  if (ctx.zodSchemaByName[schemaName]) {
-    return { ...code, code: schemaName };
+  if (ctx.zodSchemaByName[sanitizedName]) {
+    return { ...code, code: sanitizedName };
   }
 
   // Register resolved schema
-  ctx.zodSchemaByName[schemaName] = result;
+  ctx.zodSchemaByName[sanitizedName] = result;
 
   // Return schema name for reference
-  return { ...code, code: schemaName };
+  return { ...code, code: sanitizedName };
 }
 
 /**

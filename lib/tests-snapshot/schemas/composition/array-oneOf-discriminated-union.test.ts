@@ -64,35 +64,41 @@ test('array-oneOf-discriminated-union', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const ArrayRequest = z.array(
       z.discriminatedUnion("type", [
         z.object({ type: z.literal("a") }).strict(),
         z.object({ type: z.literal("b") }).strict(),
       ]),
     );
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "post" as const,
+        method: "post",
         path: "/test",
-        operationId: "postTest",
-        request: { body: ArrayRequest },
-        responses: { 200: { description: "Success", schema: z.void() } },
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "body",
+            type: "Body",
+            schema: ArrayRequest,
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "Success",
+          },
+        },
+        request: {
+          body: ArrayRequest,
+        },
+        alias: "postTest",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -143,7 +149,7 @@ test('array-oneOf-discriminated-union', async () => {
           },
         },
         httpOperation: {
-          method: "post" as const,
+          method: "post",
           path: "/test",
           originalPath: "/test",
         },

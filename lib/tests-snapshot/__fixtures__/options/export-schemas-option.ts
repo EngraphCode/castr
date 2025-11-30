@@ -5,34 +5,31 @@ export const exportSchemasOptionContextSnapshot = {
 } as const;
 
 export const exportSchemasOptionOutputSnapshot = `import { z } from "zod";
-
+// Zod Schemas
 export const Basic = z.string();
 export const UnusedSchemas = z
   .object({ nested_prop: z.boolean(), another: z.string() })
   .partial()
   .strict();
-
+// Endpoints
 export const endpoints = [
   {
-    method: "get" as const,
+    method: "get",
     path: "/export-schemas-option",
-    operationId: "123_example",
+    requestFormat: "json",
+    parameters: [],
+    response: z.string(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.string(),
+      },
+    },
     request: {},
-    responses: { 200: { schema: z.string() } },
+    alias: "123_example",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -56,7 +53,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "get" as const,
+      method: "get",
       path: "/export-schemas-option",
       originalPath: "/export-schemas-option",
       operationId: "123_example",

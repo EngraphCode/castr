@@ -1,46 +1,80 @@
 export const hyphenatedParametersSnapshot = `import { z } from "zod";
-
+// Endpoints
 export const endpoints = [
   {
-    method: "post" as const,
+    method: "post",
     path: "/pet/:ownerName",
-    operationId: "postPetOwnerName",
-    request: { pathParams: z.object({ ownerName: z.string() }) },
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "ownerName",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z.boolean(),
+    errors: [],
     responses: {
-      200: { description: "Successful operation", schema: z.boolean() },
+      200: {
+        schema: z.boolean(),
+        description: "Successful operation",
+      },
     },
+    request: {
+      pathParams: z.object({ ownerName: z.string() }),
+    },
+    alias: "postPetOwnerName",
   },
   {
-    method: "post" as const,
+    method: "post",
     path: "/pet/:ownerNameId",
-    operationId: "postPetOwnerNameId",
-    request: { pathParams: z.object({ ownerNameId: z.string() }) },
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "ownerNameId",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z.boolean(),
+    errors: [],
     responses: {
-      200: { description: "Successful operation", schema: z.boolean() },
+      200: {
+        schema: z.boolean(),
+        description: "Successful operation",
+      },
     },
+    request: {
+      pathParams: z.object({ ownerNameId: z.string() }),
+    },
+    alias: "postPetOwnerNameId",
   },
   {
-    method: "post" as const,
+    method: "post",
     path: "/pet/:petId/uploadImage",
-    operationId: "postPetPetIdUploadImage",
-    request: { pathParams: z.object({ petId: z.string() }) },
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "petId",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z.boolean(),
+    errors: [],
     responses: {
-      200: { description: "Successful operation", schema: z.boolean() },
+      200: {
+        schema: z.boolean(),
+        description: "Successful operation",
+      },
     },
+    request: {
+      pathParams: z.object({ petId: z.string() }),
+    },
+    alias: "postPetPetIdUploadImage",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -76,7 +110,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "post" as const,
+      method: "post",
       path: "/pet/:ownerName",
       originalPath: "/pet/{owner_name}",
     },
@@ -120,7 +154,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "post" as const,
+      method: "post",
       path: "/pet/:ownerNameId",
       originalPath: "/pet/{owner_name-id}",
     },
@@ -164,7 +198,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "post" as const,
+      method: "post",
       path: "/pet/:petId/uploadImage",
       originalPath: "/pet/{pet-id}/uploadImage",
     },

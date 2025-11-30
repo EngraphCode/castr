@@ -68,50 +68,83 @@ test('description-in-zod', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/sample",
-        operationId: "getSample",
-        request: {
-          queryParams: z
-            .object({
-              foo: z
-                .union([z.literal(1), z.literal(-2), z.literal(3)])
-                .describe("foo description")
-                .optional(),
-              bar: z
-                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-                .describe("bar description")
-                .optional(),
-              baz: z
-                .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
-                .describe(
-                  \`baz
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "foo",
+            type: "Query",
+            schema: z
+              .union([z.literal(1), z.literal(-2), z.literal(3)])
+              .describe("foo description")
+              .optional(),
+            description: "foo description",
+          },
+          {
+            name: "bar",
+            type: "Query",
+            schema: z
+              .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
+              .describe("bar description")
+              .optional(),
+            description: "bar description",
+          },
+          {
+            name: "baz",
+            type: "Query",
+            schema: z
+              .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
+              .describe(
+                \`baz
     multiline
     description\`,
-                )
-                .optional(),
-              qux: z.string().optional(),
-            })
-            .optional(),
+              )
+              .optional(),
+            description: "baz\\nmultiline\\ndescription",
+          },
+          {
+            name: "qux",
+            type: "Query",
+            schema: z.string().optional(),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "resoponse",
+          },
         },
-        responses: { 200: { description: "resoponse", schema: z.void() } },
+        request: {
+          queryParams: z.object({
+            foo: z
+              .union([z.literal(1), z.literal(-2), z.literal(3)])
+              .describe("foo description")
+              .optional(),
+            bar: z
+              .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
+              .describe("bar description")
+              .optional(),
+            baz: z
+              .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
+              .describe(
+                \`baz
+    multiline
+    description\`,
+              )
+              .optional(),
+            qux: z.string().optional(),
+          }),
+        },
+        alias: "getSample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -153,7 +186,7 @@ test('description-in-zod', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/sample",
           originalPath: "/sample",
         },

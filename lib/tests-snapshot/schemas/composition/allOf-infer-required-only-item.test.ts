@@ -73,38 +73,34 @@ test('allOf-infer-required-only-item', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Type Definitions
     type userResponse = Partial<{ user: user & { name: string } }>;
     type user = Partial<{ name: string; email: string }>;
-
-    export const user: z.ZodType<user> = z
-      .object({ name: z.string(), email: z.string() })
-      .strict();
-    export const userResponse: z.ZodType<userResponse> = z
+    // Zod Schemas
+    export const user = z.object({ name: z.string(), email: z.string() }).strict();
+    export const userResponse = z
       .object({ user: user.and(z.object({ name: z.string() }).strict()) })
       .strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/user",
-        operationId: "getUser",
+        requestFormat: "json",
+        parameters: [],
+        response: userResponse,
+        errors: [],
+        responses: {
+          200: {
+            schema: userResponse,
+            description: "return user",
+          },
+        },
         request: {},
-        responses: { 200: { description: "return user", schema: userResponse } },
+        alias: "getUser",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -144,7 +140,7 @@ test('allOf-infer-required-only-item', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/user",
           originalPath: "/user",
         },

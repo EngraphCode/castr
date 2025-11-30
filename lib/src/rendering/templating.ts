@@ -1,22 +1,13 @@
-import path, { dirname, resolve } from 'node:path';
+import path from 'node:path';
 import fs from 'node:fs/promises';
 
 import type { Options } from 'prettier';
-import type { getHandlebars } from './handlebars.js';
 import { maybePretty } from '../shared/maybe-pretty.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
 import type { GenerationResult } from './generation-result.js';
-import { fileURLToPath } from 'node:url';
 import { serializeIR } from '../context/ir-serialization.js';
 import { generateIndexFile, generateCommonFile, generateGroupFiles } from './templating-groups.js';
-
-const templatesDir = resolve(dirname(fileURLToPath(import.meta.url)), './templates');
-
-/**
- * Generate index file for grouped output
- *
- * @internal
- */
+import { writeTypeScript } from '../writers/typescript.js';
 
 /**
  * Handle file grouping output strategy
@@ -26,12 +17,10 @@ const templatesDir = resolve(dirname(fileURLToPath(import.meta.url)), './templat
 export async function handleFileGrouping(
   data: TemplateContext,
   effectiveOptions: TemplateContextOptions,
-  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
   withValidationHelpers: boolean | undefined,
   withSchemaRegistry: boolean | undefined,
   distPath: string | undefined,
   prettierConfig: Options | null | undefined,
-  hbs: ReturnType<typeof getHandlebars>,
   willWriteToFile: boolean,
 ): Promise<GenerationResult> {
   const outputByGroupName: Record<string, string> = {};
@@ -40,23 +29,16 @@ export async function handleFileGrouping(
     await fs.mkdir(path.dirname(distPath), { recursive: true });
   }
 
-  const indexOutput = await generateIndexFile(data, distPath, prettierConfig, hbs, willWriteToFile);
+  const indexOutput = await generateIndexFile(data, distPath, prettierConfig, willWriteToFile);
   outputByGroupName['__index'] = indexOutput;
 
-  const commonOutput = await generateCommonFile(
-    data,
-    distPath,
-    prettierConfig,
-    hbs,
-    willWriteToFile,
-  );
+  const commonOutput = await generateCommonFile(data, distPath, prettierConfig, willWriteToFile);
   if (commonOutput !== null) {
     outputByGroupName['__common'] = commonOutput;
   }
 
   const groupFiles = await generateGroupFiles(
     data,
-    compiledTemplate,
     effectiveOptions,
     withValidationHelpers,
     withSchemaRegistry,
@@ -81,20 +63,19 @@ export async function handleFileGrouping(
 export async function handleSingleFileOutput(
   data: TemplateContext,
   effectiveOptions: TemplateContextOptions,
-  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
   withValidationHelpers: boolean | undefined,
   withSchemaRegistry: boolean | undefined,
   distPath: string | undefined,
   prettierConfig: Options | null | undefined,
   willWriteToFile: boolean,
 ): Promise<GenerationResult> {
-  const output = compiledTemplate({
+  const output = writeTypeScript({
     ...data,
     options: {
       ...effectiveOptions,
       apiClientName: effectiveOptions?.apiClientName ?? 'api',
-      withValidationHelpers,
-      withSchemaRegistry,
+      withValidationHelpers: withValidationHelpers ?? false,
+      withSchemaRegistry: withSchemaRegistry ?? false,
     },
   });
   const prettyOutput = await maybePretty(output, prettierConfig);
@@ -118,24 +99,20 @@ export async function handleSingleFileOutput(
 export function renderOutput(
   data: TemplateContext,
   effectiveOptions: TemplateContextOptions,
-  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
   withValidationHelpers: boolean | undefined,
   withSchemaRegistry: boolean | undefined,
   distPath: string | undefined,
   prettierConfig: Options | null | undefined,
-  handlebars: ReturnType<typeof getHandlebars>,
   willWriteToFile: boolean,
 ): Promise<GenerationResult> {
   if (effectiveOptions.groupStrategy?.includes('file')) {
     return handleFileGrouping(
       data,
       effectiveOptions,
-      compiledTemplate,
       withValidationHelpers,
       withSchemaRegistry,
       distPath,
       prettierConfig,
-      handlebars,
       willWriteToFile,
     );
   }
@@ -143,27 +120,12 @@ export function renderOutput(
   return handleSingleFileOutput(
     data,
     effectiveOptions,
-    compiledTemplate,
     withValidationHelpers,
     withSchemaRegistry,
     distPath,
     prettierConfig,
     willWriteToFile,
   );
-}
-
-/**
- * Resolve template path from template name or custom path
- * @internal
- */
-export function resolveTemplatePath(
-  templatePath: string | undefined,
-  effectiveTemplate: string,
-): string {
-  if (templatePath) {
-    return templatePath;
-  }
-  return path.join(templatesDir, `${effectiveTemplate}.hbs`);
 }
 
 /**
@@ -183,18 +145,4 @@ export async function handleDebugIR(
       : `${distPath}.ir.json`;
     await fs.writeFile(irPath, irJson, 'utf-8');
   }
-}
-
-/**
- * Compile Handlebars template
- * @internal
- */
-export async function compileTemplate(
-  templatePath: string | undefined,
-  effectiveTemplate: string,
-  handlebars: ReturnType<typeof getHandlebars>,
-): Promise<ReturnType<ReturnType<typeof getHandlebars>['compile']>> {
-  const resolvedTemplatePath = resolveTemplatePath(templatePath, effectiveTemplate);
-  const source = await fs.readFile(resolvedTemplatePath, 'utf8');
-  return handlebars.compile(source);
 }

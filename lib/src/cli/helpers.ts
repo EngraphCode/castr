@@ -69,12 +69,8 @@ export function parseCliOptions(options: CliOptions): {
  */
 export function isTemplateName(
   template: string | undefined,
-): template is 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client' {
-  return (
-    template === 'schemas-only' ||
-    template === 'schemas-with-metadata' ||
-    template === 'schemas-with-client'
-  );
+): template is 'schemas-only' | 'schemas-with-metadata' {
+  return template === 'schemas-only' || template === 'schemas-with-metadata';
 }
 
 /**

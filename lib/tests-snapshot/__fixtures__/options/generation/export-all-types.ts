@@ -1,5 +1,5 @@
 export const exportAllTypesSnapshot = `import { z } from "zod";
-
+// Type Definitions
 type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }> &
   Settings;
 type Author = Partial<{
@@ -14,15 +14,15 @@ type Id = number;
 type Settings = Partial<{ theme_color: string; features: Features }>;
 type Features = Array<string>;
 type Song = Partial<{ name: string; duration: number }>;
-
+// Zod Schemas
 export const Title = z.string();
 export const Id = z.number();
 export const Features = z.array(z.string());
-export const Settings: z.ZodType<Settings> = z
+export const Settings = z
   .object({ theme_color: z.string(), features: Features.min(1) })
   .partial()
   .strict();
-export const Author: z.ZodType<Author> = z
+export const Author = z
   .object({
     name: z.union([z.union([z.string(), z.null()]), z.number()]),
     title: Title.min(1).max(30),
@@ -32,45 +32,41 @@ export const Author: z.ZodType<Author> = z
   })
   .partial()
   .strict();
-export const Song: z.ZodType<Song> = z
+export const Song = z
   .object({ name: z.string(), duration: z.number() })
   .partial()
   .strict();
-export const Playlist: z.ZodType<Playlist> = z
+export const Playlist = z
   .object({ name: z.string(), author: Author, songs: z.array(Song) })
   .partial()
   .strict()
   .and(Settings);
-
+// Endpoints
 export const endpoints = [
   {
-    method: "get" as const,
+    method: "get",
     path: "/example",
-    operationId: "getExample",
-    request: {},
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({ playlist: Playlist, by_author: Author })
+      .partial()
+      .strict(),
+    errors: [],
     responses: {
       200: {
-        description: "OK",
         schema: z
           .object({ playlist: Playlist, by_author: Author })
           .partial()
           .strict(),
+        description: "OK",
       },
     },
+    request: {},
+    alias: "getExample",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -228,7 +224,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "get" as const,
+      method: "get",
       path: "/example",
       originalPath: "/example",
       operationId: "getExample",

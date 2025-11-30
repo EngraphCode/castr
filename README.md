@@ -1,19 +1,37 @@
 # openapi-zod-validation
 
-This was originally forked from [openapi-zod-client](https://github.com/astahmer/openapi-zod-client). The code has been extensively rewritten as part of an effort to support automatic generation of MCP tools from OpenAPI specs.
+This repo originally started as a fork of [openapi-zod-client](https://github.com/astahmer/openapi-zod-client), but has since been completely rewritten to support two-way conversion between OpenAPI and Zod schemas, and to support automatic generation of MCP tools from OpenAPI specs.
 
-- can be used programmatically _(do w/e you want with the computed schemas/endpoints)_
-- or used as a CLI _(generates a prettier .ts file with deduplicated variables when pointing to the same schema/$ref)_
+**What this library provides:**
 
-- runtime validation using Zod schemas
-- optional type-safe HTTP client using openapi-fetch
-- tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas)
+- **Building blocks for SDK creation** - schemas, validation helpers, endpoint metadata, and MCP tools
+- **Runtime validation** using Zod schemas
+- **Flexible HTTP client integration** - use with fetch, axios, ky, openapi-fetch, or any HTTP client
+- **Programmatic API** and **CLI** for code generation
+- **MCP-ready** - generates Model Context Protocol tool definitions for AI integration
+
+**What this library does NOT provide:**
+
+- ❌ Complete HTTP client implementation (bring your own)
+- ❌ Opinionated SDK structure (you control the architecture)
+- ❌ HTTP client configuration (you choose the defaults)
+
+**Use this library to:**
+
+- Generate type-safe Zod schemas from OpenAPI specs
+- Build your own SDKs with your preferred HTTP client
+- Create MCP tools for AI assistant integration
+- Validate requests and responses at runtime
+
+Tested (using [vitest](https://vitest.dev/)) against official [OpenAPI specs samples](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas).
 
 # Why this exists
 
-Sometimes you don't have control on your API, maybe you need to consume APIs from other teams (who might each use a different language/framework), you only have their Open API spec as source of truth, then this might help 😇
+Sometimes you don't have control on your API, maybe you need to consume APIs from other teams (who might each use a different language/framework), you only have their Open API spec as source of truth. This library helps by generating the **building blocks** you need to create type-safe SDK integrations.
 
-You could use `openapi-zod-validation` to automate the API integration part (doesn't matter if you consume it in your front or back-end) on your CI and just import the generated schemas and optional client.
+You could use `openapi-zod-validation` to automate generating schemas, validation helpers, and MCP tools on your CI pipeline, then build your SDK integration on top of those building blocks using whatever HTTP client fits your needs (fetch, axios, ky, openapi-fetch, etc.).
+
+**This library is designed for flexibility** - it generates what you need to build SDKs, not complete SDKs themselves. This means you maintain full control over HTTP client choice, error handling strategies, retry logic, and SDK architecture.
 
 ## Comparison vs tRPC ts-rest etc
 
@@ -73,7 +91,7 @@ or directly (no install)
 
 # auto-generated doc
 
-https://paka.dev/npm/openapi-zod-validation
+<https://paka.dev/npm/openapi-zod-validation>
 
 ## CLI
 
@@ -639,7 +657,7 @@ const endpoints = makeApi([
 
 You can migrate Swagger 2.0 specs to OpenAPI 3.0+ using the [official Swagger Editor](https://editor.swagger.io/) using the Edit -> Convert to OpenAPI 3.0 menu.
 
-## Contributing:
+## Contributing
 
 - A `.node-version` file has been provided in the repository root, use your preferred Node.js manager which [supports](https://github.com/shadowspawn/node-version-usage#supporting-products) the standard to manage the development Node.js environment
 - The monorepo supports [corepack](https://nodejs.org/api/corepack.html), follow the linked instructions to locally install the development package manager (i.e. [pnpm](https://pnpm.io/))

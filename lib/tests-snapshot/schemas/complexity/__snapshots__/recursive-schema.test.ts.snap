@@ -148,53 +148,49 @@ exports[`recursive-schema - indirect single recursive > should handle indirect s
 
 exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 5`] = `
 "import { z } from "zod";
-
+// Type Definitions
 type User = Partial<{ name: string; middle: Middle }>;
 type Middle = Partial<{ user: User }>;
-
-export const Middle: z.ZodType<Middle> = z.lazy(() =>
+// Zod Schemas
+export const Middle = z.lazy(() =>
   z
     .object({ user: z.lazy(() => User) })
     .partial()
     .strict(),
 );
-export const User: z.ZodType<User> = z.lazy(() =>
+export const User = z.lazy(() =>
   z.object({ name: z.string(), middle: Middle }).partial().strict(),
 );
 export const Root = z
   .object({ recursive: User, basic: z.number() })
   .partial()
   .strict();
-
+// Endpoints
 export const endpoints = [
   {
-    method: "get" as const,
+    method: "get",
     path: "/example",
-    operationId: "getExample",
-    request: {},
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({ recursive: User, basic: z.number() })
+      .partial()
+      .strict(),
+    errors: [],
     responses: {
       200: {
-        description: "OK",
         schema: z
           .object({ recursive: User, basic: z.number() })
           .partial()
           .strict(),
+        description: "OK",
       },
     },
+    request: {},
+    alias: "getExample",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -234,7 +230,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "get" as const,
+      method: "get",
       path: "/example",
       originalPath: "/example",
       operationId: "getExample",
@@ -1289,7 +1285,7 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
 
 exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 5`] = `
 "import { z } from "zod";
-
+// Type Definitions
 type User = Partial<{ name: string; parent: User }>;
 type UserWithFriends = Partial<{
   name: string;
@@ -1306,11 +1302,11 @@ type ObjectWithRecursiveArray = Partial<{
   isInsideObjectWithRecursiveArray: boolean;
   array: Array<ObjectWithRecursiveArray>;
 }>;
-
-export const User: z.ZodType<User> = z.lazy(() =>
+// Zod Schemas
+export const User = z.lazy(() =>
   z.object({ name: z.string(), parent: User }).partial().strict(),
 );
-export const Friend: z.ZodType<Friend> = z.lazy(() =>
+export const Friend = z.lazy(() =>
   z
     .object({
       nickname: z.string(),
@@ -1320,7 +1316,7 @@ export const Friend: z.ZodType<Friend> = z.lazy(() =>
     .partial()
     .strict(),
 );
-export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
+export const UserWithFriends = z.lazy(() =>
   z
     .object({
       name: z.string(),
@@ -1331,50 +1327,45 @@ export const UserWithFriends: z.ZodType<UserWithFriends> = z.lazy(() =>
     .partial()
     .strict(),
 );
-export const ObjectWithRecursiveArray: z.ZodType<ObjectWithRecursiveArray> =
-  z.lazy(() =>
-    z
-      .object({
-        isInsideObjectWithRecursiveArray: z.boolean(),
-        array: z.array(z.lazy(() => ObjectWithRecursiveArray)),
-      })
-      .partial()
-      .strict(),
-  );
+export const ObjectWithRecursiveArray = z.lazy(() =>
+  z
+    .object({
+      isInsideObjectWithRecursiveArray: z.boolean(),
+      array: z.array(z.lazy(() => ObjectWithRecursiveArray)),
+    })
+    .partial()
+    .strict(),
+);
 export const ResponseSchema = z
   .object({ recursiveRef: ObjectWithRecursiveArray, basic: z.number() })
   .partial()
   .strict();
-
+// Endpoints
 export const endpoints = [
   {
-    method: "get" as const,
+    method: "get",
     path: "/example",
-    operationId: "getExample",
-    request: {},
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({ someUser: UserWithFriends, someProp: z.boolean() })
+      .partial()
+      .strict(),
+    errors: [],
     responses: {
       200: {
-        description: "OK",
         schema: z
           .object({ someUser: UserWithFriends, someProp: z.boolean() })
           .partial()
           .strict(),
+        description: "OK",
       },
     },
+    request: {},
+    alias: "getExample",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -1446,7 +1437,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "get" as const,
+      method: "get",
       path: "/example",
       originalPath: "/example",
       operationId: "getExample",
@@ -1694,7 +1685,7 @@ exports[`recursive-schema - with ref to simple schema > should generate simple s
 
 exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 3`] = `
 "import { z } from "zod";
-
+// Type Definitions
 type Playlist = Partial<{ name: string; author: Author; songs: Array<Song> }>;
 type Author = Partial<{ name: string; mail: string; settings: Settings }>;
 type Settings = Partial<{ theme_color: string }>;
@@ -1703,7 +1694,7 @@ type Song = Partial<{
   duration: number;
   in_playlists: Array<Playlist>;
 }>;
-
+// Zod Schemas
 export const Settings = z
   .object({ theme_color: z.string() })
   .partial()
@@ -1712,7 +1703,7 @@ export const Author = z
   .object({ name: z.string(), mail: z.string(), settings: Settings })
   .partial()
   .strict();
-export const Song: z.ZodType<Song> = z.lazy(() =>
+export const Song = z.lazy(() =>
   z
     .object({
       name: z.string(),
@@ -1722,42 +1713,38 @@ export const Song: z.ZodType<Song> = z.lazy(() =>
     .partial()
     .strict(),
 );
-export const Playlist: z.ZodType<Playlist> = z.lazy(() =>
+export const Playlist = z.lazy(() =>
   z
     .object({ name: z.string(), author: Author, songs: z.array(Song) })
     .partial()
     .strict(),
 );
-
+// Endpoints
 export const endpoints = [
   {
-    method: "get" as const,
+    method: "get",
     path: "/example",
-    operationId: "getExample",
-    request: {},
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({ playlist: Playlist, by_author: Author })
+      .partial()
+      .strict(),
+    errors: [],
     responses: {
       200: {
-        description: "OK",
         schema: z
           .object({ playlist: Playlist, by_author: Author })
           .partial()
           .strict(),
+        description: "OK",
       },
     },
+    request: {},
+    alias: "getExample",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -1844,7 +1831,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "get" as const,
+      method: "get",
       path: "/example",
       originalPath: "/example",
       operationId: "getExample",

@@ -293,7 +293,7 @@ export const exportAllNamedSchemasContextSnapshot = {
 } as const;
 
 export const exportAllNamedSchemasOutputSnapshot = `import { z } from "zod";
-
+// Zod Schemas
 export const sameSchemaSameName = z.enum(["xxx", "yyy", "zzz"]).optional();
 export const schemaNameAlreadyUsed = z.enum(["ggg", "hhh", "iii"]).optional();
 export const schemaNameAlreadyUsed__2 = z
@@ -301,68 +301,112 @@ export const schemaNameAlreadyUsed__2 = z
   .optional();
 export const sameSchemaDifferentName = z.enum(["xxx", "yyy", "zzz"]).optional();
 export const sameSchemaSameName__2 = z.enum(["xxx", "yyy", "zzz"]).optional();
-
+// Endpoints
 export const endpoints = [
   {
-    method: "get" as const,
+    method: "get",
     path: "/export-all-named-schemas",
-    operationId: "getSchemaNameAlreadyUsed",
-    request: {
-      queryParams: z
-        .object({ sameSchemaSameName: sameSchemaSameName })
-        .optional(),
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "sameSchemaSameName",
+        type: "Query",
+        schema: sameSchemaSameName,
+      },
+    ],
+    response: z.string(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.string(),
+      },
     },
-    responses: { 200: { schema: z.string() } },
+    request: {
+      queryParams: z.object({ sameSchemaSameName: sameSchemaSameName }),
+    },
+    alias: "getSchemaNameAlreadyUsed",
   },
   {
-    method: "post" as const,
+    method: "post",
     path: "/export-all-named-schemas",
-    operationId: "postSchemaNameAlreadyUsed",
-    request: {
-      queryParams: z
-        .object({ schemaNameAlreadyUsed: schemaNameAlreadyUsed })
-        .optional(),
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "schemaNameAlreadyUsed",
+        type: "Query",
+        schema: schemaNameAlreadyUsed,
+      },
+    ],
+    response: z.string(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.string(),
+      },
     },
-    responses: { 200: { schema: z.string() } },
+    request: {
+      queryParams: z.object({ schemaNameAlreadyUsed: schemaNameAlreadyUsed }),
+    },
+    alias: "postSchemaNameAlreadyUsed",
   },
   {
-    method: "put" as const,
+    method: "put",
     path: "/export-all-named-schemas",
-    operationId: "putSchemaNameAlreadyUsed",
-    request: {
-      queryParams: z
-        .object({ schemaNameAlreadyUsed: schemaNameAlreadyUsed__2 })
-        .optional(),
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "schemaNameAlreadyUsed",
+        type: "Query",
+        schema: schemaNameAlreadyUsed__2,
+      },
+    ],
+    response: z.string(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.string(),
+      },
     },
-    responses: { 200: { schema: z.string() } },
+    request: {
+      queryParams: z.object({
+        schemaNameAlreadyUsed: schemaNameAlreadyUsed__2,
+      }),
+    },
+    alias: "putSchemaNameAlreadyUsed",
   },
   {
-    method: "delete" as const,
+    method: "delete",
     path: "/export-all-named-schemas",
-    operationId: "deleteSchemaNameAlreadyUsed",
-    request: {
-      queryParams: z
-        .object({
-          sameSchemaDifferentName: sameSchemaDifferentName,
-          sameSchemaSameName: sameSchemaSameName__2,
-        })
-        .optional(),
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "sameSchemaDifferentName",
+        type: "Query",
+        schema: sameSchemaDifferentName,
+      },
+      {
+        name: "sameSchemaSameName",
+        type: "Query",
+        schema: sameSchemaSameName__2,
+      },
+    ],
+    response: z.string(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z.string(),
+      },
     },
-    responses: { 200: { schema: z.string() } },
+    request: {
+      queryParams: z.object({
+        sameSchemaDifferentName: sameSchemaDifferentName,
+        sameSchemaSameName: sameSchemaSameName__2,
+      }),
+    },
+    alias: "deleteSchemaNameAlreadyUsed",
   },
 ] as const;
-
-/**
- * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
- *
- * Each entry provides:
- * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
- * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
- * - \`security\`: upstream API security requirements (Layer 2 metadata only)
- *
- * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
- * additional context to operators or logging.
- */
+// MCP Tools
 export const mcpTools = [
   {
     tool: {
@@ -397,7 +441,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "get" as const,
+      method: "get",
       path: "/export-all-named-schemas",
       originalPath: "/export-all-named-schemas",
       operationId: "getSchemaNameAlreadyUsed",
@@ -441,7 +485,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "post" as const,
+      method: "post",
       path: "/export-all-named-schemas",
       originalPath: "/export-all-named-schemas",
       operationId: "postSchemaNameAlreadyUsed",
@@ -485,7 +529,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "put" as const,
+      method: "put",
       path: "/export-all-named-schemas",
       originalPath: "/export-all-named-schemas",
       operationId: "putSchemaNameAlreadyUsed",
@@ -533,7 +577,7 @@ export const mcpTools = [
       },
     },
     httpOperation: {
-      method: "delete" as const,
+      method: "delete",
       path: "/export-all-named-schemas",
       originalPath: "/export-all-named-schemas",
       operationId: "deleteSchemaNameAlreadyUsed",

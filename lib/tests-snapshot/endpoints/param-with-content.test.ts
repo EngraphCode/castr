@@ -61,52 +61,66 @@ test('param-with-content', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const test3 = z.object({ text3: z.boolean() }).partial().strict();
     export const test1 = z.object({ text1: z.string() }).partial().strict();
     export const test2 = z.object({ text2: z.number() }).partial().strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "put" as const,
+        method: "put",
         path: "/pet",
-        operationId: "putPet",
-        request: {
-          pathParams: z.object({ store: z.number().int() }),
-          queryParams: z
-            .object({
-              thing: z.object({ text1: z.string() }).partial().strict().optional(),
-              "wrong param": z
-                .object({ text2: z.number() })
-                .partial()
-                .strict()
-                .optional(),
-            })
-            .optional(),
-          headers: z
-            .object({ "Accept-Language": z.string().optional().default("EN") })
-            .optional(),
-        },
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "store",
+            type: "Path",
+            schema: z.number().int(),
+            description: "Store number",
+          },
+          {
+            name: "thing",
+            type: "Query",
+            schema: z.object({ text1: z.string() }).partial().strict().optional(),
+          },
+          {
+            name: "wrong param",
+            type: "Query",
+            schema: z.object({ text2: z.number() }).partial().strict().optional(),
+          },
+          {
+            name: "Accept-Language",
+            type: "Header",
+            schema: z.string().optional().default("EN"),
+            description: "Accept language (fr-CA)",
+          },
+        ],
+        response: z.object({ text3: z.boolean() }).partial().strict(),
+        errors: [],
         responses: {
           200: {
-            description: "Successful operation",
             schema: z.object({ text3: z.boolean() }).partial().strict(),
+            description: "Successful operation",
           },
         },
+        request: {
+          pathParams: z.object({ store: z.number().int() }),
+          queryParams: z.object({
+            thing: z.object({ text1: z.string() }).partial().strict().optional(),
+            "wrong param": z
+              .object({ text2: z.number() })
+              .partial()
+              .strict()
+              .optional(),
+          }),
+          headers: z.object({
+            "Accept-Language": z.string().optional().default("EN"),
+          }),
+        },
+        alias: "putPet",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -172,7 +186,7 @@ test('param-with-content', async () => {
           },
         },
         httpOperation: {
-          method: "put" as const,
+          method: "put",
           path: "/pet",
           originalPath: "/pet",
         },

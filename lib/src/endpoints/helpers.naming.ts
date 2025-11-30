@@ -28,6 +28,10 @@ export { registerSchemaName } from './helpers.naming.registry.js';
  * Main logic for determining variable name or inline schema
  * Orchestrates the various helper functions
  */
+import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
+
+// ...
+
 export function getSchemaVarName(
   input: ZodCodeResult,
   ctx: EndpointContext,
@@ -35,7 +39,7 @@ export function getSchemaVarName(
   fallbackName: string | undefined,
 ): string {
   // For refs, use schema name; for inline schemas, use the generated code
-  const result = input.ref ? getSchemaNameFromRef(input.ref) : input.code;
+  const result = input.ref ? sanitizeIdentifier(getSchemaNameFromRef(input.ref)) : input.code;
 
   // Handle inline-everything mode
   if (complexityThreshold === -1) {

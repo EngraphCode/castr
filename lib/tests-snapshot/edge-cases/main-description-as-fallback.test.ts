@@ -44,36 +44,29 @@ it('use main-description-as-fallback', async () => {
 
   expect(result.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const Main = z.object({ str: z.string(), nb: z.number() }).strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/example",
-        operationId: "getExample",
-        description: \`get example\`,
-        request: {},
+        requestFormat: "json",
+        parameters: [],
+        response: z.object({ str: z.string(), nb: z.number() }).strict(),
+        errors: [],
         responses: {
           200: {
-            description: "get example",
             schema: z.object({ str: z.string(), nb: z.number() }).strict(),
+            description: "get example",
           },
         },
+        request: {},
+        alias: "getExample",
+        description: "get example",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -101,7 +94,7 @@ it('use main-description-as-fallback', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/example",
           originalPath: "/example",
           operationId: "getExample",

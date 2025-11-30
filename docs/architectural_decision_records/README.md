@@ -57,6 +57,12 @@ Each ADR follows this structure:
 | [020](./ADR-020-intersection-type-strategy.md)     | Intersection Type Strategy for Type System Boundaries | Accepted | 2025-11-04 |
 | [021](./ADR-021-legacy-dependency-removal.md)      | Legacy Dependency Removal                             | Accepted | 2025-11-04 |
 
+### Library Philosophy \u0026 Architecture
+
+| ADR                                                        | Title                                  | Status   | Date       |
+| ---------------------------------------------------------- | -------------------------------------- | -------- | ---------- |
+| [022](./ADR-022-building-blocks-no-http-client.md)         | Building-Blocks Architecture - No HTTP Client Generation | Accepted | 2025-11-29 |
+
 ## Decision Dependencies
 
 ### Phase 2 Part 1 Architecture
@@ -180,6 +186,6 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** November 4, 2025  
+**Last Updated:** November 29, 2025  
 **Maintainer:** Architecture Team  
-**Next ADR:** 022
+**Next ADR:** 023

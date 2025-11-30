@@ -102,7 +102,7 @@ test('jsdoc', async () => {
 
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Type Definitions
     type ComplexObject = Partial<{
       examples: unknown;
       manyTagsStr: "a" | "b" | "c";
@@ -114,12 +114,9 @@ test('jsdoc', async () => {
       refArray: Array<SimpleObject>;
     }>;
     type SimpleObject = Partial<{ str: string }>;
-
-    export const SimpleObject: z.ZodType<SimpleObject> = z
-      .object({ str: z.string() })
-      .partial()
-      .strict();
-    export const ComplexObject: z.ZodType<ComplexObject> = z
+    // Zod Schemas
+    export const SimpleObject = z.object({ str: z.string() }).partial().strict();
+    export const ComplexObject = z
       .object({
         examples: z.unknown(),
         manyTagsStr: z.enum(["a", "b", "c"]).regex(/^[a-z]*$/),
@@ -132,28 +129,25 @@ test('jsdoc', async () => {
       })
       .partial()
       .strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/test",
-        operationId: "123_example",
+        requestFormat: "json",
+        parameters: [],
+        response: ComplexObject,
+        errors: [],
+        responses: {
+          200: {
+            schema: ComplexObject,
+          },
+        },
         request: {},
-        responses: { 200: { schema: ComplexObject } },
+        alias: "123_example",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -225,7 +219,7 @@ test('jsdoc', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/test",
           originalPath: "/test",
           operationId: "123_example",

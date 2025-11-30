@@ -83,6 +83,8 @@ export function buildIRSchemas(components: ComponentsObject | undefined): IRComp
   return irComponents;
 }
 
+import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
+
 function buildSchemaComponents(
   schemas: Record<string, SchemaObject | ReferenceObject>,
 ): IRComponent[] {
@@ -99,7 +101,7 @@ function buildSchemaComponents(
 
     return {
       type: 'schema',
-      name,
+      name: sanitizeIdentifier(name),
       schema: irSchema,
       metadata: irSchema.metadata,
     };

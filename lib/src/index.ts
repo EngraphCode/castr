@@ -5,7 +5,7 @@ export {
 } from './conversion/zod/index.js';
 export { generateZodClientFromOpenAPI } from './rendering/index.js';
 export type { GenerateZodClientFromOpenApiArgs } from './rendering/index.js';
-export { getHandlebars } from './rendering/index.js';
+
 export type { GenerationResult } from './rendering/generation-result.js';
 export { isSingleFileResult, isGroupedFileResult } from './rendering/generation-result.js';
 export { getOpenApiDependencyGraph } from './shared/index.js';

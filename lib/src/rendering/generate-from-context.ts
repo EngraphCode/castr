@@ -7,7 +7,7 @@
  * This module orchestrates the complete code generation pipeline:
  * 1. Input Processing: prepareOpenApiDocument() (Scalar bundling + upgrade to 3.1)
  * 2. Context Building: getZodClientTemplateContext() (dependency graph, type conversion)
- * 3. Template Rendering: Handlebars compilation with grouped/single file output
+ * 3. Template Rendering: ts-morph based generation with grouped/single file output
  * 4. Post-Processing: Prettier formatting
  *
  * All input specs are guaranteed to be OpenAPI 3.1 by the time they reach the
@@ -20,16 +20,13 @@
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { Options } from 'prettier';
-import { getHandlebars } from './handlebars.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
 import { getZodClientTemplateContext } from '../context/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
-import { renderOutput, handleDebugIR, compileTemplate } from './templating.js';
+import { renderOutput, handleDebugIR } from './templating.js';
 import type { GenerationResult } from './generation-result.js';
 
-type TemplateName = 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
-
-// ... existing imports ...
+type TemplateName = 'schemas-only' | 'schemas-with-metadata';
 
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
@@ -38,9 +35,8 @@ export type GenerateZodClientFromOpenApiArgs<
    * Template name to use for generation
    * - "schemas-only": Pure Zod schemas
    * - "schemas-with-metadata": Schemas + endpoint metadata (default)
-   * - "schemas-with-client": Full client with openapi-fetch + Zod validation
    */
-  template?: 'schemas-only' | 'schemas-with-metadata' | 'schemas-with-client';
+  template?: 'schemas-only' | 'schemas-with-metadata';
   /** Path to a custom template file (overrides template name) */
   templatePath?: string;
   /**
@@ -65,7 +61,6 @@ export type GenerateZodClientFromOpenApiArgs<
   debugIR?: boolean;
   prettierConfig?: Options | null;
   options?: TOptions;
-  handlebars?: ReturnType<typeof getHandlebars>;
 } & (
   | {
       /** File path or URL to OpenAPI document. Mutually exclusive with openApiDoc. */
@@ -161,7 +156,7 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   input,
   distPath,
   template,
-  templatePath,
+
   noClient,
   withValidationHelpers,
   withSchemaRegistry,
@@ -169,7 +164,6 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
   prettierConfig,
   options,
   disableWriteToFile,
-  handlebars,
 }: GenerateZodClientFromOpenApiArgs<TOptions>): Promise<GenerationResult> => {
   validateInputs(input, openApiDoc);
 
@@ -186,24 +180,25 @@ export const generateZodClientFromOpenAPI = async <TOptions extends TemplateCont
     options,
   );
 
+  // Inject template option into context options for the writer to use
+  data.options = {
+    ...data.options,
+    template: effectiveTemplate,
+    withValidationHelpers: withValidationHelpers ?? false,
+    withSchemaRegistry: withSchemaRegistry ?? false,
+  };
+
   await handleDebugIR(data, distPath, disableWriteToFile, debugIR);
 
-  const compiledTemplate = await compileTemplate(
-    templatePath,
-    effectiveTemplate,
-    handlebars ?? getHandlebars(),
-  );
   const willWriteToFile = Boolean(!disableWriteToFile && distPath);
 
   return renderOutput(
     data,
     effectiveOptions,
-    compiledTemplate,
     withValidationHelpers,
     withSchemaRegistry,
     distPath,
     prettierConfig,
-    handlebars ?? getHandlebars(),
     willWriteToFile,
   );
 };

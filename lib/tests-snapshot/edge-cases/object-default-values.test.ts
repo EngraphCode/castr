@@ -72,54 +72,79 @@ test('object-default-values', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const MyComponent = z
       .object({ id: z.number(), name: z.string() })
       .partial()
       .strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/sample",
-        operationId: "getSample",
-        request: {
-          queryParams: z
-            .object({
-              "empty-object": z
-                .object({ foo: z.string() })
-                .partial()
-                .strict()
-                .optional()
-                .default({}),
-              "default-object": z
-                .object({ foo: z.string() })
-                .partial()
-                .strict()
-                .optional()
-                .default({ foo: "bar" }),
-              "ref-object": z
-                .record(MyComponent)
-                .optional()
-                .default({ id: 1, name: "foo" }),
-            })
-            .optional(),
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "empty-object",
+            type: "Query",
+            schema: z
+              .object({ foo: z.string() })
+              .partial()
+              .strict()
+              .optional()
+              .default({}),
+          },
+          {
+            name: "default-object",
+            type: "Query",
+            schema: z
+              .object({ foo: z.string() })
+              .partial()
+              .strict()
+              .optional()
+              .default({ foo: "bar" }),
+          },
+          {
+            name: "ref-object",
+            type: "Query",
+            schema: z
+              .record(MyComponent)
+              .optional()
+              .default({ id: 1, name: "foo" }),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "resoponse",
+          },
         },
-        responses: { 200: { description: "resoponse", schema: z.void() } },
+        request: {
+          queryParams: z.object({
+            "empty-object": z
+              .object({ foo: z.string() })
+              .partial()
+              .strict()
+              .optional()
+              .default({}),
+            "default-object": z
+              .object({ foo: z.string() })
+              .partial()
+              .strict()
+              .optional()
+              .default({ foo: "bar" }),
+            "ref-object": z
+              .record(MyComponent)
+              .optional()
+              .default({ id: 1, name: "foo" }),
+          }),
+        },
+        alias: "getSample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -180,7 +205,7 @@ test('object-default-values', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/sample",
           originalPath: "/sample",
         },

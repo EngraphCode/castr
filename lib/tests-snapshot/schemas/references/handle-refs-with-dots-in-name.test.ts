@@ -164,7 +164,7 @@ test('handle-refs-with-dots-in-name', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const Aaa_bbb_CccDdd_eee_Fff_ggg_HhhIiii_jjj = z
       .object({ aaa: z.string(), bbb: z.string() })
       .partial()
@@ -174,35 +174,40 @@ test('handle-refs-with-dots-in-name', async () => {
       .partial()
       .strict();
     export const Basic = z.string();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/ref-with-dot-in-name",
-        operationId: "getWithUnusualRefFormat",
+        requestFormat: "json",
+        parameters: [],
+        response: Basic.Thing,
+        errors: [],
+        responses: {
+          200: {
+            schema: Basic.Thing,
+          },
+        },
         request: {},
-        responses: { 200: { schema: Basic.Thing } },
+        alias: "getWithUnusualRefFormat",
       },
       {
-        method: "get" as const,
+        method: "get",
         path: "/usual-ref-format",
-        operationId: "getWithUsualRefFormat",
+        requestFormat: "json",
+        parameters: [],
+        response: z.string(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.string(),
+          },
+        },
         request: {},
-        responses: { 200: { schema: z.string() } },
+        alias: "getWithUsualRefFormat",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -234,7 +239,7 @@ test('handle-refs-with-dots-in-name', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/ref-with-dot-in-name",
           originalPath: "/ref-with-dot-in-name",
           operationId: "getWithUnusualRefFormat",
@@ -267,7 +272,7 @@ test('handle-refs-with-dots-in-name', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/usual-ref-format",
           originalPath: "/usual-ref-format",
           operationId: "getWithUsualRefFormat",

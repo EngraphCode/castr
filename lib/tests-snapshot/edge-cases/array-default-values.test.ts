@@ -103,7 +103,7 @@ test('array-default-values', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Zod Schemas
     export const array_object = z
       .array(z.object({ foo: z.string() }).partial().strict())
       .optional()
@@ -113,45 +113,72 @@ test('array-default-values', async () => {
       .partial()
       .strict();
     export const MyEnum = z.enum(["one", "two", "three"]);
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/sample",
-        operationId: "getSample",
-        request: {
-          queryParams: z
-            .object({
-              "array-empty": z.array(z.string()).optional().default([]),
-              "array-string": z
-                .array(z.string())
-                .optional()
-                .default(["one", "two"]),
-              "array-number": z.array(z.number()).optional().default([1, 2]),
-              "array-object": array_object,
-              "array-ref-object": z
-                .array(MyComponent)
-                .optional()
-                .default([{ id: 1, name: "foo" }]),
-              "array-ref-enum": z.array(MyEnum).optional().default(["one", "two"]),
-            })
-            .optional(),
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "array-empty",
+            type: "Query",
+            schema: z.array(z.string()).optional().default([]),
+          },
+          {
+            name: "array-string",
+            type: "Query",
+            schema: z.array(z.string()).optional().default(["one", "two"]),
+          },
+          {
+            name: "array-number",
+            type: "Query",
+            schema: z.array(z.number()).optional().default([1, 2]),
+          },
+          {
+            name: "array-object",
+            type: "Query",
+            schema: array_object,
+          },
+          {
+            name: "array-ref-object",
+            type: "Query",
+            schema: z
+              .array(MyComponent)
+              .optional()
+              .default([{ id: 1, name: "foo" }]),
+          },
+          {
+            name: "array-ref-enum",
+            type: "Query",
+            schema: z.array(MyEnum).optional().default(["one", "two"]),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "resoponse",
+          },
         },
-        responses: { 200: { description: "resoponse", schema: z.void() } },
+        request: {
+          queryParams: z.object({
+            "array-empty": z.array(z.string()).optional().default([]),
+            "array-string": z.array(z.string()).optional().default(["one", "two"]),
+            "array-number": z.array(z.number()).optional().default([1, 2]),
+            "array-object": array_object,
+            "array-ref-object": z
+              .array(MyComponent)
+              .optional()
+              .default([{ id: 1, name: "foo" }]),
+            "array-ref-enum": z.array(MyEnum).optional().default(["one", "two"]),
+          }),
+        },
+        alias: "getSample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -239,7 +266,7 @@ test('array-default-values', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/sample",
           originalPath: "/sample",
         },

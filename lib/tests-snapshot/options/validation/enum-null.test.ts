@@ -113,52 +113,78 @@ test('enum-null', async () => {
   assertSingleFileResult(output);
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
-
+    // Type Definitions
     type Compound = Partial<{ field: Null1 | Null2 | Null3 | Null4 | string }>;
     type Null1 = null;
     type Null2 = "a" | null;
     type Null3 = "a" | null;
     type Null4 = null;
-
+    // Zod Schemas
     export const Null1 = z.literal(null);
     export const Null2 = z.enum(["a", null]);
     export const Null3 = z.enum(["a", null]);
     export const Null4 = z.literal(null);
-    export const Compound: z.ZodType<Compound> = z
+    export const Compound = z
       .object({ field: z.union([Null1, Null2, Null3, Null4, z.string()]) })
       .partial()
       .strict();
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "get" as const,
+        method: "get",
         path: "/sample",
-        operationId: "getSample",
-        request: {},
-        responses: {
-          200: { description: "one null", schema: z.literal(null) },
-          400: { description: "null with a string", schema: z.enum(["a", null]) },
-          401: {
-            description: "null with a string and nullable",
+        requestFormat: "json",
+        parameters: [],
+        response: z.literal(null),
+        errors: [
+          {
+            status: 400,
             schema: z.enum(["a", null]),
+            description: "null with a string",
           },
-          402: { description: "null with nullable", schema: z.literal(null) },
-          403: { description: "object that references null", schema: Compound },
+          {
+            status: 401,
+            schema: z.enum(["a", null]),
+            description: "null with a string and nullable",
+          },
+          {
+            status: 402,
+            schema: z.literal(null),
+            description: "null with nullable",
+          },
+          {
+            status: 403,
+            schema: Compound,
+            description: "object that references null",
+          },
+        ],
+        responses: {
+          200: {
+            schema: z.literal(null),
+            description: "one null",
+          },
+          400: {
+            schema: z.enum(["a", null]),
+            description: "null with a string",
+          },
+          401: {
+            schema: z.enum(["a", null]),
+            description: "null with a string and nullable",
+          },
+          402: {
+            schema: z.literal(null),
+            description: "null with nullable",
+          },
+          403: {
+            schema: Compound,
+            description: "object that references null",
+          },
         },
+        request: {},
+        alias: "getSample",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -183,7 +209,7 @@ test('enum-null', async () => {
           },
         },
         httpOperation: {
-          method: "get" as const,
+          method: "get",
           path: "/sample",
           originalPath: "/sample",
         },

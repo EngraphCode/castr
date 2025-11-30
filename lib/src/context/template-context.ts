@@ -111,6 +111,8 @@ export interface TemplateContextOptions {
   template?: string;
   withDefaultValues?: boolean;
   useMainResponseDescriptionAsEndpointDefinitionFallback?: boolean;
+  withValidationHelpers?: boolean;
+  withSchemaRegistry?: boolean;
 }
 
 /**

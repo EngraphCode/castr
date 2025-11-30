@@ -127,6 +127,10 @@ export const sortSchemasByDependencies = (
  *
  * @internal
  */
+import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
+
+// ...
+
 export function exportUnusedSchemas(
   docSchemas: Record<string, SchemaObject | ReferenceObject>,
   result: {
@@ -136,7 +140,8 @@ export function exportUnusedSchemas(
   options?: TemplateContext['options'],
 ): void {
   Object.entries(docSchemas).forEach(([name, schema]) => {
-    if (!result.zodSchemaByName[name]) {
+    const sanitizedName = sanitizeIdentifier(name);
+    if (!result.zodSchemaByName[sanitizedName]) {
       const schemaArgs = {
         schema,
         ctx: {
@@ -153,7 +158,7 @@ export function exportUnusedSchemas(
           `Could not get Zod schema string for schema: ${name}, with value: ${JSON.stringify(schema)}`,
         );
       }
-      result.zodSchemaByName[name] = zodSchemaString;
+      result.zodSchemaByName[sanitizedName] = zodSchemaString;
     }
   });
 }

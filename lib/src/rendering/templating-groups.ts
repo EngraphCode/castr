@@ -5,10 +5,8 @@ import type { Options } from 'prettier';
 import { capitalize } from '../shared/utils/index.js';
 import { logger } from '../shared/utils/logger.js';
 import { maybePretty } from '../shared/maybe-pretty.js';
-import type { getHandlebars } from './handlebars.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
-
-const templatesDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), './templates');
+import { writeIndexFile, writeCommonFile, writeTypeScript } from '../writers/typescript.js';
 
 /**
  * Generate index file for grouped output
@@ -19,7 +17,6 @@ export async function generateIndexFile(
   data: TemplateContext,
   distPath: string | undefined,
   prettierConfig: Options | null | undefined,
-  hbs: ReturnType<typeof getHandlebars>,
   willWriteToFile: boolean,
 ): Promise<string> {
   const groupNames = Object.fromEntries(
@@ -29,9 +26,7 @@ export async function generateIndexFile(
     ]),
   );
 
-  const indexSource = await fs.readFile(path.join(templatesDir, 'grouped-index.hbs'), 'utf8');
-  const indexTemplate = hbs.compile(indexSource);
-  const indexOutput = await maybePretty(indexTemplate({ groupNames }), prettierConfig);
+  const indexOutput = await maybePretty(writeIndexFile(groupNames), prettierConfig);
 
   if (willWriteToFile && distPath) {
     await fs.writeFile(path.join(distPath, 'index.ts'), indexOutput);
@@ -49,7 +44,6 @@ export async function generateCommonFile(
   data: TemplateContext,
   distPath: string | undefined,
   prettierConfig: Options | null | undefined,
-  hbs: ReturnType<typeof getHandlebars>,
   willWriteToFile: boolean,
 ): Promise<string | null> {
   const commonSchemaNames = [...(data.commonSchemaNames ?? [])];
@@ -57,13 +51,8 @@ export async function generateCommonFile(
     return null;
   }
 
-  const commonSource = await fs.readFile(path.join(templatesDir, 'grouped-common.hbs'), 'utf8');
-  const commonTemplate = hbs.compile(commonSource);
   const commonOutput = await maybePretty(
-    commonTemplate({
-      schemas: pick(data.schemas, commonSchemaNames),
-      types: pick(data.types, commonSchemaNames),
-    }),
+    writeCommonFile(pick(data.schemas, commonSchemaNames), pick(data.types, commonSchemaNames)),
     prettierConfig,
   );
 
@@ -81,7 +70,6 @@ export async function generateCommonFile(
  */
 export async function generateGroupFiles(
   data: TemplateContext,
-  compiledTemplate: ReturnType<ReturnType<typeof getHandlebars>['compile']>,
   effectiveOptions: TemplateContextOptions,
   withValidationHelpers: boolean | undefined,
   withSchemaRegistry: boolean | undefined,
@@ -92,17 +80,19 @@ export async function generateGroupFiles(
   const outputByGroupName: Record<string, string> = {};
 
   for (const groupName in data.endpointsGroups) {
-    const groupOutput = compiledTemplate({
+    const groupContext: TemplateContext = {
       ...data,
       ...data.endpointsGroups[groupName],
       options: {
         ...effectiveOptions,
         groupStrategy: 'none',
         apiClientName: `${capitalize(groupName)}Api`,
-        withValidationHelpers,
-        withSchemaRegistry,
+        withValidationHelpers: withValidationHelpers ?? false,
+        withSchemaRegistry: withSchemaRegistry ?? false,
       },
-    });
+    };
+
+    const groupOutput = writeTypeScript(groupContext);
     const prettyGroupOutput = await maybePretty(groupOutput, prettierConfig);
     outputByGroupName[groupName] = prettyGroupOutput;
 

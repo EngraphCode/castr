@@ -56,33 +56,39 @@ test('array-body-with-chains-tag-group-strategy', async () => {
   expect(output.files).toMatchInlineSnapshot(`
     {
         "Test": "import { z } from "zod";
-
+    // Zod Schemas
     export const putTest_Body = z.array(
       z.object({ testItem: z.string() }).partial().strict(),
     );
-
+    // Endpoints
     export const endpoints = [
       {
-        method: "put" as const,
+        method: "put",
         path: "/test",
-        operationId: "putTest",
-        description: \`Test\`,
-        request: { body: putTest_Body.min(1).max(10) },
-        responses: { 200: { description: "Success", schema: z.void() } },
+        requestFormat: "json",
+        parameters: [
+          {
+            name: "body",
+            type: "Body",
+            schema: putTest_Body.min(1).max(10),
+          },
+        ],
+        response: z.void(),
+        errors: [],
+        responses: {
+          200: {
+            schema: z.void(),
+            description: "Success",
+          },
+        },
+        request: {
+          body: putTest_Body.min(1).max(10),
+        },
+        alias: "putTest",
+        description: "Test",
       },
     ] as const;
-
-    /**
-     * MCP (Model Context Protocol) tool metadata derived from the OpenAPI document.
-     *
-     * Each entry provides:
-     * - \`tool\`: JSON Schema Draft 07 compliant tool definition (name, description, annotations, schemas)
-     * - \`httpOperation\`: source HTTP metadata (method, templated path, original path, operationId)
-     * - \`security\`: upstream API security requirements (Layer 2 metadata only)
-     *
-     * Use \`tool\` when wiring into the MCP SDK, and \`httpOperation\`/\`security\` when presenting
-     * additional context to operators or logging.
-     */
+    // MCP Tools
     export const mcpTools = [
       {
         tool: {
@@ -120,7 +126,7 @@ test('array-body-with-chains-tag-group-strategy', async () => {
           },
         },
         httpOperation: {
-          method: "put" as const,
+          method: "put",
           path: "/test",
           originalPath: "/test",
         },
@@ -132,7 +138,7 @@ test('array-body-with-chains-tag-group-strategy', async () => {
       },
     ] as const;
     ",
-        "__index": "export { TestApi } from "./Test";
+        "__index": "export * as TestApi from "./Test";
     ",
     }
   `);
