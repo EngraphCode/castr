@@ -1,0 +1,47 @@
+import { getZodSchema } from '../../../src/conversion/zod/index.js';
+import { test, expect } from 'vitest';
+
+/**
+ * Test: withImplicitRequired option behavior
+ *
+ * Note: The `options` parameter was removed from getZodSchema.
+ * This test now verifies default behavior only.
+ */
+test('withImplicitRequired-option', () => {
+  expect(
+    getZodSchema({
+      schema: {
+        type: 'object',
+        properties: {
+          str: { type: 'string' },
+          nested: {
+            additionalProperties: { type: 'number' },
+          },
+        },
+      },
+    }),
+  ).toMatchInlineSnapshot(
+    `
+    {
+        "code": "z.object({
+      str: z.string().optional(),
+      nested: z.object({
+      }).catchall(z.number()).optional(),
+    }).passthrough()",
+        "schema": {
+            "properties": {
+                "nested": {
+                    "additionalProperties": {
+                        "type": "number",
+                    },
+                },
+                "str": {
+                    "type": "string",
+                },
+            },
+            "type": "object",
+        },
+    }
+  `,
+  );
+});

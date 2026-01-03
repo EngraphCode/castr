@@ -1,0 +1,50 @@
+{
+  "name": "data-descriptions-transforms-monorepo",
+  "private": true,
+  "version": "0.0.0-development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jimcresswell/openapi-zod-validation.git"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev --parallel",
+    "type-check": "turbo type-check",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint -- --fix",
+    "test": "turbo test",
+    "test:watch": "turbo test -- --watch",
+    "test:snapshot": "turbo test:snapshot",
+    "test:gen": "turbo test:gen",
+    "character": "turbo character",
+    "test:all": "pnpm test && pnpm character && pnpm test:snapshot && pnpm test:gen",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
+    "clean": "turbo clean",
+    "fix": "pnpm format && pnpm lint:fix",
+    "qg": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm test:all",
+    "check": "pnpm clean && pnpm install && pnpm qg",
+    "fetch:examples": "turbo fetch:examples"
+  },
+  "license": "MIT",
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.25.11"
+    }
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-draft-04": "^1.0.0",
+    "ajv-formats": "^3.0.1",
+    "pnpm": "^10.20.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4",
+    "turbo": "^2.5.8",
+    "typescript": "^5"
+  },
+  "dependencies": {}
+}

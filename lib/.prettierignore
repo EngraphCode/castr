@@ -1,0 +1,15 @@
+# Templates (Handlebars syntax not compatible with Prettier)
+*.hbs
+
+# Build outputs
+dist
+
+# Lock files
+pnpm-lock.yaml
+
+# Changelogs
+CHANGELOG.md
+
+# Cache
+.eslintcache
+

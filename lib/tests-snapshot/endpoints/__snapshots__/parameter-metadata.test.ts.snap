@@ -1,0 +1,171 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Parameter Metadata Extraction - Snapshot Tests > should extract complete parameter metadata with all fields > deprecated category parameter with enum 1`] = `
+{
+    "constraints": {
+        "enum": [
+            "electronics",
+            "clothing",
+            "books",
+        ],
+    },
+    "default": "electronics",
+    "deprecated": true,
+    "description": "Product category",
+    "name": "category",
+    "schema": "z.enum(["electronics", "clothing", "books"])",
+    "type": "Query",
+}
+`;
+
+exports[`Parameter Metadata Extraction - Snapshot Tests > should extract complete parameter metadata with all fields > name parameter with examples and string constraints 1`] = `
+{
+    "constraints": {
+        "maxLength": 100,
+        "minLength": 2,
+        "pattern": "^[a-zA-Z0-9 ]+$",
+    },
+    "description": "Product name search",
+    "examples": {
+        "laptop": {
+            "summary": "Search for laptops",
+            "value": "laptop",
+        },
+        "phone": {
+            "description": "Mobile phones and accessories",
+            "summary": "Search for phones",
+            "value": "phone",
+        },
+    },
+    "name": "name",
+    "schema": "z.string().min(2).max(100).regex(/^[a-zA-Z0-9 ]+$/)",
+    "type": "Query",
+}
+`;
+
+exports[`Parameter Metadata Extraction - Snapshot Tests > should extract complete parameter metadata with all fields > price_min parameter with numeric constraints 1`] = `
+{
+    "constraints": {
+        "format": "float",
+        "minimum": 0,
+    },
+    "default": 0,
+    "description": "Minimum price filter",
+    "example": 10,
+    "name": "price_min",
+    "schema": "z.number().min(0)",
+    "type": "Query",
+}
+`;
+
+exports[`Parameter Metadata Extraction - Snapshot Tests > should extract complete parameter metadata with all fields > tags parameter with array constraints 1`] = `
+{
+    "constraints": {
+        "maxItems": 10,
+        "minItems": 1,
+        "uniqueItems": true,
+    },
+    "description": "Filter by tags",
+    "name": "tags",
+    "schema": "z.array(z.string()).min(1).max(10)",
+    "type": "Query",
+}
+`;
+
+exports[`Parameter Metadata Extraction - Snapshot Tests > should handle parameters with minimal metadata > endpoint with minimal parameter metadata 1`] = `
+{
+    "alias": "simple",
+    "errors": [],
+    "method": "get",
+    "parameters": [
+        {
+            "name": "id",
+            "schema": "z.string()",
+            "type": "Path",
+        },
+        {
+            "name": "filter",
+            "schema": "z.string()",
+            "type": "Query",
+        },
+    ],
+    "path": "/simple",
+    "requestFormat": "json",
+    "response": "z.object({
+}).passthrough()",
+    "responses": [
+        {
+            "description": "Success",
+            "schema": {
+                "metadata": {
+                    "circularReferences": [],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": false,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": ".optional()",
+                        "validations": [],
+                    },
+                },
+                "type": "object",
+            },
+            "statusCode": "200",
+        },
+    ],
+}
+`;
+
+exports[`Parameter Metadata Extraction - Snapshot Tests > should prefer parameter example over schema example > endpoint showing example priority 1`] = `
+{
+    "alias": "test",
+    "errors": [],
+    "method": "get",
+    "parameters": [
+        {
+            "example": "parameter-example",
+            "name": "param_with_both",
+            "schema": "z.string()",
+            "type": "Query",
+        },
+        {
+            "example": "schema-only-example",
+            "name": "param_with_schema_example_only",
+            "schema": "z.string()",
+            "type": "Query",
+        },
+    ],
+    "path": "/test",
+    "requestFormat": "json",
+    "response": "z.object({
+}).passthrough()",
+    "responses": [
+        {
+            "description": "Success",
+            "schema": {
+                "metadata": {
+                    "circularReferences": [],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": false,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": ".optional()",
+                        "validations": [],
+                    },
+                },
+                "type": "object",
+            },
+            "statusCode": "200",
+        },
+    ],
+}
+`;

@@ -1,0 +1,84 @@
+openapi: 3.1.0
+info:
+  title: Multi-Auth Example API
+  version: 1.0.0
+components:
+  schemas:
+    CreateUserInput:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - email
+      properties:
+        username:
+          type:
+            - string
+            - null
+          minLength: 3
+          description: Unique handle for the user
+        email:
+          type: string
+          format: email
+        age:
+          type:
+            - integer
+            - null
+          minimum: 0
+          description: Optional age in years
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: OAuth 2.0 Authorization Code flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.example.com/authorize
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            users:write: Create or update users
+            users:read: View user records
+    ApiKey:
+      type: apiKey
+      description: Static API key header
+      in: header
+      name: X-API-Key
+paths:
+  /users:
+    post:
+      operationId: createUser
+      security:
+        - OAuth2:
+            - users:write
+        - ApiKey: []
+        - OAuth2:
+            - users:write
+          ApiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserInput'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+    get:
+      operationId: listUsers
+      security: []
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreateUserInput'

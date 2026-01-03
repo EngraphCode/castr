@@ -1,0 +1,1599 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`recursive-schema - direct recursive > should handle direct recursive schemas 1`] = `
+"import { z } from "zod";
+// Type Definitions
+export type User = {
+  name?: string;
+  parent?: User;
+};
+// Zod Schemas
+export const User = z.lazy(() =>
+  z
+    .object({
+      name: z.string().optional(),
+      parent: User.optional(),
+    })
+    .strict(),
+);
+// Endpoints
+export const endpoints = [
+  {
+    method: "get",
+    path: "/example",
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({
+        name: z.string().optional(),
+        parent: User.optional(),
+      })
+      .strict(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z
+          .object({
+            name: z.string().optional(),
+            parent: User.optional(),
+          })
+          .strict(),
+        description: "OK",
+      },
+    },
+    request: {},
+    alias: "getExample",
+  },
+] as const;
+// MCP Tools
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_example",
+      description: "GET /example",
+      inputSchema: { type: "object" },
+      outputSchema: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          parent: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              parent: { $ref: "#/definitions/User" },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get",
+      path: "/example",
+      originalPath: "/example",
+      operationId: "getExample",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
+"
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 1`] = `
+{
+    "deepDependencyGraph": {
+        "#/components/schemas/Middle": Set {
+            "#/components/schemas/User",
+            "#/components/schemas/Middle",
+        },
+        "#/components/schemas/Root": Set {
+            "#/components/schemas/User",
+            "#/components/schemas/Middle",
+        },
+        "#/components/schemas/User": Set {
+            "#/components/schemas/Middle",
+            "#/components/schemas/User",
+        },
+    },
+    "refsDependencyGraph": {
+        "#/components/schemas/Middle": Set {
+            "#/components/schemas/User",
+        },
+        "#/components/schemas/Root": Set {
+            "#/components/schemas/User",
+        },
+        "#/components/schemas/User": Set {
+            "#/components/schemas/Middle",
+        },
+    },
+}
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 2`] = `
+[
+    "#/components/schemas/Middle",
+    "#/components/schemas/User",
+    "#/components/schemas/Root",
+]
+`;
+
+exports[`recursive-schema - indirect single recursive > should handle indirect single recursive schemas 3`] = `
+"import { z } from "zod";
+// Type Definitions
+export type Middle = {
+  user?: User;
+};
+export type User = {
+  name?: string;
+  middle?: Middle;
+};
+export type Root = {
+  recursive?: User;
+  basic?: number;
+};
+// Zod Schemas
+export const Middle = z.lazy(() =>
+  z
+    .object({
+      user: User.optional(),
+    })
+    .strict(),
+);
+export const User = z.lazy(() =>
+  z
+    .object({
+      name: z.string().optional(),
+      middle: Middle.optional(),
+    })
+    .strict(),
+);
+export const Root = z.lazy(() =>
+  z
+    .object({
+      recursive: User.optional(),
+      basic: z.number().optional(),
+    })
+    .strict(),
+);
+// Endpoints
+export const endpoints = [
+  {
+    method: "get",
+    path: "/example",
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({
+        recursive: User.optional(),
+        basic: z.number().optional(),
+      })
+      .strict(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z
+          .object({
+            recursive: User.optional(),
+            basic: z.number().optional(),
+          })
+          .strict(),
+        description: "OK",
+      },
+    },
+    request: {},
+    alias: "getExample",
+  },
+] as const;
+// MCP Tools
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_example",
+      description: "GET /example",
+      inputSchema: { type: "object" },
+      outputSchema: {
+        type: "object",
+        properties: {
+          recursive: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              middle: {
+                type: "object",
+                properties: { user: { $ref: "#/definitions/User" } },
+              },
+            },
+          },
+          basic: { type: "number" },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get",
+      path: "/example",
+      originalPath: "/example",
+      operationId: "getExample",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
+"
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 1`] = `
+{
+    "endpoints": [
+        {
+            "alias": "getExample",
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/example",
+            "requestFormat": "json",
+            "response": "z.object({
+  someUser: UserWithFriends.optional(),
+  someProp: z.boolean().optional(),
+}).passthrough()",
+            "responses": [
+                {
+                    "description": "OK",
+                    "schema": {
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": ".optional()",
+                                "validations": [],
+                            },
+                        },
+                        "properties": {
+                            "dataType": "CastrSchemaProperties",
+                            "value": {
+                                "someProp": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "boolean",
+                                },
+                                "someUser": {
+                                    "$ref": "#/components/schemas/UserWithFriends",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "required": [],
+                        "type": "object",
+                    },
+                    "statusCode": "200",
+                },
+            ],
+        },
+    ],
+}
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 2`] = `
+{
+    "_ir": {
+        "components": [
+            {
+                "metadata": {
+                    "circularReferences": [
+                        "#/components/schemas/User",
+                    ],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": true,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": "",
+                        "validations": [],
+                    },
+                },
+                "name": "User",
+                "schema": {
+                    "metadata": {
+                        "circularReferences": [
+                            "#/components/schemas/User",
+                        ],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": true,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "",
+                            "validations": [],
+                        },
+                    },
+                    "properties": {
+                        "dataType": "CastrSchemaProperties",
+                        "value": {
+                            "name": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                            "parent": {
+                                "$ref": "#/components/schemas/User",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "required": [],
+                    "type": "object",
+                },
+                "type": "schema",
+            },
+            {
+                "metadata": {
+                    "circularReferences": [
+                        "#/components/schemas/UserWithFriends",
+                        "#/components/schemas/Friend",
+                    ],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": true,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": "",
+                        "validations": [],
+                    },
+                },
+                "name": "UserWithFriends",
+                "schema": {
+                    "metadata": {
+                        "circularReferences": [
+                            "#/components/schemas/UserWithFriends",
+                            "#/components/schemas/Friend",
+                        ],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": true,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "",
+                            "validations": [],
+                        },
+                    },
+                    "properties": {
+                        "dataType": "CastrSchemaProperties",
+                        "value": {
+                            "bestFriend": {
+                                "$ref": "#/components/schemas/Friend",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                            "friends": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Friend",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                            "name": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                            "parent": {
+                                "$ref": "#/components/schemas/UserWithFriends",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "required": [],
+                    "type": "object",
+                },
+                "type": "schema",
+            },
+            {
+                "metadata": {
+                    "circularReferences": [
+                        "#/components/schemas/UserWithFriends",
+                        "#/components/schemas/Friend",
+                    ],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": true,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": "",
+                        "validations": [],
+                    },
+                },
+                "name": "Friend",
+                "schema": {
+                    "metadata": {
+                        "circularReferences": [
+                            "#/components/schemas/UserWithFriends",
+                            "#/components/schemas/Friend",
+                        ],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": true,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "",
+                            "validations": [],
+                        },
+                    },
+                    "properties": {
+                        "dataType": "CastrSchemaProperties",
+                        "value": {
+                            "circle": {
+                                "items": {
+                                    "$ref": "#/components/schemas/Friend",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                            "nickname": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "string",
+                            },
+                            "user": {
+                                "$ref": "#/components/schemas/UserWithFriends",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "required": [],
+                    "type": "object",
+                },
+                "type": "schema",
+            },
+            {
+                "metadata": {
+                    "circularReferences": [
+                        "#/components/schemas/ObjectWithRecursiveArray",
+                    ],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": true,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": "",
+                        "validations": [],
+                    },
+                },
+                "name": "ResponseSchema",
+                "schema": {
+                    "metadata": {
+                        "circularReferences": [
+                            "#/components/schemas/ObjectWithRecursiveArray",
+                        ],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": true,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "",
+                            "validations": [],
+                        },
+                    },
+                    "properties": {
+                        "dataType": "CastrSchemaProperties",
+                        "value": {
+                            "basic": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "number",
+                            },
+                            "recursiveRef": {
+                                "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "required": [],
+                    "type": "object",
+                },
+                "type": "schema",
+            },
+            {
+                "metadata": {
+                    "circularReferences": [
+                        "#/components/schemas/ObjectWithRecursiveArray",
+                    ],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": true,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": "",
+                        "validations": [],
+                    },
+                },
+                "name": "ObjectWithRecursiveArray",
+                "schema": {
+                    "metadata": {
+                        "circularReferences": [
+                            "#/components/schemas/ObjectWithRecursiveArray",
+                        ],
+                        "dependencyGraph": {
+                            "depth": 0,
+                            "referencedBy": [],
+                            "references": [],
+                        },
+                        "nullable": false,
+                        "required": true,
+                        "zodChain": {
+                            "defaults": [],
+                            "presence": "",
+                            "validations": [],
+                        },
+                    },
+                    "properties": {
+                        "dataType": "CastrSchemaProperties",
+                        "value": {
+                            "array": {
+                                "items": {
+                                    "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "array",
+                            },
+                            "isInsideObjectWithRecursiveArray": {
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [],
+                                    },
+                                },
+                                "type": "boolean",
+                            },
+                        },
+                    },
+                    "required": [],
+                    "type": "object",
+                },
+                "type": "schema",
+            },
+        ],
+        "dependencyGraph": {
+            "circularReferences": [],
+            "nodes": Map {},
+            "topologicalOrder": [],
+        },
+        "enums": Map {},
+        "info": {
+            "title": "Swagger Petstore - OpenAPI 3.0",
+            "version": "1.0.11",
+        },
+        "openApiVersion": "3.0.3",
+        "operations": [
+            {
+                "method": "get",
+                "operationId": "getExample",
+                "parameters": [],
+                "parametersByLocation": {
+                    "cookie": [],
+                    "header": [],
+                    "path": [],
+                    "query": [],
+                },
+                "path": "/example",
+                "responses": [
+                    {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "properties": {
+                                        "dataType": "CastrSchemaProperties",
+                                        "value": {
+                                            "someProp": {
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": ".optional()",
+                                                        "validations": [],
+                                                    },
+                                                },
+                                                "type": "boolean",
+                                            },
+                                            "someUser": {
+                                                "$ref": "#/components/schemas/UserWithFriends",
+                                                "metadata": {
+                                                    "circularReferences": [],
+                                                    "dependencyGraph": {
+                                                        "depth": 0,
+                                                        "referencedBy": [],
+                                                        "references": [],
+                                                    },
+                                                    "nullable": false,
+                                                    "required": false,
+                                                    "zodChain": {
+                                                        "defaults": [],
+                                                        "presence": ".optional()",
+                                                        "validations": [],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    "required": [],
+                                    "type": "object",
+                                },
+                            },
+                        },
+                        "description": "OK",
+                        "statusCode": "200",
+                    },
+                ],
+            },
+        ],
+        "servers": [],
+        "version": "1.0.0",
+    },
+    "endpoints": [
+        {
+            "alias": "getExample",
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/example",
+            "requestFormat": "json",
+            "response": {
+                "metadata": {
+                    "circularReferences": [],
+                    "dependencyGraph": {
+                        "depth": 0,
+                        "referencedBy": [],
+                        "references": [],
+                    },
+                    "nullable": false,
+                    "required": false,
+                    "zodChain": {
+                        "defaults": [],
+                        "presence": ".optional()",
+                        "validations": [],
+                    },
+                },
+                "properties": {
+                    "dataType": "CastrSchemaProperties",
+                    "value": {
+                        "someProp": {
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": ".optional()",
+                                    "validations": [],
+                                },
+                            },
+                            "type": "boolean",
+                        },
+                        "someUser": {
+                            "$ref": "#/components/schemas/UserWithFriends",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": ".optional()",
+                                    "validations": [],
+                                },
+                            },
+                        },
+                    },
+                },
+                "required": [],
+                "type": "object",
+            },
+            "responses": [
+                {
+                    "description": "OK",
+                    "schema": {
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": ".optional()",
+                                "validations": [],
+                            },
+                        },
+                        "properties": {
+                            "dataType": "CastrSchemaProperties",
+                            "value": {
+                                "someProp": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "boolean",
+                                },
+                                "someUser": {
+                                    "$ref": "#/components/schemas/UserWithFriends",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "required": [],
+                        "type": "object",
+                    },
+                    "statusCode": "200",
+                },
+            ],
+        },
+    ],
+    "endpointsGroups": {},
+    "mcpTools": [
+        {
+            "httpOperation": {
+                "method": "get",
+                "operationId": "getExample",
+                "originalPath": "/example",
+                "path": "/example",
+            },
+            "method": "get",
+            "operationId": "getExample",
+            "originalPath": "/example",
+            "path": "/example",
+            "security": {
+                "isPublic": true,
+                "requirementSets": [],
+                "usesGlobalSecurity": false,
+            },
+            "tool": {
+                "annotations": {
+                    "destructiveHint": false,
+                    "idempotentHint": false,
+                    "readOnlyHint": true,
+                },
+                "description": "GET /example",
+                "inputSchema": {
+                    "type": "object",
+                },
+                "name": "get_example",
+                "outputSchema": {
+                    "properties": {
+                        "someProp": {
+                            "type": "boolean",
+                        },
+                        "someUser": {
+                            "properties": {
+                                "bestFriend": {
+                                    "properties": {
+                                        "circle": {
+                                            "items": {
+                                                "$ref": "#/definitions/Friend",
+                                            },
+                                            "type": "array",
+                                        },
+                                        "nickname": {
+                                            "type": "string",
+                                        },
+                                        "user": {
+                                            "$ref": "#/definitions/UserWithFriends",
+                                        },
+                                    },
+                                    "type": "object",
+                                },
+                                "friends": {
+                                    "items": {
+                                        "properties": {
+                                            "circle": {
+                                                "items": {
+                                                    "$ref": "#/definitions/Friend",
+                                                },
+                                                "type": "array",
+                                            },
+                                            "nickname": {
+                                                "type": "string",
+                                            },
+                                            "user": {
+                                                "$ref": "#/definitions/UserWithFriends",
+                                            },
+                                        },
+                                        "type": "object",
+                                    },
+                                    "type": "array",
+                                },
+                                "name": {
+                                    "type": "string",
+                                },
+                                "parent": {
+                                    "$ref": "#/definitions/UserWithFriends",
+                                },
+                            },
+                            "type": "object",
+                        },
+                    },
+                    "type": "object",
+                },
+            },
+        },
+    ],
+    "options": {
+        "baseUrl": "",
+        "withAlias": false,
+    },
+    "sortedSchemaNames": [
+        "#/components/schemas/User",
+        "#/components/schemas/Friend",
+        "#/components/schemas/UserWithFriends",
+        "#/components/schemas/ObjectWithRecursiveArray",
+        "#/components/schemas/ResponseSchema",
+    ],
+}
+`;
+
+exports[`recursive-schema - multiple recursive in one root schema > should handle multiple recursive references in one root schema 3`] = `
+"import { z } from "zod";
+// Type Definitions
+export type User = {
+  name?: string;
+  parent?: User;
+};
+export type Friend = {
+  nickname?: string;
+  user?: UserWithFriends;
+  circle?: Friend[];
+};
+export type UserWithFriends = {
+  name?: string;
+  parent?: UserWithFriends;
+  friends?: Friend[];
+  bestFriend?: Friend;
+};
+export type ObjectWithRecursiveArray = {
+  isInsideObjectWithRecursiveArray?: boolean;
+  array?: ObjectWithRecursiveArray[];
+};
+export type ResponseSchema = {
+  recursiveRef?: ObjectWithRecursiveArray;
+  basic?: number;
+};
+// Zod Schemas
+export const User = z.lazy(() =>
+  z
+    .object({
+      name: z.string().optional(),
+      parent: User.optional(),
+    })
+    .strict(),
+);
+export const Friend = z.lazy(() =>
+  z
+    .object({
+      nickname: z.string().optional(),
+      user: UserWithFriends.optional(),
+      circle: z.array(Friend).optional(),
+    })
+    .strict(),
+);
+export const UserWithFriends = z.lazy(() =>
+  z
+    .object({
+      name: z.string().optional(),
+      parent: UserWithFriends.optional(),
+      friends: z.array(Friend).optional(),
+      bestFriend: Friend.optional(),
+    })
+    .strict(),
+);
+export const ObjectWithRecursiveArray = z.lazy(() =>
+  z
+    .object({
+      isInsideObjectWithRecursiveArray: z.boolean().optional(),
+      array: z.array(ObjectWithRecursiveArray).optional(),
+    })
+    .strict(),
+);
+export const ResponseSchema = z.lazy(() =>
+  z
+    .object({
+      recursiveRef: ObjectWithRecursiveArray.optional(),
+      basic: z.number().optional(),
+    })
+    .strict(),
+);
+// Endpoints
+export const endpoints = [
+  {
+    method: "get",
+    path: "/example",
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({
+        someUser: UserWithFriends.optional(),
+        someProp: z.boolean().optional(),
+      })
+      .strict(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z
+          .object({
+            someUser: UserWithFriends.optional(),
+            someProp: z.boolean().optional(),
+          })
+          .strict(),
+        description: "OK",
+      },
+    },
+    request: {},
+    alias: "getExample",
+  },
+] as const;
+// MCP Tools
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_example",
+      description: "GET /example",
+      inputSchema: { type: "object" },
+      outputSchema: {
+        type: "object",
+        properties: {
+          someUser: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              parent: { $ref: "#/definitions/UserWithFriends" },
+              friends: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    nickname: { type: "string" },
+                    user: { $ref: "#/definitions/UserWithFriends" },
+                    circle: {
+                      type: "array",
+                      items: { $ref: "#/definitions/Friend" },
+                    },
+                  },
+                },
+              },
+              bestFriend: {
+                type: "object",
+                properties: {
+                  nickname: { type: "string" },
+                  user: { $ref: "#/definitions/UserWithFriends" },
+                  circle: {
+                    type: "array",
+                    items: { $ref: "#/definitions/Friend" },
+                  },
+                },
+              },
+            },
+          },
+          someProp: { type: "boolean" },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get",
+      path: "/example",
+      originalPath: "/example",
+      operationId: "getExample",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
+"
+`;
+
+exports[`recursive-schema - recursive array > should handle recursive array schemas 1`] = `
+{
+    "endpoints": [
+        {
+            "alias": "getExample",
+            "errors": [],
+            "method": "get",
+            "parameters": [],
+            "path": "/example",
+            "requestFormat": "json",
+            "response": "z.object({
+  recursiveRef: ObjectWithRecursiveArray.optional(),
+  basic: z.number().optional(),
+}).passthrough()",
+            "responses": [
+                {
+                    "description": "OK",
+                    "schema": {
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": ".optional()",
+                                "validations": [],
+                            },
+                        },
+                        "properties": {
+                            "dataType": "CastrSchemaProperties",
+                            "value": {
+                                "basic": {
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                    "type": "number",
+                                },
+                                "recursiveRef": {
+                                    "$ref": "#/components/schemas/ObjectWithRecursiveArray",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "required": [],
+                        "type": "object",
+                    },
+                    "statusCode": "200",
+                },
+            ],
+        },
+    ],
+}
+`;
+
+exports[`recursive-schema - with ref to simple schema > should generate simple schema and dependencies when recursive schema has $ref to it 1`] = `
+"import { z } from "zod";
+// Type Definitions
+export type Settings = {
+  theme_color?: string;
+};
+export type Author = {
+  name?: string;
+  mail?: string;
+  settings?: Settings;
+};
+export type Song = {
+  name?: string;
+  duration?: number;
+  in_playlists?: Playlist[];
+};
+export type Playlist = {
+  name?: string;
+  author?: Author;
+  songs?: Song[];
+};
+// Zod Schemas
+export const Settings = z
+  .object({
+    theme_color: z.string().optional(),
+  })
+  .strict();
+export const Author = z
+  .object({
+    name: z.string().optional(),
+    mail: z.string().optional(),
+    settings: Settings.optional(),
+  })
+  .strict();
+export const Song = z.lazy(() =>
+  z
+    .object({
+      name: z.string().optional(),
+      duration: z.number().optional(),
+      in_playlists: z.array(Playlist).optional(),
+    })
+    .strict(),
+);
+export const Playlist = z.lazy(() =>
+  z
+    .object({
+      name: z.string().optional(),
+      author: Author.optional(),
+      songs: z.array(Song).optional(),
+    })
+    .strict(),
+);
+// Endpoints
+export const endpoints = [
+  {
+    method: "get",
+    path: "/example",
+    requestFormat: "json",
+    parameters: [],
+    response: z
+      .object({
+        playlist: Playlist.optional(),
+        by_author: Author.optional(),
+      })
+      .strict(),
+    errors: [],
+    responses: {
+      200: {
+        schema: z
+          .object({
+            playlist: Playlist.optional(),
+            by_author: Author.optional(),
+          })
+          .strict(),
+        description: "OK",
+      },
+    },
+    request: {},
+    alias: "getExample",
+  },
+] as const;
+// MCP Tools
+export const mcpTools = [
+  {
+    tool: {
+      name: "get_example",
+      description: "GET /example",
+      inputSchema: { type: "object" },
+      outputSchema: {
+        type: "object",
+        properties: {
+          playlist: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              author: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  mail: { type: "string" },
+                  settings: {
+                    type: "object",
+                    properties: { theme_color: { type: "string" } },
+                  },
+                },
+              },
+              songs: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    duration: { type: "number" },
+                    in_playlists: {
+                      type: "array",
+                      items: { $ref: "#/definitions/Playlist" },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          by_author: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              mail: { type: "string" },
+              settings: {
+                type: "object",
+                properties: { theme_color: { type: "string" } },
+              },
+            },
+          },
+        },
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get",
+      path: "/example",
+      originalPath: "/example",
+      operationId: "getExample",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+] as const;
+"
+`;
