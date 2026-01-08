@@ -49,7 +49,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 598 unit tests
+pnpm test          # 610 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -61,12 +61,13 @@ pnpm character     # 163 characterisation tests
 
 ### ✅ What Works
 
-- All 10 quality gates passing (954+ tests total)
+- All 10 quality gates passing (966+ tests total)
 - IR Builder complete (OpenAPI → CastrDocument with schemaNames, dependencyGraph)
 - Zod Writer complete (operates on IR via ts-morph)
 - Type Writer complete (operates on IR via ts-morph)
 - Scalar Pipeline complete (bundles, upgrades to 3.1)
 - IR-1 complete (schemaNames, full dependencyGraph with depth/circularity)
+- IR-2 complete (context layer uses IR for schema names, dependency graphs, endpoint tags)
 
 ### ⚠️ What Needs Work (Phase 1 Completion)
 
@@ -74,8 +75,8 @@ Phase 1 is **functionally working** but **architecturally incomplete**:
 
 | Work Item                   | Status     | Reference                    |
 | --------------------------- | ---------- | ---------------------------- |
-| IR-2: Context layer cleanup | 🎯 Current | [phase-1-completion-plan.md] |
-| IR-3: MCP subsystem cleanup | Pending    | [phase-1-completion-plan.md] |
+| IR-2: Context layer cleanup | ✅ Done    | [phase-1-completion-plan.md] |
+| IR-3: MCP subsystem cleanup | 🎯 Current | [phase-1-completion-plan.md] |
 | IR-4: Validation framework  | Pending    | [phase-1-completion-plan.md] |
 | IR-5: Documentation         | Pending    | [phase-1-completion-plan.md] |
 
@@ -128,10 +129,11 @@ The order of format support is **deliberate** (see VISION.md):
 - `lib/src/writers/zod-writer.ts` — Zod schema generation
 - `lib/src/writers/type-writer.ts` — TypeScript type generation
 
-### Context Layer (Needs Refactoring)
+### Context Layer (Refactored)
 
-- `lib/src/context/template-context.ts` — `getTemplateContext()` orchestration
-- `lib/src/context/template-context.mcp.ts` — MCP tool generation (uses raw OpenAPI)
+- `lib/src/context/template-context.ts` — `getTemplateContext()` orchestration (uses IR)
+- `lib/src/context/template-context.from-ir.ts` — IR-only helpers (NEW)
+- `lib/src/context/template-context.mcp.ts` — MCP tool generation (still uses raw OpenAPI - IR-3 scope)
 
 ### Tests
 

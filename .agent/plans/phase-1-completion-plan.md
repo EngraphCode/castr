@@ -1,7 +1,7 @@
 # Phase 1 Completion Plan: OpenAPI → Zod
 
 **Date:** January 8, 2026
-**Status:** Approved — Ready to Execute
+**Status:** In Progress — IR-2 Complete
 
 ---
 
@@ -11,11 +11,11 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 
 ### Current Issues
 
-| Issue                           | Location                  | Impact                            |
-| ------------------------------- | ------------------------- | --------------------------------- |
-| Context layer passes raw `doc`  | `template-context.ts`     | IR not single source of truth     |
-| MCP generation uses raw OpenAPI | `template-context.mcp.ts` | Bypasses IR entirely              |
-| No architectural validation     | (missing)                 | Can't prove architecture is clean |
+| Issue                              | Location                  | Impact                            |
+| ---------------------------------- | ------------------------- | --------------------------------- |
+| ~~Context layer passes raw `doc`~~ | ~~`template-context.ts`~~ | ✅ Fixed in IR-2                  |
+| MCP generation uses raw OpenAPI    | `template-context.mcp.ts` | Bypasses IR entirely              |
+| No architectural validation        | (missing)                 | Can't prove architecture is clean |
 
 ---
 
@@ -53,30 +53,46 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 
 ## Work Phases
 
-### Phase IR-2: Context Layer Cleanup (6-8h)
+### Phase IR-2: Context Layer Cleanup (6-8h) ✅ COMPLETE
 
 **Goal:** Remove all raw `doc` passing from context layer.
 
-**Files:**
+**Files Changed:**
 
 - `lib/src/context/template-context.ts`
 - `lib/src/context/template-context.endpoints.ts`
-- Related context files
+- `lib/src/context/template-context.endpoints.helpers.ts`
+- `lib/src/context/template-context.from-ir.ts` (NEW)
+- `lib/src/endpoints/definition.types.ts`
 
 **Acceptance:**
 
-- [ ] `doc: OpenAPIObject` parameter removed from all post-IR functions
-- [ ] All context functions accept only `CastrDocument`
-- [ ] Tests pass without raw doc access
+- [x] `doc: OpenAPIObject` parameter removed from post-IR context functions
+- [x] Schema names from `ir.dependencyGraph.topologicalOrder`
+- [x] Dependency graph from `ir.dependencyGraph.nodes`
+- [x] Endpoint grouping uses `endpoint.tags` (from IR)
+- [x] Tests pass (610 unit, 173 snapshot, 20 gen, 163 character)
 
-### Phase IR-3: MCP Subsystem Cleanup (10-12h)
+### Phase IR-3: MCP Subsystem Cleanup (10-12h) — 🎯 CURRENT
 
 **Goal:** MCP generation operates exclusively on IR.
 
 **Files:**
 
 - `lib/src/context/template-context.mcp.ts`
-- Related MCP generation code
+- `lib/src/context/template-context.mcp.schemas.ts`
+- `lib/src/context/template-context.mcp.parameters.ts`
+- `lib/src/context/template-context.mcp.responses.ts`
+- `lib/src/context/template-context.mcp.inline-json-schema.ts`
+
+**Audit Finding (January 8, 2026):**
+`CastrOperation` already contains all MCP-required data:
+
+- `operationId`, `description`, `summary`
+- `parameters[]` with `CastrSchema`
+- `requestBody` with content schemas
+- `responses[]` with status codes and schemas
+- `security[]` for auth metadata
 
 **Acceptance:**
 
@@ -139,10 +155,10 @@ rules: {
 **Phase 1 is complete when:**
 
 1. ✅ IR-2 done: Context layer uses only CastrDocument
-2. ✅ IR-3 done: MCP uses only CastrDocument
-3. ✅ Validation framework: Architectural tests pass
-4. ✅ All 10 quality gates pass
-5. ✅ Documentation updated
+2. ⬜ IR-3 done: MCP uses only CastrDocument
+3. ⬜ Validation framework: Architectural tests pass
+4. ⬜ All 10 quality gates pass
+5. ⬜ Documentation updated
 
 **Only then proceed to Phase 2 (Zod → OpenAPI).**
 

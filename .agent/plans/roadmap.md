@@ -2,7 +2,7 @@
 
 **Date:** January 8, 2026
 **Status:** Active
-**Quality Gates:** All 10 passing (960+ tests)
+**Quality Gates:** All 10 passing (966+ tests)
 
 ---
 
@@ -56,9 +56,10 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 | Component                | Status        | Notes                                    |
 | ------------------------ | ------------- | ---------------------------------------- |
-| Quality Gates            | 10/10 passing | 960+ tests total                         |
+| Quality Gates            | 10/10 passing | 966+ tests total                         |
 | IR Builder               | Complete      | OpenAPI → CastrDocument                  |
 | IR-1 (schemaNames, deps) | Complete      | Full dependencyGraph with depth/circular |
+| IR-2 (context cleanup)   | Complete      | Schema names, deps, tags from IR         |
 | Zod Writer               | Complete      | IR → Zod via ts-morph                    |
 | Type Writer              | Complete      | IR → TypeScript via ts-morph             |
 | Scalar Pipeline          | Complete      | Bundles, upgrades to 3.1                 |
@@ -66,11 +67,11 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 ### What Needs Work ⚠️
 
-| Component     | Issue                          | Reference                |
-| ------------- | ------------------------------ | ------------------------ |
-| Zod → OpenAPI | Not implemented — next phase   | [zod-to-openapi-plan.md] |
-| Context Layer | Still passes `doc` after IR    | [ADR-024] IR-2           |
-| MCP Subsystem | Uses raw OpenAPI instead of IR | [ADR-024] IR-3           |
+| Component         | Issue                           | Reference                |
+| ----------------- | ------------------------------- | ------------------------ |
+| Zod → OpenAPI     | Not implemented — next phase    | [zod-to-openapi-plan.md] |
+| ~~Context Layer~~ | ~~Still passes `doc` after IR~~ | ✅ Fixed (IR-2)          |
+| MCP Subsystem     | Uses raw OpenAPI instead of IR  | [ADR-024] IR-3           |
 
 ---
 
@@ -121,8 +122,8 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 
 | Work Item                   | Status     | Effort |
 | --------------------------- | ---------- | ------ |
-| IR-2: Context layer cleanup | 🎯 Current | 6-8h   |
-| IR-3: MCP subsystem cleanup | Pending    | 10-12h |
+| IR-2: Context layer cleanup | ✅ Done    | 6-8h   |
+| IR-3: MCP subsystem cleanup | 🎯 Current | 10-12h |
 | IR-4: Validation framework  | Pending    | 8-10h  |
 | IR-5: Documentation         | Pending    | 4-6h   |
 
@@ -209,7 +210,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 598 unit tests
+pnpm test          # 610 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -260,7 +261,7 @@ pnpm character     # 163 characterisation tests
 1. Read [start-right.prompt.md](../prompts/start-right.prompt.md)
 2. Run quality gates: `pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character`
 3. Review this roadmap and [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)
-4. Begin Phase IR-1
+4. Begin Phase IR-3 (MCP subsystem cleanup)
 
 ---
 
