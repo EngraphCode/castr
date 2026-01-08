@@ -1,5 +1,5 @@
 /**
- * Tests for Information Retrieval (IR) Builder
+ * Tests for Intermediate Representation (IR) Builder
  *
  * Following TDD: These tests are written FIRST (RED phase)
  * Implementation in ir-builder.ts will follow (GREEN phase)
@@ -718,6 +718,176 @@ describe('buildCastrOperations', () => {
       expect(result.operations).toHaveLength(1);
       expect(result.operations[0]?.security).toBeDefined();
       expect(result.operations[0]?.security).toHaveLength(2);
+    });
+  });
+});
+
+/**
+ * Tests for IR-1: CastrDocument enhancements
+ * Testing schemaNames and dependencyGraph population
+ */
+describe('buildIR - IR-1 enhancements', () => {
+  describe('schemaNames', () => {
+    it('should populate schemaNames from components', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: { type: 'object' } as SchemaObject,
+            Address: { type: 'object' } as SchemaObject,
+            Pet: { type: 'object' } as SchemaObject,
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.schemaNames).toBeDefined();
+      expect(result.schemaNames).toEqual(['User', 'Address', 'Pet']);
+    });
+
+    it('should return empty array when no schemas exist', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.schemaNames).toEqual([]);
+    });
+
+    it('should include schemas from x-ext vendor extension', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: { type: 'object' } as SchemaObject,
+          },
+        },
+        'x-ext': {
+          abc123: {
+            components: {
+              schemas: {
+                ExternalPet: { type: 'object' },
+              },
+            },
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.schemaNames).toContain('User');
+      expect(result.schemaNames).toContain('ExternalPet');
+    });
+  });
+
+  describe('dependencyGraph', () => {
+    it('should build dependency graph with nodes for each schema', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                address: { $ref: '#/components/schemas/Address' },
+              },
+            } as SchemaObject,
+            Address: { type: 'object' } as SchemaObject,
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+
+      expect(result.dependencyGraph.nodes.size).toBeGreaterThan(0);
+      const userNode = result.dependencyGraph.nodes.get('#/components/schemas/User');
+      expect(userNode).toBeDefined();
+      expect(userNode?.dependencies).toContain('#/components/schemas/Address');
+    });
+
+    it('should compute topological order with leaves first', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                address: { $ref: '#/components/schemas/Address' },
+              },
+            } as SchemaObject,
+            Address: { type: 'object' } as SchemaObject,
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+
+      const order = result.dependencyGraph.topologicalOrder;
+      const addressIdx = order.indexOf('#/components/schemas/Address');
+      const userIdx = order.indexOf('#/components/schemas/User');
+
+      // Address should come before User (leaves first)
+      expect(addressIdx).toBeLessThan(userIdx);
+    });
+
+    it('should detect circular references', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            Node: {
+              type: 'object',
+              properties: {
+                child: { $ref: '#/components/schemas/Node' },
+              },
+            } as SchemaObject,
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+
+      // Should detect the self-referential cycle
+      expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
+    });
+
+    it('should build dependents (reverse edges) for each node', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                address: { $ref: '#/components/schemas/Address' },
+              },
+            } as SchemaObject,
+            Address: { type: 'object' } as SchemaObject,
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+
+      const addressNode = result.dependencyGraph.nodes.get('#/components/schemas/Address');
+      expect(addressNode?.dependents).toContain('#/components/schemas/User');
     });
   });
 });

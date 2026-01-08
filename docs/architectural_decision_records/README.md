@@ -59,11 +59,11 @@ Each ADR follows this structure:
 
 ### Library Philosophy & Architecture
 
-| ADR                                                | Title                                                         | Status   | Date       |
-| -------------------------------------------------- | ------------------------------------------------------------- | -------- | ---------- |
-| [022](./ADR-022-building-blocks-no-http-client.md) | Building-Blocks Architecture - No HTTP Client Generation      | Accepted | 2025-11-29 |
-| [023](./ADR-023-ir-based-architecture.md)          | Information Retrieval (IR) Architecture for Schema Generation | Accepted | 2025-12-01 |
-| [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment                                         | Accepted | 2026-01-02 |
+| ADR                                                | Title                                                               | Status   | Date       |
+| -------------------------------------------------- | ------------------------------------------------------------------- | -------- | ---------- |
+| [022](./ADR-022-building-blocks-no-http-client.md) | Building-Blocks Architecture - No HTTP Client Generation            | Accepted | 2025-11-29 |
+| [023](./ADR-023-ir-based-architecture.md)          | Intermediate Representation (IR) Architecture for Schema Generation | Accepted | 2025-12-01 |
+| [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment                                               | Accepted | 2026-01-02 |
 
 ## Decision Dependencies
 

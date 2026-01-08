@@ -72,6 +72,7 @@ describe('writers/typescript', () => {
           topologicalOrder: [],
           circularReferences: [],
         },
+        schemaNames: [],
       };
 
       const context: TemplateContext = {
@@ -122,6 +123,7 @@ describe('writers/typescript', () => {
             topologicalOrder: [],
             circularReferences: [],
           },
+          schemaNames: [],
         },
       };
 
@@ -152,6 +154,7 @@ describe('writers/typescript', () => {
             topologicalOrder: [],
             circularReferences: [],
           },
+          schemaNames: [],
         },
         options: {
           withValidationHelpers: true,
@@ -205,6 +208,7 @@ describe('writers/typescript', () => {
           topologicalOrder: [],
           circularReferences: [],
         },
+        schemaNames: [],
       };
 
       const context: TemplateContext = {

@@ -72,8 +72,18 @@ test('handle-refs-without-var-name', () => {
             ],
             "dependencyGraph": {
                 "circularReferences": [],
-                "nodes": Map {},
-                "topologicalOrder": [],
+                "nodes": Map {
+                    "#/components/schemas/Basic" => {
+                        "dependencies": [],
+                        "dependents": [],
+                        "depth": 0,
+                        "isCircular": false,
+                        "ref": "#/components/schemas/Basic",
+                    },
+                },
+                "topologicalOrder": [
+                    "#/components/schemas/Basic",
+                ],
             },
             "enums": Map {},
             "info": {
@@ -139,6 +149,9 @@ test('handle-refs-without-var-name', () => {
                         },
                     ],
                 },
+            ],
+            "schemaNames": [
+                "Basic",
             ],
             "servers": [],
             "version": "1.0.0",

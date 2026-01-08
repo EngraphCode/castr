@@ -1,4 +1,4 @@
-# ADR-023: Information Retrieval (IR) Architecture for Schema Generation
+# ADR-023: Intermediate Representation (IR) Architecture for Schema Generation
 
 ## Status
 
@@ -12,7 +12,7 @@ December 2025 (Updated January 2026)
 
 The project needed to transition from direct format-to-format conversion (OpenAPI→Zod) to a universal schema conversion architecture where **any input format can be converted to any output format**.
 
-The key insight: without a canonical information retrieval architecture using an AST representation of the data as the canonical source, converting N formats requires O(N²) converters. With an IR, it requires only O(N) parsers + O(N) transformers = O(2N) = O(N).
+The key insight: without a canonical Intermediate Representation, converting N formats requires O(N²) converters. With an IR, it requires only O(N) parsers + O(N) transformers = O(2N) = O(N).
 
 **Strategic Vision:** See `.agent/VISION.md` for the full N×M conversion goal and roadmap.
 
@@ -96,6 +96,20 @@ JSON Schema ────┘              IROperation, IRDependencyGraph ]   └�
 - Comprehensive TSDoc on all IR types
 - Test helpers for creating IR fixtures (`createMockCastrSchema`, `createMockCastrSchemaNode`)
 - IR design based on well-understood patterns (compiler IR, search engine indexes)
+
+## Format Implementation Order
+
+The order of format support is **deliberate**. By implementing both input (parser) and output (writer) for a format before adding new formats, we discover shared patterns and prevent premature generalisation.
+
+| Phase | Transform                 | Rationale                                     |
+| ----- | ------------------------- | --------------------------------------------- |
+| 1     | **OpenAPI → Zod**         | Established baseline                          |
+| 2     | **Zod → OpenAPI**         | Complete round-trip; discover shared patterns |
+| 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges                          |
+| 4     | **JSONSchema ↔ Zod**     | Complete triangulation                        |
+| 5     | **tRPC ↔ IR**            | Additional formats as needed                  |
+
+See `VISION.md` for full rationale.
 
 ## Compliance
 

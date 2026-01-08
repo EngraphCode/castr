@@ -51,22 +51,23 @@ export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
 
 /**
  * Determine group name based on grouping strategy.
- * Data gathering function that extracts group name from operation/endpoint.
+ * Data gathering function that extracts group name from endpoint.
+ *
+ * Uses endpoint.tags which is populated from IR (CastrOperation.tags),
+ * eliminating the need to look up raw OpenAPI document.
  *
  * @param groupStrategy - The grouping strategy to use
- * @param operation - The OpenAPI operation object
- * @param endpoint - The endpoint definition
+ * @param endpoint - The endpoint definition (from IR)
  * @returns Group name (normalized)
  *
  * @internal
  */
 export const determineGroupName = (
   groupStrategy: TemplateContextGroupStrategy,
-  operation: OperationObject,
   endpoint: EndpointDefinition,
 ): string => {
   if (groupStrategy === 'tag' || groupStrategy === 'tag-file') {
-    return normalizeString(operation.tags?.[0] ?? 'Default');
+    return normalizeString(endpoint.tags?.[0] ?? 'Default');
   }
   if (groupStrategy === 'method' || groupStrategy === 'method-file') {
     return normalizeString(endpoint.method);

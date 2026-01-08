@@ -4,7 +4,7 @@ Complete API documentation for `@engraph/castr`
 
 ## Architecture
 
-This library uses an **Information Retrieval (IR) architecture** where all input formats (OpenAPI, Zod, JSON Schema) are parsed into a canonical internal representation, and all outputs are transforms from that representation. See `.agent/VISION.md` for the strategic vision.
+This library uses an **Intermediate Representation (IR) architecture** where all input formats (OpenAPI, Zod, JSON Schema) are parsed into a canonical internal representation, and all outputs are transforms from that representation. See `.agent/VISION.md` for the strategic vision.
 
 ## Table of Contents
 

@@ -21,6 +21,7 @@ describe('generateOpenAPI', () => {
         topologicalOrder: [],
         circularReferences: [],
       },
+      schemaNames: [],
       enums: new Map(),
     };
 
@@ -61,6 +62,7 @@ describe('generateOpenAPI', () => {
         topologicalOrder: [],
         circularReferences: [],
       },
+      schemaNames: [],
       enums: new Map(),
     };
 
@@ -124,6 +126,7 @@ describe('generateOpenAPI', () => {
       ],
       operations: [],
       dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
       enums: new Map(),
     };
 
@@ -205,6 +208,7 @@ describe('generateOpenAPI', () => {
       ],
       operations: [],
       dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
       enums: new Map(),
     };
 
@@ -268,6 +272,7 @@ describe('generateOpenAPI', () => {
         },
       ],
       dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
       enums: new Map(),
     };
 
@@ -302,6 +307,7 @@ describe('generateOpenAPI', () => {
       components: [],
       operations: [],
       dependencyGraph: { nodes: new Map(), topologicalOrder: [], circularReferences: [] },
+      schemaNames: [],
       enums: new Map(),
     };
 

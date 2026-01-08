@@ -70,6 +70,7 @@ describe('IR Serialization', () => {
       topologicalOrder: [],
       circularReferences: [],
     },
+    schemaNames: [],
     enums: new Map(),
   };
 

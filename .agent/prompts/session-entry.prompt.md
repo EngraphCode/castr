@@ -6,10 +6,10 @@
 
 ## 🎯 Project Summary
 
-This library converts OpenAPI specifications into Zod schemas, TypeScript types, and MCP tool definitions using an **Information Retrieval (IR) architecture** with a **canonical AST representation**.
+This library transforms data definitions **between any supported format** via a canonical **Intermediate Representation (IR)** architecture.
 
 ```text
-OpenAPI 3.x → Scalar Pipeline → CastrDocument (canonical AST) → ts-morph Writers → Artefacts
+Any Input Format → Parser → IR (canonical AST) → ts-morph Writers → Any Output Format
 ```
 
 ---
@@ -61,21 +61,23 @@ pnpm character     # 163 characterisation tests
 
 ### ✅ What Works
 
-- All 10 quality gates passing (954 tests total)
-- IR Builder complete (OpenAPI → CastrDocument)
+- All 10 quality gates passing (954+ tests total)
+- IR Builder complete (OpenAPI → CastrDocument with schemaNames, dependencyGraph)
 - Zod Writer complete (operates on IR via ts-morph)
 - Type Writer complete (operates on IR via ts-morph)
 - Scalar Pipeline complete (bundles, upgrades to 3.1)
+- IR-1 complete (schemaNames, full dependencyGraph with depth/circularity)
 
-### ⚠️ What Needs Work
+### ⚠️ What Needs Work (Phase 1 Completion)
 
-Per [ADR-024](docs/architectural_decision_records/ADR-024-complete-ir-alignment.md):
+Phase 1 is **functionally working** but **architecturally incomplete**:
 
-| Issue                                             | Files                      | Severity |
-| ------------------------------------------------- | -------------------------- | -------- |
-| MCP uses raw OpenAPI instead of IR                | `template-context.mcp*.ts` | High     |
-| Context layer passes `doc` after IR               | `template-context.ts`      | Medium   |
-| CastrDocument missing schemaNames/dependencyGraph | `ir-builder.ts`            | Medium   |
+| Work Item                   | Status     | Reference                    |
+| --------------------------- | ---------- | ---------------------------- |
+| IR-2: Context layer cleanup | 🎯 Current | [phase-1-completion-plan.md] |
+| IR-3: MCP subsystem cleanup | Pending    | [phase-1-completion-plan.md] |
+| IR-4: Validation framework  | Pending    | [phase-1-completion-plan.md] |
+| IR-5: Documentation         | Pending    | [phase-1-completion-plan.md] |
 
 ---
 
@@ -90,17 +92,27 @@ Per [ADR-024](docs/architectural_decision_records/ADR-024-complete-ir-alignment.
 
 ---
 
-## 🎯 Immediate Work: IR Alignment
+## 🎯 Current Phase: Phase 1 Completion
 
-The next work is completing IR architecture alignment (see roadmap.md):
+Phase 1 (OpenAPI → Zod) needs architectural cleanup before Phase 2 (Zod → OpenAPI).
 
-| Phase | Description                                          | Effort |
-| ----- | ---------------------------------------------------- | ------ |
-| IR-1  | Enhance CastrDocument (schemaNames, dependencyGraph) | 4-6h   |
-| IR-2  | Refactor context layer to use IR exclusively         | 6-8h   |
-| IR-3  | Refactor MCP subsystem to use IR                     | 10-12h |
-| IR-4  | Documentation and cleanup                            | 4-6h   |
-| IR-5  | Verification and hardening                           | 2-3h   |
+**See:** [phase-1-completion-plan.md](plans/phase-1-completion-plan.md) for detailed plan.
+
+---
+
+## 🔄 Format Implementation Order
+
+The order of format support is **deliberate** (see VISION.md):
+
+| Phase | Transform             | Status         |
+| ----- | --------------------- | -------------- |
+| 1     | OpenAPI → Zod         | 🟡 In Progress |
+| 2     | Zod → OpenAPI         | After Phase 1  |
+| 3     | JSONSchema ↔ OpenAPI | Planned        |
+| 4     | JSONSchema ↔ Zod     | Planned        |
+| 5     | tRPC ↔ IR            | Planned        |
+
+**Rationale:** Complete each phase architecturally before moving on.
 
 ---
 

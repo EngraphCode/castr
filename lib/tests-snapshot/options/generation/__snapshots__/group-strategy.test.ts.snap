@@ -156,6 +156,9 @@ exports[`group-strategy 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "pet",
+                ],
             },
             {
                 "alias": "petPut",
@@ -204,6 +207,9 @@ exports[`group-strategy 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "pet",
                 ],
             },
             {
@@ -254,6 +260,9 @@ exports[`group-strategy 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "pet",
+                ],
             },
             {
                 "alias": "petAllPut",
@@ -302,6 +311,9 @@ exports[`group-strategy 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "pet",
                 ],
             },
         ],
@@ -358,6 +370,9 @@ exports[`group-strategy 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "store",
+                ],
             },
             {
                 "alias": "storePut",
@@ -406,6 +421,9 @@ exports[`group-strategy 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "store",
                 ],
             },
         ],
@@ -462,6 +480,9 @@ exports[`group-strategy 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "user",
+                ],
             },
             {
                 "alias": "userPut",
@@ -510,6 +531,9 @@ exports[`group-strategy 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "user",
                 ],
             },
             {
@@ -560,6 +584,10 @@ exports[`group-strategy 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "user",
+                    "pet",
+                ],
             },
             {
                 "alias": "userPut",
@@ -608,6 +636,10 @@ exports[`group-strategy 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "user",
+                    "pet",
                 ],
             },
         ],
@@ -1184,6 +1216,9 @@ exports[`group-strategy 3`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "pet",
+                ],
             },
             {
                 "alias": "petAllGet",
@@ -1232,6 +1267,9 @@ exports[`group-strategy 3`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "pet",
                 ],
             },
             {
@@ -1282,6 +1320,9 @@ exports[`group-strategy 3`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "store",
+                ],
             },
             {
                 "alias": "userGet",
@@ -1331,6 +1372,9 @@ exports[`group-strategy 3`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "user",
+                ],
             },
             {
                 "alias": "userGet",
@@ -1379,6 +1423,10 @@ exports[`group-strategy 3`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "user",
+                    "pet",
                 ],
             },
             {
@@ -1484,6 +1532,9 @@ exports[`group-strategy 3`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "pet",
+                ],
             },
             {
                 "alias": "petAllPut",
@@ -1532,6 +1583,9 @@ exports[`group-strategy 3`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "pet",
                 ],
             },
             {
@@ -1582,6 +1636,9 @@ exports[`group-strategy 3`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "store",
+                ],
             },
             {
                 "alias": "userPut",
@@ -1631,6 +1688,9 @@ exports[`group-strategy 3`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "user",
+                ],
             },
             {
                 "alias": "userPut",
@@ -1679,6 +1739,10 @@ exports[`group-strategy 3`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "user",
+                    "pet",
                 ],
             },
             {
@@ -2360,6 +2424,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "pet",
+                ],
             },
             {
                 "alias": "petPut",
@@ -2408,6 +2475,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "pet",
                 ],
             },
             {
@@ -2494,6 +2564,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "pet",
+                ],
             },
             {
                 "alias": "petAllPost",
@@ -2542,6 +2615,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "pet",
                 ],
             },
         ],
@@ -2599,6 +2675,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "store",
+                ],
             },
             {
                 "alias": "storePut",
@@ -2647,6 +2726,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "store",
                 ],
             },
         ],
@@ -2704,6 +2786,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         "statusCode": "200",
                     },
                 ],
+                "tags": [
+                    "user",
+                ],
             },
             {
                 "alias": "userPut",
@@ -2752,6 +2837,9 @@ exports[`group-strategy with complex schemas + split files 1`] = `
                         },
                         "statusCode": "200",
                     },
+                ],
+                "tags": [
+                    "user",
                 ],
             },
         ],

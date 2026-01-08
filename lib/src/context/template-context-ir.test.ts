@@ -12,7 +12,7 @@ import { describe, expect, test } from 'vitest';
 import { getZodClientTemplateContext } from './template-context.js';
 
 /**
- * Test IR (Information Retrieval) integration
+ * Test IR (Intermediate Representation) integration
  */
 describe('getZodClientTemplateContext - IR integration', () => {
   test('should populate _ir field with CastrDocument', () => {

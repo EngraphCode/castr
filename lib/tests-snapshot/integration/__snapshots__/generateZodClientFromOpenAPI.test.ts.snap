@@ -15444,8 +15444,85 @@ exports[`getZodClientTemplateContext 1`] = `
         ],
         "dependencyGraph": {
             "circularReferences": [],
-            "nodes": Map {},
-            "topologicalOrder": [],
+            "nodes": Map {
+                "#/components/schemas/Order" => {
+                    "dependencies": [],
+                    "dependents": [],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Order",
+                },
+                "#/components/schemas/Customer" => {
+                    "dependencies": [
+                        "#/components/schemas/Address",
+                    ],
+                    "dependents": [],
+                    "depth": 1,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Customer",
+                },
+                "#/components/schemas/Address" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Customer",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Address",
+                },
+                "#/components/schemas/Category" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Pet",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Category",
+                },
+                "#/components/schemas/User" => {
+                    "dependencies": [],
+                    "dependents": [],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/User",
+                },
+                "#/components/schemas/Tag" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Pet",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Tag",
+                },
+                "#/components/schemas/Pet" => {
+                    "dependencies": [
+                        "#/components/schemas/Category",
+                        "#/components/schemas/Tag",
+                    ],
+                    "dependents": [],
+                    "depth": 1,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Pet",
+                },
+                "#/components/schemas/ApiResponse" => {
+                    "dependencies": [],
+                    "dependents": [],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/ApiResponse",
+                },
+            },
+            "topologicalOrder": [
+                "#/components/schemas/Order",
+                "#/components/schemas/Address",
+                "#/components/schemas/Customer",
+                "#/components/schemas/Category",
+                "#/components/schemas/User",
+                "#/components/schemas/Tag",
+                "#/components/schemas/Pet",
+                "#/components/schemas/ApiResponse",
+            ],
         },
         "enums": Map {
             "status" => {
@@ -18555,6 +18632,16 @@ Some useful links:
                 ],
             },
         ],
+        "schemaNames": [
+            "Order",
+            "Customer",
+            "Address",
+            "Category",
+            "User",
+            "Tag",
+            "Pet",
+            "ApiResponse",
+        ],
         "servers": [
             {
                 "url": "https://petstore3.swagger.io/api/v3",
@@ -18681,6 +18768,9 @@ Some useful links:
                     },
                     "statusCode": "405",
                 },
+            ],
+            "tags": [
+                "pet",
             ],
         },
         {
@@ -18890,6 +18980,9 @@ Some useful links:
                     "statusCode": "405",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "getPetById",
@@ -19060,6 +19153,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "updatePetWithForm",
@@ -19209,6 +19305,9 @@ Some useful links:
                     "statusCode": "405",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "deletePet",
@@ -19335,6 +19434,9 @@ Some useful links:
                     "statusCode": "400",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "uploadFile",
@@ -19437,6 +19539,9 @@ Some useful links:
                     },
                     "statusCode": "200",
                 },
+            ],
+            "tags": [
+                "pet",
             ],
         },
         {
@@ -19608,6 +19713,9 @@ Some useful links:
                     },
                     "statusCode": "400",
                 },
+            ],
+            "tags": [
+                "pet",
             ],
         },
         {
@@ -19783,6 +19891,9 @@ Some useful links:
                     "statusCode": "400",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "getInventory",
@@ -19875,6 +19986,9 @@ Some useful links:
                     },
                     "statusCode": "200",
                 },
+            ],
+            "tags": [
+                "store",
             ],
         },
         {
@@ -19994,6 +20108,9 @@ Some useful links:
                     },
                     "statusCode": "405",
                 },
+            ],
+            "tags": [
+                "store",
             ],
         },
         {
@@ -20165,6 +20282,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "store",
+            ],
         },
         {
             "alias": "deleteOrder",
@@ -20313,6 +20433,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "store",
+            ],
         },
         {
             "alias": "createUser",
@@ -20410,6 +20533,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
         {
@@ -20574,6 +20700,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "user",
+            ],
         },
         {
             "alias": "updateUser",
@@ -20694,6 +20823,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
         {
@@ -20837,6 +20969,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "user",
+            ],
         },
         {
             "alias": "createUsersWithListInput",
@@ -20973,6 +21108,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
         {
@@ -21116,6 +21254,9 @@ Some useful links:
                     "statusCode": "400",
                 },
             ],
+            "tags": [
+                "user",
+            ],
         },
         {
             "alias": "logoutUser",
@@ -21188,6 +21329,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
     ],
@@ -24460,8 +24604,85 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
         ],
         "dependencyGraph": {
             "circularReferences": [],
-            "nodes": Map {},
-            "topologicalOrder": [],
+            "nodes": Map {
+                "#/components/schemas/Order" => {
+                    "dependencies": [],
+                    "dependents": [],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Order",
+                },
+                "#/components/schemas/Customer" => {
+                    "dependencies": [
+                        "#/components/schemas/Address",
+                    ],
+                    "dependents": [],
+                    "depth": 1,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Customer",
+                },
+                "#/components/schemas/Address" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Customer",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Address",
+                },
+                "#/components/schemas/Category" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Pet",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Category",
+                },
+                "#/components/schemas/User" => {
+                    "dependencies": [],
+                    "dependents": [],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/User",
+                },
+                "#/components/schemas/Tag" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Pet",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Tag",
+                },
+                "#/components/schemas/Pet" => {
+                    "dependencies": [
+                        "#/components/schemas/Category",
+                        "#/components/schemas/Tag",
+                    ],
+                    "dependents": [],
+                    "depth": 1,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/Pet",
+                },
+                "#/components/schemas/ApiResponse" => {
+                    "dependencies": [],
+                    "dependents": [],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/ApiResponse",
+                },
+            },
+            "topologicalOrder": [
+                "#/components/schemas/Order",
+                "#/components/schemas/Address",
+                "#/components/schemas/Customer",
+                "#/components/schemas/Category",
+                "#/components/schemas/User",
+                "#/components/schemas/Tag",
+                "#/components/schemas/Pet",
+                "#/components/schemas/ApiResponse",
+            ],
         },
         "enums": Map {
             "status" => {
@@ -27571,6 +27792,16 @@ Some useful links:
                 ],
             },
         ],
+        "schemaNames": [
+            "Order",
+            "Customer",
+            "Address",
+            "Category",
+            "User",
+            "Tag",
+            "Pet",
+            "ApiResponse",
+        ],
         "servers": [
             {
                 "url": "https://petstore3.swagger.io/api/v3",
@@ -27697,6 +27928,9 @@ Some useful links:
                     },
                     "statusCode": "405",
                 },
+            ],
+            "tags": [
+                "pet",
             ],
         },
         {
@@ -27906,6 +28140,9 @@ Some useful links:
                     "statusCode": "405",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "getPetById",
@@ -28076,6 +28313,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "updatePetWithForm",
@@ -28225,6 +28465,9 @@ Some useful links:
                     "statusCode": "405",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "deletePet",
@@ -28351,6 +28594,9 @@ Some useful links:
                     "statusCode": "400",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "uploadFile",
@@ -28453,6 +28699,9 @@ Some useful links:
                     },
                     "statusCode": "200",
                 },
+            ],
+            "tags": [
+                "pet",
             ],
         },
         {
@@ -28624,6 +28873,9 @@ Some useful links:
                     },
                     "statusCode": "400",
                 },
+            ],
+            "tags": [
+                "pet",
             ],
         },
         {
@@ -28799,6 +29051,9 @@ Some useful links:
                     "statusCode": "400",
                 },
             ],
+            "tags": [
+                "pet",
+            ],
         },
         {
             "alias": "getInventory",
@@ -28891,6 +29146,9 @@ Some useful links:
                     },
                     "statusCode": "200",
                 },
+            ],
+            "tags": [
+                "store",
             ],
         },
         {
@@ -29010,6 +29268,9 @@ Some useful links:
                     },
                     "statusCode": "405",
                 },
+            ],
+            "tags": [
+                "store",
             ],
         },
         {
@@ -29181,6 +29442,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "store",
+            ],
         },
         {
             "alias": "deleteOrder",
@@ -29329,6 +29593,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "store",
+            ],
         },
         {
             "alias": "createUser",
@@ -29426,6 +29693,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
         {
@@ -29590,6 +29860,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "user",
+            ],
         },
         {
             "alias": "updateUser",
@@ -29710,6 +29983,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
         {
@@ -29853,6 +30129,9 @@ Some useful links:
                     "statusCode": "404",
                 },
             ],
+            "tags": [
+                "user",
+            ],
         },
         {
             "alias": "createUsersWithListInput",
@@ -29989,6 +30268,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
         {
@@ -30132,6 +30414,9 @@ Some useful links:
                     "statusCode": "400",
                 },
             ],
+            "tags": [
+                "user",
+            ],
         },
         {
             "alias": "logoutUser",
@@ -30204,6 +30489,9 @@ Some useful links:
                     },
                     "statusCode": "default",
                 },
+            ],
+            "tags": [
+                "user",
             ],
         },
     ],
@@ -32608,9 +32896,75 @@ exports[`with optional, partial, all required objects 1`] = `
             },
         ],
         "dependencyGraph": {
-            "circularReferences": [],
-            "nodes": Map {},
-            "topologicalOrder": [],
+            "circularReferences": [
+                [
+                    "#/components/schemas/Root2",
+                    "#/components/schemas/Nested2",
+                    "#/components/schemas/Root2",
+                ],
+            ],
+            "nodes": Map {
+                "#/components/schemas/Root2" => {
+                    "dependencies": [
+                        "#/components/schemas/Nested2",
+                        "#/components/schemas/PartialObject",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/Nested2",
+                    ],
+                    "depth": 3,
+                    "isCircular": true,
+                    "ref": "#/components/schemas/Root2",
+                },
+                "#/components/schemas/Nested2" => {
+                    "dependencies": [
+                        "#/components/schemas/DeeplyNested",
+                        "#/components/schemas/Root2",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/Root2",
+                    ],
+                    "depth": 2,
+                    "isCircular": true,
+                    "ref": "#/components/schemas/Nested2",
+                },
+                "#/components/schemas/PartialObject" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/Root2",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/PartialObject",
+                },
+                "#/components/schemas/DeeplyNested" => {
+                    "dependencies": [
+                        "#/components/schemas/VeryDeeplyNested",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/Nested2",
+                    ],
+                    "depth": 1,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/DeeplyNested",
+                },
+                "#/components/schemas/VeryDeeplyNested" => {
+                    "dependencies": [],
+                    "dependents": [
+                        "#/components/schemas/DeeplyNested",
+                    ],
+                    "depth": 0,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/VeryDeeplyNested",
+                },
+            },
+            "topologicalOrder": [
+                "#/components/schemas/VeryDeeplyNested",
+                "#/components/schemas/DeeplyNested",
+                "#/components/schemas/PartialObject",
+                "#/components/schemas/Nested2",
+                "#/components/schemas/Root2",
+            ],
         },
         "enums": Map {
             "VeryDeeplyNested" => {
@@ -33045,6 +33399,13 @@ exports[`with optional, partial, all required objects 1`] = `
                     },
                 ],
             },
+        ],
+        "schemaNames": [
+            "Root2",
+            "Nested2",
+            "PartialObject",
+            "DeeplyNested",
+            "VeryDeeplyNested",
         ],
         "servers": [],
         "version": "1.0.0",

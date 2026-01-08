@@ -20,7 +20,7 @@
 >
 > **No string manipulation for code generation.** All code output flows through ts-morph's typed AST API.
 
-ADR-023 established the Information Retrieval (IR) architecture as the canonical approach:
+ADR-023 established the Intermediate Representation (IR) architecture as the canonical approach:
 
 ```
 Input Document → IR (AST) → Output Artefacts

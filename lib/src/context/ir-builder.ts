@@ -1,7 +1,7 @@
 /**
- * Information Retrieval (IR) Builder
+ * Intermediate Representation (IR) Builder
  *
- * Builds lossless Information Retrieval structures from OpenAPI documents.
+ * Builds lossless Intermediate Representation structures from OpenAPI documents.
  * Extracts all metadata required for code generation in a structured format.
  *
  * **Pure Functions:**
@@ -18,7 +18,6 @@
 import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
 import type {
   IRComponent,
-  IRDependencyGraph,
   CastrDocument,
   IREnum,
   CastrOperation,
@@ -30,13 +29,14 @@ import type {
 import { buildCastrSchemas } from './ir-builder.schemas.js';
 import { buildCastrOperations } from './ir-builder.operations.js';
 import { isRecord } from '../shared/types.js';
+import { buildDependencyGraph, extractOriginalSchemaKeys } from './ir-builder.dependency-graph.js';
 
 // Re-export core functions for backwards compatibility
 export { buildCastrSchema, buildCastrSchemaNode } from './ir-builder.core.js';
 export { buildCastrSchemas } from './ir-builder.schemas.js';
 
 /**
- * Build complete Information Retrieval document from OpenAPI specification.
+ * Build complete Intermediate Representation document from OpenAPI specification.
  *
  * Extracts all schemas, operations, and metadata into a lossless IR structure
  * optimized for code generation. Preserves all OpenAPI information without loss.
@@ -63,8 +63,15 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
   const xExtComponents = extractXExtSchemas(doc);
   components.push(...xExtComponents);
 
+  // Extract schema names from IR components (sanitized names for code generation)
+  const schemaNames = buildSchemaNames(components);
+
+  // Extract original schema keys from OpenAPI doc for dependency graph
+  // These are the raw keys that match the actual document structure
+  const originalSchemaKeys = extractOriginalSchemaKeys(doc);
+
   const operations = buildCastrOperations(doc);
-  const dependencyGraph = buildDependencyGraph();
+  const dependencyGraph = buildDependencyGraph(originalSchemaKeys, doc);
 
   const enums = extractEnums(components, operations);
 
@@ -76,6 +83,7 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
     components,
     operations,
     dependencyGraph,
+    schemaNames,
     enums,
   };
 }
@@ -119,24 +127,17 @@ function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
 }
 
 /**
- * Build dependency graph for schemas.
+ * Extract schema names from IR components.
  *
- * Stub implementation that returns an empty dependency graph structure.
- * Full dependency graph analysis with circular reference detection and
- * topological sorting will be implemented in a future iteration.
+ * Filters components to find only schema-type components and extracts their names.
  *
- * @returns IR dependency graph with empty nodes, order, and circular references
+ * @param components - IR components from the document
+ * @returns Array of schema names (not full $ref paths)
  *
  * @internal
  */
-function buildDependencyGraph(): IRDependencyGraph {
-  // Dependency graph stub - will be enhanced in later implementation
-  // Returns empty graph structure for now
-  return {
-    nodes: new Map(),
-    topologicalOrder: [],
-    circularReferences: [],
-  };
+function buildSchemaNames(components: IRComponent[]): string[] {
+  return components.filter((c) => c.type === 'schema').map((c) => c.name);
 }
 
 /**

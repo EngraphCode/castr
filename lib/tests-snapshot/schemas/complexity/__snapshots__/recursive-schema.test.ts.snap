@@ -855,9 +855,96 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
             },
         ],
         "dependencyGraph": {
-            "circularReferences": [],
-            "nodes": Map {},
-            "topologicalOrder": [],
+            "circularReferences": [
+                [
+                    "#/components/schemas/User",
+                    "#/components/schemas/User",
+                ],
+                [
+                    "#/components/schemas/UserWithFriends",
+                    "#/components/schemas/UserWithFriends",
+                ],
+                [
+                    "#/components/schemas/UserWithFriends",
+                    "#/components/schemas/Friend",
+                    "#/components/schemas/UserWithFriends",
+                ],
+                [
+                    "#/components/schemas/Friend",
+                    "#/components/schemas/Friend",
+                ],
+                [
+                    "#/components/schemas/ObjectWithRecursiveArray",
+                    "#/components/schemas/ObjectWithRecursiveArray",
+                ],
+            ],
+            "nodes": Map {
+                "#/components/schemas/User" => {
+                    "dependencies": [
+                        "#/components/schemas/User",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/User",
+                    ],
+                    "depth": 1,
+                    "isCircular": true,
+                    "ref": "#/components/schemas/User",
+                },
+                "#/components/schemas/UserWithFriends" => {
+                    "dependencies": [
+                        "#/components/schemas/UserWithFriends",
+                        "#/components/schemas/Friend",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/UserWithFriends",
+                        "#/components/schemas/Friend",
+                    ],
+                    "depth": 2,
+                    "isCircular": true,
+                    "ref": "#/components/schemas/UserWithFriends",
+                },
+                "#/components/schemas/Friend" => {
+                    "dependencies": [
+                        "#/components/schemas/UserWithFriends",
+                        "#/components/schemas/Friend",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/UserWithFriends",
+                        "#/components/schemas/Friend",
+                    ],
+                    "depth": 1,
+                    "isCircular": true,
+                    "ref": "#/components/schemas/Friend",
+                },
+                "#/components/schemas/ResponseSchema" => {
+                    "dependencies": [
+                        "#/components/schemas/ObjectWithRecursiveArray",
+                    ],
+                    "dependents": [],
+                    "depth": 2,
+                    "isCircular": false,
+                    "ref": "#/components/schemas/ResponseSchema",
+                },
+                "#/components/schemas/ObjectWithRecursiveArray" => {
+                    "dependencies": [
+                        "#/components/schemas/ObjectWithRecursiveArray",
+                    ],
+                    "dependents": [
+                        "#/components/schemas/ResponseSchema",
+                        "#/components/schemas/ObjectWithRecursiveArray",
+                    ],
+                    "depth": 1,
+                    "isCircular": true,
+                    "ref": "#/components/schemas/ObjectWithRecursiveArray",
+                },
+            },
+            "topologicalOrder": [
+                "#/components/schemas/User",
+                "#/components/schemas/Friend",
+                "#/components/schemas/UserWithFriends",
+                "#/components/schemas/ObjectWithRecursiveArray",
+                "#/components/schemas/ResponseSchema",
+            ],
         },
         "enums": Map {},
         "info": {
@@ -948,6 +1035,13 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                     },
                 ],
             },
+        ],
+        "schemaNames": [
+            "User",
+            "UserWithFriends",
+            "Friend",
+            "ResponseSchema",
+            "ObjectWithRecursiveArray",
         ],
         "servers": [],
         "version": "1.0.0",

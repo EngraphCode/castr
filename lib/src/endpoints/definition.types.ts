@@ -118,4 +118,6 @@ export interface EndpointDefinition {
   response: CastrSchema;
   /** Optional array of all responses (when --with-all-responses is enabled) */
   responses?: EndpointResponse[];
+  /** Tags for grouping (from OpenAPI operation tags) */
+  tags?: string[];
 }

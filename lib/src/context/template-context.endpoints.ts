@@ -1,12 +1,9 @@
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
-
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
 
 // Import helpers from the helpers module
 import {
   type TemplateContextGroupStrategy,
   type MinimalTemplateContext,
-  getOperationForEndpoint,
   determineGroupName,
   ensureGroupExists,
   ensureDependenciesSetExists,
@@ -67,8 +64,9 @@ const processFileGroupingDependencies = (
  * Process endpoint grouping based on strategy.
  * Main orchestration function that groups endpoints and processes dependencies.
  *
- * @param endpoints - Array of endpoint definitions
- * @param openApiDoc - The OpenAPI document
+ * Uses endpoint.tags from IR (no raw OpenAPI access required).
+ *
+ * @param endpoints - Array of endpoint definitions (from IR)
  * @param groupStrategy - The grouping strategy to use
  * @param dependencyGraph - The deep dependency graph
  * @param schemas - Map of all schemas
@@ -80,7 +78,6 @@ const processFileGroupingDependencies = (
  */
 export const processEndpointGrouping = (
   endpoints: EndpointDefinition[],
-  openApiDoc: OpenAPIObject,
   groupStrategy: TemplateContextGroupStrategy,
   dependencyGraph: Record<string, Set<string>>,
   schemas: Record<string, string>,
@@ -95,12 +92,7 @@ export const processEndpointGrouping = (
     }
 
     if (groupStrategy !== 'none') {
-      const operation = getOperationForEndpoint(openApiDoc, endpoint);
-      if (!operation) {
-        return;
-      }
-
-      const groupName = determineGroupName(groupStrategy, operation, endpoint);
+      const groupName = determineGroupName(groupStrategy, endpoint);
       const group = ensureGroupExists(groupName, endpointsGroups);
       group.endpoints.push(endpoint);
 
@@ -139,8 +131,9 @@ function isValidGroupStrategy(strategy: string): strategy is TemplateContextGrou
  * Process endpoint grouping and common schemas.
  * Helper function to reduce complexity of getTemplateContext.
  *
- * @param endpoints - Array of endpoint definitions
- * @param doc - The OpenAPI document
+ * Uses endpoint.tags from IR (no raw OpenAPI access required).
+ *
+ * @param endpoints - Array of endpoint definitions (from IR)
  * @param groupStrategy - The grouping strategy to use
  * @param deepDependencyGraph - The deep dependency graph
  * @param sortedSchemas - Map of sorted schemas
@@ -151,7 +144,6 @@ function isValidGroupStrategy(strategy: string): strategy is TemplateContextGrou
  */
 export function processEndpointGroupingAndCommonSchemas(
   endpoints: EndpointDefinition[],
-  doc: OpenAPIObject,
   groupStrategy: string,
   deepDependencyGraph: Record<string, Set<string>>,
   sortedSchemas: Record<string, string>,
@@ -170,7 +162,6 @@ export function processEndpointGroupingAndCommonSchemas(
   // Process endpoint grouping (mutates endpointsGroups)
   const dependenciesByGroupName = processEndpointGrouping(
     endpoints,
-    doc,
     groupStrategy,
     deepDependencyGraph,
     sortedSchemas,

@@ -1000,9 +1000,9 @@ export interface IREnum {
 }
 
 /**
- * Complete Information Retrieval (IR) Document.
+ * Complete Intermediate Representation (IR) Document.
  *
- * Represents the lossless information retrieval architecture using an AST representation of the data as the canonical source of an OpenAPI document.
+ * Represents the lossless Intermediate Representation of an OpenAPI document as the canonical source.
  * Contains all schemas, operations, and metadata required for code generation.
  *
  * @public
@@ -1048,6 +1048,15 @@ export interface CastrDocument {
   dependencyGraph: IRDependencyGraph;
 
   /**
+   * All component schema names in the document.
+   * Includes both standard schemas and x-ext vendor extension schemas.
+   * Names are simple identifiers, not full $ref paths.
+   *
+   * @example ['User', 'Address', 'Pet']
+   */
+  schemaNames: string[];
+
+  /**
    * Catalog of all enums in the document.
    * Key is the enum name (or unique identifier).
    */
@@ -1064,17 +1073,20 @@ function isObject(value: unknown): value is object {
   return typeof value === 'object' && value !== null;
 }
 
+const CASTR_DOCUMENT_REQUIRED_KEYS = [
+  'version',
+  'info',
+  'servers',
+  'components',
+  'operations',
+  'dependencyGraph',
+  'schemaNames',
+  'enums',
+] as const;
+
 export function isCastrDocument(value: unknown): value is CastrDocument {
   if (!isObject(value)) {
     return false;
   }
-  return (
-    'version' in value &&
-    'info' in value &&
-    'servers' in value &&
-    'components' in value &&
-    'operations' in value &&
-    'dependencyGraph' in value &&
-    'enums' in value
-  );
+  return CASTR_DOCUMENT_REQUIRED_KEYS.every((key) => key in value);
 }

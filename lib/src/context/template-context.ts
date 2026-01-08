@@ -5,12 +5,11 @@ import type {
   OperationObject,
 } from 'openapi3-ts/oas31';
 
-// Import helpers from new modules
+// Import helpers from modules
 import {
-  extractSchemaNamesFromDoc,
-  buildDependencyGraphForSchemas,
-  sortSchemasByDependencies,
-} from './template-context.schemas.js';
+  getSchemaNamesSortedByDependencies,
+  getDeepDependencyGraphFromIR,
+} from './template-context.from-ir.js';
 import {
   processEndpointGroupingAndCommonSchemas,
   type MinimalTemplateContext,
@@ -31,7 +30,7 @@ export interface TemplateContext {
   options?: TemplateContextOptions | undefined;
   mcpTools: TemplateContextMcpTool[];
   /**
-   * Information Retrieval (IR) document containing lossless OpenAPI metadata.
+   * Intermediate Representation (IR) document containing lossless OpenAPI metadata.
    *
    * This field contains the IR representation of the OpenAPI document, which includes:
    * - All component schemas with rich metadata (CastrSchemaNode)
@@ -109,33 +108,6 @@ export interface TemplateContextOptions {
 }
 
 /**
- * Process schemas to determine topological sort order.
- * Helper function to reduce complexity of getTemplateContext.
- *
- * @internal
- */
-function processSchemas(deepDependencyGraph: Record<string, Set<string>>): {
-  sortedSchemaNames: string[];
-} {
-  // We just need the names for sorting, we don't need the schema map anymore
-  // as we'll use the IR for generation
-  const schemaNames = Object.keys(deepDependencyGraph);
-
-  // Create a dummy map for the sort function.
-  // Note: sortSchemasByDependencies expects Record<string, string> for legacy compatibility.
-  // During IR-based generation, only the schema names are needed for topological sorting.
-  const dummySchemas = schemaNames.reduce<Record<string, string>>((acc, name) => {
-    acc[name] = '';
-    return acc;
-  }, {});
-
-  const sortedSchemas = sortSchemasByDependencies(dummySchemas, deepDependencyGraph);
-  const sortedSchemaNames = Object.keys(sortedSchemas);
-
-  return { sortedSchemaNames };
-}
-
-/**
  * Main function to generate template context from OpenAPI document.
  * Orchestrates the entire process of building template context.
  *
@@ -147,11 +119,11 @@ export const getTemplateContext = (
   doc: OpenAPIObject,
   options?: TemplateContextOptions,
 ): TemplateContext => {
-  // Build IR document for enhanced metadata - Source of Truth
+  // Build IR document - Source of Truth (Cardinal Rule: after this, only IR matters)
   const irDocument = buildIR(doc);
 
-  const schemaNames = extractSchemaNamesFromDoc(doc);
-  const { deepDependencyGraph } = buildDependencyGraphForSchemas(schemaNames, doc);
+  // Use IR for schema names and dependency graph (no raw doc access)
+  const deepDependencyGraph = getDeepDependencyGraphFromIR(irDocument);
 
   // Generate endpoints from IR
   const endpoints = getEndpointDefinitionsFromIR(irDocument);
@@ -161,7 +133,8 @@ export const getTemplateContext = (
   const inlineComponents = extractInlineSchemas(irDocument);
   irDocument.components.push(...inlineComponents);
 
-  const { sortedSchemaNames } = processSchemas(deepDependencyGraph);
+  // Get sorted schema names from IR's topological order
+  const sortedSchemaNames = [...getSchemaNamesSortedByDependencies(irDocument)];
 
   // Add inline component names to sortedSchemaNames
   // We append them at the end. Since they are extracted from operations,
@@ -172,7 +145,6 @@ export const getTemplateContext = (
 
   const { endpointsGroups, commonSchemaNames } = processEndpointGroupingAndCommonSchemas(
     endpoints,
-    doc,
     options?.groupStrategy ?? 'none',
     deepDependencyGraph,
     // Pass empty maps as legacy schema/type maps are not used in IR-based architecture.

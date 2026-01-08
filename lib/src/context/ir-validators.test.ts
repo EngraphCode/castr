@@ -39,6 +39,7 @@ describe('isCastrDocument', () => {
         topologicalOrder: [],
         circularReferences: [],
       },
+      schemaNames: [],
       enums: new Map(),
     };
 

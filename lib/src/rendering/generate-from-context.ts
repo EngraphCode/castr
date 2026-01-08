@@ -55,7 +55,7 @@ export type GenerateZodClientFromOpenApiArgs<
    */
   withSchemaRegistry?: boolean;
   /**
-   * When true, writes the information retrieval architecture using an AST representation of the data as the canonical source (IR) to a JSON file alongside the output.
+   * When true, writes the Intermediate Representation (IR) to a JSON file alongside the output.
    * Useful for debugging and verifying the IR structure.
    */
   debugIR?: boolean;

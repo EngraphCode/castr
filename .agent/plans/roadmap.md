@@ -1,20 +1,52 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 2, 2026  
-**Status:** Active  
-**Quality Gates:** All 10 passing (954 tests)
+**Date:** January 8, 2026
+**Status:** Active
+**Quality Gates:** All 10 passing (960+ tests)
 
 ---
 
 ## Executive Summary
 
-This library generates strict Zod schemas, TypeScript types, and MCP tool definitions from OpenAPI 3.x specifications using a pure **Information Retrieval (IR) architecture** with a **canonical AST representation**.
+This library transforms data definitions **between any supported format** via a canonical **Intermediate Representation (IR)** architecture.
 
 ```text
-OpenAPI → Scalar Pipeline → IR (canonical AST) → ts-morph Writers → Artefacts
+Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers → Any Output Format
 ```
 
 **Key Principle:** All code generation uses **pure AST via ts-morph**—no string manipulation.
+
+---
+
+## Supported Formats
+
+> **Rule:** ALL formats MUST be supported as both **input** (→ IR) and **output** (IR →), unless explicitly marked as an exception below.
+
+| Format          | Input | Output | Notes                                                       |
+| --------------- | :---: | :----: | ----------------------------------------------------------- |
+| **OpenAPI**     |  ✅   |   ✅   | 3.0 → 3.1 auto-upgrade via Scalar                           |
+| **Zod**         |  ✅   |   ✅   | v4 target; extract via ts-morph for input                   |
+| **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                               |
+| **TypeScript**  |  ⚠️   |   ✅   | **Output-only exception** — constants, types, type-guards   |
+| **tRPC**        |  ✅   |   ✅   | Extract Zod from routers (input); generate routers (output) |
+
+### Format Details
+
+1. **OpenAPI** — The primary use case. Parse → IR, generate → OpenAPI for normalization/canonicalization.
+
+2. **Zod** — Runtime validators. Use ts-morph to parse Zod source → IR. Generate Zod from IR (existing).
+
+3. **JSON Schema** — Standard schema format. Parse → IR. Generate → JSON Schema (draft 2020-12).
+
+4. **TypeScript** (output-only) — Constants, types, and type-guards for SDK integration:
+   - Type interfaces from schemas
+   - Path/method constants
+   - Type-guard functions (`isUser()`, `isValidPath()`)
+   - _Input not supported—too broad to reliably parse into canonical IR_
+
+5. **tRPC** — Type-safe API framework:
+   - **Input:** Parse tRPC router source files via ts-morph → extract Zod schemas → IR
+   - **Output:** Generate tRPC router definitions with embedded Zod validators
 
 ---
 
@@ -22,23 +54,23 @@ OpenAPI → Scalar Pipeline → IR (canonical AST) → ts-morph Writers → Arte
 
 ### What's Working ✅
 
-| Component           | Status        | Notes                          |
-| ------------------- | ------------- | ------------------------------ |
-| Quality Gates       | 10/10 passing | 954 tests total                |
-| IR Builder          | Complete      | Parses OpenAPI → CastrDocument |
-| Zod Writer          | Complete      | Operates on IR via ts-morph    |
-| Type Writer         | Complete      | Operates on IR via ts-morph    |
-| Scalar Pipeline     | Complete      | Bundles, upgrades to 3.1       |
-| OpenAPI 3.1 Support | Complete      | First-class support            |
+| Component                | Status        | Notes                                    |
+| ------------------------ | ------------- | ---------------------------------------- |
+| Quality Gates            | 10/10 passing | 960+ tests total                         |
+| IR Builder               | Complete      | OpenAPI → CastrDocument                  |
+| IR-1 (schemaNames, deps) | Complete      | Full dependencyGraph with depth/circular |
+| Zod Writer               | Complete      | IR → Zod via ts-morph                    |
+| Type Writer              | Complete      | IR → TypeScript via ts-morph             |
+| Scalar Pipeline          | Complete      | Bundles, upgrades to 3.1                 |
+| OpenAPI 3.1 Support      | Complete      | First-class support                      |
 
 ### What Needs Work ⚠️
 
-| Component     | Issue                                | Reference |
-| ------------- | ------------------------------------ | --------- |
-| MCP Subsystem | Uses raw OpenAPI instead of IR       | [ADR-024] |
-| Context Layer | Passes `doc` after IR construction   | [ADR-024] |
-| CastrDocument | Missing schemaNames, dependencyGraph | IR-1      |
-| Documentation | Strategic overview outdated          | This file |
+| Component     | Issue                          | Reference                |
+| ------------- | ------------------------------ | ------------------------ |
+| Zod → OpenAPI | Not implemented — next phase   | [zod-to-openapi-plan.md] |
+| Context Layer | Still passes `doc` after IR    | [ADR-024] IR-2           |
+| MCP Subsystem | Uses raw OpenAPI instead of IR | [ADR-024] IR-3           |
 
 ---
 
@@ -81,19 +113,34 @@ All code generation must use **ts-morph AST manipulation exclusively**:
 
 ---
 
-## Immediate Next Steps: IR Alignment
+## Current Phase: Phase 1 Completion
 
-Per [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md), complete the Caster Model architecture alignment:
+Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete.
 
-| Phase | Description                                          | Effort |
-| ----- | ---------------------------------------------------- | ------ |
-| IR-1  | Enhance CastrDocument (schemaNames, dependencyGraph) | 4-6h   |
-| IR-2  | Refactor context layer to use IR exclusively         | 6-8h   |
-| IR-3  | Refactor MCP subsystem to use IR                     | 10-12h |
-| IR-4  | Documentation and cleanup                            | 4-6h   |
-| IR-5  | Verification and hardening                           | 2-3h   |
+**See:** [phase-1-completion-plan.md](./phase-1-completion-plan.md) for detailed plan.
 
-**Total:** ~26-35 hours (3-4 focused sessions)
+| Work Item                   | Status     | Effort |
+| --------------------------- | ---------- | ------ |
+| IR-2: Context layer cleanup | 🎯 Current | 6-8h   |
+| IR-3: MCP subsystem cleanup | Pending    | 10-12h |
+| IR-4: Validation framework  | Pending    | 8-10h  |
+| IR-5: Documentation         | Pending    | 4-6h   |
+
+---
+
+## Format Implementation Order
+
+The order of format support is **deliberate** — by implementing both input and output for a format before moving to the next, we discover commonalities between parsers and writers.
+
+| Phase | Transform             | Status         | Plan Document                                      |
+| ----- | --------------------- | -------------- | -------------------------------------------------- |
+| 1     | OpenAPI → Zod         | ✅ Complete    | (baseline)                                         |
+| 2     | Zod → OpenAPI         | 🎯 **Current** | [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) |
+| 3     | JSONSchema ↔ OpenAPI | 🔲 Planned     |                                                    |
+| 4     | JSONSchema ↔ Zod     | 🔲 Planned     |                                                    |
+| 5     | tRPC ↔ IR            | 🔲 Planned     |                                                    |
+
+**Rationale:** Complete both directions for a format before adding new formats. This reveals shared abstractions and prevents premature generalisation.
 
 ---
 

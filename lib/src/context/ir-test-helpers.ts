@@ -2,18 +2,51 @@
  * IR Test Helpers - Validation and Assertion Utilities
  *
  * These helpers reduce test complexity by providing reusable assertion patterns
- * for IR (Information Retrieval) validation tests.
+ * for IR (Intermediate Representation) validation tests.
  *
  * @module ir-test-helpers
  */
 
 import type {
+  CastrDocument,
   IRComponent,
   CastrSchema,
   CastrSchemaComponent,
   CastrSchemaNode,
 } from './ir-schema.js';
 import { CastrSchemaProperties } from './ir-schema.js';
+
+// ============================================================================
+// Mock Factory Functions
+// ============================================================================
+
+/**
+ * Create a minimal CastrDocument for testing.
+ *
+ * Provides type-safe defaults that satisfy the full CastrDocument interface,
+ * avoiding the need for `as any` casts in tests.
+ *
+ * @param overrides - Partial CastrDocument to merge with defaults
+ * @returns Complete CastrDocument
+ */
+export function createMockCastrDocument(overrides: Partial<CastrDocument> = {}): CastrDocument {
+  return {
+    version: '1.0.0',
+    openApiVersion: '3.1.0',
+    info: { title: 'Test API', version: '1.0.0' },
+    servers: [],
+    components: [],
+    operations: [],
+    schemaNames: [],
+    dependencyGraph: {
+      nodes: new Map(),
+      topologicalOrder: [],
+      circularReferences: [],
+    },
+    enums: new Map(),
+    ...overrides,
+  };
+}
 
 // ============================================================================
 // Mock Factory Functions

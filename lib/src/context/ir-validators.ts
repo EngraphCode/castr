@@ -1,5 +1,5 @@
 /**
- * Information Retrieval (IR) Type Guards and Validators
+ * Intermediate Representation (IR) Type Guards and Validators
  *
  * Provides runtime type checking for IR structures using TypeScript type predicates.
  * These guards enable safe narrowing from `unknown` to specific IR types for

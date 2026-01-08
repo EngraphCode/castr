@@ -516,6 +516,7 @@ test('same-schema-different-name - IR Snapshot', async () => {
                     ],
                 },
             ],
+            "schemaNames": [],
             "servers": [],
             "version": "1.0.0",
         },

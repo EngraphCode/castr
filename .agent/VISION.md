@@ -6,7 +6,7 @@
 
 ## The Goal
 
-Transform data definitions **between any supported format**, strictly and type-safely, via an internal information retrieval architecture using an AST representation of the data as the canonical source (IR).
+Transform data definitions **between any supported format**, strictly and type-safely, via an internal Intermediate Representation (IR) architecture using an AST representation of the data as the canonical source.
 
 ```text
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
@@ -64,7 +64,7 @@ With this principle:
 │          └─────────────────┼─────────────────┘                       │
 │                            ▼                                         │
 ├────────────────────────────────────────────────────────────────────-─┤
-│                    information retrieval architecture using an AST representation of the data as the canonical source (IR)                  │
+│                    Intermediate Representation (IR) / Caster Model                  │
 │                                                                      │
 │   • CastrSchema - Type definitions, constraints, metadata               │
 │   • CastrSchemaNode - Individual schema nodes with context              │
@@ -85,7 +85,7 @@ With this principle:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Information Retrieval (IR) Architecture Pattern:**
+**Intermediate Representation (IR) Architecture Pattern:**
 
 1. **Parse** - Convert any input format to canonical AST (input is discarded after this)
 2. **AST** - The single, canonical, type-safe representation (this IS the data now)
@@ -95,37 +95,52 @@ With this principle:
 
 ## The Roadmap
 
-### Phase 1: OpenAPI → \* (Current)
+> **Rule:** ALL formats MUST be supported as both **input** and **output**, unless explicitly marked as an exception.
 
-| Source        | Target              | Status      |
-| ------------- | ------------------- | ----------- |
-| OpenAPI 3.1.x | Zod 4               | ✅ Complete |
-| OpenAPI 3.1.x | TypeScript          | ✅ Complete |
-| OpenAPI 3.1.x | JSON Schema 2020-12 | 🔲 Planned  |
-| OpenAPI 3.1.x | MCP Tools           | ✅ Complete |
+### Supported Formats
 
-### Phase 2: Zod → \*
+| #   | Format          | Input | Output | Notes                                                    |
+| --- | --------------- | :---: | :----: | -------------------------------------------------------- |
+| 1   | **OpenAPI**     |  ✅   |   ✅   | 3.0 → 3.1 auto-upgrade                                   |
+| 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                |
+| 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                            |
+| 4   | **TypeScript**  |  ⚠️   |   ✅   | **Exception:** output-only (too broad for input parsing) |
+| 5   | **tRPC**        |  ✅   |   ✅   | Extract Zod from routers; generate routers               |
 
-| Source | Target              | Status     |
-| ------ | ------------------- | ---------- |
-| Zod 4  | OpenAPI 3.1.x       | 🔲 Planned |
-| Zod 4  | JSON Schema 2020-12 | 🔲 Planned |
-| Zod 4  | TypeScript          | 🔲 Planned |
+### Current Progress
 
-### Phase 3: JSON Schema → \*
+| Format      | → IR (Parser) | IR → (Writer) |
+| ----------- | :-----------: | :-----------: |
+| OpenAPI     |  ✅ Complete  |  🔲 Planned   |
+| Zod         |  🔲 Planned   |  ✅ Complete  |
+| JSON Schema |  🔲 Planned   |  🔲 Planned   |
+| TypeScript  |       —       |  ✅ Complete  |
+| tRPC        |  🔲 Planned   |  🔲 Planned   |
 
-| Source              | Target        | Status     |
-| ------------------- | ------------- | ---------- |
-| JSON Schema 2020-12 | OpenAPI 3.1.x | 🔲 Planned |
-| JSON Schema 2020-12 | Zod 4         | 🔲 Planned |
+### Same-Format Normalization
 
-### Phase 4: Normalization
+Once both parser and writer exist for a format, same-format conversions enable:
 
-| Conversion                | Purpose                        | Status     |
-| ------------------------- | ------------------------------ | ---------- |
-| OpenAPI → OpenAPI         | Canonicalize, validate, bundle | 🔲 Planned |
-| Zod → Zod                 | Optimize, deduplicate          | 🔲 Planned |
-| JSON Schema → JSON Schema | Upgrade draft versions         | 🔲 Planned |
+| Conversion                | Purpose                        |
+| ------------------------- | ------------------------------ |
+| OpenAPI → OpenAPI         | Canonicalize, validate, bundle |
+| Zod → Zod                 | Optimize, deduplicate          |
+| JSON Schema → JSON Schema | Upgrade draft versions         |
+| tRPC → tRPC               | Normalize router structure     |
+
+### Implementation Order
+
+The order of format support is **deliberate** — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
+
+| Phase | Transform                 | Rationale                                                    |
+| ----- | ------------------------- | ------------------------------------------------------------ |
+| 1     | **OpenAPI → Zod**         | Established baseline (current)                               |
+| 2     | **Zod → OpenAPI**         | Complete Zod round-trip; understand input/output commonality |
+| 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges with well-understood formats            |
+| 4     | **JSONSchema ↔ Zod**     | Complete JSON Schema triangulation                           |
+| 5     | **tRPC ↔ IR**            | Additional formats as needed                                 |
+
+> **Pattern:** For each format, implement both directions before adding new formats. This reveals shared abstractions and prevents premature generalisation.
 
 ---
 

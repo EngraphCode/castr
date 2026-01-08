@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This library implements an **Information Retrieval (IR) architecture** for universal schema conversion. All input formats are parsed into a canonical IR, and all outputs are transforms from that representation.
+This library implements an **Intermediate Representation (IR) architecture** for universal schema conversion. All input formats are parsed into a canonical IR, and all outputs are transforms from that representation.
 
 **See:** `.agent/VISION.md` for strategic vision and roadmap.
 
@@ -26,7 +26,7 @@ This library implements an **Information Retrieval (IR) architecture** for unive
 │          └─────────────────┼─────────────────┘                       │
 │                            ▼                                         │
 ├──────────────────────────────────────────────────────────────────────┤
-│                    information retrieval architecture using an AST representation of the data as the canonical source (IR)                  │
+│                    Intermediate Representation (IR) / Caster Model                  │
 │                                                                      │
 │   *** THIS IS THE SYSTEM'S CENTER OF GRAVITY ***                    │
 │                                                                      │

@@ -123,6 +123,11 @@ function mapOperationToEndpointDefinition(operation: CastrOperation): EndpointDe
     def.description = operation.description;
   }
 
+  // Copy tags for grouping support (IR-2 cleanup)
+  if (operation.tags && operation.tags.length > 0) {
+    def.tags = operation.tags;
+  }
+
   return def;
 }
 
