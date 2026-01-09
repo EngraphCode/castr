@@ -214,7 +214,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 610 unit tests
+pnpm test          # 664 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests

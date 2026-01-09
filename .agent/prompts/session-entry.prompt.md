@@ -49,7 +49,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 642 unit tests
+pnpm test          # 664 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -61,7 +61,7 @@ pnpm character     # 163 characterisation tests
 
 ### ✅ What Works
 
-- All 10 quality gates passing (998+ tests total)
+- All 10 quality gates passing (1020+ tests total)
 - IR Builder complete (OpenAPI → CastrDocument with schemaNames, dependencyGraph)
 - Zod Writer complete (operates on IR via ts-morph)
 - Type Writer complete (operates on IR via ts-morph)
@@ -69,6 +69,7 @@ pnpm character     # 163 characterisation tests
 - IR-1 complete (schemaNames, full dependencyGraph with depth/circularity)
 - IR-2 complete (context layer uses IR for schema names, dependency graphs, endpoint tags)
 - IR-3.1-3.4 complete (MCP IR functions: parameters, body/response, schema inlining, tool builder)
+- IR Strictness enforcement (error throwing for invalid specs instead of placeholders)
 
 ### ⚠️ What Needs Work (Phase 1 Completion)
 
@@ -87,8 +88,6 @@ Phase 1 is **functionally working** but **architecturally incomplete**:
 
 The IR-based functions are complete and tested (32 new tests). Next step is wiring `buildMcpTools()` to use the IR-only path, then removing deprecated OpenAPI functions.
 
-> **Note:** Lint currently shows 13 `ParameterAccumulator is deprecated` warnings. These are **expected** — they're on old OpenAPI-based code that will be removed in IR-3.6.
-
 ---
 
 ## 📚 Essential Reading (In Order)
@@ -96,9 +95,10 @@ The IR-based functions are complete and tested (32 new tests). Next step is wiri
 1. **[VISION.md](.agent/VISION.md)** — Strategic direction
 2. **[RULES.md](.agent/RULES.md)** — Engineering standards (extensive)
 3. **[roadmap.md](.agent/plans/roadmap.md)** — Current state and next steps
-4. **[ADR-024](docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)** — IR alignment decision
-5. **[testing-strategy.md](.agent/testing-strategy.md)** — Test methodology
-6. **[DEFINITION_OF_DONE.md](.agent/DEFINITION_OF_DONE.md)** — Quality criteria
+4. **[ADR-024](../../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)** — IR alignment decision
+5. **[ADR-025](../../docs/architectural_decision_records/ADR-025-http-client-di-integration.md)** — HTTP client DI pattern
+6. **[testing-strategy.md](.agent/testing-strategy.md)** — Test methodology
+7. **[DEFINITION_OF_DONE.md](.agent/DEFINITION_OF_DONE.md)** — Quality criteria
 
 ---
 

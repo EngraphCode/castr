@@ -57,7 +57,7 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 - [x] Schema names from `ir.dependencyGraph.topologicalOrder`
 - [x] Dependency graph from `ir.dependencyGraph.nodes`
 - [x] Endpoint grouping uses `endpoint.tags` (from IR)
-- [x] Tests pass (610 unit, 173 snapshot, 20 gen, 163 character)
+- [x] Tests pass (664 unit, 173 snapshot, 20 gen, 163 character)
 
 ---
 
