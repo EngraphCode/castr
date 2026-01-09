@@ -192,11 +192,11 @@ pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm
 
 ## Estimated Effort
 
-| Phase        | Effort | Cumulative |
-| ------------ | ------ | ---------- |
-| IR-3.1-3.6   | 12h    | 12h        |
-| IR-4         | 4h     | 16h        |
-| IR-5         | 4h     | 20h        |
+| Phase      | Effort | Cumulative |
+| ---------- | ------ | ---------- |
+| IR-3.1-3.6 | 12h    | 12h        |
+| IR-4       | 4h     | 16h        |
+| IR-5       | 4h     | 20h        |
 
 **Total:** ~20 hours (3-4 focused sessions)
 

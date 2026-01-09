@@ -171,11 +171,15 @@ After IR alignment, implement multi-artefact generation per the modular writer a
 
 See: [future-artefact-expansion.md](./future-artefact-expansion.md)
 
-### Phase 5: SDK Integration
+### Phase 5: SDK Integration & HTTP Client DI
 
 - Full SDK workspace consuming this library
 - MCP server implementation
-- HTTP client integration
+- **HTTP Client Integration via DI** (see [ADR-025](../docs/architectural_decision_records/ADR-025-http-client-di-integration.md)):
+  - `CastrHttpAdapter` interface for HTTP client contracts
+  - `createTypedClient()` factory for type-safe API calls with injected adapter
+  - Pre-built adapter packages: `@engraph/castr-adapter-fetch`, `-axios`, `-ky`
+  - Integration guide and examples
 - Hook system for vendor customisation
 
 ### Separate Initiative: ESLint Plugin
