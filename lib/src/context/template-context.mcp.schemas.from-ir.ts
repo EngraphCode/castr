@@ -24,29 +24,51 @@ import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-s
 import type { McpToolSchemaResult } from './template-context.mcp.schemas.js';
 
 /**
+ * Check if a schema is or could be an object type.
+ * Handles explicit type, array types, and composition schemas.
+ */
+const isLikelyObjectSchema = (schema: MutableJsonSchema): boolean => {
+  // Explicit object type
+  const schemaType: unknown = schema['type'];
+  if (schemaType === 'object') {
+    return true;
+  }
+  if (Array.isArray(schemaType) && schemaType.includes('object')) {
+    return true;
+  }
+
+  // Composition schemas (allOf, oneOf, anyOf) that contain objects
+  // are likely object schemas - wrap them to be safe for MCP
+  if ('allOf' in schema || 'oneOf' in schema || 'anyOf' in schema) {
+    // For MCP, compositions must be wrapped in an object type
+    // because the MCP SDK requires outputSchema.type === 'object'
+    return false; // Force wrapping of compositions
+  }
+
+  return false;
+};
+
+/**
  * Wrap a JSON schema to ensure it's always an object type.
- * Schemas with $ref are passed through - they will be resolved during inlining.
+ * Required for MCP ToolSchema which mandates outputSchema.type === 'object'.
  */
 const wrapSchemaFromIR = (schema: MutableJsonSchema | undefined): MutableJsonSchema => {
   if (schema === undefined) {
     return { type: 'object' };
   }
 
-  // Pass through $ref schemas - they will be inlined later
-  // The underlying referenced schema is typically an object
+  // Pass through $ref schemas - they should have been inlined before this point
+  // If we still have refs, pass through (caller should inline first)
   if ('$ref' in schema) {
     return schema;
   }
 
-  const schemaType: unknown = schema['type'];
-  if (schemaType === 'object') {
+  // If already an object type, return as-is
+  if (isLikelyObjectSchema(schema)) {
     return schema;
   }
 
-  if (Array.isArray(schemaType) && schemaType.includes('object')) {
-    return schema;
-  }
-
+  // Wrap non-object schemas (primitives, arrays, compositions without type)
   return {
     type: 'object',
     properties: { value: schema },

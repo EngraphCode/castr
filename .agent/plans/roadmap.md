@@ -1,8 +1,8 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 8, 2026
+**Date:** January 9, 2026
 **Status:** Active
-**Quality Gates:** All 10 passing (966+ tests)
+**Quality Gates:** All 10 passing (1017+ tests)
 
 ---
 
@@ -50,16 +50,17 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 ---
 
-## Current State (January 2026)
+## Current State (January 9, 2026)
 
 ### What's Working ✅
 
 | Component                | Status        | Notes                                    |
 | ------------------------ | ------------- | ---------------------------------------- |
-| Quality Gates            | 10/10 passing | 966+ tests total                         |
+| Quality Gates            | 10/10 passing | 1017+ tests total                        |
 | IR Builder               | Complete      | OpenAPI → CastrDocument                  |
 | IR-1 (schemaNames, deps) | Complete      | Full dependencyGraph with depth/circular |
 | IR-2 (context cleanup)   | Complete      | Schema names, deps, tags from IR         |
+| **IR-3 (MCP cleanup)**   | **Complete**  | **MCP fully IR-based**                   |
 | Zod Writer               | Complete      | IR → Zod via ts-morph                    |
 | Type Writer              | Complete      | IR → TypeScript via ts-morph             |
 | Scalar Pipeline          | Complete      | Bundles, upgrades to 3.1                 |
@@ -67,11 +68,10 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 ### What Needs Work ⚠️
 
-| Component         | Issue                           | Reference                |
-| ----------------- | ------------------------------- | ------------------------ |
-| Zod → OpenAPI     | Not implemented — next phase    | [zod-to-openapi-plan.md] |
-| ~~Context Layer~~ | ~~Still passes `doc` after IR~~ | ✅ Fixed (IR-2)          |
-| MCP Subsystem     | Uses raw OpenAPI instead of IR  | [ADR-024] IR-3           |
+| Component                 | Issue                         | Reference                |
+| ------------------------- | ----------------------------- | ------------------------ |
+| Zod → OpenAPI             | Not implemented — next phase  | [zod-to-openapi-plan.md] |
+| Architectural validation  | No automated boundary tests   | IR-4                     |
 
 ---
 
@@ -116,16 +116,16 @@ All code generation must use **ts-morph AST manipulation exclusively**:
 
 ## Current Phase: Phase 1 Completion
 
-Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete.
+Phase 1 (OpenAPI → Zod) is functionally complete. Remaining work is validation and documentation.
 
 **See:** [phase-1-completion-plan.md](./phase-1-completion-plan.md) for detailed plan.
 
 | Work Item                   | Status     | Effort |
 | --------------------------- | ---------- | ------ |
 | IR-2: Context layer cleanup | ✅ Done    | 6-8h   |
-| IR-3: MCP subsystem cleanup | 🎯 Current | 10-12h |
-| IR-4: Validation framework  | Pending    | 8-10h  |
-| IR-5: Documentation         | Pending    | 4-6h   |
+| IR-3: MCP subsystem cleanup | ✅ Done    | 12h    |
+| IR-4: Validation framework  | 🎯 Current | 4h     |
+| IR-5: Documentation         | Pending    | 4h     |
 
 ---
 
@@ -135,8 +135,8 @@ The order of format support is **deliberate** — by implementing both input and
 
 | Phase | Transform             | Status         | Plan Document                                      |
 | ----- | --------------------- | -------------- | -------------------------------------------------- |
-| 1     | OpenAPI → Zod         | ✅ Complete    | (baseline)                                         |
-| 2     | Zod → OpenAPI         | 🎯 **Current** | [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) |
+| 1     | OpenAPI → Zod         | 🟡 Completing  | [phase-1-completion-plan.md]                       |
+| 2     | Zod → OpenAPI         | 🔲 After Ph1   | [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) |
 | 3     | JSONSchema ↔ OpenAPI | 🔲 Planned     |                                                    |
 | 4     | JSONSchema ↔ Zod     | 🔲 Planned     |                                                    |
 | 5     | tRPC ↔ IR            | 🔲 Planned     |                                                    |
@@ -214,7 +214,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 664 unit tests
+pnpm test          # 661 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -231,7 +231,7 @@ pnpm character     # 163 characterisation tests
 |                  | [requirements.md](../requirements.md)                                              | Project requirements   |
 |                  | [testing-strategy.md](../testing-strategy.md)                                      | Testing philosophy     |
 |                  | [DEFINITION_OF_DONE.md](../DEFINITION_OF_DONE.md)                                  | Quality criteria       |
-| **Prompts**      | [start-right.prompt.md](../prompts/start-right.prompt.md)                          | Session initialisation |
+| **Prompts**      | [session-entry.prompt.md](../prompts/session-entry.prompt.md)                      | Session initialisation |
 | **Architecture** | [ADR-023](../docs/architectural_decision_records/ADR-023-ir-based-architecture.md) | IR architecture        |
 |                  | [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md) | IR alignment           |
 |                  | [SCALAR-PIPELINE.md](../architecture/SCALAR-PIPELINE.md)                           | Input processing       |
@@ -262,10 +262,10 @@ pnpm character     # 163 characterisation tests
 
 ## Getting Started
 
-1. Read [start-right.prompt.md](../prompts/start-right.prompt.md)
+1. Read [session-entry.prompt.md](../prompts/session-entry.prompt.md)
 2. Run quality gates: `pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character`
 3. Review this roadmap and [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)
-4. Begin Phase IR-3 (MCP subsystem cleanup)
+4. Begin Phase IR-4 (Validation Framework)
 
 ---
 

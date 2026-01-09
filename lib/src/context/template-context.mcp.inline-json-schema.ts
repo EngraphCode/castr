@@ -234,9 +234,15 @@ const inlineJsonSchemaObjectFromIR = (
 
 const COMPONENTS_SCHEMAS_PREFIX = '#/components/schemas/';
 
+// Regex for Scalar bundle x-ext refs: #/x-ext/{hash}/components/schemas/{SchemaName}
+const SCALAR_XEXT_COMPONENTS_REGEX = /^#\/x-ext\/[a-f0-9]+\/components\/schemas\/(.+)$/;
+
 /**
  * Extract the schema name from a reference.
- * Handles both #/definitions/ and #/components/schemas/ prefixes.
+ * Handles:
+ * - #/definitions/SchemaName
+ * - #/components/schemas/SchemaName
+ * - #/x-ext/{hash}/components/schemas/SchemaName (Scalar bundle format)
  * Sanitizes the name to match how IR stores component names.
  */
 const extractSchemaNameFromRef = (ref: string): string | undefined => {
@@ -246,6 +252,13 @@ const extractSchemaNameFromRef = (ref: string): string | undefined => {
   if (ref.startsWith(COMPONENTS_SCHEMAS_PREFIX)) {
     return sanitizeIdentifier(ref.slice(COMPONENTS_SCHEMAS_PREFIX.length));
   }
+
+  // Handle Scalar bundle x-ext format: #/x-ext/{hash}/components/schemas/SchemaName
+  const scalarMatch = SCALAR_XEXT_COMPONENTS_REGEX.exec(ref);
+  if (scalarMatch?.[1]) {
+    return sanitizeIdentifier(scalarMatch[1]);
+  }
+
   return undefined;
 };
 

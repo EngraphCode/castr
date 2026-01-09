@@ -9,9 +9,8 @@ export { getMcpToolName, getMcpToolHints } from './template-context.mcp.js';
 export {
   buildInputSchemaObject,
   buildOutputSchemaObject,
-  buildMcpToolSchemas,
   type McpToolSchemaResult,
-  buildMcpTools,
+  buildMcpToolsFromIR,
   type TemplateContextMcpTool,
 } from './template-context.mcp.js';
 

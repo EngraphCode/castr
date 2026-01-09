@@ -49,44 +49,49 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 664 unit tests
+pnpm test          # 661 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
 ```
 
+**Total: 1017+ tests**
+
 ---
 
 ## 📋 Current State (January 9, 2026)
 
-### ✅ What Works
+### ✅ What's Complete
 
-- All 10 quality gates passing (1020+ tests total)
+- All 10 quality gates passing (1017+ tests total)
 - IR Builder complete (OpenAPI → CastrDocument with schemaNames, dependencyGraph)
 - Zod Writer complete (operates on IR via ts-morph)
 - Type Writer complete (operates on IR via ts-morph)
 - Scalar Pipeline complete (bundles, upgrades to 3.1)
 - IR-1 complete (schemaNames, full dependencyGraph with depth/circularity)
 - IR-2 complete (context layer uses IR for schema names, dependency graphs, endpoint tags)
-- IR-3.1-3.4 complete (MCP IR functions: parameters, body/response, schema inlining, tool builder)
+- **IR-3 COMPLETE** (MCP subsystem fully migrated to IR-only path)
+  - IR-3.1-3.4: MCP IR functions (parameters, body/response, schema inlining, tool builder)
+  - IR-3.5: Wired `buildMcpToolsFromIR` into `getTemplateContext`
+  - IR-3.6: Removed deprecated OpenAPI functions from MCP layer
 - IR Strictness enforcement (error throwing for invalid specs instead of placeholders)
+- Scalar bundle x-ext refs properly inlined in MCP schemas
 
 ### ⚠️ What Needs Work (Phase 1 Completion)
 
-Phase 1 is **functionally working** but **architecturally incomplete**:
+| Work Item                   | Status     | Reference                    |
+| --------------------------- | ---------- | ---------------------------- |
+| IR-2: Context layer cleanup | ✅ Done    | [phase-1-completion-plan.md] |
+| IR-3: MCP subsystem cleanup | ✅ Done    | [phase-1-completion-plan.md] |
+| IR-4: Validation framework  | 🎯 Current | [phase-1-completion-plan.md] |
+| IR-5: Documentation         | Pending    | [phase-1-completion-plan.md] |
 
-| Work Item                         | Status     | Reference                    |
-| --------------------------------- | ---------- | ---------------------------- |
-| IR-2: Context layer cleanup       | ✅ Done    | [phase-1-completion-plan.md] |
-| IR-3.1-3.4: MCP IR functions      | ✅ Done    | [phase-1-completion-plan.md] |
-| IR-3.5: Wire up buildMcpTools     | 🎯 Current | [phase-1-completion-plan.md] |
-| IR-3.6: Remove deprecated OpenAPI | Pending    | [phase-1-completion-plan.md] |
-| IR-4: Validation framework        | Pending    | [phase-1-completion-plan.md] |
-| IR-5: Documentation               | Pending    | [phase-1-completion-plan.md] |
+**Current Work: IR-4 (Validation Framework)**
 
-**Current Work: IR-3.5 (Wire up buildMcpTools)**
+The MCP subsystem is now fully IR-based. Next step is implementing automated validation of architectural boundaries:
 
-The IR-based functions are complete and tested (32 new tests). Next step is wiring `buildMcpTools()` to use the IR-only path, then removing deprecated OpenAPI functions.
+1. **IR-4.1: Layer Boundary Tests** — Fail if `OpenAPIObject` imported in MCP/writer layers
+2. **IR-4.2: IR Completeness Tests** — Verify IR types contain all required fields
 
 ---
 
@@ -138,12 +143,14 @@ The order of format support is **deliberate** (see VISION.md):
 - `lib/src/writers/zod-writer.ts` — Zod schema generation
 - `lib/src/writers/type-writer.ts` — TypeScript type generation
 
-### Context Layer (Refactored)
+### Context Layer (Fully IR-Based)
 
-- `lib/src/context/template-context.ts` — `getTemplateContext()` orchestration (uses IR)
+- `lib/src/context/template-context.ts` — `getTemplateContext()` orchestration
 - `lib/src/context/template-context.from-ir.ts` — IR-only helpers
-- `lib/src/context/template-context.mcp.ts` — MCP tool generation (wiring to IR pending - IR-3.5)
-- `lib/src/context/template-context.mcp.schemas.from-ir.ts` — IR-based schema builder
+- `lib/src/context/template-context.mcp.ts` — `buildMcpToolsFromIR()` (IR-only)
+- `lib/src/context/template-context.mcp.schemas.from-ir.ts` — MCP schema builder
+- `lib/src/context/template-context.mcp.security.from-ir.ts` — Security resolution
+- `lib/src/context/template-context.mcp.inline-json-schema.ts` — Ref inlining (supports Scalar x-ext)
 
 ### Tests
 
@@ -163,7 +170,7 @@ The order of format support is **deliberate** (see VISION.md):
 
 ### 🚀 Immediate Next Task
 
-**IR-3.5: Wire up buildMcpTools** — Modify `buildMcpTools()` in `template-context.mcp.ts` to call the new IR-based functions instead of OpenAPI-based ones. See [phase-1-completion-plan.md](plans/phase-1-completion-plan.md) for acceptance criteria.
+**IR-4: Validation Framework** — Create architectural tests that enforce layer boundaries and IR completeness. See [phase-1-completion-plan.md](plans/phase-1-completion-plan.md) for acceptance criteria.
 
 ---
 
