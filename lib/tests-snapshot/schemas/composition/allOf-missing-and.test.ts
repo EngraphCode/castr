@@ -84,7 +84,6 @@ test('allOf-missing-and', async () => {
           },
         },
         request: {},
-        alias: "putpet",
       },
     ] as const;
     // MCP Tools
@@ -93,15 +92,27 @@ test('allOf-missing-and', async () => {
         tool: {
           name: "put_pet",
           description: "PUT /pet",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: {
               value: {
                 allOf: [
-                  { type: "object", properties: { text1: { type: "string" } } },
-                  { type: "object", properties: { text2: { type: "number" } } },
-                  { type: "object", properties: { text3: { type: "boolean" } } },
+                  {
+                    type: "object",
+                    properties: { text1: { type: "string" } },
+                    required: [],
+                  },
+                  {
+                    type: "object",
+                    properties: { text2: { type: "number" } },
+                    required: [],
+                  },
+                  {
+                    type: "object",
+                    properties: { text3: { type: "boolean" } },
+                    required: [],
+                  },
                 ],
               },
             },

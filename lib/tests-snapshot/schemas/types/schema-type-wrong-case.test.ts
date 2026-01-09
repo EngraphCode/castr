@@ -57,7 +57,6 @@ test('schema-type-wrong-case', async () => {
           },
         },
         request: {},
-        alias: "putpet",
       },
     ] as const;
     // MCP Tools
@@ -66,10 +65,11 @@ test('schema-type-wrong-case', async () => {
         tool: {
           name: "put_pet",
           description: "PUT /pet",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { text1: { type: "Integer" } },
+            required: [],
           },
           annotations: {
             readOnlyHint: false,

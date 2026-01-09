@@ -75,22 +75,63 @@ export function buildSingleResponse(
   responseObj: ResponseObject | ReferenceObject,
   context: IRBuildContext,
 ): CastrResponse {
-  // Handle $ref responses (for now, create minimal response)
+  // Handle $ref responses - attempt to resolve
   if (isReferenceObject(responseObj)) {
-    return createPlaceholderResponse(statusCode);
+    const resolved = resolveResponse(responseObj, context);
+    if (resolved) {
+      return buildConcreteResponse(statusCode, resolved, context);
+    }
+    return throwUnresolvedResponseRefError(responseObj, statusCode, context);
   }
 
   return buildConcreteResponse(statusCode, responseObj, context);
 }
 
 /**
- * Create placeholder response for unresolved references.
+ * Resolve a response reference.
+ * @param ref - Reference object
+ * @param context - Build context containing the full document
+ * @returns Resolved response object or undefined if not found
  * @internal
  */
-function createPlaceholderResponse(statusCode: string): CastrResponse {
-  return {
-    statusCode,
-  };
+function resolveResponse(
+  ref: ReferenceObject,
+  context: IRBuildContext,
+): ResponseObject | undefined {
+  const refPath = ref.$ref;
+  if (!refPath.startsWith('#/components/responses/')) {
+    return undefined;
+  }
+
+  const responseName = refPath.split('/').pop();
+  if (!responseName || !context.doc.components?.responses) {
+    return undefined;
+  }
+
+  const response = context.doc.components.responses[responseName];
+  if (isReferenceObject(response)) {
+    // Recursive resolution
+    return resolveResponse(response, context);
+  }
+
+  return response;
+}
+
+/**
+ * Throw error for unresolved response reference.
+ * Enforces strictness: invalid specs must fail fast with helpful errors.
+ * @internal
+ */
+function throwUnresolvedResponseRefError(
+  ref: ReferenceObject,
+  statusCode: string,
+  context: IRBuildContext,
+): never {
+  const location = context.path.join('/');
+  throw new Error(
+    `Unresolvable response reference "${ref.$ref}" for status ${statusCode} at ${location}. ` +
+      'The referenced response does not exist in components.responses.',
+  );
 }
 
 /**

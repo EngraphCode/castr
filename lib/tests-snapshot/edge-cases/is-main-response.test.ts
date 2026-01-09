@@ -102,7 +102,7 @@ it('determines which one is-main-response', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { str: { type: "string" }, nb: { type: "number" } },

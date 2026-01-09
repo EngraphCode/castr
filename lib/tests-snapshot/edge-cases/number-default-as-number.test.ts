@@ -67,7 +67,6 @@ test('number-default-cast', async () => {
           },
         },
         request: {},
-        alias: "putpet",
       },
     ] as const;
     // MCP Tools
@@ -76,14 +75,15 @@ test('number-default-cast', async () => {
         tool: {
           name: "put_pet",
           description: "PUT /pet",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: {
-              text1: { default: "aaa", type: "string" },
-              shouldBeFixed: { default: "20", type: "number" },
-              isFine: { default: 30, type: "number" },
+              text1: { type: "string", default: "aaa" },
+              shouldBeFixed: { type: "number", default: "20" },
+              isFine: { type: "number", default: 30 },
             },
+            required: [],
           },
           annotations: {
             readOnlyHint: false,

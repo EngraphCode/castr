@@ -269,6 +269,7 @@ test('handle-refs-without-var-name', () => {
                     },
                     "description": "GET /something",
                     "inputSchema": {
+                        "properties": {},
                         "type": "object",
                     },
                     "name": "get_something",

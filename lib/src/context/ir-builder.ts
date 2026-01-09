@@ -27,7 +27,7 @@ import type {
   CastrSchema,
 } from './ir-schema.js';
 import { buildCastrSchemas } from './ir-builder.schemas.js';
-import { buildCastrOperations } from './ir-builder.operations.js';
+import { buildCastrOperations, buildIRSecurity } from './ir-builder.operations.js';
 import { isRecord } from '../shared/types.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './ir-builder.dependency-graph.js';
 
@@ -75,6 +75,9 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
 
   const enums = extractEnums(components, operations);
 
+  // Build global security from document-level security array
+  const globalSecurity = doc.security ? buildIRSecurity(doc.security) : undefined;
+
   return {
     version: '1.0.0', // IR schema version
     openApiVersion: doc.openapi,
@@ -85,6 +88,7 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
     dependencyGraph,
     schemaNames,
     enums,
+    ...(globalSecurity ? { security: globalSecurity } : {}),
   };
 }
 

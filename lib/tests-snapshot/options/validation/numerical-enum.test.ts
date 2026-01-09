@@ -88,7 +88,6 @@ test('numerical-enum-support', async () => {
               .optional(),
           }),
         },
-        alias: "getsample",
       },
     ] as const;
     // MCP Tools

@@ -6,11 +6,11 @@
  * @module
  */
 
-import type { ParameterObject, ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
+import type { ParameterObject, ReferenceObject } from 'openapi3-ts/oas31';
 import type { CastrParameter, CastrSchema } from './ir-schema.js';
 import type { IRBuildContext } from './ir-builder.types.js';
 import { isReferenceObject } from '../validation/type-guards.js';
-import { buildCastrSchema, buildCastrSchemaNode } from './ir-builder.core.js';
+import { buildCastrSchema } from './ir-builder.core.js';
 
 /**
  * Safely convert OpenAPI example value (typed as 'any') to unknown.
@@ -91,7 +91,7 @@ export function buildSingleParameter(
     if (resolved) {
       return buildConcreteParameter(resolved, context);
     }
-    return createPlaceholderParameter(context);
+    return throwUnresolvedParameterRefError(param, context);
   }
 
   return buildConcreteParameter(param, context);
@@ -128,24 +128,20 @@ function resolveParameter(
 }
 
 /**
- * Create a placeholder parameter for unresolved references.
+ * Throw error for unresolved parameter reference.
+ * Enforces strictness: invalid specs must fail fast with helpful errors.
  *
- * @param context - Build context for schema resolution
- * @returns Minimal IR parameter structure
- *
+ * @param ref - The unresolved reference object
+ * @param context - Build context for error location
+ * @throws Error with descriptive message including reference path and location
  * @internal
  */
-function createPlaceholderParameter(context: IRBuildContext): CastrParameter {
-  const placeholderSchema: SchemaObject = {};
-  return {
-    name: 'ref',
-    in: 'query',
-    required: false,
-    schema: {
-      type: 'string' as const,
-      metadata: buildCastrSchemaNode(placeholderSchema, context),
-    },
-  };
+function throwUnresolvedParameterRefError(ref: ReferenceObject, context: IRBuildContext): never {
+  const location = context.path.join('/');
+  throw new Error(
+    `Unresolvable parameter reference "${ref.$ref}" at ${location}. ` +
+      'The referenced parameter does not exist in components.parameters.',
+  );
 }
 
 /**
@@ -171,12 +167,13 @@ function buildConcreteParameter(param: ParameterObject, context: IRBuildContext)
 }
 
 /**
- * Build schema for a parameter, defaulting to string if not specified.
+ * Build schema for a parameter.
+ * Per OpenAPI 3.0+ spec, parameters MUST have either 'schema' or 'content'.
  *
  * @param param - OpenAPI parameter object
  * @param context - Build context for schema resolution
  * @returns IR schema
- *
+ * @throws Error if parameter has neither schema nor content
  * @internal
  */
 function buildParameterSchema(param: ParameterObject, context: IRBuildContext): CastrSchema {
@@ -184,12 +181,21 @@ function buildParameterSchema(param: ParameterObject, context: IRBuildContext): 
     return buildCastrSchema(param.schema, context);
   }
 
-  // Default to string schema if not specified
-  const emptySchema: SchemaObject = {};
-  return {
-    type: 'string' as const,
-    metadata: buildCastrSchemaNode(emptySchema, context),
-  };
+  // OpenAPI spec requires either 'schema' or 'content' - validate this invariant
+  if (param.content) {
+    // Content-based parameter - extract schema from first media type
+    const mediaTypes = Object.values(param.content);
+    if (mediaTypes.length > 0 && mediaTypes[0]?.schema) {
+      return buildCastrSchema(mediaTypes[0].schema, context);
+    }
+  }
+
+  // Neither schema nor content - this is an invalid OpenAPI spec
+  const location = context.path.join('/');
+  throw new Error(
+    `Parameter "${param.name}" at ${location} has neither 'schema' nor 'content'. ` +
+      'Per OpenAPI 3.0+ specification, a parameter MUST contain either a schema or content.',
+  );
 }
 
 /**

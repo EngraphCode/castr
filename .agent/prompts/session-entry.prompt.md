@@ -49,7 +49,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 610 unit tests
+pnpm test          # 642 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -57,28 +57,37 @@ pnpm character     # 163 characterisation tests
 
 ---
 
-## 📋 Current State (January 2026)
+## 📋 Current State (January 9, 2026)
 
 ### ✅ What Works
 
-- All 10 quality gates passing (966+ tests total)
+- All 10 quality gates passing (998+ tests total)
 - IR Builder complete (OpenAPI → CastrDocument with schemaNames, dependencyGraph)
 - Zod Writer complete (operates on IR via ts-morph)
 - Type Writer complete (operates on IR via ts-morph)
 - Scalar Pipeline complete (bundles, upgrades to 3.1)
 - IR-1 complete (schemaNames, full dependencyGraph with depth/circularity)
 - IR-2 complete (context layer uses IR for schema names, dependency graphs, endpoint tags)
+- IR-3.1-3.4 complete (MCP IR functions: parameters, body/response, schema inlining, tool builder)
 
 ### ⚠️ What Needs Work (Phase 1 Completion)
 
 Phase 1 is **functionally working** but **architecturally incomplete**:
 
-| Work Item                   | Status     | Reference                    |
-| --------------------------- | ---------- | ---------------------------- |
-| IR-2: Context layer cleanup | ✅ Done    | [phase-1-completion-plan.md] |
-| IR-3: MCP subsystem cleanup | 🎯 Current | [phase-1-completion-plan.md] |
-| IR-4: Validation framework  | Pending    | [phase-1-completion-plan.md] |
-| IR-5: Documentation         | Pending    | [phase-1-completion-plan.md] |
+| Work Item                         | Status     | Reference                    |
+| --------------------------------- | ---------- | ---------------------------- |
+| IR-2: Context layer cleanup       | ✅ Done    | [phase-1-completion-plan.md] |
+| IR-3.1-3.4: MCP IR functions      | ✅ Done    | [phase-1-completion-plan.md] |
+| IR-3.5: Wire up buildMcpTools     | 🎯 Current | [phase-1-completion-plan.md] |
+| IR-3.6: Remove deprecated OpenAPI | Pending    | [phase-1-completion-plan.md] |
+| IR-4: Validation framework        | Pending    | [phase-1-completion-plan.md] |
+| IR-5: Documentation               | Pending    | [phase-1-completion-plan.md] |
+
+**Current Work: IR-3.5 (Wire up buildMcpTools)**
+
+The IR-based functions are complete and tested (32 new tests). Next step is wiring `buildMcpTools()` to use the IR-only path, then removing deprecated OpenAPI functions.
+
+> **Note:** Lint currently shows 13 `ParameterAccumulator is deprecated` warnings. These are **expected** — they're on old OpenAPI-based code that will be removed in IR-3.6.
 
 ---
 
@@ -132,8 +141,9 @@ The order of format support is **deliberate** (see VISION.md):
 ### Context Layer (Refactored)
 
 - `lib/src/context/template-context.ts` — `getTemplateContext()` orchestration (uses IR)
-- `lib/src/context/template-context.from-ir.ts` — IR-only helpers (NEW)
-- `lib/src/context/template-context.mcp.ts` — MCP tool generation (still uses raw OpenAPI - IR-3 scope)
+- `lib/src/context/template-context.from-ir.ts` — IR-only helpers
+- `lib/src/context/template-context.mcp.ts` — MCP tool generation (wiring to IR pending - IR-3.5)
+- `lib/src/context/template-context.mcp.schemas.from-ir.ts` — IR-based schema builder
 
 ### Tests
 
@@ -145,10 +155,15 @@ The order of format support is **deliberate** (see VISION.md):
 ## 🔍 Before Making Changes
 
 1. **Run quality gates** to verify clean starting state
-2. **Read the specific ADR** if working on that area
-3. **Write tests first** (TDD is mandatory)
-4. **Check the Caster Model types** before accessing any schema data
-5. **Run quality gates again** after changes
+2. **Read the phase-1-completion-plan.md** for detailed task breakdown
+3. **Read the specific ADR** if working on that area
+4. **Write tests first** (TDD is mandatory)
+5. **Check the Caster Model types** before accessing any schema data
+6. **Run quality gates again** after changes
+
+### 🚀 Immediate Next Task
+
+**IR-3.5: Wire up buildMcpTools** — Modify `buildMcpTools()` in `template-context.mcp.ts` to call the new IR-based functions instead of OpenAPI-based ones. See [phase-1-completion-plan.md](plans/phase-1-completion-plan.md) for acceptance criteria.
 
 ---
 

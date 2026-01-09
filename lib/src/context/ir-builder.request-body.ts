@@ -40,7 +40,7 @@ export function buildIRRequestBody(
     if (resolved) {
       return buildConcreteRequestBody(resolved, context);
     }
-    return createPlaceholderRequestBody();
+    return throwUnresolvedRequestBodyRefError(requestBody, context);
   }
 
   return buildConcreteRequestBody(requestBody, context);
@@ -79,17 +79,20 @@ function resolveRequestBodyRef(
 }
 
 /**
- * Create placeholder request body for unresolved references.
+ * Throw error for unresolved request body reference.
+ * Enforces strictness: invalid specs must fail fast with helpful errors.
  *
- * @returns Minimal IR request body structure
- *
+ * @param ref - The unresolved reference object
+ * @param context - Build context for error location
+ * @throws Error with descriptive message including reference path and location
  * @internal
  */
-function createPlaceholderRequestBody(): IRRequestBody {
-  return {
-    required: false,
-    content: {},
-  };
+function throwUnresolvedRequestBodyRefError(ref: ReferenceObject, context: IRBuildContext): never {
+  const location = context.path.join('/');
+  throw new Error(
+    `Unresolvable request body reference "${ref.$ref}" at ${location}. ` +
+      'The referenced request body does not exist in components.requestBodies.',
+  );
 }
 
 /**

@@ -184,7 +184,6 @@ test('enum-null', async () => {
           },
         },
         request: {},
-        alias: "getsample",
       },
     ] as const;
     // MCP Tools
@@ -193,7 +192,7 @@ test('enum-null', async () => {
         tool: {
           name: "get_sample",
           description: "GET /sample",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string", enum: [null] } },

@@ -142,7 +142,6 @@ test('object-default-values', async () => {
             "ref-object": z.object({}).strict().optional(),
           }),
         },
-        alias: "getsample",
       },
     ] as const;
     // MCP Tools
@@ -158,24 +157,27 @@ test('object-default-values', async () => {
                 type: "object",
                 properties: {
                   "empty-object": {
-                    default: {},
                     type: "object",
+                    default: {},
                     properties: { foo: { type: "string" } },
+                    required: [],
                   },
                   "default-object": {
-                    default: { foo: "bar" },
                     type: "object",
+                    default: { foo: "bar" },
                     properties: { foo: { type: "string" } },
+                    required: [],
                   },
                   "ref-object": {
-                    default: { id: 1, name: "foo" },
                     type: "object",
+                    default: { id: 1, name: "foo" },
                     additionalProperties: {
                       type: "object",
                       properties: {
                         id: { type: "number" },
                         name: { type: "string" },
                       },
+                      required: [],
                     },
                   },
                 },

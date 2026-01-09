@@ -116,7 +116,7 @@ test('name-with-special-characters', async () => {
         ] as const;
     export const mcpTools = [
             {
-                tool: {name: "name_with_s_pecial_characters", description: "GET /name-with-special-characters", inputSchema: {type: "object"}, outputSchema: {type: "object", properties: {value: {type: "string"}}}, annotations: {readOnlyHint: true, destructiveHint: false, idempotentHint: false}},
+                tool: {name: "name_with_s_pecial_characters", description: "GET /name-with-special-characters", inputSchema: {type: "object", properties: {}}, outputSchema: {type: "object", properties: {value: {type: "string"}}}, annotations: {readOnlyHint: true, destructiveHint: false, idempotentHint: false}},
                 httpOperation: {
                     method: "get",
                     path: "/name-with-special-characters",

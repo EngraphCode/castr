@@ -19,7 +19,7 @@ export function convertOperations(operations: CastrOperation[]): PathsObject {
 
 export function convertOperation(op: CastrOperation): OperationObject {
   const operationObject: OperationObject = {
-    operationId: op.operationId,
+    ...(op.operationId ? { operationId: op.operationId } : {}),
     ...(op.summary ? { summary: op.summary } : {}),
     ...(op.description ? { description: op.description } : {}),
     ...(op.tags ? { tags: op.tags } : {}),

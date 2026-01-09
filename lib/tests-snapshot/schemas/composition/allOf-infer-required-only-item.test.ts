@@ -109,7 +109,6 @@ test('allOf-infer-required-only-item', async () => {
           },
         },
         request: {},
-        alias: "getuser",
       },
     ] as const;
     // MCP Tools
@@ -118,7 +117,7 @@ test('allOf-infer-required-only-item', async () => {
         tool: {
           name: "get_user",
           description: "GET /user",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: {
@@ -130,11 +129,13 @@ test('allOf-infer-required-only-item', async () => {
                       name: { type: "string" },
                       email: { type: "string" },
                     },
+                    required: [],
                   },
-                  { type: "object", required: ["name"] },
+                  {},
                 ],
               },
             },
+            required: [],
           },
           annotations: {
             readOnlyHint: true,

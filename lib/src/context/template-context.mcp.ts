@@ -14,6 +14,11 @@ import {
 } from './template-context.mcp.schemas.js';
 import { replaceHyphenatedPath } from '../shared/utils/index.js';
 
+// IR-based imports
+import type { CastrDocument, CastrOperation } from './ir-schema.js';
+import { buildMcpToolSchemasFromIR } from './template-context.mcp.schemas.from-ir.js';
+import { resolveOperationSecurityFromIR } from './template-context.mcp.security.from-ir.js';
+
 const normalizeDescription = (
   operation: OperationObject,
   method: HttpMethod,
@@ -151,6 +156,115 @@ export const buildMcpTools = ({
       method: endpoint.method,
       path: endpoint.path,
       originalPath,
+      ...(operation.operationId ? { operationId: operation.operationId } : {}),
+      httpOperation,
+      security,
+    };
+  });
+};
+
+// ============================================================================
+// IR-based MCP Tool Builder
+// ============================================================================
+
+/**
+ * Normalize operation description for MCP tool from IR.
+ *
+ * @param operation - The CastrOperation
+ * @returns Normalized title and description
+ *
+ * @internal
+ */
+const normalizeDescriptionFromIR = (
+  operation: CastrOperation,
+): {
+  title?: string;
+  description: string;
+} => {
+  const normalizeText = (value: string | undefined): string | undefined => {
+    const trimmed = value?.trim();
+    return trimmed && trimmed.length > 0 ? trimmed : undefined;
+  };
+
+  const summary = normalizeText(operation.summary);
+  const primaryDescription = normalizeText(operation.description);
+  const fallback = `${operation.method.toUpperCase()} ${operation.path}`;
+
+  if (primaryDescription) {
+    return {
+      ...(summary ? { title: summary } : {}),
+      description: primaryDescription,
+    };
+  }
+
+  if (summary) {
+    return {
+      title: summary,
+      description: summary,
+    };
+  }
+
+  return {
+    description: fallback,
+  };
+};
+
+/**
+ * Build MCP tools from a CastrDocument (IR).
+ *
+ * This function reads entirely from IR types (`CastrDocument`) and produces
+ * `TemplateContextMcpTool[]` compatible with the existing infrastructure.
+ * It replaces `buildMcpTools` which requires raw OpenAPI objects.
+ *
+ * @param ir - The CastrDocument containing operations and components
+ * @returns Array of MCP tools ready for use
+ *
+ * @example
+ * ```typescript
+ * const ir = buildIR(openApiDoc);
+ * const mcpTools = buildMcpToolsFromIR(ir);
+ *
+ * for (const { tool, security } of mcpTools) {
+ *   console.log(tool.name, security.isPublic);
+ * }
+ * ```
+ *
+ * @see {@link buildMcpTools} for legacy OpenAPI-based implementation
+ * @public
+ */
+export const buildMcpToolsFromIR = (ir: CastrDocument): TemplateContextMcpTool[] => {
+  return ir.operations.map((operation) => {
+    // Build schemas from IR
+    const { inputSchema, outputSchema } = buildMcpToolSchemasFromIR(ir, operation);
+
+    // Resolve security from IR
+    const security = resolveOperationSecurityFromIR(ir, operation);
+
+    // Build tool metadata
+    const { title, description } = normalizeDescriptionFromIR(operation);
+    const toolCandidate = {
+      name: getMcpToolName(operation.operationId, operation.method, operation.path),
+      ...(title ? { title } : {}),
+      description,
+      inputSchema,
+      ...(outputSchema ? { outputSchema } : {}),
+      annotations: getMcpToolHints(operation.method),
+    };
+
+    const tool = ToolSchema.parse(toolCandidate);
+
+    const httpOperation = {
+      method: operation.method,
+      path: operation.path,
+      originalPath: operation.path,
+      ...(operation.operationId ? { operationId: operation.operationId } : {}),
+    };
+
+    return {
+      tool,
+      method: operation.method,
+      path: operation.path,
+      originalPath: operation.path,
       ...(operation.operationId ? { operationId: operation.operationId } : {}),
       httpOperation,
       security,

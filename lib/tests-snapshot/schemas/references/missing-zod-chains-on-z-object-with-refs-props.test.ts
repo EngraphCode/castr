@@ -109,7 +109,6 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
         request: {
           body: AddUser,
         },
-        alias: "postuseradd",
       },
       {
         method: "post",
@@ -133,7 +132,6 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
         request: {
           body: PasswordReminder,
         },
-        alias: "postuserrecover",
       },
     ] as const;
     // MCP Tools
@@ -148,25 +146,20 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
               body: {
                 type: "object",
                 properties: {
-                  value: {
-                    type: "object",
-                    properties: {
-                      email: {
-                        type: "string",
-                        minLength: 6,
-                        maxLength: 255,
-                        pattern: "/(EmailRegex)/",
-                      },
-                      password: {
-                        type: "string",
-                        minLength: 16,
-                        maxLength: 255,
-                        pattern: "/(PasswordRegex)/",
-                      },
-                    },
-                    required: ["email", "password"],
+                  email: {
+                    type: "string",
+                    minLength: 6,
+                    maxLength: 255,
+                    pattern: "/(EmailRegex)/",
+                  },
+                  password: {
+                    type: "string",
+                    minLength: 16,
+                    maxLength: 255,
+                    pattern: "/(PasswordRegex)/",
                   },
                 },
+                required: ["email", "password"],
               },
             },
             required: ["body"],
@@ -198,19 +191,14 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
               body: {
                 type: "object",
                 properties: {
-                  value: {
-                    type: "object",
-                    properties: {
-                      email: {
-                        type: "string",
-                        minLength: 6,
-                        maxLength: 255,
-                        pattern: "/(EmailRegex)/",
-                      },
-                    },
-                    required: ["email"],
+                  email: {
+                    type: "string",
+                    minLength: 6,
+                    maxLength: 255,
+                    pattern: "/(EmailRegex)/",
                   },
                 },
+                required: ["email"],
               },
             },
             required: ["body"],

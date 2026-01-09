@@ -111,7 +111,7 @@ function mapOperationToEndpointDefinition(operation: CastrOperation): EndpointDe
   const def: EndpointDefinition = {
     method: operation.method,
     path: operation.path,
-    alias: operation.operationId,
+    ...(operation.operationId ? { alias: operation.operationId } : {}),
     requestFormat,
     parameters,
     errors,

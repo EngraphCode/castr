@@ -38,10 +38,10 @@ test('resolve-ref-responses', () => {
                 "parameters": [],
                 "path": "/",
                 "requestFormat": "json",
-                "response": "z.object({
-    }).passthrough()",
+                "response": "z.string()",
                 "responses": [
                     {
+                        "description": "example response",
                         "schema": {
                             "metadata": {
                                 "circularReferences": [],
@@ -54,11 +54,11 @@ test('resolve-ref-responses', () => {
                                 "required": false,
                                 "zodChain": {
                                     "defaults": [],
-                                    "presence": "",
+                                    "presence": ".optional()",
                                     "validations": [],
                                 },
                             },
-                            "type": "object",
+                            "type": "string",
                         },
                         "statusCode": "200",
                     },

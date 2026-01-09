@@ -100,7 +100,6 @@ test('allOf-single-ref', async () => {
             anyOf_ref_param: MyComponent.optional(),
           }),
         },
-        alias: "gettest",
       },
     ] as const;
     // MCP Tools

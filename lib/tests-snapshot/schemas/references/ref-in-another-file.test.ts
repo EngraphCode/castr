@@ -68,7 +68,6 @@ test('ref-in-another-file', async () => {
     {
         "endpoints": [
             {
-                "alias": "getrobotstxt",
                 "description": "Gets robots.txt",
                 "errors": [],
                 "method": "get",

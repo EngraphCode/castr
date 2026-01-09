@@ -189,7 +189,6 @@ test('array-default-values', async () => {
             "array-ref-enum": z.array(MyEnum).optional(),
           }),
         },
-        alias: "getsample",
       },
     ] as const;
     // MCP Tools
@@ -205,42 +204,44 @@ test('array-default-values', async () => {
                 type: "object",
                 properties: {
                   "array-empty": {
-                    default: [],
                     type: "array",
+                    default: [],
                     items: { type: "string" },
                   },
                   "array-string": {
-                    default: ["one", "two"],
                     type: "array",
+                    default: ["one", "two"],
                     items: { type: "string" },
                   },
                   "array-number": {
-                    default: [1, 2],
                     type: "array",
+                    default: [1, 2],
                     items: { type: "number" },
                   },
                   "array-object": {
-                    default: [{ foo: "bar" }],
                     type: "array",
+                    default: [{ foo: "bar" }],
                     items: {
                       type: "object",
                       properties: { foo: { type: "string" } },
+                      required: [],
                     },
                   },
                   "array-ref-object": {
-                    default: [{ id: 1, name: "foo" }],
                     type: "array",
+                    default: [{ id: 1, name: "foo" }],
                     items: {
                       type: "object",
                       properties: {
                         id: { type: "number" },
                         name: { type: "string" },
                       },
+                      required: [],
                     },
                   },
                   "array-ref-enum": {
-                    default: ["one", "two"],
                     type: "array",
+                    default: ["one", "two"],
                     items: { type: "string", enum: ["one", "two", "three"] },
                   },
                 },

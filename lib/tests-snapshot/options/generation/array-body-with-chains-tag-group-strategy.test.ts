@@ -57,11 +57,11 @@ test('array-body-with-chains-tag-group-strategy', async () => {
     {
         "Test": "import { z } from "zod";
     // Type Definitions
-    export type puttest_Body = {
+    export type put_test_Body = {
       testItem?: string;
     }[];
     // Zod Schemas
-    export const puttest_Body = z
+    export const put_test_Body = z
       .array(
         z
           .object({
@@ -113,7 +113,6 @@ test('array-body-with-chains-tag-group-strategy', async () => {
             .min(1)
             .max(10),
         },
-        alias: "puttest",
         description: "Test",
       },
     ] as const;
@@ -132,13 +131,14 @@ test('array-body-with-chains-tag-group-strategy', async () => {
                 properties: {
                   value: {
                     type: "array",
+                    minItems: 1,
+                    maxItems: 10,
                     items: {
                       type: "object",
                       properties: { testItem: { type: "string" } },
+                      required: [],
                       additionalProperties: false,
                     },
-                    minItems: 1,
-                    maxItems: 10,
                   },
                 },
               },

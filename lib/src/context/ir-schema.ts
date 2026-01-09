@@ -126,10 +126,11 @@ export interface CastrOperation {
   /**
    * Unique operation identifier from OpenAPI operationId.
    * Used for function naming and MCP tool identification.
+   * Optional - not all OpenAPI operations have operationId defined.
    *
    * @example 'getUserById', 'createPet', 'listProducts'
    */
-  operationId: string;
+  operationId?: string;
 
   /**
    * HTTP method for this operation.
@@ -1061,6 +1062,18 @@ export interface CastrDocument {
    * Key is the enum name (or unique identifier).
    */
   enums: Map<string, IREnum>;
+
+  /**
+   * Document-level security requirements.
+   *
+   * These are the default security requirements that apply to all operations
+   * unless overridden at the operation level. An empty array (`security: []`)
+   * at the document level means all operations are public by default.
+   *
+   * @see {@link CastrOperation.security} for operation-level overrides
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object OpenAPI Security Requirement Object}
+   */
+  security?: IRSecurityRequirement[];
 }
 
 /**

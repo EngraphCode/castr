@@ -105,7 +105,6 @@ test('array-oneOf-discriminated-union', async () => {
         request: {
           body: ArrayRequest,
         },
-        alias: "posttest",
       },
     ] as const;
     // MCP Tools
@@ -118,25 +117,20 @@ test('array-oneOf-discriminated-union', async () => {
             type: "object",
             properties: {
               body: {
-                type: "object",
-                properties: {
-                  value: {
-                    type: "array",
-                    items: {
-                      oneOf: [
-                        {
-                          type: "object",
-                          properties: { type: { type: "string", enum: ["a"] } },
-                          required: ["type", "a"],
-                        },
-                        {
-                          type: "object",
-                          properties: { type: { type: "string", enum: ["b"] } },
-                          required: ["type", "b"],
-                        },
-                      ],
+                type: "array",
+                items: {
+                  oneOf: [
+                    {
+                      type: "object",
+                      properties: { type: { type: "string", enum: ["a"] } },
+                      required: ["type", "a"],
                     },
-                  },
+                    {
+                      type: "object",
+                      properties: { type: { type: "string", enum: ["b"] } },
+                      required: ["type", "b"],
+                    },
+                  ],
                 },
               },
             },

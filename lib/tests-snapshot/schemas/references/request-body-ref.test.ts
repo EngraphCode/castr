@@ -94,7 +94,11 @@ test('request-body-ref', async () => {
           inputSchema: {
             type: "object",
             properties: {
-              body: { type: "object", properties: { id: { type: "string" } } },
+              body: {
+                type: "object",
+                properties: { id: { type: "string" } },
+                required: [],
+              },
             },
           },
           annotations: {

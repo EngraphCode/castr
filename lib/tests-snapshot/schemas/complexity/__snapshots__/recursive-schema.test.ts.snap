@@ -51,7 +51,7 @@ export const mcpTools = [
     tool: {
       name: "get_example",
       description: "GET /example",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -60,10 +60,12 @@ export const mcpTools = [
             type: "object",
             properties: {
               name: { type: "string" },
-              parent: { $ref: "#/definitions/User" },
+              parent: { $ref: "#/components/schemas/User" },
             },
+            required: [],
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -198,7 +200,7 @@ export const mcpTools = [
     tool: {
       name: "get_example",
       description: "GET /example",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -208,12 +210,15 @@ export const mcpTools = [
               name: { type: "string" },
               middle: {
                 type: "object",
-                properties: { user: { $ref: "#/definitions/User" } },
+                properties: { user: { $ref: "#/components/schemas/User" } },
+                required: [],
               },
             },
+            required: [],
           },
           basic: { type: "number" },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -1208,6 +1213,7 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                 },
                 "description": "GET /example",
                 "inputSchema": {
+                    "properties": {},
                     "type": "object",
                 },
                 "name": "get_example",
@@ -1222,7 +1228,7 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                     "properties": {
                                         "circle": {
                                             "items": {
-                                                "$ref": "#/definitions/Friend",
+                                                "$ref": "#/components/schemas/Friend",
                                             },
                                             "type": "array",
                                         },
@@ -1230,9 +1236,10 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                             "type": "string",
                                         },
                                         "user": {
-                                            "$ref": "#/definitions/UserWithFriends",
+                                            "$ref": "#/components/schemas/UserWithFriends",
                                         },
                                     },
+                                    "required": [],
                                     "type": "object",
                                 },
                                 "friends": {
@@ -1240,7 +1247,7 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                         "properties": {
                                             "circle": {
                                                 "items": {
-                                                    "$ref": "#/definitions/Friend",
+                                                    "$ref": "#/components/schemas/Friend",
                                                 },
                                                 "type": "array",
                                             },
@@ -1248,9 +1255,10 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                                 "type": "string",
                                             },
                                             "user": {
-                                                "$ref": "#/definitions/UserWithFriends",
+                                                "$ref": "#/components/schemas/UserWithFriends",
                                             },
                                         },
+                                        "required": [],
                                         "type": "object",
                                     },
                                     "type": "array",
@@ -1259,12 +1267,14 @@ exports[`recursive-schema - multiple recursive in one root schema > should handl
                                     "type": "string",
                                 },
                                 "parent": {
-                                    "$ref": "#/definitions/UserWithFriends",
+                                    "$ref": "#/components/schemas/UserWithFriends",
                                 },
                             },
+                            "required": [],
                             "type": "object",
                         },
                     },
+                    "required": [],
                     "type": "object",
                 },
             },
@@ -1389,7 +1399,7 @@ export const mcpTools = [
     tool: {
       name: "get_example",
       description: "GET /example",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -1397,36 +1407,40 @@ export const mcpTools = [
             type: "object",
             properties: {
               name: { type: "string" },
-              parent: { $ref: "#/definitions/UserWithFriends" },
+              parent: { $ref: "#/components/schemas/UserWithFriends" },
               friends: {
                 type: "array",
                 items: {
                   type: "object",
                   properties: {
                     nickname: { type: "string" },
-                    user: { $ref: "#/definitions/UserWithFriends" },
+                    user: { $ref: "#/components/schemas/UserWithFriends" },
                     circle: {
                       type: "array",
-                      items: { $ref: "#/definitions/Friend" },
+                      items: { $ref: "#/components/schemas/Friend" },
                     },
                   },
+                  required: [],
                 },
               },
               bestFriend: {
                 type: "object",
                 properties: {
                   nickname: { type: "string" },
-                  user: { $ref: "#/definitions/UserWithFriends" },
+                  user: { $ref: "#/components/schemas/UserWithFriends" },
                   circle: {
                     type: "array",
-                    items: { $ref: "#/definitions/Friend" },
+                    items: { $ref: "#/components/schemas/Friend" },
                   },
                 },
+                required: [],
               },
             },
+            required: [],
           },
           someProp: { type: "boolean" },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -1622,7 +1636,7 @@ export const mcpTools = [
     tool: {
       name: "get_example",
       description: "GET /example",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -1638,8 +1652,10 @@ export const mcpTools = [
                   settings: {
                     type: "object",
                     properties: { theme_color: { type: "string" } },
+                    required: [],
                   },
                 },
+                required: [],
               },
               songs: {
                 type: "array",
@@ -1650,12 +1666,14 @@ export const mcpTools = [
                     duration: { type: "number" },
                     in_playlists: {
                       type: "array",
-                      items: { $ref: "#/definitions/Playlist" },
+                      items: { $ref: "#/components/schemas/Playlist" },
                     },
                   },
+                  required: [],
                 },
               },
             },
+            required: [],
           },
           by_author: {
             type: "object",
@@ -1665,10 +1683,13 @@ export const mcpTools = [
               settings: {
                 type: "object",
                 properties: { theme_color: { type: "string" } },
+                required: [],
               },
             },
+            required: [],
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,

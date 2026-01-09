@@ -260,7 +260,7 @@ test('inline-simple-schemas', async () => {
         tool: {
           name: "123_example",
           description: "GET /inline-simple-schemas",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string" } },

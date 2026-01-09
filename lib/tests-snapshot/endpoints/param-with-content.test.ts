@@ -103,12 +103,12 @@ test('param-with-content', async () => {
           {
             name: "thing",
             type: "Query",
-            schema: z.string().optional(),
+            schema: test1.optional(),
           },
           {
             name: "wrong param",
             type: "Query",
-            schema: z.string().optional(),
+            schema: test2.optional(),
           },
           {
             name: "Accept-Language",
@@ -130,14 +130,13 @@ test('param-with-content', async () => {
             store: z.number().int(),
           }),
           queryParams: z.object({
-            thing: z.string().optional(),
-            "wrong param": z.string().optional(),
+            thing: test1.optional(),
+            "wrong param": test2.optional(),
           }),
           headers: z.object({
             "Accept-Language": z.string().optional(),
           }),
         },
-        alias: "putpet",
       },
     ] as const;
     // MCP Tools
@@ -151,7 +150,7 @@ test('param-with-content', async () => {
             properties: {
               path: {
                 type: "object",
-                properties: { store: { type: "integer" } },
+                properties: { store: { type: "integer", format: "int32" } },
                 required: ["store"],
               },
               query: {
@@ -160,17 +159,19 @@ test('param-with-content', async () => {
                   thing: {
                     type: "object",
                     properties: { text1: { type: "string" } },
+                    required: [],
                   },
                   "wrong param": {
                     type: "object",
                     properties: { text2: { type: "number" } },
+                    required: [],
                   },
                 },
               },
               headers: {
                 type: "object",
                 properties: {
-                  "Accept-Language": { default: "EN", type: "string" },
+                  "Accept-Language": { type: "string", default: "EN" },
                 },
               },
             },
@@ -179,6 +180,7 @@ test('param-with-content', async () => {
           outputSchema: {
             type: "object",
             properties: { text3: { type: "boolean" } },
+            required: [],
           },
           annotations: {
             readOnlyHint: false,

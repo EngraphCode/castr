@@ -1,7 +1,7 @@
 # Phase 1 Completion Plan: OpenAPI → Zod
 
-**Date:** January 8, 2026
-**Status:** In Progress — IR-2 Complete
+**Date:** January 9, 2026  
+**Status:** In Progress — IR-3.5 Ready to Start (IR-3.1-3.4 Complete)
 
 ---
 
@@ -26,7 +26,7 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 1. **IR is Single Source of Truth**
    - After `buildIR()`, NO code path accesses raw OpenAPI
    - All writers receive only `CastrDocument`
-   - Zero imports of `OpenAPIObject` in writer layer
+   - Zero imports of `OpenAPIObject` in writer/MCP layers
 
 2. **Clean Layer Separation**
    - Parser layer: `*.parser.ts` — Input → IR
@@ -43,27 +43,13 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 2. **Generated output unchanged** (snapshot stability)
 3. **No feature regression** (characterisation tests)
 
-### Validation Framework Criteria
-
-1. **Architectural lint rules** prevent IR bypass
-2. **Layer boundary tests** verify no cross-layer imports
-3. **IR completeness tests** verify all needed data is present
-
 ---
 
 ## Work Phases
 
-### Phase IR-2: Context Layer Cleanup (6-8h) ✅ COMPLETE
+### Phase IR-2: Context Layer Cleanup ✅ COMPLETE
 
 **Goal:** Remove all raw `doc` passing from context layer.
-
-**Files Changed:**
-
-- `lib/src/context/template-context.ts`
-- `lib/src/context/template-context.endpoints.ts`
-- `lib/src/context/template-context.endpoints.helpers.ts`
-- `lib/src/context/template-context.from-ir.ts` (NEW)
-- `lib/src/endpoints/definition.types.ts`
 
 **Acceptance:**
 
@@ -73,80 +59,146 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 - [x] Endpoint grouping uses `endpoint.tags` (from IR)
 - [x] Tests pass (610 unit, 173 snapshot, 20 gen, 163 character)
 
-### Phase IR-3: MCP Subsystem Cleanup (10-12h) — 🎯 CURRENT
+---
+
+### Phase IR-3: MCP Subsystem Cleanup — 🎯 CURRENT
 
 **Goal:** MCP generation operates exclusively on IR.
 
-**Files:**
-
-- `lib/src/context/template-context.mcp.ts`
-- `lib/src/context/template-context.mcp.schemas.ts`
-- `lib/src/context/template-context.mcp.parameters.ts`
-- `lib/src/context/template-context.mcp.responses.ts`
-- `lib/src/context/template-context.mcp.inline-json-schema.ts`
-
-**Audit Finding (January 8, 2026):**
-`CastrOperation` already contains all MCP-required data:
+**Analysis:** `CastrOperation` already contains all MCP-required data:
 
 - `operationId`, `description`, `summary`
 - `parameters[]` with `CastrSchema`
+- `parametersByLocation` (pre-grouped by path/query/header/cookie)
 - `requestBody` with content schemas
 - `responses[]` with status codes and schemas
 - `security[]` for auth metadata
 
+#### IR-3.1: Create IR-based Parameter Extraction (2h) ✅ COMPLETE
+
+**Files:** `template-context.mcp.parameters.ts`
+
 **Acceptance:**
 
-- [ ] MCP generation reads from `CastrDocument.operations`
-- [ ] No direct OpenAPI access in MCP layer
-- [ ] MCP tests pass using IR-only path
+- [x] New function `collectParameterGroupsFromIR(operation: CastrOperation)` exists
+- [x] Unit test proves output matches expected behavior (7 tests pass)
+- [x] Zero `OpenAPIObject` imports in new function path
 
-### Phase IR-4: Validation Framework (8-10h)
+---
+
+#### IR-3.2: Create IR-based Request Body/Response Resolution (2h) ✅ COMPLETE
+
+**Files:** `template-context.mcp.responses.ts`
+
+**Acceptance:**
+
+- [x] `resolveRequestBodySchemaFromIR(operation)` exists
+- [x] `resolvePrimarySuccessResponseSchemaFromIR(operation)` exists
+- [x] Unit tests prove equivalence (11 tests pass)
+
+---
+
+#### IR-3.3: Create IR-based Schema Inlining (2h) ✅ COMPLETE
+
+**Files:** `template-context.mcp.inline-json-schema.ts`
+
+**Acceptance:**
+
+- [x] `inlineJsonSchemaRefsFromIR(schema, ir)` reads from `ir.components.schemas`
+- [x] Circular reference handling preserved
+- [x] Unit tests verify ref resolution (7 tests pass)
+
+---
+
+#### IR-3.4: Create IR-based Tool Schema Builder (2h) ✅ COMPLETE
+
+**Files:** `template-context.mcp.schemas.from-ir.ts` [NEW]
+
+**Acceptance:**
+
+- [x] `buildMcpToolSchemasFromIR({ operation, ir })` uses IR-3.1, IR-3.2, IR-3.3
+- [x] Unit tests pass (7 tests)
+- [x] Zero `OpenAPIObject` imports in implementation
+- [x] File split to respect 220-line max (original 356→185, new file 178 lines)
+
+---
+
+#### IR-3.5: Wire Up buildMcpTools to Use IR-Only Path (2h) — 🎯 CURRENT
+
+**Files:** `template-context.mcp.ts`, `template-context.ts`
+
+**Acceptance:**
+
+- [ ] `buildMcpTools({ ir })` replaces `buildMcpTools({ document, endpoints })`
+- [ ] All MCP tests pass unchanged
+- [ ] Character tests pass
+- [ ] Zero `OpenAPIObject` imports in `template-context.mcp.ts`
+
+---
+
+#### IR-3.6: Cleanup — Remove Deprecated OpenAPI Functions (2h)
+
+**Note:** 13 lint warnings exist for deprecated `ParameterAccumulator` usage. These will be resolved when removing the old functions.
+
+**Acceptance:**
+
+- [ ] `grep -r "OpenAPIObject" lib/src/context/template-context.mcp*.ts` returns 0 results
+- [ ] All deprecated lint warnings resolved (currently 13)
+- [ ] All 10 quality gates pass
+
+---
+
+### Phase IR-4: Validation Framework (4h)
 
 **Goal:** Automated enforcement of architectural boundaries.
 
-**Approach:** Vitest-based architectural tests + ESLint rules
+#### IR-4.1: Layer Boundary Tests
 
-#### Vitest Architectural Tests
+**Files:** [NEW] `lib/src/architecture/layer-boundaries.arch.test.ts`
 
-```typescript
-// lib/src/architecture/layer-boundaries.arch.test.ts
+**Acceptance:**
 
-describe('Layer Boundaries', () => {
-  it('writers do not import OpenAPIObject', async () => {
-    const writerFiles = await glob('lib/src/writers/**/*.ts');
-    for (const file of writerFiles) {
-      const content = await fs.readFile(file, 'utf-8');
-      expect(content).not.toContain("from 'openapi3-ts");
-    }
-  });
-});
-```
+- [ ] Test fails if `OpenAPIObject` imported in MCP/writer layers
+- [ ] Test runs in `pnpm test`
 
-#### ESLint Architectural Rules
+#### IR-4.2: IR Completeness Tests
 
-```javascript
-// .eslintrc.js addition
-rules: {
-  'no-restricted-imports': ['error', {
-    patterns: [{
-      group: ['openapi3-ts/*'],
-      importNames: ['OpenAPIObject'],
-      message: 'Writers must not import OpenAPIObject. Use CastrDocument.'
-    }]
-  }]
-}
-```
+**Files:** [NEW] `lib/src/architecture/ir-completeness.arch.test.ts`
 
-### Phase IR-5: Documentation & Hardening (4-6h)
+**Acceptance:**
 
-**Goal:** Update all documentation to reflect clean architecture.
+- [ ] Tests verify IR types contain all MCP/Writer required fields
+
+---
+
+### Phase IR-5: Documentation (4h)
 
 **Deliverables:**
 
-- [ ] Updated ADR-024 with completed status
-- [ ] Architecture diagram showing clean layers
+- [ ] ADR-024 updated with "Implemented" status
 - [ ] Session entry prompt updated
 - [ ] Roadmap updated
+- [ ] TSDoc for all new MCP functions
+
+---
+
+## Verification (After Each Work Unit)
+
+```bash
+pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character
+```
+
+---
+
+## Estimated Effort
+
+| Phase        | Effort | Cumulative |
+| ------------ | ------ | ---------- |
+| IR-3.1-3.6   | 12h    | 12h        |
+| IR-4         | 4h     | 16h        |
+| IR-5         | 4h     | 20h        |
+
+**Total:** ~20 hours (3-4 focused sessions)
 
 ---
 
@@ -155,22 +207,9 @@ rules: {
 **Phase 1 is complete when:**
 
 1. ✅ IR-2 done: Context layer uses only CastrDocument
-2. ⬜ IR-3 done: MCP uses only CastrDocument
-3. ⬜ Validation framework: Architectural tests pass
+2. 🟡 IR-3 in progress: MCP IR functions complete (IR-3.1-3.4), wiring pending (IR-3.5-3.6)
+3. ⬜ IR-4 done: Architectural tests pass
 4. ⬜ All 10 quality gates pass
 5. ⬜ Documentation updated
 
 **Only then proceed to Phase 2 (Zod → OpenAPI).**
-
----
-
-## Estimated Effort
-
-| Phase                      | Effort | Cumulative |
-| -------------------------- | ------ | ---------- |
-| IR-2: Context Cleanup      | 6-8h   | 6-8h       |
-| IR-3: MCP Cleanup          | 10-12h | 16-20h     |
-| IR-4: Validation Framework | 8-10h  | 24-30h     |
-| IR-5: Documentation        | 4-6h   | 28-36h     |
-
-**Total:** ~28-36 hours (4-5 focused sessions)

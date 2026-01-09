@@ -130,7 +130,7 @@ function buildCastrOperation(
 
   // Build core operation structure
   const irOperation: CastrOperation = {
-    operationId: operation.operationId ?? `${method}${path.replace(/\W/g, '')}`,
+    ...(operation.operationId ? { operationId: operation.operationId } : {}),
     method,
     path,
     parameters: buildCastrParameters(operation.parameters, context),
@@ -200,9 +200,9 @@ function addOptionalOperationFields(
  * @param security - OpenAPI security requirements array
  * @returns Array of IR security requirements
  *
- * @internal
+ * @public
  */
-function buildIRSecurity(security: SecurityRequirementObject[]): IRSecurityRequirement[] {
+export function buildIRSecurity(security: SecurityRequirementObject[]): IRSecurityRequirement[] {
   return security.flatMap((securityReq): IRSecurityRequirement[] => {
     return Object.entries(securityReq).map(([schemeName, scopes]): IRSecurityRequirement => {
       return {

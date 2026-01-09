@@ -150,7 +150,7 @@ it('includes errors-responses', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { str: { type: "string" }, nb: { type: "number" } },
@@ -399,7 +399,7 @@ it('determines which status are considered errors-responses', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { str: { type: "string" }, nb: { type: "number" } },
@@ -570,7 +570,7 @@ it('determines which status are considered errors-responses', async () => {
         tool: {
           name: "get_example",
           description: "GET /example",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { str: { type: "string" }, nb: { type: "number" } },

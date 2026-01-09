@@ -170,41 +170,9 @@ test('handle-refs-with-dots-in-name', async () => {
     export const mcpTools = [
       {
         tool: {
-          name: "get_with_unusual_ref_format",
-          description: "GET /ref-with-dot-in-name",
-          inputSchema: { type: "object" },
-          outputSchema: {
-            type: "object",
-            properties: {
-              thing: {
-                type: "object",
-                properties: { aaa: { type: "string" }, bbb: { type: "string" } },
-              },
-            },
-          },
-          annotations: {
-            readOnlyHint: true,
-            destructiveHint: false,
-            idempotentHint: false,
-          },
-        },
-        httpOperation: {
-          method: "get",
-          path: "/ref-with-dot-in-name",
-          originalPath: "/ref-with-dot-in-name",
-          operationId: "getWithUnusualRefFormat",
-        },
-        security: {
-          isPublic: true,
-          usesGlobalSecurity: false,
-          requirementSets: [],
-        },
-      },
-      {
-        tool: {
           name: "get_with_usual_ref_format",
           description: "GET /usual-ref-format",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string" } },
@@ -220,6 +188,40 @@ test('handle-refs-with-dots-in-name', async () => {
           path: "/usual-ref-format",
           originalPath: "/usual-ref-format",
           operationId: "getWithUsualRefFormat",
+        },
+        security: {
+          isPublic: true,
+          usesGlobalSecurity: false,
+          requirementSets: [],
+        },
+      },
+      {
+        tool: {
+          name: "get_with_unusual_ref_format",
+          description: "GET /ref-with-dot-in-name",
+          inputSchema: { type: "object", properties: {} },
+          outputSchema: {
+            type: "object",
+            properties: {
+              thing: {
+                type: "object",
+                properties: { aaa: { type: "string" }, bbb: { type: "string" } },
+                required: [],
+              },
+            },
+            required: [],
+          },
+          annotations: {
+            readOnlyHint: true,
+            destructiveHint: false,
+            idempotentHint: false,
+          },
+        },
+        httpOperation: {
+          method: "get",
+          path: "/ref-with-dot-in-name",
+          originalPath: "/ref-with-dot-in-name",
+          operationId: "getWithUnusualRefFormat",
         },
         security: {
           isPublic: true,

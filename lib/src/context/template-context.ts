@@ -15,7 +15,7 @@ import {
   type MinimalTemplateContext,
 } from './template-context.endpoints.js';
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
-import { buildMcpTools, type TemplateContextMcpTool } from './template-context.mcp.js';
+import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './template-context.mcp.js';
 import { buildIR } from './ir-builder.js';
 import type { CastrDocument } from './ir-schema.js';
 import { getEndpointDefinitionsFromIR } from './template-context.endpoints.from-ir.js';
@@ -154,10 +154,9 @@ export const getTemplateContext = (
   );
 
   const sortedEndpoints = [...endpoints].sort((a, b) => a.path.localeCompare(b.path));
-  const mcpTools = buildMcpTools({
-    document: doc,
-    endpoints: sortedEndpoints,
-  });
+
+  // Build MCP tools from IR (no longer requires raw OpenAPI document)
+  const mcpTools = buildMcpToolsFromIR(irDocument);
 
   const result: TemplateContext = {
     sortedSchemaNames,

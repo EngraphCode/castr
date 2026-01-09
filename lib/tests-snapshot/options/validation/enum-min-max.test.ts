@@ -91,7 +91,6 @@ test('enum-min-max', async () => {
             bar: z.enum(["Dogs", "Cats", "Mice"]).min(4).optional(),
           }),
         },
-        alias: "getsample",
       },
     ] as const;
     // MCP Tools
@@ -108,14 +107,14 @@ test('enum-min-max', async () => {
                 properties: {
                   foo: {
                     type: "integer",
-                    enum: [1, -2, 3],
                     minimum: 4,
                     maximum: 10,
+                    enum: [1, -2, 3],
                   },
                   bar: {
                     type: "string",
-                    enum: ["Dogs", "Cats", "Mice"],
                     minLength: 4,
+                    enum: ["Dogs", "Cats", "Mice"],
                   },
                 },
               },

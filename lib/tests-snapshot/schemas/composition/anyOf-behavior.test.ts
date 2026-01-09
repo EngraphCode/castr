@@ -387,7 +387,6 @@ describe('anyOf behavior', () => {
               anyOfRef: z.union([PetByAge, PetByType]).optional(),
             }),
           },
-          alias: "gettest",
         },
       ] as const;
       // MCP Tools

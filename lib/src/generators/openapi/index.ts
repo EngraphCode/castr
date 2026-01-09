@@ -50,7 +50,7 @@ function generatePaths(operations: CastrOperation[]): PathsObject {
 
 function generateOperation(op: CastrOperation): OperationObject {
   const operation: OperationObject = {
-    operationId: op.operationId,
+    ...(op.operationId ? { operationId: op.operationId } : {}),
     responses: {},
   };
 

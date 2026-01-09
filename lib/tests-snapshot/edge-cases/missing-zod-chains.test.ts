@@ -148,7 +148,6 @@ test('missing-zod-chains', async () => {
           },
         },
         request: {},
-        alias: "putpet",
       },
     ] as const;
     // MCP Tools
@@ -157,7 +156,7 @@ test('missing-zod-chains', async () => {
         tool: {
           name: "put_pet",
           description: "PUT /pet",
-          inputSchema: { type: "object" },
+          inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
             properties: { value: { type: "string", minLength: 5 } },

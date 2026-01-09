@@ -142,8 +142,8 @@ test('same-schema-different-name - Generation Snapshot', async () => {
                     enum: ["aaa", "bbb", "ccc"],
                   },
                   anotherDifferentNameWithSlightlyDifferentSchema: {
-                    default: "aaa",
                     type: "string",
+                    default: "aaa",
                     enum: ["aaa", "bbb", "ccc"],
                   },
                 },

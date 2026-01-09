@@ -83,7 +83,6 @@ test('common-parameters', async () => {
             otherParam: paramRef.optional(),
           }),
         },
-        alias: "postpet",
       },
       {
         method: "put",
@@ -127,7 +126,6 @@ test('common-parameters', async () => {
             personId: z.number(),
           }),
         },
-        alias: "putpet",
       },
     ] as const;
     // MCP Tools

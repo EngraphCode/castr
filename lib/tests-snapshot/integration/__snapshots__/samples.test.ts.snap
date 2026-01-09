@@ -74,7 +74,7 @@ export const mcpTools = [
     tool: {
       name: "list_users",
       description: "GET /users",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -84,13 +84,15 @@ export const mcpTools = [
               type: "object",
               properties: {
                 username: {
+                  type: ["string", null],
                   description: "Unique handle for the user",
-                  anyOf: [{ type: "string", minLength: 3 }, { type: "null" }],
+                  minLength: 3,
                 },
                 email: { type: "string", format: "email" },
                 age: {
+                  type: ["integer", null],
                   description: "Optional age in years",
-                  anyOf: [{ type: "integer", minimum: 0 }, { type: "null" }],
+                  minimum: 0,
                 },
               },
               required: ["username", "email"],
@@ -128,13 +130,15 @@ export const mcpTools = [
             type: "object",
             properties: {
               username: {
+                type: ["string", null],
                 description: "Unique handle for the user",
-                anyOf: [{ type: "string", minLength: 3 }, { type: "null" }],
+                minLength: 3,
               },
               email: { type: "string", format: "email" },
               age: {
+                type: ["integer", null],
                 description: "Optional age in years",
-                anyOf: [{ type: "integer", minimum: 0 }, { type: "null" }],
+                minimum: 0,
               },
             },
             required: ["username", "email"],
@@ -146,6 +150,7 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: { id: { type: "string", format: "uuid" } },
+        required: [],
       },
       annotations: {
         readOnlyHint: false,
@@ -219,6 +224,10 @@ export const mcpTools = [
               },
               scopes: ["users:write"],
             },
+          ],
+        },
+        {
+          schemes: [
             {
               schemeName: "ApiKey",
               scheme: {
@@ -293,7 +302,7 @@ export const mcpTools = [
       name: "list_versionsv_2",
       title: "List API versions",
       description: "List API versions",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -317,7 +326,7 @@ export const mcpTools = [
       name: "get_version_detailsv_2",
       title: "Show API version details",
       description: "Show API version details",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -375,7 +384,6 @@ export const endpoints = [
         callbackUrl: z.string().url(),
       }),
     },
-    alias: "poststreams",
     description: "subscribes a client to receive out-of-band data",
   },
 ] as const;
@@ -392,9 +400,9 @@ export const mcpTools = [
             type: "object",
             properties: {
               callbackUrl: {
-                examples: ["https://tonys-server.com"],
                 type: "string",
                 format: "uri",
+                examples: ["https://tonys-server.com"],
               },
             },
             required: ["callbackUrl"],
@@ -406,10 +414,10 @@ export const mcpTools = [
         type: "object",
         properties: {
           subscriptionId: {
+            type: "string",
             description:
               "this unique identifier allows management of the subscription",
             examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
-            type: "string",
           },
         },
         required: ["subscriptionId"],
@@ -678,6 +686,44 @@ export const endpoints = [
 export const mcpTools = [
   {
     tool: {
+      name: "get_user_by_name",
+      description: "GET /2.0/users/{username}",
+      inputSchema: {
+        type: "object",
+        properties: {
+          path: {
+            type: "object",
+            properties: { username: { type: "string" } },
+            required: ["username"],
+          },
+        },
+        required: ["path"],
+      },
+      outputSchema: {
+        type: "object",
+        properties: { username: { type: "string" }, uuid: { type: "string" } },
+        required: [],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    httpOperation: {
+      method: "get",
+      path: "/2.0/users/{username}",
+      originalPath: "/2.0/users/{username}",
+      operationId: "getUserByName",
+    },
+    security: {
+      isPublic: true,
+      usesGlobalSecurity: false,
+      requirementSets: [],
+    },
+  },
+  {
+    tool: {
       name: "get_repositories_by_owner",
       description: "GET /2.0/repositories/{username}",
       inputSchema: {
@@ -706,8 +752,10 @@ export const mcpTools = [
                     username: { type: "string" },
                     uuid: { type: "string" },
                   },
+                  required: [],
                 },
               },
+              required: [],
             },
           },
         },
@@ -758,8 +806,10 @@ export const mcpTools = [
               username: { type: "string" },
               uuid: { type: "string" },
             },
+            required: [],
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -823,8 +873,10 @@ export const mcpTools = [
                         username: { type: "string" },
                         uuid: { type: "string" },
                       },
+                      required: [],
                     },
                   },
+                  required: [],
                 },
                 author: {
                   type: "object",
@@ -832,8 +884,10 @@ export const mcpTools = [
                     username: { type: "string" },
                     uuid: { type: "string" },
                   },
+                  required: [],
                 },
               },
+              required: [],
             },
           },
         },
@@ -890,8 +944,10 @@ export const mcpTools = [
                   username: { type: "string" },
                   uuid: { type: "string" },
                 },
+                required: [],
               },
             },
+            required: [],
           },
           author: {
             type: "object",
@@ -899,8 +955,10 @@ export const mcpTools = [
               username: { type: "string" },
               uuid: { type: "string" },
             },
+            required: [],
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -952,43 +1010,6 @@ export const mcpTools = [
       originalPath:
         "/2.0/repositories/{username}/{slug}/pullrequests/{pid}/merge",
       operationId: "mergePullRequest",
-    },
-    security: {
-      isPublic: true,
-      usesGlobalSecurity: false,
-      requirementSets: [],
-    },
-  },
-  {
-    tool: {
-      name: "get_user_by_name",
-      description: "GET /2.0/users/{username}",
-      inputSchema: {
-        type: "object",
-        properties: {
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
-        },
-        required: ["path"],
-      },
-      outputSchema: {
-        type: "object",
-        properties: { username: { type: "string" }, uuid: { type: "string" } },
-      },
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-        idempotentHint: false,
-      },
-    },
-    httpOperation: {
-      method: "get",
-      path: "/2.0/users/{username}",
-      originalPath: "/2.0/users/{username}",
-      operationId: "getUserByName",
     },
     security: {
       isPublic: true,
@@ -1148,7 +1169,9 @@ export const mcpTools = [
         properties: {
           query: {
             type: "object",
-            properties: { limit: { type: "integer", maximum: 100 } },
+            properties: {
+              limit: { type: "integer", format: "int32", maximum: 100 },
+            },
           },
         },
       },
@@ -1157,16 +1180,16 @@ export const mcpTools = [
         properties: {
           value: {
             type: "array",
+            maxItems: 100,
             items: {
               type: "object",
               properties: {
-                id: { type: "integer" },
+                id: { type: "integer", format: "int64" },
                 name: { type: "string" },
                 tag: { type: "string" },
               },
               required: ["id", "name"],
             },
-            maxItems: 100,
           },
         },
       },
@@ -1199,7 +1222,7 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer" },
+              id: { type: "integer", format: "int64" },
               name: { type: "string" },
               tag: { type: "string" },
             },
@@ -1245,7 +1268,7 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
+          id: { type: "integer", format: "int64" },
           name: { type: "string" },
           tag: { type: "string" },
         },
@@ -1478,7 +1501,7 @@ export const mcpTools = [
             type: "object",
             properties: {
               tags: { type: "array", items: { type: "string" } },
-              limit: { type: "integer" },
+              limit: { type: "integer", format: "int32" },
             },
           },
         },
@@ -1500,7 +1523,7 @@ export const mcpTools = [
                 },
                 {
                   type: "object",
-                  properties: { id: { type: "integer" } },
+                  properties: { id: { type: "integer", format: "int64" } },
                   required: ["id"],
                 },
               ],
@@ -1556,7 +1579,7 @@ export const mcpTools = [
               },
               {
                 type: "object",
-                properties: { id: { type: "integer" } },
+                properties: { id: { type: "integer", format: "int64" } },
                 required: ["id"],
               },
             ],
@@ -1591,7 +1614,7 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { id: { type: "integer" } },
+            properties: { id: { type: "integer", format: "int64" } },
             required: ["id"],
           },
         },
@@ -1612,7 +1635,7 @@ export const mcpTools = [
               },
               {
                 type: "object",
-                properties: { id: { type: "integer" } },
+                properties: { id: { type: "integer", format: "int64" } },
                 required: ["id"],
               },
             ],
@@ -1646,7 +1669,7 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { id: { type: "integer" } },
+            properties: { id: { type: "integer", format: "int64" } },
             required: ["id"],
           },
         },
@@ -1853,7 +1876,7 @@ export const mcpTools = [
       name: "list_data_sets",
       title: "List available data sets",
       description: "List available data sets",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -1864,27 +1887,29 @@ export const mcpTools = [
               type: "object",
               properties: {
                 apiKey: {
-                  description: "To be used as a dataset parameter value",
                   type: "string",
+                  description: "To be used as a dataset parameter value",
                 },
                 apiVersionNumber: {
-                  description: "To be used as a version parameter value",
                   type: "string",
+                  description: "To be used as a version parameter value",
                 },
                 apiUrl: {
-                  description: "The URL describing the dataset's fields",
                   type: "string",
                   format: "uri-reference",
+                  description: "The URL describing the dataset's fields",
                 },
                 apiDocumentationUrl: {
-                  description: "A URL to the API console for each API",
                   type: "string",
                   format: "uri-reference",
+                  description: "A URL to the API console for each API",
                 },
               },
+              required: [],
             },
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -1960,8 +1985,8 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              version: { default: "v1", type: "string" },
-              dataset: { default: "oa_citations", type: "string" },
+              version: { type: "string", default: "v1" },
+              dataset: { type: "string", default: "oa_citations" },
             },
             required: ["version", "dataset"],
           },
@@ -1969,21 +1994,21 @@ export const mcpTools = [
             type: "object",
             properties: {
               criteria: {
+                type: "string",
                 description:
                   "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
                 default: "*:*",
-                type: "string",
               },
               start: {
+                type: "integer",
                 description: "Starting record number. Default value is 0.",
                 default: 0,
-                type: "integer",
               },
               rows: {
+                type: "integer",
                 description:
                   "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
                 default: 100,
-                type: "integer",
               },
             },
             required: ["criteria"],
@@ -2032,7 +2057,6 @@ export const endpoints = [
     errors: [],
     responses: {},
     request: {},
-    alias: "getusers",
   },
 ] as const;
 // MCP Tools
@@ -2041,7 +2065,7 @@ export const mcpTools = [
     tool: {
       name: "get_users",
       description: "GET /users",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2224,32 +2248,35 @@ export const mcpTools = [
       name: "get_board",
       title: "Get the whole board",
       description: "Retrieves the current state of the board and the winner.",
-      inputSchema: { type: "object" },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
           winner: {
-            description: "Winner of the game. \`.\` means nobody has won yet.",
             type: "string",
+            description: "Winner of the game. \`.\` means nobody has won yet.",
+            example: ".",
             enum: [".", "X", "O"],
           },
           board: {
             type: "array",
-            items: {
-              type: "array",
-              items: {
-                description:
-                  "Possible values for a board square. \`.\` means empty square.",
-                type: "string",
-                enum: [".", "X", "O"],
-              },
-              minItems: 3,
-              maxItems: 3,
-            },
             minItems: 3,
             maxItems: 3,
+            items: {
+              type: "array",
+              minItems: 3,
+              maxItems: 3,
+              items: {
+                type: "string",
+                description:
+                  "Possible values for a board square. \`.\` means empty square.",
+                example: ".",
+                enum: [".", "X", "O"],
+              },
+            },
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: true,
@@ -2312,8 +2339,8 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              row: { type: "integer", minimum: 1, maximum: 3 },
-              column: { type: "integer", minimum: 1, maximum: 3 },
+              row: { type: "integer", example: 1, minimum: 1, maximum: 3 },
+              column: { type: "integer", example: 1, minimum: 1, maximum: 3 },
             },
             required: ["row", "column"],
           },
@@ -2324,9 +2351,10 @@ export const mcpTools = [
         type: "object",
         properties: {
           value: {
+            type: "string",
             description:
               "Possible values for a board square. \`.\` means empty square.",
-            type: "string",
+            example: ".",
             enum: [".", "X", "O"],
           },
         },
@@ -2398,21 +2426,17 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              row: { type: "integer", minimum: 1, maximum: 3 },
-              column: { type: "integer", minimum: 1, maximum: 3 },
+              row: { type: "integer", example: 1, minimum: 1, maximum: 3 },
+              column: { type: "integer", example: 1, minimum: 1, maximum: 3 },
             },
             required: ["row", "column"],
           },
           body: {
-            type: "object",
-            properties: {
-              value: {
-                description:
-                  "Possible values for a board square. \`.\` means empty square.",
-                type: "string",
-                enum: [".", "X", "O"],
-              },
-            },
+            type: "string",
+            description:
+              "Possible values for a board square. \`.\` means empty square.",
+            example: ".",
+            enum: [".", "X", "O"],
           },
         },
         required: ["path", "body"],
@@ -2421,27 +2445,30 @@ export const mcpTools = [
         type: "object",
         properties: {
           winner: {
-            description: "Winner of the game. \`.\` means nobody has won yet.",
             type: "string",
+            description: "Winner of the game. \`.\` means nobody has won yet.",
+            example: ".",
             enum: [".", "X", "O"],
           },
           board: {
             type: "array",
-            items: {
-              type: "array",
-              items: {
-                description:
-                  "Possible values for a board square. \`.\` means empty square.",
-                type: "string",
-                enum: [".", "X", "O"],
-              },
-              minItems: 3,
-              maxItems: 3,
-            },
             minItems: 3,
             maxItems: 3,
+            items: {
+              type: "array",
+              minItems: 3,
+              maxItems: 3,
+              items: {
+                type: "string",
+                description:
+                  "Possible values for a board square. \`.\` means empty square.",
+                example: ".",
+                enum: [".", "X", "O"],
+              },
+            },
           },
         },
+        required: [],
       },
       annotations: {
         readOnlyHint: false,

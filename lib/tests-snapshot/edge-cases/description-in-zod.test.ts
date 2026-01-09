@@ -130,7 +130,6 @@ test('description-in-zod', async () => {
             qux: z.string().optional(),
           }),
         },
-        alias: "getsample",
       },
     ] as const;
     // MCP Tools
