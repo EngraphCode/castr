@@ -55,7 +55,9 @@ test('array-body-with-chains-tag-group-strategy', async () => {
   assertGroupedFileResult(output);
   expect(output.files).toMatchInlineSnapshot(`
     {
-        "Test": "import { z } from "zod";
+        "__index": "export * as TestApi from "./test";
+    ",
+        "test": "import { z } from "zod";
     // Type Definitions
     export type put_test_Body = {
       testItem?: string;
@@ -162,8 +164,6 @@ test('array-body-with-chains-tag-group-strategy', async () => {
         },
       },
     ] as const;
-    ",
-        "__index": "export * as TestApi from "./Test";
     ",
     }
   `);

@@ -1,0 +1,184 @@
+/**
+ * Zod Constraint Parsing
+ *
+ * Handles extraction of constraints from Zod method chains.
+ * Split from primitives for reduced file complexity.
+ *
+ * @module parsers/zod/constraints
+ * @internal
+ */
+
+import type { ZodMethodCall } from './zod-ast.js';
+
+/**
+ * Constraint values extracted from method chain.
+ * @internal
+ */
+export interface ParsedConstraints {
+  minLength?: number;
+  maxLength?: number;
+  minimum?: number;
+  maximum?: number;
+  exclusiveMinimum?: number;
+  exclusiveMaximum?: number;
+  multipleOf?: number;
+  pattern?: string;
+  format?: string;
+}
+
+/**
+ * Optionality state extracted from method chain.
+ * @internal
+ */
+export interface ParsedOptionality {
+  optional: boolean;
+  nullable: boolean;
+}
+
+// ============================================================================
+// String constraints
+// ============================================================================
+
+function handleStringLengthConstraint(method: ZodMethodCall, constraints: ParsedConstraints): void {
+  const arg = method.args[0];
+  if (typeof arg !== 'number') {
+    return;
+  }
+
+  if (method.name === 'min' || method.name === 'length') {
+    constraints.minLength = arg;
+  } else if (method.name === 'max') {
+    constraints.maxLength = arg;
+  }
+}
+
+function handleStringFormatOrPattern(method: ZodMethodCall, constraints: ParsedConstraints): void {
+  if (method.name === 'regex' && typeof method.args[0] === 'string') {
+    constraints.pattern = method.args[0];
+    return;
+  }
+
+  const formatMap: Record<string, string> = {
+    email: 'email',
+    url: 'uri',
+    uuid: 'uuid',
+    datetime: 'date-time',
+  };
+  const format = formatMap[method.name];
+  if (format) {
+    constraints.format = format;
+  }
+}
+
+/**
+ * Process string-specific method calls.
+ * @internal
+ */
+export function processStringMethod(method: ZodMethodCall, constraints: ParsedConstraints): void {
+  handleStringLengthConstraint(method, constraints);
+  handleStringFormatOrPattern(method, constraints);
+}
+
+// ============================================================================
+// Number constraints
+// ============================================================================
+
+function handleNumberZeroConstraint(
+  method: ZodMethodCall,
+  constraints: ParsedConstraints,
+): boolean {
+  switch (method.name) {
+    case 'positive':
+      constraints.exclusiveMinimum = 0;
+      return true;
+    case 'negative':
+      constraints.exclusiveMaximum = 0;
+      return true;
+    case 'nonnegative':
+      constraints.minimum = 0;
+      return true;
+    case 'nonpositive':
+      constraints.maximum = 0;
+      return true;
+    default:
+      return false;
+  }
+}
+
+function handleNumberArgConstraint(method: ZodMethodCall, constraints: ParsedConstraints): boolean {
+  const arg = method.args[0];
+  if (typeof arg !== 'number') {
+    return false;
+  }
+
+  switch (method.name) {
+    case 'min':
+    case 'gte':
+      constraints.minimum = arg;
+      return true;
+    case 'max':
+    case 'lte':
+      constraints.maximum = arg;
+      return true;
+    case 'multipleOf':
+      constraints.multipleOf = arg;
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Process number-specific method calls.
+ * @internal
+ */
+export function processNumberMethod(method: ZodMethodCall, constraints: ParsedConstraints): void {
+  if (handleNumberZeroConstraint(method, constraints)) {
+    return;
+  }
+  if (handleNumberArgConstraint(method, constraints)) {
+    return;
+  }
+  if (method.name === 'int') {
+    constraints.format = 'int32';
+  }
+}
+
+// ============================================================================
+// Optionality
+// ============================================================================
+
+/**
+ * Process optionality method calls.
+ * @internal
+ */
+export function processOptionalityMethod(
+  method: ZodMethodCall,
+  optionality: ParsedOptionality,
+): void {
+  if (method.name === 'optional') {
+    optionality.optional = true;
+  } else if (method.name === 'nullable') {
+    optionality.nullable = true;
+  } else if (method.name === 'nullish') {
+    optionality.optional = true;
+    optionality.nullable = true;
+  }
+}
+
+/**
+ * Handle type-based constraint methods.
+ * @internal
+ */
+export function processTypeConstraints(
+  baseMethod: string,
+  method: ZodMethodCall,
+  constraints: ParsedConstraints,
+): void {
+  if (baseMethod === 'string') {
+    processStringMethod(method, constraints);
+  }
+  if (baseMethod === 'number') {
+    processNumberMethod(method, constraints);
+  }
+}

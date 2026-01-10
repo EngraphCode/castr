@@ -7,7 +7,7 @@
  * @module shared/utils/identifier-utils
  */
 
-import ts from 'typescript';
+import { isIdentifierStart, isIdentifierPart, ScriptTarget } from 'typescript';
 import { words } from 'lodash-es';
 
 /**
@@ -85,13 +85,13 @@ export function isValidJsIdentifier(name: string): boolean {
   }
 
   const firstCode = name.codePointAt(0);
-  if (firstCode === undefined || !ts.isIdentifierStart(firstCode, ts.ScriptTarget.ESNext)) {
+  if (firstCode === undefined || !isIdentifierStart(firstCode, ScriptTarget.ESNext)) {
     return false;
   }
 
   for (let i = 1; i < name.length; i++) {
     const code = name.codePointAt(i);
-    if (code === undefined || !ts.isIdentifierPart(code, ts.ScriptTarget.ESNext)) {
+    if (code === undefined || !isIdentifierPart(code, ScriptTarget.ESNext)) {
       return false;
     }
   }

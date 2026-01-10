@@ -93,7 +93,9 @@ export const mcpTools = [
 
 exports[`file group strategy with multi-props object as query parameter > tag file 1`] = `
 {
-    "Default": "import { z } from "zod";
+    "__index": "export * as DefaultApi from "./default";
+",
+    "default": "import { z } from "zod";
 // Endpoints
 export const endpoints = [
   {
@@ -176,8 +178,6 @@ export const mcpTools = [
     },
   },
 ] as const;
-",
-    "__index": "export * as DefaultApi from "./Default";
 ",
 }
 `;

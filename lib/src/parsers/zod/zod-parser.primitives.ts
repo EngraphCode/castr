@@ -67,114 +67,8 @@ function createDefaultMetadata(
   };
 }
 
-/**
- * Constraint values extracted from method chain.
- * @internal
- */
-interface ParsedConstraints {
-  minLength?: number;
-  maxLength?: number;
-  minimum?: number;
-  maximum?: number;
-  pattern?: string;
-  format?: string;
-}
-
-/**
- * Optionality state extracted from method chain.
- * @internal
- */
-interface ParsedOptionality {
-  optional: boolean;
-  nullable: boolean;
-}
-
-// ============================================================================
-// String method handlers - split by purpose for reduced complexity
-// ============================================================================
-
-function handleStringLengthConstraint(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  const arg = method.args[0];
-  if (typeof arg !== 'number') {
-    return;
-  }
-
-  if (method.name === 'min' || method.name === 'length') {
-    constraints.minLength = arg;
-  } else if (method.name === 'max') {
-    constraints.maxLength = arg;
-  }
-}
-
-function handleStringFormatOrPattern(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  if (method.name === 'regex' && typeof method.args[0] === 'string') {
-    constraints.pattern = method.args[0];
-    return;
-  }
-
-  const formatMap: Record<string, string> = {
-    email: 'email',
-    url: 'uri',
-    uuid: 'uuid',
-    datetime: 'date-time',
-  };
-  const format = formatMap[method.name];
-  if (format) {
-    constraints.format = format;
-  }
-}
-
-/**
- * Process string-specific method calls.
- * @internal
- */
-function processStringMethod(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  handleStringLengthConstraint(method, constraints);
-  handleStringFormatOrPattern(method, constraints);
-}
-
-// ============================================================================
-// Number method handlers
-// ============================================================================
-
-/**
- * Process number-specific method calls.
- * @internal
- */
-function processNumberMethod(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  const arg = method.args[0];
-
-  if (method.name === 'min' || method.name === 'gte') {
-    if (typeof arg === 'number') {
-      constraints.minimum = arg;
-    }
-  } else if (method.name === 'max' || method.name === 'lte') {
-    if (typeof arg === 'number') {
-      constraints.maximum = arg;
-    }
-  } else if (method.name === 'int') {
-    constraints.format = 'int32';
-  }
-}
-
-// ============================================================================
-// Optionality handling
-// ============================================================================
-
-/**
- * Process optionality method calls.
- * @internal
- */
-function processOptionalityMethod(method: ZodMethodCall, optionality: ParsedOptionality): void {
-  if (method.name === 'optional') {
-    optionality.optional = true;
-  } else if (method.name === 'nullable') {
-    optionality.nullable = true;
-  } else if (method.name === 'nullish') {
-    optionality.optional = true;
-    optionality.nullable = true;
-  }
-}
+import type { ParsedConstraints, ParsedOptionality } from './zod-parser.constraints.js';
+import { processOptionalityMethod, processTypeConstraints } from './zod-parser.constraints.js';
 
 // ============================================================================
 // Zod chain info building - split for reduced complexity
@@ -271,28 +165,31 @@ interface ProcessedChain {
   constraints: ParsedConstraints;
   optionality: ParsedOptionality;
   defaultValue: unknown;
+  description?: string;
 }
 
 function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]): ProcessedChain {
   const constraints: ParsedConstraints = {};
   const optionality: ParsedOptionality = { optional: false, nullable: false };
   let defaultValue: unknown;
+  let description: string | undefined;
 
   for (const method of chainedMethods) {
     if (method.name === 'default') {
       defaultValue = method.args[0];
-      continue;
-    }
-    processOptionalityMethod(method, optionality);
-    if (baseMethod === 'string') {
-      processStringMethod(method, constraints);
-    }
-    if (baseMethod === 'number') {
-      processNumberMethod(method, constraints);
+    } else if (method.name === 'describe' && typeof method.args[0] === 'string') {
+      description = method.args[0];
+    } else {
+      processOptionalityMethod(method, optionality);
+      processTypeConstraints(baseMethod, method, constraints);
     }
   }
 
-  return { constraints, optionality, defaultValue };
+  const result: ProcessedChain = { constraints, optionality, defaultValue };
+  if (description !== undefined) {
+    result.description = description;
+  }
+  return result;
 }
 
 function applyConstraints(schema: CastrSchema, constraints: ParsedConstraints): void {
@@ -307,6 +204,15 @@ function applyConstraints(schema: CastrSchema, constraints: ParsedConstraints): 
   }
   if (constraints.maximum !== undefined) {
     schema.maximum = constraints.maximum;
+  }
+  if (constraints.exclusiveMinimum !== undefined) {
+    schema.exclusiveMinimum = constraints.exclusiveMinimum;
+  }
+  if (constraints.exclusiveMaximum !== undefined) {
+    schema.exclusiveMaximum = constraints.exclusiveMaximum;
+  }
+  if (constraints.multipleOf !== undefined) {
+    schema.multipleOf = constraints.multipleOf;
   }
   if (constraints.pattern !== undefined) {
     schema.pattern = constraints.pattern;
@@ -340,7 +246,7 @@ export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
     return undefined;
   }
 
-  const { constraints, optionality, defaultValue } = processChainMethods(
+  const { constraints, optionality, defaultValue, description } = processChainMethods(
     baseMethod,
     chainedMethods,
   );
@@ -354,14 +260,11 @@ export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
     };
   }
 
-  // Handle z.null()
-  const isNull = baseMethod === 'null';
-
-  // Build schema
+  // Build schema with nullable from z.null() or .nullable()
   const schema: CastrSchema = {
     type: schemaType,
     metadata: createDefaultMetadata({
-      nullable: isNull || optionality.nullable,
+      nullable: baseMethod === 'null' || optionality.nullable,
       required: !optionality.optional,
       zodChain,
       defaultValue,
@@ -369,9 +272,24 @@ export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
   };
 
   applyConstraints(schema, constraints);
+  applyOptionalFields(schema, defaultValue, description);
+
+  return schema;
+}
+
+/**
+ * Apply optional schema fields (default, description).
+ * @internal
+ */
+function applyOptionalFields(
+  schema: CastrSchema,
+  defaultValue: unknown,
+  description: string | undefined,
+): void {
   if (defaultValue !== undefined) {
     schema.default = defaultValue;
   }
-
-  return schema;
+  if (description !== undefined) {
+    schema.description = description;
+  }
 }

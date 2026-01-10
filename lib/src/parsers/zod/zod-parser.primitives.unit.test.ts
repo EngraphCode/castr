@@ -225,4 +225,55 @@ describe('Primitive Zod Parsing', () => {
       expect(result?.metadata.zodChain.presence).toBe('.optional()');
     });
   });
+
+  describe('parsePrimitiveZod with number sign constraints (Session 2.2 gaps)', () => {
+    it('should parse z.number().positive() with exclusiveMinimum 0', () => {
+      const result = parsePrimitiveZod('z.number().positive()');
+
+      expect(result?.type).toBe('number');
+      expect(result?.exclusiveMinimum).toBe(0);
+    });
+
+    it('should parse z.number().negative() with exclusiveMaximum 0', () => {
+      const result = parsePrimitiveZod('z.number().negative()');
+
+      expect(result?.type).toBe('number');
+      expect(result?.exclusiveMaximum).toBe(0);
+    });
+
+    it('should parse z.number().nonnegative() with minimum 0', () => {
+      const result = parsePrimitiveZod('z.number().nonnegative()');
+
+      expect(result?.type).toBe('number');
+      expect(result?.minimum).toBe(0);
+    });
+
+    it('should parse z.number().nonpositive() with maximum 0', () => {
+      const result = parsePrimitiveZod('z.number().nonpositive()');
+
+      expect(result?.type).toBe('number');
+      expect(result?.maximum).toBe(0);
+    });
+
+    it('should parse z.number().multipleOf(5) with multipleOf 5', () => {
+      const result = parsePrimitiveZod('z.number().multipleOf(5)');
+
+      expect(result?.type).toBe('number');
+      expect(result?.multipleOf).toBe(5);
+    });
+  });
+
+  describe('parsePrimitiveZod with describe (Session 2.2 gaps)', () => {
+    it('should parse z.string().describe("User email") with description', () => {
+      const result = parsePrimitiveZod('z.string().describe("User email")');
+
+      expect(result?.description).toBe('User email');
+    });
+
+    it('should parse z.number().describe("Age in years") with description', () => {
+      const result = parsePrimitiveZod('z.number().describe("Age in years")');
+
+      expect(result?.description).toBe('Age in years');
+    });
+  });
 });

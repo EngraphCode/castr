@@ -2,7 +2,7 @@
 
 exports[`group-strategy 1`] = `
 {
-    "Default": {
+    "default": {
         "endpoints": [
             {
                 "alias": "noTagsGet",
@@ -2318,7 +2318,7 @@ export const mcpTools = [
 
 exports[`group-strategy with complex schemas + split files 1`] = `
 {
-    "Default": {
+    "default": {
         "endpoints": [
             {
                 "alias": "noTagsGet",
@@ -2852,7 +2852,12 @@ exports[`group-strategy with complex schemas + split files 1`] = `
 
 exports[`group-strategy with complex schemas + split files 2`] = `
 {
-    "Default": "import { z } from "zod";
+    "__index": "export * as PetApi from "./pet";
+export * as UserApi from "./user";
+export * as StoreApi from "./store";
+export * as DefaultApi from "./default";
+",
+    "default": "import { z } from "zod";
 // Type Definitions
 export type User = {
   id?: number;
@@ -3381,11 +3386,6 @@ export const mcpTools = [
     },
   },
 ] as const;
-",
-    "__index": "export * as PetApi from "./pet";
-export * as UserApi from "./user";
-export * as StoreApi from "./store";
-export * as DefaultApi from "./Default";
 ",
     "pet": "import { z } from "zod";
 // Type Definitions

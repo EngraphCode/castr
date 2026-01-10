@@ -66,15 +66,15 @@ Implementing the reverse transformation to prove bidirectional architecture.
 
 **See:** [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
 
-| Session | Focus                    | Status                       |
-| ------- | ------------------------ | ---------------------------- |
-| 2.1     | Zod 4 parser foundation  | ✅ Complete                  |
-| 2.2     | Constraints & modifiers  | 🎯 Next                      |
-| 2.3     | Composition & references | Pending                      |
-| 2.4     | Endpoint parsing         | Pending                      |
-| 2.5     | OpenAPI writer           | Pending                      |
-| 2.6     | Round-trip validation    | Pending                      |
-| 2.7     | Adapter abstraction      | Pending                      |
+| Session | Focus                    | Status      |
+| ------- | ------------------------ | ----------- |
+| 2.1     | Zod 4 parser foundation  | ✅ Complete |
+| 2.2     | Constraints & modifiers  | 🎯 Next     |
+| 2.3     | Composition & references | Pending     |
+| 2.4     | Endpoint parsing         | Pending     |
+| 2.5     | OpenAPI writer           | Pending     |
+| 2.6     | Round-trip validation    | Pending     |
+| 2.7     | Adapter abstraction      | Pending     |
 
 > **⚠️ ADR-026:** No regex for parsing. All parsers must use ts-morph AST.
 > Lint refactoring completed — 0 errors, all regex replaced with string/AST methods.
