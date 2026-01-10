@@ -67,6 +67,11 @@ Each ADR follows this structure:
 
 ### Phase 2: Zod → OpenAPI (In Progress)
 
+| ADR                                            | Title                       | Status   | Date       |
+| ---------------------------------------------- | --------------------------- | -------- | ---------- |
+| [025](./ADR-025-http-client-di-integration.md) | HTTP Client DI Integration  | Accepted | 2026-01-06 |
+| [026](./ADR-026-no-regex-for-parsing.md)       | No Regex for Schema Parsing | Accepted | 2026-01-10 |
+
 > **Session 2.1 Complete** — Zod 4 parser foundation implemented with 46 new tests.  
 > See: [zod-to-openapi-plan.md](../.agent/plans/zod-to-openapi-plan.md)
 
@@ -204,4 +209,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** January 2026  
-**Next ADR:** 025
+**Next ADR:** 027

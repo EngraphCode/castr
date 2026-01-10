@@ -118,6 +118,20 @@ interface Recommendation {
 
 This keeps the process **completely deterministic** — no AI, no heuristics, just structured feedback.
 
+### ⚠️ NO REGEX FOR PARSING (ADR-026)
+
+> **Architectural Mandate:** Regular expressions are **banned** for parsing schema source code.
+
+During Session 2.3, an initial regex-based approach was attempted and quickly proved fragile. ADR-026 establishes:
+
+| Tool                    | Use Case                                          |
+| ----------------------- | ------------------------------------------------- |
+| **ts-morph**            | AST traversal, variable resolution, symbol tables |
+| **TypeScript Compiler** | Type checking, semantic analysis                  |
+| **Zod runtime**         | Schema validation (where applicable)              |
+
+This is **enforced via ESLint** in the `src/parsers/` directory — regex literals and `RegExp` constructors are errors.
+
 ### Parsing Strategy: ts-morph AST
 
 Use ts-morph to parse Zod source files as TypeScript AST:

@@ -73,4 +73,45 @@ describe('Object Zod Parsing', () => {
       expect(result?.properties?.get('my-prop')).toBeDefined();
     });
   });
+
+  describe('parseObjectZod with chained properties (Session 2.2)', () => {
+    it('should parse property with chain: z.string().min(1)', () => {
+      const result = parseObjectZod('z.object({ name: z.string().min(1) })');
+
+      expect(result?.properties?.get('name')?.type).toBe('string');
+      expect(result?.properties?.get('name')?.minLength).toBe(1);
+      expect(result?.required).toContain('name');
+    });
+
+    it('should parse optional property and exclude from required', () => {
+      const result = parseObjectZod('z.object({ name: z.string().optional() })');
+
+      expect(result?.properties?.get('name')?.type).toBe('string');
+      expect(result?.properties?.get('name')?.metadata.required).toBe(false);
+      expect(result?.required).not.toContain('name');
+    });
+
+    it('should parse mixed required and optional properties', () => {
+      const result = parseObjectZod('z.object({ id: z.string(), name: z.string().optional() })');
+
+      expect(result?.required).toContain('id');
+      expect(result?.required).not.toContain('name');
+    });
+
+    it('should parse property with format: z.string().email()', () => {
+      const result = parseObjectZod('z.object({ email: z.string().email() })');
+
+      expect(result?.properties?.get('email')?.format).toBe('email');
+    });
+
+    it('should parse property with complex chain', () => {
+      const result = parseObjectZod('z.object({ age: z.number().int().min(0).max(150) })');
+
+      const ageProp = result?.properties?.get('age');
+      expect(ageProp?.type).toBe('number');
+      expect(ageProp?.format).toBe('int32');
+      expect(ageProp?.minimum).toBe(0);
+      expect(ageProp?.maximum).toBe(150);
+    });
+  });
 });

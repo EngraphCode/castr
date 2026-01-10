@@ -195,4 +195,26 @@ export default defineConfig(
     },
     rules: typedTsRules,
   },
+
+  // ADR-026: No regex for schema parsing - enforce via ESLint
+  // Parsers must use ts-morph AST, not regex patterns
+  {
+    files: ['src/parsers/**/*.ts'],
+    ignores: testGlobs,
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[regex]',
+          message:
+            'Regex literals are banned in parsers (ADR-026). Use ts-morph for AST-based parsing.',
+        },
+        {
+          selector: 'NewExpression[callee.name="RegExp"]',
+          message:
+            'RegExp constructor is banned in parsers (ADR-026). Use ts-morph for AST-based parsing.',
+        },
+      ],
+    },
+  },
 );

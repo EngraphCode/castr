@@ -56,7 +56,7 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 | Component                | Status        | Notes                                    |
 | ------------------------ | ------------- | ---------------------------------------- |
-| Quality Gates            | 10/10 passing | 1080+ tests total                       |
+| Quality Gates            | 10/10 passing | 1080+ tests total                        |
 | IR Builder               | Complete      | OpenAPI → CastrDocument                  |
 | IR-1 (schemaNames, deps) | Complete      | Full dependencyGraph with depth/circular |
 | IR-2 (context cleanup)   | Complete      | Schema names, deps, tags from IR         |

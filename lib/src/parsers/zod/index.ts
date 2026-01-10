@@ -45,3 +45,14 @@ export { parsePrimitiveZod } from './zod-parser.primitives.js';
 
 // Object parsing exports
 export { parseObjectZod } from './zod-parser.object.js';
+
+// AST utilities (Session 2.3 - ADR-026)
+export {
+  createZodProject,
+  isZodCall,
+  getZodMethodChain,
+  extractObjectProperties,
+  findZodSchemaDeclarations,
+  type ZodMethodChainInfo,
+  type ZodMethodCall,
+} from './zod-ast.js';

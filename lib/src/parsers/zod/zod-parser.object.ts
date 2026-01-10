@@ -2,6 +2,7 @@
  * Zod Object Schema Parsing
  *
  * Parses z.object() schemas into CastrSchema structures with properties.
+ * Uses ts-morph AST traversal (ADR-026 compliant - no regex).
  *
  * @module parsers/zod/object
  *
@@ -9,52 +10,22 @@
  * ```typescript
  * import { parseObjectZod } from './zod-parser.object.js';
  *
- * const schema = parseObjectZod('z.object({ name: z.string() })');
- * // { type: 'object', properties: Map { 'name' => { type: 'string' } }, ... }
+ * const schema = parseObjectZod('z.object({ name: z.string().min(1) })');
  * ```
  */
 
 import type { CastrSchema, CastrSchemaNode } from '../../context/ir-schema.js';
+import type { CallExpression } from 'ts-morph';
 import { CastrSchemaProperties } from '../../context/ir-schema-properties.js';
+import { createZodProject, getZodBaseMethod, extractObjectProperties } from './zod-ast.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 
 /**
- * Regular expression to match z.object() calls.
- *
- * Captures the content inside the parentheses.
- *
- * @internal
- */
-const ZOD_OBJECT_PATTERN = /^z\.object\s*\(\s*\{([\s\S]*)\}\s*\)$/;
-
-/**
- * Regular expression to match property definitions inside z.object().
- *
- * Matches patterns like:
- * - `name: z.string()`
- * - `'my-prop': z.number()`
- * - `"quoted": z.boolean()`
- *
- * @internal
- */
-
-const PROPERTY_PATTERN =
-  // eslint-disable-next-line sonarjs/slow-regex -- Pattern is bounded by input length
-  /(?:([a-zA-Z_$][a-zA-Z0-9_$]*)|'([^']+)'|"([^"]+)")\s*:\s*(z\.[a-zA-Z]+\s*\(\s*\))/g;
-
-/**
  * Create default metadata for a schema node.
- *
- * @param options - Optional overrides for metadata fields
- * @returns Complete CastrSchemaNode with sensible defaults
- *
  * @internal
  */
 function createDefaultMetadata(
-  options: {
-    nullable?: boolean;
-    required?: boolean;
-  } = {},
+  options: { nullable?: boolean; required?: boolean } = {},
 ): CastrSchemaNode {
   const { nullable = false, required = true } = options;
 
@@ -76,86 +47,58 @@ function createDefaultMetadata(
 }
 
 /**
- * Parse a z.object() expression into a CastrSchema.
- *
- * Handles object schemas with properties:
- * - `z.object({})` → empty object
- * - `z.object({ name: z.string() })` → object with string property
- * - `z.object({ a: z.string(), b: z.number() })` → object with multiple properties
- *
- * All Zod properties are required by default (unlike TypeScript).
+ * Parse a z.object() expression into a CastrSchema using ts-morph AST.
  *
  * @param expression - A Zod object expression string
  * @returns CastrSchema if this is a valid z.object(), undefined otherwise
- *
- * @example
- * ```typescript
- * const schema = parseObjectZod('z.object({ name: z.string() })');
- * console.log(schema?.type); // 'object'
- * console.log(schema?.properties?.get('name')?.type); // 'string'
-/**
- * Parse a single property match result.
- *
- * @internal
- */
-function parsePropertyMatch(
-  propMatch: RegExpExecArray,
-  propertiesRecord: Record<string, CastrSchema>,
-  requiredFields: string[],
-): void {
-  // Group 1: unquoted identifier, Group 2: single-quoted, Group 3: double-quoted
-  const propName = propMatch[1] ?? propMatch[2] ?? propMatch[3];
-  // Group 4: the z.xxx() value
-  const propValue = propMatch[4];
-
-  if (propName === undefined || propValue === undefined) {
-    return;
-  }
-
-  const propSchema = parsePrimitiveZod(propValue);
-  if (propSchema) {
-    propertiesRecord[propName] = propSchema;
-    requiredFields.push(propName);
-  }
-}
-
-/**
- * Parse a z.object() expression into a CastrSchema.
- *
- * Handles object schemas with properties:
- * - `z.object({})` → empty object
- * - `z.object({ name: z.string() })` → object with string property
- * - `z.object({ a: z.string(), b: z.number() })` → object with multiple properties
- *
- * All Zod properties are required by default (unlike TypeScript).
- *
- * @param expression - A Zod object expression string
- * @returns CastrSchema if this is a valid z.object(), undefined otherwise
- *
- * @example
- * ```typescript
- * const schema = parseObjectZod('z.object({ name: z.string() })');
- * console.log(schema?.type); // 'object'
- * console.log(schema?.properties?.get('name')?.type); // 'string'
- * ```
  *
  * @public
  */
 export function parseObjectZod(expression: string): CastrSchema | undefined {
-  const match = ZOD_OBJECT_PATTERN.exec(expression.trim());
-  if (!match) {
+  // Parse with ts-morph
+  const project = createZodProject(`const __schema = ${expression};`);
+  const sourceFile = project.getSourceFiles()[0];
+  if (!sourceFile) {
     return undefined;
   }
 
-  const objectContent = match[1] ?? '';
+  const varDecl = sourceFile.getVariableDeclarations()[0];
+  const init = varDecl?.getInitializer();
+
+  if (!init) {
+    return undefined;
+  }
+
+  // Verify this is a z.object() call
+  const baseMethod = getZodBaseMethod(init as CallExpression);
+  if (baseMethod !== 'object') {
+    return undefined;
+  }
+
+  // Extract object properties from AST
+  const propsMap = extractObjectProperties(init as CallExpression);
+  if (!propsMap) {
+    return undefined;
+  }
+
   const propertiesRecord: Record<string, CastrSchema> = {};
   const requiredFields: string[] = [];
 
-  const propPattern = new RegExp(PROPERTY_PATTERN.source, 'g');
-  let propMatch: RegExpExecArray | null;
+  // Parse each property
+  for (const [propName, propCall] of propsMap) {
+    // Get the full text of the property expression
+    const propText = propCall.getText();
 
-  while ((propMatch = propPattern.exec(objectContent)) !== null) {
-    parsePropertyMatch(propMatch, propertiesRecord, requiredFields);
+    // Use parsePrimitiveZod which handles chains
+    const propSchema = parsePrimitiveZod(propText);
+    if (propSchema) {
+      propertiesRecord[propName] = propSchema;
+
+      // Property is required unless marked optional
+      if (propSchema.metadata.required) {
+        requiredFields.push(propName);
+      }
+    }
   }
 
   return {

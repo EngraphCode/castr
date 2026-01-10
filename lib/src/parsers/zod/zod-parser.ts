@@ -147,6 +147,8 @@ function parseZodExpression(expression: string): CastrSchema | undefined {
     return object;
   }
 
+  // TODO: Add union, intersection with ts-morph (Session 2.3 Phase B)
+
   return undefined;
 }
 
