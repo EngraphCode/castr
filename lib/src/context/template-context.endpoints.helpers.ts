@@ -4,8 +4,7 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
 import { logger } from '../shared/utils/logger.js';
 
-import { normalizeString } from '../shared/utils/index.js';
-
+import { snakeCase } from 'lodash-es';
 export type TemplateContextGroupStrategy = 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
 
 export interface MinimalTemplateContext {
@@ -27,9 +26,46 @@ export const makeEndpointTemplateContext = (): MinimalTemplateContext => ({
  *
  * @internal
  */
+function isWordCharCode(code: number): boolean {
+  return (
+    (code >= 0x30 && code <= 0x39) || // 0-9
+    (code >= 0x41 && code <= 0x5a) || // A-Z
+    (code >= 0x61 && code <= 0x7a) || // a-z
+    code === 0x5f // _
+  );
+}
+
+function findParamEnd(path: string, startIndex: number): number {
+  let paramEnd = startIndex;
+  while (paramEnd < path.length && isWordCharCode(path.charCodeAt(paramEnd))) {
+    paramEnd++;
+  }
+  return paramEnd;
+}
+
 export const getOriginalPathWithBrackets = (path: string): string => {
-  const originalPathParam = /:(\w+)/g;
-  return path.replaceAll(originalPathParam, '{$1}');
+  // Use index-based parsing instead of regex (per ADR-026)
+  let result = '';
+  let cursor = 0;
+
+  while (cursor < path.length) {
+    const colonIndex = path.indexOf(':', cursor);
+    if (colonIndex === -1) {
+      result += path.slice(cursor);
+      break;
+    }
+
+    // Add everything before the colon
+    result += path.slice(cursor, colonIndex) + '{';
+
+    // Find the end of the parameter name (alphanumeric + underscore)
+    const paramEnd = findParamEnd(path, colonIndex + 1);
+
+    result += path.slice(colonIndex + 1, paramEnd) + '}';
+    cursor = paramEnd;
+  }
+
+  return result;
 };
 
 /**
@@ -67,12 +103,12 @@ export const determineGroupName = (
   endpoint: EndpointDefinition,
 ): string => {
   if (groupStrategy === 'tag' || groupStrategy === 'tag-file') {
-    return normalizeString(endpoint.tags?.[0] ?? 'Default');
+    return snakeCase(endpoint.tags?.[0] ?? 'Default');
   }
   if (groupStrategy === 'method' || groupStrategy === 'method-file') {
-    return normalizeString(endpoint.method);
+    return snakeCase(endpoint.method);
   }
-  return normalizeString('Default');
+  return snakeCase('Default');
 };
 
 export { collectEndpointDependencies } from './template-context.endpoints.dependencies.js';

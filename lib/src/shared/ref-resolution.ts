@@ -152,13 +152,25 @@ export function parseComponentRef(ref: string): ParsedRef {
 }
 
 function tryParseStandardRef(ref: string): ParsedRef | null {
-  const standardPattern = /^#\/components\/([^/]+)\/(.+)$/;
-  const match = standardPattern.exec(ref);
+  // Standard format: #/components/{type}/{name}
+  const prefix = '#/components/';
+  if (!ref.startsWith(prefix)) {
+    return null;
+  }
 
-  if (match && match[1] && match[2]) {
+  const rest = ref.slice(prefix.length);
+  const slashIndex = rest.indexOf('/');
+  if (slashIndex === -1) {
+    return null;
+  }
+
+  const componentType = rest.slice(0, slashIndex);
+  const componentName = rest.slice(slashIndex + 1);
+
+  if (componentType && componentName) {
     return {
-      componentType: match[1],
-      componentName: match[2],
+      componentType,
+      componentName,
       isExternal: false,
       originalRef: ref,
     };
@@ -167,15 +179,29 @@ function tryParseStandardRef(ref: string): ParsedRef | null {
 }
 
 function tryParseXExtRef(ref: string): ParsedRef | null {
-  const xExtPattern = /^#\/x-ext\/([^/]+)\/components\/([^/]+)\/(.+)$/;
-  const match = xExtPattern.exec(ref);
+  // X-ext format: #/x-ext/{hash}/components/{type}/{name}
+  const prefix = '#/x-ext/';
+  if (!ref.startsWith(prefix)) {
+    return null;
+  }
 
-  if (match && match[1] && match[2] && match[3]) {
+  const rest = ref.slice(prefix.length);
+  const parts = rest.split('/');
+  // Expected: [hash, 'components', type, name, ...]
+  if (parts.length < 4 || parts[1] !== 'components') {
+    return null;
+  }
+
+  const xExtKey = parts[0];
+  const componentType = parts[2];
+  const componentName = parts.slice(3).join('/');
+
+  if (xExtKey && componentType && componentName) {
     return {
-      componentType: match[2],
-      componentName: match[3],
+      componentType,
+      componentName,
       isExternal: true,
-      xExtKey: match[1],
+      xExtKey,
       originalRef: ref,
     };
   }
@@ -183,13 +209,25 @@ function tryParseXExtRef(ref: string): ParsedRef | null {
 }
 
 function tryParseLegacyRef(ref: string): ParsedRef | null {
-  const legacyPattern = /^#components\/([^/]+)\/(.+)$/;
-  const match = legacyPattern.exec(ref);
+  // Legacy format: #components/{type}/{name} (without leading slash)
+  const prefix = '#components/';
+  if (!ref.startsWith(prefix)) {
+    return null;
+  }
 
-  if (match && match[1] && match[2]) {
+  const rest = ref.slice(prefix.length);
+  const slashIndex = rest.indexOf('/');
+  if (slashIndex === -1) {
+    return null;
+  }
+
+  const componentType = rest.slice(0, slashIndex);
+  const componentName = rest.slice(slashIndex + 1);
+
+  if (componentType && componentName) {
     return {
-      componentType: match[1],
-      componentName: match[2],
+      componentType,
+      componentName,
       isExternal: false,
       originalRef: ref,
     };

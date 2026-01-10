@@ -247,8 +247,8 @@ describe('getZodClientTemplateContext - group strategy options', () => {
       groupStrategy: 'tag',
     });
 
-    expect(result.endpointsGroups).toHaveProperty('Default');
-    expect(result.endpointsGroups['Default']?.endpoints).toHaveLength(1);
+    expect(result.endpointsGroups).toHaveProperty('default');
+    expect(result.endpointsGroups['default']?.endpoints).toHaveLength(1);
   });
 });
 

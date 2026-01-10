@@ -199,17 +199,21 @@ function isCastrSchemaLike(value: unknown): value is CastrSchema {
  */
 function extractSchemaNameFromRef(ref: string): string | undefined {
   // Handle standard refs: #/components/schemas/SchemaName
-  const standardRegex = /#\/components\/schemas\/([^/]+)$/;
-  const standardMatch = standardRegex.exec(ref);
-  if (standardMatch) {
-    return standardMatch[1];
+  const standardPrefix = '#/components/schemas/';
+  if (ref.startsWith(standardPrefix)) {
+    return ref.slice(standardPrefix.length).split('/')[0];
   }
+
   // Handle x-ext refs: #/x-ext/{hash}/components/schemas/SchemaName
-  const xExtRegex = /#\/x-ext\/[^/]+\/components\/schemas\/([^/]+)$/;
-  const xExtMatch = xExtRegex.exec(ref);
-  if (xExtMatch) {
-    return xExtMatch[1];
+  const xExtPrefix = '#/x-ext/';
+  const componentsMarker = '/components/schemas/';
+  if (ref.startsWith(xExtPrefix)) {
+    const componentsIndex = ref.indexOf(componentsMarker);
+    if (componentsIndex !== -1) {
+      return ref.slice(componentsIndex + componentsMarker.length).split('/')[0];
+    }
   }
+
   return undefined;
 }
 

@@ -123,7 +123,7 @@ export function addStringValidations(schema: CastrSchema, validations: string[])
   }
   if (schema.pattern) {
     // Escape forward slashes for regex literal format
-    const escapedPattern = schema.pattern.replace(/\//g, '\\/');
+    const escapedPattern = schema.pattern.split('/').join('\\/');
     validations.push(`.regex(/${escapedPattern}/)`);
   }
   if (schema.format) {

@@ -1,9 +1,4 @@
-export {
-  capitalize,
-  normalizeString,
-  wrapWithQuotesIfNeeded,
-  escapeControlCharacters,
-} from './string-utils.js';
+export { isValidJsIdentifier, toIdentifier } from './identifier-utils.js';
 export {
   pathToVariableName,
   pathParamToVariableName,

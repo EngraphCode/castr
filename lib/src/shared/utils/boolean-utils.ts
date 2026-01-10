@@ -1,7 +1,12 @@
-import { match, P } from 'ts-pattern';
+import { match } from 'ts-pattern';
 
+/**
+ * Convert a string or boolean value to a boolean.
+ * Uses ts-pattern for clean pattern matching.
+ * @public
+ */
 export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean): boolean =>
-  match(value)
-    .with(P.string.regex(/^false$/i), false, () => false)
-    .with(P.string.regex(/^true$/i), true, () => true)
+  match(value?.toString().toLowerCase())
+    .with('false', () => false)
+    .with('true', () => true)
     .otherwise(() => defaultValue);

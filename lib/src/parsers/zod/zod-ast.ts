@@ -102,6 +102,29 @@ export function createZodProject(source: string): Project {
   return project;
 }
 
+// ============================================================================
+// Helper functions for isZodCall - split for reduced complexity
+// ============================================================================
+
+function isDirectZodCall(expr: Node): boolean {
+  if (!Node.isPropertyAccessExpression(expr)) {
+    return false;
+  }
+  const obj = expr.getExpression();
+  return Node.isIdentifier(obj) && obj.getText() === 'z';
+}
+
+function getInnerCall(expr: Node): CallExpression | undefined {
+  if (!Node.isPropertyAccessExpression(expr)) {
+    return undefined;
+  }
+  const inner = expr.getExpression();
+  if (Node.isCallExpression(inner)) {
+    return inner;
+  }
+  return undefined;
+}
+
 /**
  * Check if a node is a call to z.xxx().
  *
@@ -118,22 +141,34 @@ export function isZodCall(node: Node): node is CallExpression {
   const expr = node.getExpression();
 
   // Direct z.xxx()
-  if (Node.isPropertyAccessExpression(expr)) {
-    const obj = expr.getExpression();
-    if (Node.isIdentifier(obj) && obj.getText() === 'z') {
-      return true;
-    }
+  if (isDirectZodCall(expr)) {
+    return true;
   }
 
   // Chained: z.xxx().yyy()
-  if (Node.isPropertyAccessExpression(expr)) {
-    const inner = expr.getExpression();
-    if (Node.isCallExpression(inner)) {
-      return isZodCall(inner);
-    }
+  const inner = getInnerCall(expr);
+  if (inner) {
+    return isZodCall(inner);
   }
 
   return false;
+}
+
+// ============================================================================
+// Helper for getZodBaseMethod
+// ============================================================================
+
+function extractBaseFromCall(call: CallExpression): string | undefined {
+  const expr = call.getExpression();
+  if (!Node.isPropertyAccessExpression(expr)) {
+    return undefined;
+  }
+
+  const obj = expr.getExpression();
+  if (Node.isIdentifier(obj) && obj.getText() === 'z') {
+    return expr.getName();
+  }
+  return undefined;
 }
 
 /**
@@ -149,27 +184,47 @@ export function getZodBaseMethod(call: CallExpression): string | undefined {
 
   // Walk down to find z.xxx()
   while (Node.isCallExpression(current)) {
-    const expr = current.getExpression();
+    const base = extractBaseFromCall(current);
+    if (base) {
+      return base;
+    }
 
-    if (Node.isPropertyAccessExpression(expr)) {
-      const obj = expr.getExpression();
-
-      // Found z.xxx()
-      if (Node.isIdentifier(obj) && obj.getText() === 'z') {
-        return expr.getName();
-      }
-
-      // Keep walking down the chain
-      if (Node.isCallExpression(obj)) {
-        current = obj;
-        continue;
-      }
+    // Keep walking down the chain
+    const inner = getInnerCall(current.getExpression());
+    if (inner) {
+      current = inner;
+      continue;
     }
 
     break;
   }
 
   return undefined;
+}
+
+// ============================================================================
+// Helpers for getZodMethodChain
+// ============================================================================
+
+function extractMethodFromCall(call: CallExpression): ZodMethodCall | undefined {
+  const expr = call.getExpression();
+  if (!Node.isPropertyAccessExpression(expr)) {
+    return undefined;
+  }
+
+  const methodName = expr.getName();
+  const argNodes = call.getArguments();
+  const args = argNodes.map((arg) => extractLiteralValue(arg));
+
+  return { name: methodName, argNodes, args };
+}
+
+function shouldStopChainWalk(expr: Node): boolean {
+  if (!Node.isPropertyAccessExpression(expr)) {
+    return true;
+  }
+  const obj = expr.getExpression();
+  return Node.isIdentifier(obj) && obj.getText() === 'z';
 }
 
 /**
@@ -187,39 +242,69 @@ export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | un
   }
 
   const chainedMethods: ZodMethodCall[] = [];
-
-  // Build chain by walking from outermost call inward
   let current: Node = call;
 
   while (Node.isCallExpression(current)) {
     const expr = current.getExpression();
 
-    if (Node.isPropertyAccessExpression(expr)) {
-      const methodName = expr.getName();
-      const obj = expr.getExpression();
-
-      // Skip the base z.xxx() call
-      if (Node.isIdentifier(obj) && obj.getText() === 'z') {
-        break;
-      }
-
-      // Extract arguments
-      const argNodes = current.getArguments();
-      const args = argNodes.map((arg) => extractLiteralValue(arg));
-
-      // Insert at beginning (we're walking backwards)
-      chainedMethods.unshift({ name: methodName, argNodes, args });
-
-      if (Node.isCallExpression(obj)) {
-        current = obj;
-        continue;
-      }
+    if (shouldStopChainWalk(expr)) {
+      break;
     }
 
-    break;
+    const method = extractMethodFromCall(current);
+    if (method) {
+      chainedMethods.unshift(method);
+    }
+
+    const inner = getInnerCall(expr);
+    if (inner) {
+      current = inner;
+    } else {
+      break;
+    }
   }
 
   return { baseMethod, chainedMethods };
+}
+
+// ============================================================================
+// Helpers for extractLiteralValue - split by type
+// ============================================================================
+
+function extractStringLiteral(node: Node): string | undefined {
+  if (Node.isStringLiteral(node)) {
+    return node.getLiteralValue();
+  }
+  return undefined;
+}
+
+function extractNumericLiteral(node: Node): number | undefined {
+  if (Node.isNumericLiteral(node)) {
+    return node.getLiteralValue();
+  }
+  return undefined;
+}
+
+function extractBooleanLiteral(node: Node): boolean | undefined {
+  if (Node.isTrueLiteral(node)) {
+    return true;
+  }
+  if (Node.isFalseLiteral(node)) {
+    return false;
+  }
+  return undefined;
+}
+
+function extractRegexPattern(node: Node): string | undefined {
+  if (!Node.isRegularExpressionLiteral(node)) {
+    return undefined;
+  }
+  const text = node.getText();
+  const lastSlash = text.lastIndexOf('/');
+  if (lastSlash > 0) {
+    return text.slice(1, lastSlash);
+  }
+  return undefined;
 }
 
 /**
@@ -231,43 +316,43 @@ export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | un
  * @internal
  */
 export function extractLiteralValue(node: Node): unknown {
-  if (Node.isStringLiteral(node)) {
-    return node.getLiteralValue();
+  const str = extractStringLiteral(node);
+  if (str !== undefined) {
+    return str;
   }
 
-  if (Node.isNumericLiteral(node)) {
-    return node.getLiteralValue();
+  const num = extractNumericLiteral(node);
+  if (num !== undefined) {
+    return num;
   }
 
-  if (Node.isTrueLiteral(node)) {
-    return true;
+  const bool = extractBooleanLiteral(node);
+  if (bool !== undefined) {
+    return bool;
   }
 
-  if (Node.isFalseLiteral(node)) {
-    return false;
-  }
-
+  // Check for null (returns null, not undefined)
   if (Node.isNullLiteral(node)) {
     return null;
   }
 
+  // Check for undefined identifier
   if (Node.isIdentifier(node) && node.getText() === 'undefined') {
     return undefined;
   }
 
-  // Handle regex literals - return pattern as string
-  if (Node.isRegularExpressionLiteral(node)) {
-    const text = node.getText();
-    // Extract pattern from /pattern/flags
-    const lastSlash = text.lastIndexOf('/');
-    if (lastSlash > 0) {
-      return text.slice(1, lastSlash);
-    }
+  const regex = extractRegexPattern(node);
+  if (regex !== undefined) {
+    return regex;
   }
 
   // Can't extract complex values
   return undefined;
 }
+
+// ============================================================================
+// findZodSchemaDeclarations
+// ============================================================================
 
 /**
  * Find all top-level Zod schema declarations in a source file.
@@ -282,20 +367,68 @@ export function findZodSchemaDeclarations(
 ): { name: string; initializer: CallExpression }[] {
   const results: { name: string; initializer: CallExpression }[] = [];
 
-  // Find variable declarations
-  const varDecls = sourceFile.getVariableDeclarations();
+  for (const stmt of sourceFile.getStatements()) {
+    if (!Node.isVariableStatement(stmt)) {
+      continue;
+    }
 
-  for (const decl of varDecls) {
-    const init = decl.getInitializer();
-    if (init && Node.isCallExpression(init) && isZodCall(init)) {
-      results.push({
-        name: decl.getName(),
-        initializer: init,
-      });
+    for (const decl of stmt.getDeclarationList().getDeclarations()) {
+      const init = decl.getInitializer();
+      if (init && Node.isCallExpression(init) && isZodCall(init)) {
+        results.push({ name: decl.getName(), initializer: init });
+      }
     }
   }
 
   return results;
+}
+
+// ============================================================================
+// Helpers for extractObjectProperties - split for reduced complexity
+// ============================================================================
+
+function findObjectCallInChain(call: CallExpression): CallExpression | undefined {
+  let objectCall: CallExpression | undefined = call;
+
+  while (objectCall) {
+    const method = getZodBaseMethod(objectCall);
+    if (method === 'object') {
+      return objectCall;
+    }
+
+    const inner = getInnerCall(objectCall.getExpression());
+    if (inner) {
+      objectCall = inner;
+    } else {
+      return undefined;
+    }
+  }
+
+  return undefined;
+}
+
+function stripQuotes(name: string): string {
+  if (
+    (name.startsWith("'") && name.endsWith("'")) ||
+    (name.startsWith('"') && name.endsWith('"'))
+  ) {
+    return name.slice(1, -1);
+  }
+  return name;
+}
+
+function extractPropertyEntry(prop: Node): [string, CallExpression] | undefined {
+  if (!Node.isPropertyAssignment(prop)) {
+    return undefined;
+  }
+
+  const name = stripQuotes(prop.getName());
+  const init = prop.getInitializer();
+
+  if (init && Node.isCallExpression(init) && isZodCall(init)) {
+    return [name, init];
+  }
+  return undefined;
 }
 
 /**
@@ -314,30 +447,7 @@ export function extractObjectProperties(
     return undefined;
   }
 
-  const args = call.getArguments();
-  if (args.length === 0) {
-    return new Map();
-  }
-
-  // Find the z.object({...}) call in the chain
-  let objectCall: CallExpression | undefined = call;
-  while (objectCall) {
-    const method = getZodBaseMethod(objectCall);
-    if (method === 'object') {
-      break;
-    }
-
-    const expr = objectCall.getExpression();
-    if (Node.isPropertyAccessExpression(expr)) {
-      const inner = expr.getExpression();
-      if (Node.isCallExpression(inner)) {
-        objectCall = inner;
-        continue;
-      }
-    }
-    objectCall = undefined;
-  }
-
+  const objectCall = findObjectCallInChain(call);
   if (!objectCall) {
     return undefined;
   }
@@ -355,20 +465,9 @@ export function extractObjectProperties(
   const properties = new Map<string, CallExpression>();
 
   for (const prop of objectLiteral.getProperties()) {
-    if (Node.isPropertyAssignment(prop)) {
-      let name = prop.getName();
-      // Strip quotes from property names like 'my-prop' or "my-prop"
-      if (
-        (name.startsWith("'") && name.endsWith("'")) ||
-        (name.startsWith('"') && name.endsWith('"'))
-      ) {
-        name = name.slice(1, -1);
-      }
-      const init = prop.getInitializer();
-
-      if (init && Node.isCallExpression(init) && isZodCall(init)) {
-        properties.set(name, init);
-      }
+    const entry = extractPropertyEntry(prop);
+    if (entry) {
+      properties.set(entry[0], entry[1]);
     }
   }
 

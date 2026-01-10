@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import type { Options } from 'prettier';
-import { capitalize } from '../shared/utils/index.js';
+import { upperFirst } from 'lodash-es';
 import { logger } from '../shared/utils/logger.js';
 import { maybePretty } from '../shared/maybe-pretty.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
@@ -20,7 +20,7 @@ export async function generateIndexFile(
 ): Promise<string> {
   const groupNames = Object.fromEntries(
     Object.keys(data.endpointsGroups).map((groupName) => [
-      `${capitalize(groupName)}Api`,
+      `${upperFirst(groupName)}Api`,
       groupName,
     ]),
   );
@@ -82,7 +82,7 @@ export async function generateGroupFiles(
       options: {
         ...effectiveOptions,
         groupStrategy: 'none',
-        apiClientName: `${capitalize(groupName)}Api`,
+        apiClientName: `${upperFirst(groupName)}Api`,
         withValidationHelpers: withValidationHelpers ?? false,
         withSchemaRegistry: withSchemaRegistry ?? false,
       },

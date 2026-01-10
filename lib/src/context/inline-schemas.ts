@@ -1,5 +1,5 @@
 import type { CastrDocument, IRComponent, CastrOperation } from './ir-schema.js';
-import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
+import { toIdentifier } from '../shared/utils/identifier-utils.js';
 
 /**
  * Extract inline request body schema from an operation.
@@ -52,7 +52,7 @@ export function extractInlineSchemas(ir: CastrDocument): IRComponent[] {
 
   for (const op of ir.operations) {
     const operationId = op.operationId || `${op.method}${op.path}`;
-    const sanitizedOpId = sanitizeIdentifier(operationId);
+    const sanitizedOpId = toIdentifier(operationId);
 
     const bodyComponent = extractRequestBodySchema(op, sanitizedOpId);
     if (bodyComponent) {

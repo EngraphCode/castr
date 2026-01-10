@@ -141,7 +141,7 @@ export async function handleDebugIR(
   if (debugIR && data._ir && distPath && !disableWriteToFile) {
     const irJson = serializeIR(data._ir);
     const irPath = distPath.endsWith('.ts')
-      ? distPath.replace(/\.ts$/, '.ir.json')
+      ? distPath.slice(0, -3) + '.ir.json'
       : `${distPath}.ir.json`;
     await fs.writeFile(irPath, irJson, 'utf-8');
   }

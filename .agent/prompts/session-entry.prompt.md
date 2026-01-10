@@ -66,18 +66,29 @@ Implementing the reverse transformation to prove bidirectional architecture.
 
 **See:** [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
 
-| Session | Focus                    | Status                          |
-| ------- | ------------------------ | ------------------------------- |
-| 2.1     | Zod 4 parser foundation  | ✅ Complete                     |
-| 2.2     | Constraints & modifiers  | ✅ Complete                     |
+| Session | Focus                    | Status                            |
+| ------- | ------------------------ | --------------------------------- |
+| 2.1     | Zod 4 parser foundation  | ✅ Complete                       |
+| 2.2     | Constraints & modifiers  | ✅ Complete                       |
 | 2.3     | Composition & references | ⏳ In Progress (ts-morph rewrite) |
-| 2.4     | Endpoint parsing         | Pending                         |
-| 2.5     | OpenAPI writer           | Pending                         |
-| 2.6     | Round-trip validation    | Pending                         |
-| 2.7     | Adapter abstraction      | Pending                         |
+| 2.4     | Endpoint parsing         | Pending                           |
+| 2.5     | OpenAPI writer           | Pending                           |
+| 2.6     | Round-trip validation    | Pending                           |
+| 2.7     | Adapter abstraction      | Pending                           |
 
 > **⚠️ ADR-026:** No regex for parsing. All parsers must use ts-morph AST.
 > Session 2.3 includes rewriting existing regex-based code to comply.
+
+### Session 2.3 Next Steps (38 Lint Errors)
+
+| Category            | Count | Files                                                            |
+| ------------------- | ----- | ---------------------------------------------------------------- |
+| Regex violations    | 8     | `zod-parser.detection.ts` (6), `zod-parser.ts` (2)               |
+| Complexity          | 16    | `zod-ast.ts`, `zod-parser.primitives.ts`, `zod-parser.object.ts` |
+| Non-null assertions | 6     | `zod-ast.unit.test.ts`                                           |
+| Type assertions     | 4     | `zod-parser.primitives.ts`, `zod-parser.object.ts`               |
+
+**Fix order:** Complexity → Type assertions → Test assertions → Regex rewrite
 
 ---
 

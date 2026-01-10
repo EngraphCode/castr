@@ -15,7 +15,7 @@
  */
 
 import type { CastrSchema, CastrSchemaNode, IRZodChainInfo } from '../../context/ir-schema.js';
-import type { CallExpression } from 'ts-morph';
+import { Node } from 'ts-morph';
 import {
   createZodProject,
   getZodMethodChain,
@@ -89,44 +89,53 @@ interface ParsedOptionality {
   nullable: boolean;
 }
 
+// ============================================================================
+// String method handlers - split by purpose for reduced complexity
+// ============================================================================
+
+function handleStringLengthConstraint(method: ZodMethodCall, constraints: ParsedConstraints): void {
+  const arg = method.args[0];
+  if (typeof arg !== 'number') {
+    return;
+  }
+
+  if (method.name === 'min' || method.name === 'length') {
+    constraints.minLength = arg;
+  } else if (method.name === 'max') {
+    constraints.maxLength = arg;
+  }
+}
+
+function handleStringFormatOrPattern(method: ZodMethodCall, constraints: ParsedConstraints): void {
+  if (method.name === 'regex' && typeof method.args[0] === 'string') {
+    constraints.pattern = method.args[0];
+    return;
+  }
+
+  const formatMap: Record<string, string> = {
+    email: 'email',
+    url: 'uri',
+    uuid: 'uuid',
+    datetime: 'date-time',
+  };
+  const format = formatMap[method.name];
+  if (format) {
+    constraints.format = format;
+  }
+}
+
 /**
  * Process string-specific method calls.
  * @internal
  */
 function processStringMethod(method: ZodMethodCall, constraints: ParsedConstraints): void {
-  const arg = method.args[0];
-
-  switch (method.name) {
-    case 'min':
-    case 'length':
-      if (typeof arg === 'number') {
-        constraints.minLength = arg;
-      }
-      break;
-    case 'max':
-      if (typeof arg === 'number') {
-        constraints.maxLength = arg;
-      }
-      break;
-    case 'regex':
-      if (typeof arg === 'string') {
-        constraints.pattern = arg;
-      }
-      break;
-    case 'email':
-      constraints.format = 'email';
-      break;
-    case 'url':
-      constraints.format = 'uri';
-      break;
-    case 'uuid':
-      constraints.format = 'uuid';
-      break;
-    case 'datetime':
-      constraints.format = 'date-time';
-      break;
-  }
+  handleStringLengthConstraint(method, constraints);
+  handleStringFormatOrPattern(method, constraints);
 }
+
+// ============================================================================
+// Number method handlers
+// ============================================================================
 
 /**
  * Process number-specific method calls.
@@ -135,42 +144,75 @@ function processStringMethod(method: ZodMethodCall, constraints: ParsedConstrain
 function processNumberMethod(method: ZodMethodCall, constraints: ParsedConstraints): void {
   const arg = method.args[0];
 
-  switch (method.name) {
-    case 'min':
-    case 'gte':
-      if (typeof arg === 'number') {
-        constraints.minimum = arg;
-      }
-      break;
-    case 'max':
-    case 'lte':
-      if (typeof arg === 'number') {
-        constraints.maximum = arg;
-      }
-      break;
-    case 'int':
-      constraints.format = 'int32';
-      break;
+  if (method.name === 'min' || method.name === 'gte') {
+    if (typeof arg === 'number') {
+      constraints.minimum = arg;
+    }
+  } else if (method.name === 'max' || method.name === 'lte') {
+    if (typeof arg === 'number') {
+      constraints.maximum = arg;
+    }
+  } else if (method.name === 'int') {
+    constraints.format = 'int32';
   }
 }
+
+// ============================================================================
+// Optionality handling
+// ============================================================================
 
 /**
  * Process optionality method calls.
  * @internal
  */
 function processOptionalityMethod(method: ZodMethodCall, optionality: ParsedOptionality): void {
-  switch (method.name) {
-    case 'optional':
-      optionality.optional = true;
-      break;
-    case 'nullable':
-      optionality.nullable = true;
-      break;
-    case 'nullish':
-      optionality.optional = true;
-      optionality.nullable = true;
-      break;
+  if (method.name === 'optional') {
+    optionality.optional = true;
+  } else if (method.name === 'nullable') {
+    optionality.nullable = true;
+  } else if (method.name === 'nullish') {
+    optionality.optional = true;
+    optionality.nullable = true;
   }
+}
+
+// ============================================================================
+// Zod chain info building - split for reduced complexity
+// ============================================================================
+
+function computePresence(optionality: ParsedOptionality): string {
+  if (optionality.optional && optionality.nullable) {
+    return '.nullish()';
+  }
+  if (optionality.optional) {
+    return '.optional()';
+  }
+  if (optionality.nullable) {
+    return '.nullable()';
+  }
+  return '';
+}
+
+function collectValidations(methods: ZodMethodCall[]): string[] {
+  const validations: string[] = [];
+  const skipMethods = new Set(['optional', 'nullable', 'nullish', 'default']);
+
+  for (const method of methods) {
+    if (skipMethods.has(method.name)) {
+      continue;
+    }
+    const argsStr = method.args.map((a) => JSON.stringify(a)).join(', ');
+    validations.push(`.${method.name}(${argsStr})`);
+  }
+  return validations;
+}
+
+function collectDefaults(defaultValue: unknown): string[] {
+  if (defaultValue === undefined) {
+    return [];
+  }
+  const defaultStr = typeof defaultValue === 'string' ? `"${defaultValue}"` : String(defaultValue);
+  return [`.default(${defaultStr})`];
 }
 
 /**
@@ -182,40 +224,96 @@ function buildZodChainInfo(
   optionality: ParsedOptionality,
   defaultValue: unknown,
 ): IRZodChainInfo {
-  const validations: string[] = [];
-  let presence = '';
+  return {
+    presence: computePresence(optionality),
+    validations: collectValidations(methods),
+    defaults: collectDefaults(defaultValue),
+  };
+}
 
-  for (const method of methods) {
-    if (['optional', 'nullable', 'nullish'].includes(method.name)) {
-      if (method.name === 'nullish') {
-        presence = '.nullish()';
-      } else if (method.name === 'optional') {
-        presence = '.optional()';
-      } else if (method.name === 'nullable') {
-        presence = '.nullable()';
-      }
-    } else if (method.name !== 'default') {
-      const argsStr = method.args.map((a) => JSON.stringify(a)).join(', ');
-      validations.push(`.${method.name}(${argsStr})`);
+// ============================================================================
+// Schema parsing - split into smaller functions
+// ============================================================================
+
+interface ParsedExpressionResult {
+  baseMethod: string;
+  chainedMethods: ZodMethodCall[];
+}
+
+function parseZodExpression(expression: string): ParsedExpressionResult | undefined {
+  const project = createZodProject(`const __schema = ${expression};`);
+  const sourceFile = project.getSourceFiles()[0];
+  if (!sourceFile) {
+    return undefined;
+  }
+
+  const varDecl = sourceFile.getVariableDeclarations()[0];
+  const init = varDecl?.getInitializer();
+  if (!init || !Node.isCallExpression(init)) {
+    return undefined;
+  }
+
+  const chainInfo = getZodMethodChain(init);
+  if (!chainInfo) {
+    return undefined;
+  }
+
+  return chainInfo;
+}
+
+const ZOD_PRIMITIVES_SET = new Set<string>(ZOD_PRIMITIVES);
+
+function isPrimitive(baseMethod: string): boolean {
+  return ZOD_PRIMITIVES_SET.has(baseMethod);
+}
+
+interface ProcessedChain {
+  constraints: ParsedConstraints;
+  optionality: ParsedOptionality;
+  defaultValue: unknown;
+}
+
+function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]): ProcessedChain {
+  const constraints: ParsedConstraints = {};
+  const optionality: ParsedOptionality = { optional: false, nullable: false };
+  let defaultValue: unknown;
+
+  for (const method of chainedMethods) {
+    if (method.name === 'default') {
+      defaultValue = method.args[0];
+      continue;
+    }
+    processOptionalityMethod(method, optionality);
+    if (baseMethod === 'string') {
+      processStringMethod(method, constraints);
+    }
+    if (baseMethod === 'number') {
+      processNumberMethod(method, constraints);
     }
   }
 
-  if (optionality.optional && optionality.nullable) {
-    presence = '.nullish()';
-  } else if (optionality.optional) {
-    presence = '.optional()';
-  } else if (optionality.nullable) {
-    presence = '.nullable()';
-  }
+  return { constraints, optionality, defaultValue };
+}
 
-  const defaults: string[] = [];
-  if (defaultValue !== undefined) {
-    const defaultStr =
-      typeof defaultValue === 'string' ? `"${defaultValue}"` : String(defaultValue);
-    defaults.push(`.default(${defaultStr})`);
+function applyConstraints(schema: CastrSchema, constraints: ParsedConstraints): void {
+  if (constraints.minLength !== undefined) {
+    schema.minLength = constraints.minLength;
   }
-
-  return { presence, validations, defaults };
+  if (constraints.maxLength !== undefined) {
+    schema.maxLength = constraints.maxLength;
+  }
+  if (constraints.minimum !== undefined) {
+    schema.minimum = constraints.minimum;
+  }
+  if (constraints.maximum !== undefined) {
+    schema.maximum = constraints.maximum;
+  }
+  if (constraints.pattern !== undefined) {
+    schema.pattern = constraints.pattern;
+  }
+  if (constraints.format !== undefined) {
+    schema.format = constraints.format;
+  }
 }
 
 /**
@@ -227,30 +325,13 @@ function buildZodChainInfo(
  * @public
  */
 export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
-  // Parse with ts-morph
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
+  const parsed = parseZodExpression(expression);
+  if (!parsed) {
     return undefined;
   }
 
-  const varDecl = sourceFile.getVariableDeclarations()[0];
-  const init = varDecl?.getInitializer();
-
-  if (!init) {
-    return undefined;
-  }
-
-  // Get method chain info
-  const chainInfo = getZodMethodChain(init as CallExpression);
-  if (!chainInfo) {
-    return undefined;
-  }
-
-  const { baseMethod, chainedMethods } = chainInfo;
-
-  // Check if this is a primitive type
-  if (!ZOD_PRIMITIVES.includes(baseMethod as (typeof ZOD_PRIMITIVES)[number])) {
+  const { baseMethod, chainedMethods } = parsed;
+  if (!isPrimitive(baseMethod)) {
     return undefined;
   }
 
@@ -259,30 +340,10 @@ export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
     return undefined;
   }
 
-  // Process chain methods
-  const constraints: ParsedConstraints = {};
-  const optionality: ParsedOptionality = { optional: false, nullable: false };
-  let defaultValue: unknown;
-
-  for (const method of chainedMethods) {
-    // Handle default
-    if (method.name === 'default') {
-      defaultValue = method.args[0];
-      continue;
-    }
-
-    // Handle optionality
-    processOptionalityMethod(method, optionality);
-
-    // Handle type-specific constraints
-    if (baseMethod === 'string') {
-      processStringMethod(method, constraints);
-    } else if (baseMethod === 'number') {
-      processNumberMethod(method, constraints);
-    }
-  }
-
-  // Build zodChain for round-trip
+  const { constraints, optionality, defaultValue } = processChainMethods(
+    baseMethod,
+    chainedMethods,
+  );
   const zodChain = buildZodChainInfo(chainedMethods, optionality, defaultValue);
 
   // Handle z.undefined()
@@ -307,25 +368,7 @@ export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
     }),
   };
 
-  // Apply constraints
-  if (constraints.minLength !== undefined) {
-    schema.minLength = constraints.minLength;
-  }
-  if (constraints.maxLength !== undefined) {
-    schema.maxLength = constraints.maxLength;
-  }
-  if (constraints.minimum !== undefined) {
-    schema.minimum = constraints.minimum;
-  }
-  if (constraints.maximum !== undefined) {
-    schema.maximum = constraints.maximum;
-  }
-  if (constraints.pattern !== undefined) {
-    schema.pattern = constraints.pattern;
-  }
-  if (constraints.format !== undefined) {
-    schema.format = constraints.format;
-  }
+  applyConstraints(schema, constraints);
   if (defaultValue !== undefined) {
     schema.default = defaultValue;
   }

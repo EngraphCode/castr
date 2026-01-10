@@ -9,7 +9,7 @@ import type {
 
 import { writeCompositionSchema } from './zod-writer.composition.js';
 import { parseComponentRef } from '../shared/ref-resolution.js';
-import { isValidJsIdentifier } from '../shared/utils/string-utils.js';
+import { isValidJsIdentifier } from '../shared/utils/identifier-utils.js';
 
 export function writeZodSchema(
   context: CastrSchemaContext,

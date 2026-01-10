@@ -78,7 +78,7 @@ export function buildCastrSchemas(components: ComponentsObject | undefined): IRC
   return irComponents;
 }
 
-import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
+import { toIdentifier } from '../shared/utils/identifier-utils.js';
 
 /**
  * Build component schema context (from #/components/schemas/{name}).
@@ -105,7 +105,7 @@ export function buildComponentSchema(
 
   return {
     contextType: 'component',
-    name: sanitizeIdentifier(name),
+    name: toIdentifier(name),
     schema: irSchema,
     metadata: irSchema.metadata,
   };

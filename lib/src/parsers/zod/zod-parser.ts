@@ -31,23 +31,7 @@ import type { ZodParseResult, ZodParseError, ZodParseRecommendation } from './zo
 import { detectZod3Syntax, detectDynamicSchemas } from './zod-parser.detection.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 import { parseObjectZod } from './zod-parser.object.js';
-
-/**
- * Regular expression to match schema variable declarations.
- *
- * Matches patterns like:
- * - `const UserSchema = z.object(...)`
- * - `export const ProductSchema = z.string()`
- * - `const mySchema = z.number()`
- *
- * Captures:
- * - Group 1: Variable name
- * - Group 2: Zod expression
- *
- * @internal
- */
-const SCHEMA_DECLARATION_PATTERN =
-  /(?:export\s+)?(?:const|let|var)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)\s*=\s*(z\.[a-zA-Z]+\s*\([^;]*\))/g;
+import { createZodProject, findZodSchemaDeclarations } from './zod-ast.js';
 
 /**
  * Extract schema name from a variable name.
@@ -147,7 +131,7 @@ function parseZodExpression(expression: string): CastrSchema | undefined {
     return object;
   }
 
-  // TODO: Add union, intersection with ts-morph (Session 2.3 Phase B)
+  // Union and intersection parsing will be added when needed
 
   return undefined;
 }
@@ -163,29 +147,33 @@ interface ParsedDeclaration {
 }
 
 /**
- * Parse all schema declarations in source code.
+ * Parse all schema declarations in source code using ts-morph AST.
+ * Per ADR-026, we use proper AST tooling instead of regex.
  *
  * @internal
  */
 function parseSchemaDeclarations(source: string): ParsedDeclaration[] {
   const results: ParsedDeclaration[] = [];
-  const declarationPattern = new RegExp(SCHEMA_DECLARATION_PATTERN.source, 'g');
-  let match: RegExpExecArray | null;
+  const project = createZodProject(source);
+  const sourceFile = project.getSourceFiles()[0];
 
-  while ((match = declarationPattern.exec(source)) !== null) {
-    const variableName = match[1];
-    const zodExpression = match[2];
+  if (!sourceFile) {
+    return results;
+  }
 
-    if (variableName === undefined || zodExpression === undefined) {
-      continue;
-    }
+  const declarations = findZodSchemaDeclarations(sourceFile);
 
+  for (const decl of declarations) {
+    const zodExpression = decl.initializer.getText();
     const schema = parseZodExpression(zodExpression);
+
     if (!schema) {
       continue;
     }
 
+    const variableName = decl.name;
     const name = extractSchemaName(variableName);
+
     results.push({
       component: {
         type: 'schema',

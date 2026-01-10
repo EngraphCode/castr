@@ -33,8 +33,11 @@ describe('Zod AST Utilities', () => {
       const init = varDecl?.getInitializer();
 
       expect(init).toBeDefined();
-      expect(Node.isCallExpression(init!)).toBe(true);
-      expect(isZodCall(init!)).toBe(true);
+      if (!init) {
+        throw new Error('Expected init');
+      }
+      expect(Node.isCallExpression(init)).toBe(true);
+      expect(isZodCall(init)).toBe(true);
     });
 
     it('should identify chained z.string().min(1) as a Zod call', () => {
@@ -42,7 +45,10 @@ describe('Zod AST Utilities', () => {
       const varDecl = project.getSourceFiles()[0]?.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      expect(isZodCall(init!)).toBe(true);
+      if (!init) {
+        throw new Error('Expected init');
+      }
+      expect(isZodCall(init)).toBe(true);
     });
 
     it('should not identify non-Zod calls', () => {
@@ -50,7 +56,10 @@ describe('Zod AST Utilities', () => {
       const varDecl = project.getSourceFiles()[0]?.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      expect(isZodCall(init!)).toBe(false);
+      if (!init) {
+        throw new Error('Expected init');
+      }
+      expect(isZodCall(init)).toBe(false);
     });
   });
 
@@ -141,8 +150,10 @@ describe('Zod AST Utilities', () => {
         const notASchema = "hello";
       `);
       const sourceFile = project.getSourceFiles()[0];
-
-      const declarations = findZodSchemaDeclarations(sourceFile!);
+      if (!sourceFile) {
+        throw new Error('Expected sourceFile');
+      }
+      const declarations = findZodSchemaDeclarations(sourceFile);
 
       expect(declarations).toHaveLength(1);
       expect(declarations[0]?.name).toBe('UserSchema');
@@ -155,8 +166,10 @@ describe('Zod AST Utilities', () => {
         const UserSchema = z.object({ name: NameSchema, age: AgeSchema });
       `);
       const sourceFile = project.getSourceFiles()[0];
-
-      const declarations = findZodSchemaDeclarations(sourceFile!);
+      if (!sourceFile) {
+        throw new Error('Expected sourceFile');
+      }
+      const declarations = findZodSchemaDeclarations(sourceFile);
 
       expect(declarations).toHaveLength(3);
     });

@@ -16,6 +16,7 @@
 
 import type { CastrSchema, CastrSchemaNode } from '../../context/ir-schema.js';
 import type { CallExpression } from 'ts-morph';
+import { Node } from 'ts-morph';
 import { CastrSchemaProperties } from '../../context/ir-schema-properties.js';
 import { createZodProject, getZodBaseMethod, extractObjectProperties } from './zod-ast.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
@@ -47,15 +48,10 @@ function createDefaultMetadata(
 }
 
 /**
- * Parse a z.object() expression into a CastrSchema using ts-morph AST.
- *
- * @param expression - A Zod object expression string
- * @returns CastrSchema if this is a valid z.object(), undefined otherwise
- *
- * @public
+ * Parse and extract initializer from expression.
+ * @internal
  */
-export function parseObjectZod(expression: string): CastrSchema | undefined {
-  // Parse with ts-morph
+function parseExpression(expression: string): CallExpression | undefined {
   const project = createZodProject(`const __schema = ${expression};`);
   const sourceFile = project.getSourceFiles()[0];
   if (!sourceFile) {
@@ -64,42 +60,66 @@ export function parseObjectZod(expression: string): CastrSchema | undefined {
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
-
   if (!init) {
     return undefined;
   }
 
-  // Verify this is a z.object() call
-  const baseMethod = getZodBaseMethod(init as CallExpression);
-  if (baseMethod !== 'object') {
-    return undefined;
+  if (Node.isCallExpression(init)) {
+    return init;
   }
+  return undefined;
+}
 
-  // Extract object properties from AST
-  const propsMap = extractObjectProperties(init as CallExpression);
-  if (!propsMap) {
-    return undefined;
-  }
-
+/**
+ * Process object properties into schema records.
+ * @internal
+ */
+function processProperties(propsMap: Map<string, CallExpression>): {
+  propertiesRecord: Record<string, CastrSchema>;
+  requiredFields: string[];
+} {
   const propertiesRecord: Record<string, CastrSchema> = {};
   const requiredFields: string[] = [];
 
-  // Parse each property
   for (const [propName, propCall] of propsMap) {
-    // Get the full text of the property expression
     const propText = propCall.getText();
-
-    // Use parsePrimitiveZod which handles chains
     const propSchema = parsePrimitiveZod(propText);
     if (propSchema) {
       propertiesRecord[propName] = propSchema;
-
-      // Property is required unless marked optional
       if (propSchema.metadata.required) {
         requiredFields.push(propName);
       }
     }
   }
+
+  return { propertiesRecord, requiredFields };
+}
+
+/**
+ * Parse a z.object() expression into a CastrSchema using ts-morph AST.
+ *
+ * @param expression - A Zod object expression string
+ * @returns CastrSchema if this is a valid z.object(), undefined otherwise
+ *
+ * @public
+ */
+export function parseObjectZod(expression: string): CastrSchema | undefined {
+  const init = parseExpression(expression);
+  if (!init) {
+    return undefined;
+  }
+
+  const baseMethod = getZodBaseMethod(init);
+  if (baseMethod !== 'object') {
+    return undefined;
+  }
+
+  const propsMap = extractObjectProperties(init);
+  if (!propsMap) {
+    return undefined;
+  }
+
+  const { propertiesRecord, requiredFields } = processProperties(propsMap);
 
   return {
     type: 'object',

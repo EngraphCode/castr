@@ -1,7 +1,7 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../context/ir-schema.js';
 import { parseComponentRef } from '../shared/ref-resolution.js';
-import { isValidJsIdentifier } from '../shared/utils/string-utils.js';
+import { isValidJsIdentifier } from '../shared/utils/identifier-utils.js';
 
 export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {

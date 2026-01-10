@@ -28,7 +28,8 @@ const IN_MEMORY_DESCRIPTOR = '[in-memory document]';
  * @internal
  */
 export function isRemoteUrl(value: string): boolean {
-  return /^https?:\/\//iu.test(value);
+  const lower = value.toLowerCase();
+  return lower.startsWith('http://') || lower.startsWith('https://');
 }
 
 /**

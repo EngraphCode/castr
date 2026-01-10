@@ -196,10 +196,24 @@ export default defineConfig(
     rules: typedTsRules,
   },
 
-  // ADR-026: No regex for schema parsing - enforce via ESLint
-  // Parsers must use ts-morph AST, not regex patterns
+  // Parser files need higher limits due to AST traversal complexity
+  // These files contain many small helper functions for type narrowing
   {
     files: ['src/parsers/**/*.ts'],
+    ignores: testGlobs,
+    rules: {
+      'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
+      'sonarjs/cognitive-complexity': ['error', 12],
+      complexity: ['error', 12],
+    },
+  },
+
+  // ADR-026: No regex for schema parsing - enforce via ESLint
+  // Parsers must use ts-morph AST, not regex patterns
+  // Writers must not use regex patterns
+  // No regex allowed in source code
+  {
+    files: ['src/**/*.ts'],
     ignores: testGlobs,
     rules: {
       'no-restricted-syntax': [

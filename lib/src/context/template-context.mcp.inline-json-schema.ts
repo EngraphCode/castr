@@ -16,13 +16,12 @@
 import { setKeyword, type MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
 import type { CastrDocument, CastrSchema, CastrSchemaComponent, IRComponent } from './ir-schema.js';
 import { CastrSchemaProperties } from './ir-schema-properties.js';
-import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
+import { toIdentifier } from '../shared/utils/identifier-utils.js';
 
 const INLINE_REF_PREFIX = '#/definitions/';
 const COMPONENTS_SCHEMAS_PREFIX = '#/components/schemas/';
-
-// Regex for Scalar bundle x-ext refs: #/x-ext/{hash}/components/schemas/{SchemaName}
-const SCALAR_XEXT_COMPONENTS_REGEX = /^#\/x-ext\/[a-f0-9]+\/components\/schemas\/(.+)$/;
+const XEXT_PREFIX = '#/x-ext/';
+const XEXT_COMPONENTS_MARKER = '/components/schemas/';
 
 /**
  * Context for IR-based schema ref resolution.
@@ -169,16 +168,18 @@ const inlineJsonSchemaObjectFromIR = (
  */
 const extractSchemaNameFromRef = (ref: string): string | undefined => {
   if (ref.startsWith(INLINE_REF_PREFIX)) {
-    return sanitizeIdentifier(ref.slice(INLINE_REF_PREFIX.length));
+    return toIdentifier(ref.slice(INLINE_REF_PREFIX.length));
   }
   if (ref.startsWith(COMPONENTS_SCHEMAS_PREFIX)) {
-    return sanitizeIdentifier(ref.slice(COMPONENTS_SCHEMAS_PREFIX.length));
+    return toIdentifier(ref.slice(COMPONENTS_SCHEMAS_PREFIX.length));
   }
 
   // Handle Scalar bundle x-ext format: #/x-ext/{hash}/components/schemas/SchemaName
-  const scalarMatch = SCALAR_XEXT_COMPONENTS_REGEX.exec(ref);
-  if (scalarMatch?.[1]) {
-    return sanitizeIdentifier(scalarMatch[1]);
+  if (ref.startsWith(XEXT_PREFIX)) {
+    const componentsIndex = ref.indexOf(XEXT_COMPONENTS_MARKER);
+    if (componentsIndex !== -1) {
+      return toIdentifier(ref.slice(componentsIndex + XEXT_COMPONENTS_MARKER.length));
+    }
   }
 
   return undefined;

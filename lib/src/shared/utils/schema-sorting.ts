@@ -1,5 +1,4 @@
-import { sortBy } from 'lodash-es';
-import { normalizeString } from './string-utils.js';
+import { sortBy, snakeCase } from 'lodash-es';
 import { getSchemaNameFromRef as getSchemaName } from '../ref-resolution.js';
 
 /**
@@ -10,11 +9,11 @@ import { getSchemaNameFromRef as getSchemaName } from '../ref-resolution.js';
 function getSchemaNameFromRef(ref: string): string {
   // If it's not a ref (doesn't start with #/), treat it as a bare name
   if (!ref.startsWith('#/')) {
-    return normalizeString(ref);
+    return snakeCase(ref);
   }
 
   const name = getSchemaName(ref);
-  return normalizeString(name);
+  return snakeCase(name);
 }
 
 /**

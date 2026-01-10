@@ -1,5 +1,6 @@
 import { Writers, type WriterFunction } from 'ts-morph';
 import type { TemplateContextMcpTool } from '../../context/template-context.mcp.js';
+import { isValidJsIdentifier } from '../../shared/utils/identifier-utils.js';
 
 export function createMcpToolWriter(tool: TemplateContextMcpTool): WriterFunction {
   const httpOpProps: Record<string, string> = {
@@ -39,8 +40,8 @@ function writeValue(value: unknown): WriterFunction {
       writer.write('{');
       const entries = Object.entries(value);
       entries.forEach(([key, val], index) => {
-        // Simple check for valid identifier to avoid quotes if possible
-        const needsQuotes = !/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key);
+        // Use proper identifier validation per ADR-026
+        const needsQuotes = !isValidJsIdentifier(key);
         const keyStr = needsQuotes ? `"${key}"` : key;
         writer.write(`${keyStr}: `);
         writeValue(val)(writer);

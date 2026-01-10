@@ -146,7 +146,11 @@ function isExampleObject(candidate: unknown): candidate is { value: unknown } {
 }
 
 function rewriteComponentRef(ref: string): string {
-  return ref.replace(/^#\/components\/schemas\//u, '#/definitions/');
+  const componentsPrefix = '#/components/schemas/';
+  if (ref.startsWith(componentsPrefix)) {
+    return '#/definitions/' + ref.slice(componentsPrefix.length);
+  }
+  return ref;
 }
 
 function getStringKeyword(schema: SchemaObject, key: string): string | undefined {
