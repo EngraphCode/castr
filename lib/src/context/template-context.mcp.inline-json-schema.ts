@@ -1,107 +1,28 @@
-/* eslint-disable max-lines -- Contains both legacy and IR-based implementations during transition */
-import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
-import { convertOpenApiSchemaToJsonSchema } from '../conversion/json-schema/convert-schema.js';
+/**
+ * MCP Inline JSON Schema Helpers
+ *
+ * This file contains functions for inlining JSON Schema references using
+ * the IR as the source of definitions.
+ *
+ * The IR-based functions read from `ir.components` (array of IRComponent)
+ * instead of `document.components.schemas` (Record), eliminating the need
+ * to access raw OpenAPI.
+ *
+ * Legacy OpenAPI-dependent functions have been removed (IR-3.6 cleanup).
+ *
+ * @module template-context.mcp.inline-json-schema
+ */
+
 import { setKeyword, type MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
 import type { CastrDocument, CastrSchema, CastrSchemaComponent, IRComponent } from './ir-schema.js';
 import { CastrSchemaProperties } from './ir-schema-properties.js';
 import { sanitizeIdentifier } from '../shared/utils/string-utils.js';
 
 const INLINE_REF_PREFIX = '#/definitions/';
+const COMPONENTS_SCHEMAS_PREFIX = '#/components/schemas/';
 
-interface InlineResolutionContext {
-  document: OpenAPIObject;
-  cache: Map<string, MutableJsonSchema>;
-  stack: Set<string>;
-}
-
-const isJsonSchemaObject = (value: unknown): value is SchemaObject =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
-
-const inlineJsonSchemaValue = (value: unknown, context: InlineResolutionContext): unknown => {
-  if (Array.isArray(value)) {
-    return value.map((item) => inlineJsonSchemaValue(item, context));
-  }
-
-  if (isJsonSchemaObject(value)) {
-    const reference = value['$ref'];
-    if (typeof reference === 'string') {
-      return resolveSchemaReference(reference, context);
-    }
-
-    return inlineJsonSchemaObject(value, context);
-  }
-
-  return value;
-};
-
-const inlineJsonSchemaObject = (
-  schema: SchemaObject,
-  context: InlineResolutionContext,
-): MutableJsonSchema => {
-  const result: MutableJsonSchema = {};
-
-  for (const [key, entryValue] of Object.entries(schema)) {
-    if (key === 'definitions') {
-      continue;
-    }
-    setKeyword(result, key, inlineJsonSchemaValue(entryValue, context));
-  }
-
-  return result;
-};
-
-const resolveSchemaReference = (
-  ref: string,
-  context: InlineResolutionContext,
-): MutableJsonSchema => {
-  if (!ref.startsWith(INLINE_REF_PREFIX)) {
-    return { $ref: ref };
-  }
-
-  const definitionName = ref.slice(INLINE_REF_PREFIX.length);
-  const cached = context.cache.get(definitionName);
-  if (cached !== undefined) {
-    return cached;
-  }
-
-  if (context.stack.has(definitionName)) {
-    return { $ref: ref };
-  }
-
-  const definition = context.document.components?.schemas?.[definitionName];
-  if (!definition) {
-    return { $ref: ref };
-  }
-
-  context.stack.add(definitionName);
-  const inlined = inlineJsonSchema(convertOpenApiSchemaToJsonSchema(definition), context);
-  context.stack.delete(definitionName);
-  context.cache.set(definitionName, inlined);
-  return inlined;
-};
-
-const inlineJsonSchema = (
-  schema: MutableJsonSchema,
-  context: InlineResolutionContext,
-): MutableJsonSchema => {
-  return inlineJsonSchemaObject(schema, context);
-};
-
-export const inlineJsonSchemaRefs = (
-  schema: MutableJsonSchema,
-  document: OpenAPIObject,
-  cache = new Map<string, MutableJsonSchema>(),
-  stack = new Set<string>(),
-): MutableJsonSchema =>
-  inlineJsonSchema(schema, {
-    document,
-    cache,
-    stack,
-  });
-
-// ============================================================================
-// IR-based functions (read from CastrDocument instead of OpenAPIObject)
-// ============================================================================
+// Regex for Scalar bundle x-ext refs: #/x-ext/{hash}/components/schemas/{SchemaName}
+const SCALAR_XEXT_COMPONENTS_REGEX = /^#\/x-ext\/[a-f0-9]+\/components\/schemas\/(.+)$/;
 
 /**
  * Context for IR-based schema ref resolution.
@@ -111,6 +32,12 @@ interface IRInlineResolutionContext {
   cache: Map<string, MutableJsonSchema>;
   stack: Set<string>;
 }
+
+/**
+ * Check if a value is a JSON Schema object.
+ */
+const isJsonSchemaObject = (value: unknown): value is MutableJsonSchema =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
  * Find a schema component by name in the IR components array.
@@ -199,7 +126,7 @@ const inlineJsonSchemaValueFromIR = (
   }
 
   if (isJsonSchemaObject(value)) {
-    const reference = value['$ref'];
+    const reference: unknown = value['$ref'];
     if (typeof reference === 'string') {
       return resolveSchemaReferenceFromIR(reference, context);
     }
@@ -231,11 +158,6 @@ const inlineJsonSchemaObjectFromIR = (
 
   return result;
 };
-
-const COMPONENTS_SCHEMAS_PREFIX = '#/components/schemas/';
-
-// Regex for Scalar bundle x-ext refs: #/x-ext/{hash}/components/schemas/{SchemaName}
-const SCALAR_XEXT_COMPONENTS_REGEX = /^#\/x-ext\/[a-f0-9]+\/components\/schemas\/(.+)$/;
 
 /**
  * Extract the schema name from a reference.

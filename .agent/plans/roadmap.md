@@ -1,8 +1,8 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 9, 2026
+**Date:** January 10, 2026
 **Status:** Active
-**Quality Gates:** All 10 passing (1017+ tests)
+**Quality Gates:** All 10 passing (1080+ tests)
 
 ---
 
@@ -50,28 +50,29 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 ---
 
-## Current State (January 9, 2026)
+## Current State (January 10, 2026)
 
 ### What's Working ✅
 
 | Component                | Status        | Notes                                    |
 | ------------------------ | ------------- | ---------------------------------------- |
-| Quality Gates            | 10/10 passing | 1017+ tests total                        |
+| Quality Gates            | 10/10 passing | 1080+ tests total                       |
 | IR Builder               | Complete      | OpenAPI → CastrDocument                  |
 | IR-1 (schemaNames, deps) | Complete      | Full dependencyGraph with depth/circular |
 | IR-2 (context cleanup)   | Complete      | Schema names, deps, tags from IR         |
-| **IR-3 (MCP cleanup)**   | **Complete**  | **MCP fully IR-based**                   |
+| IR-3 (MCP cleanup)       | Complete      | MCP fully IR-based                       |
+| **IR-4 (validation)**    | **Complete**  | **17 architectural tests**               |
 | Zod Writer               | Complete      | IR → Zod via ts-morph                    |
+| **Zod Parser (2.1)**     | **Complete**  | **46 tests, foundation in place**        |
 | Type Writer              | Complete      | IR → TypeScript via ts-morph             |
 | Scalar Pipeline          | Complete      | Bundles, upgrades to 3.1                 |
 | OpenAPI 3.1 Support      | Complete      | First-class support                      |
 
 ### What Needs Work ⚠️
 
-| Component                 | Issue                         | Reference                |
-| ------------------------- | ----------------------------- | ------------------------ |
-| Zod → OpenAPI             | Not implemented — next phase  | [zod-to-openapi-plan.md] |
-| Architectural validation  | No automated boundary tests   | IR-4                     |
+| Component     | Issue                        | Reference                |
+| ------------- | ---------------------------- | ------------------------ |
+| Zod → OpenAPI | Not implemented — next phase | [zod-to-openapi-plan.md] |
 
 ---
 
@@ -114,18 +115,42 @@ All code generation must use **ts-morph AST manipulation exclusively**:
 
 ---
 
-## Current Phase: Phase 1 Completion
+## Current Phase: Phase 2 (Zod → OpenAPI)
 
-Phase 1 (OpenAPI → Zod) is functionally complete. Remaining work is validation and documentation.
+Phase 1 (OpenAPI → Zod) is **complete**. Now implementing the reverse direction.
 
-**See:** [phase-1-completion-plan.md](./phase-1-completion-plan.md) for detailed plan.
+**See:** [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) for detailed plan.
 
-| Work Item                   | Status     | Effort |
-| --------------------------- | ---------- | ------ |
-| IR-2: Context layer cleanup | ✅ Done    | 6-8h   |
-| IR-3: MCP subsystem cleanup | ✅ Done    | 12h    |
-| IR-4: Validation framework  | 🎯 Current | 4h     |
-| IR-5: Documentation         | Pending    | 4h     |
+### Phase 1 Summary (Archived)
+
+| Work Item                   | Status  | Effort |
+| --------------------------- | ------- | ------ |
+| IR-2: Context layer cleanup | ✅ Done | 6-8h   |
+| IR-3: MCP subsystem cleanup | ✅ Done | 12h    |
+| IR-4: Validation framework  | ✅ Done | 2h     |
+| IR-5: Documentation         | ✅ Done | 1h     |
+
+**Archived:** [archive/phase-1-completion-plan.md](./archive/phase-1-completion-plan.md)
+
+### Phase 2 Overview
+
+| Session | Focus                    | Status      | Effort |
+| ------- | ------------------------ | ----------- | ------ |
+| 2.1     | Zod 4 parser foundation  | ✅ Complete | 4-6h   |
+| 2.2     | Constraints & modifiers  | 🎯 Next     | 4-6h   |
+| 2.3     | Composition & references | Pending     | 6-8h   |
+| 2.4     | Endpoint parsing         | Pending     | 6-8h   |
+| 2.5     | OpenAPI writer           | Pending     | 6-8h   |
+| 2.6     | Round-trip validation    | Pending     | 4-6h   |
+| 2.7     | Adapter abstraction      | Pending     | 4-6h   |
+
+**Total: ~3-4 weeks**
+
+**Key Decisions:**
+
+- Zod 4 only (strict rejection of Zod 3)
+- Schemas + endpoints both supported
+- Deterministic recommendations for missing metadata (no AI)
 
 ---
 
@@ -133,13 +158,13 @@ Phase 1 (OpenAPI → Zod) is functionally complete. Remaining work is validation
 
 The order of format support is **deliberate** — by implementing both input and output for a format before moving to the next, we discover commonalities between parsers and writers.
 
-| Phase | Transform             | Status         | Plan Document                                      |
-| ----- | --------------------- | -------------- | -------------------------------------------------- |
-| 1     | OpenAPI → Zod         | 🟡 Completing  | [phase-1-completion-plan.md]                       |
-| 2     | Zod → OpenAPI         | 🔲 After Ph1   | [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) |
-| 3     | JSONSchema ↔ OpenAPI | 🔲 Planned     |                                                    |
-| 4     | JSONSchema ↔ Zod     | 🔲 Planned     |                                                    |
-| 5     | tRPC ↔ IR            | 🔲 Planned     |                                                    |
+| Phase | Transform             | Status      | Plan Document                                      |
+| ----- | --------------------- | ----------- | -------------------------------------------------- |
+| 1     | OpenAPI → Zod         | ✅ Complete | [archive/phase-1-completion-plan.md]               |
+| 2     | Zod → OpenAPI         | 🎯 Active   | [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) |
+| 3     | JSONSchema ↔ OpenAPI | 🔲 Planned  |                                                    |
+| 4     | JSONSchema ↔ Zod     | 🔲 Planned  |                                                    |
+| 5     | tRPC ↔ IR            | 🔲 Planned  |                                                    |
 
 **Rationale:** Complete both directions for a format before adding new formats. This reveals shared abstractions and prevents premature generalisation.
 
@@ -214,7 +239,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 661 unit tests
+pnpm test          # 724 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -264,8 +289,8 @@ pnpm character     # 163 characterisation tests
 
 1. Read [session-entry.prompt.md](../prompts/session-entry.prompt.md)
 2. Run quality gates: `pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character`
-3. Review this roadmap and [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)
-4. Begin Phase IR-4 (Validation Framework)
+3. Review this roadmap and [zod-to-openapi-plan.md](./zod-to-openapi-plan.md)
+4. Begin Phase 2 Session 2.2 (Constraints & modifiers)
 
 ---
 

@@ -1,7 +1,7 @@
 # ADR-024: Complete IR Architecture Alignment
 
-**Status:** Proposed  
-**Date:** 2026-01-02  
+**Status:** Implemented ✅  
+**Date:** 2026-01-02 (proposed) / 2026-01-09 (implemented)  
 **Authors:** Antigravity (AI Assistant)  
 **Relates to:** ADR-023 (IR-Based Architecture)
 
@@ -32,14 +32,14 @@ The **Cardinal Rule**: After parsing, input documents are conceptually discarded
 
 A code-vision alignment audit on 2026-01-02 revealed:
 
-| Component                     | IR Alignment  | Issue                                      |
-| ----------------------------- | ------------- | ------------------------------------------ |
-| `ir-builder*.ts`              | ✅ Aligned    | Correctly parses OpenAPI → CastrDocument   |
-| `zod-writer.ts`               | ✅ Aligned    | Operates exclusively on CastrSchemaContext |
-| `type-writer.ts`              | ✅ Aligned    | Operates exclusively on CastrSchema        |
-| `template-context.ts`         | ⚠️ Partial    | Builds IR, then passes `doc` downstream    |
-| `template-context.mcp*.ts`    | ❌ Misaligned | Operates entirely on OpenAPIObject         |
-| `template-context.schemas.ts` | ⚠️ Partial    | Uses `doc` for dependency graph            |
+| Component                     | IR Alignment | Status                                     |
+| ----------------------------- | ------------ | ------------------------------------------ |
+| `ir-builder*.ts`              | ✅ Aligned   | Correctly parses OpenAPI → CastrDocument   |
+| `zod-writer.ts`               | ✅ Aligned   | Operates exclusively on CastrSchemaContext |
+| `type-writer.ts`              | ✅ Aligned   | Operates exclusively on CastrSchema        |
+| `template-context.ts`         | ✅ Aligned   | Builds IR, uses only CastrDocument         |
+| `template-context.mcp*.ts`    | ✅ Aligned   | Operates exclusively on CastrDocument      |
+| `template-context.schemas.ts` | ✅ Aligned   | Uses IR for dependency graph               |
 
 ### The Problem
 
@@ -141,13 +141,27 @@ Replace `OpenAPIObject` dependencies with IR types:
 
 ---
 
-## Verification
+## Verification Results ✅
 
-1. All 10 quality gates pass
-2. No `OpenAPIObject` imports in `template-context.mcp*.ts` (except type guards)
-3. No `doc` parameter passed to any function after IR construction
-4. `grep -r "OpenAPIObject" lib/src/writers/` returns no results
-5. Characterisation tests prove behavioral parity
+**All verification criteria have been met:**
+
+1. ✅ All 10 quality gates pass (1034 tests)
+2. ✅ No `OpenAPIObject` imports in `template-context.mcp*.ts` (enforced by tests)
+3. ✅ No `doc` parameter passed to any function after IR construction
+4. ✅ `grep -r "OpenAPIObject" lib/src/writers/` returns no results (enforced by tests)
+5. ✅ Characterisation tests prove behavioral parity
+
+### Architectural Enforcement Tests
+
+New test files prevent regression:
+
+- **`lib/src/architecture/layer-boundaries.arch.test.ts`** (5 tests)
+  - Fails if `OpenAPIObject` imported in protected layers
+  - Protects: `lib/src/writers/**`, `lib/src/context/template-context.mcp*.ts`
+
+- **`lib/src/architecture/ir-completeness.arch.test.ts`** (12 tests)
+  - Verifies IR types contain all required fields
+  - Tests: CastrDocument, CastrSchema, CastrOperation, IRDependencyGraph, etc.
 
 ---
 

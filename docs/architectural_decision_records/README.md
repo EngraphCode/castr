@@ -65,6 +65,11 @@ Each ADR follows this structure:
 | [023](./ADR-023-ir-based-architecture.md)          | Intermediate Representation (IR) Architecture for Schema Generation | Accepted | 2025-12-01 |
 | [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment                                               | Accepted | 2026-01-02 |
 
+### Phase 2: Zod → OpenAPI (In Progress)
+
+> **Session 2.1 Complete** — Zod 4 parser foundation implemented with 46 new tests.  
+> See: [zod-to-openapi-plan.md](../.agent/plans/zod-to-openapi-plan.md)
+
 ## Decision Dependencies
 
 ### Phase 2 Part 1 Architecture

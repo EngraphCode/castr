@@ -1,7 +1,7 @@
 # Phase 1 Completion Plan: OpenAPI → Zod
 
 **Date:** January 9, 2026  
-**Status:** In Progress — IR-4 Ready to Start (IR-3 Complete)
+**Status:** In Progress — IR-5 Ready to Start (IR-4 Complete)
 
 ---
 
@@ -11,17 +11,17 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 
 ### Resolved Issues ✅
 
-| Issue                              | Resolution                              |
-| ---------------------------------- | --------------------------------------- |
-| Context layer passes raw `doc`     | Fixed in IR-2                           |
-| MCP generation uses raw OpenAPI    | Fixed in IR-3 (now IR-only)             |
-| Scalar x-ext refs not inlined      | Fixed in IR-3.6                         |
+| Issue                           | Resolution                  |
+| ------------------------------- | --------------------------- |
+| Context layer passes raw `doc`  | Fixed in IR-2               |
+| MCP generation uses raw OpenAPI | Fixed in IR-3 (now IR-only) |
+| Scalar x-ext refs not inlined   | Fixed in IR-3.6             |
 
 ### Remaining Work
 
-| Issue                              | Location                  | Impact                            |
-| ---------------------------------- | ------------------------- | --------------------------------- |
-| No architectural validation        | (missing)                 | Can't prove architecture is clean |
+| Issue                 | Location  | Impact                           |
+| --------------------- | --------- | -------------------------------- |
+| Documentation updates | (various) | ADR-024, session prompt, roadmap |
 
 ---
 
@@ -95,37 +95,39 @@ Phase 1 (OpenAPI → Zod) is functionally working but architecturally incomplete
 
 ---
 
-### Phase IR-4: Validation Framework (4h) — 🎯 CURRENT
+### Phase IR-4: Validation Framework ✅ COMPLETE
 
 **Goal:** Automated enforcement of architectural boundaries.
 
-#### IR-4.1: Layer Boundary Tests
+#### IR-4.1: Layer Boundary Tests ✅
 
-**Files:** [NEW] `lib/src/architecture/layer-boundaries.arch.test.ts`
+**Files:** `lib/src/architecture/layer-boundaries.arch.test.ts`
 
-**Acceptance:**
+**Completed:**
 
-- [ ] Test fails if `OpenAPIObject` imported in MCP/writer layers
-- [ ] Test runs in `pnpm test`
+- [x] Test fails if `OpenAPIObject` imported in MCP/writer layers
+- [x] Test runs in `pnpm test`
+- [x] Removed legacy OpenAPI code from 4 MCP helper files
 
-#### IR-4.2: IR Completeness Tests
+#### IR-4.2: IR Completeness Tests ✅
 
-**Files:** [NEW] `lib/src/architecture/ir-completeness.arch.test.ts`
+**Files:** `lib/src/architecture/ir-completeness.arch.test.ts`
 
-**Acceptance:**
+**Completed:**
 
-- [ ] Tests verify IR types contain all MCP/Writer required fields
+- [x] Tests verify IR types contain all MCP/Writer required fields
 
 ---
 
-### Phase IR-5: Documentation (4h)
+### Phase IR-5: Documentation — 🎯 CURRENT
 
 **Deliverables:**
 
-- [ ] ADR-024 updated with "Implemented" status
-- [ ] Session entry prompt updated
-- [ ] Roadmap updated
-- [ ] TSDoc for all new MCP functions
+- [x] ADR-024 updated with "Implemented" status
+- [x] Session entry prompt updated
+- [x] Roadmap updated
+- [x] phase-1-completion-plan.md updated
+- [ ] TSDoc for all new MCP functions (optional)
 
 ---
 
@@ -139,13 +141,13 @@ pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm
 
 ## Estimated Effort
 
-| Phase      | Status   | Effort |
-| ---------- | -------- | ------ |
-| IR-3.1-3.6 | ✅ Done  | 12h    |
-| IR-4       | 🎯 Next  | 4h     |
-| IR-5       | Pending  | 4h     |
+| Phase      | Status  | Effort |
+| ---------- | ------- | ------ |
+| IR-3.1-3.6 | ✅ Done | 12h    |
+| IR-4       | ✅ Done | 2h     |
+| IR-5       | 🎯 Now  | 1h     |
 
-**Remaining:** ~8 hours (1-2 focused sessions)
+**Remaining:** Documentation updates only
 
 ---
 
@@ -155,8 +157,8 @@ pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm
 
 1. ✅ IR-2 done: Context layer uses only CastrDocument
 2. ✅ IR-3 done: MCP subsystem uses only IR
-3. ⬜ IR-4 done: Architectural tests pass
-4. ✅ All 10 quality gates pass
-5. ⬜ Documentation updated
+3. ✅ IR-4 done: Architectural tests pass (17 new tests)
+4. ✅ All 10 quality gates pass (1034 tests)
+5. 🎯 IR-5: Documentation updates (in progress)
 
 **Only then proceed to Phase 2 (Zod → OpenAPI).**

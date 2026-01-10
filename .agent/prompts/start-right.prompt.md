@@ -6,8 +6,7 @@ Always ask: **"What impact are we trying to create for the user with this change
 
 When analysing a **generated file**, always analyse the **generator code** that produced it as well, as the generator is the source of truth.
 
-Do not assume you know what the initial step should be—discuss with the user first.
-
+Do not assume you know what the initial step should be—discuss with the user first.åç
 After each piece of work, the full quality gate suite must be run **one gate at a time**, and analysis of issues must wait until **all gates are complete**. Analysis must include asking if there are fundamental architectural issues or opportunities for improvement.
 
 All plans must include instructions to create:

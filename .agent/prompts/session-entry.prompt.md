@@ -1,15 +1,15 @@
 # Session Entry Point: @engraph/castr
 
-**Use this prompt to start a new work session. It provides complete context.**
+**Use this prompt to start a new work session.**
 
 ---
 
-## 🎯 Project Summary
+## 🎯 What This Library Does
 
-This library transforms data definitions **between any supported format** via a canonical **Intermediate Representation (IR)** architecture.
+Transforms data definitions **between any supported format** via a canonical **Intermediate Representation (IR)**:
 
-```text
-Any Input Format → Parser → IR (canonical AST) → ts-morph Writers → Any Output Format
+```
+Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any Output Format
 ```
 
 ---
@@ -20,22 +20,14 @@ Any Input Format → Parser → IR (canonical AST) → ts-morph Writers → Any 
 
 > After parsing, input documents are conceptually discarded. **Only the Caster Model matters.**
 
-All code that processes schema data works with the Caster Model (CastrDocument, CastrSchema, IROperation). Never access raw OpenAPI after `buildIR()`.
-
 ### 2. Pure AST via ts-morph
 
-All code generation uses **ts-morph AST manipulation exclusively**—no string manipulation:
+All code generation uses **ts-morph AST manipulation**—no string templates or concatenation.
 
-| ✅ Allowed                          | ❌ Forbidden                |
-| ----------------------------------- | --------------------------- |
-| `writer.write('z.object(')`         | `` `const ${name} = ...` `` |
-| `sourceFile.addVariableStatement()` | `code += "z.string()"`      |
-
-### 3. Type Discipline (Zero Tolerance)
+### 3. Type Discipline
 
 - **FORBIDDEN:** `as` (except `as const`), `any`, `!`
-- **REQUIRED:** Library types first (`openapi3-ts/oas31`), proper type guards
-- **MANDATE:** Fix architecture, not types
+- **REQUIRED:** Library types first, proper type guards
 
 ### 4. TDD (Mandatory)
 
@@ -44,90 +36,56 @@ Write failing tests FIRST. No exceptions.
 ### 5. Quality Gates (All Must Pass)
 
 ```bash
-pnpm clean && pnpm install
-pnpm build
-pnpm type-check
-pnpm lint
-pnpm format:check
-pnpm test          # 661 unit tests
-pnpm test:snapshot # 173 snapshot tests
-pnpm test:gen      # 20 generated code tests
-pnpm character     # 163 characterisation tests
+pnpm clean && pnpm install && pnpm build && pnpm type-check && \
+pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
+pnpm test:gen && pnpm character
 ```
 
-**Total: 1017+ tests**
+**Total: 1080+ tests** (724 unit, 173 snapshot, 20 gen, 163 character)
 
 ---
 
-## 📋 Current State (January 9, 2026)
+## 📋 Current State (January 10, 2026)
 
-### ✅ What's Complete
+### ✅ Phase 1 Complete: OpenAPI → Zod
 
-- All 10 quality gates passing (1017+ tests total)
-- IR Builder complete (OpenAPI → CastrDocument with schemaNames, dependencyGraph)
-- Zod Writer complete (operates on IR via ts-morph)
-- Type Writer complete (operates on IR via ts-morph)
-- Scalar Pipeline complete (bundles, upgrades to 3.1)
-- IR-1 complete (schemaNames, full dependencyGraph with depth/circularity)
-- IR-2 complete (context layer uses IR for schema names, dependency graphs, endpoint tags)
-- **IR-3 COMPLETE** (MCP subsystem fully migrated to IR-only path)
-  - IR-3.1-3.4: MCP IR functions (parameters, body/response, schema inlining, tool builder)
-  - IR-3.5: Wired `buildMcpToolsFromIR` into `getTemplateContext`
-  - IR-3.6: Removed deprecated OpenAPI functions from MCP layer
-- IR Strictness enforcement (error throwing for invalid specs instead of placeholders)
-- Scalar bundle x-ext refs properly inlined in MCP schemas
+- All 10 quality gates passing
+- IR Builder, Zod Writer, Type Writer complete
+- Architectural validation enforced (17 tests)
+- MCP subsystem fully IR-based
 
-### ⚠️ What Needs Work (Phase 1 Completion)
+### 🎯 Phase 2 Active: Zod → OpenAPI
 
-| Work Item                   | Status     | Reference                    |
-| --------------------------- | ---------- | ---------------------------- |
-| IR-2: Context layer cleanup | ✅ Done    | [phase-1-completion-plan.md] |
-| IR-3: MCP subsystem cleanup | ✅ Done    | [phase-1-completion-plan.md] |
-| IR-4: Validation framework  | 🎯 Current | [phase-1-completion-plan.md] |
-| IR-5: Documentation         | Pending    | [phase-1-completion-plan.md] |
+Implementing the reverse transformation to prove bidirectional architecture.
 
-**Current Work: IR-4 (Validation Framework)**
+**Key Decisions:**
 
-The MCP subsystem is now fully IR-based. Next step is implementing automated validation of architectural boundaries:
+- **Zod 4 only** — Strict rejection of Zod 3 and invalid input
+- **Schemas + endpoints** — Both must be supported
+- **Deterministic recommendations** — No AI-generated metadata
 
-1. **IR-4.1: Layer Boundary Tests** — Fail if `OpenAPIObject` imported in MCP/writer layers
-2. **IR-4.2: IR Completeness Tests** — Verify IR types contain all required fields
+**See:** [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
+
+| Session | Focus                    | Status      |
+| ------- | ------------------------ | ----------- |
+| 2.1     | Zod 4 parser foundation  | ✅ Complete |
+| 2.2     | Constraints & modifiers  | 🎯 Next     |
+| 2.3     | Composition & references | Pending     |
+| 2.4     | Endpoint parsing         | Pending     |
+| 2.5     | OpenAPI writer           | Pending     |
+| 2.6     | Round-trip validation    | Pending     |
+| 2.7     | Adapter abstraction      | Pending     |
 
 ---
 
-## 📚 Essential Reading (In Order)
+## 📚 Essential Reading
 
-1. **[VISION.md](.agent/VISION.md)** — Strategic direction
-2. **[RULES.md](.agent/RULES.md)** — Engineering standards (extensive)
-3. **[roadmap.md](.agent/plans/roadmap.md)** — Current state and next steps
-4. **[ADR-024](../../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)** — IR alignment decision
-5. **[ADR-025](../../docs/architectural_decision_records/ADR-025-http-client-di-integration.md)** — HTTP client DI pattern
-6. **[testing-strategy.md](.agent/testing-strategy.md)** — Test methodology
-7. **[DEFINITION_OF_DONE.md](.agent/DEFINITION_OF_DONE.md)** — Quality criteria
-
----
-
-## 🎯 Current Phase: Phase 1 Completion
-
-Phase 1 (OpenAPI → Zod) needs architectural cleanup before Phase 2 (Zod → OpenAPI).
-
-**See:** [phase-1-completion-plan.md](plans/phase-1-completion-plan.md) for detailed plan.
-
----
-
-## 🔄 Format Implementation Order
-
-The order of format support is **deliberate** (see VISION.md):
-
-| Phase | Transform             | Status         |
-| ----- | --------------------- | -------------- |
-| 1     | OpenAPI → Zod         | 🟡 In Progress |
-| 2     | Zod → OpenAPI         | After Phase 1  |
-| 3     | JSONSchema ↔ OpenAPI | Planned        |
-| 4     | JSONSchema ↔ Zod     | Planned        |
-| 5     | tRPC ↔ IR            | Planned        |
-
-**Rationale:** Complete each phase architecturally before moving on.
+| Priority | Document                                               | Purpose                                    |
+| -------- | ------------------------------------------------------ | ------------------------------------------ |
+| 1        | [roadmap.md](plans/roadmap.md)                         | Current state, format order, future phases |
+| 2        | [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md) | Active work: Phase 2 sessions              |
+| 3        | [RULES.md](RULES.md)                                   | Engineering standards                      |
+| 4        | [VISION.md](VISION.md)                                 | Strategic direction                        |
 
 ---
 
@@ -135,79 +93,52 @@ The order of format support is **deliberate** (see VISION.md):
 
 ### Core IR Types
 
-- `lib/src/context/ir-schema.ts` — CastrDocument, CastrSchema, IROperation types
-- `lib/src/context/ir-builder.ts` — `buildIR()` function
+- `lib/src/context/ir-schema.ts` — CastrDocument, CastrSchema, CastrOperation
 
-### Writers (Pure AST)
+### Parsers (Input → IR)
 
-- `lib/src/writers/zod-writer.ts` — Zod schema generation
-- `lib/src/writers/type-writer.ts` — TypeScript type generation
+- `lib/src/context/ir-builder.ts` — OpenAPI → IR
+- `lib/src/parsers/zod/` — **[Phase 2: New]** Zod → IR
 
-### Context Layer (Fully IR-Based)
+### Writers (IR → Output)
 
-- `lib/src/context/template-context.ts` — `getTemplateContext()` orchestration
-- `lib/src/context/template-context.from-ir.ts` — IR-only helpers
-- `lib/src/context/template-context.mcp.ts` — `buildMcpToolsFromIR()` (IR-only)
-- `lib/src/context/template-context.mcp.schemas.from-ir.ts` — MCP schema builder
-- `lib/src/context/template-context.mcp.security.from-ir.ts` — Security resolution
-- `lib/src/context/template-context.mcp.inline-json-schema.ts` — Ref inlining (supports Scalar x-ext)
+- `lib/src/writers/zod-writer.ts` — IR → Zod
+- `lib/src/writers/type-writer.ts` — IR → TypeScript
+- `lib/src/writers/openapi/` — **[Phase 2: New]** IR → OpenAPI
 
-### Tests
+### Architectural Tests
 
-- `lib/src/characterisation/` — Behavioural tests
-- `lib/tests-snapshot/` — Snapshot tests
+- `lib/src/architecture/layer-boundaries.arch.test.ts` — Layer enforcement
+- `lib/src/architecture/ir-completeness.arch.test.ts` — IR type verification
 
 ---
 
-## 🔍 Before Making Changes
+## 🚀 Starting a Session
 
-1. **Run quality gates** to verify clean starting state
-2. **Read the phase-1-completion-plan.md** for detailed task breakdown
-3. **Read the specific ADR** if working on that area
-4. **Write tests first** (TDD is mandatory)
-5. **Check the Caster Model types** before accessing any schema data
-6. **Run quality gates again** after changes
-
-### 🚀 Immediate Next Task
-
-**IR-4: Validation Framework** — Create architectural tests that enforce layer boundaries and IR completeness. See [phase-1-completion-plan.md](plans/phase-1-completion-plan.md) for acceptance criteria.
+1. **Run quality gates** — Verify clean state
+2. **Read the current plan** — [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
+3. **Identify next session** — Currently 2.2 (Constraints & modifiers)
+4. **Write tests first** — TDD is mandatory
+5. **Run quality gates** — Verify after changes
 
 ---
 
-## 📁 Project Structure
+## 🔄 Format Implementation Order
 
-```
-.agent/
-├── VISION.md              ← Strategic direction
-├── RULES.md               ← Engineering standards
-├── requirements.md        ← Decision-making guide
-├── testing-strategy.md    ← Test methodology
-├── DEFINITION_OF_DONE.md  ← Quality gates
-└── plans/
-    ├── roadmap.md         ← Current state and next steps
-    └── future-*.md        ← Future work plans
+| Phase | Transform             | Status      |
+| ----- | --------------------- | ----------- |
+| 1     | OpenAPI → Zod         | ✅ Complete |
+| 2     | Zod → OpenAPI         | 🎯 Active   |
+| 3     | JSONSchema ↔ OpenAPI | Planned     |
+| 4     | JSONSchema ↔ Zod     | Planned     |
+| 5     | tRPC ↔ IR            | Planned     |
 
-docs/
-├── architectural_decision_records/
-│   ├── ADR-023-ir-based-architecture.md
-│   ├── ADR-024-complete-ir-alignment.md
-│   └── SUMMARY.md         ← ADR index
-├── architecture/
-│   └── scalar-pipeline.md
-└── guides/
-    └── openapi-3.1-migration.md
-
-lib/src/
-├── context/               ← IR builder and context
-├── writers/               ← ts-morph code generators
-├── characterisation/      ← Behavioural tests
-└── ...
-```
+**Rationale:** Complete both directions for a format before adding new formats.
 
 ---
 
-## ❓ First Question (Always Ask)
+## ❓ First Question
 
 > **"What impact are we trying to create for the user with this change?"**
 
-Before coding, understand the user-facing value. Then verify the proposed approach aligns with the Caster Model architecture.
+Before coding, understand the user-facing value. Verify the approach aligns with the IR architecture.
