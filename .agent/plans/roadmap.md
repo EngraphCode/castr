@@ -151,6 +151,7 @@ Phase 1 (OpenAPI → Zod) is **complete**. Now implementing the reverse directio
 - Zod 4 only (strict rejection of Zod 3)
 - Schemas + endpoints both supported
 - Deterministic recommendations for missing metadata (no AI)
+- No regex for parsing (ADR-026) — all regex replaced with ts-morph/string methods
 
 ---
 

@@ -66,29 +66,18 @@ Implementing the reverse transformation to prove bidirectional architecture.
 
 **See:** [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
 
-| Session | Focus                    | Status                            |
-| ------- | ------------------------ | --------------------------------- |
-| 2.1     | Zod 4 parser foundation  | ✅ Complete                       |
-| 2.2     | Constraints & modifiers  | ✅ Complete                       |
-| 2.3     | Composition & references | ⏳ In Progress (ts-morph rewrite) |
-| 2.4     | Endpoint parsing         | Pending                           |
-| 2.5     | OpenAPI writer           | Pending                           |
-| 2.6     | Round-trip validation    | Pending                           |
-| 2.7     | Adapter abstraction      | Pending                           |
+| Session | Focus                    | Status                       |
+| ------- | ------------------------ | ---------------------------- |
+| 2.1     | Zod 4 parser foundation  | ✅ Complete                  |
+| 2.2     | Constraints & modifiers  | 🎯 Next                      |
+| 2.3     | Composition & references | Pending                      |
+| 2.4     | Endpoint parsing         | Pending                      |
+| 2.5     | OpenAPI writer           | Pending                      |
+| 2.6     | Round-trip validation    | Pending                      |
+| 2.7     | Adapter abstraction      | Pending                      |
 
 > **⚠️ ADR-026:** No regex for parsing. All parsers must use ts-morph AST.
-> Session 2.3 includes rewriting existing regex-based code to comply.
-
-### Session 2.3 Next Steps (38 Lint Errors)
-
-| Category            | Count | Files                                                            |
-| ------------------- | ----- | ---------------------------------------------------------------- |
-| Regex violations    | 8     | `zod-parser.detection.ts` (6), `zod-parser.ts` (2)               |
-| Complexity          | 16    | `zod-ast.ts`, `zod-parser.primitives.ts`, `zod-parser.object.ts` |
-| Non-null assertions | 6     | `zod-ast.unit.test.ts`                                           |
-| Type assertions     | 4     | `zod-parser.primitives.ts`, `zod-parser.object.ts`               |
-
-**Fix order:** Complexity → Type assertions → Test assertions → Regex rewrite
+> Lint refactoring completed — 0 errors, all regex replaced with string/AST methods.
 
 ---
 
@@ -129,9 +118,9 @@ Implementing the reverse transformation to prove bidirectional architecture.
 
 ## 🚀 Starting a Session
 
-1. **Run quality gates** — Verify clean state (38 lint errors remain)
+1. **Run quality gates** — Verify clean state (0 lint errors)
 2. **Read the current plan** — [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
-3. **Continue Session 2.3** — Fix remaining lint errors, then composition parsing
+3. **Begin Session 2.2** — Constraints & modifiers (chain walking, optionality)
 4. **Write tests first** — TDD is mandatory
 5. **Run quality gates** — All 10 must pass before commit
 

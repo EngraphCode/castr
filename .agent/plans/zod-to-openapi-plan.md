@@ -1,8 +1,8 @@
 # Phase 2 Plan: Zod → OpenAPI
 
 **Date:** January 10, 2026  
-**Status:** Session 2.1 Complete  
-**Prerequisites:** Phase 1 complete (OpenAPI → Zod), Session 2.1 complete (46 new tests, 1080 total)
+**Status:** Session 2.2 Next  
+**Prerequisites:** Phase 1 complete (OpenAPI → Zod), Session 2.1 complete (46 tests), lint refactoring complete (0 errors)
 
 ---
 
@@ -255,7 +255,7 @@ lib/src/parsers/zod/
 
 ---
 
-### Session 2.2: Constraints & Modifiers (4-6h)
+### Session 2.2: Constraints & Modifiers (4-6h) 🎯 NEXT
 
 **Goal:** Parse Zod method chains (constraints and optionality).
 
