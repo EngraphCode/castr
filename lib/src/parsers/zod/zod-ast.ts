@@ -309,7 +309,8 @@ function extractBaseArgs(baseCall: CallExpression | undefined): {
  */
 function extractCompositionArg(node: Node): unknown {
   if (Node.isArrayLiteralExpression(node)) {
-    return node.getElements().map((el) => extractLiteralValue(el));
+    // Recursively extract each element - handles nested Zod calls
+    return node.getElements().map((el) => extractCompositionArg(el));
   }
   if (Node.isCallExpression(node)) {
     return node.getText();
