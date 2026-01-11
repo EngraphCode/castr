@@ -255,44 +255,60 @@ lib/src/parsers/zod/
 
 ---
 
-### Session 2.2: Constraints & Modifiers (4-6h) 🎯 NEXT
+### Session 2.2: Constraints & Modifiers ✅ COMPLETE
 
 **Goal:** Parse Zod method chains (constraints and optionality).
 
-**Scope:**
+**Completed (35 tests):**
 
-- [ ] Implement chain walking: `.min()`, `.max()`, `.length()`, `.regex()`
-- [ ] Handle optionality: `.optional()`, `.nullable()`, `.nullish()`
-- [ ] Parse string formats: `.email()`, `.url()`, `.uuid()`, `.datetime()`
-- [ ] Handle defaults: `.default()`
+- [x] Chain walking: `.min()`, `.max()`, `.length()`, `.regex()`
+- [x] Optionality: `.optional()`, `.nullable()`, `.nullish()`
+- [x] String formats: `.email()`, `.url()`, `.uuid()`, `.datetime()`
+- [x] Defaults: `.default()`
+- [x] Number sign constraints: `.positive()`, `.negative()`, `.nonnegative()`, `.nonpositive()`
+- [x] Divisibility: `.multipleOf()`
+- [x] Description: `.describe()`
 
-**Tests:**
+**Files Modified:**
 
-- Constraint extraction accuracy
-- Optionality edge cases (nullable vs optional vs nullish)
-
-**Acceptance:**
-
-- `z.string().min(1).max(100).email().optional()` → correct IR
+```
+lib/src/parsers/zod/
+├── zod-parser.constraints.ts     # [NEW] Constraint extraction
+├── zod-parser.primitives.ts      # [MOD] Uses constraints module
+└── *.unit.test.ts                # [MOD] Added constraint tests
+```
 
 ---
 
-### Session 2.3: Composition & References (6-8h)
+### Session 2.3: Composition & References (6-8h) 🎯 IN PROGRESS
 
-**Goal:** Handle unions, intersections, and schema references.
+**Goal:** Handle composition types and schema references.
 
-**Scope:**
+**Completed:**
 
-- [ ] Parse `z.union([...])` and `z.discriminatedUnion(...)`
-- [ ] Parse `z.intersection(...)` (allOf equivalent)
-- [ ] Resolve variable references: `const Foo = z.object(...); const Bar = Foo.extend(...)`
-- [ ] Build dependency graph from references
+- [x] Parse `z.array(z.string())` with item type
+- [x] Array constraints: `.min()`, `.max()`, `.length()`, `.nonempty()`
+- [x] Parse `z.enum(["A", "B"])` to string enum
+- [x] Nested arrays: `z.array(z.array(...))`
+
+**Remaining:**
+
+- [ ] Parse `z.union([...])` → `oneOf`
+- [ ] Parse `z.discriminatedUnion(...)` → `oneOf` with discriminator
+- [ ] Parse `z.intersection(...)` → `allOf`
 - [ ] Handle `z.lazy()` for circular references
+- [ ] Resolve variable references and build dependency graph
 
-**Tests:**
+**Files Created:**
 
-- Union/intersection IR mapping
-- Circular reference detection
+```
+lib/src/parsers/zod/
+├── zod-parser.composition.ts            # [NEW] Array & enum parsing
+├── zod-parser.composition.unit.test.ts  # [NEW] 11 tests
+└── zod-ast.ts                           # [MOD] Extended with baseArgs
+```
+
+**Tests:** 11 new tests (arrays: 8, enums: 3)
 
 **Acceptance:**
 

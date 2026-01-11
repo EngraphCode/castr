@@ -66,6 +66,10 @@ export interface ZodMethodChainInfo {
   baseMethod: string;
   /** All chained method calls in order */
   chainedMethods: ZodMethodCall[];
+  /** Raw argument nodes from the base call */
+  baseArgNodes: Node[];
+  /** Parsed argument values from the base call (for composition types) */
+  baseArgs: unknown[];
 }
 
 /**
@@ -241,13 +245,29 @@ export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | un
     return undefined;
   }
 
+  const { chainedMethods, baseCall } = walkMethodChain(call);
+  const { baseArgNodes, baseArgs } = extractBaseArgs(baseCall);
+
+  return { baseMethod, chainedMethods, baseArgNodes, baseArgs };
+}
+
+/**
+ * Walk the method chain and find the base call.
+ * @internal
+ */
+function walkMethodChain(call: CallExpression): {
+  chainedMethods: ZodMethodCall[];
+  baseCall: CallExpression | undefined;
+} {
   const chainedMethods: ZodMethodCall[] = [];
   let current: Node = call;
+  let baseCall: CallExpression | undefined;
 
   while (Node.isCallExpression(current)) {
     const expr = current.getExpression();
 
     if (shouldStopChainWalk(expr)) {
+      baseCall = current;
       break;
     }
 
@@ -264,89 +284,71 @@ export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | un
     }
   }
 
-  return { baseMethod, chainedMethods };
+  return { chainedMethods, baseCall };
 }
 
-// ============================================================================
-// Helpers for extractLiteralValue - split by type
-// ============================================================================
+/**
+ * Extract arguments from the base call.
+ * @internal
+ */
+function extractBaseArgs(baseCall: CallExpression | undefined): {
+  baseArgNodes: Node[];
+  baseArgs: unknown[];
+} {
+  if (!baseCall) {
+    return { baseArgNodes: [], baseArgs: [] };
+  }
+  const baseArgNodes = baseCall.getArguments();
+  const baseArgs = baseArgNodes.map((arg) => extractCompositionArg(arg));
+  return { baseArgNodes, baseArgs };
+}
 
-function extractStringLiteral(node: Node): string | undefined {
+/**
+ * Extract composition argument value (handles inner Zod calls).
+ * @internal
+ */
+function extractCompositionArg(node: Node): unknown {
+  if (Node.isArrayLiteralExpression(node)) {
+    return node.getElements().map((el) => extractLiteralValue(el));
+  }
+  if (Node.isCallExpression(node)) {
+    return node.getText();
+  }
+  return extractLiteralValue(node);
+}
+
+/**
+ * Extract a literal value from an AST node.
+ * @param node - AST node
+ * @returns Extracted value or undefined
+ * @internal
+ */
+export function extractLiteralValue(node: Node): unknown {
   if (Node.isStringLiteral(node)) {
     return node.getLiteralValue();
   }
-  return undefined;
-}
-
-function extractNumericLiteral(node: Node): number | undefined {
   if (Node.isNumericLiteral(node)) {
     return node.getLiteralValue();
   }
-  return undefined;
-}
-
-function extractBooleanLiteral(node: Node): boolean | undefined {
   if (Node.isTrueLiteral(node)) {
     return true;
   }
   if (Node.isFalseLiteral(node)) {
     return false;
   }
-  return undefined;
-}
-
-function extractRegexPattern(node: Node): string | undefined {
-  if (!Node.isRegularExpressionLiteral(node)) {
-    return undefined;
-  }
-  const text = node.getText();
-  const lastSlash = text.lastIndexOf('/');
-  if (lastSlash > 0) {
-    return text.slice(1, lastSlash);
-  }
-  return undefined;
-}
-
-/**
- * Extract a literal value from an AST node.
- *
- * @param node - AST node
- * @returns Extracted value or undefined
- *
- * @internal
- */
-export function extractLiteralValue(node: Node): unknown {
-  const str = extractStringLiteral(node);
-  if (str !== undefined) {
-    return str;
-  }
-
-  const num = extractNumericLiteral(node);
-  if (num !== undefined) {
-    return num;
-  }
-
-  const bool = extractBooleanLiteral(node);
-  if (bool !== undefined) {
-    return bool;
-  }
-
-  // Check for null (returns null, not undefined)
   if (Node.isNullLiteral(node)) {
     return null;
   }
-
-  // Check for undefined identifier
   if (Node.isIdentifier(node) && node.getText() === 'undefined') {
     return undefined;
   }
-
-  const regex = extractRegexPattern(node);
-  if (regex !== undefined) {
-    return regex;
+  if (Node.isRegularExpressionLiteral(node)) {
+    const text = node.getText();
+    const lastSlash = text.lastIndexOf('/');
+    if (lastSlash > 0) {
+      return text.slice(1, lastSlash);
+    }
   }
-
-  // Can't extract complex values
   return undefined;
 }
 
