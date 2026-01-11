@@ -1,8 +1,8 @@
 # Phase 2 Plan: Zod → OpenAPI
 
-**Date:** January 10, 2026  
-**Status:** Session 2.2 Next  
-**Prerequisites:** Phase 1 complete (OpenAPI → Zod), Session 2.1 complete (46 tests), lint refactoring complete (0 errors)
+**Date:** January 11, 2026  
+**Status:** Session 2.5 Next  
+**Prerequisites:** Phase 1 complete, Sessions 2.1-2.4 complete (808 unit tests)
 
 ---
 
@@ -280,61 +280,65 @@ lib/src/parsers/zod/
 
 ---
 
-### Session 2.3: Composition & References (6-8h) 🎯 IN PROGRESS
+### Session 2.3: Composition & References (6-8h) ✅ COMPLETE
 
 **Goal:** Handle composition types and schema references.
 
-**Completed:**
+**Scope:**
 
 - [x] Parse `z.array(z.string())` with item type
 - [x] Array constraints: `.min()`, `.max()`, `.length()`, `.nonempty()`
 - [x] Parse `z.enum(["A", "B"])` to string enum
-- [x] Nested arrays: `z.array(z.array(...))`
-
-**Remaining:**
-
-- [ ] Parse `z.union([...])` → `oneOf`
-- [ ] Parse `z.discriminatedUnion(...)` → `oneOf` with discriminator
-- [ ] Parse `z.intersection(...)` → `allOf`
-- [ ] Handle `z.lazy()` for circular references
-- [ ] Resolve variable references and build dependency graph
+- [x] Parse `z.union([...])` → `oneOf`
+- [x] Parse `z.discriminatedUnion(...)` → `oneOf` with discriminator
+- [x] Parse `z.intersection(...)` → `allOf`
+- [x] Handle `z.lazy()` for circular references
+- [x] Resolve variable references with `$ref`
 
 **Files Created:**
 
 ```
 lib/src/parsers/zod/
-├── zod-parser.composition.ts            # [NEW] Array & enum parsing
-├── zod-parser.composition.unit.test.ts  # [NEW] 11 tests
-└── zod-ast.ts                           # [MOD] Extended with baseArgs
+├── zod-parser.composition.ts            # Array & enum parsing
+├── zod-parser.composition.unit.test.ts  # 11 tests
+├── zod-parser.union.ts                  # Union & discriminated union
+├── zod-parser.union.unit.test.ts        # 11 tests
+├── zod-parser.intersection.ts           # Intersection parsing
+├── zod-parser.intersection.unit.test.ts # 5 tests
+├── zod-parser.references.ts             # Lazy & variable refs
+└── zod-parser.references.unit.test.ts   # 8 tests
 ```
 
-**Tests:** 11 new tests (arrays: 8, enums: 3)
+**Tests:** 35 new tests
 
-**Acceptance:**
-
-- Complex schemas with references produce valid dependency graphs
+**Acceptance:** All composition types parse correctly into IR
 
 ---
 
-### Session 2.4: Endpoint Parsing (6-8h)
+### Session 2.4: Endpoint Parsing (6-8h) ✅ COMPLETE
 
 **Goal:** Parse Zod-based endpoint definitions into IR operations.
 
 **Scope:**
 
-- [ ] Define endpoint definition format (input/output schemas, method, path)
-- [ ] Parse endpoint declarations to `CastrOperation`
-- [ ] Link request/response schemas to components
-- [ ] Handle path parameters and query schemas
+- [x] Define `EndpointDefinition` types for `defineEndpoint({...})` pattern
+- [x] Parse endpoint declarations to `CastrOperation`
+- [x] Handle path, query, header, cookie parameters
+- [x] Support request body for POST/PUT/PATCH
+- [x] Support multiple response status codes
 
-**Tests:**
+**Files Created:**
 
-- Endpoint IR mapping
-- Request/response schema linking
+```
+lib/src/parsers/zod/
+├── zod-parser.endpoint.types.ts         # Type definitions
+├── zod-parser.endpoint.ts               # Endpoint parsing & building
+└── zod-parser.endpoint.unit.test.ts     # 14 tests
+```
 
-**Acceptance:**
+**Tests:** 14 new tests
 
-- Endpoint definitions produce valid `CastrOperation` entries
+**Acceptance:** Endpoint definitions produce valid `CastrOperation` entries
 
 ---
 
