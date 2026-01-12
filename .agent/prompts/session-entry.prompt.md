@@ -41,54 +41,24 @@ pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
 pnpm test:gen && pnpm character
 ```
 
-**Total: 1237+ tests** (881 unit, 173 snapshot, 20 gen, 163 character)
-
 ---
 
-## 📋 Current State (January 12, 2026)
+## 📋 Current Focus
 
-### ✅ Phase 1 Complete: OpenAPI → Zod
+**Phase 2 Active: Zod → OpenAPI** — Session 2.6 (Round-Trip Validation)
 
-- All 10 quality gates passing
-- IR Builder, Zod Writer, Type Writer complete
-- Architectural validation enforced (17 tests)
-- MCP subsystem fully IR-based
-
-### 🎯 Phase 2 Active: Zod → OpenAPI
-
-Implementing the reverse transformation to prove bidirectional architecture.
-
-**Key Decisions:**
-
-- **Zod 4 only** — Strict rejection of Zod 3 and invalid input
-- **Schemas + endpoints** — Both must be supported
-- **Deterministic recommendations** — No AI-generated metadata
-
-**See:** [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
-
-| Session | Focus                    | Status      |
-| ------- | ------------------------ | ----------- |
-| 2.1     | Zod 4 parser foundation  | ✅ Complete |
-| 2.2     | Constraints & modifiers  | ✅ Complete |
-| 2.3     | Composition & references | ✅ Complete |
-| 2.4     | Endpoint parsing         | ✅ Complete |
-| 2.5     | OpenAPI writer           | ✅ Complete |
-| 2.6     | Round-trip validation    | 🎯 Next     |
-| 2.7     | Adapter abstraction      | Pending     |
-
-> **⚠️ ADR-026:** No regex for parsing. All parsers must use ts-morph AST.
-> Lint refactoring completed — 0 errors, all regex replaced with string/AST methods.
+See [roadmap.md](plans/roadmap.md) for phase status and [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md) for session details.
 
 ---
 
 ## 📚 Essential Reading
 
-| Priority | Document                                               | Purpose                                    |
-| -------- | ------------------------------------------------------ | ------------------------------------------ |
-| 1        | [roadmap.md](plans/roadmap.md)                         | Current state, format order, future phases |
-| 2        | [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md) | Active work: Phase 2 sessions              |
-| 3        | [RULES.md](RULES.md)                                   | Engineering standards                      |
-| 4        | [VISION.md](VISION.md)                                 | Strategic direction                        |
+| Priority | Document                                               | Purpose                              |
+| -------- | ------------------------------------------------------ | ------------------------------------ |
+| 1        | [roadmap.md](plans/roadmap.md)                         | Project status, phases, format order |
+| 2        | [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md) | Active Phase 2 sessions              |
+| 3        | [RULES.md](RULES.md)                                   | Engineering standards                |
+| 4        | [VISION.md](VISION.md)                                 | Strategic direction                  |
 
 ---
 
@@ -101,42 +71,28 @@ Implementing the reverse transformation to prove bidirectional architecture.
 ### Parsers (Input → IR)
 
 - `lib/src/context/ir-builder.ts` — OpenAPI → IR
-- `lib/src/parsers/zod/` — **[Phase 2: New]** Zod → IR
+- `lib/src/parsers/zod/` — Zod → IR (see [README](lib/src/parsers/zod/README.md))
 
 ### Writers (IR → Output)
 
 - `lib/src/writers/zod-writer.ts` — IR → Zod
 - `lib/src/writers/type-writer.ts` — IR → TypeScript
-- `lib/src/writers/openapi/` — **[Phase 2: New]** IR → OpenAPI
+- `lib/src/writers/openapi/` — IR → OpenAPI
 
-### Architectural Tests
+### Architecture
 
 - `lib/src/architecture/layer-boundaries.arch.test.ts` — Layer enforcement
-- `lib/src/architecture/ir-completeness.arch.test.ts` — IR type verification
+- `docs/architectural_decision_records/` — ADRs (26+ decisions)
 
 ---
 
 ## 🚀 Starting a Session
 
-1. **Run quality gates** — Verify clean state (0 lint errors)
-2. **Read the current plan** — [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
-3. **Start Session 2.6** — Round-trip validation
+1. **Run quality gates** — Verify clean state
+2. **Read roadmap.md** — Confirm current phase/session
+3. **Read active plan** — Check session scope
 4. **Write tests first** — TDD is mandatory
 5. **Run quality gates** — All 10 must pass before commit
-
----
-
-## 🔄 Format Implementation Order
-
-| Phase | Transform             | Status      |
-| ----- | --------------------- | ----------- |
-| 1     | OpenAPI → Zod         | ✅ Complete |
-| 2     | Zod → OpenAPI         | 🎯 Active   |
-| 3     | JSONSchema ↔ OpenAPI | Planned     |
-| 4     | JSONSchema ↔ Zod     | Planned     |
-| 5     | tRPC ↔ IR            | Planned     |
-
-**Rationale:** Complete both directions for a format before adding new formats.
 
 ---
 

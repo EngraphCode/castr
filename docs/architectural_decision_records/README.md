@@ -71,9 +71,10 @@ Each ADR follows this structure:
 | ---------------------------------------------- | --------------------------- | -------- | ---------- |
 | [025](./ADR-025-http-client-di-integration.md) | HTTP Client DI Integration  | Accepted | 2026-01-06 |
 | [026](./ADR-026-no-regex-for-parsing.md)       | No Regex for Schema Parsing | Accepted | 2026-01-10 |
+| [027](./ADR-027-round-trip-validation.md)      | Round-Trip Validation       | Accepted | 2026-01-12 |
 
-> **Session 2.1 Complete** — Zod 4 parser foundation implemented with 46 new tests.  
-> See: [zod-to-openapi-plan.md](../.agent/plans/zod-to-openapi-plan.md)
+> **Session 2.5 Complete** — OpenAPI writer implemented with 73 new tests.
+> See: [zod-to-openapi-plan.md](../../.agent/plans/zod-to-openapi-plan.md)
 
 ## Decision Dependencies
 
@@ -209,4 +210,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** January 2026  
-**Next ADR:** 027
+**Next ADR:** 028

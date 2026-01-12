@@ -2,425 +2,147 @@
 
 **Date:** January 12, 2026  
 **Status:** Session 2.6 Next  
-**Prerequisites:** Phase 1 complete, Sessions 2.1-2.5 complete (881 unit tests)
+**Prerequisites:** Sessions 2.1-2.5 complete (881 unit tests)
 
 ---
 
-## Design Decisions
+## Strategic Goal
 
-> **Resolved during planning (January 10, 2026)**
-
-| Question             | Decision                      | Rationale                                                                 |
-| -------------------- | ----------------------------- | ------------------------------------------------------------------------- |
-| **Zod version**      | Zod 4 only                    | No Zod 3 support; strict rejection of invalid input                       |
-| **Input strictness** | Strict validation             | Reject malformed/incorrect Zod; no best-effort parsing                    |
-| **Scope**            | Schemas first, then endpoints | Both must be supported                                                    |
-| **Metadata**         | Deterministic recommendations | Output suggestions for missing title/description; no AI-generated content |
+Prove the IR architecture works bidirectionally: `OpenAPI ↔ Zod` via `CastrDocument`.
 
 ---
 
-## Strategic Goals
+## Key Decisions
 
-### 1. Architectural Excellence
-
-Phase 2 is not just about "parsing Zod" — it's about **proving the IR architecture works bidirectionally**. Success means:
-
-- The same `CastrDocument` IR serves as the canonical representation for both directions
-- Writers and parsers are symmetric: `OpenAPI → IR → Zod` and `Zod → IR → OpenAPI`
-- No format-specific leakage — IR remains the single source of truth
-
-### 2. Discovering Format Symmetry
-
-> **Key Question:** What commonalities exist between defining a format as input vs. output?
-
-By implementing the reverse direction, we expect to discover:
-
-| Dimension        | OpenAPI → IR         | Zod → IR                | Shared Opportunity            |
-| ---------------- | -------------------- | ----------------------- | ----------------------------- |
-| **Type mapping** | OAS types → IR types | Zod types → IR types    | Single bidirectional type map |
-| **Composition**  | allOf/oneOf/anyOf    | z.union/z.intersection  | Unified composition algebra   |
-| **Optionality**  | required array       | .optional()/.nullable() | Canonical optionality model   |
-| **Constraints**  | min/max/pattern      | .min()/.max()/.regex()  | Shared constraint vocabulary  |
-| **References**   | $ref resolution      | Zod variable refs       | Dependency graph extraction   |
-
-**Goal:** Extract abstractions that work for **any** format pair, not just OpenAPI ↔ Zod.
-
-### 3. DRY & Elegant Design
-
-Apply rigorous software engineering principles:
-
-- **Single Responsibility:** Each module does one thing well
-- **Open/Closed:** IR is open for extension (new formats) without modification
-- **Interface Segregation:** Format-specific adapters implement common interfaces
-- **Dependency Inversion:** High-level logic depends on IR, not format specifics
-
-**Specific Opportunities:**
-
-1. **Type Mapping Table** — One declaration defines both directions
-2. **Constraint Normalisation** — Unified min/max/pattern handling
-3. **Composition Handlers** — Shared union/intersection/allOf logic
-4. **Reference Resolution** — Common dependency graph builder
+| Decision         | Choice                        | Rationale                 |
+| ---------------- | ----------------------------- | ------------------------- |
+| Zod version      | Zod 4 only                    | Strict rejection of Zod 3 |
+| Input strictness | Strict validation             | Reject malformed input    |
+| Metadata         | Deterministic recommendations | No AI-generated content   |
+| Parsing          | ts-morph AST                  | No regex (ADR-026)        |
 
 ---
 
-## Technical Approach
+## Completed Sessions (2.1-2.5)
 
-### Input: What We're Parsing
+<details>
+<summary><strong>Session 2.1: Zod 4 Parser Foundation</strong> — 46 tests</summary>
 
-**Zod 4 Only** — No Zod 3 support. The parser will:
+- Zod 4 detection, dynamic schema rejection
+- Primitives: string, number, boolean
+- Object parsing, variable name extraction
+- Deterministic recommendations
 
-- ✅ Accept well-formed, correct Zod 4 schemas
-- ❌ Reject Zod 3 syntax (different API surface)
-- ❌ Reject malformed or incorrect input with clear errors
-- ❌ Reject dynamic/computed schemas that can't be statically analysed
+</details>
 
-**Strict Validation Philosophy:**
+<details>
+<summary><strong>Session 2.2: Constraints & Modifiers</strong> — 35 tests</summary>
 
-```typescript
-// ACCEPTED: Static, well-formed Zod 4
-export const UserSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-});
+- Chain walking: .min(), .max(), .length(), .regex()
+- Optionality: .optional(), .nullable(), .nullish()
+- String formats: .email(), .url(), .uuid(), .datetime()
+- Number constraints, defaults, descriptions
 
-// REJECTED: Dynamic construction
-const fields = getFields(); // Can't statically analyse
-export const DynamicSchema = z.object(fields);
+</details>
 
-// REJECTED: Zod 3 syntax
-export const LegacySchema = z.string().nonempty(); // Zod 3 method
-```
+<details>
+<summary><strong>Session 2.3: Composition & References</strong> — 35 tests</summary>
 
-### Metadata Strategy: Deterministic Recommendations
+- Arrays with item types and constraints
+- Enums, unions, discriminated unions
+- Intersections → allOf
+- Lazy schemas, variable references
 
-When Zod lacks metadata (title, description), we output **recommendations** rather than generated content:
+</details>
 
-```typescript
-interface ParseResult {
-  ir: CastrDocument;
-  recommendations: Recommendation[];
-}
+<details>
+<summary><strong>Session 2.4: Endpoint Parsing</strong> — 14 tests</summary>
 
-interface Recommendation {
-  schemaName: string;
-  field: 'title' | 'description';
-  suggestedValue?: string;  // Only if derivable (e.g., from variable name)
-  reason: string;
-}
+- EndpointDefinition types
+- Path/query/header/cookie parameters
+- Request bodies, multiple responses
 
-// Example output:
-{
-  schemaName: "UserSchema",
-  field: "description",
-  reason: "No .describe() found. Consider adding: z.object({...}).describe('...')"
-}
-```
+</details>
 
-This keeps the process **completely deterministic** — no AI, no heuristics, just structured feedback.
+<details>
+<summary><strong>Session 2.5: OpenAPI Writer</strong> — 73 tests</summary>
 
-### ⚠️ NO REGEX FOR PARSING (ADR-026)
+- writeOpenApi(), writeOpenApiSchema()
+- writeOpenApiComponents(), writeOpenApiPaths()
+- OAS 3.1 nullable type arrays
+- Bonus: Fixed 24 pre-existing parser lint errors
 
-> **Architectural Mandate:** Regular expressions are **banned** for parsing schema source code.
+</details>
 
-During Session 2.3, an initial regex-based approach was attempted and quickly proved fragile. ADR-026 establishes:
-
-| Tool                    | Use Case                                          |
-| ----------------------- | ------------------------------------------------- |
-| **ts-morph**            | AST traversal, variable resolution, symbol tables |
-| **TypeScript Compiler** | Type checking, semantic analysis                  |
-| **Zod runtime**         | Schema validation (where applicable)              |
-
-This is **enforced via ESLint** in the `src/parsers/` directory — regex literals and `RegExp` constructors are errors.
-
-### Parsing Strategy: ts-morph AST
-
-Use ts-morph to parse Zod source files as TypeScript AST:
-
-```typescript
-// Input: Zod source
-export const UserSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1).max(100),
-  email: z.string().email().optional(),
-  role: z.enum(['admin', 'user']),
-});
-
-// Extracted IR:
-{
-  name: "User",
-  type: "object",
-  properties: {
-    id: { type: "string", format: "uuid" },
-    name: { type: "string", minLength: 1, maxLength: 100 },
-    email: { type: "string", format: "email", optional: true },
-    role: { type: "string", enum: ["admin", "user"] }
-  },
-  required: ["id", "name", "role"]
-}
-```
-
-### Key Technical Challenges
-
-| Challenge             | Approach                                           |
-| --------------------- | -------------------------------------------------- |
-| Chain method parsing  | Walk CallExpression AST, accumulate constraints    |
-| Variable references   | Track scope, resolve to schema definitions         |
-| Circular dependencies | Mirror existing IR circularity detection           |
-| Type inference        | Use TypeScript's type checker for complex cases    |
-| Zod 3 detection       | Identify and reject with clear error message       |
-| Dynamic schemas       | Detect non-static construction, reject with reason |
-| Missing metadata      | Generate recommendations, not content              |
+**Total: 203 new tests** → See [lib/src/parsers/zod/README.md](../../../lib/src/parsers/zod/README.md)
 
 ---
 
-## Architecture Vision
+## Session 2.6: Round-Trip Validation (4-6h) 🎯 NEXT
+
+**Goal:** Prove bidirectional architecture with two-case round-trip testing.
+
+### Two Validation Cases (ADR-027)
+
+| Case                       | Input                 | Expected Output               |
+| -------------------------- | --------------------- | ----------------------------- |
+| **Deterministic**          | Castr-normalized spec | Byte-for-byte identical       |
+| **Information-Preserving** | Arbitrary spec        | Semantic equivalence, no loss |
+
+### Case 1: Deterministic (Byte-for-Byte)
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     FORMAT ADAPTERS                         │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ OpenAPI      │  │ Zod          │  │ JSON Schema  │ ...  │
-│  │ Adapter      │  │ Adapter      │  │ Adapter      │      │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘      │
-│         │ parse()         │ parse()         │ parse()      │
-│         ▼                 ▼                 ▼              │
-├─────────────────────────────────────────────────────────────┤
-│                 CANONICAL IR (CastrDocument)                │
-│         components, operations, dependencyGraph             │
-├─────────────────────────────────────────────────────────────┤
-│         │ write()         │ write()         │ write()      │
-│         ▼                 ▼                 ▼              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ OpenAPI      │  │ Zod          │  │ TypeScript   │ ...  │
-│  │ Writer       │  │ Writer       │  │ Writer       │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-└─────────────────────────────────────────────────────────────┘
+Spec₀ → Castr → Spec₁ → Castr → Spec₂
+ASSERT: Spec₁ === Spec₂
 ```
 
-### Adapter Interface (DRY Opportunity)
+A Castr-normalized spec re-processed through Castr should be **byte-for-byte identical**. This proves idempotency.
 
-```typescript
-interface FormatAdapter<TInput, TOutput> {
-  /** Parse format-specific input into IR */
-  parse(input: TInput): CastrDocument;
-
-  /** Write IR to format-specific output */
-  write(ir: CastrDocument): TOutput;
-
-  /** Format metadata */
-  readonly formatId: string;
-  readonly supportsInput: boolean;
-  readonly supportsOutput: boolean;
-}
-```
-
-This interface enables:
-
-- Each format implements one adapter
-- Round-trip testing: `adapter.write(adapter.parse(input)) ≈ input`
-- Format discovery: registry of available adapters
-
----
-
-## Work Sessions
-
-### Session 2.1: Zod 4 AST Parser Foundation ✅ COMPLETE
-
-**Goal:** Parse basic Zod 4 schemas to IR using ts-morph with strict validation.
-
-**Completed (46 tests):**
-
-- [x] Create `lib/src/parsers/zod/` directory structure
-- [x] Implement `parseZodSource(source: string): ParseResult`
-- [x] Implement Zod 4 detection (reject Zod 3 syntax) — 13 tests
-- [x] Implement dynamic schema detection — 4 tests
-- [x] Handle primitives: `z.string()`, `z.number()`, `z.boolean()` — 10 tests
-- [x] Handle `z.object()` with properties — 7 tests
-- [x] Extract variable names as schema names — 5 tests
-- [x] Return structured errors for invalid input
-- [x] Generate deterministic recommendations — 7 tests
-
-**Files Created:**
+### Case 2: Information-Preserving (Semantic Equivalence)
 
 ```
-lib/src/parsers/zod/
-├── index.ts                          # Module exports
-├── zod-parser.ts                     # Main entry point
-├── zod-parser.types.ts               # Type definitions
-├── zod-parser.detection.ts           # Zod 3 & dynamic detection
-├── zod-parser.primitives.ts          # Primitive parsing
-├── zod-parser.object.ts              # Object parsing
-└── *.unit.test.ts                    # Test files
+Spec₀ → Castr → Spec₁
+ASSERT: semanticContent(Spec₀) ⊆ semanticContent(Spec₁)
 ```
 
----
+An arbitrary spec should lose **no information**, even if format changes. Castr may add computed fields (dependency graphs, resolved refs).
 
-### Session 2.2: Constraints & Modifiers ✅ COMPLETE
+### Scope
 
-**Goal:** Parse Zod method chains (constraints and optionality).
-
-**Completed (35 tests):**
-
-- [x] Chain walking: `.min()`, `.max()`, `.length()`, `.regex()`
-- [x] Optionality: `.optional()`, `.nullable()`, `.nullish()`
-- [x] String formats: `.email()`, `.url()`, `.uuid()`, `.datetime()`
-- [x] Defaults: `.default()`
-- [x] Number sign constraints: `.positive()`, `.negative()`, `.nonnegative()`, `.nonpositive()`
-- [x] Divisibility: `.multipleOf()`
-- [x] Description: `.describe()`
-
-**Files Modified:**
-
-```
-lib/src/parsers/zod/
-├── zod-parser.constraints.ts     # [NEW] Constraint extraction
-├── zod-parser.primitives.ts      # [MOD] Uses constraints module
-└── *.unit.test.ts                # [MOD] Added constraint tests
-```
-
----
-
-### Session 2.3: Composition & References (6-8h) ✅ COMPLETE
-
-**Goal:** Handle composition types and schema references.
-
-**Scope:**
-
-- [x] Parse `z.array(z.string())` with item type
-- [x] Array constraints: `.min()`, `.max()`, `.length()`, `.nonempty()`
-- [x] Parse `z.enum(["A", "B"])` to string enum
-- [x] Parse `z.union([...])` → `oneOf`
-- [x] Parse `z.discriminatedUnion(...)` → `oneOf` with discriminator
-- [x] Parse `z.intersection(...)` → `allOf`
-- [x] Handle `z.lazy()` for circular references
-- [x] Resolve variable references with `$ref`
-
-**Files Created:**
-
-```
-lib/src/parsers/zod/
-├── zod-parser.composition.ts            # Array & enum parsing
-├── zod-parser.composition.unit.test.ts  # 11 tests
-├── zod-parser.union.ts                  # Union & discriminated union
-├── zod-parser.union.unit.test.ts        # 11 tests
-├── zod-parser.intersection.ts           # Intersection parsing
-├── zod-parser.intersection.unit.test.ts # 5 tests
-├── zod-parser.references.ts             # Lazy & variable refs
-└── zod-parser.references.unit.test.ts   # 8 tests
-```
-
-**Tests:** 35 new tests
-
-**Acceptance:** All composition types parse correctly into IR
-
----
-
-### Session 2.4: Endpoint Parsing (6-8h) ✅ COMPLETE
-
-**Goal:** Parse Zod-based endpoint definitions into IR operations.
-
-**Scope:**
-
-- [x] Define `EndpointDefinition` types for `defineEndpoint({...})` pattern
-- [x] Parse endpoint declarations to `CastrOperation`
-- [x] Handle path, query, header, cookie parameters
-- [x] Support request body for POST/PUT/PATCH
-- [x] Support multiple response status codes
-
-**Files Created:**
-
-```
-lib/src/parsers/zod/
-├── zod-parser.endpoint.types.ts         # Type definitions
-├── zod-parser.endpoint.ts               # Endpoint parsing & building
-└── zod-parser.endpoint.unit.test.ts     # 14 tests
-```
-
-**Tests:** 14 new tests
-
-**Acceptance:** Endpoint definitions produce valid `CastrOperation` entries
-
----
-
-### Session 2.5: OpenAPI Writer (6-8h) ✅ COMPLETE
-
-**Goal:** Generate OpenAPI 3.1 from IR.
-
-**Completed (73 tests):**
-
-- [x] Create `lib/src/writers/openapi/` directory structure
-- [x] Implement `writeOpenApi(ir: CastrDocument): OpenAPIObject`
-- [x] Implement `writeOpenApiSchema(schema: CastrSchema): SchemaObject`
-- [x] Implement `writeOpenApiComponents(components: IRComponent[]): ComponentsObject`
-- [x] Implement `writeOpenApiPaths(operations: CastrOperation[]): PathsObject`
-- [x] Map IR types to OAS types (all primitives, composition, refs)
-- [x] Handle OAS 3.1 nullable type arrays
-- [x] Generate `components.schemas`, `securitySchemes`, `parameters`, `responses`
-- [x] Generate `paths` with operations, parameters, request bodies, responses
-
-**Files Created:**
-
-```
-lib/src/writers/openapi/
-├── index.ts                                  # Module exports
-├── openapi-writer.ts                         # Main writeOpenApi function
-├── openapi-writer.schema.ts                  # Schema conversion (7 helpers)
-├── openapi-writer.components.ts              # Components conversion (6 helpers)
-├── openapi-writer.operations.ts              # Operations/paths conversion
-├── openapi-writer.unit.test.ts               # 7 tests
-├── openapi-writer.schema.unit.test.ts        # 37 tests
-├── openapi-writer.components.unit.test.ts    # 10 tests
-└── openapi-writer.operations.unit.test.ts    # 19 tests
-```
-
-**Bonus: Parser Lint Fix (24 errors → 0)**
-
-- Refactored `zod-parser.endpoint.ts` (split into 2 files, eliminated regex/type assertions)
-- Refactored `zod-parser.references.ts` (reduced nesting, fixed imports)
-- Updated architecture test for `writers/openapi` exception
-
-**Acceptance:** Generated OpenAPI validates against OAS 3.1 schema
-
----
-
-### Session 2.6: Round-Trip Validation (4-6h)
-
-**Goal:** Prove architectural symmetry with round-trip tests.
-
-**Scope:**
-
-- [ ] Create round-trip test suite: `OpenAPI → Zod → IR → OpenAPI'`
-- [ ] Define equivalence criteria (structural, not textual)
-- [ ] Handle expected losses (comments, ordering)
+- [ ] Create round-trip test fixtures (normalized + arbitrary specs)
+- [ ] Implement deterministic comparison (sorted JSON)
+- [ ] Implement semantic equivalence checker
+- [ ] Document expected transformations (nullable, defaults)
 - [ ] Add characterisation tests for real-world specs
-- [ ] Validate recommendations output for missing metadata
+- [ ] Validate recommendations for missing metadata
 
-**Tests:**
+### Tests
 
-- All existing fixture specs round-trip successfully
-- Document any lossy transformations
-- Recommendations generated for missing descriptions
+- Deterministic: Castr fixtures round-trip byte-for-byte
+- Arbitrary: Real-world specs preserve all semantic content
+- Recommendations: Actionable, deterministic output
 
-**Acceptance:**
+### Acceptance
 
-- Round-trip produces semantically equivalent output
-- Recommendations are actionable and deterministic
+- Both round-trip cases pass for all fixtures
+- Clear documentation of expected transformations
+- No information loss for arbitrary specs
 
 ---
 
-### Session 2.7: Adapter Abstraction & Refactor (4-6h)
+## Session 2.7: Adapter Abstraction (4-6h)
 
-**Goal:** Extract common patterns into shared adapter interface.
+**Goal:** Extract common patterns into shared `FormatAdapter` interface.
 
-**Scope:**
+### Scope
 
-- [ ] Define `FormatAdapter` interface
-- [ ] Refactor OpenAPI parser to implement adapter
-- [ ] Refactor Zod parser to implement adapter
-- [ ] Create adapter registry for format discovery
+- [ ] Define `FormatAdapter<TInput, TOutput>` interface
+- [ ] Refactor OpenAPI parser/writer to implement adapter
+- [ ] Refactor Zod parser/writer to implement adapter
+- [ ] Create adapter registry
 - [ ] Document discovered commonalities
 
-**Deliverables:**
+### Deliverables
 
 - ADR documenting format adapter abstraction
 - Shared type mapping utilities
@@ -428,83 +150,27 @@ lib/src/writers/openapi/
 
 ---
 
-## Verification Strategy
+## Architecture Vision
 
-### Quality Gates (Same as Phase 1)
-
-```bash
-pnpm clean && pnpm install && pnpm build && pnpm type-check && \
-pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
-pnpm test:gen && pnpm character
 ```
-
-### Round-Trip Testing
-
-```typescript
-// New test category: round-trip validation
-describe('Format Round-Trip', () => {
-  it('OpenAPI → Zod → IR → OpenAPI produces equivalent spec', () => {
-    const original = loadFixture('petstore.yaml');
-    const zod = generateZod(original);
-    const ir = parseZod(zod);
-    const regenerated = writeOpenApi(ir);
-
-    expect(regenerated).toBeStructurallyEquivalent(original);
-  });
-});
+┌────────────────────────────────────────────────────────┐
+│                   FORMAT ADAPTERS                      │
+│  OpenAPI Adapter    Zod Adapter    JSON Schema ...    │
+│     parse()           parse()          parse()        │
+│        ↓                 ↓                ↓           │
+├────────────────────────────────────────────────────────┤
+│              CANONICAL IR (CastrDocument)              │
+├────────────────────────────────────────────────────────┤
+│     write()           write()          write()        │
+│        ↓                 ↓                ↓           │
+│  OpenAPI Writer    Zod Writer     TypeScript ...      │
+└────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Success Criteria
+## References
 
-**Phase 2 is complete when:**
-
-1. ✅ Zod source files can be parsed into `CastrDocument`
-2. ✅ `CastrDocument` can be written to OpenAPI 3.1
-3. ✅ Round-trip tests pass for representative specs
-4. ✅ Shared `FormatAdapter` abstraction documented
-5. ✅ DRY opportunities identified and implemented
-6. ✅ All quality gates pass
-7. ✅ Architecture documentation updated
-
----
-
-## Estimated Effort
-
-| Session                      | Effort | Cumulative |
-| ---------------------------- | ------ | ---------- |
-| 2.1 Zod 4 parser foundation  | 4-6h   | 4-6h       |
-| 2.2 Constraints & modifiers  | 4-6h   | 8-12h      |
-| 2.3 Composition & references | 6-8h   | 14-20h     |
-| 2.4 Endpoint parsing         | 6-8h   | 20-28h     |
-| 2.5 OpenAPI writer           | 6-8h   | 26-36h     |
-| 2.6 Round-trip validation    | 4-6h   | 30-42h     |
-| 2.7 Adapter abstraction      | 4-6h   | 34-48h     |
-
-**Total: ~5-7 focused sessions (3-4 weeks)**
-
----
-
-## Resolved Questions
-
-| Question              | Resolution                                                               |
-| --------------------- | ------------------------------------------------------------------------ |
-| Scope of Zod parsing  | Arbitrary well-formed Zod 4; strict rejection of Zod 3 and invalid input |
-| Operations            | Both schemas and endpoints supported                                     |
-| Metadata enrichment   | Deterministic recommendations; no AI-generated content                   |
-| Lossy transformations | Document explicitly; recommendations guide manual enrichment             |
-
----
-
-## Future: Beyond Phase 2
-
-With the adapter abstraction in place, Phase 3+ becomes straightforward:
-
-| Phase | Format                 | Effort Reduction            |
-| ----- | ---------------------- | --------------------------- |
-| 3     | JSON Schema ↔ OpenAPI | High (similar structure)    |
-| 4     | tRPC ↔ IR             | Medium (Zod already parsed) |
-| 5     | Custom formats         | Plug-and-play adapters      |
-
-**This is the power of architectural excellence — each new format is an incremental addition, not a rewrite.**
+- [ADR-026: No Regex for Parsing](../docs/architectural_decision_records/ADR-026-no-regex-for-parsing.md)
+- [ADR-027: Round-Trip Validation](../docs/architectural_decision_records/ADR-027-round-trip-validation.md)
+- [Parser README](../../../lib/src/parsers/zod/README.md)
