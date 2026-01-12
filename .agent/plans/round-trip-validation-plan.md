@@ -92,7 +92,10 @@ lib/tests-roundtrip/
 
 ## Implementation Order
 
-- [ ] Create fixture directory structure
+- [x] Create fixture directory structure
+- [x] Consolidate IR→OpenAPI implementations (ADR-028)
+- [x] Define canonical source structure (ADR-029)
+- [x] Update VISION.md terminology
 - [ ] Implement `sortDeep()` utility (TDD)
 - [ ] Implement `semanticDiff()` utility (TDD)
 - [ ] Create normalized fixtures
@@ -105,15 +108,18 @@ lib/tests-roundtrip/
 
 ## Decisions Made
 
-| Question                   | Decision   | Rationale                     |
-| -------------------------- | ---------- | ----------------------------- |
-| Converter consolidation    | Defer      | Focus on validation first     |
-| Real-world APIs in Tier 2  | No         | Use official OpenAPI examples |
-| additionalProperties added | Enrichment | Document, not failure         |
+| Question                   | Decision   | Rationale                                              |
+| -------------------------- | ---------- | ------------------------------------------------------ |
+| Converter consolidation    | ✅ Done    | ADR-028 — Single `writeOpenApi()` in `writers/openapi/` |
+| Canonical structure        | ✅ Defined | ADR-029 — `parsers/` + `writers/` + `ir/`               |
+| Real-world APIs in Tier 2  | No         | Use official OpenAPI examples                          |
+| additionalProperties added | Enrichment | Document, not failure                                  |
 
 ---
 
 ## References
 
 - [ADR-027: Round-Trip Validation](../../docs/architectural_decision_records/ADR-027-round-trip-validation.md)
+- [ADR-028: IR→OpenAPI Consolidation](../../docs/architectural_decision_records/ADR-028-ir-openapi-consolidation.md)
+- [ADR-029: Canonical Source Structure](../../docs/architectural_decision_records/ADR-029-canonical-source-structure.md)
 - [Existing IR fidelity test](../../lib/tests-e2e/ir-fidelity.test.ts)

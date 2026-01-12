@@ -2,7 +2,7 @@
 
 **Date:** January 12, 2026  
 **Status:** Active  
-**Quality Gates:** All 10 passing (1237+ tests)
+**Quality Gates:** All 10 passing (1250+ tests)
 
 ---
 
@@ -80,12 +80,14 @@ INPUT LAYER → IR LAYER (canonical) → OUTPUT LAYER
 
 ### Key ADRs
 
-| ADR                                                                                | Topic                 |
-| ---------------------------------------------------------------------------------- | --------------------- |
-| [ADR-023](../docs/architectural_decision_records/ADR-023-ir-based-architecture.md) | IR architecture       |
-| [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md) | IR alignment          |
-| [ADR-026](../docs/architectural_decision_records/ADR-026-no-regex-for-parsing.md)  | No regex for parsing  |
-| [ADR-027](../docs/architectural_decision_records/ADR-027-round-trip-validation.md) | Round-trip validation |
+| ADR                                                                                  | Topic                    |
+| ------------------------------------------------------------------------------------ | ------------------------ |
+| [ADR-023](../docs/architectural_decision_records/ADR-023-ir-based-architecture.md)   | IR architecture          |
+| [ADR-024](../docs/architectural_decision_records/ADR-024-complete-ir-alignment.md)   | IR alignment             |
+| [ADR-026](../docs/architectural_decision_records/ADR-026-no-regex-for-parsing.md)    | No regex for parsing     |
+| [ADR-027](../docs/architectural_decision_records/ADR-027-round-trip-validation.md)   | Round-trip validation    |
+| [ADR-028](../docs/architectural_decision_records/ADR-028-ir-openapi-consolidation.md)| IR→OpenAPI consolidation |
+| [ADR-029](../docs/architectural_decision_records/ADR-029-canonical-source-structure.md)| Canonical structure    |
 
 ---
 
