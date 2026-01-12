@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { join } from 'path';
 import { buildIR } from '../context/ir-builder.js';
-import { generateOpenAPI } from '../generators/openapi/index.js';
+import { writeOpenApi } from '../writers/openapi/index.js';
 import { loadOpenApiDocument } from '../shared/load-openapi-document/orchestrator.js';
-import { validateOpenAPI } from '../generators/openapi/validator.js';
+import { validateOpenAPI } from '../writers/openapi/openapi-validator.js';
 
 describe('OpenAPI Fidelity', () => {
   it('should preserve semantics for TicTacToe spec', async () => {
@@ -12,7 +12,7 @@ describe('OpenAPI Fidelity', () => {
     const originalDoc = loaded.document;
 
     const ir = buildIR(originalDoc);
-    const generatedDoc = generateOpenAPI(ir);
+    const generatedDoc = writeOpenApi(ir);
 
     await validateOpenAPI(generatedDoc);
 

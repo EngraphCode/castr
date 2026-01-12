@@ -47,18 +47,18 @@ pnpm test:gen && pnpm character
 
 **Phase 2 Active: Zod → OpenAPI** — Session 2.6 (Round-Trip Validation)
 
-See [roadmap.md](plans/roadmap.md) for phase status and [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md) for session details.
+See [roadmap.md](plans/roadmap.md) for phase status and [round-trip-validation-plan.md](plans/round-trip-validation-plan.md) for active session.
 
 ---
 
 ## 📚 Essential Reading
 
-| Priority | Document                                               | Purpose                              |
-| -------- | ------------------------------------------------------ | ------------------------------------ |
-| 1        | [roadmap.md](plans/roadmap.md)                         | Project status, phases, format order |
-| 2        | [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md) | Active Phase 2 sessions              |
-| 3        | [RULES.md](RULES.md)                                   | Engineering standards                |
-| 4        | [VISION.md](VISION.md)                                 | Strategic direction                  |
+| Priority | Document                                                             | Purpose                              |
+| -------- | -------------------------------------------------------------------- | ------------------------------------ |
+| 1        | [roadmap.md](plans/roadmap.md)                                       | Project status, phases, format order |
+| 2        | [round-trip-validation-plan.md](plans/round-trip-validation-plan.md) | Active Session 2.6                   |
+| 3        | [RULES.md](RULES.md)                                                 | Engineering standards                |
+| 4        | [VISION.md](VISION.md)                                               | Strategic direction                  |
 
 ---
 

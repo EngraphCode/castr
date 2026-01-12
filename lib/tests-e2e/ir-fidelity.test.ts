@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 import { prepareOpenApiDocument } from '../src/shared/prepare-openapi-document.js';
 import { serializeIR, deserializeIR } from '../src/context/ir-serialization.js';
-import { convertIRToOpenAPI } from '../src/context/converter/index.js';
+import { writeOpenApi } from '../src/writers/openapi/index.js';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -32,8 +32,8 @@ describe('IR Fidelity', () => {
     const serialized = serializeIR(irOriginal);
     const irDeserialized = deserializeIR(serialized);
 
-    // 4. Convert back to OpenAPI
-    const docReconstructed = convertIRToOpenAPI(irDeserialized);
+    // 4. Convert back to OpenAPI using canonical writer
+    const docReconstructed = writeOpenApi(irDeserialized);
 
     // 5. Generate Output from Reconstructed Doc (Code B)
     const resultB = await generateZodClientFromOpenAPI({

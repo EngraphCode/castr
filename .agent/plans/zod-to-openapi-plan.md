@@ -1,8 +1,8 @@
-# Phase 2 Plan: Zod → OpenAPI
+# Phase 2 Plan: Zod → OpenAPI (Implementation Complete)
 
 **Date:** January 12, 2026  
-**Status:** Session 2.6 Next  
-**Prerequisites:** Sessions 2.1-2.5 complete (881 unit tests)
+**Status:** Implementation Complete ✅  
+**Sessions 2.1-2.5:** 203 new tests
 
 ---
 
@@ -23,7 +23,7 @@ Prove the IR architecture works bidirectionally: `OpenAPI ↔ Zod` via `CastrDoc
 
 ---
 
-## Completed Sessions (2.1-2.5)
+## Completed Sessions
 
 <details>
 <summary><strong>Session 2.1: Zod 4 Parser Foundation</strong> — 46 tests</summary>
@@ -74,103 +74,17 @@ Prove the IR architecture works bidirectionally: `OpenAPI ↔ Zod` via `CastrDoc
 
 </details>
 
-**Total: 203 new tests** → See [lib/src/parsers/zod/README.md](../../../lib/src/parsers/zod/README.md)
+**Total: 203 new tests** → See [lib/src/parsers/zod/README.md](../../lib/src/parsers/zod/README.md)
 
 ---
 
-## Session 2.6: Round-Trip Validation (4-6h) 🎯 NEXT
+## Next Phase: Validation
 
-**Goal:** Prove bidirectional architecture with two-case round-trip testing.
-
-### Two Validation Cases (ADR-027)
-
-| Case                       | Input                 | Expected Output               |
-| -------------------------- | --------------------- | ----------------------------- |
-| **Deterministic**          | Castr-normalized spec | Byte-for-byte identical       |
-| **Information-Preserving** | Arbitrary spec        | Semantic equivalence, no loss |
-
-### Case 1: Deterministic (Byte-for-Byte)
-
-```
-Spec₀ → Castr → Spec₁ → Castr → Spec₂
-ASSERT: Spec₁ === Spec₂
-```
-
-A Castr-normalized spec re-processed through Castr should be **byte-for-byte identical**. This proves idempotency.
-
-### Case 2: Information-Preserving (Semantic Equivalence)
-
-```
-Spec₀ → Castr → Spec₁
-ASSERT: semanticContent(Spec₀) ⊆ semanticContent(Spec₁)
-```
-
-An arbitrary spec should lose **no information**, even if format changes. Castr may add computed fields (dependency graphs, resolved refs).
-
-### Scope
-
-- [ ] Create round-trip test fixtures (normalized + arbitrary specs)
-- [ ] Implement deterministic comparison (sorted JSON)
-- [ ] Implement semantic equivalence checker
-- [ ] Document expected transformations (nullable, defaults)
-- [ ] Add characterisation tests for real-world specs
-- [ ] Validate recommendations for missing metadata
-
-### Tests
-
-- Deterministic: Castr fixtures round-trip byte-for-byte
-- Arbitrary: Real-world specs preserve all semantic content
-- Recommendations: Actionable, deterministic output
-
-### Acceptance
-
-- Both round-trip cases pass for all fixtures
-- Clear documentation of expected transformations
-- No information loss for arbitrary specs
-
----
-
-## Session 2.7: Adapter Abstraction (4-6h)
-
-**Goal:** Extract common patterns into shared `FormatAdapter` interface.
-
-### Scope
-
-- [ ] Define `FormatAdapter<TInput, TOutput>` interface
-- [ ] Refactor OpenAPI parser/writer to implement adapter
-- [ ] Refactor Zod parser/writer to implement adapter
-- [ ] Create adapter registry
-- [ ] Document discovered commonalities
-
-### Deliverables
-
-- ADR documenting format adapter abstraction
-- Shared type mapping utilities
-- Updated architecture documentation
-
----
-
-## Architecture Vision
-
-```
-┌────────────────────────────────────────────────────────┐
-│                   FORMAT ADAPTERS                      │
-│  OpenAPI Adapter    Zod Adapter    JSON Schema ...    │
-│     parse()           parse()          parse()        │
-│        ↓                 ↓                ↓           │
-├────────────────────────────────────────────────────────┤
-│              CANONICAL IR (CastrDocument)              │
-├────────────────────────────────────────────────────────┤
-│     write()           write()          write()        │
-│        ↓                 ↓                ↓           │
-│  OpenAPI Writer    Zod Writer     TypeScript ...      │
-└────────────────────────────────────────────────────────┘
-```
+Session 2.6+ continues in **[round-trip-validation-plan.md](./round-trip-validation-plan.md)**.
 
 ---
 
 ## References
 
-- [ADR-026: No Regex for Parsing](../docs/architectural_decision_records/ADR-026-no-regex-for-parsing.md)
-- [ADR-027: Round-Trip Validation](../docs/architectural_decision_records/ADR-027-round-trip-validation.md)
-- [Parser README](../../../lib/src/parsers/zod/README.md)
+- [ADR-026: No Regex for Parsing](../../docs/architectural_decision_records/ADR-026-no-regex-for-parsing.md)
+- [Parser README](../../lib/src/parsers/zod/README.md)

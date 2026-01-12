@@ -34,7 +34,7 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 
 ## Current Phase: Phase 2 (Zod → OpenAPI)
 
-Phase 1 (OpenAPI → Zod) complete. Now implementing reverse direction.
+Phase 1 (OpenAPI → Zod) complete. Phase 2 implementation complete, now validating.
 
 | Session | Focus                    | Status      |
 | ------- | ------------------------ | ----------- |
@@ -43,10 +43,11 @@ Phase 1 (OpenAPI → Zod) complete. Now implementing reverse direction.
 | 2.3     | Composition & references | ✅ Complete |
 | 2.4     | Endpoint parsing         | ✅ Complete |
 | 2.5     | OpenAPI writer           | ✅ Complete |
-| 2.6     | Round-trip validation    | 🎯 Next     |
+| 2.6     | Round-trip validation    | 🎯 Active   |
 | 2.7     | Adapter abstraction      | Pending     |
 
-**See:** [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) for session details.
+**Implementation:** [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) (complete)  
+**Validation:** [round-trip-validation-plan.md](./round-trip-validation-plan.md) (active)
 
 ---
 
