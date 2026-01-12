@@ -1,8 +1,8 @@
 /**
  * Zod Endpoint Parsing
  *
- * Parses `defineEndpoint({...})` declarations into endpoint definitions
- * and builds `CastrOperation` structures for OpenAPI generation.
+ * Parses `defineEndpoint({...})` declarations into endpoint definitions.
+ * Builder functions are in `zod-parser.endpoint.builder.ts`.
  *
  * @module parsers/zod/endpoint
  *
@@ -20,16 +20,7 @@
  */
 
 import { Node } from 'ts-morph';
-import type {
-  CastrOperation,
-  CastrParameter,
-  CastrResponse,
-  CastrSchema,
-  IRRequestBody,
-} from '../../context/ir-schema.js';
 import { createZodProject } from './zod-ast.js';
-import { parsePrimitiveZod } from './zod-parser.primitives.js';
-import { parseObjectZod } from './zod-parser.object.js';
 import type {
   EndpointDefinition,
   EndpointParameters,
@@ -37,9 +28,36 @@ import type {
   ParameterLocation,
 } from './zod-parser.endpoint.types.js';
 
-// ============================================================================
-// Parsing helpers
-// ============================================================================
+// Re-export builder function for API consistency
+export { buildCastrOperationFromEndpoint } from './zod-parser.endpoint.builder.js';
+
+// Valid parameter locations for type narrowing
+const VALID_LOCATIONS: readonly ParameterLocation[] = ['path', 'query', 'header', 'cookie'];
+
+/**
+ * Type guard for valid parameter locations.
+ * @internal
+ */
+function isParameterLocation(value: string): value is ParameterLocation {
+  return VALID_LOCATIONS.some((loc) => loc === value);
+}
+
+/**
+ * Strips surrounding quotes from a text value using AST context.
+ * Replaces regex: /^['"]|['"]$/g
+ * @internal
+ */
+function stripQuotes(text: string): string {
+  if (text.length < 2) {
+    return text;
+  }
+  const first = text.charAt(0);
+  const last = text.charAt(text.length - 1);
+  if ((first === '"' || first === "'") && first === last) {
+    return text.slice(1, -1);
+  }
+  return text;
+}
 
 /**
  * Extract string value from an AST node.
@@ -86,6 +104,33 @@ function extractStringArray(node: Node): string[] | undefined {
 }
 
 /**
+ * Extract a single location's parameters from an object literal.
+ * @internal
+ */
+function extractLocationParams(locationValue: Node): Record<string, string> | undefined {
+  if (!Node.isObjectLiteralExpression(locationValue)) {
+    return undefined;
+  }
+
+  const locationParams: Record<string, string> = {};
+
+  for (const paramProp of locationValue.getProperties()) {
+    if (!Node.isPropertyAssignment(paramProp)) {
+      continue;
+    }
+
+    const paramName = paramProp.getName();
+    const paramInit = paramProp.getInitializer();
+
+    if (paramInit) {
+      locationParams[paramName] = stripQuotes(paramInit.getText());
+    }
+  }
+
+  return Object.keys(locationParams).length > 0 ? locationParams : undefined;
+}
+
+/**
  * Extract parameters object from an AST node.
  * @internal
  */
@@ -101,30 +146,18 @@ function extractParametersObject(node: Node): EndpointParameters | undefined {
       continue;
     }
 
-    const locationName = prop.getName() as ParameterLocation;
-    const locationValue = prop.getInitializer();
-
-    if (!locationValue || !Node.isObjectLiteralExpression(locationValue)) {
+    const locationName = prop.getName();
+    if (!isParameterLocation(locationName)) {
       continue;
     }
 
-    const locationParams: Record<string, string> = {};
-
-    for (const paramProp of locationValue.getProperties()) {
-      if (!Node.isPropertyAssignment(paramProp)) {
-        continue;
-      }
-
-      const paramName = paramProp.getName();
-      const paramInit = paramProp.getInitializer();
-
-      if (paramInit) {
-        // Get the raw text of the schema expression
-        locationParams[paramName] = paramInit.getText().replace(/^['"]|['"]$/g, '');
-      }
+    const locationValue = prop.getInitializer();
+    if (!locationValue) {
+      continue;
     }
 
-    if (Object.keys(locationParams).length > 0) {
+    const locationParams = extractLocationParams(locationValue);
+    if (locationParams) {
       parameters[locationName] = locationParams;
     }
   }
@@ -148,20 +181,189 @@ function extractResponsesObject(node: Node): EndpointResponses | undefined {
       continue;
     }
 
-    const statusCode = prop.getName().replace(/^['"]|['"]$/g, '');
+    const statusCode = stripQuotes(prop.getName());
     const responseInit = prop.getInitializer();
 
     if (responseInit) {
-      responses[statusCode] = responseInit.getText().replace(/^['"]|['"]$/g, '');
+      responses[statusCode] = stripQuotes(responseInit.getText());
     }
   }
 
   return Object.keys(responses).length > 0 ? responses : undefined;
 }
 
-// ============================================================================
-// Main parsing function
-// ============================================================================
+/**
+ * Valid HTTP methods for endpoints.
+ */
+const VALID_METHODS: readonly EndpointDefinition['method'][] = [
+  'get',
+  'post',
+  'put',
+  'patch',
+  'delete',
+  'head',
+  'options',
+];
+
+/**
+ * Type guard for valid HTTP methods.
+ * @internal
+ */
+function isValidMethod(value: string): value is EndpointDefinition['method'] {
+  return VALID_METHODS.some((m) => m === value);
+}
+
+/**
+ * State accumulator for parsed config properties.
+ * @internal
+ */
+interface ParsedConfigState {
+  method: EndpointDefinition['method'] | undefined;
+  path: string | undefined;
+  summary: string | undefined;
+  description: string | undefined;
+  tags: string[] | undefined;
+  deprecated: boolean | undefined;
+  operationId: string | undefined;
+  parameters: EndpointParameters | undefined;
+  body: string | undefined;
+  responses: EndpointResponses | undefined;
+}
+
+/**
+ * Create initial empty state.
+ * @internal
+ */
+function createInitialState(): ParsedConfigState {
+  return {
+    method: undefined,
+    path: undefined,
+    summary: undefined,
+    description: undefined,
+    tags: undefined,
+    deprecated: undefined,
+    operationId: undefined,
+    parameters: undefined,
+    body: undefined,
+    responses: undefined,
+  };
+}
+
+/**
+ * Extract and validate method from property.
+ * @internal
+ */
+function extractMethod(propInit: Node): EndpointDefinition['method'] | undefined {
+  const val = extractStringValue(propInit);
+  if (val && isValidMethod(val)) {
+    return val;
+  }
+  return undefined;
+}
+
+/**
+ * Process a property assignment and update state.
+ * @internal
+ */
+function processProperty(state: ParsedConfigState, propName: string, propInit: Node): void {
+  switch (propName) {
+    case 'parameters':
+      state.parameters = extractParametersObject(propInit);
+      break;
+    case 'response':
+      state.responses = extractResponsesObject(propInit);
+      break;
+    case 'method':
+      state.method = extractMethod(propInit);
+      break;
+    case 'path':
+      state.path = extractStringValue(propInit);
+      break;
+    case 'summary':
+      state.summary = extractStringValue(propInit);
+      break;
+    case 'description':
+      state.description = extractStringValue(propInit);
+      break;
+    case 'operationId':
+      state.operationId = extractStringValue(propInit);
+      break;
+    case 'body':
+      state.body = stripQuotes(propInit.getText());
+      break;
+    case 'tags':
+      state.tags = extractStringArray(propInit);
+      break;
+    case 'deprecated':
+      state.deprecated = extractBooleanValue(propInit);
+      break;
+  }
+}
+
+/**
+ * Build the final endpoint definition from parsed state.
+ * @internal
+ */
+function buildEndpointResult(state: ParsedConfigState): EndpointDefinition | undefined {
+  if (!state.method || !state.path || !state.responses) {
+    return undefined;
+  }
+
+  const result: EndpointDefinition = {
+    method: state.method,
+    path: state.path,
+    responses: state.responses,
+  };
+
+  if (state.summary !== undefined) {
+    result.summary = state.summary;
+  }
+  if (state.description !== undefined) {
+    result.description = state.description;
+  }
+  if (state.tags !== undefined) {
+    result.tags = state.tags;
+  }
+  if (state.deprecated !== undefined) {
+    result.deprecated = state.deprecated;
+  }
+  if (state.operationId !== undefined) {
+    result.operationId = state.operationId;
+  }
+  if (state.parameters !== undefined) {
+    result.parameters = state.parameters;
+  }
+  if (state.body !== undefined) {
+    result.body = state.body;
+  }
+
+  return result;
+}
+
+/**
+ * Parse the config object from a defineEndpoint call.
+ * @internal
+ */
+function parseConfigObject(configArg: Node): EndpointDefinition | undefined {
+  if (!Node.isObjectLiteralExpression(configArg)) {
+    return undefined;
+  }
+
+  const state = createInitialState();
+
+  for (const prop of configArg.getProperties()) {
+    if (!Node.isPropertyAssignment(prop)) {
+      continue;
+    }
+
+    const propInit = prop.getInitializer();
+    if (propInit) {
+      processProperty(state, prop.getName(), propInit);
+    }
+  }
+
+  return buildEndpointResult(state);
+}
 
 /**
  * Parse a `defineEndpoint({...})` expression into an endpoint definition.
@@ -193,292 +395,15 @@ export function parseEndpointDefinition(expression: string): EndpointDefinition 
     return undefined;
   }
 
-  // Check it's a defineEndpoint call
   const callExpr = init.getExpression();
   if (!Node.isIdentifier(callExpr) || callExpr.getText() !== 'defineEndpoint') {
     return undefined;
   }
 
-  // Get the first argument (the config object)
   const args = init.getArguments();
-  if (args.length === 0) {
+  if (args.length === 0 || !args[0]) {
     return undefined;
   }
 
-  const configArg = args[0];
-  if (!configArg || !Node.isObjectLiteralExpression(configArg)) {
-    return undefined;
-  }
-
-  // Extract properties
-  let method: EndpointDefinition['method'] | undefined;
-  let path: string | undefined;
-  let summary: string | undefined;
-  let description: string | undefined;
-  let tags: string[] | undefined;
-  let deprecated: boolean | undefined;
-  let operationId: string | undefined;
-  let parameters: EndpointParameters | undefined;
-  let body: string | undefined;
-  let responses: EndpointResponses | undefined;
-
-  for (const prop of configArg.getProperties()) {
-    if (!Node.isPropertyAssignment(prop)) {
-      continue;
-    }
-
-    const propName = prop.getName();
-    const propInit = prop.getInitializer();
-
-    if (!propInit) {
-      continue;
-    }
-
-    switch (propName) {
-      case 'method':
-        method = extractStringValue(propInit) as EndpointDefinition['method'];
-        break;
-      case 'path':
-        path = extractStringValue(propInit);
-        break;
-      case 'summary':
-        summary = extractStringValue(propInit);
-        break;
-      case 'description':
-        description = extractStringValue(propInit);
-        break;
-      case 'operationId':
-        operationId = extractStringValue(propInit);
-        break;
-      case 'tags':
-        tags = extractStringArray(propInit);
-        break;
-      case 'deprecated':
-        deprecated = extractBooleanValue(propInit);
-        break;
-      case 'parameters':
-        parameters = extractParametersObject(propInit);
-        break;
-      case 'body':
-        body = propInit.getText().replace(/^['"]|['"]$/g, '');
-        break;
-      case 'response':
-        responses = extractResponsesObject(propInit);
-        break;
-    }
-  }
-
-  // Validate required fields
-  if (!method || !path || !responses) {
-    return undefined;
-  }
-
-  const result: EndpointDefinition = {
-    method,
-    path,
-    responses,
-  };
-
-  // Only add optional properties if they are defined
-  if (summary !== undefined) {
-    result.summary = summary;
-  }
-  if (description !== undefined) {
-    result.description = description;
-  }
-  if (tags !== undefined) {
-    result.tags = tags;
-  }
-  if (deprecated !== undefined) {
-    result.deprecated = deprecated;
-  }
-  if (operationId !== undefined) {
-    result.operationId = operationId;
-  }
-  if (parameters !== undefined) {
-    result.parameters = parameters;
-  }
-  if (body !== undefined) {
-    result.body = body;
-  }
-
-  return result;
-}
-
-// ============================================================================
-// CastrOperation building
-// ============================================================================
-
-/**
- * Create default schema metadata.
- * @internal
- */
-function createDefaultMetadata(): CastrSchema['metadata'] {
-  return {
-    required: true,
-    nullable: false,
-    zodChain: {
-      presence: '',
-      validations: [],
-      defaults: [],
-    },
-    dependencyGraph: {
-      references: [],
-      referencedBy: [],
-      depth: 0,
-    },
-    circularReferences: [],
-  };
-}
-
-/**
- * Parse a schema expression into a CastrSchema.
- * @internal
- */
-function parseSchemaExpression(expression: string): CastrSchema {
-  // Try primitive first
-  const primitive = parsePrimitiveZod(expression);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Try object
-  const object = parseObjectZod(expression);
-  if (object) {
-    return object;
-  }
-
-  // Return a reference for named schemas
-  return {
-    $ref: `#/components/schemas/${expression.replace(/Schema$/, '')}`,
-    metadata: createDefaultMetadata(),
-  };
-}
-
-/**
- * Build CastrParameter from a parameter definition.
- * @internal
- */
-function buildParameter(
-  name: string,
-  schemaExpression: string,
-  location: ParameterLocation,
-): CastrParameter {
-  const schema = parseSchemaExpression(schemaExpression);
-  const isOptional = schemaExpression.includes('.optional()');
-
-  return {
-    name,
-    in: location,
-    required: location === 'path' ? true : !isOptional,
-    schema,
-  };
-}
-
-/**
- * Build CastrResponse from a response definition.
- * @internal
- */
-function buildResponse(statusCode: string, schemaExpression: string): CastrResponse {
-  const schema = parseSchemaExpression(schemaExpression);
-
-  return {
-    statusCode,
-    schema,
-  };
-}
-
-/**
- * Build a `CastrOperation` from a parsed endpoint definition.
- *
- * @param definition - Parsed endpoint definition
- * @returns Complete CastrOperation structure
- *
- * @example
- * ```typescript
- * const operation = buildCastrOperationFromEndpoint({
- *   method: 'get',
- *   path: '/users/{id}',
- *   parameters: { path: { id: 'z.string()' } },
- *   responses: { '200': 'UserSchema' },
- * });
- * ```
- *
- * @public
- */
-export function buildCastrOperationFromEndpoint(definition: EndpointDefinition): CastrOperation {
-  const parameters: CastrParameter[] = [];
-  const parametersByLocation: CastrOperation['parametersByLocation'] = {
-    path: [],
-    query: [],
-    header: [],
-    cookie: [],
-  };
-
-  // Build parameters
-  if (definition.parameters) {
-    const locations: ParameterLocation[] = ['path', 'query', 'header', 'cookie'];
-
-    for (const location of locations) {
-      const locationParams = definition.parameters[location];
-      if (!locationParams) {
-        continue;
-      }
-
-      for (const [name, schemaExpr] of Object.entries(locationParams)) {
-        const param = buildParameter(name, schemaExpr, location);
-        parameters.push(param);
-        parametersByLocation[location].push(param);
-      }
-    }
-  }
-
-  // Build request body
-  let requestBody: IRRequestBody | undefined;
-  if (definition.body) {
-    const bodySchema = parseSchemaExpression(definition.body);
-    requestBody = {
-      required: true,
-      content: {
-        'application/json': {
-          schema: bodySchema,
-        },
-      },
-    };
-  }
-
-  // Build responses
-  const responses: CastrResponse[] = Object.entries(definition.responses).map(
-    ([statusCode, schemaExpr]) => buildResponse(statusCode, schemaExpr),
-  );
-
-  const operation: CastrOperation = {
-    method: definition.method,
-    path: definition.path,
-    parameters,
-    parametersByLocation,
-    responses,
-  };
-
-  // Only add optional properties if they are defined
-  if (definition.operationId !== undefined) {
-    operation.operationId = definition.operationId;
-  }
-  if (definition.summary !== undefined) {
-    operation.summary = definition.summary;
-  }
-  if (definition.description !== undefined) {
-    operation.description = definition.description;
-  }
-  if (definition.tags !== undefined) {
-    operation.tags = definition.tags;
-  }
-  if (definition.deprecated !== undefined) {
-    operation.deprecated = definition.deprecated;
-  }
-  if (requestBody !== undefined) {
-    operation.requestBody = requestBody;
-  }
-
-  return operation;
+  return parseConfigObject(args[0]);
 }

@@ -41,11 +41,11 @@ pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
 pnpm test:gen && pnpm character
 ```
 
-**Total: 1164+ tests** (808 unit, 173 snapshot, 20 gen, 163 character)
+**Total: 1237+ tests** (881 unit, 173 snapshot, 20 gen, 163 character)
 
 ---
 
-## 📋 Current State (January 11, 2026)
+## 📋 Current State (January 12, 2026)
 
 ### ✅ Phase 1 Complete: OpenAPI → Zod
 
@@ -66,15 +66,15 @@ Implementing the reverse transformation to prove bidirectional architecture.
 
 **See:** [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
 
-| Session | Focus                    | Status         |
-| ------- | ------------------------ | -------------- |
-| 2.1     | Zod 4 parser foundation  | ✅ Complete    |
-| 2.2     | Constraints & modifiers  | ✅ Complete    |
-| 2.3     | Composition & references | ✅ Complete    |
-| 2.4     | Endpoint parsing         | ✅ Complete    |
-| 2.5     | OpenAPI writer           | 🎯 Next        |
-| 2.6     | Round-trip validation    | Pending        |
-| 2.7     | Adapter abstraction      | Pending        |
+| Session | Focus                    | Status      |
+| ------- | ------------------------ | ----------- |
+| 2.1     | Zod 4 parser foundation  | ✅ Complete |
+| 2.2     | Constraints & modifiers  | ✅ Complete |
+| 2.3     | Composition & references | ✅ Complete |
+| 2.4     | Endpoint parsing         | ✅ Complete |
+| 2.5     | OpenAPI writer           | ✅ Complete |
+| 2.6     | Round-trip validation    | 🎯 Next     |
+| 2.7     | Adapter abstraction      | Pending     |
 
 > **⚠️ ADR-026:** No regex for parsing. All parsers must use ts-morph AST.
 > Lint refactoring completed — 0 errors, all regex replaced with string/AST methods.
@@ -120,7 +120,7 @@ Implementing the reverse transformation to prove bidirectional architecture.
 
 1. **Run quality gates** — Verify clean state (0 lint errors)
 2. **Read the current plan** — [zod-to-openapi-plan.md](plans/zod-to-openapi-plan.md)
-3. **Start Session 2.5** — OpenAPI writer (`writeOpenApi(ir: CastrDocument)`)
+3. **Start Session 2.6** — Round-trip validation
 4. **Write tests first** — TDD is mandatory
 5. **Run quality gates** — All 10 must pass before commit
 

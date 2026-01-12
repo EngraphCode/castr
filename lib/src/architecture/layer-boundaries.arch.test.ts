@@ -37,9 +37,13 @@ const OPENAPI_OBJECT_IMPORT_PATTERN =
 
 /**
  * Get all TypeScript files in a directory recursively.
- * Excludes test files.
+ * Excludes test files and optionally specific subdirectory paths.
  */
-function getTypeScriptFiles(dir: string, excludeTests = true): string[] {
+function getTypeScriptFiles(
+  dir: string,
+  excludeTests = true,
+  excludePaths: string[] = [],
+): string[] {
   const files: string[] = [];
 
   if (!fs.existsSync(dir)) {
@@ -51,8 +55,13 @@ function getTypeScriptFiles(dir: string, excludeTests = true): string[] {
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
 
+    // Skip excluded paths
+    if (excludePaths.some((excludePath) => fullPath.includes(excludePath))) {
+      continue;
+    }
+
     if (entry.isDirectory()) {
-      files.push(...getTypeScriptFiles(fullPath, excludeTests));
+      files.push(...getTypeScriptFiles(fullPath, excludeTests, excludePaths));
     } else if (entry.isFile() && entry.name.endsWith('.ts')) {
       if (excludeTests && entry.name.includes('.test.')) {
         continue;
@@ -97,7 +106,10 @@ describe('Layer Boundary Enforcement', () => {
   describe('Writers Layer', () => {
     it('should not import OpenAPIObject in writer files', () => {
       const writersDir = path.join(libSrcPath, 'writers');
-      const writerFiles = getTypeScriptFiles(writersDir);
+      // Exception: writers/openapi is allowed to import OpenAPI types
+      // because it's for OUTPUT generation (IR → OpenAPI), not input consumption.
+      // The rule protects against inputs; output generation legitimately needs the output types.
+      const writerFiles = getTypeScriptFiles(writersDir, true, ['writers/openapi']);
 
       const violations = writerFiles
         .map(checkFileForViolations)
@@ -108,7 +120,7 @@ describe('Layer Boundary Enforcement', () => {
 
     it('should have writer files to test', () => {
       const writersDir = path.join(libSrcPath, 'writers');
-      const writerFiles = getTypeScriptFiles(writersDir);
+      const writerFiles = getTypeScriptFiles(writersDir, true, ['writers/openapi']);
 
       // Sanity check: we should have writers to test
       expect(writerFiles.length).toBeGreaterThan(0);

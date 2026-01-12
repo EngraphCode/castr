@@ -1,8 +1,8 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 11, 2026
+**Date:** January 12, 2026
 **Status:** Active
-**Quality Gates:** All 10 passing (1126+ tests)
+**Quality Gates:** All 10 passing (1237+ tests)
 
 ---
 
@@ -50,20 +50,21 @@ Any Input Format → Scalar Pipeline → IR (canonical AST) → ts-morph Writers
 
 ---
 
-## Current State (January 11, 2026)
+## Current State (January 12, 2026)
 
 ### What's Working ✅
 
 | Component                | Status          | Notes                                    |
 | ------------------------ | --------------- | ---------------------------------------- |
-| Quality Gates            | 10/10 passing   | 1126+ tests total                        |
+| Quality Gates            | 10/10 passing   | 1237+ tests total                        |
 | IR Builder               | Complete        | OpenAPI → CastrDocument                  |
 | IR-1 (schemaNames, deps) | Complete        | Full dependencyGraph with depth/circular |
 | IR-2 (context cleanup)   | Complete        | Schema names, deps, tags from IR         |
 | IR-3 (MCP cleanup)       | Complete        | MCP fully IR-based                       |
 | **IR-4 (validation)**    | **Complete**    | **17 architectural tests**               |
 | Zod Writer               | Complete        | IR → Zod via ts-morph                    |
-| **Zod Parser (2.1-2.3)** | **In Progress** | **81 tests, arrays & enums done**        |
+| **Zod Parser (2.1-2.4)** | **Complete**    | **881 tests, all features done**         |
+| **OpenAPI Writer**       | **Complete**    | **IR → OpenAPI via ts-morph (73 tests)** |
 | Type Writer              | Complete        | IR → TypeScript via ts-morph             |
 | Scalar Pipeline          | Complete        | Bundles, upgrades to 3.1                 |
 | OpenAPI 3.1 Support      | Complete        | First-class support                      |
@@ -138,10 +139,10 @@ Phase 1 (OpenAPI → Zod) is **complete**. Now implementing the reverse directio
 | ------- | ------------------------ | -------------- | ------ |
 | 2.1     | Zod 4 parser foundation  | ✅ Complete    | 4-6h   |
 | 2.2     | Constraints & modifiers  | ✅ Complete    | 4-6h   |
-| 2.3     | Composition & references | 🎯 In Progress | 6-8h   |
-| 2.4     | Endpoint parsing         | Pending        | 6-8h   |
-| 2.5     | OpenAPI writer           | Pending        | 6-8h   |
-| 2.6     | Round-trip validation    | Pending        | 4-6h   |
+| 2.3     | Composition & references | ✅ Complete    | 6-8h   |
+| 2.4     | Endpoint parsing         | ✅ Complete    | 6-8h   |
+| 2.5     | OpenAPI writer           | ✅ Complete    | 6-8h   |
+| 2.6     | Round-trip validation    | 🎯 Next        | 4-6h   |
 | 2.7     | Adapter abstraction      | Pending        | 4-6h   |
 
 **Total: ~3-4 weeks**
@@ -240,7 +241,7 @@ pnpm build
 pnpm type-check
 pnpm lint
 pnpm format:check
-pnpm test          # 770 unit tests
+pnpm test          # 881 unit tests
 pnpm test:snapshot # 173 snapshot tests
 pnpm test:gen      # 20 generated code tests
 pnpm character     # 163 characterisation tests
@@ -291,7 +292,7 @@ pnpm character     # 163 characterisation tests
 1. Read [session-entry.prompt.md](../prompts/session-entry.prompt.md)
 2. Run quality gates: `pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character`
 3. Review this roadmap and [zod-to-openapi-plan.md](./zod-to-openapi-plan.md)
-4. Continue Phase 2 Session 2.3 (Composition & references — unions, intersections, lazy)
+4. Continue Phase 2 Session 2.6 (Round-trip validation)
 
 ---
 

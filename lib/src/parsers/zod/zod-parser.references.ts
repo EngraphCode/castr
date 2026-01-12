@@ -8,7 +8,7 @@
  * @internal
  */
 
-import { type SourceFile, Node } from 'ts-morph';
+import { type SourceFile, type VariableDeclaration, type Statement, Node } from 'ts-morph';
 import type { CastrSchema } from '../../context/ir-schema.js';
 import {
   createZodProject,
@@ -187,9 +187,49 @@ export function parseLazyZod(expression: string): CastrSchema | undefined {
   return parseSchemaExpression(bodyExpression);
 }
 
-// ============================================================================
-// Variable reference resolution
-// ============================================================================
+/**
+ * Try to parse a variable declaration as a schema.
+ * @internal
+ */
+function tryParseVariableDeclaration(decl: VariableDeclaration): CastrSchema | undefined {
+  const init = decl.getInitializer();
+  if (!init) {
+    return undefined;
+  }
+
+  if (!Node.isCallExpression(init)) {
+    return undefined;
+  }
+
+  if (!isZodCall(init)) {
+    return undefined;
+  }
+
+  return parseSchemaExpression(init.getText());
+}
+
+/**
+ * Find a variable declaration by name in a statement.
+ * @internal
+ */
+function findVariableInStatement(stmt: Statement, variableName: string): CastrSchema | undefined {
+  if (!Node.isVariableStatement(stmt)) {
+    return undefined;
+  }
+
+  for (const decl of stmt.getDeclarationList().getDeclarations()) {
+    if (decl.getName() !== variableName) {
+      continue;
+    }
+
+    const parsed = tryParseVariableDeclaration(decl);
+    if (parsed) {
+      return parsed;
+    }
+  }
+
+  return undefined;
+}
 
 /**
  * Resolve a variable reference to its schema definition.
@@ -216,34 +256,13 @@ export function resolveVariableReference(
     return createUnresolvedReference(variableName);
   }
 
-  // Find variable declaration
   for (const stmt of sourceFile.getStatements()) {
-    if (!Node.isVariableStatement(stmt)) {
-      continue;
-    }
-
-    for (const decl of stmt.getDeclarationList().getDeclarations()) {
-      if (decl.getName() !== variableName) {
-        continue;
-      }
-
-      const init = decl.getInitializer();
-      if (!init) {
-        continue;
-      }
-
-      // If it's a Zod call, parse it
-      if (Node.isCallExpression(init) && isZodCall(init)) {
-        const schemaExpr = init.getText();
-        const parsed = parseSchemaExpression(schemaExpr);
-        if (parsed) {
-          return parsed;
-        }
-      }
+    const result = findVariableInStatement(stmt, variableName);
+    if (result !== undefined) {
+      return result;
     }
   }
 
-  // Variable not found or not a Zod schema - return reference
   return createUnresolvedReference(variableName);
 }
 

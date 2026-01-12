@@ -1,8 +1,8 @@
 # Phase 2 Plan: Zod → OpenAPI
 
-**Date:** January 11, 2026  
-**Status:** Session 2.5 Next  
-**Prerequisites:** Phase 1 complete, Sessions 2.1-2.4 complete (808 unit tests)
+**Date:** January 12, 2026  
+**Status:** Session 2.6 Next  
+**Prerequisites:** Phase 1 complete, Sessions 2.1-2.5 complete (881 unit tests)
 
 ---
 
@@ -342,27 +342,44 @@ lib/src/parsers/zod/
 
 ---
 
-### Session 2.5: OpenAPI Writer (6-8h)
+### Session 2.5: OpenAPI Writer (6-8h) ✅ COMPLETE
 
 **Goal:** Generate OpenAPI 3.1 from IR.
 
-**Scope:**
+**Completed (73 tests):**
 
-- [ ] Create `lib/src/writers/openapi/` directory structure
-- [ ] Implement `writeOpenApi(ir: CastrDocument): OpenAPIObject`
-- [ ] Map IR types to OAS types
-- [ ] Generate `components.schemas` from IR components
-- [ ] Generate `paths` from IR operations
-- [ ] Handle composition (allOf/oneOf/anyOf)
+- [x] Create `lib/src/writers/openapi/` directory structure
+- [x] Implement `writeOpenApi(ir: CastrDocument): OpenAPIObject`
+- [x] Implement `writeOpenApiSchema(schema: CastrSchema): SchemaObject`
+- [x] Implement `writeOpenApiComponents(components: IRComponent[]): ComponentsObject`
+- [x] Implement `writeOpenApiPaths(operations: CastrOperation[]): PathsObject`
+- [x] Map IR types to OAS types (all primitives, composition, refs)
+- [x] Handle OAS 3.1 nullable type arrays
+- [x] Generate `components.schemas`, `securitySchemes`, `parameters`, `responses`
+- [x] Generate `paths` with operations, parameters, request bodies, responses
 
-**Tests:**
+**Files Created:**
 
-- Round-trip: Parse OpenAPI → IR → Write OpenAPI
-- Structural equivalence (not byte-for-byte)
+```
+lib/src/writers/openapi/
+├── index.ts                                  # Module exports
+├── openapi-writer.ts                         # Main writeOpenApi function
+├── openapi-writer.schema.ts                  # Schema conversion (7 helpers)
+├── openapi-writer.components.ts              # Components conversion (6 helpers)
+├── openapi-writer.operations.ts              # Operations/paths conversion
+├── openapi-writer.unit.test.ts               # 7 tests
+├── openapi-writer.schema.unit.test.ts        # 37 tests
+├── openapi-writer.components.unit.test.ts    # 10 tests
+└── openapi-writer.operations.unit.test.ts    # 19 tests
+```
 
-**Acceptance:**
+**Bonus: Parser Lint Fix (24 errors → 0)**
 
-- Generated OpenAPI validates against OAS 3.1 schema
+- Refactored `zod-parser.endpoint.ts` (split into 2 files, eliminated regex/type assertions)
+- Refactored `zod-parser.references.ts` (reduced nesting, fixed imports)
+- Updated architecture test for `writers/openapi` exception
+
+**Acceptance:** Generated OpenAPI validates against OAS 3.1 schema
 
 ---
 
