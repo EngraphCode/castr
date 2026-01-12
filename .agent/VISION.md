@@ -63,33 +63,33 @@ With this principle:
 │          │                 │                 │                       │
 │          └─────────────────┼─────────────────┘                       │
 │                            ▼                                         │
-├────────────────────────────────────────────────────────────────────-─┤
-│                    Intermediate Representation (IR) / Caster Model                  │
+├──────────────────────────────────────────────────────────────────────┤
+│                    Intermediate Representation (IR)                  │
 │                                                                      │
-│   • CastrSchema - Type definitions, constraints, metadata               │
-│   • CastrSchemaNode - Individual schema nodes with context              │
+│   • CastrDocument - Complete document with schemas, operations       │
+│   • CastrSchema - Type definitions, constraints, metadata            │
 │   • IROperation - API endpoints (for OpenAPI input)                  │
 │   • IRDependencyGraph - Reference tracking, circular detection       │
 │                                                                      │
 │   *** THIS IS THE ENTIRE SYSTEM'S CENTER OF GRAVITY ***              │
-│   *** All code that touches schema data works with this AST ***       │
+│   *** All code that touches schema data works with this IR ***       │
 │                                                                      │
 ├──────────────────────────────────────────────────────────────────────┤
 │                           OUTPUT LAYER                               │
 │          ┌─────────────────┼─────────────────┐                       │
 │          │                 │                 │                       │
 │  ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐              │
-│  │ Zod Transformer│ │  TS Types    │ │  JSON Schema  │ ... more     │
-│  │   (Zod 4)     │ │ Transformer   │ │  Transformer  │   outputs    │
+│  │  Zod Writer   │ │   TS Types    │ │  JSON Schema  │ ... more     │
+│  │   (Zod 4)     │ │    Writer     │ │    Writer     │   writers    │
 │  └───────────────┘ └───────────────┘ └───────────────┘              │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Intermediate Representation (IR) Architecture Pattern:**
+**Canonical Structure (see ADR-029):**
 
-1. **Parse** - Convert any input format to canonical AST (input is discarded after this)
-2. **AST** - The single, canonical, type-safe representation (this IS the data now)
-3. **Transform** - Generate any output format from the AST
+1. **Parse** (`parsers/`) - Convert any input format to IR
+2. **IR** (`ir/`) - The single, canonical, type-safe representation
+3. **Write** (`writers/`) - Generate any output format from the IR
 
 ---
 
