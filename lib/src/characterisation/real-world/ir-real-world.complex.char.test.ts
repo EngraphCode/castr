@@ -17,7 +17,7 @@ import {
   assertComponentExists,
   assertContentContains,
 } from '../ir-test-helpers.js';
-import { assertSchemaComponent } from '../../context/ir-test-helpers.js';
+import { assertSchemaComponent } from '../../ir/test-helpers.js';
 
 describe('IR Characterization - Real-World Specs', () => {
   describe('Complex Schema Patterns', () => {

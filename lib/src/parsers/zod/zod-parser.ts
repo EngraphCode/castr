@@ -26,7 +26,7 @@ import type {
   CastrSchemaComponent,
   CastrSchema,
   CastrSchemaNode,
-} from '../../context/ir-schema.js';
+} from '../../ir/schema.js';
 import type { ZodParseResult, ZodParseError, ZodParseRecommendation } from './zod-parser.types.js';
 import { detectZod3Syntax, detectDynamicSchemas } from './zod-parser.detection.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';

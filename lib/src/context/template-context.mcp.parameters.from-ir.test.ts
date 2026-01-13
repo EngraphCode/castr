@@ -9,8 +9,8 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import type { CastrOperation, CastrParameter } from './ir-schema.js';
-import { createMockCastrSchemaNode } from './ir-test-helpers.js';
+import type { CastrOperation, CastrParameter } from '../ir/schema.js';
+import { createMockCastrSchemaNode } from '../ir/test-helpers.js';
 import { collectParameterGroupsFromIR } from './template-context.mcp.parameters.js';
 
 /**

@@ -9,7 +9,7 @@
  */
 
 import { Node } from 'ts-morph';
-import type { CastrSchema } from '../../context/ir-schema.js';
+import type { CastrSchema } from '../../ir/schema.js';
 import { createZodProject, getZodMethodChain, type ZodMethodChainInfo } from './zod-ast.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 import { parseArrayZod, parseEnumZod } from './zod-parser.composition.js';

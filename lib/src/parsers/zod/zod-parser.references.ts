@@ -9,7 +9,7 @@
  */
 
 import { type SourceFile, type VariableDeclaration, type Statement, Node } from 'ts-morph';
-import type { CastrSchema } from '../../context/ir-schema.js';
+import type { CastrSchema } from '../../ir/schema.js';
 import {
   createZodProject,
   getZodMethodChain,

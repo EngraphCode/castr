@@ -6,7 +6,7 @@
  * separation where post-IR code never accesses raw OpenAPI data.
  */
 import { describe, it, expect } from 'vitest';
-import type { CastrDocument, IRDependencyGraph, CastrSchemaComponent } from './ir-schema.js';
+import type { CastrDocument, IRDependencyGraph, CastrSchemaComponent } from '../ir/schema.js';
 import {
   getSchemaNamesSortedByDependencies,
   getDeepDependencyGraphFromIR,

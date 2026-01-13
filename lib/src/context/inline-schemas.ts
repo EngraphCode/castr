@@ -1,4 +1,4 @@
-import type { CastrDocument, IRComponent, CastrOperation } from './ir-schema.js';
+import type { CastrDocument, IRComponent, CastrOperation } from '../ir/schema.js';
 import { toIdentifier } from '../shared/utils/identifier-utils.js';
 
 /**

@@ -1,7 +1,7 @@
 import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import { type Options, resolveConfig } from 'prettier';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
-import { writeTypeScript } from '../../src/writers/typescript.js';
+import { writeTypeScript } from '../../src/writers/typescript/index.js';
 import { maybePretty } from '../../src/shared/maybe-pretty.js';
 
 import { sync } from 'fast-glob';

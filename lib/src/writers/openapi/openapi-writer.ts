@@ -10,7 +10,7 @@
 
 import type { OpenAPIObject, SecurityRequirementObject } from 'openapi3-ts/oas31';
 
-import type { CastrDocument, IRSecurityRequirement } from '../../context/ir-schema.js';
+import type { CastrDocument, IRSecurityRequirement } from '../../ir/schema.js';
 
 import { writeOpenApiComponents } from './openapi-writer.components.js';
 import { writeOpenApiPaths } from './openapi-writer.operations.js';

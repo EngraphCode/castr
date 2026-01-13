@@ -5,19 +5,36 @@
  * After `buildIR()`, the OpenAPI document is conceptually discarded.
  * Writers and MCP layers must only work with IR types (CastrDocument, CastrSchema, etc.).
  *
+ * **ADR-029 Canonical Structure:**
+ * ```
+ * lib/src/
+ * ├── ir/                  # IR Layer (schema.ts, validators.ts, serialization.ts)
+ * ├── parsers/             # Input Layer (Format → IR)
+ * │   ├── openapi/         # OpenAPI → IR (buildIR)
+ * │   └── zod/             # Zod → IR (parseZod)
+ * ├── writers/             # Output Layer (IR → Format)
+ * │   ├── openapi/         # IR → OpenAPI (writeOpenApi)
+ * │   ├── zod/             # IR → Zod (writeZodSchema)
+ * │   ├── typescript/      # IR → TypeScript (writeTypeScript)
+ * │   └── markdown/        # IR → Markdown (writeMarkdown)
+ * └── context/             # Orchestration Layer
+ * ```
+ *
  * **Protected Layers (no OpenAPIObject allowed):**
- * - `lib/src/writers/**` — Output generation layer
+ * - `lib/src/writers/**` — Output generation layer (except writers/openapi)
  * - `lib/src/context/template-context.mcp*.ts` — MCP subsystem (excluding tests)
+ * - `lib/src/ir/**` — IR layer (pure IR types only)
  *
  * **Allowed Layers:**
- * - `lib/src/context/ir-builder*.ts` — Input parsing
+ * - `lib/src/parsers/openapi/**` — Input parsing (OpenAPI allowed)
  * - `lib/src/context/template-context.ts` — Orchestration (builds IR)
  * - `lib/src/shared/load-openapi-document/**` — Input loading
  * - `lib/src/cli/**` — Entry point
  * - `lib/src/validation/**` — Input validation
  * - Test files (`*.test.ts`)
  *
- * @see ADR-024 for the architectural decision
+ * @see ADR-024 for layer boundary architectural decision
+ * @see ADR-029 for canonical source structure
  * @module architecture/layer-boundaries
  */
 
@@ -145,6 +162,25 @@ describe('Layer Boundary Enforcement', () => {
 
       // Sanity check: we should have MCP files to test
       expect(mcpFiles.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('IR Layer (ADR-029)', () => {
+    it('should not import OpenAPIObject in IR files', () => {
+      const irDir = path.join(libSrcPath, 'ir');
+      const irFiles = getTypeScriptFiles(irDir, true);
+
+      const violations = irFiles.map(checkFileForViolations).filter((v): v is string => v !== null);
+
+      expect(violations).toEqual([]);
+    });
+
+    it('should have IR files to test', () => {
+      const irDir = path.join(libSrcPath, 'ir');
+      const irFiles = getTypeScriptFiles(irDir, true);
+
+      // Sanity check: we should have IR files to test
+      expect(irFiles.length).toBeGreaterThan(0);
     });
   });
 

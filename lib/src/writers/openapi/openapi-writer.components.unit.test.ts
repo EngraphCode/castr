@@ -16,7 +16,7 @@ import type {
   CastrResponseComponent,
   CastrSchemaNode,
   IRComponent,
-} from '../../context/ir-schema.js';
+} from '../../ir/schema.js';
 
 import { writeOpenApiComponents } from './openapi-writer.components.js';
 

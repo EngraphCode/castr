@@ -9,7 +9,7 @@
 import { describe, it, expect } from 'vitest';
 import { parseEndpointDefinition, buildCastrOperationFromEndpoint } from './zod-parser.endpoint.js';
 import type { EndpointDefinition } from './zod-parser.endpoint.types.js';
-import type { CastrResponse } from '../../context/ir-schema.js';
+import type { CastrResponse } from '../../ir/schema.js';
 
 describe('Endpoint Zod Parsing', () => {
   describe('parseEndpointDefinition', () => {

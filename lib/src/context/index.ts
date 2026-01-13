@@ -14,6 +14,10 @@ export {
   type TemplateContextMcpTool,
 } from './template-context.mcp.js';
 
-// IR exports
-export * from './ir-schema.js';
-export { buildIR } from './ir-builder.js';
+// IR exports - re-exported from canonical location for backward compatibility
+// NOTE: These re-exports are deprecated. Import directly from '../ir/index.js' instead.
+export * from '../ir/index.js';
+
+// Parser exports - re-exported for backward compatibility
+// NOTE: These re-exports are deprecated. Import directly from '../parsers/openapi/index.js' instead.
+export { buildIR } from '../parsers/openapi/index.js';

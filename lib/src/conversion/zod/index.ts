@@ -1,7 +1,7 @@
-import { buildCastrSchema } from '../../context/ir-builder.core.js';
+import { buildCastrSchema } from '../../parsers/openapi/builder.core.js';
 import { generateZodSchema } from '../../test-helpers/generate-zod-schema.js';
 import type { SchemaObject } from 'openapi3-ts/oas31';
-import type { IRBuildContext } from '../../context/ir-builder.types.js';
+import type { IRBuildContext } from '../../parsers/openapi/builder.types.js';
 
 export function getZodSchema({ schema }: { schema: SchemaObject }): {
   code: string;

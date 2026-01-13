@@ -8,8 +8,8 @@
  */
 
 import type { Schema as JsonSchema } from 'ajv';
-import type { CastrDocument, CastrOperation, CastrSchema } from './ir-schema.js';
-import { CastrSchemaProperties } from './ir-schema-properties.js';
+import type { CastrDocument, CastrOperation, CastrSchema } from '../ir/schema.js';
+import { CastrSchemaProperties } from '../ir/schema-properties.js';
 import type { MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
 import {
   collectParameterGroupsFromIR,

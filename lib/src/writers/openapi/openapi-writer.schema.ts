@@ -10,7 +10,7 @@
 
 import type { SchemaObject, SchemaObjectType } from 'openapi3-ts/oas31';
 
-import type { CastrSchema } from '../../context/ir-schema.js';
+import type { CastrSchema } from '../../ir/schema.js';
 
 /**
  * Valid schema types for OAS 3.1.

@@ -18,7 +18,7 @@
  * ```
  */
 
-import type { CastrDocument } from '../../context/ir-schema.js';
+import type { CastrDocument } from '../../ir/schema.js';
 
 /**
  * Error codes for Zod parser failures.

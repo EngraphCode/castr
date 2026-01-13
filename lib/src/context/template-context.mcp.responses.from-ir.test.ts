@@ -10,8 +10,8 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import type { CastrOperation, CastrSchema, IRRequestBody, CastrResponse } from './ir-schema.js';
-import { createMockCastrSchemaNode } from './ir-test-helpers.js';
+import type { CastrOperation, CastrSchema, IRRequestBody, CastrResponse } from '../ir/schema.js';
+import { createMockCastrSchemaNode } from '../ir/test-helpers.js';
 import {
   resolveRequestBodySchemaFromIR,
   resolvePrimarySuccessResponseSchemaFromIR,

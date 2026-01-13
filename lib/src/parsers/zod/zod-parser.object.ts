@@ -14,10 +14,10 @@
  * ```
  */
 
-import type { CastrSchema, CastrSchemaNode } from '../../context/ir-schema.js';
+import type { CastrSchema, CastrSchemaNode } from '../../ir/schema.js';
 import type { CallExpression } from 'ts-morph';
 import { Node } from 'ts-morph';
-import { CastrSchemaProperties } from '../../context/ir-schema-properties.js';
+import { CastrSchemaProperties } from '../../ir/schema-properties.js';
 import { createZodProject, getZodBaseMethod, extractObjectProperties } from './zod-ast.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { join } from 'path';
-import { buildIR } from '../context/ir-builder.js';
+import { buildIR } from '../parsers/openapi/index.js';
 import { writeOpenApi } from '../writers/openapi/index.js';
 import { loadOpenApiDocument } from '../shared/load-openapi-document/orchestrator.js';
 import { validateOpenAPI } from '../writers/openapi/openapi-validator.js';

@@ -6,7 +6,7 @@
  */
 
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
-import type { CastrSchema } from './ir-schema.js';
+import type { CastrSchema } from '../ir/schema.js';
 import { getSchemaNameFromRef } from './template-context.common.js';
 import { asComponentSchema } from '../shared/utils/index.js';
 

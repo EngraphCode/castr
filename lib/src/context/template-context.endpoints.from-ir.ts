@@ -5,7 +5,7 @@ import type {
   CastrResponse,
   IRMediaType,
   CastrSchema,
-} from './ir-schema.js';
+} from '../ir/schema.js';
 import type {
   EndpointDefinition,
   EndpointParameter,

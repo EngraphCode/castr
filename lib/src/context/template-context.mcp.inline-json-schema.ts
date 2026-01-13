@@ -14,8 +14,13 @@
  */
 
 import { setKeyword, type MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
-import type { CastrDocument, CastrSchema, CastrSchemaComponent, IRComponent } from './ir-schema.js';
-import { CastrSchemaProperties } from './ir-schema-properties.js';
+import type {
+  CastrDocument,
+  CastrSchema,
+  CastrSchemaComponent,
+  IRComponent,
+} from '../ir/schema.js';
+import { CastrSchemaProperties } from '../ir/schema-properties.js';
 import { toIdentifier } from '../shared/utils/identifier-utils.js';
 
 const INLINE_REF_PREFIX = '#/definitions/';

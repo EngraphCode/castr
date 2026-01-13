@@ -5,7 +5,7 @@ import { upperFirst } from 'lodash-es';
 import { logger } from '../shared/utils/logger.js';
 import { maybePretty } from '../shared/maybe-pretty.js';
 import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
-import { writeIndexFile, writeCommonFile, writeTypeScript } from '../writers/typescript.js';
+import { writeIndexFile, writeCommonFile, writeTypeScript } from '../writers/typescript/index.js';
 
 /**
  * Generate index file for grouped output

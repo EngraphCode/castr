@@ -9,8 +9,8 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import type { CastrSchemaComponent } from './ir-schema.js';
-import { createMockCastrDocument, createMockCastrSchemaNode } from './ir-test-helpers.js';
+import type { CastrSchemaComponent } from '../ir/schema.js';
+import { createMockCastrDocument, createMockCastrSchemaNode } from '../ir/test-helpers.js';
 import type { MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
 import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-schema.js';
 

@@ -1,7 +1,7 @@
 # ADR-029: Canonical Source Structure
 
 **Date:** 2026-01-12  
-**Status:** Proposed  
+**Status:** Accepted  
 **Context:** Discovered 3 duplicate IR→OpenAPI implementations in different directories, revealing lack of coherent organizational principle
 
 ---
@@ -44,12 +44,13 @@ lib/src/
 
 ## Naming Conventions
 
-| Layer | Directory | Function Prefix | Example |
-|-------|-----------|-----------------|---------|
-| **Input** | `parsers/{format}/` | `parse*`, `build*` | `parseZodSource`, `buildIR` |
-| **Output** | `writers/{format}/` | `write*` | `writeOpenApi`, `writeZod` |
+| Layer      | Directory           | Function Prefix    | Example                     |
+| ---------- | ------------------- | ------------------ | --------------------------- |
+| **Input**  | `parsers/{format}/` | `parse*`, `build*` | `parseZodSource`, `buildIR` |
+| **Output** | `writers/{format}/` | `write*`           | `writeOpenApi`, `writeZod`  |
 
 **Rejected alternatives:**
+
 - `transformers/` — VISION.md term, but `writers/` is established ts-morph convention
 - `generators/` — Conflated with code generation (deleted per ADR-028)
 - `converters/` — Ambiguous direction (deleted per ADR-028)
@@ -58,29 +59,29 @@ lib/src/
 
 ## Current State → Target State
 
-| Current Location | Target Location | Status |
-|------------------|-----------------|--------|
-| `context/ir-schema.ts` | `ir/schema.ts` | 🔲 Move |
-| `context/ir-builder.ts` | `parsers/openapi/index.ts` | 🔲 Move |
-| `context/ir-builder.*.ts` | `parsers/openapi/builder.*.ts` | 🔲 Move |
-| `parsers/zod/*` | `parsers/zod/*` | ✅ Already correct |
-| `writers/openapi/*` | `writers/openapi/*` | ✅ Already correct |
-| `writers/zod-writer.ts` | `writers/zod/index.ts` | 🔲 Move |
-| `writers/typescript.ts` | `writers/typescript/index.ts` | 🔲 Move |
+| Current Location          | Target Location                | Status             |
+| ------------------------- | ------------------------------ | ------------------ |
+| `context/ir-schema.ts`    | `ir/schema.ts`                 | ✅ Complete        |
+| `context/ir-builder.ts`   | `parsers/openapi/index.ts`     | ✅ Complete        |
+| `context/ir-builder.*.ts` | `parsers/openapi/builder.*.ts` | ✅ Complete        |
+| `parsers/zod/*`           | `parsers/zod/*`                | ✅ Already correct |
+| `writers/openapi/*`       | `writers/openapi/*`            | ✅ Already correct |
+| `writers/zod-writer.ts`   | `writers/zod/index.ts`         | ✅ Complete        |
+| `writers/typescript.ts`   | `writers/typescript/index.ts`  | ✅ Complete        |
 
 ---
 
 ## Other Directories (Unchanged)
 
-| Directory | Purpose | Notes |
-|-----------|---------|-------|
-| `shared/` | Utilities, dependency graph, type guards | Keep |
-| `validation/` | MCP validation, type guards | Keep |
-| `rendering/` | CLI orchestration, Handlebars templating | Keep (legacy pipeline) |
-| `cli/` | CLI entry point | Keep |
-| `endpoints/` | Endpoint metadata extraction | Keep |
-| `context/` | TemplateContext (reduced after moves) | Keep |
-| `conversion/` | Convenience facades | Consider deprecating |
+| Directory     | Purpose                                  | Notes                  |
+| ------------- | ---------------------------------------- | ---------------------- |
+| `shared/`     | Utilities, dependency graph, type guards | Keep                   |
+| `validation/` | MCP validation, type guards              | Keep                   |
+| `rendering/`  | CLI orchestration, Handlebars templating | Keep (legacy pipeline) |
+| `cli/`        | CLI entry point                          | Keep                   |
+| `endpoints/`  | Endpoint metadata extraction             | Keep                   |
+| `context/`    | TemplateContext (reduced after moves)    | Keep                   |
+| `conversion/` | Convenience facades                      | Consider deprecating   |
 
 ---
 

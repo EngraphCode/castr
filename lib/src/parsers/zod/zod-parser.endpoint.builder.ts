@@ -13,7 +13,7 @@ import type {
   CastrResponse,
   CastrSchema,
   IRRequestBody,
-} from '../../context/ir-schema.js';
+} from '../../ir/schema.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 import { parseObjectZod } from './zod-parser.object.js';
 import type { EndpointDefinition, ParameterLocation } from './zod-parser.endpoint.types.js';

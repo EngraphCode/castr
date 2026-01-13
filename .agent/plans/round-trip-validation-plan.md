@@ -1,8 +1,19 @@
 # Round-Trip Validation Plan
 
-**Date:** January 12, 2026  
-**Status:** Pre-Work Active  
-**Prerequisites:** Sessions 2.1-2.5 complete
+**Date:** January 13, 2026  
+**Status:** Ready for Implementation  
+**Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029 canonical structure implemented
+
+---
+
+## 🚀 Next Session Entry Point
+
+**ADR-029 is complete.** The codebase is now organized per canonical structure:
+- IR types in `lib/src/ir/`
+- Parsers in `lib/src/parsers/openapi/` and `lib/src/parsers/zod/`
+- Writers in `lib/src/writers/{openapi,zod,typescript,markdown}/`
+
+**Start here:** Implement `sortDeep()` utility using TDD (first unchecked item below).
 
 ---
 
@@ -95,8 +106,9 @@ lib/tests-roundtrip/
 - [x] Create fixture directory structure
 - [x] Consolidate IR→OpenAPI implementations (ADR-028)
 - [x] Define canonical source structure (ADR-029)
+- [x] **Implement ADR-029 migration** ← Session 2.6 complete
 - [x] Update VISION.md terminology
-- [ ] Implement `sortDeep()` utility (TDD)
+- [ ] Implement `sortDeep()` utility (TDD) ← **START HERE**
 - [ ] Implement `semanticDiff()` utility (TDD)
 - [ ] Create normalized fixtures
 - [ ] Create edge-case fixtures
@@ -108,12 +120,12 @@ lib/tests-roundtrip/
 
 ## Decisions Made
 
-| Question                   | Decision   | Rationale                                              |
-| -------------------------- | ---------- | ------------------------------------------------------ |
+| Question                   | Decision   | Rationale                                               |
+| -------------------------- | ---------- | ------------------------------------------------------- |
 | Converter consolidation    | ✅ Done    | ADR-028 — Single `writeOpenApi()` in `writers/openapi/` |
 | Canonical structure        | ✅ Defined | ADR-029 — `parsers/` + `writers/` + `ir/`               |
-| Real-world APIs in Tier 2  | No         | Use official OpenAPI examples                          |
-| additionalProperties added | Enrichment | Document, not failure                                  |
+| Real-world APIs in Tier 2  | No         | Use official OpenAPI examples                           |
+| additionalProperties added | Enrichment | Document, not failure                                   |
 
 ---
 

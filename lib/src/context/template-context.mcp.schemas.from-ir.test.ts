@@ -9,9 +9,9 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import type { CastrOperation, CastrSchema, CastrSchemaComponent } from './ir-schema.js';
-import { CastrSchemaProperties } from './ir-schema-properties.js';
-import { createMockCastrDocument, createMockCastrSchemaNode } from './ir-test-helpers.js';
+import type { CastrOperation, CastrSchema, CastrSchemaComponent } from '../ir/schema.js';
+import { CastrSchemaProperties } from '../ir/schema-properties.js';
+import { createMockCastrDocument, createMockCastrSchemaNode } from '../ir/test-helpers.js';
 import { buildMcpToolSchemasFromIR } from './template-context.mcp.schemas.from-ir.js';
 import type { MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
 

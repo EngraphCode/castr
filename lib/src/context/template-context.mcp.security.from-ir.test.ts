@@ -14,8 +14,8 @@ import type {
   CastrOperation,
   IRSecurityRequirement,
   IRSecuritySchemeComponent,
-} from './ir-schema.js';
-import { createMockCastrDocument } from './ir-test-helpers.js';
+} from '../ir/schema.js';
+import { createMockCastrDocument } from '../ir/test-helpers.js';
 import { resolveOperationSecurityFromIR } from './template-context.mcp.security.from-ir.js';
 
 /**

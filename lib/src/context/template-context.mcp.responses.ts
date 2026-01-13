@@ -12,7 +12,7 @@
  * @module template-context.mcp.responses
  */
 
-import type { CastrOperation, CastrSchema, CastrResponse } from './ir-schema.js';
+import type { CastrOperation, CastrSchema, CastrResponse } from '../ir/schema.js';
 
 const isRequestContentTypeSupported = (mediaType: string): boolean =>
   mediaType === '*/*' ||

@@ -14,7 +14,7 @@
  * ```
  */
 
-import type { CastrSchema, CastrSchemaNode, IRZodChainInfo } from '../../context/ir-schema.js';
+import type { CastrSchema, CastrSchemaNode, IRZodChainInfo } from '../../ir/schema.js';
 import { Node } from 'ts-morph';
 import {
   createZodProject,

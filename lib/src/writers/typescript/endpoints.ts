@@ -1,8 +1,8 @@
 import { Writers, type CodeBlockWriter, type WriterFunction } from 'ts-morph';
 import type { EndpointDefinition, EndpointParameter } from '../../endpoints/definition.types.js';
-import { writeZodSchema } from '../zod-writer.js';
+import { writeZodSchema } from '../zod/index.js';
 import type { TemplateContextOptions } from '../../context/template-context.js';
-import type { CastrSchemaContext, IRPropertySchemaContext } from '../../context/ir-context.js';
+import type { CastrSchemaContext, IRPropertySchemaContext } from '../../ir/context.js';
 
 export function createEndpointWriter(
   endpoint: EndpointDefinition,

@@ -47,45 +47,49 @@ pnpm test:gen && pnpm character
 
 **Phase 2 Active: Zod → OpenAPI** — Session 2.6 (Round-Trip Validation)
 
-**Blocking work:** [ADR-029](../../docs/architectural_decision_records/ADR-029-canonical-source-structure.md) defines the canonical structure migration (`context/ir-builder` → `parsers/openapi/`). See implementation plan.
+**✅ ADR-029 Complete:** Canonical structure implemented (`ir/`, `parsers/`, `writers/`).
 
-See [roadmap.md](../plans/roadmap.md) for phase status and [round-trip-validation-plan.md](../plans/round-trip-validation-plan.md) for active session.
+**▶️ Next:** Implement round-trip validation utilities. See [round-trip-validation-plan.md](../plans/round-trip-validation-plan.md) → START at `sortDeep()`.
+
+See [roadmap.md](../plans/roadmap.md) for phase status.
 
 ---
 
 ## 📚 Essential Reading
 
-| Priority | Document                                                             | Purpose                              |
-| -------- | -------------------------------------------------------------------- | ------------------------------------ |
-| 1        | [roadmap.md](../plans/roadmap.md)                                    | Project status, phases, format order |
-| 2        | [round-trip-validation-plan.md](../plans/round-trip-validation-plan.md) | Active Session 2.6                |
+| Priority | Document                                                                                   | Purpose                                       |
+| -------- | ------------------------------------------------------------------------------------------ | --------------------------------------------- |
+| 1        | [roadmap.md](../plans/roadmap.md)                                                          | Project status, phases, format order          |
+| 2        | [round-trip-validation-plan.md](../plans/round-trip-validation-plan.md)                    | Active Session 2.6                            |
 | 3        | [ADR-029](../../docs/architectural_decision_records/ADR-029-canonical-source-structure.md) | Canonical structure (`parsers/` + `writers/`) |
-| 4        | [RULES.md](../RULES.md)                                              | Engineering standards                |
-| 5        | [VISION.md](../VISION.md)                                            | Strategic direction                  |
+| 4        | [RULES.md](../RULES.md)                                                                    | Engineering standards                         |
+| 5        | [VISION.md](../VISION.md)                                                                  | Strategic direction                           |
 
 ---
 
-## 🗂️ Key Files
+## 🗂️ Key Files (ADR-029 Structure)
 
-### Core IR Types
+### Core IR Types (`lib/src/ir/`)
 
-- `lib/src/context/ir-schema.ts` — CastrDocument, CastrSchema, CastrOperation
+- `schema.ts` — CastrDocument, CastrSchema, CastrOperation
+- `validators.ts` — Type guards and validators
+- `serialization.ts` — IR serialization/deserialization
 
-### Parsers (Input → IR)
+### Parsers (`lib/src/parsers/` — Input → IR)
 
-- `lib/src/context/ir-builder.ts` — OpenAPI → IR
-- `lib/src/parsers/zod/` — Zod → IR (see [README](lib/src/parsers/zod/README.md))
+- `openapi/index.ts` — buildIR (OpenAPI → IR)
+- `zod/index.ts` — parseZodSource (Zod → IR)
 
-### Writers (IR → Output)
+### Writers (`lib/src/writers/` — IR → Output)
 
-- `lib/src/writers/zod-writer.ts` — IR → Zod
-- `lib/src/writers/type-writer.ts` — IR → TypeScript
-- `lib/src/writers/openapi/` — IR → OpenAPI
+- `openapi/index.ts` — writeOpenApi (IR → OpenAPI)
+- `zod/index.ts` — writeZodSchema (IR → Zod)
+- `typescript/index.ts` — writeTypeScript (IR → TypeScript)
 
 ### Architecture
 
-- `lib/src/architecture/layer-boundaries.arch.test.ts` — Layer enforcement
-- `docs/architectural_decision_records/` — ADRs (26+ decisions)
+- `architecture/layer-boundaries.arch.test.ts` — Layer enforcement
+- `docs/architectural_decision_records/` — ADRs (29 decisions)
 
 ---
 

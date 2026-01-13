@@ -10,11 +10,11 @@
 
 Consolidate to **single canonical implementation** in `lib/src/writers/openapi/`.
 
-| Before | After |
-|--------|-------|
-| `generators/openapi/generateOpenAPI()` | ❌ Deleted |
-| `context/converter/convertIRToOpenAPI()` | ❌ Deleted |
-| `writers/openapi/writeOpenApi()` | ✅ Canonical |
+| Before                                   | After        |
+| ---------------------------------------- | ------------ |
+| `generators/openapi/generateOpenAPI()`   | ❌ Deleted   |
+| `context/converter/convertIRToOpenAPI()` | ❌ Deleted   |
+| `writers/openapi/writeOpenApi()`         | ✅ Canonical |
 
 ## Rationale
 

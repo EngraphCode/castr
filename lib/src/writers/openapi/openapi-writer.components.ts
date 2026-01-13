@@ -15,7 +15,7 @@ import type {
   IRSecuritySchemeComponent,
   CastrParameterComponent,
   CastrResponseComponent,
-} from '../../context/ir-schema.js';
+} from '../../ir/schema.js';
 
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 

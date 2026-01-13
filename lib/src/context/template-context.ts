@@ -16,8 +16,8 @@ import {
 } from './template-context.endpoints.js';
 import type { EndpointDefinition } from '../endpoints/definition.types.js';
 import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './template-context.mcp.js';
-import { buildIR } from './ir-builder.js';
-import type { CastrDocument } from './ir-schema.js';
+import { buildIR } from '../parsers/openapi/index.js';
+import type { CastrDocument } from '../ir/schema.js';
 import { getEndpointDefinitionsFromIR } from './template-context.endpoints.from-ir.js';
 import { extractInlineSchemas } from './inline-schemas.js';
 

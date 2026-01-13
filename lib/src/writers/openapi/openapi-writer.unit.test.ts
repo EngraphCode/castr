@@ -14,7 +14,7 @@ import type {
   CastrSchemaComponent,
   CastrSchemaNode,
   IRDependencyGraph,
-} from '../../context/ir-schema.js';
+} from '../../ir/schema.js';
 
 import { writeOpenApi } from './openapi-writer.js';
 

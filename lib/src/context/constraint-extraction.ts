@@ -7,7 +7,7 @@
  * @module
  */
 
-import type { CastrSchema } from './ir-schema.js';
+import type { CastrSchema } from '../ir/schema.js';
 import type { SchemaConstraints } from '../endpoints/definition.types.js';
 
 /** Accumulator type for building constraints */

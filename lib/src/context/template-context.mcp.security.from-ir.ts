@@ -8,7 +8,7 @@
  */
 
 import type { SecuritySchemeObject } from 'openapi3-ts/oas31';
-import type { CastrDocument, CastrOperation, IRSecurityRequirement } from './ir-schema.js';
+import type { CastrDocument, CastrOperation, IRSecurityRequirement } from '../ir/schema.js';
 import type {
   OperationSecurityMetadata,
   SecuritySchemeRequirement,

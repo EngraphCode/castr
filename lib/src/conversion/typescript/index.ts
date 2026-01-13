@@ -1,8 +1,8 @@
 import { CodeBlockWriter } from 'ts-morph';
-import { buildCastrSchema } from '../../context/ir-builder.core.js';
-import { writeTypeDefinition } from '../../writers/type-writer.js';
+import { buildCastrSchema } from '../../parsers/openapi/builder.core.js';
+import { writeTypeDefinition } from '../../writers/typescript/type-writer.js';
 import type { SchemaObject } from 'openapi3-ts/oas31';
-import type { IRBuildContext } from '../../context/ir-builder.types.js';
+import type { IRBuildContext } from '../../parsers/openapi/builder.types.js';
 
 /**
  * Convert an OpenAPI schema to TypeScript type definition.

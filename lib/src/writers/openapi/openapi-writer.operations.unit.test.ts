@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import type { CastrOperation, CastrSchemaNode } from '../../context/ir-schema.js';
+import type { CastrOperation, CastrSchemaNode } from '../../ir/schema.js';
 
 import { writeOpenApiPaths } from './openapi-writer.operations.js';
 

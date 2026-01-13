@@ -9,8 +9,8 @@
 
 import { describe, it, expect } from 'vitest';
 
-import type { CastrSchema, CastrSchemaNode } from '../../context/ir-schema.js';
-import { CastrSchemaProperties } from '../../context/ir-schema-properties.js';
+import type { CastrSchema, CastrSchemaNode } from '../../ir/schema.js';
+import { CastrSchemaProperties } from '../../ir/schema-properties.js';
 
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 

@@ -10,7 +10,7 @@ import {
 } from './template-context.mcp.schemas.js';
 
 // IR-based imports
-import type { CastrDocument, CastrOperation } from './ir-schema.js';
+import type { CastrDocument, CastrOperation } from '../ir/schema.js';
 import { buildMcpToolSchemasFromIR } from './template-context.mcp.schemas.from-ir.js';
 import { resolveOperationSecurityFromIR } from './template-context.mcp.security.from-ir.js';
 

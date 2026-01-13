@@ -8,7 +8,7 @@
  * @module template-context.from-ir
  * @internal
  */
-import type { CastrDocument } from './ir-schema.js';
+import type { CastrDocument } from '../ir/schema.js';
 
 /**
  * Gets schema names sorted by dependency order from the IR.

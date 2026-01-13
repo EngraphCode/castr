@@ -11,7 +11,7 @@ import {
   isSingleFileResult,
 } from '../../src/test-helpers/legacy-compat.js';
 import { getZodClientTemplateContext } from '../../src/context/template-context.js';
-import { assertSchemaComponent } from '../../src/context/ir-test-helpers.js';
+import { assertSchemaComponent } from '../../src/ir/test-helpers.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 

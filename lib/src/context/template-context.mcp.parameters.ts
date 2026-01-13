@@ -14,8 +14,8 @@
 
 import type { SchemaObject } from 'openapi3-ts/oas31';
 import { pathParamToVariableName } from '../shared/utils/index.js';
-import type { CastrOperation, CastrParameter, CastrSchema } from './ir-schema.js';
-import { CastrSchemaProperties } from './ir-schema-properties.js';
+import type { CastrOperation, CastrParameter, CastrSchema } from '../ir/schema.js';
+import { CastrSchemaProperties } from '../ir/schema-properties.js';
 import type { MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
 
 export type SupportedParameterLocation = 'path' | 'query' | 'header';

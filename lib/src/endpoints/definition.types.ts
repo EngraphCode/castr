@@ -1,5 +1,5 @@
 import type { ParameterObject, SchemaObject } from 'openapi3-ts/oas31';
-import type { CastrSchema } from '../context/ir-schema.js';
+import type { CastrSchema } from '../ir/schema.js';
 
 /**
  * Local type definitions for endpoint metadata

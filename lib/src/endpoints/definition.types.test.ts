@@ -6,7 +6,7 @@ import type {
   EndpointResponse,
   SchemaConstraints,
 } from './definition.types.js';
-import type { CastrSchema } from '../context/ir-schema.js';
+import type { CastrSchema } from '../ir/schema.js';
 
 import type { SchemaObjectType } from 'openapi3-ts/oas31';
 
