@@ -5,6 +5,13 @@
     "noEmit": true,
     "rootDir": "."
   },
-  "include": ["**/*.ts", "**/*.cts", "**/*.mts", "**/*.tsx", "test/**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.cts",
+    "**/*.mts",
+    "**/*.tsx",
+    "test/**/*.ts",
+    "tests-roundtrip/**/*.ts"
+  ],
   "exclude": ["node_modules", "**/*.typegen.ts", "example", "dist"]
 }

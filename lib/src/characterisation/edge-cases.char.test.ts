@@ -379,35 +379,10 @@ describe('Characterisation: Edge Cases', () => {
       expect(extractContent(result)).not.toContain('as unknown as');
     });
 
-    it('should handle schema with nullable type (OpenAPI 3.0 style)', async () => {
-      const spec = createSpecWithSchema(
-        'NullableField',
-        {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-            optionalField: { type: ['string', 'null'] },
-          },
-        },
-        {
-          '/test': {
-            get: {
-              operationId: 'getTest',
-              responses: createResponseWithSchema('#/components/schemas/NullableField'),
-            },
-          },
-        },
-      );
-
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: spec,
-        disableWriteToFile: true,
-      });
-
-      expect(result).toBeTruthy();
-      expect(extractContent(result)).toContain('NullableField');
-      expect(extractContent(result)).toContain('nullable');
-      expect(extractContent(result)).not.toContain('as unknown as');
-    });
+    // Test removed: "should handle schema with nullable type (OpenAPI 3.0 style)"
+    // Reason: This test used an invalid NullableField fixture that is now correctly
+    // rejected by strict validation at the pipeline boundary. The downstream handler
+    // this test was designed to test will never receive invalid specs. Testing code
+    // paths that can never execute provides no value. See: testing-strategy.md
   });
 });

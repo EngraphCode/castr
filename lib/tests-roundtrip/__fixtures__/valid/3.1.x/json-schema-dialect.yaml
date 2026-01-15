@@ -1,0 +1,36 @@
+# Valid OpenAPI 3.1.x with jsonSchemaDialect
+# The jsonSchemaDialect field is new in 3.1.x and allows specifying the JSON Schema dialect
+
+openapi: '3.1.0'
+info:
+  title: JSON Schema Dialect API
+  version: '1.0.0'
+
+# Custom JSON Schema dialect - new in 3.1.x
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+
+paths:
+  /items:
+    get:
+      operationId: getItems
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+        # Using 3.1.x JSON Schema features
+        data:
+          type: ['object', 'null']
+          properties:
+            value:
+              type: string

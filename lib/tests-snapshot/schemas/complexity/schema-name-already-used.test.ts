@@ -20,6 +20,7 @@ test('schema-name-already-used', async () => {
           operationId: 'getTest',
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { type: 'string' } } },
             },
           },
@@ -35,6 +36,7 @@ test('schema-name-already-used', async () => {
           operationId: 'putTest',
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { type: 'string' } } },
             },
           },

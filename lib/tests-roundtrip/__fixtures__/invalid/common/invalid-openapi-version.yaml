@@ -1,0 +1,8 @@
+# INVALID: Invalid openapi version string
+
+# Invalid version - must match ^3\.0\.\d or ^3\.1\.\d
+openapi: '2.0'
+info:
+  title: Invalid API
+  version: '1.0.0'
+paths: {}

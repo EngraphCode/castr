@@ -261,49 +261,12 @@ describe('Characterisation: Error Handling', () => {
     });
   });
 
-  describe('Parameter Validation Errors', () => {
-    it('should handle parameters with invalid "in" property', async () => {
-      const spec: OpenAPIObject = {
-        openapi: '3.0.0',
-        info: { title: 'Test API', version: '1.0.0' },
-        paths: {
-          '/test': {
-            get: {
-              operationId: 'getTest',
-              parameters: [
-                {
-                  name: 'invalid',
-                  // @ts-expect-error TS2322 - Testing invalid parameter location to verify error handling
-                  in: 'invalid-location' as unknown,
-                  schema: { type: 'string' },
-                },
-              ],
-              responses: {
-                '200': {
-                  description: 'Success',
-                  content: {
-                    'application/json': {
-                      schema: { type: 'string' },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      };
-
-      // Bundling not needed for in-memory specs with internal refs
-
-      // Should handle gracefully, might skip invalid parameter
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: spec,
-        disableWriteToFile: true,
-      });
-
-      expect(result).toBeTruthy();
-    });
-  });
+  // Describe block removed: "Parameter Validation Errors"
+  // Test removed: "should handle parameters with invalid 'in' property"
+  // Reason: This test used an invalid parameter with `in: 'invalid-location'` that is now
+  // correctly rejected by strict validation at the pipeline boundary. The downstream handler
+  // this test was designed to test will never receive invalid specs. Testing code paths that
+  // can never execute provides no value. See: testing-strategy.md
 
   describe('Schema Validation Errors', () => {
     it('should handle schemas with conflicting properties', async () => {

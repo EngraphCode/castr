@@ -16,6 +16,14 @@ import { writeOpenApiComponents } from './openapi-writer.components.js';
 import { writeOpenApiPaths } from './openapi-writer.operations.js';
 
 /**
+ * Extended OpenAPI 3.1 object type that includes fields missing from the library types.
+ * jsonSchemaDialect is a valid OAS 3.1.0 field but not included in openapi3-ts types.
+ */
+type OpenAPIObjectExtended = OpenAPIObject & {
+  jsonSchemaDialect?: string;
+};
+
+/**
  * Converts IR security requirements to OpenAPI SecurityRequirementObject[].
  *
  * @param security - The IR security requirements
@@ -57,27 +65,44 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
  *
  * @public
  */
-export function writeOpenApi(ir: CastrDocument): OpenAPIObject {
-  const result: OpenAPIObject = {
+export function writeOpenApi(ir: CastrDocument): OpenAPIObjectExtended {
+  const result: OpenAPIObjectExtended = {
     openapi: '3.1.0',
     info: ir.info,
     paths: writeOpenApiPaths(ir.operations),
   };
 
-  // Add servers if present
+  // Add optional document-level fields
+  addOptionalFields(result, ir);
+
+  return result;
+}
+
+/**
+ * Adds optional fields to the OpenAPI result object.
+ *
+ * @internal
+ */
+function addOptionalFields(result: OpenAPIObjectExtended, ir: CastrDocument): void {
+  if (ir.jsonSchemaDialect !== undefined) {
+    result.jsonSchemaDialect = ir.jsonSchemaDialect;
+  }
   if (ir.servers.length > 0) {
     result.servers = ir.servers;
   }
-
-  // Add components if present
+  if (ir.tags !== undefined && ir.tags.length > 0) {
+    result.tags = ir.tags;
+  }
+  if (ir.externalDocs !== undefined) {
+    result.externalDocs = ir.externalDocs;
+  }
+  if (ir.webhooks !== undefined && ir.webhooks.size > 0) {
+    result.webhooks = Object.fromEntries(ir.webhooks);
+  }
   if (ir.components.length > 0) {
     result.components = writeOpenApiComponents(ir.components);
   }
-
-  // Add document-level security if present
   if (ir.security !== undefined && ir.security.length > 0) {
     result.security = writeDocumentSecurity(ir.security);
   }
-
-  return result;
 }

@@ -159,6 +159,10 @@ function buildConcreteResponse(
     irResponse.headers = buildResponseHeaders(response.headers, context);
   }
 
+  if (response.links) {
+    irResponse.links = response.links;
+  }
+
   return irResponse;
 }
 

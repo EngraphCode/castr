@@ -15,7 +15,7 @@
  * @public
  */
 
-import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
+import type { ComponentsObject, OpenAPIObject, PathItemObject } from 'openapi3-ts/oas31';
 import type {
   IRComponent,
   CastrDocument,
@@ -63,6 +63,10 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
   const xExtComponents = extractXExtSchemas(doc);
   components.push(...xExtComponents);
 
+  // Extract link, callback, pathItem, and header components
+  const additionalComponents = extractAdditionalComponents(doc);
+  components.push(...additionalComponents);
+
   // Extract schema names from IR components (sanitized names for code generation)
   const schemaNames = buildSchemaNames(components);
 
@@ -78,6 +82,15 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
   // Build global security from document-level security array
   const globalSecurity = doc.security ? buildIRSecurity(doc.security) : undefined;
 
+  // Extract jsonSchemaDialect if present (OpenAPI 3.1.x only)
+  const jsonSchemaDialect =
+    'jsonSchemaDialect' in doc && typeof doc.jsonSchemaDialect === 'string'
+      ? doc.jsonSchemaDialect
+      : undefined;
+
+  // Extract webhooks (OpenAPI 3.1.x only)
+  const webhooks = extractWebhooks(doc);
+
   return {
     version: '1.0.0', // IR schema version
     openApiVersion: doc.openapi,
@@ -89,6 +102,10 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
     schemaNames,
     enums,
     ...(globalSecurity ? { security: globalSecurity } : {}),
+    ...(doc.tags ? { tags: doc.tags } : {}),
+    ...(doc.externalDocs ? { externalDocs: doc.externalDocs } : {}),
+    ...(webhooks ? { webhooks } : {}),
+    ...(jsonSchemaDialect ? { jsonSchemaDialect } : {}),
   };
 }
 
@@ -128,6 +145,108 @@ function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
   }
 
   return allXExtComponents;
+}
+
+/**
+ * Extract additional component types (links, callbacks, pathItems, headers).
+ *
+ * These component types are supported in OpenAPI but not yet fully processed
+ * into rich IR types. For now, we store them as raw OpenAPI objects.
+ *
+ * @param doc - OpenAPI document
+ * @returns Array of IR components for links, callbacks, pathItems, headers
+ *
+ * @internal
+ */
+function extractAdditionalComponents(doc: OpenAPIObject): IRComponent[] {
+  const components = doc.components;
+  if (!components) {
+    return [];
+  }
+
+  const result: IRComponent[] = [];
+
+  // Extract each component type
+  extractHeaders(components, result);
+  extractLinks(components, result);
+  extractCallbacks(components, result);
+  extractPathItems(components, result);
+  extractExamples(components, result);
+
+  return result;
+}
+
+function extractHeaders(components: ComponentsObject, result: IRComponent[]): void {
+  if (!components.headers) {
+    return;
+  }
+  for (const [name, header] of Object.entries(components.headers)) {
+    result.push({ type: 'header', name, header });
+  }
+}
+
+function extractLinks(components: ComponentsObject, result: IRComponent[]): void {
+  if (!components.links) {
+    return;
+  }
+  for (const [name, link] of Object.entries(components.links)) {
+    result.push({ type: 'link', name, link });
+  }
+}
+
+function extractCallbacks(components: ComponentsObject, result: IRComponent[]): void {
+  if (!components.callbacks) {
+    return;
+  }
+  for (const [name, callback] of Object.entries(components.callbacks)) {
+    result.push({ type: 'callback', name, callback });
+  }
+}
+
+function extractPathItems(components: ComponentsObject, result: IRComponent[]): void {
+  if (!('pathItems' in components) || !components.pathItems) {
+    return;
+  }
+  for (const [name, pathItem] of Object.entries(components.pathItems)) {
+    result.push({ type: 'pathItem', name, pathItem });
+  }
+}
+
+function extractExamples(components: ComponentsObject, result: IRComponent[]): void {
+  if (!components.examples) {
+    return;
+  }
+  for (const [name, example] of Object.entries(components.examples)) {
+    result.push({ type: 'example', name, example });
+  }
+}
+
+/**
+ * Extract webhooks from OpenAPI 3.1.x document.
+ *
+ * Webhooks are PathItem objects keyed by webhook name.
+ *
+ * @param doc - OpenAPI document
+ * @returns Map of webhook names to PathItem objects, or undefined if none
+ *
+ * @internal
+ */
+function extractWebhooks(doc: OpenAPIObject): Map<string, PathItemObject> | undefined {
+  // Webhooks only exist in OpenAPI 3.1.x
+  if (!('webhooks' in doc) || !doc.webhooks) {
+    return undefined;
+  }
+
+  const webhooks = new Map<string, PathItemObject>();
+
+  for (const [name, pathItem] of Object.entries(doc.webhooks)) {
+    // Filter out references - we only want resolved PathItemObjects
+    if (pathItem && !('$ref' in pathItem)) {
+      webhooks.set(name, pathItem);
+    }
+  }
+
+  return webhooks.size > 0 ? webhooks : undefined;
 }
 
 /**

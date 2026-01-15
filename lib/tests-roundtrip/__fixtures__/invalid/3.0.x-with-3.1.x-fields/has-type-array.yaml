@@ -1,0 +1,27 @@
+# INVALID: OpenAPI 3.0.x with type array (3.1.x only)
+# In 3.0.x, type must be a string, not an array
+
+openapi: '3.0.3'
+info:
+  title: Invalid API
+  version: '1.0.0'
+paths:
+  /items:
+    get:
+      operationId: getItems
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidSchema'
+
+components:
+  schemas:
+    InvalidSchema:
+      type: object
+      properties:
+        # type as array is NOT valid in 3.0.x
+        multiType:
+          type: ['string', 'null']

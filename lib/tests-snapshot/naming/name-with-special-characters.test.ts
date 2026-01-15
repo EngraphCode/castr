@@ -16,6 +16,7 @@ test('name-with-special-characters', async () => {
           operationId: 'nameWithSPecialCharacters',
           responses: {
             '200': {
+              description: 'OK',
               content: {
                 'application/json': {
                   schema: { $ref: '#/components/schemas/1Name-With-Special---Characters' },
@@ -62,6 +63,7 @@ test('name-with-special-characters', async () => {
             },
             "responses": [
                 {
+                    "description": "OK",
                     "schema": {
                         "$ref": "#/components/schemas/1Name-With-Special---Characters",
                         "metadata": {
@@ -106,7 +108,8 @@ test('name-with-special-characters', async () => {
                 ],
                 responses: {
                     200: {
-                        schema: 1Name-With-Special---Characters
+                        schema: 1Name-With-Special---Characters,
+                        description: "OK"
                     }
                 },
                 request: {},

@@ -21,14 +21,20 @@ test('group-strategy', async () => {
           operationId: 'petGet',
           tags: ['pet'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
         put: {
           operationId: 'petPut',
           tags: ['pet'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
       },
@@ -37,14 +43,20 @@ test('group-strategy', async () => {
           operationId: 'petAllGet',
           tags: ['pet'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
         put: {
           operationId: 'petAllPut',
           tags: ['pet'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
       },
@@ -53,14 +65,20 @@ test('group-strategy', async () => {
           operationId: 'storeGet',
           tags: ['store'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
         put: {
           operationId: 'storePut',
           tags: ['store'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
       },
@@ -69,14 +87,20 @@ test('group-strategy', async () => {
           operationId: 'userGet',
           tags: ['user'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
         put: {
           operationId: 'userPut',
           tags: ['user'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
       },
@@ -85,14 +109,20 @@ test('group-strategy', async () => {
           operationId: 'userGet',
           tags: ['user', 'pet'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
         put: {
           operationId: 'userPut',
           tags: ['user', 'pet'],
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
       },
@@ -100,13 +130,19 @@ test('group-strategy', async () => {
         get: {
           operationId: 'noTagsGet',
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
         put: {
           operationId: 'noTagsPut',
           responses: {
-            '200': { content: { 'application/json': { schema: { type: 'string' } } } },
+            '200': {
+              description: 'OK',
+              content: { 'application/json': { schema: { type: 'string' } } },
+            },
           },
         },
       },
@@ -217,6 +253,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['pet'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Pet' } } },
             },
           },
@@ -226,6 +263,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['pet'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Pet' } } },
             },
           },
@@ -237,6 +275,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['pet'],
           responses: {
             '200': {
+              description: 'OK',
               content: {
                 'application/json': {
                   schema: { type: 'array', items: { $ref: '#/components/schemas/Pet' } },
@@ -250,6 +289,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['pet'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Pet' } } },
             },
           },
@@ -261,6 +301,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['user'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/User' } } },
             },
           },
@@ -270,6 +311,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['user'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/User' } } },
             },
           },
@@ -281,6 +323,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['store'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Store' } } },
             },
           },
@@ -290,6 +333,7 @@ test('group-strategy with complex schemas + split files', async () => {
           tags: ['store'],
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Store' } } },
             },
           },
@@ -300,6 +344,7 @@ test('group-strategy with complex schemas + split files', async () => {
           operationId: 'noTagsGet',
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Country' } } },
             },
           },

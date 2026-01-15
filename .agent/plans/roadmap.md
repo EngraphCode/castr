@@ -1,8 +1,8 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 12, 2026  
+**Date:** January 14, 2026 (Updated)  
 **Status:** Active  
-**Quality Gates:** All 10 passing (1250+ tests)
+**Quality Gates:** All 10 passing (1303+ tests)
 
 ---
 
@@ -34,20 +34,34 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 
 ## Current Phase: Phase 2 (Zod → OpenAPI)
 
-Phase 1 (OpenAPI → Zod) complete. Phase 2 implementation complete, now validating.
+Phase 1 (OpenAPI → Zod) complete. Phase 2 implementation in progress.
 
-| Session | Focus                    | Status      |
-| ------- | ------------------------ | ----------- |
-| 2.1     | Zod 4 parser foundation  | ✅ Complete |
-| 2.2     | Constraints & modifiers  | ✅ Complete |
-| 2.3     | Composition & references | ✅ Complete |
-| 2.4     | Endpoint parsing         | ✅ Complete |
-| 2.5     | OpenAPI writer           | ✅ Complete |
-| 2.6     | Round-trip validation    | 🎯 Active   |
-| 2.7     | Adapter abstraction      | Pending     |
+| Session | Focus                     | Status         |
+| ------- | ------------------------- | -------------- |
+| 2.1     | Zod 4 parser foundation   | ✅ Complete    |
+| 2.2     | Constraints & modifiers   | ✅ Complete    |
+| 2.3     | Composition & references  | ✅ Complete    |
+| 2.4     | Endpoint parsing          | ✅ Complete    |
+| 2.5     | OpenAPI writer            | ✅ Complete    |
+| 2.6     | **OpenAPI Compliance**    | 🎯 Active      |
+|         | └ 2.6.1 IR expansion      | Partial        |
+|         | └ 2.6.2 Parser completion | Partial        |
+|         | └ 2.6.3 Writer completion | Partial        |
+|         | └ 2.6.4 Input coverage    | ✅ Complete    |
+|         | └ 2.6.5 Output coverage   | ✅ Complete    |
+|         | └ 2.6.6 Strict validation | ✅ Complete    |
+|         | └ 2.6.7 Enhanced errors   | ✅ Complete    |
+|         | └ 2.6.8 Fixture cleanup   | 🔄 In Progress |
+| 2.7     | Round-trip validation     | Blocked on 2.6 |
+| 2.8     | Adapter abstraction       | Pending        |
 
-**Implementation:** [zod-to-openapi-plan.md](./zod-to-openapi-plan.md) (complete)  
-**Validation:** [round-trip-validation-plan.md](./round-trip-validation-plan.md) (active)
+> [!CAUTION]
+> Session 2.6 is about **basic input/output support** — not round-trip validation.
+> Session 2.7 (Round-trip) is a SEPARATE phase that comes AFTER 2.6 is complete.
+> See [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) for formal specification.
+
+**Active Plan:** [openapi-compliance-plan.md](./openapi-compliance-plan.md)  
+**Blocked Plan:** [round-trip-validation-plan.md](./round-trip-validation-plan.md)
 
 ---
 
@@ -130,7 +144,7 @@ pnpm test:gen && pnpm character
 | Category   | Document                                                      | Purpose               |
 | ---------- | ------------------------------------------------------------- | --------------------- |
 | **Entry**  | [session-entry.prompt.md](../prompts/session-entry.prompt.md) | Session start         |
-| **Plans**  | [zod-to-openapi-plan.md](./zod-to-openapi-plan.md)            | Active phase          |
+| **Plans**  | [openapi-compliance-plan.md](./openapi-compliance-plan.md)    | Active phase (2.6)    |
 | **Rules**  | [RULES.md](../RULES.md)                                       | Engineering standards |
 | **Vision** | [VISION.md](../VISION.md)                                     | Strategic direction   |
 

@@ -239,23 +239,22 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
       ).rejects.toThrow();
     });
 
-    it('should handle spec with paths as array gracefully', async () => {
+    it('should reject spec with paths as array with helpful error message', async () => {
       const spec = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         paths: [],
       } as unknown;
 
-      // SwaggerParser is lenient and accepts this (treats empty array as empty object)
-      // Test that we handle it gracefully rather than crashing
-      const result = await generateZodClientFromOpenAPI({
-        // @ts-expect-error TS2322 - Testing edge case (paths as array) to verify graceful handling
-        openApiDoc: spec,
-        disableWriteToFile: true,
-      });
-
-      expect(result).toBeDefined();
-      expect(isSingleFileResult(result)).toBe(true);
+      // Strict validation correctly rejects this invalid structure before processing
+      // Verify the error message is user-friendly (contains location context)
+      await expect(
+        generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing invalid spec (paths as array) to verify strict validation rejection
+          openApiDoc: spec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow(/Location: paths[\s\S]*type must be object/i);
     });
   });
 

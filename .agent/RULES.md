@@ -8,7 +8,9 @@
 
 ## 🎯 Core Philosophy: Engineering Excellence Over Speed
 
-> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable. Types are our friend - they reveal architectural problems that need solving, not nuisances to bypass with escape hatches.
+> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable.Fail fast, fail hard, be strict at all times.
+
+Types are our friend - they reveal architectural problems that need solving, not nuisances to bypass with escape hatches.
 
 **Key Principles:**
 
@@ -38,6 +40,8 @@ During Phase 3, we discovered critical type system violations (7 of 8 quality ga
 **The internal representation (IR) is the single source of truth for all processed data.**
 
 This repository follows idiomatic Information Retrieval (IR) architecture. After parsing, the input document is **conceptually discarded**—only the Caster Model matters. See `VISION.md` for the strategic vision.
+
+This includes the constraint that NO CONTENT LOSS is ever acceptable. ALL of our transforms to and from the IR must preserve every aspect of the input document. The format can change, the content cannot.
 
 ```mermaid
 graph LR

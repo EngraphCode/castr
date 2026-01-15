@@ -142,6 +142,10 @@ function writeResponse(response: CastrResponse): ResponseObject {
     }
   }
 
+  if (response.links !== undefined) {
+    responseObj.links = response.links;
+  }
+
   return responseObj;
 }
 
@@ -186,6 +190,15 @@ function writeOperationMetadata(operation: CastrOperation, result: OperationObje
   }
   if (operation.deprecated !== undefined) {
     result.deprecated = operation.deprecated;
+  }
+  if (operation.externalDocs !== undefined) {
+    result.externalDocs = operation.externalDocs;
+  }
+  if (operation.callbacks !== undefined) {
+    result.callbacks = operation.callbacks;
+  }
+  if (operation.servers !== undefined && operation.servers.length > 0) {
+    result.servers = operation.servers;
   }
 }
 
@@ -246,6 +259,9 @@ function assignOperationToPath(
     case 'options':
       pathItem.options = op;
       break;
+    case 'trace':
+      pathItem.trace = op;
+      break;
   }
 }
 
@@ -285,6 +301,17 @@ export function writeOpenApiPaths(operations: CastrOperation[]): PathsObject {
 
     const op = writeOperation(operation);
     assignOperationToPath(pathItem, op, operation.method);
+
+    // Add PathItem-level fields (only if not already set by previous operation on same path)
+    if (operation.pathItemSummary && !pathItem.summary) {
+      pathItem.summary = operation.pathItemSummary;
+    }
+    if (operation.pathItemDescription && !pathItem.description) {
+      pathItem.description = operation.pathItemDescription;
+    }
+    if (operation.pathItemServers && !pathItem.servers) {
+      pathItem.servers = operation.pathItemServers;
+    }
 
     result[pathKey] = pathItem;
   }

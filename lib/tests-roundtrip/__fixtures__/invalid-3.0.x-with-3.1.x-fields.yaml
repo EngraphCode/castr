@@ -1,0 +1,24 @@
+# Invalid: 3.0.x document with 3.1.x-only fields
+openapi: '3.0.3'
+info:
+  title: Invalid 3.0.x with 3.1.x fields
+  version: '1.0.0'
+
+# jsonSchemaDialect is 3.1.x only - should be rejected in 3.0.x
+jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema'
+
+paths:
+  /test:
+    get:
+      operationId: test
+      responses:
+        '200':
+          description: OK
+
+# webhooks is 3.1.x only - should be rejected in 3.0.x
+webhooks:
+  testWebhook:
+    post:
+      responses:
+        '200':
+          description: OK

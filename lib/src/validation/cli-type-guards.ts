@@ -63,20 +63,33 @@ export function hasVersionProperty(obj: unknown): obj is { version?: unknown } {
  * Performs minimal structural validation to distinguish SwaggerParser's OpenAPI type
  * from openapi3-ts's OpenAPIObject. Both are structurally compatible.
  *
+ * Note: In OpenAPI 3.1, `paths` is optional if `webhooks` is present. A valid
+ * document can have just `webhooks` (e.g., webhook-example.yaml).
+ *
  * @param obj - Object to check (typically from SwaggerParser.bundle())
- * @returns True if the object has required OpenAPI 3.0 properties
+ * @returns True if the object has required OpenAPI properties
  */
 export function isOpenAPIObject(obj: unknown): obj is OpenAPIObject {
   if (typeof obj !== 'object' || obj === null) {
     return false;
   }
-  // Check for required OpenAPI 3.0 properties
-  return (
+
+  // Check for required OpenAPI properties
+  const hasRequiredFields =
     'openapi' in obj &&
     typeof obj.openapi === 'string' &&
     'info' in obj &&
-    typeof obj.info === 'object' &&
-    'paths' in obj &&
-    typeof obj.paths === 'object'
-  );
+    typeof obj.info === 'object';
+
+  if (!hasRequiredFields) {
+    return false;
+  }
+
+  // OAS 3.1: Either paths or webhooks must be present (or both)
+  const hasPaths = 'paths' in obj && typeof obj.paths === 'object';
+  const hasWebhooks = 'webhooks' in obj && typeof obj.webhooks === 'object';
+  const hasComponents = 'components' in obj && typeof obj.components === 'object';
+
+  // Valid if it has paths, webhooks, or just components (components-only is valid in 3.1)
+  return hasPaths || hasWebhooks || hasComponents;
 }

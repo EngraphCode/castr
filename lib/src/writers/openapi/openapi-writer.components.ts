@@ -133,6 +133,35 @@ function addResponseComponent(result: ComponentsObject, component: CastrResponse
   result.responses[component.name] = writeResponseComponent(component);
 }
 
+function addAdditionalComponents(result: ComponentsObject, component: IRComponent): void {
+  if (component.type === 'header') {
+    if (result.headers === undefined) {
+      result.headers = {};
+    }
+    result.headers[component.name] = component.header;
+  } else if (component.type === 'link') {
+    if (result.links === undefined) {
+      result.links = {};
+    }
+    result.links[component.name] = component.link;
+  } else if (component.type === 'callback') {
+    if (result.callbacks === undefined) {
+      result.callbacks = {};
+    }
+    result.callbacks[component.name] = component.callback;
+  } else if (component.type === 'pathItem') {
+    if (result.pathItems === undefined) {
+      result.pathItems = {};
+    }
+    result.pathItems[component.name] = component.pathItem;
+  } else if (component.type === 'example') {
+    if (result.examples === undefined) {
+      result.examples = {};
+    }
+    result.examples[component.name] = component.example;
+  }
+}
+
 /**
  * Converts IR components to an OpenAPI ComponentsObject.
  *
@@ -170,6 +199,8 @@ export function writeOpenApiComponents(components: IRComponent[]): ComponentsObj
       addParameterComponent(result, component);
     } else if (isResponseComponent(component)) {
       addResponseComponent(result, component);
+    } else {
+      addAdditionalComponents(result, component);
     }
   }
 

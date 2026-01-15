@@ -1,0 +1,204 @@
+openapi: '3.0.3'
+info:
+  title: Complete Field Coverage Test (3.0.x)
+  description: Tests ALL OpenAPI 3.0.x fields for parser coverage
+  version: '1.0.0'
+  termsOfService: 'https://example.com/terms'
+  contact:
+    name: API Support
+    url: 'https://example.com/support'
+    email: 'support@example.com'
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+servers:
+  - url: 'https://api.example.com/v1'
+    description: Production server
+    variables:
+      port:
+        default: '443'
+        enum: ['443', '8443']
+        description: Port number
+
+tags:
+  - name: users
+    description: User operations
+    externalDocs:
+      description: User documentation
+      url: 'https://example.com/docs/users'
+
+externalDocs:
+  description: API documentation
+  url: 'https://example.com/docs'
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users:
+    summary: User collection operations
+    description: Operations for managing users
+    servers:
+      - url: 'https://users.example.com'
+        description: Users-specific server
+    parameters:
+      - name: X-Request-ID
+        in: header
+        schema:
+          type: string
+    get:
+      tags:
+        - users
+      summary: List all users
+      description: Get a list of all users
+      operationId: listUsers
+      externalDocs:
+        description: List users docs
+        url: 'https://example.com/docs/list-users'
+      deprecated: false
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of results
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User list
+          headers:
+            X-Total-Count:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+              example:
+                - id: 1
+                  name: Alice
+          links:
+            GetUserById:
+              operationId: getUser
+              parameters:
+                userId: '$response.body#/0/id'
+      servers:
+        - url: 'https://read.example.com'
+    post:
+      tags:
+        - users
+      summary: Create a user
+      operationId: createUser
+      requestBody:
+        required: true
+        description: User to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              alice:
+                summary: Example user
+                value:
+                  name: Alice
+      responses:
+        '201':
+          description: User created
+      callbacks:
+        onUserCreated:
+          '{$request.body#/callbackUrl}':
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+              responses:
+                '200':
+                  description: Callback received
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User details
+    trace:
+      operationId: traceUser
+      responses:
+        '200':
+          description: Trace info
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        callbackUrl:
+          type: string
+
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    NotFound:
+      description: Resource not found
+
+  requestBodies:
+    UserBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+
+  headers:
+    X-Rate-Limit:
+      schema:
+        type: integer
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  links:
+    GetUser:
+      operationId: getUser
+
+  callbacks:
+    UserCallback:
+      '{$request.body#/url}':
+        post:
+          responses:
+            '200':
+              description: OK
+
+  examples:
+    UserExample:
+      summary: Sample user
+      value:
+        id: 1
+        name: Alice

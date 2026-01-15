@@ -16,13 +16,42 @@ These constraints are **non-negotiable** and guide all implementation decisions:
    - JSON Schema: draft 2020-12
 
 2. **Input Compatibility** (accept these, upgrade internally)
-   - OpenAPI: 3.0.x and 3.1.x
+   - OpenAPI: 3.0.x and 3.1.x (YAML and JSON)
 
-3. **Fail Fast**
+3. **Full Syntax Support** — **BLOCKING PREREQUISITE**
+
+   > [!CAUTION]
+   > The system is NOT ready for production use until ALL valid OpenAPI syntax is supported.
+   > This is about **basic input and output support** — NOT round-trip validation.
+   > Round-trip validation is a SEPARATE phase that comes AFTER basic support is complete.
+
+   **What this means:**
+   - **Input:** ALL valid OpenAPI 3.0.x and 3.1.x fields MUST be parsed to IR
+   - **Output:** ALL IR fields MUST be written to valid OpenAPI 3.1.x output
+   - **No deferrals:** Every field in the specification MUST be implemented
+
+   **Document-level fields (ALL required):**
+   - openapi, info, jsonSchemaDialect, servers, paths, webhooks, components, security, tags, externalDocs
+
+   **Component types (ALL required):**
+   - schemas, responses, parameters, requestBodies, headers, securitySchemes, links, callbacks, pathItems, examples
+
+   **Operation-level fields (ALL required):**
+   - operationId, method, path, summary, description, tags, parameters, requestBody, responses, security, deprecated, externalDocs, callbacks, servers
+
+   **Response-level fields (ALL required):**
+   - statusCode, description, content, headers, links
+
+   **PathItem-level fields (ALL required):**
+   - summary, description, servers, parameters, all HTTP methods including trace
+
+   **IR must support ALL fields.** Parsers must extract ALL fields. Writers must output ALL fields.
+
+4. **Fail Fast**
    - Invalid input → immediate rejection with helpful error message
    - No defensive programming, no silent fallbacks
 
-4. **Quality Bar**
+5. **Quality Bar**
    - Behavior completely defined by test suite
    - Highest standards of quality, security, reliability
 

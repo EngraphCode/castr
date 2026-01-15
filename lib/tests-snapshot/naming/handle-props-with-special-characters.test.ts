@@ -43,6 +43,7 @@ test('handle-props-with-special-characters', async () => {
             operationId: 'getSomething',
             responses: {
               '200': {
+                description: 'OK',
                 content: {
                   'application/json': {
                     schema: schemaWithSpecialCharacters,
@@ -81,6 +82,7 @@ test('handle-props-with-special-characters', async () => {
                 id: z.number().optional(),
               })
               .strict(),
+            description: "OK",
           },
         },
         request: {},

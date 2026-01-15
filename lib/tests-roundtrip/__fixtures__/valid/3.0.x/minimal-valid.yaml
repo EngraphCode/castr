@@ -1,0 +1,9 @@
+# Minimal Valid OpenAPI 3.0.x
+# This fixture contains the bare minimum required for a valid 3.0.x spec.
+# Required: openapi, info (title, version), paths
+
+openapi: '3.0.3'
+info:
+  title: Minimal Valid API
+  version: '1.0.0'
+paths: {}

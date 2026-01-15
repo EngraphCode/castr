@@ -15818,6 +15818,10 @@ exports[`getZodClientTemplateContext 1`] = `
                 ],
             },
         },
+        "externalDocs": {
+            "description": "Find out more about Swagger",
+            "url": "http://swagger.io",
+        },
         "info": {
             "contact": {
                 "email": "apiteam@swagger.io",
@@ -18904,6 +18908,28 @@ Some useful links:
         "servers": [
             {
                 "url": "https://petstore3.swagger.io/api/v3",
+            },
+        ],
+        "tags": [
+            {
+                "description": "Everything about your Pets",
+                "externalDocs": {
+                    "description": "Find out more",
+                    "url": "http://swagger.io",
+                },
+                "name": "pet",
+            },
+            {
+                "description": "Access to Petstore orders",
+                "externalDocs": {
+                    "description": "Find out more about our store",
+                    "url": "http://swagger.io",
+                },
+                "name": "store",
+            },
+            {
+                "description": "Operations about user",
+                "name": "user",
             },
         ],
         "version": "1.0.0",
@@ -25051,6 +25077,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 ],
             },
         },
+        "externalDocs": {
+            "description": "Find out more about Swagger",
+            "url": "http://swagger.io",
+        },
         "info": {
             "contact": {
                 "email": "apiteam@swagger.io",
@@ -28137,6 +28167,28 @@ Some useful links:
         "servers": [
             {
                 "url": "https://petstore3.swagger.io/api/v3",
+            },
+        ],
+        "tags": [
+            {
+                "description": "Everything about your Pets",
+                "externalDocs": {
+                    "description": "Find out more",
+                    "url": "http://swagger.io",
+                },
+                "name": "pet",
+            },
+            {
+                "description": "Access to Petstore orders",
+                "externalDocs": {
+                    "description": "Find out more about our store",
+                    "url": "http://swagger.io",
+                },
+                "name": "store",
+            },
+            {
+                "description": "Operations about user",
+                "name": "user",
             },
         ],
         "version": "1.0.0",

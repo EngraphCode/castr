@@ -1,0 +1,36 @@
+# Valid OpenAPI 3.1.x with Type Array and Null
+# In 3.1.x, type can be an array and includes 'null' as a valid type
+
+openapi: '3.1.0'
+info:
+  title: Type Array Null API
+  version: '1.0.0'
+paths:
+  /items:
+    get:
+      operationId: getItems
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TypeArrayExample'
+
+components:
+  schemas:
+    TypeArrayExample:
+      type: object
+      properties:
+        # In 3.1.x, type can be an array
+        stringOrNull:
+          type: ['string', 'null']
+        numberOrNull:
+          type: ['number', 'null']
+        stringOrNumber:
+          type: ['string', 'number']
+        multiType:
+          type: ['string', 'number', 'null']
+        # Type null by itself is valid
+        alwaysNull:
+          type: 'null'

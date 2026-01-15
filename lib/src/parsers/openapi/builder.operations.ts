@@ -73,7 +73,16 @@ function extractPathOperations(
   doc: OpenAPIObject,
 ): CastrOperation[] {
   const operations: CastrOperation[] = [];
-  const httpMethods: HttpMethod[] = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
+  const httpMethods: HttpMethod[] = [
+    'get',
+    'post',
+    'put',
+    'patch',
+    'delete',
+    'head',
+    'options',
+    'trace',
+  ];
 
   for (const method of httpMethods) {
     const operation = pathItem[method];
@@ -94,7 +103,7 @@ function extractPathOperations(
       ...(mergedParameters.length > 0 ? { parameters: mergedParameters } : {}),
     };
 
-    const irOperation = buildCastrOperation(method, path, operationWithParams, doc);
+    const irOperation = buildCastrOperation(method, path, operationWithParams, pathItem, doc);
     operations.push(irOperation);
   }
 
@@ -110,6 +119,7 @@ function extractPathOperations(
  * @param method - HTTP method for this operation
  * @param path - API path with parameter placeholders
  * @param operation - OpenAPI operation object
+ * @param pathItem - OpenAPI path item object (for path-level fields)
  * @param doc - Full OpenAPI document for reference resolution
  * @returns IR operation with extracted metadata
  *
@@ -119,6 +129,7 @@ function buildCastrOperation(
   method: HttpMethod,
   path: string,
   operation: OperationObject,
+  pathItem: PathItemObject,
   doc: OpenAPIObject,
 ): CastrOperation {
   // Build minimal context for schema resolution
@@ -150,8 +161,11 @@ function buildCastrOperation(
     }
   }
 
-  // Add optional fields
+  // Add optional operation-level fields
   addOptionalOperationFields(irOperation, operation, context);
+
+  // Add PathItem-level fields
+  addPathItemFields(irOperation, pathItem);
 
   return irOperation;
 }
@@ -160,7 +174,7 @@ function buildCastrOperation(
  * Add optional fields to IR operation if present in source.
  * @internal
  */
-function addOptionalOperationFields(
+function addBasicOperationFields(
   irOperation: CastrOperation,
   operation: OperationObject,
   context: IRBuildContext,
@@ -180,6 +194,9 @@ function addOptionalOperationFields(
   if (operation.tags) {
     irOperation.tags = operation.tags;
   }
+}
+
+function addExtendedOperationFields(irOperation: CastrOperation, operation: OperationObject): void {
   // Check deprecated status - property is part of OpenAPI 3.1 spec
   // Using Reflect to avoid false-positive deprecation linter warnings
   const deprecatedKey = 'deprecated';
@@ -188,6 +205,40 @@ function addOptionalOperationFields(
     if (deprecatedValue === true) {
       Reflect.set(irOperation, deprecatedKey, true);
     }
+  }
+  if (operation.externalDocs) {
+    irOperation.externalDocs = operation.externalDocs;
+  }
+  if (operation.callbacks) {
+    irOperation.callbacks = operation.callbacks;
+  }
+  if (operation.servers) {
+    irOperation.servers = operation.servers;
+  }
+}
+
+function addOptionalOperationFields(
+  irOperation: CastrOperation,
+  operation: OperationObject,
+  context: IRBuildContext,
+): void {
+  addBasicOperationFields(irOperation, operation, context);
+  addExtendedOperationFields(irOperation, operation);
+}
+
+/**
+ * Add PathItem-level fields to IR operation.
+ * @internal
+ */
+function addPathItemFields(irOperation: CastrOperation, pathItem: PathItemObject): void {
+  if (pathItem.summary) {
+    irOperation.pathItemSummary = pathItem.summary;
+  }
+  if (pathItem.description) {
+    irOperation.pathItemDescription = pathItem.description;
+  }
+  if (pathItem.servers) {
+    irOperation.pathItemServers = pathItem.servers;
   }
 }
 

@@ -1,0 +1,5 @@
+# INVALID: Missing info object (required in both 3.0.x and 3.1.x)
+
+openapi: '3.0.3'
+# Missing info - this is INVALID
+paths: {}

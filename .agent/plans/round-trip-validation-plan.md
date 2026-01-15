@@ -1,131 +1,235 @@
 # Round-Trip Validation Plan
 
 **Date:** January 13, 2026  
-**Status:** Ready for Implementation  
-**Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029 canonical structure implemented
+**Status:** ⛔ BLOCKED — Waiting for Session 2.6 (OpenAPI Compliance)  
+**Prerequisites:** ❌ [openapi-compliance-plan.md](./openapi-compliance-plan.md) must complete first
+
+> [!CAUTION]
+> **This plan CANNOT proceed until OpenAPI Compliance is complete.**  
+> See [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) for the formal specification.  
+> Active work: [openapi-compliance-plan.md](./openapi-compliance-plan.md)
 
 ---
 
-## 🚀 Next Session Entry Point
+## Core Principle: NO CONTENT LOSS
 
-**ADR-029 is complete.** The codebase is now organized per canonical structure:
-- IR types in `lib/src/ir/`
-- Parsers in `lib/src/parsers/openapi/` and `lib/src/parsers/zod/`
-- Writers in `lib/src/writers/{openapi,zod,typescript,markdown}/`
+> **This principle is inviolable. There is no "pragmatic" compromise.**
 
-**Start here:** Implement `sortDeep()` utility using TDD (first unchecked item below).
+A schema transformation library that loses content is fundamentally broken. Round-trip validation proves that Castr preserves ALL semantic content.
 
 ---
 
-## Strategic Goal
+## User Value
 
-Prove the IR architecture with two quantifiable claims:
+This session proves two claims that enable production adoption of Castr:
 
-| Claim            | Test                                             | User Value                   |
-| ---------------- | ------------------------------------------------ | ---------------------------- |
-| **Idempotency**  | Spec₁ → IR → Spec₂ → IR → Spec₃; Spec₂ === Spec₃ | Stable, predictable output   |
-| **Losslessness** | Spec₀ → IR → Spec₁; no semantic loss             | Safe for production adoption |
+| Claim            | User Confidence                                                                                      |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| **Idempotency**  | "If I run Castr twice on the same spec, I get identical output. The tool is predictable and stable." |
+| **Losslessness** | "If I transform my spec, I won't lose any information. The tool is safe for production use."         |
+
+These claims must be **backed by evidence**: high-level tests against known fixtures, with clear assertions.
 
 ---
 
-## Acceptance Criteria
+## Two Round-Trip Test Cases
 
-### Case 1: Deterministic (Byte-for-Byte)
+### Case 1: Arbitrary OpenAPI → IR → OpenAPI (Losslessness)
 
-```
-Given: Castr-normalized spec
-When: Processed twice through buildIR() → writeOpenApi()
-Then: JSON.stringify(sortDeep(Spec₁)) === JSON.stringify(sortDeep(Spec₂))
-```
-
-**Metric:** 100% of normalized fixtures pass
-
-### Case 2: Information-Preserving (Semantic Equivalence)
+**Input:** Any valid OpenAPI specification (not previously processed by Castr)  
+**Expected:** NO content loss. Format may change (normalization is expected).
 
 ```
-Given: Arbitrary valid spec
-When: Processed through buildIR() → writeOpenApi()
-Then: All paths, operations, schemas, constraints preserved
+Given: An arbitrary valid OpenAPI spec (e.g., examples/openapi/v3.1/tictactoe.yaml)
+When:  Processed through buildIR() → writeOpenApi()
+Then:  All content is preserved:
+       - All paths, operations, parameters
+       - All schemas and constraints
+       - All components (schemas, parameters, responses, securitySchemes)
+       - All document-level metadata (info, tags, externalDocs)
+       - All security requirements
 ```
 
-**Metric:** Zero missing fields in semantic diff
+**Normalization is NOT loss.** Format transformations like `nullable: true` → `type: [string, null]` are expected and acceptable.
+
+### Case 2: Normalized OpenAPI → IR → OpenAPI (Idempotency)
+
+**Input:** A Castr-normalized specification  
+**Expected:** Byte-for-byte identical output.
+
+```
+Given: A normalized spec (already processed by Castr and saved to disk)
+When:  Processed again through buildIR() → writeOpenApi()
+Then:  Output === Input (byte-for-byte identical JSON)
+```
+
+All pipelines **MUST** be idempotent.
 
 ---
 
 ## Fixture Strategy
 
-| Tier           | Purpose                   | Location                                                          |
-| -------------- | ------------------------- | ----------------------------------------------------------------- |
-| **Normalized** | Byte-for-byte idempotency | `tests-roundtrip/__fixtures__/normalized/`                        |
-| **Arbitrary**  | Semantic equivalence      | `tests-roundtrip/__fixtures__/arbitrary/` (symlinks to examples/) |
-| **Edge Cases** | Stress testing            | `tests-roundtrip/__fixtures__/edge-cases/`                        |
+### Arbitrary Fixtures
 
-### Normalized Fixtures (Create)
+The official OpenAPI demo schemas serve as arbitrary fixtures:
 
-- `normalized-tictactoe.json` — Process `tictactoe.yaml`
-- `normalized-petstore.json` — Process `petstore.yaml` (3.0 → 3.1)
+| Fixture          | Location                                          |
+| ---------------- | ------------------------------------------------- |
+| tictactoe        | `lib/examples/openapi/v3.1/tictactoe.yaml`        |
+| webhook-example  | `lib/examples/openapi/v3.1/webhook-example.yaml`  |
+| non-oauth-scopes | `lib/examples/openapi/v3.1/non-oauth-scopes.yaml` |
 
-### Edge Case Fixtures (Create)
+These are real-world specs that exercise various OpenAPI features.
 
-- `nullable-types.yaml` — OAS 3.1 type arrays
-- `circular-refs.yaml` — Self-referencing schemas
-- `composition.yaml` — allOf/oneOf/anyOf
+### Normalized Fixtures
+
+Generate normalized fixtures by processing arbitrary fixtures through Castr:
+
+1. Process each arbitrary fixture: `buildIR(spec) → writeOpenApi(ir)`
+2. Save the output to `lib/tests-roundtrip/__fixtures__/normalized/`
+3. These saved outputs become the normalized fixtures for idempotency tests
+
+| Normalized Fixture                 | Source                          |
+| ---------------------------------- | ------------------------------- |
+| `normalized/tictactoe.json`        | Process `tictactoe.yaml`        |
+| `normalized/webhook-example.json`  | Process `webhook-example.yaml`  |
+| `normalized/non-oauth-scopes.json` | Process `non-oauth-scopes.yaml` |
+
+---
+
+## Implementation: TDD at All Levels
+
+Per [testing-strategy.md](../testing-strategy.md), tests at each level are **specifications**, written FIRST.
+
+### Step 1: Write High-Level Tests (RED)
+
+Write integration tests that specify the behavior we want to prove. These tests should fail initially.
+
+**File:** `lib/tests-roundtrip/round-trip.integration.test.ts`
+
+```typescript
+describe('Round-Trip Validation', () => {
+  describe('Case 1: Losslessness (arbitrary specs)', () => {
+    it('preserves all paths from tictactoe.yaml', async () => {
+      // Given: tictactoe.yaml with paths /board, /board/{row}/{column}
+      // When: processed through buildIR() → writeOpenApi()
+      // Then: output contains all paths
+    });
+
+    it('preserves all operations from tictactoe.yaml', async () => {
+      // Given: tictactoe.yaml with get-board, get-square, put-square
+      // When: processed through buildIR() → writeOpenApi()
+      // Then: output contains all operations with correct methods
+    });
+
+    it('preserves all schema constraints from tictactoe.yaml', async () => {
+      // Given: tictactoe.yaml with min/max constraints on coordinate
+      // When: processed through buildIR() → writeOpenApi()
+      // Then: output contains all constraints
+    });
+
+    it('preserves document-level tags', async () => {
+      // Given: tictactoe.yaml with tags array
+      // When: processed through buildIR() → writeOpenApi()
+      // Then: output contains tags with descriptions
+    });
+
+    it('preserves all security schemes', async () => {
+      // Given: tictactoe.yaml with multiple security schemes
+      // When: processed through buildIR() → writeOpenApi()
+      // Then: output contains all security schemes
+    });
+  });
+
+  describe('Case 2: Idempotency (normalized specs)', () => {
+    it('produces byte-for-byte identical output for normalized tictactoe', async () => {
+      // Given: normalized/tictactoe.json
+      // When: processed through buildIR() → writeOpenApi()
+      // Then: output === input (byte-for-byte)
+    });
+  });
+});
+```
+
+### Step 2: Create Fixtures
+
+Generate normalized fixtures as needed by the failing tests.
+
+### Step 3: Make Tests Pass (GREEN)
+
+Run tests, observe failures, and implement necessary IR expansions.
+
+**If IR is missing content:** Expand IR and parsers/writers to capture it (NO CONTENT LOSS).
+
+### Step 4: Refactor
+
+Clean up tests and any utilities while keeping tests green.
 
 ---
 
 ## Expected Transformations (Not Failures)
 
-| Input                        | Output                 | Reason                      |
-| ---------------------------- | ---------------------- | --------------------------- |
-| `nullable: true`             | `type: [string, null]` | OAS 3.1 canonical form      |
-| Arbitrary key order          | Sorted keys            | Deterministic serialization |
-| Empty arrays                 | Omitted                | Canonical representation    |
-| `additionalProperties` added | Enrichment             | Not information loss        |
+These format changes are **expected normalization**, not content loss:
+
+| Input               | Output                 | Reason                      |
+| ------------------- | ---------------------- | --------------------------- |
+| `nullable: true`    | `type: [string, null]` | OAS 3.1 canonical form      |
+| Arbitrary key order | Sorted keys            | Deterministic serialization |
+| OpenAPI 3.0         | OpenAPI 3.1            | Auto-upgrade (intentional)  |
+| YAML format         | JSON format            | Canonical output format     |
 
 ---
 
-## Test Structure
+## Test File Naming
 
-```
-lib/tests-roundtrip/
-├── __fixtures__/
-│   ├── normalized/
-│   ├── arbitrary/
-│   └── edge-cases/
-├── round-trip.deterministic.test.ts
-├── round-trip.semantic.test.ts
-└── utils/
-    ├── sort-deep.ts
-    └── semantic-diff.ts
-```
+Per [testing-strategy.md](../testing-strategy.md):
+
+| Test Type   | Naming                  | Location               |
+| ----------- | ----------------------- | ---------------------- |
+| Integration | `*.integration.test.ts` | `lib/tests-roundtrip/` |
+
+These are integration tests because they test how multiple units work together (parser + IR + writer).
 
 ---
 
-## Implementation Order
+## What Must Be Preserved (Content Checklist)
 
-- [x] Create fixture directory structure
-- [x] Consolidate IR→OpenAPI implementations (ADR-028)
-- [x] Define canonical source structure (ADR-029)
-- [x] **Implement ADR-029 migration** ← Session 2.6 complete
-- [x] Update VISION.md terminology
-- [ ] Implement `sortDeep()` utility (TDD) ← **START HERE**
-- [ ] Implement `semanticDiff()` utility (TDD)
-- [ ] Create normalized fixtures
-- [ ] Create edge-case fixtures
-- [ ] Write deterministic tests
-- [ ] Write semantic equivalence tests
-- [ ] Document discovered issues
+When testing losslessness, verify ALL of these are preserved:
+
+- [ ] `openapi` version
+- [ ] `info` object (title, description, version, contact, license, termsOfService)
+- [ ] `servers` array
+- [ ] `tags` array with descriptions
+- [ ] `externalDocs` at all levels
+- [ ] `paths` with all operations
+- [ ] Operation metadata (operationId, summary, description, tags, deprecated)
+- [ ] Parameters (path, query, header, cookie) with all properties
+- [ ] Request bodies with all content types
+- [ ] Responses with all status codes and content types
+- [ ] Schema constraints (min, max, pattern, format, enum, etc.)
+- [ ] Composition (allOf, oneOf, anyOf, not)
+- [ ] `$ref` references
+- [ ] Security schemes and requirements
+- [ ] `components` (schemas, parameters, responses, requestBodies, headers, securitySchemes)
 
 ---
 
-## Decisions Made
+## Decisions
 
-| Question                   | Decision   | Rationale                                               |
-| -------------------------- | ---------- | ------------------------------------------------------- |
-| Converter consolidation    | ✅ Done    | ADR-028 — Single `writeOpenApi()` in `writers/openapi/` |
-| Canonical structure        | ✅ Defined | ADR-029 — `parsers/` + `writers/` + `ir/`               |
-| Real-world APIs in Tier 2  | No         | Use official OpenAPI examples                           |
-| additionalProperties added | Enrichment | Document, not failure                                   |
+| Question             | Decision                              | Rationale                            |
+| -------------------- | ------------------------------------- | ------------------------------------ |
+| Implementation order | Tests first, utilities only as needed | Per TDD at all levels                |
+| Content loss         | NEVER acceptable                      | Inviolable principle                 |
+| Missing IR fields    | Expand IR to capture                  | Architectural correctness > shortcut |
+| Fixture source       | Official OpenAPI examples             | Real-world coverage                  |
+
+---
+
+## Out of Scope
+
+- Performance benchmarking
+- Cross-format round-trips (e.g., OpenAPI → Zod → OpenAPI)
+- Mutation testing (future work)
 
 ---
 
@@ -134,4 +238,4 @@ lib/tests-roundtrip/
 - [ADR-027: Round-Trip Validation](../../docs/architectural_decision_records/ADR-027-round-trip-validation.md)
 - [ADR-028: IR→OpenAPI Consolidation](../../docs/architectural_decision_records/ADR-028-ir-openapi-consolidation.md)
 - [ADR-029: Canonical Source Structure](../../docs/architectural_decision_records/ADR-029-canonical-source-structure.md)
-- [Existing IR fidelity test](../../lib/tests-e2e/ir-fidelity.test.ts)
+- [testing-strategy.md](../testing-strategy.md) — TDD at all levels

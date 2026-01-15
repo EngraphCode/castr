@@ -1,0 +1,22 @@
+# Invalid: 3.1.x document with 3.0.x-only pattern (nullable instead of type array)
+# Note: nullable is actually still allowed in 3.1.x for backwards compat
+# The actual 3.0.x-only thing is that `paths` is REQUIRED in 3.0.x but optional in 3.1.x
+
+openapi: '3.1.0'
+info:
+  title: 3.1.x doc with license.url instead of identifier
+  version: '1.0.0'
+  license:
+    name: Apache 2.0
+    # In 3.1.x, url and identifier are mutually exclusive
+    # This uses url which is valid in both versions
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+# 3.1.x allows paths to be omitted if webhooks or components exist
+# This is a valid 3.1.x doc without paths
+webhooks:
+  testWebhook:
+    post:
+      responses:
+        '200':
+          description: OK

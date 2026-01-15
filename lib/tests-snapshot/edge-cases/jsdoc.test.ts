@@ -5,7 +5,7 @@ import { generateZodClientFromOpenAPI } from '../../src/test-helpers/legacy-comp
 
 test('jsdoc', async () => {
   const openApiDoc: OpenAPIObject = {
-    openapi: '3.0.3',
+    openapi: '3.1.0',
     info: { version: '1', title: 'Example API' },
     paths: {
       '/test': {
@@ -13,6 +13,7 @@ test('jsdoc', async () => {
           operationId: '123_example',
           responses: {
             '200': {
+              description: 'Success',
               content: {
                 'application/json': { schema: { $ref: '#/components/schemas/ComplexObject' } },
               },
@@ -107,7 +108,8 @@ test('jsdoc', async () => {
       str?: string;
     };
     export type ComplexObject = {
-      examples?: unknown;
+      /** A string with example tag */ example?: string;
+      /** A string with examples tag */ examples?: string;
       /** A string with many tags */ manyTagsStr?: string;
       /** A number with minimum tag */ numMin?: number;
       /** A number with maximum tag */ numMax?: number;
@@ -124,7 +126,8 @@ test('jsdoc', async () => {
       .strict();
     export const ComplexObject = z
       .object({
-        examples: z.unknown().optional(),
+        example: z.string().optional(),
+        examples: z.string().optional(),
         manyTagsStr: z
           .enum(["a", "b", "c"])
           .min(1)
@@ -151,6 +154,7 @@ test('jsdoc', async () => {
         responses: {
           200: {
             schema: ComplexObject,
+            description: "Success",
           },
         },
         request: {},
@@ -167,7 +171,16 @@ test('jsdoc', async () => {
           outputSchema: {
             type: "object",
             properties: {
-              examples: {},
+              example: {
+                type: "string",
+                description: "A string with example tag",
+                example: "example",
+              },
+              examples: {
+                type: "string",
+                description: "A string with examples tag",
+                examples: ["example1", "example2"],
+              },
               manyTagsStr: {
                 type: "string",
                 description: "A string with many tags",
@@ -190,7 +203,7 @@ test('jsdoc', async () => {
                 type: "number",
                 description: "A number with many tags",
                 default: 5,
-                examples: [3],
+                example: 3,
                 minimum: 0,
                 maximum: 10,
               },

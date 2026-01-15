@@ -13,6 +13,7 @@ test('same-schema-different-name - Generation Snapshot', async () => {
           operationId: 'putSameSchemaDifferentName',
           responses: {
             '200': {
+              description: 'OK',
               content: {
                 'application/json': {
                   schema: { type: 'string' },
@@ -32,6 +33,7 @@ test('same-schema-different-name - Generation Snapshot', async () => {
           operationId: 'postSameSchemaDifferentName',
           responses: {
             '200': {
+              description: 'OK',
               content: {
                 'application/json': {
                   schema: { type: 'string' },
@@ -87,6 +89,7 @@ test('same-schema-different-name - Generation Snapshot', async () => {
         responses: {
           200: {
             schema: z.string(),
+            description: "OK",
           },
         },
         request: {
@@ -115,6 +118,7 @@ test('same-schema-different-name - Generation Snapshot', async () => {
         responses: {
           200: {
             schema: z.string(),
+            description: "OK",
           },
         },
         request: {

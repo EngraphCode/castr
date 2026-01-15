@@ -1,0 +1,17 @@
+# INVALID: OpenAPI 3.0.x with webhooks (3.1.x only field)
+# This should be REJECTED by strict validation
+
+openapi: '3.0.3'
+info:
+  title: Invalid API
+  version: '1.0.0'
+paths: {}
+
+# webhooks is NOT allowed in 3.0.x
+webhooks:
+  orderCreated:
+    post:
+      operationId: onOrderCreated
+      responses:
+        '200':
+          description: Webhook acknowledged

@@ -19,6 +19,7 @@ test('export-all-named-schemas', async () => {
           operationId: 'getTest',
           responses: {
             '200': {
+              description: 'OK',
               content: {
                 'application/json': {
                   schema: { type: 'string' },

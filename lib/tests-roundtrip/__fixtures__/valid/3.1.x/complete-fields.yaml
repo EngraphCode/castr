@@ -1,0 +1,154 @@
+# Complete Valid OpenAPI 3.1.x
+# This fixture contains all 3.1.x fields including new additions from 3.0.x
+
+openapi: '3.1.0'
+info:
+  title: Complete Fields API
+  summary: A comprehensive 3.1.x API # New in 3.1.x
+  description: A comprehensive API demonstrating all 3.1.x fields
+  termsOfService: https://example.com/terms
+  contact:
+    name: API Support
+    url: https://example.com/support
+    email: support@example.com
+  license:
+    name: MIT
+    identifier: MIT # New in 3.1.x - SPDX identifier
+  version: '1.0.0'
+
+# New in 3.1.x - custom JSON Schema dialect
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+
+externalDocs:
+  description: Full documentation
+  url: https://example.com/docs
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+
+tags:
+  - name: pets
+    description: Pet operations
+
+security:
+  - apiKey: []
+
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      tags: [pets]
+      summary: List all pets
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetList'
+    post:
+      operationId: createPet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePet'
+      responses:
+        '201':
+          description: Pet created
+
+  /pets/{petId}:
+    parameters:
+      - name: petId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getPet
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+# New in 3.1.x - webhooks
+webhooks:
+  petCreated:
+    post:
+      operationId: onPetCreated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Webhook acknowledged
+
+components:
+  schemas:
+    Pet:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        tag:
+          # In 3.1.x, use type array with null instead of nullable: true
+          type: ['string', 'null']
+        status:
+          type: string
+          enum: [available, pending, sold]
+          deprecated: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+
+    CreatePet:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          writeOnly: true
+
+    PetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Pet'
+
+  # New in 3.1.x - pathItems in components
+  pathItems:
+    SharedPetPath:
+      get:
+        operationId: sharedGetPet
+        responses:
+          '200':
+            description: Shared get response
+
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+
+  responses:
+    NotFound:
+      description: Resource not found
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: X-API-Key
+      in: header

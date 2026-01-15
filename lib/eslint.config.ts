@@ -51,6 +51,7 @@ const testGlobs = [
   '**/test-*.ts',
   '**/__tests__/**',
   '**/tests-snapshot/**/*.ts',
+  '**/tests-roundtrip/**/*.ts',
   '**/characterisation/**/*.ts',
 ];
 
@@ -155,6 +156,8 @@ const testRules: Linter.RulesRecord = {
   'no-console': 'off',
   complexity: 'off',
   'sonarjs/cognitive-complexity': 'off',
+  // Allow http:// in test assertions - fixtures (official OpenAPI examples) use http:// URLs
+  'sonarjs/no-clear-text-protocols': 'off',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -205,6 +208,38 @@ export default defineConfig(
       'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
       'sonarjs/cognitive-complexity': ['error', 12],
       complexity: ['error', 12],
+    },
+  },
+
+  // IR schema files contain type definitions that are naturally larger
+  // These define the canonical intermediate representation types
+  {
+    files: ['src/ir/**/*.ts'],
+    ignores: testGlobs,
+    rules: {
+      'max-lines': ['error', { max: 1200, skipBlankLines: true, skipComments: true }],
+    },
+  },
+
+  // Writer files need higher complexity for field output
+  // These files conditionally add many optional fields to output objects
+  {
+    files: ['src/writers/**/*.ts'],
+    ignores: testGlobs,
+    rules: {
+      'sonarjs/cognitive-complexity': ['error', 15],
+      complexity: ['error', 15],
+    },
+  },
+
+  // Validation files need higher complexity for type guards
+  // OAS 3.1 validation requires checking multiple optional document structures
+  {
+    files: ['src/validation/**/*.ts'],
+    ignores: testGlobs,
+    rules: {
+      'sonarjs/cognitive-complexity': ['error', 15],
+      complexity: ['error', 15],
     },
   },
 

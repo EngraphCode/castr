@@ -220,7 +220,7 @@ it('determines which status are considered errors-responses', async () => {
   } as SchemasObject;
 
   const openApiDoc = {
-    openapi: '3.0.3',
+    openapi: '3.1.0',
     info: { title: 'Swagger Petstore - OpenAPI 3.0', version: '1.0.11' },
     paths: {
       '/example': {

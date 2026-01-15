@@ -1,0 +1,255 @@
+# Complete Valid OpenAPI 3.0.x
+# This fixture contains all common 3.0.x fields to verify full support.
+
+openapi: '3.0.3'
+info:
+  title: Complete Fields API
+  description: A comprehensive API demonstrating all 3.0.x fields
+  termsOfService: https://example.com/terms
+  contact:
+    name: API Support
+    url: https://example.com/support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: '1.0.0'
+
+externalDocs:
+  description: Full documentation
+  url: https://example.com/docs
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+    variables:
+      environment:
+        default: production
+        enum: [production, staging]
+        description: Server environment
+
+tags:
+  - name: pets
+    description: Pet operations
+    externalDocs:
+      url: https://example.com/pets
+
+security:
+  - apiKey: []
+
+paths:
+  /pets:
+    summary: Pet collection
+    description: Operations on pet collection
+    parameters:
+      - name: X-Request-ID
+        in: header
+        schema:
+          type: string
+    get:
+      operationId: listPets
+      tags: [pets]
+      summary: List all pets
+      description: Returns all pets
+      externalDocs:
+        url: https://example.com/pets/list
+      parameters:
+        - name: limit
+          in: query
+          description: Max items to return
+          required: false
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            X-Rate-Limit:
+              description: Rate limit remaining
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetList'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - apiKey: []
+    post:
+      operationId: createPet
+      tags: [pets]
+      summary: Create a pet
+      requestBody:
+        description: Pet to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePet'
+      responses:
+        '201':
+          description: Pet created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+
+  /pets/{petId}:
+    parameters:
+      - name: petId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getPet
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+    put:
+      operationId: updatePet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePet'
+      responses:
+        '200':
+          description: Pet updated
+    delete:
+      operationId: deletePet
+      responses:
+        '204':
+          description: Pet deleted
+    patch:
+      operationId: patchPet
+      responses:
+        '200':
+          description: Pet patched
+    head:
+      operationId: headPet
+      responses:
+        '200':
+          description: Pet exists
+    options:
+      operationId: optionsPet
+      responses:
+        '200':
+          description: Options
+    trace:
+      operationId: tracePet
+      responses:
+        '200':
+          description: Trace
+
+components:
+  schemas:
+    Pet:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        tag:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [available, pending, sold]
+          deprecated: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+      example:
+        id: '123'
+        name: Fluffy
+
+    CreatePet:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          writeOnly: true
+        tag:
+          type: string
+
+    PetList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Pet'
+      minItems: 0
+      maxItems: 100
+      uniqueItems: true
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+
+  parameters:
+    limitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+
+  responses:
+    NotFound:
+      description: Resource not found
+
+  examples:
+    petExample:
+      summary: Example pet
+      value:
+        id: '123'
+        name: Fluffy
+
+  requestBodies:
+    PetBody:
+      description: Pet request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePet'
+
+  headers:
+    X-Rate-Limit:
+      description: Rate limit remaining
+      schema:
+        type: integer
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: X-API-Key
+      in: header
+
+  links:
+    GetPetById:
+      operationId: getPet
+      parameters:
+        petId: $response.body#/id

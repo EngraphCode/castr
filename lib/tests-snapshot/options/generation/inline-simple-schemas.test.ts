@@ -13,26 +13,31 @@ test('inline-simple-schemas', async () => {
           operationId: '123_example',
           responses: {
             '200': {
+              description: 'Success',
               content: {
                 'application/json': { schema: { $ref: '#/components/schemas/BasicString' } },
               },
             },
             400: {
+              description: 'Bad Request',
               content: {
                 'application/json': { schema: { type: 'string', enum: ['xxx', 'yyy', 'zzz'] } },
               },
             },
             401: {
+              description: 'Unauthorized',
               content: {
                 'application/json': { schema: { type: 'string', enum: ['xxx', 'yyy', 'zzz'] } },
               },
             },
             402: {
+              description: 'Payment Required',
               content: {
                 'application/json': { schema: { type: 'array', items: { type: 'string' } } },
               },
             },
             403: {
+              description: 'Forbidden',
               content: {
                 'application/json': {
                   schema: {
@@ -45,6 +50,7 @@ test('inline-simple-schemas', async () => {
               },
             },
             404: {
+              description: 'Not Found',
               content: {
                 'application/json': {
                   schema: {
@@ -54,6 +60,7 @@ test('inline-simple-schemas', async () => {
               },
             },
             405: {
+              description: 'Method Not Allowed',
               content: {
                 'application/json': {
                   schema: {
@@ -66,6 +73,7 @@ test('inline-simple-schemas', async () => {
               },
             },
             406: {
+              description: 'Not Acceptable',
               content: {
                 'application/json': {
                   schema: {
@@ -81,6 +89,7 @@ test('inline-simple-schemas', async () => {
               },
             },
             407: {
+              description: 'Proxy Authentication Required',
               content: {
                 'application/json': {
                   schema: {
@@ -171,14 +180,17 @@ test('inline-simple-schemas', async () => {
           {
             status: 400,
             schema: z.enum(["xxx", "yyy", "zzz"]),
+            description: "Bad Request",
           },
           {
             status: 401,
             schema: z.enum(["xxx", "yyy", "zzz"]),
+            description: "Unauthorized",
           },
           {
             status: 402,
             schema: z.array(z.string()),
+            description: "Payment Required",
           },
           {
             status: 403,
@@ -187,14 +199,17 @@ test('inline-simple-schemas', async () => {
                 str: z.string().optional(),
               })
               .strict(),
+            description: "Forbidden",
           },
           {
             status: 404,
             schema: SimpleObject,
+            description: "Not Found",
           },
           {
             status: 405,
             schema: z.array(SimpleObject),
+            description: "Method Not Allowed",
           },
           {
             status: 406,
@@ -205,24 +220,30 @@ test('inline-simple-schemas', async () => {
                 })
                 .strict(),
             ),
+            description: "Not Acceptable",
           },
           {
             status: 407,
             schema: z.array(ComplexObject),
+            description: "Proxy Authentication Required",
           },
         ],
         responses: {
           200: {
             schema: BasicString,
+            description: "Success",
           },
           400: {
             schema: z.enum(["xxx", "yyy", "zzz"]),
+            description: "Bad Request",
           },
           401: {
             schema: z.enum(["xxx", "yyy", "zzz"]),
+            description: "Unauthorized",
           },
           402: {
             schema: z.array(z.string()),
+            description: "Payment Required",
           },
           403: {
             schema: z
@@ -230,12 +251,15 @@ test('inline-simple-schemas', async () => {
                 str: z.string().optional(),
               })
               .strict(),
+            description: "Forbidden",
           },
           404: {
             schema: SimpleObject,
+            description: "Not Found",
           },
           405: {
             schema: z.array(SimpleObject),
+            description: "Method Not Allowed",
           },
           406: {
             schema: z.array(
@@ -245,9 +269,11 @@ test('inline-simple-schemas', async () => {
                 })
                 .strict(),
             ),
+            description: "Not Acceptable",
           },
           407: {
             schema: z.array(ComplexObject),
+            description: "Proxy Authentication Required",
           },
         },
         request: {},

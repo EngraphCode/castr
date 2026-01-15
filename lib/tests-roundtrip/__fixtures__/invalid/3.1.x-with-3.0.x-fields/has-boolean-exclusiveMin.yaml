@@ -1,0 +1,31 @@
+# INVALID: OpenAPI 3.1.x with boolean exclusiveMinimum (3.0.x syntax)
+# In 3.0.x: exclusiveMinimum is boolean (used with minimum)
+# In 3.1.x: exclusiveMinimum is number (replaces minimum when exclusive)
+# NOTE: Scalar may not strictly enforce this - document as known limitation
+
+openapi: '3.1.0'
+info:
+  title: Invalid API
+  version: '1.0.0'
+paths:
+  /items:
+    get:
+      operationId: getItems
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidSchema'
+
+components:
+  schemas:
+    InvalidSchema:
+      type: object
+      properties:
+        # In 3.1.x, exclusiveMinimum should be a number, not boolean
+        amount:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true

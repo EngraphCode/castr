@@ -67,14 +67,17 @@ Each ADR follows this structure:
 
 ### Phase 2: Zod → OpenAPI (In Progress)
 
-| ADR                                            | Title                       | Status   | Date       |
-| ---------------------------------------------- | --------------------------- | -------- | ---------- |
-| [025](./ADR-025-http-client-di-integration.md) | HTTP Client DI Integration  | Accepted | 2026-01-06 |
-| [026](./ADR-026-no-regex-for-parsing.md)       | No Regex for Schema Parsing | Accepted | 2026-01-10 |
-| [027](./ADR-027-round-trip-validation.md)      | Round-Trip Validation       | Accepted | 2026-01-12 |
+| ADR                                             | Title                       | Status   | Date       |
+| ----------------------------------------------- | --------------------------- | -------- | ---------- |
+| [025](./ADR-025-http-client-di-integration.md)  | HTTP Client DI Integration  | Accepted | 2026-01-06 |
+| [026](./ADR-026-no-regex-for-parsing.md)        | No Regex for Schema Parsing | Accepted | 2026-01-10 |
+| [027](./ADR-027-round-trip-validation.md)       | Round-Trip Validation       | Accepted | 2026-01-12 |
+| [028](./ADR-028-ir-openapi-consolidation.md)    | IR→OpenAPI Consolidation    | Accepted | 2026-01-12 |
+| [029](./ADR-029-canonical-source-structure.md)  | Canonical Source Structure  | Accepted | 2026-01-12 |
+| [030](./ADR-030-full-openapi-syntax-support.md) | Full OpenAPI Syntax Support | Accepted | 2026-01-13 |
 
-> **Session 2.5 Complete** — OpenAPI writer implemented with 73 new tests.
-> See: [zod-to-openapi-plan.md](../../.agent/plans/zod-to-openapi-plan.md)
+> **Session 2.6a Active** — Full syntax coverage tests written (87 tests). IR expansion in progress.
+> See: [round-trip-validation-plan.md](../../.agent/plans/round-trip-validation-plan.md)
 
 ## Decision Dependencies
 
@@ -210,4 +213,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** January 2026  
-**Next ADR:** 028
+**Next ADR:** 030

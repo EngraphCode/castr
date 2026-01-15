@@ -1,0 +1,46 @@
+# Valid OpenAPI 3.1.x with Webhooks Only (No Paths)
+# In 3.1.x, paths is not required if webhooks or components is present
+
+openapi: '3.1.0'
+info:
+  title: Webhooks Only API
+  version: '1.0.0'
+
+# No paths - this is valid in 3.1.x because we have webhooks
+webhooks:
+  orderCreated:
+    post:
+      operationId: onOrderCreated
+      summary: Order created webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Webhook acknowledged
+
+  orderUpdated:
+    post:
+      operationId: onOrderUpdated
+      summary: Order updated webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Webhook acknowledged
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed, cancelled]

@@ -9,7 +9,7 @@ import type { CastrSchema } from '../ir/schema.js';
 /**
  * HTTP methods supported by OpenAPI 3.0/3.1
  */
-export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
+export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'trace';
 
 /**
  * Request format types

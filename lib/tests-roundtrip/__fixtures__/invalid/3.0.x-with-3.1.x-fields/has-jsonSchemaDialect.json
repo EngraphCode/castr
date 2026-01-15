@@ -1,0 +1,10 @@
+{
+  "$comment": "INVALID: OpenAPI 3.0.x with jsonSchemaDialect (3.1.x only field)",
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Invalid API",
+    "version": "1.0.0"
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "paths": {}
+}

@@ -1,0 +1,9 @@
+# Minimal Valid OpenAPI 3.1.x
+# This fixture contains the bare minimum required for a valid 3.1.x spec.
+# Required: openapi, info (title, version), anyOf(paths, components, webhooks)
+
+openapi: '3.1.0'
+info:
+  title: Minimal Valid API
+  version: '1.0.0'
+paths: {}

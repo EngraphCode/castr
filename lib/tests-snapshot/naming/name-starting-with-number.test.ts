@@ -16,6 +16,7 @@ test('operationId-starting-with-number', async () => {
           operationId: '123_example',
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Basic' } } },
             },
           },
@@ -58,6 +59,7 @@ test('operationId-starting-with-number', async () => {
             },
             "responses": [
                 {
+                    "description": "OK",
                     "schema": {
                         "$ref": "#/components/schemas/Basic",
                         "metadata": {
@@ -107,6 +109,7 @@ test('operationId-starting-with-number', async () => {
         responses: {
           200: {
             schema: Basic,
+            description: "OK",
           },
         },
         request: {},

@@ -6,7 +6,7 @@ import { generateZodClientFromOpenAPI } from '../../src/test-helpers/legacy-comp
 // https://github.com/astahmer/@engraph/castr/issues/49
 test('missing-zod-chains', async () => {
   const openApiDoc: OpenAPIObject = {
-    openapi: '3.0.0',
+    openapi: '3.1.0',
     info: { title: 'Schema test', version: '1.0.0' },
     components: {
       schemas: {

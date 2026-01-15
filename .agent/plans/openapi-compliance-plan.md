@@ -1,0 +1,254 @@
+# OpenAPI Compliance Plan
+
+**Date:** January 14, 2026 (Updated)  
+**Status:** Active 🎯  
+**Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029  
+**Specification:** [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md)
+
+---
+
+## Objective
+
+Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the formal specification.
+
+> [!IMPORTANT]
+> This is about **basic input and output support** — NOT round-trip validation.
+> Round-trip is a SEPARATE phase that comes AFTER this plan is complete.
+
+**Until this plan is complete:**
+
+- The system is NOT production-ready
+- Input may lose content (fields not parsed)
+- Output may be incomplete (fields not written)
+
+---
+
+## Scope
+
+| Capability                 | 3.0.x | 3.1.x | Status        |
+| -------------------------- | ----- | ----- | ------------- |
+| **Input** (parse to IR)    | ✅    | ✅    | ❌ Incomplete |
+| **Output** (write from IR) | ❌    | ✅    | ❌ Incomplete |
+
+---
+
+## Session Structure
+
+### Session 2.6: OpenAPI Compliance (This Plan)
+
+| Sub-session | Focus                        | Status         |
+| ----------- | ---------------------------- | -------------- |
+| 2.6.1       | IR Expansion                 | Partial        |
+| 2.6.2       | Parser Completion            | Partial        |
+| 2.6.3       | Writer Completion            | Partial        |
+| 2.6.4       | Input Coverage Tests         | ✅ Complete    |
+| 2.6.5       | Output Coverage Tests        | ✅ Complete    |
+| 2.6.6       | **Strict Validation**        | ✅ Complete    |
+| 2.6.7       | **Enhanced Error Messages**  | ✅ Complete    |
+| 2.6.8       | **Snapshot Fixture Cleanup** | 🔄 In Progress |
+
+### Session 2.7: Round-Trip Validation
+
+**Blocked until 2.6 complete.** See [round-trip-validation-plan.md](./round-trip-validation-plan.md)
+
+---
+
+## ✅ Completed Work (January 14, 2026)
+
+### 2.6.6 Strict Validation (COMPLETE)
+
+Implemented strict version-aware validation in `loadOpenApiDocument()`:
+
+- **Pipeline:** `bundle() → validate() → upgrade()`
+- Uses `@scalar/openapi-parser`'s `validate()` for version-specific rules
+- Fails fast on invalid specs with detailed errors
+- 20 version-validation tests (2 skipped for known Scalar limitations)
+
+**Key files:**
+
+- `lib/src/shared/load-openapi-document/orchestrator.ts` — Validation pipeline
+- `lib/tests-roundtrip/__tests__/version-validation.integration.test.ts` — Version tests
+
+### 2.6.7 Enhanced Error Messages (COMPLETE)
+
+Created user-friendly validation error formatting with TDD (17 tests):
+
+**Functions implemented:**
+
+- `formatValidationPath()` — Converts JSON pointers to readable paths
+- `getValidationHint()` — Provides context-specific hints
+- `createValidationErrorMessage()` — Builds complete error message
+
+**Example output:**
+
+```
+Invalid OpenAPI 3.0.3 document:
+
+❌ Error 1:
+  Location: paths → /test → get → responses → 200
+  Issue: must have required property
+  Hint: Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)
+```
+
+**Key files:**
+
+- `lib/src/shared/load-openapi-document/validation-errors.ts` — Formatting utilities
+- `lib/src/shared/load-openapi-document/validation-errors.unit.test.ts` — 13 unit tests
+- `lib/src/shared/load-openapi-document/validation-errors.integration.test.ts` — 4 integration tests
+
+### Comprehensive Test Fixtures (22 fixtures)
+
+Created in `lib/tests-roundtrip/__fixtures__/`:
+
+**Valid Fixtures (11):**
+
+- `valid/3.0.x/minimal-valid.yaml`, `valid/3.0.x/minimal-valid.json`
+- `valid/3.0.x/complete-fields.yaml`, `valid/3.0.x/nullable-syntax.yaml`
+- `valid/3.1.x/minimal-valid.yaml`, `valid/3.1.x/complete-fields.yaml`, `valid/3.1.x/complete-fields.json`
+- `valid/3.1.x/webhooks-only.yaml`, `valid/3.1.x/type-array-null.yaml`, `valid/3.1.x/json-schema-dialect.yaml`
+
+**Invalid Fixtures (11):**
+
+- `invalid/3.0.x-with-3.1.x-fields/` — 3.0.x using 3.1.x features
+- `invalid/3.1.x-with-3.0.x-fields/` — 3.1.x using deprecated syntax
+- `invalid/common/` — Missing required fields
+
+---
+
+## 🔄 Remaining Work
+
+### 2.6.8 Snapshot Fixture Cleanup
+
+**Current status:** ~12 snapshot tests still failing
+
+**Root cause:** Pre-existing inline OpenAPI fixtures in snapshot tests have invalid structures:
+
+- Missing required `description` fields in Response objects
+- Using 3.1.x-only features (like `examples` array) in 3.0.x specs
+
+**Fix approach:**
+
+1. Add missing `description: 'OK'` to all response objects
+2. Upgrade fixtures from 3.0.x to 3.1.x where they use 3.1.x features
+3. Update snapshots after fixes
+
+**Affected test directories:**
+
+- `lib/tests-snapshot/options/generation/`
+- `lib/tests-snapshot/spec-compliance/`
+- `lib/tests-snapshot/endpoints/`
+
+---
+
+## Key Insights
+
+### Scalar Validator Behavior (VERIFIED via 16 Integration Tests)
+
+**Test file:** `lib/tests-roundtrip/__tests__/scalar-behavior.integration.test.ts`
+
+**Confirmed Limitations** (Scalar does NOT reject these invalid constructs):
+
+| Issue                                       | Expected per Spec                                | Scalar Behavior    |
+| ------------------------------------------- | ------------------------------------------------ | ------------------ |
+| `nullable: true` in 3.1.x                   | Reject (not in 3.1.x schema)                     | ❌ Passes silently |
+| `exclusiveMinimum: true` (boolean) in 3.1.x | Reject (must be numeric per JSON Schema 2020-12) | ❌ Passes silently |
+
+**Confirmed Working** (Scalar correctly validates):
+
+| Feature                                                         | Behavior                     |
+| --------------------------------------------------------------- | ---------------------------- |
+| Component types (`examples`, `links`, `callbacks`, `pathItems`) | ✅ Validated correctly       |
+| Extension fields (`x-*`)                                        | ✅ Accepted at all levels    |
+| Unresolvable `$ref` references                                  | ✅ Rejected correctly        |
+| Circular `$ref` references                                      | ✅ Accepted (valid per spec) |
+| Missing response `description`                                  | ✅ Rejected correctly        |
+| `webhooks` in 3.0.x                                             | ✅ Rejected correctly        |
+| `jsonSchemaDialect` in 3.0.x                                    | ✅ Rejected correctly        |
+
+### OpenAPI 3.0.x vs 3.1.x Key Differences
+
+| Feature              | 3.0.x             | 3.1.x                                 |
+| -------------------- | ----------------- | ------------------------------------- |
+| Nullable             | `nullable: true`  | `type: ['string', 'null']`            |
+| Paths field          | **Required**      | Optional (if webhooks present)        |
+| `examples` in Schema | Single value only | Array supported (JSON Schema 2020-12) |
+| `jsonSchemaDialect`  | Not allowed       | Optional                              |
+| `webhooks`           | Not allowed       | Optional                              |
+
+### ADR-026 Compliance
+
+The `validation-errors.ts` module uses **string matching** instead of regex per ADR-026 (No Regex in Parsers). While not strictly a parser, this pattern avoids regex complexity issues.
+
+---
+
+## Implementation Plan (Original)
+
+### 2.6.1 IR Expansion
+
+Add ALL missing types to IR schema:
+
+| Item                     | Location         | Status |
+| ------------------------ | ---------------- | ------ |
+| `trace` method           | `IRHttpMethod`   | ❌     |
+| `Operation.externalDocs` | `CastrOperation` | ❌     |
+| `Operation.callbacks`    | `CastrOperation` | ❌     |
+| `Operation.servers`      | `CastrOperation` | ❌     |
+| `PathItem.summary`       | IR handling      | ❌     |
+| `PathItem.description`   | IR handling      | ❌     |
+| `PathItem.servers`       | IR handling      | ❌     |
+| `Response.links`         | `CastrResponse`  | ❌     |
+| `components.examples`    | `IRComponent`    | ❌     |
+
+### 2.6.2 Parser Completion
+
+Update `buildIR()` and helpers to extract ALL fields:
+
+| Object     | Fields to Add                    | Status |
+| ---------- | -------------------------------- | ------ |
+| Operation  | externalDocs, callbacks, servers | ❌     |
+| PathItem   | summary, description, servers    | ❌     |
+| Response   | links                            | ❌     |
+| Components | examples                         | ❌     |
+
+### 2.6.3 Writer Completion
+
+Update `writeOpenApi()` and helpers to output ALL fields:
+
+| Object     | Fields to Add                                  | Status  |
+| ---------- | ---------------------------------------------- | ------- |
+| Operation  | externalDocs, callbacks, servers               | ❌      |
+| PathItem   | summary, description, servers                  | ❌      |
+| Response   | links                                          | ❌      |
+| Components | headers, links, callbacks, pathItems, examples | Partial |
+
+---
+
+## Acceptance Criteria
+
+1. **All fields from [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) are implemented**
+2. **Input coverage tests pass for ALL 3.0.x fields**
+3. **Input coverage tests pass for ALL 3.1.x fields**
+4. **Output coverage tests pass for ALL 3.1.x fields**
+5. **All 22 fixture files load and process without error**
+6. **All snapshot tests pass (after fixture cleanup)**
+7. **All quality gates pass**
+
+---
+
+## Test Summary
+
+| Test Suite             | Count | Status              |
+| ---------------------- | ----- | ------------------- |
+| Unit tests             | 894   | ✅ Pass             |
+| Roundtrip tests        | 174   | ✅ Pass (2 skipped) |
+| Snapshot tests         | 173   | 🔄 ~12 failing      |
+| Error formatting tests | 17    | ✅ Pass             |
+
+---
+
+## References
+
+- [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) — Formal specification
+- [openapi_3_0_x_schema.json](../reference/openapi_schema/openapi_3_0_x_schema.json) — OAS 3.0.x schema
+- [openapi_3_1_x_schema_without_validation.json](../reference/openapi_schema/openapi_3_1_x_schema_without_validation.json) — OAS 3.1.x schema
+- [round-trip-validation-plan.md](./round-trip-validation-plan.md) — Next phase (blocked)

@@ -1,0 +1,7 @@
+# INVALID: Missing openapi version field (required in both 3.0.x and 3.1.x)
+
+# Missing openapi field - this is INVALID
+info:
+  title: Invalid API
+  version: '1.0.0'
+paths: {}

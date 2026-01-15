@@ -38,6 +38,10 @@ vi.mock('@scalar/openapi-parser', () => ({
     specification: doc,
     version: '3.1' as const,
   })),
+  validate: vi.fn(async () => ({
+    valid: true,
+    errors: [],
+  })),
 }));
 
 const successfulResolve = (raw: string, data: BundleResult): ResolveResult => ({

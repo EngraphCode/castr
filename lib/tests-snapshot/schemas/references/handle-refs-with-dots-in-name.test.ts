@@ -16,6 +16,7 @@ test('handle-refs-with-dots-in-name', async () => {
           operationId: 'getWithUsualRefFormat',
           responses: {
             '200': {
+              description: 'OK',
               content: { 'application/json': { schema: { $ref: '#/components/schemas/Basic' } } },
             },
           },
@@ -26,6 +27,7 @@ test('handle-refs-with-dots-in-name', async () => {
           operationId: 'getWithUnusualRefFormat',
           responses: {
             '200': {
+              description: 'OK',
               content: {
                 'application/json': { schema: { $ref: '#/components/schemas/Basic.Thing' } },
               },
@@ -67,6 +69,7 @@ test('handle-refs-with-dots-in-name', async () => {
                 "response": "Basic.Thing",
                 "responses": [
                     {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/components/schemas/Basic.Thing",
                             "metadata": {
@@ -99,6 +102,7 @@ test('handle-refs-with-dots-in-name', async () => {
                 "response": "Basic",
                 "responses": [
                     {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/components/schemas/Basic",
                             "metadata": {
@@ -145,6 +149,7 @@ test('handle-refs-with-dots-in-name', async () => {
         responses: {
           200: {
             schema: Basic.Thing,
+            description: "OK",
           },
         },
         request: {},
@@ -160,6 +165,7 @@ test('handle-refs-with-dots-in-name', async () => {
         responses: {
           200: {
             schema: Basic,
+            description: "OK",
           },
         },
         request: {},

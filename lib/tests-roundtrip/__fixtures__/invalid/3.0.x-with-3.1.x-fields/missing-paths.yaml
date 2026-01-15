@@ -1,0 +1,17 @@
+# INVALID: OpenAPI 3.0.x without paths (required in 3.0.x)
+# In 3.0.x, paths is REQUIRED at root level
+# In 3.1.x, you can have webhooks or components instead
+
+openapi: '3.0.3'
+info:
+  title: Invalid API
+  version: '1.0.0'
+
+# Missing paths - this is INVALID in 3.0.x
+components:
+  schemas:
+    SomeSchema:
+      type: object
+      properties:
+        name:
+          type: string

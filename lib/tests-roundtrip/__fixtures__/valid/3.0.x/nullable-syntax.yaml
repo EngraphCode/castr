@@ -1,0 +1,41 @@
+# Valid OpenAPI 3.0.x with Nullable Syntax
+# This fixture demonstrates correct use of nullable: true (3.0.x syntax)
+
+openapi: '3.0.3'
+info:
+  title: Nullable Syntax API
+  version: '1.0.0'
+paths:
+  /items:
+    get:
+      operationId: getItems
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NullableExample'
+
+components:
+  schemas:
+    NullableExample:
+      type: object
+      properties:
+        # In 3.0.x, nullable: true is the correct way to allow null
+        nullableString:
+          type: string
+          nullable: true
+        nullableNumber:
+          type: number
+          nullable: true
+        nullableArray:
+          type: array
+          items:
+            type: string
+          nullable: true
+        requiredButNullable:
+          type: string
+          nullable: true
+      required:
+        - requiredButNullable

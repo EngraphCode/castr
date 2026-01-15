@@ -1,0 +1,17 @@
+openapi: '3.1.0'
+info:
+  title: Trace Method Test
+  version: '1.0.0'
+paths:
+  /debug:
+    trace:
+      operationId: trace-debug
+      summary: Trace request for debugging
+      description: Returns diagnostic information about the request
+      responses:
+        '200':
+          description: Trace response
+          content:
+            message/http:
+              schema:
+                type: string

@@ -1,0 +1,29 @@
+# INVALID: OpenAPI 3.1.x with nullable: true (3.0.x syntax)
+# In 3.1.x, nullable was removed - use type: ['string', 'null'] instead
+# NOTE: Scalar may not strictly enforce this - document as known limitation
+
+openapi: '3.1.0'
+info:
+  title: Invalid API
+  version: '1.0.0'
+paths:
+  /items:
+    get:
+      operationId: getItems
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidSchema'
+
+components:
+  schemas:
+    InvalidSchema:
+      type: object
+      properties:
+        # nullable is NOT valid in 3.1.x - use type array instead
+        name:
+          type: string
+          nullable: true

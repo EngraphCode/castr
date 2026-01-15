@@ -1,4 +1,4 @@
-# ADR-027: Round-Trip Validation Strategy
+# ADR-027: Round-Trip Validation as Correctness Proof
 
 **Date:** 2026-01-12  
 **Status:** Accepted  
@@ -6,73 +6,91 @@
 
 ---
 
-## Summary
+## Context
 
-Defines **two distinct round-trip validation cases** for proving bidirectional IR architecture correctness.
+We need to prove that the IR-based architecture (ADR-023) correctly preserves information during format transformations. Users adopting Castr in production require confidence that:
+
+1. Their specifications won't be corrupted
+2. No semantic information will be lost
+3. The tool produces stable, predictable output
+
+Without this proof, production adoption is blocked by fear of data loss.
+
+---
+
+## Core Principle: NO CONTENT LOSS
+
+> **This principle is inviolable.**
+
+A schema transformation library that loses content is fundamentally broken. The IR **MUST** capture ALL semantic content from the input specification. If any OpenAPI content is not preserved through the round-trip, the IR must be expanded to capture it.
+
+**NO CONTENT LOSS** means:
+
+- All paths, operations, parameters, schemas, and constraints are preserved
+- All document-level metadata (`tags`, `externalDocs`, `info`) is preserved
+- All component definitions are preserved
+- All security schemes and requirements are preserved
+
+Format may change (normalization), but **information is never lost**.
 
 ---
 
 ## Decision
 
-Round-trip validation consists of two complementary test categories:
+We adopt **round-trip validation** as the mechanism to prove IR correctness.
 
-### Case 1: Deterministic (Byte-for-Byte Idempotency)
+### Two Test Cases
 
-**Input:** A spec that has already passed through Castr normalization.
+| Case                 | Input                  | Expected Output                                    |
+| -------------------- | ---------------------- | -------------------------------------------------- |
+| **Arbitrary specs**  | Any valid OpenAPI spec | No content loss; format may change (normalization) |
+| **Normalized specs** | Castr-normalized spec  | Byte-for-byte identical output                     |
 
-**Expectation:** Byte-for-byte identical output on re-processing.
+These properties are **consequences of the IR architecture**, not implementation requirements. If the IR is truly canonical and the parsers/writers are correct, round-trip validation will pass.
 
-**Rationale:** Castr produces a canonical, deterministic representation. Re-processing a normalized spec proves idempotency — the transformation is stable.
+### Property Definitions
 
-```
-Spec₀ → Castr → Spec₁ → Castr → Spec₂
-ASSERT: Spec₁ === Spec₂ (byte-for-byte)
-```
+| Property         | Definition                                                                                          |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| **Idempotency**  | All pipelines are idempotent. Processing a normalized spec produces byte-for-byte identical output. |
+| **Losslessness** | Processing any valid spec preserves all semantic information. No content is lost.                   |
 
-**Failure indicates:** Non-deterministic serialization, unstable ordering, or hidden state.
+---
 
-### Case 2: Information-Preserving (Semantic Equivalence)
+## Fixture Strategy
 
-**Input:** An arbitrary valid OpenAPI spec (not previously normalized).
+**Arbitrary fixtures:** The official OpenAPI demo schemas serve as arbitrary fixtures:
 
-**Expectation:** Semantic equivalence — all information preserved, format may change.
+- `examples/openapi/v3.1/tictactoe.yaml`
+- `examples/openapi/v3.1/webhook-example.yaml`
+- `examples/openapi/v3.1/non-oauth-scopes.yaml`
 
-**Rationale:** Arbitrary specs may have non-canonical ordering, stylistic variations, or redundant structures. Castr normalizes these while preserving all semantic content.
+**Normalized fixtures:** Process the arbitrary fixtures through Castr and save the output to disk. These become the normalized fixtures for byte-for-byte comparison:
 
-```
-Spec₀ → Castr → Spec₁
-ASSERT: semanticContent(Spec₀) ⊆ semanticContent(Spec₁)
-```
-
-**Note:** Using `⊆` because Castr may compute additional fields (dependency graphs, resolved references, default values).
-
-**Failure indicates:** Information loss during parsing or writing — a critical bug.
+- `lib/tests-roundtrip/__fixtures__/normalized/tictactoe.json`
+- etc.
 
 ---
 
 ## Consequences
 
-### Testing Strategy
+### Positive
 
-| Test Category          | Fixtures                   | Assertion                             |
-| ---------------------- | -------------------------- | ------------------------------------- |
-| Deterministic          | Castr-normalized specs     | `deepStrictEqual` on parsed structure |
-| Information-Preserving | Arbitrary real-world specs | Semantic diff, no missing fields      |
+- Provides quantifiable evidence of correctness
+- Tests the entire parse → IR → write pipeline
+- Failures indicate architectural bugs (not cosmetic issues)
+- Enables production confidence
 
-### Implementation Notes
+### Negative
 
-1. **Deterministic tests** should use `JSON.stringify()` comparison after sorting keys
-2. **Information-preserving tests** require a semantic comparator that ignores:
-   - Key ordering
-   - Whitespace
-   - Optional fields with default values
-3. Document any expected transformations (e.g., `nullable: true` → `type: ['string', 'null']` in OAS 3.1)
+- Some format transformations are expected (e.g., `nullable: true` → `type: [string, null]`)
+- Requires careful distinction between "transformation" and "loss"
+- IR must capture ALL OpenAPI content (no shortcuts)
 
-### What This Proves
+### Neutral
 
-- The IR is truly canonical — same input always produces same output
-- No information is lost during `parse → IR → write` cycles
-- The architecture supports any format pair, not just OpenAPI ↔ Zod
+- Tests should be high-level behavior tests, not unit tests of comparison utilities
+- Implementation approach (comparison libraries, diff tools) is a secondary concern
 
 ---
 
@@ -80,4 +98,4 @@ ASSERT: semanticContent(Spec₀) ⊆ semanticContent(Spec₁)
 
 - [ADR-023: IR-Based Architecture](./ADR-023-ir-based-architecture.md)
 - [ADR-024: Complete IR Alignment](./ADR-024-complete-ir-alignment.md)
-- Session 2.6: Round-Trip Validation
+- [round-trip-validation-plan.md](../../.agent/plans/round-trip-validation-plan.md) — Implementation details

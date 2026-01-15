@@ -6,11 +6,25 @@ import type {
   ExampleObject,
   ReferenceObject,
   ServerObject,
+  TagObject,
+  ExternalDocumentationObject,
+  PathItemObject,
+  LinkObject,
+  CallbackObject,
+  HeaderObject,
 } from 'openapi3-ts/oas31';
 
 // ... existing imports ...
 
-export type IRHttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
+export type IRHttpMethod =
+  | 'get'
+  | 'post'
+  | 'put'
+  | 'patch'
+  | 'delete'
+  | 'head'
+  | 'options'
+  | 'trace';
 
 /**
  * Type-safe wrapper for CastrSchema properties.
@@ -30,7 +44,12 @@ export type IRComponent =
   | IRSecuritySchemeComponent
   | CastrParameterComponent
   | CastrResponseComponent
-  | IRRequestBodyComponent;
+  | IRRequestBodyComponent
+  | IRHeaderComponent
+  | IRLinkComponent
+  | IRCallbackComponent
+  | IRPathItemComponent
+  | IRExampleComponent;
 
 export interface CastrSchemaComponent {
   /**
@@ -81,6 +100,55 @@ export interface IRRequestBodyComponent {
   type: 'requestBody';
   name: string;
   requestBody: IRRequestBody;
+}
+
+/**
+ * Header component definition from OpenAPI components/headers section.
+ */
+export interface IRHeaderComponent {
+  type: 'header';
+  name: string;
+  header: HeaderObject | ReferenceObject;
+}
+
+/**
+ * Link component definition from OpenAPI components/links section.
+ * Links describe the relationship between operations.
+ */
+export interface IRLinkComponent {
+  type: 'link';
+  name: string;
+  link: LinkObject | ReferenceObject;
+}
+
+/**
+ * Callback component definition from OpenAPI components/callbacks section.
+ * Callbacks are webhook-like patterns triggered by the server.
+ */
+export interface IRCallbackComponent {
+  type: 'callback';
+  name: string;
+  callback: CallbackObject | ReferenceObject;
+}
+
+/**
+ * PathItem component definition from OpenAPI components/pathItems section (3.1.x).
+ * Reusable path items that can be referenced.
+ */
+export interface IRPathItemComponent {
+  type: 'pathItem';
+  name: string;
+  pathItem: PathItemObject | ReferenceObject;
+}
+
+/**
+ * Example component definition from OpenAPI components/examples section.
+ * Reusable examples that can be referenced.
+ */
+export interface IRExampleComponent {
+  type: 'example';
+  name: string;
+  example: ExampleObject | ReferenceObject;
 }
 
 /**
@@ -207,6 +275,42 @@ export interface CastrOperation {
    * Used for JSDoc deprecation annotations.
    */
   deprecated?: boolean;
+
+  /**
+   * External documentation for this operation.
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object}
+   */
+  externalDocs?: ExternalDocumentationObject;
+
+  /**
+   * Callbacks for this operation.
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#callback-object}
+   */
+  callbacks?: Record<string, CallbackObject | ReferenceObject>;
+
+  /**
+   * Servers for this operation (overrides document-level servers).
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#server-object}
+   */
+  servers?: ServerObject[];
+
+  /**
+   * PathItem-level summary (applies to all operations in this path).
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
+   */
+  pathItemSummary?: string;
+
+  /**
+   * PathItem-level description (applies to all operations in this path).
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
+   */
+  pathItemDescription?: string;
+
+  /**
+   * PathItem-level servers (applies to all operations in this path).
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
+   */
+  pathItemServers?: ServerObject[];
 }
 
 /**
@@ -377,6 +481,12 @@ export interface CastrResponse {
    * Response headers.
    */
   headers?: Record<string, CastrSchema>;
+
+  /**
+   * Links for response.
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#link-object}
+   */
+  links?: Record<string, LinkObject | ReferenceObject>;
 }
 
 /**
@@ -1074,6 +1184,37 @@ export interface CastrDocument {
    * @see {@link https://spec.openapis.org/oas/v3.1.0#security-requirement-object OpenAPI Security Requirement Object}
    */
   security?: IRSecurityRequirement[];
+
+  /**
+   * Document-level tags for API categorization.
+   * Tags group operations into logical sections.
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#tag-object OpenAPI Tag Object}
+   */
+  tags?: TagObject[];
+
+  /**
+   * Document-level external documentation.
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object OpenAPI External Documentation Object}
+   */
+  externalDocs?: ExternalDocumentationObject;
+
+  /**
+   * Webhooks defined in the document (OpenAPI 3.1.x only).
+   * Key is the webhook name, value is the path item defining the webhook operations.
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#fixed-fields OpenAPI Webhooks}
+   */
+  webhooks?: Map<string, PathItemObject>;
+
+  /**
+   * JSON Schema dialect URI (OpenAPI 3.1.x only).
+   * Specifies the default JSON Schema dialect for all schemas in the document.
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#schema-dialects OpenAPI Schema Dialects}
+   */
+  jsonSchemaDialect?: string;
 }
 
 /**

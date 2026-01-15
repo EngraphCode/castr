@@ -5,6 +5,7 @@
  * @internal
  */
 
+import { validate } from '@scalar/openapi-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { OTTLoadedOpenApiDocument } from '../bundle-metadata.types.js';
 import { normalizeInput } from './normalize-input.js';
@@ -13,6 +14,7 @@ import { createBundleConfig } from './bundle-config.js';
 import { bundleDocument } from './bundle-document.js';
 import { upgradeAndValidate } from './upgrade-validate.js';
 import { createMetadata, formatDescriptor } from './metadata.js';
+import { createValidationErrorMessage } from './validation-errors.js';
 
 /**
  * Load and process OpenAPI document through complete pipeline.
@@ -20,18 +22,20 @@ import { createMetadata, formatDescriptor } from './metadata.js';
  * **Pipeline Stages:**
  * 1. Normalize Input: Accept string/URL/object, determine entry point
  * 2. Bundle: Resolve external file/URL references via @scalar/json-magic
- * 3. Upgrade: Convert OpenAPI 2.0/3.0 → 3.1 via @scalar/openapi-parser
- * 4. Validate: Type-guard to ensure BundledOpenApiDocument (intersection type)
+ * 3. **Validate**: Strict validation against declared version schema (FAIL FAST)
+ * 4. Upgrade: Convert OpenAPI 2.0/3.0 → 3.1 via @scalar/openapi-parser
+ * 5. Type Guard: Ensure BundledOpenApiDocument (intersection type)
  *
  * **Architecture Notes:**
  * - Replaces legacy SwaggerParser approach (ADR-019)
  * - bundle() preserves internal $refs (doesn't fully dereference)
+ * - validate() STRICTLY validates against declared version BEFORE upgrade
  * - upgrade() automatically converts old specs to 3.1
  * - Type-safe at boundaries (no casting except Scalar interface)
  *
  * @param input - String path/URL, URL object, or in-memory OpenAPI document
  * @returns Loaded document with OpenAPI 3.1 spec and bundle metadata
- * @throws Error if bundling, upgrading, or validation fails
+ * @throws Error if validation, bundling, upgrading, or type guard fails
  *
  * @see {@link https://github.com/scalar/scalar Scalar OpenAPI Parser}
  * @see {@link .agent/architecture/SCALAR-PIPELINE.md Architecture docs}
@@ -55,6 +59,16 @@ export async function loadOpenApiDocument(
 
   try {
     const bundledDocument = await bundleDocument(bundleInput, bundleConfig);
+
+    // STRICT VALIDATION: Validate against declared version BEFORE upgrade
+    // Per RULES.md: "Fail fast, fail hard, be strict at all times"
+    // But also be HELPFUL - show users exactly what's wrong and how to fix it
+    const validationResult = await validate(bundledDocument);
+    if (!validationResult.valid) {
+      const errorMessage = createValidationErrorMessage(validationResult.errors, bundledDocument);
+      throw new Error(errorMessage);
+    }
+
     const upgraded = upgradeAndValidate(bundledDocument);
 
     return {

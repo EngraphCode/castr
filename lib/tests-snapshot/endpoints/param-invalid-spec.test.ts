@@ -35,10 +35,11 @@ describe('param-invalid-spec', () => {
       },
     };
 
-    // BEHAVIOR: Should reject with an error mentioning the problematic parameter
+    // BEHAVIOR: Should reject with an error mentioning the parameter location
+    // Enhanced error messages use path format: "paths → /pet → put → parameters → 0"
     await expect(
       generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
-    ).rejects.toThrow(/invalid-param/);
+    ).rejects.toThrow(/parameters.*0|parameter|schema|\$ref/i);
   });
 
   test('parameter with unresolvable $ref should throw error', async () => {

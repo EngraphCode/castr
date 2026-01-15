@@ -19,7 +19,9 @@ test('request-body-ref', async () => {
           requestBody: {
             $ref: '#/components/requestBodies/PostPetsRequest',
           },
-          responses: {},
+          responses: {
+            '200': { description: 'OK' },
+          },
         },
       },
     },
@@ -77,7 +79,12 @@ test('request-body-ref', async () => {
         ],
         response: z.object({}).strict(),
         errors: [],
-        responses: {},
+        responses: {
+          200: {
+            schema: z.object({}).strict(),
+            description: "OK",
+          },
+        },
         request: {
           body: PostPetsRequest,
         },

@@ -1,0 +1,12 @@
+# INVALID: OpenAPI 3.0.x with jsonSchemaDialect (3.1.x only field)
+# This should be REJECTED by strict validation
+
+openapi: '3.0.3'
+info:
+  title: Invalid API
+  version: '1.0.0'
+
+# jsonSchemaDialect is NOT allowed in 3.0.x
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+
+paths: {}
