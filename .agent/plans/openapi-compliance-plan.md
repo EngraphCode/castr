@@ -209,43 +209,9 @@ Update parser to extract all 10 new fields:
 
 The `validation-errors.ts` module uses **string matching** instead of regex per ADR-026 (No Regex in Parsers). While not strictly a parser, this pattern avoids regex complexity issues.
 
----
+## 🟡 Pending Work
 
-## Implementation Plan (Original)
-
-### 2.6.1 IR Expansion (P1 BLOCKING)
-
-**File:** `lib/src/ir/schema.ts`
-
-Extend interfaces to support ALL OpenAPI 3.1 + JSON Schema 2020-12:
-
-**CastrSchema additions:**
-
-```typescript
-xml?: XMLObject;
-externalDocs?: ExternalDocumentationObject;
-prefixItems?: CastrSchema[];
-unevaluatedProperties?: boolean | CastrSchema;
-unevaluatedItems?: boolean | CastrSchema;
-dependentSchemas?: Record<string, CastrSchema>;
-dependentRequired?: Record<string, string[]>;
-minContains?: number;
-maxContains?: number;
-```
-
-**IRMediaType additions:**
-
-```typescript
-encoding?: Record<string, EncodingObject>;
-```
-
-**Import types from openapi3-ts:**
-
-```typescript
-import type { XMLObject, EncodingObject } from 'openapi3-ts/oas31';
-```
-
-### 2.6.2 Parser Completion (BLOCKED on 2.6.1)
+### 2.6.2 Parser Completion (NEXT)
 
 **Files:** `lib/src/parsers/openapi/builder.*.ts`
 
@@ -255,7 +221,11 @@ Extract new IR fields from OpenAPI input:
 - MediaType: `encoding`
 - Handle 3.0 → 3.1 upgrades (e.g., tuple `items` → `prefixItems`)
 
-### 2.6.3 Writer Completion (BLOCKED on 2.6.1)
+**Key files to modify:**
+- `builder.core.ts` — Schema field extraction
+- `builder.request-body.ts` — Encoding extraction
+
+### 2.6.3 Writer Completion (BLOCKED on 2.6.2)
 
 **Files:** `lib/src/writers/openapi/openapi-writer.*.ts`
 
@@ -263,6 +233,10 @@ Write new IR fields to OpenAPI 3.1 output:
 
 - Schema: `xml`, `externalDocs`, JSON Schema 2020-12 keywords
 - MediaType: `encoding`
+
+**Key files to modify:**
+- `openapi-writer.schema.ts` — Schema field output
+- `openapi-writer.operations.ts` — MediaType encoding output
 
 ---
 
