@@ -1,253 +1,194 @@
-# Future Work: Artefact Expansion & SDK Integration
+# Phase 3: Multi-Artefact Generation
 
-**Status:** Future (blocked on IR Alignment phases IR-1 through IR-3)  
-**Prerequisites:** Phase 3 complete; IR architecture fully aligned  
-**Original:** PHASE-4-ARTEFACT-EXPANSION.md (Nov 2025)
-
----
-
-## 🎯 Engineering Excellence Foundation
-
-> **Built on Excellence:** Phase 4 builds upon the type discipline and engineering excellence established in Phase 3.
-
-All Phase 4 work inherits and extends the rigorous standards established during Phase 3's type discipline restoration:
-
-**Type System Discipline:**
-
-- Zero type assertions (except `as const`)
-- Zero escape hatches (`any`, `!`, `Record<string, unknown>`)
-- Library types first (`openapi3-ts/oas31`, `openapi-fetch`)
-- Proper type guards with `is` predicates
-- No type widening - preserve literal types throughout
-
-**Engineering Standards:**
-
-- **TDD Mandatory** - Write failing tests first, always
-- **Clean Architecture** - SOLID principles, single responsibility
-- **Comprehensive Documentation** - TSDoc for all public APIs
-- **Quality Gates** - All 8 gates must pass GREEN
-- **Zero Behavioral Regressions** - Characterization tests prove parity
-
-**Phase 4 Commitment:**
-
-Every new writer, every new artifact type, every new feature will be built with the same commitment to excellence that restored type discipline in Phase 3. We don't compromise on quality to ship faster - we ship high-quality code that works correctly the first time and remains maintainable for years.
-
-**Success Measured By:**
-
-- Zero type system violations in all generated code
-- Comprehensive test coverage (unit, integration, e2e)
-- Professional documentation enabling self-service adoption
-- Deterministic outputs (same input → same output, always)
+**Status:** Future (after Production Milestone at Session 2.10)  
+**Prerequisites:** Core path proven (OpenAPI ↔ IR ↔ Zod round-trips validated)  
+**Last Updated:** January 15, 2026
 
 ---
 
-## Session Summary
+## Overview
 
-| #   | Session                                  | Intent                                                                           |
-| --- | ---------------------------------------- | -------------------------------------------------------------------------------- |
-| 4.1 | Writer Framework & Manifest              | Introduce modular writers, manifest orchestration, and CLI/API parity.           |
-| 4.2 | OpenAPI Fetch Type Suite                 | Emit `paths/operations/components/webhooks` types compatible with openapi-fetch. |
-| 4.3 | Constants & Guards Expansion             | Generate catalogues, enums, metadata, and parameter schema maps.                 |
-| 4.4 | Runtime Schema & Zod Catalogue           | Produce decorated schema modules, Zod outputs, and JSON Schema companions.       |
-| 4.5 | Client Wrappers & MCP Tooling            | Deliver client helpers plus MCP summaries, samples, and naming utilities.        |
-| 4.6 | Validation, Documentation & Release Prep | Consolidate testing, documentation, and release readiness.                       |
+After the core OpenAPI ↔ Zod path is production-ready, extend Castr to produce multiple artefact types from a single IR.
+
+```
+OpenAPI → IR → [types, zod, constants, guards, metadata, client, mcp]
+```
 
 ---
 
-## 1. Vision & Goals
+## Session 2.8: Adapter Abstraction (Prerequisite)
 
-Deliver the multi-artefact toolchain described in the additional project requirements so a single run of the generator produces every SDK deliverable:
+Before multi-artefact generation, the writer framework needs abstraction.
 
-- TypeScript interfaces for `openapi-fetch` (`paths`, `operations`, `components`, `webhooks`)
-- Deterministic enumerated constants and type guards
-- Request/response metadata maps (including per-channel parameter schemas)
-- Decorated schema JSON/TS modules with provenance
-- Zod validators, helper maps, and runtime schema collections
-- OpenAPI Fetch client wrappers and manifest outputs
-- MCP-specific summaries, sample utilities, and tool scaffolding inputs
+**Intent:** Create a pluggable writer architecture with manifest-driven output.
 
-All artefacts consume the **Phase 3 IR** and continue to validate against official OpenAPI schemas and MCP Draft 2025-06-18 requirements. Output must be deterministic and configurable through modular writers.
+**Deliverables:**
 
----
+- `Writer` interface — Standard contract for all output generators
+- `GenerationResult` manifest — File metadata, warnings, hashes
+- CLI parity — `--writers types,zod,constants` mirrors programmatic API
+- Writer registry — Discover/enable writers by name
 
-## 2. Guiding Principles
+**Acceptance Criteria:**
 
-1. **Single Pass:** Reuse the prepared IR from Phase 3; no additional schema parsing.
-2. **Writer Modularity:** Introduce pluggable writers (types, zod, metadata, clients, MCP) that share the same IR.
-3. **Deterministic & Stable:** Byte-for-byte identical output for identical input + config.
-4. **Schema Compliance:** All regenerated OpenAPI documents and derived JSON Schemas validate against `.agent/reference/openapi_schema/*.json` and MCP schemas.
-5. **Documentation First:** Every emitted module includes TSDoc sourced from the OpenAPI descriptions.
+- Writers share IR without re-parsing
+- Manifest enables deterministic output verification
+- CLI and programmatic API have identical capabilities
 
 ---
 
-## 3. Milestones
+## Sessions 2.9+: Artefact Expansion
 
-### M1. Writer Orchestration & Manifest (est. 1 week)
+After 2.8 establishes the framework, add new artefact types:
 
-- Define writer API (`types`, `zod`, `metadata`, `client`, `mcp`, `schema-json`).
-- Implement generation manifest (`GeneratedFile`, `GenerationResult`) consumed by both CLI and programmatic API.
-- Add CLI options mirroring programmatic `writers[]`, `outputDir`, and transform hooks.
-
-### M2. OpenAPI Fetch Type Suite (est. 1–2 weeks)
-
-- Emit `paths`, `operations`, `components`, `webhooks` interfaces compatible with `openapi-fetch@^0.15`.
-- Produce deterministic parameter decomposition (`path/query/header/cookie`) and numeric status literal responses.
-- Generate TSDoc per operation/parameter from OpenAPI descriptions.
-- Validate by compiling a fixture project that imports the generated interfaces.
-
-### M3. Derived Constants & Guards (est. 1 week)
-
-- Emit path catalogues (`PATHS`, `ValidPath`, `allowedMethods`, `isAllowedMethod`).
-- Produce enum constants/guards for all schema-defined `enum`/`const` values with renaming hooks.
-- Generate operation metadata (`PATH_OPERATIONS`, `OPERATIONS_BY_ID`) and request parameter schema maps.
-
-### M4. Runtime Schema & Zod Catalogue (est. 1–2 weeks)
-
-- Emit decorated schema as `schema.ts` + JSON snapshots with provenance header.
-- Produce single-pass Zod outputs: endpoints array, helper maps (operation IDs, primary status), `buildSchemaCollection`.
-- Attach JSON Schema counterparts for request/response validators to satisfy downstream tooling requirements.
-
-### M5. Client & MCP Tooling (est. 1–2 weeks)
-
-- Generate `createApiClient` / `createPathClient` wrappers around `openapi-fetch`.
-- Provide MCP operation summaries, sample generators, tool naming helpers, and JSON Schema payloads derived from the same IR.
-- Ensure MCP tool bundle can be rebuilt using only generated artefacts (integration test).
-
-### M6. Validation & Documentation (est. 1 week)
-
-- Expand characterisation tests to cover full artefact set (types, zod, clients, MCP).
-- Add integration tests: diff output determinism, compile-time checks, MCP tool regeneration, schema validation.
-- Update README, CLI help, migration guides, and changelog.
+| Session | Artefact           | Purpose                                               |
+| ------- | ------------------ | ----------------------------------------------------- |
+| 2.9     | TypeScript Types   | `paths`, `operations`, `components` for openapi-fetch |
+| 2.10    | Constants & Guards | `PATHS`, `ValidPath`, enums, type guards              |
+| 2.11    | Metadata Maps      | Operation metadata, parameter schema maps             |
+| 2.12    | JSON Schema Output | Request/response schemas for downstream tooling       |
+| 2.13    | Client Wrappers    | `createApiClient` with typed helpers                  |
+| 2.14    | MCP Tooling        | Tool summaries, sample generators, naming utilities   |
 
 ---
 
-## 4. Deliverables
+## Artefact Details
 
-- Modular writer API and CLI with manifest output.
-- Full type suite (`paths`, `operations`, `components`, `webhooks`) with TSDoc.
-- Deterministic constants/guards and parameter schema maps.
-- Decorated schema JSON/TS modules with provenance.
-- Zod endpoints + helper maps + JSON Schema validators.
-- OpenAPI Fetch client helpers.
-- MCP tool metadata, sample utility, and naming helpers.
-- Comprehensive tests ensuring compliance and determinism.
+### 2.9 TypeScript Types (openapi-fetch compatible)
+
+Generate interfaces for use with `openapi-fetch`:
+
+```typescript
+export interface paths {
+  '/users/{id}': {
+    get: operations['getUser'];
+  };
+}
+
+export interface operations {
+  getUser: {
+    parameters: { path: { id: string } };
+    responses: { 200: { content: { 'application/json': User } } };
+  };
+}
+```
+
+**Requirements:**
+
+- Numeric status keys as literals (`200`, not `string`)
+- Parameter decomposition by channel (path/query/header/cookie)
+- TSDoc from OpenAPI descriptions
+
+### 2.10 Constants & Guards
+
+```typescript
+export const PATHS = ['/users', '/users/{id}'] as const;
+export type ValidPath = (typeof PATHS)[number];
+
+export const HttpMethods = ['get', 'post', 'put', 'delete'] as const;
+export function isValidMethod(m: unknown): m is HttpMethod { ... }
+```
+
+**Requirements:**
+
+- Deterministic ordering (sorted)
+- Enum detection from `enum`/`const` in schemas
+- Optional renaming hooks for convention alignment
+
+### 2.11 Metadata Maps
+
+```typescript
+export const OPERATIONS_BY_ID = {
+  getUser: { path: '/users/{id}', method: 'get', tags: ['users'] },
+} as const;
+
+export const PARAMETER_SCHEMAS = {
+  getUser: { path: { id: z.string().uuid() } },
+} as const;
+```
+
+### 2.12 JSON Schema Output
+
+Emit request/response schemas as JSON Schema (Draft 2020-12):
+
+- For validation tooling that doesn't use Zod
+- For MCP tool input schemas
+- With `$id` and provenance metadata
+
+### 2.13 Client Wrappers
+
+```typescript
+import createClient from 'openapi-fetch';
+import type { paths } from './types';
+
+export function createApiClient(baseUrl: string) {
+  return createClient<paths>({ baseUrl });
+}
+```
+
+### 2.14 MCP Tooling
+
+Generate Model Context Protocol tool definitions:
+
+- Tool names from operationId with configurable casing
+- Input schemas from request parameters
+- Sample payload generators
 
 ---
 
-## 5. Success Criteria
+## Guiding Principles
 
-- Running `generate({ schema, writers: 'all' })` produces types, Zod, metadata, clients, MCP artefacts, and schema snapshots in one execution.
-- Emitted `paths` interface compiles with `openapi-fetch@^0.15` and matches existing SDK behaviour.
-- Zod validators cover every request channel and response status; JSON Schema siblings align.
-- Enumerated constants, request parameter maps, and operation metadata require no downstream patching.
-- MCP tool generation consumes only generated artefacts to match current behaviour.
-- Two identical runs produce identical manifests (verified via CI).
-- All outputs documented with TSDoc derived from OpenAPI descriptions.
+1. **Single IR, Multiple Outputs** — Parse once, write many
+2. **Deterministic** — Identical input + config → identical output (bit-for-bit)
+3. **Opt-in Writers** — Each artefact type is independently selectable
+4. **No Regressions** — Existing Zod output unchanged unless explicitly updated
 
 ---
 
-**Next Steps:**
+## Quality Standards
 
-1. Finalise Phase 3 implementation and capture IR schema/versioning.
-2. Spike on writer orchestration to confirm API ergonomics.
-3. Begin Milestone 1 with TDD + characterisation groundwork.
+All artefact work follows established standards:
+
+- **10 Quality Gates** — All must pass
+- **TDD Mandatory** — Tests specify behavior before implementation
+- **Type Discipline** — No `as`, `any`, `!`
+- **ts-morph for AST** — No string concatenation for code generation
 
 ---
 
-## Sessions
+## What Already Exists
 
-### Session 4.1 – Writer Framework & Manifest
+These capabilities exist and should be **preserved, not duplicated**:
 
-- **Intent:** Implement the modular writer framework and manifest return structure used by both CLI and programmatic APIs.
-- **Acceptance Criteria:**
-  - Writer API defined (`types`, `zod`, `metadata`, `client`, `mcp`, `schema-json`).
-  - `GenerationResult` manifest implemented with file metadata and warnings.
-  - CLI mirrors programmatic options for selecting writers, output directory, and transform hooks.
-- **Definition of Done:**
-  - Manifest-driven generation integrated with CLI command (including dry-run support).
-  - Unit tests validate manifest structure for sample writers.
-  - Documentation snippet describing writer selection appended to README/CLI help draft.
-- **Validation Steps:**
-  1. `pnpm test -- run src/generation/generation-manifest.test.ts`
-  2. CLI smoke run (`pnpm openapi-zod-validation ... --writers types --dry-run`)
-  3. Manual inspection of manifest JSON for complex fixture.
+| Existing          | Location                           | Notes                                  |
+| ----------------- | ---------------------------------- | -------------------------------------- |
+| Zod writer        | `writers/zod/`                     | Keep as canonical, extend if needed    |
+| TypeScript writer | `writers/typescript/`              | Write types/constants from IR          |
+| OpenAPI writer    | `writers/openapi/`                 | IR → OpenAPI output                    |
+| MCP context       | `context/template-context.mcp*.ts` | May need refactoring to writer pattern |
 
-### Session 4.2 – OpenAPI Fetch Type Suite
+---
 
-- **Intent:** Emit the `paths`, `operations`, `components`, and `webhooks` interfaces compatible with `openapi-fetch@^0.15`.
-- **Acceptance Criteria:**
-  - Generated interfaces honour shared + operation-specific parameters, decomposed per channel (`path`, `query`, `header`, `cookie`).
-  - Numeric response status keys preserved as number literals; fallback methods resolve to `never`.
-  - TSDoc derived from OpenAPI summaries/descriptions embedded.
-- **Definition of Done:**
-  - Type writer integrated and enabled when `writers` includes `types`.
-  - Characterisation snapshots added for representative specs.
-  - Sample TypeScript project compiles using emitted interfaces.
-- **Validation Steps:**
-  1. `pnpm test -- run src/writers/types/*.test.ts`
-  2. `pnpm test --filter characterisation -- types`
-  3. `pnpm --filter openapi-fetch-fixture type-check` (or equivalent sample project).
+## Dependencies on Other Roadmap Items
 
-### Session 4.3 – Constants & Guards Expansion
+| Dependency                          | Status    | Impact                                  |
+| ----------------------------------- | --------- | --------------------------------------- |
+| Session 2.6 (OpenAPI Compliance)    | 🎯 Active | IR must capture all fields first        |
+| Session 2.7 (Round-Trip Validation) | Blocked   | Proves NO CONTENT LOSS before expansion |
+| Session 2.8 (Adapter Abstraction)   | Pending   | Creates writer framework                |
 
-- **Intent:** Generate path catalogues, enumerated constants/guards, operation metadata, and parameter schema maps.
-- **Acceptance Criteria:**
-  - `PATHS`, `ValidPath`, `allowedMethods`, `isAllowedMethod` emitted deterministically.
-  - Enum detection surfaces component and inline enums with optional renaming hooks.
-  - Operation metadata exposes operation ID lookups and request parameter schema maps per channel.
-- **Definition of Done:**
-  - Constants writer outputs packaged with manifest and documented usage.
-  - Tests cover enum exports, method guards, and parameter schema maps.
-  - README section drafted for constants/guards.
-- **Validation Steps:**
-  1. `pnpm test -- run src/writers/constants/*.test.ts`
-  2. Snapshot review for enum exports on complex fixture.
-  3. Manual validation of parameter schema map for edge-case spec.
+---
 
-### Session 4.4 – Runtime Schema & Zod Catalogue
+## Out of Scope
 
-- **Intent:** Produce decorated schema modules, Zod endpoints, helper maps, and JSON Schema validators from the shared IR.
-- **Acceptance Criteria:**
-  - Decorated schema emitted as JSON + TS with provenance header (title/version/digest).
-  - Zod outputs cover success + error responses with helper maps (operation IDs, primary status codes).
-  - JSON Schema counterparts generated for request/response validators to support MCP tooling.
-- **Definition of Done:**
-  - Zod writer integrated; JSON Schema writer optionally toggled via writers list.
-  - Tests confirm parity with existing Zod outputs and JSON Schema validation via AJV.
-  - Characterisation fixtures updated accordingly.
-- **Validation Steps:**
-  1. `pnpm test -- run src/writers/zod/*.test.ts`
-  2. `pnpm test -- run src/writers/json-schema/*.test.ts`
-  3. AJV validation of generated schemas against Draft 07 or chosen draft.
+- **New parsers** — Covered in Phases 3-5 (JSONSchema, tRPC)
+- **HTTP client bundling** — Per ADR-022, consumers choose their client
+- **Performance optimization** — Future concern after correctness proven
 
-### Session 4.5 – Client Wrappers & MCP Tooling
+---
 
-- **Intent:** Generate OpenAPI Fetch client wrappers plus MCP summaries, sample payload utilities, and naming helpers.
-- **Acceptance Criteria:**
-  - `createApiClient` / `createPathClient` wrappers export typed helpers with middleware support.
-  - MCP operation summaries expose parameters, responses, schema references, and deterministically named tools.
-  - Sample payload utility handles cycles and failure modes gracefully.
-- **Definition of Done:**
-  - Client writer and MCP writer integrated with manifest/CLI.
-  - Integration test recreates current MCP bundle using only generated artefacts.
-  - Documentation outlines MCP helper usage and configuration hooks.
-- **Validation Steps:**
-  1. `pnpm test -- run src/writers/client/*.test.ts`
-  2. MCP integration test pipeline (CLI script or vitest suite).
-  3. Manual verification of generated tool names and samples.
+## References
 
-### Session 4.6 – Validation, Documentation & Release Prep
-
-- **Intent:** Consolidate validation strategy, update documentation, and prepare release once writers stabilise.
-- **Acceptance Criteria:**
-  - Comprehensive characterisation suite covering all writers passes.
-  - README/CLI docs updated with new command examples and artefact descriptions.
-  - Release notes capture Phase 4 deliverables and migration guidance.
-- **Definition of Done:**
-  - Full quality gate (format/build/type-check/test) passes from clean tree.
-  - Documentation PR merged; release checklist ticked off.
-  - Stakeholder sign-off recorded.
-- **Validation Steps:**
-  1. Run full quality gate (`pnpm format && pnpm build && pnpm type-check && pnpm test -- --run`)
-  2. `pnpm test --filter characterisation`
-  3. Documentation lint/check and release dry-run (if applicable).
+- [ADR-022: Building Blocks Architecture](../../docs/architectural_decision_records/ADR-022-building-blocks-no-http-client.md)
+- [ADR-025: HTTP Client DI Integration](../../docs/architectural_decision_records/ADR-025-http-client-di-integration.md)
+- [roadmap.md](./roadmap.md) — Session sequencing

@@ -76,8 +76,8 @@ Each ADR follows this structure:
 | [029](./ADR-029-canonical-source-structure.md)  | Canonical Source Structure  | Accepted | 2026-01-12 |
 | [030](./ADR-030-full-openapi-syntax-support.md) | Full OpenAPI Syntax Support | Accepted | 2026-01-13 |
 
-> **Session 2.6a Active** — Full syntax coverage tests written (87 tests). IR expansion in progress.
-> See: [round-trip-validation-plan.md](../../.agent/plans/round-trip-validation-plan.md)
+> **Session 2.6 Active** — OpenAPI Compliance in progress.
+> See: [roadmap.md](../../.agent/plans/roadmap.md)
 
 ## Decision Dependencies
 
@@ -169,7 +169,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 025)
+2. **Number sequentially** (next is 031)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -213,4 +213,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** January 2026  
-**Next ADR:** 030
+**Next ADR:** 031

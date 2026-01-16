@@ -276,24 +276,69 @@ Round-trip tests are NOT input/output coverage tests. They verify:
 
 ---
 
-## Part 5: Current Implementation Gaps
+## Part 5: Implementation Status
 
-### Missing from IR (MUST be added)
+> **Updated:** January 15, 2026 — Comprehensive gap analysis completed.
 
-| Item                   | Location         |
-| ---------------------- | ---------------- |
-| trace method           | IRHttpMethod     |
-| Operation.externalDocs | CastrOperation   |
-| Operation.callbacks    | CastrOperation   |
-| Operation.servers      | CastrOperation   |
-| PathItem.summary       | IR path handling |
-| PathItem.description   | IR path handling |
-| PathItem.servers       | IR path handling |
-| Response.links         | CastrResponse    |
-| components.examples    | IRComponent      |
+### IR Gaps (❌ BLOCKING)
 
-### Missing Tests
+**CastrSchema Interface Missing:**
+| Field | Type | Priority |
+|-------|------|----------|
+| `xml` | XMLObject | Low (rarely used) |
+| `externalDocs` | ExternalDocumentationObject | Low |
+| `prefixItems` | SchemaObject[] | High (JSON Schema 2020-12 core) |
+| `unevaluatedProperties` | boolean \| SchemaObject | Medium |
+| `unevaluatedItems` | boolean \| SchemaObject | Medium |
+| `dependentSchemas` | Record<string, SchemaObject> | Low |
+| `dependentRequired` | Record<string, string[]> | Low |
+| `minContains` | number | Low |
+| `maxContains` | number | Low |
 
-- No systematic per-field input coverage tests
-- No systematic per-field output coverage tests
-- Fixture tests are smoke tests, not specification compliance tests
+**IRMediaType Missing:**
+| Field | Type | Priority |
+|-------|------|----------|
+| `encoding` | Record<string, EncodingObject> | **High (multipart forms)** |
+
+### Verified Complete ✅
+
+| Item                     | Location                             | Status     |
+| ------------------------ | ------------------------------------ | ---------- |
+| `trace` method           | `IRHttpMethod` (schema.ts:27)        | ✅ Present |
+| `Operation.externalDocs` | `CastrOperation.externalDocs` (:283) | ✅ Present |
+| `Operation.callbacks`    | `CastrOperation.callbacks` (:289)    | ✅ Present |
+| `Operation.servers`      | `CastrOperation.servers` (:295)      | ✅ Present |
+| `PathItem.*` fields      | `CastrOperation.pathItem*`           | ✅ Present |
+| `Response.links`         | `CastrResponse.links` (:489)         | ✅ Present |
+| `components.examples`    | `IRExampleComponent` (:148)          | ✅ Present |
+| `webhooks`               | `CastrDocument.webhooks`             | ✅ Present |
+| `jsonSchemaDialect`      | `CastrDocument.jsonSchemaDialect`    | ✅ Present |
+| `info.summary`           | Uses raw InfoObject                  | ✅ Present |
+| `license.identifier`     | Uses raw InfoObject                  | ✅ Present |
+| `mutualTLS`              | Uses raw SecuritySchemeObject        | ✅ Present |
+
+### Parser Status
+
+- ✅ Extracts all fields IR can represent
+- ❌ BLOCKED: Cannot extract 10 fields IR cannot represent
+
+### Writer Status
+
+- ✅ Outputs all IR fields
+- ❌ BLOCKED: Cannot output 10 fields not in IR
+
+### Test Coverage
+
+| Test Suite            | Count | Purpose                 |
+| --------------------- | ----- | ----------------------- |
+| Input coverage        | 48    | OpenAPI → IR extraction |
+| Output coverage       | 25    | IR → OpenAPI output     |
+| Parser field coverage | 45    | Parser validation       |
+| Writer field coverage | 37    | Writer validation       |
+| Version validation    | 20    | 3.0/3.1 version rules   |
+| Scalar behavior       | 16    | Validator behavior      |
+| **Total roundtrip**   | 191   |                         |
+
+---
+
+**Session 2.6 Status:** ❌ INCOMPLETE — 10 P1 BLOCKING gaps identified

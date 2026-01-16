@@ -1,17 +1,19 @@
 import type {
+  CallbackObject,
+  EncodingObject,
+  ExampleObject,
+  ExternalDocumentationObject,
+  HeaderObject,
   InfoObject,
+  LinkObject,
   ParameterObject,
+  PathItemObject,
+  ReferenceObject,
   SchemaObject,
   SecuritySchemeObject,
-  ExampleObject,
-  ReferenceObject,
   ServerObject,
   TagObject,
-  ExternalDocumentationObject,
-  PathItemObject,
-  LinkObject,
-  CallbackObject,
-  HeaderObject,
+  XmlObject,
 } from 'openapi3-ts/oas31';
 
 // ... existing imports ...
@@ -443,6 +445,24 @@ export interface IRMediaType {
    * Multiple named examples.
    */
   examples?: Record<string, ReferenceObject | ExampleObject>;
+
+  /**
+   * Encoding information for multipart/form-data request bodies.
+   * Map of property name to encoding configuration.
+   *
+   * @example
+   * ```typescript
+   * {
+   *   'profileImage': {
+   *     contentType: 'image/png',
+   *     headers: { ... }
+   *   }
+   * }
+   * ```
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#encoding-object OpenAPI Encoding Object}
+   */
+  encoding?: Record<string, EncodingObject>;
 }
 
 /**
@@ -748,6 +768,92 @@ export interface CastrSchema {
    * Whether this schema is deprecated.
    */
   deprecated?: boolean;
+
+  // ========== OpenAPI Extensions (OAS 3.1) ==========
+
+  /**
+   * XML serialization metadata for this schema.
+   * Used to customize XML representation of the schema.
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#xml-object OpenAPI XML Object}
+   */
+  xml?: XmlObject;
+
+  /**
+   * External documentation for this schema.
+   * Can be used at the schema level for documentation links.
+   *
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#external-documentation-object ExternalDocumentation Object}
+   */
+  externalDocs?: ExternalDocumentationObject;
+
+  // ========== JSON Schema 2020-12 Keywords ==========
+
+  /**
+   * Prefix items for tuple validation (JSON Schema 2020-12).
+   * Replaces array-style `items` from JSON Schema Draft 7.
+   *
+   * @example
+   * ```typescript
+   * // Input (OAS 3.0): items: [{ type: 'string' }, { type: 'number' }]
+   * // Output (OAS 3.1): prefixItems: [{ type: 'string' }, { type: 'number' }]
+   * ```
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-prefixitems}
+   */
+  prefixItems?: CastrSchema[];
+
+  /**
+   * Controls evaluation of properties not covered by other keywords.
+   * - `false`: disallow unevaluated properties
+   * - `true`: allow any unevaluated properties
+   * - schema: unevaluated properties must match schema
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluatedproperties}
+   */
+  unevaluatedProperties?: boolean | CastrSchema;
+
+  /**
+   * Controls evaluation of array items not covered by other keywords.
+   * - `false`: disallow unevaluated items
+   * - `true`: allow any unevaluated items
+   * - schema: unevaluated items must match schema
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluateditems}
+   */
+  unevaluatedItems?: boolean | CastrSchema;
+
+  /**
+   * Conditional schema application based on property presence.
+   * Map of property name to schema that applies when property exists.
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-dependentschemas}
+   */
+  dependentSchemas?: Record<string, CastrSchema>;
+
+  /**
+   * Conditional required properties based on property presence.
+   * Map of property name to list of properties required when it exists.
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-dependentrequired}
+   */
+  dependentRequired?: Record<string, string[]>;
+
+  /**
+   * Minimum number of matches for `contains` keyword.
+   * Only applicable when `contains` is also specified.
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-validation#name-mincontains}
+   */
+  minContains?: number;
+
+  /**
+   * Maximum number of matches for `contains` keyword.
+   * Only applicable when `contains` is also specified.
+   *
+   *@see {@link https://json-schema.org/draft/2020-12/json-schema-validation#name-maxcontains}
+   */
+  maxContains?: number;
 
   /**
    * Rich metadata for code generation.

@@ -1,7 +1,7 @@
 # OpenAPI Compliance Plan
 
-**Date:** January 14, 2026 (Updated)  
-**Status:** Active 🎯  
+**Date:** January 16, 2026 (Updated)  
+**Status:** Active 🟡 (Phase 1 Complete)  
 **Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029  
 **Specification:** [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md)
 
@@ -12,10 +12,10 @@
 Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the formal specification.
 
 > [!IMPORTANT]
-> This is about **basic input and output support** — NOT round-trip validation.
-> Round-trip is a SEPARATE phase that comes AFTER this plan is complete.
+> Session 2.6 is about **input and output support** — NOT round-trip validation.
+> Round-trip is a SEPARATE session (2.7) that comes AFTER 2.6 is complete. Do not mix concerns.
 
-**Until this plan is complete:**
+**Until 2.6 is complete:**
 
 - The system is NOT production-ready
 - Input may lose content (fields not parsed)
@@ -25,10 +25,11 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 
 ## Scope
 
-| Capability                 | 3.0.x | 3.1.x | Status        |
-| -------------------------- | ----- | ----- | ------------- |
-| **Input** (parse to IR)    | ✅    | ✅    | ❌ Incomplete |
-| **Output** (write from IR) | ❌    | ✅    | ❌ Incomplete |
+| Capability                 | 3.0.x | 3.1.x | Status                            |
+| -------------------------- | ----- | ----- | --------------------------------- |
+| **IR Representation**      | ✅    | ✅    | ✅ Complete (10 fields added)     |
+| **Input** (parse to IR)    | ✅    | ✅    | 🟡 Pending (IR ready, parser WIP) |
+| **Output** (write from IR) | ❌    | ✅    | 🟡 Pending (IR ready, writer WIP) |
 
 ---
 
@@ -36,20 +37,34 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 
 ### Session 2.6: OpenAPI Compliance (This Plan)
 
-| Sub-session | Focus                        | Status         |
-| ----------- | ---------------------------- | -------------- |
-| 2.6.1       | IR Expansion                 | Partial        |
-| 2.6.2       | Parser Completion            | Partial        |
-| 2.6.3       | Writer Completion            | Partial        |
-| 2.6.4       | Input Coverage Tests         | ✅ Complete    |
-| 2.6.5       | Output Coverage Tests        | ✅ Complete    |
-| 2.6.6       | **Strict Validation**        | ✅ Complete    |
-| 2.6.7       | **Enhanced Error Messages**  | ✅ Complete    |
-| 2.6.8       | **Snapshot Fixture Cleanup** | 🔄 In Progress |
+| Sub-session | Focus                        | Status                        |
+| ----------- | ---------------------------- | ----------------------------- |
+| 2.6.1       | IR Expansion                 | ✅ Complete (10 fields added) |
+| 2.6.2       | Parser Completion            | 🟡 Next (extract 10 fields)   |
+| 2.6.3       | Writer Completion            | 🔒 Blocked (depends on 2.6.2) |
+| 2.6.4       | Input Coverage Tests         | ✅ Complete                   |
+| 2.6.5       | Output Coverage Tests        | ✅ Complete                   |
+| 2.6.6       | **Strict Validation**        | ✅ Complete                   |
+| 2.6.7       | **Enhanced Error Messages**  | ✅ Complete                   |
+| 2.6.8       | **Snapshot Fixture Cleanup** | ✅ Complete                   |
 
 ### Session 2.7: Round-Trip Validation
 
-**Blocked until 2.6 complete.** See [round-trip-validation-plan.md](./round-trip-validation-plan.md)
+**Status:** Blocked until 2.6 complete
+
+Proves two claims for production adoption:
+
+| Claim            | User Confidence                               |
+| ---------------- | --------------------------------------------- |
+| **Idempotency**  | Running Castr twice produces identical output |
+| **Losslessness** | No information lost during transformation     |
+
+**Two test cases:**
+
+1. **Arbitrary OpenAPI → IR → OpenAPI** — Content preserved (format may change)
+2. **Normalized OpenAPI → IR → OpenAPI** — Byte-for-byte identical
+
+See `lib/tests-roundtrip/README.md` for current test suite (191 tests).
 
 ---
 
@@ -115,32 +130,47 @@ Created in `lib/tests-roundtrip/__fixtures__/`:
 
 ---
 
-## 🔄 Remaining Work
+## ✅ Completed Work (January 16, 2026)
 
-### 2.6.8 Snapshot Fixture Cleanup
+### 2.6.1 IR Expansion (COMPLETE)
 
-**Current status:** ~12 snapshot tests still failing
+Extended IR schema to support all 10 missing OpenAPI 3.1/JSON Schema 2020-12 fields:
 
-**Root cause:** Pre-existing inline OpenAPI fixtures in snapshot tests have invalid structures:
+**CastrSchema Interface (9 fields added):**
 
-- Missing required `description` fields in Response objects
-- Using 3.1.x-only features (like `examples` array) in 3.0.x specs
+| Field                   | Type                          | Purpose                    |
+| ----------------------- | ----------------------------- | -------------------------- |
+| `xml`                   | `XmlObject`                   | XML serialization metadata |
+| `externalDocs`          | `ExternalDocumentationObject` | Schema-level docs          |
+| `prefixItems`           | `CastrSchema[]`               | JSON Schema 2020-12 tuples |
+| `unevaluatedProperties` | `boolean \| CastrSchema`      | JSON Schema 2020-12        |
+| `unevaluatedItems`      | `boolean \| CastrSchema`      | JSON Schema 2020-12        |
+| `dependentSchemas`      | `Record<string, CastrSchema>` | JSON Schema 2020-12        |
+| `dependentRequired`     | `Record<string, string[]>`    | JSON Schema 2020-12        |
+| `minContains`           | `number`                      | JSON Schema 2020-12        |
+| `maxContains`           | `number`                      | JSON Schema 2020-12        |
 
-**Fix approach:**
+**IRMediaType Interface (1 field added):**
 
-1. Add missing `description: 'OK'` to all response objects
-2. Upgrade fixtures from 3.0.x to 3.1.x where they use 3.1.x features
-3. Update snapshots after fixes
+| Field      | Type                             | Purpose                      |
+| ---------- | -------------------------------- | ---------------------------- |
+| `encoding` | `Record<string, EncodingObject>` | multipart/form-data encoding |
 
-**Affected test directories:**
+**Key file:** `lib/src/ir/schema.ts`
 
-- `lib/tests-snapshot/options/generation/`
-- `lib/tests-snapshot/spec-compliance/`
-- `lib/tests-snapshot/endpoints/`
+**All fields include:**
 
----
+- Comprehensive TSDoc with `@see` links to OpenAPI/JSON Schema specs
+- Proper type signatures using library types from `openapi3-ts/oas31`
+- `@example` blocks where applicable
 
-## Key Insights
+### Next: 2.6.2 Parser Completion
+
+Update parser to extract all 10 new fields:
+
+- `lib/src/parsers/openapi/builder.core.ts` — Schema field extraction
+- `lib/src/parsers/openapi/builder.request-body.ts` — Encoding extraction
+- Handle 3.0 → 3.1 upgrades (tuple `items` → `prefixItems`)
 
 ### Scalar Validator Behavior (VERIFIED via 16 Integration Tests)
 
@@ -183,43 +213,56 @@ The `validation-errors.ts` module uses **string matching** instead of regex per 
 
 ## Implementation Plan (Original)
 
-### 2.6.1 IR Expansion
+### 2.6.1 IR Expansion (P1 BLOCKING)
 
-Add ALL missing types to IR schema:
+**File:** `lib/src/ir/schema.ts`
 
-| Item                     | Location         | Status |
-| ------------------------ | ---------------- | ------ |
-| `trace` method           | `IRHttpMethod`   | ❌     |
-| `Operation.externalDocs` | `CastrOperation` | ❌     |
-| `Operation.callbacks`    | `CastrOperation` | ❌     |
-| `Operation.servers`      | `CastrOperation` | ❌     |
-| `PathItem.summary`       | IR handling      | ❌     |
-| `PathItem.description`   | IR handling      | ❌     |
-| `PathItem.servers`       | IR handling      | ❌     |
-| `Response.links`         | `CastrResponse`  | ❌     |
-| `components.examples`    | `IRComponent`    | ❌     |
+Extend interfaces to support ALL OpenAPI 3.1 + JSON Schema 2020-12:
 
-### 2.6.2 Parser Completion
+**CastrSchema additions:**
 
-Update `buildIR()` and helpers to extract ALL fields:
+```typescript
+xml?: XMLObject;
+externalDocs?: ExternalDocumentationObject;
+prefixItems?: CastrSchema[];
+unevaluatedProperties?: boolean | CastrSchema;
+unevaluatedItems?: boolean | CastrSchema;
+dependentSchemas?: Record<string, CastrSchema>;
+dependentRequired?: Record<string, string[]>;
+minContains?: number;
+maxContains?: number;
+```
 
-| Object     | Fields to Add                    | Status |
-| ---------- | -------------------------------- | ------ |
-| Operation  | externalDocs, callbacks, servers | ❌     |
-| PathItem   | summary, description, servers    | ❌     |
-| Response   | links                            | ❌     |
-| Components | examples                         | ❌     |
+**IRMediaType additions:**
 
-### 2.6.3 Writer Completion
+```typescript
+encoding?: Record<string, EncodingObject>;
+```
 
-Update `writeOpenApi()` and helpers to output ALL fields:
+**Import types from openapi3-ts:**
 
-| Object     | Fields to Add                                  | Status  |
-| ---------- | ---------------------------------------------- | ------- |
-| Operation  | externalDocs, callbacks, servers               | ❌      |
-| PathItem   | summary, description, servers                  | ❌      |
-| Response   | links                                          | ❌      |
-| Components | headers, links, callbacks, pathItems, examples | Partial |
+```typescript
+import type { XMLObject, EncodingObject } from 'openapi3-ts/oas31';
+```
+
+### 2.6.2 Parser Completion (BLOCKED on 2.6.1)
+
+**Files:** `lib/src/parsers/openapi/builder.*.ts`
+
+Extract new IR fields from OpenAPI input:
+
+- Schema: `xml`, `externalDocs`, JSON Schema 2020-12 keywords
+- MediaType: `encoding`
+- Handle 3.0 → 3.1 upgrades (e.g., tuple `items` → `prefixItems`)
+
+### 2.6.3 Writer Completion (BLOCKED on 2.6.1)
+
+**Files:** `lib/src/writers/openapi/openapi-writer.*.ts`
+
+Write new IR fields to OpenAPI 3.1 output:
+
+- Schema: `xml`, `externalDocs`, JSON Schema 2020-12 keywords
+- MediaType: `encoding`
 
 ---
 
@@ -235,20 +278,28 @@ Update `writeOpenApi()` and helpers to output ALL fields:
 
 ---
 
-## Test Summary
+## Test Summary (January 15, 2026)
 
-| Test Suite             | Count | Status              |
-| ---------------------- | ----- | ------------------- |
-| Unit tests             | 894   | ✅ Pass             |
-| Roundtrip tests        | 174   | ✅ Pass (2 skipped) |
-| Snapshot tests         | 173   | 🔄 ~12 failing      |
-| Error formatting tests | 17    | ✅ Pass             |
+| Test Suite      | Count | Status  |
+| --------------- | ----- | ------- |
+| Unit tests      | 894   | ✅ Pass |
+| Roundtrip tests | 191   | ✅ Pass |
+| Snapshot tests  | 173   | ✅ Pass |
+| Generated tests | 20    | ✅ Pass |
+| Character tests | 161   | ✅ Pass |
 
 ---
 
 ## References
 
+**Specifications:**
+
 - [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) — Formal specification
+- [requirements.md](../requirements.md) — Field-level requirements (comprehensive)
 - [openapi_3_0_x_schema.json](../reference/openapi_schema/openapi_3_0_x_schema.json) — OAS 3.0.x schema
 - [openapi_3_1_x_schema_without_validation.json](../reference/openapi_schema/openapi_3_1_x_schema_without_validation.json) — OAS 3.1.x schema
-- [round-trip-validation-plan.md](./round-trip-validation-plan.md) — Next phase (blocked)
+- JSON Schema 2020-12 specs: `.agent/reference/json-schema-2020-12/` (if needed for advanced keywords)
+
+**Roadmap:**
+
+- [roadmap.md](./roadmap.md) — Session 2.7 follows after 2.6 complete
