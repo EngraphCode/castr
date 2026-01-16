@@ -51,20 +51,26 @@ pnpm test:gen && pnpm character
 
 ## 📋 Current Focus: OpenAPI Compliance (Session 2.6)
 
-**Status:** 🟡 IN PROGRESS — Phase 1 complete, Phases 2-3 pending
+**Status:** 🟡 IN PROGRESS — Phases 1-2 complete, Phase 3 ready to implement
 
-| Sub-session | Focus                 | Status                        |
-| ----------- | --------------------- | ----------------------------- |
-| 2.6.1       | IR expansion          | ✅ Complete (10 fields added) |
-| 2.6.2       | Parser completion     | 🟡 Next (extract 10 fields)   |
-| 2.6.3       | Writer completion     | 🔒 Blocked (depends on 2.6.2) |
-| 2.6.4-8     | Coverage & validation | ✅ Complete                   |
-| 2.7         | Round-trip validation | 🔒 Blocked until 2.6 complete |
+| Sub-session | Focus                 | Status                            |
+| ----------- | --------------------- | --------------------------------- |
+| 2.6.1       | IR expansion          | ✅ Complete (10 fields added)     |
+| 2.6.2       | Parser completion     | ✅ Complete (10 fields extracted) |
+| 2.6.3       | Writer completion     | 🟡 Ready                          |
+| 2.6.4-8     | Coverage & validation | ✅ Complete                       |
+| 2.7         | Round-trip validation | 🔒 Blocked until 2.6 complete     |
 
 **✅ IR Now Supports (10 fields added January 16, 2026):**
 
 - 9 in `CastrSchema`: `xml`, `externalDocs`, `prefixItems`, `unevaluatedProperties`, `unevaluatedItems`, `dependentSchemas`, `dependentRequired`, `minContains`, `maxContains`
 - 1 in `IRMediaType`: `encoding`
+
+**✅ Parser Now Extracts (10 fields, January 16, 2026):**
+
+- `builder.core.ts` + `builder.json-schema-2020-12.ts`: 9 schema fields
+- `builder.request-body.ts`: `encoding` field
+- 16 new tests, 11 snapshots updated
 
 **Active plan:** [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md)
 

@@ -5617,8 +5617,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -5628,7 +5633,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -5637,6 +5644,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -5653,8 +5661,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -5664,7 +5677,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -5673,6 +5688,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -5734,8 +5750,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -5745,7 +5766,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -5754,6 +5777,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -5770,8 +5794,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -5781,7 +5810,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -5790,6 +5821,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -5869,8 +5901,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -5880,7 +5917,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -5889,6 +5928,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -5965,8 +6005,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -5976,7 +6021,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -5985,6 +6032,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -6057,8 +6105,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -6068,7 +6121,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -6077,6 +6132,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -6278,6 +6334,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6391,8 +6448,13 @@ export const mcpTools = [
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
+                    xml: { name: "category" },
                   },
-                  photoUrls: { type: "array", items: { type: "string" } },
+                  photoUrls: {
+                    type: "array",
+                    items: { type: "string", xml: { name: "photoUrl" } },
+                    xml: { wrapped: true },
+                  },
                   tags: {
                     type: "array",
                     items: {
@@ -6402,7 +6464,9 @@ export const mcpTools = [
                         name: { type: "string" },
                       },
                       required: [],
+                      xml: { name: "tag" },
                     },
+                    xml: { wrapped: true },
                   },
                   status: {
                     type: "string",
@@ -6411,9 +6475,11 @@ export const mcpTools = [
                   },
                 },
                 required: ["name", "photoUrls"],
+                xml: { name: "pet" },
               },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -6443,8 +6509,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -6454,7 +6525,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -6463,9 +6536,11 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6528,8 +6603,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -6539,7 +6619,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -6548,9 +6630,11 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -6631,6 +6715,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -6683,6 +6768,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -6707,6 +6793,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6823,6 +6910,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -6873,6 +6961,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -7223,8 +7312,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -7234,7 +7328,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -7243,6 +7339,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -7259,8 +7356,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -7270,7 +7372,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -7279,6 +7383,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7340,8 +7445,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -7351,7 +7461,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -7360,6 +7472,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -7376,8 +7489,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -7387,7 +7505,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -7396,6 +7516,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7475,8 +7596,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -7486,7 +7612,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -7495,6 +7623,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -7571,8 +7700,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -7582,7 +7716,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -7591,6 +7727,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -7663,8 +7800,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -7674,7 +7816,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -7683,6 +7827,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7884,6 +8029,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7997,8 +8143,13 @@ export const mcpTools = [
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
+                    xml: { name: "category" },
                   },
-                  photoUrls: { type: "array", items: { type: "string" } },
+                  photoUrls: {
+                    type: "array",
+                    items: { type: "string", xml: { name: "photoUrl" } },
+                    xml: { wrapped: true },
+                  },
                   tags: {
                     type: "array",
                     items: {
@@ -8008,7 +8159,9 @@ export const mcpTools = [
                         name: { type: "string" },
                       },
                       required: [],
+                      xml: { name: "tag" },
                     },
+                    xml: { wrapped: true },
                   },
                   status: {
                     type: "string",
@@ -8017,9 +8170,11 @@ export const mcpTools = [
                   },
                 },
                 required: ["name", "photoUrls"],
+                xml: { name: "pet" },
               },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -8049,8 +8204,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -8060,7 +8220,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -8069,9 +8231,11 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8134,8 +8298,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -8145,7 +8314,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -8154,9 +8325,11 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -8237,6 +8410,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -8289,6 +8463,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -8313,6 +8488,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8429,6 +8605,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -8479,6 +8656,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -8949,8 +9127,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -8960,7 +9143,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -8969,6 +9154,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -8985,8 +9171,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -8996,7 +9187,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -9005,6 +9198,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9066,8 +9260,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -9077,7 +9276,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -9086,6 +9287,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -9102,8 +9304,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -9113,7 +9320,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -9122,6 +9331,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9201,8 +9411,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -9212,7 +9427,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -9221,6 +9438,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -9297,8 +9515,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -9308,7 +9531,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -9317,6 +9542,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -9389,8 +9615,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -9400,7 +9631,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -9409,6 +9642,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9610,6 +9844,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9723,8 +9958,13 @@ export const mcpTools = [
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
+                    xml: { name: "category" },
                   },
-                  photoUrls: { type: "array", items: { type: "string" } },
+                  photoUrls: {
+                    type: "array",
+                    items: { type: "string", xml: { name: "photoUrl" } },
+                    xml: { wrapped: true },
+                  },
                   tags: {
                     type: "array",
                     items: {
@@ -9734,7 +9974,9 @@ export const mcpTools = [
                         name: { type: "string" },
                       },
                       required: [],
+                      xml: { name: "tag" },
                     },
+                    xml: { wrapped: true },
                   },
                   status: {
                     type: "string",
@@ -9743,9 +9985,11 @@ export const mcpTools = [
                   },
                 },
                 required: ["name", "photoUrls"],
+                xml: { name: "pet" },
               },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -9775,8 +10019,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -9786,7 +10035,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -9795,9 +10046,11 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9860,8 +10113,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -9871,7 +10129,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -9880,9 +10140,11 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9963,6 +10225,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -10015,6 +10278,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -10039,6 +10303,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -10155,6 +10420,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -10205,6 +10471,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],

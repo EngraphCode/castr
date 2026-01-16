@@ -187,5 +187,10 @@ function buildMediaTypeContent(
     irMediaType.examples = mediaTypeObj.examples;
   }
 
+  // Extract encoding for multipart/form-data requests
+  if (mediaTypeObj.encoding) {
+    irMediaType.encoding = mediaTypeObj.encoding;
+  }
+
   return irMediaType;
 }

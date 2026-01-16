@@ -1,7 +1,7 @@
 # OpenAPI Compliance Plan
 
 **Date:** January 16, 2026 (Updated)  
-**Status:** Active 🟡 (Phase 1 Complete)  
+**Status:** Active 🟡 (Phases 1-2 Complete)  
 **Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029  
 **Specification:** [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md)
 
@@ -28,8 +28,8 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 | Capability                 | 3.0.x | 3.1.x | Status                            |
 | -------------------------- | ----- | ----- | --------------------------------- |
 | **IR Representation**      | ✅    | ✅    | ✅ Complete (10 fields added)     |
-| **Input** (parse to IR)    | ✅    | ✅    | 🟡 Pending (IR ready, parser WIP) |
-| **Output** (write from IR) | ❌    | ✅    | 🟡 Pending (IR ready, writer WIP) |
+| **Input** (parse to IR)    | ✅    | ✅    | ✅ Complete (10 fields extracted) |
+| **Output** (write from IR) | ❌    | ✅    | 🟡 Ready (IR + Parser done)       |
 
 ---
 
@@ -37,16 +37,16 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 
 ### Session 2.6: OpenAPI Compliance (This Plan)
 
-| Sub-session | Focus                        | Status                        |
-| ----------- | ---------------------------- | ----------------------------- |
-| 2.6.1       | IR Expansion                 | ✅ Complete (10 fields added) |
-| 2.6.2       | Parser Completion            | 🟡 Next (extract 10 fields)   |
-| 2.6.3       | Writer Completion            | 🔒 Blocked (depends on 2.6.2) |
-| 2.6.4       | Input Coverage Tests         | ✅ Complete                   |
-| 2.6.5       | Output Coverage Tests        | ✅ Complete                   |
-| 2.6.6       | **Strict Validation**        | ✅ Complete                   |
-| 2.6.7       | **Enhanced Error Messages**  | ✅ Complete                   |
-| 2.6.8       | **Snapshot Fixture Cleanup** | ✅ Complete                   |
+| Sub-session | Focus                        | Status                            |
+| ----------- | ---------------------------- | --------------------------------- |
+| 2.6.1       | IR Expansion                 | ✅ Complete (10 fields added)     |
+| 2.6.2       | Parser Completion            | ✅ Complete (10 fields extracted) |
+| 2.6.3       | Writer Completion            | � Ready                           |
+| 2.6.4       | Input Coverage Tests         | ✅ Complete                       |
+| 2.6.5       | Output Coverage Tests        | ✅ Complete                       |
+| 2.6.6       | **Strict Validation**        | ✅ Complete                       |
+| 2.6.7       | **Enhanced Error Messages**  | ✅ Complete                       |
+| 2.6.8       | **Snapshot Fixture Cleanup** | ✅ Complete                       |
 
 ### Session 2.7: Round-Trip Validation
 
@@ -67,6 +67,58 @@ Proves two claims for production adoption:
 See `lib/tests-roundtrip/README.md` for current test suite (191 tests).
 
 ---
+
+## Architecture: Upgrade-Before-Parse Pipeline
+
+> [!IMPORTANT]
+> The Scalar `upgrade()` function converts all input to **OpenAPI 3.1 syntax BEFORE parsing**.
+> Parsers receive **only 3.1 syntax** — no need to handle 3.0-specific constructs.
+
+```
+Input → bundle() → validate() → upgrade() → [PARSER] → IR
+                                      ^
+                                      |
+                          3.1 syntax guaranteed here
+```
+
+**Key files:**
+
+| File                             | Purpose                                |
+| -------------------------------- | -------------------------------------- |
+| `orchestrator.ts`                | Pipeline coordination                  |
+| `upgrade-validate.ts`            | Scalar upgrade + type guard            |
+| `builder.core.ts`                | Schema field extraction (core)         |
+| `builder.json-schema-2020-12.ts` | JSON Schema 2020-12 keyword extraction |
+| `builder.request-body.ts`        | Media type encoding extraction         |
+
+**Implications for 2.6.2 (now complete):**
+
+- No handling of `nullable: true` (upgraded to `type: [..., 'null']`)
+- No handling of tuple-style `items` (upgraded to `prefixItems`)
+- Parser is **pure extraction** — map 3.1 fields directly to IR
+
+---
+
+## ✅ Completed Work: 2.6.2 Parser Completion (January 16, 2026)
+
+**16 new unit tests** added for field extraction:
+
+| Field                                       | Tests | Recursive |
+| ------------------------------------------- | ----- | --------- |
+| `xml`, `externalDocs`                       | 2     | No        |
+| `prefixItems`                               | 2     | Yes       |
+| `unevaluatedProperties`, `unevaluatedItems` | 4     | Yes       |
+| `dependentSchemas`, `dependentRequired`     | 2     | Yes/No    |
+| `minContains`, `maxContains`                | 3     | No        |
+| `encoding`                                  | 2     | No        |
+
+**Files changed:**
+
+- **NEW:** `builder.json-schema-2020-12.ts` — Extracted helper module for max-lines compliance
+- **NEW:** `builder.request-body.unit.test.ts`
+- **MODIFIED:** `builder.core.ts`, `builder.core.unit.test.ts`, `builder.request-body.ts`
+
+**11 snapshots updated** to reflect new behavior.
 
 ## ✅ Completed Work (January 14, 2026)
 
@@ -222,6 +274,7 @@ Extract new IR fields from OpenAPI input:
 - Handle 3.0 → 3.1 upgrades (e.g., tuple `items` → `prefixItems`)
 
 **Key files to modify:**
+
 - `builder.core.ts` — Schema field extraction
 - `builder.request-body.ts` — Encoding extraction
 
@@ -235,6 +288,7 @@ Write new IR fields to OpenAPI 3.1 output:
 - MediaType: `encoding`
 
 **Key files to modify:**
+
 - `openapi-writer.schema.ts` — Schema field output
 - `openapi-writer.operations.ts` — MediaType encoding output
 

@@ -22,6 +22,7 @@ import { CastrSchemaProperties } from '../../ir/schema.js';
 import type { IRBuildContext } from './builder.types.js';
 import type { IRPropertySchemaContext, IRCompositionMemberContext } from '../../ir/context.js';
 import { addConstraints } from './builder.constraints.js';
+import { addOpenAPIExtensions } from './builder.json-schema-2020-12.js';
 
 import { updateZodChain } from './builder.zod-chain.js';
 
@@ -62,6 +63,9 @@ export function buildCastrSchema(
   addAdditionalProperties(schema, context, irSchema);
   addArrayItems(schema, context, irSchema);
   addCompositionSchemas(schema, context, irSchema);
+
+  // Add OpenAPI extensions and JSON Schema 2020-12 keywords
+  addOpenAPIExtensions(schema, context, irSchema, buildCastrSchema);
 
   // Update Zod chain with validations from constraints
   updateZodChain(irSchema);

@@ -897,8 +897,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -908,7 +913,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -917,6 +924,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -933,8 +941,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -944,7 +957,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -953,6 +968,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1014,8 +1030,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -1025,7 +1046,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -1034,6 +1057,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -1050,8 +1074,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -1061,7 +1090,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -1070,6 +1101,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1149,8 +1181,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -1160,7 +1197,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -1169,6 +1208,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -1245,8 +1285,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -1256,7 +1301,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -1265,6 +1312,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -1337,8 +1385,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -1348,7 +1401,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -1357,6 +1412,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -1558,6 +1614,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1661,6 +1718,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -1680,6 +1738,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1732,6 +1791,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -1812,6 +1872,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -1864,6 +1925,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -1888,6 +1950,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -2004,6 +2067,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -2054,6 +2118,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -2603,8 +2668,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -2614,7 +2684,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -2623,6 +2695,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -2639,8 +2712,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -2650,7 +2728,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -2659,6 +2739,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -2720,8 +2801,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -2731,7 +2817,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -2740,6 +2828,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -2756,8 +2845,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -2767,7 +2861,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -2776,6 +2872,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -2855,8 +2952,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -2866,7 +2968,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -2875,6 +2979,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -2951,8 +3056,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -2962,7 +3072,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -2971,6 +3083,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -3043,8 +3156,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -3054,7 +3172,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -3063,6 +3183,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -3264,6 +3385,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -3367,6 +3489,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -3386,6 +3509,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -3438,6 +3562,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -3518,6 +3643,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -3570,6 +3696,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -3594,6 +3721,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -3710,6 +3838,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -3760,6 +3889,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -4717,8 +4847,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -4728,7 +4863,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -4737,6 +4874,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -4753,8 +4891,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -4764,7 +4907,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -4773,6 +4918,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -4834,8 +4980,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -4845,7 +4996,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -4854,6 +5007,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -4870,8 +5024,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -4881,7 +5040,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -4890,6 +5051,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -4969,8 +5131,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -4980,7 +5147,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -4989,6 +5158,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -5065,8 +5235,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -5076,7 +5251,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -5085,6 +5262,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -5157,8 +5335,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -5168,7 +5351,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -5177,6 +5362,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -5378,6 +5564,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -5481,6 +5668,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -5500,6 +5688,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -5552,6 +5741,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -5632,6 +5822,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -5684,6 +5875,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -5708,6 +5900,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -5824,6 +6017,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -5874,6 +6068,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -6831,8 +7026,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -6842,7 +7042,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -6851,6 +7053,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -6867,8 +7070,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -6878,7 +7086,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -6887,6 +7097,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6948,8 +7159,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -6959,7 +7175,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -6968,6 +7186,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -6984,8 +7203,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -6995,7 +7219,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -7004,6 +7230,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7083,8 +7310,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -7094,7 +7326,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -7103,6 +7337,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -7179,8 +7414,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -7190,7 +7430,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -7199,6 +7441,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -7271,8 +7514,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -7282,7 +7530,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -7291,6 +7541,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7492,6 +7743,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7595,6 +7847,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -7614,6 +7867,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7666,6 +7920,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7746,6 +8001,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -7798,6 +8054,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -7822,6 +8079,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7938,6 +8196,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7988,6 +8247,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -8945,8 +9205,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -8956,7 +9221,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -8965,6 +9232,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -8981,8 +9249,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -8992,7 +9265,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -9001,6 +9276,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9062,8 +9338,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -9073,7 +9354,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -9082,6 +9365,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -9098,8 +9382,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -9109,7 +9398,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -9118,6 +9409,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9197,8 +9489,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -9208,7 +9505,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -9217,6 +9516,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -9293,8 +9593,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -9304,7 +9609,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -9313,6 +9620,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -9385,8 +9693,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -9396,7 +9709,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -9405,6 +9720,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9606,6 +9922,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9709,6 +10026,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -9728,6 +10046,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9780,6 +10099,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9860,6 +10180,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -9912,6 +10233,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -9936,6 +10258,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -10052,6 +10375,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -10102,6 +10426,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -11059,8 +11384,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -11070,7 +11400,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -11079,6 +11411,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -11095,8 +11428,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -11106,7 +11444,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -11115,6 +11455,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11176,8 +11517,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -11187,7 +11533,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -11196,6 +11544,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -11212,8 +11561,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -11223,7 +11577,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -11232,6 +11588,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11311,8 +11668,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -11322,7 +11684,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -11331,6 +11695,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -11407,8 +11772,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -11418,7 +11788,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -11427,6 +11799,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -11499,8 +11872,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -11510,7 +11888,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -11519,6 +11899,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11720,6 +12101,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11823,6 +12205,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -11842,6 +12225,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11894,6 +12278,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11974,6 +12359,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -12026,6 +12412,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -12050,6 +12437,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -12166,6 +12554,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -12216,6 +12605,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -13173,8 +13563,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -13184,7 +13579,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -13193,6 +13590,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -13209,8 +13607,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -13220,7 +13623,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -13229,6 +13634,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -13290,8 +13696,13 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                xml: { name: "category" },
               },
-              photoUrls: { type: "array", items: { type: "string" } },
+              photoUrls: {
+                type: "array",
+                items: { type: "string", xml: { name: "photoUrl" } },
+                xml: { wrapped: true },
+              },
               tags: {
                 type: "array",
                 items: {
@@ -13301,7 +13712,9 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  xml: { name: "tag" },
                 },
+                xml: { wrapped: true },
               },
               status: {
                 type: "string",
@@ -13310,6 +13723,7 @@ export const mcpTools = [
               },
             },
             required: ["name", "photoUrls"],
+            xml: { name: "pet" },
           },
         },
         required: ["body"],
@@ -13326,8 +13740,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -13337,7 +13756,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -13346,6 +13767,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: false,
@@ -13425,8 +13847,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -13436,7 +13863,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -13445,6 +13874,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -13521,8 +13951,13 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  xml: { name: "category" },
                 },
-                photoUrls: { type: "array", items: { type: "string" } },
+                photoUrls: {
+                  type: "array",
+                  items: { type: "string", xml: { name: "photoUrl" } },
+                  xml: { wrapped: true },
+                },
                 tags: {
                   type: "array",
                   items: {
@@ -13532,7 +13967,9 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    xml: { name: "tag" },
                   },
+                  xml: { wrapped: true },
                 },
                 status: {
                   type: "string",
@@ -13541,6 +13978,7 @@ export const mcpTools = [
                 },
               },
               required: ["name", "photoUrls"],
+              xml: { name: "pet" },
             },
           },
         },
@@ -13613,8 +14051,13 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            xml: { name: "category" },
           },
-          photoUrls: { type: "array", items: { type: "string" } },
+          photoUrls: {
+            type: "array",
+            items: { type: "string", xml: { name: "photoUrl" } },
+            xml: { wrapped: true },
+          },
           tags: {
             type: "array",
             items: {
@@ -13624,7 +14067,9 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              xml: { name: "tag" },
             },
+            xml: { wrapped: true },
           },
           status: {
             type: "string",
@@ -13633,6 +14078,7 @@ export const mcpTools = [
           },
         },
         required: ["name", "photoUrls"],
+        xml: { name: "pet" },
       },
       annotations: {
         readOnlyHint: true,
@@ -13834,6 +14280,7 @@ export const mcpTools = [
           message: { type: "string" },
         },
         required: [],
+        xml: { name: "##default" },
       },
       annotations: {
         readOnlyHint: false,
@@ -13937,6 +14384,7 @@ export const mcpTools = [
               complete: { type: "boolean" },
             },
             required: [],
+            xml: { name: "order" },
           },
         },
       },
@@ -13956,6 +14404,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: false,
@@ -14008,6 +14457,7 @@ export const mcpTools = [
           complete: { type: "boolean" },
         },
         required: [],
+        xml: { name: "order" },
       },
       annotations: {
         readOnlyHint: true,
@@ -14088,6 +14538,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
       },
@@ -14140,6 +14591,7 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  xml: { name: "user" },
                 },
               },
             },
@@ -14164,6 +14616,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: false,
@@ -14280,6 +14733,7 @@ export const mcpTools = [
           },
         },
         required: [],
+        xml: { name: "user" },
       },
       annotations: {
         readOnlyHint: true,
@@ -14330,6 +14784,7 @@ export const mcpTools = [
               },
             },
             required: [],
+            xml: { name: "user" },
           },
         },
         required: ["path"],
@@ -14573,6 +15028,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "order",
+                    },
                 },
                 "type": "schema",
             },
@@ -14647,6 +15105,10 @@ exports[`getZodClientTemplateContext 1`] = `
                                     },
                                 },
                                 "type": "array",
+                                "xml": {
+                                    "name": "addresses",
+                                    "wrapped": true,
+                                },
                             },
                             "id": {
                                 "examples": [
@@ -14697,6 +15159,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "customer",
+                    },
                 },
                 "type": "schema",
             },
@@ -14824,6 +15289,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "address",
+                    },
                 },
                 "type": "schema",
             },
@@ -14912,6 +15380,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "category",
+                    },
                 },
                 "type": "schema",
             },
@@ -15131,6 +15602,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "user",
+                    },
                 },
                 "type": "schema",
             },
@@ -15213,6 +15687,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "tag",
+                    },
                 },
                 "type": "schema",
             },
@@ -15333,6 +15810,9 @@ exports[`getZodClientTemplateContext 1`] = `
                                         },
                                     },
                                     "type": "string",
+                                    "xml": {
+                                        "name": "photoUrl",
+                                    },
                                 },
                                 "metadata": {
                                     "circularReferences": [],
@@ -15350,6 +15830,9 @@ exports[`getZodClientTemplateContext 1`] = `
                                     },
                                 },
                                 "type": "array",
+                                "xml": {
+                                    "wrapped": true,
+                                },
                             },
                             "status": {
                                 "description": "pet status in the store",
@@ -15411,6 +15894,9 @@ exports[`getZodClientTemplateContext 1`] = `
                                     },
                                 },
                                 "type": "array",
+                                "xml": {
+                                    "wrapped": true,
+                                },
                             },
                         },
                     },
@@ -15419,6 +15905,9 @@ exports[`getZodClientTemplateContext 1`] = `
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "type": "schema",
             },
@@ -15519,6 +16008,9 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "##default",
+                    },
                 },
                 "type": "schema",
             },
@@ -21691,6 +22183,9 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
+                                    "xml": {
+                                        "name": "category",
+                                    },
                                 },
                                 "id": {
                                     "examples": [
@@ -21708,8 +22203,14 @@ Some useful links:
                                 "photoUrls": {
                                     "items": {
                                         "type": "string",
+                                        "xml": {
+                                            "name": "photoUrl",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                                 "status": {
                                     "description": "pet status in the store",
@@ -21733,8 +22234,14 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "tag",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                             },
                             "required": [
@@ -21742,6 +22249,9 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
+                            "xml": {
+                                "name": "pet",
+                            },
                         },
                     },
                     "required": [
@@ -21770,6 +22280,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "category",
+                            },
                         },
                         "id": {
                             "examples": [
@@ -21787,8 +22300,14 @@ Some useful links:
                         "photoUrls": {
                             "items": {
                                 "type": "string",
+                                "xml": {
+                                    "name": "photoUrl",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                         "status": {
                             "description": "pet status in the store",
@@ -21812,8 +22331,14 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
+                                "xml": {
+                                    "name": "tag",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                     },
                     "required": [
@@ -21821,6 +22346,9 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "title": "Add a new pet to the store",
             },
@@ -21894,6 +22422,9 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
+                                    "xml": {
+                                        "name": "category",
+                                    },
                                 },
                                 "id": {
                                     "examples": [
@@ -21911,8 +22442,14 @@ Some useful links:
                                 "photoUrls": {
                                     "items": {
                                         "type": "string",
+                                        "xml": {
+                                            "name": "photoUrl",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                                 "status": {
                                     "description": "pet status in the store",
@@ -21936,8 +22473,14 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "tag",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                             },
                             "required": [
@@ -21945,6 +22488,9 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
+                            "xml": {
+                                "name": "pet",
+                            },
                         },
                     },
                     "required": [
@@ -21973,6 +22519,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "category",
+                            },
                         },
                         "id": {
                             "examples": [
@@ -21990,8 +22539,14 @@ Some useful links:
                         "photoUrls": {
                             "items": {
                                 "type": "string",
+                                "xml": {
+                                    "name": "photoUrl",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                         "status": {
                             "description": "pet status in the store",
@@ -22015,8 +22570,14 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
+                                "xml": {
+                                    "name": "tag",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                     },
                     "required": [
@@ -22024,6 +22585,9 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "title": "Update an existing pet",
             },
@@ -22118,6 +22682,9 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "category",
+                                        },
                                     },
                                     "id": {
                                         "examples": [
@@ -22135,8 +22702,14 @@ Some useful links:
                                     "photoUrls": {
                                         "items": {
                                             "type": "string",
+                                            "xml": {
+                                                "name": "photoUrl",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                     "status": {
                                         "description": "pet status in the store",
@@ -22160,8 +22733,14 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
+                                            "xml": {
+                                                "name": "tag",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                 },
                                 "required": [
@@ -22169,6 +22748,9 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
+                                "xml": {
+                                    "name": "pet",
+                                },
                             },
                             "type": "array",
                         },
@@ -22265,6 +22847,9 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "category",
+                                        },
                                     },
                                     "id": {
                                         "examples": [
@@ -22282,8 +22867,14 @@ Some useful links:
                                     "photoUrls": {
                                         "items": {
                                             "type": "string",
+                                            "xml": {
+                                                "name": "photoUrl",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                     "status": {
                                         "description": "pet status in the store",
@@ -22307,8 +22898,14 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
+                                            "xml": {
+                                                "name": "tag",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                 },
                                 "required": [
@@ -22316,6 +22913,9 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
+                                "xml": {
+                                    "name": "pet",
+                                },
                             },
                             "type": "array",
                         },
@@ -22426,6 +23026,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "category",
+                            },
                         },
                         "id": {
                             "examples": [
@@ -22443,8 +23046,14 @@ Some useful links:
                         "photoUrls": {
                             "items": {
                                 "type": "string",
+                                "xml": {
+                                    "name": "photoUrl",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                         "status": {
                             "description": "pet status in the store",
@@ -22468,8 +23077,14 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
+                                "xml": {
+                                    "name": "tag",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                     },
                     "required": [
@@ -22477,6 +23092,9 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "title": "Find pet by ID",
             },
@@ -22733,6 +23351,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "##default",
+                    },
                 },
                 "title": "uploads an image",
             },
@@ -22859,6 +23480,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "order",
+                            },
                         },
                     },
                     "type": "object",
@@ -22909,6 +23533,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "order",
+                    },
                 },
                 "title": "Place an order for a pet",
             },
@@ -23002,6 +23629,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "order",
+                    },
                 },
                 "title": "Find purchase order by ID",
             },
@@ -23134,6 +23764,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "user",
+                            },
                         },
                     },
                     "type": "object",
@@ -23226,6 +23859,9 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "user",
+                                        },
                                     },
                                     "type": "array",
                                 },
@@ -23292,6 +23928,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "user",
+                    },
                 },
                 "title": "Creates list of users with given input array",
             },
@@ -23477,6 +24116,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "user",
+                    },
                 },
                 "title": "Get user by user name",
             },
@@ -23562,6 +24204,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "user",
+                            },
                         },
                         "path": {
                             "properties": {
@@ -23832,6 +24477,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "order",
+                    },
                 },
                 "type": "schema",
             },
@@ -23906,6 +24554,10 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                     },
                                 },
                                 "type": "array",
+                                "xml": {
+                                    "name": "addresses",
+                                    "wrapped": true,
+                                },
                             },
                             "id": {
                                 "examples": [
@@ -23956,6 +24608,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "customer",
+                    },
                 },
                 "type": "schema",
             },
@@ -24083,6 +24738,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "address",
+                    },
                 },
                 "type": "schema",
             },
@@ -24171,6 +24829,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "category",
+                    },
                 },
                 "type": "schema",
             },
@@ -24390,6 +25051,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "user",
+                    },
                 },
                 "type": "schema",
             },
@@ -24472,6 +25136,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "tag",
+                    },
                 },
                 "type": "schema",
             },
@@ -24592,6 +25259,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                         },
                                     },
                                     "type": "string",
+                                    "xml": {
+                                        "name": "photoUrl",
+                                    },
                                 },
                                 "metadata": {
                                     "circularReferences": [],
@@ -24609,6 +25279,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                     },
                                 },
                                 "type": "array",
+                                "xml": {
+                                    "wrapped": true,
+                                },
                             },
                             "status": {
                                 "description": "pet status in the store",
@@ -24670,6 +25343,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                                     },
                                 },
                                 "type": "array",
+                                "xml": {
+                                    "wrapped": true,
+                                },
                             },
                         },
                     },
@@ -24678,6 +25354,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "type": "schema",
             },
@@ -24778,6 +25457,9 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "##default",
+                    },
                 },
                 "type": "schema",
             },
@@ -30950,6 +31632,9 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
+                                    "xml": {
+                                        "name": "category",
+                                    },
                                 },
                                 "id": {
                                     "examples": [
@@ -30967,8 +31652,14 @@ Some useful links:
                                 "photoUrls": {
                                     "items": {
                                         "type": "string",
+                                        "xml": {
+                                            "name": "photoUrl",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                                 "status": {
                                     "description": "pet status in the store",
@@ -30992,8 +31683,14 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "tag",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                             },
                             "required": [
@@ -31001,6 +31698,9 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
+                            "xml": {
+                                "name": "pet",
+                            },
                         },
                     },
                     "required": [
@@ -31029,6 +31729,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "category",
+                            },
                         },
                         "id": {
                             "examples": [
@@ -31046,8 +31749,14 @@ Some useful links:
                         "photoUrls": {
                             "items": {
                                 "type": "string",
+                                "xml": {
+                                    "name": "photoUrl",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                         "status": {
                             "description": "pet status in the store",
@@ -31071,8 +31780,14 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
+                                "xml": {
+                                    "name": "tag",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                     },
                     "required": [
@@ -31080,6 +31795,9 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "title": "Add a new pet to the store",
             },
@@ -31153,6 +31871,9 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
+                                    "xml": {
+                                        "name": "category",
+                                    },
                                 },
                                 "id": {
                                     "examples": [
@@ -31170,8 +31891,14 @@ Some useful links:
                                 "photoUrls": {
                                     "items": {
                                         "type": "string",
+                                        "xml": {
+                                            "name": "photoUrl",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                                 "status": {
                                     "description": "pet status in the store",
@@ -31195,8 +31922,14 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "tag",
+                                        },
                                     },
                                     "type": "array",
+                                    "xml": {
+                                        "wrapped": true,
+                                    },
                                 },
                             },
                             "required": [
@@ -31204,6 +31937,9 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
+                            "xml": {
+                                "name": "pet",
+                            },
                         },
                     },
                     "required": [
@@ -31232,6 +31968,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "category",
+                            },
                         },
                         "id": {
                             "examples": [
@@ -31249,8 +31988,14 @@ Some useful links:
                         "photoUrls": {
                             "items": {
                                 "type": "string",
+                                "xml": {
+                                    "name": "photoUrl",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                         "status": {
                             "description": "pet status in the store",
@@ -31274,8 +32019,14 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
+                                "xml": {
+                                    "name": "tag",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                     },
                     "required": [
@@ -31283,6 +32034,9 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "title": "Update an existing pet",
             },
@@ -31377,6 +32131,9 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "category",
+                                        },
                                     },
                                     "id": {
                                         "examples": [
@@ -31394,8 +32151,14 @@ Some useful links:
                                     "photoUrls": {
                                         "items": {
                                             "type": "string",
+                                            "xml": {
+                                                "name": "photoUrl",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                     "status": {
                                         "description": "pet status in the store",
@@ -31419,8 +32182,14 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
+                                            "xml": {
+                                                "name": "tag",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                 },
                                 "required": [
@@ -31428,6 +32197,9 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
+                                "xml": {
+                                    "name": "pet",
+                                },
                             },
                             "type": "array",
                         },
@@ -31524,6 +32296,9 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "category",
+                                        },
                                     },
                                     "id": {
                                         "examples": [
@@ -31541,8 +32316,14 @@ Some useful links:
                                     "photoUrls": {
                                         "items": {
                                             "type": "string",
+                                            "xml": {
+                                                "name": "photoUrl",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                     "status": {
                                         "description": "pet status in the store",
@@ -31566,8 +32347,14 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
+                                            "xml": {
+                                                "name": "tag",
+                                            },
                                         },
                                         "type": "array",
+                                        "xml": {
+                                            "wrapped": true,
+                                        },
                                     },
                                 },
                                 "required": [
@@ -31575,6 +32362,9 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
+                                "xml": {
+                                    "name": "pet",
+                                },
                             },
                             "type": "array",
                         },
@@ -31685,6 +32475,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "category",
+                            },
                         },
                         "id": {
                             "examples": [
@@ -31702,8 +32495,14 @@ Some useful links:
                         "photoUrls": {
                             "items": {
                                 "type": "string",
+                                "xml": {
+                                    "name": "photoUrl",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                         "status": {
                             "description": "pet status in the store",
@@ -31727,8 +32526,14 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
+                                "xml": {
+                                    "name": "tag",
+                                },
                             },
                             "type": "array",
+                            "xml": {
+                                "wrapped": true,
+                            },
                         },
                     },
                     "required": [
@@ -31736,6 +32541,9 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
+                    "xml": {
+                        "name": "pet",
+                    },
                 },
                 "title": "Find pet by ID",
             },
@@ -31992,6 +32800,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "##default",
+                    },
                 },
                 "title": "uploads an image",
             },
@@ -32118,6 +32929,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "order",
+                            },
                         },
                     },
                     "type": "object",
@@ -32168,6 +32982,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "order",
+                    },
                 },
                 "title": "Place an order for a pet",
             },
@@ -32261,6 +33078,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "order",
+                    },
                 },
                 "title": "Find purchase order by ID",
             },
@@ -32393,6 +33213,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "user",
+                            },
                         },
                     },
                     "type": "object",
@@ -32485,6 +33308,9 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
+                                        "xml": {
+                                            "name": "user",
+                                        },
                                     },
                                     "type": "array",
                                 },
@@ -32551,6 +33377,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "user",
+                    },
                 },
                 "title": "Creates list of users with given input array",
             },
@@ -32736,6 +33565,9 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
+                    "xml": {
+                        "name": "user",
+                    },
                 },
                 "title": "Get user by user name",
             },
@@ -32821,6 +33653,9 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
+                            "xml": {
+                                "name": "user",
+                            },
                         },
                         "path": {
                             "properties": {

@@ -206,6 +206,7 @@ test('jsdoc', async () => {
                 example: 3,
                 minimum: 0,
                 maximum: 10,
+                externalDocs: { url: "https://example.com" },
               },
               bool: { type: "boolean", description: "A boolean", default: true },
               ref: {
