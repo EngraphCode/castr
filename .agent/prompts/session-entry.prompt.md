@@ -49,28 +49,36 @@ pnpm test:gen && pnpm character
 
 ---
 
-## 📋 Current Focus: OpenAPI Compliance (Session 2.6)
+## 📋 Current Focus: Round-Trip Validation (Session 2.7)
 
-**Status:** 🟡 IN PROGRESS — Phases 1-2 complete, Phase 3 ready to implement
+**Status:** 🟡 READY TO START
 
-| Sub-session | Focus                 | Status                            |
-| ----------- | --------------------- | --------------------------------- |
-| 2.6.1       | IR expansion          | ✅ Complete (10 fields added)     |
-| 2.6.2       | Parser completion     | ✅ Complete (10 fields extracted) |
-| 2.6.3       | Writer completion     | 🟡 Ready                          |
-| 2.6.4-8     | Coverage & validation | ✅ Complete                       |
-| 2.7         | Round-trip validation | 🔒 Blocked until 2.6 complete     |
+Session 2.6 (OpenAPI Compliance) is **✅ COMPLETE** — all phases finished on January 19, 2026.
 
-**✅ IR Now Supports (10 fields added January 16, 2026):**
+| Completed | Focus                    | Date            |
+| --------- | ------------------------ | --------------- |
+| ✅ 2.6.1  | IR Expansion (10 fields) | January 16 2026 |
+| ✅ 2.6.2  | Parser Completion        | January 16 2026 |
+| ✅ 2.6.3  | Writer Completion        | January 19 2026 |
+| ✅ 2.6.4  | Input Coverage Tests     | Prior           |
+| ✅ 2.6.5  | Output Coverage Tests    | Prior           |
+| ✅ 2.6.6  | Strict Validation        | Prior           |
 
-- 9 in `CastrSchema`: `xml`, `externalDocs`, `prefixItems`, `unevaluatedProperties`, `unevaluatedItems`, `dependentSchemas`, `dependentRequired`, `minContains`, `maxContains`
-- 1 in `IRMediaType`: `encoding`
+### Next: Session 2.7 — Round-Trip Validation
 
-**✅ Parser Now Extracts (10 fields, January 16, 2026):**
+**Objective:** Prove production readiness with two claims:
 
-- `builder.core.ts` + `builder.json-schema-2020-12.ts`: 9 schema fields
-- `builder.request-body.ts`: `encoding` field
-- 16 new tests, 11 snapshots updated
+| Claim            | User Confidence                               |
+| ---------------- | --------------------------------------------- |
+| **Idempotency**  | Running Castr twice produces identical output |
+| **Losslessness** | No information lost during transformation     |
+
+**Two test cases:**
+
+1. **Arbitrary OpenAPI → IR → OpenAPI** — Content preserved (format may normalize)
+2. **Normalized OpenAPI → IR → OpenAPI** — Byte-for-byte identical
+
+**Entry point:** [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md) → Session 2.7 section
 
 **Active plan:** [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md)
 

@@ -335,6 +335,58 @@ describe('writeOpenApiPaths', () => {
 
       expect(reqBody).toHaveProperty('description', 'User data to create');
     });
+
+    it('preserves encoding in multipart request body', () => {
+      const operations: CastrOperation[] = [
+        createOperation({
+          method: 'post',
+          path: '/users/upload',
+          requestBody: {
+            required: true,
+            content: {
+              'multipart/form-data': {
+                schema: {
+                  type: 'object',
+                  metadata: createMetadata(),
+                },
+                encoding: {
+                  profileImage: {
+                    contentType: 'image/png, image/jpeg',
+                  },
+                  document: {
+                    contentType: 'application/pdf',
+                    headers: {},
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ];
+
+      const result = writeOpenApiPaths(operations);
+      const reqBody = result['/users/upload']?.post?.requestBody;
+
+      expect(reqBody).toBeDefined();
+      // Access encoding via type-safe property checks
+      const encodingValue =
+        reqBody !== undefined &&
+        typeof reqBody === 'object' &&
+        'content' in reqBody &&
+        reqBody.content !== undefined &&
+        'multipart/form-data' in reqBody.content
+          ? reqBody.content['multipart/form-data'].encoding
+          : undefined;
+      expect(encodingValue).toEqual({
+        profileImage: {
+          contentType: 'image/png, image/jpeg',
+        },
+        document: {
+          contentType: 'application/pdf',
+          headers: {},
+        },
+      });
+    });
   });
 
   describe('responses', () => {

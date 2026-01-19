@@ -1,6 +1,7 @@
 # Repo specific
 **/reference/**/*
 lib/examples
+tmp/
 
 # Dependencies
 node_modules

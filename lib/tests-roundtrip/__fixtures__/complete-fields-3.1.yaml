@@ -156,6 +156,40 @@ paths:
         '200':
           description: Trace info
 
+  # Path with encoding in request body
+  /users/{id}/upload:
+    post:
+      operationId: uploadUserAvatar
+      tags:
+        - users
+      summary: Upload user avatar
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                metadata:
+                  type: string
+            encoding:
+              avatar:
+                contentType: image/png, image/jpeg
+              metadata:
+                contentType: application/json
+      responses:
+        '200':
+          description: Upload successful
+
 components:
   schemas:
     User:
@@ -169,6 +203,96 @@ components:
           type: string
         callbackUrl:
           type: string
+      # JSON Schema 2020-12: dependentRequired
+      dependentRequired:
+        callbackUrl:
+          - name
+
+    # Schema with xml and externalDocs
+    Pet:
+      type: object
+      description: A pet with XML serialization
+      xml:
+        name: Pet
+        namespace: 'http://example.com/pet'
+        prefix: pet
+      externalDocs:
+        description: Pet schema documentation
+        url: 'https://example.com/docs/pet'
+      properties:
+        name:
+          type: string
+          xml:
+            attribute: true
+        tags:
+          type: array
+          xml:
+            wrapped: true
+            name: tags
+          items:
+            type: string
+
+    # Schema with prefixItems (tuple)
+    Coordinate:
+      type: array
+      description: A tuple of [x, y, z] coordinates
+      prefixItems:
+        - type: number
+          description: X coordinate
+        - type: number
+          description: Y coordinate
+        - type: number
+          description: Z coordinate
+      items: false
+
+    # Schema with unevaluatedProperties
+    StrictConfig:
+      type: object
+      description: Config that disallows unevaluated properties
+      properties:
+        name:
+          type: string
+        enabled:
+          type: boolean
+      unevaluatedProperties: false
+
+    # Schema with unevaluatedItems
+    StrictArray:
+      type: array
+      description: Array that validates unevaluated items as strings
+      prefixItems:
+        - type: integer
+      unevaluatedItems:
+        type: string
+
+    # Schema with dependentSchemas
+    PaymentMethod:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: ['card', 'bank']
+        cardNumber:
+          type: string
+        routingNumber:
+          type: string
+      dependentSchemas:
+        cardNumber:
+          required:
+            - cardNumber
+          properties:
+            cvv:
+              type: string
+
+    # Schema with minContains/maxContains
+    TaggedArray:
+      type: array
+      items:
+        type: string
+      contains:
+        const: 'required-tag'
+      minContains: 1
+      maxContains: 3
 
   parameters:
     UserId:

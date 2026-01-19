@@ -7,6 +7,8 @@
  * @module
  */
 
+/* eslint-disable max-lines -- Operations writer requires comprehensive coverage of OpenAPI spec */
+
 import type {
   PathsObject,
   PathItemObject,
@@ -81,6 +83,9 @@ function writeRequestBody(requestBody: IRRequestBody): RequestBodyObject {
     if (mediaTypeObj.examples !== undefined) {
       content[mediaType].examples = mediaTypeObj.examples;
     }
+    if (mediaTypeObj.encoding !== undefined) {
+      content[mediaType].encoding = mediaTypeObj.encoding;
+    }
   }
 
   const result: RequestBodyObject = {
@@ -109,6 +114,12 @@ function buildContentFromMediaTypes(
     };
     if (mediaTypeObj.example !== undefined) {
       content[mediaType].example = mediaTypeObj.example;
+    }
+    if (mediaTypeObj.examples !== undefined) {
+      content[mediaType].examples = mediaTypeObj.examples;
+    }
+    if (mediaTypeObj.encoding !== undefined) {
+      content[mediaType].encoding = mediaTypeObj.encoding;
     }
   }
   return content;

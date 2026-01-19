@@ -1,7 +1,7 @@
 # OpenAPI Compliance Plan
 
-**Date:** January 16, 2026 (Updated)  
-**Status:** Active 🟡 (Phases 1-2 Complete)  
+**Date:** January 19, 2026 (Updated)  
+**Status:** ✅ Session 2.6 COMPLETE — Session 2.7 READY  
 **Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029  
 **Specification:** [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md)
 
@@ -29,7 +29,8 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 | -------------------------- | ----- | ----- | --------------------------------- |
 | **IR Representation**      | ✅    | ✅    | ✅ Complete (10 fields added)     |
 | **Input** (parse to IR)    | ✅    | ✅    | ✅ Complete (10 fields extracted) |
-| **Output** (write from IR) | ❌    | ✅    | 🟡 Ready (IR + Parser done)       |
+| **Output** (write from IR) | ❌    | ✅    | ✅ Complete (10 fields written)   |
+| **Round-Trip Validation**  | 🔲    | 🔲    | 🟡 Session 2.7 (READY TO START)   |
 
 ---
 
@@ -41,7 +42,7 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 | ----------- | ---------------------------- | --------------------------------- |
 | 2.6.1       | IR Expansion                 | ✅ Complete (10 fields added)     |
 | 2.6.2       | Parser Completion            | ✅ Complete (10 fields extracted) |
-| 2.6.3       | Writer Completion            | � Ready                           |
+| 2.6.3       | Writer Completion            | ✅ Complete (10 fields)           |
 | 2.6.4       | Input Coverage Tests         | ✅ Complete                       |
 | 2.6.5       | Output Coverage Tests        | ✅ Complete                       |
 | 2.6.6       | **Strict Validation**        | ✅ Complete                       |
@@ -50,21 +51,46 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 
 ### Session 2.7: Round-Trip Validation
 
-**Status:** Blocked until 2.6 complete
+**Status:** 🟡 READY TO START — Session 2.6 is COMPLETE
 
-Proves two claims for production adoption:
+#### Objective
+
+Prove two claims for production adoption:
 
 | Claim            | User Confidence                               |
 | ---------------- | --------------------------------------------- |
 | **Idempotency**  | Running Castr twice produces identical output |
 | **Losslessness** | No information lost during transformation     |
 
-**Two test cases:**
+#### Test Cases
 
-1. **Arbitrary OpenAPI → IR → OpenAPI** — Content preserved (format may change)
-2. **Normalized OpenAPI → IR → OpenAPI** — Byte-for-byte identical
+| Case                      | Input                 | Expected Output                          |
+| ------------------------- | --------------------- | ---------------------------------------- |
+| Arbitrary OpenAPI         | Any valid 3.0.x/3.1.x | Content preserved (format may normalize) |
+| Normalized (Castr output) | Castr-generated spec  | Byte-for-byte identical                  |
 
-See `lib/tests-roundtrip/README.md` for current test suite (191 tests).
+#### Implementation Approach
+
+1. **`sortDeep()` utility** — Deterministic key ordering for comparison
+2. **Arbitrary round-trip tests** — Parse → IR → Write → Compare (semantic equality)
+3. **Normalized round-trip tests** — Parse → IR → Write → Parse → IR → Write → Compare (byte equality)
+4. **Fixture generation** — Create normalized fixtures from arbitrary OpenAPI specs
+
+#### Existing Test Suite
+
+See `lib/tests-roundtrip/README.md` for current infrastructure:
+
+- **201 integration tests** already passing
+- `input-coverage.integration.test.ts` — Parser field coverage
+- `output-coverage.integration.test.ts` — Writer field coverage
+- `writer-field-coverage.integration.test.ts` — 47 tests including new JSON Schema 2020-12 fields
+
+#### Starting Session 2.7
+
+1. Run quality gates (verify clean state)
+2. Read `lib/tests-roundtrip/README.md` for existing infrastructure
+3. Review [ADR-027](../docs/architectural_decision_records/ADR-027-round-trip-validation.md) for design decisions
+4. Start with `sortDeep()` utility using TDD
 
 ---
 
@@ -96,6 +122,36 @@ Input → bundle() → validate() → upgrade() → [PARSER] → IR
 - No handling of `nullable: true` (upgraded to `type: [..., 'null']`)
 - No handling of tuple-style `items` (upgraded to `prefixItems`)
 - Parser is **pure extraction** — map 3.1 fields directly to IR
+
+---
+
+## ✅ Completed Work: 2.6.3 Writer Completion (January 19, 2026)
+
+**15 new unit tests** + **11 new integration tests** for output:
+
+| Field                        | Unit Tests | Integration Tests |
+| ---------------------------- | ---------- | ----------------- |
+| `xml`, `externalDocs`        | 3          | 2                 |
+| `prefixItems`                | 2          | 1                 |
+| `unevaluatedProperties`      | 2          | 1                 |
+| `unevaluatedItems`           | 2          | 1                 |
+| `dependentSchemas`           | 2          | 1                 |
+| `dependentRequired`          | 1          | 1                 |
+| `minContains`, `maxContains` | 3          | 2                 |
+| `encoding`                   | 1          | 1                 |
+
+**Code changes:**
+
+- **MODIFIED:** `openapi-writer.schema.ts` — Added `writeExtensionFields()` with 3 helper functions
+- **MODIFIED:** `openapi-writer.operations.ts` — Added `encoding` support
+- **MODIFIED:** `openapi-writer.schema.unit.test.ts`, `openapi-writer.operations.unit.test.ts`
+
+**Integration tests:**
+
+- **MODIFIED:** `complete-fields-3.1.yaml` — Added 7 test schemas + upload endpoint
+- **MODIFIED:** `writer-field-coverage.integration.test.ts` — 47 tests total
+
+**Quality gates:** All 10 passed, 1,279 tests total.
 
 ---
 

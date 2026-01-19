@@ -4,3 +4,4 @@ samples-generator.ts
 example
 
 .agent/reference
+tmp/

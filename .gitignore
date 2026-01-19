@@ -42,3 +42,4 @@ yarn-error.log*
 dist
 .eslintcache
 /.idea/
+tmp/

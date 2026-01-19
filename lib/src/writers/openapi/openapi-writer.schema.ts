@@ -8,7 +8,7 @@
  * @module
  */
 
-import type { SchemaObject, SchemaObjectType } from 'openapi3-ts/oas31';
+import type { SchemaObject, SchemaObjectType, ReferenceObject } from 'openapi3-ts/oas31';
 
 import type { CastrSchema } from '../../ir/schema.js';
 
@@ -191,6 +191,89 @@ function writeMetadataFields(schema: CastrSchema, result: SchemaObject): void {
 }
 
 /**
+ * Extended SchemaObject with JSON Schema 2020-12 keywords.
+ * The openapi3-ts types don't include these, but they are valid in OAS 3.1.
+ * @internal
+ */
+type ExtendedSchemaObject = SchemaObject & {
+  dependentRequired?: Record<string, string[]>;
+  dependentSchemas?: Record<string, SchemaObject | ReferenceObject>;
+  minContains?: number;
+  maxContains?: number;
+};
+
+/**
+ * Writes simple OpenAPI extension fields (xml, externalDocs).
+ * @internal
+ */
+function writeOasExtensions(schema: CastrSchema, result: ExtendedSchemaObject): void {
+  if (schema.xml !== undefined) {
+    result.xml = schema.xml;
+  }
+  if (schema.externalDocs !== undefined) {
+    result.externalDocs = schema.externalDocs;
+  }
+}
+
+/**
+ * Writes simple JSON Schema 2020-12 fields (dependentRequired, minContains, maxContains).
+ * @internal
+ */
+function writeJsonSchema2020SimpleFields(schema: CastrSchema, result: ExtendedSchemaObject): void {
+  if (schema.dependentRequired !== undefined) {
+    result.dependentRequired = schema.dependentRequired;
+  }
+  if (schema.minContains !== undefined) {
+    result.minContains = schema.minContains;
+  }
+  if (schema.maxContains !== undefined) {
+    result.maxContains = schema.maxContains;
+  }
+}
+
+/**
+ * Writes recursive JSON Schema 2020-12 fields (prefixItems, unevaluated*, dependentSchemas).
+ * @internal
+ */
+function writeJsonSchema2020RecursiveFields(
+  schema: CastrSchema,
+  result: ExtendedSchemaObject,
+): void {
+  if (schema.prefixItems !== undefined) {
+    result.prefixItems = schema.prefixItems.map((item) => writeOpenApiSchema(item));
+  }
+  if (schema.unevaluatedProperties !== undefined) {
+    result.unevaluatedProperties =
+      typeof schema.unevaluatedProperties === 'boolean'
+        ? schema.unevaluatedProperties
+        : writeOpenApiSchema(schema.unevaluatedProperties);
+  }
+  if (schema.unevaluatedItems !== undefined) {
+    result.unevaluatedItems =
+      typeof schema.unevaluatedItems === 'boolean'
+        ? schema.unevaluatedItems
+        : writeOpenApiSchema(schema.unevaluatedItems);
+  }
+  if (schema.dependentSchemas !== undefined) {
+    const deps: Record<string, SchemaObject> = {};
+    for (const [key, depSchema] of Object.entries(schema.dependentSchemas)) {
+      deps[key] = writeOpenApiSchema(depSchema);
+    }
+    result.dependentSchemas = deps;
+  }
+}
+
+/**
+ * Writes OpenAPI extensions and JSON Schema 2020-12 keywords.
+ * @internal
+ */
+function writeExtensionFields(schema: CastrSchema, result: ExtendedSchemaObject): void {
+  writeOasExtensions(schema, result);
+  writeJsonSchema2020SimpleFields(schema, result);
+  writeJsonSchema2020RecursiveFields(schema, result);
+}
+
+/**
  * Converts an IR schema to an OpenAPI SchemaObject.
  *
  * Handles all schema types (primitives, objects, arrays, composition) and
@@ -214,8 +297,8 @@ function writeMetadataFields(schema: CastrSchema, result: SchemaObject): void {
  *
  * @public
  */
-export function writeOpenApiSchema(schema: CastrSchema): SchemaObject {
-  const result: SchemaObject = {};
+export function writeOpenApiSchema(schema: CastrSchema): ExtendedSchemaObject {
+  const result: ExtendedSchemaObject = {};
 
   // Handle $ref - if present, only output $ref (per OAS spec)
   if (schema.$ref !== undefined) {
@@ -234,6 +317,7 @@ export function writeOpenApiSchema(schema: CastrSchema): SchemaObject {
   writeArrayFields(schema, result);
   writeCompositionFields(schema, result);
   writeMetadataFields(schema, result);
+  writeExtensionFields(schema, result);
 
   return result;
 }

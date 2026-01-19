@@ -246,6 +246,92 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
       expect(response?.links?.['GetUserById']).toBeDefined();
     });
   });
+
+  // ==========================================================================
+  // JSON Schema 2020-12 Keywords and OpenAPI Extensions
+  // ==========================================================================
+
+  describe('JSON Schema 2020-12 Keywords', () => {
+    it('writes prefixItems for tuple schemas', () => {
+      const coordinate = output.components?.schemas?.['Coordinate'];
+      expect(coordinate).toBeDefined();
+      expect((coordinate as { prefixItems?: unknown[] })?.prefixItems).toHaveLength(3);
+    });
+
+    it('writes unevaluatedProperties', () => {
+      const config = output.components?.schemas?.['StrictConfig'];
+      expect(config).toBeDefined();
+      expect((config as { unevaluatedProperties?: boolean })?.unevaluatedProperties).toBe(false);
+    });
+
+    it('writes unevaluatedItems', () => {
+      const arr = output.components?.schemas?.['StrictArray'];
+      expect(arr).toBeDefined();
+      expect((arr as { unevaluatedItems?: { type: string } })?.unevaluatedItems).toEqual({
+        type: 'string',
+      });
+    });
+
+    it('writes dependentSchemas', () => {
+      const payment = output.components?.schemas?.['PaymentMethod'];
+      expect(payment).toBeDefined();
+      const deps = (payment as { dependentSchemas?: { cardNumber?: object } })?.dependentSchemas;
+      expect(deps).toBeDefined();
+      expect(deps?.cardNumber).toBeDefined();
+    });
+
+    it('writes dependentRequired', () => {
+      const user = output.components?.schemas?.['User'];
+      expect(user).toBeDefined();
+      const deps = (user as { dependentRequired?: Record<string, string[]> })?.dependentRequired;
+      expect(deps).toBeDefined();
+      expect(deps?.['callbackUrl']).toEqual(['name']);
+    });
+
+    it('writes minContains', () => {
+      const tagged = output.components?.schemas?.['TaggedArray'];
+      expect(tagged).toBeDefined();
+      expect((tagged as { minContains?: number })?.minContains).toBe(1);
+    });
+
+    it('writes maxContains', () => {
+      const tagged = output.components?.schemas?.['TaggedArray'];
+      expect(tagged).toBeDefined();
+      expect((tagged as { maxContains?: number })?.maxContains).toBe(3);
+    });
+  });
+
+  describe('OpenAPI Schema Extensions', () => {
+    it('writes xml object on schema', () => {
+      const pet = output.components?.schemas?.['Pet'];
+      expect(pet).toBeDefined();
+      expect((pet as { xml?: { name: string } })?.xml?.name).toBe('Pet');
+    });
+
+    it('writes externalDocs on schema', () => {
+      const pet = output.components?.schemas?.['Pet'];
+      expect(pet).toBeDefined();
+      expect((pet as { externalDocs?: { url: string } })?.externalDocs?.url).toBe(
+        'https://example.com/docs/pet',
+      );
+    });
+  });
+
+  describe('Request Body Encoding', () => {
+    it('writes encoding in multipart request body', () => {
+      const uploadOp = output.paths?.['/users/{id}/upload']?.post;
+      expect(uploadOp).toBeDefined();
+      const reqBody = uploadOp?.requestBody;
+      expect(reqBody).toBeDefined();
+      if (reqBody && 'content' in reqBody) {
+        const multipartContent = reqBody.content?.['multipart/form-data'];
+        expect(multipartContent?.encoding).toBeDefined();
+        const avatarEncoding = multipartContent?.encoding?.['avatar'];
+        expect(avatarEncoding).toBeDefined();
+        expect(avatarEncoding?.contentType).toBe('image/png, image/jpeg');
+      }
+    });
+  });
 });
 
 describe('Writer Output - Version Validation', () => {

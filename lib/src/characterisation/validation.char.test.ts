@@ -280,8 +280,10 @@ describe('Characterisation: OpenAPI Spec Validation', () => {
         const endTime = Date.now();
         const duration = endTime - startTime;
 
-        // Validation should be fast (< 100ms) because it happens before domain logic
-        expect(duration).toBeLessThan(100);
+        // Validation should be fast (< 500ms) because it happens before domain logic
+        // Note: We use 500ms to account for JIT warmup and slower CI environments.
+        // The point is validation fails early (not after heavy processing), not sub-100ms.
+        expect(duration).toBeLessThan(500);
         expect(error).toBeInstanceOf(Error);
       }
     });

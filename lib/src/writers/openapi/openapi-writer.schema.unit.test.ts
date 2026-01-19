@@ -7,6 +7,8 @@
  * @module
  */
 
+/* eslint-disable max-lines-per-function -- Test file with comprehensive coverage of all schema types */
+
 import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/schema.js';
@@ -512,6 +514,207 @@ describe('writeOpenApiSchema', () => {
       const result = writeOpenApiSchema(schema);
 
       expect(result.writeOnly).toBe(true);
+    });
+  });
+
+  describe('OpenAPI extensions', () => {
+    it('preserves xml object', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        xml: { name: 'Pet', namespace: 'http://example.com/pet', prefix: 'pet' },
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.xml).toEqual({
+        name: 'Pet',
+        namespace: 'http://example.com/pet',
+        prefix: 'pet',
+      });
+    });
+
+    it('preserves externalDocs', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        externalDocs: { url: 'https://example.com/docs', description: 'More info' },
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.externalDocs).toEqual({
+        url: 'https://example.com/docs',
+        description: 'More info',
+      });
+    });
+  });
+
+  describe('JSON Schema 2020-12 keywords', () => {
+    it('converts prefixItems recursively', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        prefixItems: [
+          { type: 'string', metadata: createMetadata() },
+          { type: 'number', metadata: createMetadata() },
+        ],
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.prefixItems).toEqual([{ type: 'string' }, { type: 'number' }]);
+    });
+
+    it('preserves unevaluatedProperties when boolean false', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        unevaluatedProperties: false,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.unevaluatedProperties).toBe(false);
+    });
+
+    it('preserves unevaluatedProperties when boolean true', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        unevaluatedProperties: true,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.unevaluatedProperties).toBe(true);
+    });
+
+    it('converts unevaluatedProperties schema recursively', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        unevaluatedProperties: { type: 'string', metadata: createMetadata() },
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.unevaluatedProperties).toEqual({ type: 'string' });
+    });
+
+    it('preserves unevaluatedItems when boolean false', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        unevaluatedItems: false,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.unevaluatedItems).toBe(false);
+    });
+
+    it('preserves unevaluatedItems when boolean true', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        unevaluatedItems: true,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.unevaluatedItems).toBe(true);
+    });
+
+    it('converts unevaluatedItems schema recursively', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        unevaluatedItems: { type: 'number', metadata: createMetadata() },
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.unevaluatedItems).toEqual({ type: 'number' });
+    });
+
+    it('converts dependentSchemas recursively', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        dependentSchemas: {
+          creditCard: {
+            type: 'object',
+            properties: new CastrSchemaProperties({
+              billingAddress: { type: 'string', metadata: createMetadata() },
+            }),
+            metadata: createMetadata(),
+          },
+        },
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.dependentSchemas).toEqual({
+        creditCard: {
+          type: 'object',
+          properties: { billingAddress: { type: 'string' } },
+        },
+      });
+    });
+
+    it('preserves dependentRequired', () => {
+      const schema: CastrSchema = {
+        type: 'object',
+        dependentRequired: {
+          creditCard: ['billingAddress', 'securityCode'],
+        },
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.dependentRequired).toEqual({
+        creditCard: ['billingAddress', 'securityCode'],
+      });
+    });
+
+    it('preserves minContains', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        minContains: 2,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.minContains).toBe(2);
+    });
+
+    it('preserves maxContains', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        maxContains: 5,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.maxContains).toBe(5);
+    });
+
+    it('preserves minContains and maxContains together', () => {
+      const schema: CastrSchema = {
+        type: 'array',
+        minContains: 1,
+        maxContains: 3,
+        metadata: createMetadata(),
+      };
+
+      const result = writeOpenApiSchema(schema);
+
+      expect(result.minContains).toBe(1);
+      expect(result.maxContains).toBe(3);
     });
   });
 });
