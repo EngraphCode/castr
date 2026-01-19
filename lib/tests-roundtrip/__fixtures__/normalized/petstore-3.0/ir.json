@@ -1,0 +1,681 @@
+{
+  "version": "1.0.0",
+  "openApiVersion": "3.1.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://petstore.swagger.io/v1"
+    }
+  ],
+  "components": [
+    {
+      "type": "schema",
+      "name": "Pet",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "object",
+        "properties": {
+          "dataType": "CastrSchemaProperties",
+          "value": {
+            "id": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [".int()"],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "integer",
+              "format": "int64"
+            },
+            "name": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            },
+            "tag": {
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": ".optional()",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            }
+          }
+        },
+        "required": ["id", "name"]
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
+    {
+      "type": "schema",
+      "name": "Pets",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [".max(100)"],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "array",
+        "maxItems": 100,
+        "items": {
+          "$ref": "#/components/schemas/Pet",
+          "metadata": {
+            "required": false,
+            "nullable": false,
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "zodChain": {
+              "presence": ".optional()",
+              "validations": [],
+              "defaults": []
+            },
+            "circularReferences": []
+          }
+        }
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [".max(100)"],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    },
+    {
+      "type": "schema",
+      "name": "Error",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "object",
+        "properties": {
+          "dataType": "CastrSchemaProperties",
+          "value": {
+            "code": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [".int()"],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "integer",
+              "format": "int32"
+            },
+            "message": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            }
+          }
+        },
+        "required": ["code", "message"]
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    }
+  ],
+  "operations": [
+    {
+      "operationId": "listPets",
+      "method": "get",
+      "path": "/pets",
+      "parameters": [
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "metadata": {
+              "required": false,
+              "nullable": false,
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "zodChain": {
+                "presence": ".optional()",
+                "validations": [".max(100)", ".int()"],
+                "defaults": []
+              },
+              "circularReferences": []
+            },
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100
+          },
+          "metadata": {
+            "required": false,
+            "nullable": false,
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "zodChain": {
+              "presence": ".optional()",
+              "validations": [".max(100)", ".int()"],
+              "defaults": []
+            },
+            "circularReferences": []
+          },
+          "description": "How many items to return at one time (max 100)"
+        }
+      ],
+      "parametersByLocation": {
+        "query": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": ".optional()",
+                  "validations": [".max(100)", ".int()"],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "integer",
+              "format": "int32",
+              "maximum": 100
+            },
+            "metadata": {
+              "required": false,
+              "nullable": false,
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "zodChain": {
+                "presence": ".optional()",
+                "validations": [".max(100)", ".int()"],
+                "defaults": []
+              },
+              "circularReferences": []
+            },
+            "description": "How many items to return at one time (max 100)"
+          }
+        ],
+        "path": [],
+        "header": [],
+        "cookie": []
+      },
+      "responses": [
+        {
+          "statusCode": "200",
+          "description": "A paged array of pets",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pets",
+                "metadata": {
+                  "required": false,
+                  "nullable": false,
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "zodChain": {
+                    "presence": ".optional()",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "circularReferences": []
+                }
+              }
+            }
+          },
+          "headers": {
+            "x-next": {
+              "schema": {
+                "metadata": {
+                  "required": false,
+                  "nullable": false,
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "zodChain": {
+                    "presence": ".optional()",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "circularReferences": []
+                },
+                "type": "string"
+              },
+              "description": "A link to the next page of responses"
+            }
+          }
+        },
+        {
+          "statusCode": "default",
+          "description": "unexpected error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error",
+                "metadata": {
+                  "required": false,
+                  "nullable": false,
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "zodChain": {
+                    "presence": ".optional()",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "circularReferences": []
+                }
+              }
+            }
+          }
+        }
+      ],
+      "summary": "List all pets",
+      "tags": ["pets"]
+    },
+    {
+      "operationId": "createPets",
+      "method": "post",
+      "path": "/pets",
+      "parameters": [],
+      "parametersByLocation": {
+        "query": [],
+        "path": [],
+        "header": [],
+        "cookie": []
+      },
+      "responses": [
+        {
+          "statusCode": "201",
+          "description": "Null response"
+        },
+        {
+          "statusCode": "default",
+          "description": "unexpected error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error",
+                "metadata": {
+                  "required": false,
+                  "nullable": false,
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "zodChain": {
+                    "presence": ".optional()",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "circularReferences": []
+                }
+              }
+            }
+          }
+        }
+      ],
+      "summary": "Create a pet",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pet",
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": ".optional()",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              }
+            }
+          }
+        }
+      },
+      "tags": ["pets"]
+    },
+    {
+      "operationId": "showPetById",
+      "method": "get",
+      "path": "/pets/{petId}",
+      "parameters": [
+        {
+          "name": "petId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "circularReferences": []
+            },
+            "type": "string"
+          },
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "circularReferences": []
+          },
+          "description": "The id of the pet to retrieve"
+        }
+      ],
+      "parametersByLocation": {
+        "query": [],
+        "path": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            },
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "circularReferences": []
+            },
+            "description": "The id of the pet to retrieve"
+          }
+        ],
+        "header": [],
+        "cookie": []
+      },
+      "responses": [
+        {
+          "statusCode": "200",
+          "description": "Expected response to a valid request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet",
+                "metadata": {
+                  "required": false,
+                  "nullable": false,
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "zodChain": {
+                    "presence": ".optional()",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "circularReferences": []
+                }
+              }
+            }
+          }
+        },
+        {
+          "statusCode": "default",
+          "description": "unexpected error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error",
+                "metadata": {
+                  "required": false,
+                  "nullable": false,
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "zodChain": {
+                    "presence": ".optional()",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "circularReferences": []
+                }
+              }
+            }
+          }
+        }
+      ],
+      "summary": "Info for a specific pet",
+      "tags": ["pets"]
+    }
+  ],
+  "dependencyGraph": {
+    "nodes": {
+      "#/components/schemas/Pet": {
+        "ref": "#/components/schemas/Pet",
+        "dependencies": [],
+        "dependents": ["#/components/schemas/Pets"],
+        "depth": 0,
+        "isCircular": false
+      },
+      "#/components/schemas/Pets": {
+        "ref": "#/components/schemas/Pets",
+        "dependencies": ["#/components/schemas/Pet"],
+        "dependents": [],
+        "depth": 1,
+        "isCircular": false
+      },
+      "#/components/schemas/Error": {
+        "ref": "#/components/schemas/Error",
+        "dependencies": [],
+        "dependents": [],
+        "depth": 0,
+        "isCircular": false
+      }
+    },
+    "topologicalOrder": [
+      "#/components/schemas/Pet",
+      "#/components/schemas/Pets",
+      "#/components/schemas/Error"
+    ],
+    "circularReferences": []
+  },
+  "schemaNames": ["Pet", "Pets", "Error"],
+  "enums": {}
+}

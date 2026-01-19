@@ -67,7 +67,7 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
  */
 export function writeOpenApi(ir: CastrDocument): OpenAPIObjectExtended {
   const result: OpenAPIObjectExtended = {
-    openapi: '3.1.0',
+    openapi: ir.openApiVersion,
     info: ir.info,
     paths: writeOpenApiPaths(ir.operations),
   };

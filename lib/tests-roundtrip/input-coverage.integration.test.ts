@@ -225,7 +225,9 @@ describe('Input Coverage: OpenAPI → IR', () => {
       const ir = await loadAndBuildIR(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const getSquare = ir.operations.find((op) => op.operationId === 'get-square');
-      expect(getSquare?.parameters.length).toBe(2); // row, column
+      // Path-level $ref parameters are tracked separately to preserve DRY structure
+      // The operation may have 0 inline params if all come from path-level refs
+      expect(getSquare?.pathItemParameterRefs?.length).toBe(2); // rowParam, columnParam refs
     });
 
     it('parses operation requestBody', async () => {

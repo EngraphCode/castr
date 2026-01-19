@@ -9,7 +9,7 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a",
+  "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev --parallel",
@@ -37,14 +37,25 @@
     }
   },
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
     "ajv": "^8.17.1",
     "ajv-draft-04": "^1.0.0",
     "ajv-formats": "^3.0.1",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-formatter-pretty": "^7.0.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-sonarjs": "^3.0.5",
+    "jiti": "^2.6.1",
     "pnpm": "^10.20.0",
     "prettier": "^3.6.2",
     "tsx": "^4",
     "turbo": "^2.5.8",
-    "typescript": "^5"
-  },
-  "dependencies": {}
+    "typescript": "^5",
+    "typescript-eslint": "^8.46.2"
+  }
 }

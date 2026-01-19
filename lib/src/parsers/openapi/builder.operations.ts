@@ -92,7 +92,11 @@ function extractPathOperations(
 
     // Merge path-level parameters with operation-level parameters
     // Operation-level parameters take precedence (though usually they are distinct)
-    const mergedParameters = [...(pathItem.parameters || []), ...(operation.parameters || [])];
+    // Path-level $ref parameters are NOT merged here — they're tracked separately
+    // as pathItemParameterRefs to preserve DRY structure
+    const pathLevelParams = pathItem.parameters || [];
+    const nonRefPathParams = pathLevelParams.filter((p) => !isReferenceObject(p));
+    const mergedParameters = [...nonRefPathParams, ...(operation.parameters || [])];
 
     // Create a new operation object with merged parameters to avoid mutating the original
     const operationWithoutParams = { ...operation };
@@ -239,6 +243,19 @@ function addPathItemFields(irOperation: CastrOperation, pathItem: PathItemObject
   }
   if (pathItem.servers) {
     irOperation.pathItemServers = pathItem.servers;
+  }
+
+  // Extract path-level parameter refs to preserve DRY structure
+  if (pathItem.parameters && pathItem.parameters.length > 0) {
+    const paramRefs: string[] = [];
+    for (const param of pathItem.parameters) {
+      if (isReferenceObject(param)) {
+        paramRefs.push(param.$ref);
+      }
+    }
+    if (paramRefs.length > 0) {
+      irOperation.pathItemParameterRefs = paramRefs;
+    }
   }
 }
 

@@ -46,6 +46,21 @@ function isNotAllowedError(message: string): boolean {
 }
 
 /**
+ * Check if path is in components/schemas
+ */
+function isSchemaPath(path: string): boolean {
+  return path.includes('/components/schemas/');
+}
+
+/**
+ * Check if message is about missing $ref (AJV validation quirk)
+ */
+function isMissingRefError(message: string): boolean {
+  const lower = message.toLowerCase();
+  return lower.includes("required property '$ref'") || lower.includes('required property "$ref"');
+}
+
+/**
  * Validation hint definitions using string matching
  */
 const VALIDATION_HINTS: readonly {
@@ -53,6 +68,14 @@ const VALIDATION_HINTS: readonly {
   messageMatcher: (message: string) => boolean;
   hint: string;
 }[] = [
+  // NEW: Catch the confusing "$ref required" error on schemas - usually indicates version mismatch
+  {
+    pathMatcher: isSchemaPath,
+    messageMatcher: isMissingRefError,
+    hint:
+      "This often means the schema uses OpenAPI 3.1 syntax (like 'type: null' in anyOf) in a 3.0.x document. " +
+      "Either upgrade to 'openapi: 3.1.0' or use 'nullable: true' instead of 'type: null'.",
+  },
   {
     pathMatcher: isResponsePath,
     messageMatcher: isRequiredPropertyError,

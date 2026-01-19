@@ -313,6 +313,16 @@ export interface CastrOperation {
    * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
    */
   pathItemServers?: ServerObject[];
+
+  /**
+   * PathItem-level parameter references.
+   * Stores $ref strings for parameters defined at the path level.
+   * These are preserved as refs in output instead of being expanded.
+   *
+   * @example ['#/components/parameters/rowParam', '#/components/parameters/columnParam']
+   * @see {@link https://spec.openapis.org/oas/v3.1.0#path-item-object}
+   */
+  pathItemParameterRefs?: string[];
 }
 
 /**
@@ -499,14 +509,58 @@ export interface CastrResponse {
 
   /**
    * Response headers.
+   * Preserves all HeaderObject fields including description, required, deprecated.
    */
-  headers?: Record<string, CastrSchema>;
+  headers?: Record<string, IRResponseHeader>;
 
   /**
    * Links for response.
    * @see {@link https://spec.openapis.org/oas/v3.1.0#link-object}
    */
   links?: Record<string, LinkObject | ReferenceObject>;
+}
+
+/**
+ * Response header definition.
+ *
+ * Preserves all HeaderObject fields from OpenAPI for round-trip fidelity.
+ * Unlike the previous implementation that only stored the schema,
+ * this captures description, required, deprecated, example, etc.
+ *
+ * @see {@link https://spec.openapis.org/oas/v3.1.0#header-object OpenAPI Header Object}
+ * @public
+ */
+export interface IRResponseHeader {
+  /**
+   * Header schema definition.
+   */
+  schema: CastrSchema;
+
+  /**
+   * Header description for documentation.
+   * This field was previously lost during round-trip — now preserved.
+   */
+  description?: string;
+
+  /**
+   * Whether the header is required.
+   */
+  required?: boolean;
+
+  /**
+   * Whether the header is deprecated.
+   */
+  deprecated?: boolean;
+
+  /**
+   * Example value for the header.
+   */
+  example?: unknown;
+
+  /**
+   * Multiple named examples.
+   */
+  examples?: Record<string, ReferenceObject | ExampleObject>;
 }
 
 /**

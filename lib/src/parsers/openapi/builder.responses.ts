@@ -13,7 +13,7 @@ import type {
   HeaderObject,
   MediaTypeObject,
 } from 'openapi3-ts/oas31';
-import type { CastrResponse, IRMediaType, CastrSchema } from '../../ir/schema.js';
+import type { CastrResponse, IRMediaType, IRResponseHeader } from '../../ir/schema.js';
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
@@ -228,13 +228,13 @@ function buildResponseMediaType(
 function buildResponseHeaders(
   headers: Record<string, HeaderObject | ReferenceObject>,
   context: IRBuildContext,
-): Record<string, CastrSchema> {
-  const result: Record<string, CastrSchema> = {};
+): Record<string, IRResponseHeader> {
+  const result: Record<string, IRResponseHeader> = {};
 
   for (const [headerName, headerObj] of Object.entries(headers)) {
-    const headerSchema = buildResponseHeader(headerName, headerObj, context);
-    if (headerSchema) {
-      result[headerName] = headerSchema;
+    const irHeader = buildResponseHeader(headerName, headerObj, context);
+    if (irHeader) {
+      result[headerName] = irHeader;
     }
   }
 
@@ -242,14 +242,15 @@ function buildResponseHeaders(
 }
 
 /**
- * Build IR schema for a single response header.
+ * Build IRResponseHeader for a single response header.
+ * Extracts all HeaderObject fields including description, required, deprecated.
  * @internal
  */
 function buildResponseHeader(
   headerName: string,
   headerObj: HeaderObject | ReferenceObject,
   context: IRBuildContext,
-): CastrSchema | undefined {
+): IRResponseHeader | undefined {
   if (isReferenceObject(headerObj)) {
     return undefined;
   }
@@ -263,5 +264,26 @@ function buildResponseHeader(
     path: [...context.path, 'headers', headerName],
   };
 
-  return buildCastrSchema(headerObj.schema, headerContext);
+  const irHeader: IRResponseHeader = {
+    schema: buildCastrSchema(headerObj.schema, headerContext),
+  };
+
+  // Preserve all HeaderObject fields that were previously lost
+  if (headerObj.description !== undefined) {
+    irHeader.description = headerObj.description;
+  }
+  if (headerObj.required !== undefined) {
+    irHeader.required = headerObj.required;
+  }
+  if (headerObj.deprecated !== undefined) {
+    irHeader.deprecated = headerObj.deprecated;
+  }
+  if (headerObj.example !== undefined) {
+    irHeader.example = headerObj.example;
+  }
+  if (headerObj.examples !== undefined) {
+    irHeader.examples = headerObj.examples;
+  }
+
+  return irHeader;
 }

@@ -51,7 +51,7 @@ Implement FULL OpenAPI 3.0.x and 3.1.x **input and output support** per the form
 
 ### Session 2.7: Round-Trip Validation
 
-**Status:** 🟡 READY TO START — Session 2.6 is COMPLETE
+**Status:** 🟡 IN PROGRESS — Phase 1 Complete (January 19, 2026)
 
 #### Objective
 
@@ -62,35 +62,45 @@ Prove two claims for production adoption:
 | **Idempotency**  | Running Castr twice produces identical output |
 | **Losslessness** | No information lost during transformation     |
 
+#### Progress
+
+| Phase | Focus                        | Status                           |
+| ----- | ---------------------------- | -------------------------------- |
+| 1     | `sortDeep()` utility (TDD)   | ✅ Complete (17 unit tests)      |
+| 2     | Arbitrary fixtures           | ✅ Complete (5 symlinks created) |
+| 3     | Round-trip integration tests | 🟡 Next                          |
+| 4     | Normalized fixtures + script | 🔲 Pending                       |
+
+#### Completed Work (January 19, 2026)
+
+**Phase 1: sortDeep() utility**
+
+- Created `lib/src/shared/utils/sortDeep.ts` — Deterministic key ordering for comparison
+- Created `lib/src/shared/utils/sortDeep.unit.test.ts` — 17 unit tests covering primitives, arrays, objects, nested structures, edge cases
+- Exported from `lib/src/shared/utils/index.ts`
+
+**Phase 2: Arbitrary fixtures**
+
+- Created 5 symlinks in `lib/tests-roundtrip/__fixtures__/arbitrary/`:
+  - `tictactoe-3.1.yaml` → `lib/examples/openapi/v3.1/tictactoe.yaml`
+  - `webhook-3.1.yaml` → `lib/examples/openapi/v3.1/webhook-example.yaml`
+  - `petstore-3.0.yaml` → `lib/examples/openapi/v3.0/petstore.yaml`
+  - `petstore-expanded-3.0.yaml` → `lib/examples/openapi/v3.0/petstore-expanded.yaml`
+  - `callback-3.0.yaml` → `lib/examples/openapi/v3.0/callback-example.yaml`
+
+#### Next Steps
+
+1. Create `lib/tests-roundtrip/__tests__/round-trip.integration.test.ts`
+2. Implement losslessness tests (arbitrary specs → IR → output → IR comparison)
+3. Implement idempotency tests (normalized specs → byte-for-byte comparison)
+4. Create fixture generation script for normalized fixtures
+
 #### Test Cases
 
 | Case                      | Input                 | Expected Output                          |
 | ------------------------- | --------------------- | ---------------------------------------- |
 | Arbitrary OpenAPI         | Any valid 3.0.x/3.1.x | Content preserved (format may normalize) |
 | Normalized (Castr output) | Castr-generated spec  | Byte-for-byte identical                  |
-
-#### Implementation Approach
-
-1. **`sortDeep()` utility** — Deterministic key ordering for comparison
-2. **Arbitrary round-trip tests** — Parse → IR → Write → Compare (semantic equality)
-3. **Normalized round-trip tests** — Parse → IR → Write → Parse → IR → Write → Compare (byte equality)
-4. **Fixture generation** — Create normalized fixtures from arbitrary OpenAPI specs
-
-#### Existing Test Suite
-
-See `lib/tests-roundtrip/README.md` for current infrastructure:
-
-- **201 integration tests** already passing
-- `input-coverage.integration.test.ts` — Parser field coverage
-- `output-coverage.integration.test.ts` — Writer field coverage
-- `writer-field-coverage.integration.test.ts` — 47 tests including new JSON Schema 2020-12 fields
-
-#### Starting Session 2.7
-
-1. Run quality gates (verify clean state)
-2. Read `lib/tests-roundtrip/README.md` for existing infrastructure
-3. Review [ADR-027](../docs/architectural_decision_records/ADR-027-round-trip-validation.md) for design decisions
-4. Start with `sortDeep()` utility using TDD
 
 ---
 

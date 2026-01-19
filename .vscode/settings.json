@@ -13,5 +13,6 @@
     "worktree",
     "zodios"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.workingDirectories": [{ "directory": "lib", "changeProcessCWD": true }]
 }

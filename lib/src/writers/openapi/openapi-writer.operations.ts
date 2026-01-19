@@ -17,6 +17,7 @@ import type {
   RequestBodyObject,
   ResponsesObject,
   ResponseObject,
+  HeaderObject,
   SecurityRequirementObject,
   MediaTypeObject,
 } from 'openapi3-ts/oas31';
@@ -28,6 +29,7 @@ import type {
   CastrResponse,
   IRSecurityRequirement,
   IRMediaType,
+  IRResponseHeader,
 } from '../../ir/schema.js';
 
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
@@ -126,6 +128,35 @@ function buildContentFromMediaTypes(
 }
 
 /**
+ * Converts an IRResponseHeader to OpenAPI HeaderObject.
+ * Preserves all header fields including description, required, deprecated.
+ * @internal
+ */
+function writeResponseHeader(header: IRResponseHeader): HeaderObject {
+  const headerObj: HeaderObject = {
+    schema: writeOpenApiSchema(header.schema),
+  };
+
+  if (header.description !== undefined) {
+    headerObj.description = header.description;
+  }
+  if (header.required !== undefined) {
+    headerObj.required = header.required;
+  }
+  if (header.deprecated !== undefined) {
+    headerObj.deprecated = header.deprecated;
+  }
+  if (header.example !== undefined) {
+    headerObj.example = header.example;
+  }
+  if (header.examples !== undefined) {
+    headerObj.examples = header.examples;
+  }
+
+  return headerObj;
+}
+
+/**
  * Converts a single CastrResponse to OpenAPI ResponseObject.
  * @internal
  */
@@ -146,10 +177,8 @@ function writeResponse(response: CastrResponse): ResponseObject {
 
   if (response.headers !== undefined) {
     responseObj.headers = {};
-    for (const [name, schema] of Object.entries(response.headers)) {
-      responseObj.headers[name] = {
-        schema: writeOpenApiSchema(schema),
-      };
+    for (const [name, header] of Object.entries(response.headers)) {
+      responseObj.headers[name] = writeResponseHeader(header);
     }
   }
 
@@ -322,6 +351,10 @@ export function writeOpenApiPaths(operations: CastrOperation[]): PathsObject {
     }
     if (operation.pathItemServers && !pathItem.servers) {
       pathItem.servers = operation.pathItemServers;
+    }
+    // Preserve path-level parameter refs instead of expanding them
+    if (operation.pathItemParameterRefs && !pathItem.parameters) {
+      pathItem.parameters = operation.pathItemParameterRefs.map((ref) => ({ $ref: ref }));
     }
 
     result[pathKey] = pathItem;

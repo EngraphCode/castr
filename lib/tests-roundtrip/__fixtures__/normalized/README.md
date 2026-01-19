@@ -2,18 +2,25 @@
 
 Castr-normalized OpenAPI specs for byte-for-byte idempotency testing.
 
-These are created by processing arbitrary specs through Castr once and saving the output.
-Re-processing these specs should produce identical output.
+## Purpose
 
-## How to Create
+These fixtures are created by processing arbitrary specs through Castr once.
+Re-processing these specs should produce **identical output**.
 
-```typescript
-import { buildIR } from '../../../src/context/ir-builder.js';
-import { writeOpenApi } from '../../../src/writers/openapi/openapi-writer.js';
-import { prepareOpenApiDocument } from '../../../src/shared/prepare-openapi-document.js';
+## Files
 
-const doc = await prepareOpenApiDocument('./arbitrary/petstore.yaml');
-const ir = buildIR(doc);
-const normalized = writeOpenApi(ir);
-// Save normalized to this directory
+Each fixture directory contains:
+
+| File               | Description                                                      |
+| ------------------ | ---------------------------------------------------------------- |
+| `input.yaml`       | Symlink to original arbitrary fixture                            |
+| `normalized.json`  | First pass: input → IR → OpenAPI                                 |
+| `reprocessed.json` | Second pass: normalized → IR → OpenAPI (should match normalized) |
+| `ir.json`          | IR from first pass (for debugging)                               |
+| `ir2.json`         | IR from second pass (for debugging)                              |
+
+## How to Regenerate
+
+```bash
+npx tsx scripts/generate-normalized-fixtures.ts
 ```

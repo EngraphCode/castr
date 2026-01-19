@@ -14,12 +14,13 @@ OpenAPI Input → buildIR() → IR (CastrDocument) → writeOpenApi() → OpenAP
 | ----------------------------------------------------- | ----------------------------------------- | ----- |
 | `input-coverage.integration.test.ts`                  | Verifies OpenAPI syntax is parsed to IR   | 48    |
 | `output-coverage.integration.test.ts`                 | Verifies IR fields are written to OpenAPI | 25    |
+| `__tests__/round-trip.integration.test.ts`            | Losslessness and idempotency validation   | 45    |
 | `__tests__/version-validation.integration.test.ts`    | Version-specific validation rules         | 20    |
 | `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior       | 16    |
 | `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification      | 45    |
-| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification          | 37    |
+| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification          | 47    |
 
-**Total: 191 tests**
+**Total: 246 tests**
 
 ---
 

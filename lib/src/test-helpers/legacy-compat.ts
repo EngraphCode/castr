@@ -22,8 +22,10 @@ export interface LegacyEndpointError extends Omit<EndpointError, 'schema'> {
   schema: string;
 }
 
-export interface LegacyEndpointDefinition
-  extends Omit<EndpointDefinition, 'response' | 'parameters' | 'errors'> {
+export interface LegacyEndpointDefinition extends Omit<
+  EndpointDefinition,
+  'response' | 'parameters' | 'errors'
+> {
   response?: string;
   parameters: LegacyEndpointParameter[];
   errors: LegacyEndpointError[];

@@ -18882,46 +18882,52 @@ Some useful links:
                         "description": "successful operation",
                         "headers": {
                             "X-Expires-After": {
-                                "format": "date-time",
-                                "metadata": {
-                                    "circularReferences": [],
-                                    "dependencyGraph": {
-                                        "depth": 0,
-                                        "referencedBy": [],
-                                        "references": [],
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                    "format": "date-time",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [
+                                                ".datetime()",
+                                            ],
+                                        },
                                     },
-                                    "nullable": false,
-                                    "required": false,
-                                    "zodChain": {
-                                        "defaults": [],
-                                        "presence": ".optional()",
-                                        "validations": [
-                                            ".datetime()",
-                                        ],
-                                    },
+                                    "type": "string",
                                 },
-                                "type": "string",
                             },
                             "X-Rate-Limit": {
-                                "format": "int32",
-                                "metadata": {
-                                    "circularReferences": [],
-                                    "dependencyGraph": {
-                                        "depth": 0,
-                                        "referencedBy": [],
-                                        "references": [],
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                    "format": "int32",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [
+                                                ".int()",
+                                            ],
+                                        },
                                     },
-                                    "nullable": false,
-                                    "required": false,
-                                    "zodChain": {
-                                        "defaults": [],
-                                        "presence": ".optional()",
-                                        "validations": [
-                                            ".int()",
-                                        ],
-                                    },
+                                    "type": "integer",
                                 },
-                                "type": "integer",
                             },
                         },
                         "statusCode": "200",
@@ -28331,46 +28337,52 @@ Some useful links:
                         "description": "successful operation",
                         "headers": {
                             "X-Expires-After": {
-                                "format": "date-time",
-                                "metadata": {
-                                    "circularReferences": [],
-                                    "dependencyGraph": {
-                                        "depth": 0,
-                                        "referencedBy": [],
-                                        "references": [],
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                    "format": "date-time",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [
+                                                ".datetime()",
+                                            ],
+                                        },
                                     },
-                                    "nullable": false,
-                                    "required": false,
-                                    "zodChain": {
-                                        "defaults": [],
-                                        "presence": ".optional()",
-                                        "validations": [
-                                            ".datetime()",
-                                        ],
-                                    },
+                                    "type": "string",
                                 },
-                                "type": "string",
                             },
                             "X-Rate-Limit": {
-                                "format": "int32",
-                                "metadata": {
-                                    "circularReferences": [],
-                                    "dependencyGraph": {
-                                        "depth": 0,
-                                        "referencedBy": [],
-                                        "references": [],
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                    "format": "int32",
+                                    "metadata": {
+                                        "circularReferences": [],
+                                        "dependencyGraph": {
+                                            "depth": 0,
+                                            "referencedBy": [],
+                                            "references": [],
+                                        },
+                                        "nullable": false,
+                                        "required": false,
+                                        "zodChain": {
+                                            "defaults": [],
+                                            "presence": ".optional()",
+                                            "validations": [
+                                                ".int()",
+                                            ],
+                                        },
                                     },
-                                    "nullable": false,
-                                    "required": false,
-                                    "zodChain": {
-                                        "defaults": [],
-                                        "presence": ".optional()",
-                                        "validations": [
-                                            ".int()",
-                                        ],
-                                    },
+                                    "type": "integer",
                                 },
-                                "type": "integer",
                             },
                         },
                         "statusCode": "200",

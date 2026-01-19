@@ -34,8 +34,8 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
   // ==========================================================================
 
   describe('Root Object', () => {
-    it('writes openapi version as 3.1.0', () => {
-      expect(output.openapi).toBe('3.1.0');
+    it('writes openapi version as 3.1.x', () => {
+      expect(output.openapi).toMatch(/^3\.1\./);
     });
 
     it('writes info object', () => {
@@ -335,12 +335,13 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
 });
 
 describe('Writer Output - Version Validation', () => {
-  it('always outputs as OpenAPI 3.1.0', async () => {
+  it('always outputs as OpenAPI 3.1.x (version flows from IR)', async () => {
     const result30 = await loadOpenApiDocument(`${FIXTURES_DIR}/complete-fields-3.0.yaml`);
     const ir30 = buildIR(result30.document);
     const output30 = writeOpenApi(ir30);
 
-    expect(output30.openapi).toBe('3.1.0');
+    // Version flows from IR (scalar parser upgrades 3.0.x to 3.1.x)
+    expect(output30.openapi).toMatch(/^3\.1\./);
   });
 
   it('does NOT output 3.1.x-only fields from 3.0.x input', async () => {

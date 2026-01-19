@@ -101,10 +101,10 @@ JSON Schema ────┘              IROperation, IRDependencyGraph ]   └�
 
 The order of format support is **deliberate**. By implementing both input (parser) and output (writer) for a format before adding new formats, we discover shared patterns and prevent premature generalisation.
 
-| Phase | Transform                 | Rationale                                     |
-| ----- | ------------------------- | --------------------------------------------- |
-| 1     | **OpenAPI → Zod**         | Established baseline                          |
-| 2     | **Zod → OpenAPI**         | Complete round-trip; discover shared patterns |
+| Phase | Transform                | Rationale                                     |
+| ----- | ------------------------ | --------------------------------------------- |
+| 1     | **OpenAPI → Zod**        | Established baseline                          |
+| 2     | **Zod → OpenAPI**        | Complete round-trip; discover shared patterns |
 | 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges                          |
 | 4     | **JSONSchema ↔ Zod**     | Complete triangulation                        |
 | 5     | **tRPC ↔ IR**            | Additional formats as needed                  |

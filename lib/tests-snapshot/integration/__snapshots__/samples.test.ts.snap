@@ -2147,20 +2147,7 @@ export const endpoints = [
     method: "get",
     path: "/board/{row}/{column}",
     requestFormat: "json",
-    parameters: [
-      {
-        name: "row",
-        type: "Path",
-        schema: coordinate,
-        description: "Board row (vertical coordinate)",
-      },
-      {
-        name: "column",
-        type: "Path",
-        schema: coordinate,
-        description: "Board column (horizontal coordinate)",
-      },
-    ],
+    parameters: [],
     response: mark,
     errors: [
       {
@@ -2179,12 +2166,7 @@ export const endpoints = [
         description: "The provided parameters are incorrect",
       },
     },
-    request: {
-      pathParams: z.object({
-        row: coordinate,
-        column: coordinate,
-      }),
-    },
+    request: {},
     alias: "get-square",
     description: "Retrieves the requested square.",
   },
@@ -2193,18 +2175,6 @@ export const endpoints = [
     path: "/board/{row}/{column}",
     requestFormat: "json",
     parameters: [
-      {
-        name: "row",
-        type: "Path",
-        schema: coordinate,
-        description: "Board row (vertical coordinate)",
-      },
-      {
-        name: "column",
-        type: "Path",
-        schema: coordinate,
-        description: "Board column (horizontal coordinate)",
-      },
       {
         name: "body",
         type: "Body",
@@ -2230,10 +2200,6 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        row: coordinate,
-        column: coordinate,
-      }),
       body: mark,
     },
     alias: "put-square",
@@ -2333,20 +2299,7 @@ export const mcpTools = [
       name: "get_square",
       title: "Get a single board square",
       description: "Retrieves the requested square.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          path: {
-            type: "object",
-            properties: {
-              row: { type: "integer", example: 1, minimum: 1, maximum: 3 },
-              column: { type: "integer", example: 1, minimum: 1, maximum: 3 },
-            },
-            required: ["row", "column"],
-          },
-        },
-        required: ["path"],
-      },
+      inputSchema: { type: "object", properties: {} },
       outputSchema: {
         type: "object",
         properties: {
@@ -2423,14 +2376,6 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
-          path: {
-            type: "object",
-            properties: {
-              row: { type: "integer", example: 1, minimum: 1, maximum: 3 },
-              column: { type: "integer", example: 1, minimum: 1, maximum: 3 },
-            },
-            required: ["row", "column"],
-          },
           body: {
             type: "string",
             description:
@@ -2439,7 +2384,7 @@ export const mcpTools = [
             enum: [".", "X", "O"],
           },
         },
-        required: ["path", "body"],
+        required: ["body"],
       },
       outputSchema: {
         type: "object",

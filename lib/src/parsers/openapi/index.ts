@@ -368,7 +368,8 @@ class EnumExtractor {
       for (const key of Object.keys(response.headers)) {
         const header = response.headers[key];
         if (header) {
-          this.visitSchema(header);
+          // IRResponseHeader has .schema, extract it for enum traversal
+          this.visitSchema(header.schema);
         }
       }
     }

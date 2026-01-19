@@ -51,32 +51,31 @@ pnpm test:gen && pnpm character
 
 ## 📋 Current Focus: Round-Trip Validation (Session 2.7)
 
-**Status:** 🟡 READY TO START
+**Status:** 🟡 IN PROGRESS (Phase 1 Complete)
 
 Session 2.6 (OpenAPI Compliance) is **✅ COMPLETE** — all phases finished on January 19, 2026.
 
-| Completed | Focus                    | Date            |
-| --------- | ------------------------ | --------------- |
-| ✅ 2.6.1  | IR Expansion (10 fields) | January 16 2026 |
-| ✅ 2.6.2  | Parser Completion        | January 16 2026 |
-| ✅ 2.6.3  | Writer Completion        | January 19 2026 |
-| ✅ 2.6.4  | Input Coverage Tests     | Prior           |
-| ✅ 2.6.5  | Output Coverage Tests    | Prior           |
-| ✅ 2.6.6  | Strict Validation        | Prior           |
+### Session 2.7 Progress
 
-### Next: Session 2.7 — Round-Trip Validation
+| Phase | Focus                        | Status                           |
+| ----- | ---------------------------- | -------------------------------- |
+| 1     | `sortDeep()` utility (TDD)   | ✅ Complete (17 unit tests)      |
+| 2     | Arbitrary fixtures           | ✅ Complete (5 symlinks created) |
+| 3     | Round-trip integration tests | 🟡 Next                          |
+| 4     | Normalized fixtures + script | 🔲 Pending                       |
 
-**Objective:** Prove production readiness with two claims:
+**Completed this session:**
 
-| Claim            | User Confidence                               |
-| ---------------- | --------------------------------------------- |
-| **Idempotency**  | Running Castr twice produces identical output |
-| **Losslessness** | No information lost during transformation     |
+- Created `lib/src/shared/utils/sortDeep.ts` with 17 unit tests
+- Created 5 arbitrary fixture symlinks in `lib/tests-roundtrip/__fixtures__/arbitrary/`
+- All 10 quality gates pass (1,279+ tests)
 
-**Two test cases:**
+**Next steps:**
 
-1. **Arbitrary OpenAPI → IR → OpenAPI** — Content preserved (format may normalize)
-2. **Normalized OpenAPI → IR → OpenAPI** — Byte-for-byte identical
+1. Create round-trip integration test file (`round-trip.integration.test.ts`)
+2. Implement losslessness tests (arbitrary specs)
+3. Implement idempotency tests (normalized specs)
+4. Create fixture generation script
 
 **Entry point:** [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md) → Session 2.7 section
 

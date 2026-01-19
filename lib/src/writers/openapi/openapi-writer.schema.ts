@@ -104,7 +104,8 @@ function writeObjectFields(schema: CastrSchema, result: SchemaObject): void {
       result.properties[key] = writeOpenApiSchema(propSchema);
     }
   }
-  if (schema.required !== undefined) {
+  // Omit empty required arrays (idiomatic per OAS 3.1 / JSON Schema 2020-12)
+  if (schema.required !== undefined && schema.required.length > 0) {
     result.required = schema.required;
   }
   if (schema.additionalProperties !== undefined) {

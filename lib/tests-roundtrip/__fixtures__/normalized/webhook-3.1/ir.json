@@ -1,0 +1,146 @@
+{
+  "version": "1.0.0",
+  "openApiVersion": "3.1.0",
+  "info": {
+    "title": "Webhook Example",
+    "version": "1.0.0"
+  },
+  "servers": [],
+  "components": [
+    {
+      "type": "schema",
+      "name": "Pet",
+      "schema": {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "circularReferences": []
+        },
+        "type": "object",
+        "properties": {
+          "dataType": "CastrSchemaProperties",
+          "value": {
+            "id": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [".int()"],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "integer",
+              "format": "int64"
+            },
+            "name": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            },
+            "tag": {
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "zodChain": {
+                  "presence": ".optional()",
+                  "validations": [],
+                  "defaults": []
+                },
+                "circularReferences": []
+              },
+              "type": "string"
+            }
+          }
+        },
+        "required": ["id", "name"]
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "circularReferences": []
+      }
+    }
+  ],
+  "operations": [],
+  "dependencyGraph": {
+    "nodes": {
+      "#/components/schemas/Pet": {
+        "ref": "#/components/schemas/Pet",
+        "dependencies": [],
+        "dependents": [],
+        "depth": 0,
+        "isCircular": false
+      }
+    },
+    "topologicalOrder": ["#/components/schemas/Pet"],
+    "circularReferences": []
+  },
+  "schemaNames": ["Pet"],
+  "enums": {},
+  "webhooks": {
+    "newPet": {
+      "post": {
+        "requestBody": {
+          "description": "Information about a new pet in the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        }
+      }
+    }
+  }
+}

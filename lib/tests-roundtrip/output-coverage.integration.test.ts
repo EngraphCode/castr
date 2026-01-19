@@ -49,9 +49,9 @@ async function roundTrip(fixturePath: string): Promise<OpenAPIObject> {
 
 describe('Output Coverage: IR → OpenAPI 3.1', () => {
   describe('Output format', () => {
-    it('outputs OpenAPI 3.1.0 version', async () => {
+    it('outputs OpenAPI 3.1.x version (flows from IR)', async () => {
       const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
-      expect(output.openapi).toBe('3.1.0');
+      expect(output.openapi).toMatch(/^3\.1\./);
     });
 
     it('outputs valid JSON (serializable object)', async () => {
@@ -63,7 +63,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
       // Should parse back to identical object
       const parsed = JSON.parse(jsonString) as OpenAPIObject;
-      expect(parsed.openapi).toBe('3.1.0');
+      expect(parsed.openapi).toMatch(/^3\.1\./);
     });
   });
 
@@ -297,16 +297,16 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       // We need to verify this is handled correctly
       const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      // Verify output is valid 3.1 format
-      expect(output.openapi).toBe('3.1.0');
+      // Verify output is valid 3.1.x format
+      expect(output.openapi).toMatch(/^3\.1\./);
     });
 
     it('handles 3.0 → 3.1 upgrade correctly', async () => {
-      // When a 3.0 spec is loaded, it should be upgraded to 3.1
+      // When a 3.0 spec is loaded, it should be upgraded to 3.1.x by scalar parser
       const output = await roundTrip(`${EXAMPLES_DIR}/v3.0/petstore.yaml`);
 
-      // Output should always be 3.1.0
-      expect(output.openapi).toBe('3.1.0');
+      // Version flows from IR (scalar parser upgrades 3.0.x to 3.1.x)
+      expect(output.openapi).toMatch(/^3\.1\./);
     });
   });
 });

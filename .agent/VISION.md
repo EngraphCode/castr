@@ -132,10 +132,10 @@ Once both parser and writer exist for a format, same-format conversions enable:
 
 The order of format support is **deliberate** — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
 
-| Phase | Transform                 | Rationale                                                    |
-| ----- | ------------------------- | ------------------------------------------------------------ |
-| 1     | **OpenAPI → Zod**         | Established baseline (current)                               |
-| 2     | **Zod → OpenAPI**         | Complete Zod round-trip; understand input/output commonality |
+| Phase | Transform                | Rationale                                                    |
+| ----- | ------------------------ | ------------------------------------------------------------ |
+| 1     | **OpenAPI → Zod**        | Established baseline (current)                               |
+| 2     | **Zod → OpenAPI**        | Complete Zod round-trip; understand input/output commonality |
 | 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges with well-understood formats            |
 | 4     | **JSONSchema ↔ Zod**     | Complete JSON Schema triangulation                           |
 | 5     | **tRPC ↔ IR**            | Additional formats as needed                                 |
