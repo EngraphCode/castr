@@ -284,7 +284,7 @@ it('determines which status are considered errors-responses', async () => {
       is400?: boolean;
       nested?: Nested;
     };
-    export type Error404 = unknown;
+    export type Error404 = null;
     export type Error500 = string;
     // Zod Schemas
     export const Main = z
@@ -455,7 +455,7 @@ it('determines which status are considered errors-responses', async () => {
       is400?: boolean;
       nested?: Nested;
     };
-    export type Error404 = unknown;
+    export type Error404 = null;
     export type Error500 = string;
     // Zod Schemas
     export const Main = z

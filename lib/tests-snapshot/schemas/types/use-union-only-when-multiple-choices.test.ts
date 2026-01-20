@@ -23,7 +23,7 @@ test('use-union-only-when-multiple-choices', () => {
     {
         "code": "z.object({
       singleOneOf: z.string().optional(),
-      multipleOneOf: z.union([z.string(), z.number()]).optional(),
+      multipleOneOf: z.xor([z.string(), z.number()]).optional(),
       singleAnyOf: z.string().optional(),
       multipleAnyOf: z.union([z.string(), z.number()]).optional(),
       singleAllOf: z.string().optional(),

@@ -44,7 +44,7 @@ describe('anyOf behavior', () => {
       `
       {
           "code": "z.union([z.object({
-        age: z.number().int(),
+        age: z.int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({
         pet_type: z.enum(["Cat", "Dog"]),
@@ -129,7 +129,7 @@ describe('anyOf behavior', () => {
       `
       {
           "code": "z.union([z.object({
-        age: z.number().int(),
+        age: z.int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({
         pet_type: z.enum(["Cat", "Dog"]),
@@ -220,7 +220,7 @@ describe('anyOf behavior', () => {
       `
       {
           "code": "z.union([z.union([z.number(), z.boolean()]), z.object({
-        age: z.number().int(),
+        age: z.int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({
         pet_type: z.enum(["Cat", "Dog"]),
@@ -351,7 +351,7 @@ describe('anyOf behavior', () => {
       // Zod Schemas
       export const PetByAge = z
         .object({
-          age: z.number().int(),
+          age: z.int(),
           nickname: z.string().optional(),
         })
         .strict();
@@ -383,9 +383,11 @@ describe('anyOf behavior', () => {
             },
           },
           request: {
-            queryParams: z.object({
-              anyOfRef: z.union([PetByAge, PetByType]).optional(),
-            }),
+            queryParams: z
+              .object({
+                anyOfRef: z.union([PetByAge, PetByType]).optional(),
+              })
+              .strict(),
           },
         },
       ] as const;

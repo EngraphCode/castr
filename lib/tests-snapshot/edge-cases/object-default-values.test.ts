@@ -126,21 +126,23 @@ test('object-default-values', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            "empty-object": z
-              .object({
-                foo: z.string().optional(),
-              })
-              .strict()
-              .optional(),
-            "default-object": z
-              .object({
-                foo: z.string().optional(),
-              })
-              .strict()
-              .optional(),
-            "ref-object": z.object({}).strict().optional(),
-          }),
+          queryParams: z
+            .object({
+              "empty-object": z
+                .object({
+                  foo: z.string().optional(),
+                })
+                .strict()
+                .optional(),
+              "default-object": z
+                .object({
+                  foo: z.string().optional(),
+                })
+                .strict()
+                .optional(),
+              "ref-object": z.object({}).strict().optional(),
+            })
+            .strict(),
         },
       },
     ] as const;

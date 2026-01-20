@@ -7,8 +7,6 @@
  * @module
  */
 
-/* eslint-disable max-lines -- Operations writer requires comprehensive coverage of OpenAPI spec */
-
 import type {
   PathsObject,
   PathItemObject,

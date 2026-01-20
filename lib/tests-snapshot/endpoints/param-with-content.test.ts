@@ -97,7 +97,7 @@ test('param-with-content', async () => {
           {
             name: "store",
             type: "Path",
-            schema: z.number().int(),
+            schema: z.int32(),
             description: "Store number",
           },
           {
@@ -126,16 +126,22 @@ test('param-with-content', async () => {
           },
         },
         request: {
-          pathParams: z.object({
-            store: z.number().int(),
-          }),
-          queryParams: z.object({
-            thing: test1.optional(),
-            "wrong param": test2.optional(),
-          }),
-          headers: z.object({
-            "Accept-Language": z.string().optional(),
-          }),
+          pathParams: z
+            .object({
+              store: z.int32(),
+            })
+            .strict(),
+          queryParams: z
+            .object({
+              thing: test1.optional(),
+              "wrong param": test2.optional(),
+            })
+            .strict(),
+          headers: z
+            .object({
+              "Accept-Language": z.string().optional(),
+            })
+            .strict(),
         },
       },
     ] as const;

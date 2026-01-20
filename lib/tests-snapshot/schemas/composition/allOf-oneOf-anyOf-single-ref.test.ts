@@ -96,11 +96,13 @@ test('allOf-single-ref', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            allOf_ref_param: MyComponent.optional(),
-            oneOf_ref_param: MyComponent.optional(),
-            anyOf_ref_param: MyComponent.optional(),
-          }),
+          queryParams: z
+            .object({
+              allOf_ref_param: MyComponent.optional(),
+              oneOf_ref_param: MyComponent.optional(),
+              anyOf_ref_param: MyComponent.optional(),
+            })
+            .strict(),
         },
       },
     ] as const;

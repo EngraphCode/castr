@@ -43,6 +43,7 @@
     "character": "vitest run --config vitest.characterisation.config.ts",
     "character:watch": "vitest --config vitest.characterisation.config.ts",
     "test:roundtrip": "vitest run --config vitest.roundtrip.config.ts",
+    "test:transforms": "vitest run --config vitest.roundtrip.config.ts",
     "fetch:examples": "tsx ./examples-fetcher.mts"
   },
   "license": "MIT",

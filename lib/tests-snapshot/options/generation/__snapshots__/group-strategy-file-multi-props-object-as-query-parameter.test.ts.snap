@@ -17,8 +17,8 @@ export const endpoints = [
         type: "Query",
         schema: z
           .object({
-            prop1: z.number().int(),
-            prop2: z.number().int(),
+            prop1: z.int32(),
+            prop2: z.int32(),
           })
           .strict(),
       },
@@ -32,14 +32,16 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        req: z
-          .object({
-            prop1: z.number().int(),
-            prop2: z.number().int(),
-          })
-          .strict(),
-      }),
+      queryParams: z
+        .object({
+          req: z
+            .object({
+              prop1: z.int32(),
+              prop2: z.int32(),
+            })
+            .strict(),
+        })
+        .strict(),
     },
   },
 ] as const;
@@ -108,8 +110,8 @@ export const endpoints = [
         type: "Query",
         schema: z
           .object({
-            prop1: z.number().int(),
-            prop2: z.number().int(),
+            prop1: z.int32(),
+            prop2: z.int32(),
           })
           .strict(),
       },
@@ -123,14 +125,16 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        req: z
-          .object({
-            prop1: z.number().int(),
-            prop2: z.number().int(),
-          })
-          .strict(),
-      }),
+      queryParams: z
+        .object({
+          req: z
+            .object({
+              prop1: z.int32(),
+              prop2: z.int32(),
+            })
+            .strict(),
+        })
+        .strict(),
     },
   },
 ] as const;

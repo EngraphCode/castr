@@ -10,6 +10,7 @@ import type {
 
 import { writeCompositionSchema } from './composition.js';
 import { writeMetadata } from './metadata.js';
+import { writePrimitiveSchema, filterRedundantValidations } from './primitives.js';
 import { parseComponentRef } from '../../shared/ref-resolution.js';
 import { isValidJsIdentifier } from '../../shared/utils/identifier-utils.js';
 
@@ -175,6 +176,11 @@ function writeSingleTypeFromArray(
 
 /**
  * Write Zod chain modifiers (validations, defaults, presence) to the schema.
+ *
+ * Filters out validations that are redundant because they're already built into
+ * Zod 4 format functions (e.g., z.int() already includes integer validation,
+ * z.email() already includes email validation).
+ *
  * @internal
  */
 function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter): void {
@@ -184,7 +190,10 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   }
 
   const { validations, defaults } = schema.metadata.zodChain;
-  validations.forEach((v) => writer.write(v));
+
+  // Filter out validations that are redundant for Zod 4 format functions
+  const filteredValidations = filterRedundantValidations(validations, schema);
+  filteredValidations.forEach((v) => writer.write(v));
   defaults.forEach((d) => writer.write(d));
 
   const isOptionalProperty = context.contextType === 'property' && context.optional;
@@ -197,26 +206,6 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   // Skip if type is array - nullability is already handled in writeTypeArraySchema
   if (schema.metadata.nullable && !Array.isArray(schema.type)) {
     writer.write('.nullable()');
-  }
-}
-
-function writePrimitiveSchema(schema: CastrSchema, writer: CodeBlockWriter): boolean {
-  switch (schema.type) {
-    case 'string':
-      writer.write('z.string()');
-      return true;
-    case 'number':
-    case 'integer':
-      writer.write('z.number()');
-      return true;
-    case 'boolean':
-      writer.write('z.boolean()');
-      return true;
-    case 'null':
-      writer.write('z.null()');
-      return true;
-    default:
-      return false;
   }
 }
 

@@ -2,9 +2,11 @@
 
 This directory contains integration tests that verify OpenAPI specifications survive the complete transformation pipeline:
 
-```
+```text
 OpenAPI Input → buildIR() → IR (CastrDocument) → writeOpenApi() → OpenAPI Output
 ```
+
+it also tests that the Zod output is correct.
 
 ---
 
@@ -19,8 +21,6 @@ OpenAPI Input → buildIR() → IR (CastrDocument) → writeOpenApi() → OpenAP
 | `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior       | 16    |
 | `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification      | 45    |
 | `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification          | 47    |
-
-**Total: 246 tests**
 
 ---
 

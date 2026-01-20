@@ -78,10 +78,7 @@ test('description-in-zod', async () => {
           {
             name: "foo",
             type: "Query",
-            schema: z
-              .union([z.literal(1), z.literal(-2), z.literal(3)])
-              .int()
-              .optional(),
+            schema: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
             description: "foo description",
           },
           {
@@ -116,19 +113,18 @@ test('description-in-zod', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            foo: z
-              .union([z.literal(1), z.literal(-2), z.literal(3)])
-              .int()
-              .optional(),
-            bar: z
-              .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-              .optional(),
-            baz: z
-              .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
-              .optional(),
-            qux: z.string().optional(),
-          }),
+          queryParams: z
+            .object({
+              foo: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
+              bar: z
+                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
+                .optional(),
+              baz: z
+                .union([z.literal(1.3), z.literal(34.1), z.literal(-57.89)])
+                .optional(),
+              qux: z.string().optional(),
+            })
+            .strict(),
         },
       },
     ] as const;

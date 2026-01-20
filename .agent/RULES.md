@@ -183,6 +183,7 @@ pnpm test           # unit tests
 pnpm test:snapshot  # snapshot tests
 pnpm test:gen       # test generated code
 pnpm character      # character tests -- tests the public API as consumed by external users
+pnpm test:transforms # transform tests -- tests the transform pipeline
 ```
 
 All quality gate issues are blocking at ALL times, regardless of where or why they happen. This rule is absolute and unwavering.

@@ -4,7 +4,9 @@ export type NewPet = {
   name: string;
   tag?: string;
 };
-export type Pet = unknown;
+export type Pet = NewPet & {
+  id: number;
+};
 export type Error = {
   code: number;
   message: string;
@@ -68,10 +70,12 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        tags: z.array(z.string()).optional(),
-        limit: z.number().int().optional(),
-      }),
+      queryParams: z
+        .object({
+          tags: z.array(z.string()).optional(),
+          limit: z.number().int().optional(),
+        })
+        .strict(),
     },
     alias: 'findPets',
     description:
@@ -144,9 +148,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        id: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          id: z.number().int(),
+        })
+        .strict(),
     },
     alias: 'find pet by id',
     description: 'Returns a user based on a single ID, if the user does not have access to the pet',
@@ -182,9 +188,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        id: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          id: z.number().int(),
+        })
+        .strict(),
     },
     alias: 'deletePet',
     description: 'deletes a single pet based on the ID supplied',

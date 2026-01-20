@@ -45,6 +45,10 @@
       "cache": false,
       "outputs": []
     },
+    "test:transforms": {
+      "cache": false,
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true

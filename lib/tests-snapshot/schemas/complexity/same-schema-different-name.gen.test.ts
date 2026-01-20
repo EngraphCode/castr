@@ -93,12 +93,14 @@ test('same-schema-different-name - Generation Snapshot', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            differentNameSameSchema: z.enum(["aaa", "bbb", "ccc"]).optional(),
-            anotherDifferentNameWithSlightlyDifferentSchema: z
-              .enum(["aaa", "bbb", "ccc"])
-              .optional(),
-          }),
+          queryParams: z
+            .object({
+              differentNameSameSchema: z.enum(["aaa", "bbb", "ccc"]).optional(),
+              anotherDifferentNameWithSlightlyDifferentSchema: z
+                .enum(["aaa", "bbb", "ccc"])
+                .optional(),
+            })
+            .strict(),
         },
         alias: "postSameSchemaDifferentName",
       },
@@ -122,9 +124,11 @@ test('same-schema-different-name - Generation Snapshot', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            sameSchemaDifferentName: z.enum(["aaa", "bbb", "ccc"]).optional(),
-          }),
+          queryParams: z
+            .object({
+              sameSchemaDifferentName: z.enum(["aaa", "bbb", "ccc"]).optional(),
+            })
+            .strict(),
         },
         alias: "putSameSchemaDifferentName",
       },

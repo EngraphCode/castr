@@ -56,10 +56,7 @@ test('numerical-enum-support', async () => {
           {
             name: "foo",
             type: "Query",
-            schema: z
-              .union([z.literal(1), z.literal(-2), z.literal(3)])
-              .int()
-              .optional(),
+            schema: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
           },
           {
             name: "bar",
@@ -78,15 +75,14 @@ test('numerical-enum-support', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            foo: z
-              .union([z.literal(1), z.literal(-2), z.literal(3)])
-              .int()
-              .optional(),
-            bar: z
-              .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
-              .optional(),
-          }),
+          queryParams: z
+            .object({
+              foo: z.union([z.literal(1), z.literal(-2), z.literal(3)]).optional(),
+              bar: z
+                .union([z.literal(1.2), z.literal(34), z.literal(-56.789)])
+                .optional(),
+            })
+            .strict(),
         },
       },
     ] as const;

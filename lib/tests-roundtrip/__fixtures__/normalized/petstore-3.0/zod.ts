@@ -58,9 +58,11 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        limit: z.number().max(100).int().optional(),
-      }),
+      queryParams: z
+        .object({
+          limit: z.number().max(100).int().optional(),
+        })
+        .strict(),
     },
     alias: 'listPets',
   },
@@ -129,9 +131,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        petId: z.string(),
-      }),
+      pathParams: z
+        .object({
+          petId: z.string(),
+        })
+        .strict(),
     },
     alias: 'showPetById',
   },

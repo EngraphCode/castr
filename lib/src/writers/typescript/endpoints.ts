@@ -205,7 +205,7 @@ function createZodObjectWriter(
           writer.write(',').newLine();
         });
       })
-      .write(')');
+      .write(').strict()');
   };
 }
 

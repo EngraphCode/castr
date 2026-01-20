@@ -14,9 +14,20 @@ export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
 
 function writeTypeBody(schema: CastrSchema): WriterFunction {
   return (writer) => {
+    // Handle references first
     if (schema.$ref) {
       const { componentName } = parseComponentRef(schema.$ref);
       writer.write(componentName);
+      return;
+    }
+
+    // Handle composition schemas (allOf → intersection, oneOf/anyOf → union)
+    if (schema.allOf) {
+      writeIntersection(schema.allOf, writer);
+      return;
+    }
+    if (schema.oneOf ?? schema.anyOf) {
+      writeUnion(schema.oneOf ?? schema.anyOf ?? [], writer);
       return;
     }
 
@@ -37,10 +48,55 @@ function writeTypeBody(schema: CastrSchema): WriterFunction {
       case 'object':
         writeObjectType(schema, writer);
         break;
+      case 'null':
+        writer.write('null');
+        break;
       default:
         writer.write('unknown');
     }
   };
+}
+
+/**
+ * Write intersection type for allOf composition.
+ * allOf: [A, B] → A & B
+ */
+function writeIntersection(schemas: CastrSchema[], writer: CodeBlockWriter): void {
+  if (schemas.length === 0) {
+    writer.write('unknown');
+    return;
+  }
+  schemas.forEach((s, i) => {
+    if (i > 0) {
+      writer.write(' & ');
+    }
+    // Wrap complex types in parentheses for correct precedence
+    const needsParens = Boolean(s.oneOf ?? s.anyOf);
+    if (needsParens) {
+      writer.write('(');
+    }
+    writeTypeBody(s)(writer);
+    if (needsParens) {
+      writer.write(')');
+    }
+  });
+}
+
+/**
+ * Write union type for oneOf/anyOf composition.
+ * oneOf/anyOf: [A, B] → A | B
+ */
+function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
+  if (schemas.length === 0) {
+    writer.write('unknown');
+    return;
+  }
+  schemas.forEach((s, i) => {
+    if (i > 0) {
+      writer.write(' | ');
+    }
+    writeTypeBody(s)(writer);
+  });
 }
 
 function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {

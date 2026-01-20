@@ -119,7 +119,7 @@ test('enum-null', async () => {
     export type Null3 = string;
     export type Null4 = string;
     export type Compound = {
-      field?: unknown;
+      field?: Null1 | Null2 | Null3 | Null4 | string;
     };
     // Zod Schemas
     export const Null1 = z.literal(null);
@@ -128,7 +128,7 @@ test('enum-null', async () => {
     export const Null4 = z.literal(null);
     export const Compound = z
       .object({
-        field: z.union([Null1, Null2, Null3, Null4, z.string()]).optional(),
+        field: z.xor([Null1, Null2, Null3, Null4, z.string()]).optional(),
       })
       .strict();
     // Endpoints

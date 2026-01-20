@@ -172,22 +172,24 @@ test('array-default-values', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            "array-empty": z.array(z.string()).optional(),
-            "array-string": z.array(z.string()).optional(),
-            "array-number": z.array(z.number()).optional(),
-            "array-object": z
-              .array(
-                z
-                  .object({
-                    foo: z.string().optional(),
-                  })
-                  .strict(),
-              )
-              .optional(),
-            "array-ref-object": z.array(MyComponent).optional(),
-            "array-ref-enum": z.array(MyEnum).optional(),
-          }),
+          queryParams: z
+            .object({
+              "array-empty": z.array(z.string()).optional(),
+              "array-string": z.array(z.string()).optional(),
+              "array-number": z.array(z.number()).optional(),
+              "array-object": z
+                .array(
+                  z
+                    .object({
+                      foo: z.string().optional(),
+                    })
+                    .strict(),
+                )
+                .optional(),
+              "array-ref-object": z.array(MyComponent).optional(),
+              "array-ref-enum": z.array(MyEnum).optional(),
+            })
+            .strict(),
         },
       },
     ] as const;

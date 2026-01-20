@@ -79,7 +79,7 @@ test('allOf-infer-required-only-item', async () => {
       email?: string;
     };
     export type userResponse = {
-      user?: unknown;
+      user?: user & unknown;
     };
     // Zod Schemas
     export const user = z

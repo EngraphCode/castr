@@ -42,12 +42,14 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        callbackUrl: z
-          .string()
-          .url()
-          .meta({ examples: ['https://tonys-server.com'] }),
-      }),
+      queryParams: z
+        .object({
+          callbackUrl: z
+            .string()
+            .url()
+            .meta({ examples: ['https://tonys-server.com'] }),
+        })
+        .strict(),
     },
     description: 'subscribes a client to receive out-of-band data',
   },

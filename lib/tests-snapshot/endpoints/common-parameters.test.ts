@@ -78,10 +78,12 @@ test('common-parameters', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            petId: z.string(),
-            otherParam: paramRef.optional(),
-          }),
+          queryParams: z
+            .object({
+              petId: z.string(),
+              otherParam: paramRef.optional(),
+            })
+            .strict(),
         },
       },
       {
@@ -119,12 +121,14 @@ test('common-parameters', async () => {
           },
         },
         request: {
-          queryParams: z.object({
-            petId: z.string(),
-            otherParam: paramRef.optional(),
-            petId: z.number(),
-            personId: z.number(),
-          }),
+          queryParams: z
+            .object({
+              petId: z.string(),
+              otherParam: paramRef.optional(),
+              petId: z.number(),
+              personId: z.number(),
+            })
+            .strict(),
         },
       },
     ] as const;

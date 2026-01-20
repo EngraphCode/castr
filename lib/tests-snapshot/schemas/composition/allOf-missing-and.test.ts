@@ -50,7 +50,7 @@ test('allOf-missing-and', async () => {
     export type test3 = {
       text3?: boolean;
     };
-    export type test4 = unknown;
+    export type test4 = test1 & test2 & test3;
     // Zod Schemas
     export const test1 = z
       .object({

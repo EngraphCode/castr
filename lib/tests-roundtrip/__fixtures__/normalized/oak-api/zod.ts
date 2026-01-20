@@ -1,6 +1,163 @@
 import { z } from 'zod';
 // Type Definitions
-export type SequenceUnitsResponseSchema = unknown[];
+export type SequenceUnitsResponseSchema =
+  | {
+      /** The year group */ year: number | string;
+      /** An optional alternative title for the year sequence */ title?: string;
+      /** A list of units that make up a full sequence, grouped by year. */ units:
+        | {
+            /** The title of the unit */ unitTitle: string;
+            /** The position of the unit within the sequence. */ unitOrder: number;
+            /** The unique slug identifier for the unit */ unitOptions: {
+              unitTitle: string;
+              unitSlug: string;
+            }[];
+            /** The categories (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ categories?: {
+              /** The title of the category */ categoryTitle: string;
+              /** The unique identifier for the category */ categorySlug?: string;
+            }[];
+            /** A list of threads (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ threads?: {
+              /** The title of the category */ threadTitle: string;
+              /** The unique identifier for the thread */ threadSlug: string;
+              /** Deprecated */ order: number;
+            }[];
+          }
+        | {
+            unitTitle: string;
+            unitOrder: number;
+            /** The unique slug identifier for the unit */ unitSlug: string;
+            categories?: {
+              /** The title of the category */ categoryTitle: string;
+              /** The unique identifier for the category */ categorySlug?: string;
+            }[];
+            threads?: {
+              /** The title of the category */ threadTitle: string;
+              /** The unique identifier for the thread */ threadSlug: string;
+              /** Deprecated */ order: number;
+            }[];
+          }[];
+    }
+  | {
+      year: number;
+      title?: string;
+      /** Only used in secondary science. Contains a full year's unit sequences based on which subject is being studied at KS4. */ examSubjects:
+        | {
+            examSubjectTitle: string;
+            examSubjectSlug?: string;
+            tiers: {
+              /** The title of the tier */ tierTitle: string;
+              /** The tier identifier */ tierSlug: string;
+              units:
+                | {
+                    /** The title of the unit */ unitTitle: string;
+                    /** The position of the unit within the sequence. */ unitOrder: number;
+                    /** The unique slug identifier for the unit */ unitOptions: {
+                      unitTitle: string;
+                      unitSlug: string;
+                    }[];
+                    /** The categories (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ categories?: {
+                      /** The title of the category */ categoryTitle: string;
+                      /** The unique identifier for the category */ categorySlug?: string;
+                    }[];
+                    /** A list of threads (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ threads?: {
+                      /** The title of the category */ threadTitle: string;
+                      /** The unique identifier for the thread */ threadSlug: string;
+                      /** Deprecated */ order: number;
+                    }[];
+                  }
+                | {
+                    unitTitle: string;
+                    unitOrder: number;
+                    /** The unique slug identifier for the unit */ unitSlug: string;
+                    categories?: {
+                      /** The title of the category */ categoryTitle: string;
+                      /** The unique identifier for the category */ categorySlug?: string;
+                    }[];
+                    threads?: {
+                      /** The title of the category */ threadTitle: string;
+                      /** The unique identifier for the thread */ threadSlug: string;
+                      /** Deprecated */ order: number;
+                    }[];
+                  }[];
+            }[];
+          }
+        | {
+            examSubjectTitle: string;
+            examSubjectSlug?: string;
+            units:
+              | {
+                  /** The title of the unit */ unitTitle: string;
+                  /** The position of the unit within the sequence. */ unitOrder: number;
+                  /** The unique slug identifier for the unit */ unitOptions: {
+                    unitTitle: string;
+                    unitSlug: string;
+                  }[];
+                  /** The categories (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ categories?: {
+                    /** The title of the category */ categoryTitle: string;
+                    /** The unique identifier for the category */ categorySlug?: string;
+                  }[];
+                  /** A list of threads (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ threads?: {
+                    /** The title of the category */ threadTitle: string;
+                    /** The unique identifier for the thread */ threadSlug: string;
+                    /** Deprecated */ order: number;
+                  }[];
+                }
+              | {
+                  unitTitle: string;
+                  unitOrder: number;
+                  /** The unique slug identifier for the unit */ unitSlug: string;
+                  categories?: {
+                    /** The title of the category */ categoryTitle: string;
+                    /** The unique identifier for the category */ categorySlug?: string;
+                  }[];
+                  threads?: {
+                    /** The title of the category */ threadTitle: string;
+                    /** The unique identifier for the thread */ threadSlug: string;
+                    /** Deprecated */ order: number;
+                  }[];
+                }[];
+          }[];
+    }
+  | {
+      year: number;
+      title?: string;
+      tiers: {
+        /** The title of the tier */ tierTitle: string;
+        /** The tier identifier */ tierSlug: string;
+        units:
+          | {
+              /** The title of the unit */ unitTitle: string;
+              /** The position of the unit within the sequence. */ unitOrder: number;
+              /** The unique slug identifier for the unit */ unitOptions: {
+                unitTitle: string;
+                unitSlug: string;
+              }[];
+              /** The categories (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ categories?: {
+                /** The title of the category */ categoryTitle: string;
+                /** The unique identifier for the category */ categorySlug?: string;
+              }[];
+              /** A list of threads (if any) that are assigned to the unit. If the unit does not have any categories, this property is omitted. */ threads?: {
+                /** The title of the category */ threadTitle: string;
+                /** The unique identifier for the thread */ threadSlug: string;
+                /** Deprecated */ order: number;
+              }[];
+            }
+          | {
+              unitTitle: string;
+              unitOrder: number;
+              /** The unique slug identifier for the unit */ unitSlug: string;
+              categories?: {
+                /** The title of the category */ categoryTitle: string;
+                /** The unique identifier for the category */ categorySlug?: string;
+              }[];
+              threads?: {
+                /** The title of the category */ threadTitle: string;
+                /** The unique identifier for the thread */ threadSlug: string;
+                /** Deprecated */ order: number;
+              }[];
+            }[];
+      }[];
+    }[];
 export type TranscriptResponseSchema = {
   /** The transcript for the lesson video */ transcript: string;
   /** The contents of the .vtt file for the lesson video, which maps captions to video timestamps. */ vtt: string;
@@ -125,20 +282,458 @@ export type AllKeyStageAndSubjectUnitsResponseSchema = {
   }[];
 }[];
 export type QuestionForLessonsResponseSchema = {
-  /** The starter quiz questions - which test prior knowledge */ starterQuiz: unknown[];
-  /** The exit quiz questions - which test on the knowledge learned in the lesson */ exitQuiz: unknown[];
+  /** The starter quiz questions - which test prior knowledge */ starterQuiz: {
+    /** The question text */ question: string;
+    /** The type of quiz question which could be one of the following:
+            - multiple-choice
+            - order
+            - match
+            - explanatory-text
+            - short-answer */ questionType: string | string | string | string;
+    questionImage?: {
+      url: string;
+      width: number;
+      height: number;
+      alt?: string;
+      /** Supplementary text for the image, if any */ text?: string;
+      attribution?: string;
+    };
+  } & (
+    | {
+        questionType: string;
+        answers: {
+          /** Whether the multiple choice question response is the correct answer (false) or is a distractor (true) */ distractor: boolean;
+        } & (
+          | {
+              /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+              /** Quiz question answer */ content: string;
+            }
+          | {
+              type: string;
+              content: {
+                url: string;
+                width: number;
+                height: number;
+                alt?: string;
+                /** Supplementary text for the image, if any */ text?: string;
+                attribution?: string;
+              };
+            }
+        )[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Matching options (LHS) */ matchOption: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+          /** Matching options (RHS), indicating the correct choice */ correctChoice: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Indicates the correct ordering of the response */ order: number;
+        } & {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+  )[];
+  /** The exit quiz questions - which test on the knowledge learned in the lesson */ exitQuiz: {
+    /** The question text */ question: string;
+    /** The type of quiz question which could be one of the following:
+            - multiple-choice
+            - order
+            - match
+            - explanatory-text
+            - short-answer */ questionType: string | string | string | string;
+    questionImage?: {
+      url: string;
+      width: number;
+      height: number;
+      alt?: string;
+      /** Supplementary text for the image, if any */ text?: string;
+      attribution?: string;
+    };
+  } & (
+    | {
+        questionType: string;
+        answers: {
+          /** Whether the multiple choice question response is the correct answer (false) or is a distractor (true) */ distractor: boolean;
+        } & (
+          | {
+              /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+              /** Quiz question answer */ content: string;
+            }
+          | {
+              type: string;
+              content: {
+                url: string;
+                width: number;
+                height: number;
+                alt?: string;
+                /** Supplementary text for the image, if any */ text?: string;
+                attribution?: string;
+              };
+            }
+        )[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Matching options (LHS) */ matchOption: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+          /** Matching options (RHS), indicating the correct choice */ correctChoice: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Indicates the correct ordering of the response */ order: number;
+        } & {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+  )[];
 };
 export type QuestionsForSequenceResponseSchema = {
   /** The lesson slug identifier */ lessonSlug: string;
   /** The title of the lesson */ lessonTitle: string;
-  /** The starter quiz questions - which test prior knowledge */ starterQuiz: unknown[];
-  /** The exit quiz questions - which test on the knowledge learned in the lesson */ exitQuiz: unknown[];
+  /** The starter quiz questions - which test prior knowledge */ starterQuiz: {
+    /** The question text */ question: string;
+    /** The type of quiz question which could be one of the following:
+            - multiple-choice
+            - order
+            - match
+            - explanatory-text
+            - short-answer */ questionType: string | string | string | string;
+    questionImage?: {
+      url: string;
+      width: number;
+      height: number;
+      alt?: string;
+      /** Supplementary text for the image, if any */ text?: string;
+      attribution?: string;
+    };
+  } & (
+    | {
+        questionType: string;
+        answers: {
+          /** Whether the multiple choice question response is the correct answer (false) or is a distractor (true) */ distractor: boolean;
+        } & (
+          | {
+              /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+              /** Quiz question answer */ content: string;
+            }
+          | {
+              type: string;
+              content: {
+                url: string;
+                width: number;
+                height: number;
+                alt?: string;
+                /** Supplementary text for the image, if any */ text?: string;
+                attribution?: string;
+              };
+            }
+        )[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Matching options (LHS) */ matchOption: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+          /** Matching options (RHS), indicating the correct choice */ correctChoice: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Indicates the correct ordering of the response */ order: number;
+        } & {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+  )[];
+  /** The exit quiz questions - which test on the knowledge learned in the lesson */ exitQuiz: {
+    /** The question text */ question: string;
+    /** The type of quiz question which could be one of the following:
+            - multiple-choice
+            - order
+            - match
+            - explanatory-text
+            - short-answer */ questionType: string | string | string | string;
+    questionImage?: {
+      url: string;
+      width: number;
+      height: number;
+      alt?: string;
+      /** Supplementary text for the image, if any */ text?: string;
+      attribution?: string;
+    };
+  } & (
+    | {
+        questionType: string;
+        answers: {
+          /** Whether the multiple choice question response is the correct answer (false) or is a distractor (true) */ distractor: boolean;
+        } & (
+          | {
+              /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+              /** Quiz question answer */ content: string;
+            }
+          | {
+              type: string;
+              content: {
+                url: string;
+                width: number;
+                height: number;
+                alt?: string;
+                /** Supplementary text for the image, if any */ text?: string;
+                attribution?: string;
+              };
+            }
+        )[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Matching options (LHS) */ matchOption: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+          /** Matching options (RHS), indicating the correct choice */ correctChoice: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Indicates the correct ordering of the response */ order: number;
+        } & {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+  )[];
 }[];
 export type QuestionsForKeyStageAndSubjectResponseSchema = {
   /** The lesson slug identifier */ lessonSlug: string;
   /** The title of the lesson */ lessonTitle: string;
-  /** The starter quiz questions - which test prior knowledge */ starterQuiz: unknown[];
-  /** The exit quiz questions - which test on the knowledge learned in the lesson */ exitQuiz: unknown[];
+  /** The starter quiz questions - which test prior knowledge */ starterQuiz: {
+    /** The question text */ question: string;
+    /** The type of quiz question which could be one of the following:
+            - multiple-choice
+            - order
+            - match
+            - explanatory-text
+            - short-answer */ questionType: string | string | string | string;
+    questionImage?: {
+      url: string;
+      width: number;
+      height: number;
+      alt?: string;
+      /** Supplementary text for the image, if any */ text?: string;
+      attribution?: string;
+    };
+  } & (
+    | {
+        questionType: string;
+        answers: {
+          /** Whether the multiple choice question response is the correct answer (false) or is a distractor (true) */ distractor: boolean;
+        } & (
+          | {
+              /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+              /** Quiz question answer */ content: string;
+            }
+          | {
+              type: string;
+              content: {
+                url: string;
+                width: number;
+                height: number;
+                alt?: string;
+                /** Supplementary text for the image, if any */ text?: string;
+                attribution?: string;
+              };
+            }
+        )[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Matching options (LHS) */ matchOption: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+          /** Matching options (RHS), indicating the correct choice */ correctChoice: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Indicates the correct ordering of the response */ order: number;
+        } & {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+  )[];
+  /** The exit quiz questions - which test on the knowledge learned in the lesson */ exitQuiz: {
+    /** The question text */ question: string;
+    /** The type of quiz question which could be one of the following:
+            - multiple-choice
+            - order
+            - match
+            - explanatory-text
+            - short-answer */ questionType: string | string | string | string;
+    questionImage?: {
+      url: string;
+      width: number;
+      height: number;
+      alt?: string;
+      /** Supplementary text for the image, if any */ text?: string;
+      attribution?: string;
+    };
+  } & (
+    | {
+        questionType: string;
+        answers: {
+          /** Whether the multiple choice question response is the correct answer (false) or is a distractor (true) */ distractor: boolean;
+        } & (
+          | {
+              /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+              /** Quiz question answer */ content: string;
+            }
+          | {
+              type: string;
+              content: {
+                url: string;
+                width: number;
+                height: number;
+                alt?: string;
+                /** Supplementary text for the image, if any */ text?: string;
+                attribution?: string;
+              };
+            }
+        )[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Matching options (LHS) */ matchOption: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+          /** Matching options (RHS), indicating the correct choice */ correctChoice: {
+            /** The format of the quiz answer 
+                    Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+            /** Quiz question answer */ content: string;
+          };
+        }[];
+      }
+    | {
+        questionType: string;
+        answers: {
+          /** Indicates the correct ordering of the response */ order: number;
+        } & {
+          /** The format of the quiz answer 
+                Note: currently, we are only returning text-based quiz answers. In the future, we will also have image-based questions available. */ type: string;
+          /** Quiz question answer */ content: string;
+        }[];
+      }
+  )[];
 }[];
 export type LessonSummaryResponseSchema = {
   /** The lesson title */ lessonTitle: string;
@@ -163,8 +758,17 @@ export type LessonSummaryResponseSchema = {
   /** Helpful teaching tips for the lesson */ teacherTips: {
     teacherTip: string;
   }[];
-  /** Full guidance about the types of lesson content for the teacher to consider (where appropriate) */ contentGuidance: unknown;
-  /** The ID of the supervision level for the identified type of content. See ‘What are the types of content guidance?’ for more information. */ supervisionLevel: unknown;
+  /** Full guidance about the types of lesson content for the teacher to consider (where appropriate) */ contentGuidance:
+    | {
+        /** Category of content guidance */ contentGuidanceArea: string;
+        /** The ID of the supervision level for the identified type of content. See ‘What are the types of content guidance?’ for more information. */ supervisionlevel_id: number;
+        /** Content guidance label */ contentGuidanceLabel: string;
+        /** A detailed description of the type of content that we suggest needs guidance. */ contentGuidanceDescription: string;
+      }[]
+    | null;
+  /** The ID of the supervision level for the identified type of content. See ‘What are the types of content guidance?’ for more information. */ supervisionLevel:
+    | string
+    | null;
   /** Whether the lesson currently has any downloadable assets availableNote: this field reflects the current availability of downloadable assets, which reflects the availability of early-release content available for the hackathon. All lessons will eventually have downloadable assets available. */ downloadsAvailable: boolean;
 };
 export type LessonSearchResponseSchema = {
@@ -174,7 +778,7 @@ export type LessonSearchResponseSchema = {
   /** The units that the lesson is part of. See sample response below */ units: {
     unitSlug: string;
     unitTitle: string;
-    examBoardTitle: unknown;
+    examBoardTitle: string | null;
     keyStageSlug: string;
     subjectSlug: string;
   }[];
@@ -183,7 +787,7 @@ export type UnitSummaryResponseSchema = {
   /** The unit slug identifier */ unitSlug: string;
   /** The unit title */ unitTitle: string;
   /** The slug identifier for the year to which the unit belongs */ yearSlug: string;
-  /** The year to which the unit belongs */ year: unknown;
+  /** The year to which the unit belongs */ year: number | string;
   /** The slug identifier for the phase to which the unit belongs */ phaseSlug: string;
   /** The subject identifier */ subjectSlug: string;
   /** The slug identifier for the the key stage to which the unit belongs */ keyStageSlug: string;
@@ -1461,7 +2065,7 @@ export const QuestionForLessonsResponseSchema = z
           })
           .strict()
           .and(
-            z.union([
+            z.xor([
               z
                 .object({
                   questionType: z.literal('multiple-choice'),
@@ -1619,7 +2223,7 @@ export const QuestionForLessonsResponseSchema = z
           })
           .strict()
           .and(
-            z.union([
+            z.xor([
               z
                 .object({
                   questionType: z.literal('multiple-choice'),
@@ -1815,7 +2419,7 @@ export const QuestionsForSequenceResponseSchema = z
               })
               .strict()
               .and(
-                z.union([
+                z.xor([
                   z
                     .object({
                       questionType: z.literal('multiple-choice'),
@@ -1982,7 +2586,7 @@ export const QuestionsForSequenceResponseSchema = z
               })
               .strict()
               .and(
-                z.union([
+                z.xor([
                   z
                     .object({
                       questionType: z.literal('multiple-choice'),
@@ -2200,7 +2804,7 @@ export const QuestionsForKeyStageAndSubjectResponseSchema = z
               })
               .strict()
               .and(
-                z.union([
+                z.xor([
                   z
                     .object({
                       questionType: z.literal('multiple-choice'),
@@ -2367,7 +2971,7 @@ export const QuestionsForKeyStageAndSubjectResponseSchema = z
               })
               .strict()
               .and(
-                z.union([
+                z.xor([
                   z
                     .object({
                       questionType: z.literal('multiple-choice'),
@@ -2644,13 +3248,13 @@ export const LessonSummaryResponseSchema = z
             })
             .strict(),
         ),
-        z.unknown(),
+        z.null(),
       ])
       .meta({
         description:
           'Full guidance about the types of lesson content for the teacher to consider (where appropriate)',
       }),
-    supervisionLevel: z.union([z.string(), z.unknown()]).meta({
+    supervisionLevel: z.union([z.string(), z.null()]).meta({
       description:
         'The ID of the supervision level for the identified type of content. See ‘What are the types of content guidance?’ for more information.',
     }),
@@ -2728,7 +3332,7 @@ export const LessonSearchResponseSchema = z
               .object({
                 unitSlug: z.string(),
                 unitTitle: z.string(),
-                examBoardTitle: z.union([z.string(), z.unknown()]),
+                examBoardTitle: z.union([z.string(), z.null()]),
                 keyStageSlug: z.string(),
                 subjectSlug: z.string(),
               })
@@ -3244,61 +3848,65 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
-          description:
-            "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
-          examples: ['ks1'],
-        }),
-        subject: z
-          .enum([
-            'art',
-            'citizenship',
-            'computing',
-            'cooking-nutrition',
-            'design-technology',
-            'english',
-            'french',
-            'geography',
-            'german',
-            'history',
-            'maths',
-            'music',
-            'physical-education',
-            'religious-education',
-            'rshe-pshe',
-            'science',
-            'spanish',
-          ])
-          .meta({
+      pathParams: z
+        .object({
+          keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
             description:
-              "Subject slug to search by, e.g. 'science' - note that casing is important here (always lowercase)",
-            examples: ['english'],
+              "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
+            examples: ['ks1'],
           }),
-      }),
-      queryParams: z.object({
-        type: z
-          .enum([
-            'slideDeck',
-            'exitQuiz',
-            'exitQuizAnswers',
-            'starterQuiz',
-            'starterQuizAnswers',
-            'supplementaryResource',
-            'video',
-            'worksheet',
-            'worksheetAnswers',
-          ])
-          .optional()
-          .meta({ examples: ['slideDeck'] }),
-        unit: z
-          .string()
-          .optional()
-          .meta({
-            description: 'Optional unit slug to additionally filter by',
-            examples: ['word-class'],
-          }),
-      }),
+          subject: z
+            .enum([
+              'art',
+              'citizenship',
+              'computing',
+              'cooking-nutrition',
+              'design-technology',
+              'english',
+              'french',
+              'geography',
+              'german',
+              'history',
+              'maths',
+              'music',
+              'physical-education',
+              'religious-education',
+              'rshe-pshe',
+              'science',
+              'spanish',
+            ])
+            .meta({
+              description:
+                "Subject slug to search by, e.g. 'science' - note that casing is important here (always lowercase)",
+              examples: ['english'],
+            }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          type: z
+            .enum([
+              'slideDeck',
+              'exitQuiz',
+              'exitQuizAnswers',
+              'starterQuiz',
+              'starterQuizAnswers',
+              'supplementaryResource',
+              'video',
+              'worksheet',
+              'worksheetAnswers',
+            ])
+            .optional()
+            .meta({ examples: ['slideDeck'] }),
+          unit: z
+            .string()
+            .optional()
+            .meta({
+              description: 'Optional unit slug to additionally filter by',
+              examples: ['word-class'],
+            }),
+        })
+        .strict(),
     },
     alias: 'getAssets-getSubjectAssets',
     description:
@@ -3399,63 +4007,67 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
-          description:
-            "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
-          examples: ['ks1'],
-        }),
-        subject: z
-          .enum([
-            'art',
-            'citizenship',
-            'computing',
-            'cooking-nutrition',
-            'design-technology',
-            'english',
-            'french',
-            'geography',
-            'german',
-            'history',
-            'maths',
-            'music',
-            'physical-education',
-            'religious-education',
-            'rshe-pshe',
-            'science',
-            'spanish',
-          ])
-          .meta({
+      pathParams: z
+        .object({
+          keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
             description:
-              "Subject slug to filter by, e.g. 'english' - note that casing is important here, and should be lowercase",
-            examples: ['english'],
+              "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
+            examples: ['ks1'],
           }),
-      }),
-      queryParams: z.object({
-        unit: z
-          .string()
-          .optional()
-          .meta({
-            description: 'Optional unit slug to additionally filter by',
-            examples: ['word-class'],
-          }),
-        offset: z
-          .number()
-          .optional()
-          .meta({
-            description:
-              'Limit the number of lessons returned per unit. Units with zero lessons after limiting are omitted.',
-            examples: [50],
-          }),
-        limit: z
-          .number()
-          .max(100)
-          .optional()
-          .meta({
-            description: 'Offset applied to lessons within each unit (not to the unit list).',
-            examples: [10],
-          }),
-      }),
+          subject: z
+            .enum([
+              'art',
+              'citizenship',
+              'computing',
+              'cooking-nutrition',
+              'design-technology',
+              'english',
+              'french',
+              'geography',
+              'german',
+              'history',
+              'maths',
+              'music',
+              'physical-education',
+              'religious-education',
+              'rshe-pshe',
+              'science',
+              'spanish',
+            ])
+            .meta({
+              description:
+                "Subject slug to filter by, e.g. 'english' - note that casing is important here, and should be lowercase",
+              examples: ['english'],
+            }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          unit: z
+            .string()
+            .optional()
+            .meta({
+              description: 'Optional unit slug to additionally filter by',
+              examples: ['word-class'],
+            }),
+          offset: z
+            .number()
+            .optional()
+            .meta({
+              description:
+                'Limit the number of lessons returned per unit. Units with zero lessons after limiting are omitted.',
+              examples: [50],
+            }),
+          limit: z
+            .number()
+            .max(100)
+            .optional()
+            .meta({
+              description: 'Offset applied to lessons within each unit (not to the unit list).',
+              examples: [10],
+            }),
+        })
+        .strict(),
     },
     alias: 'getKeyStageSubjectLessons-getKeyStageSubjectLessons',
     description:
@@ -3538,49 +4150,53 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
-          description:
-            "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
-          examples: ['ks1'],
-        }),
-        subject: z
-          .enum([
-            'art',
-            'citizenship',
-            'computing',
-            'cooking-nutrition',
-            'design-technology',
-            'english',
-            'french',
-            'geography',
-            'german',
-            'history',
-            'maths',
-            'music',
-            'physical-education',
-            'religious-education',
-            'rshe-pshe',
-            'science',
-            'spanish',
-          ])
-          .meta({
+      pathParams: z
+        .object({
+          keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
             description:
-              "Subject slug to search by, e.g. 'science' - note that casing is important here",
-            examples: ['art'],
+              "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
+            examples: ['ks1'],
           }),
-      }),
-      queryParams: z.object({
-        offset: z
-          .number()
-          .optional()
-          .meta({ examples: [50] }),
-        limit: z
-          .number()
-          .max(100)
-          .optional()
-          .meta({ examples: [10] }),
-      }),
+          subject: z
+            .enum([
+              'art',
+              'citizenship',
+              'computing',
+              'cooking-nutrition',
+              'design-technology',
+              'english',
+              'french',
+              'geography',
+              'german',
+              'history',
+              'maths',
+              'music',
+              'physical-education',
+              'religious-education',
+              'rshe-pshe',
+              'science',
+              'spanish',
+            ])
+            .meta({
+              description:
+                "Subject slug to search by, e.g. 'science' - note that casing is important here",
+              examples: ['art'],
+            }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          offset: z
+            .number()
+            .optional()
+            .meta({ examples: [50] }),
+          limit: z
+            .number()
+            .max(100)
+            .optional()
+            .meta({ examples: [10] }),
+        })
+        .strict(),
     },
     alias: 'getQuestions-getQuestionsForKeyStageAndSubject',
     description:
@@ -3641,37 +4257,39 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
-          description: "Key stage slug to filter by, e.g. 'ks2'",
-          examples: ['ks1'],
-        }),
-        subject: z
-          .enum([
-            'art',
-            'citizenship',
-            'computing',
-            'cooking-nutrition',
-            'design-technology',
-            'english',
-            'french',
-            'geography',
-            'german',
-            'history',
-            'maths',
-            'music',
-            'physical-education',
-            'religious-education',
-            'rshe-pshe',
-            'science',
-            'spanish',
-          ])
-          .meta({
-            description:
-              "Subject slug to search by, e.g. 'science' - note that casing is important here (always lowercase)",
-            examples: ['art'],
+      pathParams: z
+        .object({
+          keyStage: z.enum(['ks1', 'ks2', 'ks3', 'ks4']).meta({
+            description: "Key stage slug to filter by, e.g. 'ks2'",
+            examples: ['ks1'],
           }),
-      }),
+          subject: z
+            .enum([
+              'art',
+              'citizenship',
+              'computing',
+              'cooking-nutrition',
+              'design-technology',
+              'english',
+              'french',
+              'geography',
+              'german',
+              'history',
+              'maths',
+              'music',
+              'physical-education',
+              'religious-education',
+              'rshe-pshe',
+              'science',
+              'spanish',
+            ])
+            .meta({
+              description:
+                "Subject slug to search by, e.g. 'science' - note that casing is important here (always lowercase)",
+              examples: ['art'],
+            }),
+        })
+        .strict(),
     },
     alias: 'getAllKeyStageAndSubjectUnits-getAllKeyStageAndSubjectUnits',
     description:
@@ -3721,28 +4339,32 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        lesson: z.string().meta({
-          description: 'The lesson slug identifier',
-          examples: ['child-workers-in-the-victorian-era'],
-        }),
-      }),
-      queryParams: z.object({
-        type: z
-          .enum([
-            'slideDeck',
-            'exitQuiz',
-            'exitQuizAnswers',
-            'starterQuiz',
-            'starterQuizAnswers',
-            'supplementaryResource',
-            'video',
-            'worksheet',
-            'worksheetAnswers',
-          ])
-          .optional()
-          .meta({ examples: ['slideDeck'] }),
-      }),
+      pathParams: z
+        .object({
+          lesson: z.string().meta({
+            description: 'The lesson slug identifier',
+            examples: ['child-workers-in-the-victorian-era'],
+          }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          type: z
+            .enum([
+              'slideDeck',
+              'exitQuiz',
+              'exitQuizAnswers',
+              'starterQuiz',
+              'starterQuizAnswers',
+              'supplementaryResource',
+              'video',
+              'worksheet',
+              'worksheetAnswers',
+            ])
+            .optional()
+            .meta({ examples: ['slideDeck'] }),
+        })
+        .strict(),
     },
     alias: 'getAssets-getLessonAssets',
     description:
@@ -3791,25 +4413,27 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        lesson: z.string().meta({
-          description: 'The lesson slug',
-          examples: ['child-workers-in-the-victorian-era'],
-        }),
-        type: z
-          .enum([
-            'slideDeck',
-            'exitQuiz',
-            'exitQuizAnswers',
-            'starterQuiz',
-            'starterQuizAnswers',
-            'supplementaryResource',
-            'video',
-            'worksheet',
-            'worksheetAnswers',
-          ])
-          .meta({ examples: ['slideDeck'] }),
-      }),
+      pathParams: z
+        .object({
+          lesson: z.string().meta({
+            description: 'The lesson slug',
+            examples: ['child-workers-in-the-victorian-era'],
+          }),
+          type: z
+            .enum([
+              'slideDeck',
+              'exitQuiz',
+              'exitQuizAnswers',
+              'starterQuiz',
+              'starterQuizAnswers',
+              'supplementaryResource',
+              'video',
+              'worksheet',
+              'worksheetAnswers',
+            ])
+            .meta({ examples: ['slideDeck'] }),
+        })
+        .strict(),
     },
     alias: 'getAssets-getLessonAsset',
     description:
@@ -3839,12 +4463,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        lesson: z.string().meta({
-          description: 'The lesson slug identifier',
-          examples: ['imagining-you-are-the-characters-the-three-billy-goats-gruff'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          lesson: z.string().meta({
+            description: 'The lesson slug identifier',
+            examples: ['imagining-you-are-the-characters-the-three-billy-goats-gruff'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getQuestions-getQuestionsForLessons',
     description:
@@ -3874,12 +4500,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        lesson: z.string().meta({
-          description: 'The slug of the lesson',
-          examples: ['joining-using-and'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          lesson: z.string().meta({
+            description: 'The slug of the lesson',
+            examples: ['joining-using-and'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getLessons-getLesson',
     description: 'This endpoint returns a summary for a given lesson',
@@ -3908,12 +4536,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        lesson: z.string().meta({
-          description: 'The slug of the lesson',
-          examples: ['checking-understanding-of-basic-transformations'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          lesson: z.string().meta({
+            description: 'The slug of the lesson',
+            examples: ['checking-understanding-of-basic-transformations'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getLessonTranscript-getLessonTranscript',
     description:
@@ -4014,53 +4644,55 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        q: z.string().meta({
-          description: 'Search query text snippet',
-          examples: ['gothic'],
-        }),
-        keyStage: z
-          .enum(['ks1', 'ks2', 'ks3', 'ks4'])
-          .optional()
-          .meta({
-            description:
-              "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
-            examples: ['ks2'],
+      queryParams: z
+        .object({
+          q: z.string().meta({
+            description: 'Search query text snippet',
+            examples: ['gothic'],
           }),
-        subject: z
-          .enum([
-            'art',
-            'citizenship',
-            'computing',
-            'cooking-nutrition',
-            'design-technology',
-            'english',
-            'french',
-            'geography',
-            'german',
-            'history',
-            'maths',
-            'music',
-            'physical-education',
-            'religious-education',
-            'rshe-pshe',
-            'science',
-            'spanish',
-          ])
-          .optional()
-          .meta({
-            description:
-              "Subject slug to filter by, e.g. 'english' - note that casing is important here, and should be lowercase",
-            examples: ['english'],
-          }),
-        unit: z
-          .string()
-          .optional()
-          .meta({
-            description: 'Optional unit slug to additionally filter by',
-            examples: ['Gothic poetry'],
-          }),
-      }),
+          keyStage: z
+            .enum(['ks1', 'ks2', 'ks3', 'ks4'])
+            .optional()
+            .meta({
+              description:
+                "Key stage slug to filter by, e.g. 'ks2' - note that casing is important here, and should be lowercase",
+              examples: ['ks2'],
+            }),
+          subject: z
+            .enum([
+              'art',
+              'citizenship',
+              'computing',
+              'cooking-nutrition',
+              'design-technology',
+              'english',
+              'french',
+              'geography',
+              'german',
+              'history',
+              'maths',
+              'music',
+              'physical-education',
+              'religious-education',
+              'rshe-pshe',
+              'science',
+              'spanish',
+            ])
+            .optional()
+            .meta({
+              description:
+                "Subject slug to filter by, e.g. 'english' - note that casing is important here, and should be lowercase",
+              examples: ['english'],
+            }),
+          unit: z
+            .string()
+            .optional()
+            .meta({
+              description: 'Optional unit slug to additionally filter by',
+              examples: ['Gothic poetry'],
+            }),
+        })
+        .strict(),
     },
     alias: 'getLessons-searchByTextSimilarity',
     description:
@@ -4090,12 +4722,14 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        q: z.string().meta({
-          description: 'A snippet of text to search for in the lesson video transcripts',
-          examples: ['Who were the romans?'],
-        }),
-      }),
+      queryParams: z
+        .object({
+          q: z.string().meta({
+            description: 'A snippet of text to search for in the lesson video transcripts',
+            examples: ['Who were the romans?'],
+          }),
+        })
+        .strict(),
     },
     alias: 'searchTranscripts-searchTranscripts',
     description:
@@ -4163,41 +4797,45 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        sequence: z.string().meta({
-          description:
-            'The sequence slug identifier, including the key stage 4 option where relevant.',
-          examples: ['english-primary'],
-        }),
-      }),
-      queryParams: z.object({
-        year: z
-          .number()
-          .optional()
-          .meta({
+      pathParams: z
+        .object({
+          sequence: z.string().meta({
             description:
-              'The year group to filter by. For the physical-education-primary sequence, a value of all-years can also be used.',
-            examples: [3],
+              'The sequence slug identifier, including the key stage 4 option where relevant.',
+            examples: ['english-primary'],
           }),
-        type: z
-          .enum([
-            'slideDeck',
-            'exitQuiz',
-            'exitQuizAnswers',
-            'starterQuiz',
-            'starterQuizAnswers',
-            'supplementaryResource',
-            'video',
-            'worksheet',
-            'worksheetAnswers',
-          ])
-          .optional()
-          .meta({
-            description:
-              'Optional asset type specifier\n\nAvailable values: slideDeck, exitQuiz, exitQuizAnswers, starterQuiz, starterQuizAnswers, supplementaryResource, video, worksheet, worksheetAnswers',
-            examples: ['slideDeck'],
-          }),
-      }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          year: z
+            .number()
+            .optional()
+            .meta({
+              description:
+                'The year group to filter by. For the physical-education-primary sequence, a value of all-years can also be used.',
+              examples: [3],
+            }),
+          type: z
+            .enum([
+              'slideDeck',
+              'exitQuiz',
+              'exitQuizAnswers',
+              'starterQuiz',
+              'starterQuizAnswers',
+              'supplementaryResource',
+              'video',
+              'worksheet',
+              'worksheetAnswers',
+            ])
+            .optional()
+            .meta({
+              description:
+                'Optional asset type specifier\n\nAvailable values: slideDeck, exitQuiz, exitQuizAnswers, starterQuiz, starterQuizAnswers, supplementaryResource, video, worksheet, worksheetAnswers',
+              examples: ['slideDeck'],
+            }),
+        })
+        .strict(),
     },
     alias: 'getAssets-getSequenceAssets',
     description:
@@ -4261,32 +4899,36 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        sequence: z.string().meta({
-          description:
-            'The sequence slug identifier, including the key stage 4 option where relevant.',
-          examples: ['english-primary'],
-        }),
-      }),
-      queryParams: z.object({
-        year: z
-          .number()
-          .optional()
-          .meta({
+      pathParams: z
+        .object({
+          sequence: z.string().meta({
             description:
-              'The year group to filter by. For the physical-education-primary sequence, a value of all-years can also be used.',
-            examples: [3],
+              'The sequence slug identifier, including the key stage 4 option where relevant.',
+            examples: ['english-primary'],
           }),
-        offset: z
-          .number()
-          .optional()
-          .meta({ examples: [50] }),
-        limit: z
-          .number()
-          .max(100)
-          .optional()
-          .meta({ examples: [10] }),
-      }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          year: z
+            .number()
+            .optional()
+            .meta({
+              description:
+                'The year group to filter by. For the physical-education-primary sequence, a value of all-years can also be used.',
+              examples: [3],
+            }),
+          offset: z
+            .number()
+            .optional()
+            .meta({ examples: [50] }),
+          limit: z
+            .number()
+            .max(100)
+            .optional()
+            .meta({ examples: [10] }),
+        })
+        .strict(),
     },
     alias: 'getQuestions-getQuestionsForSequence',
     description:
@@ -4330,23 +4972,27 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        sequence: z.string().meta({
-          description:
-            'The sequence slug identifier, including the key stage 4 option where relevant.',
-          examples: ['english-primary'],
-        }),
-      }),
-      queryParams: z.object({
-        year: z
-          .enum(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'all-years'])
-          .optional()
-          .meta({
+      pathParams: z
+        .object({
+          sequence: z.string().meta({
             description:
-              'The year group to filter by. For the physical-education-primary sequence, a value of all-years can also be used.',
-            examples: ['1'],
+              'The sequence slug identifier, including the key stage 4 option where relevant.',
+            examples: ['english-primary'],
           }),
-      }),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          year: z
+            .enum(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'all-years'])
+            .optional()
+            .meta({
+              description:
+                'The year group to filter by. For the physical-education-primary sequence, a value of all-years can also be used.',
+              examples: ['1'],
+            }),
+        })
+        .strict(),
     },
     alias: 'getSequences-getSequenceUnits',
     description:
@@ -4394,12 +5040,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        subject: z.string().meta({
-          description: 'The slug identifier for the subject',
-          examples: ['art'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          subject: z.string().meta({
+            description: 'The slug identifier for the subject',
+            examples: ['art'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getSubjects-getSubject',
     description:
@@ -4429,12 +5077,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        subject: z.string().meta({
-          description: 'The subject slug identifier',
-          examples: ['art'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          subject: z.string().meta({
+            description: 'The subject slug identifier',
+            examples: ['art'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getSubjects-getSubjectKeyStages',
     description:
@@ -4464,12 +5114,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        subject: z.string().meta({
-          description: 'The slug identifier for the subject',
-          examples: ['art'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          subject: z.string().meta({
+            description: 'The slug identifier for the subject',
+            examples: ['art'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getSubjects-getSubjectSequence',
     description:
@@ -4499,12 +5151,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        subject: z.string().meta({
-          description: 'Subject slug to filter by',
-          examples: ['cooking-nutrition'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          subject: z.string().meta({
+            description: 'Subject slug to filter by',
+            examples: ['cooking-nutrition'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getSubjects-getSubjectYears',
     description:
@@ -4548,9 +5202,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        threadSlug: z.string().meta({ examples: ['number-multiplication-and-division'] }),
-      }),
+      pathParams: z
+        .object({
+          threadSlug: z.string().meta({ examples: ['number-multiplication-and-division'] }),
+        })
+        .strict(),
     },
     alias: 'getThreads-getThreadUnits',
     description: 'This endpoint returns all of the units that belong to a given thread.',
@@ -4579,12 +5235,14 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        unit: z.string().meta({
-          description: 'The unit slug',
-          examples: ['simple-compound-and-adverbial-complex-sentences'],
-        }),
-      }),
+      pathParams: z
+        .object({
+          unit: z.string().meta({
+            description: 'The unit slug',
+            examples: ['simple-compound-and-adverbial-complex-sentences'],
+          }),
+        })
+        .strict(),
     },
     alias: 'getUnits-getUnit',
     description:

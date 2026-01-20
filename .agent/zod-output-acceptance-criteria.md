@@ -78,15 +78,19 @@ All validation constraints must transfer:
 
 ## Validation Parity Goal
 
-The ultimate test:
+The ultimate test: generated Zod schemas enforce the same constraints as the IR.
 
 ```typescript
-// For any valid OpenAPI input data
-const openapiValid = openapiValidator.validate(data);
-const zodValid = zodSchema.safeParse(data).success;
+// Valid data per IR must parse successfully
+zodSchema.parse(validData); // No throw = pass
 
-expect(openapiValid).toBe(zodValid); // Must match
+// Invalid data per IR must throw
+expect(() => zodSchema.parse(invalidData)).toThrow();
 ```
+
+> **Note:** Both `.parse()` (throws) and `.safeParse()` (returns result object) enforce identical
+> validation rules. Either is acceptable—we use `.parse()` in tests because `expect().toThrow()`
+> is idiomatic for testing validation failures.
 
 ---
 

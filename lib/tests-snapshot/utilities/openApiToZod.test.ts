@@ -21,7 +21,7 @@ test('getSchemaAsZodString', () => {
   expect(getSchemaAsZodString({ type: 'boolean' })).toMatchInlineSnapshot(`"z.boolean()"`);
   expect(getSchemaAsZodString({ type: 'string' })).toMatchInlineSnapshot(`"z.string()"`);
   expect(getSchemaAsZodString({ type: 'number' })).toMatchInlineSnapshot(`"z.number()"`);
-  expect(getSchemaAsZodString({ type: 'integer' })).toMatchInlineSnapshot(`"z.number().int()"`);
+  expect(getSchemaAsZodString({ type: 'integer' })).toMatchInlineSnapshot(`"z.int()"`);
 
   expect(getSchemaAsZodString({ type: 'array', items: { type: 'string' } })).toMatchInlineSnapshot(
     `"z.array(z.string())"`,
@@ -42,7 +42,7 @@ test('getSchemaAsZodString', () => {
   expect(getSchemaAsZodString({ type: 'object', properties: { nb: { type: 'integer' } } }))
     .toMatchInlineSnapshot(`
       "z.object({
-        nb: z.number().int().optional(),
+        nb: z.int().optional(),
       }).passthrough()"
     `);
 
@@ -80,7 +80,7 @@ test('getSchemaAsZodString', () => {
     }),
   ).toMatchInlineSnapshot(`
     "z.object({
-      dt: z.string().datetime().optional(),
+      dt: z.iso.datetime().optional(),
     }).passthrough()"
   `);
 
@@ -145,7 +145,7 @@ test('getSchemaAsZodString', () => {
     }),
   ).toMatchInlineSnapshot(`
     "z.object({
-      union: z.union([z.string(), z.number()]).optional(),
+      union: z.xor([z.string(), z.number()]).optional(),
     }).passthrough()"
   `);
 

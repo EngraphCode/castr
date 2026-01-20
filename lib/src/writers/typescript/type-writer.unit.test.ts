@@ -153,4 +153,275 @@ describe('TypeWriter', () => {
     };
     expect(generate(schema)).toBe('{ /** Property description */ prop1: string; }');
   });
+
+  describe('Composition Types', () => {
+    it('generates intersection type for allOf', () => {
+      const schema: CastrSchema = {
+        allOf: [
+          {
+            type: 'object',
+            properties: new CastrSchemaProperties({
+              name: {
+                type: 'string',
+                metadata: {
+                  required: true,
+                  nullable: false,
+                  circularReferences: [],
+                  dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                  zodChain: { presence: '', validations: [], defaults: [] },
+                },
+              },
+            }),
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+          {
+            type: 'object',
+            properties: new CastrSchemaProperties({
+              id: {
+                type: 'number',
+                metadata: {
+                  required: true,
+                  nullable: false,
+                  circularReferences: [],
+                  dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                  zodChain: { presence: '', validations: [], defaults: [] },
+                },
+              },
+            }),
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+        ],
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      expect(generate(schema)).toBe('{ name: string; } & { id: number; }');
+    });
+
+    it('generates intersection with schema references', () => {
+      const schema: CastrSchema = {
+        allOf: [
+          {
+            $ref: '#/components/schemas/Base',
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+          {
+            type: 'object',
+            properties: new CastrSchemaProperties({
+              extra: {
+                type: 'string',
+                metadata: {
+                  required: true,
+                  nullable: false,
+                  circularReferences: [],
+                  dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                  zodChain: { presence: '', validations: [], defaults: [] },
+                },
+              },
+            }),
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+        ],
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      expect(generate(schema)).toBe('Base & { extra: string; }');
+    });
+
+    it('generates union type for oneOf', () => {
+      const schema: CastrSchema = {
+        oneOf: [
+          {
+            type: 'string',
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+          {
+            type: 'number',
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+        ],
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      expect(generate(schema)).toBe('string | number');
+    });
+
+    it('generates union type for anyOf', () => {
+      const schema: CastrSchema = {
+        anyOf: [
+          {
+            type: 'boolean',
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+          {
+            type: 'null',
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+        ],
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      expect(generate(schema)).toBe('boolean | null');
+    });
+
+    it('generates nested composition with correct precedence', () => {
+      const schema: CastrSchema = {
+        allOf: [
+          {
+            type: 'object',
+            properties: new CastrSchemaProperties({
+              base: {
+                type: 'string',
+                metadata: {
+                  required: true,
+                  nullable: false,
+                  circularReferences: [],
+                  dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                  zodChain: { presence: '', validations: [], defaults: [] },
+                },
+              },
+            }),
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+          {
+            oneOf: [
+              {
+                type: 'object',
+                properties: new CastrSchemaProperties({
+                  a: {
+                    type: 'number',
+                    metadata: {
+                      required: true,
+                      nullable: false,
+                      circularReferences: [],
+                      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                      zodChain: { presence: '', validations: [], defaults: [] },
+                    },
+                  },
+                }),
+                metadata: {
+                  required: true,
+                  nullable: false,
+                  circularReferences: [],
+                  dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                  zodChain: { presence: '', validations: [], defaults: [] },
+                },
+              },
+              {
+                type: 'object',
+                properties: new CastrSchemaProperties({
+                  b: {
+                    type: 'boolean',
+                    metadata: {
+                      required: true,
+                      nullable: false,
+                      circularReferences: [],
+                      dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                      zodChain: { presence: '', validations: [], defaults: [] },
+                    },
+                  },
+                }),
+                metadata: {
+                  required: true,
+                  nullable: false,
+                  circularReferences: [],
+                  dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                  zodChain: { presence: '', validations: [], defaults: [] },
+                },
+              },
+            ],
+            metadata: {
+              required: true,
+              nullable: false,
+              circularReferences: [],
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: { presence: '', validations: [], defaults: [] },
+            },
+          },
+        ],
+        metadata: {
+          required: true,
+          nullable: false,
+          circularReferences: [],
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+        },
+      };
+      // Union inside intersection needs parentheses for correct precedence
+      expect(generate(schema)).toBe('{ base: string; } & ({ a: number; } | { b: boolean; })');
+    });
+  });
 });

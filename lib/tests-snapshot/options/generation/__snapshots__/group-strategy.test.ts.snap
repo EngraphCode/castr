@@ -2945,7 +2945,7 @@ export type Store = {
 export const User = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
@@ -2956,7 +2956,7 @@ export const User = z.lazy(() =>
 export const Pet = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       nickname: z.string().optional(),
       owner: User.optional(),
     })
@@ -2965,7 +2965,7 @@ export const Pet = z.lazy(() =>
 export const Country = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
       store_list: z.array(Store).optional(),
@@ -2975,7 +2975,7 @@ export const Country = z.lazy(() =>
 export const Store = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
       country: Country.optional(),
@@ -3476,7 +3476,7 @@ export type Store = {
 export const User = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
@@ -3487,7 +3487,7 @@ export const User = z.lazy(() =>
 export const Pet = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       nickname: z.string().optional(),
       owner: User.optional(),
     })
@@ -3496,7 +3496,7 @@ export const Pet = z.lazy(() =>
 export const Country = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
       store_list: z.array(Store).optional(),
@@ -3506,7 +3506,7 @@ export const Country = z.lazy(() =>
 export const Store = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
       country: Country.optional(),
@@ -4055,7 +4055,7 @@ export type Store = {
 export const User = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
@@ -4066,7 +4066,7 @@ export const User = z.lazy(() =>
 export const Pet = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       nickname: z.string().optional(),
       owner: User.optional(),
     })
@@ -4075,7 +4075,7 @@ export const Pet = z.lazy(() =>
 export const Country = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
       store_list: z.array(Store).optional(),
@@ -4085,7 +4085,7 @@ export const Country = z.lazy(() =>
 export const Store = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
       country: Country.optional(),
@@ -4602,7 +4602,7 @@ export type Store = {
 export const User = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
@@ -4613,7 +4613,7 @@ export const User = z.lazy(() =>
 export const Pet = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       nickname: z.string().optional(),
       owner: User.optional(),
     })
@@ -4622,7 +4622,7 @@ export const Pet = z.lazy(() =>
 export const Country = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
       store_list: z.array(Store).optional(),
@@ -4632,7 +4632,7 @@ export const Country = z.lazy(() =>
 export const Store = z.lazy(() =>
   z
     .object({
-      id: z.number().int().optional(),
+      id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
       country: Country.optional(),
@@ -5185,8 +5185,7 @@ export type createUsersWithListInput_Body = User[];
 export const Category = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [1] }),
     name: z
@@ -5198,7 +5197,7 @@ export const Category = z
   .meta({ xml: { name: "category" } });
 export const Tag = z
   .object({
-    id: z.number().int().optional(),
+    id: z.int64().optional(),
     name: z.string().optional(),
   })
   .strict()
@@ -5206,8 +5205,7 @@ export const Tag = z
 export const Pet = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     name: z.string().meta({ examples: ["doggie"] }),
@@ -5229,21 +5227,18 @@ export const Pet = z
 export const Order = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     petId: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [198772] }),
     quantity: z
-      .number()
-      .int()
+      .int32()
       .optional()
       .meta({ examples: [7] }),
-    shipDate: z.string().datetime().optional(),
+    shipDate: z.iso.datetime().optional(),
     status: z
       .enum(["placed", "approved", "delivered"])
       .optional()
@@ -5277,8 +5272,7 @@ export const Address = z
 export const Customer = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [100000] }),
     username: z
@@ -5295,8 +5289,7 @@ export const Customer = z
 export const User = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     username: z
@@ -5324,8 +5317,7 @@ export const User = z
       .optional()
       .meta({ examples: ["12345"] }),
     userStatus: z
-      .number()
-      .int()
+      .int32()
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
@@ -5333,7 +5325,7 @@ export const User = z
   .meta({ xml: { name: "user" } });
 export const ApiResponse = z
   .object({
-    code: z.number().int().optional(),
+    code: z.int32().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
@@ -5463,9 +5455,11 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        status: z.enum(["available", "pending", "sold"]).optional(),
-      }),
+      queryParams: z
+        .object({
+          status: z.enum(["available", "pending", "sold"]).optional(),
+        })
+        .strict(),
     },
     alias: "findPetsByStatus",
     description:
@@ -5502,9 +5496,11 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        tags: z.array(z.string()).optional(),
-      }),
+      queryParams: z
+        .object({
+          tags: z.array(z.string()).optional(),
+        })
+        .strict(),
     },
     alias: "findPetsByTags",
     description:
@@ -5518,7 +5514,7 @@ export const endpoints = [
       {
         name: "petId",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of pet to return",
       },
     ],
@@ -5550,9 +5546,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        petId: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          petId: z.int64(),
+        })
+        .strict(),
     },
     alias: "getPetById",
     description: "Returns a single pet",
@@ -5565,7 +5563,7 @@ export const endpoints = [
       {
         name: "petId",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of pet that needs to be updated",
       },
       {
@@ -5596,13 +5594,17 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        petId: z.number().int(),
-      }),
-      queryParams: z.object({
-        name: z.string().optional(),
-        status: z.string().optional(),
-      }),
+      pathParams: z
+        .object({
+          petId: z.int64(),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          name: z.string().optional(),
+          status: z.string().optional(),
+        })
+        .strict(),
     },
     alias: "updatePetWithForm",
   },
@@ -5619,7 +5621,7 @@ export const endpoints = [
       {
         name: "petId",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "Pet id to delete",
       },
     ],
@@ -5638,12 +5640,16 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        petId: z.number().int(),
-      }),
-      headers: z.object({
-        api_key: z.string().optional(),
-      }),
+      pathParams: z
+        .object({
+          petId: z.int64(),
+        })
+        .strict(),
+      headers: z
+        .object({
+          api_key: z.string().optional(),
+        })
+        .strict(),
     },
     alias: "deletePet",
     description: "delete a pet",
@@ -5656,7 +5662,7 @@ export const endpoints = [
       {
         name: "petId",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of pet to update",
       },
       {
@@ -5675,12 +5681,16 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        petId: z.number().int(),
-      }),
-      queryParams: z.object({
-        additionalMetadata: z.string().optional(),
-      }),
+      pathParams: z
+        .object({
+          petId: z.int64(),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          additionalMetadata: z.string().optional(),
+        })
+        .strict(),
     },
     alias: "uploadFile",
   },
@@ -7168,8 +7178,7 @@ export type createUsersWithListInput_Body = User[];
 export const Category = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [1] }),
     name: z
@@ -7181,7 +7190,7 @@ export const Category = z
   .meta({ xml: { name: "category" } });
 export const Tag = z
   .object({
-    id: z.number().int().optional(),
+    id: z.int64().optional(),
     name: z.string().optional(),
   })
   .strict()
@@ -7189,8 +7198,7 @@ export const Tag = z
 export const Pet = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     name: z.string().meta({ examples: ["doggie"] }),
@@ -7212,21 +7220,18 @@ export const Pet = z
 export const Order = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     petId: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [198772] }),
     quantity: z
-      .number()
-      .int()
+      .int32()
       .optional()
       .meta({ examples: [7] }),
-    shipDate: z.string().datetime().optional(),
+    shipDate: z.iso.datetime().optional(),
     status: z
       .enum(["placed", "approved", "delivered"])
       .optional()
@@ -7260,8 +7265,7 @@ export const Address = z
 export const Customer = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [100000] }),
     username: z
@@ -7278,8 +7282,7 @@ export const Customer = z
 export const User = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     username: z
@@ -7307,8 +7310,7 @@ export const User = z
       .optional()
       .meta({ examples: ["12345"] }),
     userStatus: z
-      .number()
-      .int()
+      .int32()
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
@@ -7316,7 +7318,7 @@ export const User = z
   .meta({ xml: { name: "user" } });
 export const ApiResponse = z
   .object({
-    code: z.number().int().optional(),
+    code: z.int32().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
@@ -7385,7 +7387,7 @@ export const endpoints = [
       {
         name: "orderId",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of order that needs to be fetched",
       },
     ],
@@ -7417,9 +7419,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        orderId: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          orderId: z.int64(),
+        })
+        .strict(),
     },
     alias: "getOrderById",
     description:
@@ -7433,7 +7437,7 @@ export const endpoints = [
       {
         name: "orderId",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of the order that needs to be deleted",
       },
     ],
@@ -7461,9 +7465,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        orderId: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          orderId: z.int64(),
+        })
+        .strict(),
     },
     alias: "deleteOrder",
     description:
@@ -8953,8 +8959,7 @@ export type createUsersWithListInput_Body = User[];
 export const Category = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [1] }),
     name: z
@@ -8966,7 +8971,7 @@ export const Category = z
   .meta({ xml: { name: "category" } });
 export const Tag = z
   .object({
-    id: z.number().int().optional(),
+    id: z.int64().optional(),
     name: z.string().optional(),
   })
   .strict()
@@ -8974,8 +8979,7 @@ export const Tag = z
 export const Pet = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     name: z.string().meta({ examples: ["doggie"] }),
@@ -8997,21 +9001,18 @@ export const Pet = z
 export const Order = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     petId: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [198772] }),
     quantity: z
-      .number()
-      .int()
+      .int32()
       .optional()
       .meta({ examples: [7] }),
-    shipDate: z.string().datetime().optional(),
+    shipDate: z.iso.datetime().optional(),
     status: z
       .enum(["placed", "approved", "delivered"])
       .optional()
@@ -9045,8 +9046,7 @@ export const Address = z
 export const Customer = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [100000] }),
     username: z
@@ -9063,8 +9063,7 @@ export const Customer = z
 export const User = z
   .object({
     id: z
-      .number()
-      .int()
+      .int64()
       .optional()
       .meta({ examples: [10] }),
     username: z
@@ -9092,8 +9091,7 @@ export const User = z
       .optional()
       .meta({ examples: ["12345"] }),
     userStatus: z
-      .number()
-      .int()
+      .int32()
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
@@ -9101,7 +9099,7 @@ export const User = z
   .meta({ xml: { name: "user" } });
 export const ApiResponse = z
   .object({
-    code: z.number().int().optional(),
+    code: z.int32().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
@@ -9214,10 +9212,12 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        username: z.string().optional(),
-        password: z.string().optional(),
-      }),
+      queryParams: z
+        .object({
+          username: z.string().optional(),
+          password: z.string().optional(),
+        })
+        .strict(),
     },
     alias: "loginUser",
   },
@@ -9284,9 +9284,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+        })
+        .strict(),
     },
     alias: "getUserByName",
   },
@@ -9323,9 +9325,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+        })
+        .strict(),
       body: User,
     },
     alias: "updateUser",
@@ -9367,9 +9371,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+        })
+        .strict(),
     },
     alias: "deleteUser",
     description: "This can only be done by the logged in user.",

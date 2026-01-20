@@ -74,15 +74,20 @@ test('missing-zod-chains', async () => {
       text: string;
       num: number;
     };
-    export type nulltype = unknown;
-    export type anyOfType = unknown;
+    export type nulltype = {} | null;
+    export type anyOfType =
+      | {}
+      | {
+          foo?: string;
+        }
+      | null;
     // Zod Schemas
     export const test1 = z.string().min(5);
-    export const test2 = z.number().min(10).int();
+    export const test2 = z.int().min(10);
     export const test3 = z
       .object({
         text: z.string().min(5),
-        num: z.number().min(10).int(),
+        num: z.int().min(10),
       })
       .strict();
     export const nulltype = z.union([z.object({}).strict(), z.null()]);

@@ -16,9 +16,9 @@ export const CreateUserInput = z
       .string()
       .nullable()
       .meta({ description: "Unique handle for the user" }),
-    email: z.string().email(),
+    email: z.email(),
     age: z
-      .number()
+      .int()
       .nullable()
       .optional()
       .meta({ description: "Optional age in years" }),
@@ -55,7 +55,7 @@ export const endpoints = [
     ],
     response: z
       .object({
-        id: z.string().uuid().optional(),
+        id: z.uuidv4().optional(),
       })
       .passthrough(),
     errors: [],
@@ -63,7 +63,7 @@ export const endpoints = [
       201: {
         schema: z
           .object({
-            id: z.string().uuid().optional(),
+            id: z.uuidv4().optional(),
           })
           .passthrough(),
         description: "User created successfully",
@@ -365,10 +365,7 @@ export const endpoints = [
       {
         name: "callbackUrl",
         type: "Query",
-        schema: z
-          .string()
-          .url()
-          .meta({ examples: ["https://tonys-server.com"] }),
+        schema: z.url().meta({ examples: ["https://tonys-server.com"] }),
         description:
           "the location where data will be sent.  Must be network accessible\\nby the source server\\n",
       },
@@ -404,12 +401,11 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        callbackUrl: z
-          .string()
-          .url()
-          .meta({ examples: ["https://tonys-server.com"] }),
-      }),
+      queryParams: z
+        .object({
+          callbackUrl: z.url().meta({ examples: ["https://tonys-server.com"] }),
+        })
+        .strict(),
     },
     description: "subscribes a client to receive out-of-band data",
   },
@@ -500,7 +496,7 @@ export const repository = z
   .passthrough();
 export const pullrequest = z
   .object({
-    id: z.number().int().optional(),
+    id: z.int().optional(),
     title: z.string().optional(),
     repository: repository.optional(),
     author: user.optional(),
@@ -528,9 +524,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+        })
+        .strict(),
     },
     alias: "getRepositoriesByOwner",
   },
@@ -559,10 +557,12 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+          slug: z.string(),
+        })
+        .strict(),
     },
     alias: "getRepository",
   },
@@ -596,13 +596,17 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-      }),
-      queryParams: z.object({
-        state: z.enum(["open", "merged", "declined"]).optional(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+          slug: z.string(),
+        })
+        .strict(),
+      queryParams: z
+        .object({
+          state: z.enum(["open", "merged", "declined"]).optional(),
+        })
+        .strict(),
     },
     alias: "getPullRequestsByRepository",
   },
@@ -636,11 +640,13 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-        pid: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+          slug: z.string(),
+          pid: z.string(),
+        })
+        .strict(),
     },
     alias: "getPullRequestsById",
   },
@@ -674,11 +680,13 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-        slug: z.string(),
-        pid: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+          slug: z.string(),
+          pid: z.string(),
+        })
+        .strict(),
     },
     alias: "mergePullRequest",
   },
@@ -702,9 +710,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        username: z.string(),
-      }),
+      pathParams: z
+        .object({
+          username: z.string(),
+        })
+        .strict(),
     },
     alias: "getUserByName",
   },
@@ -1061,7 +1071,7 @@ export type Error = {
 // Zod Schemas
 export const Pet = z
   .object({
-    id: z.number().int(),
+    id: z.int64(),
     name: z.string(),
     tag: z.string().optional(),
   })
@@ -1069,7 +1079,7 @@ export const Pet = z
 export const Pets = z.array(Pet).max(100);
 export const Error = z
   .object({
-    code: z.number().int(),
+    code: z.int32(),
     message: z.string(),
   })
   .passthrough();
@@ -1083,7 +1093,7 @@ export const endpoints = [
       {
         name: "limit",
         type: "Query",
-        schema: z.number().max(100).int().optional(),
+        schema: z.int32().max(100).optional(),
         description: "How many items to return at one time (max 100)",
       },
     ],
@@ -1106,9 +1116,11 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        limit: z.number().max(100).int().optional(),
-      }),
+      queryParams: z
+        .object({
+          limit: z.int32().max(100).optional(),
+        })
+        .strict(),
     },
     alias: "listPets",
   },
@@ -1177,9 +1189,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        petId: z.string(),
-      }),
+      pathParams: z
+        .object({
+          petId: z.string(),
+        })
+        .strict(),
     },
     alias: "showPetById",
   },
@@ -1327,7 +1341,9 @@ export type NewPet = {
   name: string;
   tag?: string;
 };
-export type Pet = unknown;
+export type Pet = NewPet & {
+  id: number;
+};
 export type Error = {
   code: number;
   message: string;
@@ -1342,13 +1358,13 @@ export const NewPet = z
 export const Pet = NewPet.and(
   z
     .object({
-      id: z.number().int(),
+      id: z.int64(),
     })
     .passthrough(),
 );
 export const Error = z
   .object({
-    code: z.number().int(),
+    code: z.int32(),
     message: z.string(),
   })
   .passthrough();
@@ -1368,7 +1384,7 @@ export const endpoints = [
       {
         name: "limit",
         type: "Query",
-        schema: z.number().int().optional(),
+        schema: z.int32().optional(),
         description: "maximum number of results to return",
       },
     ],
@@ -1391,10 +1407,12 @@ export const endpoints = [
       },
     },
     request: {
-      queryParams: z.object({
-        tags: z.array(z.string()).optional(),
-        limit: z.number().int().optional(),
-      }),
+      queryParams: z
+        .object({
+          tags: z.array(z.string()).optional(),
+          limit: z.int32().optional(),
+        })
+        .strict(),
     },
     alias: "findPets",
     description:
@@ -1444,7 +1462,7 @@ export const endpoints = [
       {
         name: "id",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of pet to fetch",
       },
     ],
@@ -1467,9 +1485,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        id: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          id: z.int64(),
+        })
+        .strict(),
     },
     alias: "find pet by id",
     description:
@@ -1483,7 +1503,7 @@ export const endpoints = [
       {
         name: "id",
         type: "Path",
-        schema: z.number().int(),
+        schema: z.int64(),
         description: "ID of pet to delete",
       },
     ],
@@ -1506,9 +1526,11 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        id: z.number().int(),
-      }),
+      pathParams: z
+        .object({
+          id: z.int64(),
+        })
+        .strict(),
     },
     alias: "deletePet",
     description: "deletes a single pet based on the ID supplied",
@@ -1741,7 +1763,7 @@ export type perform_search_Body = {
 // Zod Schemas
 export const dataSetList = z
   .object({
-    total: z.number().int().optional(),
+    total: z.int().optional(),
     apis: z
       .array(
         z
@@ -1777,12 +1799,10 @@ export const perform_search_Body = z
           "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
       }),
     start: z
-      .number()
       .int()
       .optional()
       .meta({ description: "Starting record number. Default value is 0." }),
     rows: z
-      .number()
       .int()
       .optional()
       .meta({
@@ -1849,10 +1869,12 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        dataset: z.string(),
-        version: z.string(),
-      }),
+      pathParams: z
+        .object({
+          dataset: z.string(),
+          version: z.string(),
+        })
+        .strict(),
     },
     alias: "list-searchable-fields",
     description:
@@ -1888,14 +1910,12 @@ export const endpoints = [
                   "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
               }),
             start: z
-              .number()
               .int()
               .optional()
               .meta({
                 description: "Starting record number. Default value is 0.",
               }),
             rows: z
-              .number()
               .int()
               .optional()
               .meta({
@@ -1925,10 +1945,12 @@ export const endpoints = [
       },
     },
     request: {
-      pathParams: z.object({
-        version: z.string(),
-        dataset: z.string(),
-      }),
+      pathParams: z
+        .object({
+          version: z.string(),
+          dataset: z.string(),
+        })
+        .strict(),
       body: z
         .object({
           criteria: z
@@ -1938,14 +1960,12 @@ export const endpoints = [
                 "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
             }),
           start: z
-            .number()
             .int()
             .optional()
             .meta({
               description: "Starting record number. Default value is 0.",
             }),
           rows: z
-            .number()
             .int()
             .optional()
             .meta({
@@ -2209,10 +2229,9 @@ export const errorMessage = z
   .max(256)
   .meta({ description: "A text message describing an error" });
 export const coordinate = z
-  .number()
+  .int()
   .min(1)
   .max(3)
-  .int()
   .meta({ examples: [1] });
 export const mark = z
   .enum([".", "X", "O"])

@@ -19,7 +19,7 @@ const getSchemaAsTsString = (schema: SchemaObject, meta?: { name: string }) => {
 };
 
 test('getSchemaAsTsString', () => {
-  expect(getSchemaAsTsString({ type: 'null' })).toMatchInlineSnapshot(`"unknown"`);
+  expect(getSchemaAsTsString({ type: 'null' })).toMatchInlineSnapshot(`"null"`);
   expect(getSchemaAsTsString({ type: 'boolean' })).toMatchInlineSnapshot('"boolean"');
   expect(getSchemaAsTsString({ type: 'string' })).toMatchInlineSnapshot('"string"');
   expect(getSchemaAsTsString({ type: 'number' })).toMatchInlineSnapshot('"number"');
@@ -27,7 +27,7 @@ test('getSchemaAsTsString', () => {
   expect(getSchemaAsTsString({})).toMatchInlineSnapshot('"unknown"');
 
   expect(getSchemaAsTsString({ type: 'null' }, { name: 'nullType' })).toMatchInlineSnapshot(
-    `"export type nullType = unknown;"`,
+    `"export type nullType = null;"`,
   );
   expect(getSchemaAsTsString({ type: 'boolean' }, { name: 'booleanType' })).toMatchInlineSnapshot(
     `"export type booleanType = boolean;"`,
@@ -235,60 +235,60 @@ test('getSchemaAsTsString', () => {
     ),
   ).toMatchInlineSnapshot(`
     "export type ObjectWithUnion = {
-      union?: unknown;
+      union?: string | number;
     };"
   `);
   expect(
     getSchemaAsTsString({ oneOf: [{ type: 'string' }, { type: 'number' }] }),
-  ).toMatchInlineSnapshot(`"unknown"`);
+  ).toMatchInlineSnapshot(`"string | number"`);
   expect(
     getSchemaAsTsString(
       { oneOf: [{ type: 'string' }, { type: 'number' }] },
       { name: 'StringOrNumber' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringOrNumber = unknown;"`);
+  ).toMatchInlineSnapshot(`"export type StringOrNumber = string | number;"`);
 
   expect(
     getSchemaAsTsString({ allOf: [{ type: 'string' }, { type: 'number' }] }),
-  ).toMatchInlineSnapshot(`"unknown"`);
+  ).toMatchInlineSnapshot(`"string & number"`);
   expect(
     getSchemaAsTsString(
       { allOf: [{ type: 'string' }, { type: 'number' }] },
       { name: 'StringAndNumber' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringAndNumber = unknown;"`);
+  ).toMatchInlineSnapshot(`"export type StringAndNumber = string & number;"`);
 
   expect(
     getSchemaAsTsString({ anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
-  ).toMatchInlineSnapshot(`"unknown"`);
+  ).toMatchInlineSnapshot(`"string | number | null"`);
   expect(
     getSchemaAsTsString({ oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
-  ).toMatchInlineSnapshot(`"unknown"`);
+  ).toMatchInlineSnapshot(`"string | number | null"`);
   expect(
     getSchemaAsTsString(
       { oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       { name: 'StringOrNumber' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringOrNumber = unknown;"`);
+  ).toMatchInlineSnapshot(`"export type StringOrNumber = string | number | null;"`);
 
   expect(
     getSchemaAsTsString({ allOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
-  ).toMatchInlineSnapshot(`"unknown"`);
+  ).toMatchInlineSnapshot(`"string & number & null"`);
   expect(
     getSchemaAsTsString(
       { allOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] },
       { name: 'StringAndNumber' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringAndNumber = unknown;"`);
+  ).toMatchInlineSnapshot(`"export type StringAndNumber = string & number & null;"`);
   expect(
     getSchemaAsTsString({ anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] }),
-  ).toMatchInlineSnapshot(`"unknown"`);
+  ).toMatchInlineSnapshot(`"string | number | null"`);
   expect(
     getSchemaAsTsString(
       { anyOf: [{ type: 'string' }, { type: 'number' }] },
       { name: 'StringAndNumberMaybeMultiple' },
     ),
-  ).toMatchInlineSnapshot(`"export type StringAndNumberMaybeMultiple = unknown;"`);
+  ).toMatchInlineSnapshot(`"export type StringAndNumberMaybeMultiple = string | number;"`);
 
   expect(
     getSchemaAsTsString(
@@ -303,7 +303,7 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(
     `
     "export type ObjectWithArrayUnion = {
-      unionOrArrayOfUnion?: unknown;
+      unionOrArrayOfUnion?: string | number;
     };"
   `,
   );
@@ -321,7 +321,7 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(
     `
     "export type ObjectWithIntersection = {
-      intersection?: unknown;
+      intersection?: string & number;
     };"
   `,
   );
@@ -624,8 +624,8 @@ describe('getSchemaAsTsString with context', () => {
     expect(result).toMatchInlineSnapshot(
       `
       "export type Root = {
-        user?: unknown;
-        users?: unknown[];
+        user?: User | Member;
+        users?: User | Member[];
         basic?: number;
       };"
     `,
