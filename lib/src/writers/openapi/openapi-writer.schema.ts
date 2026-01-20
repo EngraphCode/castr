@@ -164,10 +164,13 @@ function writeCompositionFields(schema: CastrSchema, result: SchemaObject): void
 }
 
 /**
- * Writes metadata fields (description, default, example, deprecated, etc.).
+ * Writes metadata fields (title, description, default, example, deprecated, etc.).
  * @internal
  */
 function writeMetadataFields(schema: CastrSchema, result: SchemaObject): void {
+  if (schema.title !== undefined) {
+    result.title = schema.title;
+  }
   if (schema.description !== undefined) {
     result.description = schema.description;
   }

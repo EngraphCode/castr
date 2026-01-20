@@ -1,4 +1,5 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
+import type { SchemaObjectType } from 'openapi3-ts/oas31';
 import type { CastrSchema } from '../../ir/schema.js';
 import type { TemplateContextOptions } from '../../context/template-context.js';
 import type {
@@ -8,6 +9,7 @@ import type {
 } from '../../ir/context.js';
 
 import { writeCompositionSchema } from './composition.js';
+import { writeMetadata } from './metadata.js';
 import { parseComponentRef } from '../../shared/ref-resolution.js';
 import { isValidJsIdentifier } from '../../shared/utils/identifier-utils.js';
 
@@ -45,6 +47,8 @@ function writeSchemaBody(
 
     // Apply Zod chain modifiers
     writeSchemaChain(context, writer);
+    // Apply metadata via .meta() (Zod 4)
+    writeMetadata(schema, writer);
   };
 }
 
@@ -62,6 +66,24 @@ function writeSchemaType(
     return;
   }
 
+  // Handle const values with z.literal() - BEFORE type switch
+  if (schema.const !== undefined) {
+    writeConstSchema(schema.const, writer);
+    return;
+  }
+
+  // Handle empty schema {} → z.unknown() (OAS 3.1: represents "any value")
+  if (schema.type === undefined) {
+    writer.write('z.unknown()');
+    return;
+  }
+
+  // Handle OAS 3.1 type arrays (e.g., ['string', 'null'] or ['number', 'boolean'])
+  if (Array.isArray(schema.type)) {
+    writeTypeArraySchema(schema.type, context, writer, options);
+    return;
+  }
+
   if (!writePrimitiveSchema(schema, writer)) {
     switch (schema.type) {
       case 'array':
@@ -70,11 +92,85 @@ function writeSchemaType(
       case 'object':
         writeObjectSchema(context, writer, options);
         break;
+      case 'null':
+        // Defensive: handle null type if it reaches here (should be caught by writePrimitiveSchema)
+        writer.write('z.null()');
+        break;
       default:
-        // Fallback to unknown - should only happen for truly unknown types
-        writer.write('z.unknown()');
+        // FAIL-FAST: Unknown types must throw, not silently degrade
+        throw new Error(
+          `Unsupported schema type: ${String(schema.type)}. ` +
+            `Writer cannot produce valid Zod for this IR pattern.`,
+        );
     }
   }
+}
+
+/**
+ * Handle OAS 3.1 type arrays (e.g., ['string', 'null']).
+ * @internal
+ */
+function writeTypeArraySchema(
+  types: SchemaObjectType[],
+  context: CastrSchemaContext,
+  writer: CodeBlockWriter,
+  options?: TemplateContextOptions,
+): void {
+  // Filter out null types - handle both string 'null' AND literal null (runtime data may have either)
+  const nonNullTypes = types.filter((t): t is SchemaObjectType => t !== 'null' && t != null);
+  const hasNull = types.some((t) => t === 'null' || t == null);
+
+  if (nonNullTypes.length === 0) {
+    // Only null type - output z.null() directly
+    writer.write('z.null()');
+    return;
+  }
+
+  if (nonNullTypes.length === 1) {
+    // Single non-null type - write it directly, nullable handled in chain
+    const singleType = nonNullTypes[0];
+    // Guard: we just checked length === 1, but TypeScript needs this
+    if (singleType !== undefined) {
+      writeSingleTypeFromArray(singleType, context, writer, options);
+    }
+  } else {
+    // Multiple types - create union
+    writer.write('z.union([');
+    nonNullTypes.forEach((t, i) => {
+      if (i > 0) {
+        writer.write(', ');
+      }
+      writeSingleTypeFromArray(t, context, writer, options);
+    });
+    writer.write('])');
+  }
+
+  // Add .nullable() if null was in the type array
+  if (hasNull) {
+    writer.write('.nullable()');
+  }
+}
+
+/**
+ * Write a single type from a type array, creating appropriate context.
+ * @internal
+ */
+function writeSingleTypeFromArray(
+  type: SchemaObjectType,
+  context: CastrSchemaContext,
+  writer: CodeBlockWriter,
+  options?: TemplateContextOptions,
+): void {
+  // Create a new schema with just this type
+  const typeSchema: CastrSchema = {
+    ...context.schema,
+    type,
+  };
+  const typeContext: CastrSchemaContext = {
+    ...context,
+    schema: typeSchema,
+  };
+  writeSchemaType(typeContext, writer, options);
 }
 
 /**
@@ -91,16 +187,15 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   validations.forEach((v) => writer.write(v));
   defaults.forEach((d) => writer.write(d));
 
-  // Presence logic based on context
   const isOptionalProperty = context.contextType === 'property' && context.optional;
   const isOptionalParameter = context.contextType === 'parameter' && !context.required;
-
   if (isOptionalProperty || isOptionalParameter) {
     writer.write('.optional()');
   }
 
   // Nullability logic based on metadata
-  if (schema.metadata.nullable) {
+  // Skip if type is array - nullability is already handled in writeTypeArraySchema
+  if (schema.metadata.nullable && !Array.isArray(schema.type)) {
     writer.write('.nullable()');
   }
 }
@@ -117,9 +212,22 @@ function writePrimitiveSchema(schema: CastrSchema, writer: CodeBlockWriter): boo
     case 'boolean':
       writer.write('z.boolean()');
       return true;
+    case 'null':
+      writer.write('z.null()');
+      return true;
     default:
       return false;
   }
+}
+
+/**
+ * Write z.literal() for const values.
+ * @internal
+ */
+function writeConstSchema(value: unknown, writer: CodeBlockWriter): void {
+  writer.write('z.literal(');
+  writer.write(JSON.stringify(value));
+  writer.write(')');
 }
 
 function writeArraySchema(

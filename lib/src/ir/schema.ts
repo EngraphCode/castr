@@ -658,6 +658,14 @@ export interface CastrSchema {
   description?: string;
 
   /**
+   * Schema title for documentation.
+   * JSON Schema 2020-12 keyword.
+   *
+   * @see {@link https://json-schema.org/draft/2020-12/json-schema-validation#name-title-and-description}
+   */
+  title?: string;
+
+  /**
    * Default value for this schema.
    */
   default?: unknown;

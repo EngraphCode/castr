@@ -219,7 +219,7 @@ describe('anyOf behavior', () => {
     expect(zodSchema).toMatchInlineSnapshot(
       `
       {
-          "code": "z.union([z.unknown(), z.object({
+          "code": "z.union([z.union([z.number(), z.boolean()]), z.object({
         age: z.number().int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({

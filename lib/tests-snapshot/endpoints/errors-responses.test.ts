@@ -310,7 +310,7 @@ it('determines which status are considered errors-responses', async () => {
         nested: Nested.optional(),
       })
       .strict();
-    export const Error404 = z.unknown();
+    export const Error404 = z.null();
     export const Error500 = z.string();
     // Endpoints
     export const endpoints = [
@@ -481,7 +481,7 @@ it('determines which status are considered errors-responses', async () => {
         nested: Nested.optional(),
       })
       .strict();
-    export const Error404 = z.unknown();
+    export const Error404 = z.null();
     export const Error500 = z.string();
     // Endpoints
     export const endpoints = [

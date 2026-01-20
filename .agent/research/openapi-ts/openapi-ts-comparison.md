@@ -3,7 +3,8 @@
 ## Executive Summary
 
 - Castr is a canonical IR-first transformer focused on schema building blocks, validation, and MCP tooling; OpenAPI-TS is a plugin-first SDK/codegen system optimized for client output breadth and ecosystem integrations.
-- Castr accepts OpenAPI 2.0/3.0/3.1 inputs via Scalar, normalizing to 3.1 with strict spec validation and round-trip correctness; OpenAPI-TS supports 2.0/3.0/3.1 with optional, limited spec validation and richer pre-parse transforms and filters.
+- Castr accepts OpenAPI 2.0/3.0/3.1 inputs via Scalar, normalizing to 3.1 with strict spec validation and round-trip correctness; OpenAPI-TS supports 2.0/3.0/3.1 with optional, limited spec validation and pre-parse transforms/filters (OpenAPI-TS-only).
+- Castr is strict-by-default and fail-fast at all times; non-compliant inputs are rejected.
 - Castr’s IR now targets full OpenAPI 3.x syntax coverage (document fields + component types like headers, links, callbacks, pathItems, examples, webhooks, jsonSchemaDialect).
 - Castr keeps OpenAPI semantics explicit (allOf/oneOf/anyOf, full content maps, headers/links) while OpenAPI-TS normalizes schema composition into `items` + `logicalOperator` and chooses a preferred media type for bodies/responses.
 - Castr embeds rich schema metadata (nullable, zod chain, dependency info) directly in IR; OpenAPI-TS relies on a spec-wide JSON Pointer graph with scope propagation and plugin context for behavior.
@@ -18,8 +19,8 @@
 ## Scope and Sources
 
 - Castr source root: `lib/`, `docs/`, and root README.
-- OpenAPI-TS source root: `tmp/openapi-ts/`, especially `packages/openapi-ts` and `docs/openapi-ts`.
-- Versions observed: Castr `lib/package.json` 1.18.3; OpenAPI-TS `packages/openapi-ts/package.json` 0.90.4.
+- OpenAPI-TS source root: `tmp/openapi-ts/`, especially `tmp/openapi-ts/packages/openapi-ts` and `tmp/openapi-ts/docs/openapi-ts`.
+- Versions observed: Castr `lib/package.json` 1.18.3; OpenAPI-TS `tmp/openapi-ts/packages/openapi-ts/package.json` 0.90.4.
 
 ## Feature Matrix
 
@@ -32,7 +33,7 @@
 | JSON Schema handling     | Planned as another writer on the same IR pipeline                                | Schema outputs via plugins (format varies by plugin)                | Castr does not plan a separate JSON Schema handling path                      |
 | Input sources            | File, URL, object                                                                | File, URL, registry shorthand, object; watch mode                   | OpenAPI-TS adds registry + watch                                              |
 | Bundling / normalization | Scalar pipeline bundles external refs, preserves internal $refs, upgrades to 3.1 | json-schema-ref-parser bundles; patch/transform/filter before parse | Castr emphasizes $ref preservation for graphs                                 |
-| Parser transforms        | Few explicit transforms (options like implicitRequired)                          | Extensive: patch, filters, transforms, hooks, pagination keywords   | OpenAPI-TS is more configurable pre-parse                                     |
+| Parser transforms        | Strict normalization only (e.g., 3.0 → 3.1), no patching                         | Extensive: patch, filters, transforms, hooks, pagination keywords   | OpenAPI-TS is more configurable pre-parse                                     |
 | IR model                 | Canonical CastrDocument + CastrSchema with rich metadata                         | IR.Model with JSON Schema-ish objects + graph metadata              | Both have IR; depth and shape differ                                          |
 | Schema metadata          | Embedded CastrSchemaNode (required, nullable, zodChain, dependency graph)        | Access scopes and graph metadata; no zod-specific chain in IR       | Castr IR is generation-aware for Zod                                          |
 | Dependency graph         | Component-level dependency graph for ordering and circular refs                  | JSON-pointer graph with scope propagation                           | Different granularity and use cases                                           |
@@ -40,7 +41,7 @@
 | Extensibility            | Template selection + custom template path                                        | First-class plugin system with dependency ordering, tags, hooks     | OpenAPI-TS is more extensible at output layer                                 |
 | Client generation        | Optional openapi-fetch client template                                           | Client plugins (fetch, axios, angular, nuxt, etc.)                  | Castr avoids client coupling by default                                       |
 | Validators               | MCP input/output guards + Zod validation; AJV for spec validation                | Validator plugins (zod/valibot; ajv planned)                        | Different scope: Castr validates specs; OpenAPI-TS validates runtime payloads |
-| Spec validation          | Fail-fast + AJV compliance tests                                                 | Optional/experimental validate_EXPERIMENTAL with limited rules      | Castr is stricter; OpenAPI-TS is lighter                                      |
+| Spec validation          | Strict-by-default, fail-fast + AJV compliance tests                              | Optional/experimental validate_EXPERIMENTAL with limited rules      | Castr is stricter; OpenAPI-TS is lighter                                      |
 | Round-trip correctness   | Explicitly targeted with tests                                                   | Not a stated goal                                                   | Castr’s IR is designed for losslessness                                       |
 | Output layout            | Single file or grouped files                                                     | Generated folder tree with client/core/sdk/types                    | OpenAPI-TS scaffolds runtime                                                  |
 | Registry integration     | None                                                                             | Yes (Hey API, Scalar, ReadMe)                                       | OpenAPI-TS has platform integrations                                          |
@@ -80,7 +81,7 @@
 
 ## Real IR Excerpts (From Tests)
 
-Note: There are additional examples under `lib/tests-roundtrip/__fixtures__/normalized`, but the IR/code is not feature-complete and these fixtures will change frequently.
+Note: The normalized fixtures under `lib/tests-roundtrip/__fixtures__/normalized` include `ir.json` and `ir2.json` outputs from round-trip runs. The excerpts below include these real IR artifacts.
 
 ### Castr: Minimal document + schema metadata
 
@@ -224,6 +225,271 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 });
 ```
 
+### Castr: Webhooks in IR (normalized fixture)
+
+Source: `lib/tests-roundtrip/__fixtures__/normalized/webhook-3.1/ir.json`
+
+```json
+"webhooks": {
+  "newPet": {
+    "post": {
+      "requestBody": {
+        "description": "Information about a new pet in the system",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pet"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Return a 200 status to indicate that the data was received successfully"
+        }
+      }
+    }
+  }
+}
+```
+
+### Castr: Callbacks in Operation IR (normalized fixture)
+
+Source: `lib/tests-roundtrip/__fixtures__/normalized/callback-3.0/ir.json`
+
+```json
+"callbacks": {
+  "onData": {
+    "{$request.query.callbackUrl}/data": {
+      "post": {
+        "requestBody": {
+          "description": "subscription payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "userData": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": { "description": "Your server implementation should return this HTTP status code\nif the data was received successfully\n" },
+          "204": { "description": "Your server should return this HTTP status code if no longer interested\nin further updates\n" }
+        }
+      }
+    }
+  }
+}
+```
+
+### Castr: Response Headers in IR (normalized fixture)
+
+Source: `lib/tests-roundtrip/__fixtures__/normalized/petstore-3.0/ir.json`
+
+```json
+{
+  "statusCode": "200",
+  "description": "A paged array of pets",
+  "content": {
+    "application/json": {
+      "schema": { "$ref": "#/components/schemas/Pets" }
+    }
+  },
+  "headers": {
+    "x-next": {
+      "schema": { "type": "string" },
+      "description": "A link to the next page of responses"
+    }
+  }
+}
+```
+
+### Castr: Petstore Expanded (schema + operation + dependency graph)
+
+Source: `lib/tests-roundtrip/__fixtures__/normalized/petstore-expanded-3.0/ir.json`
+
+Schema (allOf composition with component ref):
+
+```json
+{
+  "type": "schema",
+  "name": "Pet",
+  "schema": {
+    "allOf": [
+      {
+        "$ref": "#/components/schemas/NewPet",
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+          "zodChain": { "presence": "", "validations": [], "defaults": [] },
+          "circularReferences": []
+        }
+      },
+      {
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+          "zodChain": { "presence": "", "validations": [], "defaults": [] },
+          "circularReferences": []
+        },
+        "type": "object",
+        "properties": {
+          "dataType": "CastrSchemaProperties",
+          "value": {
+            "id": {
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+                "zodChain": { "presence": "", "validations": [".int()"], "defaults": [] },
+                "circularReferences": []
+              },
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        "required": ["id"]
+      }
+    ]
+  }
+}
+```
+
+Operation (query params + array response):
+
+```json
+{
+  "operationId": "findPets",
+  "method": "get",
+  "path": "/pets",
+  "parameters": [
+    {
+      "name": "tags",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "metadata": {
+          "required": false,
+          "nullable": false,
+          "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+          "zodChain": { "presence": ".optional()", "validations": [], "defaults": [] },
+          "circularReferences": []
+        },
+        "type": "array",
+        "items": {
+          "metadata": {
+            "required": false,
+            "nullable": false,
+            "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+            "zodChain": { "presence": ".optional()", "validations": [], "defaults": [] },
+            "circularReferences": []
+          },
+          "type": "string"
+        }
+      },
+      "metadata": {
+        "required": false,
+        "nullable": false,
+        "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+        "zodChain": { "presence": ".optional()", "validations": [], "defaults": [] },
+        "circularReferences": []
+      },
+      "description": "tags to filter by",
+      "style": "form"
+    },
+    {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+        "metadata": {
+          "required": false,
+          "nullable": false,
+          "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+          "zodChain": { "presence": ".optional()", "validations": [".int()"], "defaults": [] },
+          "circularReferences": []
+        },
+        "type": "integer",
+        "format": "int32"
+      },
+      "metadata": {
+        "required": false,
+        "nullable": false,
+        "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+        "zodChain": { "presence": ".optional()", "validations": [".int()"], "defaults": [] },
+        "circularReferences": []
+      },
+      "description": "maximum number of results to return"
+    }
+  ],
+  "responses": [
+    {
+      "statusCode": "200",
+      "description": "pet response",
+      "content": {
+        "application/json": {
+          "schema": {
+            "metadata": {
+              "required": false,
+              "nullable": false,
+              "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+              "zodChain": { "presence": ".optional()", "validations": [], "defaults": [] },
+              "circularReferences": []
+            },
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pet",
+              "metadata": {
+                "required": false,
+                "nullable": false,
+                "dependencyGraph": { "references": [], "referencedBy": [], "depth": 0 },
+                "zodChain": { "presence": ".optional()", "validations": [], "defaults": [] },
+                "circularReferences": []
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+Dependency graph (component ordering + direct dependencies):
+
+```json
+{
+  "topologicalOrder": [
+    "#/components/schemas/NewPet",
+    "#/components/schemas/Pet",
+    "#/components/schemas/Error"
+  ],
+  "nodes": {
+    "#/components/schemas/Pet": {
+      "ref": "#/components/schemas/Pet",
+      "dependencies": ["#/components/schemas/NewPet"],
+      "dependents": [],
+      "depth": 1,
+      "isCircular": false
+    },
+    "#/components/schemas/NewPet": {
+      "ref": "#/components/schemas/NewPet",
+      "dependencies": [],
+      "dependents": ["#/components/schemas/Pet"],
+      "depth": 0,
+      "isCircular": false
+    }
+  }
+}
+```
+
 ## IR Deep Dive: Structures and Processing
 
 ### Castr IR: Canonical and Lossless
@@ -239,11 +505,11 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 
 ### OpenAPI-TS IR: Normalized for Codegen and Plugins
 
-- Pre-parse filters and transforms mutate specs (enums, required-by-default, read/write splitting) before IR is built.
+- OpenAPI-TS pre-parse transforms can mutate specs (enums, required-by-default, read/write splitting) before IR is built; Castr rejects non-compliant inputs.
 - Schema parsing flattens composition into `items` + `logicalOperator`, deduplicates unions, injects discriminator properties, and uses `omit` to resolve conflicts.
 - `additionalProperties` is normalized to `unknown`/`never` for type output; `accessScope` is derived from readOnly/writeOnly.
 - Operations select a preferred media type and collapse bodies/responses to a single `IRBodyObject` and `IRResponseObject`; `id` is generated even when operationId is missing.
-- A spec-wide JSON Pointer graph tracks nodes, dependencies, transitive deps, and scope propagation for filters and read/write transforms.
+- A spec-wide JSON Pointer graph tracks nodes, dependencies, transitive deps, and scope propagation for read/write transforms.
 - Plugins consume IR via events; `symbolRef` can bypass `$ref` lookups for direct type symbol usage.
 
 ### Conceptual Model Differences (Intent-Driven)
@@ -251,21 +517,21 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 - Castr prioritizes lossless fidelity and round-trip correctness; OpenAPI-TS prioritizes predictable codegen output and plugin ergonomics.
 - Castr’s metadata is writer-specific (Zod/MCP); OpenAPI-TS relies on graph scopes and plugin context for behavior.
 - Castr retains multiple media types; OpenAPI-TS reduces to a preferred media type for simpler SDK output.
-- Castr is strict on unresolved $refs (fail fast); OpenAPI-TS is more tolerant via transforms and patches.
+- Castr is strict on unresolved $refs (fail fast); OpenAPI-TS offers pre-parse patch/transform hooks, but Castr does not accept non-compliant inputs.
 
 ## Architectural Differences and Implications
 
 ### Normalization and Reference Handling
 
 - Castr normalizes all inputs to OpenAPI 3.1 via Scalar and preserves internal $refs for dependency graphs and circular detection (`docs/architecture/scalar-pipeline.md`, `lib/src/shared/prepare-openapi-document.ts`).
-- OpenAPI-TS bundles via `@hey-api/json-schema-ref-parser`, then applies patch/filter/transform logic before parsing (`tmp/openapi-ts/packages/openapi-ts/src/createClient.ts`, `tmp/openapi-ts/docs/openapi-ts/configuration/parser.md`).
+- OpenAPI-TS bundles via `@hey-api/json-schema-ref-parser`, then applies pre-parse transforms before parsing (`tmp/openapi-ts/packages/openapi-ts/src/createClient.ts`, `tmp/openapi-ts/docs/openapi-ts/configuration/parser.md`).
 - Implication: Castr favors lossless reference tracking and round-trip fidelity; OpenAPI-TS favors mutable pre-processing to fit plugin outputs.
 
 ### Graphs and Scopes
 
 - Castr builds a component-level dependency graph for ordering and circular detection; it does not maintain a spec-wide pointer graph.
-- OpenAPI-TS builds a JSON Pointer graph with transitive dependencies and scope propagation to support filtering and read/write transforms.
-- Implication: OpenAPI-TS can tree-shake and scope-split at graph level; Castr focuses on schema ordering for writers.
+- OpenAPI-TS builds a JSON Pointer graph with transitive dependencies and scope propagation to support read/write transforms.
+- Implication: OpenAPI-TS can scope-split at graph level; Castr focuses on schema ordering for writers.
 
 ### Output Strategy
 
@@ -287,8 +553,8 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 ### Transformation Philosophy
 
 - Castr: fail-fast and minimize heuristics; encourage spec compliance (`docs/architectural_decision_records/ADR-001-fail-fast-spec-violations.md`).
-- OpenAPI-TS: supports patching and transforms to handle real-world input variance (`tmp/openapi-ts/docs/openapi-ts/configuration/parser.md`).
-- Implication: Castr provides stricter correctness guarantees; OpenAPI-TS provides more tolerance and customization.
+- OpenAPI-TS: supports patch/transform steps for plugin outputs (`tmp/openapi-ts/docs/openapi-ts/configuration/parser.md`).
+- Implication: Castr provides stricter correctness guarantees; OpenAPI-TS provides more customization.
 
 ## Validation and Quality
 
@@ -319,8 +585,7 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 ### OpenAPI-TS -> Castr
 
 - **Plugin ecosystem**: Castr could adopt a light plugin interface for optional outputs (SDKs, framework hooks).
-- **Parser transforms/filters**: Offer opt-in patching/filters to handle messy specs without weakening default strictness.
-- **Pointer graph + scopes**: Add a spec-wide JSON Pointer graph to enable filtering, transitive dependency analysis, and read/write scope propagation.
+- **Pointer graph + scopes**: Add a spec-wide JSON Pointer graph to enable transitive dependency analysis and read/write scope propagation.
 - **Registry + watch mode**: Provide registry shorthand input and watch-based regeneration for dev flows.
 - **Transformers**: Add a “transformers” output (dates/bigint) or hook into output metadata to enable this.
 
@@ -332,7 +597,7 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 
 ## Deep Dive Opportunities for Castr
 
-- Add a spec-wide JSON Pointer graph sidecar to enable scopes, transitive dependencies, and filter-driven tree-shaking.
+- Add a spec-wide JSON Pointer graph sidecar to enable scopes and transitive dependencies.
 - Introduce an optional normalized IR view for writers (composition flattening, union dedupe, discriminator conflict handling, preferred media type hints).
 - Model read/write scopes explicitly (graph-driven or metadata) to support distinct input/output schema generation.
 - Expand remaining JSON Schema keyword coverage (patternProperties, propertyNames, contains, if/then/else) for parity with real-world specs.
@@ -364,9 +629,9 @@ expect(context.ir.paths?.[path]?.[method]).toEqual({
 ## Recommendations
 
 - Build a shared spec corpus index mapping OpenAPI-TS fixtures to Castr test categories (parsing, IR, roundtrip, schema validation).
-- Prototype a pointer-level graph sidecar with scope propagation for filtering and transitive dependency analysis.
+- Prototype a pointer-level graph sidecar with scope propagation for transitive dependency analysis.
 - Add an optional normalized writer view (composition flattening, union dedupe, discriminator handling, media type preference).
-- Add a “strict vs tolerant” mode in Castr to optionally allow OpenAPI-TS-style patch/filter transformations.
+- Preserve strict-by-default and fail-fast at all times; no tolerant modes.
 - Expand JSON Schema keyword coverage and add opt-in `x-` extension passthrough for plugins.
 - Consider an interop adapter: `CastrDocument -> OpenAPI-TS IR.Model` for selected plugins.
 

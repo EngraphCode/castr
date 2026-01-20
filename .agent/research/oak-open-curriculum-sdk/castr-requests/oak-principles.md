@@ -70,6 +70,8 @@ type Widget = z.infer<typeof WidgetSchema>;
 
 ## Strict Validation
 
+Strict-by-default is mandatory. There is no opt-out mode for Oak outputs.
+
 ### Object Schemas Reject Unknown Keys
 
 All object schemas MUST use `.strict()` to ensure unknown keys cause validation errors.

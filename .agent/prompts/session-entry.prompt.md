@@ -24,22 +24,28 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 
 > **This principle is inviolable.** The format can change, the content cannot.
 
-All transforms to and from the IR must preserve every aspect of the input document. If content would be lost, expand the IR — never accept the loss.
+### 3. Strict-By-Default and Fail-Fast
 
-### 3. Pure AST via ts-morph
+> **INVIOLABLE:** All code must be STRICT by default and FAIL FAST on errors. NO exceptions.
+
+- Objects use `.strict()` unless `additionalProperties: true`
+- Unknown types MUST throw, never fall back to `z.unknown()`
+- No silent coercion, no partial output
+
+### 4. Pure AST via ts-morph
 
 All code generation uses **ts-morph AST manipulation**—no string templates or concatenation.
 
-### 4. Type Discipline
+### 5. Type Discipline
 
 - **FORBIDDEN:** `as` (except `as const`), `any`, `!`
 - **REQUIRED:** Library types first, proper type guards
 
-### 5. TDD at ALL Levels (Mandatory)
+### 6. TDD at ALL Levels (Mandatory)
 
-Write failing tests FIRST—unit, integration, AND E2E. Tests are **specifications** that drive implementation.
+Write failing tests FIRST—unit, integration, AND E2E.
 
-### 6. Quality Gates (All 10 Must Pass)
+### 7. Quality Gates (All 10 Must Pass)
 
 ```bash
 pnpm clean && pnpm install && pnpm build && pnpm type-check && \
@@ -47,68 +53,65 @@ pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
 pnpm test:gen && pnpm character
 ```
 
+> **Note:** All commands run from `lib/` directory.
+
 ---
 
-## 📋 Current Focus: Round-Trip Validation (Session 2.7)
+## 📋 Current Focus: Zod 4 Output Compliance (Session 2.8)
 
-**Status:** 🟡 IN PROGRESS (Phase 1 Complete)
+> [!IMPORTANT]
+> **Zod 4 ONLY** — We do not support Zod 3. This enables `.meta()` for zero information loss.
 
-Session 2.6 (OpenAPI Compliance) is **✅ COMPLETE** — all phases finished on January 19, 2026.
+**Status:** 🚧 IN PROGRESS (Phases 2.8.1-2.8.3 Complete)
 
-### Session 2.7 Progress
+### Completed Sessions
 
-| Phase | Focus                        | Status                           |
-| ----- | ---------------------------- | -------------------------------- |
-| 1     | `sortDeep()` utility (TDD)   | ✅ Complete (17 unit tests)      |
-| 2     | Arbitrary fixtures           | ✅ Complete (5 symlinks created) |
-| 3     | Round-trip integration tests | 🟡 Next                          |
-| 4     | Normalized fixtures + script | 🔲 Pending                       |
+| Session | Focus                       | Status      |
+| ------- | --------------------------- | ----------- |
+| 2.1-2.5 | Zod parser + OpenAPI writer | ✅ Complete |
+| 2.6     | OpenAPI Compliance          | ✅ Complete |
+| 2.7     | OpenAPI Round-Trip          | ✅ Complete |
+| 2.8.1   | Audit & Planning            | ✅ Complete |
+| 2.8.2   | Metadata via .meta()        | ✅ Complete |
+| 2.8.3   | Type Coverage & Fail-Fast   | ✅ Complete |
 
-**Completed this session:**
+### Remaining Work (Session 2.8.4+)
 
-- Created `lib/src/shared/utils/sortDeep.ts` with 17 unit tests
-- Created 5 arbitrary fixture symlinks in `lib/tests-roundtrip/__fixtures__/arbitrary/`
-- All 10 quality gates pass (1,279+ tests)
+| Phase | Focus                                           | Status     |
+| ----- | ----------------------------------------------- | ---------- |
+| 2.8.4 | Integration tests (OpenAPI → IR → Zod pipeline) | 🔲 Pending |
+| 2.8.5 | Validation parity tests                         | 🔲 Pending |
 
-**Next steps:**
+### Session 2.8 Objective
 
-1. Create round-trip integration test file (`round-trip.integration.test.ts`)
-2. Implement losslessness tests (arbitrary specs)
-3. Implement idempotency tests (normalized specs)
-4. Create fixture generation script
+Prove that **OpenAPI → IR → Zod** produces correct, complete Zod 4 schemas with zero information loss.
 
-**Entry point:** [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md) → Session 2.7 section
+**Active plan:** [zod4-output-compliance-plan.md](../plans/zod4-output-compliance-plan.md)
 
-**Active plan:** [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md)
+**Specification:** [zod-output-acceptance-criteria.md](../../docs/zod-output-acceptance-criteria.md)
 
 ---
 
 ## 📚 Essential Reading
 
-| Priority | Document                                                            | Purpose               |
-| -------- | ------------------------------------------------------------------- | --------------------- |
-| 1        | [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md)   | Active work           |
-| 2        | [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) | Formal specification  |
-| 3        | [requirements.md](../requirements.md)                               | Field-level reqs      |
-| 4        | [RULES.md](../RULES.md)                                             | Engineering standards |
-| 5        | [testing-strategy.md](../testing-strategy.md)                       | TDD at all levels     |
-
-**Reference Specifications:**
-
-- OpenAPI schemas: `.agent/reference/openapi_schema/`
-- JSON Schema 2020-12: `.agent/reference/json-schema-2020-12/`
+| Priority | Document                                                                          | Purpose               |
+| -------- | --------------------------------------------------------------------------------- | --------------------- |
+| 1        | [zod4-output-compliance-plan.md](../plans/zod4-output-compliance-plan.md)         | Active work           |
+| 2        | [zod-output-acceptance-criteria.md](../../docs/zod-output-acceptance-criteria.md) | Formal specification  |
+| 3        | [RULES.md](../RULES.md)                                                           | Engineering standards |
+| 4        | [testing-strategy.md](../testing-strategy.md)                                     | TDD at all levels     |
 
 ---
 
 ## 🗂️ Key Files (ADR-029 Structure)
 
-| Layer            | Location                                | Entry Point                                                    |
-| ---------------- | --------------------------------------- | -------------------------------------------------------------- |
-| IR               | `lib/src/ir/`                           | `schema.ts`                                                    |
-| Parsers          | `lib/src/parsers/{format}/`             | `index.ts`                                                     |
-| Writers          | `lib/src/writers/{format}/`             | `index.ts`                                                     |
-| Validation       | `lib/src/shared/load-openapi-document/` | [README](../../lib/src/shared/load-openapi-document/README.md) |
-| Round-trip tests | `lib/tests-roundtrip/`                  | [README](../../lib/tests-roundtrip/README.md)                  |
+| Layer            | Location                    | Entry Point      |
+| ---------------- | --------------------------- | ---------------- |
+| IR               | `lib/src/ir/`               | `schema.ts`      |
+| Parsers          | `lib/src/parsers/{format}/` | `index.ts`       |
+| Writers          | `lib/src/writers/{format}/` | `index.ts`       |
+| Zod Writer       | `lib/src/writers/zod/`      | Focus for 2.8    |
+| Round-trip tests | `lib/tests-roundtrip/`      | Fixtures for 2.8 |
 
 ---
 
@@ -116,7 +119,7 @@ Session 2.6 (OpenAPI Compliance) is **✅ COMPLETE** — all phases finished on 
 
 1. **Run quality gates** — Verify clean state
 2. **Read this document** — Understand current focus
-3. **Read active plan** — [openapi-compliance-plan.md](../plans/openapi-compliance-plan.md)
+3. **Read active plan** — [zod4-output-compliance-plan.md](../plans/zod4-output-compliance-plan.md)
 4. **Ask:** What impact are we creating for the user?
 5. **Write tests first** — TDD at all levels
 6. **Run quality gates** — All 10 must pass before commit
@@ -125,8 +128,8 @@ Session 2.6 (OpenAPI Compliance) is **✅ COMPLETE** — all phases finished on 
 
 ## ⚠️ Common Pitfalls
 
-1. **Accepting content loss** — NEVER acceptable. Expand IR if needed.
-2. **Building utilities before tests** — TDD means tests first
-3. **Jumping to solutions** — Articulate the problem first
-4. **Forgetting user value** — Every change needs clear user impact
+1. **Accepting content loss** — NEVER acceptable. All metadata via `.meta()`
+2. **Silent fallbacks** — NEVER use `z.unknown()` for unsupported types, ALWAYS throw
+3. **Building utilities before tests** — TDD means tests first
+4. **Targeting Zod 3** — We only support Zod 4
 5. **"Pragmatic" shortcuts** — In this project, pragmatic = highest quality

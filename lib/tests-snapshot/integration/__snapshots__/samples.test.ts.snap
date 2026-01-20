@@ -12,9 +12,16 @@ export type CreateUserInput = {
 // Zod Schemas
 export const CreateUserInput = z
   .object({
-    username: z.unknown(),
+    username: z
+      .string()
+      .nullable()
+      .meta({ description: "Unique handle for the user" }),
     email: z.string().email(),
-    age: z.unknown().optional(),
+    age: z
+      .number()
+      .nullable()
+      .optional()
+      .meta({ description: "Optional age in years" }),
   })
   .strict();
 // Endpoints
@@ -358,30 +365,50 @@ export const endpoints = [
       {
         name: "callbackUrl",
         type: "Query",
-        schema: z.string().url(),
+        schema: z
+          .string()
+          .url()
+          .meta({ examples: ["https://tonys-server.com"] }),
         description:
           "the location where data will be sent.  Must be network accessible\\nby the source server\\n",
       },
     ],
     response: z
       .object({
-        subscriptionId: z.string(),
+        subscriptionId: z
+          .string()
+          .meta({
+            description:
+              "this unique identifier allows management of the subscription",
+            examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
+          }),
       })
-      .passthrough(),
+      .passthrough()
+      .meta({ description: "subscription information" }),
     errors: [],
     responses: {
       201: {
         schema: z
           .object({
-            subscriptionId: z.string(),
+            subscriptionId: z
+              .string()
+              .meta({
+                description:
+                  "this unique identifier allows management of the subscription",
+                examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
+              }),
           })
-          .passthrough(),
+          .passthrough()
+          .meta({ description: "subscription information" }),
         description: "subscription successfully created",
       },
     },
     request: {
       queryParams: z.object({
-        callbackUrl: z.string().url(),
+        callbackUrl: z
+          .string()
+          .url()
+          .meta({ examples: ["https://tonys-server.com"] }),
       }),
     },
     description: "subscribes a client to receive out-of-band data",
@@ -1719,10 +1746,22 @@ export const dataSetList = z
       .array(
         z
           .object({
-            apiKey: z.string().optional(),
-            apiVersionNumber: z.string().optional(),
-            apiUrl: z.string().optional(),
-            apiDocumentationUrl: z.string().optional(),
+            apiKey: z
+              .string()
+              .optional()
+              .meta({ description: "To be used as a dataset parameter value" }),
+            apiVersionNumber: z
+              .string()
+              .optional()
+              .meta({ description: "To be used as a version parameter value" }),
+            apiUrl: z
+              .string()
+              .optional()
+              .meta({ description: "The URL describing the dataset's fields" }),
+            apiDocumentationUrl: z
+              .string()
+              .optional()
+              .meta({ description: "A URL to the API console for each API" }),
           })
           .passthrough(),
       )
@@ -1731,9 +1770,25 @@ export const dataSetList = z
   .passthrough();
 export const perform_search_Body = z
   .object({
-    criteria: z.string(),
-    start: z.number().int().optional(),
-    rows: z.number().int().optional(),
+    criteria: z
+      .string()
+      .meta({
+        description:
+          "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+      }),
+    start: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "Starting record number. Default value is 0." }),
+    rows: z
+      .number()
+      .int()
+      .optional()
+      .meta({
+        description:
+          "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+      }),
   })
   .passthrough();
 // Endpoints
@@ -1826,9 +1881,27 @@ export const endpoints = [
         type: "Body",
         schema: z
           .object({
-            criteria: z.string(),
-            start: z.number().int().optional(),
-            rows: z.number().int().optional(),
+            criteria: z
+              .string()
+              .meta({
+                description:
+                  "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+              }),
+            start: z
+              .number()
+              .int()
+              .optional()
+              .meta({
+                description: "Starting record number. Default value is 0.",
+              }),
+            rows: z
+              .number()
+              .int()
+              .optional()
+              .meta({
+                description:
+                  "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+              }),
           })
           .passthrough(),
       },
@@ -1858,9 +1931,27 @@ export const endpoints = [
       }),
       body: z
         .object({
-          criteria: z.string(),
-          start: z.number().int().optional(),
-          rows: z.number().int().optional(),
+          criteria: z
+            .string()
+            .meta({
+              description:
+                "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+            }),
+          start: z
+            .number()
+            .int()
+            .optional()
+            .meta({
+              description: "Starting record number. Default value is 0.",
+            }),
+          rows: z
+            .number()
+            .int()
+            .optional()
+            .meta({
+              description:
+                "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+            }),
         })
         .passthrough(),
     },
@@ -2113,11 +2204,29 @@ export type status = {
   board?: board;
 };
 // Zod Schemas
-export const errorMessage = z.string().max(256);
-export const coordinate = z.number().min(1).max(3).int();
-export const mark = z.enum([".", "X", "O"]);
+export const errorMessage = z
+  .string()
+  .max(256)
+  .meta({ description: "A text message describing an error" });
+export const coordinate = z
+  .number()
+  .min(1)
+  .max(3)
+  .int()
+  .meta({ examples: [1] });
+export const mark = z
+  .enum([".", "X", "O"])
+  .meta({
+    description: "Possible values for a board square. \`.\` means empty square.",
+    examples: ["."],
+  });
 export const board = z.array(z.array(mark).min(3).max(3)).min(3).max(3);
-export const winner = z.enum([".", "X", "O"]);
+export const winner = z
+  .enum([".", "X", "O"])
+  .meta({
+    description: "Winner of the game. \`.\` means nobody has won yet.",
+    examples: ["."],
+  });
 export const status = z
   .object({
     winner: winner.optional(),

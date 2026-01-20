@@ -137,6 +137,9 @@ function addTypeInfo(schema: SchemaObject, irSchema: CastrSchema): void {
 
 /** @internal */
 function addDocumentation(schema: SchemaObject, irSchema: CastrSchema): void {
+  if (schema.title !== undefined) {
+    irSchema.title = schema.title;
+  }
   if (schema.description !== undefined) {
     irSchema.description = schema.description;
   }

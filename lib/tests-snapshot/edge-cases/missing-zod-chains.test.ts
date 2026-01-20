@@ -85,7 +85,7 @@ test('missing-zod-chains', async () => {
         num: z.number().min(10).int(),
       })
       .strict();
-    export const nulltype = z.union([z.object({}).strict(), z.unknown()]);
+    export const nulltype = z.union([z.object({}).strict(), z.null()]);
     export const anyOfType = z.union([
       z.object({}).strict(),
       z
@@ -93,7 +93,7 @@ test('missing-zod-chains', async () => {
           foo: z.string().optional(),
         })
         .strict(),
-      z.unknown(),
+      z.null(),
     ]);
     // Endpoints
     export const endpoints = [

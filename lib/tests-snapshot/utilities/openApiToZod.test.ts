@@ -14,7 +14,7 @@ const getSchemaAsZodString = (schema: SchemaObject) =>
   getZodSchema({ schema: makeSchema(schema) }).code;
 
 test('getSchemaAsZodString', () => {
-  expect(getSchemaAsZodString({ type: 'null' })).toMatchInlineSnapshot(`"z.unknown()"`);
+  expect(getSchemaAsZodString({ type: 'null' })).toMatchInlineSnapshot(`"z.null()"`);
   expect(
     getSchemaAsZodString({ type: 'null', enum: ['Dogs', 'Cats', 'Mice'] }),
   ).toMatchInlineSnapshot(`"z.enum(["Dogs", "Cats", "Mice"])"`);
@@ -191,7 +191,7 @@ test('getSchemaAsZodString', () => {
 
 test('getSchemaWithChainableAsZodString', () => {
   expect(getSchemaAsZodString({ type: ['string', 'null'] })).toMatchInlineSnapshot(
-    `"z.unknown().nullable()"`,
+    `"z.string().nullable()"`,
   );
   expect(getSchemaAsZodString({ type: 'string' })).toMatchInlineSnapshot(`"z.string()"`);
 });

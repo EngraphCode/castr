@@ -126,20 +126,53 @@ test('jsdoc', async () => {
       .strict();
     export const ComplexObject = z
       .object({
-        example: z.string().optional(),
-        examples: z.string().optional(),
+        example: z
+          .string()
+          .optional()
+          .meta({
+            description: "A string with example tag",
+            examples: ["example"],
+          }),
+        examples: z
+          .string()
+          .optional()
+          .meta({
+            description: "A string with examples tag",
+            examples: ["example1", "example2"],
+          }),
         manyTagsStr: z
           .enum(["a", "b", "c"])
           .min(1)
           .max(10)
           .regex(/^[a-z]*$/)
-          .optional(),
-        numMin: z.number().min(0).optional(),
-        numMax: z.number().max(10).optional(),
-        manyTagsNum: z.number().min(0).max(10).optional(),
-        bool: z.boolean().optional(),
+          .optional()
+          .meta({ description: "A string with many tags" }),
+        numMin: z
+          .number()
+          .min(0)
+          .optional()
+          .meta({ description: "A number with minimum tag" }),
+        numMax: z
+          .number()
+          .max(10)
+          .optional()
+          .meta({ description: "A number with maximum tag" }),
+        manyTagsNum: z
+          .number()
+          .min(0)
+          .max(10)
+          .optional()
+          .meta({
+            description: "A number with many tags",
+            examples: [3],
+            externalDocs: { url: "https://example.com" },
+          }),
+        bool: z.boolean().optional().meta({ description: "A boolean" }),
         ref: SimpleObject.optional(),
-        refArray: z.array(SimpleObject).optional(),
+        refArray: z
+          .array(SimpleObject)
+          .optional()
+          .meta({ description: "An array of SimpleObject" }),
       })
       .strict();
     // Endpoints

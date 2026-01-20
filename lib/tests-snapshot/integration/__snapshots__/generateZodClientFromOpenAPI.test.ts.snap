@@ -57,70 +57,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [
@@ -2236,70 +2326,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [
@@ -4007,70 +4187,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [
@@ -6186,70 +6456,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [
@@ -8365,70 +8725,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [
@@ -10544,70 +10994,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [
@@ -12723,70 +13263,160 @@ export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
   .object({
-    id: z.number().int().optional(),
-    petId: z.number().int().optional(),
-    quantity: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    petId: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [198772] }),
+    quantity: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [7] }),
     shipDate: z.string().datetime().optional(),
-    status: z.enum(["placed", "approved", "delivered"]).optional(),
+    status: z
+      .enum(["placed", "approved", "delivered"])
+      .optional()
+      .meta({ description: "Order Status", examples: ["approved"] }),
     complete: z.boolean().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zip: z.string().optional(),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
+    city: z
+      .string()
+      .optional()
+      .meta({ examples: ["Palo Alto"] }),
+    state: z
+      .string()
+      .optional()
+      .meta({ examples: ["CA"] }),
+    zip: z
+      .string()
+      .optional()
+      .meta({ examples: ["94301"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    address: z.array(Address).optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [100000] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["fehguy"] }),
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "customer" } });
 export const Category = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [1] }),
+    name: z
+      .string()
+      .optional()
+      .meta({ examples: ["Dogs"] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "category" } });
 export const User = z
   .object({
-    id: z.number().int().optional(),
-    username: z.string().optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    email: z.string().optional(),
-    password: z.string().optional(),
-    phone: z.string().optional(),
-    userStatus: z.number().int().optional(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
+    email: z
+      .string()
+      .optional()
+      .meta({ examples: ["john@email.com"] }),
+    password: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    phone: z
+      .string()
+      .optional()
+      .meta({ examples: ["12345"] }),
+    userStatus: z
+      .number()
+      .int()
+      .optional()
+      .meta({ description: "User Status", examples: [1] }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "user" } });
 export const Tag = z
   .object({
     id: z.number().int().optional(),
     name: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
-    id: z.number().int().optional(),
-    name: z.string(),
+    id: z
+      .number()
+      .int()
+      .optional()
+      .meta({ examples: [10] }),
+    name: z.string().meta({ examples: ["doggie"] }),
     category: Category.optional(),
-    photoUrls: z.array(z.string()),
-    tags: z.array(Tag).optional(),
-    status: z.enum(["available", "pending", "sold"]).optional(),
+    photoUrls: z
+      .array(z.string().meta({ xml: { name: "photoUrl" } }))
+      .meta({ xml: { wrapped: true } }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
+    status: z
+      .enum(["available", "pending", "sold"])
+      .optional()
+      .meta({ description: "pet status in the store" }),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
   .object({
     code: z.number().int().optional(),
     type: z.string().optional(),
     message: z.string().optional(),
   })
-  .strict();
+  .strict()
+  .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
 export const endpoints = [

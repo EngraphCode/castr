@@ -61,7 +61,9 @@ test('allOf-single-ref', async () => {
     // Type Definitions
     export type MyComponent = string;
     // Zod Schemas
-    export const MyComponent = z.enum(["one", "two", "three"]);
+    export const MyComponent = z
+      .enum(["one", "two", "three"])
+      .meta({ title: "MyComponent" });
     // Endpoints
     export const endpoints = [
       {
@@ -115,13 +117,31 @@ test('allOf-single-ref', async () => {
                 type: "object",
                 properties: {
                   allOf_ref_param: {
-                    allOf: [{ type: "string", enum: ["one", "two", "three"] }],
+                    allOf: [
+                      {
+                        type: "string",
+                        title: "MyComponent",
+                        enum: ["one", "two", "three"],
+                      },
+                    ],
                   },
                   oneOf_ref_param: {
-                    oneOf: [{ type: "string", enum: ["one", "two", "three"] }],
+                    oneOf: [
+                      {
+                        type: "string",
+                        title: "MyComponent",
+                        enum: ["one", "two", "three"],
+                      },
+                    ],
                   },
                   anyOf_ref_param: {
-                    anyOf: [{ type: "string", enum: ["one", "two", "three"] }],
+                    anyOf: [
+                      {
+                        type: "string",
+                        title: "MyComponent",
+                        enum: ["one", "two", "three"],
+                      },
+                    ],
                   },
                 },
               },

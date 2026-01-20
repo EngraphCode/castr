@@ -129,13 +129,13 @@ exports[`Parameter Metadata Extraction - Snapshot Tests > should prefer paramete
         {
             "example": "parameter-example",
             "name": "param_with_both",
-            "schema": "z.string()",
+            "schema": "z.string().meta({"examples":["schema-example"]})",
             "type": "Query",
         },
         {
             "example": "schema-only-example",
             "name": "param_with_schema_example_only",
-            "schema": "z.string()",
+            "schema": "z.string().meta({"examples":["schema-only-example"]})",
             "type": "Query",
         },
     ],

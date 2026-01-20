@@ -3,12 +3,13 @@
  * Generate Normalized Fixtures
  *
  * Takes arbitrary OpenAPI specs and generates normalized output for inspection.
- * Creates five files for each input:
+ * Creates six files for each input:
  * - input.yaml (original, symlinked)
  * - normalized.json (first pass output)
  * - reprocessed.json (second pass output — should be identical to normalized)
  * - ir.json (intermediate representation from first pass)
  * - ir2.json (intermediate representation from second pass)
+ * - zod.ts (generated Zod schemas from the IR)
  *
  * Usage:
  *   npx tsx scripts/generate-normalized-fixtures.ts
@@ -20,6 +21,7 @@
  *     - reprocessed.json
  *     - ir.json
  *     - ir2.json
+ *     - zod.ts
  */
 
 import { existsSync, mkdirSync, writeFileSync, symlinkSync, unlinkSync } from 'node:fs';
@@ -27,6 +29,7 @@ import { resolve } from 'node:path';
 import { buildIR } from '../src/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
 import { writeOpenApi } from '../src/writers/openapi/index.js';
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '../src/rendering/index.js';
 
 const ARBITRARY_FIXTURES_DIR = resolve(
   import.meta.dirname,
@@ -53,6 +56,12 @@ function ensureDir(dir: string): void {
 /** Write JSON file with pretty printing. */
 function writeJson(filePath: string, data: unknown): void {
   writeFileSync(filePath, JSON.stringify(data, null, 2));
+  console.log(`  → ${filePath}`);
+}
+
+/** Write text file. */
+function writeText(filePath: string, content: string): void {
+  writeFileSync(filePath, content);
   console.log(`  → ${filePath}`);
 }
 
@@ -101,11 +110,30 @@ async function processFixture(fixtureName: string): Promise<void> {
   writeJson(resolve(fixtureOutputDir, 'ir.json'), serializeIR(ir));
   writeJson(resolve(fixtureOutputDir, 'ir2.json'), serializeIR(ir2));
 
+  // Generate Zod TypeScript output
+  await writeZodOutput(inputPath, fixtureOutputDir);
+
   // Symlink input
   const ext = fixtureName.split('.').pop();
   createSymlink(`../../arbitrary/${fixtureName}`, resolve(fixtureOutputDir, `input.${ext}`));
 
   console.log('');
+}
+
+/** Generate and write Zod output for a fixture. */
+async function writeZodOutput(inputPath: string, outputDir: string): Promise<void> {
+  const zodResult = await generateZodClientFromOpenAPI({
+    input: inputPath,
+    disableWriteToFile: true,
+  });
+  if (isSingleFileResult(zodResult)) {
+    writeText(resolve(outputDir, 'zod.ts'), zodResult.content);
+  } else {
+    for (const [fileName, content] of Object.entries(zodResult.files)) {
+      const safeFileName = fileName.replace(/[/\\]/g, '_');
+      writeText(resolve(outputDir, `zod_${safeFileName}`), content);
+    }
+  }
 }
 
 async function generateNormalizedFixtures(): Promise<void> {

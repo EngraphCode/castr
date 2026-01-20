@@ -2,7 +2,7 @@
 
 ## Intent
 
-Provide canonical inputs for validating `@engraph/castr` against a real, schema-first pipeline. These OpenAPI fixtures are the ground truth for the Oak Open Curriculum API: every generated type, validator, and MCP tool ultimately flows from them. The SDK-decorated schema is the input passed to castr; the original schema is retained for provenance and upstream feedback. OpenAPI 3.0 inputs are preserved alongside OpenAPI 3.1 upgrades used for stricter, fully valid checks. These fixtures define the contract Castr must satisfy for the current systems, not an implementation detail of the harness.
+Provide canonical inputs for validating `@engraph/castr` against a real, schema-first pipeline. These OpenAPI fixtures are the ground truth for the Oak Open Curriculum API: every generated type, validator, and MCP tool ultimately flows from them. The SDK-decorated schema is the input passed to castr; the original schema is retained for provenance and upstream feedback. Castr should treat the SDK-decorated input as standard OpenAPI with no Oak-specific parsing or logic. OpenAPI 3.0 inputs are preserved alongside OpenAPI 3.1 upgrades used for stricter, fully valid checks. These fixtures define the contract Castr must satisfy for the current systems, not an implementation detail of the harness.
 
 ## Negotiation Context
 
@@ -10,23 +10,25 @@ This document represents Oak's initial requirements. It is a starting point for 
 
 ### What's Non-Negotiable (and Why)
 
-| Requirement                  | Rationale                                                                                                                                                           |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Strict object validation** | Oak's MCP tools fail fast on invalid API responses. Unknown keys indicate schema drift that must be caught immediately, not silently ignored.                       |
-| **Deterministic output**     | Oak's CI pipeline verifies that `type-gen` produces identical output. Non-determinism causes spurious diffs and broken builds.                                      |
-| **Type preservation**        | Oak's entire SDK type system depends on literal types flowing from the schema. Widening `'/api/lessons'` to `string` breaks compile-time safety for every consumer. |
-| **No invented optionality**  | If the schema says required, it's required. Adding `.optional()` "for safety" masks real bugs and violates the schema contract.                                     |
+| Requirement                      | Rationale                                                                                                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Strict by default, fail fast** | Oak's MCP tools rely on immediate validation. Unknown keys indicate schema drift and must throw; strictness is the default and non-optional.                        |
+| **Deterministic output**         | Oak's CI pipeline verifies that `type-gen` produces identical output. Non-determinism causes spurious diffs and broken builds.                                      |
+| **Type preservation**            | Oak's entire SDK type system depends on literal types flowing from the schema. Widening `'/api/lessons'` to `string` breaks compile-time safety for every consumer. |
+| **No invented optionality**      | If the schema says required, it's required. Adding `.optional()` "for safety" masks real bugs and violates the schema contract.                                     |
 
 ### What's Negotiable
 
-| Area                          | Oak's Flexibility                                                                                            |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| **File structure**            | Oak can adapt to any reasonable output layout. Current structure is not sacred.                              |
-| **API shape**                 | As long as the required data is accessible, the exact function signatures and export structure are flexible. |
-| **Naming conventions**        | Prefer configurable hooks, but Oak can adapt to reasonable defaults.                                         |
-| **Path format**               | Colon (`:id`) vs curly (`{id}`) - Oak can adapt either way if castr has a preference.                        |
-| **Bundle manifest structure** | The current `castr-bundle.schema.json` is a proposal. Open to revision.                                      |
-| **Emitter granularity**       | Whether Zod/TypeScript/metadata come from one emitter or multiple is flexible.                               |
+| Area                          | Oak's Flexibility                                                                                                             |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **File structure**            | Oak can adapt to any reasonable output layout. Current structure is not sacred.                                               |
+| **API shape**                 | As long as the required data is accessible, the exact function signatures and export structure are flexible.                  |
+| **Naming conventions**        | Prefer configurable hooks, but Oak can adapt to reasonable defaults.                                                          |
+| **Path format**               | Colon (`:id`) vs curly (`{id}`) - Oak can adapt either way if castr has a preference.                                         |
+| **Bundle manifest structure** | The current `castr-bundle.schema.json` is a proposal and a temporary communication artifact; open to revision or replacement. |
+| **Emitter granularity**       | Whether Zod/TypeScript/metadata come from one emitter or multiple is flexible.                                                |
+
+The castr-bundle format is a starting point for communication. It should remain in place until it is superseded, but it is not a permanent contract.
 
 ### How to Propose Changes
 

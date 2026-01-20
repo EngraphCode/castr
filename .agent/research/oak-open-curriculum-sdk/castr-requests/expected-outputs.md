@@ -2,6 +2,11 @@
 
 This document provides concrete examples of the outputs Oak expects from castr, derived from analysing the current adapter and its consumers.
 
+## Assumptions
+
+- Strict-by-default and fail-fast: object schemas use `.strict()`, and missing/unsupported constructs fail immediately.
+- Input is already SDK-decorated by Oak; castr treats it as standard OpenAPI.
+
 ## Example: Widget API
 
 Given this OpenAPI fragment:

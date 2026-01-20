@@ -43,6 +43,8 @@ const baseIgnores = [
   '**/.DS_Store',
   '**/*.hbs',
   '**/tests-generated/.tmp/**',
+  // Generated fixture outputs - not source code
+  '**/tests-roundtrip/__fixtures__/normalized/**/zod*.ts',
 ];
 
 const testGlobs = [
@@ -221,12 +223,13 @@ export default defineConfig(
     },
   },
 
-  // Writer files need higher complexity for field output
+  // Writer files need higher limits for conditional field output
   // These files conditionally add many optional fields to output objects
   {
     files: ['src/writers/**/*.ts'],
     ignores: testGlobs,
     rules: {
+      'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
       'sonarjs/cognitive-complexity': ['error', 15],
       complexity: ['error', 15],
     },

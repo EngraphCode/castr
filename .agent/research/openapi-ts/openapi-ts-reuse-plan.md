@@ -5,7 +5,7 @@ This document complements `.agent/research/openapi-ts/openapi-ts-comparison.md` 
 ## Executive Summary
 
 - Reuse ideas and architecture patterns freely; re-implement in Castr for lowest risk.
-- MIT-licensed OpenAPI‑TS code can be reused with attribution and inclusion of the license text.
+- MIT-licensed OpenAPI-TS content can be reused after confirming the license for the specific files; if any reuse occurs, we must add `docs/THIRD_PARTY_NOTICES.md` with attribution and the MIT license text.
 - Fixture/spec files may include third‑party content; do not copy without verifying per‑file licensing.
 - Prefer synthetic fixtures that reproduce edge cases rather than copying third‑party specs.
 
@@ -14,7 +14,7 @@ This document complements `.agent/research/openapi-ts/openapi-ts-comparison.md` 
 ### Architecture / Concepts (Re-implement)
 
 - Plugin dependency graph + tagging system for optional outputs.
-- Parser transforms/filters/patch hooks for resilience.
+- Deterministic spec normalization for standards-compliant upgrades (e.g., 3.0 → 3.1), without accepting invalid inputs.
 - Output scaffolding patterns for SDKs.
 
 ### UX Features (Re-implement)
@@ -36,8 +36,9 @@ This document complements `.agent/research/openapi-ts/openapi-ts-comparison.md` 
 
 ### Required Actions if Reusing MIT Code
 
+- Confirm the specific files are covered by MIT (and not third-party).
 - Include the MIT license text from `tmp/openapi-ts/LICENSE.md`.
-- Add attribution in a `THIRD_PARTY_NOTICES.md` or equivalent.
+- Add attribution in `docs/THIRD_PARTY_NOTICES.md` (or equivalent).
 - Keep any existing copyright headers.
 
 ## Caution Zones (Audit Required)
@@ -73,7 +74,7 @@ Even if snapshots were produced by OpenAPI‑TS, they may embed third‑party co
 
 ### Step 1: Provenance Audit
 
-Create a list of fixtures in `tmp/openapi-ts/specs/**` and classify:
+Create a list of fixtures in `tmp/openapi-ts/specs` and classify:
 
 - `first-party`: authored by OpenAPI‑TS (safe to reuse under MIT)
 - `third-party`: copied from external providers (audit required)
@@ -92,7 +93,7 @@ For each fixture category, create minimal synthetic equivalents:
 
 ### Step 3: Optional MIT Code Reuse
 
-If you decide to reuse any OpenAPI‑TS code, add:
+If you decide to reuse any OpenAPI-TS content, after confirming licensing, add:
 
 - `docs/THIRD_PARTY_NOTICES.md` with the MIT license text.
 - A short note in `README.md` citing the reuse.

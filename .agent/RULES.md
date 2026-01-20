@@ -82,6 +82,47 @@ Before any work, always ask:
 
 ---
 
+## ⚡ Strict-By-Default and Fail-Fast
+
+> **INVIOLABLE PRINCIPLE**: All code must be STRICT by default and FAIL FAST on errors.
+> There are NO exceptions. Ever.
+
+### Strict-By-Default
+
+Every component must enforce the strictest possible validation:
+
+- **Objects**: Always use `.strict()` unless `additionalProperties: true` is explicitly set
+- **Types**: Never allow unknown types to pass silently - validate everything
+- **Schemas**: Require all constraints to match exactly, not loosely
+- **No Coercion**: Never use implicit type coercion (`z.coerce`) unless explicitly requested
+
+### Fail-Fast
+
+Errors must be thrown IMMEDIATELY when detected, not swallowed or degraded:
+
+- **Unsupported patterns MUST throw** - Never fall back to `z.unknown()` or similar
+- **Invalid data MUST throw** - Never produce partial or invalid output
+- **Missing requirements MUST throw** - Never assume defaults for required fields
+- **Type mismatches MUST throw** - Never silently ignore type incompatibilities
+
+### Why This Matters
+
+Silent failures are the enemy of reliable software:
+
+```typescript
+// ❌ FORBIDDEN: Silent fallback
+default:
+  writer.write('z.unknown()'); // Hides the problem!
+
+// ✅ REQUIRED: Fail-fast
+default:
+  throw new Error(`Unsupported schema type: ${type}. Writer cannot proceed.`);
+```
+
+**The cost of a strict error today is FAR LESS than the cost of a silent bug in production.**
+
+---
+
 ## 📚 Document Relationships
 
 ```mermaid
