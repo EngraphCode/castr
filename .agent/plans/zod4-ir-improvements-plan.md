@@ -1,24 +1,47 @@
 # Plan: Zod 4 IR→Zod Improvements
 
-**Status:** 🔲 Not Started  
+**Status:** 🟡 In Progress  
 **Priority:** 3.1b  
 **Prerequisite for:** Zod → IR Parser, True Round-Trip Validation
 
 ---
 
-## Goal
+## Context
 
-Leverage Zod 4's advanced features to produce **richer, more idiomatic** Zod output from the IR before building the Zod → IR parser.
+> [!IMPORTANT]
+> **Session 3.1a (IR Semantic Audit) is complete.** The IR is now format-agnostic.
+> **Research complete.** Priorities confirmed, now implementing.
 
-**Why before parser:** If we improve the output first, the parser gets built for the final shape from day one.
+**Essential reading:**
+
+- [session-entry.prompt.md](../prompts/session-entry.prompt.md) — Critical rules
+- [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md) — Current Zod output strategy
+- [zod4-advanced-features-research.md](./zod4-advanced-features-research.md) — Feature research
 
 ---
 
-## Features to Explore
+## Goal
 
-### 1. Native Recursion (High Priority)
+Produce **idiomatic Zod 4 output** that looks handwritten, leveraging Zod 4's advanced features.
 
-**Current:** `z.lazy()` with type assertions
+**Why before parser:** The Zod → IR parser gets built for the final output shape from day one.
+
+---
+
+## Priorities (Confirmed)
+
+| Priority | Feature          | Status          | Decision                                |
+| -------- | ---------------- | --------------- | --------------------------------------- |
+| 1        | Native Recursion | ✅ Complete     | Getter syntax replaces `z.lazy()`       |
+| 2        | Codecs           | 🟡 Implementing | Always on, internal plugin architecture |
+| 3        | `.overwrite()`   | 🔲 Research     | Investigate OpenAPI trigger patterns    |
+| ❌       | ~~Zod Mini~~     | Deferred        | Not a priority                          |
+
+---
+
+## 1. Native Recursion (✅ Complete)
+
+**Before:** `z.lazy()` with type assertions
 
 ```typescript
 const Category: z.ZodType<Category> = z.lazy(() =>
@@ -26,7 +49,7 @@ const Category: z.ZodType<Category> = z.lazy(() =>
 );
 ```
 
-**Proposed:** Getter syntax with full method access
+**After:** Getter syntax with full method access
 
 ```typescript
 const Category = z.object({
@@ -37,103 +60,53 @@ const Category = z.object({
 });
 ```
 
-**Investigation:**
+**Implementation:**
 
-- [ ] Verify getter syntax works with ts-morph generation
-- [ ] Test type inference with recursive schemas
-- [ ] Compare bundle size impact
-
----
-
-### 2. Codecs (High Priority)
-
-**Current:** Plain string types for date-time
-
-```typescript
-z.string(); // for format: date-time
-```
-
-**Proposed:** Bidirectional codec with runtime type
-
-```typescript
-z.codec(
-  z.iso.datetime(), // wire format (string)
-  z.date(), // runtime type (Date)
-  { decode: (s) => new Date(s), encode: (d) => d.toISOString() },
-);
-```
-
-**Investigation:**
-
-- [ ] When should we use codecs vs plain format functions?
-- [ ] Impact on SDK generation (decode for input, encode for output)
-- [ ] Configuration option: `--useCodecs` vs `--formatOnly`?
-
-**Candidate mappings:**
-
-| OpenAPI Format | Codec Option        |
-| -------------- | ------------------- |
-| `date-time`    | `isoDatetimeToDate` |
-| `date`         | `isoDateToDate`     |
-| `byte`         | `base64ToBytes`     |
-| `uri`          | `stringToUrl`       |
+- Modified `lib/src/writers/zod/index.ts` — `writeProperties()` generates getters for circular refs
+- Added `hasSchemaReference()` helper for mutual reference detection
+- Updated 4 test files, 6 snapshots regenerated
+- All 11 quality gates pass
 
 ---
 
-### 3. `.overwrite()` (Medium Priority)
+## 2. Codecs (Deferred)
 
-**Use case:** Type-preserving transforms like `.trim()`, `.toLowerCase()`
+**Status:** ⚪ Deferred — not currently relevant
 
-**Investigation:**
+> [!NOTE]
+> Zod 4 provides **codec examples** (like `isoDatetimeToDate`, `base64ToBytes`) in the documentation, but these are **not first-class APIs**. Per the Zod docs: *"these are not included as first-class APIs in Zod itself. Instead, you should copy/paste them into your project."*
 
-- [ ] When would OpenAPI trigger `.overwrite()`?
-- [ ] Map to `x-*` extensions for transforms?
+**Current approach:** Use format-specific validation functions (`z.iso.datetime()`, `z.url()`, etc.) which provide correct validation without runtime transformation.
 
----
+**Future consideration:** If runtime type transformation becomes a user requirement, we could:
 
-### 4. Zod Mini Target (Low Priority)
+1. Bundle codec implementations in generated output
+2. Wait for Zod to promote codecs to first-class APIs
 
-**Use case:** Bundle-size-sensitive applications
+For now, validation-only format functions are sufficient.
 
-**Investigation:**
+## 3. `.overwrite()` (Deferred)
 
-- [ ] Functional API differences from chained API
-- [ ] ts-morph generation changes needed
-- [ ] Configuration option: `--zodTarget mini`
+**Status:** ⚪ Deferred — no evidence of real-world usage
 
----
+Zod 4's `.overwrite()` method could support mutation transforms like `x-trim` or `x-lowercase`, but no evidence these patterns exist in real OpenAPI specs.
 
-## Decision Points
-
-| Question                 | Options                   | Decision |
-| ------------------------ | ------------------------- | -------- |
-| Codecs by default?       | Always / Opt-in / Never   | TBD      |
-| Recursive getter syntax? | Yes if ts-morph supports  | TBD      |
-| Zod Mini support?        | Separate target / Not now | TBD      |
+**Future consideration:** If vendor extensions triggering mutation transforms are identified, this can be revisited.
 
 ---
 
 ## Success Criteria
 
-1. IR → Zod produces idiomatic Zod 4 output using available features
-2. Changes are opt-in or backward compatible
-3. Zod → IR parser can parse the improved output
-4. All quality gates pass
-
----
-
-## Sequence
-
-1. **Investigate** each feature with minimal experiments
-2. **Decide** which features to adopt and how
-3. **Implement** changes to `writers/zod/`
-4. **Test** with existing fixtures
-5. **Document** in ADR if significant
+1. ✅ No `z.lazy()` in generated output for circular references (getter syntax instead)
+2. ⚪ Codecs deferred (Zod 4 codecs not first-class APIs)
+3. ⚪ `.overwrite()` deferred (no real-world usage patterns identified)
+4. ✅ All 10 quality gates pass
+5. ⬜ Zod → IR parser can parse the output (Session 3.2)
 
 ---
 
 ## References
 
-- [zod4-advanced-features-research.md](./zod4-advanced-features-research.md)
 - [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
+- [zod4-advanced-features-research.md](./zod4-advanced-features-research.md)
 - [Zod 4 Codecs](https://zod.dev/codecs)

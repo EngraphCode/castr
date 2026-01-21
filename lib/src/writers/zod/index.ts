@@ -268,8 +268,6 @@ function writeProperties(
   for (const [key, prop] of schema.properties.entries()) {
     // Quote property names that aren't valid JS identifiers
     const quotedKey = isValidJsIdentifier(key) ? key : `'${key}'`;
-    writer.write(`${quotedKey}: `);
-
     const isRequired = schema.required?.includes(key) ?? false;
     const propContext: IRPropertySchemaContext = {
       contextType: 'property',
@@ -278,9 +276,48 @@ function writeProperties(
       optional: !isRequired,
     };
 
-    writeZodSchema(propContext, options)(writer);
-    writer.write(',').newLine();
+    // Detect if this property causes circular references
+    // Case 1: Property schema directly has circularReferences (self-referencing)
+    // Case 2: Containing schema has circularReferences AND property has a $ref (mutual refs)
+    const propHasCircularRef =
+      prop.metadata?.circularReferences && prop.metadata.circularReferences.length > 0;
+    const parentHasCircularRef =
+      schema.metadata?.circularReferences && schema.metadata.circularReferences.length > 0;
+    const propHasRef = hasSchemaReference(prop);
+
+    const useGetterSyntax = propHasCircularRef || (parentHasCircularRef && propHasRef);
+
+    if (useGetterSyntax) {
+      // Use Zod 4 getter syntax for circular references
+      // This allows: get children() { return z.array(Category); }
+      writer.write(`get ${quotedKey}() { return `);
+      writeSchemaBody(propContext, options)(writer);
+      writer.write('; },').newLine();
+    } else {
+      // Normal property assignment
+      writer.write(`${quotedKey}: `);
+      writeZodSchema(propContext, options)(writer);
+      writer.write(',').newLine();
+    }
   }
+}
+
+/**
+ * Check if a schema contains a $ref (directly or in array items).
+ * @internal
+ */
+function hasSchemaReference(schema: CastrSchema): boolean {
+  // Direct $ref
+  if (schema.$ref) {
+    return true;
+  }
+
+  // Check array items for $ref
+  if (schema.items && !Array.isArray(schema.items) && schema.items.$ref) {
+    return true;
+  }
+
+  return false;
 }
 
 function writeAdditionalProperties(

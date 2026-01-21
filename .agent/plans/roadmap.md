@@ -61,21 +61,21 @@ OpenAPI → IR → Zod (proven) ✅
 ## Phase 3: Immediate Priorities (Active)
 
 > [!IMPORTANT]
-> **Research complete.** Now focusing on improvements before Zod→IR parser.
+> **Research complete.** Now implementing Zod 4 IR→Zod improvements.
 
-| Session | Focus                                                                  | Status         |
-| ------- | ---------------------------------------------------------------------- | -------------- |
-| 3.1a    | **IR Semantic Audit**                                                  | 🔲 Not Started |
-|         | └ Remove JSON Schema bias from IR docs                                 | 🔲             |
-|         | └ Plan: [ir-semantic-audit-plan.md](./ir-semantic-audit-plan.md)       |                |
-| 3.1b    | **Zod 4 IR→Zod Improvements**                                          | 🔲 Not Started |
-|         | └ Native recursion (replace z.lazy())                                  | 🔲             |
-|         | └ Codecs for date-time, bytes                                          | 🔲             |
-|         | └ Plan: [zod4-ir-improvements-plan.md](./zod4-ir-improvements-plan.md) |                |
-| 3.2     | **Zod → IR Parser**                                                    | 🔲 Not Started |
-|         | └ Parse finalized Zod output shape                                     | 🔲             |
-| 3.3     | **True Round-Trip Validation**                                         | 🔲 Not Started |
-|         | └ OpenAPI → Zod → OpenAPI byte-identical                               | 🔲             |
+| Session | Focus                                                                                  | Status          |
+| ------- | -------------------------------------------------------------------------------------- | --------------- |
+| 3.1a    | **IR Semantic Audit**                                                                  | ✅ Complete     |
+|         | └ IR is now format-agnostic                                                            | ✅              |
+|         | └ Archive: [ir-semantic-audit-plan](./archive/ir-semantic-audit-plan-3.1a-complete.md) | ✅              |
+| 3.1b    | **Zod 4 IR→Zod Improvements**                                                          | 🟡 In Progress  |
+|         | └ Native recursion (getter syntax)                                                     | ✅ Complete     |
+|         | └ Codecs (bidirectional transforms)                                                    | 🟡 Implementing |
+|         | └ Plan: [zod4-ir-improvements-plan.md](./zod4-ir-improvements-plan.md)                 |                 |
+| 3.2     | **Zod → IR Parser**                                                                    | 🔲 Not Started  |
+|         | └ Parse finalized Zod output shape                                                     | 🔲              |
+| 3.3     | **True Round-Trip Validation**                                                         | 🔲 Not Started  |
+|         | └ OpenAPI → Zod → OpenAPI byte-identical                                               | 🔲              |
 
 ---
 

@@ -9,6 +9,9 @@
 
 With the OpenAPI → Zod pipeline production-ready, we need to formalize decisions about Zod 4 output generation. This ADR documents the strategies for generating idiomatic, type-safe Zod 4 schemas from the IR.
 
+> [!NOTE]
+> **Round-trip (OpenAPI → Zod → OpenAPI) is a validation mechanism**, not a fundamental library requirement. It proves the pipeline works correctly. The Zod → IR parser (future) will need to handle arbitrary Zod input, including unsupported patterns—those concerns are out of scope for the Zod writer.
+
 ## Decisions
 
 ### 1. Metadata Preservation via `.meta()`
@@ -87,6 +90,15 @@ Skip Zod validations that duplicate what the type already provides:
 - Skip `.nullable()` when type array includes 'null'
 
 **Rationale:** Cleaner output, no runtime overhead.
+
+### 7. Codecs (Deferred)
+
+> [!NOTE]
+> Zod 4 provides **codec examples** in documentation (e.g., `isoDatetimeToDate`, `base64ToBytes`), but these are **not first-class APIs**. Per Zod docs: *"these are not included as first-class APIs in Zod itself."*
+
+**Current approach:** Use validation-only format functions (`z.iso.datetime()`, `z.url()`).
+
+**Future consideration:** If runtime transformation becomes a requirement, we could bundle codec implementations in output or wait for Zod to promote them to first-class APIs.
 
 ## Consequences
 

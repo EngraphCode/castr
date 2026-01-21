@@ -31,8 +31,9 @@ describe('ZodWriter', () => {
   function createMockSchema(
     type: CastrSchema['type'] = 'string',
     metadata: Partial<CastrSchema['metadata']> = {},
+    $ref?: string,
   ): CastrSchema {
-    return {
+    const schema: CastrSchema = {
       type,
       metadata: {
         required: true,
@@ -46,7 +47,11 @@ describe('ZodWriter', () => {
         },
         ...metadata,
       },
-    } as CastrSchema;
+    };
+    if ($ref) {
+      schema.$ref = $ref;
+    }
+    return schema;
   }
 
   function createComponentContext(schema: CastrSchema): CastrSchemaContext {
@@ -179,14 +184,29 @@ describe('ZodWriter', () => {
     expect(generate(context)).toBe('z.string().min(1).optional()');
   });
 
-  it('generates lazy schema for circular references', () => {
-    const schema = createMockSchema('object', {
+  it('generates getter syntax for circular reference properties', () => {
+    // Arrange: Schema with a circular reference in a property
+    // The circularReferences metadata indicates this property references the parent
+    const childSchema = createMockSchema('array', {
       circularReferences: ['#/components/schemas/Node'],
     });
-    schema.properties = new CastrSchemaProperties({});
+    // Create items schema with $ref using the helper (no type cast needed)
+    childSchema.items = createMockSchema(undefined, {}, '#/components/schemas/Node');
+
+    const schema = createMockSchema('object');
+    schema.properties = new CastrSchemaProperties({
+      value: createMockSchema('string'),
+      children: childSchema,
+    });
+    schema.required = ['value'];
 
     const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.lazy(() => z.object({ }).passthrough())');
+    const result = generate(context);
+
+    // Assert: Uses getter syntax, not z.lazy()
+    expect(result).toContain('get children()');
+    expect(result).toContain('return z.array(Node)');
+    expect(result).not.toContain('z.lazy');
   });
 
   // ========== Metadata via .meta() tests (Zod 4) ==========

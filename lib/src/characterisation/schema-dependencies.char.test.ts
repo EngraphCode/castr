@@ -317,9 +317,9 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
       disableWriteToFile: true,
     });
 
-    // Assert: Uses z.lazy for circular reference
+    // Assert: Uses Zod 4 getter syntax for circular reference
     expect(extractContent(result)).toContain('TreeNode');
-    expect(extractContent(result)).toContain('z.lazy');
+    expect(extractContent(result)).toContain('get children()');
     expect(extractContent(result)).not.toContain('as unknown as');
   });
 
@@ -378,10 +378,10 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
       disableWriteToFile: true,
     });
 
-    // Assert: Both schemas generated with z.lazy
+    // Assert: Both schemas use getter syntax for circular refs
     expect(extractContent(result)).toContain('Author');
     expect(extractContent(result)).toContain('Book');
-    expect(extractContent(result)).toContain('z.lazy');
+    expect(extractContent(result)).toMatch(/get (books|author)\(\)/);
     expect(extractContent(result)).not.toContain('as unknown as');
   });
 

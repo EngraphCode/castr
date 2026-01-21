@@ -658,10 +658,11 @@ export interface CastrSchema {
   description?: string;
 
   /**
-   * Schema title for documentation.
-   * JSON Schema 2020-12 keyword.
+   * Human-readable title for this schema.
+   * Used for documentation and generated type names.
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-validation#name-title-and-description}
+   * @remarks
+   * Also defined in JSON Schema and OpenAPI specifications.
    */
   title?: string;
 
@@ -849,71 +850,121 @@ export interface CastrSchema {
    */
   externalDocs?: ExternalDocumentationObject;
 
-  // ========== JSON Schema 2020-12 Keywords ==========
+  // ========== Advanced Validation Keywords ==========
 
   /**
-   * Prefix items for tuple validation (JSON Schema 2020-12).
-   * Replaces array-style `items` from JSON Schema Draft 7.
+   * Schemas for positional array items (tuple validation).
+   * Each schema applies to the array item at the corresponding index.
    *
    * @example
    * ```typescript
-   * // Input (OAS 3.0): items: [{ type: 'string' }, { type: 'number' }]
-   * // Output (OAS 3.1): prefixItems: [{ type: 'string' }, { type: 'number' }]
+   * // [string, number, boolean] tuple
+   * prefixItems: [
+   *   { type: 'string', metadata: { ... } },
+   *   { type: 'number', metadata: { ... } },
+   *   { type: 'boolean', metadata: { ... } },
+   * ]
    * ```
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-prefixitems}
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   prefixItems?: CastrSchema[];
 
   /**
-   * Controls evaluation of properties not covered by other keywords.
+   * Controls validation of object properties not covered by `properties`,
+   * `patternProperties`, or `additionalProperties`.
    * - `false`: disallow unevaluated properties
    * - `true`: allow any unevaluated properties
    * - schema: unevaluated properties must match schema
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluatedproperties}
+   * Useful in composition scenarios (allOf, oneOf) where inherited
+   * properties need strict validation.
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   unevaluatedProperties?: boolean | CastrSchema;
 
   /**
-   * Controls evaluation of array items not covered by other keywords.
+   * Controls validation of array items not covered by `prefixItems` or `items`.
    * - `false`: disallow unevaluated items
    * - `true`: allow any unevaluated items
    * - schema: unevaluated items must match schema
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-unevaluateditems}
+   * Useful for tuple-with-rest patterns where prefix items are fixed
+   * but trailing items need validation.
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   unevaluatedItems?: boolean | CastrSchema;
 
   /**
-   * Conditional schema application based on property presence.
-   * Map of property name to schema that applies when property exists.
+   * Conditional schema requirements based on property presence.
+   * When a trigger property is present, the corresponding schema
+   * must also be satisfied.
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-dependentschemas}
+   * @example
+   * ```typescript
+   * // If 'creditCard' is present, require 'billingAddress' as object
+   * dependentSchemas: {
+   *   creditCard: { type: 'object', properties: { billingAddress: { ... } } }
+   * }
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   dependentSchemas?: Record<string, CastrSchema>;
 
   /**
    * Conditional required properties based on property presence.
-   * Map of property name to list of properties required when it exists.
+   * When a trigger property is present, the listed properties
+   * become required.
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-core#name-dependentrequired}
+   * @example
+   * ```typescript
+   * // If 'email' is present, 'emailVerified' is required
+   * dependentRequired: {
+   *   email: ['emailVerified']
+   * }
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   dependentRequired?: Record<string, string[]>;
 
   /**
-   * Minimum number of matches for `contains` keyword.
-   * Only applicable when `contains` is also specified.
+   * Minimum number of array items that must match the `contains` schema.
+   * Only meaningful when `contains` is also specified.
    *
-   * @see {@link https://json-schema.org/draft/2020-12/json-schema-validation#name-mincontains}
+   * @example
+   * ```typescript
+   * // At least 2 items must be strings
+   * contains: { type: 'string', metadata: { ... } },
+   * minContains: 2
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   minContains?: number;
 
   /**
-   * Maximum number of matches for `contains` keyword.
-   * Only applicable when `contains` is also specified.
+   * Maximum number of array items that can match the `contains` schema.
+   * Only meaningful when `contains` is also specified.
    *
-   *@see {@link https://json-schema.org/draft/2020-12/json-schema-validation#name-maxcontains}
+   * @example
+   * ```typescript
+   * // At most 5 items can be null
+   * contains: { type: 'null', metadata: { ... } },
+   * maxContains: 5
+   * ```
+   *
+   * @remarks
+   * Also defined in JSON Schema 2020-12 and OpenAPI 3.1.
    */
   maxContains?: number;
 

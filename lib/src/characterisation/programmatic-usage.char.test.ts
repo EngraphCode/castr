@@ -145,12 +145,12 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
    * Scenario 1.3 (P1): Spec with circular refs
    *
    * Acceptance Criteria:
-   * - Uses z.lazy() for circular references
+   * - Uses Zod 4 getter syntax for circular references
    * - Named schema exported
    *
    * Note: Circular references are handled by the Scalar pipeline's bundling process
    */
-  it('should handle circular references with z.lazy()', async () => {
+  it('should handle circular references with Zod 4 getter syntax', async () => {
     const spec: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
@@ -173,13 +173,13 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
 
     const result = await generateZodClientFromOpenAPI({
       openApiDoc: spec,
-      // Note: Pipeline uses bundle mode which preserves $refs, allowing proper circular ref handling with z.lazy()
+      // Note: Pipeline uses bundle mode which preserves $refs, allowing proper circular ref handling
       disableWriteToFile: true,
       options: { shouldExportAllSchemas: true }, // Export schemas even with no endpoints
     });
 
-    // Acceptance criteria:
-    expect(extractContent(result)).toContain('z.lazy(');
+    // Acceptance criteria: Uses getter syntax, not z.lazy()
+    expect(extractContent(result)).toContain('get children()');
     expect(extractContent(result)).toContain('export const Node');
   });
 });

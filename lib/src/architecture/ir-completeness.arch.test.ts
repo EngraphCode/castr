@@ -272,7 +272,7 @@ describe('IR Completeness', () => {
       expect(graph.circularReferences).toEqual([]);
     });
 
-    it('tracks circular references for z.lazy() generation', () => {
+    it('tracks circular references for getter syntax generation', () => {
       const graph: IRDependencyGraph = {
         nodes: new Map(),
         topologicalOrder: [],

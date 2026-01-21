@@ -36469,8 +36469,12 @@ export const Nested2 = z.lazy(() =>
   z
     .object({
       nested_prop: z.boolean().optional(),
-      deeplyNested: DeeplyNested.optional(),
-      circularToRoot: Root2.optional(),
+      get deeplyNested() {
+        return DeeplyNested.optional();
+      },
+      get circularToRoot() {
+        return Root2.optional();
+      },
       requiredProp: z.string(),
     })
     .strict(),
@@ -36480,8 +36484,12 @@ export const Root2 = z.lazy(() =>
     .object({
       str: z.string(),
       nb: z.number(),
-      nested: Nested2,
-      partial: PartialObject.optional(),
+      get nested() {
+        return Nested2;
+      },
+      get partial() {
+        return PartialObject.optional();
+      },
       optionalProp: z.string().optional(),
     })
     .strict(),

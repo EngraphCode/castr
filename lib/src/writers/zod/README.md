@@ -55,6 +55,14 @@ All OpenAPI metadata flows to Zod's `.meta()`:
 z.string().meta({ title, description, deprecated, examples, externalDocs, xml });
 ```
 
+## Codecs (Deferred)
+
+Zod 4 provides codec **examples** (`isoDatetimeToDate`, `base64ToBytes`) in documentation, but these are **not first-class APIs** — they're recipes to copy/paste.
+
+**Current:** Using validation-only format functions (`z.iso.datetime()`, `z.url()`).
+
+**Future:** Could bundle codec implementations if runtime transformation becomes a requirement.
+
 ## Related
 
 - [ADR-031](../../../.agent/adr/ADR-031-zod-output-strategy.md) — Full design decisions

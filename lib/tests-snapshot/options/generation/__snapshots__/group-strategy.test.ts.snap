@@ -2949,7 +2949,9 @@ export const User = z.lazy(() =>
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
-      friends: z.array(User).optional(),
+      get friends() {
+        return z.array(User).optional();
+      },
     })
     .strict(),
 );
@@ -2958,7 +2960,9 @@ export const Pet = z.lazy(() =>
     .object({
       id: z.int().optional(),
       nickname: z.string().optional(),
-      owner: User.optional(),
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -2968,7 +2972,9 @@ export const Country = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
-      store_list: z.array(Store).optional(),
+      get store_list() {
+        return z.array(Store).optional();
+      },
     })
     .strict(),
 );
@@ -2978,8 +2984,12 @@ export const Store = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
-      country: Country.optional(),
-      owner: User.optional(),
+      get country() {
+        return Country.optional();
+      },
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -3480,7 +3490,9 @@ export const User = z.lazy(() =>
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
-      friends: z.array(User).optional(),
+      get friends() {
+        return z.array(User).optional();
+      },
     })
     .strict(),
 );
@@ -3489,7 +3501,9 @@ export const Pet = z.lazy(() =>
     .object({
       id: z.int().optional(),
       nickname: z.string().optional(),
-      owner: User.optional(),
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -3499,7 +3513,9 @@ export const Country = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
-      store_list: z.array(Store).optional(),
+      get store_list() {
+        return z.array(Store).optional();
+      },
     })
     .strict(),
 );
@@ -3509,8 +3525,12 @@ export const Store = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
-      country: Country.optional(),
-      owner: User.optional(),
+      get country() {
+        return Country.optional();
+      },
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -4059,7 +4079,9 @@ export const User = z.lazy(() =>
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
-      friends: z.array(User).optional(),
+      get friends() {
+        return z.array(User).optional();
+      },
     })
     .strict(),
 );
@@ -4068,7 +4090,9 @@ export const Pet = z.lazy(() =>
     .object({
       id: z.int().optional(),
       nickname: z.string().optional(),
-      owner: User.optional(),
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -4078,7 +4102,9 @@ export const Country = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
-      store_list: z.array(Store).optional(),
+      get store_list() {
+        return z.array(Store).optional();
+      },
     })
     .strict(),
 );
@@ -4088,8 +4114,12 @@ export const Store = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
-      country: Country.optional(),
-      owner: User.optional(),
+      get country() {
+        return Country.optional();
+      },
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -4606,7 +4636,9 @@ export const User = z.lazy(() =>
       firstname: z.string().optional(),
       lastname: z.string().optional(),
       email: z.string().optional(),
-      friends: z.array(User).optional(),
+      get friends() {
+        return z.array(User).optional();
+      },
     })
     .strict(),
 );
@@ -4615,7 +4647,9 @@ export const Pet = z.lazy(() =>
     .object({
       id: z.int().optional(),
       nickname: z.string().optional(),
-      owner: User.optional(),
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -4625,7 +4659,9 @@ export const Country = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       code: z.string().optional(),
-      store_list: z.array(Store).optional(),
+      get store_list() {
+        return z.array(Store).optional();
+      },
     })
     .strict(),
 );
@@ -4635,8 +4671,12 @@ export const Store = z.lazy(() =>
       id: z.int().optional(),
       name: z.string().optional(),
       address: z.string().optional(),
-      country: Country.optional(),
-      owner: User.optional(),
+      get country() {
+        return Country.optional();
+      },
+      get owner() {
+        return User.optional();
+      },
     })
     .strict(),
 );

@@ -12,7 +12,9 @@ export const User = z.lazy(() =>
   z
     .object({
       name: z.string().optional(),
-      parent: User.optional(),
+      get parent() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -145,7 +147,9 @@ export type Root = {
 export const Middle = z.lazy(() =>
   z
     .object({
-      user: User.optional(),
+      get user() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -153,14 +157,18 @@ export const User = z.lazy(() =>
   z
     .object({
       name: z.string().optional(),
-      middle: Middle.optional(),
+      get middle() {
+        return Middle.optional();
+      },
     })
     .strict(),
 );
 export const Root = z.lazy(() =>
   z
     .object({
-      recursive: User.optional(),
+      get recursive() {
+        return User.optional();
+      },
       basic: z.number().optional(),
     })
     .strict(),
@@ -1325,7 +1333,9 @@ export const User = z.lazy(() =>
   z
     .object({
       name: z.string().optional(),
-      parent: User.optional(),
+      get parent() {
+        return User.optional();
+      },
     })
     .strict(),
 );
@@ -1333,8 +1343,12 @@ export const Friend = z.lazy(() =>
   z
     .object({
       nickname: z.string().optional(),
-      user: UserWithFriends.optional(),
-      circle: z.array(Friend).optional(),
+      get user() {
+        return UserWithFriends.optional();
+      },
+      get circle() {
+        return z.array(Friend).optional();
+      },
     })
     .strict(),
 );
@@ -1342,9 +1356,15 @@ export const UserWithFriends = z.lazy(() =>
   z
     .object({
       name: z.string().optional(),
-      parent: UserWithFriends.optional(),
-      friends: z.array(Friend).optional(),
-      bestFriend: Friend.optional(),
+      get parent() {
+        return UserWithFriends.optional();
+      },
+      get friends() {
+        return z.array(Friend).optional();
+      },
+      get bestFriend() {
+        return Friend.optional();
+      },
     })
     .strict(),
 );
@@ -1352,14 +1372,18 @@ export const ObjectWithRecursiveArray = z.lazy(() =>
   z
     .object({
       isInsideObjectWithRecursiveArray: z.boolean().optional(),
-      array: z.array(ObjectWithRecursiveArray).optional(),
+      get array() {
+        return z.array(ObjectWithRecursiveArray).optional();
+      },
     })
     .strict(),
 );
 export const ResponseSchema = z.lazy(() =>
   z
     .object({
-      recursiveRef: ObjectWithRecursiveArray.optional(),
+      get recursiveRef() {
+        return ObjectWithRecursiveArray.optional();
+      },
       basic: z.number().optional(),
     })
     .strict(),
@@ -1588,7 +1612,9 @@ export const Song = z.lazy(() =>
     .object({
       name: z.string().optional(),
       duration: z.number().optional(),
-      in_playlists: z.array(Playlist).optional(),
+      get in_playlists() {
+        return z.array(Playlist).optional();
+      },
     })
     .strict(),
 );
@@ -1596,8 +1622,12 @@ export const Playlist = z.lazy(() =>
   z
     .object({
       name: z.string().optional(),
-      author: Author.optional(),
-      songs: z.array(Song).optional(),
+      get author() {
+        return Author.optional();
+      },
+      get songs() {
+        return z.array(Song).optional();
+      },
     })
     .strict(),
 );

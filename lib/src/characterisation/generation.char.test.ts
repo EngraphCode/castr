@@ -478,12 +478,12 @@ describe('Characterisation: Full Generation Pipeline - Complex OpenAPI Features'
       disableWriteToFile: true,
     });
 
-    // Assert: Circular reference handled (z.lazy)
+    // Assert: Circular reference handled with Zod 4 getter syntax
     expect(extractContent(result)).toContain('TreeNode');
     expect(extractContent(result)).not.toContain('as unknown as');
 
-    // Should use z.lazy for circular reference
-    expect(extractContent(result)).toMatch(/z\.lazy/);
+    // Should use getter syntax for circular reference
+    expect(extractContent(result)).toMatch(/get children\(\)/);
   });
 
   it('should handle deeply nested schemas', async () => {

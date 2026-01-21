@@ -67,8 +67,8 @@ pnpm test:gen && pnpm character && pnpm test:transforms
 ## 📋 Current Focus: Phase 3 — IR Audit & Zod 4 Improvements
 
 > [!NOTE]
-> **Phase 2 complete.** OpenAPI → Zod pipeline is production-ready (1,715+ tests).
-> Now **improving IR→Zod output** before building the Zod→IR parser.
+> **Phase 2 complete.** OpenAPI → Zod pipeline is production-ready (1,719+ tests).
+> **Session 3.1a complete.** IR is now format-agnostic. Now **improving IR→Zod output** before building the Zod→IR parser.
 
 ### Completed Sessions
 
@@ -79,17 +79,19 @@ pnpm test:gen && pnpm character && pnpm test:transforms
 | 2.7     | OpenAPI Round-Trip          | ✅ Complete |
 | 2.8     | Zod 4 Output Compliance     | ✅ Complete |
 | 2.9     | Pipeline Polish             | ✅ Complete |
+| 3.1a    | IR Semantic Audit           | ✅ Complete |
 
 ### Next Sessions: Phase 3 (🎯 Active)
 
-| Session | Focus                     | Plan                                                                  |
-| ------- | ------------------------- | --------------------------------------------------------------------- |
-| 3.1a    | IR Semantic Audit         | [ir-semantic-audit-plan.md](../plans/ir-semantic-audit-plan.md)       |
-| 3.1b    | Zod 4 IR→Zod Improvements | [zod4-ir-improvements-plan.md](../plans/zod4-ir-improvements-plan.md) |
-| 3.2     | Zod → IR Parser           | After 3.1a/b complete                                                 |
-| 3.3     | True Round-Trip           | OpenAPI → Zod → OpenAPI                                               |
+| Session | Focus                     | Status          |
+| ------- | ------------------------- | --------------- |
+| 3.1b    | Zod 4 IR→Zod Improvements | 🟡 In Progress  |
+|         | └ Native Recursion        | ✅ Complete     |
+|         | └ Codecs                  | 🟡 Implementing |
+| 3.2     | Zod → IR Parser           | 🔲 Not Started  |
+| 3.3     | True Round-Trip           | 🔲 Not Started  |
 
-**Sequence Rationale:** Improve the output shape _before_ building the parser, so the parser handles the final Zod output from day one.
+**Plan:** [zod4-ir-improvements-plan.md](../plans/zod4-ir-improvements-plan.md)
 
 ---
 
