@@ -18,7 +18,7 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 
 ### 1. The Cardinal Rule
 
-> After parsing, input documents are conceptually discarded. **Only the Caster Model matters.**
+> After parsing, input documents are conceptually discarded. **Only the Castr Model matters.**
 
 ### 2. NO CONTENT LOSS
 
@@ -31,159 +31,112 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 - Objects use `.strict()` unless `additionalProperties: true`
 - Unknown types MUST throw, never fall back to `z.unknown()`
 - No silent coercion, no partial output
-- Use `.parse()` (throws) not `.safeParse()` (returns) — fail-fast means throw on error
+- Use `.parse()` (throws) not `.safeParse()` (returns)
 
-### 4. Code Generation via ts-morph
+### 4. Zod 4 Only
 
-Writers use **ts-morph** for code generation—no string templates or concatenation. The IR itself is plain TypeScript interfaces (`CastrSchema`, `CastrDocument`), not ts-morph AST nodes.
+> **Zod 3 syntax MUST be rejected** with clear, descriptive error messages.
 
-### 5. Type Discipline
+| Zod 3 (❌ Reject)    | Zod 4 (✅ Accept) |
+| -------------------- | ----------------- |
+| `z.string().email()` | `z.email()`       |
+| `z.string().url()`   | `z.url()`         |
+| `z.number().int()`   | `z.int()`         |
+
+### 5. Code Generation via ts-morph
+
+Writers use **ts-morph** for code generation—no string templates or concatenation.
+
+### 6. Type Discipline
 
 - **FORBIDDEN:** `as` (except `as const`), `any`, `!`
 - **REQUIRED:** Library types first, proper type guards
 
-### 6. TDD at ALL Levels (Mandatory)
+### 7. TDD at ALL Levels (Mandatory)
 
 Write failing tests FIRST—unit, integration, AND E2E.
 
-### 7. Tests Prove Real Code, Not Test Code
-
-- Tests must validate actual system behavior
-- TypeScript proves types, tests prove behavior
-- If code compiles and runs, it compiles—no need for separate compilation tests
-
-### 8. Quality Gates (All 11 Must Pass)
+### 8. Quality Gates (All 10 Must Pass)
 
 ```bash
 pnpm clean && pnpm install && pnpm build && pnpm type-check && \
 pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
-pnpm test:gen && pnpm character && pnpm test:transforms
+pnpm test:gen && pnpm character
 ```
 
 > **Note:** All commands run from `lib/` directory.
 
 ---
 
-## 📋 Current Focus: Phase 3 — IR Audit & Zod 4 Improvements
+## 📋 Current Focus: Session 3.2 — Zod → IR Parser
 
-> [!NOTE]
-> **Phase 2 complete.** OpenAPI → Zod pipeline is production-ready (1,719+ tests).
-> **Session 3.1a complete.** IR is now format-agnostic. Now **improving IR→Zod output** before building the Zod→IR parser.
+> [!IMPORTANT]
+> **Sessions 3.1a-3.1b complete.** IR is format-agnostic, native recursion implemented.
+> **Now building the Zod → IR parser** to enable true round-trip validation.
 
 ### Completed Sessions
 
-| Session | Focus                       | Status      |
-| ------- | --------------------------- | ----------- |
-| 2.1-2.5 | Zod parser + OpenAPI writer | ✅ Complete |
-| 2.6     | OpenAPI Compliance          | ✅ Complete |
-| 2.7     | OpenAPI Round-Trip          | ✅ Complete |
-| 2.8     | Zod 4 Output Compliance     | ✅ Complete |
-| 2.9     | Pipeline Polish             | ✅ Complete |
-| 3.1a    | IR Semantic Audit           | ✅ Complete |
+| Session | Focus                     | Status      |
+| ------- | ------------------------- | ----------- |
+| 2.1-2.9 | OpenAPI ↔ Zod Pipeline    | ✅ Complete |
+| 3.1a    | IR Semantic Audit         | ✅ Complete |
+| 3.1b    | Zod 4 IR→Zod Improvements | ✅ Complete |
 
-### Next Sessions: Phase 3 (🎯 Active)
+### Current Session: 3.2 — Zod → IR Parser (🎯 Active)
 
-| Session | Focus                     | Status          |
-| ------- | ------------------------- | --------------- |
-| 3.1b    | Zod 4 IR→Zod Improvements | 🟡 In Progress  |
-|         | └ Native Recursion        | ✅ Complete     |
-|         | └ Codecs                  | 🟡 Implementing |
-| 3.2     | Zod → IR Parser           | 🔲 Not Started  |
-| 3.3     | True Round-Trip           | 🔲 Not Started  |
+**Goal:** Parse Zod 4 schemas and reconstruct the IR.
 
-**Plan:** [zod4-ir-improvements-plan.md](../plans/zod4-ir-improvements-plan.md)
+**Critical requirements:**
 
----
+- **Zod 4 only** — reject Zod 3 syntax with clear errors
+- **Strict everywhere** — fail fast with useful error messages
+- **Pattern recognition** — map Zod 4 functions back to IR
+- **Handle getter syntax** — recursive reference detection
 
-## 📂 Fixture Architecture
+**Plan:** [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
 
-**Input fixtures** are static OpenAPI specs in `lib/tests-roundtrip/__fixtures__/arbitrary/`.
+### Upcoming: Session 3.3 — True Round-Trip
 
-**Generated outputs** in `lib/tests-roundtrip/__fixtures__/normalized/` are kept in the repo for analysis:
-
-| File               | Description                        |
-| ------------------ | ---------------------------------- |
-| `input.yaml`       | Symlink to arbitrary fixture       |
-| `normalized.json`  | OpenAPI output from first pass     |
-| `reprocessed.json` | OpenAPI output from second pass    |
-| `ir.json`          | IR from first pass                 |
-| `zod.ts`           | Generated Zod schemas + TypeScript |
-
-**Update generated outputs** with: `npx tsx scripts/generate-normalized-fixtures.ts`
+Once the parser is complete, validate: `OpenAPI → Zod → OpenAPI` is byte-identical.
 
 ---
 
-## 🔧 IR Version Fields
+## 📂 Key Files for Session 3.2
 
-`CastrDocument` has two version fields:
-
-| Field            | Value     | Source                                          |
-| ---------------- | --------- | ----------------------------------------------- |
-| `version`        | `"1.0.0"` | IR schema version (Castr-defined)               |
-| `openApiVersion` | `"3.1.1"` | From Scalar `upgrade()` — upgrades all to 3.1.1 |
-
-> [!NOTE]
-> **`3.1.1` is a real OpenAPI version** (released October 2024). Scalar's `upgrade()` ensures
-> all documents are upgraded to the latest 3.1.x semantics.
-
----
-
-## ⚠️ Design Decisions (Established)
-
-These are no longer assumptions — they've been verified:
-
-1. **`zod.ts` files are generated outputs** — kept for inspection, validated by `validation-parity` tests
-2. **TypeScript proves types, tests prove behavior** — per testing-strategy.md
-3. **Composition types map correctly** — `allOf`→`&`, `oneOf`→`z.xor()`, `anyOf`→`z.union()` (tested)
-4. **Inline endpoint objects use `.strict()`** — unconditional, not configurable
-5. **`type-check-validation.gen.test.ts`** — proves fresh generation compiles correctly
-6. **`z.discriminatedUnion()` used when discriminator present** — O(1) lookup optimization
-7. **Format-specific Zod 4 functions** — `z.int32()`, `z.email()`, etc. (ADR-031)
+| Location               | Purpose                                |
+| ---------------------- | -------------------------------------- |
+| `lib/src/parsers/zod/` | Zod parser implementation (to build)   |
+| `lib/src/writers/zod/` | Zod writer (generates output we parse) |
+| `lib/src/ir/schema.ts` | IR types we reconstruct                |
 
 ---
 
 ## 📚 Essential Reading
 
-| Priority | Document                                                                  | Purpose                 |
-| -------- | ------------------------------------------------------------------------- | ----------------------- |
-| 1        | [RULES.md](../RULES.md)                                                   | Engineering standards   |
-| 2        | [testing-strategy.md](../testing-strategy.md)                             | TDD at all levels       |
-| 3        | [requirements.md](../requirements.md)                                     | Decision guidance       |
-| 4        | [DEFINITION_OF_DONE.md](../DEFINITION_OF_DONE.md)                         | Quality gates           |
-| 5        | [zod-output-acceptance-criteria.md](../zod-output-acceptance-criteria.md) | Zod output requirements |
-| 6        | [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md)      | Roundtrip test docs     |
+| Priority | Document                                                                            | Purpose               |
+| -------- | ----------------------------------------------------------------------------------- | --------------------- |
+| 1        | [zod4-parser-plan.md](../plans/zod4-parser-plan.md)                                 | Session 3.2 plan      |
+| 2        | [RULES.md](../RULES.md)                                                             | Engineering standards |
+| 3        | [testing-strategy.md](../testing-strategy.md)                                       | TDD at all levels     |
+| 4        | [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md) | Zod output patterns   |
+| 5        | [roadmap.md](../plans/roadmap.md)                                                   | Strategic context     |
 
 ---
 
-## 🗂️ Key Files (ADR-029 Structure)
-
-| Layer            | Location                    | Entry Point |
-| ---------------- | --------------------------- | ----------- |
-| IR               | `lib/src/ir/`               | `schema.ts` |
-| Parsers          | `lib/src/parsers/{format}/` | `index.ts`  |
-| Writers          | `lib/src/writers/{format}/` | `index.ts`  |
-| Round-trip tests | `lib/tests-roundtrip/`      | Integration |
-
----
-
-## 🚀 Starting a Session
+## 🚀 Starting Session 3.2
 
 1. **Run quality gates** — Verify clean state
-2. **Read this document** — Understand current focus
-3. **Check roadmap** — [roadmap.md](../plans/roadmap.md) for strategic context
-4. **Ask:** What impact are we creating for the user?
-5. **Write tests first** — TDD at all levels
-6. **Run quality gates** — All 11 must pass before commit
+2. **Read the plan** — [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
+3. **Study writer output** — Understand what patterns to parse
+4. **Write failing tests first** — TDD the parser
+5. **Run quality gates** — All 10 must pass before commit
 
 ---
 
-## ⚠️ Common Pitfalls
+## ⚠️ Common Pitfalls (Session 3.2 Specific)
 
-1. **Accepting content loss** — NEVER acceptable. All metadata via `.meta()`
-2. **Silent fallbacks** — NEVER use `z.unknown()` for unsupported types, ALWAYS throw
-3. **Using `.safeParse()`** — Use `.parse()` which throws on failure (fail-fast)
-4. **Building utilities before tests** — TDD means tests first
-5. **Targeting Zod 3** — We only support Zod 4
-6. **"Pragmatic" shortcuts** — In this project, pragmatic = highest quality
-7. **Testing against stubs/mocks** — Tests must prove real code works
-8. **Confusing inputs/outputs** — `arbitrary/` = static inputs, `normalized/` = generated outputs
+1. **Accepting Zod 3 syntax** — ALWAYS detect and reject with clear errors
+2. **Partial parsing** — Never return incomplete IR, fail fast
+3. **Ignoring getter syntax** — Critical for circular reference detection
+4. **Forgetting .meta()** — Must extract all metadata to IR
+5. **Skipping .strict()** — Must detect and map to `additionalProperties: false`
