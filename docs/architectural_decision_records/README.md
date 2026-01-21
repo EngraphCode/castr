@@ -75,8 +75,9 @@ Each ADR follows this structure:
 | [028](./ADR-028-ir-openapi-consolidation.md)    | IR→OpenAPI Consolidation    | Accepted | 2026-01-12 |
 | [029](./ADR-029-canonical-source-structure.md)  | Canonical Source Structure  | Accepted | 2026-01-12 |
 | [030](./ADR-030-full-openapi-syntax-support.md) | Full OpenAPI Syntax Support | Accepted | 2026-01-13 |
+| [031](./ADR-031-zod-output-strategy.md)         | Zod 4 Output Strategy       | Accepted | 2026-01-21 |
 
-> **Session 2.6 Active** — OpenAPI Compliance in progress.
+> **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
 
 ## Decision Dependencies
@@ -213,4 +214,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** January 2026  
-**Next ADR:** 031
+**Next ADR:** 032

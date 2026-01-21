@@ -25,21 +25,23 @@ The key insight: without a canonical Intermediate Representation, converting N f
 
 ## Decision
 
-**The IR architecture uses a canonical AST representation as the center of gravity for the entire system.**
+**The IR architecture uses a canonical Intermediate Representation (IR) as the center of gravity for the entire system.**
 
-After input parsing, the original document is conceptually discarded. All operations—validation, transformation, dependency analysis, code generation—work exclusively on the canonical AST.
+After input parsing, the original document is conceptually discarded. All operations—validation, transformation, dependency analysis, code generation—work exclusively on the canonical IR.
+
+> **Note:** The IR is plain TypeScript interfaces (`CastrSchema`, `CastrDocument`, etc.). Writers use ts-morph for **code generation** only — the IR itself is not a ts-morph AST.
 
 ### Architecture
 
 ```text
-Input Formats              Canonical AST (Single Source of Truth)   Output Formats
-─────────────              ───────────────────────────────────────   ──────────────
+Input Formats              Canonical IR (Single Source of Truth)   Output Formats
+─────────────              ──────────────────────────────────────   ──────────────
 OpenAPI 3.1.x ──┐                                              ┌──▶ Zod 4 schemas
 Zod 4 schemas ──┼──▶ Parser ──▶ [ CastrSchema, CastrSchemaNode,   ──┼──▶ TypeScript types
 JSON Schema ────┘              IROperation, IRDependencyGraph ]   └──▶ JSON Schema
                                         │
                                         ▼
-                            All transformers read from AST
+                            All writers read from IR
                             Nothing reads from input directly
 ```
 
@@ -70,9 +72,9 @@ JSON Schema ────┘              IROperation, IRDependencyGraph ]   └�
 
 ### Key Invariants
 
-1. **Input discarded after parsing** - Only the canonical AST is consulted for all operations
-2. **No format-specific code in core** - Format knowledge lives only in parsers/transformers
-3. **All transforms are AST → Output** - Never Input → Output directly
+1. **Input discarded after parsing** - Only the canonical IR is consulted for all operations
+2. **No format-specific code in core** - Format knowledge lives only in parsers/writers
+3. **All transforms are IR → Output** - Never Input → Output directly
 4. **Strict typing throughout** - No `any`, no unchecked assertions
 
 ## Consequences

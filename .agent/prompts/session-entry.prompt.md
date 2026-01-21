@@ -33,9 +33,9 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 - No silent coercion, no partial output
 - Use `.parse()` (throws) not `.safeParse()` (returns) — fail-fast means throw on error
 
-### 4. Pure AST via ts-morph
+### 4. Code Generation via ts-morph
 
-All code generation uses **ts-morph AST manipulation**—no string templates or concatenation.
+Writers use **ts-morph** for code generation—no string templates or concatenation. The IR itself is plain TypeScript interfaces (`CastrSchema`, `CastrDocument`), not ts-morph AST nodes.
 
 ### 5. Type Discipline
 
@@ -64,10 +64,11 @@ pnpm test:gen && pnpm character && pnpm test:transforms
 
 ---
 
-## 📋 Current Focus: Session 2.9 Ready
+## 📋 Current Focus: Phase 3 — IR Audit & Zod 4 Improvements
 
 > [!NOTE]
-> **Sessions 2.8 and 2.8.x are COMPLETE.** All quality gates passing (1298 tests).
+> **Phase 2 complete.** OpenAPI → Zod pipeline is production-ready (1,715+ tests).
+> Now **improving IR→Zod output** before building the Zod→IR parser.
 
 ### Completed Sessions
 
@@ -77,23 +78,18 @@ pnpm test:gen && pnpm character && pnpm test:transforms
 | 2.6     | OpenAPI Compliance          | ✅ Complete |
 | 2.7     | OpenAPI Round-Trip          | ✅ Complete |
 | 2.8     | Zod 4 Output Compliance     | ✅ Complete |
-| 2.8.x   | Strictness Remediation      | ✅ Complete |
+| 2.9     | Pipeline Polish             | ✅ Complete |
 
-### Session 2.8.x Outcomes
+### Next Sessions: Phase 3 (🎯 Active)
 
-1. **TypeScript type composition** — `type-writer.ts` handles `allOf`→`&`, `oneOf`/`anyOf`→`|`
-2. **Inline object strictness** — `endpoints.ts` adds `.strict()` to queryParams/pathParams/headers
-3. **Composition test coverage** — Added 5 new tests for intersection/union types
-4. **Generated outputs updated** — All `normalized/*/zod.ts` files regenerated with correct types
+| Session | Focus                     | Plan                                                                  |
+| ------- | ------------------------- | --------------------------------------------------------------------- |
+| 3.1a    | IR Semantic Audit         | [ir-semantic-audit-plan.md](../plans/ir-semantic-audit-plan.md)       |
+| 3.1b    | Zod 4 IR→Zod Improvements | [zod4-ir-improvements-plan.md](../plans/zod4-ir-improvements-plan.md) |
+| 3.2     | Zod → IR Parser           | After 3.1a/b complete                                                 |
+| 3.3     | True Round-Trip           | OpenAPI → Zod → OpenAPI                                               |
 
-### Next: Session 2.9 (TBD)
-
-Possible focuses:
-
-- Create ADR-031 for Zod output strategy
-- Zod 4 deep dive — leverage new features (`.meta()`, `z.globalRegistry`)
-- Zod input parsing (Zod → IR)
-- Additional output formats
+**Sequence Rationale:** Improve the output shape _before_ building the parser, so the parser handles the final Zod output from day one.
 
 ---
 
@@ -124,9 +120,9 @@ Possible focuses:
 | `version`        | `"1.0.0"` | IR schema version (Castr-defined)               |
 | `openApiVersion` | `"3.1.1"` | From Scalar `upgrade()` — upgrades all to 3.1.1 |
 
-> [!IMPORTANT]
-> **`3.1.1` is Scalar's output, not an official OpenAPI version.** OpenAPI only has `3.1.0`.
-> This is external library behavior, not a Castr bug. The IR correctly stores what Scalar provides.
+> [!NOTE]
+> **`3.1.1` is a real OpenAPI version** (released October 2024). Scalar's `upgrade()` ensures
+> all documents are upgraded to the latest 3.1.x semantics.
 
 ---
 
@@ -136,9 +132,11 @@ These are no longer assumptions — they've been verified:
 
 1. **`zod.ts` files are generated outputs** — kept for inspection, validated by `validation-parity` tests
 2. **TypeScript proves types, tests prove behavior** — per testing-strategy.md
-3. **Composition types map correctly** — `allOf`→`&`, `oneOf`/`anyOf`→`|` (tested)
+3. **Composition types map correctly** — `allOf`→`&`, `oneOf`→`z.xor()`, `anyOf`→`z.union()` (tested)
 4. **Inline endpoint objects use `.strict()`** — unconditional, not configurable
 5. **`type-check-validation.gen.test.ts`** — proves fresh generation compiles correctly
+6. **`z.discriminatedUnion()` used when discriminator present** — O(1) lookup optimization
+7. **Format-specific Zod 4 functions** — `z.int32()`, `z.email()`, etc. (ADR-031)
 
 ---
 
@@ -170,10 +168,10 @@ These are no longer assumptions — they've been verified:
 
 1. **Run quality gates** — Verify clean state
 2. **Read this document** — Understand current focus
-3. **Question assumptions** — See list above
+3. **Check roadmap** — [roadmap.md](../plans/roadmap.md) for strategic context
 4. **Ask:** What impact are we creating for the user?
 5. **Write tests first** — TDD at all levels
-6. **Run quality gates** — All 10 must pass before commit
+6. **Run quality gates** — All 11 must pass before commit
 
 ---
 

@@ -6,13 +6,13 @@
 
 ## The Goal
 
-Transform data definitions **between any supported format**, strictly and type-safely, via an internal Intermediate Representation (IR) architecture using an AST representation of the data as the canonical source.
+Transform data definitions **between any supported format**, strictly and type-safely, via an internal **Intermediate Representation (IR)** as the canonical source.
 
 ```text
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
 │   OpenAPI   │────▶│              │────▶│   OpenAPI   │
-│     Zod     │────▶│ Canonical    │────▶│     Zod     │
-│ JSON Schema │────▶│    AST       │────▶│ JSON Schema │
+│     Zod     │────▶│     IR       │────▶│     Zod     │
+│ JSON Schema │────▶│ (CastrDoc)   │────▶│ JSON Schema │
 │   (more)    │────▶│              │────▶│   (more)    │
 └─────────────┘     └──────────────┘     └─────────────┘
      Input        Single Source of       Output (any)
@@ -23,17 +23,19 @@ Transform data definitions **between any supported format**, strictly and type-s
 
 ---
 
-## The Core Principle: Canonical AST is Everything
+## The Core Principle: The IR is the Single Source of Truth
 
-> **The entire system architecture is built around the canonical AST.**  
+> **The entire system architecture is built around the canonical IR.**  
 > Input formats are merely ingestion pathways. Output formats are merely rendering views.
 
-The canonical AST (the data representation at the heart of the Caster Model architecture) is:
+The IR (the data representation at the heart of the Caster Model architecture) is:
 
-1. **The single source of truth** - After parsing, the input document is discarded. Only the AST matters.
-2. **The canonical data model** - All schema concepts (types, constraints, references, composition) are expressed in AST terms.
-3. **The architectural center** - All tools, transforms, and validations operate on the AST, never on raw input formats.
-4. **Format-agnostic** - The AST knows nothing about OpenAPI, Zod, or JSON Schema. It represents pure schema semantics.
+1. **The single source of truth** - After parsing, the input document is discarded. Only the IR matters.
+2. **The canonical data model** - All schema concepts (types, constraints, references, composition) are expressed in IR types (`CastrSchema`, `CastrDocument`, etc.).
+3. **The architectural center** - All tools, transforms, and validations operate on the IR, never on raw input formats.
+4. **Format-agnostic** - The IR knows nothing about OpenAPI, Zod, or JSON Schema. It represents pure schema semantics.
+
+> **Note:** The IR is plain TypeScript interfaces. Writers use ts-morph for **code generation** only — the IR itself is not a ts-morph AST.
 
 ### The Complexity Argument
 
@@ -45,8 +47,8 @@ Without this principle:
 
 With this principle:
 
-- Each format needs only two modules: parser (to AST) and transformer (from AST): **O(N) complexity**
-- Edge cases are handled once, in the AST model
+- Each format needs only two modules: parser (to IR) and writer (from IR): **O(N) complexity**
+- Edge cases are handled once, in the IR model
 - The core remains clean and format-agnostic
 
 ---
@@ -166,11 +168,11 @@ One tool that speaks all schema languages fluently.
 
 ## Principles
 
-1. **Canonical AST is Truth** - The internal AST representation is authoritative; inputs are ingestion, outputs are views
+1. **IR is Truth** - The internal IR is authoritative; inputs are ingestion, outputs are views
 2. **Strict Conversion** - No silent coercion, no data loss without explicit handling
 3. **Type Safety** - TypeScript types flow through the entire pipeline
 4. **Fail Fast** - Invalid input rejected immediately with helpful errors
-5. **Format Agnostic Core** - The AST doesn't know about OpenAPI, Zod, or JSON Schema
+5. **Format Agnostic Core** - The IR knows nothing about OpenAPI, Zod, or JSON Schema
 
 ---
 

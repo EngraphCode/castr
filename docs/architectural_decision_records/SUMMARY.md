@@ -101,12 +101,13 @@ This library implements an **Intermediate Representation (IR) architecture** for
 | [022](./ADR-022-building-blocks-no-http-client.md) | Building-Blocks Architecture | ✅ Accepted |
 | [023](./ADR-023-ir-based-architecture.md)          | IR-Based Architecture        | ✅ Accepted |
 | [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment        | 📋 Proposed |
+| [031](./ADR-031-zod-output-strategy.md)            | Zod 4 Output Strategy        | ✅ Accepted |
 
 ---
 
 ## Key Principles
 
-1. **Canonical AST is Truth** - The internal AST representation is authoritative
+1. **IR is Truth** - The internal IR is authoritative
 2. **Fail Fast** - Invalid input rejected immediately
 3. **Type Safety** - No `any`, no unchecked assertions
 4. **O(N) Complexity** - One parser + one transformer per format

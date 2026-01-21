@@ -1,10 +1,11 @@
 # Zod 4 Output Compliance Plan
 
 **Date:** January 20, 2026  
-**Status:** ✅ COMPLETE (with 2.8.x remediation in progress)  
-**Session:** 2.8  
+**Status:** ✅ COMPLETE  
+**Session:** 2.8 + 2.9  
 **Specification:** [zod-output-acceptance-criteria.md](../zod-output-acceptance-criteria.md)  
-**Test Docs:** [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md)
+**Test Docs:** [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md)  
+**ADR:** [ADR-031-zod-output-strategy.md](../adr/ADR-031-zod-output-strategy.md)
 
 ---
 
@@ -20,13 +21,14 @@ Implement FULL Zod 4 output support with **zero information loss** from the IR.
 
 ## Progress Summary
 
-| Phase | Focus                     | Status         |
-| ----- | ------------------------- | -------------- |
-| 2.8.1 | Audit & Planning          | ✅ Complete    |
-| 2.8.2 | Metadata via .meta()      | ✅ Complete    |
-| 2.8.3 | Type Coverage & Fail-Fast | ✅ Complete    |
-| 2.8.4 | Validation Parity Tests   | ✅ Complete    |
-| 2.8.x | Strictness Remediation    | 🔄 In Progress |
+| Phase | Focus                     | Status      |
+| ----- | ------------------------- | ----------- |
+| 2.8.1 | Audit & Planning          | ✅ Complete |
+| 2.8.2 | Metadata via .meta()      | ✅ Complete |
+| 2.8.3 | Type Coverage & Fail-Fast | ✅ Complete |
+| 2.8.4 | Validation Parity Tests   | ✅ Complete |
+| 2.8.x | Strictness Remediation    | ✅ Complete |
+| 2.9   | Zod 4 Advanced Features   | ✅ Complete |
 
 ---
 
@@ -46,25 +48,23 @@ Tests import pre-generated Zod schemas from fixture directories and validate beh
 - No compilation stubs — tests run against real Zod 4
 - Uses `.parse()` not `.safeParse()` — fail-fast means throw on error
 
-### 2.8.x: Strictness Remediation 🔄
+### 2.8.x: Strictness Remediation ✅
 
-**In Progress:** January 20, 2026
+**Completed:** January 20, 2026
 
-**Issues Found:**
+1. **TypeScript type composition** — `allOf`→`&`, `oneOf`/`anyOf`→`|` in `type-writer.ts`
+2. **Inline endpoint strictness** — `.strict()` added in `endpoints.ts`
+3. **Snapshots regenerated** — All `normalized/*/zod.ts` files updated
 
-1. **TypeScript type `Pet = unknown` for `allOf` schemas**
-   - Location: `lib/src/writers/typescript/type-writer.ts`
-   - Fix: Added `allOf` → intersection (`&`), `oneOf`/`anyOf` → union (`|`) handling
-   - Status: ✅ Code fixed, awaiting snapshot regeneration
+### 2.9: Zod 4 Advanced Features ✅
 
-2. **Missing `.strict()` on inline endpoint objects**
-   - Location: `lib/src/writers/typescript/endpoints.ts`
-   - Fix: Added `.strict()` to `createZodObjectWriter`
-   - Status: ✅ Code fixed, awaiting snapshot regeneration
+**Completed:** January 20, 2026
 
-3. **IR version field shows `3.1.1`** (not an official OpenAPI version)
-   - Location: `lib/src/ir/schema.ts`
-   - Status: ⏳ Deferred to future session
+1. **`z.xor()` for `oneOf`** — Exclusive union semantics (XOR, not OR)
+2. **`z.discriminatedUnion()`** — Optimized parsing when discriminator present
+3. **Format-specific functions** — `z.int32()`, `z.email()`, `z.iso.datetime()`, etc.
+4. **Redundant validation filtering** — No duplicate `.int()` on `z.int()`
+5. **ADR-031 accepted** — Formalizes Zod 4 output strategy
 
 ---
 
@@ -101,7 +101,7 @@ The next session MUST critically examine these assumptions:
 
 ## Definition of Done ✅
 
-Session 2.8 core work complete:
+Session 2.8 core work:
 
 - [x] All IR metadata fields flow to `.meta()` calls
 - [x] `z.null()` for null type
@@ -110,14 +110,21 @@ Session 2.8 core work complete:
 - [x] Fail-fast on unsupported patterns (no `z.unknown()`)
 - [x] Strict-by-default documented in RULES.md
 - [x] Validation parity tests using `.parse()` (throws on failure)
-- [x] All 10 quality gates pass
 
 Session 2.8.x remediation:
 
 - [x] TypeScript composition types (allOf, oneOf, anyOf)
 - [x] Inline endpoint object strictness
-- [ ] Regenerate `zod.ts` snapshot outputs
-- [ ] Verify all quality gates still pass
+- [x] Regenerate `zod.ts` snapshot outputs
+- [x] All quality gates pass (972 tests)
+
+Session 2.9 advanced features:
+
+- [x] `z.xor()` for `oneOf` exclusivity
+- [x] `z.discriminatedUnion()` for discriminator optimization
+- [x] Format-specific integer/string functions
+- [x] Redundant validation filtering
+- [x] ADR-031 accepted and documented
 
 ---
 

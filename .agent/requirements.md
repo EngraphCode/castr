@@ -222,16 +222,17 @@ The writer MUST produce valid 3.1.x output containing ALL fields from the IR, in
 
 ---
 
-## Current Focus: OpenAPI → Zod Pipeline
+## Current Focus: OpenAPI ↔ Zod Pipeline
 
-This is the active implementation focus. When making decisions, prioritize this pipeline:
+> [!NOTE]
+> **Phase 2 complete.** Now focused on bidirectional transforms and round-trip validation.
 
-| Input         | Output               | Priority     |
-| ------------- | -------------------- | ------------ |
-| OpenAPI 3.1.x | Zod 4 schemas        | ✅ Primary   |
-| OpenAPI 3.1.x | TypeScript types     | ✅ Primary   |
-| OpenAPI 3.1.x | MCP tool definitions | ✅ Primary   |
-| OpenAPI 3.1.x | JSON Schema 2020-12  | 🔲 Secondary |
+| Priority | Focus                      | Status      |
+| -------- | -------------------------- | ----------- |
+| 1        | OpenAPI → Zod              | ✅ Complete |
+| 2        | Zod → IR (Parser)          | 🔲 Next     |
+| 3        | True Round-Trip Validation | 🔲 Next     |
+| 4        | JSON Schema                | 🔲 Deferred |
 
 ---
 
