@@ -72,7 +72,7 @@ pnpm test:gen && pnpm character
 
 > [!IMPORTANT]
 > **Sessions 3.1a-3.1b complete.** IR is format-agnostic, native recursion implemented.
-> **Now building the Zod → IR parser** to enable true round-trip validation.
+> **Phase 1 (Fixture Creation) is in progress** — happy-path fixtures done, expected IR files in progress.
 
 ### Completed Sessions
 

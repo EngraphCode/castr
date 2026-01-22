@@ -1,0 +1,77 @@
+{
+  "$schema": "expected-ir.schema.json",
+  "$comment": "Expected IR output for objects.zod4.ts - Maps Zod 4 object patterns to CastrSchema IR",
+  "schemas": {
+    "BasicObjectSchema": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "age": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["name", "age", "active"]
+    },
+    "StrictObjectSchema": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "value": { "type": "number" }
+      },
+      "required": ["id", "value"],
+      "additionalProperties": false
+    },
+    "PassthroughObjectSchema": {
+      "type": "object",
+      "properties": {
+        "known": { "type": "string" }
+      },
+      "required": ["known"],
+      "additionalProperties": true
+    },
+    "ObjectWithOptionalSchema": {
+      "type": "object",
+      "properties": {
+        "required": { "type": "string" },
+        "optional": { "type": "string" },
+        "nullable": { "type": ["string", "null"] },
+        "nullish": { "type": ["string", "null"] }
+      },
+      "required": ["required", "nullable"],
+      "$comment": "optional and nullish properties are NOT in required array"
+    },
+    "NestedObjectSchema": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string", "format": "email" }
+          },
+          "required": ["name", "email"]
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "createdAt": { "type": "string", "format": "date-time" },
+            "version": { "type": "integer" }
+          },
+          "required": ["createdAt", "version"]
+        }
+      },
+      "required": ["user", "metadata"]
+    },
+    "ObjectWithFormatsSchema": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "email": { "type": "string", "format": "email" },
+        "website": { "type": "string", "format": "uri" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "count": { "type": "integer", "format": "int32" }
+      },
+      "required": ["id", "email", "website", "createdAt", "count"],
+      "additionalProperties": false
+    }
+  }
+}

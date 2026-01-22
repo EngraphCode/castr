@@ -1,6 +1,6 @@
 # Plan: Session 3.2 — Zod → IR Parser
 
-**Status:** 🟡 Planning Complete — Ready for Implementation  
+**Status:** 🟢 Phase 1: Fixture Creation In Progress  
 **Priority:** 3.2  
 **Prerequisite for:** True Round-Trip Validation (Session 3.3)
 
@@ -163,7 +163,7 @@ Parse full generated output and verify IR reconstruction matches original.
 
 ## File Structure
 
-```
+```text
 lib/src/parsers/zod/
 ├── index.ts               # Main entry point
 ├── zod-parser.ts          # Core parsing logic

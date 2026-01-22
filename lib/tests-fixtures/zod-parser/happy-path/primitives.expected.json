@@ -1,0 +1,46 @@
+{
+  "$schema": "expected-ir.schema.json",
+  "$comment": "Expected IR output for primitives.zod4.ts - Maps Zod 4 primitive functions to CastrSchema IR",
+  "schemas": {
+    "StringSchema": {
+      "type": "string"
+    },
+    "NumberSchema": {
+      "type": "number"
+    },
+    "BooleanSchema": {
+      "type": "boolean"
+    },
+    "NullSchema": {
+      "type": "null"
+    },
+    "UndefinedSchema": {
+      "$comment": "Zod undefined has no direct OpenAPI equivalent, maps to empty schema or is skipped"
+    },
+    "BigIntSchema": {
+      "type": "integer",
+      "format": "int64",
+      "$comment": "BigInt maps to integer with int64 format"
+    },
+    "IntSchema": {
+      "type": "integer",
+      "$comment": "z.int() is safe integer range"
+    },
+    "Int32Schema": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "Int64Schema": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "Float32Schema": {
+      "type": "number",
+      "format": "float"
+    },
+    "Float64Schema": {
+      "type": "number",
+      "format": "double"
+    }
+  }
+}

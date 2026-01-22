@@ -1,0 +1,80 @@
+{
+  "$schema": "expected-ir.schema.json",
+  "$comment": "Expected IR output for string-formats.zod4.ts - Maps Zod 4 string format functions to CastrSchema IR",
+  "schemas": {
+    "EmailSchema": {
+      "type": "string",
+      "format": "email"
+    },
+    "UrlSchema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "UuidSchema": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "Uuidv4Schema": {
+      "type": "string",
+      "format": "uuid",
+      "$comment": "UUIDv4 is a subset of UUID, format remains 'uuid'"
+    },
+    "Uuidv7Schema": {
+      "type": "string",
+      "format": "uuid",
+      "$comment": "UUIDv7 is a subset of UUID, format remains 'uuid'"
+    },
+    "Base64Schema": {
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "Base64UrlSchema": {
+      "type": "string",
+      "contentEncoding": "base64url"
+    },
+    "Ipv4Schema": {
+      "type": "string",
+      "format": "ipv4"
+    },
+    "Ipv6Schema": {
+      "type": "string",
+      "format": "ipv6"
+    },
+    "Cidrv4Schema": {
+      "type": "string",
+      "$comment": "CIDR blocks have no standard OpenAPI format, may use pattern or custom format"
+    },
+    "Cidrv6Schema": {
+      "type": "string",
+      "$comment": "CIDR blocks have no standard OpenAPI format, may use pattern or custom format"
+    },
+    "JwtSchema": {
+      "type": "string",
+      "$comment": "JWT has no standard OpenAPI format, may use custom format 'jwt'"
+    },
+    "E164Schema": {
+      "type": "string",
+      "$comment": "E.164 phone format has no standard OpenAPI format"
+    },
+    "HostnameSchema": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "IsoDateSchema": {
+      "type": "string",
+      "format": "date"
+    },
+    "IsoDatetimeSchema": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "IsoTimeSchema": {
+      "type": "string",
+      "format": "time"
+    },
+    "IsoDurationSchema": {
+      "type": "string",
+      "format": "duration"
+    }
+  }
+}

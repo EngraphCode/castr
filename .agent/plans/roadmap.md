@@ -45,21 +45,21 @@ OpenAPI → Zod → OpenAPI (Session 3.3 — pending) 🔲
 
 ## Phase 3: Zod Round-Trip (Active)
 
-| Session | Focus                                                                   | Status      |
-| ------- | ----------------------------------------------------------------------- | ----------- |
-| 3.1a    | IR Semantic Audit                                                       | ✅ Complete |
-|         | └ Archive: [3.1a](./archive/ir-semantic-audit-plan-3.1a-complete.md)    | ✅          |
-| 3.1b    | Zod 4 IR→Zod Improvements                                               | ✅ Complete |
-|         | └ Native recursion (getter syntax)                                      | ✅ Complete |
-|         | └ Codecs (deferred — not first-class APIs)                              | ⚪ Deferred |
-|         | └ .overwrite() (deferred — no real-world usage)                         | ⚪ Deferred |
-|         | └ Archive: [3.1b](./archive/zod4-ir-improvements-plan-3.1b-complete.md) | ✅          |
-| **3.2** | **Zod → IR Parser**                                                     | 🔲 **Next** |
-|         | └ Parse Zod 4 output, reconstruct IR                                    | 🔲          |
-|         | └ Zod 4 only (reject Zod 3 syntax)                                      | 🔲          |
-|         | └ Plan: [zod4-parser-plan.md](./zod4-parser-plan.md)                    |             |
-| 3.3     | True Round-Trip Validation                                              | 🔲 Pending  |
-|         | └ OpenAPI → Zod → OpenAPI byte-identical                                | 🔲          |
+| Session | Focus                                                                   | Status         |
+| ------- | ----------------------------------------------------------------------- | -------------- |
+| 3.1a    | IR Semantic Audit                                                       | ✅ Complete    |
+|         | └ Archive: [3.1a](./archive/ir-semantic-audit-plan-3.1a-complete.md)    | ✅             |
+| 3.1b    | Zod 4 IR→Zod Improvements                                               | ✅ Complete    |
+|         | └ Native recursion (getter syntax)                                      | ✅ Complete    |
+|         | └ Codecs (deferred — not first-class APIs)                              | ⚪ Deferred    |
+|         | └ .overwrite() (deferred — no real-world usage)                         | ⚪ Deferred    |
+|         | └ Archive: [3.1b](./archive/zod4-ir-improvements-plan-3.1b-complete.md) | ✅             |
+| **3.2** | **Zod → IR Parser**                                                     | 🟡 In Progress |
+|         | └ Parse Zod 4 output, reconstruct IR                                    | 🟡             |
+|         | └ Zod 4 only (reject Zod 3 syntax)                                      | 🔲             |
+|         | └ Plan: [zod4-parser-plan.md](./zod4-parser-plan.md)                    |                |
+| 3.3     | True Round-Trip Validation                                              | 🔲 Pending     |
+|         | └ OpenAPI → Zod → OpenAPI byte-identical                                | 🔲             |
 
 ---
 
