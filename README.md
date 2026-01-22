@@ -1,6 +1,6 @@
 # Castr
 
-> Transform schemas between formats using a canonical internal representation.
+> Transform schemas between formats losslessly using a canonical internal representation.
 
 **Castr** (pronounced "caster") generates SDK building blocks from OpenAPI specs:
 
@@ -40,11 +40,20 @@ pnpm add @engraph/castr
 - Runtime validation using Zod
 - Flexible HTTP client integration — use fetch, axios, ky, or any client
 - MCP-ready tool definitions for AI integration
+- Lossless, deterministic transformations via the canonical IR
 
 **Does NOT provide:**
 
 - Complete HTTP client implementation (bring your own)
 - Opinionated SDK structure (you control the architecture)
+
+## Compatibility Goals
+
+Castr is intended to replace schema tooling dependencies in production pipelines, including:
+
+- **openapi-zod-client-style adapters** with native Zod v4 output
+- **trpc-to-openapi** and **zod-openapi** for OpenAPI generation from code-first schemas
+- **openapi-ts best practices** (plugin surface, DX) with ethical reuse and attribution when code is reused
 
 ## Programmatic API
 
@@ -177,9 +186,9 @@ Run `castr --help` for all options.
 
 ## OpenAPI Support
 
+- ✅ **OpenAPI 2.0 (Swagger)** — supported as input only (auto-upgraded to 3.1)
 - ✅ **OpenAPI 3.0.x** (3.0.0–3.0.3)
 - ✅ **OpenAPI 3.1.x** including type arrays, null types
-- ❌ **OpenAPI 2.x (Swagger)** — migrate using [Swagger Editor](https://editor.swagger.io/)
 
 ## Architecture
 

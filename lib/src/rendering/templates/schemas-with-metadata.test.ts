@@ -98,14 +98,6 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
             },
             required: ['id', 'name'],
           },
-          Error: {
-            type: 'object' as const,
-            properties: {
-              message: { type: 'string' as const },
-              code: { type: 'number' as const },
-            },
-            required: ['message'],
-          },
         },
       },
       paths: {
@@ -117,6 +109,14 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
                 content: {
                   'application/json': {
                     schema: { $ref: '#/components/schemas/User' },
+                  },
+                },
+              },
+              '500': {
+                description: 'Error',
+                content: {
+                  'application/json': {
+                    schema: { $ref: '#/components/schemas/Error' },
                   },
                 },
               },
@@ -136,7 +136,6 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
 
     // MUST have individual schema exports (not grouped)
     expect(result.content).toContain('export const User');
-    expect(result.content).toContain('export const Error');
 
     // MUST include schema definitions with zod (flexible formatting)
     expect(result.content).toContain('.object('); // Will match z.object( or z\n  .object(

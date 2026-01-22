@@ -12,7 +12,7 @@ import { writeCompositionSchema } from './composition.js';
 import { writeMetadata } from './metadata.js';
 import { writePrimitiveSchema, filterRedundantValidations } from './primitives.js';
 import { parseComponentRef } from '../../shared/ref-resolution.js';
-import { isValidJsIdentifier } from '../../shared/utils/identifier-utils.js';
+import { isValidJsIdentifier, safeSchemaName } from '../../shared/utils/identifier-utils.js';
 
 export function writeZodSchema(
   context: CastrSchemaContext,
@@ -60,10 +60,10 @@ function writeSchemaType(
 ): void {
   const schema = context.schema;
 
-  // Handle references FIRST - write the component name directly
+  // Handle $ref - use safeSchemaName to avoid shadowing built-in globals like Error
   if (schema.$ref) {
     const { componentName } = parseComponentRef(schema.$ref);
-    writer.write(componentName);
+    writer.write(safeSchemaName(componentName));
     return;
   }
 

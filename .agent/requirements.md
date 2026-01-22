@@ -294,9 +294,10 @@ When uncertain about implementation choices, use these priorities:
 
 ## Related Documents
 
-| Document                | Purpose                         |
-| ----------------------- | ------------------------------- |
-| `VISION.md`             | Strategic direction and roadmap |
-| `RULES.md`              | Engineering standards           |
-| `testing-strategy.md`   | Test methodology                |
-| `DEFINITION_OF_DONE.md` | Quality gates                   |
+| Document                           | Purpose                                 |
+| ---------------------------------- | --------------------------------------- |
+| `VISION.md`                        | Strategic direction and roadmap         |
+| `RULES.md`                         | Engineering standards                   |
+| `testing-strategy.md`              | Test methodology                        |
+| `DEFINITION_OF_DONE.md`            | Quality gates                           |
+| `.agent/research/feature-parity/*` | Parity research and integration targets |

@@ -216,7 +216,7 @@ Key changes during upgrade:
 - `exclusiveMinimum: true` → `exclusiveMinimum: numericValue`
 - `exclusiveMaximum: true` → `exclusiveMaximum: numericValue`
 
-See [OPENAPI-3.1-MIGRATION.md](./OPENAPI-3.1-MIGRATION.md) for full details.
+See [OpenAPI 3.1 Migration Guide](../guides/openapi-3.1-migration.md) for full details.
 
 ## Design Decisions
 
@@ -463,4 +463,4 @@ For test fixtures with external file references, we use inline schemas to avoid 
 - [Scalar OpenAPI Parser](https://github.com/scalar/scalar/tree/main/packages/openapi-parser)
 - [OpenAPI 3.1 Specification](https://spec.openapis.org/oas/v3.1.0)
 - [JSON Schema 2020-12](https://json-schema.org/draft/2020-12/release-notes.html)
-- [Phase 2 Implementation Plan](../../plans/PHASE-2-MCP-ENHANCEMENTS.md)
+- [Roadmap](../../.agent/plans/roadmap.md)

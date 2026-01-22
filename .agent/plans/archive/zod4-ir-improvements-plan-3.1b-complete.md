@@ -74,7 +74,7 @@ const Category = z.object({
 **Status:** ⚪ Deferred — not currently relevant
 
 > [!NOTE]
-> Zod 4 provides **codec examples** (like `isoDatetimeToDate`, `base64ToBytes`) in the documentation, but these are **not first-class APIs**. Per the Zod docs: *"these are not included as first-class APIs in Zod itself. Instead, you should copy/paste them into your project."*
+> Zod 4 provides **codec examples** (like `isoDatetimeToDate`, `base64ToBytes`) in the documentation, but these are **not first-class APIs**. Per the Zod docs: _"these are not included as first-class APIs in Zod itself. Instead, you should copy/paste them into your project."_
 
 **Current approach:** Use format-specific validation functions (`z.iso.datetime()`, `z.url()`, etc.) which provide correct validation without runtime transformation.
 

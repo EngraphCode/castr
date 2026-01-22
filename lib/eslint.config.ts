@@ -201,6 +201,14 @@ export default defineConfig(
     rules: typedTsRules,
   },
 
+  // Test fixtures
+  {
+    files: ['tests-fixtures/**/*.{ts,tsx}'],
+    rules: {
+      'max-lines': ['error', { max: 500, skipBlankLines: true, skipComments: true }],
+    },
+  },
+
   // Parser files need higher limits due to AST traversal complexity
   // These files contain many small helper functions for type narrowing
   {

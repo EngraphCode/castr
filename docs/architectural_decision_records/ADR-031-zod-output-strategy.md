@@ -94,7 +94,7 @@ Skip Zod validations that duplicate what the type already provides:
 ### 7. Codecs (Deferred)
 
 > [!NOTE]
-> Zod 4 provides **codec examples** in documentation (e.g., `isoDatetimeToDate`, `base64ToBytes`), but these are **not first-class APIs**. Per Zod docs: *"these are not included as first-class APIs in Zod itself."*
+> Zod 4 provides **codec examples** in documentation (e.g., `isoDatetimeToDate`, `base64ToBytes`), but these are **not first-class APIs**. Per Zod docs: _"these are not included as first-class APIs in Zod itself."_
 
 **Current approach:** Use validation-only format functions (`z.iso.datetime()`, `z.url()`).
 

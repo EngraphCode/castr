@@ -7,8 +7,8 @@ import { writeZodSchema } from '../zod/index.js';
 import { writeTypeDefinition } from './type-writer.js';
 import type { CastrSchemaComponent } from '../../ir/schema.js';
 import type { CastrSchemaContext } from '../../ir/context.js';
-
 import { parseComponentRef } from '../../shared/ref-resolution.js';
+import { safeSchemaName } from '../../shared/utils/identifier-utils.js';
 
 /**
  * Generate TypeScript code from TemplateContext using ts-morph.
@@ -78,8 +78,9 @@ function addTypeDefinitions(
     const { componentName } = parseComponentRef(ref);
     const component = componentsMap.get(componentName);
     if (component) {
+      const safeName = safeSchemaName(component.name);
       sourceFile.addTypeAlias({
-        name: component.name,
+        name: safeName,
         isExported: true,
         type: writeTypeDefinition(component.schema),
       });
@@ -98,9 +99,10 @@ function addZodSchemas(
     const { componentName } = parseComponentRef(ref);
     const component = componentsMap.get(componentName);
     if (component) {
+      const safeName = safeSchemaName(component.name);
       const schemaContext: CastrSchemaContext = {
         contextType: 'component',
-        name: component.name,
+        name: safeName,
         schema: component.schema,
         metadata: component.metadata,
       };
@@ -110,7 +112,7 @@ function addZodSchemas(
         isExported: true,
         declarations: [
           {
-            name: component.name,
+            name: safeName,
             initializer: writeZodSchema(schemaContext, context.options),
           },
         ],

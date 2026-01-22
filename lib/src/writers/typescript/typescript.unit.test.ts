@@ -222,9 +222,9 @@ describe('writers/typescript', () => {
       const output = writeCommonFile(context, ['#/components/schemas/Error']);
       expect(output).toContain('import { z } from "zod";');
       expect(output).toContain('// Type Definitions');
-      expect(output).toContain('export type Error =');
+      expect(output).toContain('export type ErrorSchema =');
       expect(output).toContain('// Zod Schemas');
-      expect(output).toContain('export const Error = z.object(');
+      expect(output).toContain('export const ErrorSchema = z.object(');
       expect(output).toContain('message: z.string()');
     });
   });

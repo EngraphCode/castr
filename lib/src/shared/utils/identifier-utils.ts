@@ -64,6 +64,91 @@ const RESERVED_WORDS = new Set([
 ]);
 
 /**
+ * JavaScript built-in globals that should not be shadowed by generated code.
+ * These are not reserved words but using them as variable names will
+ * shadow the built-in and cause unexpected behavior.
+ * @internal
+ */
+const BUILTIN_GLOBALS = new Set([
+  // Error types
+  'Error',
+  'TypeError',
+  'RangeError',
+  'ReferenceError',
+  'SyntaxError',
+  'EvalError',
+  'URIError',
+  'AggregateError',
+  // Fundamental objects
+  'Object',
+  'Array',
+  'String',
+  'Number',
+  'Boolean',
+  'Symbol',
+  'BigInt',
+  'Function',
+  // Collections
+  'Map',
+  'Set',
+  'WeakMap',
+  'WeakSet',
+  // Typed arrays and buffers
+  'ArrayBuffer',
+  'DataView',
+  'Int8Array',
+  'Uint8Array',
+  'Int16Array',
+  'Uint16Array',
+  'Int32Array',
+  'Uint32Array',
+  'Float32Array',
+  'Float64Array',
+  'BigInt64Array',
+  'BigUint64Array',
+  // Other built-ins
+  'Date',
+  'RegExp',
+  'Promise',
+  'Proxy',
+  'Reflect',
+  'JSON',
+  'Math',
+  'Intl',
+  'console',
+  'undefined',
+  'NaN',
+  'Infinity',
+]);
+
+/**
+ * Make a schema name safe by adding 'Schema' suffix if it would shadow
+ * a JavaScript built-in global.
+ *
+ * Unlike toIdentifier, this function does NOT transform the name in any
+ * other way — it only adds a suffix for built-in globals.
+ *
+ * @param name - Schema name to check
+ * @returns Safe schema name (with 'Schema' suffix if needed)
+ *
+ * @example
+ * ```typescript
+ * safeSchemaName('Error');       // 'ErrorSchema'
+ * safeSchemaName('Date');        // 'DateSchema'
+ * safeSchemaName('User');        // 'User' (unchanged)
+ * safeSchemaName('Basic.Thing'); // 'Basic.Thing' (unchanged)
+ * ```
+ *
+ * @public
+ */
+export function safeSchemaName(name: string): string {
+  if (BUILTIN_GLOBALS.has(name)) {
+    return `${name}Schema`;
+  }
+  return name;
+}
+
+/**
  * Check if a string is a valid JavaScript identifier.
  * Uses TypeScript's built-in isIdentifierStart and isIdentifierPart.
  *

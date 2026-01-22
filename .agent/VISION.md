@@ -6,7 +6,7 @@
 
 ## The Goal
 
-Transform data definitions **between any supported format**, strictly and type-safely, via an internal **Intermediate Representation (IR)** as the canonical source.
+Transform data definitions **between any supported format**, losslessly, deterministically, and strictly, via an internal **Intermediate Representation (IR)** as the canonical source.
 
 ```text
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
@@ -103,7 +103,7 @@ With this principle:
 
 | #   | Format          | Input | Output | Notes                                                    |
 | --- | --------------- | :---: | :----: | -------------------------------------------------------- |
-| 1   | **OpenAPI**     |  ✅   |   ✅   | 3.0 → 3.1 auto-upgrade                                   |
+| 1   | **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.0 → 3.1 auto-upgrade                   |
 | 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                |
 | 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                            |
 | 4   | **TypeScript**  |  ⚠️   |   ✅   | **Exception:** output-only (too broad for input parsing) |
@@ -111,13 +111,23 @@ With this principle:
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer) |
-| ----------- | :-----------: | :-----------: |
-| OpenAPI     |  ✅ Complete  |  🔲 Planned   |
-| Zod         |  🔲 Planned   |  ✅ Complete  |
-| JSON Schema |  🔲 Planned   |  🔲 Planned   |
-| TypeScript  |       —       |  ✅ Complete  |
-| tRPC        |  🔲 Planned   |  🔲 Planned   |
+| Format      | → IR (Parser) | IR → (Writer)  |
+| ----------- | :-----------: | :------------: |
+| OpenAPI     |  ✅ Complete  | ⚠️ In progress |
+| Zod         |  ⚠️ Partial   |  ✅ Complete   |
+| JSON Schema |  ⚠️ Partial   |   ⚠️ Partial   |
+| TypeScript  |       —       |  ✅ Complete   |
+| tRPC        |  🔲 Planned   |   🔲 Planned   |
+
+---
+
+## Adoption Goals (Ecosystem Replacement)
+
+To be practically useful in production pipelines, Castr targets replacement of existing schema tooling dependencies and workflows:
+
+- Replace **openapi-zod-client-style adapters** with native Zod v4 output.
+- Replace **trpc-to-openapi** and **zod-openapi** in `tmp/oak-openapi` with IR-driven generation.
+- Incorporate the **best practices of openapi-ts** (plugin surface, DX), with ethical reuse and attribution when code is reused.
 
 ### Same-Format Normalization
 

@@ -1064,7 +1064,7 @@ export type Pet = {
   tag?: string;
 };
 export type Pets = Pet[];
-export type Error = {
+export type ErrorSchema = {
   code: number;
   message: string;
 };
@@ -1077,7 +1077,7 @@ export const Pet = z
   })
   .passthrough();
 export const Pets = z.array(Pet).max(100);
-export const Error = z
+export const ErrorSchema = z
   .object({
     code: z.int32(),
     message: z.string(),
@@ -1101,7 +1101,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1111,7 +1111,7 @@ export const endpoints = [
         description: "A paged array of pets",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },
@@ -1139,7 +1139,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1149,7 +1149,7 @@ export const endpoints = [
         description: "Null response",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },
@@ -1174,7 +1174,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1184,7 +1184,7 @@ export const endpoints = [
         description: "Expected response to a valid request",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },
@@ -1344,7 +1344,7 @@ export type NewPet = {
 export type Pet = NewPet & {
   id: number;
 };
-export type Error = {
+export type ErrorSchema = {
   code: number;
   message: string;
 };
@@ -1362,7 +1362,7 @@ export const Pet = NewPet.and(
     })
     .passthrough(),
 );
-export const Error = z
+export const ErrorSchema = z
   .object({
     code: z.int32(),
     message: z.string(),
@@ -1392,7 +1392,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1402,7 +1402,7 @@ export const endpoints = [
         description: "pet response",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },
@@ -1434,7 +1434,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1444,7 +1444,7 @@ export const endpoints = [
         description: "pet response",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },
@@ -1470,7 +1470,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1480,7 +1480,7 @@ export const endpoints = [
         description: "pet response",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },
@@ -1511,7 +1511,7 @@ export const endpoints = [
     errors: [
       {
         status: "default",
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     ],
@@ -1521,7 +1521,7 @@ export const endpoints = [
         description: "pet deleted",
       },
       default: {
-        schema: Error,
+        schema: ErrorSchema,
         description: "unexpected error",
       },
     },

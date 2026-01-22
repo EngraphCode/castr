@@ -11,6 +11,7 @@ Define a strict-only, fail-fast test plan that ties Oak’s harness expectations
 - No invented optionality or type widening.
 - Oak provides SDK-decorated input; Castr treats it as standard OpenAPI (no Oak-specific parsing).
 - `castr-bundle` is a temporary communication artifact, not a permanent contract.
+- Oak requirements are flexible; prioritize IR-first architecture and avoid string-first public APIs.
 
 ## Sources (Authoritative)
 
@@ -19,6 +20,7 @@ Define a strict-only, fail-fast test plan that ties Oak’s harness expectations
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/README.md` for Oak contract shape.
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/oak-principles.md` for type discipline.
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/expected-outputs.md` for output examples.
+- `.agent/research/feature-parity/*` for parity gaps and integration targets.
 - `.agent/research/openapi-ts/openapi-ts-comparison.md` for fixture categories and edge cases.
 - `.agent/research/openapi-ts/openapi-ts-reuse-plan.md` for licensing and synthetic fixtures guidance.
 
