@@ -8,6 +8,42 @@
 
 ---
 
+## Current Progress (Resume Here)
+
+### Completed This Session ✅
+
+- **safeSchemaName fix** — Prevents schema names like `Error` from shadowing JS built-ins (→ `ErrorSchema`)
+- **10 Zod 4 happy-path fixtures** — `lib/tests-fixtures/zod-parser/happy-path/*.zod4.ts`
+- **Zod 3 sad-path fixture** — `lib/tests-fixtures/zod-parser/sad-path/zod3-syntax.patterns.ts`
+- **3 expected IR output files** — primitives, string-formats, objects `.expected.json`
+
+### Next Steps 🔲
+
+1. **Complete remaining expected IR files** (6 more: arrays-tuples, unions, intersections, recursion, metadata, constraints)
+2. **Create expected error files** (`.expected-error.json`) for Zod 3 rejection
+3. **Begin Phase 2: Core Parser (TDD)** — Start with `zod-ast.ts` updates for Zod 4 functions
+
+### Fixture Locations
+
+```text
+lib/tests-fixtures/zod-parser/
+├── happy-path/
+│   ├── primitives.zod4.ts          + primitives.expected.json ✅
+│   ├── string-formats.zod4.ts      + string-formats.expected.json ✅
+│   ├── objects.zod4.ts             + objects.expected.json ✅
+│   ├── arrays-tuples.zod4.ts       (needs .expected.json)
+│   ├── unions.zod4.ts              (needs .expected.json)
+│   ├── intersections.zod4.ts       (needs .expected.json)
+│   ├── recursion.zod4.ts           (needs .expected.json)
+│   ├── metadata.zod4.ts            (needs .expected.json)
+│   ├── constraints.zod4.ts         (needs .expected.json)
+│   └── generated-petstore-expanded.zod4.ts (real-world fixture)
+└── sad-path/
+    └── zod3-syntax.patterns.ts     (needs .expected-error.json)
+```
+
+---
+
 ## Goal
 
 Parse **Zod 4 schemas** and reconstruct the **Intermediate Representation (IR)**, enabling:
