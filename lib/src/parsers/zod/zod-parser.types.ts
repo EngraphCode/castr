@@ -18,7 +18,18 @@
  * ```
  */
 
-import type { CastrDocument } from '../../ir/schema.js';
+import type { CastrDocument, CastrSchema } from '../../ir/schema.js';
+import type { Node } from 'ts-morph';
+
+/**
+ * Callback type for recursive schema parsing.
+ *
+ * Used to break circular dependencies between parser modules.
+ * Each parser accepts this callback instead of importing the core dispatcher.
+ *
+ * @internal
+ */
+export type ZodSchemaParser = (node: Node) => CastrSchema | undefined;
 
 /**
  * Error codes for Zod parser failures.

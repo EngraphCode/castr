@@ -1,29 +1,120 @@
 /**
- * Zod Intersection Type Parsing
+ * Zod Intersection Parser
  *
- * Handles parsing of Zod intersection types (z.intersection(), .and())
- * into CastrSchema structures using ts-morph AST (ADR-026 compliant).
+ * Handles parsing of Zod intersection schemas: z.intersection(A, B).
+ * Also handles chained .and() calls.
  *
  * @module parsers/zod/intersection
- * @internal
  */
 
-import { Node } from 'ts-morph';
 import type { CastrSchema } from '../../ir/schema.js';
-import { createZodProject, getZodMethodChain, type ZodMethodChainInfo } from './zod-ast.js';
-import { parsePrimitiveZod } from './zod-parser.primitives.js';
-import { parseArrayZod, parseEnumZod } from './zod-parser.composition.js';
-import { parseObjectZod } from './zod-parser.object.js';
-
-// ============================================================================
-// Common parsing helper
-// ============================================================================
+import { Node } from 'ts-morph';
+import { createZodProject, getZodMethodChain } from './zod-ast.js';
+import type { ZodSchemaParser } from './zod-parser.types.js';
+import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
+import { createDefaultMetadata } from './zod-parser.defaults.js';
+import { applyMetaAndReturn } from './zod-parser.meta.js';
 
 /**
- * Parse a Zod expression string into method chain info.
+ * Parse a Zod intersection expression from a ts-morph Node.
+ * Handles `z.intersection(A, B)`.
  * @internal
  */
-function parseZodExpression(expression: string): ZodMethodChainInfo | undefined {
+export function parseIntersectionZodFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const chainInfo = getZodMethodChain(node);
+  if (!chainInfo) {
+    return undefined;
+  }
+
+  const { baseMethod, baseArgNodes, chainedMethods } = chainInfo;
+
+  if (baseMethod !== 'intersection') {
+    return undefined;
+  }
+
+  if (baseArgNodes.length < 2) {
+    return undefined;
+  }
+
+  const leftNode = baseArgNodes[0];
+  const rightNode = baseArgNodes[1];
+
+  if (!leftNode || !rightNode) {
+    return undefined;
+  }
+
+  const left = parseSchema(leftNode);
+  const right = parseSchema(rightNode);
+
+  if (!left || !right) {
+    return undefined;
+  }
+
+  const schema: CastrSchema = {
+    allOf: [left, right],
+    metadata: createDefaultMetadata(),
+  };
+
+  return applyMetaAndReturn(schema, chainedMethods);
+}
+
+/**
+ * Handle chained .and() calls: A.and(B)
+ * @internal
+ */
+export function parseChainedIntersectionFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const expr = node.getExpression();
+  if (!Node.isPropertyAccessExpression(expr)) {
+    return undefined;
+  }
+
+  if (expr.getName() !== 'and') {
+    return undefined;
+  }
+
+  const leftNode = expr.getExpression();
+  const rightNode = node.getArguments()[0];
+
+  if (!leftNode || !rightNode) {
+    return undefined;
+  }
+
+  const left = parseSchema(leftNode);
+  const right = parseSchema(rightNode);
+
+  if (!left || !right) {
+    return undefined;
+  }
+
+  return {
+    allOf: [left, right],
+    metadata: createDefaultMetadata(),
+  };
+}
+
+// Register parsers with the core dispatcher
+registerParser('intersection', parseIntersectionZodFromNode);
+registerParser('chainedIntersection', parseChainedIntersectionFromNode);
+
+/**
+ * Parse a Zod intersection expression string.
+ * @internal
+ */
+export function parseIntersectionZod(expression: string): CastrSchema | undefined {
   const project = createZodProject(`const __schema = ${expression};`);
   const sourceFile = project.getSourceFiles()[0];
   if (!sourceFile) {
@@ -32,118 +123,10 @@ function parseZodExpression(expression: string): ZodMethodChainInfo | undefined 
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
+
   if (!init || !Node.isCallExpression(init)) {
     return undefined;
   }
 
-  return getZodMethodChain(init);
-}
-
-// ============================================================================
-// Shared helpers
-// ============================================================================
-
-/**
- * Create default metadata for intersection schemas.
- * @internal
- */
-function createIntersectionMetadata(): CastrSchema['metadata'] {
-  return {
-    required: true,
-    nullable: false,
-    zodChain: {
-      presence: '',
-      validations: [],
-      defaults: [],
-    },
-    dependencyGraph: {
-      references: [],
-      referencedBy: [],
-      depth: 0,
-    },
-    circularReferences: [],
-  };
-}
-
-/**
- * Parse a single intersection member expression into a CastrSchema.
- * @internal
- */
-function parseIntersectionMember(expression: string): CastrSchema | undefined {
-  // Try primitive
-  const primitive = parsePrimitiveZod(expression);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Try object
-  const object = parseObjectZod(expression);
-  if (object) {
-    return object;
-  }
-
-  // Try array
-  const array = parseArrayZod(expression);
-  if (array) {
-    return array;
-  }
-
-  // Try enum
-  const enumSchema = parseEnumZod(expression);
-  if (enumSchema) {
-    return enumSchema;
-  }
-
-  return undefined;
-}
-
-// ============================================================================
-// Intersection parsing
-// ============================================================================
-
-/**
- * Parse a Zod intersection expression into a CastrSchema with allOf.
- *
- * @param expression - A Zod intersection expression string (e.g., 'z.intersection(A, B)')
- * @returns CastrSchema with allOf array, or undefined if not an intersection expression
- *
- * @example
- * ```typescript
- * parseIntersectionZod('z.intersection(z.object({ a: z.string() }), z.object({ b: z.number() }))');
- * // => { allOf: [{ type: 'object', ... }, { type: 'object', ... }], metadata: { ... } }
- * ```
- *
- * @public
- */
-export function parseIntersectionZod(expression: string): CastrSchema | undefined {
-  const parsed = parseZodExpression(expression);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const { baseMethod, baseArgs } = parsed;
-  if (baseMethod !== 'intersection') {
-    return undefined;
-  }
-
-  // Both arguments are the intersection members
-  const allOf: CastrSchema[] = [];
-  for (const memberExpr of baseArgs) {
-    if (typeof memberExpr !== 'string') {
-      continue;
-    }
-    const memberSchema = parseIntersectionMember(memberExpr);
-    if (memberSchema) {
-      allOf.push(memberSchema);
-    }
-  }
-
-  if (allOf.length === 0) {
-    return undefined;
-  }
-
-  return {
-    allOf,
-    metadata: createIntersectionMetadata(),
-  };
+  return parseIntersectionZodFromNode(init, parseZodSchemaFromNode);
 }

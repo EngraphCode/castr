@@ -1,0 +1,602 @@
+{
+  "$schema": "./expected.schema.json",
+  "schemas": {
+    "StringMin": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(1)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minLength": 1
+    },
+    "StringMax": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".max(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "maxLength": 100
+    },
+    "StringLength": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".length(10)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minLength": 10
+    },
+    "StringMinMax": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(1)", ".max(255)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "StringRegex": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".regex(\"^[a-z]+$\")"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "pattern": "^[a-z]+$"
+    },
+    "StringStartsWith": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".startsWith(\"prefix_\")"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "pattern": "^prefix_"
+    },
+    "StringEndsWith": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".endsWith(\"_suffix\")"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "pattern": "_suffix$"
+    },
+    "StringIncludes": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".includes(\"middle\")"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "pattern": "middle"
+    },
+    "NumberMin": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(0)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minimum": 0
+    },
+    "NumberMax": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".max(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "maximum": 100
+    },
+    "NumberMinMax": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(0)", ".max(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minimum": 0,
+      "maximum": 100
+    },
+    "NumberGt": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".gt(0)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "exclusiveMinimum": 0
+    },
+    "NumberGte": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".gte(0)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minimum": 0
+    },
+    "NumberLt": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".lt(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "exclusiveMaximum": 100
+    },
+    "NumberLte": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".lte(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "maximum": 100
+    },
+    "NumberPositive": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".positive()"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "exclusiveMinimum": 0
+    },
+    "NumberNegative": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".negative()"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "exclusiveMaximum": 0
+    },
+    "NumberNonnegative": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(0)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minimum": 0
+    },
+    "NumberNonpositive": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".max(0)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "maximum": 0
+    },
+    "NumberMultipleOf": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".multipleOf(5)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "multipleOf": 5
+    },
+    "IntMin": {
+      "type": "integer",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(0)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "IntMax": {
+      "type": "integer",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".max(1000)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "Int32MinMax": {
+      "type": "integer",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min()", ".max(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "format": "int32"
+    },
+    "FullyConstrainedString": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(1)", ".max(50)", ".regex(\"^[A-Za-z ]+$\")"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minLength": 1,
+      "maxLength": 50,
+      "pattern": "^[A-Za-z ]+$"
+    },
+    "FullyConstrainedNumber": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [".min(0)", ".max(100)", ".multipleOf(5)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 5
+    },
+    "StringWithDefault": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "default": "default_value",
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": [".default(\"default_value\")"]
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "default": "default_value"
+    },
+    "NumberWithDefault": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "default": 42,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": [".default(42)"]
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "default": 42
+    },
+    "BooleanWithDefault": {
+      "type": "boolean",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "default": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": [".default(false)"]
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "default": false
+    },
+    "OptionalWithMin": {
+      "type": "string",
+      "metadata": {
+        "required": false,
+        "nullable": false,
+        "zodChain": {
+          "presence": ".optional()",
+          "validations": [".min(1)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minLength": 1
+    },
+    "NullableWithMax": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": true,
+        "zodChain": {
+          "presence": ".nullable()",
+          "validations": [".max(100)"],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "maximum": 100
+    },
+    "NullishWithDefault": {
+      "type": "string",
+      "metadata": {
+        "required": false,
+        "nullable": true,
+        "default": "fallback",
+        "zodChain": {
+          "presence": ".nullish()",
+          "validations": [],
+          "defaults": [".default(\"fallback\")"]
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "default": "fallback"
+    }
+  }
+}

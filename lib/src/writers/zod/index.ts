@@ -19,14 +19,7 @@ export function writeZodSchema(
   options?: TemplateContextOptions,
 ): WriterFunction {
   return (writer) => {
-    const schema = context.schema;
-    if (schema.metadata?.circularReferences && schema.metadata.circularReferences.length > 0) {
-      writer.write('z.lazy(() => ');
-      writeSchemaBody(context, options)(writer);
-      writer.write(')');
-    } else {
-      writeSchemaBody(context, options)(writer);
-    }
+    writeSchemaBody(context, options)(writer);
   };
 }
 

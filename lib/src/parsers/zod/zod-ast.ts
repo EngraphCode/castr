@@ -19,7 +19,7 @@
  * ```
  */
 
-import type { SourceFile, CallExpression } from 'ts-morph';
+import type { CallExpression, ReturnStatement } from 'ts-morph';
 import { Project, Node } from 'ts-morph';
 
 /**
@@ -39,6 +39,30 @@ export const ZOD_PRIMITIVES = [
   'any',
   'unknown',
   'never',
+  // Zod 4 Primitives
+  'int',
+  'int32',
+  'int64',
+  'float32',
+  'float64',
+  'iso.date',
+  'iso.datetime',
+  'iso.time',
+  'iso.duration',
+  'uuidv4',
+  'base64',
+  'base64url',
+  'email',
+  'url',
+  'uuid',
+  'ipv4',
+  'ipv6',
+  'cidrv4',
+  'cidrv6',
+  'jwt',
+  'e164',
+  'hostname',
+  'literal',
 ] as const;
 
 export type ZodPrimitiveType = (typeof ZOD_PRIMITIVES)[number];
@@ -54,6 +78,7 @@ export const ZOD_COMPOSITIONS = [
   'intersection',
   'discriminatedUnion',
   'lazy',
+  'xor',
 ] as const;
 
 export type ZodCompositionType = (typeof ZOD_COMPOSITIONS)[number];
@@ -70,6 +95,8 @@ export interface ZodMethodChainInfo {
   baseArgNodes: Node[];
   /** Parsed argument values from the base call (for composition types) */
   baseArgs: unknown[];
+  /** The AST node of the base call expression */
+  baseCallNode?: CallExpression | undefined;
 }
 
 /**
@@ -110,101 +137,15 @@ export function createZodProject(source: string): Project {
 // Helper functions for isZodCall - split for reduced complexity
 // ============================================================================
 
-function isDirectZodCall(expr: Node): boolean {
-  if (!Node.isPropertyAccessExpression(expr)) {
-    return false;
-  }
-  const obj = expr.getExpression();
-  return Node.isIdentifier(obj) && obj.getText() === 'z';
-}
+import {
+  isZodCall,
+  getZodBaseMethod,
+  isZodOrZodNamespace,
+  isDirectZodCall,
+  getInnerCall,
+} from './zod-ast.helpers.js';
 
-function getInnerCall(expr: Node): CallExpression | undefined {
-  if (!Node.isPropertyAccessExpression(expr)) {
-    return undefined;
-  }
-  const inner = expr.getExpression();
-  if (Node.isCallExpression(inner)) {
-    return inner;
-  }
-  return undefined;
-}
-
-/**
- * Check if a node is a call to z.xxx().
- *
- * @param node - AST node to check
- * @returns True if this is a z.xxx() call
- *
- * @internal
- */
-export function isZodCall(node: Node): node is CallExpression {
-  if (!Node.isCallExpression(node)) {
-    return false;
-  }
-
-  const expr = node.getExpression();
-
-  // Direct z.xxx()
-  if (isDirectZodCall(expr)) {
-    return true;
-  }
-
-  // Chained: z.xxx().yyy()
-  const inner = getInnerCall(expr);
-  if (inner) {
-    return isZodCall(inner);
-  }
-
-  return false;
-}
-
-// ============================================================================
-// Helper for getZodBaseMethod
-// ============================================================================
-
-function extractBaseFromCall(call: CallExpression): string | undefined {
-  const expr = call.getExpression();
-  if (!Node.isPropertyAccessExpression(expr)) {
-    return undefined;
-  }
-
-  const obj = expr.getExpression();
-  if (Node.isIdentifier(obj) && obj.getText() === 'z') {
-    return expr.getName();
-  }
-  return undefined;
-}
-
-/**
- * Get the base Zod method name from a call expression.
- *
- * @param call - A Zod call expression
- * @returns The base method name (e.g., 'string', 'object') or undefined
- *
- * @internal
- */
-export function getZodBaseMethod(call: CallExpression): string | undefined {
-  let current: Node = call;
-
-  // Walk down to find z.xxx()
-  while (Node.isCallExpression(current)) {
-    const base = extractBaseFromCall(current);
-    if (base) {
-      return base;
-    }
-
-    // Keep walking down the chain
-    const inner = getInnerCall(current.getExpression());
-    if (inner) {
-      current = inner;
-      continue;
-    }
-
-    break;
-  }
-
-  return undefined;
-}
+export { isZodCall, getZodBaseMethod, isZodOrZodNamespace, isDirectZodCall, getInnerCall };
 
 // ============================================================================
 // Helpers for getZodMethodChain
@@ -228,7 +169,7 @@ function shouldStopChainWalk(expr: Node): boolean {
     return true;
   }
   const obj = expr.getExpression();
-  return Node.isIdentifier(obj) && obj.getText() === 'z';
+  return isZodOrZodNamespace(obj);
 }
 
 /**
@@ -248,7 +189,7 @@ export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | un
   const { chainedMethods, baseCall } = walkMethodChain(call);
   const { baseArgNodes, baseArgs } = extractBaseArgs(baseCall);
 
-  return { baseMethod, chainedMethods, baseArgNodes, baseArgs };
+  return { baseMethod, chainedMethods, baseArgNodes, baseArgs, baseCallNode: baseCall };
 }
 
 /**
@@ -357,34 +298,7 @@ export function extractLiteralValue(node: Node): unknown {
 // findZodSchemaDeclarations
 // ============================================================================
 
-/**
- * Find all top-level Zod schema declarations in a source file.
- *
- * @param sourceFile - ts-morph SourceFile
- * @returns Array of variable declarations with Zod schemas
- *
- * @public
- */
-export function findZodSchemaDeclarations(
-  sourceFile: SourceFile,
-): { name: string; initializer: CallExpression }[] {
-  const results: { name: string; initializer: CallExpression }[] = [];
-
-  for (const stmt of sourceFile.getStatements()) {
-    if (!Node.isVariableStatement(stmt)) {
-      continue;
-    }
-
-    for (const decl of stmt.getDeclarationList().getDeclarations()) {
-      const init = decl.getInitializer();
-      if (init && Node.isCallExpression(init) && isZodCall(init)) {
-        results.push({ name: decl.getName(), initializer: init });
-      }
-    }
-  }
-
-  return results;
-}
+export { findZodSchemaDeclarations } from './zod-ast.declarations.js';
 
 // ============================================================================
 // Helpers for extractObjectProperties - split for reduced complexity
@@ -420,17 +334,38 @@ function stripQuotes(name: string): string {
   return name;
 }
 
-function extractPropertyEntry(prop: Node): [string, CallExpression] | undefined {
-  if (!Node.isPropertyAssignment(prop)) {
-    return undefined;
+function extractPropertyEntry(prop: Node): [string, Node] | undefined {
+  if (Node.isPropertyAssignment(prop)) {
+    const name = stripQuotes(prop.getName());
+    const init = prop.getInitializer();
+
+    if (init && (Node.isCallExpression(init) || Node.isIdentifier(init))) {
+      return [name, init];
+    }
   }
 
-  const name = stripQuotes(prop.getName());
-  const init = prop.getInitializer();
+  if (Node.isGetAccessorDeclaration(prop)) {
+    const name = stripQuotes(prop.getName());
+    const body = prop.getBody();
+    if (!body || !Node.isBlock(body)) {
+      return undefined;
+    }
 
-  if (init && Node.isCallExpression(init) && isZodCall(init)) {
-    return [name, init];
+    const returnStat = body
+      .getStatements()
+      .find((s): s is ReturnStatement => Node.isReturnStatement(s));
+    if (!returnStat) {
+      return undefined;
+    }
+
+    const expr = returnStat.getExpression();
+    if (!expr) {
+      return undefined;
+    }
+
+    return [name, expr];
   }
+
   return undefined;
 }
 
@@ -442,9 +377,7 @@ function extractPropertyEntry(prop: Node): [string, CallExpression] | undefined 
  *
  * @public
  */
-export function extractObjectProperties(
-  call: CallExpression,
-): Map<string, CallExpression> | undefined {
+export function extractObjectProperties(call: CallExpression): Map<string, Node> | undefined {
   const baseMethod = getZodBaseMethod(call);
   if (baseMethod !== 'object') {
     return undefined;
@@ -465,7 +398,7 @@ export function extractObjectProperties(
     return undefined;
   }
 
-  const properties = new Map<string, CallExpression>();
+  const properties = new Map<string, Node>();
 
   for (const prop of objectLiteral.getProperties()) {
     const entry = extractPropertyEntry(prop);

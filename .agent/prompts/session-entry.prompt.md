@@ -47,16 +47,20 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 
 Writers use **ts-morph** for code generation—no string templates or concatenation.
 
-### 6. Type Discipline
+### 6. No String Manipulation for Parsing
 
-- **FORBIDDEN:** `as` (except `as const`), `any`, `!`
+> **INVIOLABLE:** All parsing must use proper AST analysis (ts-morph). String manipulation carries no semantic meaning and is banned.
+
+### 7. Type Discipline
+
+- **FORBIDDEN:** `as` (except `as const`), `any`, `!`, disabled checks
 - **REQUIRED:** Library types first, proper type guards
 
-### 7. TDD at ALL Levels (Mandatory)
+### 8. TDD at ALL Levels (Mandatory)
 
 Write failing tests FIRST—unit, integration, AND E2E.
 
-### 8. Quality Gates (All 10 Must Pass)
+### 9. Quality Gates (All Must Pass)
 
 ```bash
 pnpm clean && pnpm install && pnpm build && pnpm type-check && \
@@ -70,9 +74,16 @@ pnpm test:gen && pnpm character
 
 ## 📋 Current Focus: Session 3.2 — Zod → IR Parser
 
-> [!IMPORTANT]
-> **Sessions 3.1a-3.1b complete.** IR is format-agnostic, native recursion implemented.
-> **Phase 1 (Fixture Creation) is in progress** — happy-path fixtures done, expected IR files in progress.
+> [!WARNING]
+> **BUILD IS CURRENTLY BROKEN.** The next session MUST start by fixing build errors before any new work.
+
+### Build Status
+
+```
+❌ DTS Build Error in zod-parser.primitives.ts
+   - Line 163: Unused function 'parseZodExpression'
+   - Line 313: Type comparison error between 'literal' and 'null'
+```
 
 ### Completed Sessions
 
@@ -86,12 +97,15 @@ pnpm test:gen && pnpm character
 
 **Goal:** Parse Zod 4 schemas and reconstruct the IR.
 
-**Critical requirements:**
+**Status:** Phase 2 implementation in progress, build broken
 
-- **Zod 4 only** — reject Zod 3 syntax with clear errors
-- **Strict everywhere** — fail fast with useful error messages
-- **Pattern recognition** — map Zod 4 functions back to IR
-- **Handle getter syntax** — recursive reference detection
+**What's Done:**
+
+- ✅ Phase 1: All fixture files created (10 happy-path, 1 sad-path)
+- ✅ Core parser architecture established (dispatcher pattern)
+- ✅ Individual parser modules created (primitives, object, composition, union, intersection, references)
+- ❌ Build errors in `zod-parser.primitives.ts`
+- ❌ Lint errors in multiple files (complexity, unused vars)
 
 **Plan:** [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
 
@@ -111,6 +125,54 @@ Once the parser is complete, validate: `OpenAPI → Zod → OpenAPI` is byte-ide
 
 ---
 
+## 🚀 Starting the Next Session
+
+### 1. Fix Build (BLOCKING)
+
+```bash
+cd lib
+pnpm build  # Will fail - fix the errors
+```
+
+Fix in `zod-parser.primitives.ts`:
+
+- Remove or use `parseZodExpression` (line 163)
+- Fix type comparison at line 313
+
+### 2. Fix Lint Errors
+
+```bash
+pnpm lint
+```
+
+Common issues to fix:
+
+- Unused `chainedMethods` params → prefix with `_`
+- Single-line if bodies → add braces
+- Cognitive complexity → split functions
+
+### 3. Run Full Quality Gates
+
+```bash
+pnpm build && pnpm type-check && pnpm lint && pnpm format:check
+```
+
+### 4. Continue Implementation
+
+Read the updated plan: [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
+
+---
+
+## ⚠️ Key Challenges Discovered
+
+1. **Dependency cycles** between parser modules — need careful import management
+2. **CastrSchemaProperties wrapper required** — use `new CastrSchemaProperties(obj)`
+3. **CastrSchemaNode required everywhere** — use `createDefaultMetadata()`
+4. **Strict TypeScript** — explicit `| undefined` for optional props
+5. **Low cognitive complexity limits** — max 12, must split large functions
+
+---
+
 ## 📚 Essential Reading
 
 | Priority | Document                                                                            | Purpose               |
@@ -123,16 +185,6 @@ Once the parser is complete, validate: `OpenAPI → Zod → OpenAPI` is byte-ide
 
 ---
 
-## 🚀 Starting Session 3.2
-
-1. **Run quality gates** — Verify clean state
-2. **Read the plan** — [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
-3. **Study writer output** — Understand what patterns to parse
-4. **Write failing tests first** — TDD the parser
-5. **Run quality gates** — All 10 must pass before commit
-
----
-
 ## ⚠️ Common Pitfalls (Session 3.2 Specific)
 
 1. **Accepting Zod 3 syntax** — ALWAYS detect and reject with clear errors
@@ -140,3 +192,4 @@ Once the parser is complete, validate: `OpenAPI → Zod → OpenAPI` is byte-ide
 3. **Ignoring getter syntax** — Critical for circular reference detection
 4. **Forgetting .meta()** — Must extract all metadata to IR
 5. **Skipping .strict()** — Must detect and map to `additionalProperties: false`
+6. **Incremental file patches** — Led to file corruption; prefer full file rewrites when making significant changes

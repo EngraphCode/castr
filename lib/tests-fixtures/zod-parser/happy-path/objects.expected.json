@@ -1,74 +1,402 @@
 {
-  "$schema": "expected-ir.schema.json",
-  "$comment": "Expected IR output for objects.zod4.ts - Maps Zod 4 object patterns to CastrSchema IR",
+  "$schema": "./expected.schema.json",
   "schemas": {
-    "BasicObjectSchema": {
+    "BasicObject": {
       "type": "object",
       "properties": {
-        "name": { "type": "string" },
-        "age": { "type": "number" },
-        "active": { "type": "boolean" }
+        "name": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "age": {
+          "type": "number",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "active": {
+          "type": "boolean",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
       },
       "required": ["name", "age", "active"]
     },
-    "StrictObjectSchema": {
+    "StrictObject": {
       "type": "object",
       "properties": {
-        "id": { "type": "string" },
-        "value": { "type": "number" }
+        "id": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "value": {
+          "type": "number",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
       },
       "required": ["id", "value"],
       "additionalProperties": false
     },
-    "PassthroughObjectSchema": {
+    "PassthroughObject": {
       "type": "object",
       "properties": {
-        "known": { "type": "string" }
+        "known": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
       },
       "required": ["known"],
       "additionalProperties": true
     },
-    "ObjectWithOptionalSchema": {
+    "ObjectWithOptional": {
       "type": "object",
       "properties": {
-        "required": { "type": "string" },
-        "optional": { "type": "string" },
-        "nullable": { "type": ["string", "null"] },
-        "nullish": { "type": ["string", "null"] }
+        "required": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "optional": {
+          "type": "string",
+          "metadata": {
+            "required": false,
+            "nullable": false,
+            "zodChain": {
+              "presence": ".optional()",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "nullable": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": true,
+            "zodChain": {
+              "presence": ".nullable()",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "nullish": {
+          "type": "string",
+          "metadata": {
+            "required": false,
+            "nullable": true,
+            "zodChain": {
+              "presence": ".nullish()",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
       },
-      "required": ["required", "nullable"],
-      "$comment": "optional and nullish properties are NOT in required array"
+      "required": ["required", "nullable"]
     },
-    "NestedObjectSchema": {
+    "NestedObject": {
       "type": "object",
       "properties": {
         "user": {
           "type": "object",
           "properties": {
-            "name": { "type": "string" },
-            "email": { "type": "string", "format": "email" }
+            "name": {
+              "type": "string",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              }
+            },
+            "email": {
+              "type": "string",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              },
+              "format": "email"
+            }
           },
           "required": ["name", "email"]
         },
         "metadata": {
           "type": "object",
           "properties": {
-            "createdAt": { "type": "string", "format": "date-time" },
-            "version": { "type": "integer" }
+            "createdAt": {
+              "type": "string",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              },
+              "format": "date-time"
+            },
+            "version": {
+              "type": "integer",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              }
+            }
           },
           "required": ["createdAt", "version"]
         }
       },
-      "required": ["user", "metadata"]
+      "required": []
     },
-    "ObjectWithFormatsSchema": {
+    "ObjectWithFormats": {
       "type": "object",
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "email": { "type": "string", "format": "email" },
-        "website": { "type": "string", "format": "uri" },
-        "createdAt": { "type": "string", "format": "date-time" },
-        "count": { "type": "integer", "format": "int32" }
+        "id": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          },
+          "format": "uuid"
+        },
+        "email": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          },
+          "format": "email"
+        },
+        "website": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          },
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          },
+          "format": "date-time"
+        },
+        "count": {
+          "type": "integer",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          },
+          "format": "int32"
+        }
       },
       "required": ["id", "email", "website", "createdAt", "count"],
       "additionalProperties": false

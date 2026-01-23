@@ -751,6 +751,12 @@ export interface CastrSchema {
    */
   pattern?: string;
 
+  /**
+   * Content encoding (OAS 3.1).
+   * @example 'base64', 'base64url'
+   */
+  contentEncoding?: string;
+
   // Number properties
   /**
    * Minimum number value (inclusive).
@@ -1074,7 +1080,7 @@ export interface CastrSchemaNode {
 
   /**
    * Detected circular references in the dependency graph.
-   * Used to generate z.lazy() wrappers.
+   * Used to generate getter-based recursion in Zod output.
    *
    * @example ['#/components/schemas/Node', '#/components/schemas/Tree']
    *
@@ -1199,7 +1205,7 @@ export interface IRZodChainInfo {
  * Dependency graph for schema references.
  *
  * Tracks all schema references in the document and detects circular dependencies.
- * Used for topological sorting (generation order) and z.lazy() generation.
+ * Used for topological sorting (generation order) and getter-based recursion.
  *
  * @example
  * ```typescript

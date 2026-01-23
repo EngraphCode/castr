@@ -19,12 +19,11 @@ With the OpenAPI → Zod pipeline production-ready, we need to formalize decisio
 All OpenAPI metadata that doesn't map to Zod validation is preserved using `.meta()`:
 
 ```typescript
-z.string()
-  .describe('User email address')
-  .meta({
-    deprecated: true,
-    examples: ['user@example.com'],
-  });
+z.string().meta({
+  description: 'User email address',
+  deprecated: true,
+  examples: ['user@example.com'],
+});
 ```
 
 **Rationale:** Ensures NO CONTENT LOSS during transformations.

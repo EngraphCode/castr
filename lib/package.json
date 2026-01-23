@@ -58,7 +58,7 @@
     "prettier": "^3.6.2",
     "ts-morph": "^27.0.2",
     "ts-pattern": "^5.9.0",
-    "zod": "^4.1.13"
+    "zod": "^4.3.6"
   },
   "peerDependencies": {
     "openapi-fetch": "^0.15.0"

@@ -19,7 +19,7 @@
 ## Scope and Sources
 
 - Castr source root: `lib/`, `docs/`, and root README.
-- OpenAPI-TS source root: `tmp/openapi-ts/`, especially `tmp/openapi-ts/packages/openapi-ts` and `tmp/openapi-ts/docs/openapi-ts`.
+- OpenAPI-TS source root: [`tmp/openapi-ts`](../../../tmp/openapi-ts), especially `tmp/openapi-ts/packages/openapi-ts` and `tmp/openapi-ts/docs/openapi-ts`.
 - Versions observed: Castr `lib/package.json` 1.18.3; OpenAPI-TS `tmp/openapi-ts/packages/openapi-ts/package.json` 0.90.4.
 
 ## Feature Matrix

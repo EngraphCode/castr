@@ -47,10 +47,10 @@ export const NumberPositiveSchema = z.number().positive();
 export const NumberNegativeSchema = z.number().negative();
 
 /** .nonnegative() - >= 0 */
-export const NumberNonnegativeSchema = z.number().nonnegative();
+export const NumberNonnegativeSchema = z.number().min(0);
 
 /** .nonpositive() - <= 0 */
-export const NumberNonpositiveSchema = z.number().nonpositive();
+export const NumberNonpositiveSchema = z.number().max(0);
 
 /** .multipleOf() - must be multiple of N */
 export const NumberMultipleOfSchema = z.number().multipleOf(5);

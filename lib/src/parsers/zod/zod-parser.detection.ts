@@ -103,10 +103,42 @@ export function detectZod3Syntax(source: string): ZodParseError[] {
           location: { line: lineAndCol.line, column: lineAndCol.column },
         });
       }
+
+      // Check for discouraged refinements that should be primitives
+      if (isDiscouragedRefinement(method.name)) {
+        const replacement = getDiscouragedReplacement(method.name);
+        const lineAndCol = sourceFile.getLineAndColumnAtPos(node.getStart());
+
+        errors.push({
+          message: `Refinement '.${method.name}()' effectively creates a new primitive type. Use '${replacement}' instead.`,
+          code: 'ZOD3_SYNTAX', // Reusing code or DYNAMIC_SCHEMA? ZOD3_SYNTAX is likely what's expected by user rule "Zod 3 style"
+          location: { line: lineAndCol.line, column: lineAndCol.column },
+        });
+      }
     }
   });
 
   return errors;
+}
+
+/**
+ * Zod refinements that should be used as primitives instead.
+ * @internal
+ */
+const DISCOURAGED_REFINEMENTS: ReadonlyMap<string, string> = new Map([
+  ['email', 'z.email()'],
+  ['url', 'z.url()'],
+  ['uuid', 'z.uuid()'],
+  ['datetime', 'z.iso.datetime()'],
+  ['int', 'z.int()'],
+]);
+
+function isDiscouragedRefinement(methodName: string): boolean {
+  return DISCOURAGED_REFINEMENTS.has(methodName);
+}
+
+function getDiscouragedReplacement(methodName: string): string | undefined {
+  return DISCOURAGED_REFINEMENTS.get(methodName);
 }
 
 /**

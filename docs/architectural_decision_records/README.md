@@ -76,6 +76,7 @@ Each ADR follows this structure:
 | [029](./ADR-029-canonical-source-structure.md)  | Canonical Source Structure  | Accepted | 2026-01-12 |
 | [030](./ADR-030-full-openapi-syntax-support.md) | Full OpenAPI Syntax Support | Accepted | 2026-01-13 |
 | [031](./ADR-031-zod-output-strategy.md)         | Zod 4 Output Strategy       | Accepted | 2026-01-21 |
+| [032](./ADR-032-zod-input-strategy.md)          | Zod 4 Input Strategy        | Accepted | 2026-01-23 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
@@ -170,7 +171,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 031)
+2. **Number sequentially** (next is 033)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry

@@ -3,7 +3,7 @@
 **Date:** January 19, 2026 (Updated)  
 **Status:** ✅ Session 2.6 COMPLETE — Session 2.7 READY  
 **Prerequisites:** ✅ Sessions 2.1-2.5 complete, ✅ ADR-029  
-**Specification:** [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md)
+**Specification:** [openapi-acceptance-criteria.md](../acceptance-criteria/openapi-acceptance-criteria.md)
 
 ---
 
@@ -362,7 +362,7 @@ Write new IR fields to OpenAPI 3.1 output:
 
 ## Acceptance Criteria
 
-1. **All fields from [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) are implemented**
+1. **All fields from [openapi-acceptance-criteria.md](../acceptance-criteria/openapi-acceptance-criteria.md) are implemented**
 2. **Input coverage tests pass for ALL 3.0.x fields**
 3. **Input coverage tests pass for ALL 3.1.x fields**
 4. **Output coverage tests pass for ALL 3.1.x fields**
@@ -388,7 +388,7 @@ Write new IR fields to OpenAPI 3.1 output:
 
 **Specifications:**
 
-- [openapi-acceptance-criteria.md](../openapi-acceptance-criteria.md) — Formal specification
+- [openapi-acceptance-criteria.md](../acceptance-criteria/openapi-acceptance-criteria.md) — Formal specification
 - [requirements.md](../requirements.md) — Field-level requirements (comprehensive)
 - [openapi_3_0_x_schema.json](../reference/openapi_schema/openapi_3_0_x_schema.json) — OAS 3.0.x schema
 - [openapi_3_1_x_schema_without_validation.json](../reference/openapi_schema/openapi_3_1_x_schema_without_validation.json) — OAS 3.1.x schema

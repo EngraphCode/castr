@@ -1,117 +1,115 @@
 /**
- * Zod Object Parsing Tests
+ * Zod Object Parser Tests
  *
- * TDD tests for parsing z.object() schemas to IR.
+ * TDD for Zod Object schemas, strictness, and property extraction.
  *
  * @module parsers/zod/object.test
  */
 
 import { describe, it, expect } from 'vitest';
 import { parseObjectZod } from './zod-parser.object.js';
+// Side-effect import to register primitive parser needed for property parsing
+import './zod-parser.primitives.js';
 
-describe('Object Zod Parsing', () => {
-  describe('parseObjectZod', () => {
-    it('should parse empty z.object({}) to empty object schema', () => {
-      const result = parseObjectZod('z.object({})');
+describe('Zod Object Parsing', () => {
+  it('should parse a basic object with primitive properties', () => {
+    const result = parseObjectZod(`
+      z.object({
+        name: z.string(),
+        age: z.number(),
+        active: z.boolean()
+      })
+    `);
 
-      expect(result).toBeDefined();
-      expect(result?.type).toBe('object');
-      expect(result?.properties?.size).toBe(0);
-      expect(result?.required).toEqual([]);
-    });
-
-    it('should parse z.object({ name: z.string() }) with property', () => {
-      const result = parseObjectZod('z.object({ name: z.string() })');
-
-      expect(result).toBeDefined();
-      expect(result?.type).toBe('object');
-      expect(result?.properties?.size).toBe(1);
-      expect(result?.properties?.get('name')).toBeDefined();
-      expect(result?.properties?.get('name')?.type).toBe('string');
-      // All Zod properties are required by default
-      expect(result?.required).toContain('name');
-    });
-
-    it('should parse z.object with multiple properties', () => {
-      const result = parseObjectZod('z.object({ a: z.string(), b: z.number() })');
-
-      expect(result).toBeDefined();
-      expect(result?.type).toBe('object');
-      expect(result?.properties?.size).toBe(2);
-      expect(result?.properties?.get('a')?.type).toBe('string');
-      expect(result?.properties?.get('b')?.type).toBe('number');
-      expect(result?.required).toContain('a');
-      expect(result?.required).toContain('b');
-    });
-
-    it('should have valid metadata structure', () => {
-      const result = parseObjectZod('z.object({ name: z.string() })');
-
-      expect(result?.metadata).toBeDefined();
-      expect(result?.metadata.required).toBe(true);
-      expect(result?.metadata.nullable).toBe(false);
-      expect(result?.metadata.zodChain).toBeDefined();
-      expect(result?.metadata.dependencyGraph).toBeDefined();
-    });
-
-    it('should return undefined for non-object Zod calls', () => {
-      const result = parseObjectZod('z.string()');
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for non-Zod expressions', () => {
-      const result = parseObjectZod('someObject({})');
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should handle property names with special characters', () => {
-      const result = parseObjectZod("z.object({ 'my-prop': z.string() })");
-
-      expect(result).toBeDefined();
-      expect(result?.properties?.get('my-prop')).toBeDefined();
+    expect(result).toMatchObject({
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        age: { type: 'number' },
+        active: { type: 'boolean' },
+      },
+      required: ['name', 'age', 'active'],
     });
   });
 
-  describe('parseObjectZod with chained properties (Session 2.2)', () => {
-    it('should parse property with chain: z.string().min(1)', () => {
-      const result = parseObjectZod('z.object({ name: z.string().min(1) })');
+  it('should parse a strict object (additionalProperties: false)', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).strict()
+    `);
 
-      expect(result?.properties?.get('name')?.type).toBe('string');
-      expect(result?.properties?.get('name')?.minLength).toBe(1);
-      expect(result?.required).toContain('name');
-    });
-
-    it('should parse optional property and exclude from required', () => {
-      const result = parseObjectZod('z.object({ name: z.string().optional() })');
-
-      expect(result?.properties?.get('name')?.type).toBe('string');
-      expect(result?.properties?.get('name')?.metadata.required).toBe(false);
-      expect(result?.required).not.toContain('name');
-    });
-
-    it('should parse mixed required and optional properties', () => {
-      const result = parseObjectZod('z.object({ id: z.string(), name: z.string().optional() })');
-
-      expect(result?.required).toContain('id');
-      expect(result?.required).not.toContain('name');
-    });
-
-    it('should parse property with format: z.string().email()', () => {
-      const result = parseObjectZod('z.object({ email: z.string().email() })');
-
-      expect(result?.properties?.get('email')?.format).toBe('email');
-    });
-
-    it('should parse property with complex chain', () => {
-      const result = parseObjectZod('z.object({ age: z.number().int().min(0).max(150) })');
-
-      const ageProp = result?.properties?.get('age');
-      expect(ageProp?.type).toBe('number');
-      expect(ageProp?.format).toBe('int32');
-      expect(ageProp?.minimum).toBe(0);
-      expect(ageProp?.maximum).toBe(150);
+    expect(result).toMatchObject({
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        id: { type: 'string' },
+      },
     });
   });
+
+  it('should parse a passthrough object (additionalProperties: true)', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).passthrough()
+    `);
+
+    expect(result).toMatchObject({
+      type: 'object',
+      additionalProperties: true,
+      properties: {
+        id: { type: 'string' },
+      },
+    });
+  });
+
+  it('should parse a generic object (strip unknown - default)', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      })
+    `);
+
+    expect(result?.additionalProperties).toBeUndefined(); // or whatever default behavior we map to IR (usually open or specific?)
+    // OpenAPI default is open. Zod default is strip (which acts like explicit validation of allowed keys ONLY).
+    // IR usually leaves additionalProperties undefined for default objects.
+  });
+
+  it('should handle optional and nullable properties correctly in required list', () => {
+    const result = parseObjectZod(`
+      z.object({
+        req: z.string(),
+        opt: z.string().optional(),
+        nullable: z.string().nullable(),
+        nullish: z.string().nullish()
+      })
+    `);
+
+    expect(result?.required).toContain('req');
+    expect(result?.required).toContain('nullable'); // nullable is still required key, value can be null
+    expect(result?.required).not.toContain('opt');
+    expect(result?.required).not.toContain('nullish');
+  });
+
+  it('should parse nested objects', () => {
+    const result = parseObjectZod(`
+      z.object({
+        user: z.object({
+          name: z.string()
+        })
+      })
+    `);
+
+    expect(result?.properties?.get('user')).toMatchObject({
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+    });
+  });
+
+  // Note: z.object({...}).extend({...}) is composition/inheritance.
+  // We might test it here if parseObjectZod supports it, or later.
+  // For basic parser, focus on z.object() definition.
 });

@@ -1,79 +1,323 @@
 {
-  "$schema": "expected-ir.schema.json",
-  "$comment": "Expected IR output for string-formats.zod4.ts - Maps Zod 4 string format functions to CastrSchema IR",
+  "$schema": "./expected.schema.json",
   "schemas": {
-    "EmailSchema": {
+    "Email": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "email"
     },
-    "UrlSchema": {
+    "Url": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "uri"
     },
-    "UuidSchema": {
+    "Uuid": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "uuid"
     },
-    "Uuidv4Schema": {
+    "Uuidv4": {
       "type": "string",
-      "format": "uuid",
-      "$comment": "UUIDv4 is a subset of UUID, format remains 'uuid'"
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "format": "uuid"
     },
-    "Uuidv7Schema": {
+    "Base64": {
       "type": "string",
-      "format": "uuid",
-      "$comment": "UUIDv7 is a subset of UUID, format remains 'uuid'"
-    },
-    "Base64Schema": {
-      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "contentEncoding": "base64"
     },
-    "Base64UrlSchema": {
+    "Base64Url": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "contentEncoding": "base64url"
     },
-    "Ipv4Schema": {
+    "Ipv4": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "ipv4"
     },
-    "Ipv6Schema": {
+    "Ipv6": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "ipv6"
     },
-    "Cidrv4Schema": {
+    "Cidrv4": {
       "type": "string",
-      "$comment": "CIDR blocks have no standard OpenAPI format, may use pattern or custom format"
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "Cidrv6Schema": {
+    "Cidrv6": {
       "type": "string",
-      "$comment": "CIDR blocks have no standard OpenAPI format, may use pattern or custom format"
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "JwtSchema": {
+    "Jwt": {
       "type": "string",
-      "$comment": "JWT has no standard OpenAPI format, may use custom format 'jwt'"
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "E164Schema": {
+    "E164": {
       "type": "string",
-      "$comment": "E.164 phone format has no standard OpenAPI format"
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "HostnameSchema": {
+    "Hostname": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "hostname"
     },
-    "IsoDateSchema": {
+    "IsoDate": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "date"
     },
-    "IsoDatetimeSchema": {
+    "IsoDatetime": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "date-time"
     },
-    "IsoTimeSchema": {
+    "IsoTime": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "time"
     },
-    "IsoDurationSchema": {
+    "IsoDuration": {
       "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "duration"
     }
   }

@@ -1,57 +1,131 @@
 /**
- * Zod Object Schema Parsing
+ * Zod Object Parser
  *
- * Parses z.object() schemas into CastrSchema structures with properties.
- * Uses ts-morph AST traversal (ADR-026 compliant - no regex).
+ * Handles parsing of Zod object schemas, including properties, strictness, and passthrough.
+ * Recurses for property schemas via Core Dispatcher.
  *
  * @module parsers/zod/object
- *
- * @example
- * ```typescript
- * import { parseObjectZod } from './zod-parser.object.js';
- *
- * const schema = parseObjectZod('z.object({ name: z.string().min(1) })');
- * ```
  */
 
-import type { CastrSchema, CastrSchemaNode } from '../../ir/schema.js';
-import type { CallExpression } from 'ts-morph';
-import { Node } from 'ts-morph';
+import type { CastrSchema } from '../../ir/schema.js';
 import { CastrSchemaProperties } from '../../ir/schema-properties.js';
-import { createZodProject, getZodBaseMethod, extractObjectProperties } from './zod-ast.js';
-import { parsePrimitiveZod } from './zod-parser.primitives.js';
+import { Node } from 'ts-morph';
+import { createZodProject, getZodMethodChain, extractObjectProperties } from './zod-ast.js';
+import type { ZodSchemaParser } from './zod-parser.types.js';
+import { createDefaultMetadata } from './zod-parser.defaults.js';
+import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
+import { applyMetaToSchema, extractMetaFromChain } from './zod-parser.meta.js';
+
+// ============================================================================
+// Helper functions - extracted to reduce complexity
+// ============================================================================
 
 /**
- * Create default metadata for a schema node.
+ * Extract strictness/additionalProperties from chained methods.
  * @internal
  */
-function createDefaultMetadata(
-  options: { nullable?: boolean; required?: boolean } = {},
-): CastrSchemaNode {
-  const { nullable = false, required = true } = options;
+function extractStrictness(chainedMethods: { name: string }[]): boolean | undefined {
+  let additionalProperties: boolean | undefined = undefined;
 
-  return {
-    required,
-    nullable,
-    zodChain: {
-      presence: '',
-      validations: [],
-      defaults: [],
-    },
-    dependencyGraph: {
-      references: [],
-      referencedBy: [],
-      depth: 0,
-    },
-    circularReferences: [],
-  };
+  for (const method of chainedMethods) {
+    if (method.name === 'strict') {
+      additionalProperties = false;
+    } else if (method.name === 'passthrough') {
+      additionalProperties = true;
+    } else if (method.name === 'strip') {
+      additionalProperties = undefined;
+    }
+  }
+
+  return additionalProperties;
 }
 
 /**
- * Parse and extract initializer from expression.
+ * Extract properties from object node.
  * @internal
  */
-function parseExpression(expression: string): CallExpression | undefined {
+function extractPropertiesFromNode(
+  propertyNodes: Map<string, Node> | undefined,
+  parseSchema: ZodSchemaParser,
+): { properties: Record<string, CastrSchema>; required: string[] } {
+  const properties: Record<string, CastrSchema> = {};
+  const required: string[] = [];
+
+  if (!propertyNodes) {
+    return { properties, required };
+  }
+
+  for (const [name, propNode] of propertyNodes) {
+    const propSchema = parseSchema(propNode);
+    if (!propSchema) {
+      continue;
+    }
+    properties[name] = propSchema;
+    if (propSchema.metadata?.required) {
+      required.push(name);
+    }
+  }
+
+  return { properties, required };
+}
+
+/**
+ * Parse a Zod object expression from a ts-morph Node.
+ * @internal
+ */
+export function parseObjectZodFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const chainInfo = getZodMethodChain(node);
+  if (!chainInfo) {
+    return undefined;
+  }
+
+  const { baseMethod, chainedMethods, baseCallNode } = chainInfo;
+
+  if (baseMethod !== 'object') {
+    return undefined;
+  }
+
+  if (!baseCallNode) {
+    return undefined;
+  }
+
+  const additionalProperties = extractStrictness(chainedMethods);
+  const propertyNodes = extractObjectProperties(baseCallNode);
+  const { properties, required } = extractPropertiesFromNode(propertyNodes, parseSchema);
+
+  const schema: CastrSchema = {
+    type: 'object',
+    properties: new CastrSchemaProperties(properties),
+    required,
+    metadata: createDefaultMetadata(),
+  };
+
+  if (additionalProperties !== undefined) {
+    schema.additionalProperties = additionalProperties;
+  }
+
+  applyMetaToSchema(schema, extractMetaFromChain(chainedMethods));
+
+  return schema;
+}
+
+// Register this parser with the core dispatcher
+registerParser('object', parseObjectZodFromNode);
+
+/**
+ * Parse a Zod object expression string.
+ * Wrapper for string input.
+ *
+ * @internal
+ */
+export function parseObjectZod(expression: string): CastrSchema | undefined {
   const project = createZodProject(`const __schema = ${expression};`);
   const sourceFile = project.getSourceFiles()[0];
   if (!sourceFile) {
@@ -60,71 +134,10 @@ function parseExpression(expression: string): CallExpression | undefined {
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
-  if (!init) {
+
+  if (!init || !Node.isCallExpression(init)) {
     return undefined;
   }
 
-  if (Node.isCallExpression(init)) {
-    return init;
-  }
-  return undefined;
-}
-
-/**
- * Process object properties into schema records.
- * @internal
- */
-function processProperties(propsMap: Map<string, CallExpression>): {
-  propertiesRecord: Record<string, CastrSchema>;
-  requiredFields: string[];
-} {
-  const propertiesRecord: Record<string, CastrSchema> = {};
-  const requiredFields: string[] = [];
-
-  for (const [propName, propCall] of propsMap) {
-    const propText = propCall.getText();
-    const propSchema = parsePrimitiveZod(propText);
-    if (propSchema) {
-      propertiesRecord[propName] = propSchema;
-      if (propSchema.metadata.required) {
-        requiredFields.push(propName);
-      }
-    }
-  }
-
-  return { propertiesRecord, requiredFields };
-}
-
-/**
- * Parse a z.object() expression into a CastrSchema using ts-morph AST.
- *
- * @param expression - A Zod object expression string
- * @returns CastrSchema if this is a valid z.object(), undefined otherwise
- *
- * @public
- */
-export function parseObjectZod(expression: string): CastrSchema | undefined {
-  const init = parseExpression(expression);
-  if (!init) {
-    return undefined;
-  }
-
-  const baseMethod = getZodBaseMethod(init);
-  if (baseMethod !== 'object') {
-    return undefined;
-  }
-
-  const propsMap = extractObjectProperties(init);
-  if (!propsMap) {
-    return undefined;
-  }
-
-  const { propertiesRecord, requiredFields } = processProperties(propsMap);
-
-  return {
-    type: 'object',
-    properties: new CastrSchemaProperties(propertiesRecord),
-    required: requiredFields,
-    metadata: createDefaultMetadata(),
-  };
+  return parseObjectZodFromNode(init, parseZodSchemaFromNode);
 }

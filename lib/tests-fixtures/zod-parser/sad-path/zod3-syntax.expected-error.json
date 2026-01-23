@@ -1,0 +1,38 @@
+{
+  "$schema": "expected-error.schema.json",
+  "$comment": "Expected Errors for zod3-syntax.patterns.ts",
+  "errors": [
+    {
+      "pattern": "z.string().email()",
+      "error": "Use `z.email()` instead"
+    },
+    {
+      "pattern": "z.string().url()",
+      "error": "Use `z.url()` instead"
+    },
+    {
+      "pattern": "z.string().uuid()",
+      "error": "Use `z.uuid()` instead"
+    },
+    {
+      "pattern": "z.string().datetime()",
+      "error": "Use `z.iso.datetime()` instead"
+    },
+    {
+      "pattern": "z.number().int()",
+      "error": "Use `z.int()` instead"
+    },
+    {
+      "pattern": "z.string().nonempty()",
+      "error": "Use `.min(1)` instead"
+    },
+    {
+      "pattern": "z.number().nonnegative()",
+      "error": "Use `.min(0)` instead"
+    },
+    {
+      "pattern": "z.number().nonpositive()",
+      "error": "Use `.max(0)` instead"
+    }
+  ]
+}

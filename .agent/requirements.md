@@ -222,6 +222,67 @@ The writer MUST produce valid 3.1.x output containing ALL fields from the IR, in
 
 ---
 
+### 8. Union Semantics (anyOf vs oneOf) — Lossless by Design
+
+**Non‑negotiable:** We MUST preserve `anyOf` vs `oneOf` semantics end‑to‑end.  
+Collapsing them into a single form is NOT allowed because it loses meaning.
+
+**IR Requirements**
+
+- IR MUST represent `anyOf` and `oneOf` distinctly (never normalize one into the other).
+- If input is OpenAPI `oneOf`/`anyOf`, the IR MUST preserve that choice exactly.
+- Writers MUST emit the same union semantics that exist in the IR (lossless round‑trip).
+
+**Zod → IR Policy**
+
+- `z.union([...])` defaults to IR `anyOf` unless disjointness is provable or explicit metadata requests `oneOf`.
+- `z.discriminatedUnion(...)` maps to IR `oneOf` with discriminator (if discriminator values are provably unique).
+- `z.xor(a, b)` maps to IR `oneOf` (exactly‑one semantics).
+- Any refinement/transform that prevents proof of disjointness MUST fall back to `anyOf` unless explicit metadata forces `oneOf` (see below).
+
+**Provable Disjointness (Minimum Proof Rules)**
+
+We may emit `oneOf` for Zod unions only when disjointness can be **proven** by static inspection:
+
+1. **Disjoint `type` sets**
+   - Example: `{ type: 'string' }` vs `{ type: 'number' }`
+   - If both schemas share any possible type (including `null`), disjointness is NOT proven.
+
+2. **Discriminator with unique literal/enum values**
+   - Every branch has the discriminator property as a literal/enum with **no overlap** across branches.
+   - If any branch lacks the discriminator or uses non‑literal values, disjointness is NOT proven.
+
+3. **Literal/enum unions with non‑overlapping values**
+   - Example: `z.union([z.literal('a'), z.literal('b')])`
+   - If values overlap or include broad types (e.g., `z.string()`), disjointness is NOT proven.
+
+If none of the above is satisfied, the union is treated as **potentially overlapping** and MUST be `anyOf` unless explicitly overridden.
+
+**Explicit Metadata Requests**
+
+We MUST support explicit metadata to request union semantics, but we cannot violate strictness:
+
+- If metadata requests **`anyOf`** → always allowed.
+- If metadata requests **`oneOf`**:
+  - Allowed only when disjointness is provable **OR** the input format already used `oneOf` (losslessness).
+  - Otherwise we MUST fail fast with a helpful error explaining why disjointness cannot be proven and how to fix it (add discriminator + literals, use `z.xor`, or choose `anyOf`).
+
+This keeps behavior strict, predictable, and lossless while still honoring explicit user intent when safe.
+
+---
+
+### 9. Zod Input (Idiomatic Zod 4 Only)
+
+**Non‑negotiable:** The parser MUST support idiomatic Zod 4 input and remain lossless.
+
+- **Zod 4 only** — reject Zod 3 syntax with actionable errors.
+- **Standard API only** — Zod 4 mini is out of scope.
+- **Static parsing only** — dynamic patterns (computed keys, spreads, runtime indirection) MUST fail fast.
+- **Getter‑based recursion only** — `z.lazy()` is not supported.
+- **Metadata is preserved when present** using idiomatic Zod 4 mechanisms (see ADR‑032).
+
+---
+
 ## Current Focus: OpenAPI ↔ Zod Pipeline
 
 > [!NOTE]
@@ -241,7 +302,7 @@ The writer MUST produce valid 3.1.x output containing ALL fields from the IR, in
 ### Input Handling
 
 - Accept OpenAPI via file path, URL, or in-memory object
-- Accept Zod schemas programmatically
+- Accept idiomatic Zod 4 schemas programmatically
 - Dereference and bundle at load time
 - Validate before processing
 

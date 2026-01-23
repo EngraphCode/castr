@@ -1,0 +1,43 @@
+{
+  "$schema": "./expected.schema.json",
+  "schemas": {
+    "LiteralArray": {
+      "type": "string",
+      "enum": [["red", "green", "blue"]],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "NumericLiteral": {
+      "type": "string",
+      "enum": [[200, 201, 204, 404, 500]],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    }
+  }
+}

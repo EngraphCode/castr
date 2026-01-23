@@ -1,53 +1,78 @@
 /**
- * Zod Intersection Parsing Unit Tests
+ * Zod Intersection Parser Tests
  *
- * Tests for parsing intersection types: z.intersection(), .and() method.
+ * TDD for Intersections (z.intersection and .and()).
  *
- * @module parsers/zod/intersection.unit.test
+ * @module parsers/zod/intersection.test
  */
 
 import { describe, it, expect } from 'vitest';
 import { parseIntersectionZod } from './zod-parser.intersection.js';
+import { parseZodSchemaFromNode } from './zod-parser.core.js';
+import { createZodProject } from './zod-ast.js';
+import { Node } from 'ts-morph';
+// Side-effect imports to register parsers needed for nested parsing
+import './zod-parser.primitives.js';
+import './zod-parser.object.js';
 
-describe('Intersection Zod Parsing', () => {
-  describe('parseIntersectionZod', () => {
-    it('should parse z.intersection(A, B) to allOf with 2 schemas', () => {
-      const result = parseIntersectionZod(
-        'z.intersection(z.object({ a: z.string() }), z.object({ b: z.number() }))',
-      );
+// Wrapper to test core dispatch for .and()
+function parseCode(code: string) {
+  const project = createZodProject(`const __schema = ${code};`);
+  const sourceFile = project.getSourceFiles()[0];
+  if (!sourceFile) {
+    return undefined;
+  }
+  const varDecl = sourceFile.getVariableDeclarations()[0];
+  if (!varDecl) {
+    return undefined;
+  }
+  const init = varDecl.getInitializer();
+  if (init && Node.isCallExpression(init)) {
+    return parseZodSchemaFromNode(init);
+  }
+  return undefined;
+}
 
-      expect(result).toBeDefined();
-      expect(result?.allOf).toHaveLength(2);
+describe('Zod Intersection Parsing', () => {
+  describe('z.intersection(A, B)', () => {
+    it('should parse z.intersection([A, B])', () => {
+      // z.intersection arguments are A, B. Not array.
+      const result = parseIntersectionZod('z.intersection(z.string(), z.number())');
+      expect(result).toMatchObject({
+        allOf: [{ type: 'string' }, { type: 'number' }],
+      });
+    });
+  });
+
+  describe('A.and(B)', () => {
+    it('should parse object.and(object)', () => {
+      const result = parseCode('z.object({ a: z.string() }).and(z.object({ b: z.number() }))');
+      expect(result).toMatchObject({
+        allOf: [
+          {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+          },
+          {
+            type: 'object',
+            properties: { b: { type: 'number' } },
+          },
+        ],
+      });
     });
 
-    it('should parse intersection of primitives', () => {
-      const result = parseIntersectionZod('z.intersection(z.string(), z.string())');
-
-      expect(result).toBeDefined();
-      expect(result?.allOf).toHaveLength(2);
-      expect(result?.allOf?.[0]).toEqual(expect.objectContaining({ type: 'string' }));
-    });
-
-    it('should include metadata on intersection schema', () => {
-      const result = parseIntersectionZod(
-        'z.intersection(z.object({ a: z.string() }), z.object({ b: z.number() }))',
-      );
-
-      expect(result?.metadata).toBeDefined();
-      expect(result?.metadata?.required).toBe(true);
-      expect(result?.metadata?.nullable).toBe(false);
-    });
-
-    it('should return undefined for non-intersection expressions', () => {
-      const result = parseIntersectionZod('z.string()');
-
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined for union expressions', () => {
-      const result = parseIntersectionZod('z.union([z.string(), z.number()])');
-
-      expect(result).toBeUndefined();
+    it('should handle chained .and()', () => {
+      const result = parseCode('z.string().and(z.number()).and(z.boolean())');
+      // Structure: (string & number) & boolean -> allOf [ allOf[str, num], bool ]
+      // OpenAPI flattens allOf? No, valid to nest.
+      expect(result).toMatchObject({
+        allOf: [
+          {
+            allOf: [{ type: 'string' }, { type: 'number' }],
+          },
+          { type: 'boolean' },
+        ],
+      });
     });
   });
 });

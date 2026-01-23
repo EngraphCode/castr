@@ -2,6 +2,8 @@
 
 ## Overview
 
+Repo path: [`tmp/openapi-ts`](../../../tmp/openapi-ts)
+
 This document outlines a high-level design for an OpenAPI‑TS plugin that emits MCP tool definitions (JSON Schema Draft‑07) from an OpenAPI spec. The goal is to provide a simple, opt‑in output that makes OpenAPI‑TS compatible with the Model Context Protocol (MCP) ecosystem without changing OpenAPI‑TS core architecture.
 
 ## Goals

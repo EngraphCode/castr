@@ -47,16 +47,19 @@ export { parsePrimitiveZod } from './zod-parser.primitives.js';
 export { parseObjectZod } from './zod-parser.object.js';
 
 // Composition parsing exports (Session 2.3)
-export { parseArrayZod, parseEnumZod } from './zod-parser.composition.js';
+export { parseCompositionZodFromNode } from './zod-parser.composition.js';
 
 // Union parsing exports (Session 2.3)
-export { parseUnionZod, parseDiscriminatedUnionZod } from './zod-parser.union.js';
+export { parseUnionZodFromNode } from './zod-parser.union.js';
 
 // Intersection parsing exports (Session 2.3)
-export { parseIntersectionZod } from './zod-parser.intersection.js';
+export {
+  parseIntersectionZodFromNode,
+  parseChainedIntersectionFromNode,
+} from './zod-parser.intersection.js';
 
 // Reference parsing exports (Session 2.3)
-export { parseLazyZod, resolveVariableReference } from './zod-parser.references.js';
+export { parseReferenceZodFromNode } from './zod-parser.references.js';
 
 // Endpoint parsing exports (Session 2.4)
 export { parseEndpointDefinition, buildCastrOperationFromEndpoint } from './zod-parser.endpoint.js';

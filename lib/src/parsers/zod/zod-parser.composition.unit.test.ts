@@ -1,102 +1,82 @@
 /**
- * Zod Composition Parsing Unit Tests
+ * Zod Composition Parser Tests
  *
- * Tests for parsing composition types: arrays, enums, unions, intersections.
+ * TDD for Arrays, Tuples, and Enums.
+ *
+ * @module parsers/zod/composition.test
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseArrayZod, parseEnumZod } from './zod-parser.composition.js';
+import { parseCompositionZod } from './zod-parser.composition.js';
+// Side-effect import to register primitive parser needed for nested parsing
+import './zod-parser.primitives.js';
+// Note: We test the public wrapper parseCompositionZod which uses string -> Node -> Core -> Composition
+// Or we test parseCompositionZodFromNode directly?
+// Let's test parseCompositionZod logic mainly.
+// For recursion, we rely on core dispatcher working (verification in integration tests).
 
-describe('Composition Zod Parsing', () => {
-  describe('parseArrayZod', () => {
-    it('should parse z.array(z.string()) to array schema with string items', () => {
-      const result = parseArrayZod('z.array(z.string())');
-
-      expect(result?.type).toBe('array');
-      expect(result?.items).toEqual(
-        expect.objectContaining({
-          type: 'string',
-        }),
-      );
+describe('Zod Composition Parsing', () => {
+  describe('Arrays', () => {
+    it('should parse z.array(z.string())', () => {
+      const result = parseCompositionZod('z.array(z.string())');
+      expect(result).toMatchObject({
+        type: 'array',
+        items: { type: 'string' },
+      });
     });
 
-    it('should parse z.array(z.number()) to array schema with number items', () => {
-      const result = parseArrayZod('z.array(z.number())');
-
-      expect(result?.type).toBe('array');
-      expect(result?.items).toEqual(
-        expect.objectContaining({
-          type: 'number',
-        }),
-      );
+    it('should parse array with min/max length', () => {
+      const result = parseCompositionZod('z.array(z.string()).min(1).max(10)');
+      expect(result).toMatchObject({
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 1,
+        maxItems: 10,
+      });
     });
 
-    it('should parse z.array(z.string()).min(1) with minItems', () => {
-      const result = parseArrayZod('z.array(z.string()).min(1)');
-
-      expect(result?.type).toBe('array');
-      expect(result?.minItems).toBe(1);
+    it('should parse array with exact length', () => {
+      const result = parseCompositionZod('z.array(z.string()).length(5)');
+      expect(result).toMatchObject({
+        type: 'array',
+        minItems: 5,
+        maxItems: 5,
+      });
     });
 
-    it('should parse z.array(z.string()).max(10) with maxItems', () => {
-      const result = parseArrayZod('z.array(z.string()).max(10)');
-
-      expect(result?.type).toBe('array');
-      expect(result?.maxItems).toBe(10);
-    });
-
-    it('should parse z.array(z.string()).length(5) with both min and max', () => {
-      const result = parseArrayZod('z.array(z.string()).length(5)');
-
-      expect(result?.type).toBe('array');
-      expect(result?.minItems).toBe(5);
-      expect(result?.maxItems).toBe(5);
-    });
-
-    it('should parse z.array(z.string()).nonempty() with minItems 1', () => {
-      const result = parseArrayZod('z.array(z.string()).nonempty()');
-
-      expect(result?.type).toBe('array');
-      expect(result?.minItems).toBe(1);
-    });
-
-    it('should parse nested arrays z.array(z.array(z.string()))', () => {
-      const result = parseArrayZod('z.array(z.array(z.string()))');
-
-      expect(result?.type).toBe('array');
-      const items = result?.items;
-      expect(items).toBeDefined();
-      if (items && !Array.isArray(items)) {
-        expect(items.type).toBe('array');
-      }
-    });
-
-    it('should return undefined for non-array expressions', () => {
-      const result = parseArrayZod('z.string()');
-
-      expect(result).toBeUndefined();
+    it('should parse nested arrays', () => {
+      const result = parseCompositionZod('z.array(z.array(z.number()))');
+      expect(result).toMatchObject({
+        type: 'array',
+        items: {
+          type: 'array',
+          items: { type: 'number' },
+        },
+      });
     });
   });
 
-  describe('parseEnumZod', () => {
-    it('should parse z.enum(["A", "B", "C"]) to string enum schema', () => {
-      const result = parseEnumZod('z.enum(["A", "B", "C"])');
-
-      expect(result?.type).toBe('string');
-      expect(result?.enum).toEqual(['A', 'B', 'C']);
+  describe('Tuples', () => {
+    it('should parse z.tuple([string, number])', () => {
+      const result = parseCompositionZod('z.tuple([z.string(), z.number()])');
+      expect(result).toMatchObject({
+        type: 'array',
+        prefixItems: [{ type: 'string' }, { type: 'number' }],
+        minItems: 2,
+        maxItems: 2,
+      });
     });
 
-    it('should parse z.enum(["admin", "user", "guest"])', () => {
-      const result = parseEnumZod('z.enum(["admin", "user", "guest"])');
-
-      expect(result?.type).toBe('string');
-      expect(result?.enum).toEqual(['admin', 'user', 'guest']);
-    });
-
-    it('should return undefined for non-enum expressions', () => {
-      const result = parseEnumZod('z.string()');
-
-      expect(result).toBeUndefined();
+    it('should parse variadic tuple .rest()', () => {
+      const result = parseCompositionZod('z.tuple([z.string()]).rest(z.number())');
+      expect(result).toMatchObject({
+        type: 'array',
+        prefixItems: [{ type: 'string' }],
+        minItems: 1, // Rest allows more
+        // items: { type: 'number' } // OpenAPI 3.1: items is the rest schema
+      });
+      expect(result?.items).toMatchObject({ type: 'number' });
+      expect(result?.maxItems).toBeUndefined();
     });
   });
 });

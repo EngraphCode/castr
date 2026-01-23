@@ -1,32 +1,226 @@
 /**
- * Zod Composition Type Parsing
+ * Zod Composition Parser
  *
- * Handles parsing of Zod composition types (arrays, enums, unions, intersections)
- * into CastrSchema structures using ts-morph AST (ADR-026 compliant).
+ * Handles parsing of Zod composition schemas: array, tuple, enum.
  *
  * @module parsers/zod/composition
- * @internal
  */
 
-import { Node } from 'ts-morph';
 import type { CastrSchema } from '../../ir/schema.js';
+import { Node } from 'ts-morph';
 import {
   createZodProject,
   getZodMethodChain,
   type ZodMethodCall,
-  type ZodMethodChainInfo,
+  extractLiteralValue,
 } from './zod-ast.js';
-import { parsePrimitiveZod } from './zod-parser.primitives.js';
+import type { ZodSchemaParser } from './zod-parser.types.js';
+import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
+import { createDefaultMetadata } from './zod-parser.defaults.js';
+import { applyMetaAndReturn } from './zod-parser.meta.js';
 
 // ============================================================================
-// Common parsing helper
+// Helper functions - extracted to reduce complexity
 // ============================================================================
 
 /**
- * Parse a Zod expression string into method chain info.
+ * Parse z.array(T)
+ */
+function parseArray(
+  args: Node[],
+  chainedMethods: ZodMethodCall[],
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (args.length === 0) {
+    return undefined;
+  }
+
+  const itemArg = args[0];
+  if (!itemArg) {
+    return undefined;
+  }
+
+  const itemSchema = parseSchema(itemArg);
+  if (!itemSchema) {
+    return undefined;
+  }
+
+  const schema: CastrSchema = {
+    type: 'array',
+    items: itemSchema,
+    metadata: createDefaultMetadata(),
+  };
+
+  applyArrayConstraints(schema, chainedMethods);
+  return schema;
+}
+
+/**
+ * Apply array constraints from method chain.
+ */
+function applyArrayConstraints(schema: CastrSchema, methods: ZodMethodCall[]): void {
+  for (const method of methods) {
+    const arg = method.args[0];
+    if (typeof arg === 'number') {
+      if (method.name === 'min') {
+        schema.minItems = arg;
+      } else if (method.name === 'max') {
+        schema.maxItems = arg;
+      } else if (method.name === 'length') {
+        schema.minItems = arg;
+        schema.maxItems = arg;
+      }
+    }
+    if (method.name === 'nonempty') {
+      schema.minItems = 1;
+    }
+  }
+}
+
+/**
+ * Process rest method for tuple.
+ */
+function processRestMethod(
+  schema: CastrSchema,
+  method: ZodMethodCall,
+  parseSchema: ZodSchemaParser,
+): void {
+  const restArg = method.argNodes[0];
+  if (!restArg) {
+    return;
+  }
+  const restSchema = parseSchema(restArg);
+  if (!restSchema) {
+    return;
+  }
+  schema.items = restSchema;
+  delete schema.maxItems;
+}
+
+/**
+ * Parse z.tuple([...])
+ */
+function parseTuple(
+  args: Node[],
+  chainedMethods: ZodMethodCall[],
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (args.length === 0) {
+    return undefined;
+  }
+  const itemsArg = args[0];
+
+  if (!Node.isArrayLiteralExpression(itemsArg)) {
+    return undefined;
+  }
+
+  const prefixItems: CastrSchema[] = [];
+  for (const itemNode of itemsArg.getElements()) {
+    const itemSchema = parseSchema(itemNode);
+    if (itemSchema) {
+      prefixItems.push(itemSchema);
+    }
+  }
+
+  const schema: CastrSchema = {
+    type: 'array',
+    prefixItems,
+    minItems: prefixItems.length,
+    maxItems: prefixItems.length,
+    metadata: createDefaultMetadata(),
+  };
+
+  for (const method of chainedMethods) {
+    if (method.name === 'rest') {
+      processRestMethod(schema, method, parseSchema);
+    }
+  }
+
+  return schema;
+}
+
+/**
+ * Parse z.enum(['a', 'b'])
+ */
+function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
+  if (baseMethod === 'nativeEnum') {
+    return { type: 'string', metadata: createDefaultMetadata() };
+  }
+
+  if (args.length === 0) {
+    return undefined;
+  }
+  const itemsArg = args[0];
+
+  if (!Node.isArrayLiteralExpression(itemsArg)) {
+    return undefined;
+  }
+
+  const enumValues: unknown[] = [];
+  for (const itemNode of itemsArg.getElements()) {
+    const val = extractLiteralValue(itemNode);
+    if (val !== undefined) {
+      enumValues.push(val);
+    }
+  }
+
+  return {
+    type: 'string',
+    enum: enumValues,
+    metadata: createDefaultMetadata(),
+  };
+}
+
+// ============================================================================
+// Main exports
+// ============================================================================
+
+/**
+ * Parse a Zod composition expression from a ts-morph Node.
  * @internal
  */
-function parseZodExpression(expression: string): ZodMethodChainInfo | undefined {
+export function parseCompositionZodFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const chainInfo = getZodMethodChain(node);
+  if (!chainInfo) {
+    return undefined;
+  }
+
+  const { baseMethod, chainedMethods, baseArgNodes } = chainInfo;
+
+  if (baseMethod === 'array') {
+    return applyMetaAndReturn(
+      parseArray(baseArgNodes, chainedMethods, parseSchema),
+      chainedMethods,
+    );
+  }
+  if (baseMethod === 'tuple') {
+    return applyMetaAndReturn(
+      parseTuple(baseArgNodes, chainedMethods, parseSchema),
+      chainedMethods,
+    );
+  }
+  if (baseMethod === 'enum' || baseMethod === 'nativeEnum') {
+    return applyMetaAndReturn(parseEnum(baseArgNodes, baseMethod), chainedMethods);
+  }
+
+  return undefined;
+}
+
+// Register this parser with the core dispatcher
+registerParser('composition', parseCompositionZodFromNode);
+
+/**
+ * Parse a Zod composition expression string.
+ * @internal
+ */
+export function parseCompositionZod(expression: string): CastrSchema | undefined {
   const project = createZodProject(`const __schema = ${expression};`);
   const sourceFile = project.getSourceFiles()[0];
   if (!sourceFile) {
@@ -35,215 +229,10 @@ function parseZodExpression(expression: string): ZodMethodChainInfo | undefined 
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
+
   if (!init || !Node.isCallExpression(init)) {
     return undefined;
   }
 
-  return getZodMethodChain(init);
-}
-
-// ============================================================================
-// Shared helpers
-// ============================================================================
-
-/**
- * Create default metadata for composition schemas.
- * @internal
- */
-function createCompositionMetadata(): CastrSchema['metadata'] {
-  return {
-    required: true,
-    nullable: false,
-    zodChain: {
-      presence: '',
-      validations: [],
-      defaults: [],
-    },
-    dependencyGraph: {
-      references: [],
-      referencedBy: [],
-      depth: 0,
-    },
-    circularReferences: [],
-  };
-}
-
-// ============================================================================
-// Array parsing
-// ============================================================================
-
-/**
- * Array constraints extracted from method chain.
- * @internal
- */
-interface ArrayConstraints {
-  minItems?: number;
-  maxItems?: number;
-}
-
-/**
- * Process array-specific method calls.
- * @internal
- */
-function processArrayMethod(method: ZodMethodCall, constraints: ArrayConstraints): void {
-  const arg = method.args[0];
-
-  switch (method.name) {
-    case 'min':
-      if (typeof arg === 'number') {
-        constraints.minItems = arg;
-      }
-      break;
-    case 'max':
-      if (typeof arg === 'number') {
-        constraints.maxItems = arg;
-      }
-      break;
-    case 'length':
-      if (typeof arg === 'number') {
-        constraints.minItems = arg;
-        constraints.maxItems = arg;
-      }
-      break;
-    case 'nonempty':
-      constraints.minItems = 1;
-      break;
-  }
-}
-
-/**
- * Parse z.array() item expression.
- * @internal
- */
-function parseArrayItems(itemExpression: string): CastrSchema | undefined {
-  // Try parsing as primitive first
-  const primitive = parsePrimitiveZod(itemExpression);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Try parsing as nested array
-  const nestedArray = parseArrayZod(itemExpression);
-  if (nestedArray) {
-    return nestedArray;
-  }
-
-  // More composition types will be added here
-  return undefined;
-}
-
-/**
- * Parse a Zod array expression into a CastrSchema.
- *
- * @param expression - A Zod array expression string (e.g., 'z.array(z.string())')
- * @returns CastrSchema with type 'array', or undefined if not an array expression
- *
- * @example
- * ```typescript
- * parseArrayZod('z.array(z.string())');
- * // => { type: 'array', items: { type: 'string', ... }, ... }
- *
- * parseArrayZod('z.array(z.number()).min(1).max(10)');
- * // => { type: 'array', items: { type: 'number', ... }, minItems: 1, maxItems: 10, ... }
- * ```
- *
- * @public
- */
-export function parseArrayZod(expression: string): CastrSchema | undefined {
-  const parsed = parseZodExpression(expression);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const { baseMethod, chainedMethods, baseArgs } = parsed;
-  if (baseMethod !== 'array') {
-    return undefined;
-  }
-
-  // First argument is the item type expression
-  const itemExpression = baseArgs[0];
-  if (!itemExpression || typeof itemExpression !== 'string') {
-    return undefined;
-  }
-
-  const items = parseArrayItems(itemExpression);
-  if (!items) {
-    return undefined;
-  }
-
-  return buildArraySchema(items, chainedMethods);
-}
-
-/**
- * Build array schema with constraints.
- * @internal
- */
-function buildArraySchema(items: CastrSchema, chainedMethods: ZodMethodCall[]): CastrSchema {
-  const constraints: ArrayConstraints = {};
-  for (const method of chainedMethods) {
-    processArrayMethod(method, constraints);
-  }
-
-  const schema: CastrSchema = {
-    type: 'array',
-    items,
-    metadata: createCompositionMetadata(),
-  };
-
-  if (constraints.minItems !== undefined) {
-    schema.minItems = constraints.minItems;
-  }
-  if (constraints.maxItems !== undefined) {
-    schema.maxItems = constraints.maxItems;
-  }
-
-  return schema;
-}
-
-// ============================================================================
-// Enum parsing
-// ============================================================================
-
-/**
- * Parse a Zod enum expression into a CastrSchema.
- *
- * @param expression - A Zod enum expression string (e.g., 'z.enum(["A", "B"])')
- * @returns CastrSchema with type 'string' and enum values, or undefined if not an enum
- *
- * @example
- * ```typescript
- * parseEnumZod('z.enum(["admin", "user"])');
- * // => { type: 'string', enum: ['admin', 'user'], ... }
- * ```
- *
- * @public
- */
-export function parseEnumZod(expression: string): CastrSchema | undefined {
-  const parsed = parseZodExpression(expression);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const { baseMethod, baseArgs } = parsed;
-  if (baseMethod !== 'enum') {
-    return undefined;
-  }
-
-  // First argument should be array of string values
-  const enumValues = baseArgs[0];
-  if (!Array.isArray(enumValues)) {
-    return undefined;
-  }
-
-  // Validate all values are strings
-  const stringValues = enumValues.filter((v): v is string => typeof v === 'string');
-  if (stringValues.length !== enumValues.length) {
-    return undefined;
-  }
-
-  return {
-    type: 'string',
-    enum: stringValues,
-    metadata: createCompositionMetadata(),
-  };
+  return parseCompositionZodFromNode(init, parseZodSchemaFromNode);
 }

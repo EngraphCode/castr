@@ -19,7 +19,7 @@
  * 1. **Circular References**: Dereferencing creates circular JavaScript object references
  *    (e.g., `Node.properties.next === Node`), which cause stack overflows during Zod
  *    schema generation. Bundle mode preserves $refs, allowing us to detect cycles and
- *    use `z.lazy()` appropriately.
+ *    use getter-based recursion appropriately.
  *
  * 2. **Dependency Tracking**: Our dependency graph relies on $ref strings to determine
  *    schema ordering. After dereferencing, these $refs are gone, making it impossible

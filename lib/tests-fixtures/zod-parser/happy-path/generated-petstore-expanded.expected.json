@@ -1,0 +1,92 @@
+{
+  "$schema": "./expected.schema.json",
+  "schemas": {
+    "NewPet": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        "tag": {
+          "type": "string",
+          "metadata": {
+            "required": false,
+            "nullable": false,
+            "zodChain": {
+              "presence": ".optional()",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          },
+          "format": "int32"
+        },
+        "message": {
+          "type": "string",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
+      },
+      "required": ["code", "message"],
+      "additionalProperties": false
+    }
+  }
+}

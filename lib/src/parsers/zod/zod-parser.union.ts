@@ -1,29 +1,151 @@
 /**
- * Zod Union Type Parsing
+ * Zod Union Parser
  *
- * Handles parsing of Zod union types (z.union, z.discriminatedUnion)
- * into CastrSchema structures using ts-morph AST (ADR-026 compliant).
+ * Handles parsing of Zod union schemas: union, discriminatedUnion, xor.
  *
  * @module parsers/zod/union
- * @internal
  */
 
-import { Node } from 'ts-morph';
 import type { CastrSchema } from '../../ir/schema.js';
-import { createZodProject, getZodMethodChain, type ZodMethodChainInfo } from './zod-ast.js';
-import { parsePrimitiveZod } from './zod-parser.primitives.js';
-import { parseArrayZod, parseEnumZod } from './zod-parser.composition.js';
-import { parseObjectZod } from './zod-parser.object.js';
+import { Node } from 'ts-morph';
+import { createZodProject, getZodMethodChain, extractLiteralValue } from './zod-ast.js';
+import type { ZodSchemaParser } from './zod-parser.types.js';
+import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
+import { createDefaultMetadata } from './zod-parser.defaults.js';
+import { applyMetaAndReturn } from './zod-parser.meta.js';
 
 // ============================================================================
-// Common parsing helper
+// Helper functions
 // ============================================================================
 
 /**
- * Parse a Zod expression string into method chain info.
+ * Parse z.union([A, B])
+ */
+function parseUnion(
+  args: Node[],
+  parseSchema: ZodSchemaParser,
+  outputKey: 'anyOf' | 'oneOf' = 'anyOf',
+): CastrSchema | undefined {
+  if (args.length === 0) {
+    return undefined;
+  }
+  const itemsArg = args[0];
+
+  if (!Node.isArrayLiteralExpression(itemsArg)) {
+    return undefined;
+  }
+
+  const options: CastrSchema[] = [];
+  for (const itemNode of itemsArg.getElements()) {
+    const optionSchema = parseSchema(itemNode);
+    if (optionSchema) {
+      options.push(optionSchema);
+    }
+  }
+
+  const schema: CastrSchema = {
+    metadata: createDefaultMetadata(),
+  };
+
+  if (outputKey === 'anyOf') {
+    schema.anyOf = options;
+  } else {
+    schema.oneOf = options;
+  }
+
+  return schema;
+}
+
+/**
+ * Parse z.discriminatedUnion(key, [A, B])
+ */
+function parseDiscriminatedUnion(
+  args: Node[],
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (args.length < 2) {
+    return undefined;
+  }
+
+  const keyArg = args[0];
+  const itemsArg = args[1];
+
+  if (!keyArg) {
+    return undefined;
+  }
+
+  const discriminatorKey = extractLiteralValue(keyArg);
+  if (typeof discriminatorKey !== 'string') {
+    return undefined;
+  }
+
+  if (!Node.isArrayLiteralExpression(itemsArg)) {
+    return undefined;
+  }
+
+  const options: CastrSchema[] = [];
+  for (const itemNode of itemsArg.getElements()) {
+    const optionSchema = parseSchema(itemNode);
+    if (optionSchema) {
+      options.push(optionSchema);
+    }
+  }
+
+  return {
+    oneOf: options,
+    discriminator: {
+      propertyName: discriminatorKey,
+    },
+    metadata: createDefaultMetadata(),
+  };
+}
+
+// ============================================================================
+// Main exports
+// ============================================================================
+
+/**
+ * Parse a Zod union expression from a ts-morph Node.
  * @internal
  */
-function parseZodExpression(expression: string): ZodMethodChainInfo | undefined {
+export function parseUnionZodFromNode(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const chainInfo = getZodMethodChain(node);
+  if (!chainInfo) {
+    return undefined;
+  }
+
+  const { baseMethod, baseArgNodes, chainedMethods } = chainInfo;
+
+  if (baseMethod === 'union') {
+    return applyMetaAndReturn(parseUnion(baseArgNodes, parseSchema), chainedMethods);
+  }
+
+  if (baseMethod === 'discriminatedUnion') {
+    return applyMetaAndReturn(parseDiscriminatedUnion(baseArgNodes, parseSchema), chainedMethods);
+  }
+
+  if (baseMethod === 'xor') {
+    return applyMetaAndReturn(parseUnion(baseArgNodes, parseSchema, 'oneOf'), chainedMethods);
+  }
+
+  return undefined;
+}
+
+// Register this parser with the core dispatcher
+registerParser('union', parseUnionZodFromNode);
+
+/**
+ * Parse a Zod union expression string.
+ * @internal
+ */
+export function parseUnionZod(expression: string): CastrSchema | undefined {
   const project = createZodProject(`const __schema = ${expression};`);
   const sourceFile = project.getSourceFiles()[0];
   if (!sourceFile) {
@@ -32,233 +154,10 @@ function parseZodExpression(expression: string): ZodMethodChainInfo | undefined 
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
+
   if (!init || !Node.isCallExpression(init)) {
     return undefined;
   }
 
-  return getZodMethodChain(init);
-}
-
-// ============================================================================
-// Shared helpers
-// ============================================================================
-
-/**
- * Create default metadata for union schemas.
- * @internal
- */
-function createUnionMetadata(): CastrSchema['metadata'] {
-  return {
-    required: true,
-    nullable: false,
-    zodChain: {
-      presence: '',
-      validations: [],
-      defaults: [],
-    },
-    dependencyGraph: {
-      references: [],
-      referencedBy: [],
-      depth: 0,
-    },
-    circularReferences: [],
-  };
-}
-
-/**
- * Parse a single union member expression into a CastrSchema.
- * Tries primitives, literals, arrays, enums, and objects.
- * @internal
- */
-function parseUnionMember(expression: string): CastrSchema | undefined {
-  // Try literal first (z.literal(...))
-  const literal = parseLiteralZod(expression);
-  if (literal) {
-    return literal;
-  }
-
-  // Try primitive
-  const primitive = parsePrimitiveZod(expression);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Try array
-  const array = parseArrayZod(expression);
-  if (array) {
-    return array;
-  }
-
-  // Try enum
-  const enumSchema = parseEnumZod(expression);
-  if (enumSchema) {
-    return enumSchema;
-  }
-
-  // Try object
-  const object = parseObjectZod(expression);
-  if (object) {
-    return object;
-  }
-
-  return undefined;
-}
-
-/**
- * Parse z.literal(...) expressions.
- * @internal
- */
-function parseLiteralZod(expression: string): CastrSchema | undefined {
-  const parsed = parseZodExpression(expression);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const { baseMethod, baseArgs } = parsed;
-  if (baseMethod !== 'literal') {
-    return undefined;
-  }
-
-  const value = baseArgs[0];
-  if (value === undefined) {
-    return undefined;
-  }
-
-  return {
-    const: value,
-    metadata: createUnionMetadata(),
-  };
-}
-
-// ============================================================================
-// Union parsing
-// ============================================================================
-
-/**
- * Parse a Zod union expression into a CastrSchema with oneOf.
- *
- * @param expression - A Zod union expression string (e.g., 'z.union([z.string(), z.number()])')
- * @returns CastrSchema with oneOf array, or undefined if not a union expression
- *
- * @example
- * ```typescript
- * parseUnionZod('z.union([z.string(), z.number()])');
- * // => { oneOf: [{ type: 'string', ... }, { type: 'number', ... }], metadata: { ... } }
- *
- * parseUnionZod('z.union([z.literal("a"), z.literal("b")])');
- * // => { oneOf: [{ const: 'a', ... }, { const: 'b', ... }], metadata: { ... } }
- * ```
- *
- * @public
- */
-export function parseUnionZod(expression: string): CastrSchema | undefined {
-  const parsed = parseZodExpression(expression);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const { baseMethod, baseArgs } = parsed;
-  if (baseMethod !== 'union') {
-    return undefined;
-  }
-
-  // First argument should be array of union members
-  const memberExpressions = baseArgs[0];
-  if (!Array.isArray(memberExpressions)) {
-    return undefined;
-  }
-
-  const oneOf: CastrSchema[] = [];
-  for (const memberExpr of memberExpressions) {
-    if (typeof memberExpr !== 'string') {
-      continue;
-    }
-    const memberSchema = parseUnionMember(memberExpr);
-    if (memberSchema) {
-      oneOf.push(memberSchema);
-    }
-  }
-
-  if (oneOf.length === 0) {
-    return undefined;
-  }
-
-  return {
-    oneOf,
-    metadata: createUnionMetadata(),
-  };
-}
-
-// ============================================================================
-// Discriminated union parsing
-// ============================================================================
-
-/**
- * Parse discriminated union variant expressions into schemas.
- * @internal
- */
-function parseDiscriminatedUnionVariants(variantExpressions: unknown[]): CastrSchema[] {
-  const oneOf: CastrSchema[] = [];
-  for (const variantExpr of variantExpressions) {
-    if (typeof variantExpr !== 'string') {
-      continue;
-    }
-    const variantSchema = parseObjectZod(variantExpr);
-    if (variantSchema) {
-      oneOf.push(variantSchema);
-    }
-  }
-  return oneOf;
-}
-
-/**
- * Parse a Zod discriminated union expression into a CastrSchema with oneOf and discriminator.
- *
- * @param expression - A Zod discriminated union expression string
- * @returns CastrSchema with oneOf and discriminator, or undefined if not a discriminated union
- *
- * @example
- * ```typescript
- * parseDiscriminatedUnionZod(`z.discriminatedUnion('type', [
- *   z.object({ type: z.literal('click'), x: z.number() }),
- *   z.object({ type: z.literal('scroll'), offset: z.number() }),
- * ])`);
- * // => { oneOf: [...], discriminator: { propertyName: 'type' }, metadata: { ... } }
- * ```
- *
- * @public
- */
-export function parseDiscriminatedUnionZod(expression: string): CastrSchema | undefined {
-  const parsed = parseZodExpression(expression);
-  if (!parsed) {
-    return undefined;
-  }
-
-  const { baseMethod, baseArgs } = parsed;
-  if (baseMethod !== 'discriminatedUnion') {
-    return undefined;
-  }
-
-  // First argument is the discriminator property name
-  const discriminatorProperty = baseArgs[0];
-  if (typeof discriminatorProperty !== 'string') {
-    return undefined;
-  }
-
-  // Second argument should be array of object schemas
-  const variantExpressions = baseArgs[1];
-  if (!Array.isArray(variantExpressions)) {
-    return undefined;
-  }
-
-  const oneOf = parseDiscriminatedUnionVariants(variantExpressions);
-  if (oneOf.length === 0) {
-    return undefined;
-  }
-
-  return {
-    oneOf,
-    discriminator: { propertyName: discriminatorProperty },
-    metadata: createUnionMetadata(),
-  };
+  return parseUnionZodFromNode(init, parseZodSchemaFromNode);
 }

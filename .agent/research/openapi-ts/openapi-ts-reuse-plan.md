@@ -1,5 +1,7 @@
 # OpenAPI-TS Reuse Plan (Legal/Ethical Focus)
 
+Repo path: [`tmp/openapi-ts`](../../../tmp/openapi-ts)
+
 This document complements `.agent/research/openapi-ts/openapi-ts-comparison.md` and focuses on what to reuse from OpenAPI‑TS, and how to do it without legal or ethical risk.
 
 ## Executive Summary

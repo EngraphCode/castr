@@ -102,6 +102,7 @@ This library implements an **Intermediate Representation (IR) architecture** for
 | [023](./ADR-023-ir-based-architecture.md)          | IR-Based Architecture        | ✅ Accepted |
 | [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment        | 📋 Proposed |
 | [031](./ADR-031-zod-output-strategy.md)            | Zod 4 Output Strategy        | ✅ Accepted |
+| [032](./ADR-032-zod-input-strategy.md)             | Zod 4 Input Strategy         | ✅ Accepted |
 
 ---
 

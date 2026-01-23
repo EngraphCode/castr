@@ -1,45 +1,187 @@
 {
-  "$schema": "expected-ir.schema.json",
-  "$comment": "Expected IR output for primitives.zod4.ts - Maps Zod 4 primitive functions to CastrSchema IR",
+  "$schema": "./expected.schema.json",
   "schemas": {
-    "StringSchema": {
-      "type": "string"
+    "String": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "NumberSchema": {
-      "type": "number"
+    "Number": {
+      "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "BooleanSchema": {
-      "type": "boolean"
+    "Boolean": {
+      "type": "boolean",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "NullSchema": {
-      "type": "null"
+    "Null": {
+      "type": "null",
+      "metadata": {
+        "required": true,
+        "nullable": true,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "UndefinedSchema": {
-      "$comment": "Zod undefined has no direct OpenAPI equivalent, maps to empty schema or is skipped"
+    "Undefined": {
+      "metadata": {
+        "required": false,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "BigIntSchema": {
+    "Int": {
       "type": "integer",
-      "format": "int64",
-      "$comment": "BigInt maps to integer with int64 format"
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
-    "IntSchema": {
+    "Int32": {
       "type": "integer",
-      "$comment": "z.int() is safe integer range"
-    },
-    "Int32Schema": {
-      "type": "integer",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "int32"
     },
-    "Int64Schema": {
+    "Int64": {
       "type": "integer",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "int64"
     },
-    "Float32Schema": {
+    "Float32": {
       "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "float"
     },
-    "Float64Schema": {
+    "Float64": {
       "type": "number",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "format": "double"
     }
   }

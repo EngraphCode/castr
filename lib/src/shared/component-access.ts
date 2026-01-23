@@ -6,7 +6,7 @@
  * These utilities work with Scalar's bundled specs, which preserve internal $refs.
  * Preserving $refs is essential for:
  * 1. Dependency tracking (getOpenApiDependencyGraph relies on $ref strings)
- * 2. Circular reference detection (z.lazy() generation)
+ * 2. Circular reference detection (getter-based recursion)
  * 3. Semantic naming (generated code uses meaningful variable names)
  *
  * See: .agent/architecture/SCALAR-PIPELINE.md (Bundling vs Dereferencing)

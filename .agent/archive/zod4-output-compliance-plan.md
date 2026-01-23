@@ -3,7 +3,7 @@
 **Date:** January 20, 2026  
 **Status:** ✅ COMPLETE  
 **Session:** 2.8 + 2.9  
-**Specification:** [zod-output-acceptance-criteria.md](../zod-output-acceptance-criteria.md)  
+**Specification:** [zod-output-acceptance-criteria.md](../plans/acceptance-criteria/zod-output-acceptance-criteria.md)  
 **Test Docs:** [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md)  
 **ADR:** [ADR-031-zod-output-strategy.md](../adr/ADR-031-zod-output-strategy.md)
 
@@ -154,7 +154,7 @@ pnpm test:gen && pnpm character
 
 ## References
 
-- [zod-output-acceptance-criteria.md](../zod-output-acceptance-criteria.md) — Success criteria
+- [zod-output-acceptance-criteria.md](../plans/acceptance-criteria/zod-output-acceptance-criteria.md) — Success criteria
 - [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md) — Test infrastructure
 - [Zod 4 Metadata Docs](https://zod.dev/metadata) — `.meta()` API
 - [RULES.md](../RULES.md) — Strict-By-Default section

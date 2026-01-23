@@ -9,7 +9,7 @@
  * Why $refs are essential:
  * 1. Circular reference detection (LinkedList → Node → LinkedList)
  * 2. Topological sorting (generate schemas in correct order)
- * 3. z.lazy() generation (break circular references in Zod)
+ * 3. Getter-based recursion (break circular references in Zod 4)
  *
  * If we used full dereferencing, all $refs would be replaced with inline schemas,
  * making dependency tracking impossible.
@@ -198,7 +198,7 @@ const buildDeepDependencyGraph = (
  * Analyzes schema references to build both direct and transitive dependency relationships.
  * This is essential for:
  * - Topological sorting of schemas (resolving dependencies before dependents)
- * - Detecting circular references (for z.lazy() usage)
+ * - Detecting circular references (for getter-based recursion)
  * - Understanding schema relationships for code generation
  *
  * @param schemaRef - Array of schema reference paths (e.g., ['#/components/schemas/User'])

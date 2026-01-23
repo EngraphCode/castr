@@ -74,12 +74,14 @@ describe('Zod 3 Detection', () => {
       expect(error?.message).toContain('.max(0)');
     });
 
-    it('should detect multiple Zod 3 methods in chain', () => {
+    it('should detect multiple Zod 3 methods/discouraged refinements in chain', () => {
       const source = `const schema = z.string().nonempty().email();`;
       const errors = detectZod3Syntax(source);
 
-      expect(errors).toHaveLength(1);
-      expect(errors.at(0)?.code).toBe('ZOD3_SYNTAX');
+      // nonempty is Zod 3 method
+      // email is discouraged refinement
+      expect(errors).toHaveLength(2);
+      expect(errors.every((e) => e.code === 'ZOD3_SYNTAX')).toBe(true);
     });
 
     it('should detect Zod 3 methods across multiple schemas', () => {
@@ -93,9 +95,9 @@ describe('Zod 3 Detection', () => {
       expect(errors.every((e) => e.code === 'ZOD3_SYNTAX')).toBe(true);
     });
 
-    it('should NOT flag valid Zod 4 syntax', () => {
+    it('should NOT flag strictly valid Zod 4 syntax (without discouraged refinements)', () => {
       const source = `
-        const schema = z.string().min(1).email();
+        const schema = z.string().min(1);
         const num = z.number().min(0).max(100);
       `;
       const errors = detectZod3Syntax(source);
@@ -129,6 +131,20 @@ describe('Dynamic Schema Detection', () => {
       const error = errors.at(0);
       expect(error?.code).toBe('DYNAMIC_SCHEMA');
       expect(error?.message).toMatch(/computed/i);
+    });
+
+    it('should detect discouraged refinements that should be primitives', () => {
+      const code = `
+        import { z } from 'zod';
+        const s1 = z.string().email();
+        const s2 = z.string().url();
+        const n1 = z.number().int();
+      `;
+      const errors = detectZod3Syntax(code);
+      expect(errors).toHaveLength(3);
+      expect(errors.at(0)?.message).toContain('Use');
+      expect(errors.at(1)?.message).toContain('Use');
+      expect(errors.at(2)?.message).toContain('Use');
     });
 
     it('should detect schemas using spread operator', () => {

@@ -3,7 +3,7 @@
 **Date:** January 20, 2026  
 **Status:** Accepted  
 **Decision Makers:** @jim  
-**Related:** [zod-output-acceptance-criteria.md](../zod-output-acceptance-criteria.md)
+**Related:** [zod-output-acceptance-criteria.md](../plans/acceptance-criteria/zod-output-acceptance-criteria.md)
 
 ---
 
