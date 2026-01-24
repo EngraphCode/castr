@@ -11,10 +11,7 @@
  * @module ir-enum-integration.test
  */
 
-import {
-  generateZodClientFromOpenAPI,
-  isSingleFileResult,
-} from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 

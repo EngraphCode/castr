@@ -23,8 +23,7 @@ describe('Public API Preservation', () => {
     expect(publicApi).toHaveProperty('getOpenApiDependencyGraph');
     expect(typeof publicApi.getOpenApiDependencyGraph).toBe('function');
     // validateOpenApiSpec removed in Phase 1 Part 5 (replaced by prepareOpenApiDocument internally)
-    expect(publicApi).toHaveProperty('getEndpointDefinitionList');
-    expect(typeof publicApi.getEndpointDefinitionList).toBe('function');
+    // getEndpointDefinitionList removed - legacy-compat.js module deleted
     expect(publicApi).toHaveProperty('maybePretty');
     expect(typeof publicApi.maybePretty).toBe('function');
     expect(publicApi).toHaveProperty('getZodSchema');

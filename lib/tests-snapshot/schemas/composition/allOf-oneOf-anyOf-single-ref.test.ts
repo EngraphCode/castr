@@ -1,7 +1,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
-import { generateZodClientFromOpenAPI } from '../../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 // https://github.com/astahmer/@engraph/castr/issues/49
 test('allOf-single-ref', async () => {

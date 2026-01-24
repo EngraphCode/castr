@@ -2942,57 +2942,49 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      firstname: z.string().optional(),
-      lastname: z.string().optional(),
-      email: z.string().optional(),
-      get friends() {
-        return z.array(User).optional();
-      },
-    })
-    .strict(),
-);
-export const Pet = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      nickname: z.string().optional(),
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
-export const Country = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      code: z.string().optional(),
-      get store_list() {
-        return z.array(Store).optional();
-      },
-    })
-    .strict(),
-);
-export const Store = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      address: z.string().optional(),
-      get country() {
-        return Country.optional();
-      },
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
+export const User = z
+  .object({
+    id: z.int().optional(),
+    firstname: z.string().optional(),
+    lastname: z.string().optional(),
+    email: z.string().optional(),
+    get friends() {
+      return z.array(User).optional();
+    },
+  })
+  .strict();
+export const Pet = z
+  .object({
+    id: z.int().optional(),
+    nickname: z.string().optional(),
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
+export const Country = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    code: z.string().optional(),
+    get store_list() {
+      return z.array(Store).optional();
+    },
+  })
+  .strict();
+export const Store = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    address: z.string().optional(),
+    get country() {
+      return Country.optional();
+    },
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
 // Endpoints
 export const endpoints = [
   {
@@ -3483,57 +3475,49 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      firstname: z.string().optional(),
-      lastname: z.string().optional(),
-      email: z.string().optional(),
-      get friends() {
-        return z.array(User).optional();
-      },
-    })
-    .strict(),
-);
-export const Pet = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      nickname: z.string().optional(),
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
-export const Country = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      code: z.string().optional(),
-      get store_list() {
-        return z.array(Store).optional();
-      },
-    })
-    .strict(),
-);
-export const Store = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      address: z.string().optional(),
-      get country() {
-        return Country.optional();
-      },
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
+export const User = z
+  .object({
+    id: z.int().optional(),
+    firstname: z.string().optional(),
+    lastname: z.string().optional(),
+    email: z.string().optional(),
+    get friends() {
+      return z.array(User).optional();
+    },
+  })
+  .strict();
+export const Pet = z
+  .object({
+    id: z.int().optional(),
+    nickname: z.string().optional(),
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
+export const Country = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    code: z.string().optional(),
+    get store_list() {
+      return z.array(Store).optional();
+    },
+  })
+  .strict();
+export const Store = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    address: z.string().optional(),
+    get country() {
+      return Country.optional();
+    },
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
 // Endpoints
 export const endpoints = [
   {
@@ -4072,57 +4056,49 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      firstname: z.string().optional(),
-      lastname: z.string().optional(),
-      email: z.string().optional(),
-      get friends() {
-        return z.array(User).optional();
-      },
-    })
-    .strict(),
-);
-export const Pet = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      nickname: z.string().optional(),
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
-export const Country = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      code: z.string().optional(),
-      get store_list() {
-        return z.array(Store).optional();
-      },
-    })
-    .strict(),
-);
-export const Store = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      address: z.string().optional(),
-      get country() {
-        return Country.optional();
-      },
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
+export const User = z
+  .object({
+    id: z.int().optional(),
+    firstname: z.string().optional(),
+    lastname: z.string().optional(),
+    email: z.string().optional(),
+    get friends() {
+      return z.array(User).optional();
+    },
+  })
+  .strict();
+export const Pet = z
+  .object({
+    id: z.int().optional(),
+    nickname: z.string().optional(),
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
+export const Country = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    code: z.string().optional(),
+    get store_list() {
+      return z.array(Store).optional();
+    },
+  })
+  .strict();
+export const Store = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    address: z.string().optional(),
+    get country() {
+      return Country.optional();
+    },
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
 // Endpoints
 export const endpoints = [
   {
@@ -4629,57 +4605,49 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      firstname: z.string().optional(),
-      lastname: z.string().optional(),
-      email: z.string().optional(),
-      get friends() {
-        return z.array(User).optional();
-      },
-    })
-    .strict(),
-);
-export const Pet = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      nickname: z.string().optional(),
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
-export const Country = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      code: z.string().optional(),
-      get store_list() {
-        return z.array(Store).optional();
-      },
-    })
-    .strict(),
-);
-export const Store = z.lazy(() =>
-  z
-    .object({
-      id: z.int().optional(),
-      name: z.string().optional(),
-      address: z.string().optional(),
-      get country() {
-        return Country.optional();
-      },
-      get owner() {
-        return User.optional();
-      },
-    })
-    .strict(),
-);
+export const User = z
+  .object({
+    id: z.int().optional(),
+    firstname: z.string().optional(),
+    lastname: z.string().optional(),
+    email: z.string().optional(),
+    get friends() {
+      return z.array(User).optional();
+    },
+  })
+  .strict();
+export const Pet = z
+  .object({
+    id: z.int().optional(),
+    nickname: z.string().optional(),
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
+export const Country = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    code: z.string().optional(),
+    get store_list() {
+      return z.array(Store).optional();
+    },
+  })
+  .strict();
+export const Store = z
+  .object({
+    id: z.int().optional(),
+    name: z.string().optional(),
+    address: z.string().optional(),
+    get country() {
+      return Country.optional();
+    },
+    get owner() {
+      return User.optional();
+    },
+  })
+  .strict();
 // Endpoints
 export const endpoints = [
   {

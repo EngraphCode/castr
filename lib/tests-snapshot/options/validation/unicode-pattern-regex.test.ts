@@ -1,4 +1,4 @@
-import { getZodSchema } from '../../../src/test-helpers/legacy-compat.js';
+import { getZodSchema } from '../../../src/index.js';
 import { expect, test } from 'vitest';
 import { type SchemaObject } from 'openapi3-ts/oas31';
 

@@ -1,7 +1,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { assertGroupedFileResult } from '../../../tests-helpers/generation-result-assertions.js';
-import { generateZodClientFromOpenAPI } from '../../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 import type { TemplateContextGroupStrategy } from '../../../src/context/template-context.js';
 
 // https://github.com/astahmer/@engraph/castr/issues/157

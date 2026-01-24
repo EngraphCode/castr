@@ -1,22 +1,19 @@
 /**
  * IR Integration - Basic Circular Reference Handling
  *
- * PROVES: Basic circular references (self, mutual) detected in IR result in lazy() schemas
+ * PROVES: Basic circular references (self, mutual) detected in IR result in getter-based schemas (Zod 4 native recursion)
  *
  * @module ir-circular-refs-basic.test
  */
 
-import {
-  generateZodClientFromOpenAPI,
-  isSingleFileResult,
-} from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import { getZodClientTemplateContext } from '../../src/context/template-context.js';
 import { assertSchemaComponent } from '../../src/ir/test-helpers.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 
 describe('IR Integration - Basic Circular References', () => {
-  test('self-referencing schema generates lazy() Zod schema', async () => {
+  test('self-referencing schema generates getter-based Zod schema', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Self-Reference Test' },
@@ -43,7 +40,7 @@ describe('IR Integration - Basic Circular References', () => {
     expect(circularRefs.length).toBeGreaterThan(0);
     expect(circularRefs).toContain('#/components/schemas/Node');
 
-    // SECOND: Prove generated code uses lazy() for circular ref
+    // SECOND: Prove generated code uses getter syntax for circular ref (Zod 4 native recursion)
     const result = await generateZodClientFromOpenAPI({
       disableWriteToFile: true,
       openApiDoc,
@@ -55,14 +52,11 @@ describe('IR Integration - Basic Circular References', () => {
     }
 
     expect(result.content).toContain('Node');
-    expect(result.content).toContain('z.lazy(');
-
-    // The circular reference should be wrapped in lazy
-    const hasLazyReference = result.content.includes('z.lazy(') && result.content.includes('Node');
-    expect(hasLazyReference).toBe(true);
+    // Zod 4 uses getter syntax for native recursion, not z.lazy()
+    expect(result.content).toMatch(/get\s+\w+\(\)\s*\{/);
   });
 
-  test('mutual circular references generate lazy() schemas', async () => {
+  test('mutual circular references generate getter-based schemas', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Mutual Reference Test' },
@@ -118,7 +112,7 @@ describe('IR Integration - Basic Circular References', () => {
     expect(result.content).toContain('Author');
     expect(result.content).toContain('Book');
 
-    // At least one should use lazy() to break the cycle
-    expect(result.content).toContain('z.lazy(');
+    // Zod 4 uses getter syntax to break the cycle (native recursion)
+    expect(result.content).toMatch(/get\s+\w+\(\)\s*\{/);
   });
 });

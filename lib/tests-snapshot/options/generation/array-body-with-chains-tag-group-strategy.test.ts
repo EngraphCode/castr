@@ -1,7 +1,7 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { assertGroupedFileResult } from '../../../tests-helpers/generation-result-assertions.js';
-import { generateZodClientFromOpenAPI } from '../../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 test('array-body-with-chains-tag-group-strategy', async () => {
   const openApiDoc: OpenAPIObject = {

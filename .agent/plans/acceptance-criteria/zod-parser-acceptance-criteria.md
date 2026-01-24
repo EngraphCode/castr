@@ -7,12 +7,12 @@
 
 ## Scope
 
-| Input            | Support Status | Notes                              |
-| ---------------- | -------------- | ---------------------------------- |
-| Zod 4 (standard) | MUST support   | Idiomatic Zod 4 input              |
-| Zod 4 (mini)     | NOT supported  | Different API surface              |
-| Zod 3 syntax     | MUST reject    | Actionable errors                  |
-| Dynamic Zod      | MUST reject    | Not statically analyzable          |
+| Input            | Support Status | Notes                     |
+| ---------------- | -------------- | ------------------------- |
+| Zod 4 (standard) | MUST support   | Idiomatic Zod 4 input     |
+| Zod 4 (mini)     | NOT supported  | Different API surface     |
+| Zod 3 syntax     | MUST reject    | Actionable errors         |
+| Dynamic Zod      | MUST reject    | Not statically analyzable |
 
 Primary goal: parse idiomatic Zod 4 schemas (including our output) and
 reconstruct IR for lossless round-trip validation.
@@ -154,15 +154,21 @@ Array constraints:
 
 ### 1.12 Metadata
 
-Only `.meta()` is supported for metadata extraction. Description must come
-from `.meta({ description })` (not `.describe()`).
+`.meta()` is the idiomatic Zod 4 approach for metadata and is always preferred.
 
-| Zod 4 Method                  | Target IR     |
-| ----------------------------- | ------------- |
-| `.meta({ title })`            | `title`       |
-| `.meta({ description })`      | `description` |
-| `.meta({ deprecated: true })` | `deprecated`  |
-| `.meta({ examples: [...] })`  | `examples`    |
+**`.describe()` Handling (Deprecated):**
+
+- `.describe(text)` in input is converted to `.meta({ description: text })` during parsing
+- If both `.describe()` and `.meta({ description })` exist, `.meta()` takes precedence
+- Output MUST always use `.meta()`, never `.describe()`
+
+| Zod 4 Method                  | Target IR                                |
+| ----------------------------- | ---------------------------------------- |
+| `.meta({ title })`            | `title`                                  |
+| `.meta({ description })`      | `description`                            |
+| `.describe(text)`             | `description` (converted to meta format) |
+| `.meta({ deprecated: true })` | `deprecated`                             |
+| `.meta({ examples: [...] })`  | `examples`                               |
 
 ### 1.13 Recursive References (Zod 4 getter syntax ONLY)
 

@@ -21,15 +21,11 @@ describe('Zod Object Parsing', () => {
       })
     `);
 
-    expect(result).toMatchObject({
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        age: { type: 'number' },
-        active: { type: 'boolean' },
-      },
-      required: ['name', 'age', 'active'],
-    });
+    expect(result?.type).toBe('object');
+    expect(result?.properties?.get('name')?.type).toBe('string');
+    expect(result?.properties?.get('age')?.type).toBe('number');
+    expect(result?.properties?.get('active')?.type).toBe('boolean');
+    expect(result?.required).toEqual(['name', 'age', 'active']);
   });
 
   it('should parse a strict object (additionalProperties: false)', () => {
@@ -39,13 +35,9 @@ describe('Zod Object Parsing', () => {
       }).strict()
     `);
 
-    expect(result).toMatchObject({
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        id: { type: 'string' },
-      },
-    });
+    expect(result?.type).toBe('object');
+    expect(result?.additionalProperties).toBe(false);
+    expect(result?.properties?.get('id')?.type).toBe('string');
   });
 
   it('should parse a passthrough object (additionalProperties: true)', () => {
@@ -55,13 +47,9 @@ describe('Zod Object Parsing', () => {
       }).passthrough()
     `);
 
-    expect(result).toMatchObject({
-      type: 'object',
-      additionalProperties: true,
-      properties: {
-        id: { type: 'string' },
-      },
-    });
+    expect(result?.type).toBe('object');
+    expect(result?.additionalProperties).toBe(true);
+    expect(result?.properties?.get('id')?.type).toBe('string');
   });
 
   it('should parse a generic object (strip unknown - default)', () => {
@@ -101,12 +89,9 @@ describe('Zod Object Parsing', () => {
       })
     `);
 
-    expect(result?.properties?.get('user')).toMatchObject({
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-      },
-    });
+    const userSchema = result?.properties?.get('user');
+    expect(userSchema?.type).toBe('object');
+    expect(userSchema?.properties?.get('name')?.type).toBe('string');
   });
 
   // Note: z.object({...}).extend({...}) is composition/inheritance.

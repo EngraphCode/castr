@@ -32,11 +32,12 @@ This decision must align with:
 - Dynamic patterns (computed keys, spreads, runtime indirection) are **rejected**.
 - Unsupported patterns must **fail fast** with actionable diagnostics.
 
-### 3. Metadata Ingestion via `.meta()`
+### 3. Metadata Ingestion
 
-- Metadata is ingested from **Zod 4 `.meta()`** calls.
-- **Description comes from `.meta({ description })` only**.
-- `.describe()` is **not supported** to avoid dual sources of truth.
+- Primary metadata source is **Zod 4 `.meta()`** calls.
+- **`.describe()` is supported for backward compatibility** but converted to `.meta({ description })`.
+- If both `.describe()` and `.meta({ description })` exist, **`.meta()` takes precedence**.
+- Output MUST always use `.meta()`, never `.describe()`.
 
 ### 4. Recursion: Getter‑Based Only
 
@@ -74,8 +75,9 @@ This decision must align with:
 2. **Allow `z.lazy()`**
    - Rejected: conflicts with the getter‑based recursion strategy and complicates static analysis.
 
-3. **Accept `.describe()` as description**
-   - Rejected: creates dual metadata sources and risks ambiguity/loss.
+3. **Reject `.describe()` entirely**
+   - Rejected: would break backward compatibility with many existing Zod schemas.
+   - Instead, `.describe()` is parsed but `.meta()` takes precedence.
 
 4. **Allow dynamic patterns with best‑effort parsing**
    - Rejected: violates fail‑fast and static‑analysis requirements.

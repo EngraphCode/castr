@@ -8,11 +8,11 @@ Parses Zod 4 schema source files into `CastrDocument` IR using ts-morph AST.
 - **Static analysis** — Rejects dynamic/computed schemas
 - **Full schema support** — Primitives, objects, arrays, enums, unions, intersections
 - **Endpoint parsing** — `defineEndpoint({...})` pattern → `CastrOperation`
-- **Reference resolution** — Variable refs, lazy schemas, circular detection
+- **Reference resolution** — Variable refs, getter-based recursion, circular detection
 
 ## Architecture
 
-```
+```text
 Zod Source → ts-morph AST → Parser Modules → CastrDocument IR
 ```
 

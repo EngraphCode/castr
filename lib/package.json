@@ -18,6 +18,10 @@
     "./cli": {
       "types": "./dist/cli/index.d.ts",
       "import": "./dist/cli/index.js"
+    },
+    "./parsers/zod": {
+      "types": "./dist/parsers/zod/index.d.ts",
+      "import": "./dist/parsers/zod/index.js"
     }
   },
   "homepage": "https://github.com/jimcresswell/openapi-zod-validation",

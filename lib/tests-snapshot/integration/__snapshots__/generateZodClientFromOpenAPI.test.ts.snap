@@ -36465,35 +36465,31 @@ export const PartialObject = z
     another: z.number().optional(),
   })
   .strict();
-export const Nested2 = z.lazy(() =>
-  z
-    .object({
-      nested_prop: z.boolean().optional(),
-      get deeplyNested() {
-        return DeeplyNested.optional();
-      },
-      get circularToRoot() {
-        return Root2.optional();
-      },
-      requiredProp: z.string(),
-    })
-    .strict(),
-);
-export const Root2 = z.lazy(() =>
-  z
-    .object({
-      str: z.string(),
-      nb: z.number(),
-      get nested() {
-        return Nested2;
-      },
-      get partial() {
-        return PartialObject.optional();
-      },
-      optionalProp: z.string().optional(),
-    })
-    .strict(),
-);
+export const Nested2 = z
+  .object({
+    nested_prop: z.boolean().optional(),
+    get deeplyNested() {
+      return DeeplyNested.optional();
+    },
+    get circularToRoot() {
+      return Root2.optional();
+    },
+    requiredProp: z.string(),
+  })
+  .strict();
+export const Root2 = z
+  .object({
+    str: z.string(),
+    nb: z.number(),
+    get nested() {
+      return Nested2;
+    },
+    get partial() {
+      return PartialObject.optional();
+    },
+    optionalProp: z.string().optional(),
+  })
+  .strict();
 // Endpoints
 export const endpoints = [
   {

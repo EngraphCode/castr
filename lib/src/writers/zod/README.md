@@ -1,6 +1,6 @@
 # Zod Writer
 
-Generates **Zod 4 schemas** from the IR. See [ADR-031](../../../.agent/adr/ADR-031-zod-output-strategy.md) for design decisions.
+Generates **Zod 4 schemas** from the IR. See [ADR-031](../../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md) for design decisions.
 
 ## Key Files
 
@@ -65,5 +65,5 @@ Zod 4 provides codec **examples** (`isoDatetimeToDate`, `base64ToBytes`) in docu
 
 ## Related
 
-- [ADR-031](../../../.agent/adr/ADR-031-zod-output-strategy.md) — Full design decisions
+- [ADR-031](../../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md) — Full design decisions
 - [zod-output-acceptance-criteria.md](../../../.agent/zod-output-acceptance-criteria.md) — Requirements

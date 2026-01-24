@@ -4,187 +4,295 @@
     "PersonBase": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          }
-        }
-      },
-      "required": ["name"]
-    },
-    "HasEmail": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          },
-          "format": "email"
-        }
-      },
-      "required": ["email"]
-    },
-    "HasTimestamps": {
-      "type": "object",
-      "properties": {
-        "createdAt": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          },
-          "format": "date-time"
-        },
-        "updatedAt": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          },
-          "format": "date-time"
-        }
-      },
-      "required": ["createdAt", "updatedAt"]
-    },
-    "WithId": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          },
-          "format": "uuid"
-        }
-      },
-      "required": ["id"]
-    },
-    "WithVersion": {
-      "type": "object",
-      "properties": {
-        "version": {
-          "type": "integer",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [".min(0)"],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          },
-          "format": "int32"
-        }
-      },
-      "required": ["version"]
-    },
-    "NewItem": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          }
-        },
-        "description": {
-          "type": "string",
-          "metadata": {
-            "required": false,
-            "nullable": false,
-            "zodChain": {
-              "presence": ".optional()",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "name": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
           }
         }
       },
       "required": ["name"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "HasEmail": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "email": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            },
+            "format": "email"
+          }
+        }
+      },
+      "required": ["email"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "HasTimestamps": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "createdAt": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            },
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            },
+            "format": "date-time"
+          }
+        }
+      },
+      "required": ["createdAt", "updatedAt"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "WithId": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "id": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            },
+            "format": "uuid"
+          }
+        }
+      },
+      "required": ["id"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "WithVersion": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "version": {
+            "type": "integer",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [".min(0)"],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            },
+            "format": "int32"
+          }
+        }
+      },
+      "required": ["version"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
+    },
+    "NewItem": {
+      "type": "object",
+      "properties": {
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "name": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          },
+          "description": {
+            "type": "string",
+            "metadata": {
+              "required": false,
+              "nullable": false,
+              "zodChain": {
+                "presence": ".optional()",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          }
+        }
+      },
+      "required": ["name"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
       "additionalProperties": false
     }
   }

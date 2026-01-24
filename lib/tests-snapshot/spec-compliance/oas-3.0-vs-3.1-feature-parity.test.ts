@@ -1,6 +1,6 @@
 import { expect, test, describe } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
 /**

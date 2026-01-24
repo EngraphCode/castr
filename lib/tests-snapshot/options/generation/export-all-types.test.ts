@@ -1,6 +1,6 @@
 import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../../../src/rendering/index.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) => ({

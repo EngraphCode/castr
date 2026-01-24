@@ -1,7 +1,7 @@
 import { type SchemasObject } from 'openapi3-ts/oas31';
 import { expect, it } from 'vitest';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
-import { generateZodClientFromOpenAPI } from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 it('includes errors-responses', async () => {
   const schemas = {

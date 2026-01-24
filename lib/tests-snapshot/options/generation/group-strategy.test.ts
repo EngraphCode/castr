@@ -2,10 +2,7 @@ import { type OpenAPIObject, type SchemaObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../../../src/shared/prepare-openapi-document.js';
 import { expect, test } from 'vitest';
 
-import {
-  generateZodClientFromOpenAPI,
-  getZodClientTemplateContext,
-} from '../../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../../src/index.js';
 import {
   assertSingleFileResult,
   assertGroupedFileResult,

@@ -1,10 +1,7 @@
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
-import {
-  generateZodClientFromOpenAPI,
-  getZodClientTemplateContext,
-} from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../src/index.js';
 
 test('name-with-special-characters', async () => {
   const openApiDoc: OpenAPIObject = {

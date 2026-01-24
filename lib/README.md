@@ -4,7 +4,7 @@ This is the main library package for Castr, containing the core schema transform
 
 ## Package Structure
 
-```
+```text
 lib/
 ├── src/
 │   ├── cli/           # Command-line interface
@@ -61,11 +61,17 @@ All changes must pass these gates:
 ## Key Exports
 
 ```typescript
-// Main generation function
+// Main generation function (OpenAPI → Zod)
 export { generateZodClientFromOpenAPI } from '@engraph/castr';
 
+// OpenAPI writer (IR → OpenAPI)
+export { writeOpenApi } from '@engraph/castr';
+
 // Template context utilities
-export { getZodClientTemplateContext, getEndpointDefinitionList } from '@engraph/castr';
+export { getZodClientTemplateContext } from '@engraph/castr';
+
+// Zod parser (Zod → IR) - subpath export
+export { parseZodSource } from '@engraph/castr/parsers/zod';
 
 // MCP utilities
 export {

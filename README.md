@@ -90,13 +90,10 @@ eval(result); // Or process further
 ### Template Context Access
 
 ```typescript
-import { getZodClientTemplateContext, getEndpointDefinitionList } from '@engraph/castr';
+import { getZodClientTemplateContext } from '@engraph/castr';
 
 // Get full template context for custom rendering
 const ctx = await getZodClientTemplateContext(openApiDoc, options);
-
-// Get just the endpoints
-const endpoints = await getEndpointDefinitionList(openApiDoc, options);
 ```
 
 ### Options
@@ -107,7 +104,7 @@ const endpoints = await getEndpointDefinitionList(openApiDoc, options);
 | `exportSchemas`   | `boolean` | Export all #/components/schemas |
 | `exportTypes`     | `boolean` | Generate TypeScript types       |
 | `strictObjects`   | `boolean` | Disallow unknown keys           |
-| `withDescription` | `boolean` | Add z.describe()                |
+| `withDescription` | `boolean` | Add descriptions via .meta()    |
 | `withDocs`        | `boolean` | Add JSDoc comments              |
 | `allReadonly`     | `boolean` | Make objects/arrays readonly    |
 
@@ -118,6 +115,34 @@ const endpoints = await getEndpointDefinitionList(openApiDoc, options);
 | `schemas-with-metadata` | Schemas + endpoints (default) | Building SDKs, tooling |
 | `schemas-only`          | Pure Zod schemas              | Validation only        |
 | `schemas-with-client`   | Client with openapi-fetch     | Quick prototypes       |
+
+## Zod → OpenAPI (Code-First)
+
+Parse Zod schemas and generate OpenAPI specs:
+
+```typescript
+import { parseZodSource } from '@engraph/castr/parsers/zod';
+import { writeOpenApi } from '@engraph/castr';
+
+const zodSource = `
+  export const UserSchema = z.object({
+    id: z.uuid(),
+    email: z.email(),
+    createdAt: z.iso.datetime(),
+  }).meta({ description: 'A user in the system' });
+`;
+
+const { ir } = parseZodSource(zodSource);
+const openApiDoc = writeOpenApi(ir);
+```
+
+**Requirements:**
+
+- Zod 4 syntax only (Zod 3 is rejected with actionable errors)
+- Static schemas (no dynamic/computed properties)
+- Getter-based recursion (not `z.lazy()`)
+
+See [ADR-032](./docs/architectural_decision_records/ADR-032-zod-input-strategy.md) for details.
 
 ## Example
 

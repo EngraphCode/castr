@@ -21,5 +21,4 @@ export { writeOpenApi } from './writers/openapi/index.js';
 // Deprecated alias for backward compatibility
 export { writeOpenApi as generateOpenAPI } from './writers/openapi/index.js';
 export { loadOpenApiDocument } from './shared/load-openapi-document/orchestrator.js';
-export { getEndpointDefinitionList } from './test-helpers/legacy-compat.js';
 export { getZodSchema } from './conversion/zod/index.js';

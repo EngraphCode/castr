@@ -2,7 +2,7 @@
 
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
-import { getZodClientTemplateContext } from '../../../src/test-helpers/legacy-compat.js';
+import { getZodClientTemplateContext } from '../../../src/index.js';
 
 test('same-schema-different-name - IR Snapshot', async () => {
   const openApiDoc: OpenAPIObject = {

@@ -1,6 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
 // https://github.com/astahmer/@engraph/castr/issues/60

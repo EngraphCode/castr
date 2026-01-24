@@ -20,6 +20,7 @@ import {
   createZodProject,
   getZodMethodChain,
   type ZodMethodCall,
+  type ZodMethodChainInfo,
   ZOD_PRIMITIVES,
 } from './zod-ast.js';
 import {
@@ -108,17 +109,24 @@ interface ProcessedChain {
   constraints: ParsedConstraints;
   optionality: ParsedOptionality;
   defaultValue: unknown;
+  description: string | undefined;
 }
 
 function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]): ProcessedChain {
   const constraints: ParsedConstraints = {};
   const optionality: ParsedOptionality = { optional: false, nullable: false };
   let defaultValue: unknown;
+  let description: string | undefined;
 
   for (const method of chainedMethods) {
     if (method.name === 'default') {
       defaultValue = method.args[0];
-    } else if (method.name === 'meta' || method.name === 'describe') {
+    } else if (method.name === 'describe') {
+      const arg = method.args[0];
+      if (typeof arg === 'string') {
+        description = arg;
+      }
+    } else if (method.name === 'meta') {
       continue;
     } else {
       processOptionalityMethod(method, optionality);
@@ -126,7 +134,7 @@ function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]
     }
   }
 
-  return { constraints, optionality, defaultValue };
+  return { constraints, optionality, defaultValue, description };
 }
 
 // ============================================================================
@@ -183,6 +191,7 @@ function handleStandardPrimitive(
   constraints: ParsedConstraints,
   zodChain: IRZodChainInfo,
   defaultValue: unknown,
+  description: string | undefined,
 ): CastrSchema {
   const schema: CastrSchema = {
     type: schemaType,
@@ -195,7 +204,7 @@ function handleStandardPrimitive(
   };
 
   applyConstraints(schema, constraints);
-  applyOptionalFields(schema, defaultValue, undefined);
+  applyOptionalFields(schema, defaultValue, description);
   applyZod4Formats(schema, baseMethod);
 
   return schema;
@@ -205,31 +214,34 @@ function handleStandardPrimitive(
  * Parse a primitive Zod expression from a ts-morph Node.
  * @internal
  */
+function validateAndGetChainInfo(node: Node): ZodMethodChainInfo | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+  const chainInfo = getZodMethodChain(node);
+  if (!chainInfo || !isPrimitive(chainInfo.baseMethod)) {
+    return undefined;
+  }
+  return chainInfo;
+}
+
 export function parsePrimitiveZodFromNode(
   node: Node,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _parseSchema: ZodSchemaParser,
 ): CastrSchema | undefined {
-  if (!Node.isCallExpression(node)) {
-    return undefined;
-  }
-
-  const chainInfo = getZodMethodChain(node);
+  const chainInfo = validateAndGetChainInfo(node);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, chainedMethods } = chainInfo;
-  if (!isPrimitive(baseMethod)) {
-    return undefined;
-  }
-
   const schemaType = ZOD_PRIMITIVE_TYPES.get(baseMethod);
   if (schemaType === undefined && baseMethod !== 'undefined' && baseMethod !== 'literal') {
     return undefined;
   }
 
-  const { constraints, optionality, defaultValue } = processChainMethods(
+  const { constraints, optionality, defaultValue, description } = processChainMethods(
     baseMethod,
     chainedMethods,
   );
@@ -254,6 +266,7 @@ export function parsePrimitiveZodFromNode(
       constraints,
       zodChain,
       defaultValue,
+      description,
     ),
     chainedMethods,
   );

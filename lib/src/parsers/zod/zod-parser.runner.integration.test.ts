@@ -15,7 +15,7 @@ import type { CastrSchema } from 'src/ir/schema.js';
 import { AssertionError } from 'node:assert/strict';
 
 const FIXTURES_DIR = path.resolve(__dirname, '../../../tests-fixtures/zod-parser/happy-path');
-const UPDATE_SNAPSHOTS = false; // Set to true to regenerate expected files
+const UPDATE_SNAPSHOTS = process.env['UPDATE_SNAPSHOTS'] === 'true'; // Set to true to regenerate expected files
 
 describe('Zod Parser Integration Runner', async () => {
   const files = await fs.readdir(FIXTURES_DIR);
@@ -72,9 +72,10 @@ describe('Zod Parser Integration Runner', async () => {
       }
 
       if (expectedJson.schemas) {
-        // Simple structural match
+        // Simple structural match - serialize to JSON first to match CastrSchemaProperties format
         if (!UPDATE_SNAPSHOTS) {
-          expect(parserOutputMap).toMatchObject(expectedJson.schemas);
+          const serialized = JSON.parse(JSON.stringify(parserOutputMap)) as unknown;
+          expect(serialized).toMatchObject(expectedJson.schemas);
         }
       } else {
         // If expectedJson is the schema itself (single export?)

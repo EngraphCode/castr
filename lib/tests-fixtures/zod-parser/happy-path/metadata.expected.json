@@ -8,7 +8,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".describe(\"A user description\")"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -27,7 +27,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".describe(\"Age in years\")"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -46,7 +46,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".meta()"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -55,7 +55,8 @@
           "depth": 0
         },
         "circularReferences": []
-      }
+      },
+      "title": "User Name"
     },
     "MetaWithDescription": {
       "type": "string",
@@ -64,7 +65,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".meta()"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -74,7 +75,8 @@
         },
         "circularReferences": []
       },
-      "format": "email"
+      "format": "email",
+      "description": "User email address"
     },
     "MetaWithExamples": {
       "type": "string",
@@ -83,7 +85,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".meta()"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -92,7 +94,8 @@
           "depth": 0
         },
         "circularReferences": []
-      }
+      },
+      "examples": ["example1", "example2"]
     },
     "MetaWithDeprecated": {
       "type": "string",
@@ -101,7 +104,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".meta()"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -110,7 +113,8 @@
           "depth": 0
         },
         "circularReferences": []
-      }
+      },
+      "deprecated": true
     },
     "FullMetadata": {
       "type": "string",
@@ -119,7 +123,7 @@
         "nullable": false,
         "zodChain": {
           "presence": "",
-          "validations": [".meta()"],
+          "validations": [],
           "defaults": []
         },
         "dependencyGraph": {
@@ -129,70 +133,98 @@
         },
         "circularReferences": []
       },
-      "format": "email"
+      "format": "email",
+      "title": "Email Address",
+      "description": "Primary email for the user account",
+      "deprecated": false,
+      "examples": ["user@example.com", "admin@company.org"]
     },
     "ObjectWithMetadata": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [".meta()"],
-              "defaults": []
+        "dataType": "CastrSchemaProperties",
+        "value": {
+          "id": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
             },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
+            "format": "uuid",
+            "title": "User ID",
+            "description": "Unique identifier"
           },
-          "format": "uuid"
-        },
-        "email": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [".meta()"],
-              "defaults": []
+          "email": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
             },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
+            "format": "email",
+            "examples": ["test@example.com"]
           },
-          "format": "email"
-        },
-        "createdAt": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [".meta()"],
-              "defaults": []
+          "createdAt": {
+            "type": "string",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
             },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          },
-          "format": "date-time"
+            "format": "date-time",
+            "title": "Creation Timestamp"
+          }
         }
       },
-      "required": ["id", "email", "createdAt"]
+      "required": ["id", "email", "createdAt"],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "title": "User Object",
+      "description": "Represents a user in the system"
     }
   }
 }

@@ -1,7 +1,7 @@
 import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import type { OpenAPIObject, SchemasObject } from 'openapi3-ts/oas31';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
+import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import { isGroupedFileResult } from '../../src/rendering/generation-result.js';
 import { getZodClientTemplateContext } from '../../src/context/index.js';
 import { pathToVariableName } from '../../src/shared/utils/index.js';

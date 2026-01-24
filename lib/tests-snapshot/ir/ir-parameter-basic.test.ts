@@ -6,10 +6,7 @@
  * @module ir-parameter-basic.test
  */
 
-import {
-  generateZodClientFromOpenAPI,
-  isSingleFileResult,
-} from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import { getZodClientTemplateContext } from '../../src/context/template-context.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';

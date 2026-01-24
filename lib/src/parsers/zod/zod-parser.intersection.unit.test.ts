@@ -47,18 +47,16 @@ describe('Zod Intersection Parsing', () => {
   describe('A.and(B)', () => {
     it('should parse object.and(object)', () => {
       const result = parseCode('z.object({ a: z.string() }).and(z.object({ b: z.number() }))');
-      expect(result).toMatchObject({
-        allOf: [
-          {
-            type: 'object',
-            properties: { a: { type: 'string' } },
-          },
-          {
-            type: 'object',
-            properties: { b: { type: 'number' } },
-          },
-        ],
-      });
+
+      expect(result?.allOf).toHaveLength(2);
+
+      const allOf0 = result?.allOf?.[0];
+      expect(allOf0?.type).toBe('object');
+      expect(allOf0?.properties?.get('a')?.type).toBe('string');
+
+      const allOf1 = result?.allOf?.[1];
+      expect(allOf1?.type).toBe('object');
+      expect(allOf1?.properties?.get('b')?.type).toBe('number');
     });
 
     it('should handle chained .and()', () => {

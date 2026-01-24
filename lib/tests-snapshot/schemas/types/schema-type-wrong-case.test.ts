@@ -1,6 +1,6 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { expect, test, describe } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 
 /**
  * Tests for schema type validation behavior

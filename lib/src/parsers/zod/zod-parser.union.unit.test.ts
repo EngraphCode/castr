@@ -44,27 +44,23 @@ describe('Zod Union Parsing', () => {
         ])
       `);
 
-      expect(result).toMatchObject({
-        oneOf: [
-          {
-            type: 'object',
-            properties: {
-              type: { type: 'string', enum: ['a'] },
-              val: { type: 'string' },
-            },
-          },
-          {
-            type: 'object',
-            properties: {
-              type: { type: 'string', enum: ['b'] },
-              val: { type: 'number' },
-            },
-          },
-        ],
-        discriminator: {
-          propertyName: 'type',
-        },
-      });
+      // Verify structure
+      expect(result?.oneOf).toHaveLength(2);
+      expect(result?.discriminator).toMatchObject({ propertyName: 'type' });
+
+      // Verify first variant
+      const variant0 = result?.oneOf?.[0];
+      expect(variant0?.type).toBe('object');
+      expect(variant0?.properties?.get('type')?.type).toBe('string');
+      expect(variant0?.properties?.get('type')?.enum).toEqual(['a']);
+      expect(variant0?.properties?.get('val')?.type).toBe('string');
+
+      // Verify second variant
+      const variant1 = result?.oneOf?.[1];
+      expect(variant1?.type).toBe('object');
+      expect(variant1?.properties?.get('type')?.type).toBe('string');
+      expect(variant1?.properties?.get('type')?.enum).toEqual(['b']);
+      expect(variant1?.properties?.get('val')?.type).toBe('number');
     });
   });
 });

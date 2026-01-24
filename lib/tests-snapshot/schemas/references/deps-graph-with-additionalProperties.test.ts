@@ -1,6 +1,6 @@
 import { type ReferenceObject, type SchemaObject, type SchemasObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
-import { getOpenApiDependencyGraph } from '../../../src/test-helpers/legacy-compat.js';
+import { getOpenApiDependencyGraph } from '../../../src/index.js';
 
 const makeOpenApiDoc = (
   schemas: SchemasObject,

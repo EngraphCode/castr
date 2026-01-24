@@ -22,7 +22,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { ValidateFunction } from 'ajv';
-import { generateZodClientFromOpenAPI } from '../../src/rendering/index.js';
+import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 // Handle CJS/ESM interop for default exports
 // @ts-expect-error TS2571 - Ajv04Module may have default export (CJS) or be direct export (ESM)

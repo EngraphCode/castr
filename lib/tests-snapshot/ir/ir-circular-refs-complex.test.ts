@@ -1,22 +1,19 @@
 /**
  * IR Integration - Complex Circular Reference Handling
  *
- * PROVES: Complex circular references (deep, allOf, three-way) detected in IR result in lazy() schemas
+ * PROVES: Complex circular references (deep, allOf, three-way) detected in IR result in getter-based schemas (Zod 4 native recursion)
  *
  * @module ir-circular-refs-complex.test
  */
 
-import {
-  generateZodClientFromOpenAPI,
-  isSingleFileResult,
-} from '../../src/test-helpers/legacy-compat.js';
+import { generateZodClientFromOpenAPI, isSingleFileResult } from '../../src/index.js';
 import { getZodClientTemplateContext } from '../../src/context/template-context.js';
 import { assertSchemaComponent } from '../../src/ir/test-helpers.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 
 describe('IR Integration - Complex Circular References', () => {
-  test('deeply nested circular reference generates correct lazy() schema', async () => {
+  test('deeply nested circular reference generates correct getter-based schema', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Deep Circular Test' },
@@ -46,7 +43,7 @@ describe('IR Integration - Complex Circular References', () => {
 
     expect(circularRefs.length).toBeGreaterThan(0);
 
-    // SECOND: Prove generated code uses lazy() correctly
+    // SECOND: Prove generated code uses getter syntax correctly (Zod 4 native recursion)
     const result = await generateZodClientFromOpenAPI({
       disableWriteToFile: true,
       openApiDoc,
@@ -58,7 +55,8 @@ describe('IR Integration - Complex Circular References', () => {
     }
 
     expect(result.content).toContain('TreeNode');
-    expect(result.content).toContain('z.lazy(');
+    // Zod 4 uses getter syntax for native recursion, not z.lazy()
+    expect(result.content).toMatch(/get\s+\w+\(\)\s*\{/);
 
     // Should handle both children array and parent reference
     const treeNodeDefinition = result.content.substring(
@@ -121,7 +119,7 @@ describe('IR Integration - Complex Circular References', () => {
     expect(result).toBeDefined();
   });
 
-  test('three-way circular reference generates correct lazy() schemas', async () => {
+  test('three-way circular reference generates correct getter-based schemas', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Three-Way Circular Test' },
@@ -184,11 +182,11 @@ describe('IR Integration - Complex Circular References', () => {
     expect(result.content).toContain('B');
     expect(result.content).toContain('C');
 
-    // Should use lazy() to break the cycle
-    expect(result.content).toContain('z.lazy(');
+    // Zod 4 uses getter syntax to break the cycle (native recursion)
+    expect(result.content).toMatch(/get\s+\w+\(\)\s*\{/);
   });
 
-  test('optional circular reference generates correct nullable lazy() schema', async () => {
+  test('optional circular reference generates correct nullable getter-based schema', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.1.0',
       info: { version: '1.0.0', title: 'Optional Circular Test' },
@@ -228,7 +226,8 @@ describe('IR Integration - Complex Circular References', () => {
     }
 
     expect(result.content).toContain('LinkedList');
-    expect(result.content).toContain('z.lazy(');
+    // Zod 4 uses getter syntax for native recursion, not z.lazy()
+    expect(result.content).toMatch(/get\s+\w+\(\)\s*\{/);
 
     // Next field should be optional (not required)
     const linkedListDef = result.content.substring(

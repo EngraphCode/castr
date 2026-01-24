@@ -1203,28 +1203,6 @@ if (Object.keys(schema).length === 0) continue;
 
 ### 2. **JSDoc for public APIs**
 
-````typescript
-/**
- * Converts an OpenAPI schema to a Zod schema string.
- *
- * @param schema - The OpenAPI schema object to convert
- * @param options - Optional conversion options
- * @returns A string representation of the Zod schema
- * @throws {Error} If schema is invalid or contains unsupported features
- *
- * @example
- * ```typescript
- * const zodSchema = getZodSchema({
- *   schema: { type: "string" }
- * });
- * // Returns: "z.string()"
- * ```
- */
-export function getZodSchema(args: ConversionArgs): ZodSchema {
-  // ...
-}
-````
-
 ---
 
 ## 🎯 **MANDATORY: Comprehensive TSDoc Standards**
