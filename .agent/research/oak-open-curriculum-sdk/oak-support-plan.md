@@ -25,16 +25,40 @@
 
 ### Negotiation positions (draft)
 
-<!-- this is a very minor point, it basically doesn't matter, configurable is fine, default to curly braces -->
-- **Path format** is configurable (colon or curly).
+<!-- configurable; default to curly braces; boolean switch enables colon -->
+
+- **Path format** is configurable: default **curly braces**, optional **colon** via a boolean config switch.
 - **Output shape** is Castr’s, not Oak’s; we will provide stable, documented exports that satisfy Oak’s workflows.
 - **Artifact emission** will be first-class (TS outputs), not stringified schema fragments.
+
+### Options (non-canonical, to be revisited)
+
+**Option A — Metadata TS emitter (Castr-native)**
+
+- Emit dedicated metadata outputs (paths registry, operations registry, response code helpers, parameter enums).
+- All artifacts are **rule-compliant TS** (no `as` except `as const`, no `Object.*`, no stringified schemas).
+- Pros: first-class, explicit, deterministic.
+- Cons: new emitter surface area; more artifacts to version/document.
+
+**Option B — Zod-first enablement**
+
+- Keep core output Zod-centric, but add **rule-compliant helper exports** that enable the same impact (e.g., typed endpoints + registry builders).
+- Metadata is derived from IR and Zod outputs, not from stringified code.
+- Pros: smaller surface; leverages existing Zod output.
+- Cons: some Oak workflows may still need explicit registries; derivation must remain rule-compliant.
+
+**Both options must (and will be revisited once we learn more):**
+
+- Avoid compatibility layers and string-based schema outputs.
+- Preserve determinism and strict-by-default behavior.
+- Provide stable, documented exports (even if shape differs from Oak’s current adapter).
 
 ### Example output analysis (metadata TS)
 
 Reference: `example-oak-sdk-output-ts-metadata.ts` (illustrative, not exhaustive).
 
 **Artifacts in the example and current Castr coverage**
+
 - **PATHS / ValidPath / isValidPath**: not emitted today; could be derived from endpoints but would need explicit generated maps (no `Object.*`).
 - **Allowed methods + guards**: not emitted; would need a generated literal list (no `as` except `as const`).
 - **PATH_OPERATIONS / OPERATIONS_BY_ID**: not emitted; current endpoints array is similar but uses Zod schemas, not raw OpenAPI shapes.
@@ -44,18 +68,78 @@ Reference: `example-oak-sdk-output-ts-metadata.ts` (illustrative, not exhaustive
 
 **Implication**
 The example highlights metadata and runtime registries that Castr does **not** currently emit. We must either:
-1) emit equivalent metadata directly (TS outputs), or
-2) enable the same impact via Zod outputs and documented derivations.
+
+1. emit equivalent metadata directly (TS outputs), or
+2. enable the same impact via Zod outputs and documented derivations.
 
 ### Rule-compliant generation constraints
+
 - **No** `as` type assertions (except `as const`).
 - **No** `Object.*` or `Reflect.*` usage in generated code.
 - **No** `Record<string, unknown>` or stringified schema outputs.
 - Prefer **generated literal arrays/objects** and `value in MAP` guards.
 
+### Rule-compliant pseudocode patterns (examples)
+
+**Paths registry + guard**
+
+```typescript
+export const PATHS = {
+  '/changelog': '/changelog',
+  '/subjects/{subject}': '/subjects/{subject}',
+} as const;
+
+export type ValidPath = keyof typeof PATHS;
+
+export function isValidPath(value: string): value is ValidPath {
+  return value in PATHS;
+}
+```
+
+**Allowed methods (no `Object.*`, no `as`)**
+
+```typescript
+export const ALLOWED_METHODS = ['get', 'post', 'put', 'delete'] as const;
+export type AllowedMethod = (typeof ALLOWED_METHODS)[number];
+
+export function isAllowedMethod(value: string): value is AllowedMethod {
+  if (value === 'get') return true;
+  if (value === 'post') return true;
+  if (value === 'put') return true;
+  if (value === 'delete') return true;
+  return false;
+}
+```
+
+**Operation registry**
+
+```typescript
+export const OPERATIONS_BY_ID = {
+  'getLessons-getLesson': { path: '/lessons/{lesson}', method: 'get' },
+} as const;
+
+export type OperationId = keyof typeof OPERATIONS_BY_ID;
+
+export function isOperationId(value: string): value is OperationId {
+  return value in OPERATIONS_BY_ID;
+}
+```
+
+**Parameter enums + validator (no casts)**
+
+```typescript
+export const KEY_STAGES = ['ks1', 'ks2', 'ks3', 'ks4'] as const;
+export type KeyStage = (typeof KEY_STAGES)[number];
+
+export function isKeyStage(value: string): value is KeyStage {
+  return value === 'ks1' || value === 'ks2' || value === 'ks3' || value === 'ks4';
+}
+```
+
 ### Owner decisions needed
 
 <!-- enablement, NOT matching -->
+
 - Confirm the negotiated contract stance (enablement vs. shape matching).
 <!-- allow config, default to curly braces -->
 - Confirm path format preference and whether both formats must be supported.
@@ -102,7 +186,7 @@ Provide Castr-native exports that satisfy Oak’s SDK generation + validation wo
    - Where we are outputting metadata patterns, e.g. lists of endpoints, we will do so using `as const`, and then we will use that runtime object to define types and type-predicate functions, e.g.
 
 ```typescript
-   export type ValidPath = keyof Paths;
+export type ValidPath = keyof Paths;
 
 /**
 
@@ -112,10 +196,14 @@ export const PATHS = {
   '/changelog': '/changelog',
   '/changelog/latest': '/changelog/latest',
   '/key-stages': '/key-stages',
-  '/key-stages/{keyStage}/subject/{subject}/assets': '/key-stages/{keyStage}/subject/{subject}/assets',
-  '/key-stages/{keyStage}/subject/{subject}/lessons': '/key-stages/{keyStage}/subject/{subject}/lessons',
-  '/key-stages/{keyStage}/subject/{subject}/questions': '/key-stages/{keyStage}/subject/{subject}/questions',
-  '/key-stages/{keyStage}/subject/{subject}/units': '/key-stages/{keyStage}/subject/{subject}/units',
+  '/key-stages/{keyStage}/subject/{subject}/assets':
+    '/key-stages/{keyStage}/subject/{subject}/assets',
+  '/key-stages/{keyStage}/subject/{subject}/lessons':
+    '/key-stages/{keyStage}/subject/{subject}/lessons',
+  '/key-stages/{keyStage}/subject/{subject}/questions':
+    '/key-stages/{keyStage}/subject/{subject}/questions',
+  '/key-stages/{keyStage}/subject/{subject}/units':
+    '/key-stages/{keyStage}/subject/{subject}/units',
   '/lessons/{lesson}/assets': '/lessons/{lesson}/assets',
   '/lessons/{lesson}/assets/{type}': '/lessons/{lesson}/assets/{type}',
   '/lessons/{lesson}/quiz': '/lessons/{lesson}/quiz',
@@ -134,21 +222,20 @@ export const PATHS = {
   '/subjects/{subject}/years': '/subjects/{subject}/years',
   '/threads': '/threads',
   '/threads/{threadSlug}/units': '/threads/{threadSlug}/units',
-  '/units/{unit}/summary': '/units/{unit}/summary'
+  '/units/{unit}/summary': '/units/{unit}/summary',
 } as const;
 
 /**
 
 - Types derived from the runtime schema object.
 */
-export type RawPaths = Schema["paths"];
+export type RawPaths = Schema['paths'];
 
 export function isValidPath(value: string): value is ValidPath {
   const paths = Object.keys(schema.paths);
   return paths.includes(value);
 }
 export const apiPaths: RawPaths = schema.paths;
-
 ```
 
 ### Acceptance criteria (Phase 1)

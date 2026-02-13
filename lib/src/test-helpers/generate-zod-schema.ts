@@ -1,7 +1,7 @@
 import { CodeBlockWriter } from 'ts-morph';
-import { writeZodSchema } from '../writers/zod/index.js';
-import type { CastrSchemaContext } from '../ir/context.js';
-import type { CastrSchema } from '../ir/schema.js';
+import { writeZodSchema } from '../schema-processing/writers/zod/index.js';
+import type { CastrSchemaContext } from '../schema-processing/ir/context.js';
+import type { CastrSchema } from '../schema-processing/ir/schema.js';
 
 /**
  * Helper to generate a Zod schema string from an CastrSchema object.

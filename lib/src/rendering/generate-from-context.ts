@@ -20,8 +20,11 @@
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { Options } from 'prettier';
-import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
-import { getZodClientTemplateContext } from '../context/index.js';
+import type {
+  TemplateContext,
+  TemplateContextOptions,
+} from '../schema-processing/context/index.js';
+import { getZodClientTemplateContext } from '../schema-processing/context/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { renderOutput, handleDebugIR } from './templating.js';
 import type { GenerationResult } from './generation-result.js';

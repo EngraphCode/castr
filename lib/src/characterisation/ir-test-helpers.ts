@@ -9,7 +9,7 @@
 
 import type { GenerationResult } from '../rendering/generation-result.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
-import type { IRComponent } from '../ir/schema.js';
+import type { IRComponent } from '../schema-processing/ir/schema.js';
 
 /**
  * Assert that a generation result is a single file result and return the content.

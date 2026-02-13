@@ -122,7 +122,7 @@ describe('Layer Boundary Enforcement', () => {
 
   describe('Writers Layer', () => {
     it('should not import OpenAPIObject in writer files', () => {
-      const writersDir = path.join(libSrcPath, 'writers');
+      const writersDir = path.join(libSrcPath, 'schema-processing', 'writers');
       // Exception: writers/openapi is allowed to import OpenAPI types
       // because it's for OUTPUT generation (IR → OpenAPI), not input consumption.
       // The rule protects against inputs; output generation legitimately needs the output types.
@@ -136,7 +136,7 @@ describe('Layer Boundary Enforcement', () => {
     });
 
     it('should have writer files to test', () => {
-      const writersDir = path.join(libSrcPath, 'writers');
+      const writersDir = path.join(libSrcPath, 'schema-processing', 'writers');
       const writerFiles = getTypeScriptFiles(writersDir, true, ['writers/openapi']);
 
       // Sanity check: we should have writers to test
@@ -146,7 +146,7 @@ describe('Layer Boundary Enforcement', () => {
 
   describe('MCP Layer', () => {
     it('should not import OpenAPIObject in MCP files', () => {
-      const contextDir = path.join(libSrcPath, 'context');
+      const contextDir = path.join(libSrcPath, 'schema-processing', 'context');
       const mcpFiles = getMcpLayerFiles(contextDir);
 
       const violations = mcpFiles
@@ -157,7 +157,7 @@ describe('Layer Boundary Enforcement', () => {
     });
 
     it('should have MCP files to test', () => {
-      const contextDir = path.join(libSrcPath, 'context');
+      const contextDir = path.join(libSrcPath, 'schema-processing', 'context');
       const mcpFiles = getMcpLayerFiles(contextDir);
 
       // Sanity check: we should have MCP files to test
@@ -167,7 +167,7 @@ describe('Layer Boundary Enforcement', () => {
 
   describe('IR Layer (ADR-029)', () => {
     it('should not import OpenAPIObject in IR files', () => {
-      const irDir = path.join(libSrcPath, 'ir');
+      const irDir = path.join(libSrcPath, 'schema-processing', 'ir');
       const irFiles = getTypeScriptFiles(irDir, true);
 
       const violations = irFiles.map(checkFileForViolations).filter((v): v is string => v !== null);
@@ -176,7 +176,7 @@ describe('Layer Boundary Enforcement', () => {
     });
 
     it('should have IR files to test', () => {
-      const irDir = path.join(libSrcPath, 'ir');
+      const irDir = path.join(libSrcPath, 'schema-processing', 'ir');
       const irFiles = getTypeScriptFiles(irDir, true);
 
       // Sanity check: we should have IR files to test
@@ -186,8 +186,8 @@ describe('Layer Boundary Enforcement', () => {
 
   describe('Boundary Compliance Summary', () => {
     it('should list all protected files checked', () => {
-      const writersDir = path.join(libSrcPath, 'writers');
-      const contextDir = path.join(libSrcPath, 'context');
+      const writersDir = path.join(libSrcPath, 'schema-processing', 'writers');
+      const contextDir = path.join(libSrcPath, 'schema-processing', 'context');
 
       const writerFiles = getTypeScriptFiles(writersDir);
       const mcpFiles = getMcpLayerFiles(contextDir);

@@ -1,6 +1,6 @@
 # OpenAPI Acceptance Criteria
 
-> Detailed view of `.agent/requirements.md` sections 1-6. If any conflict exists,
+> Detailed view of `.agent/directives/requirements.md` sections 1-6. If any conflict exists,
 > the requirements document is the source of truth.
 > Reference schemas: `.agent/reference/openapi_schema/openapi_3_0_x_schema.json` and
 > `.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json`.

@@ -1,6 +1,6 @@
 # Existing Plans Review (Deep)
 
-This review covers all active plans under `.agent/plans` plus archival plans in `.agent/plans/archive`. It focuses on overlap with the new parity goals (Oak contract + openapi-ts best practices + oak-openapi dependency replacement).
+This review covers all active plans under `.agent/plans` plus archival plans in `.agent/plans/archive`. It focuses on overlap with the new **enablement** goals (Oak use cases + openapi-ts best practices + oak-openapi dependency replacement).
 
 ## 1) Active Plans Summary
 
@@ -64,7 +64,7 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 - **Scope:** format-agnostic IR docs.
 - **Relevance:** ensures IR remains neutral and extensible for Zod/OpenAPI/JSON Schema parity.
 
-## 3) Alignment vs New Parity Goals
+## 3) Alignment vs New Enablement Goals
 
 ### Already Planned (Strong Alignment)
 
@@ -80,19 +80,19 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ### Not Planned (Gaps to Add)
 
-- **Path format configuration** (colon vs curly) for endpoints and maps.
+- **Path format configuration** (default **curly**, boolean switch for colon) for endpoints and maps.
 - **Explicit `operationId` field in endpoint output** (currently `alias`).
-- **Public schema-to-code serializer** (Oak needs stringified schemas for request maps).
-- **Bundle manifest output** compatible with Oak harness (plan mentions manifest but not a concrete shape).
+- **Metadata output options** (Option A: metadata TS emitter, Option B: Zod-first enablement).
+- **Bundle manifest output** is **TBD** and should be validated with Oak before committing to a shape.
 - **tRPC → IR parser / adapters** (needed to replace `trpc-to-openapi`).
 - **Zod-OpenAPI metadata ingestion** (`.openapi()` / `.meta()` mapping to OpenAPI fields).
 - **Watch mode / plugin surface** (openapi-ts best-practice alignment; not in roadmap).
 
 ## 4) Potential Plan Conflicts / Risks
 
-1. **AST-only generation vs schema-string outputs**
-   - Roadmap states "no string manipulation"; Oak requires schema code strings for some maps.
-   - Mitigation: generate strings from AST (ts-morph writer → string) to maintain AST purity.
+1. **AST-only generation vs string-based schema outputs**
+   - Roadmap states "no string manipulation"; rules forbid stringified schema outputs.
+   - Mitigation: avoid string-first APIs; if strings are unavoidable, generate via ts-morph printers only.
 
 2. **Strict-by-default in plans vs writer default behavior**
    - Plans emphasize strict-by-default, but current Zod writer defaults to `.passthrough()` unless `strictObjects` is set.
@@ -104,14 +104,14 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ## 5) Concrete Recommendations to Incorporate into Plans
 
-- Extend `future-artefact-expansion.md` with **Oak parity outputs** explicitly:
-  - operationId maps, colon path format, request-parameter schema strings, bundle manifest shape.
+- Extend `future-artefact-expansion.md` with **Oak enablement outputs** explicitly:
+  - operationId maps, path format switch, metadata output options (A/B), bundle manifest **TBD**.
 - Add a short **tRPC → IR plan** (parser + security mapping) to the roadmap.
 - Add **Zod-OpenAPI metadata ingestion** as a Session in Phase 3 or Phase 4.
 - Add a **strict profile** concept to the roadmap to enforce Oak defaults.
 
-**Update given Oak flexibility:** prefer IR-first outputs and helper APIs over prescriptive string-based public APIs; when emitting TypeScript, use ts-morph AST (separate from IR) and its printers if strings are ever required.
+**Update given Oak flexibility:** prefer IR-first outputs and helper APIs over prescriptive string-based public APIs. Output artifacts must be rule-compliant (no `as` except `as const`, no `Object.*`, no stringified schema APIs).
 
 ## 6) Key Takeaway
 
-The existing plan set is strong on IR correctness, strict validation, and determinism, and already anticipates multi-artefact output (including metadata maps and JSON Schema). The main missing pieces are integration-specific: path formatting, operationId maps, schema-string outputs, tRPC and Zod-OpenAPI ingestion, and a concrete bundle manifest for the Oak harness.
+The existing plan set is strong on IR correctness, strict validation, and determinism, and already anticipates multi-artefact output (including metadata maps and JSON Schema). The main missing pieces are integration-specific: path formatting, operationId maps, metadata output options (A/B), tRPC and Zod-OpenAPI ingestion, and a concrete bundle manifest **if** Oak validates the need.

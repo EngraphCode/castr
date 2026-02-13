@@ -16,9 +16,9 @@ import { describe, it, expect } from 'vitest';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { buildIR } from '../src/parsers/openapi/index.js';
+import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
-import type { CastrDocument } from '../src/ir/schema.js';
+import type { CastrDocument } from '../src/schema-processing/ir/schema.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

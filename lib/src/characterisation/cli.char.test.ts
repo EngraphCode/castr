@@ -5,7 +5,7 @@ import { execSync } from 'node:child_process';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { fileURLToPath } from 'node:url';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
-import { getZodClientTemplateContext } from '../context/index.js';
+import { getZodClientTemplateContext } from '../schema-processing/context/index.js';
 
 /**
  * Characterisation Tests: CLI Behavior

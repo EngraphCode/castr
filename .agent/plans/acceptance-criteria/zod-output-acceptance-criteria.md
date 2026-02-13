@@ -1,6 +1,6 @@
 # Zod Output Acceptance Criteria
 
-> Detailed view of `.agent/requirements.md` (Output Generation + Union Semantics)
+> Detailed view of `.agent/directives/requirements.md` (Output Generation + Union Semantics)
 > and ADR-031. If any conflict exists, requirements win.
 
 ---

@@ -26,9 +26,9 @@
 
 import { existsSync, mkdirSync, writeFileSync, symlinkSync, unlinkSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { buildIR } from '../src/parsers/openapi/index.js';
+import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
-import { writeOpenApi } from '../src/writers/openapi/index.js';
+import { writeOpenApi } from '../src/schema-processing/writers/openapi/index.js';
 import { generateZodClientFromOpenAPI, isSingleFileResult } from '../src/rendering/index.js';
 
 const ARBITRARY_FIXTURES_DIR = resolve(

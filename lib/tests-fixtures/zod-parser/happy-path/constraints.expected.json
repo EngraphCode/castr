@@ -438,6 +438,118 @@
       },
       "format": "int32"
     },
+    "ArrayMin": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "circularReferences": []
+        }
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minItems": 1
+    },
+    "ArrayMax": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "circularReferences": []
+        }
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "maxItems": 10
+    },
+    "ArrayLength": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "circularReferences": []
+        }
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
     "FullyConstrainedString": {
       "type": "string",
       "metadata": {
@@ -539,6 +651,42 @@
         "circularReferences": []
       },
       "default": false
+    },
+    "ArrayWithDefault": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "metadata": {
+          "required": true,
+          "nullable": false,
+          "zodChain": {
+            "presence": "",
+            "validations": [],
+            "defaults": []
+          },
+          "dependencyGraph": {
+            "references": [],
+            "referencedBy": [],
+            "depth": 0
+          },
+          "circularReferences": []
+        }
+      },
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
     "OptionalWithMin": {
       "type": "string",

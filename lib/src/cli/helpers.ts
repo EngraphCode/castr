@@ -10,7 +10,7 @@ import {
   isGroupStrategy,
   isDefaultStatusBehavior,
 } from '../validation/cli-type-guards.js';
-import type { TemplateContextOptions } from '../context/index.js';
+import type { TemplateContextOptions } from '../schema-processing/context/index.js';
 import { buildGenerationOptions, type CliOptions } from './helpers.options.js';
 import { fileURLToPath } from 'node:url';
 

@@ -11,14 +11,15 @@ Exit criteria:
 - Goals documented and aligned.
 - Bundle manifest spec agreed.
 
-## Phase 1: Oak Phase 1 parity (blocking)
+## Phase 1: Oak Phase 1 enablement (blocking)
 
 - Strict-by-default Zod output.
-- Path format option with colon format support (or consumer-side adapter if preferred).
-- Emit operationId field + required metadata (maps or helper APIs, not necessarily static constants).
+- Path format option with colon format support (default curly; no compatibility adapters).
+- Emit operationId field + required metadata (maps or helper APIs), pending final option choice.
 - IR-first outputs; TypeScript code rendering handled via ts-morph AST (separate from IR). Avoid string-first APIs; only print strings via ts-morph when unavoidable.
 - Replace missing-schema fallbacks with errors in strict mode.
-- Bundle manifest output for fixture verification (schema internal and flexible).
+- Bundle manifest output for fixture verification (schema internal and flexible) — **TBD**, needs validation with Oak.
+- All generated outputs must be **rule-compliant** (no `as` except `as const`, no `Object.*`, no stringified schema APIs).
 
 Exit criteria:
 

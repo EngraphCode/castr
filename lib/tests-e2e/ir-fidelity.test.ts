@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../src/index.js';
 import { prepareOpenApiDocument } from '../src/shared/prepare-openapi-document.js';
-import { serializeIR, deserializeIR } from '../src/ir/serialization.js';
-import { writeOpenApi } from '../src/writers/openapi/index.js';
+import { serializeIR, deserializeIR } from '../src/schema-processing/ir/serialization.js';
+import { writeOpenApi } from '../src/schema-processing/writers/openapi/index.js';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 

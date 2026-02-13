@@ -58,6 +58,31 @@ export function hasVersionProperty(obj: unknown): obj is { version?: unknown } {
 }
 
 /**
+ * Checks for required structural fields (openapi version string + info object).
+ * @internal
+ */
+function hasRequiredOpenApiFields(obj: object): boolean {
+  return (
+    'openapi' in obj &&
+    typeof obj.openapi === 'string' &&
+    'info' in obj &&
+    typeof obj.info === 'object'
+  );
+}
+
+/**
+ * Checks that the document has at least one content section (paths, webhooks, or components).
+ * OAS 3.1: Either paths or webhooks must be present (or both). Components-only is also valid.
+ * @internal
+ */
+function hasDocumentContent(obj: object): boolean {
+  const hasPaths = 'paths' in obj && typeof obj.paths === 'object';
+  const hasWebhooks = 'webhooks' in obj && typeof obj.webhooks === 'object';
+  const hasComponents = 'components' in obj && typeof obj.components === 'object';
+  return hasPaths || hasWebhooks || hasComponents;
+}
+
+/**
  * Type guard to check if an object is a valid OpenAPIObject
  *
  * Performs minimal structural validation to distinguish SwaggerParser's OpenAPI type
@@ -74,22 +99,5 @@ export function isOpenAPIObject(obj: unknown): obj is OpenAPIObject {
     return false;
   }
 
-  // Check for required OpenAPI properties
-  const hasRequiredFields =
-    'openapi' in obj &&
-    typeof obj.openapi === 'string' &&
-    'info' in obj &&
-    typeof obj.info === 'object';
-
-  if (!hasRequiredFields) {
-    return false;
-  }
-
-  // OAS 3.1: Either paths or webhooks must be present (or both)
-  const hasPaths = 'paths' in obj && typeof obj.paths === 'object';
-  const hasWebhooks = 'webhooks' in obj && typeof obj.webhooks === 'object';
-  const hasComponents = 'components' in obj && typeof obj.components === 'object';
-
-  // Valid if it has paths, webhooks, or just components (components-only is valid in 3.1)
-  return hasPaths || hasWebhooks || hasComponents;
+  return hasRequiredOpenApiFields(obj) && hasDocumentContent(obj);
 }

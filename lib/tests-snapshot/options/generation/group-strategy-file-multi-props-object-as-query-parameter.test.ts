@@ -2,7 +2,7 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { assertGroupedFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
-import type { TemplateContextGroupStrategy } from '../../../src/context/template-context.js';
+import type { TemplateContextGroupStrategy } from '../../../src/schema-processing/context/template-context.js';
 
 // https://github.com/astahmer/@engraph/castr/issues/157
 describe('file group strategy with multi-props object as query parameter', () => {

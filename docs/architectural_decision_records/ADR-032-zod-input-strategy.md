@@ -88,5 +88,5 @@ This decision must align with:
 
 - `.agent/requirements.md` (Zod input requirements; union semantics)
 - `.agent/plans/acceptance-criteria/zod-parser-acceptance-criteria.md`
-- [ADR-026: No Regex for Schema Parsing](./ADR-026-no-regex-for-parsing.md)
+- [ADR-026: No String Manipulation for Parsing](./ADR-026-no-string-manipulation-for-parsing.md)
 - [ADR-031: Zod 4 Output Strategy](./ADR-031-zod-output-strategy.md)

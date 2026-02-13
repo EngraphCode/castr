@@ -3,11 +3,14 @@ import fs from 'node:fs/promises';
 
 import type { Options } from 'prettier';
 import { maybePretty } from '../shared/maybe-pretty.js';
-import type { TemplateContext, TemplateContextOptions } from '../context/index.js';
+import type {
+  TemplateContext,
+  TemplateContextOptions,
+} from '../schema-processing/context/index.js';
 import type { GenerationResult } from './generation-result.js';
-import { serializeIR } from '../ir/serialization.js';
+import { serializeIR } from '../schema-processing/ir/serialization.js';
 import { generateIndexFile, generateCommonFile, generateGroupFiles } from './templating-groups.js';
-import { writeTypeScript } from '../writers/typescript/index.js';
+import { writeTypeScript } from '../schema-processing/writers/typescript/index.js';
 
 /**
  * Handle file grouping output strategy

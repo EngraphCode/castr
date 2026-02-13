@@ -1,6 +1,6 @@
 import type { SchemaObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
-import { getZodSchema } from '../../src/conversion/zod/index.js';
+import { getZodSchema } from '../../src/schema-processing/conversion/zod/index.js';
 
 /**
  * Tests for OpenAPI to Zod schema conversion.

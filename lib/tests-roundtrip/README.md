@@ -1,12 +1,33 @@
 # Round-Trip Test Suite
 
-This directory contains integration tests that verify OpenAPI specifications survive the complete transformation pipeline:
+This directory contains integration tests that verify specifications survive complete transformation pipelines:
 
 ```text
-OpenAPI Input → buildIR() → IR (CastrDocument) → writeOpenApi() → OpenAPI Output
+  OpenAPI → IR → OpenAPI (Scenario 1) ✅
+      Zod → IR → Zod     (Scenario 2) 🔲
+OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) 🔲
+    Zod → IR → OpenAPI → IR → Zod (Scenario 4) 🔲
 ```
 
-it also tests that the Zod output is correct.
+---
+
+## Validation Framework
+
+All round-trip scenarios use two validation categories:
+
+### Losslessness — Arbitrary Input → Normalized Output
+
+**Test:** `parse(input) ≅ parse(write(parse(input)))`
+
+- Arbitrary input transforms to semantically equivalent normalized output
+- Uses IR-level comparison (Vitest's toEqual)
+
+### Idempotency — Normalized Input → Identical Output
+
+**Test:** `write(parse(output)) === output`
+
+- Castr-normalized input MUST produce byte-identical output
+- Uses byte-level comparison (string equality)
 
 ---
 
@@ -65,16 +86,18 @@ Scalar correctly validates:
 
 Located in `__fixtures__/`:
 
-### Valid Fixtures (11)
+### OpenAPI Fixtures
 
-- `valid/3.0.x/` — Valid 3.0.x specifications
-- `valid/3.1.x/` — Valid 3.1.x specifications
+- `arbitrary/` — Real-world OpenAPI specs for round-trip testing
+- `normalized/` — Castr-normalized output for idempotency testing
+- `valid/` — Valid 3.0.x and 3.1.x specifications
+- `invalid/` — Version validation test cases
 
-### Invalid Fixtures (11)
+### Zod Fixtures
 
-- `invalid/3.0.x-with-3.1.x-fields/` — 3.0.x using 3.1.x features
-- `invalid/3.1.x-with-3.0.x-fields/` — 3.1.x using deprecated syntax
-- `invalid/common/` — Missing required fields
+Located in `../tests-fixtures/zod-parser/happy-path/`:
+
+- Schema declaration fixtures for Zod → IR → Zod round-trip
 
 ---
 
@@ -85,5 +108,5 @@ Located in `__fixtures__/`:
 pnpm test:roundtrip
 
 # Run specific test file
-cd lib && npx vitest run --config vitest.roundtrip.config.ts __tests__/scalar-behavior.integration.test.ts
+cd lib && npx vitest run --config vitest.roundtrip.config.ts __tests__/round-trip.integration.test.ts
 ```

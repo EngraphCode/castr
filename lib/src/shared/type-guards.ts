@@ -8,8 +8,8 @@
  * @public
  */
 
-import type { CastrSchema } from '../ir/schema.js';
-import { CastrSchemaProperties } from '../ir/schema.js';
+import type { CastrSchema } from '../schema-processing/ir/schema.js';
+import { CastrSchemaProperties } from '../schema-processing/ir/schema.js';
 
 /**
  * Type guard for string values.

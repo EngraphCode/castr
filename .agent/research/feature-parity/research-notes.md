@@ -5,6 +5,7 @@
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/README.md`
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/oak-principles.md`
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/expected-outputs.md`
+- `.agent/research/oak-open-curriculum-sdk/example-oak-sdk-output-ts-metadata.ts`
 - `.agent/research/openapi-ts/*`
 - `.agent/research/zod/notes.md`
 - `.agent/research/zod-openapi/notes.md`

@@ -23,10 +23,46 @@
               },
               "circularReferences": []
             }
+          },
+          "subcategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySchema",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              }
+            },
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
           }
         }
       },
-      "required": ["name"],
+      "required": ["name", "subcategories"],
       "metadata": {
         "required": true,
         "nullable": false,
@@ -85,10 +121,46 @@
               "circularReferences": []
             },
             "format": "email"
+          },
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostSchema",
+              "metadata": {
+                "required": true,
+                "nullable": false,
+                "zodChain": {
+                  "presence": "",
+                  "validations": [],
+                  "defaults": []
+                },
+                "dependencyGraph": {
+                  "references": [],
+                  "referencedBy": [],
+                  "depth": 0
+                },
+                "circularReferences": []
+              }
+            },
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
           }
         }
       },
-      "required": ["id", "email"],
+      "required": ["id", "email", "posts"],
       "metadata": {
         "required": true,
         "nullable": false,
@@ -164,10 +236,28 @@
               },
               "circularReferences": []
             }
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserSchema",
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": "",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
           }
         }
       },
-      "required": ["id", "title", "content"],
+      "required": ["id", "title", "content", "author"],
       "metadata": {
         "required": true,
         "nullable": false,

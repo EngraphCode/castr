@@ -26,7 +26,7 @@ import type {
   IRDependencyNode,
   IRZodChainInfo,
   CastrSchemaDependencyInfo,
-} from '../ir/schema.js';
+} from '../schema-processing/ir/schema.js';
 
 describe('IR Completeness', () => {
   describe('CastrDocument', () => {

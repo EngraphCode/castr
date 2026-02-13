@@ -2,28 +2,31 @@
 
 This scope is organized as "must for parity", "should for replacement viability", and "nice-to-have". It synthesizes Oak contract requirements, openapi-ts best practices, and oak-openapi dependency replacement needs.
 
-## Must for Oak Phase 1 parity (blocking)
+## Must for Oak Phase 1 enablement (blocking)
 
 1. **Strict-by-default output profile**
    - Enforce `.strict()` on all object schemas for Oak outputs.
    - Remove implicit `.passthrough()` unless explicitly requested.
 
 2. **Path format option (colon vs curly)**
-   - Add `pathFormat: 'colon' | 'curly'` and apply it consistently to endpoints, helpers, and maps.
+   - Add a boolean switch for colon paths; default stays **curly**. Apply consistently to endpoints, helpers, and maps.
 
 3. **OperationId visibility and maps**
    - Emit `operationId` on endpoints.
-   - Emit `OPERATION_ID_BY_METHOD_AND_PATH` and `PRIMARY_RESPONSE_STATUS_BY_OPERATION_ID` maps.
+   - Provide **either** explicit maps **or** Zod-first enablement (option TBD; revisit when Oak workflow is clearer).
 
 4. **Schema rendering without string-first APIs (preferred)**
    - Provide IR-first exports; keep code emission separate and handled via ts-morph writers/AST when generating TypeScript.
-   - If strings are required, generate them via ts-morph printers (no manual string manipulation).
+   - Avoid string-based schema APIs; if strings are unavoidable, generate via ts-morph printers only.
 
-5. **Strict failure on missing schemas**
+5. **Rule-compliant generation**
+   - No `as` assertions (except `as const`), no `Object.*` / `Reflect.*`, no stringified schema outputs.
+
+6. **Strict failure on missing schemas**
    - Replace `createEmptySchema()` fallback in strict mode with explicit errors and context.
 
-6. **Bundle manifest output**
-   - Emit `castr-bundle.json` manifest that references generated files (for Oak fixture validation), but keep the manifest schema internal and flexible.
+7. **Bundle manifest output**
+   - TBD — validate whether a manifest adds material value before committing to a shape.
 
 ## Should for Oak Phase 2 and broader replacement viability
 

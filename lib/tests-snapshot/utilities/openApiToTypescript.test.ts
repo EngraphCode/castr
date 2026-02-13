@@ -1,4 +1,4 @@
-import { getTypescriptFromOpenApi } from '../../src/conversion/typescript/index.js';
+import { getTypescriptFromOpenApi } from '../../src/schema-processing/conversion/typescript/index.js';
 
 import type { SchemaObject, SchemasObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';

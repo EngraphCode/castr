@@ -170,11 +170,11 @@ For each issue found, document:
 
 | Document            | Location                                           |
 | ------------------- | -------------------------------------------------- |
-| Vision              | `.agent/VISION.md`                                 |
-| Rules               | `.agent/RULES.md`                                  |
+| Vision              | `.agent/directives/VISION.md`                      |
+| Rules               | `.agent/directives/RULES.md`                       |
 | IR Architecture ADR | `docs/architectural_decision_records/ADR-023-*.md` |
-| Testing Strategy    | `.agent/testing-strategy.md`                       |
-| Requirements        | `.agent/requirements.md`                           |
+| Testing Strategy    | `.agent/directives/testing-strategy.md`            |
+| Requirements        | `.agent/directives/requirements.md`                |
 | ADR Summary         | `docs/architectural_decision_records/SUMMARY.md`   |
 
 ---

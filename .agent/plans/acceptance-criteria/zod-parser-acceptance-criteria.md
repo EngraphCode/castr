@@ -1,7 +1,7 @@
 # Zod 4 -> IR Parser Acceptance Criteria
 
-> Detailed view of `.agent/requirements.md` (Zod -> IR focus and union semantics)
-> and `.agent/plans/zod4-parser-plan.md`. If any conflict exists, requirements win.
+> Detailed view of `.agent/directives/requirements.md` (Zod -> IR focus and union semantics)
+> and `.agent/plans/archive/zod4-parser-plan-3.2-complete.md`. If any conflict exists, requirements win.
 
 ---
 

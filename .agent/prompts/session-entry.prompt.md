@@ -16,180 +16,118 @@ Any Input Format → Parser → IR (CastrDocument) → ts-morph Writers → Any 
 
 ## 🔴 Critical Rules (Non-Negotiable)
 
-### 1. The Cardinal Rule
-
-> After parsing, input documents are conceptually discarded. **Only the Castr Model matters.**
-
-### 2. NO CONTENT LOSS
-
-> **This principle is inviolable.** The format can change, the content cannot.
-
-### 3. Strict-By-Default and Fail-Fast
-
-> **INVIOLABLE:** All code must be STRICT by default and FAIL FAST on errors. NO exceptions.
-
-- Objects use `.strict()` unless `additionalProperties: true`
-- Unknown types MUST throw, never fall back to `z.unknown()`
-- No silent coercion, no partial output
-- Use `.parse()` (throws) not `.safeParse()` (returns)
-
-### 4. Zod 4 Only
-
-> **Zod 3 syntax MUST be rejected** with clear, descriptive error messages.
-
-| Zod 3 (❌ Reject)    | Zod 4 (✅ Accept) |
-| -------------------- | ----------------- |
-| `z.string().email()` | `z.email()`       |
-| `z.string().url()`   | `z.url()`         |
-| `z.number().int()`   | `z.int()`         |
-
-### 5. Code Generation via ts-morph
-
-Writers use **ts-morph** for code generation—no string templates or concatenation.
-
-### 6. No String Manipulation for Parsing
-
-> **INVIOLABLE:** All parsing must use proper AST analysis (ts-morph). String manipulation carries no semantic meaning and is banned.
-
-### 7. Type Discipline
-
-- **FORBIDDEN:** `as` (except `as const`), `any`, `!`, disabled checks
-- **REQUIRED:** Library types first, proper type guards
-
-### 8. TDD at ALL Levels (Mandatory)
-
-Write failing tests FIRST—unit, integration, AND E2E.
-
-### 9. Quality Gates (All Must Pass)
-
-```bash
-pnpm clean && pnpm install && pnpm build && pnpm type-check && \
-pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && \
-pnpm test:gen && pnpm character
-```
-
-> **Note:** All commands run from `lib/` directory.
+1. **Cardinal Rule:** After parsing, input is discarded. Only the Castr Model matters.
+2. **NO CONTENT LOSS:** Format can change, content cannot.
+3. **Strict-By-Default:** Objects use `.strict()`, unknown types throw.
+4. **Zod 4 Only:** `z.email()` not `z.string().email()`.
+5. **ts-morph for Code Gen:** No string templates.
+6. **No String Manipulation:** All parsing via AST analysis.
+7. **Type Discipline:** No `as`, `any`, `!` escape hatches.
+8. **TDD at ALL Levels:** Write failing tests FIRST.
+9. **Quality Gates:** All must pass before merge.
 
 ---
 
-## 📋 Current Focus: Session 3.2 — Zod → IR Parser
+## 📋 Current Focus: Complexity Refactoring
 
-> [!WARNING]
-> **BUILD IS CURRENTLY BROKEN.** The next session MUST start by fixing build errors before any new work.
+> **Status:** 🔄 In Progress  
+> **Plan:** [string-manipulation-remediation.md](../plans/active/string-manipulation-remediation.md)
 
-### Build Status
+### What Happened
 
-```
-❌ DTS Build Error in zod-parser.primitives.ts
-   - Line 163: Unused function 'parseZodExpression'
-   - Line 313: Type comparison error between 'literal' and 'null'
-```
+1. **Directory restructure complete** — Created `src/schema-processing/` with 6 subdirectories
+2. **ESLint string rules created** — 23 patterns, currently disabled
+3. **Complexity violations reduced** — Down from 51 to 35 remaining
+4. **Refactoring in progress** — Zod writer + parser constraints extracted, type-check blocker resolved
 
-### Completed Sessions
-
-| Session | Focus                     | Status      |
-| ------- | ------------------------- | ----------- |
-| 2.1-2.9 | OpenAPI ↔ Zod Pipeline    | ✅ Complete |
-| 3.1a    | IR Semantic Audit         | ✅ Complete |
-| 3.1b    | Zod 4 IR→Zod Improvements | ✅ Complete |
-
-### Current Session: 3.2 — Zod → IR Parser (🎯 Active)
-
-**Goal:** Parse Zod 4 schemas and reconstruct the IR.
-
-**Status:** Phase 2 implementation in progress, build broken
-
-**What's Done:**
-
-- ✅ Phase 1: All fixture files created (10 happy-path, 1 sad-path)
-- ✅ Core parser architecture established (dispatcher pattern)
-- ✅ Individual parser modules created (primitives, object, composition, union, intersection, references)
-- ❌ Build errors in `zod-parser.primitives.ts`
-- ❌ Lint errors in multiple files (complexity, unused vars)
-
-**Plan:** [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
-
-### Upcoming: Session 3.3 — True Round-Trip
-
-Once the parser is complete, validate: `OpenAPI → Zod → OpenAPI` is byte-identical.
-
----
-
-## 📂 Key Files for Session 3.2
-
-| Location               | Purpose                                |
-| ---------------------- | -------------------------------------- |
-| `lib/src/parsers/zod/` | Zod parser implementation (to build)   |
-| `lib/src/writers/zod/` | Zod writer (generates output we parse) |
-| `lib/src/ir/schema.ts` | IR types we reconstruct                |
-
----
-
-## 🚀 Starting the Next Session
-
-### 1. Fix Build (BLOCKING)
+### Quick Start Next Session
 
 ```bash
 cd lib
-pnpm build  # Will fail - fix the errors
+
+# 1. Verify current state
+pnpm type-check && pnpm test  # Both should pass
+
+# 2. See remaining violations
+pnpm lint 2>&1 | grep "error" | head -20
+
+# 3. Continue refactoring (see plan for priority order)
 ```
-
-Fix in `zod-parser.primitives.ts`:
-
-- Remove or use `parseZodExpression` (line 163)
-- Fix type comparison at line 313
-
-### 2. Fix Lint Errors
-
-```bash
-pnpm lint
-```
-
-Common issues to fix:
-
-- Unused `chainedMethods` params → prefix with `_`
-- Single-line if bodies → add braces
-- Cognitive complexity → split functions
-
-### 3. Run Full Quality Gates
-
-```bash
-pnpm build && pnpm type-check && pnpm lint && pnpm format:check
-```
-
-### 4. Continue Implementation
-
-Read the updated plan: [zod4-parser-plan.md](../plans/zod4-parser-plan.md)
 
 ---
 
-## ⚠️ Key Challenges Discovered
+## 📂 Key Files
 
-1. **Dependency cycles** between parser modules — need careful import management
-2. **CastrSchemaProperties wrapper required** — use `new CastrSchemaProperties(obj)`
-3. **CastrSchemaNode required everywhere** — use `createDefaultMetadata()`
-4. **Strict TypeScript** — explicit `| undefined` for optional props
-5. **Low cognitive complexity limits** — max 12, must split large functions
+| File                                                            | Purpose                                                |
+| --------------------------------------------------------------- | ------------------------------------------------------ |
+| `lib/src/schema-processing/`                                    | Schema code directory (parsers, writers, ir)           |
+| `lib/src/schema-processing/writers/zod/properties.ts`           | Extracted pure functions                               |
+| `lib/src/schema-processing/writers/zod/properties.unit.test.ts` | Unit tests for extracted functions                     |
+| `.agent/plans/active/string-manipulation-remediation.md`        | **Full plan with priorities**                          |
+| `lib/eslint.config.ts`                                          | ESLint config (string rules at line 247, set to 'off') |
+
+---
+
+## 🎯 Next Session Tasks (Priority Order)
+
+### 1. Continue High-Impact Files
+
+Use `pnpm lint` to identify the highest-violation files and apply the
+Extract → Test → Compose pattern (see below) to each.
+
+---
+
+## ⚠️ Pattern to Follow: Extract → Test → Compose
+
+For each complex function:
+
+```typescript
+// 1. Write failing test FIRST (TDD)
+describe('extractFormat', () => {
+  it('extracts email format', () => {
+    expect(extractFormat(node)).toBe('email');
+  });
+});
+
+// 2. Extract pure function from original
+export function extractFormat(node: Node): string | undefined { ... }
+
+// 3. Update original to use extracted function
+function handleStringFormatOrPattern(node: Node): void {
+  const format = extractFormat(node);  // ← Uses extracted function
+  ...
+}
+```
+
+---
+
+## 📊 Quality Gate Status
+
+| Gate          | Status | Notes                              |
+| ------------- | ------ | ---------------------------------- |
+| build         | ✅     |                                    |
+| type-check    | ✅     |                                    |
+| lint          | ❌     | 35 complexity violations remaining |
+| test          | ✅     | 1,010+ tests pass                  |
+| test:snapshot | ✅     |                                    |
+| character     | ✅     | 152 tests                          |
 
 ---
 
 ## 📚 Essential Reading
 
-| Priority | Document                                                                            | Purpose               |
-| -------- | ----------------------------------------------------------------------------------- | --------------------- |
-| 1        | [zod4-parser-plan.md](../plans/zod4-parser-plan.md)                                 | Session 3.2 plan      |
-| 2        | [RULES.md](../RULES.md)                                                             | Engineering standards |
-| 3        | [testing-strategy.md](../testing-strategy.md)                                       | TDD at all levels     |
-| 4        | [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md) | Zod output patterns   |
-| 5        | [roadmap.md](../plans/roadmap.md)                                                   | Strategic context     |
+| Priority | Document                                                                                 | Purpose                               |
+| -------- | ---------------------------------------------------------------------------------------- | ------------------------------------- |
+| 1        | [string-manipulation-remediation.md](../plans/active/string-manipulation-remediation.md) | Full plan with file list              |
+| 2        | [RULES.md](../directives/RULES.md)                                                       | Single responsibility, pure functions |
+| 3        | [testing-strategy.md](../directives/testing-strategy.md)                                 | TDD approach                          |
 
 ---
 
-## ⚠️ Common Pitfalls (Session 3.2 Specific)
+## ⚠️ Decisions Made
 
-1. **Accepting Zod 3 syntax** — ALWAYS detect and reject with clear errors
-2. **Partial parsing** — Never return incomplete IR, fail fast
-3. **Ignoring getter syntax** — Critical for circular reference detection
-4. **Forgetting .meta()** — Must extract all metadata to IR
-5. **Skipping .strict()** — Must detect and map to `additionalProperties: false`
-6. **Incremental file patches** — Led to file corruption; prefer full file rewrites when making significant changes
+1. **`schema-processing/` directory created** — Groups all schema code for ESLint scoping
+2. **String ESLint rules disabled** — Re-enable after complexity refactoring complete
+3. **Legacy complexity exceptions removed** — Down from 51 to 35 violations
+4. **TDD approach for extraction** — Write tests before extracting functions
+5. **Directive files moved** — All foundation docs now live in `.agent/directives/`

@@ -14,9 +14,9 @@ import { describe, expect, it } from 'vitest';
 import { resolve } from 'node:path';
 import type { HeaderObject, PathsObject } from 'openapi3-ts/oas31';
 
-import { buildIR } from '../../src/parsers/openapi/index.js';
+import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
-import { writeOpenApi } from '../../src/writers/openapi/index.js';
+import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.js';
 
 // ============================================================================
 // Bug #1: Header Description Loss

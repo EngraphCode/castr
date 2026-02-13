@@ -19,7 +19,7 @@ import { dirname } from 'node:path';
 import { resolveConfig } from 'prettier';
 
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { getZodClientTemplateContext } from '../context/index.js';
+import { getZodClientTemplateContext } from '../schema-processing/context/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import type { CliOptions } from './helpers.js';
 import {

@@ -1,4 +1,4 @@
-import { getZodSchema } from '../../src/conversion/zod/index.js';
+import { getZodSchema } from '../../src/schema-processing/conversion/zod/index.js';
 import { test, expect } from 'vitest';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';

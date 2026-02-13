@@ -12,8 +12,8 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
-import { buildIR } from '../../src/parsers/openapi/index.js';
-import { writeOpenApi } from '../../src/writers/openapi/openapi-writer.js';
+import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
+import { writeOpenApi } from '../../src/schema-processing/writers/openapi/openapi-writer.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

@@ -193,3 +193,5 @@ If we can validate inputs, outputs, and conversion edges consistently, the rest 
    - IR validation (structural + semantic)
    - output validation (OpenAPI/JSON Schema compliance)
 3. Add a fixture provenance tracker (source repo, file path, license).
+
+> Note: `example-oak-sdk-output-ts-metadata.ts` is a **single illustrative output** (metadata TS) among many expected outputs. It should not be treated as a fixture or a complete target; we will also need Zod, JSON Schema, OpenAPI, and other outputs as requirements clarify.

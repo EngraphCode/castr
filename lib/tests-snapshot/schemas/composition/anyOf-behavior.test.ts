@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
-import { getZodSchema } from '../../../src/conversion/zod/index.js';
+import { getZodSchema } from '../../../src/schema-processing/conversion/zod/index.js';
 import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../../../src/index.js';
 

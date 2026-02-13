@@ -8,7 +8,7 @@ export { getOpenApiDependencyGraph } from './shared/index.js';
 // Replaced by prepareOpenApiDocument helper (internal) which uses SwaggerParser
 export * from './endpoints/index.js';
 export { maybePretty } from './shared/index.js';
-export * from './context/index.js';
+export * from './schema-processing/context/index.js';
 export { logger } from './shared/index.js';
 export { isMcpTool, isMcpToolInput, isMcpToolOutput } from './validation/mcp-type-guards.js';
 export {
@@ -17,8 +17,8 @@ export {
   type McpValidationErrorContext,
 } from './validation/mcp-error-formatting.js';
 // Canonical IR → OpenAPI writer (consolidated from generators/openapi and context/converter)
-export { writeOpenApi } from './writers/openapi/index.js';
+export { writeOpenApi } from './schema-processing/writers/openapi/index.js';
 // Deprecated alias for backward compatibility
-export { writeOpenApi as generateOpenAPI } from './writers/openapi/index.js';
+export { writeOpenApi as generateOpenAPI } from './schema-processing/writers/openapi/index.js';
 export { loadOpenApiDocument } from './shared/load-openapi-document/orchestrator.js';
-export { getZodSchema } from './conversion/zod/index.js';
+export { getZodSchema } from './schema-processing/conversion/zod/index.js';

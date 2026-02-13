@@ -1,5 +1,5 @@
 import { toBoolean } from '../shared/utils/index.js';
-import type { TemplateContextOptions } from '../context/index.js';
+import type { TemplateContextOptions } from '../schema-processing/context/index.js';
 import type { parseCliOptions } from './helpers.js';
 
 /**

@@ -1,7 +1,7 @@
 # .agent Directory - Navigation Guide
 
 **Purpose:** Documentation and planning for @engraph/castr  
-**Last Updated:** January 2026
+**Last Updated:** February 2026
 
 ---
 
@@ -13,25 +13,25 @@
 
 ---
 
-## 📚 Foundation Documents
+## 📚 Foundation Documents (Directives)
 
-| Document                                       | Purpose                | Key Question                      |
-| ---------------------------------------------- | ---------------------- | --------------------------------- |
-| [VISION.md](VISION.md)                         | Strategic direction    | _Where are we going?_             |
-| [requirements.md](requirements.md)             | Decision guidance      | _How should I decide?_            |
-| [RULES.md](RULES.md)                           | Engineering standards  | _What does excellence look like?_ |
-| [testing-strategy.md](testing-strategy.md)     | TDD & test methodology | _How do we prove correctness?_    |
-| [DEFINITION_OF_DONE.md](DEFINITION_OF_DONE.md) | Quality gates          | _How do we verify we're done?_    |
+| Document                                                  | Purpose                | Key Question                      |
+| --------------------------------------------------------- | ---------------------- | --------------------------------- |
+| [VISION.md](directives/VISION.md)                         | Strategic direction    | _Where are we going?_             |
+| [requirements.md](directives/requirements.md)             | Decision guidance      | _How should I decide?_            |
+| [RULES.md](directives/RULES.md)                           | Engineering standards  | _What does excellence look like?_ |
+| [testing-strategy.md](directives/testing-strategy.md)     | TDD & test methodology | _How do we prove correctness?_    |
+| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md) | Quality gates          | _How do we verify we're done?_    |
 
 **Read `RULES.md` first** — it contains the Cardinal Rule and engineering principles.
 
 ---
 
-## 🎯 Current State (January 2026)
+## 🎯 Current State (February 2026)
 
-- **Quality Gates:** 10/10 passing (954 tests)
-- **Architecture:** IR-based with canonical AST
-- **Next Work:** IR Alignment phases (see roadmap)
+- **Quality Gates:** 10/10 passing (1,010+ tests)
+- **Architecture:** IR-based with canonical structure
+- **Active Work:** Phase 3.3a — Complexity Refactoring (35 lint violations remaining)
 
 ---
 
@@ -39,11 +39,12 @@
 
 ```text
 .agent/
-├── VISION.md              ← Strategic direction
-├── RULES.md               ← Engineering standards (extensive)
-├── requirements.md        ← Decision-making guide
-├── testing-strategy.md    ← Test methodology
-├── DEFINITION_OF_DONE.md  ← Quality gates
+├── directives/            ← Foundation documents
+│   ├── VISION.md              ← Strategic direction
+│   ├── RULES.md               ← Engineering standards (extensive)
+│   ├── requirements.md        ← Decision-making guide
+│   ├── testing-strategy.md    ← Test methodology
+│   └── DEFINITION_OF_DONE.md  ← Quality gates
 │
 ├── prompts/
 │   ├── session-entry.prompt.md  ← Start here for new sessions
@@ -51,9 +52,12 @@
 │
 ├── plans/
 │   ├── roadmap.md               ← Current state & next steps
-│   └── future-*.md              ← Future work plans
+│   ├── archive/                 ← Completed plans
+│   └── acceptance-criteria/     ← Acceptance criteria docs
 │
-└── research/                    ← Historical research documents
+├── reference/                   ← Permanent reference material
+├── research/                    ← Historical research documents
+└── rules/                       ← Cursor/IDE rules
 ```
 
 ---
