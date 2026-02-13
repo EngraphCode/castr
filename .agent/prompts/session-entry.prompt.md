@@ -42,6 +42,17 @@ Notes:
 
 **ACTIVE PLAN: [3.3a.02 — ESLint Enforcement Redesign](../plans/active/3.3a-02-eslint-enforcement-redesign.md)** — open this file first.
 
+#### Plan lifecycle
+
+There is always exactly one active plan in `.agent/plans/active/` (plus a README). When a plan is complete:
+
+1. Move the finished plan to `.agent/plans/current/complete/`.
+2. Copy the next queued plan (from `.agent/plans/current/session-3.3a/`) into `.agent/plans/active/`.
+3. Update the status in [roadmap.md](../plans/roadmap.md) execution table.
+4. Update this file's "ACTIVE PLAN" link and context to point at the new plan.
+
+The plan's **Successor** field tells you which plan comes next.
+
 #### Context (what's already done)
 
 3.3a.01 (ADR-026 Scope Definition) is complete. It produced:
