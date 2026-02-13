@@ -6,6 +6,19 @@
 
 ---
 
+## Acceptance Criteria (Formal Checklists)
+
+Acceptance criteria documents expand these requirements into concrete checklists for tests and validation.  
+If any conflict exists, **this requirements document is the source of truth**.
+
+| Area                 | Acceptance Criteria                                            |
+| -------------------- | -------------------------------------------------------------- |
+| OpenAPI input/output | `.agent/acceptance-criteria/openapi-acceptance-criteria.md`    |
+| Zod writer output    | `.agent/acceptance-criteria/zod-output-acceptance-criteria.md` |
+| Zod parser input     | `.agent/acceptance-criteria/zod-parser-acceptance-criteria.md` |
+
+---
+
 ## OpenAPI Compliance (Non-negotiable)
 
 The system is NOT ready for production until these criteria are met.
@@ -185,23 +198,23 @@ ALL 3.0.x input MUST be normalized to 3.1 IR:
 
 The IR MUST be capable of representing EVERY field listed in sections 2 and 3.
 
-**P1 BLOCKING Gaps (9 fields):**
+**Regression-critical fields (implemented):** these fields exist in IR and MUST remain supported end-to-end (parse → IR → write) with tests proving preservation.
 
 **CastrSchema Interface:**
 
-- ❌ `xml` (XMLObject) — OpenAPI extension for XML serialization
-- ❌ `externalDocs` (ExternalDocumentationObject) — at schema level
-- ❌ `prefixItems` (SchemaObject[]) — JSON Schema 2020-12 tuple validation
-- ❌ `unevaluatedProperties` (boolean | SchemaObject) — JSON Schema 2020-12
-- ❌ `unevaluatedItems` (boolean | SchemaObject) — JSON Schema 2020-12
-- ❌ `dependentSchemas` (Record<string, SchemaObject>) — JSON Schema 2020-12
-- ❌ `dependentRequired` (Record<string, string[]>) — JSON Schema 2020-12
-- ❌ `minContains` (number) — JSON Schema 2020-12
-- ❌ `maxContains` (number) — JSON Schema 2020-12
+- ✅ `xml` (XMLObject) — OpenAPI extension for XML serialization
+- ✅ `externalDocs` (ExternalDocumentationObject) — at schema level
+- ✅ `prefixItems` (SchemaObject[]) — JSON Schema 2020-12 tuple validation
+- ✅ `unevaluatedProperties` (boolean | SchemaObject) — JSON Schema 2020-12
+- ✅ `unevaluatedItems` (boolean | SchemaObject) — JSON Schema 2020-12
+- ✅ `dependentSchemas` (Record<string, SchemaObject>) — JSON Schema 2020-12
+- ✅ `dependentRequired` (Record<string, string[]>) — JSON Schema 2020-12
+- ✅ `minContains` (number) — JSON Schema 2020-12
+- ✅ `maxContains` (number) — JSON Schema 2020-12
 
 **IRMediaType Interface:**
 
-- ❌ `encoding` (Record<string, EncodingObject>) — multipart/form-data support
+- ✅ `encoding` (Record<string, EncodingObject>) — multipart/form-data support
 
 **Verified Complete:**
 
@@ -286,14 +299,15 @@ This keeps behavior strict, predictable, and lossless while still honoring expli
 ## Current Focus: OpenAPI ↔ Zod Pipeline
 
 > [!NOTE]
-> **Phase 2 complete.** Now focused on bidirectional transforms and round-trip validation.
+> **Phase 2 complete.** Now focused on strict bidirectional transforms and end-to-end round-trip validation (Session 3.3).
 
 | Priority | Focus                      | Status      |
 | -------- | -------------------------- | ----------- |
 | 1        | OpenAPI → Zod              | ✅ Complete |
-| 2        | Zod → IR (Parser)          | 🔲 Next     |
-| 3        | True Round-Trip Validation | 🔲 Next     |
-| 4        | JSON Schema                | 🔲 Deferred |
+| 2        | Zod → IR (Parser)          | ✅ Complete |
+| 3        | ADR-026 + Strictness       | 🔄 Active   |
+| 4        | True Round-Trip Validation | 🔄 Active   |
+| 5        | JSON Schema                | 🔲 Deferred |
 
 ---
 

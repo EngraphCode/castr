@@ -232,7 +232,7 @@ pnpm install
 pnpm test
 ```
 
-See `.agent/RULES.md` for engineering standards.
+See `.agent/directives/RULES.md` for engineering standards.
 
 ## License
 

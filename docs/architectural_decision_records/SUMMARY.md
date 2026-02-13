@@ -1,6 +1,6 @@
 # Architectural Decision Records - Summary
 
-**Last Updated:** January 2026  
+**Last Updated:** 2026-02-13  
 **Project:** @engraph/castr  
 **Status:** Stable - All quality gates passing
 
@@ -10,7 +10,7 @@
 
 This library implements an **Intermediate Representation (IR) architecture** for universal schema conversion. All input formats are parsed into a canonical IR, and all outputs are transforms from that representation.
 
-**See:** `.agent/VISION.md` for strategic vision and roadmap.
+**See:** `.agent/directives/VISION.md` for strategic vision and roadmap.
 
 ---
 
@@ -21,7 +21,7 @@ This library implements an **Intermediate Representation (IR) architecture** for
 │                           INPUT LAYER                                │
 │  ┌───────────────┐ ┌───────────────┐ ┌───────────────┐              │
 │  │ OpenAPI Parser│ │  Zod Parser   │ │ JSON Schema   │              │
-│  │  (3.0, 3.1)   │ │    (future)   │ │   (future)    │              │
+│  │  (3.0, 3.1)   │ │    (v4)      │ │   (future)    │              │
 │  └───────┬───────┘ └───────┬───────┘ └───────┬───────┘              │
 │          └─────────────────┼─────────────────┘                       │
 │                            ▼                                         │
@@ -39,7 +39,7 @@ This library implements an **Intermediate Representation (IR) architecture** for
 │                           OUTPUT LAYER                               │
 │          ┌─────────────────┼─────────────────┐                       │
 │  ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐              │
-│  │Zod Transformer│ │  TS Types     │ │  MCP Tools    │              │
+│  │  Zod Writer   │ │  TS Types     │ │  MCP Tools    │              │
 │  └───────────────┘ └───────────────┘ └───────────────┘              │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -118,10 +118,10 @@ This library implements an **Intermediate Representation (IR) architecture** for
 
 ## Related Documents
 
-| Document                     | Purpose                         |
-| ---------------------------- | ------------------------------- |
-| `.agent/VISION.md`           | Strategic direction and roadmap |
-| `.agent/requirements.md`     | Agent decision-making guide     |
-| `.agent/RULES.md`            | Engineering standards           |
-| `.agent/testing-strategy.md` | Test methodology                |
-| `./README.md`                | ADR guide and template          |
+| Document                                | Purpose                         |
+| --------------------------------------- | ------------------------------- |
+| `.agent/directives/VISION.md`           | Strategic direction and roadmap |
+| `.agent/directives/requirements.md`     | Agent decision-making guide     |
+| `.agent/directives/RULES.md`            | Engineering standards           |
+| `.agent/directives/testing-strategy.md` | Test methodology                |
+| `./README.md`                           | ADR guide and template          |

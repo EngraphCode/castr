@@ -6,7 +6,7 @@
 
 > [!CAUTION]
 > **This plan CANNOT proceed until OpenAPI Compliance is complete.**  
-> See [openapi-acceptance-criteria.md](../plans/acceptance-criteria/openapi-acceptance-criteria.md) for the formal specification.  
+> See [openapi-acceptance-criteria.md](../acceptance-criteria/openapi-acceptance-criteria.md) for the formal specification.  
 > Active work: [openapi-compliance-plan.md](./openapi-compliance-plan.md)
 
 ---

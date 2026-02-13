@@ -4,8 +4,6 @@
  * These tests define ACCEPTANCE CRITERIA for Phase 1 implementation.
  * They test WHAT should work, not HOW it works (that's what unit tests do).
  *
- * Based on: .agent/analysis/E2E-TEST-MATRIX.md
- *
  * Test Priorities:
  * - P0 (8 scenarios): MUST pass before Phase 1 complete
  * - P1 (4 scenarios): SHOULD pass (nice to have)

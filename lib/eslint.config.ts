@@ -241,7 +241,7 @@ export default defineConfig(
   // Session 3.3a: String manipulation detection
   // Configured as ERRORS - no warnings policy
   // Scoped to schema-processing/ only - utilities like shared/ may use strings legitimately
-  // See: .agent/plans/string-manipulation-remediation.md
+  // See: .agent/plans/roadmap.md (Session 3.3a)
   {
     files: ['src/schema-processing/**/*.ts'],
     ignores: testGlobs,

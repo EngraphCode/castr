@@ -4,7 +4,7 @@ This guide provides comprehensive instructions for integrating `@engraph/castr` 
 
 ## Architecture
 
-This library uses an **Caster Model architecture** where OpenAPI specs are parsed into a canonical internal representation, then transformed into MCP tool definitions. See `.agent/VISION.md` for the strategic vision.
+This library uses an **Caster Model architecture** where OpenAPI specs are parsed into a canonical internal representation, then transformed into MCP tool definitions. See `.agent/directives/VISION.md` for the strategic vision.
 
 ## Table of Contents
 
@@ -689,6 +689,6 @@ describe('MCP tool validation', () => {
 
 - Report issues: [GitHub Issues](https://github.com/jimcresswell/openapi-zod-validation/issues)
 - Ask questions: [GitHub Discussions](https://github.com/jimcresswell/openapi-zod-validation/discussions)
-- Architecture: See `.agent/VISION.md` for the Caster Model-based conversion architecture
+- Architecture: See `.agent/directives/VISION.md` for the Caster Model-based conversion architecture
 
 **Last Updated:** January 2026

@@ -33,7 +33,7 @@ We currently use `tanu` (v0.2.0) for TypeScript AST manipulation and code genera
    - CodeMeta wraps tanu types
    - Adds unnecessary abstraction layer
    - Makes code harder to understand
-   - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
+   - See also: `.agent/analysis-and-reports/type-assertion-elimination-analysis.md` (tanu boundary assertions)
 
 ### Alternatives Considered
 
@@ -48,7 +48,6 @@ We currently use `tanu` (v0.2.0) for TypeScript AST manipulation and code genera
 - Generate code via string concatenation
 - Use template literals for structure
 - **Rejected:** Fragile, no type safety, hard to maintain
-- Reference: `.agent/analysis/HANDLEBARS_EVALUATION.md`
 
 **Option 3: ts-morph (Accepted)**
 

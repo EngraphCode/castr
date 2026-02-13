@@ -151,20 +151,20 @@ These ADRs establish the following principles:
 
 **Strategic Context:**
 
-- **Strategic Vision (VISION.md):** `.agent/VISION.md` - The N×M format conversion goal
-- **Decision Guidance (requirements.md):** `.agent/requirements.md` - Agent decision-making heuristics
+- **Strategic Vision (VISION.md):** `.agent/directives/VISION.md` - The N×M format conversion goal
+- **Decision Guidance (requirements.md):** `.agent/directives/requirements.md` - Agent decision-making heuristics
 
 **Engineering Standards:**
 
-- **Rules:** `.agent/RULES.md` - Engineering excellence standards
+- **Rules:** `.agent/directives/RULES.md` - Engineering excellence standards
 - **Summary:** `./SUMMARY.md` - Phase 2 architectural decisions summary
-- **Strategic Overview:** `.agent/plans/00-STRATEGIC-OVERVIEW.md`
+- **Roadmap:** `.agent/plans/roadmap.md`
 
 **Core Documents:**
 
-- **Vision:** `.agent/VISION.md`
-- **Requirements:** `.agent/requirements.md`
-- **Rules:** `.agent/RULES.md`
+- **Vision:** `.agent/directives/VISION.md`
+- **Requirements:** `.agent/directives/requirements.md`
+- **Rules:** `.agent/directives/RULES.md`
 
 ## Creating New ADRs
 
@@ -210,9 +210,9 @@ For questions about these decisions:
 1. Read the ADR's "Context" and "Consequences" sections
 2. Check related ADRs linked in the "Related" field
 3. Review the implementation in the codebase
-4. Consult `.agent/VISION.md` for current status
+4. Consult `.agent/directives/VISION.md` for current status
 
 ---
 
-**Last Updated:** January 2026  
-**Next ADR:** 032
+**Last Updated:** 2026-02-13  
+**Next ADR:** 033

@@ -14,7 +14,7 @@ The project needed to transition from direct format-to-format conversion (OpenAP
 
 The key insight: without a canonical Intermediate Representation, converting N formats requires O(N²) converters. With an IR, it requires only O(N) parsers + O(N) transformers = O(2N) = O(N).
 
-**Strategic Vision:** See `.agent/VISION.md` for the full N×M conversion goal and roadmap.
+**Strategic Vision:** See `.agent/directives/VISION.md` for the full N×M conversion goal and roadmap.
 
 ### Problems with Direct Conversion
 
@@ -119,12 +119,12 @@ This decision aligns with:
 
 - **VISION.md**: Implements the N×M conversion architecture
 - **RULES.md**: Follows type safety, engineering excellence principles
-- **Cardinal Rule**: The canonical AST is the single source of truth
+- **Cardinal Rule**: The canonical IR is the single source of truth
 
 ## References
 
-- `.agent/VISION.md` - Strategic vision and roadmap
-- `.agent/RULES.md` - Engineering standards (Cardinal Rule section)
-- `lib/src/context/ir-schema.ts` - IR type definitions
-- `lib/src/context/ir-context.ts` - Schema context types
+- `.agent/directives/VISION.md` - Strategic vision and roadmap
+- `.agent/directives/RULES.md` - Engineering standards (Cardinal Rule section)
+- `lib/src/schema-processing/ir/schema.ts` - IR type definitions
+- `lib/src/schema-processing/context/template-context.ts` - IR-derived template context
 - [ADR-018](./ADR-018-openapi-3.1-first-architecture.md) - OpenAPI 3.1-first decision

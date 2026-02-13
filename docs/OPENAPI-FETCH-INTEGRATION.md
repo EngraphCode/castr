@@ -2,7 +2,7 @@
 
 Deep dive into the `schemas-with-client` template and how it leverages `openapi-fetch` for type-safe, runtime-validated API clients.
 
-This library uses an **Caster Model architecture** for schema conversion. See `.agent/VISION.md` for details.
+This library uses an **Caster Model architecture** for schema conversion. See `.agent/directives/VISION.md` for details.
 
 ## Table of Contents
 
@@ -525,7 +525,7 @@ await api.getPet({ id: '123' }); // Uses operationId
 
 ---
 
-**Architecture:** See `.agent/VISION.md` for the Caster Model-based conversion architecture.
+**Architecture:** See `.agent/directives/VISION.md` for the Caster Model-based conversion architecture.
 
 **Questions or issues?** Please [open an issue](https://github.com/jimcresswell/openapi-zod-validation/issues) on GitHub.
 

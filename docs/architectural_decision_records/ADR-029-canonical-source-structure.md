@@ -97,4 +97,4 @@ lib/src/
 ## References
 
 - [ADR-028: IR→OpenAPI Consolidation](./ADR-028-ir-openapi-consolidation.md)
-- [VISION.md](../../.agent/VISION.md)
+- [VISION.md](../../.agent/directives/VISION.md)

@@ -4,7 +4,7 @@ This guide helps you migrate to `@engraph/castr` from legacy forks or the origin
 
 ## Architecture Note
 
-This library uses an **Caster Model architecture** where all input formats are parsed into a canonical internal representation. See `.agent/VISION.md` for the strategic vision.
+This library uses an **Caster Model architecture** where all input formats are parsed into a canonical internal representation. See `.agent/directives/VISION.md` for the strategic vision.
 
 ## Overview
 
@@ -248,20 +248,20 @@ const users = await api.getUsers();
 
 If you have a large codebase, consider this gradual approach:
 
-1. **Phase 1: Install both packages**
+1. **Migration Phase 1: Install both packages**
 
    ```bash
    npm install openapi-zod-validation
    # Keep @engraph/castr for now
    ```
 
-2. **Phase 2: Generate with new package**
+2. **Migration Phase 2: Generate with new package**
 
    ```bash
    npx openapi-zod-validation ./openapi.yaml -o ./api-client-new.ts --template schemas-with-client
    ```
 
-3. **Phase 3: Update imports gradually**
+3. **Migration Phase 3: Update imports gradually**
 
    ```typescript
    // Old
@@ -272,7 +272,7 @@ If you have a large codebase, consider this gradual approach:
    const api = createApiClient({ baseUrl: '...' });
    ```
 
-4. **Phase 4: Remove old package**
+4. **Migration Phase 4: Remove old package**
 
    ```bash
    npm uninstall @engraph/castr

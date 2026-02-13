@@ -480,4 +480,4 @@ npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status-behavior au
 ---
 
 **Last Updated:** January 2026  
-**Architecture:** See `.agent/VISION.md` for details
+**Architecture:** See `.agent/directives/VISION.md` for details

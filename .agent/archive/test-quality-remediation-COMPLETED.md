@@ -101,32 +101,32 @@ it.skip('REJECTS 3.1.x with boolean exclusiveMinimum (3.0.x syntax) - SCALAR LIM
 
 ## Remediation Tasks
 
-### Phase 1: Remove it.skip Violations ✅ COMPLETE
+### Remediation Phase 1: Remove it.skip Violations ✅ COMPLETE
 
 - [x] Deleted redundant tests (already documented in `scalar-behavior.integration.test.ts`)
 - [x] Added explanatory comment referencing scalar-behavior tests
 - [x] Zero `it.skip` in codebase
 
-### Phase 2: Verify IR Field Flow ✅ COMPLETE
+### Remediation Phase 2: Verify IR Field Flow ✅ COMPLETE
 
 - [x] Created test: OpenAPI Response.description → IR → OpenAPI (Semantic Integrity Proof)
 - [x] Added to `output-coverage.integration.test.ts`
 - [x] 191 roundtrip tests pass
 
-### Phase 3: Enhance Error Messages ✅ COMPLETE
+### Remediation Phase 3: Enhance Error Messages ✅ COMPLETE
 
 - [x] Reviewed: Error formatting already well-tested at unit level (17 tests in `validation-errors.unit.test.ts`)
 - [x] Snapshot test assertions are appropriate — prove rejection behavior without over-constraining message wording
 - [x] No changes needed — follows testing-strategy.md's "test behavior, not implementation" principle
 
-### Phase 4: Fix Character Tests ✅ COMPLETE
+### Remediation Phase 4: Fix Character Tests ✅ COMPLETE
 
 - [x] Deleted obsolete test in edge-cases.char.test.ts (nullable type, dead code path)
 - [x] Deleted obsolete test in error-handling.char.test.ts (invalid parameter, dead code path)
 - [x] Repurposed validation.char.test.ts test to verify strict validation rejection
 - [x] All character tests passing (161 tests)
 
-### Phase 5: Audit All Snapshot Tests ✅ COMPLETE
+### Remediation Phase 5: Audit All Snapshot Tests ✅ COMPLETE
 
 - [x] Performed targeted audit of test suites
 - [x] Removed 1 placeholder test (`expect(true).toBe(true)` in `spec-compliance.test.ts`)

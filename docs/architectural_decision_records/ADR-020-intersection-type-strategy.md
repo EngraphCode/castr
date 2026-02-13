@@ -42,7 +42,7 @@ interface OpenAPIObject {
 
 1. **Extension Preservation:** Need Scalar's `x-ext` and `x-ext-urls` metadata for debugging
 2. **Strict Typing:** Need `openapi3-ts` strict types for conversion/template logic
-3. **Type Safety:** Cannot use `as` casting (violates `.agent/RULES.md`)
+3. **Type Safety:** Cannot use `as` casting (violates `.agent/directives/RULES.md`)
 4. **IntelliSense:** Developers need autocomplete for standard OpenAPI properties
 
 ### Previous Approaches (Rejected)
@@ -176,7 +176,7 @@ export async function loadOpenApiDocument(
 ✅ **IntelliSense:** Full autocomplete for both type systems  
 ✅ **Debugging:** Access to Scalar's `x-ext` and `x-ext-urls` metadata  
 ✅ **Maintainable:** Single type definition, validated once at boundary  
-✅ **Rules Compliant:** No `as` casting, follows `.agent/RULES.md`  
+✅ **Rules Compliant:** No `as` casting, follows `.agent/directives/RULES.md`  
 ✅ **Future-Proof:** Easy to add more type sources if needed
 
 ### Negative
@@ -328,7 +328,7 @@ function processDoc<T extends OpenAPIObject & OpenAPIV3_1.Document>(doc: T) {
 - [TypeScript Handbook: Intersection Types](https://www.typescriptlang.org/docs/handbook/2/objects.html#intersection-types)
 - [TypeScript Handbook: Type Guards](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates)
 - [Effective TypeScript: Item 3 (Understand Type Narrowing)](https://effectivetypescript.com/)
-- `.agent/RULES.md` - Type System Discipline section
+- `.agent/directives/RULES.md` - Type System Discipline section
 
 ---
 

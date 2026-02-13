@@ -239,25 +239,28 @@ Added comprehensive characterisation coverage in `lib/src/characterisation/input
 
 ## Migration Strategy
 
-### Phase 1: Foundation (Session 1) ✅
+> [!NOTE]
+> These "Migration Phases" are local to this ADR and are not the same as `.agent/plans/roadmap.md` phases/sessions.
+
+### Migration Phase 1: Foundation (Migration Session 1) ✅
 
 - Add Scalar dependencies with pinned versions
 - Create guard to prevent SwaggerParser imports
 - Document all existing `prepareOpenApiDocument` usage
 
-### Phase 2: Implementation (Session 2) ✅
+### Migration Phase 2: Implementation (Migration Session 2) ✅
 
 - Implement `loadOpenApiDocument` with Scalar pipeline
 - Add characterisation tests for behavior parity
 - Export new API surface with TSDoc
 
-### Phase 3: Cleanup (Session 3+) 🟡
+### Migration Phase 3: Cleanup (Migration Session 3+) 🟡
 
 - Fix all type/lint errors from migration
 - Update tests to use new pipeline
 - Remove SwaggerParser dependency
 
-### Phase 4: Integration (Session 4+) ⚪
+### Migration Phase 4: Integration (Migration Session 4+) ⚪
 
 - Update `prepareOpenApiDocument` to use new pipeline exclusively
 - Remove legacy code paths

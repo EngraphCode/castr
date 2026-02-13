@@ -189,6 +189,6 @@ These capabilities exist and should be **preserved, not duplicated**:
 
 ## References
 
-- [ADR-022: Building Blocks Architecture](../../docs/architectural_decision_records/ADR-022-building-blocks-no-http-client.md)
-- [ADR-025: HTTP Client DI Integration](../../docs/architectural_decision_records/ADR-025-http-client-di-integration.md)
+- [ADR-022: Building Blocks Architecture](../../../docs/architectural_decision_records/ADR-022-building-blocks-no-http-client.md)
+- [ADR-025: HTTP Client DI Integration](../../../docs/architectural_decision_records/ADR-025-http-client-di-integration.md)
 - [roadmap.md](./roadmap.md) — Session sequencing

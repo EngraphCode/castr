@@ -18,5 +18,5 @@ Edge-case fixtures are minimal, focused tests for specific scenarios.
 
 ## See Also
 
-- [round-trip-validation-plan.md](../../../.agent/plans/round-trip-validation-plan.md)
+- [roadmap.md](../../../.agent/plans/roadmap.md)
 - [ADR-027: Round-Trip Validation](../../../docs/architectural_decision_records/ADR-027-round-trip-validation.md)

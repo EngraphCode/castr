@@ -4,7 +4,7 @@ Complete API documentation for `@engraph/castr`
 
 ## Architecture
 
-This library uses an **Intermediate Representation (IR) architecture** where all input formats (OpenAPI, Zod, JSON Schema) are parsed into a canonical internal representation, and all outputs are transforms from that representation. See `.agent/VISION.md` for the strategic vision.
+This library uses an **Intermediate Representation (IR) architecture** where all input formats (OpenAPI, Zod, JSON Schema) are parsed into a canonical internal representation, and all outputs are transforms from that representation. See `.agent/directives/VISION.md` for the strategic vision.
 
 ## Table of Contents
 
@@ -576,7 +576,7 @@ type GetPetResponse = z.infer<(typeof endpoints)[0]['responses'][200]['schema']>
 
 ---
 
-**Architecture:** See `.agent/VISION.md` for the Caster Model-based conversion architecture.
+**Architecture:** See `.agent/directives/VISION.md` for the Caster Model-based conversion architecture.
 
 **Questions or issues?** Please [open an issue](https://github.com/jimcresswell/openapi-zod-validation/issues) on GitHub.
 

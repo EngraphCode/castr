@@ -5,11 +5,9 @@
 **Accepted** - November 29, 2025  
 **Implementation:** Core library
 
-philosophy
-
 ## Context
 
-During the investigation of test failures (Session 3.7), we discovered that several tests expected this library to generate complete HTTP client implementations (e.g., `createClient<paths>()` from openapi-fetch). This raised a fundamental question: **Should this library generate complete SDKs with HTTP clients, or provide building blocks for consumers to build their own SDKs?**
+During an investigation of test failures, we discovered that several tests expected this library to generate complete HTTP client implementations (e.g., `createClient<paths>()` from openapi-fetch). This raised a fundamental question: **Should this library generate complete SDKs with HTTP clients, or provide building blocks for consumers to build their own SDKs?**
 
 ### Historical Context
 
@@ -91,7 +89,7 @@ These tests **constrained implementation** rather than **proving behavior**, vio
 ❌ **Opinionated SDK structure** (consumers control their architecture)  
 ❌ **HTTP client configuration** (consumers set their defaults)
 
-### Separate SDK Workspace (Phase 5)
+### Separate SDK Workspace (Roadmap Phase 5)
 
 A **separate workspace** will demonstrate how to build complete, production-ready SDKs:
 
@@ -174,7 +172,7 @@ Modern ecosystems favor **composition** of focused libraries over monolithic all
 
 ### Requirements Updated
 
-Added three new requirements (#20-22) clarifying:
+Updated requirements clarifying:
 
 - This library provides building blocks, not complete SDKs
 - Consumers choose their HTTP client
@@ -184,8 +182,8 @@ Added three new requirements (#20-22) clarifying:
 
 - **README.md**: Clarified building-blocks approach
 - **.agent/README.md**: Added library philosophy
-- **.agent/requirements.md**: Added Requirements #20-22
-- **.agent/plans/00-STRATEGIC-OVERVIEW.md**: Added Phase 5 (SDK Workspace)
+- **.agent/directives/requirements.md**: Captures the building-blocks contract and non-goals
+- **.agent/plans/roadmap.md**: Phase 5 planning (SDK workspace / examples)
 
 ### Tests to Fix
 
@@ -201,7 +199,7 @@ The 16 failing tests expected:
 2. **Updated** - If useful, update expectations to match building-blocks architecture
 3. **Removed** - If they only test "has HTTP client", they violate testing philosophy
 
-Per `.agent/testing-strategy.md`:
+Per `.agent/directives/testing-strategy.md`:
 
 > "Tests must prove that the system behaves correctly from the user's or caller's perspective, rather than verifying that specific code paths are executed."
 
@@ -248,13 +246,12 @@ Tests checking for `createClient<paths>()` are **implementation details**, not *
 
 ## Alignment with Requirements
 
-**See:** `.agent/requirements.md`
+**See:** `.agent/directives/requirements.md`
 
-This decision directly implements:
+This decision is encoded in requirements under:
 
-- **Req #20:** Building blocks, not complete SDK ✅
-- **Req #21:** Consumer choice of HTTP client ✅
-- **Req #22:** Separate SDK workspace demonstrates integration ✅
+- "What This Library IS"
+- "What This Library IS NOT"
 
 And supports:
 
@@ -323,11 +320,12 @@ if (data) {
 
 **Requirements:**
 
-- `.agent/requirements.md` - Requirements #20-22 added
+- `.agent/directives/requirements.md` - Building-blocks contract and non-goals
 
 **Strategic Plan:**
 
-- `.agent/plans/00-STRATEGIC-OVERVIEW.md` - Phase 5: Full SDK Workspace
+- `.agent/plans/roadmap.md` - Canonical roadmap
+- `.agent/plans/future/phase-5-ecosystem-expansion.md` - Phase 5 planning
 
 **Documentation:**
 
@@ -336,17 +334,17 @@ if (data) {
 
 **Testing Philosophy:**
 
-- `.agent/testing-strategy.md` - Tests prove behavior, not implementation
-- `.agent/RULES.md` - Engineering excellence principles
+- `.agent/directives/testing-strategy.md` - Tests prove behavior, not implementation
+- `.agent/directives/RULES.md` - Engineering excellence principles
 
 ## Timeline
 
 - **November 29, 2025**: Decision accepted during test failure investigation
-- **Phase 5 (Planned)**: SDK workspace demonstrates full integration (2-3 weeks post-extraction)
+- **Roadmap Phase 5 (Planned)**: SDK workspace demonstrates full integration
 
 ## Success Criteria
 
-✅ Requirements #20-22 documented  
+✅ Requirements documented (building-blocks contract + non-goals)  
 ✅ Documentation updated (README, .agent docs, strategic plan)  
 ✅ ADR created and accepted  
 ✅ Test failures resolved per testing philosophy  

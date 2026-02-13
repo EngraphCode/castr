@@ -7,7 +7,7 @@
 
 ## Context
 
-The Zod → IR parser is the next critical step for round‑trip validation and for ingesting Zod input directly into the IR. We need a clear, strict, and lossless definition of what Zod input is supported, how metadata is handled, and which patterns must be rejected.
+The Zod → IR parser is a critical step for round‑trip validation and for ingesting Zod input directly into the IR. We need a clear, strict, and lossless definition of what Zod input is supported, how metadata is handled, and which patterns must be rejected.
 
 This decision must align with:
 
@@ -86,7 +86,7 @@ This decision must align with:
 
 ## References
 
-- `.agent/requirements.md` (Zod input requirements; union semantics)
-- `.agent/plans/acceptance-criteria/zod-parser-acceptance-criteria.md`
+- `.agent/directives/requirements.md` (Zod input requirements; union semantics)
+- `.agent/acceptance-criteria/zod-parser-acceptance-criteria.md`
 - [ADR-026: No String Manipulation for Parsing](./ADR-026-no-string-manipulation-for-parsing.md)
 - [ADR-031: Zod 4 Output Strategy](./ADR-031-zod-output-strategy.md)

@@ -79,5 +79,5 @@ Based on initial review, these areas likely need attention:
 
 ## References
 
-- [VISION.md](../../.agent/VISION.md) — IR as single source of truth
-- [ADR-023](../../docs/architectural_decision_records/ADR-023-ir-based-architecture.md) — IR architecture
+- [VISION.md](../../directives/VISION.md) — IR as single source of truth
+- [ADR-023](../../../docs/architectural_decision_records/ADR-023-ir-based-architecture.md) — IR architecture

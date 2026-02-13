@@ -1,155 +1,75 @@
 # Definition of Done
 
-**Purpose:** A script that validates all work is complete and the codebase is in a releasable state.
+**Last Updated:** 2026-02-13  
+**Purpose:** The canonical, strict quality gate definition for this repository.
+
+All quality gate failures are blocking at ALL times. No exceptions, no workarounds.
 
 ---
 
-## Current Definition (Updated December 2025)
+## Canonical Commands
 
-**All quality gates must pass. All quality gate issues are blocking at ALL times, regardless of where or why they happen. This rule is absolute and unwavering.**
+- **CI (non-mutating):** `pnpm check:ci`
+- **Local (may mutate to fix):** `pnpm check`
+- **Fast gates (assumes deps installed, non-mutating):** `pnpm qg`
 
-### Quality Gates (Run One at a Time, In Order)
+`pnpm check` is intentionally allowed to modify files (formatting, safe lint autofixes).  
+If you need a non-mutating verification run, use `pnpm check:ci`.
+
+---
+
+## Quality Gates (Expanded, Run From Repo Root)
 
 ```bash
-#!/bin/bash
-# Run this to verify Definition of Done
-# From the repo root
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e  # Exit on first error
-
-echo "🧹 Running clean..."
 pnpm clean
+pnpm install --frozen-lockfile
 
-echo "📦 Running install..."
-pnpm install
-
-echo "🏗️  Running build..."
 pnpm build
-
-echo "🔍 Running type-check..."
+pnpm format:check
 pnpm type-check
-
-echo "🔍 Running lint..."
 pnpm lint
 
-echo "🎨 Running format check..."
-pnpm format:check
-
-echo "✅ Running unit tests..."
 pnpm test
-
-echo "📸 Running snapshot tests..."
-pnpm test:snapshot
-
-echo "⚙️  Running generated code tests..."
-pnpm test:gen
-
-echo "🎭 Running character tests (public API)..."
 pnpm character
-
-echo ""
-echo "✅ ✅ ✅ All quality gates passed! ✅ ✅ ✅"
+pnpm test:snapshot
+pnpm test:gen
+pnpm test:transforms
 ```
-
-### Quick Reference
-
-| Gate | Command | Purpose |
-| ---------------- | -------------------- | ------------------------------ ||
-| Clean | `pnpm clean` | Remove build artifacts |
-| Install | `pnpm install` | Install dependencies |
-| Build | `pnpm build` | Compile ESM + CJS + DTS |
-| Type-check | `pnpm type-check` | TypeScript strict mode |
-| Lint | `pnpm lint` | ESLint rules enforcement |
-| Format | `pnpm format:check` | Prettier formatting |
-| Unit Tests | `pnpm test` | Unit test suite |
-| Snapshot Tests | `pnpm test:snapshot` | Snapshot comparison |
-| Generated Tests | `pnpm test:gen` | Tests on generated code |
-| Character Tests | `pnpm character` | Public API behavior |
-
-### Quick Check (Single Command)
-
-```bash
-pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character
-```
-
-If this exits successfully (exit code 0), the Definition of Done is met.
 
 ---
 
-## Future Extensions
+## Quick Reference
 
-As we complete work items, we will add to the Definition of Done:
+| Gate            | Command                          | Purpose                              |
+| --------------- | -------------------------------- | ------------------------------------ |
+| Clean           | `pnpm clean`                     | Remove build artifacts               |
+| Install         | `pnpm install --frozen-lockfile` | Install deps without lockfile drift  |
+| Build           | `pnpm build`                     | Build all packages                   |
+| Format          | `pnpm format:check`              | Enforce formatting (non-mutating)    |
+| Type-check      | `pnpm type-check`                | TypeScript strict mode               |
+| Lint            | `pnpm lint`                      | ESLint rules enforcement             |
+| Unit tests      | `pnpm test`                      | Primary test suite                   |
+| Character tests | `pnpm character`                 | Public API behavior                  |
+| Snapshot tests  | `pnpm test:snapshot`             | Snapshot comparison                  |
+| Generated tests | `pnpm test:gen`                  | Tests on generated code              |
+| Transform tests | `pnpm test:transforms`           | End-to-end transform pipeline proofs |
 
-### After Type Assertions Fixed
-
-```bash
-# Will add:
-pnpm lint  # Must exit 0
-```
-
-### After Stryker Added
-
-```bash
-# Will add:
-pnpm test:mutation  # Must meet threshold (e.g., 80%)
-```
-
-### After All Enhancements
-
-```bash
-# Final Definition of Done:
-pnpm format
-pnpm build
-pnpm type-check
-pnpm lint          # 0 errors, 0 warnings
-pnpm test -- --run # 100% passing
-pnpm test:mutation # ≥80% mutation score
-pnpm audit         # 0 vulnerabilities
-```
+---
 
 ## Acceptance Metrics (Measurable)
 
-- **100% of fixtures** pass strict validation and output checks
-- **0 tolerance paths**: invalid inputs fail with explicit errors
-- **Determinism**: 0 diff across repeated runs for all fixtures
-- **IR coverage**: all 3.0/3.1 fields from `directives/requirements.md` represented in IR
+- **0 tolerance paths**: invalid/unsupported inputs fail fast with explicit errors
+- **Determinism**: repeated runs produce byte-for-byte identical output for all fixtures
+- **IR coverage**: all OpenAPI 3.0/3.1 fields from `.agent/directives/requirements.md` are representable at the IR boundary
 
 ---
 
-## Status
+## Optional Future Gates (Not Yet Part of DoD)
 
-**All quality gates now pass cleanly.** As of February 2026:
+If/when added, they must be implemented as `package.json` scripts and added to the gate list above in the same PR.
 
-- 1,010+ total tests passing
-- 0 lint warnings
-- 0 type assertions (`as` usage eliminated)
-
----
-
-## Verification
-
-Run the Definition of Done check before:
-
-- Committing significant work
-- Ending a work session
-- Creating a PR (future)
-- Tagging a release (future)
-
----
-
-## Quick Verification Script
-
-Save this as `check-done.sh`:
-
-```bash
-#!/bin/bash
-set -e
-pnpm format && pnpm build && pnpm type-check && pnpm test -- --run && echo "✅ Definition of Done: PASSED"
-```
-
-Then:
-
-```bash
-chmod +x check-done.sh
-./check-done.sh
-```
+- Mutation testing (planned): `pnpm test:mutation`
+- Dependency auditing (planned): `pnpm audit`

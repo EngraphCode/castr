@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Castr Start Right'
+  short_description: 'Start castr sessions with start-right'
+  default_prompt: 'Use $castr-start-right to start this castr session by following .agent/prompts/start-right.prompt.md.'

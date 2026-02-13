@@ -22,20 +22,19 @@ While analyzing `openApiToTypescript.ts` and `openApiToTypescript.helpers.ts`, w
    - SwaggerParser already resolves all operation-level `$ref`s
    - We're not trusting this guarantee
    - Custom resolver logic is redundant and error-prone
-   - Analysis: `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md`
+   - See: `docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md` (current bundling pipeline; supersedes earlier SwaggerParser notes)
 
 3. **`CodeMeta` is a poorly conceived abstraction**
    - Wraps tanu's `t` types with name strings
    - No clear value proposition
    - Adds complexity without benefits
    - Makes code harder to understand and maintain
-   - Analysis: `.agent/analysis/CODEMETA_ANALYSIS.md`
 
 4. **Tanu API usage at wrong abstraction level**
    - Both `t` and `ts` from same library but don't compose well
    - Suggests incorrect API usage pattern
    - ~15-20 assertions at tanu boundary
-   - Analysis: `.agent/docs/type-assertion-elimination-analysis.md`
+   - Analysis: `.agent/analysis-and-reports/type-assertion-elimination-analysis.md`
 
 ### The Problem
 
@@ -197,7 +196,7 @@ Work from Task 3.2 is preserved:
 
 **Requirements:**
 
-- `.agent/requirements.md` - Core requirements this rewrite supports
+- `.agent/directives/requirements.md` - Core requirements this rewrite supports
 
 ## Timeline
 

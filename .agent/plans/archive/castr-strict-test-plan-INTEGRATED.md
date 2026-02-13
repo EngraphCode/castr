@@ -15,8 +15,8 @@ Define a strict-only, fail-fast test plan that ties Oak’s harness expectations
 
 ## Sources (Authoritative)
 
-- `.agent/requirements.md` for strict validation and OpenAPI 3.0/3.1 rules.
-- `.agent/RULES.md` for strictness, fail-fast, and TDD discipline.
+- `.agent/directives/requirements.md` for strict validation and OpenAPI 3.0/3.1 rules.
+- `.agent/directives/RULES.md` for strictness, fail-fast, and TDD discipline.
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/README.md` for Oak contract shape.
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/oak-principles.md` for type discipline.
 - `.agent/research/oak-open-curriculum-sdk/castr-requests/expected-outputs.md` for output examples.
@@ -85,13 +85,13 @@ Define a strict-only, fail-fast test plan that ties Oak’s harness expectations
 - 100% of Oak fixtures pass strict validation and output checks.
 - 0 tolerance paths: invalid inputs fail with explicit errors.
 - Determinism: 0 diff across repeated runs for all fixtures.
-- IR coverage: all 3.0/3.1 fields from `.agent/requirements.md` represented in IR.
+- IR coverage: all 3.0/3.1 fields from `.agent/directives/requirements.md` represented in IR.
 
 ## Execution Checklist
 
-1. Re-read `.agent/requirements.md`, `.agent/RULES.md`, `.agent/testing-strategy.md`, and `.agent/DEFINITION_OF_DONE.md`.
+1. Re-read `.agent/directives/requirements.md`, `.agent/directives/RULES.md`, `.agent/directives/testing-strategy.md`, and `.agent/directives/DEFINITION_OF_DONE.md`.
 2. Write failing tests first (TDD) for each new fixture category.
-3. Run gates one at a time (strict order in `.agent/DEFINITION_OF_DONE.md`).
+3. Run gates one at a time (strict order in `.agent/directives/DEFINITION_OF_DONE.md`).
 4. Record fixture provenance (synthetic vs first-party) in test metadata.
 
 ## Licensing and Provenance

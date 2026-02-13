@@ -1,6 +1,6 @@
 # Coding Standards & Engineering Excellence
 
-**Date:** October 2025 (Updated January 2025)  
+**Date:** October 2025 (Updated: 2026-02-13)  
 **Project:** @engraph/castr  
 **Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
 
@@ -8,7 +8,7 @@
 
 ## 🎯 Core Philosophy: Engineering Excellence Over Speed
 
-> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable.Fail fast, fail hard, be strict at all times.
+> **Mission Statement:** We prioritize long-term stability, maintainability, and type safety over short-term convenience. Excellence is not negotiable. Fail fast, fail hard, be strict at all times.
 
 Types are our friend - they reveal architectural problems that need solving, not nuisances to bypass with escape hatches.
 
@@ -20,7 +20,7 @@ Types are our friend - they reveal architectural problems that need solving, not
 4. **Library Types First** - Defer to `openapi3-ts/oas31` and other domain expert libraries before creating custom types
 5. **Test-Driven Development** - Write failing tests first, always, no exceptions
 6. **Comprehensive Documentation** - TSDoc for all public APIs enables professional self-service adoption
-7. **Quality Gates Are Absolute** - All 8 gates must pass GREEN, no exceptions, no workarounds
+7. **Quality Gates Are Absolute** - All gates defined in `.agent/directives/DEFINITION_OF_DONE.md` must pass GREEN, no exceptions, no workarounds
 
 **The Type Discipline:**
 
@@ -205,6 +205,8 @@ pnpm test:transforms # transform tests -- tests the transform pipeline
 All quality gate issues are blocking at ALL times, regardless of where or why they happen. This rule is absolute and unwavering.
 
 > **See also:** [DEFINITION_OF_DONE.md](DEFINITION_OF_DONE.md) for the full verification script.
+
+**No tolerance policy:** If the system cannot represent something losslessly and deterministically, it MUST fail fast with a helpful error. Silent fallbacks, permissive outputs, and partial success are doctrine violations.
 
 ## Testing Standards
 
@@ -1497,18 +1499,9 @@ export type HttpMethod = (typeof HTTP_METHODS)[number];
  * response definitions, and parameter descriptions. Implements fail-fast philosophy
  * by throwing on critical errors with actionable error messages.
  *
- * Validation levels:
- * - **ERRORS** - Critical issues that prevent MCP generation (operationId missing, etc.)
- * - **WARNINGS** - Recommended improvements (missing descriptions, etc.)
- * - **STRICT** - Treats warnings as errors for maximum spec quality
- *
  * @param openApiDoc - The OpenAPI document to validate
- * @param options - Validation configuration options
- * @param options.skip - Skip validation entirely (for testing or edge cases)
- * @param options.strict - Treat warnings as errors for strict validation
  *
- * @throws {Error} When spec has critical MCP issues with detailed location context
- * @throws {Error} In strict mode, when spec has warnings
+ * @throws {Error} When spec has MCP issues with detailed location context
  *
  * @example Validate before generation
  * ```typescript
@@ -1524,35 +1517,23 @@ export type HttpMethod = (typeof HTTP_METHODS)[number];
  * }
  * ```
  *
- * @example Strict mode for CI/CD
+ * @example Use in CI/CD
  * ```typescript
- * validateMcpReadiness(openApiDoc, { strict: true });
- * // Fails on any warnings, ensuring highest quality specs
- * ```
- *
- * @example Skip validation (not recommended)
- * ```typescript
- * validateMcpReadiness(openApiDoc, { skip: true });
- * // Bypasses all validation checks
+ * validateMcpReadiness(openApiDoc);
  * ```
  *
  * @see {@link generateZodClientFromOpenAPI} for usage in generation pipeline
  * @see {@link https://anthropic.com/mcp} for MCP specification
  *
  * @remarks
- * - Automatically enabled when using --no-client CLI flag
  * - Validates operationId presence (required for MCP tool naming)
  * - Validates success response existence (200 or 201)
  * - Validates security scheme references
- * - Warns about missing descriptions (improves AI context)
  *
  * @since 1.9.0
  * @public
  */
-export function validateMcpReadiness(
-  openApiDoc: OpenAPIObject,
-  options: ValidateMcpReadinessOptions = {},
-): void {
+export function validateMcpReadiness(openApiDoc: OpenAPIObject): void {
   // Implementation
 }
 ````

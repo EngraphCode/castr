@@ -143,7 +143,7 @@ export const reactConfig = defineConfig(
       'react/jsx-uses-react': 'off',
       'react/jsx-uses-vars': 'error',
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'error',
     },
   },
 );
@@ -159,10 +159,7 @@ import { reactConfig } from './react.js';
 import nextPlugin from '@next/eslint-plugin-next';
 
 export const nextConfig = defineConfig(...reactConfig, nextPlugin.configs.recommended, {
-  rules: {
-    '@next/next/no-html-link-for-pages': 'off',
-    '@next/next/no-img-element': 'off',
-  },
+  rules: {},
 });
 ```
 
@@ -218,7 +215,7 @@ export default [
 - Add internal custom rules under `src/rules/`.
 - Include project-specific presets (e.g. `ai`, `server`, `docs`).
 - Add unit tests with `@eslint/plugin-utils` to validate configs.
-- Remove `@ts-expect-error` once TS-ESLint v9 lands.
+- Do not use `@ts-expect-error` in product code. If type limitations are encountered, redesign types or add typed boundary validators.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Extensive real-world examples for using `@engraph/castr`.
 
-This library uses an **Caster Model architecture** for schema conversion. See `.agent/VISION.md` for the strategic vision.
+This library uses an **Caster Model architecture** for schema conversion. See `.agent/directives/VISION.md` for the strategic vision.
 
 ## Table of Contents
 

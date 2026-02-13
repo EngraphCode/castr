@@ -2,7 +2,7 @@
 
 Complete guide to using `@engraph/castr` for generating type-safe API clients with runtime validation.
 
-This library uses an **Intermediate Representation (IR) architecture** - all input formats are parsed into a canonical internal representation, enabling N×M format conversion. See `.agent/VISION.md` for details.
+This library uses an **Intermediate Representation (IR) architecture** - all input formats are parsed into a canonical internal representation, enabling N×M format conversion. See `.agent/directives/VISION.md` for details.
 
 ## Table of Contents
 
@@ -517,7 +517,7 @@ const order = await orders.getOrder({ id: '456' });
 
 ---
 
-**Architecture:** See `.agent/VISION.md` for the Caster Model-based conversion architecture.
+**Architecture:** See `.agent/directives/VISION.md` for the Caster Model-based conversion architecture.
 
 **Questions or issues?** Please [open an issue](https://github.com/jimcresswell/openapi-zod-validation/issues) on GitHub.
 

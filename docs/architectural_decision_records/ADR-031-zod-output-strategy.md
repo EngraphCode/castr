@@ -10,7 +10,7 @@
 With the OpenAPI → Zod pipeline production-ready, we need to formalize decisions about Zod 4 output generation. This ADR documents the strategies for generating idiomatic, type-safe Zod 4 schemas from the IR.
 
 > [!NOTE]
-> **Round-trip (OpenAPI → Zod → OpenAPI) is a validation mechanism**, not a fundamental library requirement. It proves the pipeline works correctly. The Zod → IR parser (future) will need to handle arbitrary Zod input, including unsupported patterns—those concerns are out of scope for the Zod writer.
+> **Round-trip (OpenAPI → Zod → OpenAPI) is a validation mechanism**, not a fundamental library requirement. It proves the pipeline works correctly. The Zod → IR parser exists (Session 3.2) and must remain in lockstep with writer output; doc-level Zod ingestion beyond schema declarations is a separate future scope.
 
 ## Decisions
 
@@ -114,5 +114,5 @@ Skip Zod validations that duplicate what the type already provides:
 
 ## References
 
-- [zod4-advanced-features-research.md](../../.agent/plans/zod4-advanced-features-research.md)
+- [zod4-advanced-features-research.md](../../.agent/reference/zod4-advanced-features-research.md)
 - [Zod 4 documentation](https://zod.dev/v4)

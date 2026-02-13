@@ -1,7 +1,7 @@
-# ADR-026: No String Manipulation for Parsing
+# ADR-026: No String/Regex Heuristics for TS-Source Parsing
 
 **Status:** Accepted (Extended January 2026)  
-**Date:** 2026-01-10 (Updated: 2026-01-24)  
+**Date:** 2026-01-10 (Updated: 2026-02-13)  
 **Deciders:** Engineering Team
 
 ## Context
@@ -15,12 +15,12 @@ During Phase 2, Session 2.3 implementation of the Zod parser, an initial approac
 
 ### Extension (Session 3.3a)
 
-During Session 3.3a, we discovered that the prohibition should extend beyond regex to **all forms of string manipulation**. The Zod parser contained 459 violations including:
+During Session 3.3a, we discovered that the prohibition must extend beyond regex to **string-based heuristics used to infer semantics from TypeScript source text**. These patterns included:
 
 - `getText() === 'z'` — Comparing AST node text instead of using symbol resolution
-- `startsWith()`, `endsWith()`, `includes()` — Pattern matching on strings
-- `slice()`, `split()`, `replace()` — String manipulation for parsing
-- String literal comparisons (`=== 'schema'`) — Semantic checks via text matching
+- `startsWith()`, `endsWith()`, `includes()` — Pattern matching on strings to detect meaning
+- `slice()`, `split()`, `replace()` — Parsing behavior from text instead of the AST
+- string literal comparisons against node text to decide semantics
 
 These patterns are equally fragile because they:
 
@@ -30,11 +30,22 @@ These patterns are equally fragile because they:
 
 ## Decision
 
-**No string manipulation or matching of any kind shall be used for parsing schema source code.**
+**No string/regex heuristics shall be used to derive schema semantics from TypeScript source code when an AST exists.**
+
+This ADR targets **TS-source parsing** (ts-morph + TypeScript compiler APIs), not “data-string parsing” inside OpenAPI/JSON Schema documents.
+
+### Out of Scope (But Still Strict)
+
+Parsing _data strings_ that are part of OpenAPI/JSON Schema (e.g. `$ref`, media types) is allowed when it is:
+
+- centralized,
+- validated,
+- tested,
+- and fail-fast on invalid inputs.
 
 This includes but is not limited to:
 
-| Banned Pattern                      | Reason                                 |
+| Banned Pattern (TS-source parsing)  | Reason                                 |
 | ----------------------------------- | -------------------------------------- |
 | Regex literals (`/pattern/`)        | Fragile, unreadable, inappropriate     |
 | `RegExp` constructor                | Same as above                          |
@@ -45,7 +56,7 @@ This includes but is not limited to:
 | `toLowerCase()`, `toUpperCase()`    | Case normalization                     |
 | `replace()`, `replaceAll()`         | String transformation                  |
 | `match()`, `search()`               | Regex-adjacent methods                 |
-| `=== 'literal'` with strings        | Semantic checks via text               |
+| `=== 'literal'` against node text   | Semantic checks via text               |
 
 The Zod parser (and any future source code parsers) must use proper semantic tooling:
 
@@ -61,7 +72,8 @@ The Zod parser (and any future source code parsers) must use proper semantic too
 ESLint rules in `lib/eslint.config.ts` enforce this ADR:
 
 - Regex literals and `RegExp` constructor are **errors**
-- All string manipulation methods are **errors** in `src/**/*.ts`
+- String/regex heuristic bans are scoped to TS-source parsing modules (where semantics must come from the AST)
+- Data-string parsing utilities are excluded (they must be centralized/validated/tested instead)
 - Test files are excluded (they may assert on string content)
 
 ## Consequences
@@ -82,7 +94,7 @@ ESLint rules in `lib/eslint.config.ts` enforce this ADR:
 
 ## Implementation Notes
 
-Session 3.3a established the ESLint enforcement. Remediation involves:
+Remediation involves:
 
 1. Replacing `getText() === 'z'` with symbol resolution (verify import source)
 2. Replacing string heuristics with AST node type checks
@@ -91,5 +103,5 @@ Session 3.3a established the ESLint enforcement. Remediation involves:
 ## References
 
 - [ADR-014: Migrate tanu to ts-morph](./ADR-014-migrate-tanu-to-ts-morph.md)
-- [Session 3.3a Plan: String Manipulation Remediation](../../.agent/plans/string-manipulation-remediation.md)
+- [Roadmap (Session 3.3a): ADR-026 Enforcement + Strictness Remediation](../../.agent/plans/roadmap.md)
 - [ts-morph documentation](https://ts-morph.com/)

@@ -30,4 +30,4 @@ Consolidate to **single canonical implementation** in `lib/src/writers/openapi/`
 
 ## References
 
-- [VISION.md](../../.agent/VISION.md) — Architecture diagram showing single Output Layer
+- [VISION.md](../../.agent/directives/VISION.md) — Architecture diagram showing single Output Layer

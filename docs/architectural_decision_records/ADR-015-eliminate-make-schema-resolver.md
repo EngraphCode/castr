@@ -81,9 +81,8 @@ function processSchema(schema: SchemaObject | ReferenceObject, components: Compo
 
 Analysis documented in:
 
-- `.agent/analysis/SWAGGER_PARSER_INTEGRATION.md` - SwaggerParser.bundle() guarantees
-- `.agent/docs/type-assertion-elimination-analysis.md` - Type flow analysis
-- `.agent/plans/archive/COMPLETED_WORK.md` - Task 2.3 analysis
+- `docs/architectural_decision_records/ADR-019-scalar-pipeline-adoption.md` - current bundling pipeline notes (supersedes SwaggerParser references)
+- `.agent/analysis-and-reports/type-assertion-elimination-analysis.md` - type flow analysis
 
 ## Decision
 

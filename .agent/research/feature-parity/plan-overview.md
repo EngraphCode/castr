@@ -1,6 +1,10 @@
 # High-Level Plan Overview
 
-## Phase 0: Alignment and instrumentation
+> [!IMPORTANT]
+> This is a historical research document. Its "Phase N" labels are NOT the same as the roadmap phases in `.agent/plans/roadmap.md`.
+> For canonical phases and execution, see `.agent/plans/roadmap.md` and `.agent/plans/future/*`.
+
+## Enablement Step 0: Alignment and instrumentation
 
 - Document current goals (README + VISION updates).
 - Add a dedicated "Oak profile" or config preset for strictness + determinism.
@@ -11,7 +15,7 @@ Exit criteria:
 - Goals documented and aligned.
 - Bundle manifest spec agreed.
 
-## Phase 1: Oak Phase 1 enablement (blocking)
+## Enablement Step 1: Oak enablement (blocking)
 
 - Strict-by-default Zod output.
 - Path format option with colon format support (default curly; no compatibility adapters).
@@ -26,7 +30,7 @@ Exit criteria:
 - Oak fixtures pass `verify-castr-fixtures.ts`.
 - Deterministic output across runs.
 
-## Phase 2: Zod -> OpenAPI + JSON Schema outputs
+## Enablement Step 2: Zod -> OpenAPI + JSON Schema outputs
 
 - Extend Zod parser to ingest `.meta()` / `.openapi()` annotations.
 - Build Zod source -> IR document (schemas + endpoints) pipeline.
@@ -38,7 +42,7 @@ Exit criteria:
 - OpenAPI output from Zod passes validation.
 - Response map JSON Schemas validated.
 
-## Phase 3: tRPC -> IR integration (oak-openapi parity)
+## Enablement Step 3: tRPC -> IR integration (oak-openapi parity)
 
 - Build tRPC router parser with `meta.openapi` extraction.
 - Provide minimal HTTP adapter (or documented pattern) replacing `createOpenApiFetchHandler`.
@@ -48,7 +52,7 @@ Exit criteria:
 
 - `tmp/oak-openapi` can generate and serve OpenAPI without trpc-to-openapi.
 
-## Phase 4: openapi-ts best parts (optional enhancements)
+## Enablement Step 4: openapi-ts best parts (optional enhancements)
 
 - Plugin-style output orchestration and watch mode.
 - Registry input adapters.
@@ -58,7 +62,7 @@ Exit criteria:
 
 - Optional DX improvements land without breaking strict defaults.
 
-## Phase 5: Hardening
+## Enablement Step 5: Hardening
 
 - Round-trip tests for OpenAPI <-> IR <-> OpenAPI.
 - Expanded determinism tests (hash-stable output).

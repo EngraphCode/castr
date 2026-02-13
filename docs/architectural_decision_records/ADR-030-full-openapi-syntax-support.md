@@ -93,4 +93,4 @@ Add to `IRComponent` types:
 - [OpenAPI 3.0.x Schema](../../.agent/reference/openapi_schema/openapi_3_0_x_schema.json)
 - [OpenAPI 3.1.x Schema](../../.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json)
 - [ADR-027: Round-Trip Validation](./ADR-027-round-trip-validation.md)
-- [requirements.md](../../.agent/requirements.md) — Updated with full syntax support constraint
+- [requirements.md](../../.agent/directives/requirements.md) — Updated with full syntax support constraint

@@ -286,4 +286,4 @@ the `result` parameter is guaranteed to be a single file result. This enables:
 
 - `lib/src/rendering/generation-result.ts` - Type definitions and type guards
 - TypeScript Handbook § Discriminated Unions - Official pattern documentation
-- `.agent/RULES.md` § Type Safety - Project type discipline standards
+- `.agent/directives/RULES.md` § Type Safety - Project type discipline standards

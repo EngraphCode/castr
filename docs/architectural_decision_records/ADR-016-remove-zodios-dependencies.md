@@ -42,7 +42,7 @@ Historical reasons:
    - Zodios is stable but not actively developed
    - No support for latest Zod v4 features
    - Uncertain long-term future
-   - Analysis: `.agent/analysis/ZODIOS_CORE_EVALUATION.md`
+   - See: `docs/MIGRATION.md` (migration context)
 
 2. **Not Our Primary Use Case**
    - We need: Zod schemas for validation + MCP tools
@@ -52,7 +52,6 @@ Historical reasons:
 3. **Larger Bundle Size**
    - Zodios + axios: ~35 KB additional
    - Unnecessary for schema-only usage
-   - Analysis: `.agent/analysis/HANDLEBARS_EVALUATION.md`
 
 4. **schemas-with-metadata is Superior**
    - Everything Zodios provides, plus:
@@ -245,7 +244,7 @@ export function validateResponse(endpoint, status, data) { ... }
 
 ## Alignment with Requirements
 
-**See:** `.agent/plans/requirements.md`
+**See:** `.agent/directives/requirements.md`
 
 This decision directly supports:
 
@@ -271,7 +270,7 @@ This decision directly supports:
 
 **Requirements:**
 
-- `.agent/requirements.md` - Requirements alignment
+- `.agent/directives/requirements.md` - Requirements alignment
 
 ## Timeline
 

@@ -5,15 +5,18 @@
 
 ## Tooling
 
-- Vitest
-- React Testing Library
-- Supertest
-- Playwright
-- Stryker
+- Vitest (current)
+
+If/when this repo adds these layers, document the concrete tooling in the same PR:
+
+- HTTP E2E: Supertest (planned)
+- UI E2E: Playwright (planned)
+- Mutation testing: Stryker (planned)
 
 ## Philosophy
 
 - ALWAYS test behaviour, NEVER test implementation
+- **Strictness:** No permissive fallbacks and no partial success. If behavior is unsupported, tests must assert a fail-fast error with helpful context.
 - **Prove System Behaviour**: Tests must prove that the system behaves correctly from the user's or caller's perspective, rather than verifying that specific code paths are executed.
 - **Never Constrain Implementation**: Tests must never be coupled to the internal implementation details. Refactoring internals should never break a test if the external behaviour remains the same.
 - **Tests Must Be Useful**: Every test must provide value by proving a specific requirement or preventing a specific regression. If a test doesn't prove anything useful, delete it.
@@ -329,8 +332,6 @@ it('produces correct result', () => {
 
 - ALWAYS USE TDD at ALL levels
 - Use Vitest for all in-process tests (unit + integration)
-- Use Supertest for HTTP-level E2E tests
-- Use Playwright for UI E2E tests
 - Use the MCP client SDK for MCP protocol E2E tests
 - Use the canonical mocking approaches for the testing tools in use for a given test
 - Tests live next to the code they test, not in a `test` directory
@@ -433,8 +434,8 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 | Document                                                            | Purpose                                     |
 | ------------------------------------------------------------------- | ------------------------------------------- |
-| `directives/requirements.md`                                        | Strict validation and OpenAPI 3.0/3.1 rules |
-| `directives/RULES.md`                                               | Strictness, fail-fast, TDD discipline       |
+| `.agent/directives/requirements.md`                                 | Strict validation and OpenAPI 3.0/3.1 rules |
+| `.agent/directives/RULES.md`                                        | Strictness, fail-fast, TDD discipline       |
 | `research/oak-open-curriculum-sdk/castr-requests/README.md`         | Oak contract shape                          |
 | `research/oak-open-curriculum-sdk/castr-requests/oak-principles.md` | Type discipline                             |
 | `research/feature-parity/*`                                         | Parity gaps and integration targets         |

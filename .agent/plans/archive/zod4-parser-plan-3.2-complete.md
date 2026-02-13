@@ -4,7 +4,7 @@
 **Priority:** 3.2  
 **Prerequisite for:** True Round-Trip Validation (Session 3.3)
 
-> See also: [Acceptance Criteria](./acceptance-criteria/zod-parser-acceptance-criteria.md)
+> See also: [Acceptance Criteria](../../acceptance-criteria/zod-parser-acceptance-criteria.md)
 
 ---
 
@@ -111,7 +111,7 @@ lib/tests-fixtures/zod-parser/
 
 ## References
 
-- [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
-- [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)
-- [Archive: Session 3.1b](./archive/zod4-ir-improvements-plan-3.1b-complete.md)
+- [ADR-031](../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
+- [ADR-032](../../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)
+- [Archive: Session 3.1b](./zod4-ir-improvements-plan-3.1b-complete.md)
 - [Zod 4 Documentation](https://zod.dev/v4)

@@ -27,8 +27,9 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yaml,yml}\"",
     "clean": "turbo clean",
     "fix": "pnpm format && pnpm lint:fix",
-    "qg": "pnpm build && pnpm format && pnpm type-check && pnpm lint && pnpm test:all",
-    "check": "pnpm clean && pnpm install && pnpm qg",
+    "qg": "pnpm build && pnpm format:check && pnpm type-check && pnpm lint && pnpm test:all",
+    "check": "pnpm clean && pnpm install && pnpm fix && pnpm qg",
+    "check:ci": "pnpm clean && pnpm install --frozen-lockfile && pnpm qg",
     "fetch:examples": "turbo fetch:examples"
   },
   "license": "MIT",

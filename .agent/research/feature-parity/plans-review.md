@@ -2,28 +2,42 @@
 
 This review covers all active plans under `.agent/plans` plus archival plans in `.agent/plans/archive`. It focuses on overlap with the new **enablement** goals (Oak use cases + openapi-ts best practices + oak-openapi dependency replacement).
 
+> [!IMPORTANT]
+> Canonical execution is tracked in `.agent/plans/roadmap.md` plus atomic steps under `.agent/plans/current/`.
+> This document is advisory only and may lag behind the current roadmap.
+
 ## 1) Active Plans Summary
 
 ### `roadmap.md`
 
 - **Primary focus:** OpenAPI ↔ Zod core path + round-trip validation.
-- **Next milestone:** Session 3.2 (Zod → IR parser) then 3.3 (true round-trip).
+- **Current milestone:** Session 3.3 (3.3a strictness remediation + 3.3b strict Zod-layer round-trip proofs). Session 3.2 is complete.
 - **Core principles:** strict-by-default, fail-fast, deterministic output, AST-only generation.
 - **Relevance:** aligns with Oak strictness/determinism; does not explicitly cover metadata maps or bundle manifests required by Oak.
 
-### `castr-strict-test-plan.md`
+### Session 3.3a (Roadmap)
+
+- **Primary focus:** ADR-026 enforcement + repo-wide strictness remediation (no escape hatches, no fallbacks).
+- **Relevance:** unblocks strict round-trip proofs by removing heuristic parsing and permissive behavior.
+
+### Session 3.3b (Roadmap)
+
+- **Primary focus:** strict, lossless Zod-layer round-trip proofs (Scenario 3 is the remaining blocker).
+- **Relevance:** this is the proof that the Zod layer participates in strict transforms (or rejects with helpful errors).
+
+### `castr-strict-test-plan-INTEGRATED.md` (archive)
 
 - **Primary focus:** strict-only, fail-fast tests keyed to Oak contract + OpenAPI-TS-inspired fixture categories.
 - **Includes:** determinism, strict validation, IR completeness, and Oak harness integration.
 - **Relevance:** directly aligns with Oak Phase 1 criteria and fixture validation pipeline. Mentions `castr-bundle` as temporary but required when harness expects it.
 
-### `zod4-parser-plan.md`
+### `zod4-parser-plan-3.2-complete.md` (archive)
 
 - **Primary focus:** Zod 4 → IR parsing to enable true round-trip.
 - **Includes:** reject Zod 3 syntax, parse `.meta()`, `.strict()`, getter recursion, constraints, etc.
 - **Relevance:** foundational for Zod → IR; partially overlaps with Zod-OpenAPI replacement (but does **not** cover `.openapi()`/`.meta()` as full OpenAPI doc metadata for endpoints).
 
-### `zod4-advanced-features-research.md`
+### `zod4-advanced-features-research.md` (reference)
 
 - **Primary focus:** research-only on Zod 4 capabilities and future enhancements (codecs, prefaults, zod mini).
 - **Relevance:** informs long-term enhancements; not required for immediate Oak parity.
@@ -75,7 +89,7 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ### Partially Planned
 
-- **Zod → IR parsing** (zod4-parser plan). This enables Zod-based workflows but not full Zod-OpenAPI parity yet.
+- **Zod → IR parsing** (Session 3.2, archived). This enables Zod-based workflows but not full Zod-OpenAPI parity yet.
 - **MCP output** (already present) but needs JSON Schema alignment for Oak response maps.
 
 ### Not Planned (Gaps to Add)
@@ -90,9 +104,10 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ## 4) Potential Plan Conflicts / Risks
 
-1. **AST-only generation vs string-based schema outputs**
-   - Roadmap states "no string manipulation"; rules forbid stringified schema outputs.
-   - Mitigation: avoid string-first APIs; if strings are unavoidable, generate via ts-morph printers only.
+1. **ADR-026 scope vs legitimate string operations**
+   - ADR-026 forbids string/regex heuristics used to infer semantics from TypeScript source text when AST + semantic APIs exist.
+   - Data-string parsing (OpenAPI `$ref`, media types, URL templates) is allowed but must be centralized, validated, tested, and fail-fast.
+   - Mitigation: enforce ADR-026 only in TS-source parsing modules; centralize data-string parsing utilities; continue to avoid string templates for code generation (use ts-morph printers).
 
 2. **Strict-by-default in plans vs writer default behavior**
    - Plans emphasize strict-by-default, but current Zod writer defaults to `.passthrough()` unless `strictObjects` is set.
@@ -107,7 +122,7 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 - Extend `future-artefact-expansion.md` with **Oak enablement outputs** explicitly:
   - operationId maps, path format switch, metadata output options (A/B), bundle manifest **TBD**.
 - Add a short **tRPC → IR plan** (parser + security mapping) to the roadmap.
-- Add **Zod-OpenAPI metadata ingestion** as a Session in Phase 3 or Phase 4.
+- Add **Zod-OpenAPI metadata ingestion** as a Session in the roadmap (post-3.3 parity track; likely Roadmap Phase 4).
 - Add a **strict profile** concept to the roadmap to enforce Oak defaults.
 
 **Update given Oak flexibility:** prefer IR-first outputs and helper APIs over prescriptive string-based public APIs. Output artifacts must be rule-compliant (no `as` except `as const`, no `Object.*`, no stringified schema APIs).

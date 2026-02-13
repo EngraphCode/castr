@@ -80,11 +80,11 @@ Prove the IR architecture works bidirectionally: `OpenAPI ↔ Zod` via `CastrDoc
 
 ## Next Phase: Validation
 
-Session 2.6+ continues in **[round-trip-validation-plan.md](./round-trip-validation-plan.md)**.
+Current plan of record: `.agent/plans/roadmap.md` (Session 3.3).
 
 ---
 
 ## References
 
-- [ADR-026: No Regex for Parsing](../../docs/architectural_decision_records/ADR-026-no-regex-for-parsing.md)
+- [ADR-026: No String/Regex Heuristics for TS-Source Parsing](../../docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md)
 - [Parser README](../../lib/src/parsers/zod/README.md)

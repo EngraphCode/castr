@@ -31,7 +31,9 @@
 
 - **Quality Gates:** 10/10 passing (1,010+ tests)
 - **Architecture:** IR-based with canonical structure
-- **Active Work:** Phase 3.3a — Complexity Refactoring (35 lint violations remaining)
+- **Active Work:** Session 3.3 (strictness remediation + strict Zod-layer round-trip proofs)
+  - Plan of record: `.agent/plans/roadmap.md`
+  - Atomic plans (execute): `.agent/plans/current/*`
 
 ---
 
@@ -46,14 +48,22 @@
 │   ├── testing-strategy.md    ← Test methodology
 │   └── DEFINITION_OF_DONE.md  ← Quality gates
 │
+├── acceptance-criteria/   ← Formal acceptance criteria (checklists)
+│   ├── openapi-acceptance-criteria.md
+│   ├── zod-output-acceptance-criteria.md
+│   └── zod-parser-acceptance-criteria.md
+│
 ├── prompts/
 │   ├── session-entry.prompt.md  ← Start here for new sessions
 │   └── start-right.prompt.md    ← Quick reference
 │
 ├── plans/
-│   ├── roadmap.md               ← Current state & next steps
-│   ├── archive/                 ← Completed plans
-│   └── acceptance-criteria/     ← Acceptance criteria docs
+│   ├── roadmap.md               ← Ties all plans together (plan-of-record)
+│   ├── active/                  ← Single next atomic plan to execute
+│   ├── current/                 ← Queued atomic plans (linear execution steps)
+│   │   └── complete/            ← Completed atomic plans (staged; archive in batches)
+│   ├── future/                  ← Planned future work (Roadmap Phase 4+)
+│   └── archive/                 ← Archived plan groups (completed)
 │
 ├── reference/                   ← Permanent reference material
 ├── research/                    ← Historical research documents
@@ -76,8 +86,11 @@
 ## ⚡ Quick Commands
 
 ```bash
-# Verify quality gates
-pnpm clean && pnpm install && pnpm build && pnpm type-check && pnpm lint && pnpm format:check && pnpm test && pnpm test:snapshot && pnpm test:gen && pnpm character
+# CI-style (non-mutating) verification
+pnpm check:ci
+
+# Local verification (may mutate to fix formatting / safe lint autofixes)
+pnpm check
 ```
 
 ---

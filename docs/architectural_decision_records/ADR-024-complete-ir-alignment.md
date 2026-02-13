@@ -168,5 +168,5 @@ New test files prevent regression:
 ## Related Documents
 
 - [ADR-023: IR-Based Architecture](./ADR-023-ir-based-architecture.md)
-- [VISION.md](/.agent/VISION.md)
+- [VISION.md](../../.agent/directives/VISION.md)
 - [Audit Report](walkthrough.md - 2026-01-02)

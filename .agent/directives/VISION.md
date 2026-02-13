@@ -1,12 +1,20 @@
 # Vision: Universal Schema Conversion
 
-**Last Updated:** January 2026
+**Last Updated:** 2026-02-13
+
+Castr is **strict by default** and **fails fast and hard**.
+
+- No silent information loss, no partial success, no swallowed errors, no permissive fallback output.
+- No type-system escape hatches in product code (`as`, `any`, `!`, `eslint-disable`); fix architecture or fix the rule.
+- Normalization/canonicalization is allowed only when it is **lossless** and **deterministic**, and the rule is explicit (example: documented OpenAPI 3.0 → 3.1 upgrade semantics in requirements).
+
+If something is wrong, the pipeline stops and reports exactly what happened and where.
 
 ---
 
 ## The Goal
 
-Transform data definitions **between any supported format**, losslessly, deterministically, and strictly, via an internal **Intermediate Representation (IR)** as the canonical source.
+Transform data definitions **between any supported format**, losslessly, deterministically, and **strictly**, via an internal **Intermediate Representation (IR)** as the canonical source.
 
 ```text
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
@@ -99,25 +107,25 @@ With this principle:
 
 > **Rule:** ALL formats MUST be supported as both **input** and **output**, unless explicitly marked as an exception.
 
-### Supported Formats
+### Target Formats (Vision)
 
 | #   | Format          | Input | Output | Notes                                                    |
 | --- | --------------- | :---: | :----: | -------------------------------------------------------- |
 | 1   | **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.0 → 3.1 auto-upgrade                   |
 | 2   | **Zod**         |  ✅   |   ✅   | v4 target                                                |
 | 3   | **JSON Schema** |  ✅   |   ✅   | Draft 2020-12                                            |
-| 4   | **TypeScript**  |  ⚠️   |   ✅   | **Exception:** output-only (too broad for input parsing) |
+| 4   | **TypeScript**  |   —   |   ✅   | **Exception:** output-only (too broad for input parsing) |
 | 5   | **tRPC**        |  ✅   |   ✅   | Extract Zod from routers; generate routers               |
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer)  |
-| ----------- | :-----------: | :------------: |
-| OpenAPI     |  ✅ Complete  | ⚠️ In progress |
-| Zod         |  ⚠️ Partial   |  ✅ Complete   |
-| JSON Schema |  ⚠️ Partial   |   ⚠️ Partial   |
-| TypeScript  |       —       |  ✅ Complete   |
-| tRPC        |  🔲 Planned   |   🔲 Planned   |
+| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                |
+| ----------- | :-----------: | :-----------: | -------------------------------------------------------------------------------------------------------------------- |
+| OpenAPI     |      ✅       |      ✅       | OpenAPI ↔ OpenAPI round-trip is validated; full spec completeness is tracked in `.agent/directives/requirements.md`. |
+| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; full Zod-layer round-trip proofs are in progress (Session 3.3).                             |
+| JSON Schema |      🔲       |      🔲       | Deferred (internal conversions exist for MCP only).                                                                  |
+| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                         |
+| tRPC        |      🔲       |      🔲       | Planned.                                                                                                             |
 
 ---
 
@@ -144,13 +152,15 @@ Once both parser and writer exist for a format, same-format conversions enable:
 
 The order of format support is **deliberate** — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
 
-| Phase | Transform                | Rationale                                                    |
+| Order | Transform                | Rationale                                                    |
 | ----- | ------------------------ | ------------------------------------------------------------ |
 | 1     | **OpenAPI → Zod**        | Established baseline (current)                               |
 | 2     | **Zod → OpenAPI**        | Complete Zod round-trip; understand input/output commonality |
 | 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges with well-understood formats            |
 | 4     | **JSONSchema ↔ Zod**     | Complete JSON Schema triangulation                           |
 | 5     | **tRPC ↔ IR**            | Additional formats as needed                                 |
+
+> **Note:** Roadmap _phases_ (delivery milestones) are tracked in `.agent/plans/roadmap.md`. The ordering above is a conceptual sequencing for format support, not a roadmap phase number.
 
 > **Pattern:** For each format, implement both directions before adding new formats. This reveals shared abstractions and prevents premature generalisation.
 
@@ -188,10 +198,10 @@ One tool that speaks all schema languages fluently.
 
 ## Related Documents
 
-| Document                   | Purpose                                |
-| -------------------------- | -------------------------------------- |
-| `requirements.md`          | Decision-making guidance for agents    |
-| `RULES.md`                 | Engineering standards and code quality |
-| `testing-strategy.md`      | How we verify correctness              |
-| `DEFINITION_OF_DONE.md`    | Quality gates and completion criteria  |
-| `ADR-023` (in `docs/adr/`) | IR Architecture decision record        |
+| Document                                                               | Purpose                                |
+| ---------------------------------------------------------------------- | -------------------------------------- |
+| `requirements.md`                                                      | Decision-making guidance for agents    |
+| `RULES.md`                                                             | Engineering standards and code quality |
+| `testing-strategy.md`                                                  | How we verify correctness              |
+| `DEFINITION_OF_DONE.md`                                                | Quality gates and completion criteria  |
+| `docs/architectural_decision_records/ADR-023-ir-based-architecture.md` | IR architecture decision record        |

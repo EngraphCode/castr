@@ -8,7 +8,7 @@ The **Intermediate Representation (IR)** is the single source of truth for all p
 Input (OpenAPI, Zod, etc.) → Parser → IR (CastrDocument) → Writer → Output
 ```
 
-After parsing, the input document is **conceptually discarded**—only the IR matters. See [VISION.md](../../../.agent/VISION.md).
+After parsing, the input document is **conceptually discarded**—only the IR matters. See [VISION.md](../../../../.agent/directives/VISION.md).
 
 ## Key Files
 
@@ -36,5 +36,5 @@ After parsing, the input document is **conceptually discarded**—only the IR ma
 
 ## Related
 
-- [RULES.md](../../../.agent/RULES.md) — Engineering standards
-- [requirements.md](../../../.agent/requirements.md) — IR completeness requirements
+- [RULES.md](../../../../.agent/directives/RULES.md) — Engineering standards
+- [requirements.md](../../../../.agent/directives/requirements.md) — IR completeness requirements

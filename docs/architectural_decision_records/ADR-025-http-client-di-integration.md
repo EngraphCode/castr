@@ -170,17 +170,17 @@ const api = createTypedClient({
 
 ## Timeline
 
-| Phase    | Work                                    | Target  |
-| -------- | --------------------------------------- | ------- |
-| Design   | Interface definition, factory signature | Phase 4 |
-| Core     | `createTypedClient`, `CastrHttpAdapter` | Phase 5 |
-| Adapters | fetch, axios adapters                   | Phase 5 |
-| Docs     | Integration guide, examples             | Phase 5 |
+| Phase    | Work                                    | Target          |
+| -------- | --------------------------------------- | --------------- |
+| Design   | Interface definition, factory signature | Roadmap Phase 4 |
+| Core     | `createTypedClient`, `CastrHttpAdapter` | Roadmap Phase 5 |
+| Adapters | fetch, axios adapters                   | Roadmap Phase 5 |
+| Docs     | Integration guide, examples             | Roadmap Phase 5 |
 
 ## Related Decisions
 
 - [ADR-022](./ADR-022-building-blocks-no-http-client.md) - Foundation: no bundled HTTP client
-- [RULES.md](../../.agent/RULES.md) - Dependency Injection for Testability
+- [RULES.md](../../.agent/directives/RULES.md) - Dependency Injection for Testability
 
 ## Success Criteria
 
