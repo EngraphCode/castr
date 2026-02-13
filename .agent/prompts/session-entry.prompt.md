@@ -40,26 +40,29 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3a)
 
-**3.3a.01 (ADR-026 Scope Definition) is COMPLETE.** Key findings from the comprehensive audit:
+**ACTIVE PLAN: [3.3a.02 — ESLint Enforcement Redesign](../plans/active/3.3a-02-eslint-enforcement-redesign.md)** — open this file first.
 
-- **22 TS-source heuristic violations** in `parsers/zod/`: 7 `getText()==='z'` identity checks, 4 naming-convention heuristics (`endsWith('Schema')`), 8 getText-then-manipulate patterns, 3 duplicated quote-stripping functions
-- **7 centralization violations**: ad-hoc `$ref` parsing scattered across 7 files that MUST delegate to `shared/ref-resolution.ts`
-- **2 IR text-heuristic violations**: endpoint-dependency code using text heuristics on IR data; should be replaced with explicit IR properties
-- **Strict enforcement principle** written to ADR-026 § "Scope Definition" — no grey areas, no exceptions, no "partially enforced" tiers
+#### Context (what's already done)
 
-**Start with the single active atomic plan (open this file first):**
+3.3a.01 (ADR-026 Scope Definition) is complete. It produced:
 
-- Open the single plan file under `.agent/plans/active/` (there should only be one).
-- Move completed plans to `.agent/plans/current/complete/`.
-- Activate the next queued plan from `.agent/plans/current/session-3.3a/`.
+- **Strict enforcement principle** in ADR-026 § "Scope Definition" — no grey areas, no "partially enforced" tiers, no excluded modules
+- **31 classified violations**: 22 TS-source heuristics (Zod parser), 7 centralization violations (ad-hoc `$ref` parsing), 2 IR text-heuristic violations
+- **Responsibility boundaries** on all 15 plans — each states what it owns and what it doesn't
 
-This work enforces absolute strictness with no compromise:
+#### What the active plan (3.3a.02) must do
 
-- **Ban all TS-source heuristics** in ALL `src/` files — `getText()` identity, regex, text comparison. No exceptions.
-- **Ban all ad-hoc data-string parsing** — inline `startsWith('#/components/')` is a violation. Delegate to designated centralized utilities.
-- **Remediate all violations** — replace with semantic analysis (ts-morph), symbol resolution, and centralized validated parsers.
+Redesign `lib/eslint.config.ts` to match the strict scope:
 
-**Quick start:**
+1. Remove the schema-processing override that sets `no-restricted-syntax` to `'off'` (line ~249)
+2. Ban `getText()` identity, regex, and text comparison in ALL `src/**/*.ts`
+3. Ban data-string methods in ALL `src/**/*.ts` EXCEPT `src/shared/ref-resolution.ts` (designated utility)
+4. Exempt test files (`**/*.test.ts`, `**/*.spec.ts`, `tests-*/**`)
+5. Avoid false positives on discriminated-union checks and type narrowing
+
+**Lint WILL fail after this plan** — that is expected and correct. The violations are remediated by plans 03 and 04.
+
+#### Quick start
 
 ```bash
 # Repo root: verify baseline first
@@ -70,10 +73,19 @@ sed -n '200,420p' lib/eslint.config.ts | nl -ba | sed -n '1,220p'
 
 # Inventory (rules are currently off, so use rg)
 cd lib
-rg -n "\\.getText\\(" src/schema-processing/parsers/zod --glob '!**/*.test.*'
-rg -n "\\.(startsWith|endsWith|includes|split|slice|indexOf|replace|replaceAll|toLowerCase|toUpperCase|trim)\\(" \\
+rg -n "\.getText\(" src/schema-processing/parsers/zod --glob '!**/*.test.*'
+rg -n "\.(startsWith|endsWith|includes|split|slice|indexOf|replace|replaceAll|toLowerCase|toUpperCase|trim)\(" \
   src/schema-processing --glob '!**/*.test.*' --glob '!**/*.spec.*' | head -50
 ```
+
+#### Absolute strictness principles (from `start-right.prompt.md`)
+
+1. **STRICT BY DEFAULT** — never relax constraints to "make things work"
+2. **FAIL FAST AND HARD** — no silent fallbacks, no degraded output, no swallowed errors
+3. **NO ESCAPE HATCHES** — no `as`, `any`, `!`, or `eslint-disable` in product code
+4. **ADR-026** — semantic analysis, not string heuristics. See ADR-026 § "Scope Definition"
+5. **CENTRALIZE OR FAIL** — one canonical parser per data format
+6. **NO TOLERANCE PATHS** — rules are enforced everywhere or they're not rules
 
 ### Priority 2: Session 3.3b — Strict Zod-Layer Round-Trip Validation
 
