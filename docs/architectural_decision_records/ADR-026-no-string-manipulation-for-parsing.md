@@ -76,6 +76,52 @@ ESLint rules in `lib/eslint.config.ts` enforce this ADR:
 - Data-string parsing utilities are excluded (they must be centralized/validated/tested instead)
 - Test files are excluded (they may assert on string content)
 
+## Scope Definition (Session 3.3a.01 Audit)
+
+### What This ADR Bans
+
+String/regex heuristics that derive meaning from TypeScript source code text when an AST with semantic APIs exists:
+
+1. **Text comparison for identity**: `node.getText() === 'z'` instead of symbol resolution
+2. **Text comparison for semantics**: `expression.includes('.optional()')` instead of AST chain analysis
+3. **Naming-convention heuristics**: `name.endsWith('Schema')` instead of a symbol table
+4. **getText()-then-manipulate**: Getting source text then parsing with string methods, when `getName()`, `getLiteralValue()`, or symbol resolution could extract the information directly
+
+### What This ADR Allows
+
+**Data-string parsing** (OpenAPI `$ref`, media types, URL templates, HTTP status codes) is allowed **only** when ALL of the following hold:
+
+1. **Centralized** — the parsing lives in a designated utility module (not inline, not ad-hoc, not scattered)
+2. **Validated** — fail-fast on invalid inputs with helpful error messages
+3. **Tested** — unit tests covering normal, edge, and error cases
+4. **Not parsing TypeScript source code** — operating on data from the IR, OpenAPI spec, or configuration
+5. **Explicitly designated** — the utility module is listed below
+
+**Designated centralized data-string utilities:**
+
+- `src/shared/ref-resolution.ts` — OpenAPI `$ref` parsing (canonical, all `$ref` parsing MUST delegate here)
+- Future: media-type parser, URL-template parser (when created)
+
+**Ad-hoc data-string parsing (e.g., inline `startsWith('#/components/')` in 7 files) is a violation of the centralization requirement** and must be remediated to delegate to the designated utility.
+
+Also allowed (not string-parsing, no centralization needed):
+
+- **Array `.includes()`** on typed arrays (not string operations)
+- **Display/formatting** operations (`.toUpperCase()`, `.toLowerCase()` for rendering output, never for semantics)
+
+**`getText()` principle:** `getText()` is banned for identity or semantic comparison (`=== 'z'`, `=== 'undefined'`, `=== 'defineEndpoint'`). Prefer ts-morph semantic APIs (`getName()`, `getLiteralValue()`, `getLiteralText()`, symbol resolution) in all cases. `getText()` may be used only for data extraction from a known node type when no semantic API exists, and never for comparison.
+
+### Enforcement Principle
+
+**TS-source heuristics (`getText()`, regex, text comparison) are banned in ALL `src/` files, no exceptions.** Data-string methods (`startsWith`, `includes`, `split`, `slice`) are banned in ALL `src/` files EXCEPT in designated centralized utility modules listed above. Test files are excluded (they may assert on string content).
+
+| Scope                      | Files                                         | Policy                                                             |
+| -------------------------- | --------------------------------------------- | ------------------------------------------------------------------ |
+| **Banned**                 | All `src/**/*.ts`                             | `getText()` identity, regex, text comparison — always banned       |
+| **Banned (data-string)**   | All `src/**/*.ts` except designated utilities | Inline `startsWith`, `includes`, `split` etc. on ref/media strings |
+| **Allowed (data-string)**  | Designated centralized utilities only         | String methods for data parsing, centralized + validated + tested  |
+| **Excluded from all bans** | `**/*.test.ts`, `**/*.spec.ts`, `tests-*/**`  | Tests may assert on string content                                 |
+
 ## Consequences
 
 ### Positive

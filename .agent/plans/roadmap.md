@@ -92,6 +92,7 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - ESLint config is `lib/eslint.config.ts` (no repo-root `eslint.config.ts`).
 - ADR-026 enforcement exists but is disabled by a schema-processing override that turns `no-restricted-syntax` off (`lib/eslint.config.ts:249`).
 - ADR-026 is scoped: TS-source parsing heuristics are forbidden; data-string parsing (OpenAPI `$ref`, media types) is allowed only when centralized + validated + tested + fail-fast.
+- **Scope defined (3.3a.01 complete), absolute strictness enforced:** No grey areas, no "partially enforced" tiers. TS-source heuristics banned in ALL `src/`. Data-string methods banned everywhere except designated centralized utilities. Audit found **31 violations**: 22 TS-source heuristics (Zod parser), 7 centralization violations (ad-hoc `$ref` parsing), 2 IR text-heuristic violations. See ADR-026 § "Scope Definition".
 
 **Definition of Done (3.3a):**
 
@@ -143,23 +144,23 @@ Prove that the Zod layer participates in strict, lossless round-trips:
 
 Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans under `./current/session-3.3a/` and `./current/session-3.3b/`.
 
-| Step | Plan                                                                                                             | Status    |
-| ---- | ---------------------------------------------------------------------------------------------------------------- | --------- |
-| 1    | [3.3a.01 — ADR-026 Scope Definition](./active/3.3a-01-adr026-scope.md)                                           | 🔄 Active |
-| 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/session-3.3a/3.3a-02-eslint-enforcement-redesign.md)           | 🔲        |
-| 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/session-3.3a/3.3a-03-zod-parser-semantic-parsing.md)           | 🔲        |
-| 4    | [3.3a.04 — Centralize Data-String Parsing](./current/session-3.3a/3.3a-04-centralize-data-string-parsing.md)     | 🔲        |
-| 5    | [3.3a.05 — Remove Permissive Fallbacks](./current/session-3.3a/3.3a-05-remove-permissive-fallbacks.md)           | 🔲        |
-| 6    | [3.3a.06 — Remove Swallowed Errors](./current/session-3.3a/3.3a-06-remove-swallowed-errors.md)                   | 🔲        |
-| 7    | [3.3a.07 — Remove Escape Hatches](./current/session-3.3a/3.3a-07-remove-escape-hatches.md)                       | 🔲        |
-| 8    | [3.3a.08 — Prove Determinism](./current/session-3.3a/3.3a-08-prove-determinism.md)                               | 🔲        |
-| 9    | [3.3b.01 — Round-Trip Suite Strictness](./current/session-3.3b/3.3b-01-roundtrip-suite-strictness.md)            | 🔲        |
-| 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md)  | 🔲        |
-| 11   | [3.3b.03 — Reject `z.undefined()`](./current/session-3.3b/3.3b-03-reject-z-undefined.md)                         | 🔲        |
-| 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./current/session-3.3b/3.3b-04-format-parity-hostname-float.md) | 🔲        |
-| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md)   | 🔲        |
-| 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                           | 🔲        |
-| 15   | [3.3b.07 — Nullability Chain Normalization](./current/session-3.3b/3.3b-07-nullability-chain-normalization.md)   | 🔲        |
+| Step | Plan                                                                                                             | Status      |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | ----------- |
+| 1    | [3.3a.01 — ADR-026 Scope Definition](./active/3.3a-01-adr026-scope.md)                                           | ✅ Complete |
+| 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/session-3.3a/3.3a-02-eslint-enforcement-redesign.md)           | 🔲          |
+| 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/session-3.3a/3.3a-03-zod-parser-semantic-parsing.md)           | 🔲          |
+| 4    | [3.3a.04 — Centralize Data-String Parsing](./current/session-3.3a/3.3a-04-centralize-data-string-parsing.md)     | 🔲          |
+| 5    | [3.3a.05 — Remove Permissive Fallbacks](./current/session-3.3a/3.3a-05-remove-permissive-fallbacks.md)           | 🔲          |
+| 6    | [3.3a.06 — Remove Swallowed Errors](./current/session-3.3a/3.3a-06-remove-swallowed-errors.md)                   | 🔲          |
+| 7    | [3.3a.07 — Remove Escape Hatches](./current/session-3.3a/3.3a-07-remove-escape-hatches.md)                       | 🔲          |
+| 8    | [3.3a.08 — Prove Determinism](./current/session-3.3a/3.3a-08-prove-determinism.md)                               | 🔲          |
+| 9    | [3.3b.01 — Round-Trip Suite Strictness](./current/session-3.3b/3.3b-01-roundtrip-suite-strictness.md)            | 🔲          |
+| 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md)  | 🔲          |
+| 11   | [3.3b.03 — Reject `z.undefined()`](./current/session-3.3b/3.3b-03-reject-z-undefined.md)                         | 🔲          |
+| 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./current/session-3.3b/3.3b-04-format-parity-hostname-float.md) | 🔲          |
+| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md)   | 🔲          |
+| 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                           | 🔲          |
+| 15   | [3.3b.07 — Nullability Chain Normalization](./current/session-3.3b/3.3b-07-nullability-chain-normalization.md)   | 🔲          |
 
 ---
 

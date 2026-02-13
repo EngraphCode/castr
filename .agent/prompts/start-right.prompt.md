@@ -4,6 +4,17 @@ Read (under .agent/) [RULES.md](../directives/RULES.md), [testing-strategy.md](.
 
 Always ask: **"What impact are we trying to create for the user with this change?"**
 
+## Non-Negotiable Principles
+
+These principles are absolute. There are no exceptions, no grey areas, no compromises, no expediency shortcuts.
+
+1. **STRICT BY DEFAULT.** Every component enforces the strictest possible validation. Never relax constraints to "make things work."
+2. **FAIL FAST AND HARD.** Unsupported patterns throw immediately with helpful error messages. No silent fallbacks (`z.unknown()`), no degraded output, no swallowed errors. The cost of a strict error today is far less than a silent bug in production.
+3. **NO ESCAPE HATCHES.** No `as` (except `as const`), `any`, `!`, or `eslint-disable` in product code. If types don't fit, fix the architecture, not the types.
+4. **ADR-026: SEMANTIC ANALYSIS, NOT STRING HEURISTICS.** TS-source parsing must use ts-morph AST + semantic APIs (symbol resolution). `getText()` identity comparison, regex, and text-based heuristics are banned in ALL `src/` files. Data-string parsing is allowed ONLY in designated centralized utility modules. Ad-hoc inline string parsing is a violation. See ADR-026 § "Scope Definition".
+5. **CENTRALIZE OR FAIL.** If a data format needs parsing (e.g., `$ref`, media types), there must be exactly ONE canonical parser for it. Scattered ad-hoc parsing is a violation — delegate to the canonical utility.
+6. **NO TOLERANCE PATHS.** Do not create "partially enforced" or "excluded" tiers. Rules are either enforced everywhere or they're not rules.
+
 When analysing a **generated file**, always analyse the **generator code** that produced it as well, as the generator is the source of truth.
 
 Do not assume you know what the initial step should be—discuss with the user first.

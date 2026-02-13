@@ -27,7 +27,7 @@ Notes:
 4. **Deterministic Output:** Identical input must produce byte-for-byte identical output.
 5. **Zod 4 Output Policy:** Writers must emit canonical Zod 4 helpers where representable (`z.email()`, `z.url()`, `z.int()`, `z.iso.*`). Parsers must accept all canonical writer output. Non-canonical Zod 4 input may be accepted only if it maps losslessly; otherwise fail fast with a helpful error.
 6. **ts-morph for TS/Zod Code Gen:** No string templates for code generation.
-7. **ADR-026 (Clarified):** No string/regex heuristics for parsing TypeScript source code. Use ts-morph + semantic APIs (symbol resolution), not node-text matching.
+7. **ADR-026 (Scoped — see ADR-026 § "Scope Definition"):** No string/regex heuristics for parsing TypeScript source code. Use ts-morph + semantic APIs (symbol resolution), not node-text matching. Data-string parsing (OpenAPI `$ref`, media types) allowed when centralized, validated, tested, fail-fast.
 8. **No Escape Hatches:** No `as`, `any`, `!`, or `eslint-disable` workarounds in product code. Fix architecture or fix the rule.
 9. **TDD at ALL Levels:** Write failing tests FIRST.
 10. **Quality Gates:** All gates must pass before merge.
@@ -40,26 +40,24 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3a)
 
+**3.3a.01 (ADR-026 Scope Definition) is COMPLETE.** Key findings from the comprehensive audit:
+
+- **22 TS-source heuristic violations** in `parsers/zod/`: 7 `getText()==='z'` identity checks, 4 naming-convention heuristics (`endsWith('Schema')`), 8 getText-then-manipulate patterns, 3 duplicated quote-stripping functions
+- **7 centralization violations**: ad-hoc `$ref` parsing scattered across 7 files that MUST delegate to `shared/ref-resolution.ts`
+- **2 IR text-heuristic violations**: endpoint-dependency code using text heuristics on IR data; should be replaced with explicit IR properties
+- **Strict enforcement principle** written to ADR-026 § "Scope Definition" — no grey areas, no exceptions, no "partially enforced" tiers
+
 **Start with the single active atomic plan (open this file first):**
 
 - Open the single plan file under `.agent/plans/active/` (there should only be one).
-- Current active plan: `.agent/plans/active/3.3a-01-adr026-scope.md`
+- Move completed plans to `.agent/plans/current/complete/`.
+- Activate the next queued plan from `.agent/plans/current/session-3.3a/`.
 
-Queued atomic plans live under:
+This work enforces absolute strictness with no compromise:
 
-- `.agent/plans/current/session-3.3a/`
-
-Workflow:
-
-- Finish the active atomic plan.
-- Move it to `.agent/plans/current/complete/`.
-- Activate the next atomic plan by moving it into `.agent/plans/active/`.
-
-This work is not "ban all string operations everywhere". It is:
-
-- Redesign ESLint enforcement to match ADR-026 scope (TS-source parsing heuristics only), without disabling regex bans for `schema-processing/`.
-- Remediate Zod TS-source parsing to remove brittle string/regex heuristics (replace with semantic analysis).
-- Centralize and validate data-string parsing (`$ref`, media types) rather than scattering ad-hoc parsing.
+- **Ban all TS-source heuristics** in ALL `src/` files — `getText()` identity, regex, text comparison. No exceptions.
+- **Ban all ad-hoc data-string parsing** — inline `startsWith('#/components/')` is a violation. Delegate to designated centralized utilities.
+- **Remediate all violations** — replace with semantic analysis (ts-morph), symbol resolution, and centralized validated parsers.
 
 **Quick start:**
 
