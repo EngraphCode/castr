@@ -60,7 +60,7 @@ Redesign `lib/eslint.config.ts` to match the strict scope:
 4. Exempt test files (`**/*.test.ts`, `**/*.spec.ts`, `tests-*/**`)
 5. Avoid false positives on discriminated-union checks and type narrowing
 
-**Lint WILL fail after this plan** — that is expected and correct. The violations are remediated by plans 03 and 04.
+**Lint WILL fail after this plan** — that is expected and correct. **Do NOT remediate violations in this plan** — only configure enforcement. The violations are fixed by plans 03 and 04.
 
 #### Quick start
 
@@ -71,11 +71,10 @@ pnpm type-check && pnpm test
 # ESLint config lives here (no repo-root eslint.config.ts)
 sed -n '200,420p' lib/eslint.config.ts | nl -ba | sed -n '1,220p'
 
-# Inventory (rules are currently off, so use rg)
-cd lib
-rg -n "\.getText\(" src/schema-processing/parsers/zod --glob '!**/*.test.*'
+# Inventory current violations (rules are currently off, so use rg from repo root)
+rg -n "\.getText\(" lib/src/schema-processing/parsers/zod --glob '!**/*.test.*'
 rg -n "\.(startsWith|endsWith|includes|split|slice|indexOf|replace|replaceAll|toLowerCase|toUpperCase|trim)\(" \
-  src/schema-processing --glob '!**/*.test.*' --glob '!**/*.spec.*' | head -50
+  lib/src/schema-processing --glob '!**/*.test.*' --glob '!**/*.spec.*' | head -50
 ```
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
