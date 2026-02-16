@@ -11,16 +11,22 @@ import {
   type MutableJsonSchema,
   type SchemaLike,
 } from './keyword-helpers.js';
+import {
+  RESULT_KIND_ARRAY,
+  RESULT_KIND_BOOLEAN,
+  RESULT_KIND_SCHEMA,
+  SCHEMA_TYPE_ARRAY,
+} from './json-schema-constants.js';
 
 type ItemsKeywordResult =
-  | { kind: 'boolean'; value: boolean }
-  | { kind: 'array'; value: SchemaLike[] }
-  | { kind: 'schema'; value: SchemaLike }
+  | { kind: typeof RESULT_KIND_BOOLEAN; value: boolean }
+  | { kind: typeof RESULT_KIND_ARRAY; value: SchemaLike[] }
+  | { kind: typeof RESULT_KIND_SCHEMA; value: SchemaLike }
   | undefined;
 
 type UnevaluatedItemsResult =
-  | { kind: 'boolean'; value: boolean }
-  | { kind: 'schema'; value: SchemaLike }
+  | { kind: typeof RESULT_KIND_BOOLEAN; value: boolean }
+  | { kind: typeof RESULT_KIND_SCHEMA; value: SchemaLike }
   | undefined;
 
 export function applyArrayKeywords(
@@ -32,7 +38,7 @@ export function applyArrayKeywords(
     return;
   }
 
-  target['type'] = 'array';
+  target['type'] = SCHEMA_TYPE_ARRAY;
 
   const prefixItems = readPrefixItems(schema);
   if (prefixItems !== undefined) {
@@ -63,7 +69,7 @@ export function applyArrayKeywords(
 
 function isArrayLikeSchema(schema: SchemaObject): boolean {
   return (
-    schema.type === 'array' ||
+    schema.type === SCHEMA_TYPE_ARRAY ||
     readPrefixItems(schema) !== undefined ||
     readItemsKeyword(schema) !== undefined ||
     readUnevaluatedItems(schema) !== undefined
@@ -81,7 +87,7 @@ function applyItemsKeyword(
   }
 
   switch (items.kind) {
-    case 'boolean': {
+    case RESULT_KIND_BOOLEAN: {
       if (!items.value) {
         setKeyword(target, 'items', []);
         setKeyword(target, 'additionalItems', false);
@@ -90,7 +96,7 @@ function applyItemsKeyword(
       }
       break;
     }
-    case 'array': {
+    case RESULT_KIND_ARRAY: {
       setKeyword(
         target,
         'items',
@@ -98,7 +104,7 @@ function applyItemsKeyword(
       );
       break;
     }
-    case 'schema': {
+    case RESULT_KIND_SCHEMA: {
       setKeyword(target, 'items', convert(items.value));
       break;
     }
@@ -114,14 +120,14 @@ function applyAdditionalItemsFromTuple(
     return;
   }
 
-  if (tupleItems.kind === 'boolean') {
+  if (tupleItems.kind === RESULT_KIND_BOOLEAN) {
     if (!tupleItems.value) {
       setKeyword(target, 'additionalItems', false);
     }
     return;
   }
 
-  if (tupleItems.kind === 'schema') {
+  if (tupleItems.kind === RESULT_KIND_SCHEMA) {
     setKeyword(target, 'additionalItems', convert(tupleItems.value));
   }
 }
@@ -140,7 +146,7 @@ function applyUnevaluatedItems(
     return;
   }
 
-  if (unevaluatedItems.kind === 'schema') {
+  if (unevaluatedItems.kind === RESULT_KIND_SCHEMA) {
     setKeyword(target, 'additionalItems', convert(unevaluatedItems.value));
   } else if (!unevaluatedItems.value) {
     setKeyword(target, 'additionalItems', false);
@@ -160,16 +166,16 @@ function readItemsKeyword(schema: SchemaObject): ItemsKeywordResult {
   }
 
   if (typeof candidate === 'boolean') {
-    return { kind: 'boolean', value: candidate };
+    return { kind: RESULT_KIND_BOOLEAN, value: candidate };
   }
 
   const arrayItems = toSchemaLikeArray(candidate);
   if (arrayItems !== undefined) {
-    return { kind: 'array', value: arrayItems };
+    return { kind: RESULT_KIND_ARRAY, value: arrayItems };
   }
 
   const schemaLike = toSchemaLike(candidate);
-  return schemaLike === undefined ? undefined : { kind: 'schema', value: schemaLike };
+  return schemaLike === undefined ? undefined : { kind: RESULT_KIND_SCHEMA, value: schemaLike };
 }
 
 function readUnevaluatedItems(schema: SchemaObject): UnevaluatedItemsResult {
@@ -179,9 +185,9 @@ function readUnevaluatedItems(schema: SchemaObject): UnevaluatedItemsResult {
   }
 
   if (typeof candidate === 'boolean') {
-    return { kind: 'boolean', value: candidate };
+    return { kind: RESULT_KIND_BOOLEAN, value: candidate };
   }
 
   const schemaLike = toSchemaLike(candidate);
-  return schemaLike === undefined ? undefined : { kind: 'schema', value: schemaLike };
+  return schemaLike === undefined ? undefined : { kind: RESULT_KIND_SCHEMA, value: schemaLike };
 }

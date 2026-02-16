@@ -32,6 +32,26 @@ import type {
 import { CastrSchemaProperties } from './schema.js';
 
 import { type UnknownRecord, isRecord } from '../../shared/types.js';
+const HTTP_METHOD_GET = 'get' as const;
+const HTTP_METHOD_POST = 'post' as const;
+const HTTP_METHOD_PUT = 'put' as const;
+const HTTP_METHOD_PATCH = 'patch' as const;
+const HTTP_METHOD_DELETE = 'delete' as const;
+const HTTP_METHOD_HEAD = 'head' as const;
+const HTTP_METHOD_OPTIONS = 'options' as const;
+const VALID_HTTP_METHODS = new Set<string>([
+  HTTP_METHOD_GET,
+  HTTP_METHOD_POST,
+  HTTP_METHOD_PUT,
+  HTTP_METHOD_PATCH,
+  HTTP_METHOD_DELETE,
+  HTTP_METHOD_HEAD,
+  HTTP_METHOD_OPTIONS,
+]);
+
+function isSupportedHttpMethod(method: unknown): boolean {
+  return typeof method === 'string' && VALID_HTTP_METHODS.has(method);
+}
 
 /**
  * Type guard for CastrDocument.
@@ -143,9 +163,7 @@ export function isCastrOperation(value: unknown): value is CastrOperation {
   }
 
   // Validate HTTP method
-  const validMethods = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
-  const method = value['method'];
-  if (typeof method !== 'string' || !validMethods.includes(method)) {
+  if (!isSupportedHttpMethod(value['method'])) {
     return false;
   }
 

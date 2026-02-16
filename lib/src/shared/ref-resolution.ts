@@ -12,6 +12,40 @@
  * @see {@link https://github.com/scalar/scalar} - Scalar bundler documentation
  */
 
+import { drop, join, split, startsWith } from 'lodash-es';
+
+const STANDARD_PREFIX = '#/components/' as const;
+const X_EXT_PREFIX = '#/x-ext/' as const;
+const LEGACY_PREFIX = '#components/' as const;
+const HASH_PREFIX = '#' as const;
+const COMPONENTS_SEGMENT = 'components' as const;
+const STANDARD_LEADING_SEGMENT = '#';
+const LEGACY_LEADING_SEGMENT = '#components' as const;
+const X_EXT_SEGMENT = 'x-ext' as const;
+const STANDARD_BARE_COMPONENT_TYPE = 'schemas' as const;
+const SLASH_TOKEN = '/' as const;
+const STANDARD_MIN_SEGMENT_COUNT = 4;
+const X_EXT_MIN_SEGMENT_COUNT = 6;
+const LEGACY_MIN_SEGMENT_COUNT = 3;
+const STANDARD_COMPONENTS_SEGMENT_INDEX = 1;
+const STANDARD_COMPONENT_TYPE_INDEX = 2;
+const STANDARD_COMPONENT_NAME_START_INDEX = 3;
+const X_EXT_SEGMENT_INDEX = 1;
+const X_EXT_KEY_INDEX = 2;
+const X_EXT_COMPONENTS_INDEX = 3;
+const X_EXT_COMPONENT_TYPE_INDEX = 4;
+const X_EXT_COMPONENT_NAME_START_INDEX = 5;
+const LEGACY_COMPONENT_TYPE_INDEX = 1;
+const LEGACY_COMPONENT_NAME_START_INDEX = 2;
+
+function isValidXExtLeadingSegments(parts: string[]): boolean {
+  return (
+    parts[0] === STANDARD_LEADING_SEGMENT &&
+    parts[X_EXT_SEGMENT_INDEX] === X_EXT_SEGMENT &&
+    parts[X_EXT_COMPONENTS_INDEX] === COMPONENTS_SEGMENT
+  );
+}
+
 /**
  * Parsed representation of an OpenAPI component $ref.
  *
@@ -153,19 +187,24 @@ export function parseComponentRef(ref: string): ParsedRef {
 
 function tryParseStandardRef(ref: string): ParsedRef | null {
   // Standard format: #/components/{type}/{name}
-  const prefix = '#/components/';
-  if (!ref.startsWith(prefix)) {
+  if (!startsWith(ref, STANDARD_PREFIX)) {
     return null;
   }
 
-  const rest = ref.slice(prefix.length);
-  const slashIndex = rest.indexOf('/');
-  if (slashIndex === -1) {
+  const parts = split(ref, SLASH_TOKEN);
+  if (parts.length < STANDARD_MIN_SEGMENT_COUNT) {
     return null;
   }
 
-  const componentType = rest.slice(0, slashIndex);
-  const componentName = rest.slice(slashIndex + 1);
+  if (
+    parts[0] !== STANDARD_LEADING_SEGMENT ||
+    parts[STANDARD_COMPONENTS_SEGMENT_INDEX] !== COMPONENTS_SEGMENT
+  ) {
+    return null;
+  }
+
+  const componentType = parts[STANDARD_COMPONENT_TYPE_INDEX] ?? '';
+  const componentName = join(drop(parts, STANDARD_COMPONENT_NAME_START_INDEX), SLASH_TOKEN);
 
   if (componentType && componentName) {
     return {
@@ -180,21 +219,22 @@ function tryParseStandardRef(ref: string): ParsedRef | null {
 
 function tryParseXExtRef(ref: string): ParsedRef | null {
   // X-ext format: #/x-ext/{hash}/components/{type}/{name}
-  const prefix = '#/x-ext/';
-  if (!ref.startsWith(prefix)) {
+  if (!startsWith(ref, X_EXT_PREFIX)) {
     return null;
   }
 
-  const rest = ref.slice(prefix.length);
-  const parts = rest.split('/');
-  // Expected: [hash, 'components', type, name, ...]
-  if (parts.length < 4 || parts[1] !== 'components') {
+  const parts = split(ref, SLASH_TOKEN);
+  if (parts.length < X_EXT_MIN_SEGMENT_COUNT) {
     return null;
   }
 
-  const xExtKey = parts[0];
-  const componentType = parts[2];
-  const componentName = parts.slice(3).join('/');
+  if (!isValidXExtLeadingSegments(parts)) {
+    return null;
+  }
+
+  const xExtKey = parts[X_EXT_KEY_INDEX];
+  const componentType = parts[X_EXT_COMPONENT_TYPE_INDEX];
+  const componentName = join(drop(parts, X_EXT_COMPONENT_NAME_START_INDEX), SLASH_TOKEN);
 
   if (xExtKey && componentType && componentName) {
     return {
@@ -210,19 +250,21 @@ function tryParseXExtRef(ref: string): ParsedRef | null {
 
 function tryParseLegacyRef(ref: string): ParsedRef | null {
   // Legacy format: #components/{type}/{name} (without leading slash)
-  const prefix = '#components/';
-  if (!ref.startsWith(prefix)) {
+  if (!startsWith(ref, LEGACY_PREFIX)) {
     return null;
   }
 
-  const rest = ref.slice(prefix.length);
-  const slashIndex = rest.indexOf('/');
-  if (slashIndex === -1) {
+  const parts = split(ref, SLASH_TOKEN);
+  if (parts.length < LEGACY_MIN_SEGMENT_COUNT) {
     return null;
   }
 
-  const componentType = rest.slice(0, slashIndex);
-  const componentName = rest.slice(slashIndex + 1);
+  if (parts[0] !== LEGACY_LEADING_SEGMENT) {
+    return null;
+  }
+
+  const componentType = parts[LEGACY_COMPONENT_TYPE_INDEX] ?? '';
+  const componentName = join(drop(parts, LEGACY_COMPONENT_NAME_START_INDEX), SLASH_TOKEN);
 
   if (componentType && componentName) {
     return {
@@ -236,9 +278,9 @@ function tryParseLegacyRef(ref: string): ParsedRef | null {
 }
 
 function tryParseBareRef(ref: string): ParsedRef | null {
-  if (!ref.startsWith('#')) {
+  if (!startsWith(ref, HASH_PREFIX)) {
     return {
-      componentType: 'schemas',
+      componentType: STANDARD_BARE_COMPONENT_TYPE,
       componentName: ref,
       isExternal: false,
       originalRef: ref,

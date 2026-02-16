@@ -1,4 +1,5 @@
 import { ToolSchema, type Tool } from '@modelcontextprotocol/sdk/types.js';
+import { toUpper, trim } from 'lodash-es';
 
 import type { EndpointDefinition } from '../../endpoints/definition.types.js';
 import type { OperationSecurityMetadata } from '../conversion/json-schema/security/extract-operation-security.js';
@@ -51,13 +52,13 @@ const normalizeDescriptionFromIR = (
   description: string;
 } => {
   const normalizeText = (value: string | undefined): string | undefined => {
-    const trimmed = value?.trim();
-    return trimmed && trimmed.length > 0 ? trimmed : undefined;
+    const normalized = value === undefined ? undefined : trim(value);
+    return normalized && normalized.length > 0 ? normalized : undefined;
   };
 
   const summary = normalizeText(operation.summary);
   const primaryDescription = normalizeText(operation.description);
-  const fallback = `${operation.method.toUpperCase()} ${operation.path}`;
+  const fallback = `${toUpper(operation.method)} ${operation.path}`;
 
   if (primaryDescription) {
     return {

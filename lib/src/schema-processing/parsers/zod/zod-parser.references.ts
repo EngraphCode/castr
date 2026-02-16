@@ -7,11 +7,15 @@
  */
 
 import type { CastrSchema } from '../../ir/schema.js';
-import { Node } from 'ts-morph';
+import { type ArrowFunction, type FunctionExpression, type Identifier, Node } from 'ts-morph';
 import { createZodProject, getZodMethodChain } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import type { ZodSchemaParser } from './zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
 import { createDefaultMetadata } from './zod-parser.defaults.js';
+import { ZOD_METHOD_LAZY } from './zod-constants.js';
+
+const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/' as const;
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity and nesting
@@ -21,10 +25,14 @@ import { createDefaultMetadata } from './zod-parser.defaults.js';
  * Handle identifier references to other schemas.
  * @internal
  */
-function handleIdentifier(node: Node): CastrSchema {
-  const name = node.getText();
+function handleIdentifier(node: Identifier): CastrSchema | undefined {
+  const symbolName = node.getSymbol()?.getName();
+  if (!symbolName) {
+    return undefined;
+  }
+
   return {
-    $ref: `#/components/schemas/${name}`,
+    $ref: `${COMPONENT_SCHEMA_REF_PREFIX}${symbolName}`,
     metadata: createDefaultMetadata(),
   };
 }
@@ -62,36 +70,52 @@ function extractFromBlockBody(body: Node, parseSchema: ZodSchemaParser): CastrSc
   return parseSchema(expr);
 }
 
+function extractLazyCallback(baseArgNodes: Node[]): ArrowFunction | FunctionExpression | undefined {
+  const callback = baseArgNodes[0];
+  if (!callback) {
+    return undefined;
+  }
+
+  if (!Node.isArrowFunction(callback) && !Node.isFunctionExpression(callback)) {
+    return undefined;
+  }
+
+  return callback;
+}
+
 /**
  * Handle z.lazy(() => Schema) calls.
  * @internal
  */
-function handleLazy(node: Node, parseSchema: ZodSchemaParser): CastrSchema | undefined {
+function handleLazy(
+  node: Node,
+  parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
+): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
+  if (!resolver) {
+    return undefined;
+  }
 
-  const chainInfo = getZodMethodChain(node);
+  const chainInfo = getZodMethodChain(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, baseArgNodes } = chainInfo;
 
-  if (baseMethod !== 'lazy') {
+  if (baseMethod !== ZOD_METHOD_LAZY) {
     return undefined;
   }
 
-  if (baseArgNodes.length === 0) {
+  const callback = extractLazyCallback(baseArgNodes);
+  if (!callback) {
     return undefined;
   }
 
-  const fnArg = baseArgNodes[0];
-  if (!Node.isArrowFunction(fnArg) && !Node.isFunctionExpression(fnArg)) {
-    return undefined;
-  }
-
-  const body = fnArg.getBody();
+  const body = callback.getBody();
 
   // Try concise body first, then block body
   return extractFromConciseBody(body, parseSchema) ?? extractFromBlockBody(body, parseSchema);
@@ -108,6 +132,7 @@ function handleLazy(node: Node, parseSchema: ZodSchemaParser): CastrSchema | und
 export function parseReferenceZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   // Handle Identifiers (References to other schemas)
   if (Node.isIdentifier(node)) {
@@ -115,7 +140,7 @@ export function parseReferenceZodFromNode(
   }
 
   // Handle z.lazy(() => Schema)
-  return handleLazy(node, parseSchema);
+  return handleLazy(node, parseSchema, resolver);
 }
 
 // Register this parser with the core dispatcher
@@ -127,11 +152,7 @@ registerParser('identifier', parseReferenceZodFromNode);
  * @internal
  */
 export function parseReferenceZod(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${expression};`);
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
@@ -140,5 +161,6 @@ export function parseReferenceZod(expression: string): CastrSchema | undefined {
     return undefined;
   }
 
-  return parseReferenceZodFromNode(init, parseZodSchemaFromNode);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
+  return parseReferenceZodFromNode(init, boundParseSchema, resolver);
 }

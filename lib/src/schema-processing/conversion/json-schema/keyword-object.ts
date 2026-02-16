@@ -12,10 +12,15 @@ import {
   type MutableJsonSchema,
   type SchemaLike,
 } from './keyword-helpers.js';
+import {
+  RESULT_KIND_BOOLEAN,
+  RESULT_KIND_SCHEMA,
+  SCHEMA_TYPE_OBJECT,
+} from './json-schema-constants.js';
 
 type UnevaluatedPropertiesResult =
-  | { kind: 'boolean'; value: boolean }
-  | { kind: 'schema'; value: SchemaLike }
+  | { kind: typeof RESULT_KIND_BOOLEAN; value: boolean }
+  | { kind: typeof RESULT_KIND_SCHEMA; value: SchemaLike }
   | undefined;
 
 export function applyObjectKeywords(
@@ -27,7 +32,7 @@ export function applyObjectKeywords(
     return;
   }
 
-  setKeyword(target, 'type', 'object');
+  setKeyword(target, 'type', SCHEMA_TYPE_OBJECT);
 
   applyPropertiesKeyword(schema, target, convert);
   applyRequiredKeyword(schema, target);
@@ -39,7 +44,7 @@ export function applyObjectKeywords(
 
 function isObjectLikeSchema(schema: SchemaObject): boolean {
   return (
-    schema.type === 'object' ||
+    schema.type === SCHEMA_TYPE_OBJECT ||
     schema.properties !== undefined ||
     schema.required !== undefined ||
     schema.additionalProperties !== undefined
@@ -128,7 +133,7 @@ function applyUnevaluatedProperties(
     return;
   }
 
-  if (unevaluated.kind === 'boolean') {
+  if (unevaluated.kind === RESULT_KIND_BOOLEAN) {
     setKeyword(target, 'additionalProperties', unevaluated.value);
   } else {
     setKeyword(target, 'additionalProperties', convert(unevaluated.value));
@@ -173,11 +178,11 @@ function readUnevaluatedProperties(schema: SchemaObject): UnevaluatedPropertiesR
   }
 
   if (typeof candidate === 'boolean') {
-    return { kind: 'boolean', value: candidate };
+    return { kind: RESULT_KIND_BOOLEAN, value: candidate };
   }
 
   const schemaLike = toSchemaLike(candidate);
-  return schemaLike === undefined ? undefined : { kind: 'schema', value: schemaLike };
+  return schemaLike === undefined ? undefined : { kind: RESULT_KIND_SCHEMA, value: schemaLike };
 }
 
 function readDependentSchemas(schema: SchemaObject): Record<string, SchemaLike> | undefined {

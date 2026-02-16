@@ -1,4 +1,9 @@
 import type { CastrDocument, CastrOperation, CastrSchema } from '../../ir/schema.js';
+import { toUpper } from 'lodash-es';
+import { parseComponentRef } from '../../../shared/ref-resolution.js';
+
+const SCHEMA_TYPE_ARRAY = 'array' as const;
+const FALLBACK_REF_NAME = 'Ref' as const;
 
 /**
  * Generate Markdown documentation from IR.
@@ -36,7 +41,7 @@ function writeOperations(ir: CastrDocument, lines: string[]): void {
   for (const op of ir.operations) {
     lines.push(`### ${op.summary || op.operationId}`);
     lines.push('');
-    lines.push(`\`${op.method.toUpperCase()} ${op.path}\``);
+    lines.push(`\`${toUpper(op.method)} ${op.path}\``);
     lines.push('');
     if (op.description) {
       lines.push(op.description);
@@ -111,7 +116,11 @@ function writeEnums(ir: CastrDocument, lines: string[]): void {
 
 function getTypeName(schema: CastrSchema): string {
   if (schema.$ref) {
-    return schema.$ref.split('/').pop() || 'Ref';
+    try {
+      return parseComponentRef(schema.$ref).componentName;
+    } catch {
+      return FALLBACK_REF_NAME;
+    }
   }
   if (schema.type) {
     return getTypeFromTypeField(schema.type, schema.items);
@@ -135,7 +144,7 @@ function getTypeFromTypeField(
   if (Array.isArray(type)) {
     return type.join(' | ');
   }
-  if (type === 'array' && items) {
+  if (type === SCHEMA_TYPE_ARRAY && items) {
     const itemType = Array.isArray(items) ? items.map(getTypeName).join(', ') : getTypeName(items);
     return `Array<${itemType}>`;
   }

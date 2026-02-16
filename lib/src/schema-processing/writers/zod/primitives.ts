@@ -11,6 +11,10 @@
 import type { CodeBlockWriter } from 'ts-morph';
 import type { CastrSchema } from '../../ir/schema.js';
 
+const SCHEMA_TYPE_STRING = 'string' as const;
+const SCHEMA_TYPE_INTEGER = 'integer' as const;
+const VALIDATION_INT = '.int()' as const;
+
 /**
  * Write Zod schema for primitive types.
  *
@@ -108,12 +112,12 @@ function writeStringSchema(schema: CastrSchema, writer: CodeBlockWriter): void {
 export function filterRedundantValidations(validations: string[], schema: CastrSchema): string[] {
   return validations.filter((v) => {
     // Integer: z.int() already includes .int() validation
-    if (schema.type === 'integer' && v === '.int()') {
+    if (schema.type === SCHEMA_TYPE_INTEGER && v === VALIDATION_INT) {
       return false;
     }
 
     // String formats: format functions already include validation
-    if (schema.type === 'string' && schema.format) {
+    if (schema.type === SCHEMA_TYPE_STRING && schema.format) {
       const formatToValidation: Record<string, string> = {
         email: '.email()',
         uuid: '.uuid()',

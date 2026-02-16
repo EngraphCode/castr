@@ -20,6 +20,12 @@ import type { MutableJsonSchema } from '../conversion/json-schema/keyword-helper
 
 export type SupportedParameterLocation = 'path' | 'query' | 'header';
 
+const PARAM_LOCATION_PATH = 'path' as const;
+const PARAM_LOCATION_QUERY = 'query' as const;
+const PARAM_LOCATION_HEADER = 'header' as const;
+const SCHEMA_TYPE_OBJECT = 'object' as const;
+const SCHEMA_KEY_METADATA = 'metadata' as const;
+
 /**
  * Accumulator for OpenAPI-based parameter extraction.
  * Uses SchemaObject from openapi3-ts.
@@ -99,12 +105,13 @@ export const collectParameterGroupsFromIR = (
 
     for (const param of parameters) {
       // Normalize path parameter names (e.g., 'profile.id' -> 'profileId')
-      const normalizedName = location === 'path' ? pathParamToVariableName(param.name) : param.name;
+      const normalizedName =
+        location === PARAM_LOCATION_PATH ? pathParamToVariableName(param.name) : param.name;
 
       accumulator.properties[normalizedName] = param.schema;
 
       // Path parameters are always required; other locations use the required flag
-      const isRequired = location === 'path' ? true : param.required;
+      const isRequired = location === PARAM_LOCATION_PATH ? true : param.required;
       if (isRequired) {
         accumulator.required.add(normalizedName);
       }
@@ -115,9 +122,9 @@ export const collectParameterGroupsFromIR = (
 
   // Process only supported locations (path, query, header)
   // Cookie is intentionally excluded as MCP doesn't support it
-  processLocationGroup('path', operation.parametersByLocation.path);
-  processLocationGroup('query', operation.parametersByLocation.query);
-  processLocationGroup('header', operation.parametersByLocation.header);
+  processLocationGroup(PARAM_LOCATION_PATH, operation.parametersByLocation.path);
+  processLocationGroup(PARAM_LOCATION_QUERY, operation.parametersByLocation.query);
+  processLocationGroup(PARAM_LOCATION_HEADER, operation.parametersByLocation.header);
 
   return groups;
 };
@@ -142,7 +149,7 @@ export const createParameterSectionSchemaFromIR = (
   }
 
   const schema: MutableJsonSchema = {
-    type: 'object',
+    type: SCHEMA_TYPE_OBJECT,
     properties,
   };
 
@@ -205,7 +212,7 @@ const castrSchemaToJsonSchemaSimple = (schema: CastrSchema): MutableJsonSchema =
   const result: MutableJsonSchema = {};
 
   for (const [key, value] of Object.entries(schema)) {
-    if (key === 'metadata') {
+    if (key === SCHEMA_KEY_METADATA) {
       continue;
     }
     const processed = processSchemaEntrySimple(value);

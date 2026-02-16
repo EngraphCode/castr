@@ -6,8 +6,13 @@
 
 import { upgrade } from '@scalar/openapi-parser';
 import type { AnyObject, Filesystem } from '@scalar/openapi-parser';
+import { split } from 'lodash-es';
 import { isOpenAPIObject } from '../../validation/cli-type-guards.js';
 import type { BundledOpenApiDocument } from '../bundle-metadata.types.js';
+
+const OPENAPI_VERSION_SEPARATOR = '.' as const;
+const OPENAPI_VERSION_MAJOR_3 = '3' as const;
+const OPENAPI_VERSION_MINOR_1 = '1' as const;
 
 /**
  * Type guard for BundledOpenApiDocument (intersection type).
@@ -31,7 +36,15 @@ export function isBundledOpenApiDocument(value: unknown): value is BundledOpenAp
   }
 
   // Ensure it's 3.1.x (upgrade() should guarantee this)
-  if (typeof value.openapi !== 'string' || !value.openapi.startsWith('3.1.')) {
+  const version = value.openapi;
+  const versionSegments = split(version, OPENAPI_VERSION_SEPARATOR);
+  const major = versionSegments[0];
+  const minor = versionSegments[1];
+  if (
+    typeof version !== 'string' ||
+    major !== OPENAPI_VERSION_MAJOR_3 ||
+    minor !== OPENAPI_VERSION_MINOR_1
+  ) {
     return false;
   }
 

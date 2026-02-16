@@ -1,5 +1,6 @@
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import type { Schema as JsonSchema } from 'ajv';
+import { SCHEMA_TYPE_INTEGER, SCHEMA_TYPE_NUMBER } from './json-schema-constants.js';
 
 export type SchemaLike = SchemaObject | ReferenceObject;
 export type MutableJsonSchema = Extract<JsonSchema, object>;
@@ -12,7 +13,7 @@ export function assignIfDefined<T>(value: T | undefined, assign: (resolved: T) =
 }
 
 export function isNumericSchema(schema: SchemaObject): boolean {
-  return schema.type === 'number' || schema.type === 'integer';
+  return schema.type === SCHEMA_TYPE_NUMBER || schema.type === SCHEMA_TYPE_INTEGER;
 }
 
 export function isLegacyExclusiveValue(value: unknown): value is boolean {

@@ -23,8 +23,12 @@ export function isGroupStrategy(value: unknown): value is GroupStrategy {
   if (typeof value !== 'string') {
     return false;
   }
-  const strategies: readonly string[] = GROUP_STRATEGIES;
-  return strategies.includes(value);
+  for (const strategy of GROUP_STRATEGIES) {
+    if (value === strategy) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -43,8 +47,12 @@ export function isDefaultStatusBehavior(value: unknown): value is DefaultStatusB
   if (typeof value !== 'string') {
     return false;
   }
-  const behaviors: readonly string[] = DEFAULT_STATUS_BEHAVIORS;
-  return behaviors.includes(value);
+  for (const behavior of DEFAULT_STATUS_BEHAVIORS) {
+    if (value === behavior) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**

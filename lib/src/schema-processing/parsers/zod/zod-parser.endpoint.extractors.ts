@@ -27,22 +27,6 @@ export function isParameterLocation(value: string): value is ParameterLocation {
 }
 
 /**
- * Strips surrounding quotes from a text value using AST context.
- * @internal
- */
-export function stripQuotes(text: string): string {
-  if (text.length < 2) {
-    return text;
-  }
-  const first = text.charAt(0);
-  const last = text.charAt(text.length - 1);
-  if ((first === '"' || first === "'") && first === last) {
-    return text.slice(1, -1);
-  }
-  return text;
-}
-
-/**
  * Extract string value from an AST node.
  * @internal
  */
@@ -87,9 +71,27 @@ export function extractStringArray(node: Node): string[] | undefined {
 }
 
 /**
- * Extract a single location's parameters from an object literal.
+ * Extract a single parameter name-value pair from a property assignment.
  * @internal
  */
+function extractParamEntry(prop: Node): [string, string] | undefined {
+  if (!NodeClass.isPropertyAssignment(prop)) {
+    return undefined;
+  }
+
+  const paramInit = prop.getInitializer();
+  if (!paramInit) {
+    return undefined;
+  }
+
+  const value = extractStringValue(paramInit);
+  if (value === undefined) {
+    return undefined;
+  }
+
+  return [prop.getName(), value];
+}
+
 export function extractLocationParams(locationValue: Node): Record<string, string> | undefined {
   if (!NodeClass.isObjectLiteralExpression(locationValue)) {
     return undefined;
@@ -98,15 +100,9 @@ export function extractLocationParams(locationValue: Node): Record<string, strin
   const locationParams: Record<string, string> = {};
 
   for (const paramProp of locationValue.getProperties()) {
-    if (!NodeClass.isPropertyAssignment(paramProp)) {
-      continue;
-    }
-
-    const paramName = paramProp.getName();
-    const paramInit = paramProp.getInitializer();
-
-    if (paramInit) {
-      locationParams[paramName] = stripQuotes(paramInit.getText());
+    const entry = extractParamEntry(paramProp);
+    if (entry) {
+      locationParams[entry[0]] = entry[1];
     }
   }
 
@@ -176,7 +172,11 @@ function extractResponseEntry(prop: Node): [string, string] | undefined {
   if (!responseInit) {
     return undefined;
   }
-  return [statusCode, stripQuotes(responseInit.getText())];
+  const value = extractStringValue(responseInit);
+  if (value === undefined) {
+    return undefined;
+  }
+  return [statusCode, value];
 }
 
 /**

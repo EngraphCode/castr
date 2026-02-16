@@ -10,10 +10,12 @@
 import type { CastrSchema } from '../../ir/schema.js';
 import { Node } from 'ts-morph';
 import { createZodProject, getZodMethodChain } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import type { ZodSchemaParser } from './zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
 import { createDefaultMetadata } from './zod-parser.defaults.js';
 import { applyMetaAndReturn } from './zod-parser.meta.js';
+import { ZOD_METHOD_AND, ZOD_METHOD_INTERSECTION } from './zod-constants.js';
 
 /**
  * Validate and extract left/right schemas from intersection arguments.
@@ -52,19 +54,23 @@ function parseIntersectionArgs(
 export function parseIntersectionZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
+  if (!resolver) {
+    return undefined;
+  }
 
-  const chainInfo = getZodMethodChain(node);
+  const chainInfo = getZodMethodChain(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, baseArgNodes, chainedMethods } = chainInfo;
 
-  if (baseMethod !== 'intersection') {
+  if (baseMethod !== ZOD_METHOD_INTERSECTION) {
     return undefined;
   }
 
@@ -88,6 +94,8 @@ export function parseIntersectionZodFromNode(
 export function parseChainedIntersectionFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
@@ -98,7 +106,7 @@ export function parseChainedIntersectionFromNode(
     return undefined;
   }
 
-  if (expr.getName() !== 'and') {
+  if (expr.getName() !== ZOD_METHOD_AND) {
     return undefined;
   }
 
@@ -131,11 +139,7 @@ registerParser('chainedIntersection', parseChainedIntersectionFromNode);
  * @internal
  */
 export function parseIntersectionZod(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${expression};`);
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
@@ -144,5 +148,6 @@ export function parseIntersectionZod(expression: string): CastrSchema | undefine
     return undefined;
   }
 
-  return parseIntersectionZodFromNode(init, parseZodSchemaFromNode);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
+  return parseIntersectionZodFromNode(init, boundParseSchema, resolver);
 }

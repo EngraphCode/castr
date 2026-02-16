@@ -9,10 +9,19 @@
 import type { CastrSchema } from '../../ir/schema.js';
 import { Node } from 'ts-morph';
 import { createZodProject, getZodMethodChain, extractLiteralValue } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import type { ZodSchemaParser } from './zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
 import { createDefaultMetadata } from './zod-parser.defaults.js';
 import { applyMetaAndReturn } from './zod-parser.meta.js';
+import {
+  ZOD_METHOD_DISCRIMINATED_UNION,
+  ZOD_METHOD_UNION,
+  ZOD_METHOD_XOR,
+} from './zod-constants.js';
+
+const UNION_OUTPUT_KEY_ANY_OF = 'anyOf' as const;
+const UNION_OUTPUT_KEY_ONE_OF = 'oneOf' as const;
 
 // ============================================================================
 // Helper functions
@@ -24,7 +33,9 @@ import { applyMetaAndReturn } from './zod-parser.meta.js';
 function parseUnion(
   args: Node[],
   parseSchema: ZodSchemaParser,
-  outputKey: 'anyOf' | 'oneOf' = 'anyOf',
+  outputKey:
+    | typeof UNION_OUTPUT_KEY_ANY_OF
+    | typeof UNION_OUTPUT_KEY_ONE_OF = UNION_OUTPUT_KEY_ANY_OF,
 ): CastrSchema | undefined {
   if (args.length === 0) {
     return undefined;
@@ -47,7 +58,7 @@ function parseUnion(
     metadata: createDefaultMetadata(),
   };
 
-  if (outputKey === 'anyOf') {
+  if (outputKey === UNION_OUTPUT_KEY_ANY_OF) {
     schema.anyOf = options;
   } else {
     schema.oneOf = options;
@@ -111,28 +122,35 @@ function parseDiscriminatedUnion(
 export function parseUnionZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
+  if (!resolver) {
+    return undefined;
+  }
 
-  const chainInfo = getZodMethodChain(node);
+  const chainInfo = getZodMethodChain(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, baseArgNodes, chainedMethods } = chainInfo;
 
-  if (baseMethod === 'union') {
+  if (baseMethod === ZOD_METHOD_UNION) {
     return applyMetaAndReturn(parseUnion(baseArgNodes, parseSchema), chainedMethods);
   }
 
-  if (baseMethod === 'discriminatedUnion') {
+  if (baseMethod === ZOD_METHOD_DISCRIMINATED_UNION) {
     return applyMetaAndReturn(parseDiscriminatedUnion(baseArgNodes, parseSchema), chainedMethods);
   }
 
-  if (baseMethod === 'xor') {
-    return applyMetaAndReturn(parseUnion(baseArgNodes, parseSchema, 'oneOf'), chainedMethods);
+  if (baseMethod === ZOD_METHOD_XOR) {
+    return applyMetaAndReturn(
+      parseUnion(baseArgNodes, parseSchema, UNION_OUTPUT_KEY_ONE_OF),
+      chainedMethods,
+    );
   }
 
   return undefined;
@@ -146,11 +164,7 @@ registerParser('union', parseUnionZodFromNode);
  * @internal
  */
 export function parseUnionZod(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${expression};`);
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
@@ -159,5 +173,6 @@ export function parseUnionZod(expression: string): CastrSchema | undefined {
     return undefined;
   }
 
-  return parseUnionZodFromNode(init, parseZodSchemaFromNode);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
+  return parseUnionZodFromNode(init, boundParseSchema, resolver);
 }

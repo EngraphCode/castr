@@ -100,6 +100,7 @@ String/regex heuristics that derive meaning from TypeScript source code text whe
 **Designated centralized data-string utilities:**
 
 - `src/shared/ref-resolution.ts` — OpenAPI `$ref` parsing (canonical, all `$ref` parsing MUST delegate here)
+- `src/schema-processing/context/template-context.status-codes.ts` — endpoint success-status parsing (`200`, `201`, `202`, `203`, `204`, `2XX`, `default`)
 - Future: media-type parser, URL-template parser (when created)
 
 **Ad-hoc data-string parsing (e.g., inline `startsWith('#/components/')` in 7 files) is a violation of the centralization requirement** and must be remediated to delegate to the designated utility.
@@ -109,7 +110,15 @@ Also allowed (not string-parsing, no centralization needed):
 - **Array `.includes()`** on typed arrays (not string operations)
 - **Display/formatting** operations (`.toUpperCase()`, `.toLowerCase()` for rendering output, never for semantics)
 
-**`getText()` principle:** `getText()` is banned for identity or semantic comparison (`=== 'z'`, `=== 'undefined'`, `=== 'defineEndpoint'`). Prefer ts-morph semantic APIs (`getName()`, `getLiteralValue()`, `getLiteralText()`, symbol resolution) in all cases. `getText()` may be used only for data extraction from a known node type when no semantic API exists, and never for comparison.
+**`getText()` principle:** `getText()` is banned for identity or semantic comparison (`=== 'z'`, `=== 'undefined'`). Prefer ts-morph semantic APIs (`getName()`, `getLiteralValue()`, `getLiteralText()`, symbol resolution) in all cases. `getText()` may be used only for data extraction from a known node type when no semantic API exists, and never for comparison.
+
+**Amendment — `Identifier.getText()` (2026-02-16):** ts-morph's `Identifier` class inherits from `CommonIdentifierBase`, which exposes exactly one method for reading the identifier's name: `getText()`. There is no `getName()`, `getIdentifierText()`, or equivalent semantic API on `Identifier`. The `getText()` return value for an `Identifier` node IS the identifier name by definition — it is not arbitrary source text, but the single token that constitutes the node. Therefore, `Identifier.getText()` is allowed when:
+
+1. The node has been type-narrowed via `Node.isIdentifier(node)` (proving it is an `Identifier`)
+2. The comparison is against a typed constant (not an inline magic string)
+3. No symbol resolution alternative exists (e.g., the identifier is not an import binding)
+
+This is enforced by an ESLint selector exemption for `getText()` calls on nodes that have been narrowed to `Identifier` via `Node.isIdentifier()`. See `lib/eslint.config.ts`.
 
 ### Enforcement Principle
 

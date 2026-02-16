@@ -25,6 +25,8 @@ import { getSchemaFromComponents } from './component-access.js';
 import { parseComponentRef } from './ref-resolution.js';
 
 type VisitFn = (schema: SchemaObject | ReferenceObject, fromRef: string) => void;
+const SCHEMA_TYPE_ARRAY = 'array' as const;
+const SCHEMA_TYPE_OBJECT = 'object' as const;
 
 /**
  * Handle reference object in dependency graph
@@ -92,13 +94,13 @@ const handleSchemaType = (schema: SchemaObject, fromRef: string, visit: VisitFn)
   }
 
   // Handle array schemas
-  if (schema.type === 'array' && schema.items) {
+  if (schema.type === SCHEMA_TYPE_ARRAY && schema.items) {
     visit(schema.items, fromRef);
     return;
   }
 
   // Handle object schemas
-  if (schema.type === 'object' || schema.properties || schema.additionalProperties) {
+  if (schema.type === SCHEMA_TYPE_OBJECT || schema.properties || schema.additionalProperties) {
     visitObjectProperties(schema, fromRef, visit);
   }
 };

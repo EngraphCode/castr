@@ -15,12 +15,14 @@ interface SerializedMap {
 }
 
 import { type UnknownRecord, isRecord } from '../../shared/types.js';
+const SERIALIZED_DATA_TYPE_MAP = 'Map' as const;
+const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties' as const;
 
 /**
  * Interface for a serialized CastrSchemaProperties.
  */
 interface SerializedCastrSchemaProperties {
-  dataType: 'CastrSchemaProperties';
+  dataType: typeof SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES;
 
   // We need to be more specific here, we know this is CastrSchema don't we?
   value: UnknownRecord;
@@ -38,7 +40,7 @@ function isSerializedMap(value: unknown): value is SerializedMap {
   }
   return (
     'dataType' in value &&
-    value['dataType'] === 'Map' &&
+    value['dataType'] === SERIALIZED_DATA_TYPE_MAP &&
     'value' in value &&
     Array.isArray(value['value'])
   );
@@ -59,7 +61,7 @@ function isSerializedCastrSchemaProperties(
   const record = value;
   return (
     'dataType' in record &&
-    record['dataType'] === 'CastrSchemaProperties' &&
+    record['dataType'] === SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES &&
     'value' in record &&
     isRecord(record['value'])
   );
@@ -78,7 +80,7 @@ export function serializeIR(ir: CastrDocument): string {
     (_key: string, value: unknown): unknown => {
       if (value instanceof Map) {
         const serialized: SerializedMap = {
-          dataType: 'Map',
+          dataType: SERIALIZED_DATA_TYPE_MAP,
           value: Array.from(value.entries()),
         };
         return serialized;

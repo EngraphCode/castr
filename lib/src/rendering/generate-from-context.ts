@@ -30,6 +30,8 @@ import { renderOutput, handleDebugIR } from './templating.js';
 import type { GenerationResult } from './generation-result.js';
 
 type TemplateName = 'schemas-only' | 'schemas-with-metadata';
+const TEMPLATE_SCHEMAS_ONLY = 'schemas-only' as const;
+const TEMPLATE_SCHEMAS_WITH_METADATA = 'schemas-with-metadata' as const;
 
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],
@@ -106,20 +108,20 @@ export function determineEffectiveTemplate(
   optionsTemplate: TemplateContextOptions['template'] | undefined,
 ): TemplateName {
   if (noClient) {
-    return 'schemas-with-metadata';
+    return TEMPLATE_SCHEMAS_WITH_METADATA;
   }
   if (template) {
     return template;
   }
   // optionsTemplate is 'schemas-only' | 'schemas-with-metadata' | undefined
   // Both non-undefined values are valid TemplateName values
-  if (optionsTemplate === 'schemas-only') {
-    return 'schemas-only';
+  if (optionsTemplate === TEMPLATE_SCHEMAS_ONLY) {
+    return TEMPLATE_SCHEMAS_ONLY;
   }
-  if (optionsTemplate === 'schemas-with-metadata') {
-    return 'schemas-with-metadata';
+  if (optionsTemplate === TEMPLATE_SCHEMAS_WITH_METADATA) {
+    return TEMPLATE_SCHEMAS_WITH_METADATA;
   }
-  return 'schemas-with-metadata';
+  return TEMPLATE_SCHEMAS_WITH_METADATA;
 }
 
 /**
@@ -135,7 +137,7 @@ export function buildEffectiveOptions<TOptions extends TemplateContext['options'
     withAlias: false,
   };
 
-  if (effectiveTemplate === 'schemas-with-metadata') {
+  if (effectiveTemplate === TEMPLATE_SCHEMAS_WITH_METADATA) {
     return {
       ...baseDefaults,
       ...options,

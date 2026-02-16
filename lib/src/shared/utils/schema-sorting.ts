@@ -1,5 +1,7 @@
-import { sortBy, snakeCase } from 'lodash-es';
+import { sortBy, snakeCase, startsWith } from 'lodash-es';
 import { getSchemaNameFromRef as getSchemaName } from '../ref-resolution.js';
+
+const LOCAL_REF_PREFIX = '#/' as const;
 
 /**
  * Extract and normalize schema name from a component schema $ref
@@ -8,7 +10,7 @@ import { getSchemaNameFromRef as getSchemaName } from '../ref-resolution.js';
  */
 function getSchemaNameFromRef(ref: string): string {
   // If it's not a ref (doesn't start with #/), treat it as a bare name
-  if (!ref.startsWith('#/')) {
+  if (!startsWith(ref, LOCAL_REF_PREFIX)) {
     return snakeCase(ref);
   }
 

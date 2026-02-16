@@ -11,7 +11,7 @@ import { defineConfig } from 'vitest/config';
  */
 export default defineConfig({
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'eslint-rules/**/*.test.ts'],
     exclude: [
       'src/characterisation/**/*.test.ts',
       'src/validation/scalar-guard.test.ts',

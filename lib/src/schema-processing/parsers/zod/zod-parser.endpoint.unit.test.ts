@@ -169,6 +169,23 @@ describe('Endpoint Zod Parsing', () => {
       expect(result.parametersByLocation.cookie).toHaveLength(0);
     });
 
+    it('should derive query optionality from parsed schema semantics, not string matching', () => {
+      const definition: EndpointDefinition = {
+        method: 'get',
+        path: '/users',
+        parameters: {
+          query: { include: 'z.string().optional ()' },
+        },
+        responses: { '200': 'UserSchema' },
+      };
+
+      const result = buildCastrOperationFromEndpoint(definition);
+
+      expect(result.parameters).toHaveLength(1);
+      expect(result.parameters[0]?.in).toBe('query');
+      expect(result.parameters[0]?.required).toBe(false);
+    });
+
     it('should build requestBody for POST endpoints', () => {
       const definition: EndpointDefinition = {
         method: 'post',

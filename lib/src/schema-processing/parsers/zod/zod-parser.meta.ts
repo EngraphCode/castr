@@ -9,6 +9,7 @@
 import type { CastrSchema } from '../../ir/schema.js';
 import { Node } from 'ts-morph';
 import { extractLiteralValue, type ZodMethodCall } from './zod-ast.js';
+import { ZOD_METHOD_META } from './zod-constants.js';
 
 export interface ParsedZodMeta {
   title?: string;
@@ -32,7 +33,7 @@ export function extractMetaFromChain(chainedMethods: ZodMethodCall[]): ParsedZod
   let meta: ParsedZodMeta | undefined;
 
   for (const method of chainedMethods) {
-    if (method.name !== 'meta') {
+    if (method.name !== ZOD_METHOD_META) {
       continue;
     }
 
@@ -220,7 +221,7 @@ function parseObjectProperty(prop: Node): [string, unknown] | undefined {
     return undefined;
   }
 
-  const name = getStaticPropertyName(prop.getNameNode());
+  const name = prop.getName();
   if (!name) {
     return undefined;
   }
@@ -274,22 +275,6 @@ function parseMetaValue(node: Node): unknown | undefined {
   }
 
   return extractLiteralValue(node);
-}
-
-function getStaticPropertyName(node: Node): string | undefined {
-  if (Node.isIdentifier(node)) {
-    return node.getText();
-  }
-
-  if (Node.isStringLiteral(node)) {
-    return node.getLiteralValue();
-  }
-
-  if (Node.isNumericLiteral(node)) {
-    return node.getLiteralValue().toString();
-  }
-
-  return undefined;
 }
 
 function isPlainObject(value: unknown): value is JsonObject {

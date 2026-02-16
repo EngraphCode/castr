@@ -42,6 +42,8 @@
     "@eslint/js": "^9.38.0",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
+    "@typescript-eslint/rule-tester": "^8.55.0",
+    "@typescript-eslint/utils": "^8.55.0",
     "ajv": "^8.17.1",
     "ajv-draft-04": "^1.0.0",
     "ajv-formats": "^3.0.1",

@@ -14,6 +14,10 @@ import type {
   SecuritySchemeRequirement,
 } from '../conversion/json-schema/security/extract-operation-security.js';
 
+const SECURITY_COMPONENT_TYPE = 'securityScheme' as const;
+const SECURITY_SELECTION_PUBLIC = 'public' as const;
+const SECURITY_SELECTION_REQUIREMENTS = 'requirements' as const;
+
 /**
  * Resolve the security requirements for an operation from the IR.
  *
@@ -67,7 +71,7 @@ export function resolveOperationSecurityFromIR(
   // Select which security requirements to use (operation-level or global)
   const selection = selectSecurityRequirements(operation.security, ir.security);
 
-  if (selection.kind === 'public') {
+  if (selection.kind === SECURITY_SELECTION_PUBLIC) {
     return { isPublic: true, usesGlobalSecurity: false, requirementSets: [] };
   }
 
@@ -95,7 +99,7 @@ function buildSecuritySchemeLookup(ir: CastrDocument): Map<string, SecuritySchem
   const lookup = new Map<string, SecuritySchemeObject>();
 
   for (const component of ir.components) {
-    if (component.type === 'securityScheme') {
+    if (component.type === SECURITY_COMPONENT_TYPE) {
       // TypeScript narrows component to IRSecuritySchemeComponent here
       // IR security schemes should already be resolved (not references)
       // If it's a reference, we throw as that indicates a bug in IR building
@@ -146,9 +150,9 @@ function resolveRequirement(
  * @internal
  */
 type SecuritySelection =
-  | { kind: 'public' }
+  | { kind: typeof SECURITY_SELECTION_PUBLIC }
   | {
-      kind: 'requirements';
+      kind: typeof SECURITY_SELECTION_REQUIREMENTS;
       requirements: IRSecurityRequirement[];
       usesGlobalDefaults: boolean;
     };
@@ -175,15 +179,23 @@ function selectSecurityRequirements(
   // Operation-level security is defined (including empty array)
   if (operationSecurity !== undefined) {
     if (operationSecurity.length === 0) {
-      return { kind: 'public' };
+      return { kind: SECURITY_SELECTION_PUBLIC };
     }
-    return { kind: 'requirements', requirements: operationSecurity, usesGlobalDefaults: false };
+    return {
+      kind: SECURITY_SELECTION_REQUIREMENTS,
+      requirements: operationSecurity,
+      usesGlobalDefaults: false,
+    };
   }
 
   // Fall back to global security
   if (!globalSecurity || globalSecurity.length === 0) {
-    return { kind: 'public' };
+    return { kind: SECURITY_SELECTION_PUBLIC };
   }
 
-  return { kind: 'requirements', requirements: globalSecurity, usesGlobalDefaults: true };
+  return {
+    kind: SECURITY_SELECTION_REQUIREMENTS,
+    requirements: globalSecurity,
+    usesGlobalDefaults: true,
+  };
 }

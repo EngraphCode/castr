@@ -14,17 +14,20 @@ import type { Schema as JsonSchema } from 'ajv';
 import type { SchemaObject as OpenApiSchemaObject } from 'openapi3-ts/oas31';
 import type { OperationSecurityMetadata } from '../conversion/json-schema/security/extract-operation-security.js';
 
+const SCHEMA_TYPE_OBJECT = 'object' as const;
+
 const isObjectSchema = (schema: OpenApiSchemaObject | undefined): schema is OpenApiSchemaObject => {
   if (!schema) {
     return false;
   }
 
-  if (schema.type === 'object') {
+  if (schema.type === SCHEMA_TYPE_OBJECT) {
     return true;
   }
 
   if (Array.isArray(schema.type)) {
-    return schema.type.includes('object');
+    const schemaTypes = new Set(schema.type);
+    return schemaTypes.has(SCHEMA_TYPE_OBJECT);
   }
 
   return false;
@@ -33,7 +36,7 @@ const isObjectSchema = (schema: OpenApiSchemaObject | undefined): schema is Open
 const wrapSchema = (schema: OpenApiSchemaObject | undefined): OpenApiSchemaObject => {
   if (schema === undefined) {
     return {
-      type: 'object',
+      type: SCHEMA_TYPE_OBJECT,
     } satisfies OpenApiSchemaObject;
   }
 
@@ -42,7 +45,7 @@ const wrapSchema = (schema: OpenApiSchemaObject | undefined): OpenApiSchemaObjec
   }
 
   return {
-    type: 'object',
+    type: SCHEMA_TYPE_OBJECT,
     properties: {
       value: schema,
     },

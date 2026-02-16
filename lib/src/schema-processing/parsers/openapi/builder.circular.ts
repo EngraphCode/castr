@@ -8,6 +8,12 @@
  */
 
 import type { IRComponent, CastrSchema } from '../../ir/schema.js';
+import { split } from 'lodash-es';
+import { parseComponentRef } from '../../../shared/ref-resolution.js';
+
+const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+const COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
+const COMPONENT_NAME_SEPARATOR = '/' as const;
 
 /**
  * Detect circular references in schemas using depth-first search.
@@ -23,7 +29,7 @@ import type { IRComponent, CastrSchema } from '../../ir/schema.js';
 export function detectCircularReferences(components: IRComponent[]): void {
   // Filter for schema components only
   const schemaComponents = components.filter(
-    (c): c is IRComponent & { type: 'schema' } => c.type === 'schema',
+    (c): c is IRComponent & { type: 'schema' } => c.type === COMPONENT_TYPE_SCHEMA,
   );
 
   // Build dependency graph: schema name → referenced schema names
@@ -198,23 +204,17 @@ function isCastrSchemaLike(value: unknown): value is CastrSchema {
  * @internal
  */
 function extractSchemaNameFromRef(ref: string): string | undefined {
-  // Handle standard refs: #/components/schemas/SchemaName
-  const standardPrefix = '#/components/schemas/';
-  if (ref.startsWith(standardPrefix)) {
-    return ref.slice(standardPrefix.length).split('/')[0];
-  }
-
-  // Handle x-ext refs: #/x-ext/{hash}/components/schemas/SchemaName
-  const xExtPrefix = '#/x-ext/';
-  const componentsMarker = '/components/schemas/';
-  if (ref.startsWith(xExtPrefix)) {
-    const componentsIndex = ref.indexOf(componentsMarker);
-    if (componentsIndex !== -1) {
-      return ref.slice(componentsIndex + componentsMarker.length).split('/')[0];
+  try {
+    const parsedRef = parseComponentRef(ref);
+    if (parsedRef.componentType !== COMPONENT_TYPE_SCHEMAS) {
+      return undefined;
     }
-  }
 
-  return undefined;
+    const nameSegments = split(parsedRef.componentName, COMPONENT_NAME_SEPARATOR);
+    return nameSegments[0];
+  } catch {
+    return undefined;
+  }
 }
 
 /**

@@ -11,10 +11,18 @@ import type { CastrSchema } from '../../ir/schema.js';
 import { CastrSchemaProperties } from '../../ir/schema-properties.js';
 import { Node } from 'ts-morph';
 import { createZodProject, getZodMethodChain, extractObjectProperties } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import type { ZodSchemaParser } from './zod-parser.types.js';
 import { createDefaultMetadata } from './zod-parser.defaults.js';
 import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
 import { applyMetaToSchema, extractMetaFromChain } from './zod-parser.meta.js';
+import {
+  ZOD_METHOD_PASSTHROUGH,
+  ZOD_METHOD_STRICT,
+  ZOD_METHOD_STRIP,
+  ZOD_OBJECT_METHOD,
+  ZOD_SCHEMA_TYPE_OBJECT,
+} from './zod-constants.js';
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity
@@ -28,11 +36,11 @@ function extractStrictness(chainedMethods: { name: string }[]): boolean | undefi
   let additionalProperties: boolean | undefined = undefined;
 
   for (const method of chainedMethods) {
-    if (method.name === 'strict') {
+    if (method.name === ZOD_METHOD_STRICT) {
       additionalProperties = false;
-    } else if (method.name === 'passthrough') {
+    } else if (method.name === ZOD_METHOD_PASSTHROUGH) {
       additionalProperties = true;
-    } else if (method.name === 'strip') {
+    } else if (method.name === ZOD_METHOD_STRIP) {
       additionalProperties = undefined;
     }
   }
@@ -76,19 +84,23 @@ function extractPropertiesFromNode(
 export function parseObjectZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
+  if (!resolver) {
+    return undefined;
+  }
 
-  const chainInfo = getZodMethodChain(node);
+  const chainInfo = getZodMethodChain(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, chainedMethods, baseCallNode } = chainInfo;
 
-  if (baseMethod !== 'object') {
+  if (baseMethod !== ZOD_OBJECT_METHOD) {
     return undefined;
   }
 
@@ -97,11 +109,11 @@ export function parseObjectZodFromNode(
   }
 
   const additionalProperties = extractStrictness(chainedMethods);
-  const propertyNodes = extractObjectProperties(baseCallNode);
+  const propertyNodes = extractObjectProperties(baseCallNode, resolver);
   const { properties, required } = extractPropertiesFromNode(propertyNodes, parseSchema);
 
   const schema: CastrSchema = {
-    type: 'object',
+    type: ZOD_SCHEMA_TYPE_OBJECT,
     properties: new CastrSchemaProperties(properties),
     required,
     metadata: createDefaultMetadata(),
@@ -126,11 +138,7 @@ registerParser('object', parseObjectZodFromNode);
  * @internal
  */
 export function parseObjectZod(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${expression};`);
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
@@ -139,5 +147,6 @@ export function parseObjectZod(expression: string): CastrSchema | undefined {
     return undefined;
   }
 
-  return parseObjectZodFromNode(init, parseZodSchemaFromNode);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
+  return parseObjectZodFromNode(init, boundParseSchema, resolver);
 }

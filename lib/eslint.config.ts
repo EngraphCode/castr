@@ -10,6 +10,7 @@ import eslint from '@eslint/js';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import { importX } from 'eslint-plugin-import-x';
 import globals from 'globals';
+import { noMagicStringComparison } from './eslint-rules/no-magic-string-comparison.js';
 
 const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -212,165 +213,164 @@ export default defineConfig(
     },
   },
 
-  // ADR-026: No regex for schema parsing - enforce via ESLint
-  // Parsers must use ts-morph AST, not regex patterns
-  // Writers must not use regex patterns
-  // No regex allowed in source code
+  // ---------------------------------------------------------------------------
+  // ADR-026: Strict enforcement — no string/regex heuristics in product code
+  // ---------------------------------------------------------------------------
+  //
+  // See: docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md
+  //
+  // DESIGN PRINCIPLES:
+  //   1. Enforcement applies to ALL src/**/*.ts — no file-level exemptions
+  //   2. Moving files between directories cannot bypass lint
+  //   3. All selectors are 'error' — no warnings, no 'off'
+  //   4. Test files are excluded (tests may assert on string content)
+  //   5. typeof narrowing (typeof x === 'type') is allowed (=== and !== only)
+  //   6. Array literal .includes() is allowed; string .includes() is banned
+  //   7. Identifier.getText() is allowed after Node.isIdentifier() narrowing
+  //      (see ADR-026 § "Amendment — Identifier.getText()")
+  //
   {
     files: ['src/**/*.ts'],
-    ignores: testGlobs,
+    ignores: [...testGlobs],
     rules: {
       'no-restricted-syntax': [
         'error',
+
+        // --- Regex ---
         {
           selector: 'Literal[regex]',
-          message:
-            'Regex literals are banned in parsers (ADR-026). Use ts-morph for AST-based parsing.',
+          message: 'Regex literals banned (ADR-026). Use ts-morph AST, not regex.',
         },
         {
           selector: 'NewExpression[callee.name="RegExp"]',
-          message:
-            'RegExp constructor is banned in parsers (ADR-026). Use ts-morph for AST-based parsing.',
+          message: 'RegExp constructor banned (ADR-026). Use ts-morph AST, not regex.',
         },
-      ],
-    },
-  },
 
-  // We don't allow string manipulation in source code, this avoids agents
-  // trying to use string matching to implement parsers
-  // Session 3.3a: String manipulation detection
-  // Configured as ERRORS - no warnings policy
-  // Scoped to schema-processing/ only - utilities like shared/ may use strings legitimately
-  // See: .agent/plans/roadmap.md (Session 3.3a)
-  {
-    files: ['src/schema-processing/**/*.ts'],
-    ignores: testGlobs,
-    rules: {
-      'no-restricted-syntax': [
-        'off',
-        // String pattern matching methods
+        // --- getText() ---
+        {
+          selector: "CallExpression[callee.property.name='getText']",
+          message:
+            'getText() banned (ADR-026). Use symbol resolution or semantic APIs (getName, getLiteralValue). Exception: Identifier.getText() after Node.isIdentifier() — see ADR-026 § "Amendment — Identifier.getText()".',
+        },
+
+        // --- String pattern matching ---
         {
           selector: "CallExpression[callee.property.name='startsWith']",
-          message:
-            'String startsWith() banned (Session 3.3a). Use semantic analysis, not string matching.',
+          message: 'startsWith() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='endsWith']",
+          message: 'endsWith() banned (ADR-026). Use centralized utilities or semantic analysis.',
+        },
+        {
+          selector: "CallExpression[callee.property.name='indexOf']",
+          message: 'indexOf() banned (ADR-026). Use centralized utilities or semantic analysis.',
+        },
+        {
+          selector: "CallExpression[callee.property.name='lastIndexOf']",
           message:
-            'String endsWith() banned (Session 3.3a). Use semantic analysis, not string matching.',
+            'lastIndexOf() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector:
             "CallExpression[callee.property.name='includes'][callee.object.type!='ArrayExpression']",
           message:
-            'String includes() banned (Session 3.3a). Use semantic analysis, not string matching.',
+            'includes() banned on strings (ADR-026). Array literal .includes() is permitted.',
         },
-        {
-          selector: "CallExpression[callee.property.name='indexOf']",
-          message:
-            'String indexOf() banned (Session 3.3a). Use semantic analysis, not string matching.',
-        },
-        {
-          selector: "CallExpression[callee.property.name='lastIndexOf']",
-          message:
-            'String lastIndexOf() banned (Session 3.3a). Use semantic analysis, not string matching.',
-        },
-        // String manipulation methods
+
+        // --- String manipulation ---
         {
           selector: "CallExpression[callee.property.name='slice']",
-          message:
-            'String slice() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'slice() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='substring']",
-          message:
-            'String substring() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'substring() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='substr']",
-          message:
-            'String substr() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'substr() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='split']",
-          message:
-            'String split() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'split() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='replace']",
-          message:
-            'String replace() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'replace() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='replaceAll']",
-          message:
-            'String replaceAll() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'replaceAll() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
-        // String transformation methods
+
+        // --- String transformation ---
         {
           selector: "CallExpression[callee.property.name='toLowerCase']",
           message:
-            'String toLowerCase() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+            'toLowerCase() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='toUpperCase']",
           message:
-            'String toUpperCase() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+            'toUpperCase() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='trim']",
-          message:
-            'String trim() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'trim() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='trimStart']",
-          message:
-            'String trimStart() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'trimStart() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='trimEnd']",
-          message:
-            'String trimEnd() banned (Session 3.3a). Use semantic analysis, not string manipulation.',
+          message: 'trimEnd() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
-        // Regex-adjacent string methods
+
+        // --- Regex-adjacent string methods ---
         {
           selector: "CallExpression[callee.property.name='match']",
-          message:
-            'String match() banned (Session 3.3a). Use semantic analysis, not regex matching.',
+          message: 'match() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
         {
           selector: "CallExpression[callee.property.name='search']",
-          message:
-            'String search() banned (Session 3.3a). Use semantic analysis, not regex matching.',
-        },
-        // ts-morph getText() anti-pattern
-        {
-          selector: "CallExpression[callee.property.name='getText']",
-          message:
-            'getText() for comparison banned (Session 3.3a). Use symbol resolution, not text comparison.',
-        },
-        // String literal comparisons
-        {
-          selector: "BinaryExpression[operator='==='][right.type='Literal'][right.value]",
-          message:
-            'String literal comparison banned (Session 3.3a). Use semantic analysis, not string matching.',
-        },
-        {
-          selector: "BinaryExpression[operator='==='][left.type='Literal'][left.value]",
-          message:
-            'String literal comparison banned (Session 3.3a). Use semantic analysis, not string matching.',
-        },
-        {
-          selector: "BinaryExpression[operator='=='][right.type='Literal'][right.value]",
-          message:
-            'String literal comparison banned (Session 3.3a). Use semantic analysis, not string matching.',
-        },
-        {
-          selector: "BinaryExpression[operator='=='][left.type='Literal'][left.value]",
-          message:
-            'String literal comparison banned (Session 3.3a). Use semantic analysis, not string matching.',
+          message: 'search() banned (ADR-026). Use centralized utilities or semantic analysis.',
         },
       ],
+    },
+  },
+
+  // ---------------------------------------------------------------------------
+  // ADR-026: Magic-string literal comparisons — custom typed rule
+  // ---------------------------------------------------------------------------
+  //
+  // ESLint's `no-restricted-syntax` Literal selectors cannot distinguish string
+  // from numeric/boolean values. This custom rule checks `typeof node.value`
+  // to catch only genuine magic-string comparisons while allowing typeof
+  // narrowing, numeric, boolean, and null comparisons.
+  //
+  {
+    files: ['src/**/*.ts'],
+    ignores: [...testGlobs],
+    plugins: {
+      castr: {
+        rules: {
+          'no-magic-string-comparison': noMagicStringComparison,
+        },
+      },
+    },
+    rules: {
+      'castr/no-magic-string-comparison': 'error',
+    },
+  },
+
+  // eslint-rules tests: RuleTester.run() creates describe/it dynamically —
+  // sonarjs/no-empty-test-file cannot detect this pattern statically.
+  {
+    files: ['eslint-rules/**/*.test.ts'],
+    rules: {
+      'sonarjs/no-empty-test-file': 'off',
     },
   },
 );

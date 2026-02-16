@@ -4,6 +4,14 @@ import { writeZodSchema } from '../zod/index.js';
 import type { TemplateContextOptions } from '../../context/template-context.js';
 import type { CastrSchemaContext, IRPropertySchemaContext } from '../../ir/context.js';
 
+const PARAM_TYPE_BODY = 'Body' as const;
+const PARAM_TYPE_PATH = 'Path' as const;
+const PARAM_TYPE_QUERY = 'Query' as const;
+const PARAM_TYPE_HEADER = 'Header' as const;
+const PARAM_LOCATION_PATH = 'path' as const;
+const PARAM_LOCATION_QUERY = 'query' as const;
+const PARAM_LOCATION_HEADER = 'header' as const;
+
 export function createEndpointWriter(
   endpoint: EndpointDefinition,
   options?: TemplateContextOptions,
@@ -49,7 +57,7 @@ function createParametersArrayWriter(
           // Determine context based on parameter type
           let context: CastrSchemaContext;
 
-          if (param.type === 'Body') {
+          if (param.type === PARAM_TYPE_BODY) {
             // Body is treated as a component/property (value schema)
             context = {
               contextType: 'component',
@@ -154,10 +162,10 @@ function createRequestObjectWriter(
   parameters: EndpointParameter[],
   options?: TemplateContextOptions,
 ): WriterFunction {
-  const pathParams = parameters.filter((p) => p.type === 'Path');
-  const queryParams = parameters.filter((p) => p.type === 'Query');
-  const headers = parameters.filter((p) => p.type === 'Header');
-  const body = parameters.find((p) => p.type === 'Body');
+  const pathParams = parameters.filter((p) => p.type === PARAM_TYPE_PATH);
+  const queryParams = parameters.filter((p) => p.type === PARAM_TYPE_QUERY);
+  const headers = parameters.filter((p) => p.type === PARAM_TYPE_HEADER);
+  const body = parameters.find((p) => p.type === PARAM_TYPE_BODY);
 
   const requestProps: Record<string, string | WriterFunction> = {};
 
@@ -210,9 +218,14 @@ function createZodObjectWriter(
 }
 
 function getParamLocation(type: string): 'path' | 'query' | 'header' {
-  const lower = type.toLowerCase();
-  if (lower === 'path' || lower === 'query' || lower === 'header') {
-    return lower;
+  const locationsByType: Record<string, 'path' | 'query' | 'header'> = {
+    [PARAM_TYPE_PATH]: PARAM_LOCATION_PATH,
+    [PARAM_TYPE_QUERY]: PARAM_LOCATION_QUERY,
+    [PARAM_TYPE_HEADER]: PARAM_LOCATION_HEADER,
+  };
+  const location = locationsByType[type];
+  if (location) {
+    return location;
   }
   throw new Error(`Invalid parameter type: ${type}`);
 }

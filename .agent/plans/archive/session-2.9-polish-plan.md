@@ -8,11 +8,11 @@
 
 ## ⚡ Quick Start (New Session)
 
-1. **Read foundational docs:** [RULES.md](../RULES.md), [testing-strategy.md](../testing-strategy.md), [DEFINITION_OF_DONE.md](../DEFINITION_OF_DONE.md)
+1. **Read foundational docs:** [RULES.md](../../directives/RULES.md), [testing-strategy.md](../../directives/testing-strategy.md), [DEFINITION_OF_DONE.md](../../directives/DEFINITION_OF_DONE.md)
 2. **Run quality gates** to verify clean state
 3. **Work through remaining tasks** below using TDD
 4. **Run quality gates** after each task
-5. **After completion:** Proceed to [zod4-advanced-features-research.md](./zod4-advanced-features-research.md)
+5. **After completion:** Proceed to [zod4-advanced-features-research.md](../../reference/zod4-advanced-features-research.md)
 
 ---
 
@@ -20,7 +20,7 @@
 
 The OpenAPI → IR → Zod pipeline is **proven** (generation works, validation works, real-world fixtures pass). This plan adds **hardening tests** for edge cases and new Zod 4 features.
 
-**Key reference:** [ADR-031-zod-output-strategy.md](../adr/ADR-031-zod-output-strategy.md)
+**Key reference:** [ADR-031-zod-output-strategy.md](../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
 
 ---
 

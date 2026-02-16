@@ -22,11 +22,16 @@ import type {
 } from '../ir/schema.js';
 import { CastrSchemaProperties } from '../ir/schema-properties.js';
 import { toIdentifier } from '../../shared/utils/identifier-utils.js';
+import { drop, join, split, startsWith } from 'lodash-es';
+import { parseComponentRef } from '../../shared/ref-resolution.js';
 
 const INLINE_REF_PREFIX = '#/definitions/';
-const COMPONENTS_SCHEMAS_PREFIX = '#/components/schemas/';
-const XEXT_PREFIX = '#/x-ext/';
-const XEXT_COMPONENTS_MARKER = '/components/schemas/';
+const REF_HASH_PREFIX = '#' as const;
+const REF_PATH_SEPARATOR = '/' as const;
+const INLINE_DEFINITIONS_PREFIX_SEGMENT_COUNT = 2;
+const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+const METADATA_KEY = 'metadata' as const;
+const DEFINITIONS_KEY = 'definitions' as const;
 
 /**
  * Context for IR-based schema ref resolution.
@@ -51,7 +56,7 @@ const findSchemaComponentByName = (
   name: string,
 ): CastrSchemaComponent | undefined => {
   for (const component of components) {
-    if (component.type === 'schema' && component.name === name) {
+    if (component.type === COMPONENT_TYPE_SCHEMA && component.name === name) {
       return component;
     }
   }
@@ -112,7 +117,7 @@ const castrSchemaToJsonSchema = (schema: CastrSchema): MutableJsonSchema => {
   const result: MutableJsonSchema = {};
 
   for (const [key, value] of Object.entries(schema)) {
-    if (key === 'metadata') {
+    if (key === METADATA_KEY) {
       continue;
     }
     setKeyword(result, key, processSchemaEntry(value));
@@ -154,7 +159,7 @@ const inlineJsonSchemaObjectFromIR = (
   const result: MutableJsonSchema = {};
 
   for (const [key, entryValue] of Object.entries(schema)) {
-    if (key === 'definitions') {
+    if (key === DEFINITIONS_KEY) {
       continue;
     }
     setKeyword(result, key, inlineJsonSchemaValueFromIR(entryValue, context));
@@ -172,22 +177,25 @@ const inlineJsonSchemaObjectFromIR = (
  * Sanitizes the name to match how IR stores component names.
  */
 const extractSchemaNameFromRef = (ref: string): string | undefined => {
-  if (ref.startsWith(INLINE_REF_PREFIX)) {
-    return toIdentifier(ref.slice(INLINE_REF_PREFIX.length));
-  }
-  if (ref.startsWith(COMPONENTS_SCHEMAS_PREFIX)) {
-    return toIdentifier(ref.slice(COMPONENTS_SCHEMAS_PREFIX.length));
-  }
-
-  // Handle Scalar bundle x-ext format: #/x-ext/{hash}/components/schemas/SchemaName
-  if (ref.startsWith(XEXT_PREFIX)) {
-    const componentsIndex = ref.indexOf(XEXT_COMPONENTS_MARKER);
-    if (componentsIndex !== -1) {
-      return toIdentifier(ref.slice(componentsIndex + XEXT_COMPONENTS_MARKER.length));
-    }
+  if (startsWith(ref, INLINE_REF_PREFIX)) {
+    const refSegments = split(ref, REF_PATH_SEPARATOR);
+    const definitionName = join(
+      drop(refSegments, INLINE_DEFINITIONS_PREFIX_SEGMENT_COUNT),
+      REF_PATH_SEPARATOR,
+    );
+    return toIdentifier(definitionName);
   }
 
-  return undefined;
+  if (!startsWith(ref, REF_HASH_PREFIX)) {
+    return undefined;
+  }
+
+  try {
+    const parsedRef = parseComponentRef(ref);
+    return toIdentifier(parsedRef.componentName);
+  } catch {
+    return undefined;
+  }
 };
 
 const resolveSchemaReferenceFromIR = (

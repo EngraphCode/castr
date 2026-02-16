@@ -8,7 +8,7 @@
  */
 
 import { isIdentifierStart, isIdentifierPart, ScriptTarget } from 'typescript';
-import { words } from 'lodash-es';
+import { trim, words } from 'lodash-es';
 
 /**
  * TypeScript reserved words that cannot be used as identifiers.
@@ -206,7 +206,7 @@ export function isValidJsIdentifier(name: string): boolean {
  * @public
  */
 export function toIdentifier(name: string): string {
-  const trimmed = name.trim();
+  const trimmed = trim(name);
 
   // If already a valid identifier, return it (unless it's a reserved word)
   if (isValidJsIdentifier(trimmed) && !RESERVED_WORDS.has(trimmed)) {

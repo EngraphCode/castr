@@ -4,8 +4,25 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { EndpointDefinition } from '../../endpoints/definition.types.js';
 import { logger } from '../../shared/utils/logger.js';
 
-import { snakeCase } from 'lodash-es';
+import { snakeCase, split } from 'lodash-es';
 export type TemplateContextGroupStrategy = 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
+
+const CHAR_CODE_0 = 0x30;
+const CHAR_CODE_9 = 0x39;
+const CHAR_CODE_A = 0x41;
+const CHAR_CODE_Z = 0x5a;
+const CHAR_CODE_a = 0x61;
+const CHAR_CODE_z = 0x7a;
+const CHAR_CODE_UNDERSCORE = 0x5f;
+const COLON_TOKEN = ':' as const;
+const OPEN_BRACE_TOKEN = '{' as const;
+const CLOSE_BRACE_TOKEN = '}' as const;
+const REF_SEPARATOR = '/' as const;
+const DEFAULT_GROUP_NAME = 'Default' as const;
+const GROUP_STRATEGY_TAG = 'tag' as const;
+const GROUP_STRATEGY_TAG_FILE = 'tag-file' as const;
+const GROUP_STRATEGY_METHOD = 'method' as const;
+const GROUP_STRATEGY_METHOD_FILE = 'method-file' as const;
 
 export interface MinimalTemplateContext {
   schemas: Record<string, string>;
@@ -28,10 +45,10 @@ export const makeEndpointTemplateContext = (): MinimalTemplateContext => ({
  */
 function isWordCharCode(code: number): boolean {
   return (
-    (code >= 0x30 && code <= 0x39) || // 0-9
-    (code >= 0x41 && code <= 0x5a) || // A-Z
-    (code >= 0x61 && code <= 0x7a) || // a-z
-    code === 0x5f // _
+    (code >= CHAR_CODE_0 && code <= CHAR_CODE_9) || // 0-9
+    (code >= CHAR_CODE_A && code <= CHAR_CODE_Z) || // A-Z
+    (code >= CHAR_CODE_a && code <= CHAR_CODE_z) || // a-z
+    code === CHAR_CODE_UNDERSCORE // _
   );
 }
 
@@ -44,25 +61,30 @@ function findParamEnd(path: string, startIndex: number): number {
 }
 
 export const getOriginalPathWithBrackets = (path: string): string => {
-  // Use index-based parsing instead of regex (per ADR-026)
   let result = '';
-  let cursor = 0;
+  let index = 0;
 
-  while (cursor < path.length) {
-    const colonIndex = path.indexOf(':', cursor);
-    if (colonIndex === -1) {
-      result += path.slice(cursor);
-      break;
+  while (index < path.length) {
+    const char = path[index] ?? '';
+    if (char !== COLON_TOKEN) {
+      result += char;
+      index++;
+      continue;
     }
 
-    // Add everything before the colon
-    result += path.slice(cursor, colonIndex) + '{';
+    const paramEnd = findParamEnd(path, index + 1);
+    if (paramEnd === index + 1) {
+      result += COLON_TOKEN;
+      index++;
+      continue;
+    }
 
-    // Find the end of the parameter name (alphanumeric + underscore)
-    const paramEnd = findParamEnd(path, colonIndex + 1);
-
-    result += path.slice(colonIndex + 1, paramEnd) + '}';
-    cursor = paramEnd;
+    result += OPEN_BRACE_TOKEN;
+    for (let i = index + 1; i < paramEnd; i++) {
+      result += path[i] ?? '';
+    }
+    result += CLOSE_BRACE_TOKEN;
+    index = paramEnd;
   }
 
   return result;
@@ -76,8 +98,8 @@ export const getOriginalPathWithBrackets = (path: string): string => {
  */
 export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
   return fullSchemaNames.map((name) => {
-    const parts = name.split('/');
-    const lastPart = parts.at(-1);
+    const parts = split(name, REF_SEPARATOR);
+    const lastPart = parts[parts.length - 1];
     if (!lastPart) {
       throw new Error(`Invalid schema name: ${name}`);
     }
@@ -102,13 +124,13 @@ export const determineGroupName = (
   groupStrategy: TemplateContextGroupStrategy,
   endpoint: EndpointDefinition,
 ): string => {
-  if (groupStrategy === 'tag' || groupStrategy === 'tag-file') {
-    return snakeCase(endpoint.tags?.[0] ?? 'Default');
+  if (groupStrategy === GROUP_STRATEGY_TAG || groupStrategy === GROUP_STRATEGY_TAG_FILE) {
+    return snakeCase(endpoint.tags?.[0] ?? DEFAULT_GROUP_NAME);
   }
-  if (groupStrategy === 'method' || groupStrategy === 'method-file') {
+  if (groupStrategy === GROUP_STRATEGY_METHOD || groupStrategy === GROUP_STRATEGY_METHOD_FILE) {
     return snakeCase(endpoint.method);
   }
-  return snakeCase('Default');
+  return snakeCase(DEFAULT_GROUP_NAME);
 };
 
 export { collectEndpointDependencies } from './template-context.endpoints.dependencies.js';

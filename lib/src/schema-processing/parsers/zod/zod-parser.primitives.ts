@@ -23,6 +23,7 @@ import {
   type ZodMethodChainInfo,
   ZOD_PRIMITIVES,
 } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import {
   createDefaultMetadata,
   ZOD_PRIMITIVE_TYPES,
@@ -40,57 +41,15 @@ import {
   applyOptionalFields,
 } from './zod-parser.constraints.js';
 import { applyZod4Formats } from './zod-parser.zod4-formats.js';
-
-function computePresence(optionality: ParsedOptionality): string {
-  if (optionality.optional && optionality.nullable) {
-    return '.nullish()';
-  }
-  if (optionality.optional) {
-    return '.optional()';
-  }
-  if (optionality.nullable) {
-    return '.nullable()';
-  }
-  return '';
-}
-
-function collectValidations(methods: ZodMethodCall[]): string[] {
-  const validations: string[] = [];
-  const skipMethods = new Set(['optional', 'nullable', 'nullish', 'default', 'meta', 'describe']);
-
-  for (const method of methods) {
-    if (skipMethods.has(method.name)) {
-      continue;
-    }
-    const argsStr = method.args.map((a) => JSON.stringify(a)).join(', ');
-    validations.push(`.${method.name}(${argsStr})`);
-  }
-  return validations;
-}
-
-function collectDefaults(defaultValue: unknown): string[] {
-  if (defaultValue === undefined) {
-    return [];
-  }
-  const val = typeof defaultValue === 'string' ? `"${defaultValue}"` : String(defaultValue);
-  return [`.default(${val})`];
-}
-
-/**
- * Build IRZodChainInfo from parsed data.
- * @internal
- */
-function buildZodChainInfo(
-  methods: ZodMethodCall[],
-  optionality: ParsedOptionality,
-  defaultValue: unknown,
-): IRZodChainInfo {
-  return {
-    presence: computePresence(optionality),
-    validations: collectValidations(methods),
-    defaults: collectDefaults(defaultValue),
-  };
-}
+import { buildZodChainInfo } from './zod-parser.primitives.chain.js';
+import {
+  ZOD_BASE_METHOD_LITERAL,
+  ZOD_BASE_METHOD_NULL,
+  ZOD_BASE_METHOD_UNDEFINED,
+  ZOD_METHOD_DEFAULT,
+  ZOD_METHOD_DESCRIBE,
+  ZOD_METHOD_META,
+} from './zod-constants.js';
 
 const ZOD_PRIMITIVES_SET = new Set<string>(ZOD_PRIMITIVES);
 
@@ -110,18 +69,18 @@ function processChainMethod(
   method: ZodMethodCall,
   state: ProcessedChain,
 ): void {
-  if (method.name === 'default') {
+  if (method.name === ZOD_METHOD_DEFAULT) {
     state.defaultValue = method.args[0];
     return;
   }
-  if (method.name === 'describe') {
+  if (method.name === ZOD_METHOD_DESCRIBE) {
     const arg = method.args[0];
     if (typeof arg === 'string') {
       state.description = arg;
     }
     return;
   }
-  if (method.name === 'meta') {
+  if (method.name === ZOD_METHOD_META) {
     return;
   }
   processOptionalityMethod(method, state.optionality);
@@ -198,7 +157,7 @@ function handleStandardPrimitive(
   const schema: CastrSchema = {
     type: schemaType,
     metadata: createDefaultMetadata({
-      nullable: baseMethod === 'null' || optionality.nullable,
+      nullable: baseMethod === ZOD_BASE_METHOD_NULL || optionality.nullable,
       required: !optionality.optional,
       zodChain,
       defaultValue,
@@ -216,11 +175,17 @@ function handleStandardPrimitive(
  * Parse a primitive Zod expression from a ts-morph Node.
  * @internal
  */
-function validateAndGetChainInfo(node: Node): ZodMethodChainInfo | undefined {
+function validateAndGetChainInfo(
+  node: Node,
+  resolver?: ZodImportResolver,
+): ZodMethodChainInfo | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
-  const chainInfo = getZodMethodChain(node);
+  if (!resolver) {
+    return undefined;
+  }
+  const chainInfo = getZodMethodChain(node, resolver);
   if (!chainInfo || !ZOD_PRIMITIVES_SET.has(chainInfo.baseMethod)) {
     return undefined;
   }
@@ -229,28 +194,33 @@ function validateAndGetChainInfo(node: Node): ZodMethodChainInfo | undefined {
 
 export function parsePrimitiveZodFromNode(
   node: Node,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
-  const chainInfo = validateAndGetChainInfo(node);
+  const chainInfo = validateAndGetChainInfo(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, chainedMethods } = chainInfo;
   const schemaType = ZOD_PRIMITIVE_TYPES.get(baseMethod);
-  if (schemaType === undefined && baseMethod !== 'undefined' && baseMethod !== 'literal') {
+  if (
+    schemaType === undefined &&
+    baseMethod !== ZOD_BASE_METHOD_UNDEFINED &&
+    baseMethod !== ZOD_BASE_METHOD_LITERAL
+  ) {
     return undefined;
   }
 
   const processed = processChainMethods(baseMethod, chainedMethods);
   const zodChain = buildZodChainInfo(chainedMethods, processed.optionality, processed.defaultValue);
 
-  if (baseMethod === 'undefined') {
+  if (baseMethod === ZOD_BASE_METHOD_UNDEFINED) {
     return applyMetaAndReturn(handleUndefinedSchema(zodChain), chainedMethods);
   }
 
-  if (baseMethod === 'literal') {
+  if (baseMethod === ZOD_BASE_METHOD_LITERAL) {
     return applyMetaAndReturn(
       handleLiteralSchema(chainInfo, processed.optionality, zodChain, processed.defaultValue),
       chainedMethods,
@@ -281,16 +251,13 @@ registerParser('primitive', parsePrimitiveZodFromNode);
  * @public
  */
 export function parsePrimitiveZod(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${expression};`);
 
   const init = sourceFile.getVariableDeclarations()[0]?.getInitializer();
   if (!init || !Node.isCallExpression(init)) {
     return undefined;
   }
 
-  return parsePrimitiveZodFromNode(init, parseZodSchemaFromNode);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
+  return parsePrimitiveZodFromNode(init, boundParseSchema, resolver);
 }

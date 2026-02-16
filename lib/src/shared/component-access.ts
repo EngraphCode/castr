@@ -24,6 +24,11 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 import { parseComponentRef } from './ref-resolution.js';
 import { isRecord } from './types.js';
 
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
+const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters' as const;
+const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses' as const;
+const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies' as const;
+
 function isSchemaObjectOrRef(value: unknown): value is SchemaObject | ReferenceObject {
   return isRecord(value) && (isReferenceObject(value) || true);
 }
@@ -177,7 +182,7 @@ export function resolveSchemaRef(
   const parsedRef = parseComponentRef(ref);
 
   // Only support schema refs (not parameters, responses, etc.)
-  if (parsedRef.componentType !== 'schemas') {
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_SCHEMAS) {
     throw new Error(
       `Invalid schema $ref: ${ref}. Expected schema reference, got ${parsedRef.componentType}`,
     );
@@ -233,7 +238,7 @@ export function getParameterByRef(
 ): ParameterObject | ReferenceObject {
   const { componentType, componentName } = parseComponentRef(ref);
 
-  if (componentType !== 'parameters') {
+  if (componentType !== OPENAPI_COMPONENT_TYPE_PARAMETERS) {
     throw new Error(`Expected parameter $ref, got: ${ref}`);
   }
 
@@ -273,7 +278,7 @@ export function getResponseByRef(
 ): ResponseObject | ReferenceObject {
   const { componentType, componentName } = parseComponentRef(ref);
 
-  if (componentType !== 'responses') {
+  if (componentType !== OPENAPI_COMPONENT_TYPE_RESPONSES) {
     throw new Error(`Expected response $ref, got: ${ref}`);
   }
 
@@ -311,7 +316,7 @@ export function getRequestBodyByRef(
 ): RequestBodyObject | ReferenceObject {
   const { componentType, componentName } = parseComponentRef(ref);
 
-  if (componentType !== 'requestBodies') {
+  if (componentType !== OPENAPI_COMPONENT_TYPE_REQUEST_BODIES) {
     throw new Error(`Expected requestBody $ref, got: ${ref}`);
   }
 

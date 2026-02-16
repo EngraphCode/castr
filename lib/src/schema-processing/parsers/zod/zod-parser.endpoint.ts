@@ -21,6 +21,7 @@
 
 import { Node } from 'ts-morph';
 import { createZodProject } from './zod-ast.js';
+import { DEFINE_ENDPOINT_IDENTIFIER } from './zod-constants.js';
 import type {
   EndpointDefinition,
   EndpointParameters,
@@ -32,7 +33,6 @@ import {
   extractStringArray,
   extractParametersObject,
   extractResponsesObject,
-  stripQuotes,
 } from './zod-parser.endpoint.extractors.js';
 
 // Re-export builder function for API consistency
@@ -137,7 +137,7 @@ const PROPERTY_EXTRACTORS: Readonly<
     state.operationId = extractStringValue(propInit);
   },
   body: (state, propInit) => {
-    state.body = stripQuotes(propInit.getText());
+    state.body = extractStringValue(propInit);
   },
   tags: (state, propInit) => {
     state.tags = extractStringArray(propInit);
@@ -261,11 +261,7 @@ export function parseEndpointDefinition(expression: string): EndpointDefinition 
  * @internal
  */
 function findDefineEndpointInit(expression: string): Node | undefined {
-  const project = createZodProject(`const __endpoint = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile } = createZodProject(`const __endpoint = ${expression};`);
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
@@ -287,7 +283,8 @@ function extractDefineEndpointArg(expression: string): Node | undefined {
   }
 
   const callExpr = init.getExpression();
-  if (!Node.isIdentifier(callExpr) || callExpr.getText() !== 'defineEndpoint') {
+  // eslint-disable-next-line no-restricted-syntax -- ADR-026 § "Amendment — Identifier.getText()": ts-morph Identifier has no getName(); getText() is the only API
+  if (!Node.isIdentifier(callExpr) || callExpr.getText() !== DEFINE_ENDPOINT_IDENTIFIER) {
     return undefined;
   }
 

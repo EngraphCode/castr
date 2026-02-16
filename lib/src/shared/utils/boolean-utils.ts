@@ -1,4 +1,5 @@
 import { match } from 'ts-pattern';
+import { toLower } from 'lodash-es';
 
 /**
  * Convert a string or boolean value to a boolean.
@@ -6,7 +7,7 @@ import { match } from 'ts-pattern';
  * @public
  */
 export const toBoolean = (value: undefined | string | boolean, defaultValue: boolean): boolean =>
-  match(value?.toString().toLowerCase())
+  match(toLower(value?.toString()))
     .with('false', () => false)
     .with('true', () => true)
     .otherwise(() => defaultValue);

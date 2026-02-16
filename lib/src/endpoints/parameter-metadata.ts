@@ -1,5 +1,6 @@
 import type { SchemaObject, ParameterObject, ExampleObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
+import { trim } from 'lodash-es';
 import type { SchemaConstraints } from './definition.types.js';
 
 /**
@@ -29,7 +30,7 @@ export type ParameterMetadata = Pick<
  * @internal
  */
 export function extractDescription(param: ParameterObject): string | undefined {
-  const trimmed = param.description?.trim();
+  const trimmed = param.description === undefined ? undefined : trim(param.description);
   return trimmed && trimmed.length > 0 ? trimmed : undefined;
 }
 

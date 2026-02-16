@@ -41,10 +41,13 @@
  *
  * @public
  */
+const GENERATION_RESULT_TYPE_SINGLE = 'single' as const;
+const GENERATION_RESULT_TYPE_GROUPED = 'grouped' as const;
+
 export type GenerationResult =
   | {
       /** Discriminator: single file output */
-      type: 'single';
+      type: typeof GENERATION_RESULT_TYPE_SINGLE;
       /** Generated code content */
       content: string;
       /** Optional output file path */
@@ -52,7 +55,7 @@ export type GenerationResult =
     }
   | {
       /** Discriminator: grouped file output */
-      type: 'grouped';
+      type: typeof GENERATION_RESULT_TYPE_GROUPED;
       /** Generated files by name/path */
       files: Record<string, string>;
       /** List of file paths */
@@ -82,7 +85,7 @@ export type GenerationResult =
 export function isSingleFileResult(
   result: GenerationResult,
 ): result is Extract<GenerationResult, { type: 'single' }> {
-  return result.type === 'single';
+  return result.type === GENERATION_RESULT_TYPE_SINGLE;
 }
 
 /**
@@ -109,5 +112,5 @@ export function isSingleFileResult(
 export function isGroupedFileResult(
   result: GenerationResult,
 ): result is Extract<GenerationResult, { type: 'grouped' }> {
-  return result.type === 'grouped';
+  return result.type === GENERATION_RESULT_TYPE_GROUPED;
 }

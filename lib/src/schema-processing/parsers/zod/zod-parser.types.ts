@@ -20,6 +20,7 @@
 
 import type { CastrDocument, CastrSchema } from '../../ir/schema.js';
 import type { Node } from 'ts-morph';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 
 /**
  * Callback type for recursive schema parsing.
@@ -29,7 +30,7 @@ import type { Node } from 'ts-morph';
  *
  * @internal
  */
-export type ZodSchemaParser = (node: Node) => CastrSchema | undefined;
+export type ZodSchemaParser = (node: Node, resolver?: ZodImportResolver) => CastrSchema | undefined;
 
 /**
  * Error codes for Zod parser failures.

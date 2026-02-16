@@ -17,6 +17,11 @@ import type {
   CastrSchema,
 } from '../../ir/schema.js';
 
+const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+const COMPONENT_TYPE_PARAMETER = 'parameter' as const;
+const COMPONENT_TYPE_RESPONSE = 'response' as const;
+const COMPONENT_TYPE_REQUEST_BODY = 'requestBody' as const;
+
 /**
  * Extract all enums from components and operations.
  * @internal
@@ -45,13 +50,13 @@ class EnumExtractor {
   }
 
   private visitComponent(component: IRComponent): void {
-    if (component.type === 'schema') {
+    if (component.type === COMPONENT_TYPE_SCHEMA) {
       this.visitSchema(component.schema, component.name);
-    } else if (component.type === 'parameter') {
+    } else if (component.type === COMPONENT_TYPE_PARAMETER) {
       this.visitSchema(component.parameter.schema, component.parameter.name);
-    } else if (component.type === 'response') {
+    } else if (component.type === COMPONENT_TYPE_RESPONSE) {
       this.visitResponseComponent(component);
-    } else if (component.type === 'requestBody') {
+    } else if (component.type === COMPONENT_TYPE_REQUEST_BODY) {
       this.visitRequestBody(component.requestBody);
     }
   }

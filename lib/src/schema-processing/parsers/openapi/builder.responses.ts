@@ -17,6 +17,9 @@ import type { CastrResponse, IRMediaType, IRResponseHeader } from '../../ir/sche
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
+import { parseComponentRef } from '../../../shared/ref-resolution.js';
+
+const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses' as const;
 
 /**
  * Type guard to check if a value is a ResponseObject or ReferenceObject.
@@ -98,12 +101,18 @@ function resolveResponse(
   ref: ReferenceObject,
   context: IRBuildContext,
 ): ResponseObject | undefined {
-  const refPath = ref.$ref;
-  if (!refPath.startsWith('#/components/responses/')) {
+  let parsedRef;
+  try {
+    parsedRef = parseComponentRef(ref.$ref);
+  } catch {
     return undefined;
   }
 
-  const responseName = refPath.split('/').pop();
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_RESPONSES) {
+    return undefined;
+  }
+
+  const responseName = parsedRef.componentName;
   if (!responseName || !context.doc.components?.responses) {
     return undefined;
   }

@@ -14,25 +14,43 @@ import type { MinimalTemplateContext } from './template-context.endpoints.helper
 
 export type { MinimalTemplateContext };
 
+function toRootSchemaName(schemaName: string): string {
+  const DOT_CHAR_CODE = 46;
+  let rootName = '';
+
+  for (let i = 0; i < schemaName.length; i++) {
+    const ch = schemaName.charCodeAt(i);
+    if (ch === DOT_CHAR_CODE) {
+      break;
+    }
+
+    rootName += schemaName[i] ?? '';
+  }
+
+  return rootName || schemaName;
+}
+
 /**
- * Normalize schema name for dependency tracking.
- * Extracts base schema name from potentially chained schema names.
+ * Normalize dependency name from a structural schema reference.
  *
- * @param schemaName - Schema name (may include chains like "User.address")
- * @returns Normalized schema name or null if invalid
+ * @param schema - Minimal schema shape containing an optional `$ref`
+ * @returns Root dependency name when reference exists, otherwise null
  *
  * @internal
  */
-export const normalizeSchemaNameForDependency = (schemaName: string): string | null => {
+export const normalizeSchemaNameForDependency = (
+  schema: Pick<CastrSchema, '$ref'>,
+): string | null => {
+  if (!schema.$ref) {
+    return null;
+  }
+
+  const schemaName = getSchemaNameFromRef(schema.$ref);
   if (!schemaName) {
     return null;
   }
-  if (schemaName.startsWith('z.')) {
-    return null;
-  }
-  // Sometimes the schema includes a chain that should be removed from the dependency
-  const [normalizedSchemaName] = schemaName.split('.');
-  return normalizedSchemaName || null;
+
+  return toRootSchemaName(schemaName);
 };
 
 /**
@@ -109,15 +127,12 @@ export const processTransitiveDependenciesForGroup = (
   }
 
   transitiveRefs.forEach((transitiveRef) => {
-    const transitiveSchemaName = getSchemaNameFromRef(transitiveRef);
-    if (!transitiveSchemaName) {
-      return;
-    }
-
-    const normalized = normalizeSchemaNameForDependency(transitiveSchemaName);
+    const normalized = normalizeSchemaNameForDependency({ $ref: transitiveRef });
     if (normalized) {
       dependencies.add(normalized);
     }
+
+    const transitiveSchemaName = getSchemaNameFromRef(transitiveRef);
 
     const transitiveType = types[transitiveSchemaName];
     if (transitiveType) {

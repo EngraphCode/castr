@@ -103,11 +103,18 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - No swallowed errors exist in strict pipeline code paths.
 - No product-code escape hatches exist (`as` except `as const`, `any`, `!`, `eslint-disable`).
 - Determinism is proven by tests (stable ordering, byte-identical outputs where required).
+- TDD is mandatory for all work (see `RULES.md` § Testing Standards).
 - Quality gates pass (canonical: `.agent/directives/DEFINITION_OF_DONE.md`).
 
 **Governing docs:** `.agent/directives/VISION.md`, `.agent/directives/RULES.md`, `.agent/directives/testing-strategy.md`, `.agent/directives/requirements.md`, `.agent/directives/DEFINITION_OF_DONE.md`.
 
 **References:** `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md`, `lib/eslint.config.ts`.
+
+**Progress update (2026-02-16):**
+
+- [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md) is complete.
+- Lint debt for Plan 04 scope is reduced from 272 to 0.
+- Current active plan is now [3.3a.05 — Remove Permissive Fallbacks](./active/3.3a-05-remove-permissive-fallbacks.md).
 
 ---
 
@@ -126,6 +133,8 @@ Prove that the Zod layer participates in strict, lossless round-trips:
 | 2   | Zod → IR → Zod                    | ✅       | ✅         | ✅ Complete |
 | 3   | OpenAPI → IR → Zod → IR → OpenAPI | 🔴       | —          | 🔴 Blocked  |
 | 4   | Zod → IR → OpenAPI → IR → Zod     | ✅       | —          | ✅ Complete |
+
+> **Note:** ✅ = structural losslessness proven (schema counts, structure preserved). Functional validation-parity (data validates identically before/after round-trips) is tracked separately in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md).
 
 **Success criteria (3.3b):**
 
@@ -146,11 +155,11 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 
 | Step | Plan                                                                                                             | Status      |
 | ---- | ---------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1    | [3.3a.01 — ADR-026 Scope Definition](./active/3.3a-01-adr026-scope.md)                                           | ✅ Complete |
-| 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/session-3.3a/3.3a-02-eslint-enforcement-redesign.md)           | 🔲          |
-| 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/session-3.3a/3.3a-03-zod-parser-semantic-parsing.md)           | 🔲          |
-| 4    | [3.3a.04 — Centralize Data-String Parsing](./current/session-3.3a/3.3a-04-centralize-data-string-parsing.md)     | 🔲          |
-| 5    | [3.3a.05 — Remove Permissive Fallbacks](./current/session-3.3a/3.3a-05-remove-permissive-fallbacks.md)           | 🔲          |
+| 1    | [3.3a.01 — ADR-026 Scope Definition](./current/complete/3.3a-01-adr026-scope.md)                                 | ✅ Complete |
+| 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/complete/3.3a-02-eslint-enforcement-redesign.md)               | ✅ Complete |
+| 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/complete/3.3a-03-zod-parser-semantic-parsing.md)               | ✅ Complete |
+| 4    | [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md)          | ✅ Complete |
+| 5    | [3.3a.05 — Remove Permissive Fallbacks](./active/3.3a-05-remove-permissive-fallbacks.md)                         | 🔄 Active   |
 | 6    | [3.3a.06 — Remove Swallowed Errors](./current/session-3.3a/3.3a-06-remove-swallowed-errors.md)                   | 🔲          |
 | 7    | [3.3a.07 — Remove Escape Hatches](./current/session-3.3a/3.3a-07-remove-escape-hatches.md)                       | 🔲          |
 | 8    | [3.3a.08 — Prove Determinism](./current/session-3.3a/3.3a-08-prove-determinism.md)                               | 🔲          |
@@ -210,9 +219,10 @@ Strictness note: any "best-effort" or "permissive fallback" behavior is a doctri
 ## Architectural Note: Two-Pass Parsing with Symbol Table (Identified Session 3.3)
 
 > [!IMPORTANT]
-> The current Zod parser uses single-pass parsing with naming convention heuristics
-> (e.g., stripping `Schema` suffix) to resolve schema references. For a more robust
-> and idiomatic solution, implement two-pass parsing:
+> **Addressed in [3.3a.03 — Zod Parser Semantic Parsing](./current/complete/3.3a-03-zod-parser-semantic-parsing.md).**
+>
+> The Zod parser is being refactored from single-pass parsing with naming convention heuristics
+> to two-pass parsing with a symbol table:
 >
 > **Pass 1:** Collect all schema declarations into a symbol table  
 > **Pass 2:** Resolve identifier references by looking up symbols
@@ -223,7 +233,7 @@ Strictness note: any "best-effort" or "permissive fallback" behavior is a doctri
 > - Cross-file reference resolution
 > - Circular reference detection
 >
-> This is future work on the roadmap for Phase 4+.
+> [3.3b.02 — Scenario 3](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md) consumes the symbol table for identifier-based composition parsing.
 
 ---
 

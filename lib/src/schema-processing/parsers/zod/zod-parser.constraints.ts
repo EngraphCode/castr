@@ -9,7 +9,18 @@
  */
 
 import type { ZodMethodCall } from './zod-ast.js';
-import type { CastrSchema } from '../../ir/schema.js';
+import {
+  ZOD_BASE_METHOD_NUMBER,
+  ZOD_BASE_METHOD_STRING,
+  ZOD_METHOD_BASE64,
+  ZOD_METHOD_INT,
+  ZOD_METHOD_LENGTH,
+  ZOD_METHOD_MAX,
+  ZOD_METHOD_MIN,
+  ZOD_METHOD_NULLABLE,
+  ZOD_METHOD_NULLISH,
+  ZOD_METHOD_OPTIONAL,
+} from './zod-constants.js';
 
 /**
  * Constraint values extracted from method chain.
@@ -47,9 +58,9 @@ function handleStringLengthConstraint(method: ZodMethodCall, constraints: Parsed
     return;
   }
 
-  if (method.name === 'min' || method.name === 'length') {
+  if (method.name === ZOD_METHOD_MIN || method.name === ZOD_METHOD_LENGTH) {
     constraints.minLength = arg;
-  } else if (method.name === 'max') {
+  } else if (method.name === ZOD_METHOD_MAX) {
     constraints.maxLength = arg;
   }
 }
@@ -101,7 +112,7 @@ function handleStringFormatOrPattern(method: ZodMethodCall, constraints: ParsedC
   }
 
   // Check for base64 encoding
-  if (method.name === 'base64') {
+  if (method.name === ZOD_METHOD_BASE64) {
     constraints.contentEncoding = 'base64';
     return;
   }
@@ -202,7 +213,7 @@ export function processNumberMethod(method: ZodMethodCall, constraints: ParsedCo
   if (handleNumberArgConstraint(method, constraints)) {
     return;
   }
-  if (method.name === 'int') {
+  if (method.name === ZOD_METHOD_INT) {
     constraints.format = 'int32';
   }
 }
@@ -219,11 +230,11 @@ export function processOptionalityMethod(
   method: ZodMethodCall,
   optionality: ParsedOptionality,
 ): void {
-  if (method.name === 'optional') {
+  if (method.name === ZOD_METHOD_OPTIONAL) {
     optionality.optional = true;
-  } else if (method.name === 'nullable') {
+  } else if (method.name === ZOD_METHOD_NULLABLE) {
     optionality.nullable = true;
-  } else if (method.name === 'nullish') {
+  } else if (method.name === ZOD_METHOD_NULLISH) {
     optionality.optional = true;
     optionality.nullable = true;
   }
@@ -238,80 +249,11 @@ export function processTypeConstraints(
   method: ZodMethodCall,
   constraints: ParsedConstraints,
 ): void {
-  if (baseMethod === 'string') {
+  if (baseMethod === ZOD_BASE_METHOD_STRING) {
     processStringMethod(method, constraints);
   }
-  if (baseMethod === 'number') {
+  if (baseMethod === ZOD_BASE_METHOD_NUMBER) {
     processNumberMethod(method, constraints);
   }
 }
-
-/**
- * Apply string constraints to schema.
- * @internal
- */
-function applyStringConstraints(schema: CastrSchema, constraints: ParsedConstraints): void {
-  if (constraints.minLength !== undefined) {
-    schema.minLength = constraints.minLength;
-  }
-  if (constraints.maxLength !== undefined) {
-    schema.maxLength = constraints.maxLength;
-  }
-  if (constraints.pattern !== undefined) {
-    schema.pattern = constraints.pattern;
-  }
-  if (constraints.format !== undefined) {
-    schema.format = constraints.format;
-  }
-  if (constraints.contentEncoding !== undefined) {
-    schema.contentEncoding = constraints.contentEncoding;
-  }
-}
-
-/**
- * Apply number constraints to schema.
- * @internal
- */
-function applyNumberConstraints(schema: CastrSchema, constraints: ParsedConstraints): void {
-  if (constraints.minimum !== undefined) {
-    schema.minimum = constraints.minimum;
-  }
-  if (constraints.maximum !== undefined) {
-    schema.maximum = constraints.maximum;
-  }
-  if (constraints.exclusiveMinimum !== undefined) {
-    schema.exclusiveMinimum = constraints.exclusiveMinimum;
-  }
-  if (constraints.exclusiveMaximum !== undefined) {
-    schema.exclusiveMaximum = constraints.exclusiveMaximum;
-  }
-  if (constraints.multipleOf !== undefined) {
-    schema.multipleOf = constraints.multipleOf;
-  }
-}
-
-/**
- * Apply constraints to schema.
- * @internal
- */
-export function applyConstraints(schema: CastrSchema, constraints: ParsedConstraints): void {
-  applyStringConstraints(schema, constraints);
-  applyNumberConstraints(schema, constraints);
-}
-
-/**
- * Apply optional schema fields (default, description).
- * @internal
- */
-export function applyOptionalFields(
-  schema: CastrSchema,
-  defaultValue: unknown,
-  description: string | undefined,
-): void {
-  if (defaultValue !== undefined) {
-    schema.default = defaultValue;
-  }
-  if (description !== undefined) {
-    schema.description = description;
-  }
-}
+export { applyConstraints, applyOptionalFields } from './zod-parser.constraints.apply.js';

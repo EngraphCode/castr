@@ -22,14 +22,20 @@ export interface OTTNormalizedInput {
 }
 
 const IN_MEMORY_DESCRIPTOR = '[in-memory document]';
+const HTTP_PROTOCOL = 'http:' as const;
+const HTTPS_PROTOCOL = 'https:' as const;
 
 /**
  * Check if string is a remote URL (http/https)
  * @internal
  */
 export function isRemoteUrl(value: string): boolean {
-  const lower = value.toLowerCase();
-  return lower.startsWith('http://') || lower.startsWith('https://');
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === HTTP_PROTOCOL || parsed.protocol === HTTPS_PROTOCOL;
+  } catch {
+    return false;
+  }
 }
 
 /**

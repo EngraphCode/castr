@@ -11,6 +11,9 @@ import type { IRRequestBody, IRMediaType } from '../../ir/schema.js';
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
+import { parseComponentRef } from '../../../shared/ref-resolution.js';
+
+const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies' as const;
 
 /**
  * Build IR request body from OpenAPI request body object.
@@ -59,12 +62,18 @@ function resolveRequestBodyRef(
   ref: ReferenceObject,
   context: IRBuildContext,
 ): RequestBodyObject | undefined {
-  const refPath = ref.$ref;
-  if (!refPath.startsWith('#/components/requestBodies/')) {
+  let parsedRef;
+  try {
+    parsedRef = parseComponentRef(ref.$ref);
+  } catch {
     return undefined;
   }
 
-  const requestBodyName = refPath.split('/').pop();
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_REQUEST_BODIES) {
+    return undefined;
+  }
+
+  const requestBodyName = parsedRef.componentName;
   if (!requestBodyName || !context.doc.components?.requestBodies) {
     return undefined;
   }

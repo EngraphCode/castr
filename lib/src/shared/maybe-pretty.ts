@@ -1,6 +1,7 @@
 import type { Options } from 'prettier';
 import { format } from 'prettier';
 import parserTypescript from 'prettier/parser-typescript';
+import { trim } from 'lodash-es';
 
 /** @see https://github.dev/stephenh/ts-poet/blob/5ea0dbb3c9f1f4b0ee51a54abb2d758102eda4a2/src/Code.ts#L231 */
 
@@ -12,7 +13,7 @@ export async function maybePretty(input: string, options?: Options | null): Prom
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- JC: it really is a pain to do it properly
     const { plugins, ...safeOptions } = options ?? {};
 
-    return await format(input.trim(), {
+    return await format(trim(input), {
       parser: 'typescript',
       plugins: [parserTypescript],
       ...safeOptions,

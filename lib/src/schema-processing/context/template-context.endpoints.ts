@@ -19,6 +19,24 @@ import { processCommonSchemasForGroups } from './template-context.common.js';
 export type { TemplateContextGroupStrategy, MinimalTemplateContext };
 export { processCommonSchemasForGroups };
 
+const GROUP_STRATEGY_NONE = 'none' as const;
+const GROUP_STRATEGY_TAG = 'tag' as const;
+const GROUP_STRATEGY_METHOD = 'method' as const;
+const GROUP_STRATEGY_TAG_FILE = 'tag-file' as const;
+const GROUP_STRATEGY_METHOD_FILE = 'method-file' as const;
+
+const VALID_GROUP_STRATEGY_SET = new Set<string>([
+  GROUP_STRATEGY_NONE,
+  GROUP_STRATEGY_TAG,
+  GROUP_STRATEGY_METHOD,
+  GROUP_STRATEGY_TAG_FILE,
+  GROUP_STRATEGY_METHOD_FILE,
+]);
+
+function isFileGroupStrategy(strategy: TemplateContextGroupStrategy): boolean {
+  return strategy === GROUP_STRATEGY_TAG_FILE || strategy === GROUP_STRATEGY_METHOD_FILE;
+}
+
 /**
  * Process file grouping dependencies for a group.
  * Helper function to reduce complexity of processEndpointGrouping.
@@ -91,7 +109,7 @@ export const processEndpointGrouping = (
       return;
     }
 
-    if (groupStrategy !== 'none') {
+    if (groupStrategy !== GROUP_STRATEGY_NONE) {
       const groupName = determineGroupName(groupStrategy, endpoint);
       const group = ensureGroupExists(groupName, endpointsGroups);
       group.endpoints.push(endpoint);
@@ -102,7 +120,7 @@ export const processEndpointGrouping = (
 
       addDependenciesToGroup(dependencies, schemas, group);
 
-      if (groupStrategy.includes('file')) {
+      if (isFileGroupStrategy(groupStrategy)) {
         processFileGroupingDependencies(dependencies, types, schemas, dependencyGraph, group);
       }
     }
@@ -116,15 +134,7 @@ export const processEndpointGrouping = (
  * @internal
  */
 function isValidGroupStrategy(strategy: string): strategy is TemplateContextGroupStrategy {
-  const validStrategies: TemplateContextGroupStrategy[] = [
-    'none',
-    'tag',
-    'method',
-    'tag-file',
-    'method-file',
-  ];
-  const strategies: readonly string[] = validStrategies;
-  return strategies.includes(strategy);
+  return VALID_GROUP_STRATEGY_SET.has(strategy);
 }
 
 /**
@@ -170,7 +180,7 @@ export function processEndpointGroupingAndCommonSchemas(
   );
 
   // Process common schemas for file grouping (sorts schemas by dependencies)
-  if (groupStrategy.includes('file')) {
+  if (isFileGroupStrategy(groupStrategy)) {
     const commonSchemaNames = processCommonSchemasForGroups(
       endpointsGroups,
       dependenciesByGroupName,

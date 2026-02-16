@@ -1,71 +1,133 @@
-import { camelCase, startCase } from 'lodash-es';
+import { camelCase, join, split, startCase, startsWith } from 'lodash-es';
+
+const COLON_PREFIX = ':' as const;
+const UNDERSCORE_TOKEN = '_' as const;
+const HASH_PLACEHOLDER = '#' as const;
+const HYPHEN_TOKEN = '-' as const;
+const SPACE_TOKEN = ' ' as const;
+const EMPTY_TEXT = '' as const;
+const OPEN_BRACE = '{' as const;
+const CLOSE_BRACE = '}' as const;
+const TOKEN_LITERAL = 'literal' as const;
+const TOKEN_PARAM = 'param' as const;
+
+interface PathToken {
+  kind: typeof TOKEN_LITERAL | typeof TOKEN_PARAM;
+  value: string;
+}
+
+interface PathParseState {
+  tokens: PathToken[];
+  literalBuffer: string;
+  paramBuffer: string;
+  insideParam: boolean;
+}
+
+function replaceTokenEverywhere(text: string, token: string, replacement: string): string {
+  return join(split(text, token), replacement);
+}
+
+function removeLeadingColon(name: string): string {
+  let result = EMPTY_TEXT;
+  const startIndex = startsWith(name, COLON_PREFIX) ? 1 : 0;
+  for (let i = startIndex; i < name.length; i++) {
+    result += name[i] ?? EMPTY_TEXT;
+  }
+  return result;
+}
+
+function flushLiteralBuffer(state: PathParseState): void {
+  if (state.literalBuffer.length === 0) {
+    return;
+  }
+  state.tokens.push({ kind: TOKEN_LITERAL, value: state.literalBuffer });
+  state.literalBuffer = EMPTY_TEXT;
+}
+
+function closeParameterToken(state: PathParseState): void {
+  state.tokens.push({ kind: TOKEN_PARAM, value: state.paramBuffer });
+  state.paramBuffer = EMPTY_TEXT;
+  state.insideParam = false;
+}
+
+function handleParameterCharacter(state: PathParseState, char: string): void {
+  if (char === CLOSE_BRACE) {
+    closeParameterToken(state);
+    return;
+  }
+  state.paramBuffer += char;
+}
+
+function handleLiteralCharacter(state: PathParseState, char: string): void {
+  if (char !== OPEN_BRACE) {
+    state.literalBuffer += char;
+    return;
+  }
+
+  flushLiteralBuffer(state);
+  state.insideParam = true;
+}
+
+function finalizePathTokens(state: PathParseState): PathToken[] {
+  if (state.insideParam) {
+    state.literalBuffer += `${OPEN_BRACE}${state.paramBuffer}`;
+  }
+  flushLiteralBuffer(state);
+  return state.tokens;
+}
+
+function parseBracketedPath(path: string): PathToken[] {
+  const state: PathParseState = {
+    tokens: [],
+    literalBuffer: EMPTY_TEXT,
+    paramBuffer: EMPTY_TEXT,
+    insideParam: false,
+  };
+
+  for (const char of path) {
+    if (state.insideParam) {
+      handleParameterCharacter(state, char);
+      continue;
+    }
+    handleLiteralCharacter(state, char);
+  }
+
+  return finalizePathTokens(state);
+}
 
 export const pathParamToVariableName = (name: string): string => {
-  const hasColon = name.startsWith(':');
-  const nameWithoutColon = hasColon ? name.slice(1) : name;
-  const preserveUnderscore = nameWithoutColon.replaceAll('_', '#');
-  const result = camelCase(preserveUnderscore.replaceAll('-', '_')).replaceAll('#', '_');
-  return hasColon ? `:${result}` : result;
+  const hasColon = startsWith(name, COLON_PREFIX);
+  const nameWithoutColon = removeLeadingColon(name);
+  const preserveUnderscore = replaceTokenEverywhere(
+    nameWithoutColon,
+    UNDERSCORE_TOKEN,
+    HASH_PLACEHOLDER,
+  );
+  const hyphenToUnderscore = replaceTokenEverywhere(
+    preserveUnderscore,
+    HYPHEN_TOKEN,
+    UNDERSCORE_TOKEN,
+  );
+  const camelCased = camelCase(hyphenToUnderscore);
+  const result = replaceTokenEverywhere(camelCased, HASH_PLACEHOLDER, UNDERSCORE_TOKEN);
+  return hasColon ? `${COLON_PREFIX}${result}` : result;
 };
 
 export const replaceHyphenatedPath = (path: string): string => {
-  let result = '';
-  let cursor = 0;
+  const tokens = parseBracketedPath(path);
+  let result = EMPTY_TEXT;
 
-  while (cursor < path.length) {
-    const openIndex = path.indexOf('{', cursor);
-    if (openIndex === -1) {
-      result += path.slice(cursor);
-      break;
+  for (const token of tokens) {
+    if (token.kind === TOKEN_LITERAL) {
+      result += token.value;
+      continue;
     }
 
-    const closeIndex = path.indexOf('}', openIndex + 1);
-    if (closeIndex === -1) {
-      result += path.slice(cursor);
-      break;
-    }
-
-    const segment = path.slice(cursor, openIndex);
-    const parameterName = path.slice(openIndex + 1, closeIndex);
-    const normalizedParameter = pathParamToVariableName(`:${parameterName}`);
-
-    result += segment + normalizedParameter;
-    cursor = closeIndex + 1;
+    result += pathParamToVariableName(`${COLON_PREFIX}${token.value}`);
   }
 
   return result;
 };
-
-/**
- * Extract path parameters from brackets in path string.
- * Uses index-based parsing instead of regex.
- * @internal
- */
-function extractBracketedParams(path: string): { start: number; end: number; param: string }[] {
-  const params: { start: number; end: number; param: string }[] = [];
-  let cursor = 0;
-
-  while (cursor < path.length) {
-    const openIndex = path.indexOf('{', cursor);
-    if (openIndex === -1) {
-      break;
-    }
-
-    const closeIndex = path.indexOf('}', openIndex + 1);
-    if (closeIndex === -1) {
-      break;
-    }
-
-    params.push({
-      start: openIndex,
-      end: closeIndex + 1,
-      param: path.slice(openIndex + 1, closeIndex),
-    });
-    cursor = closeIndex + 1;
-  }
-
-  return params;
-}
 
 /**
  * Check if a character code is a word character (alphanumeric, underscore, or hyphen).
@@ -92,10 +154,10 @@ function replaceNonWordChars(str: string): string {
     if (code !== undefined && isWordOrHyphenChar(code)) {
       result.push(char);
     } else {
-      result.push('_');
+      result.push(UNDERSCORE_TOKEN);
     }
   }
-  return result.join('');
+  return result.join(EMPTY_TEXT);
 }
 
 /**
@@ -103,30 +165,22 @@ function replaceNonWordChars(str: string): string {
  * @internal
  */
 function toPascalCase(str: string): string {
-  return startCase(str).replaceAll(' ', '');
+  return replaceTokenEverywhere(startCase(str), SPACE_TOKEN, EMPTY_TEXT);
 }
 
 /** @example turns `/media-objects/{id}` into `MediaObjectsId` */
 export const pathToVariableName = (path: string): string => {
-  // Use lodash's startCase for proper PascalCase (handles v1 → V1)
-  // Apply startCase BEFORE removing slashes so lodash tokenizes correctly
   const pascalCased = toPascalCase(path);
+  const tokens = parseBracketedPath(pascalCased);
 
-  // Handle bracketed parameters
-  const params = extractBracketedParams(pascalCased);
-  if (params.length === 0) {
-    return replaceNonWordChars(pascalCased);
+  let result = EMPTY_TEXT;
+  for (const token of tokens) {
+    if (token.kind === TOKEN_LITERAL) {
+      result += token.value;
+      continue;
+    }
+    result += toPascalCase(token.value);
   }
-
-  // Replace bracketed params with PascalCase version
-  let result = '';
-  let lastEnd = 0;
-  for (const { start, end, param } of params) {
-    result += pascalCased.slice(lastEnd, start);
-    result += toPascalCase(param);
-    lastEnd = end;
-  }
-  result += pascalCased.slice(lastEnd);
 
   return replaceNonWordChars(result);
 };

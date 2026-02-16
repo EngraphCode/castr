@@ -9,14 +9,19 @@
 
 import type { CallExpression, ReturnStatement } from 'ts-morph';
 import { Node } from 'ts-morph';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import { getZodBaseMethod, getInnerCall } from './zod-ast.helpers.js';
+import { ZOD_OBJECT_METHOD } from './zod-constants.js';
 
-function findObjectCallInChain(call: CallExpression): CallExpression | undefined {
+function findObjectCallInChain(
+  call: CallExpression,
+  resolver: ZodImportResolver,
+): CallExpression | undefined {
   let objectCall: CallExpression | undefined = call;
 
   while (objectCall) {
-    const method = getZodBaseMethod(objectCall);
-    if (method === 'object') {
+    const method = getZodBaseMethod(objectCall, resolver);
+    if (method === ZOD_OBJECT_METHOD) {
       return objectCall;
     }
 
@@ -31,16 +36,6 @@ function findObjectCallInChain(call: CallExpression): CallExpression | undefined
   return undefined;
 }
 
-function stripQuotes(name: string): string {
-  if (
-    (name.startsWith("'") && name.endsWith("'")) ||
-    (name.startsWith('"') && name.endsWith('"'))
-  ) {
-    return name.slice(1, -1);
-  }
-  return name;
-}
-
 /**
  * Extract a property entry from a PropertyAssignment node.
  * @internal
@@ -49,7 +44,7 @@ function extractFromPropertyAssignment(prop: Node): [string, Node] | undefined {
   if (!Node.isPropertyAssignment(prop)) {
     return undefined;
   }
-  const name = stripQuotes(prop.getName());
+  const name = prop.getName();
   const init = prop.getInitializer();
 
   if (init && (Node.isCallExpression(init) || Node.isIdentifier(init))) {
@@ -66,7 +61,7 @@ function extractFromGetAccessor(prop: Node): [string, Node] | undefined {
   if (!Node.isGetAccessorDeclaration(prop)) {
     return undefined;
   }
-  const name = stripQuotes(prop.getName());
+  const name = prop.getName();
   const body = prop.getBody();
   if (!body || !Node.isBlock(body)) {
     return undefined;
@@ -95,17 +90,21 @@ function extractPropertyEntry(prop: Node): [string, Node] | undefined {
  * Extract properties from a z.object() call.
  *
  * @param call - A z.object() call expression
+ * @param resolver - Resolver for checking zod import identity
  * @returns Map of property name to property schema call, or undefined
  *
  * @public
  */
-export function extractObjectProperties(call: CallExpression): Map<string, Node> | undefined {
-  const baseMethod = getZodBaseMethod(call);
-  if (baseMethod !== 'object') {
+export function extractObjectProperties(
+  call: CallExpression,
+  resolver: ZodImportResolver,
+): Map<string, Node> | undefined {
+  const baseMethod = getZodBaseMethod(call, resolver);
+  if (baseMethod !== ZOD_OBJECT_METHOD) {
     return undefined;
   }
 
-  const objectCall = findObjectCallInChain(call);
+  const objectCall = findObjectCallInChain(call, resolver);
   if (!objectCall) {
     return undefined;
   }

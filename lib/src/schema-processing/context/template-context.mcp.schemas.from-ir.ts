@@ -23,6 +23,14 @@ import {
 import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-schema.js';
 import type { McpToolSchemaResult } from './template-context.mcp.schemas.js';
 
+const SCHEMA_TYPE_OBJECT = 'object' as const;
+const SCHEMA_KEY_METADATA = 'metadata' as const;
+const SCHEMA_KEY_REF = '$ref' as const;
+const INPUT_SECTION_PATH = 'path' as const;
+const INPUT_SECTION_QUERY = 'query' as const;
+const INPUT_SECTION_HEADERS = 'headers' as const;
+const INPUT_SECTION_BODY = 'body' as const;
+
 /**
  * Check if a schema is or could be an object type.
  * Handles explicit type, array types, and composition schemas.
@@ -30,19 +38,18 @@ import type { McpToolSchemaResult } from './template-context.mcp.schemas.js';
 const isLikelyObjectSchema = (schema: MutableJsonSchema): boolean => {
   // Explicit object type
   const schemaType: unknown = schema['type'];
-  if (schemaType === 'object') {
+  if (schemaType === SCHEMA_TYPE_OBJECT) {
     return true;
   }
-  if (Array.isArray(schemaType) && schemaType.includes('object')) {
-    return true;
+  if (Array.isArray(schemaType)) {
+    const schemaTypes = new Set(schemaType);
+    if (schemaTypes.has(SCHEMA_TYPE_OBJECT)) {
+      return true;
+    }
   }
 
-  // Composition schemas (allOf, oneOf, anyOf) that contain objects
-  // are likely object schemas - wrap them to be safe for MCP
   if ('allOf' in schema || 'oneOf' in schema || 'anyOf' in schema) {
-    // For MCP, compositions must be wrapped in an object type
-    // because the MCP SDK requires outputSchema.type === 'object'
-    return false; // Force wrapping of compositions
+    return false;
   }
 
   return false;
@@ -54,12 +61,12 @@ const isLikelyObjectSchema = (schema: MutableJsonSchema): boolean => {
  */
 const wrapSchemaFromIR = (schema: MutableJsonSchema | undefined): MutableJsonSchema => {
   if (schema === undefined) {
-    return { type: 'object' };
+    return { type: SCHEMA_TYPE_OBJECT };
   }
 
   // Pass through $ref schemas - they should have been inlined before this point
   // If we still have refs, pass through (caller should inline first)
-  if ('$ref' in schema) {
+  if (SCHEMA_KEY_REF in schema) {
     return schema;
   }
 
@@ -70,7 +77,7 @@ const wrapSchemaFromIR = (schema: MutableJsonSchema | undefined): MutableJsonSch
 
   // Wrap non-object schemas (primitives, arrays, compositions without type)
   return {
-    type: 'object',
+    type: SCHEMA_TYPE_OBJECT,
     properties: { value: schema },
   };
 };
@@ -124,7 +131,7 @@ const castrSchemaToJsonSchemaForMcp = (schema: CastrSchema): MutableJsonSchema =
   const result: MutableJsonSchema = {};
 
   for (const [key, value] of Object.entries(schema)) {
-    if (key === 'metadata') {
+    if (key === SCHEMA_KEY_METADATA) {
       continue;
     }
 
@@ -158,21 +165,21 @@ function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): 
   const properties: Record<string, MutableJsonSchema> = {};
   const requiredSections = new Set<string>();
 
-  assignSectionFromIR(properties, requiredSections, 'path', parameterGroups.path);
-  assignSectionFromIR(properties, requiredSections, 'query', parameterGroups.query);
-  assignSectionFromIR(properties, requiredSections, 'headers', parameterGroups.header);
+  assignSectionFromIR(properties, requiredSections, INPUT_SECTION_PATH, parameterGroups.path);
+  assignSectionFromIR(properties, requiredSections, INPUT_SECTION_QUERY, parameterGroups.query);
+  assignSectionFromIR(properties, requiredSections, INPUT_SECTION_HEADERS, parameterGroups.header);
 
   if (requestBody) {
     const bodyJsonSchema = castrSchemaToJsonSchemaForMcp(requestBody.schema);
-    properties['body'] = wrapSchemaFromIR(bodyJsonSchema);
+    properties[INPUT_SECTION_BODY] = wrapSchemaFromIR(bodyJsonSchema);
     if (requestBody.required) {
-      requiredSections.add('body');
+      requiredSections.add(INPUT_SECTION_BODY);
     }
   }
 
   const required = requiredSections.size > 0 ? [...requiredSections] : undefined;
   const inputSchemaObject: MutableJsonSchema = {
-    type: 'object',
+    type: SCHEMA_TYPE_OBJECT,
     properties,
     ...(required ? { required } : {}),
   };

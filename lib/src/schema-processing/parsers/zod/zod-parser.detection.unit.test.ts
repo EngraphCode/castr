@@ -39,7 +39,7 @@ describe('Zod 3 Detection', () => {
 
   describe('detectZod3Syntax', () => {
     it('should detect z.string().nonempty() as Zod 3 syntax', () => {
-      const source = `const schema = z.string().nonempty();`;
+      const source = `import { z } from 'zod'; const schema = z.string().nonempty();`;
       const errors = detectZod3Syntax(source);
 
       expect(errors).toHaveLength(1);
@@ -51,7 +51,7 @@ describe('Zod 3 Detection', () => {
     });
 
     it('should detect z.number().nonnegative() as Zod 3 syntax', () => {
-      const source = `const schema = z.number().nonnegative();`;
+      const source = `import { z } from 'zod'; const schema = z.number().nonnegative();`;
       const errors = detectZod3Syntax(source);
 
       expect(errors).toHaveLength(1);
@@ -63,7 +63,7 @@ describe('Zod 3 Detection', () => {
     });
 
     it('should detect z.number().nonpositive() as Zod 3 syntax', () => {
-      const source = `const schema = z.number().nonpositive();`;
+      const source = `import { z } from 'zod'; const schema = z.number().nonpositive();`;
       const errors = detectZod3Syntax(source);
 
       expect(errors).toHaveLength(1);
@@ -75,7 +75,7 @@ describe('Zod 3 Detection', () => {
     });
 
     it('should detect multiple Zod 3 methods/discouraged refinements in chain', () => {
-      const source = `const schema = z.string().nonempty().email();`;
+      const source = `import { z } from 'zod'; const schema = z.string().nonempty().email();`;
       const errors = detectZod3Syntax(source);
 
       // nonempty is Zod 3 method
@@ -86,6 +86,7 @@ describe('Zod 3 Detection', () => {
 
     it('should detect Zod 3 methods across multiple schemas', () => {
       const source = `
+        import { z } from 'zod';
         const schema1 = z.string().nonempty();
         const schema2 = z.number().nonnegative();
       `;
@@ -97,6 +98,7 @@ describe('Zod 3 Detection', () => {
 
     it('should NOT flag strictly valid Zod 4 syntax (without discouraged refinements)', () => {
       const source = `
+        import { z } from 'zod';
         const schema = z.string().min(1);
         const num = z.number().min(0).max(100);
       `;
@@ -106,7 +108,7 @@ describe('Zod 3 Detection', () => {
     });
 
     it('should include location information in errors', () => {
-      const source = `const schema = z.string().nonempty();`;
+      const source = `import { z } from 'zod'; const schema = z.string().nonempty();`;
       const errors = detectZod3Syntax(source);
 
       expect(errors).toHaveLength(1);
@@ -122,6 +124,7 @@ describe('Dynamic Schema Detection', () => {
   describe('detectDynamicSchemas', () => {
     it('should detect schemas with computed property keys', () => {
       const source = `
+        import { z } from 'zod';
         const key = 'name';
         const schema = z.object({ [key]: z.string() });
       `;
@@ -149,6 +152,7 @@ describe('Dynamic Schema Detection', () => {
 
     it('should detect schemas using spread operator', () => {
       const source = `
+        import { z } from 'zod';
         const baseFields = { name: z.string() };
         const schema = z.object({ ...baseFields, age: z.number() });
       `;
@@ -162,6 +166,7 @@ describe('Dynamic Schema Detection', () => {
 
     it('should NOT flag static object schemas', () => {
       const source = `
+        import { z } from 'zod';
         const schema = z.object({
           name: z.string(),
           age: z.number(),
@@ -173,7 +178,7 @@ describe('Dynamic Schema Detection', () => {
     });
 
     it('should include location information in errors', () => {
-      const source = `const schema = z.object({ [key]: z.string() });`;
+      const source = `import { z } from 'zod'; const schema = z.object({ [key]: z.string() });`;
       const errors = detectDynamicSchemas(source);
 
       expect(errors).toHaveLength(1);

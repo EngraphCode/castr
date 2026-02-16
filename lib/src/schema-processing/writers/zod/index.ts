@@ -12,6 +12,9 @@ import { writePrimitiveSchema, filterRedundantValidations } from './primitives.j
 import { formatPropertyKey, buildPropertyContext, shouldUseGetterSyntax } from './properties.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
+import { isOptionalSchemaContext } from './context-utils.js';
+
+const SCHEMA_TYPE_NULL = 'null' as const;
 
 export function writeZodSchema(
   context: CastrSchemaContext,
@@ -122,8 +125,11 @@ function writeTypeArraySchema(
   options?: TemplateContextOptions,
 ): void {
   // Filter out null types - handle both string 'null' AND literal null (runtime data may have either)
-  const nonNullTypes = types.filter((t): t is SchemaObjectType => t !== 'null' && t != null);
-  const hasNull = types.some((t) => t === 'null' || t == null);
+  const nonNullTypes = types.filter(
+    (typeEntry): typeEntry is SchemaObjectType =>
+      typeEntry !== SCHEMA_TYPE_NULL && typeEntry != null,
+  );
+  const hasNull = types.some((typeEntry) => typeEntry === SCHEMA_TYPE_NULL || typeEntry == null);
 
   if (nonNullTypes.length === 0) {
     // Only null type - output z.null() directly
@@ -201,7 +207,7 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   defaults.forEach((d) => writer.write(d));
 
   // Write .optional() for optional properties and parameters
-  if (isOptionalContext(context)) {
+  if (isOptionalSchemaContext(context)) {
     writer.write('.optional()');
   }
 
@@ -210,14 +216,6 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   if (schema.metadata.nullable && !Array.isArray(schema.type)) {
     writer.write('.nullable()');
   }
-}
-
-/** Check if context represents an optional property or parameter. @internal */
-function isOptionalContext(context: CastrSchemaContext): boolean {
-  return (
-    (context.contextType === 'property' && context.optional === true) ||
-    (context.contextType === 'parameter' && context.required === false)
-  );
 }
 
 /**
@@ -278,7 +276,7 @@ function writeProperties(
 
   for (const [key, prop] of schema.properties.entries()) {
     const quotedKey = formatPropertyKey(key);
-    const isRequired = schema.required?.includes(key) ?? false;
+    const isRequired = schema.required?.some((requiredName) => requiredName === key) ?? false;
     const propContext = buildPropertyContext(key, prop, isRequired);
     const useGetterSyntax = shouldUseGetterSyntax(prop, schema);
 

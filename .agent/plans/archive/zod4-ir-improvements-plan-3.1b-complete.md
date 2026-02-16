@@ -14,9 +14,9 @@
 
 **Essential reading:**
 
-- [session-entry.prompt.md](../prompts/session-entry.prompt.md) — Critical rules
+- [session-entry.prompt.md](../../prompts/session-entry.prompt.md) — Critical rules
 - [ADR-031](../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md) — Current Zod output strategy
-- [zod4-advanced-features-research.md](./zod4-advanced-features-research.md) — Feature research
+- [zod4-advanced-features-research.md](../../reference/zod4-advanced-features-research.md) — Feature research
 
 ---
 
@@ -108,5 +108,5 @@ Zod 4's `.overwrite()` method could support mutation transforms like `x-trim` or
 ## References
 
 - [ADR-031](../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
-- [zod4-advanced-features-research.md](./zod4-advanced-features-research.md)
+- [zod4-advanced-features-research.md](../../reference/zod4-advanced-features-research.md)
 - [Zod 4 Codecs](https://zod.dev/codecs)

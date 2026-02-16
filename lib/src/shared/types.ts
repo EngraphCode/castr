@@ -4,6 +4,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-types -- JC: Sometimes we really do need to deal with unknown records at incoming system boundaries
 export type UnknownRecord = Record<string, unknown>;
+const EMPTY_STRING = '' as const;
 
 /**
  * Type guard to check if a value is a non-null object (UnknownRecord).
@@ -19,6 +20,6 @@ export function isRecord(value: unknown): value is UnknownRecord {
   const hasKeys = Object.keys(value).length > 0;
   const hasValues = Object.values(value).length > 0;
   const firstKey = Object.keys(value)[0];
-  const hasStringKey = typeof firstKey === 'string' && firstKey !== '';
+  const hasStringKey = typeof firstKey === 'string' && firstKey !== EMPTY_STRING;
   return isProbablyObject && hasKeys && hasValues && hasStringKey;
 }

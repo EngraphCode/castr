@@ -10,6 +10,8 @@ import type { CastrSchemaContext } from '../../ir/context.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 
+const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+
 /**
  * Generate TypeScript code from TemplateContext using ts-morph.
  * Replaces the legacy Handlebars templates.
@@ -59,7 +61,7 @@ function addComponentsToSourceFile(
 
   const componentsMap = new Map<string, CastrSchemaComponent>();
   context._ir.components.forEach((c) => {
-    if (c.type === 'schema') {
+    if (c.type === COMPONENT_TYPE_SCHEMA) {
       componentsMap.set(c.name, c);
     }
   });

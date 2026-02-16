@@ -11,8 +11,12 @@ import {
 } from './keyword-appliers.js';
 import { assignIfDefined, readSchemaKeyword, setKeyword } from './keyword-helpers.js';
 import { logger } from '../../../shared/utils/logger.js';
+import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
 type OpenApiSchema = SchemaObject | ReferenceObject;
+const SCHEMA_TYPE_NULL = 'null' as const;
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
+const JSON_SCHEMA_DEFINITIONS_PREFIX = '#/definitions/' as const;
 
 /**
  * Convert an OpenAPI 3.1 schema object (Scalar-upgraded) into a JSON Schema Draft 07 representation.
@@ -44,10 +48,10 @@ function convertUnionSchema(schema: SchemaObject): MutableJsonSchema {
   const strippedSchema = cloneWithoutSharedKeywords(schema);
 
   const typeArray = Array.isArray(schema.type)
-    ? schema.type.map((entry) => (entry == null ? 'null' : entry))
+    ? schema.type.map((entry) => (entry == null ? SCHEMA_TYPE_NULL : entry))
     : [];
 
-  const nonNullTypes = typeArray.filter((typeEntry) => typeEntry !== 'null');
+  const nonNullTypes = typeArray.filter((typeEntry) => typeEntry !== SCHEMA_TYPE_NULL);
 
   const anyOf = nonNullTypes.map((typeEntry) =>
     convertOpenApiSchemaToJsonSchema({
@@ -56,8 +60,8 @@ function convertUnionSchema(schema: SchemaObject): MutableJsonSchema {
     }),
   );
 
-  if (typeArray.includes('null')) {
-    anyOf.push({ type: 'null' });
+  if (typeArray.some((typeEntry) => typeEntry === SCHEMA_TYPE_NULL)) {
+    anyOf.push({ type: SCHEMA_TYPE_NULL });
   }
 
   return {
@@ -146,9 +150,13 @@ function isExampleObject(candidate: unknown): candidate is { value: unknown } {
 }
 
 function rewriteComponentRef(ref: string): string {
-  const componentsPrefix = '#/components/schemas/';
-  if (ref.startsWith(componentsPrefix)) {
-    return '#/definitions/' + ref.slice(componentsPrefix.length);
+  try {
+    const parsedRef = parseComponentRef(ref);
+    if (parsedRef.componentType === OPENAPI_COMPONENT_TYPE_SCHEMAS) {
+      return `${JSON_SCHEMA_DEFINITIONS_PREFIX}${parsedRef.componentName}`;
+    }
+  } catch {
+    return ref;
   }
   return ref;
 }

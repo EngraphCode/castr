@@ -8,6 +8,7 @@
  */
 
 import { Node, type SourceFile, type CallExpression } from 'ts-morph';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import { isZodCall } from './zod-ast.helpers.js';
 
 /**
@@ -17,6 +18,7 @@ import { isZodCall } from './zod-ast.helpers.js';
 function findZodDeclarationsInStatement(
   stmt: Node,
   results: { name: string; initializer: CallExpression }[],
+  resolver: ZodImportResolver,
 ): void {
   if (!Node.isVariableStatement(stmt)) {
     return;
@@ -24,7 +26,7 @@ function findZodDeclarationsInStatement(
 
   for (const decl of stmt.getDeclarationList().getDeclarations()) {
     const init = decl.getInitializer();
-    if (init && Node.isCallExpression(init) && isZodCall(init)) {
+    if (init && Node.isCallExpression(init) && isZodCall(init, resolver)) {
       results.push({ name: decl.getName(), initializer: init });
     }
   }
@@ -34,17 +36,19 @@ function findZodDeclarationsInStatement(
  * Find all top-level Zod schema declarations in a source file.
  *
  * @param sourceFile - ts-morph SourceFile
+ * @param resolver - Resolver for checking zod import identity
  * @returns Array of variable declarations with Zod schemas
  *
  * @public
  */
 export function findZodSchemaDeclarations(
   sourceFile: SourceFile,
+  resolver: ZodImportResolver,
 ): { name: string; initializer: CallExpression }[] {
   const results: { name: string; initializer: CallExpression }[] = [];
 
   for (const stmt of sourceFile.getStatements()) {
-    findZodDeclarationsInStatement(stmt, results);
+    findZodDeclarationsInStatement(stmt, results, resolver);
   }
 
   return results;

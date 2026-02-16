@@ -27,6 +27,10 @@ export const isPrimitiveSchemaType = (value: unknown): value is PrimitiveSchemaT
   if (typeof value !== 'string') {
     return false;
   }
-  const typeStrings: readonly string[] = PRIMITIVE_SCHEMA_TYPES;
-  return typeStrings.includes(value);
+  for (const schemaType of PRIMITIVE_SCHEMA_TYPES) {
+    if (value === schemaType) {
+      return true;
+    }
+  }
+  return false;
 };

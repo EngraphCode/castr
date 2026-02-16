@@ -19,12 +19,22 @@ import type {
 
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 
+const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+const COMPONENT_TYPE_SECURITY_SCHEME = 'securityScheme' as const;
+const COMPONENT_TYPE_PARAMETER = 'parameter' as const;
+const COMPONENT_TYPE_RESPONSE = 'response' as const;
+const COMPONENT_TYPE_HEADER = 'header' as const;
+const COMPONENT_TYPE_LINK = 'link' as const;
+const COMPONENT_TYPE_CALLBACK = 'callback' as const;
+const COMPONENT_TYPE_PATH_ITEM = 'pathItem' as const;
+const COMPONENT_TYPE_EXAMPLE = 'example' as const;
+
 /**
  * Type guard for schema components.
  * @internal
  */
 function isSchemaComponent(component: IRComponent): component is CastrSchemaComponent {
-  return component.type === 'schema';
+  return component.type === COMPONENT_TYPE_SCHEMA;
 }
 
 /**
@@ -32,7 +42,7 @@ function isSchemaComponent(component: IRComponent): component is CastrSchemaComp
  * @internal
  */
 function isSecuritySchemeComponent(component: IRComponent): component is IRSecuritySchemeComponent {
-  return component.type === 'securityScheme';
+  return component.type === COMPONENT_TYPE_SECURITY_SCHEME;
 }
 
 /**
@@ -40,7 +50,7 @@ function isSecuritySchemeComponent(component: IRComponent): component is IRSecur
  * @internal
  */
 function isParameterComponent(component: IRComponent): component is CastrParameterComponent {
-  return component.type === 'parameter';
+  return component.type === COMPONENT_TYPE_PARAMETER;
 }
 
 /**
@@ -48,7 +58,7 @@ function isParameterComponent(component: IRComponent): component is CastrParamet
  * @internal
  */
 function isResponseComponent(component: IRComponent): component is CastrResponseComponent {
-  return component.type === 'response';
+  return component.type === COMPONENT_TYPE_RESPONSE;
 }
 
 /**
@@ -208,7 +218,7 @@ function addExampleComponent(
  * @internal
  */
 function isHeaderComponent(component: IRComponent): component is IRComponent & { type: 'header' } {
-  return component.type === 'header';
+  return component.type === COMPONENT_TYPE_HEADER;
 }
 
 /**
@@ -216,7 +226,7 @@ function isHeaderComponent(component: IRComponent): component is IRComponent & {
  * @internal
  */
 function isLinkComponent(component: IRComponent): component is IRComponent & { type: 'link' } {
-  return component.type === 'link';
+  return component.type === COMPONENT_TYPE_LINK;
 }
 
 /**
@@ -226,7 +236,7 @@ function isLinkComponent(component: IRComponent): component is IRComponent & { t
 function isCallbackComponent(
   component: IRComponent,
 ): component is IRComponent & { type: 'callback' } {
-  return component.type === 'callback';
+  return component.type === COMPONENT_TYPE_CALLBACK;
 }
 
 /**
@@ -236,7 +246,7 @@ function isCallbackComponent(
 function isPathItemComponent(
   component: IRComponent,
 ): component is IRComponent & { type: 'pathItem' } {
-  return component.type === 'pathItem';
+  return component.type === COMPONENT_TYPE_PATH_ITEM;
 }
 
 /**
@@ -246,7 +256,7 @@ function isPathItemComponent(
 function isExampleComponent(
   component: IRComponent,
 ): component is IRComponent & { type: 'example' } {
-  return component.type === 'example';
+  return component.type === COMPONENT_TYPE_EXAMPLE;
 }
 
 /**

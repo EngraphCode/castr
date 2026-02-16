@@ -17,18 +17,14 @@ import './zod-parser.object.js';
 
 // Wrapper to test core dispatch for .and()
 function parseCode(code: string) {
-  const project = createZodProject(`const __schema = ${code};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${code};`);
   const varDecl = sourceFile.getVariableDeclarations()[0];
   if (!varDecl) {
     return undefined;
   }
   const init = varDecl.getInitializer();
   if (init && Node.isCallExpression(init)) {
-    return parseZodSchemaFromNode(init);
+    return parseZodSchemaFromNode(init, resolver);
   }
   return undefined;
 }

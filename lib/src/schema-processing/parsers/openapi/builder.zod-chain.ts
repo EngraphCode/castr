@@ -9,6 +9,12 @@
  */
 
 import type { CastrSchema } from '../../ir/schema.js';
+import { join, split } from 'lodash-es';
+
+const SCHEMA_TYPE_NUMBER = 'number' as const;
+const SCHEMA_TYPE_INTEGER = 'integer' as const;
+const SCHEMA_TYPE_STRING = 'string' as const;
+const SCHEMA_TYPE_ARRAY = 'array' as const;
 
 /**
  * Update Zod chain validations based on schema constraints.
@@ -20,17 +26,17 @@ export function updateZodChain(irSchema: CastrSchema): void {
   const validations: string[] = [];
 
   // Numeric constraints
-  if (irSchema.type === 'number' || irSchema.type === 'integer') {
+  if (irSchema.type === SCHEMA_TYPE_NUMBER || irSchema.type === SCHEMA_TYPE_INTEGER) {
     addNumericValidations(irSchema, validations);
   }
 
   // String constraints
-  if (irSchema.type === 'string') {
+  if (irSchema.type === SCHEMA_TYPE_STRING) {
     addStringValidations(irSchema, validations);
   }
 
   // Array constraints
-  if (irSchema.type === 'array') {
+  if (irSchema.type === SCHEMA_TYPE_ARRAY) {
     addArrayValidations(irSchema, validations);
   }
 
@@ -49,7 +55,7 @@ export function addNumericValidations(schema: CastrSchema, validations: string[]
   }
 
   // Integer type check (if type is integer)
-  if (schema.type === 'integer') {
+  if (schema.type === SCHEMA_TYPE_INTEGER) {
     validations.push('.int()');
   }
 }
@@ -123,7 +129,7 @@ export function addStringValidations(schema: CastrSchema, validations: string[])
   }
   if (schema.pattern) {
     // Escape forward slashes for regex literal format
-    const escapedPattern = schema.pattern.split('/').join('\\/');
+    const escapedPattern = join(split(schema.pattern, '/'), '\\/');
     validations.push(`.regex(/${escapedPattern}/)`);
   }
   if (schema.format) {

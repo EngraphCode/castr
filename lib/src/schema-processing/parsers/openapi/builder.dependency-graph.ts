@@ -216,6 +216,54 @@ function detectCircularReferences(refsDependencyGraph: Record<string, Set<string
 /**
  * DFS helper to detect cycles.
  */
+function findCycleStart(path: string[], node: string): number {
+  for (let i = 0; i < path.length; i++) {
+    if (path[i] === node) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function buildCycle(path: string[], cycleStart: number, node: string): string[] {
+  const cycle: string[] = [];
+  for (let i = cycleStart; i < path.length; i++) {
+    const pathNode = path[i];
+    if (pathNode !== undefined) {
+      cycle.push(pathNode);
+    }
+  }
+  cycle.push(node);
+  return cycle;
+}
+
+function addDetectedCycle(path: string[], node: string, cycles: string[][]): boolean {
+  const cycleStart = findCycleStart(path, node);
+  if (cycleStart === -1) {
+    return false;
+  }
+  cycles.push(buildCycle(path, cycleStart, node));
+  return true;
+}
+
+function visitNodeDependencies(
+  node: string,
+  graph: Record<string, Set<string>>,
+  visited: Set<string>,
+  recursionStack: Set<string>,
+  path: string[],
+  cycles: string[][],
+): void {
+  const deps = graph[node];
+  if (!deps) {
+    return;
+  }
+
+  for (const dep of deps) {
+    dfsForCycles(dep, graph, visited, recursionStack, path, cycles);
+  }
+}
+
 function dfsForCycles(
   node: string,
   graph: Record<string, Set<string>>,
@@ -225,11 +273,7 @@ function dfsForCycles(
   cycles: string[][],
 ): void {
   if (recursionStack.has(node)) {
-    // Found a cycle - extract it from the path
-    const cycleStart = path.indexOf(node);
-    if (cycleStart !== -1) {
-      cycles.push([...path.slice(cycleStart), node]);
-    }
+    addDetectedCycle(path, node, cycles);
     return;
   }
 
@@ -241,12 +285,7 @@ function dfsForCycles(
   recursionStack.add(node);
   path.push(node);
 
-  const deps = graph[node];
-  if (deps) {
-    for (const dep of deps) {
-      dfsForCycles(dep, graph, visited, recursionStack, path, cycles);
-    }
-  }
+  visitNodeDependencies(node, graph, visited, recursionStack, path, cycles);
 
   path.pop();
   recursionStack.delete(node);

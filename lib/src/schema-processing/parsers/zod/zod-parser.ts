@@ -21,12 +21,7 @@
  * ```
  */
 
-import type {
-  CastrDocument,
-  CastrSchemaComponent,
-  CastrSchema,
-  CastrSchemaNode,
-} from '../../ir/schema.js';
+import type { CastrDocument, CastrSchemaComponent, CastrSchemaNode } from '../../ir/schema.js';
 import type { ZodParseResult, ZodParseError, ZodParseRecommendation } from './zod-parser.types.js';
 import { detectZod3Syntax, detectDynamicSchemas } from './zod-parser.detection.js';
 import { createZodProject, findZodSchemaDeclarations } from './zod-ast.js';
@@ -42,6 +37,7 @@ import './zod-parser.references.js';
 
 // Import core dispatcher for unified schema parsing
 import { parseZodSchemaFromNode } from './zod-parser.core.js';
+import { deriveComponentName } from './schema-name-registry.js';
 
 /**
  * Extract schema name from a variable name.
@@ -61,14 +57,7 @@ import { parseZodSchemaFromNode } from './zod-parser.core.js';
  * @public
  */
 export function extractSchemaName(variableName: string): string {
-  // Remove 'Schema' suffix (case-sensitive, only if not the entire name)
-  if (variableName.endsWith('Schema') && variableName.length > 6) {
-    return variableName.slice(0, -6);
-  }
-  if (variableName.endsWith('schema') && variableName.length > 6) {
-    return variableName.slice(0, -6);
-  }
-  return variableName;
+  return deriveComponentName(variableName);
 }
 
 /**
@@ -123,36 +112,6 @@ function createDefaultMetadata(): CastrSchemaNode {
 }
 
 /**
- * Parse a Zod expression and return a CastrSchema.
- *
- * Uses the central dispatcher to try all registered parsers in priority order.
- * This ensures composition (enum, array, tuple), union, intersection, and
- * reference schemas are properly handled.
- *
- * @param expression - Zod expression string
- * @returns Parsed schema or undefined if not recognized
- *
- * @internal
- */
-function parseZodExpression(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
-
-  const varDecl = sourceFile.getVariableDeclarations()[0];
-  const init = varDecl?.getInitializer();
-
-  if (!init) {
-    return undefined;
-  }
-
-  // Use the core dispatcher which tries all registered parsers
-  return parseZodSchemaFromNode(init);
-}
-
-/**
  * Result of parsing a single schema declaration.
  *
  * @internal
@@ -170,18 +129,12 @@ interface ParsedDeclaration {
  */
 function parseSchemaDeclarations(source: string): ParsedDeclaration[] {
   const results: ParsedDeclaration[] = [];
-  const project = createZodProject(source);
-  const sourceFile = project.getSourceFiles()[0];
+  const { sourceFile, resolver } = createZodProject(source);
 
-  if (!sourceFile) {
-    return results;
-  }
-
-  const declarations = findZodSchemaDeclarations(sourceFile);
+  const declarations = findZodSchemaDeclarations(sourceFile, resolver);
 
   for (const decl of declarations) {
-    const zodExpression = decl.initializer.getText();
-    const schema = parseZodExpression(zodExpression);
+    const schema = parseZodSchemaFromNode(decl.initializer, resolver);
 
     if (!schema) {
       continue;

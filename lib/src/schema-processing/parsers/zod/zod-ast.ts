@@ -9,79 +9,30 @@
  *
  * @example
  * ```typescript
- * import { createZodProject, findZodCalls, getZodMethodChain } from './zod-ast.js';
+ * import { createZodProject, getZodMethodChain } from './zod-ast.js';
  *
- * const project = createZodProject(`
+ * const { sourceFile, resolver } = createZodProject(`
  *   export const UserSchema = z.object({ name: z.string().min(1) });
  * `);
- *
- * const calls = findZodCalls(project.getSourceFiles()[0]);
  * ```
  */
 
-import type { CallExpression } from 'ts-morph';
+import type { CallExpression, SourceFile } from 'ts-morph';
 import { Project, Node } from 'ts-morph';
+import { ZodImportResolver } from './zod-import-resolver.js';
+import { buildZodDeclarationSource } from './zod-decl-builder.js';
 
-/**
- * Recognized Zod base types.
- * @internal
- */
-export const ZOD_PRIMITIVES = [
-  'string',
-  'number',
-  'boolean',
-  'null',
-  'undefined',
-  'bigint',
-  'date',
-  'symbol',
-  'void',
-  'any',
-  'unknown',
-  'never',
-  // Zod 4 Primitives
-  'int',
-  'int32',
-  'int64',
-  'float32',
-  'float64',
-  'iso.date',
-  'iso.datetime',
-  'iso.time',
-  'iso.duration',
-  'uuidv4',
-  'base64',
-  'base64url',
-  'email',
-  'url',
-  'uuid',
-  'ipv4',
-  'ipv6',
-  'cidrv4',
-  'cidrv6',
-  'jwt',
-  'e164',
-  'hostname',
-  'literal',
-] as const;
+// Re-export constants so existing consumers don't break
+export {
+  ZOD_PRIMITIVES,
+  ZOD_COMPOSITIONS,
+  ZOD_OBJECT_METHOD,
+  type ZodPrimitiveType,
+  type ZodCompositionType,
+} from './zod-constants.js';
 
-export type ZodPrimitiveType = (typeof ZOD_PRIMITIVES)[number];
-
-/**
- * Recognized Zod composition types.
- * @internal
- */
-export const ZOD_COMPOSITIONS = [
-  'object',
-  'array',
-  'union',
-  'intersection',
-  'discriminatedUnion',
-  'lazy',
-  'xor',
-] as const;
-
-export type ZodCompositionType = (typeof ZOD_COMPOSITIONS)[number];
+/** Symbol name for the global `undefined` identifier, used for semantic comparison. */
+const GLOBAL_UNDEFINED_SYMBOL_NAME = 'undefined';
 
 /**
  * Method chain information extracted from Zod AST.
@@ -112,25 +63,67 @@ export interface ZodMethodCall {
 }
 
 /**
- * Create a ts-morph Project from Zod source code.
+ * Result of creating a Zod project.
  *
- * @param source - Zod source code string
- * @returns ts-morph Project with the source file
+ * Bundles the ts-morph Project, the input source file, and a
+ * {@link ZodImportResolver} that can determine whether identifiers
+ * trace back to the zod module.
  *
  * @public
  */
-export function createZodProject(source: string): Project {
+export interface ZodProjectResult {
+  /** The ts-morph Project containing all source files. */
+  project: Project;
+  /** The input source file (always `getSourceFiles()[0]`). */
+  sourceFile: SourceFile;
+  /** Resolver for checking zod import identity via source-file object identity. */
+  resolver: ZodImportResolver;
+}
+
+/**
+ * Create a ts-morph Project from Zod source code.
+ *
+ * Returns a {@link ZodProjectResult} containing the project, the input
+ * source file, and a {@link ZodImportResolver} for zod identity checks.
+ *
+ * @param source - Zod source code string
+ * @returns Project result with source file and import resolver
+ *
+ * @public
+ */
+export function createZodProject(source: string): ZodProjectResult {
   const project = new Project({
     useInMemoryFileSystem: true,
     compilerOptions: {
       strict: true,
       target: 99, // ESNext
       module: 99, // ESNext
+      moduleResolution: 2, // Node — required for resolving bare 'zod' specifier
     },
   });
 
-  project.createSourceFile('input.ts', source);
-  return project;
+  // Always prepend a synthetic zod import so the resolver can trace
+  // `z` identifiers back to the zod module. Expression-wrapping
+  // callers (e.g. parsePrimitiveZod) pass code without imports; full-source
+  // callers include their own imports — duplicate imports are harmless for
+  // ts-morph symbol resolution (the compiler merges them).
+  const ZOD_IMPORT = "import { z } from 'zod';\n";
+  const normalizedSource = ZOD_IMPORT + source;
+
+  // Create input.ts first so getSourceFiles()[0] returns the user's source file.
+  const sourceFile = project.createSourceFile('input.ts', normalizedSource);
+
+  // Add a synthetic zod declaration generated from ZOD_PRIMITIVES and
+  // ZOD_COMPOSITIONS — the same arrays that drive the parser. This ensures
+  // the declaration stays in sync with what the parser recognizes.
+  const zodDeclFile = project.createSourceFile(
+    'node_modules/zod/index.d.ts',
+    buildZodDeclarationSource(),
+  );
+
+  const resolver = new ZodImportResolver(zodDeclFile);
+
+  return { project, sourceFile, resolver };
 }
 
 // ============================================================================
@@ -146,6 +139,7 @@ import {
 } from './zod-ast.helpers.js';
 
 export { isZodCall, getZodBaseMethod, isZodOrZodNamespace, isDirectZodCall, getInnerCall };
+export { ZodImportResolver } from './zod-import-resolver.js';
 
 // ============================================================================
 // Helpers for getZodMethodChain
@@ -164,29 +158,33 @@ function extractMethodFromCall(call: CallExpression): ZodMethodCall | undefined 
   return { name: methodName, argNodes, args };
 }
 
-function shouldStopChainWalk(expr: Node): boolean {
+function shouldStopChainWalk(expr: Node, resolver: ZodImportResolver): boolean {
   if (!Node.isPropertyAccessExpression(expr)) {
     return true;
   }
   const obj = expr.getExpression();
-  return isZodOrZodNamespace(obj);
+  return isZodOrZodNamespace(obj, resolver);
 }
 
 /**
  * Extract the full method chain from a Zod call expression.
  *
  * @param call - A Zod call expression
+ * @param resolver - Resolver for checking zod import identity
  * @returns Method chain information
  *
  * @public
  */
-export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | undefined {
-  const baseMethod = getZodBaseMethod(call);
+export function getZodMethodChain(
+  call: CallExpression,
+  resolver: ZodImportResolver,
+): ZodMethodChainInfo | undefined {
+  const baseMethod = getZodBaseMethod(call, resolver);
   if (!baseMethod) {
     return undefined;
   }
 
-  const { chainedMethods, baseCall } = walkMethodChain(call);
+  const { chainedMethods, baseCall } = walkMethodChain(call, resolver);
   const { baseArgNodes, baseArgs } = extractBaseArgs(baseCall);
 
   return { baseMethod, chainedMethods, baseArgNodes, baseArgs, baseCallNode: baseCall };
@@ -196,7 +194,10 @@ export function getZodMethodChain(call: CallExpression): ZodMethodChainInfo | un
  * Walk the method chain and find the base call.
  * @internal
  */
-function walkMethodChain(call: CallExpression): {
+function walkMethodChain(
+  call: CallExpression,
+  resolver: ZodImportResolver,
+): {
   chainedMethods: ZodMethodCall[];
   baseCall: CallExpression | undefined;
 } {
@@ -207,7 +208,7 @@ function walkMethodChain(call: CallExpression): {
   while (Node.isCallExpression(current)) {
     const expr = current.getExpression();
 
-    if (shouldStopChainWalk(expr)) {
+    if (shouldStopChainWalk(expr, resolver)) {
       baseCall = current;
       break;
     }
@@ -246,6 +247,12 @@ function extractBaseArgs(baseCall: CallExpression | undefined): {
 
 /**
  * Extract composition argument value (handles inner Zod calls).
+ *
+ * For `CallExpression` nodes (inner Zod calls like `z.string()` inside
+ * `z.union([z.string(), z.number()])`), returns the AST `Node` directly
+ * rather than serializing to text. Downstream consumers use `baseArgNodes`
+ * for composition types and `parseZodSchemaFromNode` to process them.
+ *
  * @internal
  */
 function extractCompositionArg(node: Node): unknown {
@@ -254,22 +261,32 @@ function extractCompositionArg(node: Node): unknown {
     return node.getElements().map((el) => extractCompositionArg(el));
   }
   if (Node.isCallExpression(node)) {
-    return node.getText();
+    // Return the AST node directly — consumers use parseZodSchemaFromNode
+    // to process inner Zod calls. Never serialize to text (ADR-026).
+    return node;
   }
   return extractLiteralValue(node);
 }
 
 /**
- * Try to extract a simple literal value (string, number, boolean, null, undefined).
+ * Try to extract a numeric or string literal value.
  * @internal
  */
-function tryExtractSimpleLiteral(node: Node): { value: unknown; found: boolean } {
+function tryExtractTypedLiteral(node: Node): { value: unknown; found: boolean } {
   if (Node.isStringLiteral(node)) {
     return { value: node.getLiteralValue(), found: true };
   }
   if (Node.isNumericLiteral(node)) {
     return { value: node.getLiteralValue(), found: true };
   }
+  return { value: undefined, found: false };
+}
+
+/**
+ * Try to extract a boolean, null, or undefined literal value.
+ * @internal
+ */
+function tryExtractSpecialLiteral(node: Node): { value: unknown; found: boolean } {
   if (Node.isTrueLiteral(node)) {
     return { value: true, found: true };
   }
@@ -279,23 +296,37 @@ function tryExtractSimpleLiteral(node: Node): { value: unknown; found: boolean }
   if (Node.isNullLiteral(node)) {
     return { value: null, found: true };
   }
-  if (Node.isIdentifier(node) && node.getText() === 'undefined') {
+  if (Node.isIdentifier(node) && node.getSymbol()?.getName() === GLOBAL_UNDEFINED_SYMBOL_NAME) {
     return { value: undefined, found: true };
   }
   return { value: undefined, found: false };
 }
 
 /**
+ * Try to extract a simple literal value (string, number, boolean, null, undefined).
+ * @internal
+ */
+function tryExtractSimpleLiteral(node: Node): { value: unknown; found: boolean } {
+  const typed = tryExtractTypedLiteral(node);
+  if (typed.found) {
+    return typed;
+  }
+  return tryExtractSpecialLiteral(node);
+}
+
+/**
  * Extract a regex literal body from a RegularExpressionLiteral node.
+ *
+ * Uses `getLiteralValue()` which returns the parsed `RegExp` object,
+ * then reads `.source` to get the pattern body — a semantic API
+ * that avoids manual string parsing of the `/body/flags` format.
+ *
  * @internal
  */
 function extractRegexBody(node: Node): string | undefined {
   if (Node.isRegularExpressionLiteral(node)) {
-    const text = node.getText();
-    const lastSlash = text.lastIndexOf('/');
-    if (lastSlash > 0) {
-      return text.slice(1, lastSlash);
-    }
+    const regex: RegExp = node.getLiteralValue();
+    return regex.source;
   }
   return undefined;
 }

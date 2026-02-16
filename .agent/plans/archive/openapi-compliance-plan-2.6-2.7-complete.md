@@ -389,11 +389,11 @@ Write new IR fields to OpenAPI 3.1 output:
 **Specifications:**
 
 - [openapi-acceptance-criteria.md](../../acceptance-criteria/openapi-acceptance-criteria.md) — Formal specification
-- [requirements.md](../requirements.md) — Field-level requirements (comprehensive)
-- [openapi_3_0_x_schema.json](../reference/openapi_schema/openapi_3_0_x_schema.json) — OAS 3.0.x schema
-- [openapi_3_1_x_schema_without_validation.json](../reference/openapi_schema/openapi_3_1_x_schema_without_validation.json) — OAS 3.1.x schema
+- [requirements.md](../../directives/requirements.md) — Field-level requirements (comprehensive)
+- [openapi_3_0_x_schema.json](../../reference/openapi_schema/openapi_3_0_x_schema.json) — OAS 3.0.x schema
+- [openapi_3_1_x_schema_without_validation.json](../../reference/openapi_schema/openapi_3_1_x_schema_without_validation.json) — OAS 3.1.x schema
 - JSON Schema 2020-12 specs: `.agent/reference/json-schema-2020-12/` (if needed for advanced keywords)
 
 **Roadmap:**
 
-- [roadmap.md](./roadmap.md) — Session 2.7 follows after 2.6 complete
+- [roadmap.md](../roadmap.md) — Session 2.7 follows after 2.6 complete

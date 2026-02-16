@@ -15,6 +15,7 @@ import type {
   ParameterType,
 } from '../../endpoints/definition.types.js';
 import { extractConstraintsFromIR } from './constraint-extraction.js';
+import { isSuccessStatusCode, STATUS_DEFAULT } from './template-context.status-codes.js';
 
 /**
  * Creates an empty CastrSchema object with default metadata.
@@ -183,17 +184,11 @@ function toParameterType(location: 'path' | 'query' | 'header' | 'cookie'): Para
 
 function mapErrors(responses: CastrResponse[]): EndpointError[] {
   return responses
-    .filter(
-      (r) =>
-        r.statusCode !== '200' &&
-        r.statusCode !== '201' &&
-        r.statusCode !== '204' &&
-        !r.statusCode.startsWith('2'),
-    )
+    .filter((r) => !isSuccessStatusCode(r.statusCode))
     .map((r) => {
       const schema = r.schema || getSchemaFromContent(r.content);
       const error: EndpointError = {
-        status: r.statusCode === 'default' ? 'default' : parseInt(r.statusCode, 10),
+        status: r.statusCode === STATUS_DEFAULT ? STATUS_DEFAULT : parseInt(r.statusCode, 10),
         schema: schema || createEmptySchema(),
       };
       if (r.description) {
@@ -205,10 +200,8 @@ function mapErrors(responses: CastrResponse[]): EndpointError[] {
 
 function mapSuccessResponse(responses: CastrResponse[]): CastrSchema {
   // Should be CastrSchema
-  // Find primary success response (200, 201, 204, or default)
-  const success = responses.find(
-    (r) => r.statusCode === '200' || r.statusCode === '201' || r.statusCode === '204',
-  );
+  // Find primary success response using centralized status-code semantics.
+  const success = responses.find((r) => isSuccessStatusCode(r.statusCode));
   if (success) {
     return success.schema || getSchemaFromContent(success.content) || createEmptySchema();
   }

@@ -16,7 +16,10 @@ import type {
 } from '../../ir/schema.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 import { parseObjectZod } from './zod-parser.object.js';
+import { deriveComponentName } from './schema-name-registry.js';
 import type { EndpointDefinition, ParameterLocation } from './zod-parser.endpoint.types.js';
+
+const PATH_PARAMETER_LOCATION: ParameterLocation = 'path';
 
 /**
  * Create default schema metadata.
@@ -41,17 +44,6 @@ function createDefaultMetadata(): CastrSchema['metadata'] {
 }
 
 /**
- * Strips trailing "Schema" suffix from a schema name to create a reference name.
- * @internal
- */
-function stripSchemaSuffix(expression: string): string {
-  if (expression.endsWith('Schema')) {
-    return expression.slice(0, -6);
-  }
-  return expression;
-}
-
-/**
  * Parse a schema expression into a CastrSchema.
  * @internal
  */
@@ -68,7 +60,7 @@ function parseSchemaExpression(expression: string): CastrSchema {
 
   // Return a reference for named schemas
   return {
-    $ref: `#/components/schemas/${stripSchemaSuffix(expression)}`,
+    $ref: `#/components/schemas/${deriveComponentName(expression)}`,
     metadata: createDefaultMetadata(),
   };
 }
@@ -83,12 +75,12 @@ function buildParameter(
   location: ParameterLocation,
 ): CastrParameter {
   const schema = parseSchemaExpression(schemaExpression);
-  const isOptional = schemaExpression.includes('.optional()');
+  const required = location === PATH_PARAMETER_LOCATION ? true : schema.metadata.required;
 
   return {
     name,
     in: location,
-    required: location === 'path' ? true : !isOptional,
+    required,
     schema,
   };
 }

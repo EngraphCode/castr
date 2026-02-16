@@ -11,6 +11,10 @@ import type { CastrParameter, CastrSchema } from '../../ir/schema.js';
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
+import { parseComponentRef } from '../../../shared/ref-resolution.js';
+
+const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters' as const;
+const PARAMETER_LOCATION_PATH = 'path' as const;
 
 /**
  * Safely convert OpenAPI example value (typed as 'any') to unknown.
@@ -108,12 +112,18 @@ function resolveParameter(
   ref: ReferenceObject,
   context: IRBuildContext,
 ): ParameterObject | undefined {
-  const refPath = ref.$ref;
-  if (!refPath.startsWith('#/components/parameters/')) {
+  let parsedRef;
+  try {
+    parsedRef = parseComponentRef(ref.$ref);
+  } catch {
     return undefined;
   }
 
-  const paramName = refPath.split('/').pop();
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_PARAMETERS) {
+    return undefined;
+  }
+
+  const paramName = parsedRef.componentName;
   if (!paramName || !context.doc.components?.parameters) {
     return undefined;
   }
@@ -156,7 +166,7 @@ function throwUnresolvedParameterRefError(ref: ReferenceObject, context: IRBuild
 function buildConcreteParameter(param: ParameterObject, context: IRBuildContext): CastrParameter {
   const parameterContext: IRBuildContext = {
     ...context,
-    required: param.required ?? param.in === 'path',
+    required: param.required ?? param.in === PARAMETER_LOCATION_PATH,
     path: [...context.path, param.name],
   };
 
@@ -211,7 +221,7 @@ function buildBaseParameter(param: ParameterObject, schema: CastrSchema): CastrP
   return {
     name: param.name,
     in: param.in,
-    required: param.required ?? param.in === 'path', // Path parameters are always required
+    required: param.required ?? param.in === PARAMETER_LOCATION_PATH, // Path parameters are always required
     schema,
     // Populate metadata from schema's metadata (if available)
     metadata: schema.metadata,

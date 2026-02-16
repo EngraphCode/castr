@@ -26,6 +26,8 @@ import { addOpenAPIExtensions } from './builder.json-schema-2020-12.js';
 
 import { updateZodChain } from './builder.zod-chain.js';
 
+const SCHEMA_TYPE_NULL = 'null' as const;
+
 /**
  * Build IR schema from OpenAPI SchemaObject or ReferenceObject.
  * Recursively processes primitives, objects, arrays, compositions, and references.
@@ -87,7 +89,8 @@ export function buildCastrSchemaNode(
   context: IRBuildContext,
 ): CastrSchemaNode {
   // Determine nullability from OAS 3.1 type arrays
-  const nullable = Array.isArray(schema.type) && schema.type.includes('null');
+  const nullable =
+    Array.isArray(schema.type) && schema.type.some((typeEntry) => typeEntry === SCHEMA_TYPE_NULL);
 
   return {
     required: context.required,
@@ -174,7 +177,7 @@ export function buildPropertySchema(
   parentRequired: string[],
   parentContext: IRBuildContext,
 ): IRPropertySchemaContext {
-  const isRequired = parentRequired.includes(name);
+  const isRequired = parentRequired.some((requiredName) => requiredName === name);
   const context: IRBuildContext = {
     ...parentContext,
     path: [...parentContext.path, 'properties', name],

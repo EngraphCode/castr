@@ -305,7 +305,7 @@ export type DefaultStatusBehavior = 'spec-compliant' | 'auto-correct';
 
 ### Option Location
 
-**File:** `lib/src/context/template-context.types.ts`
+**File:** `lib/src/schema-processing/context/template-context.ts`
 
 **Usage:**
 
@@ -334,7 +334,11 @@ interface TemplateContextOptions {
 
 ### Implementation
 
-**File:** `lib/src/endpoints/status-codes.ts` (hypothetical location)
+**Files:**
+
+- `lib/src/schema-processing/context/template-context.ts` (option contract)
+- `lib/src/schema-processing/context/template-context.endpoints.from-ir.ts` (response mapping)
+- `lib/src/schema-processing/context/template-context.status-codes.ts` (centralized status-code semantics)
 
 The warning is emitted when:
 
@@ -458,7 +462,7 @@ npx @engraph/castr ./openapi.yaml -o ./generated.ts --default-status-behavior au
 
 ### Related Documentation
 
-- [TSDoc for `defaultStatusBehavior`](../lib/src/context/template-context.types.ts)
+- [TSDoc for `defaultStatusBehavior`](../lib/src/schema-processing/context/template-context.ts)
 - [TSDoc for `generateZodClientFromOpenAPI`](../lib/src/rendering/generate-from-context.ts)
 
 ### Related Issues

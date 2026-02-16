@@ -5,6 +5,10 @@ import type {
   SecurityRequirementObject,
   SecuritySchemeObject,
 } from 'openapi3-ts/oas31';
+import {
+  SECURITY_SELECTION_KIND_PUBLIC,
+  SECURITY_SELECTION_KIND_REQUIREMENTS,
+} from '../json-schema-constants.js';
 
 export interface SecuritySchemeRequirement {
   schemeName: string;
@@ -43,7 +47,7 @@ export function resolveOperationSecurity({
   const securitySchemes = document.components?.securitySchemes ?? {};
   const selection = selectSecurityRequirements(operationSecurity, document.security ?? []);
 
-  if (selection.kind === 'public') {
+  if (selection.kind === SECURITY_SELECTION_KIND_PUBLIC) {
     return { isPublic: true, usesGlobalSecurity: false, requirementSets: [] };
   }
 
@@ -82,9 +86,9 @@ function resolveRequirement(
 }
 
 type SecuritySelection =
-  | { kind: 'public' }
+  | { kind: typeof SECURITY_SELECTION_KIND_PUBLIC }
   | {
-      kind: 'requirements';
+      kind: typeof SECURITY_SELECTION_KIND_REQUIREMENTS;
       requirements: SecurityRequirementObject[];
       usesGlobalDefaults: boolean;
     };
@@ -95,14 +99,22 @@ function selectSecurityRequirements(
 ): SecuritySelection {
   if (operationSecurity !== undefined) {
     if (operationSecurity.length === 0) {
-      return { kind: 'public' };
+      return { kind: SECURITY_SELECTION_KIND_PUBLIC };
     }
-    return { kind: 'requirements', requirements: operationSecurity, usesGlobalDefaults: false };
+    return {
+      kind: SECURITY_SELECTION_KIND_REQUIREMENTS,
+      requirements: operationSecurity,
+      usesGlobalDefaults: false,
+    };
   }
 
   if (globalSecurity.length === 0) {
-    return { kind: 'public' };
+    return { kind: SECURITY_SELECTION_KIND_PUBLIC };
   }
 
-  return { kind: 'requirements', requirements: globalSecurity, usesGlobalDefaults: true };
+  return {
+    kind: SECURITY_SELECTION_KIND_REQUIREMENTS,
+    requirements: globalSecurity,
+    usesGlobalDefaults: true,
+  };
 }

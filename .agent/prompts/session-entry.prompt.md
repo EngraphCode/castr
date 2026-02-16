@@ -28,7 +28,7 @@ Notes:
 5. **Zod 4 Output Policy:** Writers must emit canonical Zod 4 helpers where representable (`z.email()`, `z.url()`, `z.int()`, `z.iso.*`). Parsers must accept all canonical writer output. Non-canonical Zod 4 input may be accepted only if it maps losslessly; otherwise fail fast with a helpful error.
 6. **ts-morph for TS/Zod Code Gen:** No string templates for code generation.
 7. **ADR-026 (Scoped — see ADR-026 § "Scope Definition"):** No string/regex heuristics for parsing TypeScript source code. Use ts-morph + semantic APIs (symbol resolution), not node-text matching. Data-string parsing (OpenAPI `$ref`, media types) allowed when centralized, validated, tested, fail-fast.
-8. **No Escape Hatches:** No `as`, `any`, `!`, or `eslint-disable` workarounds in product code. Fix architecture or fix the rule.
+8. **No Escape Hatches:** No `as`, `any`, `!`, or `eslint-disable` workarounds in product code. Fix architecture or fix the rule. **One governed exception:** `Identifier.getText()` — see ADR-026 § "Amendment — Identifier.getText()".
 9. **TDD at ALL Levels:** Write failing tests FIRST.
 10. **Quality Gates:** All gates must pass before merge.
 
@@ -40,7 +40,7 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3a)
 
-**ACTIVE PLAN: [3.3a.02 — ESLint Enforcement Redesign](../plans/active/3.3a-02-eslint-enforcement-redesign.md)** — open this file first.
+**ACTIVE PLAN: [3.3a.05 — Remove Permissive Fallback Outputs](../plans/active/3.3a-05-remove-permissive-fallbacks.md)** — open this file first.
 
 #### Plan lifecycle
 
@@ -55,44 +55,47 @@ The plan's **Successor** field tells you which plan comes next.
 
 #### Context (what's already done)
 
-3.3a.01 (ADR-026 Scope Definition) is complete. It produced:
+- **3.3a.01** (ADR-026 Scope Definition) ✅ — strict enforcement principle, 31 classified violations, responsibility boundaries
+- **3.3a.02** (ESLint Enforcement Redesign) ✅ — 21 `no-restricted-syntax` selectors + custom `castr/no-magic-string-comparison` rule active
+- **3.3a.03 Phases 1 & 1b** ✅ — Symbol resolution for `z` identity. `ZodImportResolver` class, `zod-constants.ts`, `zod-decl-builder.ts`. Source-file object identity. Resolver threaded through 15+ files. **8 violations resolved.**
+- **3.3a.03 Phase 2** ✅ — Eliminated getText() → re-parse anti-pattern. Direct node passing in `parseSchemaDeclarations`. Deleted `parseZodExpression`. **8.2× speedup** (2719ms → 330ms). Fixed `test:transforms` constraints timeout (root cause was 35× `createZodProject` calls). **1 violation resolved.**
+- **3.3a.03 Phase 3** ✅ — Replaced all `stripQuotes(getText())` with `extractStringValue()`, `getLiteralValue()`, `getName()`. Extracted `extractParamEntry`/`extractResponseEntry` helpers. **6 violations resolved.**
+- **3.3a.03 Phase 4** ✅ — Added `schema-name-registry.ts` and `schema-name-registry.unit.test.ts`. `extractSchemaName` now delegates to registry; endpoint builder uses `deriveComponentName`.
+- **3.3a.03 Phase 5** ✅ — Replaced IR text heuristics with structural/centralized approach: `normalizeSchemaNameForDependency` now uses `$ref` shape; added `template-context.status-codes.ts`; `from-ir.ts` now uses `isSuccessStatusCode` + typed constants.
+- **3.3a.03 Phase 6** ✅ — Cleanup. Removed dead `stripQuotes` functions, `parseZodExpression`, stale imports.
+- **3.3a.03 Step 4 follow-up** ✅ — Removed `includes('.optional()')` heuristic in endpoint builder; requiredness now uses parsed schema metadata.
+- **ADR-026 Amendment** (2026-02-16) — § "Amendment — Identifier.getText()": ts-morph `Identifier` has no `getName()`. `getText()` is the only API. Allowed after `Node.isIdentifier()` narrowing, against typed constants.
+- **Audit follow-ups A1-A4** ✅ — all resolved in Plan 03.
+- **3.3a.04** ✅ Complete (2026-02-16) — repo-wide ADR-026 remediation finished. Lint debt reduced from **272 → 0** with `pnpm lint`, `pnpm type-check`, and `pnpm test` all green.
 
-- **Strict enforcement principle** in ADR-026 § "Scope Definition" — no grey areas, no "partially enforced" tiers, no excluded modules
-- **31 classified violations**: 22 TS-source heuristics (Zod parser), 7 centralization violations (ad-hoc `$ref` parsing), 2 IR text-heuristic violations
-- **Responsibility boundaries** on all 15 plans — each states what it owns and what it doesn't
+#### Plan restructuring (2026-02-15)
 
-#### What the active plan (3.3a.02) must do
+- **Plan 03** scoped to **Zod parser only** (~20 violations, Phases 1-6). **20/20 complete.**
+- **Plan 04** — Repo-Wide ADR-026 Remediation — **complete** and moved to `.agent/plans/current/complete/`.
+- **Plan 05** — Remove Permissive Fallback Outputs — now active.
 
-Redesign `lib/eslint.config.ts` to match the strict scope:
+#### What the active plan (3.3a.05) must do next
 
-1. Remove the schema-processing override that sets `no-restricted-syntax` to `'off'` (line ~249)
-2. Ban `getText()` identity, regex, and text comparison in ALL `src/**/*.ts`
-3. Ban data-string methods in ALL `src/**/*.ts` EXCEPT `src/shared/ref-resolution.ts` (designated utility)
-4. Exempt test files (`**/*.test.ts`, `**/*.spec.ts`, `tests-*/**`)
-5. Avoid false positives on discriminated-union checks and type narrowing
-
-**Lint WILL fail after this plan** — that is expected and correct. **Do NOT remediate violations in this plan** — only configure enforcement. The violations are fixed by plans 03 and 04.
+Remove permissive fallback output behavior (catch + warn + permissive return) and replace it with strict fail-fast errors with actionable context.
 
 #### Quick start
 
 ```bash
 # Repo root: verify baseline first
-pnpm type-check && pnpm test
+pnpm lint && pnpm type-check && pnpm test
 
-# ESLint config lives here (no repo-root eslint.config.ts)
-sed -n '200,420p' lib/eslint.config.ts | nl -ba | sed -n '1,220p'
+# Open active plan
+sed -n '1,220p' .agent/plans/active/3.3a-05-remove-permissive-fallbacks.md
 
-# Inventory current violations (rules are currently off, so use rg from repo root)
-rg -n "\.getText\(" lib/src/schema-processing/parsers/zod --glob '!**/*.test.*'
-rg -n "\.(startsWith|endsWith|includes|split|slice|indexOf|replace|replaceAll|toLowerCase|toUpperCase|trim)\(" \
-  lib/src/schema-processing --glob '!**/*.test.*' --glob '!**/*.spec.*' | head -50
+# Primary known remediation target
+sed -n '1,260p' lib/src/schema-processing/conversion/json-schema/convert-schema.ts
 ```
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
 1. **STRICT BY DEFAULT** — never relax constraints to "make things work"
 2. **FAIL FAST AND HARD** — no silent fallbacks, no degraded output, no swallowed errors
-3. **NO ESCAPE HATCHES** — no `as`, `any`, `!`, or `eslint-disable` in product code
+3. **NO ESCAPE HATCHES** — no `as`, `any`, `!`, or `eslint-disable` in product code (one governed exception: `Identifier.getText()` per ADR-026 amendment)
 4. **ADR-026** — semantic analysis, not string heuristics. See ADR-026 § "Scope Definition"
 5. **CENTRALIZE OR FAIL** — one canonical parser per data format
 6. **NO TOLERANCE PATHS** — rules are enforced everywhere or they're not rules

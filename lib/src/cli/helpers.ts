@@ -19,6 +19,8 @@ export type { CliOptions };
 export { buildGenerationOptions };
 
 const packageJsonPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../package.json');
+const TEMPLATE_SCHEMAS_ONLY = 'schemas-only' as const;
+const TEMPLATE_SCHEMAS_WITH_METADATA = 'schemas-with-metadata' as const;
 
 /**
  * Get package version from package.json.
@@ -70,7 +72,7 @@ export function parseCliOptions(options: CliOptions): {
 export function isTemplateName(
   template: string | undefined,
 ): template is 'schemas-only' | 'schemas-with-metadata' {
-  return template === 'schemas-only' || template === 'schemas-with-metadata';
+  return template === TEMPLATE_SCHEMAS_ONLY || template === TEMPLATE_SCHEMAS_WITH_METADATA;
 }
 
 /**

@@ -50,6 +50,17 @@ This decision must align with:
 - `z.union(...)` defaults to `anyOf` unless disjointness is provable or explicit metadata requests `oneOf`.
 - If `oneOf` is requested but disjointness cannot be proven, **fail fast** with a clear error.
 
+### 6. Parser Naming and Endpoint Optionality Must Be Semantic
+
+- Component naming from schema declarations is centralized via
+  `parsers/zod/schema-name-registry.ts` (`deriveComponentName` with typed suffix constants),
+  not ad-hoc naming heuristics scattered across parser modules.
+- Endpoint parameter requiredness in endpoint operation building is derived from parsed schema
+  metadata (`schema.metadata.required`) with explicit path-parameter override, not string
+  matching (e.g., no `.includes('.optional()')` heuristics).
+- Status-code semantics used by IR endpoint mapping are centralized in
+  `context/template-context.status-codes.ts` and referenced via typed constants/predicates.
+
 ---
 
 ## Consequences

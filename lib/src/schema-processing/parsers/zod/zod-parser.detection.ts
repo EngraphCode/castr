@@ -26,7 +26,8 @@
 import type { CallExpression, ObjectLiteralExpression, SourceFile } from 'ts-morph';
 import { Node } from 'ts-morph';
 import type { ZodParseError } from './zod-parser.types.js';
-import { createZodProject, isZodCall, getZodMethodChain } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
+import { createZodProject, isZodCall, getZodMethodChain, ZOD_OBJECT_METHOD } from './zod-ast.js';
 
 /**
  * Zod 3 methods that are not available in Zod 4.
@@ -108,19 +109,14 @@ function checkMethodForIssues(
  */
 export function detectZod3Syntax(source: string): ZodParseError[] {
   const errors: ZodParseError[] = [];
-  const project = createZodProject(source);
-  const sourceFile = project.getSourceFiles()[0];
-
-  if (!sourceFile) {
-    return errors;
-  }
+  const { sourceFile, resolver } = createZodProject(source);
 
   sourceFile.forEachDescendant((node) => {
-    if (!Node.isCallExpression(node) || !isZodCall(node) || isInnerChainCall(node)) {
+    if (!Node.isCallExpression(node) || !isZodCall(node, resolver) || isInnerChainCall(node)) {
       return;
     }
 
-    const chain = getZodMethodChain(node);
+    const chain = getZodMethodChain(node, resolver);
     if (!chain) {
       return;
     }
@@ -157,7 +153,10 @@ function getDiscouragedReplacement(methodName: string): string | undefined {
  * Find the z.object() call in a chain of method calls.
  * @internal
  */
-function findObjectCallInChain(node: CallExpression): CallExpression | undefined {
+function findObjectCallInChain(
+  node: CallExpression,
+  resolver: ZodImportResolver,
+): CallExpression | undefined {
   let current: CallExpression | undefined = node;
 
   while (current) {
@@ -167,7 +166,11 @@ function findObjectCallInChain(node: CallExpression): CallExpression | undefined
     }
 
     const obj = expr.getExpression();
-    if (Node.isIdentifier(obj) && obj.getText() === 'z' && expr.getName() === 'object') {
+    if (
+      Node.isIdentifier(obj) &&
+      resolver.resolveToZodImport(obj) &&
+      expr.getName() === ZOD_OBJECT_METHOD
+    ) {
       return current;
     }
 
@@ -242,24 +245,19 @@ function checkForSpreadAssignments(
  */
 export function detectDynamicSchemas(source: string): ZodParseError[] {
   const errors: ZodParseError[] = [];
-  const project = createZodProject(source);
-  const sourceFile = project.getSourceFiles()[0];
-
-  if (!sourceFile) {
-    return errors;
-  }
+  const { sourceFile, resolver } = createZodProject(source);
 
   sourceFile.forEachDescendant((node) => {
-    if (!Node.isCallExpression(node) || !isZodCall(node)) {
+    if (!Node.isCallExpression(node) || !isZodCall(node, resolver)) {
       return;
     }
 
-    const chain = getZodMethodChain(node);
-    if (!chain || chain.baseMethod !== 'object') {
+    const chain = getZodMethodChain(node, resolver);
+    if (!chain || chain.baseMethod !== ZOD_OBJECT_METHOD) {
       return;
     }
 
-    const objectCall = findObjectCallInChain(node);
+    const objectCall = findObjectCallInChain(node, resolver);
     if (!objectCall) {
       return;
     }

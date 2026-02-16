@@ -34,6 +34,7 @@ import {
 } from '../rendering/generate-from-context.js';
 
 const program = new Command();
+const CURRENT_DIR_DOT = '.' as const;
 
 program
   .name('data-descriptions-tooling')
@@ -146,7 +147,7 @@ program
     if (options.emitMcpManifest) {
       const manifestPath = options.emitMcpManifest;
       const manifestDir = dirname(manifestPath);
-      if (manifestDir && manifestDir !== '.') {
+      if (manifestDir && manifestDir !== CURRENT_DIR_DOT) {
         await mkdir(manifestDir, { recursive: true });
       }
 

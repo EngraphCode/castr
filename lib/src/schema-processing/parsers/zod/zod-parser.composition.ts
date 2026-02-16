@@ -14,10 +14,20 @@ import {
   type ZodMethodCall,
   extractLiteralValue,
 } from './zod-ast.js';
+import type { ZodImportResolver } from './zod-import-resolver.js';
 import type { ZodSchemaParser } from './zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from './zod-parser.core.js';
 import { createDefaultMetadata } from './zod-parser.defaults.js';
 import { applyMetaAndReturn } from './zod-parser.meta.js';
+import {
+  ZOD_METHOD_ARRAY,
+  ZOD_METHOD_ENUM,
+  ZOD_METHOD_NATIVE_ENUM,
+  ZOD_METHOD_REST,
+  ZOD_METHOD_TUPLE,
+  ZOD_SCHEMA_TYPE_ARRAY,
+  ZOD_SCHEMA_TYPE_STRING,
+} from './zod-constants.js';
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity
@@ -46,7 +56,7 @@ function parseArray(
   }
 
   const schema: CastrSchema = {
-    type: 'array',
+    type: ZOD_SCHEMA_TYPE_ARRAY,
     items: itemSchema,
     metadata: createDefaultMetadata(),
   };
@@ -141,7 +151,7 @@ function parseTuple(
   }
 
   const schema: CastrSchema = {
-    type: 'array',
+    type: ZOD_SCHEMA_TYPE_ARRAY,
     prefixItems,
     minItems: prefixItems.length,
     maxItems: prefixItems.length,
@@ -149,7 +159,7 @@ function parseTuple(
   };
 
   for (const method of chainedMethods) {
-    if (method.name === 'rest') {
+    if (method.name === ZOD_METHOD_REST) {
       processRestMethod(schema, method, parseSchema);
     }
   }
@@ -161,8 +171,8 @@ function parseTuple(
  * Parse z.enum(['a', 'b'])
  */
 function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
-  if (baseMethod === 'nativeEnum') {
-    return { type: 'string', metadata: createDefaultMetadata() };
+  if (baseMethod === ZOD_METHOD_NATIVE_ENUM) {
+    return { type: ZOD_SCHEMA_TYPE_STRING, metadata: createDefaultMetadata() };
   }
 
   if (args.length === 0) {
@@ -183,7 +193,7 @@ function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
   }
 
   return {
-    type: 'string',
+    type: ZOD_SCHEMA_TYPE_STRING,
     enum: enumValues,
     metadata: createDefaultMetadata(),
   };
@@ -200,31 +210,35 @@ function parseEnum(args: Node[], baseMethod: string): CastrSchema | undefined {
 export function parseCompositionZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
+  resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
+  if (!resolver) {
+    return undefined;
+  }
 
-  const chainInfo = getZodMethodChain(node);
+  const chainInfo = getZodMethodChain(node, resolver);
   if (!chainInfo) {
     return undefined;
   }
 
   const { baseMethod, chainedMethods, baseArgNodes } = chainInfo;
 
-  if (baseMethod === 'array') {
+  if (baseMethod === ZOD_METHOD_ARRAY) {
     return applyMetaAndReturn(
       parseArray(baseArgNodes, chainedMethods, parseSchema),
       chainedMethods,
     );
   }
-  if (baseMethod === 'tuple') {
+  if (baseMethod === ZOD_METHOD_TUPLE) {
     return applyMetaAndReturn(
       parseTuple(baseArgNodes, chainedMethods, parseSchema),
       chainedMethods,
     );
   }
-  if (baseMethod === 'enum' || baseMethod === 'nativeEnum') {
+  if (baseMethod === ZOD_METHOD_ENUM || baseMethod === ZOD_METHOD_NATIVE_ENUM) {
     return applyMetaAndReturn(parseEnum(baseArgNodes, baseMethod), chainedMethods);
   }
 
@@ -239,11 +253,7 @@ registerParser('composition', parseCompositionZodFromNode);
  * @internal
  */
 export function parseCompositionZod(expression: string): CastrSchema | undefined {
-  const project = createZodProject(`const __schema = ${expression};`);
-  const sourceFile = project.getSourceFiles()[0];
-  if (!sourceFile) {
-    return undefined;
-  }
+  const { sourceFile, resolver } = createZodProject(`const __schema = ${expression};`);
 
   const varDecl = sourceFile.getVariableDeclarations()[0];
   const init = varDecl?.getInitializer();
@@ -252,5 +262,6 @@ export function parseCompositionZod(expression: string): CastrSchema | undefined
     return undefined;
   }
 
-  return parseCompositionZodFromNode(init, parseZodSchemaFromNode);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
+  return parseCompositionZodFromNode(init, boundParseSchema, resolver);
 }

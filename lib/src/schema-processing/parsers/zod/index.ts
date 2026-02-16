@@ -32,6 +32,7 @@ export type {
   ZodParseRecommendation,
   ZodRecommendationField,
   ZodParseOptions,
+  ZodSchemaParser,
 } from './zod-parser.types.js';
 
 // Main parser exports
@@ -82,6 +83,13 @@ export {
   getZodMethodChain,
   extractObjectProperties,
   findZodSchemaDeclarations,
+  ZodImportResolver,
+  ZOD_PRIMITIVES,
+  ZOD_COMPOSITIONS,
+  ZOD_OBJECT_METHOD,
   type ZodMethodChainInfo,
   type ZodMethodCall,
+  type ZodProjectResult,
+  type ZodPrimitiveType,
+  type ZodCompositionType,
 } from './zod-ast.js';

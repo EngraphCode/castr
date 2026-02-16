@@ -49,9 +49,12 @@ export function isAllowedMethod(maybeMethod: unknown): maybeMethod is AllowedMet
   if (!maybeMethod || typeof maybeMethod !== 'string') {
     return false;
   }
-  // Cast to readonly string[] for .includes() compatibility
-  const stringMethods: readonly string[] = ALLOWED_METHODS;
-  return stringMethods.includes(maybeMethod);
+  for (const allowedMethod of ALLOWED_METHODS) {
+    if (maybeMethod === allowedMethod) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**

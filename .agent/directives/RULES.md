@@ -4,6 +4,10 @@
 **Project:** @engraph/castr  
 **Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
 
+No fallbacks, no escape hatches, no compromises, no "pragmatic" solutions, no "good enough" solutions; only architecturally excellent, long-term sustainable solutions.
+
+All code, processes, pipelines and checks must be STRICT at all times. Fail fast.
+
 ---
 
 ## 🎯 Core Philosophy: Engineering Excellence Over Speed

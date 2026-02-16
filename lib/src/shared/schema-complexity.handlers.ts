@@ -22,14 +22,24 @@ export type ComplexityFn = (args: {
   schema: SchemaObject | ReferenceObject | undefined;
 }) => number;
 
+const SCHEMA_TYPE_STRING = 'string' as const;
+const SCHEMA_TYPE_NUMBER = 'number' as const;
+const SCHEMA_TYPE_INTEGER = 'integer' as const;
+const SCHEMA_TYPE_BOOLEAN = 'boolean' as const;
+const SCHEMA_TYPE_NULL = 'null' as const;
+const SCHEMA_TYPE_ARRAY = 'array' as const;
+const SCHEMA_TYPE_OBJECT = 'object' as const;
+
+const PRIMITIVE_COMPLEXITY_TYPES = new Set<PrimitiveSchemaType>([
+  SCHEMA_TYPE_STRING,
+  SCHEMA_TYPE_NUMBER,
+  SCHEMA_TYPE_INTEGER,
+  SCHEMA_TYPE_BOOLEAN,
+  SCHEMA_TYPE_NULL,
+]);
+
 const complexityByType = (type: PrimitiveSchemaType): number => {
-  return type === 'string' ||
-    type === 'number' ||
-    type === 'integer' ||
-    type === 'boolean' ||
-    type === 'null'
-    ? 1
-    : 0;
+  return PRIMITIVE_COMPLEXITY_TYPES.has(type) ? 1 : 0;
 };
 
 /**
@@ -64,7 +74,7 @@ export function handleReferenceSchema(current: number): number {
  * Handle null type schema - adds type complexity
  */
 export function handleNullTypeSchema(current: number): number {
-  return current + complexityByType('null');
+  return current + complexityByType(SCHEMA_TYPE_NULL);
 }
 
 /**
@@ -121,7 +131,7 @@ export function handleArraySchema(
   current: number,
   getSchemaComplexity: ComplexityFn,
 ): number {
-  if (schema.type !== 'array') {
+  if (schema.type !== SCHEMA_TYPE_ARRAY) {
     return current;
   }
 
@@ -141,7 +151,8 @@ export function handleObjectSchema(
   current: number,
   getSchemaComplexity: ComplexityFn,
 ): number {
-  const isObjectType = schema.type === 'object' || schema.properties || schema.additionalProperties;
+  const isObjectType =
+    schema.type === SCHEMA_TYPE_OBJECT || schema.properties || schema.additionalProperties;
   if (!isObjectType) {
     return current;
   }
@@ -199,7 +210,7 @@ export function trySchemaTypeHandlers(
   getSchemaComplexity: ComplexityFn,
 ): number {
   // Handle null type
-  if (schema.type === 'null') {
+  if (schema.type === SCHEMA_TYPE_NULL) {
     return handleNullTypeSchema(current);
   }
 

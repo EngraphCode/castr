@@ -12,6 +12,17 @@ import { serializeIR } from '../schema-processing/ir/serialization.js';
 import { generateIndexFile, generateCommonFile, generateGroupFiles } from './templating-groups.js';
 import { writeTypeScript } from '../schema-processing/writers/typescript/index.js';
 
+const GROUP_STRATEGY_TAG_FILE = 'tag-file' as const;
+const GROUP_STRATEGY_METHOD_FILE = 'method-file' as const;
+const TYPESCRIPT_FILE_EXTENSION = '.ts' as const;
+const IR_JSON_FILE_SUFFIX = '.ir.json' as const;
+
+function isFileGroupingStrategy(
+  strategy: TemplateContextOptions['groupStrategy'] | undefined,
+): strategy is typeof GROUP_STRATEGY_TAG_FILE | typeof GROUP_STRATEGY_METHOD_FILE {
+  return strategy === GROUP_STRATEGY_TAG_FILE || strategy === GROUP_STRATEGY_METHOD_FILE;
+}
+
 /**
  * Handle file grouping output strategy
  *
@@ -108,7 +119,8 @@ export function renderOutput(
   prettierConfig: Options | null | undefined,
   willWriteToFile: boolean,
 ): Promise<GenerationResult> {
-  if (effectiveOptions.groupStrategy?.includes('file')) {
+  const groupStrategy = effectiveOptions.groupStrategy;
+  if (isFileGroupingStrategy(groupStrategy)) {
     return handleFileGrouping(
       data,
       effectiveOptions,
@@ -143,9 +155,11 @@ export async function handleDebugIR(
 ): Promise<void> {
   if (debugIR && data._ir && distPath && !disableWriteToFile) {
     const irJson = serializeIR(data._ir);
-    const irPath = distPath.endsWith('.ts')
-      ? distPath.slice(0, -3) + '.ir.json'
-      : `${distPath}.ir.json`;
+    const parsedPath = path.parse(distPath);
+    const irPath =
+      parsedPath.ext === TYPESCRIPT_FILE_EXTENSION
+        ? path.join(parsedPath.dir, `${parsedPath.name}${IR_JSON_FILE_SUFFIX}`)
+        : `${distPath}${IR_JSON_FILE_SUFFIX}`;
     await fs.writeFile(irPath, irJson, 'utf-8');
   }
 }

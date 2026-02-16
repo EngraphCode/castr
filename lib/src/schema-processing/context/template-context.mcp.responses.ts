@@ -12,18 +12,101 @@
  * @module template-context.mcp.responses
  */
 
+import { includes, split, toLower, trim } from 'lodash-es';
 import type { CastrOperation, CastrSchema, CastrResponse } from '../ir/schema.js';
 
-const isRequestContentTypeSupported = (mediaType: string): boolean =>
-  mediaType === '*/*' ||
-  mediaType.includes('json') ||
-  mediaType.includes('x-www-form-urlencoded') ||
-  mediaType.includes('form-data') ||
-  mediaType.includes('octet-stream') ||
-  mediaType.includes('text/');
+const MEDIA_TYPE_WILDCARD_TYPE = '*' as const;
+const MEDIA_TYPE_WILDCARD_SUBTYPE = '*' as const;
+const MEDIA_TYPE_SEPARATOR = '/' as const;
+const MEDIA_TYPE_PARAMETER_SEPARATOR = ';' as const;
+const MEDIA_TYPE_TEXT_TYPE = 'text' as const;
+const MEDIA_TYPE_APPLICATION_TYPE = 'application' as const;
+const MEDIA_TYPE_MULTIPART_TYPE = 'multipart' as const;
+const JSON_SUBTYPE_TOKEN = 'json' as const;
+const SUBTYPE_FORM_URLENCODED = 'x-www-form-urlencoded' as const;
+const SUBTYPE_FORM_DATA = 'form-data' as const;
+const SUBTYPE_OCTET_STREAM = 'octet-stream' as const;
 
-const isResponseContentTypeSupported = (mediaType: string): boolean =>
-  mediaType.includes('json') || mediaType.includes('text/') || mediaType === '*/*';
+interface ParsedMediaType {
+  type: string;
+  subtype: string;
+}
+
+function parseMediaType(mediaType: string): ParsedMediaType | undefined {
+  const withParams = split(mediaType, MEDIA_TYPE_PARAMETER_SEPARATOR);
+  const mediaTypeToken = trim(withParams[0] ?? '');
+  const normalizedToken = toLower(mediaTypeToken);
+  const parts = split(normalizedToken, MEDIA_TYPE_SEPARATOR);
+
+  if (parts.length !== 2) {
+    return undefined;
+  }
+
+  const type = parts[0] ?? '';
+  const subtype = parts[1] ?? '';
+  if (type.length === 0 || subtype.length === 0) {
+    return undefined;
+  }
+
+  return { type, subtype };
+}
+
+function isWildcardMediaType(mediaType: ParsedMediaType): boolean {
+  return (
+    mediaType.type === MEDIA_TYPE_WILDCARD_TYPE && mediaType.subtype === MEDIA_TYPE_WILDCARD_SUBTYPE
+  );
+}
+
+function isJsonSubtype(subtype: string): boolean {
+  return includes(subtype, JSON_SUBTYPE_TOKEN);
+}
+
+function isTextType(mediaType: ParsedMediaType): boolean {
+  return mediaType.type === MEDIA_TYPE_TEXT_TYPE;
+}
+
+function isMultipartFormData(mediaType: ParsedMediaType): boolean {
+  return mediaType.type === MEDIA_TYPE_MULTIPART_TYPE && mediaType.subtype === SUBTYPE_FORM_DATA;
+}
+
+function isSupportedApplicationSubtype(mediaType: ParsedMediaType): boolean {
+  if (mediaType.type !== MEDIA_TYPE_APPLICATION_TYPE) {
+    return false;
+  }
+  return (
+    mediaType.subtype === SUBTYPE_FORM_URLENCODED || mediaType.subtype === SUBTYPE_OCTET_STREAM
+  );
+}
+
+const isRequestContentTypeSupported = (mediaType: string): boolean => {
+  const parsed = parseMediaType(mediaType);
+  if (!parsed) {
+    return false;
+  }
+
+  return (
+    isWildcardMediaType(parsed) ||
+    isTextType(parsed) ||
+    isJsonSubtype(parsed.subtype) ||
+    isMultipartFormData(parsed) ||
+    isSupportedApplicationSubtype(parsed)
+  );
+};
+
+const isResponseContentTypeSupported = (mediaType: string): boolean => {
+  const parsed = parseMediaType(mediaType);
+  if (!parsed) {
+    return false;
+  }
+
+  if (isWildcardMediaType(parsed)) {
+    return true;
+  }
+  if (isTextType(parsed)) {
+    return true;
+  }
+  return isJsonSubtype(parsed.subtype);
+};
 
 /**
  * Extracts request body schema from a CastrOperation using the IR.
@@ -33,14 +116,6 @@ const isResponseContentTypeSupported = (mediaType: string): boolean =>
  *
  * @param operation - The CastrOperation (or partial with requestBody)
  * @returns Schema and required flag, or undefined if no request body
- *
- * @example
- * ```typescript
- * const result = resolveRequestBodySchemaFromIR(operation);
- * if (result) {
- *   console.log(result.schema, result.required);
- * }
- * ```
  */
 export const resolveRequestBodySchemaFromIR = (
   operation: Pick<CastrOperation, 'requestBody'>,
@@ -72,12 +147,10 @@ export const resolveRequestBodySchemaFromIR = (
  * Extracts the primary 2xx response schema from response content.
  */
 const extractResponseSchemaFromIR = (response: CastrResponse): CastrSchema | undefined => {
-  // Direct schema takes precedence
   if (response.schema) {
     return response.schema;
   }
 
-  // Check content for supported media types
   if (response.content) {
     const mediaTypes = Object.keys(response.content);
     const matchingMediaType = mediaTypes.find(isResponseContentTypeSupported);
@@ -92,27 +165,12 @@ const extractResponseSchemaFromIR = (response: CastrResponse): CastrSchema | und
 
 /**
  * Extracts the primary success response schema from a CastrOperation using the IR.
- *
- * This function reads from `operation.responses` which is pre-resolved by the
- * IR builder. It finds the first 2xx response with a supported content type.
- *
- * @param operation - The CastrOperation (or partial with responses)
- * @returns The first 2xx response schema, or undefined if none found
- *
- * @example
- * ```typescript
- * const schema = resolvePrimarySuccessResponseSchemaFromIR(operation);
- * if (schema) {
- *   // Use schema for output schema generation
- * }
- * ```
  */
 export const resolvePrimarySuccessResponseSchemaFromIR = (
   operation: Pick<CastrOperation, 'responses'>,
 ): CastrSchema | undefined => {
   const { responses } = operation;
 
-  // Sort responses by status code to get lowest 2xx first
   const sortedResponses = [...responses].sort((a, b) => {
     const aNum = Number(a.statusCode);
     const bNum = Number(b.statusCode);

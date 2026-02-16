@@ -7,6 +7,7 @@ import {
   setKeyword,
   type MutableJsonSchema,
 } from './keyword-helpers.js';
+import { SCHEMA_TYPE_STRING } from './json-schema-constants.js';
 
 export function applyTypeInformation(schema: SchemaObject, target: MutableJsonSchema): void {
   if (typeof schema.type === 'string') {
@@ -23,7 +24,7 @@ export function applyTypeInformation(schema: SchemaObject, target: MutableJsonSc
 }
 
 export function applyStringKeywords(schema: SchemaObject, target: MutableJsonSchema): void {
-  if (schema.type !== 'string') {
+  if (schema.type !== SCHEMA_TYPE_STRING) {
     return;
   }
 

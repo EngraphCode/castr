@@ -3,6 +3,7 @@ import {
   sortSchemaNamesByDependencyOrder,
   sortSchemasByDependencyOrder,
 } from '../../shared/utils/schema-sorting.js';
+import { split } from 'lodash-es';
 
 // Re-export from centralized ref-resolution module
 export { getSchemaNameFromRef } from '../../shared/ref-resolution.js';
@@ -120,8 +121,8 @@ export interface MinimalTemplateContext {
 
 export const getPureSchemaNames = (fullSchemaNames: string[]): string[] => {
   return fullSchemaNames.map((name) => {
-    const parts = name.split('/');
-    const lastPart = parts.at(-1);
+    const parts = split(name, '/');
+    const lastPart = parts[parts.length - 1];
     if (!lastPart) {
       throw new Error(`Invalid schema name: ${name}`);
     }

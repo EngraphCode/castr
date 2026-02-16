@@ -8,56 +8,119 @@
  * @internal
  */
 
+import { drop, endsWith, includes, join, split, startsWith, toLower } from 'lodash-es';
+
+const ROOT_EMPTY_PATH = '' as const;
+const ROOT_SLASH_PATH = '/' as const;
+const READABLE_ROOT = '(root)' as const;
+const PATH_SEPARATOR = '/' as const;
+const PATH_DISPLAY_SEPARATOR = ' → ' as const;
+const RESPONSES_SEGMENT = 'responses' as const;
+const INFO_SUFFIX = '/info' as const;
+const PATHS_PATH = '/paths' as const;
+const TYPE_SUFFIX = '/type' as const;
+const JSON_SCHEMA_DIALECT_TOKEN = 'jsonschemadialect' as const;
+const WEBHOOKS_TOKEN = 'webhooks' as const;
+const REQUIRED_PROPERTY_TOKEN = 'required property' as const;
+const TYPE_ALLOWED_VALUES_TOKEN = 'equal to one of the allowed values' as const;
+const NOT_EXPECTED_TOKEN = 'not expected' as const;
+const NOT_ALLOWED_TOKEN = 'not allowed' as const;
+const REF_REQUIRED_SINGLE_QUOTE = "required property '$ref'" as const;
+const REF_REQUIRED_DOUBLE_QUOTE = 'required property "$ref"' as const;
+const JSON_POINTER_ESCAPED_SLASH = '~1' as const;
+const JSON_POINTER_ESCAPED_TILDE = '~0' as const;
+const TILDE_TOKEN = '~' as const;
+const OPENAPI_KEY = 'openapi' as const;
+const NEWLINE_TOKEN = '\n' as const;
+const ERROR_HEADER_PREFIX = '\n❌ Error ' as const;
+const LOCATION_PREFIX = '  Location: ' as const;
+const ISSUE_PREFIX = '  Issue: ' as const;
+const HINT_PREFIX = '  Hint: ' as const;
+const INVALID_OPENAPI_WITH_VERSION_PREFIX = 'Invalid OpenAPI ' as const;
+const INVALID_OPENAPI_WITH_VERSION_SUFFIX = ' document:\n' as const;
+const INVALID_OPENAPI_GENERIC_HEADER = 'Invalid OpenAPI document:\n' as const;
+
+function replaceTokenEverywhere(text: string, token: string, replacement: string): string {
+  return join(split(text, token), replacement);
+}
+
+function parsePointerSegments(path: string): string[] {
+  if (startsWith(path, PATH_SEPARATOR)) {
+    return drop(split(path, PATH_SEPARATOR), 1);
+  }
+  return split(path, PATH_SEPARATOR);
+}
+
+function normalizeMessage(message: string): string {
+  return toLower(message);
+}
+
+function containsNormalizedToken(message: string, token: string): boolean {
+  return includes(normalizeMessage(message), token);
+}
+
+function isNumericText(value: string): boolean {
+  return value.length > 0 && !Number.isNaN(Number(value));
+}
+
 /**
  * Check if a path ends with a response status code pattern (e.g., /responses/200)
  */
 function isResponsePath(path: string): boolean {
-  const segments = path.split('/');
+  const segments = parsePointerSegments(path);
   const lastIndex = segments.length - 1;
   if (lastIndex < 2) {
     return false;
   }
   const parentSegment = segments[lastIndex - 1];
   const lastSegment = segments[lastIndex];
-  // Check if parent is 'responses' and last is a number
-  return parentSegment === 'responses' && !Number.isNaN(Number(lastSegment));
+  return parentSegment === RESPONSES_SEGMENT && isNumericText(lastSegment ?? ROOT_EMPTY_PATH);
 }
 
 /**
  * Check if message contains "required property" (case insensitive)
  */
 function isRequiredPropertyError(message: string): boolean {
-  return message.toLowerCase().includes('required property');
+  return containsNormalizedToken(message, REQUIRED_PROPERTY_TOKEN);
 }
 
 /**
  * Check if message contains type value error patterns
  */
 function isTypeValueError(message: string): boolean {
-  return message.toLowerCase().includes('equal to one of the allowed values');
+  return containsNormalizedToken(message, TYPE_ALLOWED_VALUES_TOKEN);
 }
 
 /**
  * Check if message contains not expected/not allowed error patterns
  */
 function isNotAllowedError(message: string): boolean {
-  const lower = message.toLowerCase();
-  return lower.includes('not expected') || lower.includes('not allowed');
+  return (
+    containsNormalizedToken(message, NOT_EXPECTED_TOKEN) ||
+    containsNormalizedToken(message, NOT_ALLOWED_TOKEN)
+  );
 }
 
 /**
  * Check if path is in components/schemas
  */
 function isSchemaPath(path: string): boolean {
-  return path.includes('/components/schemas/');
+  return includes(path, '/components/schemas/');
 }
 
 /**
  * Check if message is about missing $ref (AJV validation quirk)
  */
 function isMissingRefError(message: string): boolean {
-  const lower = message.toLowerCase();
-  return lower.includes("required property '$ref'") || lower.includes('required property "$ref"');
+  const normalized = normalizeMessage(message);
+  return (
+    includes(normalized, REF_REQUIRED_SINGLE_QUOTE) ||
+    includes(normalized, REF_REQUIRED_DOUBLE_QUOTE)
+  );
+}
+
+function pathContainsTokenCaseInsensitive(path: string, token: string): boolean {
+  return includes(toLower(path), token);
 }
 
 /**
@@ -68,7 +131,6 @@ const VALIDATION_HINTS: readonly {
   messageMatcher: (message: string) => boolean;
   hint: string;
 }[] = [
-  // NEW: Catch the confusing "$ref required" error on schemas - usually indicates version mismatch
   {
     pathMatcher: isSchemaPath,
     messageMatcher: isMissingRefError,
@@ -82,31 +144,36 @@ const VALIDATION_HINTS: readonly {
     hint: "Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)",
   },
   {
-    pathMatcher: (path) => path.endsWith('/info'),
+    pathMatcher: (path) => endsWith(path, INFO_SUFFIX),
     messageMatcher: isRequiredPropertyError,
     hint: "The 'info' object requires 'title' and 'version' fields",
   },
   {
-    pathMatcher: (path) => path === '/paths',
+    pathMatcher: (path) => path === PATHS_PATH,
     messageMatcher: isRequiredPropertyError,
     hint: "The 'paths' field is required in OpenAPI 3.0.x (optional in 3.1.x if webhooks or components present)",
   },
   {
-    pathMatcher: (path) => path.endsWith('/type'),
+    pathMatcher: (path) => endsWith(path, TYPE_SUFFIX),
     messageMatcher: isTypeValueError,
     hint: "In 3.0.x, 'type' must be: array, boolean, integer, number, object, or string. 'null' is 3.1.x only",
   },
   {
-    pathMatcher: (path) => path.toLowerCase().includes('jsonschemadialect'),
+    pathMatcher: (path) => pathContainsTokenCaseInsensitive(path, JSON_SCHEMA_DIALECT_TOKEN),
     messageMatcher: isNotAllowedError,
     hint: "'jsonSchemaDialect' is only valid in OpenAPI 3.1.x",
   },
   {
-    pathMatcher: (path) => path.toLowerCase().includes('webhooks'),
+    pathMatcher: (path) => pathContainsTokenCaseInsensitive(path, WEBHOOKS_TOKEN),
     messageMatcher: isNotAllowedError,
     hint: "'webhooks' is only valid in OpenAPI 3.1.x",
   },
 ];
+
+function unescapePointerSegment(segment: string): string {
+  const withSlashes = replaceTokenEverywhere(segment, JSON_POINTER_ESCAPED_SLASH, PATH_SEPARATOR);
+  return replaceTokenEverywhere(withSlashes, JSON_POINTER_ESCAPED_TILDE, TILDE_TOKEN);
+}
 
 /**
  * Convert a JSON pointer path to a human-readable format.
@@ -119,28 +186,13 @@ const VALIDATION_HINTS: readonly {
  * // => 'paths → /test → get → responses → 200'
  */
 export function formatValidationPath(path: string): string {
-  if (path === '' || path === '/') {
-    return '(root)';
+  if (path === ROOT_EMPTY_PATH || path === ROOT_SLASH_PATH) {
+    return READABLE_ROOT;
   }
 
-  // Remove leading slash and split into segments
-  const pathWithoutLeadingSlash = path.startsWith('/') ? path.slice(1) : path;
-  const segments = pathWithoutLeadingSlash.split('/');
-
-  // Unescape each segment (JSON pointer: ~1 = /, ~0 = ~)
-  const unescapedSegments = segments.map((segment) => {
-    let result = segment;
-    // Replace all ~1 with / and all ~0 with ~
-    while (result.includes('~1')) {
-      result = result.split('~1').join('/');
-    }
-    while (result.includes('~0')) {
-      result = result.split('~0').join('~');
-    }
-    return result;
-  });
-
-  return unescapedSegments.join(' → ');
+  const segments = parsePointerSegments(path);
+  const unescapedSegments = segments.map((segment) => unescapePointerSegment(segment));
+  return join(unescapedSegments, PATH_DISPLAY_SEPARATOR);
 }
 
 /**
@@ -176,25 +228,17 @@ export interface ValidationError {
  *
  * @param error - The validation error from Scalar
  * @returns A formatted error string with location, issue, and optional hint
- *
- * @example
- * formatValidationError({ message: 'must have required property', path: '/paths/~1test/get/responses/200' })
- * // =>
- * // "  Location: paths → /test → get → responses → 200
- * //   Issue: must have required property
- * //   Hint: Response objects require a 'description' field (OpenAPI 3.0.x and 3.1.x)"
  */
 export function formatValidationError(error: ValidationError): string {
   const location = formatValidationPath(error.path);
   const hint = getValidationHint(error.message, error.path);
-
-  const lines = [`  Location: ${location}`, `  Issue: ${error.message}`];
+  const lines = [`${LOCATION_PREFIX}${location}`, `${ISSUE_PREFIX}${error.message}`];
 
   if (hint !== undefined) {
-    lines.push(`  Hint: ${hint}`);
+    lines.push(`${HINT_PREFIX}${hint}`);
   }
 
-  return lines.join('\n');
+  return join(lines, NEWLINE_TOKEN);
 }
 
 /**
@@ -210,15 +254,15 @@ export function formatValidationErrors(
 ): string {
   const header =
     version !== undefined
-      ? `Invalid OpenAPI ${version} document:\n`
-      : 'Invalid OpenAPI document:\n';
+      ? `${INVALID_OPENAPI_WITH_VERSION_PREFIX}${version}${INVALID_OPENAPI_WITH_VERSION_SUFFIX}`
+      : INVALID_OPENAPI_GENERIC_HEADER;
 
   const formattedErrors = errors.map((error, index) => {
-    const errorHeader = `\n❌ Error ${index + 1}:`;
-    return `${errorHeader}\n${formatValidationError(error)}`;
+    const errorHeader = `${ERROR_HEADER_PREFIX}${index + 1}:`;
+    return `${errorHeader}${NEWLINE_TOKEN}${formatValidationError(error)}`;
   });
 
-  return header + formattedErrors.join('\n');
+  return header + join(formattedErrors, NEWLINE_TOKEN);
 }
 
 /**
@@ -236,8 +280,7 @@ function extractOpenApiVersion(document: unknown): string | undefined {
   if (typeof document !== 'object' || document === null) {
     return undefined;
   }
-  // Use 'in' operator for safe type narrowing without assertions
-  if ('openapi' in document) {
+  if (OPENAPI_KEY in document) {
     const openapi = document.openapi;
     if (typeof openapi === 'string') {
       return openapi;
@@ -248,13 +291,6 @@ function extractOpenApiVersion(document: unknown): string | undefined {
 
 /**
  * Create formatted validation error message from Scalar validation result.
- *
- * This helper encapsulates the error extraction and formatting logic,
- * reducing complexity in the orchestrator.
- *
- * @param scalarErrors - Errors from Scalar's validate() result
- * @param bundledDocument - The bundled document being validated
- * @returns Formatted error message string
  */
 export function createValidationErrorMessage(
   scalarErrors: readonly ScalarValidationError[] | undefined,
@@ -263,7 +299,7 @@ export function createValidationErrorMessage(
   const errors: readonly ValidationError[] =
     scalarErrors?.map((e) => ({
       message: e.message,
-      path: e.path ?? '',
+      path: e.path ?? ROOT_EMPTY_PATH,
     })) ?? [];
 
   const version = extractOpenApiVersion(bundledDocument);

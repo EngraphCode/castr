@@ -2,6 +2,7 @@
  * Pure functions for handling OpenAPI enum value conversions to Zod
  * These functions are extracted for testability and clarity
  */
+const SCHEMA_TYPE_STRING = 'string' as const;
 
 /**
  * Safely converts an enum value to a string representation for code generation
@@ -52,7 +53,7 @@ export function nonStringEnumValueToZodLiteral(value: unknown): ZodLiteralValue 
  * This happens when a non-string type has string values mixed in
  */
 export function shouldEnumBeNever(schemaType: string, enumValues: unknown[]): boolean {
-  if (schemaType === 'string') {
+  if (schemaType === SCHEMA_TYPE_STRING) {
     return false;
   }
   return enumValues.some((e) => typeof e === 'string');
