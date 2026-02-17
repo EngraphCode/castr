@@ -11,6 +11,7 @@ import type { Schema as JsonSchema } from 'ajv';
 import type { CastrDocument, CastrOperation, CastrSchema } from '../ir/schema.js';
 import { CastrSchemaProperties } from '../ir/schema-properties.js';
 import type { MutableJsonSchema } from '../conversion/json-schema/keyword-helpers.js';
+import { isRecord } from '../../shared/types.js';
 import {
   collectParameterGroupsFromIR,
   createParameterSectionSchemaFromIR,
@@ -83,6 +84,25 @@ const wrapSchemaFromIR = (schema: MutableJsonSchema | undefined): MutableJsonSch
 };
 
 /**
+ * Wrap a JSON schema to ensure it's always an object type.
+ * Accepts Ajv JsonSchema values (object or boolean) and normalizes to object.
+ */
+const wrapJsonSchemaFromIR = (schema: JsonSchema | undefined): MutableJsonSchema => {
+  if (schema === undefined) {
+    return { type: SCHEMA_TYPE_OBJECT };
+  }
+
+  if (typeof schema === 'boolean') {
+    return {
+      type: SCHEMA_TYPE_OBJECT,
+      properties: { value: schema },
+    };
+  }
+
+  return wrapSchemaFromIR(schema);
+};
+
+/**
  * Assign an IR parameter section to the input schema properties.
  */
 const assignSectionFromIR = (
@@ -122,6 +142,35 @@ const convertPropertiesToJsonSchema = (
   return result;
 };
 
+function convertArrayToJsonSchema(values: readonly unknown[]): unknown[] {
+  const converted: unknown[] = [];
+  for (const value of values) {
+    converted.push(isCastrSchemaForMcp(value) ? castrSchemaToJsonSchemaForMcp(value) : value);
+  }
+  return converted;
+}
+
+function convertSchemaFieldValue(value: unknown): unknown {
+  if (value instanceof CastrSchemaProperties) {
+    return convertPropertiesToJsonSchema(value);
+  }
+  if (isCastrSchemaForMcp(value)) {
+    return castrSchemaToJsonSchemaForMcp(value);
+  }
+  if (Array.isArray(value)) {
+    return convertArrayToJsonSchema(value);
+  }
+  return value;
+}
+
+function getRecordEntries(value: unknown): [string, unknown][] {
+  if (!isRecord(value)) {
+    return [];
+  }
+
+  return Object.entries(value);
+}
+
 /**
  * Convert CastrSchema to MutableJsonSchema for MCP output.
  * Strips IR metadata while preserving schema structure.
@@ -130,24 +179,9 @@ const convertPropertiesToJsonSchema = (
 const castrSchemaToJsonSchemaForMcp = (schema: CastrSchema): MutableJsonSchema => {
   const result: MutableJsonSchema = {};
 
-  for (const [key, value] of Object.entries(schema)) {
-    if (key === SCHEMA_KEY_METADATA) {
-      continue;
-    }
-
-    // Handle CastrSchemaProperties (Map) for properties field
-    if (value instanceof CastrSchemaProperties) {
-      result[key] = convertPropertiesToJsonSchema(value);
-    } else if (isCastrSchemaForMcp(value)) {
-      result[key] = castrSchemaToJsonSchemaForMcp(value);
-    } else if (Array.isArray(value)) {
-      // Handle arrays (e.g., allOf, oneOf, anyOf)
-      result[key] = value.map((item: unknown) =>
-        isCastrSchemaForMcp(item) ? castrSchemaToJsonSchemaForMcp(item) : item,
-      );
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Schema values pass through unchanged
-      result[key] = value;
+  for (const [key, value] of getRecordEntries(schema)) {
+    if (key !== SCHEMA_KEY_METADATA && value !== undefined) {
+      result[key] = convertSchemaFieldValue(value);
     }
   }
 
@@ -157,8 +191,7 @@ const castrSchemaToJsonSchemaForMcp = (schema: CastrSchema): MutableJsonSchema =
 /**
  * Create input schema from IR operation.
  */
-// eslint-disable-next-line sonarjs/function-return-type -- Returns consistent JsonSchema type
-function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): JsonSchema {
+function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): MutableJsonSchema {
   const parameterGroups = collectParameterGroupsFromIR(operation);
   const requestBody = resolveRequestBodySchemaFromIR(operation);
 
@@ -185,28 +218,23 @@ function createInputSchemaFromIR(ir: CastrDocument, operation: CastrOperation): 
   };
 
   const wrapped = wrapSchemaFromIR(inputSchemaObject);
-  return inlineJsonSchemaRefsFromIR(wrapped, ir);
+  const inlined = inlineJsonSchemaRefsFromIR(wrapped, ir);
+  return wrapJsonSchemaFromIR(inlined);
 }
 
 /**
  * Create output schema from IR operation.
  * Inlines refs first, then wraps to ensure object type.
  */
-// eslint-disable-next-line sonarjs/function-return-type -- Returns JsonSchema | undefined consistently
 function createOutputSchemaFromIR(
   ir: CastrDocument,
-  operation: CastrOperation,
-): JsonSchema | undefined {
-  const successSchema = resolvePrimarySuccessResponseSchemaFromIR(operation);
-  if (!successSchema) {
-    return undefined;
-  }
-
+  successSchema: CastrSchema,
+): MutableJsonSchema {
   const asJsonSchema = castrSchemaToJsonSchemaForMcp(successSchema);
   // Inline refs first to resolve $ref schemas
   const inlined = inlineJsonSchemaRefsFromIR(asJsonSchema, ir);
   // Then wrap to ensure it's an object type (required by MCP ToolSchema)
-  return wrapSchemaFromIR(inlined);
+  return wrapJsonSchemaFromIR(inlined);
 }
 
 /**
@@ -230,7 +258,8 @@ export const buildMcpToolSchemasFromIR = (
   operation: CastrOperation,
 ): Omit<McpToolSchemaResult, 'security'> => {
   const inputSchema = createInputSchemaFromIR(ir, operation);
-  const outputSchema = createOutputSchemaFromIR(ir, operation);
+  const successSchema = resolvePrimarySuccessResponseSchemaFromIR(operation);
+  const outputSchema = successSchema ? createOutputSchemaFromIR(ir, successSchema) : undefined;
 
   return {
     inputSchema,

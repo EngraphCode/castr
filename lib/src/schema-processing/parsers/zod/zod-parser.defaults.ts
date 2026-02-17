@@ -8,6 +8,8 @@
 
 import type { CastrSchema, CastrSchemaNode, IRZodChainInfo } from '../../ir/schema.js';
 
+type LiteralSchemaType = 'string' | 'number' | 'boolean' | 'null';
+
 /**
  * Options for creating default metadata.
  * @internal
@@ -92,17 +94,14 @@ export const ZOD_PRIMITIVE_TYPES: ReadonlyMap<string, CastrSchema['type']> = new
  * Derive type from literal value.
  * @internal
  */
-
-// eslint-disable-next-line sonarjs/function-return-type -- Returns union type by design for literal type inference
-export function deriveLiteralType(literalValue: unknown): CastrSchema['type'] {
+export function deriveLiteralType(literalValue: unknown): LiteralSchemaType {
+  let derivedType: LiteralSchemaType = 'string';
   if (typeof literalValue === 'number') {
-    return 'number';
+    derivedType = 'number';
+  } else if (typeof literalValue === 'boolean') {
+    derivedType = 'boolean';
+  } else if (literalValue === null) {
+    derivedType = 'null';
   }
-  if (typeof literalValue === 'boolean') {
-    return 'boolean';
-  }
-  if (literalValue === null) {
-    return 'null';
-  }
-  return 'string';
+  return derivedType;
 }

@@ -14,6 +14,10 @@ import {
   writeTypeScript,
 } from '../schema-processing/writers/typescript/index.js';
 
+function getSortedGroupNames(endpointsGroups: TemplateContext['endpointsGroups']): string[] {
+  return Object.keys(endpointsGroups).sort((left, right) => left.localeCompare(right));
+}
+
 /**
  * Generate index file for grouped output
  *
@@ -25,11 +29,9 @@ export async function generateIndexFile(
   prettierConfig: Options | null | undefined,
   willWriteToFile: boolean,
 ): Promise<string> {
+  const sortedGroupNames = getSortedGroupNames(data.endpointsGroups);
   const groupNames = Object.fromEntries(
-    Object.keys(data.endpointsGroups).map((groupName) => [
-      `${upperFirst(groupName)}Api`,
-      groupName,
-    ]),
+    sortedGroupNames.map((groupName) => [`${upperFirst(groupName)}Api`, groupName]),
   );
 
   const indexOutput = await maybePretty(writeIndexFile(groupNames), prettierConfig);
@@ -81,8 +83,9 @@ export async function generateGroupFiles(
   willWriteToFile: boolean,
 ): Promise<Record<string, string>> {
   const outputByGroupName: Record<string, string> = {};
+  const sortedGroupNames = getSortedGroupNames(data.endpointsGroups);
 
-  for (const groupName in data.endpointsGroups) {
+  for (const groupName of sortedGroupNames) {
     const groupContext: TemplateContext = {
       ...data,
       ...data.endpointsGroups[groupName],

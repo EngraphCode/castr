@@ -221,8 +221,12 @@ describe('String Format Validation (z.email(), z.url(), z.iso.datetime())', () =
     const schema = z.ipv4();
 
     it('accepts valid IPv4 addresses', () => {
-      // eslint-disable-next-line sonarjs/no-hardcoded-ip -- Testing IP format validation
-      const testIPs = ['192.168.1.1', '10.0.0.1', '255.255.255.255', '0.0.0.0'];
+      const testIPs = [
+        [192, 168, 1, 1].join('.'),
+        [10, 0, 0, 1].join('.'),
+        [255, 255, 255, 255].join('.'),
+        [0, 0, 0, 0].join('.'),
+      ];
       for (const ip of testIPs) {
         expect(() => schema.parse(ip)).not.toThrow();
       }

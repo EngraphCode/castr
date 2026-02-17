@@ -69,6 +69,15 @@ describe('Zod Writer Fail-Fast Behavior', () => {
     };
   }
 
+  function forceInvalidType(schema: CastrSchema, invalidType: string): void {
+    Object.defineProperty(schema, 'type', {
+      value: invalidType,
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
+  }
+
   // ============================================================================
   // Fail-Fast Tests - Unsupported Patterns MUST Throw
   // ============================================================================
@@ -76,9 +85,7 @@ describe('Zod Writer Fail-Fast Behavior', () => {
   describe('unsupported schema types throw errors', () => {
     it('throws for unknown type string', () => {
       const schema = createMockSchema();
-      // Force an invalid type at runtime (this simulates malformed IR)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing fail-fast for invalid input
-      (schema as any).type = 'unknownType';
+      forceInvalidType(schema, 'unknownType');
       const context = createComponentContext(schema);
 
       expect(() => generate(context)).toThrow(/Unsupported schema type/);
@@ -86,8 +93,7 @@ describe('Zod Writer Fail-Fast Behavior', () => {
 
     it('throws for invalid type that is not a primitive', () => {
       const schema = createMockSchema();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing fail-fast for invalid input
-      (schema as any).type = 'custom';
+      forceInvalidType(schema, 'custom');
       const context = createComponentContext(schema);
 
       expect(() => generate(context)).toThrow(/Unsupported schema type/);

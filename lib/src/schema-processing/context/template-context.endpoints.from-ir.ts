@@ -38,6 +38,10 @@ export function getEndpointDefinitionsFromIR(ir: CastrDocument): EndpointDefinit
   return ir.operations.map((operation) => mapOperationToEndpointDefinition(operation));
 }
 
+function getSortedMediaTypeKeys(content: Record<string, IRMediaType>): string[] {
+  return Object.keys(content).sort((left, right) => left.localeCompare(right));
+}
+
 /**
  * Determines the request format based on the content types in the request body.
  */
@@ -72,7 +76,7 @@ function createBodyParameter(
     return null;
   }
 
-  const contentType = Object.keys(requestBody.content)[0];
+  const contentType = getSortedMediaTypeKeys(requestBody.content)[0];
   if (!contentType) {
     return null;
   }
@@ -229,7 +233,7 @@ function getSchemaFromContent(content?: Record<string, IRMediaType>): CastrSchem
   if (content['application/json']) {
     return content['application/json'].schema;
   }
-  const firstKey = Object.keys(content)[0];
+  const firstKey = getSortedMediaTypeKeys(content)[0];
   if (firstKey && content[firstKey]) {
     return content[firstKey].schema;
   }

@@ -56,7 +56,7 @@ const types = schema.anyOf
 1. **Remove unused variables entirely**
 2. **Remove unused function parameters** (with rare exceptions)
 3. **Remove unused imports**
-4. **If truly needed unused**, document why with ESLint disable comment
+4. **If a value seems "temporarily unused"**, refactor so it is either used now or removed now
 
 ### Exceptions
 
@@ -72,16 +72,9 @@ array.map((value, _index, _array) => transform(value));
 array.map((value) => transform(value));
 ```
 
-#### 2. Future-proofing (Rare)
+#### 2. Future-proofing
 
-If a variable is genuinely needed for upcoming work:
-
-```typescript
-// ✅ OK: Documented reason
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const futureFeature = extractData();
-// TODO: Use futureFeature in phase 2 implementation
-```
+Future-proofing is not a valid reason to keep unused variables. Remove the variable and reintroduce it when needed.
 
 ### How to Handle
 
@@ -108,12 +101,8 @@ function calculate(x: number) {
   return x + 1;
 }
 
-// ✅ GOOD: If truly needed, document why
-function processSchema(
-  schema: SchemaObject,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  options?: Options, // Reserved for future enhancement - see issue #123
-) {
+// ✅ GOOD: Remove unused option and reintroduce later if needed
+function processSchema(schema: SchemaObject) {
   return transform(schema);
 }
 ```

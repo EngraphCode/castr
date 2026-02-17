@@ -23,6 +23,10 @@ type OpenAPIObjectExtended = OpenAPIObject & {
   jsonSchemaDialect?: string;
 };
 
+function getSortedMapEntries<T>(map: Map<string, T>): [string, T][] {
+  return [...map.entries()].sort(([leftName], [rightName]) => leftName.localeCompare(rightName));
+}
+
 /**
  * Converts IR security requirements to OpenAPI SecurityRequirementObject[].
  *
@@ -105,7 +109,7 @@ function addDocumentMetadata(result: OpenAPIObjectExtended, ir: CastrDocument): 
  */
 function addDocumentContent(result: OpenAPIObjectExtended, ir: CastrDocument): void {
   if (ir.webhooks !== undefined && ir.webhooks.size > 0) {
-    result.webhooks = Object.fromEntries(ir.webhooks);
+    result.webhooks = Object.fromEntries(getSortedMapEntries(ir.webhooks));
   }
   if (ir.components.length > 0) {
     result.components = writeOpenApiComponents(ir.components);

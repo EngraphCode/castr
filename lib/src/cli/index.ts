@@ -36,6 +36,10 @@ import {
 const program = new Command();
 const CURRENT_DIR_DOT = '.' as const;
 
+function writeCliMessage(message: string): void {
+  process.stdout.write(`${message}\n`);
+}
+
 program
   .name('data-descriptions-tooling')
   .description('Generate a type-safe API client with Zod validation from an OpenAPI specification')
@@ -121,8 +125,7 @@ program
     'Emit MCP tool manifest JSON to the specified path (relative to current working directory).',
   )
   .action(async (input: string, options: CliOptions) => {
-    // eslint-disable-next-line no-console -- CLI output: inform user of operation start
-    console.log('Retrieving OpenAPI document from', input);
+    writeCliMessage(`Retrieving OpenAPI document from ${input}`);
     const openApiDoc = await prepareOpenApiDocument(input);
     const prettierConfig = await resolveConfig(options.prettier ?? './');
     const distPath = options.output ?? input + '.client.ts';
@@ -159,13 +162,11 @@ program
       }));
 
       await writeFile(manifestPath, `${JSON.stringify(manifestEntries, null, 2)}\n`, 'utf8');
-      // eslint-disable-next-line no-console -- CLI output
-      console.log(`Wrote MCP manifest to ${manifestPath}`);
+      writeCliMessage(`Wrote MCP manifest to ${manifestPath}`);
     }
 
     await generateZodClientFromOpenAPI(generationArgs);
-    // eslint-disable-next-line no-console -- CLI output: inform user of successful completion
-    console.log(`Done generating <${distPath}> !`);
+    writeCliMessage(`Done generating <${distPath}> !`);
   });
 
 program.parse();

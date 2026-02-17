@@ -12,6 +12,12 @@ import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema' as const;
 
+function getSortedGroupEntries(groupNames: Record<string, string>): [string, string][] {
+  return Object.entries(groupNames).sort(([leftApiName], [rightApiName]) =>
+    leftApiName.localeCompare(rightApiName),
+  );
+}
+
 /**
  * Generate TypeScript code from TemplateContext using ts-morph.
  * Replaces the legacy Handlebars templates.
@@ -204,7 +210,7 @@ export function writeIndexFile(groupNames: Record<string, string>): string {
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('index.ts', '', { overwrite: true });
 
-  for (const [apiName, groupName] of Object.entries(groupNames)) {
+  for (const [apiName, groupName] of getSortedGroupEntries(groupNames)) {
     sourceFile.addExportDeclaration({
       moduleSpecifier: `./${groupName}`,
       namespaceExport: apiName,

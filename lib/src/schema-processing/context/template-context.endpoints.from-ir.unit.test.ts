@@ -164,6 +164,33 @@ describe('template-context.endpoints.from-ir', () => {
     expect(endpoint?.response).toEqual(contentSchema);
   });
 
+  it('uses lexicographically first media type when response content has no application/json', () => {
+    const xmlSchema = createSchema('object');
+    const textSchema = createSchema('string');
+
+    const doc = createDocument([
+      createOperation({
+        responses: [
+          {
+            statusCode: '200',
+            content: {
+              'text/plain': {
+                schema: textSchema,
+              },
+              'application/xml': {
+                schema: xmlSchema,
+              },
+            },
+          },
+        ],
+      }),
+    ]);
+
+    const [endpoint] = getEndpointDefinitionsFromIR(doc);
+
+    expect(endpoint?.response).toEqual(xmlSchema);
+  });
+
   it('adds body parameter and infers request format from request content type', () => {
     const bodySchema = createSchema('object');
 
@@ -190,6 +217,33 @@ describe('template-context.endpoints.from-ir', () => {
     expect(bodyParameter?.name).toBe('body');
     expect(bodyParameter?.schema).toEqual(bodySchema);
     expect(bodyParameter?.description).toBe('Upload body');
+  });
+
+  it('uses lexicographically first media type for body parameter schema fallback', () => {
+    const xmlBodySchema = createSchema('object');
+    const textBodySchema = createSchema('string');
+
+    const doc = createDocument([
+      createOperation({
+        requestBody: {
+          required: true,
+          content: {
+            'text/plain': {
+              schema: textBodySchema,
+            },
+            'application/xml': {
+              schema: xmlBodySchema,
+            },
+          },
+        },
+        responses: [createResponse('200', createSchema('object'))],
+      }),
+    ]);
+
+    const [endpoint] = getEndpointDefinitionsFromIR(doc);
+    const bodyParameter = endpoint?.parameters.find((p) => p.type === 'Body');
+
+    expect(bodyParameter?.schema).toEqual(xmlBodySchema);
   });
 
   it('maps cookie parameters to Header endpoint parameter type', () => {

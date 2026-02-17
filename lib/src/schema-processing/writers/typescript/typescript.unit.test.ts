@@ -178,6 +178,21 @@ describe('writers/typescript', () => {
       expect(output).toContain('export * as users from "./users-group";');
       expect(output).toContain('export * as posts from "./posts-group";');
     });
+
+    it('sorts exports by api name for deterministic output', () => {
+      const groups = {
+        zebra: 'zebra-group',
+        alpha: 'alpha-group',
+      };
+
+      const output = writeIndexFile(groups);
+      const alphaExport = 'export * as alpha from "./alpha-group";';
+      const zebraExport = 'export * as zebra from "./zebra-group";';
+
+      expect(output.indexOf(alphaExport)).toBeGreaterThanOrEqual(0);
+      expect(output.indexOf(zebraExport)).toBeGreaterThanOrEqual(0);
+      expect(output.indexOf(alphaExport)).toBeLessThan(output.indexOf(zebraExport));
+    });
   });
 
   describe('writeCommonFile', () => {

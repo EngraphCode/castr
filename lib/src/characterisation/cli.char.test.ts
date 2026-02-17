@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { writeFileSync, rmSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { execSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { fileURLToPath } from 'node:url';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
@@ -76,30 +76,20 @@ function runCli(args: string[]): { stdout: string; exitCode: number } {
   // Characterisation test: Must execute actual CLI to verify behavior
   // Arguments are controlled test fixtures, not external user input
 
-  try {
-    // Use array form to avoid shell injection - args are test fixtures
-    const command = ['node', CLI_PATH, ...args];
-    // Characterisation test must execute CLI - arguments are controlled test fixtures
-    // eslint-disable-next-line sonarjs/os-command
-    const result = execSync(command.join(' '), {
-      encoding: 'utf8',
-      cwd: TEST_OUTPUT_DIR,
-      stdio: 'pipe',
-    });
-    return { stdout: result, exitCode: 0 };
-  } catch (error: unknown) {
-    // Handle execSync error type - may have stdout/stderr/status properties
-    // @ts-expect-error TS2571 - execSync errors have stdout/stderr/status properties, but TypeScript doesn't know this
-    const stdout = error.stdout?.toString() || '';
-    // @ts-expect-error TS2571 - execSync errors have stdout/stderr/status properties, but TypeScript doesn't know this
-    const stderr = error.stderr?.toString() || '';
-    // @ts-expect-error TS2571 - execSync errors have stdout/stderr/status properties, but TypeScript doesn't know this
-    const exitCode = error.status || 1;
-    return {
-      stdout: stdout + '\nSTDERR:\n' + stderr,
-      exitCode,
-    };
-  }
+  const result = spawnSync(process.execPath, [CLI_PATH, ...args], {
+    encoding: 'utf8',
+    cwd: TEST_OUTPUT_DIR,
+    stdio: 'pipe',
+  });
+
+  const stdout = typeof result.stdout === 'string' ? result.stdout : '';
+  const stderr = typeof result.stderr === 'string' ? result.stderr : '';
+  const output = stderr ? `${stdout}\nSTDERR:\n${stderr}` : stdout;
+
+  return {
+    stdout: output,
+    exitCode: result.status ?? 1,
+  };
 }
 
 describe('Characterisation: CLI Behavior', () => {

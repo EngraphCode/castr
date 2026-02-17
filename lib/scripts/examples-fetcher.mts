@@ -1,6 +1,5 @@
-import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { readdir, rm } from 'node:fs/promises';
+import { readdir, rename, rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import degit from 'degit';
@@ -58,7 +57,7 @@ async function fetchOpenApiExamples(): Promise<void> {
     await cloneExamplesFromGitHub();
 
     // Step 3: Filter to OpenAPI 3.x only (remove Swagger v2.0)
-    removeSwaggerV2Examples();
+    await removeSwaggerV2Examples();
 
     // Step 4: Move from temp to final location
     await moveToFinalLocation();
@@ -111,10 +110,7 @@ async function cloneExamplesFromGitHub(): Promise<void> {
   console.log(`   Cloned full repo to: ${fullRepoTemp}`);
 
   // Move just the examples subdirectory to our temp location
-  // eslint-disable-next-line sonarjs/no-os-command-from-path -- safe
-  spawnSync('mv', [join(fullRepoTemp, 'examples'), EXAMPLES_CONFIG.tempDir], {
-    stdio: 'inherit',
-  });
+  await rename(join(fullRepoTemp, 'examples'), EXAMPLES_CONFIG.tempDir);
 
   // Clean up the rest of the repo
   await rm(fullRepoTemp, { recursive: true, force: true });
@@ -124,15 +120,13 @@ async function cloneExamplesFromGitHub(): Promise<void> {
 /**
  * Removes Swagger v2.0 examples, keeping only OpenAPI 3.0+ specs.
  */
-function removeSwaggerV2Examples(): void {
+async function removeSwaggerV2Examples(): Promise<void> {
   console.log('🗑️  Removing Swagger v2.0 examples (keeping OpenAPI 3.x only)...');
 
   const v2Path = join(EXAMPLES_CONFIG.tempDir, 'v2.0');
 
   if (existsSync(v2Path)) {
-    // Safe: PATH is hardcoded literal, not user input
-    // eslint-disable-next-line sonarjs/no-os-command-from-path
-    spawnSync('rm -rf ./v2.0', { shell: true, cwd: EXAMPLES_CONFIG.tempDir });
+    await rm(v2Path, { recursive: true, force: true });
     console.log('   Removed: v2.0 directory');
   } else {
     console.log('   No v2.0 directory found (already clean)');
@@ -154,10 +148,7 @@ async function moveToFinalLocation(): Promise<void> {
   console.log(`   Found ${v3Dirs.length} OpenAPI 3.x directories`);
 
   // Move temp to final location
-  // eslint-disable-next-line sonarjs/no-os-command-from-path -- safe
-  spawnSync('mv', [EXAMPLES_CONFIG.tempDir, EXAMPLES_CONFIG.targetDir], {
-    stdio: 'inherit',
-  });
+  await rename(EXAMPLES_CONFIG.tempDir, EXAMPLES_CONFIG.targetDir);
 
   console.log(`   Moved to: ${EXAMPLES_CONFIG.targetDir}`);
 

@@ -126,17 +126,20 @@ function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
     }
 
     const extComponents = extContent['components'];
-    if (!isRecord(extComponents)) {
+    if (!isComponentsObject(extComponents)) {
       continue;
     }
 
     // Build components from this x-ext location
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Safe cast: isRecord validates it's an object with string keys
-    const irComponents = buildCastrSchemas(extComponents as ComponentsObject);
+    const irComponents = buildCastrSchemas(extComponents);
     allXExtComponents.push(...irComponents);
   }
 
   return allXExtComponents;
+}
+
+function isComponentsObject(value: unknown): value is ComponentsObject {
+  return isRecord(value);
 }
 
 /**

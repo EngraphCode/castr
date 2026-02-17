@@ -2909,10 +2909,10 @@ exports[`group-strategy with complex schemas + split files 1`] = `
 
 exports[`group-strategy with complex schemas + split files 2`] = `
 {
-    "__index": "export * as PetApi from "./pet";
-export * as UserApi from "./user";
+    "__index": "export * as DefaultApi from "./default";
+export * as PetApi from "./pet";
 export * as StoreApi from "./store";
-export * as DefaultApi from "./default";
+export * as UserApi from "./user";
 ",
     "default": "import { z } from "zod";
 // Type Definitions

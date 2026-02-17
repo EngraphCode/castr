@@ -9,7 +9,7 @@
 During Phase 2, Session 2.3 implementation of the Zod parser, an initial approach using regular expressions was attempted for parsing Zod schema expressions. This approach quickly revealed fundamental limitations:
 
 1. **Fragility:** Regex patterns failed on nested structures (e.g., `z.object({ a: z.string() })` broke patterns using `[^)]+`)
-2. **Complexity:** Patterns became unreadable and required multiple eslint-disable comments
+2. **Complexity:** Patterns became unreadable and required multiple lint-suppression comments
 3. **Maintainability:** Each new Zod feature required new regex patterns and edge case handling
 4. **Inappropriate tool:** The project already has ts-morph for AST manipulation
 

@@ -283,8 +283,12 @@ function extractDefineEndpointArg(expression: string): Node | undefined {
   }
 
   const callExpr = init.getExpression();
-  // eslint-disable-next-line no-restricted-syntax -- ADR-026 § "Amendment — Identifier.getText()": ts-morph Identifier has no getName(); getText() is the only API
-  if (!Node.isIdentifier(callExpr) || callExpr.getText() !== DEFINE_ENDPOINT_IDENTIFIER) {
+  if (!Node.isIdentifier(callExpr)) {
+    return undefined;
+  }
+
+  const expressionIdentifier = String(callExpr.compilerNode.escapedText);
+  if (expressionIdentifier !== DEFINE_ENDPOINT_IDENTIFIER) {
     return undefined;
   }
 

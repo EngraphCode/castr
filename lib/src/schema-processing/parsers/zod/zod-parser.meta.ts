@@ -10,6 +10,7 @@ import type { CastrSchema } from '../../ir/schema.js';
 import { Node } from 'ts-morph';
 import { extractLiteralValue, type ZodMethodCall } from './zod-ast.js';
 import { ZOD_METHOD_META } from './zod-constants.js';
+import type { UnknownRecord } from '../../../shared/types.js';
 
 export interface ParsedZodMeta {
   title?: string;
@@ -18,12 +19,10 @@ export interface ParsedZodMeta {
   example?: unknown;
   examples?: unknown[];
   externalDocs?: { url: string; description?: string };
-  // eslint-disable-next-line @typescript-eslint/no-restricted-types -- XML metadata is arbitrary key-value pairs from OpenAPI spec
-  xml?: Record<string, unknown>;
+  xml?: UnknownRecord;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-types -- AST parsing requires arbitrary object representation
-type JsonObject = Record<string, unknown>;
+type JsonObject = UnknownRecord;
 
 /**
  * Extract metadata from chained `.meta()` calls.
@@ -131,20 +130,12 @@ function buildMetaFromRaw(raw: JsonObject): ParsedZodMeta | undefined {
 
   assignPrimitiveFields(meta, raw);
 
-  const extDocsResult = parseExternalDocsField(raw);
-  if (extDocsResult === false) {
+  if (!applyExternalDocsField(meta, raw)) {
     return undefined;
-  }
-  if (extDocsResult) {
-    meta.externalDocs = extDocsResult;
   }
 
-  const xmlResult = parseXmlField(raw);
-  if (xmlResult === false) {
+  if (!applyXmlField(meta, raw)) {
     return undefined;
-  }
-  if (xmlResult) {
-    meta.xml = xmlResult;
   }
 
   return meta;
@@ -168,26 +159,31 @@ function assignPrimitiveFields(meta: ParsedZodMeta, raw: JsonObject): void {
   }
 }
 
-// eslint-disable-next-line sonarjs/function-return-type -- Returns union type by design for validation result
-function parseExternalDocsField(
-  raw: JsonObject,
-): { url: string; description?: string } | false | undefined {
+function applyExternalDocsField(meta: ParsedZodMeta, raw: JsonObject): boolean {
   if (raw['externalDocs'] === undefined) {
-    return undefined;
+    return true;
   }
+
   const result = parseExternalDocs(raw['externalDocs']);
-  return result === undefined ? false : result;
+  if (result === undefined) {
+    return false;
+  }
+
+  meta.externalDocs = result;
+  return true;
 }
 
-// eslint-disable-next-line sonarjs/function-return-type -- Returns union type by design for validation result
-function parseXmlField(raw: JsonObject): JsonObject | false | undefined {
+function applyXmlField(meta: ParsedZodMeta, raw: JsonObject): boolean {
   if (raw['xml'] === undefined) {
-    return undefined;
+    return true;
   }
+
   if (!isPlainObject(raw['xml'])) {
     return false;
   }
-  return raw['xml'];
+
+  meta.xml = raw['xml'];
+  return true;
 }
 
 function parseExternalDocs(value: unknown): { url: string; description?: string } | undefined {

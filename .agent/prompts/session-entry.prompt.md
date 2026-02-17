@@ -40,7 +40,7 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3a)
 
-**ACTIVE PLAN: [3.3a.07 — Remove Escape Hatches](../plans/active/3.3a-07-remove-escape-hatches.md)** — open this file first.
+**ACTIVE PLAN: [3.3a.08 — Prove Determinism](../plans/active/3.3a-08-prove-determinism.md)** — open this file first.
 
 #### Plan lifecycle
 
@@ -68,6 +68,8 @@ The plan's **Successor** field tells you which plan comes next.
 - **Audit follow-ups A1-A4** ✅ — all resolved in Plan 03.
 - **3.3a.04** ✅ Complete (2026-02-16) — repo-wide ADR-026 remediation finished. Lint debt reduced from **272 → 0** with `pnpm lint`, `pnpm type-check`, and `pnpm test` all green.
 - **3.3a.05** ✅ Complete (2026-02-17) — removed permissive fallback outputs, centralized strict OpenAPI component-ref resolution in `builder.component-ref-resolution.ts`, and added strict fail-fast tests for JSON Schema conversion, MCP inline refs, and OpenAPI ref builders. Package checks run: `pnpm type-check`, `pnpm lint`, `pnpm test` (all green in `lib`).
+- **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
+- **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green.
 
 #### Plan restructuring (2026-02-17)
 
@@ -75,17 +77,18 @@ The plan's **Successor** field tells you which plan comes next.
 - **Plan 04** — Repo-Wide ADR-026 Remediation — **complete** and moved to `.agent/plans/current/complete/`.
 - **Plan 05** — Remove Permissive Fallback Outputs — **complete** and moved to `.agent/plans/current/complete/`.
 - **Plan 06** — Remove Swallowed Errors — **complete** and moved to `.agent/plans/current/complete/`.
-- **Plan 07** — Remove Escape Hatches — now active.
+- **Plan 07** — Remove Escape Hatches — **complete** and moved to `.agent/plans/current/complete/`.
+- **Plan 08** — Prove Determinism — now active.
 
-#### What the active plan (3.3a.07) must do next
+#### What the active plan (3.3a.08) must do next
 
 Execute these immediate priorities in order:
 
-1. Inventory all remaining product-code escape hatches (`as` except `as const`, `any`, non-null `!`, `eslint-disable`) in `lib/src/**` excluding test files.
-2. Remove assertion-based typing in `lib/src/schema-processing/parsers/openapi/index.ts` by introducing typed boundary guards so casts are no longer needed.
-3. Remove/no-op policy exceptions in `lib/src/shared/types.ts` and replace with rule-compliant boundary modeling.
-4. Add or update tests that prove behavior is unchanged while escape-hatch usage is eliminated.
-5. Keep lint rules as enforcement mechanism (no new suppressions).
+1. Inventory output-affecting iteration/ordering in product code (`Object.keys/values/entries`, `Map` iteration, and any insertion-order-dependent traversal).
+2. Make ordering explicit and stable in output-critical code paths (sorted keys, deterministic component ordering, stable traversal).
+3. Add tests that generate outputs twice and assert byte-identical artifacts.
+4. Prove determinism for representative fixtures used in round-trip pathways.
+5. Keep strict fail-fast and no-escape-hatch policies fully enforced while hardening determinism.
 
 #### Quick start
 
@@ -94,12 +97,12 @@ Execute these immediate priorities in order:
 pnpm lint && pnpm type-check && pnpm test
 
 # Open active plan
-sed -n '1,260p' .agent/plans/active/3.3a-07-remove-escape-hatches.md
+sed -n '1,260p' .agent/plans/active/3.3a-08-prove-determinism.md
 
 # Immediate priority targets
-sed -n '100,180p' lib/src/schema-processing/parsers/openapi/index.ts
-sed -n '1,220p' lib/src/shared/types.ts
-rg -n "eslint-disable|\\bas\\s+|\\bany\\b|!\\." lib/src --glob '!**/*.test.ts'
+rg -n "Object\\.(keys|values|entries)|new Map\\(|for \\(const .* of .*\\)" lib/src
+rg -n "sort\\(|localeCompare\\(" lib/src
+pnpm test
 ```
 
 #### Absolute strictness principles (from `start-right.prompt.md`)

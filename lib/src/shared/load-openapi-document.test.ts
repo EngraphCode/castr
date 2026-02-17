@@ -3,15 +3,15 @@ import path from 'node:path';
 import type { LoaderPlugin, ResolveResult, bundle } from '@scalar/json-magic/bundle';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { loadOpenApiDocument } from './load-openapi-document/index.js';
+import type { UnknownRecord } from './types.js';
 
 // Interface for bundle result (Scalar returns loose object types)
 // Architecture: Scalar's bundle() returns Record<string, unknown> which we then
 // validate and narrow to BundledOpenApiDocument using a type guard (see ADR-020).
 // This follows our "validate at boundaries" principle.
-// We disable restricted-types here because BundleResult models Scalar's actual
-// loose return type - we validate it properly when converting to OpenAPIObject
-// eslint-disable-next-line @typescript-eslint/no-restricted-types
-type BundleResult = Record<string, unknown>;
+// BundleResult models Scalar's actual loose return type - we validate it properly
+// when converting to OpenAPIObject.
+type BundleResult = UnknownRecord;
 
 let currentReadFilesPlugin: LoaderPlugin;
 let currentFetchUrlsPlugin: LoaderPlugin;
