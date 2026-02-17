@@ -94,14 +94,34 @@ describe('template-context.endpoints.dependencies', () => {
       expect(dependencies).toEqual(['User', 'Profile', 'Filter', 'ErrorBody']);
     });
 
-    it('preserves bare schema names and collects component refs', () => {
+    it('throws on malformed dependency refs with endpoint context', () => {
       const endpoint = createEndpoint({
-        response: createSchema(['not-a-ref', '#/components/schemas/User']),
+        response: createSchema(['not-a-ref']),
+      });
+
+      expect(() => collectEndpointDependencies(endpoint)).toThrow(
+        /Invalid schema dependency reference "not-a-ref".*get \/users\/\{id\}.*response/,
+      );
+    });
+
+    it('throws on non-schema component refs with endpoint context', () => {
+      const endpoint = createEndpoint({
+        response: createSchema(['#/components/parameters/UserId']),
+      });
+
+      expect(() => collectEndpointDependencies(endpoint)).toThrow(
+        /Unsupported schema dependency reference "#\/components\/parameters\/UserId".*get \/users\/\{id\}.*response/,
+      );
+    });
+
+    it('collects valid x-ext schema refs', () => {
+      const endpoint = createEndpoint({
+        response: createSchema(['#/x-ext/abc123/components/schemas/User']),
       });
 
       const dependencies = collectEndpointDependencies(endpoint);
 
-      expect(dependencies).toEqual(['not-a-ref', 'User']);
+      expect(dependencies).toEqual(['User']);
     });
   });
 

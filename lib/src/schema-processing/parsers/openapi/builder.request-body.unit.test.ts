@@ -5,7 +5,7 @@
  */
 
 import { describe, test, expect } from 'vitest';
-import type { RequestBodyObject } from 'openapi3-ts/oas31';
+import type { RequestBodyObject, ReferenceObject } from 'openapi3-ts/oas31';
 import { buildIRRequestBody } from './builder.request-body.js';
 import type { IRBuildContext } from './builder.types.js';
 
@@ -76,5 +76,25 @@ describe('buildIRRequestBody - encoding extraction', () => {
 
     expect(result.content['application/json']).toBeDefined();
     expect(result.content['application/json']?.encoding).toBeUndefined();
+  });
+
+  test('throws on malformed requestBody component refs with actionable context', () => {
+    const requestBodyRef: ReferenceObject = {
+      $ref: '#/components/requestBodies/',
+    };
+
+    expect(() => buildIRRequestBody(requestBodyRef, createContext())).toThrow(
+      /Invalid request body reference.*Expected format/,
+    );
+  });
+
+  test('throws on non-requestBody component refs with actionable context', () => {
+    const requestBodyRef: ReferenceObject = {
+      $ref: '#/components/schemas/CreateUserBody',
+    };
+
+    expect(() => buildIRRequestBody(requestBodyRef, createContext())).toThrow(
+      /Unsupported request body reference.*Expected #\/components\/requestBodies\/\{name\}/,
+    );
   });
 });

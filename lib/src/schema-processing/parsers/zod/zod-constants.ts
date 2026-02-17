@@ -35,6 +35,7 @@ export const ZOD_FLAT_PRIMITIVES = [
   'float32',
   'float64',
   'uuidv4',
+  'uuidv7',
   'base64',
   'base64url',
   'email',

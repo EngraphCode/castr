@@ -30,6 +30,7 @@ const REF_HASH_PREFIX = '#' as const;
 const REF_PATH_SEPARATOR = '/' as const;
 const INLINE_DEFINITIONS_PREFIX_SEGMENT_COUNT = 2;
 const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
 const METADATA_KEY = 'metadata' as const;
 const DEFINITIONS_KEY = 'definitions' as const;
 
@@ -190,12 +191,23 @@ const extractSchemaNameFromRef = (ref: string): string | undefined => {
     return undefined;
   }
 
+  let parsedRef;
   try {
-    const parsedRef = parseComponentRef(ref);
-    return toIdentifier(parsedRef.componentName);
-  } catch {
-    return undefined;
+    parsedRef = parseComponentRef(ref);
+  } catch (error) {
+    throw new Error(
+      `[mcp-inline-json-schema] Invalid schema reference "${ref}". ${describeUnknownError(error)}`,
+    );
   }
+
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_SCHEMAS) {
+    throw new Error(
+      `[mcp-inline-json-schema] Unsupported schema reference "${ref}". ` +
+        'Expected #/components/schemas/{name}.',
+    );
+  }
+
+  return toIdentifier(parsedRef.componentName);
 };
 
 const resolveSchemaReferenceFromIR = (
@@ -269,3 +281,7 @@ export const inlineJsonSchemaRefsFromIR = (
     cache,
     stack,
   });
+
+function describeUnknownError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}

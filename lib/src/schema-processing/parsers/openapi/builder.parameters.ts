@@ -11,7 +11,10 @@ import type { CastrParameter, CastrSchema } from '../../ir/schema.js';
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
+import {
+  assertNoCircularComponentRef,
+  parseComponentNameForType,
+} from './builder.component-ref-resolution.js';
 
 const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters' as const;
 const PARAMETER_LOCATION_PATH = 'path' as const;
@@ -62,9 +65,8 @@ function extractExampleValue(param: ParameterObject): unknown | undefined {
  * @returns Array of IR parameters with resolved schemas
  *
  * @remarks
- * - Reference objects currently return placeholder structures
+ * - Component refs are resolved eagerly and fail fast on invalid syntax or missing targets
  * - Path parameters are automatically marked as required
- * - Schema defaults to string type if not specified
  *
  * @internal
  */
@@ -91,11 +93,7 @@ export function buildSingleParameter(
 ): CastrParameter {
   // Handle $ref parameters
   if (isReferenceObject(param)) {
-    const resolved = resolveParameter(param, context);
-    if (resolved) {
-      return buildConcreteParameter(resolved, context);
-    }
-    return throwUnresolvedParameterRefError(param, context);
+    return buildConcreteParameter(resolveParameter(param, context), context);
   }
 
   return buildConcreteParameter(param, context);
@@ -106,32 +104,48 @@ export function buildSingleParameter(
  *
  * @param ref - Reference object
  * @param context - Build context containing the full document
- * @returns Resolved parameter object or undefined if not found
+ * @returns Resolved parameter object
+ * @throws Error when ref syntax is invalid, points to non-parameter components,
+ *         cannot be resolved, or forms a circular reference
  */
 function resolveParameter(
   ref: ReferenceObject,
   context: IRBuildContext,
-): ParameterObject | undefined {
-  let parsedRef;
-  try {
-    parsedRef = parseComponentRef(ref.$ref);
-  } catch {
-    return undefined;
-  }
+  seenRefs = new Set<string>(),
+): ParameterObject {
+  const location = context.path.join('/');
+  assertNoCircularComponentRef(ref.$ref, location, seenRefs, 'parameter');
 
-  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_PARAMETERS) {
-    return undefined;
-  }
+  const paramName = parseComponentNameForType(
+    ref.$ref,
+    OPENAPI_COMPONENT_TYPE_PARAMETERS,
+    location,
+    'parameter',
+    '#/components/parameters/{name}',
+  );
+  const param = getReferencedParameter(paramName, ref, context);
 
-  const paramName = parsedRef.componentName;
-  if (!paramName || !context.doc.components?.parameters) {
-    return undefined;
-  }
-
-  const param = context.doc.components.parameters[paramName];
   if (isReferenceObject(param)) {
     // Recursive resolution (though typically parameters aren't nested refs)
-    return resolveParameter(param, context);
+    return resolveParameter(param, context, seenRefs);
+  }
+
+  return param;
+}
+
+function getReferencedParameter(
+  paramName: string,
+  ref: ReferenceObject,
+  context: IRBuildContext,
+): ParameterObject | ReferenceObject {
+  const parameters = context.doc.components?.parameters;
+  if (!parameters) {
+    return throwUnresolvedParameterRefError(ref, context);
+  }
+
+  const param = parameters[paramName];
+  if (!param) {
+    return throwUnresolvedParameterRefError(ref, context);
   }
 
   return param;

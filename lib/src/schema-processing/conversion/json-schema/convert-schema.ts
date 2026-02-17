@@ -10,13 +10,15 @@ import {
   type MutableJsonSchema,
 } from './keyword-appliers.js';
 import { assignIfDefined, readSchemaKeyword, setKeyword } from './keyword-helpers.js';
-import { logger } from '../../../shared/utils/logger.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
 type OpenApiSchema = SchemaObject | ReferenceObject;
 const SCHEMA_TYPE_NULL = 'null' as const;
 const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
 const JSON_SCHEMA_DEFINITIONS_PREFIX = '#/definitions/' as const;
+const REF_HASH_PREFIX = '#' as const;
+const REF_FIELD_SCHEMA = '$ref' as const;
+const REF_FIELD_DYNAMIC = '$dynamicRef' as const;
 
 /**
  * Convert an OpenAPI 3.1 schema object (Scalar-upgraded) into a JSON Schema Draft 07 representation.
@@ -26,8 +28,7 @@ export function convertOpenApiSchemaToJsonSchema(schema: OpenApiSchema): Mutable
   try {
     return convertSchemaInternal(schema);
   } catch (error) {
-    logger.warn(createFallbackMessage(schema), error);
-    return createPermissiveSchema();
+    throw new Error(createConversionFailureMessage(schema, error));
   }
 }
 
@@ -35,7 +36,7 @@ function convertSchemaInternal(schema: OpenApiSchema): MutableJsonSchema {
   let result: MutableJsonSchema;
 
   if (isReferenceObject(schema)) {
-    result = createReferenceSchema(rewriteComponentRef(schema.$ref));
+    result = createReferenceSchema(rewriteComponentRef(schema.$ref, REF_FIELD_SCHEMA));
   } else {
     result = convertSchemaObject(schema);
   }
@@ -54,7 +55,7 @@ function convertUnionSchema(schema: SchemaObject): MutableJsonSchema {
   const nonNullTypes = typeArray.filter((typeEntry) => typeEntry !== SCHEMA_TYPE_NULL);
 
   const anyOf = nonNullTypes.map((typeEntry) =>
-    convertOpenApiSchemaToJsonSchema({
+    convertSchemaInternal({
       ...strippedSchema,
       type: typeEntry,
     }),
@@ -76,13 +77,13 @@ function convertNonUnionSchema(schema: SchemaObject): MutableJsonSchema {
   applyTypeInformation(schema, result);
   applyStringKeywords(schema, result);
   applyNumericKeywords(schema, result);
-  applyArrayKeywords(schema, result, convertOpenApiSchemaToJsonSchema);
-  applyObjectKeywords(schema, result, convertOpenApiSchemaToJsonSchema);
-  applyCompositionKeywords(schema, result, convertOpenApiSchemaToJsonSchema);
+  applyArrayKeywords(schema, result, convertSchemaInternal);
+  applyObjectKeywords(schema, result, convertSchemaInternal);
+  applyCompositionKeywords(schema, result, convertSchemaInternal);
 
   const dynamicRef = getStringKeyword(schema, '$dynamicRef');
   if (dynamicRef) {
-    result['$ref'] = rewriteComponentRef(dynamicRef);
+    result['$ref'] = rewriteComponentRef(dynamicRef, REF_FIELD_DYNAMIC);
   }
 
   return result;
@@ -149,16 +150,29 @@ function isExampleObject(candidate: unknown): candidate is { value: unknown } {
   return typeof candidate === 'object' && candidate !== null && 'value' in candidate;
 }
 
-function rewriteComponentRef(ref: string): string {
-  try {
-    const parsedRef = parseComponentRef(ref);
-    if (parsedRef.componentType === OPENAPI_COMPONENT_TYPE_SCHEMAS) {
-      return `${JSON_SCHEMA_DEFINITIONS_PREFIX}${parsedRef.componentName}`;
-    }
-  } catch {
+function rewriteComponentRef(ref: string, refField: '$ref' | '$dynamicRef'): string {
+  if (ref.charAt(0) !== REF_HASH_PREFIX) {
     return ref;
   }
-  return ref;
+
+  let parsedRef;
+  try {
+    parsedRef = parseComponentRef(ref);
+  } catch (error) {
+    throw new Error(
+      `[json-schema] Invalid schema component reference "${ref}" found in ${refField}. ` +
+        describeUnknownError(error),
+    );
+  }
+
+  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_SCHEMAS) {
+    throw new Error(
+      `[json-schema] Unsupported schema component reference "${ref}" found in ${refField}. ` +
+        'Expected #/components/schemas/{name}.',
+    );
+  }
+
+  return `${JSON_SCHEMA_DEFINITIONS_PREFIX}${parsedRef.componentName}`;
 }
 
 function getStringKeyword(schema: SchemaObject, key: string): string | undefined {
@@ -178,13 +192,16 @@ function convertSchemaObject(schema: SchemaObject): MutableJsonSchema {
   return convertNonUnionSchema(schema);
 }
 
-function createFallbackMessage(schema: OpenApiSchema): string {
+function createConversionFailureMessage(schema: OpenApiSchema, error: unknown): string {
   const prefix = '[json-schema] Failed to convert schema';
   const details = describeSchema(schema);
+  const failureMessage = describeUnknownError(error);
+
   if (details) {
-    return `${prefix} (${details}); emitted permissive schema`;
+    return `${prefix} (${details}): ${failureMessage}`;
   }
-  return `${prefix}; emitted permissive schema`;
+
+  return `${prefix}: ${failureMessage}`;
 }
 
 function describeSchema(schema: OpenApiSchema): string | undefined {
@@ -213,6 +230,6 @@ function describeSchema(schema: OpenApiSchema): string | undefined {
   return fragments.length > 0 ? fragments.join(', ') : undefined;
 }
 
-function createPermissiveSchema(): MutableJsonSchema {
-  return {};
+function describeUnknownError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }

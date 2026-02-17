@@ -154,6 +154,34 @@ describe('inlineJsonSchemaRefsFromIR', () => {
     );
   });
 
+  test('throws error when internal hash reference syntax is invalid', () => {
+    const ir = createMockCastrDocument();
+    const schema: MutableJsonSchema = {
+      type: 'object',
+      properties: {
+        malformed: { $ref: '#/components/schemas/' },
+      },
+    };
+
+    expect(() => inlineJsonSchemaRefsFromIR(schema, ir)).toThrow(
+      /Invalid schema reference.*Expected format/,
+    );
+  });
+
+  test('throws error when internal hash reference points to non-schema components', () => {
+    const ir = createMockCastrDocument();
+    const schema: MutableJsonSchema = {
+      type: 'object',
+      properties: {
+        wrongType: { $ref: '#/components/parameters/UserId' },
+      },
+    };
+
+    expect(() => inlineJsonSchemaRefsFromIR(schema, ir)).toThrow(
+      /Unsupported schema reference.*Expected #\/components\/schemas\/\{name\}/,
+    );
+  });
+
   test('caches resolved refs to avoid redundant processing', () => {
     const ir = createMockCastrDocument({
       components: [

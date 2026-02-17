@@ -57,6 +57,7 @@ export const ZOD_PRIMITIVE_TYPES: ReadonlyMap<string, CastrSchema['type']> = new
   ['number', 'number'],
   ['boolean', 'boolean'],
   ['null', 'null'],
+  ['bigint', 'integer'],
   ['undefined', undefined],
   // Zod 4 Integers -> integer
   ['int', 'integer'],
@@ -71,6 +72,7 @@ export const ZOD_PRIMITIVE_TYPES: ReadonlyMap<string, CastrSchema['type']> = new
   ['iso.time', 'string'],
   ['iso.duration', 'string'],
   ['uuidv4', 'string'],
+  ['uuidv7', 'string'],
   ['base64', 'string'],
   ['base64url', 'string'],
   ['email', 'string'],

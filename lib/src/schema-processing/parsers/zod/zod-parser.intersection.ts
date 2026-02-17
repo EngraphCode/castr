@@ -94,8 +94,6 @@ export function parseIntersectionZodFromNode(
 export function parseChainedIntersectionFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _resolver?: ZodImportResolver,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;

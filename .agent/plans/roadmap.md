@@ -110,11 +110,15 @@ Bring the repository into strict alignment by completing two things in lockstep:
 
 **References:** `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md`, `lib/eslint.config.ts`.
 
-**Progress update (2026-02-16):**
+**Progress update (2026-02-17):**
 
-- [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md) is complete.
-- Lint debt for Plan 04 scope is reduced from 272 to 0.
-- Current active plan is now [3.3a.05 — Remove Permissive Fallbacks](./active/3.3a-05-remove-permissive-fallbacks.md).
+- [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md) remains complete (lint debt reduced from 272 to 0).
+- [3.3a.05 — Remove Permissive Fallback Outputs](./current/complete/3.3a-05-remove-permissive-fallbacks.md) is complete and moved to `./current/complete/`.
+- [3.3a.06 — Remove Swallowed Errors](./current/complete/3.3a-06-remove-swallowed-errors.md) is complete and moved to `./current/complete/`.
+- Plan 05 established a centralized strict component-ref helper at `lib/src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` and removed permissive output degradation paths.
+- Plan 06 removed swallowed-error paths in dependency extraction, Zod declaration parsing, and circular ref extraction; component-ref validation remains centralized.
+- Latest verification: `pnpm qg` is green from repo root.
+- Current active plan is now [3.3a.07 — Remove Escape Hatches](./active/3.3a-07-remove-escape-hatches.md).
 
 ---
 
@@ -159,9 +163,9 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 | 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/complete/3.3a-02-eslint-enforcement-redesign.md)               | ✅ Complete |
 | 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/complete/3.3a-03-zod-parser-semantic-parsing.md)               | ✅ Complete |
 | 4    | [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md)          | ✅ Complete |
-| 5    | [3.3a.05 — Remove Permissive Fallbacks](./active/3.3a-05-remove-permissive-fallbacks.md)                         | 🔄 Active   |
-| 6    | [3.3a.06 — Remove Swallowed Errors](./current/session-3.3a/3.3a-06-remove-swallowed-errors.md)                   | 🔲          |
-| 7    | [3.3a.07 — Remove Escape Hatches](./current/session-3.3a/3.3a-07-remove-escape-hatches.md)                       | 🔲          |
+| 5    | [3.3a.05 — Remove Permissive Fallback Outputs](./current/complete/3.3a-05-remove-permissive-fallbacks.md)        | ✅ Complete |
+| 6    | [3.3a.06 — Remove Swallowed Errors](./current/complete/3.3a-06-remove-swallowed-errors.md)                       | ✅ Complete |
+| 7    | [3.3a.07 — Remove Escape Hatches](./active/3.3a-07-remove-escape-hatches.md)                                     | 🔄 Active   |
 | 8    | [3.3a.08 — Prove Determinism](./current/session-3.3a/3.3a-08-prove-determinism.md)                               | 🔲          |
 | 9    | [3.3b.01 — Round-Trip Suite Strictness](./current/session-3.3b/3.3b-01-roundtrip-suite-strictness.md)            | 🔲          |
 | 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md)  | 🔲          |

@@ -16,6 +16,7 @@ import type { CastrSchema } from '../../ir/schema.js';
 const FORMAT_MAP: Readonly<Record<string, string>> = {
   int32: 'int32',
   int64: 'int64',
+  bigint: 'bigint',
   float32: 'float',
   float64: 'double',
   'iso.date': 'date',
@@ -23,6 +24,7 @@ const FORMAT_MAP: Readonly<Record<string, string>> = {
   'iso.time': 'time',
   'iso.duration': 'duration',
   uuidv4: 'uuid',
+  uuidv7: 'uuidv7',
   email: 'email',
   url: 'uri',
   uuid: 'uuid',

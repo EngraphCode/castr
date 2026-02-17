@@ -9,11 +9,14 @@
 
 import type { IRComponent, CastrSchema } from '../../ir/schema.js';
 import { split } from 'lodash-es';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
+import { parseComponentNameForType } from './builder.component-ref-resolution.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema' as const;
 const COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
 const COMPONENT_NAME_SEPARATOR = '/' as const;
+const COMPONENTS_PATH_PREFIX = '#/components/schemas/' as const;
+const EXPECTED_SCHEMA_REF_PATTERN =
+  '#/components/schemas/{name} or #/x-ext/{hash}/components/schemas/{name}' as const;
 
 /**
  * Detect circular references in schemas using depth-first search.
@@ -36,7 +39,8 @@ export function detectCircularReferences(components: IRComponent[]): void {
   const dependencyGraph = new Map<string, Set<string>>();
 
   for (const component of schemaComponents) {
-    const refs = extractSchemaReferences(component.schema);
+    const location = `${COMPONENTS_PATH_PREFIX}${component.name}`;
+    const refs = extractSchemaReferences(component.schema, location);
     dependencyGraph.set(component.name, refs);
   }
 
@@ -60,27 +64,25 @@ export function detectCircularReferences(components: IRComponent[]): void {
  *
  * @internal
  */
-function extractSchemaReferences(irSchema: CastrSchema): Set<string> {
+function extractSchemaReferences(irSchema: CastrSchema, location: string): Set<string> {
   const refs = new Set<string>();
 
   // Check direct $ref
   if (irSchema.$ref) {
-    const refName = extractSchemaNameFromRef(irSchema.$ref);
-    if (refName) {
-      refs.add(refName);
-    }
+    const refName = extractSchemaNameFromRef(irSchema.$ref, location);
+    refs.add(refName);
   }
 
   // Check properties (for object schemas)
-  const propertyRefs = extractPropertyReferences(irSchema.properties);
+  const propertyRefs = extractPropertyReferences(irSchema.properties, `${location}/properties`);
   propertyRefs.forEach((ref) => refs.add(ref));
 
   // Check array items
-  const itemRefs = extractItemsReferences(irSchema.items);
+  const itemRefs = extractItemsReferences(irSchema.items, `${location}/items`);
   itemRefs.forEach((ref) => refs.add(ref));
 
   // Check composition schemas (allOf, oneOf, anyOf)
-  const compositionRefs = extractCompositionReferences(irSchema);
+  const compositionRefs = extractCompositionReferences(irSchema, location);
   compositionRefs.forEach((ref) => refs.add(ref));
 
   return refs;
@@ -94,13 +96,16 @@ function extractSchemaReferences(irSchema: CastrSchema): Set<string> {
  *
  * @internal
  */
-function extractPropertyReferences(properties: CastrSchema['properties']): Set<string> {
+function extractPropertyReferences(
+  properties: CastrSchema['properties'],
+  location: string,
+): Set<string> {
   const refs = new Set<string>();
 
   if (properties) {
-    const values = properties.values();
-    for (const propSchema of values) {
-      const propRefs = extractSchemaReferences(propSchema);
+    for (const [propertyName, propSchema] of properties.entries()) {
+      const propLocation = `${location}/${propertyName}`;
+      const propRefs = extractSchemaReferences(propSchema, propLocation);
       propRefs.forEach((ref) => refs.add(ref));
     }
   }
@@ -116,7 +121,7 @@ function extractPropertyReferences(properties: CastrSchema['properties']): Set<s
  *
  * @internal
  */
-function extractItemsReferences(items: CastrSchema['items']): Set<string> {
+function extractItemsReferences(items: CastrSchema['items'], location: string): Set<string> {
   // Fail-fast: empty set for null/undefined items
   if (!items) {
     return new Set<string>();
@@ -125,14 +130,15 @@ function extractItemsReferences(items: CastrSchema['items']): Set<string> {
   const refs = new Set<string>();
 
   if (Array.isArray(items)) {
-    for (const item of items) {
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
       if (isCastrSchemaLike(item)) {
-        const itemRefs = extractSchemaReferences(item);
+        const itemRefs = extractSchemaReferences(item, `${location}/${String(index)}`);
         itemRefs.forEach((ref) => refs.add(ref));
       }
     }
   } else if (isCastrSchemaLike(items)) {
-    const itemRefs = extractSchemaReferences(items);
+    const itemRefs = extractSchemaReferences(items, location);
     itemRefs.forEach((ref) => refs.add(ref));
   }
 
@@ -147,14 +153,14 @@ function extractItemsReferences(items: CastrSchema['items']): Set<string> {
  *
  * @internal
  */
-function extractCompositionReferences(irSchema: CastrSchema): Set<string> {
+function extractCompositionReferences(irSchema: CastrSchema, location: string): Set<string> {
   const refs = new Set<string>();
   const compositionKeys: ('allOf' | 'oneOf' | 'anyOf')[] = ['allOf', 'oneOf', 'anyOf'];
 
   for (const key of compositionKeys) {
     const schemas = irSchema[key];
     if (schemas && Array.isArray(schemas)) {
-      const compositionRefs = extractReferencesFromSchemas(schemas);
+      const compositionRefs = extractReferencesFromSchemas(schemas, `${location}/${key}`);
       compositionRefs.forEach((ref) => refs.add(ref));
     }
   }
@@ -170,12 +176,13 @@ function extractCompositionReferences(irSchema: CastrSchema): Set<string> {
  *
  * @internal
  */
-function extractReferencesFromSchemas(schemas: unknown[]): Set<string> {
+function extractReferencesFromSchemas(schemas: unknown[], location: string): Set<string> {
   const refs = new Set<string>();
 
-  for (const schema of schemas) {
+  for (let index = 0; index < schemas.length; index++) {
+    const schema = schemas[index];
     if (isCastrSchemaLike(schema)) {
-      const schemaRefs = extractSchemaReferences(schema);
+      const schemaRefs = extractSchemaReferences(schema, `${location}/${String(index)}`);
       schemaRefs.forEach((ref) => refs.add(ref));
     }
   }
@@ -199,22 +206,24 @@ function isCastrSchemaLike(value: unknown): value is CastrSchema {
  * Extract schema name from a $ref string.
  *
  * @param ref - OpenAPI $ref string
- * @returns Schema name or undefined
+ * @returns Schema name
  *
  * @internal
  */
-function extractSchemaNameFromRef(ref: string): string | undefined {
-  try {
-    const parsedRef = parseComponentRef(ref);
-    if (parsedRef.componentType !== COMPONENT_TYPE_SCHEMAS) {
-      return undefined;
-    }
-
-    const nameSegments = split(parsedRef.componentName, COMPONENT_NAME_SEPARATOR);
-    return nameSegments[0];
-  } catch {
-    return undefined;
+function extractSchemaNameFromRef(ref: string, location: string): string {
+  const componentName = parseComponentNameForType(
+    ref,
+    COMPONENT_TYPE_SCHEMAS,
+    location,
+    'schema',
+    EXPECTED_SCHEMA_REF_PATTERN,
+  );
+  const nameSegments = split(componentName, COMPONENT_NAME_SEPARATOR);
+  const rootName = nameSegments[0];
+  if (!rootName) {
+    throw new Error(`Invalid schema reference "${ref}" at ${location}.`);
   }
+  return rootName;
 }
 
 /**

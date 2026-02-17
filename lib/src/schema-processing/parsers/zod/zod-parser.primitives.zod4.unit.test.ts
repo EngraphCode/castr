@@ -29,6 +29,12 @@ describe('Zod 4 Primitive Parsing', () => {
       expect(result?.type).toBe('integer');
       expect(result?.format).toBe('int64');
     });
+
+    it('should parse z.bigint() as integer bigint', () => {
+      const result = parsePrimitiveZod('z.bigint()');
+      expect(result?.type).toBe('integer');
+      expect(result?.format).toBe('bigint');
+    });
   });
 
   describe('Float Types', () => {
@@ -76,6 +82,12 @@ describe('Zod 4 Primitive Parsing', () => {
       const result = parsePrimitiveZod('z.uuidv4()');
       expect(result?.type).toBe('string');
       expect(result?.format).toBe('uuid');
+    });
+
+    it('should parse z.uuidv7() as string uuidv7', () => {
+      const result = parsePrimitiveZod('z.uuidv7()');
+      expect(result?.type).toBe('string');
+      expect(result?.format).toBe('uuidv7');
     });
 
     it('should parse z.base64() as string with contentEncoding', () => {

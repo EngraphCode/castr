@@ -89,6 +89,20 @@ describe('Zod Parser Integration', () => {
       expect(result.errors.some((e: { code: string }) => e.code === 'DYNAMIC_SCHEMA')).toBe(true);
     });
 
+    it('should return parse errors for unsupported declarations with source context', () => {
+      const source = `
+        const BrokenSchema = z.promise(z.string());
+      `;
+      const result = parseZodSource(source);
+
+      const parseError = result.errors.find((e: { code: string }) => e.code === 'PARSE_ERROR');
+      expect(parseError).toBeDefined();
+      expect(parseError?.message).toContain('BrokenSchema');
+      expect(parseError?.location).toBeDefined();
+      expect(parseError?.location?.line).toBeGreaterThan(0);
+      expect(parseError?.location?.column).toBeGreaterThan(0);
+    });
+
     it('should return empty IR for invalid source', () => {
       const source = `
         not valid javascript

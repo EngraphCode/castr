@@ -11,7 +11,10 @@ import type { IRRequestBody, IRMediaType } from '../../ir/schema.js';
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
+import {
+  assertNoCircularComponentRef,
+  parseComponentNameForType,
+} from './builder.component-ref-resolution.js';
 
 const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies' as const;
 
@@ -27,7 +30,7 @@ const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies' as const;
  * @returns IR request body with resolved content types
  *
  * @remarks
- * - Reference objects currently return minimal placeholder structures
+ * - Component refs are resolved eagerly and fail fast on invalid syntax or missing targets
  * - Each content type is processed independently with its own schema
  * - Examples are preserved when present
  *
@@ -39,11 +42,7 @@ export function buildIRRequestBody(
 ): IRRequestBody {
   // Handle $ref request bodies - resolve from components/requestBodies
   if (isReferenceObject(requestBody)) {
-    const resolved = resolveRequestBodyRef(requestBody, context);
-    if (resolved) {
-      return buildConcreteRequestBody(resolved, context);
-    }
-    return throwUnresolvedRequestBodyRefError(requestBody, context);
+    return buildConcreteRequestBody(resolveRequestBodyRef(requestBody, context), context);
   }
 
   return buildConcreteRequestBody(requestBody, context);
@@ -54,34 +53,49 @@ export function buildIRRequestBody(
  *
  * @param ref - Reference object pointing to requestBody component
  * @param context - Build context containing the full document
- * @returns Resolved RequestBodyObject or undefined if not found
+ * @returns Resolved RequestBodyObject
+ * @throws Error when ref syntax is invalid, points to non-requestBody components,
+ *         cannot be resolved, or forms a circular reference
  *
  * @internal
  */
 function resolveRequestBodyRef(
   ref: ReferenceObject,
   context: IRBuildContext,
-): RequestBodyObject | undefined {
-  let parsedRef;
-  try {
-    parsedRef = parseComponentRef(ref.$ref);
-  } catch {
-    return undefined;
+  seenRefs = new Set<string>(),
+): RequestBodyObject {
+  const location = context.path.join('/');
+  assertNoCircularComponentRef(ref.$ref, location, seenRefs, 'request body');
+
+  const requestBodyName = parseComponentNameForType(
+    ref.$ref,
+    OPENAPI_COMPONENT_TYPE_REQUEST_BODIES,
+    location,
+    'request body',
+    '#/components/requestBodies/{name}',
+  );
+  const resolved = getReferencedRequestBody(requestBodyName, ref, context);
+
+  if (isReferenceObject(resolved)) {
+    return resolveRequestBodyRef(resolved, context, seenRefs);
   }
 
-  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_REQUEST_BODIES) {
-    return undefined;
+  return resolved;
+}
+
+function getReferencedRequestBody(
+  requestBodyName: string,
+  ref: ReferenceObject,
+  context: IRBuildContext,
+): RequestBodyObject | ReferenceObject {
+  const requestBodies = context.doc.components?.requestBodies;
+  if (!requestBodies) {
+    return throwUnresolvedRequestBodyRefError(ref, context);
   }
 
-  const requestBodyName = parsedRef.componentName;
-  if (!requestBodyName || !context.doc.components?.requestBodies) {
-    return undefined;
-  }
-
-  const resolved = context.doc.components.requestBodies[requestBodyName];
-  if (!resolved || isReferenceObject(resolved)) {
-    // Don't resolve nested refs (avoid infinite loops)
-    return undefined;
+  const resolved = requestBodies[requestBodyName];
+  if (!resolved) {
+    return throwUnresolvedRequestBodyRefError(ref, context);
   }
 
   return resolved;

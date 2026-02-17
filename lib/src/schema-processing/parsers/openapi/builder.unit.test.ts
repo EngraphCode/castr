@@ -866,6 +866,40 @@ describe('buildIR - IR-1 enhancements', () => {
       expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
     });
 
+    it('should throw on malformed schema refs during circular reference extraction', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          User: {
+            type: 'object',
+            properties: {
+              child: { $ref: 'not-a-ref' },
+            },
+          },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(
+        /Invalid schema reference "not-a-ref".*Expected format: #\/components\/\{type\}\/\{name\} or #\/x-ext\/\{hash\}\/components\/\{type\}\/\{name\}/,
+      );
+    });
+
+    it('should throw on non-schema component refs during circular reference extraction', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          User: {
+            type: 'object',
+            properties: {
+              child: { $ref: '#/components/parameters/UserId' },
+            },
+          },
+        },
+      };
+
+      expect(() => buildCastrSchemas(components)).toThrow(
+        /Unsupported schema reference "#\/components\/parameters\/UserId".*Expected #\/components\/schemas\/\{name\} or #\/x-ext\/\{hash\}\/components\/schemas\/\{name\}/,
+      );
+    });
+
     it('should build dependents (reverse edges) for each node', () => {
       const doc: OpenAPIObject = {
         openapi: '3.1.0',

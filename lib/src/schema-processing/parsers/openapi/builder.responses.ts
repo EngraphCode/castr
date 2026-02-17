@@ -17,7 +17,10 @@ import type { CastrResponse, IRMediaType, IRResponseHeader } from '../../ir/sche
 import type { IRBuildContext } from './builder.types.js';
 import { isReferenceObject } from '../../../validation/type-guards.js';
 import { buildCastrSchema } from './builder.core.js';
-import { parseComponentRef } from '../../../shared/ref-resolution.js';
+import {
+  assertNoCircularComponentRef,
+  parseComponentNameForType,
+} from './builder.component-ref-resolution.js';
 
 const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses' as const;
 
@@ -41,7 +44,7 @@ function isResponseOrReference(value: unknown): value is ResponseObject | Refere
  * @returns Array of IR responses
  *
  * @remarks
- * - Reference objects return minimal response structures with only status code
+ * - Component refs are resolved eagerly and fail fast on invalid syntax or missing targets
  * - Each content type is processed independently
  * - Response headers are included when present
  *
@@ -80,11 +83,11 @@ export function buildSingleResponse(
 ): CastrResponse {
   // Handle $ref responses - attempt to resolve
   if (isReferenceObject(responseObj)) {
-    const resolved = resolveResponse(responseObj, context);
-    if (resolved) {
-      return buildConcreteResponse(statusCode, resolved, context);
-    }
-    return throwUnresolvedResponseRefError(responseObj, statusCode, context);
+    return buildConcreteResponse(
+      statusCode,
+      resolveResponse(responseObj, context, statusCode),
+      context,
+    );
   }
 
   return buildConcreteResponse(statusCode, responseObj, context);
@@ -94,33 +97,52 @@ export function buildSingleResponse(
  * Resolve a response reference.
  * @param ref - Reference object
  * @param context - Build context containing the full document
- * @returns Resolved response object or undefined if not found
+ * @param statusCode - Response status code for contextual error messages
+ * @returns Resolved response object
+ * @throws Error when ref syntax is invalid, points to non-response components,
+ *         cannot be resolved, or forms a circular reference
  * @internal
  */
 function resolveResponse(
   ref: ReferenceObject,
   context: IRBuildContext,
-): ResponseObject | undefined {
-  let parsedRef;
-  try {
-    parsedRef = parseComponentRef(ref.$ref);
-  } catch {
-    return undefined;
-  }
+  statusCode: string,
+  seenRefs = new Set<string>(),
+): ResponseObject {
+  const location = context.path.join('/');
+  assertNoCircularComponentRef(ref.$ref, location, seenRefs, 'response');
 
-  if (parsedRef.componentType !== OPENAPI_COMPONENT_TYPE_RESPONSES) {
-    return undefined;
-  }
+  const responseName = parseComponentNameForType(
+    ref.$ref,
+    OPENAPI_COMPONENT_TYPE_RESPONSES,
+    location,
+    'response',
+    '#/components/responses/{name}',
+  );
+  const response = getReferencedResponse(responseName, ref, statusCode, context);
 
-  const responseName = parsedRef.componentName;
-  if (!responseName || !context.doc.components?.responses) {
-    return undefined;
-  }
-
-  const response = context.doc.components.responses[responseName];
   if (isReferenceObject(response)) {
-    // Recursive resolution
-    return resolveResponse(response, context);
+    // Recursive resolution with circular detection
+    return resolveResponse(response, context, statusCode, seenRefs);
+  }
+
+  return response;
+}
+
+function getReferencedResponse(
+  responseName: string,
+  ref: ReferenceObject,
+  statusCode: string,
+  context: IRBuildContext,
+): ResponseObject | ReferenceObject {
+  const responses = context.doc.components?.responses;
+  if (!responses) {
+    return throwUnresolvedResponseRefError(ref, statusCode, context);
+  }
+
+  const response = responses[responseName];
+  if (!response) {
+    return throwUnresolvedResponseRefError(ref, statusCode, context);
   }
 
   return response;

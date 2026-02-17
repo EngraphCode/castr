@@ -121,45 +121,88 @@ interface ParsedDeclaration {
   recommendation: ZodParseRecommendation;
 }
 
+interface ParsedDeclarationsResult {
+  declarations: ParsedDeclaration[];
+  errors: ZodParseError[];
+}
+
+type ZodDeclaration = ReturnType<typeof findZodSchemaDeclarations>[number];
+
+function createParsedDeclaration(
+  variableName: string,
+  schema: CastrSchemaComponent['schema'],
+): ParsedDeclaration {
+  const name = extractSchemaName(variableName);
+  return {
+    component: {
+      type: 'schema',
+      name,
+      schema,
+      metadata: createDefaultMetadata(),
+    },
+    recommendation: {
+      schemaName: name,
+      field: 'description',
+      reason: `No .describe() found on ${variableName}. Consider adding a description.`,
+      suggestedValue: `Description for ${name}`,
+    },
+  };
+}
+
+function buildDeclarationParseError(
+  sourceFile: ReturnType<typeof createZodProject>['sourceFile'],
+  declaration: ZodDeclaration,
+  detail: string,
+): ZodParseError {
+  const location = sourceFile.getLineAndColumnAtPos(declaration.initializer.getPos());
+  return {
+    code: 'PARSE_ERROR',
+    message:
+      `Failed to parse schema declaration "${declaration.name}" at line ${location.line}, ` +
+      `column ${location.column}. ${detail}`,
+    location: {
+      line: location.line,
+      column: location.column,
+    },
+  };
+}
+
 /**
  * Parse all schema declarations in source code using ts-morph AST.
  * Per ADR-026, we use proper AST tooling instead of regex.
  *
  * @internal
  */
-function parseSchemaDeclarations(source: string): ParsedDeclaration[] {
-  const results: ParsedDeclaration[] = [];
+function parseSchemaDeclarations(source: string): ParsedDeclarationsResult {
+  const declarationsList: ParsedDeclaration[] = [];
+  const errors: ZodParseError[] = [];
   const { sourceFile, resolver } = createZodProject(source);
 
   const declarations = findZodSchemaDeclarations(sourceFile, resolver);
 
   for (const decl of declarations) {
-    const schema = parseZodSchemaFromNode(decl.initializer, resolver);
-
-    if (!schema) {
+    let schema: CastrSchemaComponent['schema'] | undefined;
+    try {
+      schema = parseZodSchemaFromNode(decl.initializer, resolver);
+    } catch (error) {
+      errors.push(buildDeclarationParseError(sourceFile, decl, describeUnknownError(error)));
       continue;
     }
 
-    const variableName = decl.name;
-    const name = extractSchemaName(variableName);
+    if (!schema) {
+      errors.push(
+        buildDeclarationParseError(sourceFile, decl, 'Unsupported or unparseable Zod expression.'),
+      );
+      continue;
+    }
 
-    results.push({
-      component: {
-        type: 'schema',
-        name,
-        schema,
-        metadata: createDefaultMetadata(),
-      },
-      recommendation: {
-        schemaName: name,
-        field: 'description',
-        reason: `No .describe() found on ${variableName}. Consider adding a description.`,
-        suggestedValue: `Description for ${name}`,
-      },
-    });
+    declarationsList.push(createParsedDeclaration(decl.name, schema));
   }
 
-  return results;
+  return {
+    declarations: declarationsList,
+    errors,
+  };
 }
 
 /**
@@ -195,9 +238,10 @@ export function parseZodSource(source: string): ZodParseResult {
   const errors: ZodParseError[] = [...detectZod3Syntax(source), ...detectDynamicSchemas(source)];
 
   // Parse all schema declarations
-  const declarations = parseSchemaDeclarations(source);
-  const components = declarations.map((d) => d.component);
-  const recommendations = declarations.map((d) => d.recommendation);
+  const parsedDeclarations = parseSchemaDeclarations(source);
+  errors.push(...parsedDeclarations.errors);
+  const components = parsedDeclarations.declarations.map((d) => d.component);
+  const recommendations = parsedDeclarations.declarations.map((d) => d.recommendation);
 
   // Create IR document
   const ir: CastrDocument = {
@@ -207,4 +251,8 @@ export function parseZodSource(source: string): ZodParseResult {
   };
 
   return { ir, recommendations, errors };
+}
+
+function describeUnknownError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }

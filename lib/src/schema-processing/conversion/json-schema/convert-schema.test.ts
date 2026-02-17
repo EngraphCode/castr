@@ -4,7 +4,6 @@ import type { SchemaObject } from 'openapi3-ts/oas31';
 
 import { convertOpenApiSchemaToJsonSchema } from './convert-schema.js';
 import * as keywordPrimitives from './keyword-primitives.js';
-import { logger } from '../../../shared/utils/logger.js';
 
 function expectSchemaObject(schema: JsonSchema): asserts schema is Extract<JsonSchema, object> {
   if (typeof schema === 'boolean') {
@@ -91,6 +90,22 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
     expect(result).toEqual({
       $ref: '#/definitions/User',
     });
+  });
+
+  it('throws when a schema reference has invalid syntax', () => {
+    const ref = { $ref: '#/components/schemas/' };
+
+    expect(() => convertOpenApiSchemaToJsonSchema(ref)).toThrow(
+      /Invalid schema component reference.*Expected format/,
+    );
+  });
+
+  it('throws when a schema reference points to a non-schema component', () => {
+    const ref = { $ref: '#/components/parameters/UserId' };
+
+    expect(() => convertOpenApiSchemaToJsonSchema(ref)).toThrow(
+      /Unsupported schema component reference.*Expected #\/components\/schemas\/\{name\}/,
+    );
   });
 
   it('converts object schemas with properties and required keys', () => {
@@ -313,10 +328,9 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
     }
   });
 
-  it('logs a warning and returns a permissive schema when conversion fails', () => {
+  it('throws a contextual error when conversion fails', () => {
     const schema: SchemaObject = { type: 'string' };
     const failure = new Error('boom');
-    const warnSpy = vi.spyOn(logger, 'warn').mockImplementation(() => undefined);
     const primitiveSpy = vi
       .spyOn(keywordPrimitives, 'applyTypeInformation')
       .mockImplementation(() => {
@@ -324,13 +338,11 @@ describe('convertOpenApiSchemaToJsonSchema', () => {
       });
 
     try {
-      const result = convertOpenApiSchemaToJsonSchema(schema);
-      expectSchemaObject(result);
-      expect(result).toEqual({});
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('permissive schema'), failure);
+      expect(() => convertOpenApiSchemaToJsonSchema(schema)).toThrow(
+        /Failed to convert schema.*type string.*boom/,
+      );
     } finally {
       primitiveSpy.mockRestore();
-      warnSpy.mockRestore();
     }
   });
 });
