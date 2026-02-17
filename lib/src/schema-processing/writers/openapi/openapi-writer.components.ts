@@ -17,6 +17,7 @@ import type {
   CastrResponseComponent,
 } from '../../ir/schema.js';
 
+import { compareComponentsForDeterminism } from './openapi-writer.components.ordering.js';
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema' as const;
@@ -345,8 +346,9 @@ const COMPONENT_TYPE_HANDLERS: Record<
  */
 export function writeOpenApiComponents(components: IRComponent[]): ComponentsObject {
   const result: ComponentsObject = {};
+  const sortedComponents = [...components].sort(compareComponentsForDeterminism);
 
-  for (const component of components) {
+  for (const component of sortedComponents) {
     COMPONENT_TYPE_HANDLERS[component.type](result, component);
   }
 

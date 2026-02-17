@@ -17,6 +17,10 @@ import type { CastrSchema } from '../../ir/schema.js';
  */
 type WriteSchemaFn = (schema: CastrSchema) => SchemaObject;
 
+function getSortedRecordEntries<T>(record: Record<string, T>): [string, T][] {
+  return Object.entries(record).sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey));
+}
+
 /**
  * Extended SchemaObject with JSON Schema 2020-12 keywords.
  * The openapi3-ts types don't include these, but they are valid in OAS 3.1.
@@ -48,7 +52,11 @@ function writeOasExtensions(schema: CastrSchema, result: ExtendedSchemaObject): 
  */
 function writeJsonSchema2020SimpleFields(schema: CastrSchema, result: ExtendedSchemaObject): void {
   if (schema.dependentRequired !== undefined) {
-    result.dependentRequired = schema.dependentRequired;
+    const sortedDependentRequired: Record<string, string[]> = {};
+    for (const [key, requiredKeys] of getSortedRecordEntries(schema.dependentRequired)) {
+      sortedDependentRequired[key] = requiredKeys;
+    }
+    result.dependentRequired = sortedDependentRequired;
   }
   if (schema.minContains !== undefined) {
     result.minContains = schema.minContains;
@@ -96,7 +104,7 @@ function writeJsonSchema2020RecursiveFields(
   writeUnevaluatedFields(schema, result, writeSchema);
   if (schema.dependentSchemas !== undefined) {
     const deps: Record<string, SchemaObject> = {};
-    for (const [key, depSchema] of Object.entries(schema.dependentSchemas)) {
+    for (const [key, depSchema] of getSortedRecordEntries(schema.dependentSchemas)) {
       deps[key] = writeSchema(depSchema);
     }
     result.dependentSchemas = deps;

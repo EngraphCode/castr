@@ -14,6 +14,16 @@ import type { CastrSchema } from '../../ir/schema.js';
 import type { ExtendedSchemaObject } from './openapi-writer.schema.extensions.js';
 import { writeExtensionFields } from './openapi-writer.schema.extensions.js';
 
+function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] {
+  if (schema.properties === undefined) {
+    return [];
+  }
+
+  return [...schema.properties.entries()].sort(([leftKey], [rightKey]) =>
+    leftKey.localeCompare(rightKey),
+  );
+}
+
 /**
  * Valid schema types for OAS 3.1.
  */
@@ -117,7 +127,7 @@ function writeAdditionalProperties(schema: CastrSchema, result: SchemaObject): v
 function writeObjectFields(schema: CastrSchema, result: SchemaObject): void {
   if (schema.properties !== undefined) {
     result.properties = {};
-    for (const [key, propSchema] of schema.properties.entries()) {
+    for (const [key, propSchema] of getSortedPropertyEntries(schema)) {
       result.properties[key] = writeOpenApiSchema(propSchema);
     }
   }

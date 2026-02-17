@@ -269,6 +269,21 @@ describe('object schemas', () => {
     expect(result.properties?.['age']).toEqual({ type: 'integer' });
   });
 
+  it('sorts object property keys for deterministic output', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      properties: new CastrSchemaProperties({
+        zebra: { type: 'string', metadata: createMetadata() },
+        alpha: { type: 'integer', metadata: createMetadata() },
+      }),
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(Object.keys(result.properties ?? {})).toEqual(['alpha', 'zebra']);
+  });
+
   it('preserves required array', () => {
     const schema: CastrSchema = {
       type: 'object',
@@ -660,6 +675,21 @@ describe('JSON Schema 2020-12 keywords', () => {
     });
   });
 
+  it('sorts dependentSchemas keys for deterministic output', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      dependentSchemas: {
+        zeta: { type: 'string', metadata: createMetadata() },
+        alpha: { type: 'number', metadata: createMetadata() },
+      },
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(Object.keys(result.dependentSchemas ?? {})).toEqual(['alpha', 'zeta']);
+  });
+
   it('preserves dependentRequired', () => {
     const schema: CastrSchema = {
       type: 'object',
@@ -674,6 +704,21 @@ describe('JSON Schema 2020-12 keywords', () => {
     expect(result.dependentRequired).toEqual({
       creditCard: ['billingAddress', 'securityCode'],
     });
+  });
+
+  it('sorts dependentRequired keys for deterministic output', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      dependentRequired: {
+        zebra: ['a'],
+        alpha: ['b'],
+      },
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(Object.keys(result.dependentRequired ?? {})).toEqual(['alpha', 'zebra']);
   });
 
   it('preserves minContains', () => {

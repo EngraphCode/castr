@@ -70,6 +70,7 @@ The plan's **Successor** field tells you which plan comes next.
 - **3.3a.05** ✅ Complete (2026-02-17) — removed permissive fallback outputs, centralized strict OpenAPI component-ref resolution in `builder.component-ref-resolution.ts`, and added strict fail-fast tests for JSON Schema conversion, MCP inline refs, and OpenAPI ref builders. Package checks run: `pnpm type-check`, `pnpm lint`, `pnpm test` (all green in `lib`).
 - **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
 - **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green.
+- **3.3a.08** 🔄 In Progress (2026-02-17) — determinism hardening tranches completed for OpenAPI media/status/header ordering, webhooks ordering, path+method ordering, security requirement ordering, component section/name ordering, and schema map-key ordering (`properties`, `dependentSchemas`, `dependentRequired`) with unit tests proving stable output.
 
 #### Plan restructuring (2026-02-17)
 

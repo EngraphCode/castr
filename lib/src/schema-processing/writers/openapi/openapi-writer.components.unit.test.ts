@@ -252,6 +252,80 @@ describe('writeOpenApiComponents', () => {
     });
   });
 
+  describe('determinism', () => {
+    it('sorts component names within each section regardless of input order', () => {
+      const components: IRComponent[] = [
+        {
+          type: 'schema',
+          name: 'Zoo',
+          schema: { type: 'object', metadata: createMetadata() },
+          metadata: createMetadata(),
+        } satisfies CastrSchemaComponent,
+        {
+          type: 'schema',
+          name: 'Alpha',
+          schema: { type: 'object', metadata: createMetadata() },
+          metadata: createMetadata(),
+        } satisfies CastrSchemaComponent,
+        {
+          type: 'parameter',
+          name: 'ZuluParam',
+          parameter: {
+            name: 'zulu',
+            in: 'query',
+            required: false,
+            schema: { type: 'string', metadata: createMetadata() },
+          },
+        } satisfies CastrParameterComponent,
+        {
+          type: 'parameter',
+          name: 'AlphaParam',
+          parameter: {
+            name: 'alpha',
+            in: 'query',
+            required: false,
+            schema: { type: 'string', metadata: createMetadata() },
+          },
+        } satisfies CastrParameterComponent,
+      ];
+
+      const result = writeOpenApiComponents(components);
+
+      expect(Object.keys(result.schemas ?? {})).toEqual(['Alpha', 'Zoo']);
+      expect(Object.keys(result.parameters ?? {})).toEqual(['AlphaParam', 'ZuluParam']);
+    });
+
+    it('emits component sections in canonical order independent of input order', () => {
+      const components: IRComponent[] = [
+        {
+          type: 'parameter',
+          name: 'PageSize',
+          parameter: {
+            name: 'pageSize',
+            in: 'query',
+            required: false,
+            schema: { type: 'integer', metadata: createMetadata() },
+          },
+        } satisfies CastrParameterComponent,
+        {
+          type: 'schema',
+          name: 'User',
+          schema: { type: 'object', metadata: createMetadata() },
+          metadata: createMetadata(),
+        } satisfies CastrSchemaComponent,
+        {
+          type: 'securityScheme',
+          name: 'bearerAuth',
+          scheme: { type: 'http', scheme: 'bearer' },
+        } satisfies IRSecuritySchemeComponent,
+      ];
+
+      const result = writeOpenApiComponents(components);
+
+      expect(Object.keys(result)).toEqual(['schemas', 'securitySchemes', 'parameters']);
+    });
+  });
+
   describe('empty components', () => {
     it('returns empty object for empty input', () => {
       const result = writeOpenApiComponents([]);
