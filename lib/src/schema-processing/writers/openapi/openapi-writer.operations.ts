@@ -20,6 +20,13 @@ import type { CastrOperation, CastrParameter, IRSecurityRequirement } from '../.
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 import { writeRequestBody, writeResponses } from './openapi-writer.bodies.js';
 
+function compareSecurityRequirements(
+  left: IRSecurityRequirement,
+  right: IRSecurityRequirement,
+): number {
+  return left.schemeName.localeCompare(right.schemeName);
+}
+
 /**
  * Converts a CastrParameter to OpenAPI ParameterObject.
  * @internal
@@ -59,7 +66,8 @@ function writeParameter(param: CastrParameter): ParameterObject {
  * @internal
  */
 function writeSecurity(security: IRSecurityRequirement[]): SecurityRequirementObject[] {
-  return security.map((req) => ({
+  const sortedSecurity = [...security].sort(compareSecurityRequirements);
+  return sortedSecurity.map((req) => ({
     [req.schemeName]: req.scopes,
   }));
 }
@@ -168,6 +176,36 @@ const PATH_ITEM_METHOD_SETTERS: Record<string, PathItemMethodSetter> = {
   },
 };
 
+const HTTP_METHOD_ORDER: string[] = [
+  'get',
+  'post',
+  'put',
+  'patch',
+  'delete',
+  'head',
+  'options',
+  'trace',
+];
+
+const HTTP_METHOD_ORDER_INDEX: Record<string, number> = Object.fromEntries(
+  HTTP_METHOD_ORDER.map((method, index) => [method, index]),
+);
+
+function compareOperationsByPathThenMethod(left: CastrOperation, right: CastrOperation): number {
+  const pathComparison = left.path.localeCompare(right.path);
+  if (pathComparison !== 0) {
+    return pathComparison;
+  }
+
+  const leftOrder = HTTP_METHOD_ORDER_INDEX[left.method] ?? Number.POSITIVE_INFINITY;
+  const rightOrder = HTTP_METHOD_ORDER_INDEX[right.method] ?? Number.POSITIVE_INFINITY;
+  if (leftOrder !== rightOrder) {
+    return leftOrder - rightOrder;
+  }
+
+  return left.method.localeCompare(right.method);
+}
+
 /**
  * Assigns an operation to a path item based on method.
  * @internal
@@ -246,8 +284,9 @@ function applyPathItemFields(operation: CastrOperation, pathItem: PathItemObject
  */
 export function writeOpenApiPaths(operations: CastrOperation[]): PathsObject {
   const result: PathsObject = {};
+  const sortedOperations = [...operations].sort(compareOperationsByPathThenMethod);
 
-  for (const operation of operations) {
+  for (const operation of sortedOperations) {
     const pathKey = operation.path;
     const pathItem: PathItemObject = result[pathKey] ?? {};
 

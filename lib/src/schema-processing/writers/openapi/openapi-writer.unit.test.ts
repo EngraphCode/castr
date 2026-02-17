@@ -163,6 +163,19 @@ describe('writeOpenApi', () => {
       expect(result.security).toBeDefined();
       expect(result.security).toEqual([{ bearerAuth: [] }]);
     });
+
+    it('sorts document-level security requirements by scheme name', () => {
+      const ir = createDocument({
+        security: [
+          { schemeName: 'oauth2', scopes: ['read'] },
+          { schemeName: 'apiKey', scopes: [] },
+        ],
+      });
+
+      const result = writeOpenApi(ir);
+
+      expect(result.security).toEqual([{ apiKey: [] }, { oauth2: ['read'] }]);
+    });
   });
 
   describe('empty document', () => {

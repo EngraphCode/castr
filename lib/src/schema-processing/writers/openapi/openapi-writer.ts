@@ -27,6 +27,13 @@ function getSortedMapEntries<T>(map: Map<string, T>): [string, T][] {
   return [...map.entries()].sort(([leftName], [rightName]) => leftName.localeCompare(rightName));
 }
 
+function compareSecurityRequirements(
+  left: IRSecurityRequirement,
+  right: IRSecurityRequirement,
+): number {
+  return left.schemeName.localeCompare(right.schemeName);
+}
+
 /**
  * Converts IR security requirements to OpenAPI SecurityRequirementObject[].
  *
@@ -36,7 +43,8 @@ function getSortedMapEntries<T>(map: Map<string, T>): [string, T][] {
  * @internal
  */
 function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequirementObject[] {
-  return security.map((req) => ({
+  const sortedSecurity = [...security].sort(compareSecurityRequirements);
+  return sortedSecurity.map((req) => ({
     [req.schemeName]: req.scopes,
   }));
 }

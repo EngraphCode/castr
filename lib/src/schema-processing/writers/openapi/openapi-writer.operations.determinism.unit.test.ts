@@ -25,6 +25,49 @@ function createOperation(overrides: Partial<CastrOperation> = {}): CastrOperatio
 }
 
 describe('writeOpenApiPaths determinism', () => {
+  it('sorts path keys lexicographically regardless of input operation order', () => {
+    const operations: CastrOperation[] = [
+      createOperation({
+        method: 'get',
+        path: '/z-users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
+      createOperation({
+        method: 'get',
+        path: '/a-users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
+    ];
+
+    const result = writeOpenApiPaths(operations);
+
+    expect(Object.keys(result)).toEqual(['/a-users', '/z-users']);
+  });
+
+  it('sorts methods within a path by canonical HTTP method order', () => {
+    const operations: CastrOperation[] = [
+      createOperation({
+        method: 'post',
+        path: '/users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
+      createOperation({
+        method: 'get',
+        path: '/users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
+      createOperation({
+        method: 'patch',
+        path: '/users',
+        responses: [{ statusCode: '200', description: 'ok' }],
+      }),
+    ];
+
+    const result = writeOpenApiPaths(operations);
+
+    expect(Object.keys(result['/users'] ?? {})).toEqual(['get', 'post', 'patch']);
+  });
+
   it('sorts request body media types for deterministic output', () => {
     const operations: CastrOperation[] = [
       createOperation({
@@ -104,5 +147,24 @@ describe('writeOpenApiPaths determinism', () => {
 
     expect(Object.keys(response?.content ?? {})).toEqual(['application/json', 'text/plain']);
     expect(Object.keys(response?.headers ?? {})).toEqual(['x-alpha', 'x-zeta']);
+  });
+
+  it('sorts operation security requirements by scheme name', () => {
+    const operations: CastrOperation[] = [
+      createOperation({
+        method: 'get',
+        path: '/secure',
+        responses: [{ statusCode: '200', description: 'ok' }],
+        security: [
+          { schemeName: 'oauth2', scopes: ['read'] },
+          { schemeName: 'apiKey', scopes: [] },
+        ],
+      }),
+    ];
+
+    const result = writeOpenApiPaths(operations);
+    const security = result['/secure']?.get?.security;
+
+    expect(security).toEqual([{ apiKey: [] }, { oauth2: ['read'] }]);
   });
 });
