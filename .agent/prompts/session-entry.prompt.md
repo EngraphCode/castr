@@ -70,7 +70,7 @@ The plan's **Successor** field tells you which plan comes next.
 - **3.3a.05** ✅ Complete (2026-02-17) — removed permissive fallback outputs, centralized strict OpenAPI component-ref resolution in `builder.component-ref-resolution.ts`, and added strict fail-fast tests for JSON Schema conversion, MCP inline refs, and OpenAPI ref builders. Package checks run: `pnpm type-check`, `pnpm lint`, `pnpm test` (all green in `lib`).
 - **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
 - **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green.
-- **3.3a.08** 🔄 In Progress (2026-02-17) — determinism hardening tranches completed for OpenAPI media/status/header ordering, webhooks ordering, path+method ordering, security requirement ordering, component section/name ordering, and schema map-key ordering (`properties`, `dependentSchemas`, `dependentRequired`) with unit tests proving stable output.
+- **3.3a.08** 🔄 In Progress (2026-02-18) — determinism hardening tranches completed for OpenAPI media/status/header ordering, webhooks ordering, path+method ordering, security requirement ordering, component section/name ordering, and schema map-key ordering (`properties`, `dependentSchemas`, `dependentRequired`) with unit tests proving stable output. Full `pnpm qg` is green after these updates.
 
 #### Plan restructuring (2026-02-17)
 
@@ -85,11 +85,11 @@ The plan's **Successor** field tells you which plan comes next.
 
 Execute these immediate priorities in order:
 
-1. Inventory output-affecting iteration/ordering in product code (`Object.keys/values/entries`, `Map` iteration, and any insertion-order-dependent traversal).
-2. Make ordering explicit and stable in output-critical code paths (sorted keys, deterministic component ordering, stable traversal).
-3. Add tests that generate outputs twice and assert byte-identical artifacts.
-4. Prove determinism for representative fixtures used in round-trip pathways.
-5. Keep strict fail-fast and no-escape-hatch policies fully enforced while hardening determinism.
+1. Canonicalize property iteration ordering in `lib/src/schema-processing/writers/typescript/type-writer.ts`.
+2. Canonicalize property iteration ordering in `lib/src/schema-processing/writers/zod/index.ts`.
+3. Canonicalize grouped output path ordering in `lib/src/rendering/templating.ts` (`paths: Object.keys(files)`).
+4. Add failing-first determinism tests for each change and assert stable output across runs.
+5. Re-run full quality gates (`pnpm qg`) and keep strict fail-fast/no-escape-hatch compliance.
 
 #### Quick start
 
@@ -101,9 +101,9 @@ pnpm lint && pnpm type-check && pnpm test
 sed -n '1,260p' .agent/plans/active/3.3a-08-prove-determinism.md
 
 # Immediate priority targets
-rg -n "Object\\.(keys|values|entries)|new Map\\(|for \\(const .* of .*\\)" lib/src
-rg -n "sort\\(|localeCompare\\(" lib/src
-pnpm test
+rg -n "schema\\.properties\\.entries\\(\\)" lib/src/schema-processing/writers/typescript/type-writer.ts lib/src/schema-processing/writers/zod/index.ts
+rg -n "paths:\\s*Object\\.keys\\(files\\)" lib/src/rendering/templating.ts
+pnpm qg
 ```
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
