@@ -73,6 +73,7 @@ ESLint rules in `lib/eslint.config.ts` enforce this ADR:
 
 - Regex literals and `RegExp` constructor are **errors**
 - String/regex heuristic bans are scoped to TS-source parsing modules (where semantics must come from the AST)
+- `castr/no-magic-string-comparison` enforces string-literal comparison bans in binary expressions while allowing `typeof` narrowing checks
 - Data-string parsing utilities are excluded (they must be centralized/validated/tested instead)
 - Test files are excluded (they may assert on string content)
 
@@ -100,6 +101,7 @@ String/regex heuristics that derive meaning from TypeScript source code text whe
 **Designated centralized data-string utilities:**
 
 - `src/shared/ref-resolution.ts` — OpenAPI `$ref` parsing (canonical, all `$ref` parsing MUST delegate here)
+- `src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` — OpenAPI builder component-ref validation/enforcement (supported prefix checks, expected component-type checks, circular-ref guards). OpenAPI builders must delegate component-ref handling here instead of local parsing/catch logic.
 - `src/schema-processing/context/template-context.status-codes.ts` — endpoint success-status parsing (`200`, `201`, `202`, `203`, `204`, `2XX`, `default`)
 - Future: media-type parser, URL-template parser (when created)
 

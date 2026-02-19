@@ -489,7 +489,7 @@ try {
 ```typescript
 export async function generateZodClientFromOpenAPI<TOptions = TemplateContext['options']>(
   args: GenerateZodClientFromOpenApiArgs<TOptions>,
-): Promise<string | Record<string, string>>;
+): Promise<GenerationResult>;
 ```
 
 Generate TypeScript code from an OpenAPI specification.
@@ -500,20 +500,26 @@ Generate TypeScript code from an OpenAPI specification.
 
 **Returns:**
 
-- `Promise<string>` - Generated TypeScript code (if `disableWriteToFile` is `true`)
-- `Promise<Record<string, string>>` - Map of file paths to contents (for grouped templates)
+- `Promise<GenerationResult>` - Discriminated union:
+  - `type: 'single'` → `{ content: string, path?: string }`
+  - `type: 'grouped'` → `{ files: Record<string, string>, paths: string[] }`
+- For grouped output, `paths` is canonical sorted file order and equals sorted `Object.keys(files)`.
 
 **Example:**
 
 ```typescript
-import { generateZodClientFromOpenAPI } from '@engraph/castr';
+import {
+  generateZodClientFromOpenAPI,
+  isGroupedFileResult,
+  isSingleFileResult,
+} from '@engraph/castr';
 import { readFileSync, writeFileSync } from 'fs';
 
 const openApiDoc = JSON.parse(readFileSync('./openapi.json', 'utf8'));
 
 const result = await generateZodClientFromOpenAPI({
   openApiDoc,
-  template: 'schemas-with-client',
+  template: 'schemas-with-metadata',
   disableWriteToFile: true,
   options: {
     withAlias: true,
@@ -521,7 +527,18 @@ const result = await generateZodClientFromOpenAPI({
   },
 });
 
-writeFileSync('./src/api-client.ts', result);
+if (isSingleFileResult(result)) {
+  writeFileSync('./src/api-client.ts', result.content);
+}
+
+if (isGroupedFileResult(result)) {
+  for (const path of result.paths) {
+    const content = result.files[path];
+    if (content !== undefined) {
+      writeFileSync(`./src/generated/${path}`, content);
+    }
+  }
+}
 ```
 
 ---
