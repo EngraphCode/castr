@@ -40,7 +40,7 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3b)
 
-**ACTIVE PLAN: [3.3b.01 — Transform Sample Suite Strictness](../plans/active/3.3b-01-transform-sample-suite-strictness.md)** — open this file first.
+**ACTIVE PLAN: [3.3b.03 — Reject `z.undefined()`](../plans/active/3.3b-03-reject-z-undefined.md)** — open this file first.
 
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
@@ -62,7 +62,9 @@ Notes:
 - **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
 - **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green (policy now codified in `.agent/directives/RULES.md`).
 - **3.3a.08** ✅ Complete (2026-02-19) — determinism closure executed end-to-end: Tranches A-D completed (TypeScript/Zod property ordering, grouped `result.paths`, MCP nested `properties` map ordering), failing-first tests added, and the full one-by-one gate sequence is green (`clean` → `test:transforms`) after snapshot baseline refresh. Plan moved to `current/complete/`.
-- **3.3b status checkpoint** (2026-02-19) — 3.3b.01 remains active: Scenario 2 and Scenario 4 still include parse-error early-return branches, and Scenario 3 still uses schema-count tolerance (`toBeLessThanOrEqual`). Scenario 3 remains blocked (🔴) until identifier-rooted composition parsing is fixed in 3.3b.02.
+- **3.3b.01** ✅ Complete (2026-02-19) — strict transform-sample suite hardening landed: no parse-error early-return branches in Scenarios 2/4, explicit parse-error assertions for Scenarios 2-4, and strict Scenario 3 schema-count equality.
+- **3.3b.02** ✅ Complete (2026-02-19) — parser now admits writer-emitted identifier-rooted composition declarations (for example `NewPet.and(z.object(...))`) when rooted in known declarations, with AST + integration regressions added.
+- **3.3b status checkpoint** (2026-02-19) — structural strictness for Scenarios 2-4 is green; remaining blockers are `z.undefined()` strict rejection (active 3.3b.03), writer format parity (3.3b.04), and validation parity matrix completion (3.3b.05).
 
 #### Plan restructuring (2026-02-17)
 
@@ -72,32 +74,35 @@ Notes:
 - **Plan 06** — Remove Swallowed Errors — **complete** and moved to `.agent/plans/current/complete/`.
 - **Plan 07** — Remove Escape Hatches — **complete** and moved to `.agent/plans/current/complete/`.
 - **Plan 08** — Prove Determinism — complete and moved to `.agent/plans/current/complete/`.
+- **Plan 3.3b.01** — Transform Sample Suite Strictness — **complete** and moved to `.agent/plans/current/complete/`.
+- **Plan 3.3b.02** — Scenario 3 Reference Composition — **complete** and moved to `.agent/plans/current/complete/`.
 
-#### 3.3b.01 Focus + Next Action
+#### 3.3b.03 Focus + Next Action
 
 Execution focus for the active plan:
 
-1. Remove weak transform-sample assertions (`<=`, tolerance language, skip-on-error patterns) and replace with strict proofs.
-2. Remove early returns that hide parse failures; failures must surface actionable context.
-3. Add explicit parse-error assertions for Scenarios 2-4; Scenario 3 must assert zero parse errors before strict schema-count equality.
-4. Keep scope tight to test-suite strictness only; production-code fixes belong to successor plans.
+1. Reject standalone `z.undefined()` as a hard parser error with location and actionable guidance.
+2. Eliminate tolerated degradation paths where `schema.type === undefined` can become permissive writer output.
+3. Add/adjust strict tests in parser primitive + integration + transform-sample coverage to prove fail-fast behavior.
+4. Keep scope tight to `z.undefined()` strictness; other format parity work remains in successor plans.
 
 Immediate next action:
 
-1. Execute `3.3b.01` with strict Red → Green → Refactor in `lib/tests-transforms/__tests__/transform-samples.integration.test.ts`.
+1. Execute `3.3b.03` with strict Red → Green → Refactor in `lib/src/schema-processing/parsers/zod/zod-parser.primitives.ts` with paired tests.
 
 #### Quick start
 
 ```bash
 # Open active plan
-sed -n '1,260p' .agent/plans/active/3.3b-01-transform-sample-suite-strictness.md
+sed -n '1,260p' .agent/plans/active/3.3b-03-reject-z-undefined.md
 
-# Immediate target for strictness pass
-sed -n '1,360p' lib/tests-transforms/__tests__/transform-samples.integration.test.ts
+# Immediate parser + writer inspection points
+sed -n '1,260p' lib/src/schema-processing/parsers/zod/zod-parser.primitives.ts
+sed -n '1,260p' lib/src/schema-processing/writers/zod/index.ts
 
-# Red-first baseline for this plan (targeted suite)
-cd lib && pnpm vitest run --config vitest.transforms.config.ts \
-  tests-transforms/__tests__/transform-samples.integration.test.ts
+# Red-first baseline for this plan (targeted tests)
+cd lib && pnpm vitest run \
+  src/schema-processing/parsers/zod/zod-parser.primitives.unit.test.ts
 
 # Run full gates only after plan work is complete (one gate at a time)
 # See active plan Verification Protocol.

@@ -61,6 +61,16 @@ This decision must align with:
 - Status-code semantics used by IR endpoint mapping are centralized in
   `context/template-context.status-codes.ts` and referenced via typed constants/predicates.
 
+### 7. Declaration Discovery Must Stay Compatible with Writer Emission
+
+- The parser must accept writer-emitted identifier-rooted composition declarations
+  when the root identifier resolves to a known schema declaration in scope
+  (for example `const Pet = NewPet.and(z.object(...))`).
+- Declaration eligibility decisions must remain semantic/AST-driven and must not
+  regress to text/regex heuristics.
+- Support for non-emitted composition APIs remains opt-in and requires explicit
+  failing-first evidence and plan scope.
+
 ---
 
 ## Consequences
@@ -70,6 +80,7 @@ This decision must align with:
 - Clear, deterministic input contract for Zod → IR parsing.
 - Lossless round‑trip validation becomes feasible and reliable.
 - Metadata handling is consistent and unambiguous.
+- Writer/parser lockstep includes identifier-rooted `allOf` composition output.
 
 ### Negative
 

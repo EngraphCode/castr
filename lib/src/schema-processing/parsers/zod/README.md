@@ -9,6 +9,7 @@ Parses Zod 4 schema source files into `CastrDocument` IR using ts-morph AST.
 - **Full schema support** — Primitives, objects, arrays, enums, unions, intersections
 - **Endpoint parsing** — `defineEndpoint({...})` pattern → `CastrOperation`
 - **Reference resolution** — Variable refs, getter-based recursion, circular detection
+- **Writer lockstep** — Accepts writer-emitted identifier-rooted intersection declarations (for example `const Pet = NewPet.and(...)`) when root identifiers are known schema declarations
 
 ## Architecture
 

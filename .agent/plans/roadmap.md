@@ -31,10 +31,10 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Priority: Production-Ready Core Path
 
-OpenAPI ↔ OpenAPI transform proof is validated. OpenAPI → Zod generation is proven. Full Zod-layer transform validation (OpenAPI → Zod → OpenAPI) remains incomplete and is tracked in Session 3.3b.
+OpenAPI ↔ OpenAPI transform proof is validated. OpenAPI → Zod generation is proven. Session 3.3b continues the remaining strictness/parity closure for Zod-layer transform validation with sample input.
 
 ```text
-OpenAPI → IR → OpenAPI (transform validation, incl. round-trip proof) ✅
+OpenAPI → IR → OpenAPI (transform validation, incl. strict round-trip/idempotence assertions) ✅
 OpenAPI → IR → Zod (proven) ✅
 Zod → IR (Session 3.2) ✅ COMPLETE
 Full Transform Validation (Session 3.3) 🔄 IN PROGRESS
@@ -75,8 +75,8 @@ Full Transform Validation (Session 3.3) 🔄 IN PROGRESS
 |          | └ No escape hatches: remove `as`/`any`/`!`/`eslint-disable` in product code  | ✅          |
 |          | └ Eliminate fallbacks; fail fast and hard with helpful errors                | ✅          |
 | **3.3b** | **Strict Zod-Layer Transform Validation** (Strict, no weak assertions)       | 🔄 Active   |
-|          | └ Harden Scenarios 2-4 into strict, lossless proofs                          | 🔲          |
-|          | └ Zod ↔ Zod, OpenAPI → Zod → OpenAPI, Zod → OpenAPI → Zod                    | 🔲          |
+|          | └ Structural strictness closure for Scenarios 2-4                            | ✅ Complete |
+|          | └ Remaining strictness/parity blockers (`z.undefined()`, formats, parity)    | 🔄          |
 
 ---
 
@@ -120,7 +120,9 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - Plan 05 established a centralized strict component-ref helper at `lib/src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` and removed permissive output degradation paths.
 - Plan 06 removed swallowed-error paths in dependency extraction, Zod declaration parsing, and circular ref extraction; component-ref validation remains centralized.
 - Plan 07 removed non-governed check-disabling directives and replaced escape-hatch usage with typed, rule-compliant implementations.
-- Current active plan is now [3.3b.01 — Transform Sample Suite Strictness](./active/3.3b-01-transform-sample-suite-strictness.md).
+- [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md) is complete and moved to `./current/complete/`.
+- [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md) is complete and moved to `./current/complete/`.
+- Current active plan is now [3.3b.03 — Reject `z.undefined()`](./active/3.3b-03-reject-z-undefined.md).
 
 ---
 
@@ -133,21 +135,21 @@ Prove that the Zod layer participates in strict, lossless transform validation w
 
 **Scenarios (target state):**
 
-| #   | Scenario                          | Lossless | Idempotent | Status                             |
-| --- | --------------------------------- | -------- | ---------- | ---------------------------------- |
-| 1   | OpenAPI → IR → OpenAPI            | ✅       | ✅         | ✅ Complete                        |
-| 2   | Zod → IR → Zod                    | 🟡       | 🟡         | 🟡 Strictness hardening in 3.3b.01 |
-| 3   | OpenAPI → IR → Zod → IR → OpenAPI | 🔴       | —          | 🔴 Blocked                         |
-| 4   | Zod → IR → OpenAPI → IR → Zod     | 🟡       | —          | 🟡 Strictness hardening in 3.3b.01 |
+| #   | Scenario                          | Lossless | Idempotent | Status                                                             |
+| --- | --------------------------------- | -------- | ---------- | ------------------------------------------------------------------ |
+| 1   | OpenAPI → IR → OpenAPI            | ✅       | ✅         | ✅ Complete                                                        |
+| 2   | Zod → IR → Zod                    | ✅       | ✅         | ✅ Structural strictness complete; functional parity in 3.3b.05    |
+| 3   | OpenAPI → IR → Zod → IR → OpenAPI | ✅       | —          | ✅ Structural strictness complete after 3.3b.02; parity in 3.3b.05 |
+| 4   | Zod → IR → OpenAPI → IR → Zod     | ✅       | —          | ✅ Structural strictness complete; functional parity in 3.3b.05    |
 
-> **Note:** ✅ = strict structural proof complete (no tolerance/skip-on-error paths in scenario assertions). 🟡 = structural checks exist but strictness closure is still in progress under [3.3b.01](./active/3.3b-01-transform-sample-suite-strictness.md). Functional validation-parity (data validates identically before/after transform execution) extends existing parity suites and is tracked in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md). Some assertions are explicit round-trip/idempotence proofs.
+> **Note:** Scenario strictness checks are sample-input transform proofs, and some assertions are explicit round-trip/idempotence proofs. Functional validation-parity (data validates identically before/after transform execution) is tracked in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md).
 
 **Success criteria (3.3b):**
 
-- 3.3b.01 strictness closure is complete (no weak assertions, no parse-error early returns, explicit parse-error assertions with context).
-- Scenario 3 passes strict losslessness assertions (no schema loss through Zod layer).
-- Idempotency holds where required (byte-identical normalized outputs on second pass).
+- `z.undefined()` is rejected with strict parser diagnostics and no permissive degradation path (3.3b.03).
+- Writer format parity for hostname/float32/float64 is lossless or fail-fast with context (3.3b.04).
 - Validation-parity tests cover Scenarios 2–4 (data validates the same before/after transform execution).
+- Idempotency holds where required (byte-identical normalized outputs on second pass).
 - Quality gates pass (canonical: `.agent/directives/DEFINITION_OF_DONE.md`).
 
 **Governing docs:** `.agent/directives/VISION.md`, `.agent/directives/requirements.md`, `docs/architectural_decision_records/ADR-027-round-trip-validation.md`, `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`, `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`.
@@ -170,9 +172,9 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 | 6    | [3.3a.06 — Remove Swallowed Errors](./current/complete/3.3a-06-remove-swallowed-errors.md)                       | ✅ Complete |
 | 7    | [3.3a.07 — Remove Escape Hatches](./current/complete/3.3a-07-remove-escape-hatches.md)                           | ✅ Complete |
 | 8    | [3.3a.08 — Prove Determinism](./current/complete/3.3a-08-prove-determinism.md)                                   | ✅ Complete |
-| 9    | [3.3b.01 — Transform Sample Suite Strictness](./active/3.3b-01-transform-sample-suite-strictness.md)             | 🔄 Active   |
-| 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md)  | 🔲          |
-| 11   | [3.3b.03 — Reject `z.undefined()`](./current/session-3.3b/3.3b-03-reject-z-undefined.md)                         | 🔲          |
+| 9    | [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md)   | ✅ Complete |
+| 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md)      | ✅ Complete |
+| 11   | [3.3b.03 — Reject `z.undefined()`](./active/3.3b-03-reject-z-undefined.md)                                       | 🔄 Active   |
 | 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./current/session-3.3b/3.3b-04-format-parity-hostname-float.md) | 🔲          |
 | 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md)   | 🔲          |
 | 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                           | 🔲          |
@@ -240,13 +242,13 @@ Strictness note: any "best-effort" or "permissive fallback" behavior is a doctri
 > - Cross-file reference resolution
 > - Circular reference detection
 >
-> [3.3b.02 — Scenario 3](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md) consumes the symbol table for identifier-based composition parsing.
+> [3.3b.02 — Scenario 3](./current/complete/3.3b-02-scenario3-reference-composition.md) consumed the symbol table for identifier-based composition parsing.
 
 ---
 
 ## Post‑3.3 Feature‑Parity Track (Alignment Only)
 
-After Zod round‑trip (3.3), prioritize the parity workstream documented in
+After Session 3.3 transform-validation closure, prioritize the parity workstream documented in
 `.agent/research/feature-parity/*`. This is **alignment**, not a prescriptive API commitment:
 
 - IR‑first metadata outputs (maps/helpers), optional path formatting, and bundle manifest

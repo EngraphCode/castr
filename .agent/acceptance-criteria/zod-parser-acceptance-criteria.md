@@ -112,9 +112,10 @@ parsing MUST fail fast with a helpful error.
 
 ### 1.9 Intersection Types
 
-| Zod 4 Expression       | Target IR       |
-| ---------------------- | --------------- |
-| `z.intersection(a, b)` | `allOf: [a, b]` |
+| Zod 4 Expression       | Target IR                                                            |
+| ---------------------- | -------------------------------------------------------------------- |
+| `z.intersection(a, b)` | `allOf: [a, b]`                                                      |
+| `KnownSchema.and(b)`   | `allOf: [a, b]` (when `KnownSchema` is a known declaration in scope) |
 
 ### 1.10 Optionality and Nullability
 

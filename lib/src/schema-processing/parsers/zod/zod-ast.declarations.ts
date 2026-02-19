@@ -10,6 +10,42 @@
 import { Node, type SourceFile, type CallExpression } from 'ts-morph';
 import type { ZodImportResolver } from './zod-import-resolver.js';
 import { isZodCall } from './zod-ast.helpers.js';
+import { ZOD_METHOD_AND } from './zod-constants.js';
+
+function resolveAndChainRootIdentifier(call: CallExpression): Node | undefined {
+  const expr = call.getExpression();
+  if (!Node.isPropertyAccessExpression(expr) || expr.getName() !== ZOD_METHOD_AND) {
+    return undefined;
+  }
+
+  const left = expr.getExpression();
+  if (Node.isIdentifier(left)) {
+    return left;
+  }
+
+  if (Node.isCallExpression(left)) {
+    return resolveAndChainRootIdentifier(left);
+  }
+
+  return undefined;
+}
+
+function isIdentifierRootedAndDeclaration(
+  initializer: CallExpression,
+  knownSchemaNames: ReadonlySet<string>,
+): boolean {
+  const rootIdentifier = resolveAndChainRootIdentifier(initializer);
+  if (!rootIdentifier || !Node.isIdentifier(rootIdentifier)) {
+    return false;
+  }
+
+  const symbolName = rootIdentifier.getSymbol()?.getName();
+  if (!symbolName) {
+    return false;
+  }
+
+  return knownSchemaNames.has(symbolName);
+}
 
 /**
  * Extract Zod declarations from a single variable statement.
@@ -19,6 +55,7 @@ function findZodDeclarationsInStatement(
   stmt: Node,
   results: { name: string; initializer: CallExpression }[],
   resolver: ZodImportResolver,
+  knownSchemaNames: Set<string>,
 ): void {
   if (!Node.isVariableStatement(stmt)) {
     return;
@@ -26,8 +63,14 @@ function findZodDeclarationsInStatement(
 
   for (const decl of stmt.getDeclarationList().getDeclarations()) {
     const init = decl.getInitializer();
-    if (init && Node.isCallExpression(init) && isZodCall(init, resolver)) {
-      results.push({ name: decl.getName(), initializer: init });
+    if (!init || !Node.isCallExpression(init)) {
+      continue;
+    }
+
+    if (isZodCall(init, resolver) || isIdentifierRootedAndDeclaration(init, knownSchemaNames)) {
+      const declarationName = decl.getName();
+      results.push({ name: declarationName, initializer: init });
+      knownSchemaNames.add(declarationName);
     }
   }
 }
@@ -46,9 +89,10 @@ export function findZodSchemaDeclarations(
   resolver: ZodImportResolver,
 ): { name: string; initializer: CallExpression }[] {
   const results: { name: string; initializer: CallExpression }[] = [];
+  const knownSchemaNames = new Set<string>();
 
   for (const stmt of sourceFile.getStatements()) {
-    findZodDeclarationsInStatement(stmt, results, resolver);
+    findZodDeclarationsInStatement(stmt, results, resolver, knownSchemaNames);
   }
 
   return results;

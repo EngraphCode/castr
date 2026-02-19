@@ -4,9 +4,9 @@ This directory contains integration tests that verify specifications survive com
 
 ```text
   OpenAPI → IR → OpenAPI (Scenario 1) ✅
-      Zod → IR → Zod     (Scenario 2) 🟡
-OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) 🔴
-    Zod → IR → OpenAPI → IR → Zod (Scenario 4) 🟡
+      Zod → IR → Zod     (Scenario 2) ✅
+OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) ✅
+    Zod → IR → OpenAPI → IR → Zod (Scenario 4) ✅
 ```
 
 ---
@@ -38,6 +38,7 @@ Some transform tests are explicit round-trip proofs. Those round-trip assertions
 - No weak/tolerance assertions in scenario strictness proofs (`<=`, "at least", or skip-on-error behavior).
 - Parse errors must fail with fixture-scoped context; they must never be handled by early-return branches.
 - For scenario strictness checks, parse-error expectations run before schema-count/idempotency assertions.
+- Structural strictness closure for Scenarios 2-4 is complete; functional validation parity is tracked in `validation-parity*.integration.test.ts`.
 
 This contract is governed by `.agent/directives/testing-strategy.md` and implemented in `__tests__/transform-samples.integration.test.ts`.
 
@@ -45,18 +46,18 @@ This contract is governed by `.agent/directives/testing-strategy.md` and impleme
 
 ## Test Files
 
-| File / Pattern                                        | Purpose                                                        |
-| ----------------------------------------------------- | -------------------------------------------------------------- |
-| `input-coverage.integration.test.ts`                  | Verifies OpenAPI syntax is parsed to IR                        |
-| `output-coverage.integration.test.ts`                 | Verifies IR fields are written to OpenAPI                      |
-| `__tests__/transform-samples.integration.test.ts`     | Transform-sample scenarios incl. round-trip/idempotency proofs |
-| `__tests__/validation-parity*.integration.test.ts`    | Functional validation-parity for transform scenarios           |
-| `__tests__/version-validation.integration.test.ts`    | Version-specific validation rules                              |
-| `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior                            |
-| `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification                           |
-| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification                               |
-| `__tests__/content-preservation.unit.test.ts`         | Regression checks for known content-loss bugs                  |
-| `__tests__/zod-format-functions.integration.test.ts`  | Zod helper/function output coverage checks                     |
+| File / Pattern                                        | Purpose                                                                                |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `input-coverage.integration.test.ts`                  | Verifies OpenAPI syntax is parsed to IR                                                |
+| `output-coverage.integration.test.ts`                 | Verifies IR fields are written to OpenAPI                                              |
+| `__tests__/transform-samples.integration.test.ts`     | Transform-sample scenarios incl. strict round-trip/idempotency proofs where applicable |
+| `__tests__/validation-parity*.integration.test.ts`    | Functional validation-parity for transform scenarios                                   |
+| `__tests__/version-validation.integration.test.ts`    | Version-specific validation rules                                                      |
+| `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior                                                    |
+| `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification                                                   |
+| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification                                                       |
+| `__tests__/content-preservation.unit.test.ts`         | Regression checks for known content-loss bugs                                          |
+| `__tests__/zod-format-functions.integration.test.ts`  | Zod helper/function output coverage checks                                             |
 
 ---
 

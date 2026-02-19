@@ -183,6 +183,18 @@ describe('Zod AST Utilities', () => {
 
       expect(declarations).toHaveLength(3);
     });
+
+    it('should include identifier-rooted .and() declarations when root is known', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const NewPet = z.object({ name: z.string() });
+        const Pet = NewPet.and(z.object({ id: z.number() }));
+      `);
+      const declarations = findZodSchemaDeclarations(sourceFile, resolver);
+
+      expect(declarations).toHaveLength(2);
+      expect(declarations.map((d) => d.name)).toEqual(['NewPet', 'Pet']);
+    });
   });
 
   describe('extractObjectProperties', () => {

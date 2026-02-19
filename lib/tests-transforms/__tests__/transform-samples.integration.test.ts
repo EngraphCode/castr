@@ -99,6 +99,20 @@ async function generateZodFromOpenAPI(
   return result.content;
 }
 
+/**
+ * Assert that parsing produced no errors, with fixture-scoped context.
+ */
+function expectNoParseErrors(
+  fixtureName: string,
+  stage: string,
+  parseResult: ReturnType<typeof parseZodSource>,
+): void {
+  expect(
+    parseResult.errors,
+    `${fixtureName}: parse errors in ${stage}\n${JSON.stringify(parseResult.errors, null, 2)}`,
+  ).toHaveLength(0);
+}
+
 // ============================================================================
 // Tests: Losslessness (IR Comparison)
 // ============================================================================
@@ -321,13 +335,8 @@ describe('OpenAPI Document: Idempotency', () => {
 // ============================================================================
 
 /**
- * Zod Parser Fixtures — existing happy-path fixtures for Zod → IR → Zod testing.
+ * Zod Parser Fixtures — existing happy-path fixtures for Zod transform validation.
  * These contain valid Zod 4 schema declarations.
- *
- * NOTE: Some Zod 4 syntax (z.undefined, z.float32) isn't fully preserved in the transform path
- * because the IR is OpenAPI-semantics. This is expected — we test that:
- * 1. The normalized OUTPUT is idempotent (second pass === first pass)
- * 2. Schema count is preserved through the transform path
  */
 const ZOD_FIXTURES_DIR = resolve(__dirname, '../../tests-fixtures/zod-parser/happy-path');
 
@@ -360,10 +369,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
       // Parse arbitrary Zod
       const source = await readZodFixture(path);
       const result1 = parseZodSource(source);
-
-      if (result1.errors.length > 0) {
-        return;
-      }
+      expectNoParseErrors(_name, 'Scenario 2 arbitrary-input parse', result1);
 
       const originalSchemaCount = result1.ir.components.length;
 
@@ -371,6 +377,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
       const openApiDoc = writeOpenApi(result1.ir);
       const zodOutput = await generateZodFromOpenAPI(openApiDoc);
       const result2 = parseZodSource(zodOutput);
+      expectNoParseErrors(_name, 'Scenario 2 generated-output parse', result2);
 
       // Schema count should be preserved
       expect(result2.ir.components.length).toBe(originalSchemaCount);
@@ -384,10 +391,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
         // First pass: arbitrary Zod → normalized Zod
         const source = await readZodFixture(path);
         const result1 = parseZodSource(source);
-
-        if (result1.errors.length > 0) {
-          return;
-        }
+        expectNoParseErrors(_name, 'Scenario 2 arbitrary-input parse', result1);
 
         // Generate first normalized output
         const openApiDoc1 = writeOpenApi(result1.ir);
@@ -395,6 +399,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
 
         // Second pass: normalized Zod → IR → normalized Zod
         const result2 = parseZodSource(normalizedOutput1);
+        expectNoParseErrors(_name, 'Scenario 2 normalized-output parse', result2);
         const openApiDoc2 = writeOpenApi(result2.ir);
         const normalizedOutput2 = await generateZodFromOpenAPI(openApiDoc2);
 
@@ -429,12 +434,10 @@ describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
 
         // Zod source → IR (only schema components)
         const zodParsed = parseZodSource(zodSource);
+        expectNoParseErrors(_name, 'Scenario 3 generated-output parse', zodParsed);
 
-        // Schema count should be at least as many as the original.
-        // Note: Composition schemas using allOf with $ref may be inlined during
-        // Zod generation, so we allow the Zod-parsed count to be less.
-        // The key invariant is that no schemas are INVENTED (output <= input).
-        expect(zodParsed.ir.components.length).toBeLessThanOrEqual(originalSchemaCount);
+        // Schema count must be preserved exactly through the transform path.
+        expect(zodParsed.ir.components.length).toBe(originalSchemaCount);
       },
     );
   });
@@ -446,7 +449,6 @@ describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
 
 /**
  * Scenario 4 tests that Zod schemas survive a full cross-format transform path.
- * Note: Some Zod-specific formats (z.hostname, etc.) may normalize through OpenAPI.
  */
 describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
   describe('Losslessness: Schema count preserved through cross-format trip', () => {
@@ -454,10 +456,7 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
       // Zod → IR
       const source = await readZodFixture(path);
       const result1 = parseZodSource(source);
-
-      if (result1.errors.length > 0) {
-        return;
-      }
+      expectNoParseErrors(_name, 'Scenario 4 arbitrary-input parse', result1);
 
       const originalCount = result1.ir.components.length;
 
@@ -465,6 +464,7 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
       const openApiOutput = writeOpenApi(result1.ir);
       const zodOutput = await generateZodFromOpenAPI(openApiOutput);
       const result3 = parseZodSource(zodOutput);
+      expectNoParseErrors(_name, 'Scenario 4 generated-output parse', result3);
 
       // Schema count preserved
       expect(result3.ir.components.length).toBe(originalCount);

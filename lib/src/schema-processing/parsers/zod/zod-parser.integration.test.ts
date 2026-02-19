@@ -125,5 +125,28 @@ describe('Zod Parser Integration', () => {
       const component = result.ir.components.at(0);
       expect(component?.name).toBe('Email');
     });
+
+    it('should parse identifier-rooted .and() declarations emitted by the writer', () => {
+      const source = `
+        const NewPet = z.object({ name: z.string() });
+        const Pet = NewPet.and(z.object({ id: z.number() }));
+      `;
+      const result = parseZodSource(source);
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.ir.components).toHaveLength(2);
+
+      const names = result.ir.components.map((component) => component.name);
+      expect(names).toContain('NewPet');
+      expect(names).toContain('Pet');
+
+      const petComponent = result.ir.components.find((component) => component.name === 'Pet');
+      if (!petComponent || petComponent.type !== 'schema') {
+        throw new Error('Expected Pet schema component');
+      }
+
+      expect(petComponent.schema.allOf).toHaveLength(2);
+      expect(petComponent.schema.allOf?.[0]?.$ref).toBe('#/components/schemas/NewPet');
+    });
   });
 });
