@@ -378,6 +378,8 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 - OpenAPI input → IR → OpenAPI output matches normalized 3.1 expectations
 - Upgrades (3.0 → 3.1) are strictly standards-compliant
+- No weak/tolerance assertions in transform scenarios (`<=`, "at least", skip-on-error behavior)
+- Parse failures are assertions, not control flow: no early returns on parse errors; assert zero parse errors with fixture-scoped context before downstream structural checks
 
 ### 4) Writer Outputs (Zod + Metadata)
 

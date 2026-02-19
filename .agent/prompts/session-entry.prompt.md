@@ -42,18 +42,7 @@ Notes:
 
 **ACTIVE PLAN: [3.3b.01 — Transform Sample Suite Strictness](../plans/active/3.3b-01-transform-sample-suite-strictness.md)** — open this file first.
 
-> **Canonical source rule:** Execute from the file in `.agent/plans/active/` only. If a same-named plan exists under `.agent/plans/current/session-3.3b/`, treat it as a queue mirror/pointer, not the execution source.
-
-#### Plan lifecycle
-
-There is always exactly one active plan in `.agent/plans/active/` (plus a README). When a plan is complete:
-
-1. Move the finished plan to `.agent/plans/current/complete/`.
-2. Resolve the next plan from the finished plan's **Successor** field, then copy that queued plan (from the appropriate `.agent/plans/current/session-*` queue) into `.agent/plans/active/`.
-3. Update the status in [roadmap.md](../plans/roadmap.md) execution table.
-4. Update this file's "ACTIVE PLAN" link and context to point at the new plan.
-
-The plan's **Successor** field tells you which plan comes next.
+> **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
 #### Context (what's already done)
 
@@ -73,7 +62,7 @@ The plan's **Successor** field tells you which plan comes next.
 - **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
 - **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green (policy now codified in `.agent/directives/RULES.md`).
 - **3.3a.08** ✅ Complete (2026-02-19) — determinism closure executed end-to-end: Tranches A-D completed (TypeScript/Zod property ordering, grouped `result.paths`, MCP nested `properties` map ordering), failing-first tests added, and the full one-by-one gate sequence is green (`clean` → `test:transforms`) after snapshot baseline refresh. Plan moved to `current/complete/`.
-- **3.3b status checkpoint** (2026-02-19) — Scenario 2 and Scenario 4 are in strictness-hardening state (🟡) under 3.3b.01; Scenario 3 remains blocked (🔴) until identifier-rooted composition parsing is fixed in 3.3b.02.
+- **3.3b status checkpoint** (2026-02-19) — 3.3b.01 remains active: Scenario 2 and Scenario 4 still include parse-error early-return branches, and Scenario 3 still uses schema-count tolerance (`toBeLessThanOrEqual`). Scenario 3 remains blocked (🔴) until identifier-rooted composition parsing is fixed in 3.3b.02.
 
 #### Plan restructuring (2026-02-17)
 
