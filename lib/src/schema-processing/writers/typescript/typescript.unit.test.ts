@@ -43,6 +43,15 @@ function createMockRefSchema(ref: string): CastrSchema {
 const mockInfo: InfoObject = { title: 'Test API', version: '1.0.0' };
 const mockServers: ServerObject[] = [];
 
+function getSectionOrThrow(output: string, marker: string, sectionIndex: number): string {
+  const sections = output.split(marker);
+  const section = sections[sectionIndex];
+  if (section === undefined) {
+    throw new Error(`Expected section ${sectionIndex} split by "${marker}"`);
+  }
+  return section;
+}
+
 describe('writers/typescript', () => {
   describe('writeTypeScript', () => {
     it('should generate basic imports and schemas', () => {
@@ -164,6 +173,190 @@ describe('writers/typescript', () => {
       const output = writeTypeScript(context);
       expect(output).toContain('export function validateRequest');
       expect(output).toContain('export function validateResponse');
+    });
+
+    it('keeps type-definition property ordering stable across IR insertion permutations', () => {
+      const schemaWithZebraFirst = createMockSchema('object', {
+        zebra: createMockSchema('string'),
+        alpha: createMockSchema('string'),
+      });
+      const schemaWithAlphaFirst = createMockSchema('object', {
+        alpha: createMockSchema('string'),
+        zebra: createMockSchema('string'),
+      });
+
+      const baseIr: Omit<CastrDocument, 'components'> = {
+        version: '1.0.0',
+        openApiVersion: '3.1.0',
+        info: mockInfo,
+        servers: mockServers,
+        enums: new Map(),
+        operations: [],
+        dependencyGraph: {
+          nodes: new Map(),
+          topologicalOrder: [],
+          circularReferences: [],
+        },
+        schemaNames: [],
+      };
+
+      const contextWithZebraFirst: TemplateContext = {
+        sortedSchemaNames: ['#/components/schemas/User'],
+        endpoints: [],
+        endpointsGroups: {},
+        mcpTools: [],
+        _ir: {
+          ...baseIr,
+          components: [
+            {
+              type: 'schema',
+              name: 'User',
+              schema: schemaWithZebraFirst,
+              metadata: {
+                required: false,
+                nullable: false,
+                zodChain: { presence: '', validations: [], defaults: [] },
+                dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                circularReferences: [],
+              },
+            },
+          ],
+        },
+      };
+
+      const contextWithAlphaFirst: TemplateContext = {
+        sortedSchemaNames: ['#/components/schemas/User'],
+        endpoints: [],
+        endpointsGroups: {},
+        mcpTools: [],
+        _ir: {
+          ...baseIr,
+          components: [
+            {
+              type: 'schema',
+              name: 'User',
+              schema: schemaWithAlphaFirst,
+              metadata: {
+                required: false,
+                nullable: false,
+                zodChain: { presence: '', validations: [], defaults: [] },
+                dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                circularReferences: [],
+              },
+            },
+          ],
+        },
+      };
+
+      const typeSectionWithZebraFirst = getSectionOrThrow(
+        writeTypeScript(contextWithZebraFirst),
+        '// Zod Schemas',
+        0,
+      );
+      const typeSectionWithAlphaFirst = getSectionOrThrow(
+        writeTypeScript(contextWithAlphaFirst),
+        '// Zod Schemas',
+        0,
+      );
+
+      expect(typeSectionWithZebraFirst).toBe(typeSectionWithAlphaFirst);
+      expect(typeSectionWithZebraFirst.indexOf('alpha: string;')).toBeGreaterThanOrEqual(0);
+      expect(typeSectionWithZebraFirst.indexOf('zebra: string;')).toBeGreaterThanOrEqual(0);
+      expect(typeSectionWithZebraFirst.indexOf('alpha: string;')).toBeLessThan(
+        typeSectionWithZebraFirst.indexOf('zebra: string;'),
+      );
+    });
+
+    it('keeps zod object property ordering stable across IR insertion permutations', () => {
+      const schemaWithZebraFirst = createMockSchema('object', {
+        zebra: createMockSchema('string'),
+        alpha: createMockSchema('string'),
+      });
+      const schemaWithAlphaFirst = createMockSchema('object', {
+        alpha: createMockSchema('string'),
+        zebra: createMockSchema('string'),
+      });
+
+      const baseIr: Omit<CastrDocument, 'components'> = {
+        version: '1.0.0',
+        openApiVersion: '3.1.0',
+        info: mockInfo,
+        servers: mockServers,
+        enums: new Map(),
+        operations: [],
+        dependencyGraph: {
+          nodes: new Map(),
+          topologicalOrder: [],
+          circularReferences: [],
+        },
+        schemaNames: [],
+      };
+
+      const contextWithZebraFirst: TemplateContext = {
+        sortedSchemaNames: ['#/components/schemas/User'],
+        endpoints: [],
+        endpointsGroups: {},
+        mcpTools: [],
+        _ir: {
+          ...baseIr,
+          components: [
+            {
+              type: 'schema',
+              name: 'User',
+              schema: schemaWithZebraFirst,
+              metadata: {
+                required: false,
+                nullable: false,
+                zodChain: { presence: '', validations: [], defaults: [] },
+                dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                circularReferences: [],
+              },
+            },
+          ],
+        },
+      };
+
+      const contextWithAlphaFirst: TemplateContext = {
+        sortedSchemaNames: ['#/components/schemas/User'],
+        endpoints: [],
+        endpointsGroups: {},
+        mcpTools: [],
+        _ir: {
+          ...baseIr,
+          components: [
+            {
+              type: 'schema',
+              name: 'User',
+              schema: schemaWithAlphaFirst,
+              metadata: {
+                required: false,
+                nullable: false,
+                zodChain: { presence: '', validations: [], defaults: [] },
+                dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                circularReferences: [],
+              },
+            },
+          ],
+        },
+      };
+
+      const zodSectionWithZebraFirst = getSectionOrThrow(
+        writeTypeScript(contextWithZebraFirst),
+        '// Zod Schemas',
+        1,
+      );
+      const zodSectionWithAlphaFirst = getSectionOrThrow(
+        writeTypeScript(contextWithAlphaFirst),
+        '// Zod Schemas',
+        1,
+      );
+
+      expect(zodSectionWithZebraFirst).toBe(zodSectionWithAlphaFirst);
+      expect(zodSectionWithZebraFirst.indexOf('alpha: z.string()')).toBeGreaterThanOrEqual(0);
+      expect(zodSectionWithZebraFirst.indexOf('zebra: z.string()')).toBeGreaterThanOrEqual(0);
+      expect(zodSectionWithZebraFirst.indexOf('alpha: z.string()')).toBeLessThan(
+        zodSectionWithZebraFirst.indexOf('zebra: z.string()'),
+      );
     });
   });
 

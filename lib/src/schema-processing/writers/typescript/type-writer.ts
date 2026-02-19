@@ -134,12 +134,20 @@ function writeArrayType(schema: CastrSchema, writer: CodeBlockWriter): void {
   }
 }
 
+function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] {
+  if (!schema.properties) {
+    return [];
+  }
+
+  return [...schema.properties.entries()].sort(([leftKey], [rightKey]) =>
+    leftKey.localeCompare(rightKey),
+  );
+}
+
 function writeObjectType(schema: CastrSchema, writer: CodeBlockWriter): void {
   writer.inlineBlock(() => {
-    if (schema.properties) {
-      for (const [key, prop] of schema.properties.entries()) {
-        writeProperty(key, prop, writer);
-      }
+    for (const [key, prop] of getSortedPropertyEntries(schema)) {
+      writeProperty(key, prop, writer);
     }
   });
 }

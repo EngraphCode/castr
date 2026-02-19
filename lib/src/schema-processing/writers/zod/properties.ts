@@ -52,6 +52,24 @@ export function buildPropertyContext(
 }
 
 /**
+ * Get object-schema properties in canonical lexicographic key order.
+ *
+ * @param schema - Object schema that may include properties
+ * @returns Sorted [propertyName, propertySchema] tuples
+ *
+ * @public
+ */
+export function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSchema][] {
+  if (!schema.properties) {
+    return [];
+  }
+
+  return [...schema.properties.entries()].sort(([leftKey], [rightKey]) =>
+    leftKey.localeCompare(rightKey),
+  );
+}
+
+/**
  * Check if a schema contains a $ref (directly or in array items).
  *
  * @param schema - Schema to check

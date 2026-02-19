@@ -17,6 +17,10 @@ const GROUP_STRATEGY_METHOD_FILE = 'method-file' as const;
 const TYPESCRIPT_FILE_EXTENSION = '.ts' as const;
 const IR_JSON_FILE_SUFFIX = '.ir.json' as const;
 
+function getSortedFilePaths(files: Record<string, string>): string[] {
+  return Object.keys(files).sort((left, right) => left.localeCompare(right));
+}
+
 function isFileGroupingStrategy(
   strategy: TemplateContextOptions['groupStrategy'] | undefined,
 ): strategy is typeof GROUP_STRATEGY_TAG_FILE | typeof GROUP_STRATEGY_METHOD_FILE {
@@ -65,7 +69,7 @@ export async function handleFileGrouping(
   return {
     type: 'grouped',
     files,
-    paths: Object.keys(files),
+    paths: getSortedFilePaths(files),
   };
 }
 

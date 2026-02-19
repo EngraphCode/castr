@@ -2,6 +2,8 @@ import { Writers, type WriterFunction } from 'ts-morph';
 import type { TemplateContextMcpTool } from '../../context/template-context.mcp.js';
 import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
 
+const OBJECT_MAP_KEY_PROPERTIES = 'properties' as const;
+
 export function createMcpToolWriter(tool: TemplateContextMcpTool): WriterFunction {
   const httpOpProps: Record<string, string> = {
     method: `"${tool.httpOperation.method}"`,
@@ -26,11 +28,15 @@ export function createMcpToolWriter(tool: TemplateContextMcpTool): WriterFunctio
 }
 
 function writeValue(value: unknown): WriterFunction {
+  return writeValueWithParentKey(value);
+}
+
+function writeValueWithParentKey(value: unknown, parentKey?: string): WriterFunction {
   return (writer) => {
     if (Array.isArray(value)) {
       writer.write('[');
       value.forEach((item, index) => {
-        writeValue(item)(writer);
+        writeValueWithParentKey(item)(writer);
         if (index < value.length - 1) {
           writer.write(', ');
         }
@@ -39,12 +45,15 @@ function writeValue(value: unknown): WriterFunction {
     } else if (typeof value === 'object' && value !== null) {
       writer.write('{');
       const entries = Object.entries(value);
+      if (parentKey === OBJECT_MAP_KEY_PROPERTIES) {
+        entries.sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey));
+      }
       entries.forEach(([key, val], index) => {
         // Use proper identifier validation per ADR-026
         const needsQuotes = !isValidJsIdentifier(key);
         const keyStr = needsQuotes ? `"${key}"` : key;
         writer.write(`${keyStr}: `);
-        writeValue(val)(writer);
+        writeValueWithParentKey(val, key)(writer);
         if (index < entries.length - 1) {
           writer.write(', ');
         }

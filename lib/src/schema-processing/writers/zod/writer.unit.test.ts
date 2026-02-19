@@ -303,4 +303,61 @@ describe('ZodWriter', () => {
       expect(generate(context)).toBe(expectedOutput);
     });
   });
+
+  describe('deterministic property ordering', () => {
+    it('emits identical object schema output for different property insertion orders', () => {
+      const schemaWithZebraFirst = createMockSchema('object');
+      schemaWithZebraFirst.properties = new CastrSchemaProperties({
+        zebra: createMockSchema('string'),
+        alpha: createMockSchema('number'),
+      });
+      schemaWithZebraFirst.required = ['alpha', 'zebra'];
+
+      const schemaWithAlphaFirst = createMockSchema('object');
+      schemaWithAlphaFirst.properties = new CastrSchemaProperties({
+        alpha: createMockSchema('number'),
+        zebra: createMockSchema('string'),
+      });
+      schemaWithAlphaFirst.required = ['alpha', 'zebra'];
+
+      const outputWithZebraFirst = generate(createComponentContext(schemaWithZebraFirst));
+      const outputWithAlphaFirst = generate(createComponentContext(schemaWithAlphaFirst));
+
+      expect(outputWithZebraFirst).toBe(outputWithAlphaFirst);
+      expect(outputWithZebraFirst).toBe(
+        'z.object({ alpha: z.number(), zebra: z.string() }).passthrough()',
+      );
+    });
+
+    it('keeps mixed getter and normal properties in stable key order', () => {
+      const circularPropertySchema = createMockSchema('array', {
+        circularReferences: ['#/components/schemas/Node'],
+      });
+      circularPropertySchema.items = createMockSchema(undefined, {}, '#/components/schemas/Node');
+
+      const schemaWithGetterFirst = createMockSchema('object');
+      schemaWithGetterFirst.properties = new CastrSchemaProperties({
+        'zeta-node': circularPropertySchema,
+        alpha: createMockSchema('string'),
+      });
+      schemaWithGetterFirst.required = ['alpha'];
+
+      const schemaWithNormalFirst = createMockSchema('object');
+      schemaWithNormalFirst.properties = new CastrSchemaProperties({
+        alpha: createMockSchema('string'),
+        'zeta-node': circularPropertySchema,
+      });
+      schemaWithNormalFirst.required = ['alpha'];
+
+      const outputWithGetterFirst = generate(createComponentContext(schemaWithGetterFirst));
+      const outputWithNormalFirst = generate(createComponentContext(schemaWithNormalFirst));
+
+      expect(outputWithGetterFirst).toBe(outputWithNormalFirst);
+      expect(outputWithGetterFirst.indexOf('alpha: z.string()')).toBeGreaterThanOrEqual(0);
+      expect(outputWithGetterFirst.indexOf("get 'zeta-node'()")).toBeGreaterThanOrEqual(0);
+      expect(outputWithGetterFirst.indexOf('alpha: z.string()')).toBeLessThan(
+        outputWithGetterFirst.indexOf("get 'zeta-node'()"),
+      );
+    });
+  });
 });

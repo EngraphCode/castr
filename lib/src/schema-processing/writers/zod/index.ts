@@ -7,9 +7,15 @@ import type { CastrSchemaContext, IRArrayItemsContext } from '../../ir/context.j
 import { writeAdditionalProperties } from './additional-properties.js';
 import { writeCompositionSchema } from './composition.js';
 import { writeEnumSchema } from './enums.js';
+import { writeConstSchema } from './literals.js';
 import { writeMetadata } from './metadata.js';
 import { writePrimitiveSchema, filterRedundantValidations } from './primitives.js';
-import { formatPropertyKey, buildPropertyContext, shouldUseGetterSyntax } from './properties.js';
+import {
+  formatPropertyKey,
+  buildPropertyContext,
+  shouldUseGetterSyntax,
+  getSortedPropertyEntries,
+} from './properties.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { isOptionalSchemaContext } from './context-utils.js';
@@ -218,16 +224,6 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   }
 }
 
-/**
- * Write z.literal() for const values.
- * @internal
- */
-function writeConstSchema(value: unknown, writer: CodeBlockWriter): void {
-  writer.write('z.literal(');
-  writer.write(JSON.stringify(value));
-  writer.write(')');
-}
-
 function writeArraySchema(
   context: CastrSchemaContext,
   writer: CodeBlockWriter,
@@ -274,7 +270,7 @@ function writeProperties(
     return;
   }
 
-  for (const [key, prop] of schema.properties.entries()) {
+  for (const [key, prop] of getSortedPropertyEntries(schema)) {
     const quotedKey = formatPropertyKey(key);
     const isRequired = schema.required?.some((requiredName) => requiredName === key) ?? false;
     const propContext = buildPropertyContext(key, prop, isRequired);
