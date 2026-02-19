@@ -69,7 +69,7 @@ The plan's **Successor** field tells you which plan comes next.
 - **3.3a.04** ✅ Complete (2026-02-16) — repo-wide ADR-026 remediation finished. Lint debt reduced from **272 → 0** with `pnpm lint`, `pnpm type-check`, and `pnpm test` all green.
 - **3.3a.05** ✅ Complete (2026-02-17) — removed permissive fallback outputs, centralized strict OpenAPI component-ref resolution in `builder.component-ref-resolution.ts`, and added strict fail-fast tests for JSON Schema conversion, MCP inline refs, and OpenAPI ref builders. Package checks run: `pnpm type-check`, `pnpm lint`, `pnpm test` (all green in `lib`).
 - **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
-- **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green.
+- **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green (policy now codified in `.agent/directives/RULES.md`).
 - **3.3a.08** ✅ Complete (2026-02-19) — determinism closure executed end-to-end: Tranches A-D completed (TypeScript/Zod property ordering, grouped `result.paths`, MCP nested `properties` map ordering), failing-first tests added, and the full one-by-one gate sequence is green (`clean` → `test:transforms`) after snapshot baseline refresh. Plan moved to `current/complete/`.
 
 #### Plan restructuring (2026-02-17)

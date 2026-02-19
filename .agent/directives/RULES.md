@@ -1,5 +1,7 @@
 # Coding Standards & Engineering Excellence
 
+This file MUST NOT be edited without prior and explicit user approval.
+
 **Date:** October 2025 (Updated: 2026-02-13)  
 **Project:** @engraph/castr  
 **Purpose:** Define non-negotiable quality standards, engineering excellence principles, and comprehensive type discipline
@@ -1162,8 +1164,13 @@ const types = schema.anyOf
 
 **Exceptions:**
 
-- Function parameters in interfaces/callbacks where signature must match
-- Use the comment `// eslint-disable-next-line @typescript-eslint/no-unused-vars` if absolutely necessary and document why
+NONE. NO EXCEPTIONS.
+
+**Check-disabling directive governance (non-negotiable):**
+
+- `eslint-disable`, `@ts-ignore`, `@ts-expect-error`, and similar check-disabling directives are forbidden in product code EVER, no exceptions.
+- The user may decide to add them.
+- Ungoverned or blanket check-disabling directives are policy violations and must be removed.
 
 ### 2. **File naming**
 
