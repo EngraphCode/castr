@@ -2,7 +2,7 @@
 
 Symlinks to real-world OpenAPI specs from `lib/examples/openapi/`.
 
-These specs are used for semantic equivalence testing — verifying that no information is lost during the round-trip transformation.
+These specs are used for semantic equivalence testing — verifying that no information is lost during transform execution with sample input.
 
 ## Fixtures
 
@@ -16,7 +16,7 @@ These specs are used for semantic equivalence testing — verifying that no info
 
 ## Normalization Behaviors
 
-Castr applies idiomatic normalizations during round-trip:
+Castr applies idiomatic normalizations during transform execution:
 
 | Behavior                           | Description                                                                            |
 | ---------------------------------- | -------------------------------------------------------------------------------------- |

@@ -299,15 +299,15 @@ This keeps behavior strict, predictable, and lossless while still honoring expli
 ## Current Focus: OpenAPI ↔ Zod Pipeline
 
 > [!NOTE]
-> **Phase 2 complete.** Now focused on strict bidirectional transforms and end-to-end round-trip validation (Session 3.3).
+> **Phase 2 complete.** Now focused on strict bidirectional transforms and end-to-end transform validation with sample input (Session 3.3).
 
-| Priority | Focus                      | Status      |
-| -------- | -------------------------- | ----------- |
-| 1        | OpenAPI → Zod              | ✅ Complete |
-| 2        | Zod → IR (Parser)          | ✅ Complete |
-| 3        | ADR-026 + Strictness       | 🔄 Active   |
-| 4        | True Round-Trip Validation | 🔄 Active   |
-| 5        | JSON Schema                | 🔲 Deferred |
+| Priority | Focus                                                           | Status      |
+| -------- | --------------------------------------------------------------- | ----------- |
+| 1        | OpenAPI → Zod                                                   | ✅ Complete |
+| 2        | Zod → IR (Parser)                                               | ✅ Complete |
+| 3        | ADR-026 + Strictness                                            | 🔄 Active   |
+| 4        | True Transform Validation (incl. round-trip/idempotence proofs) | 🔄 Active   |
+| 5        | JSON Schema                                                     | 🔲 Deferred |
 
 ---
 

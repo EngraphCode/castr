@@ -1,4 +1,4 @@
-# ADR-027: Round-Trip Validation as Correctness Proof
+# ADR-027: Transform Validation with Sample Input as Correctness Proof
 
 **Date:** 2026-01-12  
 **Status:** Accepted  
@@ -22,7 +22,7 @@ Without this proof, production adoption is blocked by fear of data loss.
 
 > **This principle is inviolable.**
 
-A schema transformation library that loses content is fundamentally broken. The IR **MUST** capture ALL semantic content from the input specification. If any OpenAPI content is not preserved through the round-trip, the IR must be expanded to capture it.
+A schema transformation library that loses content is fundamentally broken. The IR **MUST** capture ALL semantic content from the input specification. If any OpenAPI content is not preserved through transform execution, the IR must be expanded to capture it.
 
 **NO CONTENT LOSS** means:
 
@@ -37,7 +37,8 @@ Format may change (normalization), but **information is never lost**.
 
 ## Decision
 
-We adopt **round-trip validation** as the mechanism to prove IR correctness.
+We adopt **transform validation with sample input** as the mechanism to prove IR correctness.
+Explicit round-trip assertions remain part of this strategy to prove losslessness and idempotence.
 
 ### Two Test Cases
 
@@ -46,7 +47,7 @@ We adopt **round-trip validation** as the mechanism to prove IR correctness.
 | **Arbitrary specs**  | Any valid OpenAPI spec | No content loss; format may change (normalization) |
 | **Normalized specs** | Castr-normalized spec  | Byte-for-byte identical output                     |
 
-These properties are **consequences of the IR architecture**, not implementation requirements. If the IR is truly canonical and the parsers/writers are correct, round-trip validation will pass.
+These properties are **consequences of the IR architecture**, not implementation requirements. If the IR is truly canonical and the parsers/writers are correct, transform validation with sample input (including round-trip checks) will pass.
 
 ### Property Definitions
 
@@ -67,7 +68,7 @@ These properties are **consequences of the IR architecture**, not implementation
 
 **Normalized fixtures:** Process the arbitrary fixtures through Castr and save the output to disk. These become the normalized fixtures for byte-for-byte comparison:
 
-- `lib/tests-roundtrip/__fixtures__/normalized/tictactoe.json`
+- `lib/tests-transforms/__fixtures__/normalized/tictactoe.json`
 - etc.
 
 ---

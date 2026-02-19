@@ -371,10 +371,10 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 ### 2) IR Completeness and Fidelity
 
 - Every required OpenAPI 3.0/3.1 field is represented in IR
-- Lossless round-trip for supported fields (no omissions or merges)
+- Lossless transform execution for supported fields (no omissions or merges)
 - IR schema metadata supports strict Zod output (required, nullable, dependency graph)
 
-### 3) Round-Trip OpenAPI
+### 3) OpenAPI Transform Validation (Sample Input)
 
 - OpenAPI input → IR → OpenAPI output matches normalized 3.1 expectations
 - Upgrades (3.0 → 3.1) are strictly standards-compliant
@@ -403,11 +403,11 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 
 ### Fixture Provenance
 
-| Source                     | Description                                                      |
-| -------------------------- | ---------------------------------------------------------------- |
-| Oak SDK-decorated fixtures | Ground truth input + expected outputs                            |
-| Castr normalized fixtures  | Round-trip IR artifacts                                          |
-| Synthetic fixtures         | OpenAPI-TS-inspired edge cases recreated in-house (never copied) |
+| Source                     | Description                                                             |
+| -------------------------- | ----------------------------------------------------------------------- |
+| Oak SDK-decorated fixtures | Ground truth input + expected outputs                                   |
+| Castr normalized fixtures  | Transform-validation IR artifacts (incl. round-trip/idempotence proofs) |
+| Synthetic fixtures         | OpenAPI-TS-inspired edge cases recreated in-house (never copied)        |
 
 ### Fixture Matrix (Strict-Only)
 

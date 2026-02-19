@@ -15,7 +15,7 @@
 | Dynamic Zod      | MUST reject    | Not statically analyzable |
 
 Primary goal: parse idiomatic Zod 4 schemas (including our output) and
-reconstruct IR for lossless round-trip validation.
+reconstruct IR for lossless transform validation with sample input.
 
 ---
 
@@ -136,7 +136,7 @@ String constraints:
 - `.regex(/.../)` -> `pattern`
 - `.startsWith()` / `.endsWith()` / `.includes()`:
   - If these appear in input, the parser MUST either map them to an equivalent JSON Schema constraint losslessly (typically via `pattern`) OR reject with a helpful, actionable error.
-  - "Preserve in metadata" is not acceptable in strict mode unless there is a defined, lossless IR representation and a writer strategy that round-trips it deterministically.
+  - "Preserve in metadata" is not acceptable in strict mode unless there is a defined, lossless IR representation and a writer strategy that reprocesses it deterministically.
 
 Number constraints:
 
@@ -243,7 +243,7 @@ For each rejection pattern in Parts 2 and 3:
 - A corresponding `.expected-error.json` MUST define the error
 - Tests MUST assert the error is produced
 
-### 4.3 Round-Trip Validation Tests
+### 4.3 Transform Validation Tests (Sample Input)
 
 ```
 OpenAPI -> IR1 -> Zod -> IR2

@@ -64,8 +64,8 @@ The IR (`CastrDocument`, `IRComponent`, related types) must be expanded to captu
 
 ### Phase 1: Tests (Complete)
 
-- `lib/tests-roundtrip/input-coverage.integration.test.ts` — 54 tests
-- `lib/tests-roundtrip/output-coverage.integration.test.ts` — 33 tests
+- `lib/tests-transforms/input-coverage.integration.test.ts` — 54 tests
+- `lib/tests-transforms/output-coverage.integration.test.ts` — 33 tests
 - Total: 87 tests (72 passing, 15 expected failing for missing fields)
 
 ### Phase 2: IR Expansion (Pending)
@@ -92,5 +92,5 @@ Add to `IRComponent` types:
 
 - [OpenAPI 3.0.x Schema](../../.agent/reference/openapi_schema/openapi_3_0_x_schema.json)
 - [OpenAPI 3.1.x Schema](../../.agent/reference/openapi_schema/openapi_3_1_x_schema_without_validation.json)
-- [ADR-027: Round-Trip Validation](./ADR-027-round-trip-validation.md)
+- [ADR-027: Transform Validation with Sample Input](./ADR-027-round-trip-validation.md)
 - [requirements.md](../../.agent/directives/requirements.md) — Updated with full syntax support constraint

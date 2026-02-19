@@ -11,7 +11,7 @@
     "**/*.mts",
     "**/*.tsx",
     "test/**/*.ts",
-    "tests-roundtrip/**/*.ts"
+    "tests-transforms/**/*.ts"
   ],
   "exclude": ["node_modules", "**/*.typegen.ts", "example", "dist"]
 }

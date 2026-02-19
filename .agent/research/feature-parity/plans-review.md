@@ -10,19 +10,19 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ### `roadmap.md`
 
-- **Primary focus:** OpenAPI ↔ Zod core path + round-trip validation.
-- **Current milestone:** Session 3.3 (3.3a strictness remediation + 3.3b strict Zod-layer round-trip proofs). Session 3.2 is complete.
+- **Primary focus:** OpenAPI ↔ Zod core path + transform validation with sample input.
+- **Current milestone:** Session 3.3 (3.3a strictness remediation + 3.3b strict Zod-layer transform proofs, including round-trip/idempotence checks). Session 3.2 is complete.
 - **Core principles:** strict-by-default, fail-fast, deterministic output, AST-only generation.
 - **Relevance:** aligns with Oak strictness/determinism; does not explicitly cover metadata maps or bundle manifests required by Oak.
 
 ### Session 3.3a (Roadmap)
 
 - **Primary focus:** ADR-026 enforcement + repo-wide strictness remediation (no escape hatches, no fallbacks).
-- **Relevance:** unblocks strict round-trip proofs by removing heuristic parsing and permissive behavior.
+- **Relevance:** unblocks strict transform proofs (including round-trip/idempotence assertions) by removing heuristic parsing and permissive behavior.
 
 ### Session 3.3b (Roadmap)
 
-- **Primary focus:** strict, lossless Zod-layer round-trip proofs (Scenario 3 is the remaining blocker).
+- **Primary focus:** strict, lossless Zod-layer transform proofs with sample input (Scenario 3 is the remaining blocker).
 - **Relevance:** this is the proof that the Zod layer participates in strict transforms (or rejects with helpful errors).
 
 ### `castr-strict-test-plan-INTEGRATED.md` (archive)
@@ -33,7 +33,7 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ### `zod4-parser-plan-3.2-complete.md` (archive)
 
-- **Primary focus:** Zod 4 → IR parsing to enable true round-trip.
+- **Primary focus:** Zod 4 → IR parsing to enable strict transform-sample validation.
 - **Includes:** reject Zod 3 syntax, parse `.meta()`, `.strict()`, getter recursion, constraints, etc.
 - **Relevance:** foundational for Zod → IR; partially overlaps with Zod-OpenAPI replacement (but does **not** cover `.openapi()`/`.meta()` as full OpenAPI doc metadata for endpoints).
 
@@ -60,7 +60,7 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 
 ### `openapi-compliance-plan-2.6-2.7-complete.md`
 
-- **Scope:** OpenAPI 3.0/3.1 input/output completeness, strict validation, round-trip prep.
+- **Scope:** OpenAPI 3.0/3.1 input/output completeness, strict validation, transform-sample prep.
 - **Relevance:** foundational; enables lossless OpenAPI output. No explicit OpenAPI 2.0 mention (input-only support exists in code but not in the plan).
 
 ### `phase-1-completion-plan.md`
@@ -83,7 +83,7 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
 ### Already Planned (Strong Alignment)
 
 - **Strict-by-default + fail-fast** (roadmap + strict test plan)
-- **Determinism** (strict test plan + round-trip validation plan)
+- **Determinism** (strict test plan + transform-sample validation plan, including round-trip/idempotence proofs)
 - **Metadata maps + JSON Schema output** (future-artefact-expansion)
 - **Writer registry + manifest** (future-artefact-expansion)
 

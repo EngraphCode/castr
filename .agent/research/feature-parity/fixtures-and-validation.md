@@ -7,7 +7,7 @@ This is intended to drive Castr's validation infrastructure and test design, not
 
 ## Why this matters
 
-Validation and fixtures are the backbone of lossless transforms, strictness, and round-trip guarantees.
+Validation and fixtures are the backbone of lossless transforms, strictness, and transform-validation guarantees (including explicit round-trip/idempotence proofs).
 If we can validate inputs, outputs, and conversion edges consistently, the rest of the system can evolve safely.
 
 ## What impact are we trying to create?

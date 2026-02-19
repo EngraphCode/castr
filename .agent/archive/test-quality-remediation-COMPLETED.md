@@ -33,7 +33,7 @@ All test quality issues identified during Session 2.6 have been fully remediated
 
 > "**No skipped tests** — Fix it or delete it. **NEVER** use `it.skip`"
 
-**Location:** `lib/tests-roundtrip/__tests__/version-validation.integration.test.ts`
+**Location:** `lib/tests-transforms/__tests__/version-validation.integration.test.ts`
 
 **Current state:**
 
@@ -111,7 +111,7 @@ it.skip('REJECTS 3.1.x with boolean exclusiveMinimum (3.0.x syntax) - SCALAR LIM
 
 - [x] Created test: OpenAPI Response.description → IR → OpenAPI (Semantic Integrity Proof)
 - [x] Added to `output-coverage.integration.test.ts`
-- [x] 191 roundtrip tests pass
+- [x] 191 transform-sample tests pass
 
 ### Remediation Phase 3: Enhance Error Messages ✅ COMPLETE
 
@@ -170,11 +170,11 @@ Once all items above are complete and quality gates pass:
 
 ## Files Modified
 
-| File                                                               | Action                                           | Status      |
-| ------------------------------------------------------------------ | ------------------------------------------------ | ----------- |
-| `tests-roundtrip/__tests__/version-validation.integration.test.ts` | Deleted redundant `it.skip` tests, added comment | ✅ Complete |
-| `tests-roundtrip/output-coverage.integration.test.ts`              | Added Semantic Integrity Proof test              | ✅ Complete |
-| `tests-snapshot/spec-compliance/spec-compliance.test.ts`           | Removed placeholder test                         | ✅ Complete |
-| `src/characterisation/edge-cases.char.test.ts`                     | Deleted obsolete test (nullable type)            | ✅ Complete |
-| `src/characterisation/error-handling.char.test.ts`                 | Deleted obsolete test (invalid parameter)        | ✅ Complete |
-| `src/characterisation/validation.char.test.ts`                     | Repurposed to test strict validation rejection   | ✅ Complete |
+| File                                                                | Action                                           | Status      |
+| ------------------------------------------------------------------- | ------------------------------------------------ | ----------- |
+| `tests-transforms/__tests__/version-validation.integration.test.ts` | Deleted redundant `it.skip` tests, added comment | ✅ Complete |
+| `tests-transforms/output-coverage.integration.test.ts`              | Added Semantic Integrity Proof test              | ✅ Complete |
+| `tests-snapshot/spec-compliance/spec-compliance.test.ts`            | Removed placeholder test                         | ✅ Complete |
+| `src/characterisation/edge-cases.char.test.ts`                      | Deleted obsolete test (nullable type)            | ✅ Complete |
+| `src/characterisation/error-handling.char.test.ts`                  | Deleted obsolete test (invalid parameter)        | ✅ Complete |
+| `src/characterisation/validation.char.test.ts`                      | Repurposed to test strict validation rejection   | ✅ Complete |

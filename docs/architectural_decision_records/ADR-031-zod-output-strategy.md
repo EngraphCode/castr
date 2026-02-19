@@ -104,7 +104,7 @@ Skip Zod validations that duplicate what the type already provides:
 ### Positive
 
 - Idiomatic Zod 4 output that leverages library capabilities
-- Metadata preserved for round-trip validation
+- Metadata preserved for transform validation with sample input (including round-trip/idempotence proofs)
 - Type-safe with full TypeScript inference
 
 ### Negative

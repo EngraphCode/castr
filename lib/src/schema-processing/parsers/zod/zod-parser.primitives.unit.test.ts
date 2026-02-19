@@ -212,7 +212,7 @@ describe('Primitive Zod Parsing', () => {
       expect(result?.metadata.required).toBe(false);
     });
 
-    it('should populate zodChain validations for round-trip', () => {
+    it('should populate zodChain validations for transform-path assertions', () => {
       const result = parsePrimitiveZod('z.string().min(1).email()');
 
       expect(result?.metadata.zodChain.validations).toContain('.min(1)');

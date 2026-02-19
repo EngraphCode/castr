@@ -304,10 +304,10 @@ Allowed methods for input and output:
 
 - 3.0 -> 3.1 transformations MUST be verified for each rule in Part 4
 
-### Round-Trip Tests
+### Transform Tests (Sample Input)
 
 - Input -> IR -> Output preserves semantics
-- Normalized specs round-trip byte-for-byte
+- Normalized specs are idempotent byte-for-byte on re-processing
 
 ---
 

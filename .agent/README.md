@@ -31,7 +31,7 @@
 
 - **Quality Gates:** 10/10 passing (1,010+ tests)
 - **Architecture:** IR-based with canonical structure
-- **Active Work:** Session 3.3 (strictness remediation + strict Zod-layer round-trip proofs)
+- **Active Work:** Session 3.3 (strictness remediation + strict Zod-layer transform tests with sample input)
   - Plan of record: `.agent/plans/roadmap.md`
   - Atomic plans (execute): `.agent/plans/current/*`
 

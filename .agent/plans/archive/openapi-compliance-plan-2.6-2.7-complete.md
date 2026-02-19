@@ -81,7 +81,7 @@ Prove two claims for production adoption:
 
 **Phase 2: Arbitrary fixtures**
 
-- Created 5 symlinks in `lib/tests-roundtrip/__fixtures__/arbitrary/`:
+- Created 5 symlinks in `lib/tests-transforms/__fixtures__/arbitrary/`:
   - `tictactoe-3.1.yaml` → `lib/examples/openapi/v3.1/tictactoe.yaml`
   - `webhook-3.1.yaml` → `lib/examples/openapi/v3.1/webhook-example.yaml`
   - `petstore-3.0.yaml` → `lib/examples/openapi/v3.0/petstore.yaml`
@@ -90,7 +90,7 @@ Prove two claims for production adoption:
 
 #### Next Steps
 
-1. Create `lib/tests-roundtrip/__tests__/round-trip.integration.test.ts`
+1. Create `lib/tests-transforms/__tests__/transform-samples.integration.test.ts`
 2. Implement losslessness tests (arbitrary specs → IR → output → IR comparison)
 3. Implement idempotency tests (normalized specs → byte-for-byte comparison)
 4. Create fixture generation script for normalized fixtures
@@ -200,7 +200,7 @@ Implemented strict version-aware validation in `loadOpenApiDocument()`:
 **Key files:**
 
 - `lib/src/shared/load-openapi-document/orchestrator.ts` — Validation pipeline
-- `lib/tests-roundtrip/__tests__/version-validation.integration.test.ts` — Version tests
+- `lib/tests-transforms/__tests__/version-validation.integration.test.ts` — Version tests
 
 ### 2.6.7 Enhanced Error Messages (COMPLETE)
 
@@ -231,7 +231,7 @@ Invalid OpenAPI 3.0.3 document:
 
 ### Comprehensive Test Fixtures (22 fixtures)
 
-Created in `lib/tests-roundtrip/__fixtures__/`:
+Created in `lib/tests-transforms/__fixtures__/`:
 
 **Valid Fixtures (11):**
 
@@ -292,7 +292,7 @@ Update parser to extract all 10 new fields:
 
 ### Scalar Validator Behavior (VERIFIED via 16 Integration Tests)
 
-**Test file:** `lib/tests-roundtrip/__tests__/scalar-behavior.integration.test.ts`
+**Test file:** `lib/tests-transforms/__tests__/scalar-behavior.integration.test.ts`
 
 **Confirmed Limitations** (Scalar does NOT reject these invalid constructs):
 

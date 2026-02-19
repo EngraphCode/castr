@@ -1,6 +1,6 @@
-# Round-Trip Test Fixtures
+# Transform Test Fixtures (Sample Input)
 
-This directory contains fixtures for round-trip validation testing (Session 2.6).
+This directory contains fixtures for transform testing with sample input (Session 2.6).
 
 ## Directory Structure
 
@@ -19,4 +19,4 @@ Edge-case fixtures are minimal, focused tests for specific scenarios.
 ## See Also
 
 - [roadmap.md](../../../.agent/plans/roadmap.md)
-- [ADR-027: Round-Trip Validation](../../../docs/architectural_decision_records/ADR-027-round-trip-validation.md)
+- [ADR-027: Transform Validation with Sample Input](../../../docs/architectural_decision_records/ADR-027-round-trip-validation.md)

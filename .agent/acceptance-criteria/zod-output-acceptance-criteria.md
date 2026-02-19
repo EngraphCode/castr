@@ -164,7 +164,7 @@ The writer MUST throw (not emit broken code) for:
 1. Schema type tests
 2. Constraint tests
 3. Composition tests
-4. Round-trip validation (OpenAPI -> IR -> Zod -> IR)
+4. Transform validation with sample input (OpenAPI -> IR -> Zod -> IR)
 5. Generated code quality (TS compile, lint, format)
 
 ### Definition of Done
@@ -173,4 +173,4 @@ The writer MUST throw (not emit broken code) for:
 - All supported constraints are preserved
 - Metadata flows to `.meta()`
 - Generated code compiles and passes quality gates
-- Round-trip validation passes for normalized fixtures
+- Transform validation passes for normalized fixtures (including round-trip/idempotence proofs)

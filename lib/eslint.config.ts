@@ -45,7 +45,7 @@ const baseIgnores = [
   '**/*.hbs',
   '**/tests-generated/.tmp/**',
   // Generated fixture outputs - not source code
-  '**/tests-roundtrip/__fixtures__/normalized/**/zod*.ts',
+  '**/tests-transforms/__fixtures__/normalized/**/zod*.ts',
 ];
 
 const testGlobs = [
@@ -54,7 +54,7 @@ const testGlobs = [
   '**/test-*.ts',
   '**/__tests__/**',
   '**/tests-snapshot/**/*.ts',
-  '**/tests-roundtrip/**/*.ts',
+  '**/tests-transforms/**/*.ts',
   '**/characterisation/**/*.ts',
 ];
 

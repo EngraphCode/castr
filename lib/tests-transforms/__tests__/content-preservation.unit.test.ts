@@ -1,13 +1,13 @@
 /**
  * Content Preservation Unit Tests
  *
- * Tests that validate NO CONTENT LOSS during round-trip transformation.
+ * Tests that validate NO CONTENT LOSS during transform execution with sample input.
  * These tests specifically target bugs discovered during manual review:
  *
  * 1. Header description loss — HeaderObject.description not preserved
  * 2. Path-level parameter ref expansion — $ref replaced with inline copies
  *
- * @see ADR-027 Round-Trip Validation as Correctness Proof
+ * @see ADR-027 Transform Validation with Sample Input as Correctness Proof
  */
 
 import { describe, expect, it } from 'vitest';
@@ -23,7 +23,7 @@ import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.
 // ============================================================================
 
 describe('Content Preservation: Header Description', () => {
-  it('preserves header description through round-trip', async () => {
+  it('preserves header description through transform pipeline', async () => {
     // Petstore has a header with description
     const fixturePath = resolve(import.meta.dirname, '../__fixtures__/arbitrary/petstore-3.0.yaml');
 

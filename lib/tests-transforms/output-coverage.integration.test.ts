@@ -35,9 +35,9 @@ const SWAGGER_DIR = resolve(__dirname, '../examples/swagger');
 
 /**
  * Loads an OpenAPI document, builds IR, and writes back to OpenAPI 3.1.
- * This is a complete round-trip through the system.
+ * This is a complete transform pipeline pass through the system.
  */
-async function roundTrip(fixturePath: string): Promise<OpenAPIObject> {
+async function runTransformPass(fixturePath: string): Promise<OpenAPIObject> {
   const result = await loadOpenApiDocument(fixturePath);
   const ir = buildIR(result.document);
   return writeOpenApi(ir);
@@ -50,12 +50,12 @@ async function roundTrip(fixturePath: string): Promise<OpenAPIObject> {
 describe('Output Coverage: IR → OpenAPI 3.1', () => {
   describe('Output format', () => {
     it('outputs OpenAPI 3.1.x version (flows from IR)', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
       expect(output.openapi).toMatch(/^3\.1\./);
     });
 
     it('outputs valid JSON (serializable object)', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       // Should be JSON-serializable without circular references
       const jsonString = JSON.stringify(output);
@@ -73,7 +73,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
   describe('Document-level fields', () => {
     it('writes info object complete', async () => {
-      const output = await roundTrip(`${SWAGGER_DIR}/petstore.yaml`);
+      const output = await runTransformPass(`${SWAGGER_DIR}/petstore.yaml`);
 
       expect(output.info).toBeDefined();
       expect(output.info.title).toBe('Swagger Petstore - OpenAPI 3.0');
@@ -87,7 +87,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes servers array', async () => {
-      const output = await roundTrip(`${SWAGGER_DIR}/petstore.yaml`);
+      const output = await runTransformPass(`${SWAGGER_DIR}/petstore.yaml`);
 
       expect(output.servers).toBeDefined();
       expect(output.servers).toHaveLength(1);
@@ -96,7 +96,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
     it('writes document-level security', async () => {
       // Verify that security is handled
-      const output = await roundTrip(`${SWAGGER_DIR}/petstore.yaml`);
+      const output = await runTransformPass(`${SWAGGER_DIR}/petstore.yaml`);
 
       // petstore doesn't have document-level security
       // This is correct - security should be undefined or empty at document level
@@ -112,14 +112,14 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
   describe('Paths and Operations', () => {
     it('writes paths object', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       expect(output.paths).toBeDefined();
       expect(Object.keys(output.paths ?? {}).length).toBe(2); // /board, /board/{row}/{column}
     });
 
     it('writes operation methods', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const boardPath = output.paths?.['/board'];
       expect(boardPath).toBeDefined();
@@ -127,7 +127,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes operation metadata', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const getBoard = output.paths?.['/board']?.get;
       expect(getBoard).toBeDefined();
@@ -137,7 +137,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes operation tags', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const getBoard = output.paths?.['/board']?.get;
       expect(getBoard?.tags).toBeDefined();
@@ -145,22 +145,22 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes operation requestBody', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const putSquare = output.paths?.['/board/{row}/{column}']?.put;
       expect(putSquare?.requestBody).toBeDefined();
     });
 
     it('writes operation responses', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const getBoard = output.paths?.['/board']?.get;
       expect(getBoard?.responses).toBeDefined();
       expect(getBoard?.responses?.['200']).toBeDefined();
     });
 
-    it('preserves response.description through round-trip (Semantic Integrity Proof)', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+    it('preserves response.description through transform pipeline (Semantic Integrity Proof)', async () => {
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       // Verify description is preserved through OpenAPI → IR → OpenAPI
       const getBoard = output.paths?.['/board']?.get;
@@ -176,7 +176,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes operation security', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const getBoard = output.paths?.['/board']?.get;
       expect(getBoard?.security).toBeDefined();
@@ -185,7 +185,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
     it('writes trace method operations', async () => {
       const fixturePath = resolve(__dirname, '__fixtures__/trace-method.yaml');
-      const output = await roundTrip(fixturePath);
+      const output = await runTransformPass(fixturePath);
 
       const debugPath = output.paths?.['/debug'];
       expect(debugPath).toBeDefined();
@@ -200,7 +200,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
   describe('Components', () => {
     it('writes component schemas', async () => {
-      const output = await roundTrip(`${SWAGGER_DIR}/petstore.yaml`);
+      const output = await runTransformPass(`${SWAGGER_DIR}/petstore.yaml`);
 
       expect(output.components?.schemas).toBeDefined();
       expect(Object.keys(output.components?.schemas ?? {}).length).toBeGreaterThan(0);
@@ -208,7 +208,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes component parameters', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       expect(output.components?.parameters).toBeDefined();
       expect(output.components?.parameters?.['rowParam']).toBeDefined();
@@ -216,7 +216,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes component securitySchemes', async () => {
-      const output = await roundTrip(`${SWAGGER_DIR}/petstore.yaml`);
+      const output = await runTransformPass(`${SWAGGER_DIR}/petstore.yaml`);
 
       expect(output.components?.securitySchemes).toBeDefined();
       expect(Object.keys(output.components?.securitySchemes ?? {}).length).toBe(2);
@@ -231,7 +231,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
   describe('Schema features', () => {
     it('writes string type and constraints', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const errorMessage = output.components?.schemas?.['errorMessage'];
       expect(errorMessage).toBeDefined();
@@ -240,7 +240,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes number type and constraints', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const coordinate = output.components?.schemas?.['coordinate'];
       expect(coordinate).toBeDefined();
@@ -250,7 +250,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes enum values', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const mark = output.components?.schemas?.['mark'];
       expect(mark).toBeDefined();
@@ -258,7 +258,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes array schemas', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const board = output.components?.schemas?.['board'];
       expect(board).toBeDefined();
@@ -268,7 +268,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes object schemas with properties', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const status = output.components?.schemas?.['status'];
       expect(status).toBeDefined();
@@ -277,7 +277,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     });
 
     it('writes $ref references', async () => {
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       const status = output.components?.schemas?.['status'] as
         | { properties?: { winner?: { $ref?: string }; board?: { $ref?: string } } }
@@ -295,7 +295,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     it('writes nullable as type array', async () => {
       // In OpenAPI 3.1, nullable: true becomes type: ['string', 'null']
       // We need to verify this is handled correctly
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
       // Verify output is valid 3.1.x format
       expect(output.openapi).toMatch(/^3\.1\./);
@@ -303,7 +303,7 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
 
     it('handles 3.0 → 3.1 upgrade correctly', async () => {
       // When a 3.0 spec is loaded, it should be upgraded to 3.1.x by scalar parser
-      const output = await roundTrip(`${EXAMPLES_DIR}/v3.0/petstore.yaml`);
+      const output = await runTransformPass(`${EXAMPLES_DIR}/v3.0/petstore.yaml`);
 
       // Version flows from IR (scalar parser upgrades 3.0.x to 3.1.x)
       expect(output.openapi).toMatch(/^3\.1\./);

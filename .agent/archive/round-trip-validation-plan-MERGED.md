@@ -86,7 +86,7 @@ These are real-world specs that exercise various OpenAPI features.
 Generate normalized fixtures by processing arbitrary fixtures through Castr:
 
 1. Process each arbitrary fixture: `buildIR(spec) → writeOpenApi(ir)`
-2. Save the output to `lib/tests-roundtrip/__fixtures__/normalized/`
+2. Save the output to `lib/tests-transforms/__fixtures__/normalized/`
 3. These saved outputs become the normalized fixtures for idempotency tests
 
 | Normalized Fixture                 | Source                          |
@@ -105,7 +105,7 @@ Per [testing-strategy.md](../testing-strategy.md), tests at each level are **spe
 
 Write integration tests that specify the behavior we want to prove. These tests should fail initially.
 
-**File:** `lib/tests-roundtrip/round-trip.integration.test.ts`
+**File:** `lib/tests-transforms/__tests__/transform-samples.integration.test.ts`
 
 ```typescript
 describe('Round-Trip Validation', () => {
@@ -184,9 +184,9 @@ These format changes are **expected normalization**, not content loss:
 
 Per [testing-strategy.md](../testing-strategy.md):
 
-| Test Type   | Naming                  | Location               |
-| ----------- | ----------------------- | ---------------------- |
-| Integration | `*.integration.test.ts` | `lib/tests-roundtrip/` |
+| Test Type   | Naming                  | Location                |
+| ----------- | ----------------------- | ----------------------- |
+| Integration | `*.integration.test.ts` | `lib/tests-transforms/` |
 
 These are integration tests because they test how multiple units work together (parser + IR + writer).
 

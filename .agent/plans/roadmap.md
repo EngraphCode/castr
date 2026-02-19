@@ -22,7 +22,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 - **Phase**: A major milestone on this roadmap (high-level product capability).
 - **Session X.Y**: A unit of execution within a phase (work tracking). Historical sessions are archived under `./archive/`.
-- **Session 3.3a / 3.3b**: Two parallel sub-tracks within Session 3.3 (strictness remediation vs strict Zod-layer round-trips).
+- **Session 3.3a / 3.3b**: Two parallel sub-tracks within Session 3.3 (strictness remediation vs strict Zod-layer transform validation with sample input).
 - **Atomic plans**: Small, linear steps stored under `./current/` and linked below.
 - **Active atomic plan**: The single next atomic plan lives under `./active/`.
 - **Completed atomic plans (staged)**: Completed atomic plans are moved to `./current/complete/` and only archived in batches when a group of work is complete.
@@ -31,13 +31,13 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Priority: Production-Ready Core Path
 
-OpenAPI ↔ OpenAPI round-trip is validated. OpenAPI → Zod generation is proven. Full Zod-layer round-trip (OpenAPI → Zod → OpenAPI) remains incomplete and is tracked in Session 3.3b.
+OpenAPI ↔ OpenAPI transform proof is validated. OpenAPI → Zod generation is proven. Full Zod-layer transform validation (OpenAPI → Zod → OpenAPI) remains incomplete and is tracked in Session 3.3b.
 
 ```text
-OpenAPI → IR → OpenAPI (round-trip validation) ✅
+OpenAPI → IR → OpenAPI (transform validation, incl. round-trip proof) ✅
 OpenAPI → IR → Zod (proven) ✅
 Zod → IR (Session 3.2) ✅ COMPLETE
-Full Round-Trip Validation (Session 3.3) 🔄 IN PROGRESS
+Full Transform Validation (Session 3.3) 🔄 IN PROGRESS
 ```
 
 ---
@@ -48,13 +48,13 @@ Full Round-Trip Validation (Session 3.3) 🔄 IN PROGRESS
 | ------- | ----------------------------- | ----------- |
 | 2.1-2.5 | Zod parser + OpenAPI writer   | ✅ Complete |
 | 2.6     | OpenAPI Compliance            | ✅ Complete |
-| 2.7     | OpenAPI Round-Trip            | ✅ Complete |
+| 2.7     | OpenAPI Transform Validation  | ✅ Complete |
 | 2.8     | Zod 4 Output Compliance       | ✅ Complete |
 | 2.9     | OpenAPI → Zod Pipeline Polish | ✅ Complete |
 
 ---
 
-## Phase 3: Zod Round-Trip (Active)
+## Phase 3: Zod Transform Validation (Active)
 
 | Session  | Focus                                                                        | Status      |
 | -------- | ---------------------------------------------------------------------------- | ----------- |
@@ -74,7 +74,7 @@ Full Round-Trip Validation (Session 3.3) 🔄 IN PROGRESS
 |          | └ No string/regex heuristics for TS-source parsing; use semantic analysis    | ✅          |
 |          | └ No escape hatches: remove `as`/`any`/`!`/`eslint-disable` in product code  | ✅          |
 |          | └ Eliminate fallbacks; fail fast and hard with helpful errors                | ✅          |
-| **3.3b** | **Strict Zod-Layer Round-Trip Validation** (Strict, no weak assertions)      | 🔄 Active   |
+| **3.3b** | **Strict Zod-Layer Transform Validation** (Strict, no weak assertions)       | 🔄 Active   |
 |          | └ Harden Scenarios 2-4 into strict, lossless proofs                          | 🔲          |
 |          | └ Zod ↔ Zod, OpenAPI → Zod → OpenAPI, Zod → OpenAPI → Zod                    | 🔲          |
 
@@ -120,38 +120,39 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - Plan 05 established a centralized strict component-ref helper at `lib/src/schema-processing/parsers/openapi/builder.component-ref-resolution.ts` and removed permissive output degradation paths.
 - Plan 06 removed swallowed-error paths in dependency extraction, Zod declaration parsing, and circular ref extraction; component-ref validation remains centralized.
 - Plan 07 removed non-governed check-disabling directives and replaced escape-hatch usage with typed, rule-compliant implementations.
-- Current active plan is now [3.3b.01 — Round-Trip Suite Strictness](./active/3.3b-01-roundtrip-suite-strictness.md).
+- Current active plan is now [3.3b.01 — Transform Sample Suite Strictness](./active/3.3b-01-transform-sample-suite-strictness.md).
 
 ---
 
-## Session 3.3b — Strict Zod-Layer Round-Trip Validation
+## Session 3.3b — Strict Zod-Layer Transform Validation
 
-Prove that the Zod layer participates in strict, lossless round-trips:
+Prove that the Zod layer participates in strict, lossless transform validation with sample input:
 
 - Scenarios 2–4 are strict proofs (no `<=`, no “skip on errors”).
-- Writer and parser remain in lockstep: writer output must be parseable; parseable constructs must round-trip losslessly or be rejected upstream.
+- Writer and parser remain in lockstep: writer output must be parseable; parseable constructs must transform losslessly or be rejected upstream.
 
 **Scenarios (target state):**
 
-| #   | Scenario                          | Lossless | Idempotent | Status      |
-| --- | --------------------------------- | -------- | ---------- | ----------- |
-| 1   | OpenAPI → IR → OpenAPI            | ✅       | ✅         | ✅ Complete |
-| 2   | Zod → IR → Zod                    | ✅       | ✅         | ✅ Complete |
-| 3   | OpenAPI → IR → Zod → IR → OpenAPI | 🔴       | —          | 🔴 Blocked  |
-| 4   | Zod → IR → OpenAPI → IR → Zod     | ✅       | —          | ✅ Complete |
+| #   | Scenario                          | Lossless | Idempotent | Status                             |
+| --- | --------------------------------- | -------- | ---------- | ---------------------------------- |
+| 1   | OpenAPI → IR → OpenAPI            | ✅       | ✅         | ✅ Complete                        |
+| 2   | Zod → IR → Zod                    | 🟡       | 🟡         | 🟡 Strictness hardening in 3.3b.01 |
+| 3   | OpenAPI → IR → Zod → IR → OpenAPI | 🔴       | —          | 🔴 Blocked                         |
+| 4   | Zod → IR → OpenAPI → IR → Zod     | 🟡       | —          | 🟡 Strictness hardening in 3.3b.01 |
 
-> **Note:** ✅ = structural losslessness proven (schema counts, structure preserved). Functional validation-parity (data validates identically before/after round-trips) is tracked separately in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md).
+> **Note:** ✅ = strict structural proof complete (no tolerance/skip-on-error paths in scenario assertions). 🟡 = structural checks exist but strictness closure is still in progress under [3.3b.01](./active/3.3b-01-transform-sample-suite-strictness.md). Functional validation-parity (data validates identically before/after transform execution) extends existing parity suites and is tracked in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md). Some assertions are explicit round-trip/idempotence proofs.
 
 **Success criteria (3.3b):**
 
+- 3.3b.01 strictness closure is complete (no weak assertions, no parse-error early returns, explicit parse-error assertions with context).
 - Scenario 3 passes strict losslessness assertions (no schema loss through Zod layer).
 - Idempotency holds where required (byte-identical normalized outputs on second pass).
-- Validation-parity tests cover Scenarios 2–4 (data validates the same before/after round-trips).
+- Validation-parity tests cover Scenarios 2–4 (data validates the same before/after transform execution).
 - Quality gates pass (canonical: `.agent/directives/DEFINITION_OF_DONE.md`).
 
 **Governing docs:** `.agent/directives/VISION.md`, `.agent/directives/requirements.md`, `docs/architectural_decision_records/ADR-027-round-trip-validation.md`, `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`, `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`.
 
-**References:** `lib/tests-roundtrip/__tests__/round-trip.integration.test.ts`, `lib/tests-roundtrip/__tests__/validation-parity*.integration.test.ts`, `lib/src/schema-processing/parsers/zod/zod-parser.detection.ts`.
+**References:** `lib/tests-transforms/__tests__/transform-samples.integration.test.ts`, `lib/tests-transforms/__tests__/validation-parity*.integration.test.ts`, `lib/src/schema-processing/parsers/zod/zod-parser.detection.ts`.
 
 ---
 
@@ -169,7 +170,7 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 | 6    | [3.3a.06 — Remove Swallowed Errors](./current/complete/3.3a-06-remove-swallowed-errors.md)                       | ✅ Complete |
 | 7    | [3.3a.07 — Remove Escape Hatches](./current/complete/3.3a-07-remove-escape-hatches.md)                           | ✅ Complete |
 | 8    | [3.3a.08 — Prove Determinism](./current/complete/3.3a-08-prove-determinism.md)                                   | ✅ Complete |
-| 9    | [3.3b.01 — Round-Trip Suite Strictness](./active/3.3b-01-roundtrip-suite-strictness.md)                          | 🔄 Active   |
+| 9    | [3.3b.01 — Transform Sample Suite Strictness](./active/3.3b-01-transform-sample-suite-strictness.md)             | 🔄 Active   |
 | 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/session-3.3b/3.3b-02-scenario3-reference-composition.md)  | 🔲          |
 | 11   | [3.3b.03 — Reject `z.undefined()`](./current/session-3.3b/3.3b-03-reject-z-undefined.md)                         | 🔲          |
 | 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./current/session-3.3b/3.3b-04-format-parity-hostname-float.md) | 🔲          |
@@ -186,7 +187,7 @@ After Session 3.3 completes, priority shifts to JSON Schema support and post-3.3
 - JSON Schema outputs where required (Draft 2020-12 semantics, strict, deterministic)
 - JSON Schema input support (Draft 2020-12)
 - Feature-parity alignment (tracked under `.agent/research/feature-parity/*`)
-- Multi-artefact output separation where it improves strict round-trips (Zod schema output vs metadata outputs)
+- Multi-artefact output separation where it improves strict transform validation paths (Zod schema output vs metadata outputs)
 
 Plan: [phase-4-json-schema-and-parity.md](./future/phase-4-json-schema-and-parity.md)
 
@@ -212,7 +213,7 @@ Strictness note: any "best-effort" or "permissive fallback" behavior is a doctri
 > - `endpoints` array (runtime metadata)
 > - `mcpTools` array (MCP tool definitions)
 >
-> The Zod **parser** only handles schema declarations. For true round-trip validation,
+> The Zod **parser** only handles schema declarations. For true transform validation,
 > consider separating into distinct writers:
 >
 > - **Zod Schema Writer** — Pure schema output (parseable by Zod parser)

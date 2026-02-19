@@ -114,7 +114,7 @@
 - Castr’s Zod parser should understand both:
   - `.openapi()` metadata (zod-to-openapi style)
   - `.meta()` metadata (Zod native, used by zod-openapi)
-- The fixture suite can be used to create Castr round-trip tests once IR coverage is complete.
+- The fixture suite can be used to create Castr transform-sample tests once IR coverage is complete (including round-trip/idempotence proofs where needed).
 
 ## Gaps / open questions
 

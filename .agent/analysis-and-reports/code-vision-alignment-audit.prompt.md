@@ -130,7 +130,7 @@ The AST is defined in `lib/src/context/ir-schema.ts`. Key types:
 
 - `lib/src/writers/zod-writer.ts` - CastrSchema → Zod code
 - `lib/src/writers/type-writer.ts` - CastrSchema → TypeScript types
-- `lib/src/generators/openapi/index.ts` - CastrDocument → OpenAPI (round-trip)
+- `lib/src/generators/openapi/index.ts` - CastrDocument → OpenAPI (transform validation path)
 
 ### Pipeline
 

@@ -4,7 +4,7 @@
 **Status:** ✅ COMPLETE  
 **Session:** 2.8 + 2.9  
 **Specification:** [zod-output-acceptance-criteria.md](../acceptance-criteria/zod-output-acceptance-criteria.md)  
-**Test Docs:** [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md)  
+**Test Docs:** [lib/tests-transforms/README.md](../../lib/tests-transforms/README.md)  
 **ADR:** [ADR-031-zod-output-strategy.md](../adr/ADR-031-zod-output-strategy.md)
 
 ---
@@ -38,7 +38,7 @@ Implement FULL Zod 4 output support with **zero information loss** from the IR.
 
 **Completed:** January 20, 2026
 
-**Location:** `lib/tests-roundtrip/__tests__/validation-parity.integration.test.ts`
+**Location:** `lib/tests-transforms/__tests__/validation-parity.integration.test.ts`
 
 **Approach:**
 
@@ -130,13 +130,13 @@ Session 2.9 advanced features:
 
 ## Key Files
 
-| File                                                                  | Purpose                    |
-| --------------------------------------------------------------------- | -------------------------- |
-| `lib/src/writers/zod/index.ts`                                        | Main Zod writer            |
-| `lib/src/writers/zod/metadata.ts`                                     | Metadata via .meta()       |
-| `lib/src/writers/typescript/type-writer.ts`                           | TypeScript type generation |
-| `lib/src/writers/typescript/endpoints.ts`                             | Endpoint generation        |
-| `lib/tests-roundtrip/__tests__/validation-parity.integration.test.ts` | Parity tests               |
+| File                                                                   | Purpose                    |
+| ---------------------------------------------------------------------- | -------------------------- |
+| `lib/src/writers/zod/index.ts`                                         | Main Zod writer            |
+| `lib/src/writers/zod/metadata.ts`                                      | Metadata via .meta()       |
+| `lib/src/writers/typescript/type-writer.ts`                            | TypeScript type generation |
+| `lib/src/writers/typescript/endpoints.ts`                              | Endpoint generation        |
+| `lib/tests-transforms/__tests__/validation-parity.integration.test.ts` | Parity tests               |
 
 ---
 
@@ -155,7 +155,7 @@ pnpm test:gen && pnpm character
 ## References
 
 - [zod-output-acceptance-criteria.md](../acceptance-criteria/zod-output-acceptance-criteria.md) — Success criteria
-- [lib/tests-roundtrip/README.md](../../lib/tests-roundtrip/README.md) — Test infrastructure
+- [lib/tests-transforms/README.md](../../lib/tests-transforms/README.md) — Test infrastructure
 - [Zod 4 Metadata Docs](https://zod.dev/metadata) — `.meta()` API
 - [RULES.md](../RULES.md) — Strict-By-Default section
 - [testing-strategy.md](../testing-strategy.md) — TDD methodology

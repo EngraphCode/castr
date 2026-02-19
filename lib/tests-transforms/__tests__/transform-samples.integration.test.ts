@@ -1,8 +1,11 @@
 /**
- * Round-Trip Integration Tests
+ * Transform Integration Tests (Sample Input)
  *
  * Tests that OpenAPI specifications survive the complete transformation pipeline:
  * OpenAPI Input → buildIR() → IR (CastrDocument) → writeOpenApi() → OpenAPI Output
+ *
+ * Note: A subset of these transform tests are explicit round-trip assertions
+ * used to prove losslessness and idempotence.
  *
  * **Two Test Categories:**
  *
@@ -14,7 +17,7 @@
  *    - Test: write(parse(output)) === output
  *    - Uses byte-level comparison
  *
- * @see ADR-027 Round-Trip Validation as Correctness Proof
+ * @see ADR-027 Transform Validation with Sample Input as Correctness Proof
  */
 
 import { resolve } from 'node:path';
@@ -59,12 +62,12 @@ async function parseToIR(specPath: string): Promise<ReturnType<typeof buildIR>> 
 }
 
 /**
- * Performs a round-trip: parse → write → parse.
- * Returns both the original IR and the round-tripped IR for comparison.
+ * Performs a transform round-trip pass: parse → write → parse.
+ * Returns both the original IR and the transformed IR for comparison.
  */
-async function roundTrip(
+async function runTransformPass(
   specPath: string,
-): Promise<{ originalIR: ReturnType<typeof buildIR>; roundTrippedIR: ReturnType<typeof buildIR> }> {
+): Promise<{ originalIR: ReturnType<typeof buildIR>; transformedIR: ReturnType<typeof buildIR> }> {
   // Parse original spec to IR
   const originalIR = await parseToIR(specPath);
 
@@ -72,9 +75,9 @@ async function roundTrip(
   const openApiOutput = writeOpenApi(originalIR);
 
   // Parse the output back to IR (using in-memory document)
-  const roundTrippedIR = buildIR(openApiOutput);
+  const transformedIR = buildIR(openApiOutput);
 
-  return { originalIR, roundTrippedIR };
+  return { originalIR, transformedIR };
 }
 
 /**
@@ -100,32 +103,35 @@ async function generateZodFromOpenAPI(
 // Tests: Losslessness (IR Comparison)
 // ============================================================================
 
-describe('Round-Trip: Losslessness', () => {
+describe('Transform Samples: Losslessness (Round-Trip Proof)', () => {
   describe('Arbitrary fixtures preserve semantic content', () => {
-    it.each(ARBITRARY_FIXTURES)('%s: IR is preserved through round-trip', async (_name, path) => {
-      const { originalIR, roundTrippedIR } = await roundTrip(path);
+    it.each(ARBITRARY_FIXTURES)(
+      '%s: IR is preserved through transform pipeline',
+      async (_name, path) => {
+        const { originalIR, transformedIR } = await runTransformPass(path);
 
-      // Core document properties
-      expect(roundTrippedIR.info).toEqual(originalIR.info);
-      expect(roundTrippedIR.servers).toEqual(originalIR.servers);
+        // Core document properties
+        expect(transformedIR.info).toEqual(originalIR.info);
+        expect(transformedIR.servers).toEqual(originalIR.servers);
 
-      // Operations count and core properties
-      expect(roundTrippedIR.operations.length).toBe(originalIR.operations.length);
+        // Operations count and core properties
+        expect(transformedIR.operations.length).toBe(originalIR.operations.length);
 
-      // Components count by type
-      const originalSchemaCount = originalIR.components.filter((c) => c.type === 'schema').length;
-      const roundTrippedSchemaCount = roundTrippedIR.components.filter(
-        (c) => c.type === 'schema',
-      ).length;
-      expect(roundTrippedSchemaCount).toBe(originalSchemaCount);
-    });
+        // Components count by type
+        const originalSchemaCount = originalIR.components.filter((c) => c.type === 'schema').length;
+        const transformedSchemaCount = transformedIR.components.filter(
+          (c) => c.type === 'schema',
+        ).length;
+        expect(transformedSchemaCount).toBe(originalSchemaCount);
+      },
+    );
   });
 
   describe('Operation details are preserved', () => {
     it.each(ARBITRARY_FIXTURES)(
       '%s: operation paths and methods preserved',
       async (_name, path) => {
-        const { originalIR, roundTrippedIR } = await roundTrip(path);
+        const { originalIR, transformedIR } = await runTransformPass(path);
 
         // Extract operation signatures for comparison
         const originalOps = originalIR.operations.map((op) => ({
@@ -134,20 +140,20 @@ describe('Round-Trip: Losslessness', () => {
           operationId: op.operationId,
         }));
 
-        const roundTrippedOps = roundTrippedIR.operations.map((op) => ({
+        const transformedOps = transformedIR.operations.map((op) => ({
           path: op.path,
           method: op.method,
           operationId: op.operationId,
         }));
 
-        expect(roundTrippedOps).toEqual(originalOps);
+        expect(transformedOps).toEqual(originalOps);
       },
     );
   });
 
   describe('Schema content is preserved', () => {
     it.each(ARBITRARY_FIXTURES)('%s: schema names and types preserved', async (_name, path) => {
-      const { originalIR, roundTrippedIR } = await roundTrip(path);
+      const { originalIR, transformedIR } = await runTransformPass(path);
 
       // Extract schema component names
       const originalSchemas = originalIR.components
@@ -155,12 +161,12 @@ describe('Round-Trip: Losslessness', () => {
         .map((c) => c.name)
         .sort();
 
-      const roundTrippedSchemas = roundTrippedIR.components
+      const transformedSchemas = transformedIR.components
         .filter((c) => c.type === 'schema')
         .map((c) => c.name)
         .sort();
 
-      expect(roundTrippedSchemas).toEqual(originalSchemas);
+      expect(transformedSchemas).toEqual(originalSchemas);
     });
   });
 });
@@ -169,16 +175,16 @@ describe('Round-Trip: Losslessness', () => {
 // Tests: Idempotency (Output Stability)
 // ============================================================================
 
-describe('Round-Trip: Idempotency', () => {
-  describe('Double round-trip produces identical IR', () => {
-    it.each(ARBITRARY_FIXTURES)('%s: second round-trip matches first', async (_name, path) => {
-      // First round-trip
-      const { roundTrippedIR: ir1 } = await roundTrip(path);
+describe('Transform Samples: Idempotency (Round-Trip Proof)', () => {
+  describe('Double transform pass produces identical IR', () => {
+    it.each(ARBITRARY_FIXTURES)('%s: second transform pass matches first', async (_name, path) => {
+      // First transform pass
+      const { transformedIR: ir1 } = await runTransformPass(path);
 
       // Write IR1 to OpenAPI
       const output1 = writeOpenApi(ir1);
 
-      // Second round-trip
+      // Second transform pass
       const ir2 = buildIR(output1);
       const output2 = writeOpenApi(ir2);
 
@@ -311,17 +317,17 @@ describe('OpenAPI Document: Idempotency', () => {
 });
 
 // ============================================================================
-// Scenario 2: Zod → IR → Zod Round-Trip
+// Scenario 2: Zod → IR → Zod Transform Path
 // ============================================================================
 
 /**
  * Zod Parser Fixtures — existing happy-path fixtures for Zod → IR → Zod testing.
  * These contain valid Zod 4 schema declarations.
  *
- * NOTE: Some Zod 4 syntax (z.undefined, z.float32) isn't fully preserved in round-trip
+ * NOTE: Some Zod 4 syntax (z.undefined, z.float32) isn't fully preserved in the transform path
  * because the IR is OpenAPI-semantics. This is expected — we test that:
  * 1. The normalized OUTPUT is idempotent (second pass === first pass)
- * 2. Schema count is preserved through round-trip
+ * 2. Schema count is preserved through the transform path
  */
 const ZOD_FIXTURES_DIR = resolve(__dirname, '../../tests-fixtures/zod-parser/happy-path');
 
@@ -339,9 +345,9 @@ async function readZodFixture(path: string): Promise<string> {
   return readFile(path, 'utf-8');
 }
 
-describe('Round-Trip Scenario 2: Zod → IR → Zod', () => {
+describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
   /**
-   * Scenario 2 tests the full round-trip through the REAL system:
+   * Scenario 2 tests the full transform path through the REAL system:
    * Zod → IR → OpenAPI → Zod (via real generator) → IR
    *
    * Two test categories:
@@ -349,7 +355,7 @@ describe('Round-Trip Scenario 2: Zod → IR → Zod', () => {
    * 2. Idempotency: Normalized output is byte-identical on second pass
    */
 
-  describe('Losslessness: Schema count preserved through round-trip', () => {
+  describe('Losslessness: Schema count preserved through transform path', () => {
     it.each(ZOD_FIXTURES)('%s: Zod → IR → Zod → IR preserves schema count', async (_name, path) => {
       // Parse arbitrary Zod
       const source = await readZodFixture(path);
@@ -408,7 +414,7 @@ describe('Round-Trip Scenario 2: Zod → IR → Zod', () => {
  * Scenario 3 tests that schemas flow through the Zod layer without loss.
  * This proves OpenAPI schemas can be represented in Zod and parsed back.
  */
-describe('Round-Trip Scenario 3: OpenAPI → Zod → OpenAPI', () => {
+describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
   describe('Losslessness: Schema content flows through Zod layer', () => {
     it.each(ARBITRARY_FIXTURES)(
       '%s: OpenAPI → Zod → IR preserves schema count',
@@ -439,10 +445,10 @@ describe('Round-Trip Scenario 3: OpenAPI → Zod → OpenAPI', () => {
 // ============================================================================
 
 /**
- * Scenario 4 tests that Zod schemas survive a full cross-format round-trip.
+ * Scenario 4 tests that Zod schemas survive a full cross-format transform path.
  * Note: Some Zod-specific formats (z.hostname, etc.) may normalize through OpenAPI.
  */
-describe('Round-Trip Scenario 4: Zod → OpenAPI → Zod', () => {
+describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
   describe('Losslessness: Schema count preserved through cross-format trip', () => {
     it.each(ZOD_FIXTURES)('%s: Zod → OpenAPI → Zod preserves schema count', async (_name, path) => {
       // Zod → IR

@@ -15,7 +15,7 @@
  *   npx tsx scripts/generate-normalized-fixtures.ts
  *
  * Output:
- *   lib/tests-roundtrip/__fixtures__/normalized/{fixture-name}/
+ *   lib/tests-transforms/__fixtures__/normalized/{fixture-name}/
  *     - input.yaml (symlink to original)
  *     - normalized.json
  *     - reprocessed.json
@@ -33,9 +33,9 @@ import { generateZodClientFromOpenAPI, isSingleFileResult } from '../src/renderi
 
 const ARBITRARY_FIXTURES_DIR = resolve(
   import.meta.dirname,
-  '../tests-roundtrip/__fixtures__/arbitrary',
+  '../tests-transforms/__fixtures__/arbitrary',
 );
-const OUTPUT_DIR = resolve(import.meta.dirname, '../tests-roundtrip/__fixtures__/normalized');
+const OUTPUT_DIR = resolve(import.meta.dirname, '../tests-transforms/__fixtures__/normalized');
 
 const FIXTURES = [
   'tictactoe-3.1.yaml',

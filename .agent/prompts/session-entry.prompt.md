@@ -36,18 +36,20 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Session 3.3b — Strict Zod-Layer Round-Trip Validation
+### Priority 1: Session 3.3b — Strict Zod-Layer Transform Validation (Sample Input)
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3b)
 
-**ACTIVE PLAN: [3.3b.01 — Round-Trip Suite Strictness](../plans/active/3.3b-01-roundtrip-suite-strictness.md)** — open this file first.
+**ACTIVE PLAN: [3.3b.01 — Transform Sample Suite Strictness](../plans/active/3.3b-01-transform-sample-suite-strictness.md)** — open this file first.
+
+> **Canonical source rule:** Execute from the file in `.agent/plans/active/` only. If a same-named plan exists under `.agent/plans/current/session-3.3b/`, treat it as a queue mirror/pointer, not the execution source.
 
 #### Plan lifecycle
 
 There is always exactly one active plan in `.agent/plans/active/` (plus a README). When a plan is complete:
 
 1. Move the finished plan to `.agent/plans/current/complete/`.
-2. Copy the next queued plan (from the appropriate `.agent/plans/current/session-*` queue) into `.agent/plans/active/`.
+2. Resolve the next plan from the finished plan's **Successor** field, then copy that queued plan (from the appropriate `.agent/plans/current/session-*` queue) into `.agent/plans/active/`.
 3. Update the status in [roadmap.md](../plans/roadmap.md) execution table.
 4. Update this file's "ACTIVE PLAN" link and context to point at the new plan.
 
@@ -71,6 +73,7 @@ The plan's **Successor** field tells you which plan comes next.
 - **3.3a.06** ✅ Complete (2026-02-17) — removed swallowed-error paths and replaced silent skips/catches with strict fail-fast errors carrying source context.
 - **3.3a.07** ✅ Complete (2026-02-17) — removed non-governed check-disabling directives and eliminated remaining escape-hatch usage in scope while keeping quality gates green (policy now codified in `.agent/directives/RULES.md`).
 - **3.3a.08** ✅ Complete (2026-02-19) — determinism closure executed end-to-end: Tranches A-D completed (TypeScript/Zod property ordering, grouped `result.paths`, MCP nested `properties` map ordering), failing-first tests added, and the full one-by-one gate sequence is green (`clean` → `test:transforms`) after snapshot baseline refresh. Plan moved to `current/complete/`.
+- **3.3b status checkpoint** (2026-02-19) — Scenario 2 and Scenario 4 are in strictness-hardening state (🟡) under 3.3b.01; Scenario 3 remains blocked (🔴) until identifier-rooted composition parsing is fixed in 3.3b.02.
 
 #### Plan restructuring (2026-02-17)
 
@@ -85,25 +88,30 @@ The plan's **Successor** field tells you which plan comes next.
 
 Execution focus for the active plan:
 
-1. Remove weak round-trip assertions (`<=`, tolerance language, skip-on-error patterns) and replace with strict proofs.
+1. Remove weak transform-sample assertions (`<=`, tolerance language, skip-on-error patterns) and replace with strict proofs.
 2. Remove early returns that hide parse failures; failures must surface actionable context.
-3. Keep scope tight to test-suite strictness only; production-code fixes belong to successor plans.
+3. Add explicit parse-error assertions for Scenarios 2-4; Scenario 3 must assert zero parse errors before strict schema-count equality.
+4. Keep scope tight to test-suite strictness only; production-code fixes belong to successor plans.
 
 Immediate next action:
 
-1. Execute `3.3b.01` with strict Red → Green → Refactor in `lib/tests-roundtrip/__tests__/round-trip.integration.test.ts`.
+1. Execute `3.3b.01` with strict Red → Green → Refactor in `lib/tests-transforms/__tests__/transform-samples.integration.test.ts`.
 
 #### Quick start
 
 ```bash
-# Repo root: verify baseline
-pnpm qg
-
 # Open active plan
-sed -n '1,260p' .agent/plans/active/3.3b-01-roundtrip-suite-strictness.md
+sed -n '1,260p' .agent/plans/active/3.3b-01-transform-sample-suite-strictness.md
 
 # Immediate target for strictness pass
-sed -n '1,360p' lib/tests-roundtrip/__tests__/round-trip.integration.test.ts
+sed -n '1,360p' lib/tests-transforms/__tests__/transform-samples.integration.test.ts
+
+# Red-first baseline for this plan (targeted suite)
+cd lib && pnpm vitest run --config vitest.transforms.config.ts \
+  tests-transforms/__tests__/transform-samples.integration.test.ts
+
+# Run full gates only after plan work is complete (one gate at a time)
+# See active plan Verification Protocol.
 ```
 
 #### Absolute strictness principles (from `start-right.prompt.md`)

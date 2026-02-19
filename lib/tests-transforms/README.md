@@ -1,4 +1,4 @@
-# Round-Trip Test Suite
+# Transform Test Suite (Sample Input)
 
 This directory contains integration tests that verify specifications survive complete transformation pipelines:
 
@@ -13,7 +13,7 @@ OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) 🔲
 
 ## Validation Framework
 
-All round-trip scenarios use two validation categories:
+Transform tests in this suite use two validation categories:
 
 ### Losslessness — Arbitrary Input → Normalized Output
 
@@ -29,19 +29,21 @@ All round-trip scenarios use two validation categories:
 - Castr-normalized input MUST produce byte-identical output
 - Uses byte-level comparison (string equality)
 
+Some transform tests are explicit round-trip proofs. Those round-trip assertions are used to prove properties such as losslessness and idempotence.
+
 ---
 
 ## Test Files
 
-| File                                                  | Purpose                                   | Tests |
-| ----------------------------------------------------- | ----------------------------------------- | ----- |
-| `input-coverage.integration.test.ts`                  | Verifies OpenAPI syntax is parsed to IR   | 48    |
-| `output-coverage.integration.test.ts`                 | Verifies IR fields are written to OpenAPI | 25    |
-| `__tests__/round-trip.integration.test.ts`            | Losslessness and idempotency validation   | 45    |
-| `__tests__/version-validation.integration.test.ts`    | Version-specific validation rules         | 20    |
-| `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior       | 16    |
-| `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification      | 45    |
-| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification          | 47    |
+| File                                                  | Purpose                                                        | Tests |
+| ----------------------------------------------------- | -------------------------------------------------------------- | ----- |
+| `input-coverage.integration.test.ts`                  | Verifies OpenAPI syntax is parsed to IR                        | 48    |
+| `output-coverage.integration.test.ts`                 | Verifies IR fields are written to OpenAPI                      | 25    |
+| `__tests__/transform-samples.integration.test.ts`     | Transform-sample scenarios incl. round-trip/idempotency proofs | 45    |
+| `__tests__/version-validation.integration.test.ts`    | Version-specific validation rules                              | 20    |
+| `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior                            | 16    |
+| `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification                           | 45    |
+| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification                               | 47    |
 
 ---
 
@@ -88,7 +90,7 @@ Located in `__fixtures__/`:
 
 ### OpenAPI Fixtures
 
-- `arbitrary/` — Real-world OpenAPI specs for round-trip testing
+- `arbitrary/` — Real-world OpenAPI specs for transform testing with sample input
 - `normalized/` — Castr-normalized output for idempotency testing
 - `valid/` — Valid 3.0.x and 3.1.x specifications
 - `invalid/` — Version validation test cases
@@ -97,16 +99,16 @@ Located in `__fixtures__/`:
 
 Located in `../tests-fixtures/zod-parser/happy-path/`:
 
-- Schema declaration fixtures for Zod → IR → Zod round-trip
+- Schema declaration fixtures for Zod → IR → Zod transform testing
 
 ---
 
 ## Running Tests
 
 ```bash
-# Run all roundtrip tests
-pnpm test:roundtrip
+# Run all transform tests (sample input suite)
+pnpm test:transforms
 
 # Run specific test file
-cd lib && npx vitest run --config vitest.roundtrip.config.ts __tests__/round-trip.integration.test.ts
+cd lib && npx vitest run --config vitest.transforms.config.ts __tests__/transform-samples.integration.test.ts
 ```

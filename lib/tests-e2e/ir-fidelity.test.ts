@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 describe('IR Fidelity', () => {
   const petstorePath = path.resolve(__dirname, '../examples/openapi/v3.1/tictactoe.yaml');
 
-  it('should maintain fidelity through IR round-trip', async () => {
+  it('should maintain fidelity through IR transform pass', async () => {
     // 1. Generate Standard Output (Code A)
     const resultA = await generateZodClientFromOpenAPI({
       input: petstorePath,

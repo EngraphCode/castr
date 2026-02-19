@@ -119,13 +119,13 @@ With this principle:
 
 ### Current Progress
 
-| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                |
-| ----------- | :-----------: | :-----------: | -------------------------------------------------------------------------------------------------------------------- |
-| OpenAPI     |      ✅       |      ✅       | OpenAPI ↔ OpenAPI round-trip is validated; full spec completeness is tracked in `.agent/directives/requirements.md`. |
-| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; full Zod-layer round-trip proofs are in progress (Session 3.3).                             |
-| JSON Schema |      🔲       |      🔲       | Deferred (internal conversions exist for MCP only).                                                                  |
-| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                         |
-| tRPC        |      🔲       |      🔲       | Planned.                                                                                                             |
+| Format      | → IR (Parser) | IR → (Writer) | Notes                                                                                                                             |
+| ----------- | :-----------: | :-----------: | --------------------------------------------------------------------------------------------------------------------------------- |
+| OpenAPI     |      ✅       |      ✅       | OpenAPI ↔ OpenAPI transform validation is proven; full spec completeness is tracked in `.agent/directives/requirements.md`.       |
+| Zod         | ✅ (v4 only)  | ✅ (v4 only)  | Parser and writer exist; full Zod-layer transform proofs (including round-trip/idempotence checks) are in progress (Session 3.3). |
+| JSON Schema |      🔲       |      🔲       | Deferred (internal conversions exist for MCP only).                                                                               |
+| TypeScript  |       —       |      ✅       | Output-only (writer exists).                                                                                                      |
+| tRPC        |      🔲       |      🔲       | Planned.                                                                                                                          |
 
 ---
 
@@ -152,13 +152,13 @@ Once both parser and writer exist for a format, same-format conversions enable:
 
 The order of format support is **deliberate** — by implementing both input and output for each format before moving to the next, we understand what's common between input/output code for a given format:
 
-| Order | Transform                | Rationale                                                    |
-| ----- | ------------------------ | ------------------------------------------------------------ |
-| 1     | **OpenAPI → Zod**        | Established baseline (current)                               |
-| 2     | **Zod → OpenAPI**        | Complete Zod round-trip; understand input/output commonality |
-| 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges with well-understood formats            |
-| 4     | **JSONSchema ↔ Zod**     | Complete JSON Schema triangulation                           |
-| 5     | **tRPC ↔ IR**            | Additional formats as needed                                 |
+| Order | Transform                | Rationale                                                              |
+| ----- | ------------------------ | ---------------------------------------------------------------------- |
+| 1     | **OpenAPI → Zod**        | Established baseline (current)                                         |
+| 2     | **Zod → OpenAPI**        | Complete Zod transform validation; understand input/output commonality |
+| 3     | **JSONSchema ↔ OpenAPI** | Cross-format bridges with well-understood formats                      |
+| 4     | **JSONSchema ↔ Zod**     | Complete JSON Schema triangulation                                     |
+| 5     | **tRPC ↔ IR**            | Additional formats as needed                                           |
 
 > **Note:** Roadmap _phases_ (delivery milestones) are tracked in `.agent/plans/roadmap.md`. The ordering above is a conceptual sequencing for format support, not a roadmap phase number.
 

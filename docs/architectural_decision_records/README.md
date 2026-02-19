@@ -67,16 +67,16 @@ Each ADR follows this structure:
 
 ### Phase 2: Zod → OpenAPI (In Progress)
 
-| ADR                                                    | Title                              | Status   | Date       |
-| ------------------------------------------------------ | ---------------------------------- | -------- | ---------- |
-| [025](./ADR-025-http-client-di-integration.md)         | HTTP Client DI Integration         | Accepted | 2026-01-06 |
-| [026](./ADR-026-no-string-manipulation-for-parsing.md) | No String Manipulation for Parsing | Accepted | 2026-01-10 |
-| [027](./ADR-027-round-trip-validation.md)              | Round-Trip Validation              | Accepted | 2026-01-12 |
-| [028](./ADR-028-ir-openapi-consolidation.md)           | IR→OpenAPI Consolidation           | Accepted | 2026-01-12 |
-| [029](./ADR-029-canonical-source-structure.md)         | Canonical Source Structure         | Accepted | 2026-01-12 |
-| [030](./ADR-030-full-openapi-syntax-support.md)        | Full OpenAPI Syntax Support        | Accepted | 2026-01-13 |
-| [031](./ADR-031-zod-output-strategy.md)                | Zod 4 Output Strategy              | Accepted | 2026-01-21 |
-| [032](./ADR-032-zod-input-strategy.md)                 | Zod 4 Input Strategy               | Accepted | 2026-01-23 |
+| ADR                                                    | Title                                  | Status   | Date       |
+| ------------------------------------------------------ | -------------------------------------- | -------- | ---------- |
+| [025](./ADR-025-http-client-di-integration.md)         | HTTP Client DI Integration             | Accepted | 2026-01-06 |
+| [026](./ADR-026-no-string-manipulation-for-parsing.md) | No String Manipulation for Parsing     | Accepted | 2026-01-10 |
+| [027](./ADR-027-round-trip-validation.md)              | Transform Validation with Sample Input | Accepted | 2026-01-12 |
+| [028](./ADR-028-ir-openapi-consolidation.md)           | IR→OpenAPI Consolidation               | Accepted | 2026-01-12 |
+| [029](./ADR-029-canonical-source-structure.md)         | Canonical Source Structure             | Accepted | 2026-01-12 |
+| [030](./ADR-030-full-openapi-syntax-support.md)        | Full OpenAPI Syntax Support            | Accepted | 2026-01-13 |
+| [031](./ADR-031-zod-output-strategy.md)                | Zod 4 Output Strategy                  | Accepted | 2026-01-21 |
+| [032](./ADR-032-zod-input-strategy.md)                 | Zod 4 Input Strategy                   | Accepted | 2026-01-23 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)

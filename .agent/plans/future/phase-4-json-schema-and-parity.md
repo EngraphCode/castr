@@ -8,7 +8,7 @@
 
 ## Goal
 
-After Session 3.3 (strict Zod-layer round-trip) is complete, Phase 4 focuses on:
+After Session 3.3 (strict Zod-layer transform validation with sample input) is complete, Phase 4 focuses on:
 
 - JSON Schema (Draft 2020-12) support as a first-class format, and
 - parity work that improves strict, lossless transforms without expanding scope prematurely.
@@ -22,7 +22,7 @@ This phase must remain strict: no lossy normalization, no permissive fallbacks, 
 - **JSON Schema output** for validation use-cases where JSON Schema is required.
 - **JSON Schema input** parsing into IR.
 - **Feature-parity alignment** workstream (see `.agent/research/feature-parity/*`).
-- **Multi-artefact output separation** when it is required to maintain strict round-trips:
+- **Multi-artefact output separation** when it is required to maintain strict transform validation paths (including round-trip/idempotence proofs):
   - “pure schema” outputs must be parseable by schema parsers,
   - metadata outputs must be separate artifacts (not mixed into schema-only streams).
 
