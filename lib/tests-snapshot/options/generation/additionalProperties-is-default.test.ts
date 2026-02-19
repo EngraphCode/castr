@@ -97,8 +97,8 @@ describe('additional-properties', () => {
       `
       {
           "code": "z.object({
-        foo: z.string().optional(),
         bar: z.number().optional(),
+        foo: z.string().optional(),
       }).passthrough()",
           "schema": {
               "properties": {

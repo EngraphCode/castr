@@ -19,8 +19,8 @@ test('required-additional-props-not-in-properties', () => {
   ).toMatchInlineSnapshot(`
     {
         "code": "z.object({
-      name: z.string(),
       email: z.string(),
+      name: z.string(),
     }).passthrough()",
         "schema": {
             "properties": {

@@ -158,15 +158,15 @@ test('object-default-values', async () => {
               query: {
                 type: "object",
                 properties: {
-                  "empty-object": {
-                    type: "object",
-                    default: {},
-                    properties: { foo: { type: "string" } },
-                    required: [],
-                  },
                   "default-object": {
                     type: "object",
                     default: { foo: "bar" },
+                    properties: { foo: { type: "string" } },
+                    required: [],
+                  },
+                  "empty-object": {
+                    type: "object",
+                    default: {},
                     properties: { foo: { type: "string" } },
                     required: [],
                   },

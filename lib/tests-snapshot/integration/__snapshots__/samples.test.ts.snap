@@ -5,23 +5,23 @@ exports[`openapi-examples > results by file 1`] = `
     "custom/v3.1/multi-auth": "import { z } from "zod";
 // Type Definitions
 export type CreateUserInput = {
-  /** Unique handle for the user */ username: unknown;
-  email: string;
   /** Optional age in years */ age?: unknown;
+  email: string;
+  /** Unique handle for the user */ username: unknown;
 };
 // Zod Schemas
 export const CreateUserInput = z
   .object({
-    username: z
-      .string()
-      .nullable()
-      .meta({ description: "Unique handle for the user" }),
-    email: z.email(),
     age: z
       .int()
       .nullable()
       .optional()
       .meta({ description: "Optional age in years" }),
+    email: z.email(),
+    username: z
+      .string()
+      .nullable()
+      .meta({ description: "Unique handle for the user" }),
   })
   .strict();
 // Endpoints
@@ -90,16 +90,16 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                username: {
-                  type: ["string", null],
-                  description: "Unique handle for the user",
-                  minLength: 3,
-                },
-                email: { type: "string", format: "email" },
                 age: {
                   type: ["integer", null],
                   description: "Optional age in years",
                   minimum: 0,
+                },
+                email: { type: "string", format: "email" },
+                username: {
+                  type: ["string", null],
+                  description: "Unique handle for the user",
+                  minLength: 3,
                 },
               },
               required: ["username", "email"],
@@ -136,16 +136,16 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              username: {
-                type: ["string", null],
-                description: "Unique handle for the user",
-                minLength: 3,
-              },
-              email: { type: "string", format: "email" },
               age: {
                 type: ["integer", null],
                 description: "Optional age in years",
                 minimum: 0,
+              },
+              email: { type: "string", format: "email" },
+              username: {
+                type: ["string", null],
+                description: "Unique handle for the user",
+                minLength: 3,
               },
             },
             required: ["username", "email"],
@@ -472,14 +472,14 @@ export type user = {
   uuid?: string;
 };
 export type repository = {
-  slug?: string;
   owner?: user;
+  slug?: string;
 };
 export type pullrequest = {
-  id?: number;
-  title?: string;
-  repository?: repository;
   author?: user;
+  id?: number;
+  repository?: repository;
+  title?: string;
 };
 // Zod Schemas
 export const user = z
@@ -490,16 +490,16 @@ export const user = z
   .passthrough();
 export const repository = z
   .object({
-    slug: z.string().optional(),
     owner: user.optional(),
+    slug: z.string().optional(),
   })
   .passthrough();
 export const pullrequest = z
   .object({
-    id: z.int().optional(),
-    title: z.string().optional(),
-    repository: repository.optional(),
     author: user.optional(),
+    id: z.int().optional(),
+    repository: repository.optional(),
+    title: z.string().optional(),
   })
   .passthrough();
 // Endpoints
@@ -782,7 +782,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                slug: { type: "string" },
                 owner: {
                   type: "object",
                   properties: {
@@ -791,6 +790,7 @@ export const mcpTools = [
                   },
                   required: [],
                 },
+                slug: { type: "string" },
               },
               required: [],
             },
@@ -825,8 +825,8 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              username: { type: "string" },
               slug: { type: "string" },
+              username: { type: "string" },
             },
             required: ["username", "slug"],
           },
@@ -836,7 +836,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          slug: { type: "string" },
           owner: {
             type: "object",
             properties: {
@@ -845,6 +844,7 @@ export const mcpTools = [
             },
             required: [],
           },
+          slug: { type: "string" },
         },
         required: [],
       },
@@ -876,8 +876,8 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              username: { type: "string" },
               slug: { type: "string" },
+              username: { type: "string" },
             },
             required: ["username", "slug"],
           },
@@ -898,23 +898,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer" },
-                title: { type: "string" },
-                repository: {
-                  type: "object",
-                  properties: {
-                    slug: { type: "string" },
-                    owner: {
-                      type: "object",
-                      properties: {
-                        username: { type: "string" },
-                        uuid: { type: "string" },
-                      },
-                      required: [],
-                    },
-                  },
-                  required: [],
-                },
                 author: {
                   type: "object",
                   properties: {
@@ -923,6 +906,23 @@ export const mcpTools = [
                   },
                   required: [],
                 },
+                id: { type: "integer" },
+                repository: {
+                  type: "object",
+                  properties: {
+                    owner: {
+                      type: "object",
+                      properties: {
+                        username: { type: "string" },
+                        uuid: { type: "string" },
+                      },
+                      required: [],
+                    },
+                    slug: { type: "string" },
+                  },
+                  required: [],
+                },
+                title: { type: "string" },
               },
               required: [],
             },
@@ -957,9 +957,9 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              username: { type: "string" },
-              slug: { type: "string" },
               pid: { type: "string" },
+              slug: { type: "string" },
+              username: { type: "string" },
             },
             required: ["username", "slug", "pid"],
           },
@@ -969,23 +969,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          title: { type: "string" },
-          repository: {
-            type: "object",
-            properties: {
-              slug: { type: "string" },
-              owner: {
-                type: "object",
-                properties: {
-                  username: { type: "string" },
-                  uuid: { type: "string" },
-                },
-                required: [],
-              },
-            },
-            required: [],
-          },
           author: {
             type: "object",
             properties: {
@@ -994,6 +977,23 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          repository: {
+            type: "object",
+            properties: {
+              owner: {
+                type: "object",
+                properties: {
+                  username: { type: "string" },
+                  uuid: { type: "string" },
+                },
+                required: [],
+              },
+              slug: { type: "string" },
+            },
+            required: [],
+          },
+          title: { type: "string" },
         },
         required: [],
       },
@@ -1026,9 +1026,9 @@ export const mcpTools = [
           path: {
             type: "object",
             properties: {
-              username: { type: "string" },
-              slug: { type: "string" },
               pid: { type: "string" },
+              slug: { type: "string" },
+              username: { type: "string" },
             },
             required: ["username", "slug", "pid"],
           },
@@ -1549,8 +1549,8 @@ export const mcpTools = [
           query: {
             type: "object",
             properties: {
-              tags: { type: "array", items: { type: "string" } },
               limit: { type: "integer", format: "int32" },
+              tags: { type: "array", items: { type: "string" } },
             },
           },
         },
@@ -1747,47 +1747,47 @@ export const mcpTools = [
     "v3.0/uspto": "import { z } from "zod";
 // Type Definitions
 export type dataSetList = {
-  total?: number;
   apis?: {
-    /** To be used as a dataset parameter value */ apiKey?: string;
-    /** To be used as a version parameter value */ apiVersionNumber?: string;
-    /** The URL describing the dataset's fields */ apiUrl?: string;
     /** A URL to the API console for each API */ apiDocumentationUrl?: string;
+    /** To be used as a dataset parameter value */ apiKey?: string;
+    /** The URL describing the dataset's fields */ apiUrl?: string;
+    /** To be used as a version parameter value */ apiVersionNumber?: string;
   }[];
+  total?: number;
 };
 export type perform_search_Body = {
   /** Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values. */ criteria: string;
-  /** Starting record number. Default value is 0. */ start?: number;
   /** Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset. */ rows?: number;
+  /** Starting record number. Default value is 0. */ start?: number;
 };
 // Zod Schemas
 export const dataSetList = z
   .object({
-    total: z.int().optional(),
     apis: z
       .array(
         z
           .object({
-            apiKey: z
-              .string()
-              .optional()
-              .meta({ description: "To be used as a dataset parameter value" }),
-            apiVersionNumber: z
-              .string()
-              .optional()
-              .meta({ description: "To be used as a version parameter value" }),
-            apiUrl: z
-              .string()
-              .optional()
-              .meta({ description: "The URL describing the dataset's fields" }),
             apiDocumentationUrl: z
               .string()
               .optional()
               .meta({ description: "A URL to the API console for each API" }),
+            apiKey: z
+              .string()
+              .optional()
+              .meta({ description: "To be used as a dataset parameter value" }),
+            apiUrl: z
+              .string()
+              .optional()
+              .meta({ description: "The URL describing the dataset's fields" }),
+            apiVersionNumber: z
+              .string()
+              .optional()
+              .meta({ description: "To be used as a version parameter value" }),
           })
           .passthrough(),
       )
       .optional(),
+    total: z.int().optional(),
   })
   .passthrough();
 export const perform_search_Body = z
@@ -1798,10 +1798,6 @@ export const perform_search_Body = z
         description:
           "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
       }),
-    start: z
-      .int()
-      .optional()
-      .meta({ description: "Starting record number. Default value is 0." }),
     rows: z
       .int()
       .optional()
@@ -1809,6 +1805,10 @@ export const perform_search_Body = z
         description:
           "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
       }),
+    start: z
+      .int()
+      .optional()
+      .meta({ description: "Starting record number. Default value is 0." }),
   })
   .passthrough();
 // Endpoints
@@ -1909,18 +1909,18 @@ export const endpoints = [
                 description:
                   "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
               }),
-            start: z
-              .int()
-              .optional()
-              .meta({
-                description: "Starting record number. Default value is 0.",
-              }),
             rows: z
               .int()
               .optional()
               .meta({
                 description:
                   "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+              }),
+            start: z
+              .int()
+              .optional()
+              .meta({
+                description: "Starting record number. Default value is 0.",
               }),
           })
           .passthrough(),
@@ -1959,18 +1959,18 @@ export const endpoints = [
               description:
                 "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
             }),
-          start: z
-            .int()
-            .optional()
-            .meta({
-              description: "Starting record number. Default value is 0.",
-            }),
           rows: z
             .int()
             .optional()
             .meta({
               description:
                 "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+            }),
+          start: z
+            .int()
+            .optional()
+            .meta({
+              description: "Starting record number. Default value is 0.",
             }),
         })
         .passthrough(),
@@ -1991,34 +1991,34 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          total: { type: "integer" },
           apis: {
             type: "array",
             items: {
               type: "object",
               properties: {
+                apiDocumentationUrl: {
+                  type: "string",
+                  format: "uri-reference",
+                  description: "A URL to the API console for each API",
+                },
                 apiKey: {
                   type: "string",
                   description: "To be used as a dataset parameter value",
-                },
-                apiVersionNumber: {
-                  type: "string",
-                  description: "To be used as a version parameter value",
                 },
                 apiUrl: {
                   type: "string",
                   format: "uri-reference",
                   description: "The URL describing the dataset's fields",
                 },
-                apiDocumentationUrl: {
+                apiVersionNumber: {
                   type: "string",
-                  format: "uri-reference",
-                  description: "A URL to the API console for each API",
+                  description: "To be used as a version parameter value",
                 },
               },
               required: [],
             },
           },
+          total: { type: "integer" },
         },
         required: [],
       },
@@ -2093,14 +2093,6 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
-          path: {
-            type: "object",
-            properties: {
-              version: { type: "string", default: "v1" },
-              dataset: { type: "string", default: "oa_citations" },
-            },
-            required: ["version", "dataset"],
-          },
           body: {
             type: "object",
             properties: {
@@ -2110,19 +2102,27 @@ export const mcpTools = [
                   "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
                 default: "*:*",
               },
-              start: {
-                type: "integer",
-                description: "Starting record number. Default value is 0.",
-                default: 0,
-              },
               rows: {
                 type: "integer",
                 description:
                   "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
                 default: 100,
               },
+              start: {
+                type: "integer",
+                description: "Starting record number. Default value is 0.",
+                default: 0,
+              },
             },
             required: ["criteria"],
+          },
+          path: {
+            type: "object",
+            properties: {
+              dataset: { type: "string", default: "oa_citations" },
+              version: { type: "string", default: "v1" },
+            },
+            required: ["version", "dataset"],
           },
         },
         required: ["path"],
@@ -2220,8 +2220,8 @@ export type mark = string;
 export type board = mark[][];
 export type winner = string;
 export type status = {
-  winner?: winner;
   board?: board;
+  winner?: winner;
 };
 // Zod Schemas
 export const errorMessage = z
@@ -2248,8 +2248,8 @@ export const winner = z
   });
 export const status = z
   .object({
-    winner: winner.optional(),
     board: board.optional(),
+    winner: winner.optional(),
   })
   .passthrough();
 // Endpoints
@@ -2346,12 +2346,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          winner: {
-            type: "string",
-            description: "Winner of the game. \`.\` means nobody has won yet.",
-            example: ".",
-            enum: [".", "X", "O"],
-          },
           board: {
             type: "array",
             minItems: 3,
@@ -2368,6 +2362,12 @@ export const mcpTools = [
                 enum: [".", "X", "O"],
               },
             },
+          },
+          winner: {
+            type: "string",
+            description: "Winner of the game. \`.\` means nobody has won yet.",
+            example: ".",
+            enum: [".", "X", "O"],
           },
         },
         required: [],
@@ -2517,12 +2517,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          winner: {
-            type: "string",
-            description: "Winner of the game. \`.\` means nobody has won yet.",
-            example: ".",
-            enum: [".", "X", "O"],
-          },
           board: {
             type: "array",
             minItems: 3,
@@ -2539,6 +2533,12 @@ export const mcpTools = [
                 enum: [".", "X", "O"],
               },
             },
+          },
+          winner: {
+            type: "string",
+            description: "Winner of the game. \`.\` means nobody has won yet.",
+            example: ".",
+            enum: [".", "X", "O"],
           },
         },
         required: [],

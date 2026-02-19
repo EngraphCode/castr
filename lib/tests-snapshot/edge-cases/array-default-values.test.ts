@@ -210,11 +210,6 @@ test('array-default-values', async () => {
                     default: [],
                     items: { type: "string" },
                   },
-                  "array-string": {
-                    type: "array",
-                    default: ["one", "two"],
-                    items: { type: "string" },
-                  },
                   "array-number": {
                     type: "array",
                     default: [1, 2],
@@ -229,6 +224,11 @@ test('array-default-values', async () => {
                       required: [],
                     },
                   },
+                  "array-ref-enum": {
+                    type: "array",
+                    default: ["one", "two"],
+                    items: { type: "string", enum: ["one", "two", "three"] },
+                  },
                   "array-ref-object": {
                     type: "array",
                     default: [{ id: 1, name: "foo" }],
@@ -241,10 +241,10 @@ test('array-default-values', async () => {
                       required: [],
                     },
                   },
-                  "array-ref-enum": {
+                  "array-string": {
                     type: "array",
                     default: ["one", "two"],
-                    items: { type: "string", enum: ["one", "two", "three"] },
+                    items: { type: "string" },
                   },
                 },
               },

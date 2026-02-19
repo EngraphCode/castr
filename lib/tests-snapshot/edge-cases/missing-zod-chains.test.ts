@@ -71,8 +71,8 @@ test('missing-zod-chains', async () => {
     export type test1 = string;
     export type test2 = number;
     export type test3 = {
-      text: string;
       num: number;
+      text: string;
     };
     export type nulltype = {} | null;
     export type anyOfType =
@@ -86,8 +86,8 @@ test('missing-zod-chains', async () => {
     export const test2 = z.int().min(10);
     export const test3 = z
       .object({
-        text: z.string().min(5),
         num: z.int().min(10),
+        text: z.string().min(5),
       })
       .strict();
     export const nulltype = z.union([z.object({}).strict(), z.null()]);

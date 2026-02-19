@@ -46,14 +46,14 @@ it('use main-description-as-fallback', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type Main = {
-      str: string;
       nb: number;
+      str: string;
     };
     // Zod Schemas
     export const Main = z
       .object({
-        str: z.string(),
         nb: z.number(),
+        str: z.string(),
       })
       .strict();
     // Endpoints
@@ -65,8 +65,8 @@ it('use main-description-as-fallback', async () => {
         parameters: [],
         response: z
           .object({
-            str: z.string(),
             nb: z.number(),
+            str: z.string(),
           })
           .strict(),
         errors: [],
@@ -74,8 +74,8 @@ it('use main-description-as-fallback', async () => {
           200: {
             schema: z
               .object({
-                str: z.string(),
                 nb: z.number(),
+                str: z.string(),
               })
               .strict(),
             description: "get example",
@@ -94,7 +94,7 @@ it('use main-description-as-fallback', async () => {
           inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
-            properties: { str: { type: "string" }, nb: { type: "number" } },
+            properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
           },
           annotations: {

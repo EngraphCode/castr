@@ -154,6 +154,12 @@ test('param-with-content', async () => {
           inputSchema: {
             type: "object",
             properties: {
+              headers: {
+                type: "object",
+                properties: {
+                  "Accept-Language": { type: "string", default: "EN" },
+                },
+              },
               path: {
                 type: "object",
                 properties: { store: { type: "integer", format: "int32" } },
@@ -172,12 +178,6 @@ test('param-with-content', async () => {
                     properties: { text2: { type: "number" } },
                     required: [],
                   },
-                },
-              },
-              headers: {
-                type: "object",
-                properties: {
-                  "Accept-Language": { type: "string", default: "EN" },
                 },
               },
             },

@@ -75,8 +75,8 @@ test('allOf-infer-required-only-item', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type user = {
-      name?: string;
       email?: string;
+      name?: string;
     };
     export type userResponse = {
       user?: user & unknown;
@@ -84,8 +84,8 @@ test('allOf-infer-required-only-item', async () => {
     // Zod Schemas
     export const user = z
       .object({
-        name: z.string().optional(),
         email: z.string().optional(),
+        name: z.string().optional(),
       })
       .strict();
     export const userResponse = z
@@ -126,8 +126,8 @@ test('allOf-infer-required-only-item', async () => {
                   {
                     type: "object",
                     properties: {
-                      name: { type: "string" },
                       email: { type: "string" },
+                      name: { type: "string" },
                     },
                     required: [],
                   },

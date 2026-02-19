@@ -108,13 +108,13 @@ test('jsdoc', async () => {
       str?: string;
     };
     export type ComplexObject = {
+      /** A boolean */ bool?: boolean;
       /** A string with example tag */ example?: string;
       /** A string with examples tag */ examples?: string;
-      /** A string with many tags */ manyTagsStr?: string;
-      /** A number with minimum tag */ numMin?: number;
-      /** A number with maximum tag */ numMax?: number;
       /** A number with many tags */ manyTagsNum?: number;
-      /** A boolean */ bool?: boolean;
+      /** A string with many tags */ manyTagsStr?: string;
+      /** A number with maximum tag */ numMax?: number;
+      /** A number with minimum tag */ numMin?: number;
       ref?: SimpleObject;
       /** An array of SimpleObject */ refArray?: SimpleObject[];
     };
@@ -126,6 +126,7 @@ test('jsdoc', async () => {
       .strict();
     export const ComplexObject = z
       .object({
+        bool: z.boolean().optional().meta({ description: "A boolean" }),
         example: z
           .string()
           .optional()
@@ -140,23 +141,6 @@ test('jsdoc', async () => {
             description: "A string with examples tag",
             examples: ["example1", "example2"],
           }),
-        manyTagsStr: z
-          .enum(["a", "b", "c"])
-          .min(1)
-          .max(10)
-          .regex(/^[a-z]*$/)
-          .optional()
-          .meta({ description: "A string with many tags" }),
-        numMin: z
-          .number()
-          .min(0)
-          .optional()
-          .meta({ description: "A number with minimum tag" }),
-        numMax: z
-          .number()
-          .max(10)
-          .optional()
-          .meta({ description: "A number with maximum tag" }),
         manyTagsNum: z
           .number()
           .min(0)
@@ -167,7 +151,23 @@ test('jsdoc', async () => {
             examples: [3],
             externalDocs: { url: "https://example.com" },
           }),
-        bool: z.boolean().optional().meta({ description: "A boolean" }),
+        manyTagsStr: z
+          .enum(["a", "b", "c"])
+          .min(1)
+          .max(10)
+          .regex(/^[a-z]*$/)
+          .optional()
+          .meta({ description: "A string with many tags" }),
+        numMax: z
+          .number()
+          .max(10)
+          .optional()
+          .meta({ description: "A number with maximum tag" }),
+        numMin: z
+          .number()
+          .min(0)
+          .optional()
+          .meta({ description: "A number with minimum tag" }),
         ref: SimpleObject.optional(),
         refArray: z
           .array(SimpleObject)
@@ -204,6 +204,7 @@ test('jsdoc', async () => {
           outputSchema: {
             type: "object",
             properties: {
+              bool: { type: "boolean", description: "A boolean", default: true },
               example: {
                 type: "string",
                 description: "A string with example tag",
@@ -214,24 +215,6 @@ test('jsdoc', async () => {
                 description: "A string with examples tag",
                 examples: ["example1", "example2"],
               },
-              manyTagsStr: {
-                type: "string",
-                description: "A string with many tags",
-                minLength: 1,
-                maxLength: 10,
-                pattern: "^[a-z]*$",
-                enum: ["a", "b", "c"],
-              },
-              numMin: {
-                type: "number",
-                description: "A number with minimum tag",
-                minimum: 0,
-              },
-              numMax: {
-                type: "number",
-                description: "A number with maximum tag",
-                maximum: 10,
-              },
               manyTagsNum: {
                 type: "number",
                 description: "A number with many tags",
@@ -241,7 +224,24 @@ test('jsdoc', async () => {
                 maximum: 10,
                 externalDocs: { url: "https://example.com" },
               },
-              bool: { type: "boolean", description: "A boolean", default: true },
+              manyTagsStr: {
+                type: "string",
+                description: "A string with many tags",
+                minLength: 1,
+                maxLength: 10,
+                pattern: "^[a-z]*$",
+                enum: ["a", "b", "c"],
+              },
+              numMax: {
+                type: "number",
+                description: "A number with maximum tag",
+                maximum: 10,
+              },
+              numMin: {
+                type: "number",
+                description: "A number with minimum tag",
+                minimum: 0,
+              },
               ref: {
                 type: "object",
                 properties: { str: { type: "string" } },

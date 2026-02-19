@@ -127,8 +127,8 @@ test('allOf-single-ref', async () => {
                       },
                     ],
                   },
-                  oneOf_ref_param: {
-                    oneOf: [
+                  anyOf_ref_param: {
+                    anyOf: [
                       {
                         type: "string",
                         title: "MyComponent",
@@ -136,8 +136,8 @@ test('allOf-single-ref', async () => {
                       },
                     ],
                   },
-                  anyOf_ref_param: {
-                    anyOf: [
+                  oneOf_ref_param: {
+                    oneOf: [
                       {
                         type: "string",
                         title: "MyComponent",

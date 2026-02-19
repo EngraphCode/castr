@@ -47,8 +47,8 @@ describe('anyOf behavior', () => {
         age: z.int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({
-        pet_type: z.enum(["Cat", "Dog"]),
         hunts: z.boolean().optional(),
+        pet_type: z.enum(["Cat", "Dog"]),
       }).passthrough()])",
           "schema": {
               "anyOf": [
@@ -132,8 +132,8 @@ describe('anyOf behavior', () => {
         age: z.int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({
-        pet_type: z.enum(["Cat", "Dog"]),
         hunts: z.boolean().optional(),
+        pet_type: z.enum(["Cat", "Dog"]),
       }).passthrough(), z.number()])",
           "schema": {
               "anyOf": [
@@ -223,8 +223,8 @@ describe('anyOf behavior', () => {
         age: z.int(),
         nickname: z.string().optional(),
       }).passthrough(), z.object({
-        pet_type: z.enum(["Cat", "Dog"]),
         hunts: z.boolean().optional(),
+        pet_type: z.enum(["Cat", "Dog"]),
       }).passthrough(), z.string()])",
           "schema": {
               "anyOf": [
@@ -345,8 +345,8 @@ describe('anyOf behavior', () => {
         nickname?: string;
       };
       export type PetByType = {
-        pet_type: string;
         hunts?: boolean;
+        pet_type: string;
       };
       // Zod Schemas
       export const PetByAge = z
@@ -357,8 +357,8 @@ describe('anyOf behavior', () => {
         .strict();
       export const PetByType = z
         .object({
-          pet_type: z.enum(["Cat", "Dog"]),
           hunts: z.boolean().optional(),
+          pet_type: z.enum(["Cat", "Dog"]),
         })
         .strict();
       // Endpoints
@@ -416,8 +416,8 @@ describe('anyOf behavior', () => {
                         {
                           type: "object",
                           properties: {
-                            pet_type: { type: "string", enum: ["Cat", "Dog"] },
                             hunts: { type: "boolean" },
+                            pet_type: { type: "string", enum: ["Cat", "Dog"] },
                           },
                           required: ["pet_type"],
                         },

@@ -39,16 +39,16 @@ test('number-default-cast', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type test1 = {
-      text1?: string;
-      shouldBeFixed?: number;
       isFine?: number;
+      shouldBeFixed?: number;
+      text1?: string;
     };
     // Zod Schemas
     export const test1 = z
       .object({
-        text1: z.string().optional(),
-        shouldBeFixed: z.number().optional(),
         isFine: z.number().optional(),
+        shouldBeFixed: z.number().optional(),
+        text1: z.string().optional(),
       })
       .strict();
     // Endpoints
@@ -79,9 +79,9 @@ test('number-default-cast', async () => {
           outputSchema: {
             type: "object",
             properties: {
-              text1: { type: "string", default: "aaa" },
-              shouldBeFixed: { type: "number", default: "20" },
               isFine: { type: "number", default: 30 },
+              shouldBeFixed: { type: "number", default: "20" },
+              text1: { type: "string", default: "aaa" },
             },
             required: [],
           },

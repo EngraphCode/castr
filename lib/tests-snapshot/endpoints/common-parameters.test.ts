@@ -144,8 +144,8 @@ test('common-parameters', async () => {
               query: {
                 type: "object",
                 properties: {
-                  petId: { type: "string" },
                   otherParam: { type: "number" },
+                  petId: { type: "string" },
                 },
                 required: ["petId"],
               },
@@ -183,9 +183,9 @@ test('common-parameters', async () => {
               query: {
                 type: "object",
                 properties: {
-                  petId: { type: "number" },
                   otherParam: { type: "number" },
                   personId: { type: "number" },
+                  petId: { type: "number" },
                 },
                 required: ["petId", "personId"],
               },

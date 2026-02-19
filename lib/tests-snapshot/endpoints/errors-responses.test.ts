@@ -62,8 +62,8 @@ it('includes errors-responses', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type Main = {
-      str: string;
       nb: number;
+      str: string;
     };
     export type AnotherSuccess = number;
     export type Error400 = {
@@ -73,8 +73,8 @@ it('includes errors-responses', async () => {
     // Zod Schemas
     export const Main = z
       .object({
-        str: z.string(),
         nb: z.number(),
+        str: z.string(),
       })
       .strict();
     export const AnotherSuccess = z.number();
@@ -93,8 +93,8 @@ it('includes errors-responses', async () => {
         parameters: [],
         response: z
           .object({
-            str: z.string(),
             nb: z.number(),
+            str: z.string(),
           })
           .strict(),
         errors: [
@@ -117,8 +117,8 @@ it('includes errors-responses', async () => {
           200: {
             schema: z
               .object({
-                str: z.string(),
                 nb: z.number(),
+                str: z.string(),
               })
               .strict(),
             description: "OK",
@@ -153,7 +153,7 @@ it('includes errors-responses', async () => {
           inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
-            properties: { str: { type: "string" }, nb: { type: "number" } },
+            properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
           },
           annotations: {
@@ -268,16 +268,16 @@ it('determines which status are considered errors-responses', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type Main = {
-      str: string;
       nb: number;
+      str: string;
     };
     export type AnotherSuccess = number;
     export type VeryDeeplyNested = string;
     export type DeeplyNested = VeryDeeplyNested[];
     export type Nested = {
-      nested_prop?: boolean;
-      deeplyNested?: DeeplyNested;
       circularToMain?: Main;
+      deeplyNested?: DeeplyNested;
+      nested_prop?: boolean;
       requiredProp: string;
     };
     export type Error400 = {
@@ -289,8 +289,8 @@ it('determines which status are considered errors-responses', async () => {
     // Zod Schemas
     export const Main = z
       .object({
-        str: z.string(),
         nb: z.number(),
+        str: z.string(),
       })
       .strict();
     export const AnotherSuccess = z.number();
@@ -298,9 +298,9 @@ it('determines which status are considered errors-responses', async () => {
     export const DeeplyNested = z.array(VeryDeeplyNested);
     export const Nested = z
       .object({
-        nested_prop: z.boolean().optional(),
-        deeplyNested: DeeplyNested.optional(),
         circularToMain: Main.optional(),
+        deeplyNested: DeeplyNested.optional(),
+        nested_prop: z.boolean().optional(),
         requiredProp: z.string(),
       })
       .strict();
@@ -321,8 +321,8 @@ it('determines which status are considered errors-responses', async () => {
         parameters: [],
         response: z
           .object({
-            str: z.string(),
             nb: z.number(),
+            str: z.string(),
           })
           .strict(),
         errors: [
@@ -356,8 +356,8 @@ it('determines which status are considered errors-responses', async () => {
           200: {
             schema: z
               .object({
-                str: z.string(),
                 nb: z.number(),
+                str: z.string(),
               })
               .strict(),
             description: "OK",
@@ -402,7 +402,7 @@ it('determines which status are considered errors-responses', async () => {
           inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
-            properties: { str: { type: "string" }, nb: { type: "number" } },
+            properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
           },
           annotations: {
@@ -439,16 +439,16 @@ it('determines which status are considered errors-responses', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type Main = {
-      str: string;
       nb: number;
+      str: string;
     };
     export type AnotherSuccess = number;
     export type VeryDeeplyNested = string;
     export type DeeplyNested = VeryDeeplyNested[];
     export type Nested = {
-      nested_prop?: boolean;
-      deeplyNested?: DeeplyNested;
       circularToMain?: Main;
+      deeplyNested?: DeeplyNested;
+      nested_prop?: boolean;
       requiredProp: string;
     };
     export type Error400 = {
@@ -460,8 +460,8 @@ it('determines which status are considered errors-responses', async () => {
     // Zod Schemas
     export const Main = z
       .object({
-        str: z.string(),
         nb: z.number(),
+        str: z.string(),
       })
       .strict();
     export const AnotherSuccess = z.number();
@@ -469,9 +469,9 @@ it('determines which status are considered errors-responses', async () => {
     export const DeeplyNested = z.array(VeryDeeplyNested);
     export const Nested = z
       .object({
-        nested_prop: z.boolean().optional(),
-        deeplyNested: DeeplyNested.optional(),
         circularToMain: Main.optional(),
+        deeplyNested: DeeplyNested.optional(),
+        nested_prop: z.boolean().optional(),
         requiredProp: z.string(),
       })
       .strict();
@@ -492,8 +492,8 @@ it('determines which status are considered errors-responses', async () => {
         parameters: [],
         response: z
           .object({
-            str: z.string(),
             nb: z.number(),
+            str: z.string(),
           })
           .strict(),
         errors: [
@@ -527,8 +527,8 @@ it('determines which status are considered errors-responses', async () => {
           200: {
             schema: z
               .object({
-                str: z.string(),
                 nb: z.number(),
+                str: z.string(),
               })
               .strict(),
             description: "OK",
@@ -573,7 +573,7 @@ it('determines which status are considered errors-responses', async () => {
           inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
-            properties: { str: { type: "string" }, nb: { type: "number" } },
+            properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
           },
           annotations: {

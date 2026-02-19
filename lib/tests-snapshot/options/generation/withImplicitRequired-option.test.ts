@@ -24,9 +24,9 @@ test('withImplicitRequired-option', () => {
     `
     {
         "code": "z.object({
-      str: z.string().optional(),
       nested: z.object({
       }).catchall(z.number()).optional(),
+      str: z.string().optional(),
     }).passthrough()",
         "schema": {
             "properties": {

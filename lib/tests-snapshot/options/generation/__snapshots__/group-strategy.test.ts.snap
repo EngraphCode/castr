@@ -2917,11 +2917,11 @@ export * as UserApi from "./user";
     "default": "import { z } from "zod";
 // Type Definitions
 export type User = {
-  id?: number;
-  firstname?: string;
-  lastname?: string;
   email?: string;
+  firstname?: string;
   friends?: User[];
+  id?: number;
+  lastname?: string;
 };
 export type Pet = {
   id?: number;
@@ -2929,28 +2929,28 @@ export type Pet = {
   owner?: User;
 };
 export type Country = {
+  code?: string;
   id?: number;
   name?: string;
-  code?: string;
   store_list?: Store[];
 };
 export type Store = {
-  id?: number;
-  name?: string;
   address?: string;
   country?: Country;
+  id?: number;
+  name?: string;
   owner?: User;
 };
 // Zod Schemas
 export const User = z
   .object({
-    id: z.int().optional(),
-    firstname: z.string().optional(),
-    lastname: z.string().optional(),
     email: z.string().optional(),
+    firstname: z.string().optional(),
     get friends() {
       return z.array(User).optional();
     },
+    id: z.int().optional(),
+    lastname: z.string().optional(),
   })
   .strict();
 export const Pet = z
@@ -2964,9 +2964,9 @@ export const Pet = z
   .strict();
 export const Country = z
   .object({
+    code: z.string().optional(),
     id: z.int().optional(),
     name: z.string().optional(),
-    code: z.string().optional(),
     get store_list() {
       return z.array(Store).optional();
     },
@@ -2974,12 +2974,12 @@ export const Country = z
   .strict();
 export const Store = z
   .object({
-    id: z.int().optional(),
-    name: z.string().optional(),
     address: z.string().optional(),
     get country() {
       return Country.optional();
     },
+    id: z.int().optional(),
+    name: z.string().optional(),
     get owner() {
       return User.optional();
     },
@@ -3019,14 +3019,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3064,14 +3064,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3114,14 +3114,14 @@ export const mcpTools = [
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -3162,14 +3162,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3202,14 +3202,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -3239,14 +3239,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -3276,15 +3276,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -3292,17 +3290,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3335,15 +3335,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -3351,17 +3349,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3394,29 +3394,29 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
+          code: { type: "string" },
           id: { type: "integer" },
           name: { type: "string" },
-          code: { type: "string" },
           store_list: {
             type: "array",
             items: {
               type: "object",
               properties: {
-                id: { type: "integer" },
-                name: { type: "string" },
                 address: { type: "string" },
                 country: { $ref: "#/components/schemas/Country" },
+                id: { type: "integer" },
+                name: { type: "string" },
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -3450,11 +3450,11 @@ export const mcpTools = [
     "pet": "import { z } from "zod";
 // Type Definitions
 export type User = {
-  id?: number;
-  firstname?: string;
-  lastname?: string;
   email?: string;
+  firstname?: string;
   friends?: User[];
+  id?: number;
+  lastname?: string;
 };
 export type Pet = {
   id?: number;
@@ -3462,28 +3462,28 @@ export type Pet = {
   owner?: User;
 };
 export type Country = {
+  code?: string;
   id?: number;
   name?: string;
-  code?: string;
   store_list?: Store[];
 };
 export type Store = {
-  id?: number;
-  name?: string;
   address?: string;
   country?: Country;
+  id?: number;
+  name?: string;
   owner?: User;
 };
 // Zod Schemas
 export const User = z
   .object({
-    id: z.int().optional(),
-    firstname: z.string().optional(),
-    lastname: z.string().optional(),
     email: z.string().optional(),
+    firstname: z.string().optional(),
     get friends() {
       return z.array(User).optional();
     },
+    id: z.int().optional(),
+    lastname: z.string().optional(),
   })
   .strict();
 export const Pet = z
@@ -3497,9 +3497,9 @@ export const Pet = z
   .strict();
 export const Country = z
   .object({
+    code: z.string().optional(),
     id: z.int().optional(),
     name: z.string().optional(),
-    code: z.string().optional(),
     get store_list() {
       return z.array(Store).optional();
     },
@@ -3507,12 +3507,12 @@ export const Country = z
   .strict();
 export const Store = z
   .object({
-    id: z.int().optional(),
-    name: z.string().optional(),
     address: z.string().optional(),
     get country() {
       return Country.optional();
     },
+    id: z.int().optional(),
+    name: z.string().optional(),
     get owner() {
       return User.optional();
     },
@@ -3600,14 +3600,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3645,14 +3645,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3695,14 +3695,14 @@ export const mcpTools = [
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -3743,14 +3743,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3783,14 +3783,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -3820,14 +3820,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -3857,15 +3857,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -3873,17 +3871,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3916,15 +3916,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -3932,17 +3930,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -3975,29 +3975,29 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
+          code: { type: "string" },
           id: { type: "integer" },
           name: { type: "string" },
-          code: { type: "string" },
           store_list: {
             type: "array",
             items: {
               type: "object",
               properties: {
-                id: { type: "integer" },
-                name: { type: "string" },
                 address: { type: "string" },
                 country: { $ref: "#/components/schemas/Country" },
+                id: { type: "integer" },
+                name: { type: "string" },
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -4031,11 +4031,11 @@ export const mcpTools = [
     "store": "import { z } from "zod";
 // Type Definitions
 export type User = {
-  id?: number;
-  firstname?: string;
-  lastname?: string;
   email?: string;
+  firstname?: string;
   friends?: User[];
+  id?: number;
+  lastname?: string;
 };
 export type Pet = {
   id?: number;
@@ -4043,28 +4043,28 @@ export type Pet = {
   owner?: User;
 };
 export type Country = {
+  code?: string;
   id?: number;
   name?: string;
-  code?: string;
   store_list?: Store[];
 };
 export type Store = {
-  id?: number;
-  name?: string;
   address?: string;
   country?: Country;
+  id?: number;
+  name?: string;
   owner?: User;
 };
 // Zod Schemas
 export const User = z
   .object({
-    id: z.int().optional(),
-    firstname: z.string().optional(),
-    lastname: z.string().optional(),
     email: z.string().optional(),
+    firstname: z.string().optional(),
     get friends() {
       return z.array(User).optional();
     },
+    id: z.int().optional(),
+    lastname: z.string().optional(),
   })
   .strict();
 export const Pet = z
@@ -4078,9 +4078,9 @@ export const Pet = z
   .strict();
 export const Country = z
   .object({
+    code: z.string().optional(),
     id: z.int().optional(),
     name: z.string().optional(),
-    code: z.string().optional(),
     get store_list() {
       return z.array(Store).optional();
     },
@@ -4088,12 +4088,12 @@ export const Country = z
   .strict();
 export const Store = z
   .object({
-    id: z.int().optional(),
-    name: z.string().optional(),
     address: z.string().optional(),
     get country() {
       return Country.optional();
     },
+    id: z.int().optional(),
+    name: z.string().optional(),
     get owner() {
       return User.optional();
     },
@@ -4149,14 +4149,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4194,14 +4194,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4244,14 +4244,14 @@ export const mcpTools = [
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -4292,14 +4292,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4332,14 +4332,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -4369,14 +4369,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -4406,15 +4406,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -4422,17 +4420,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4465,15 +4465,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -4481,17 +4479,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4524,29 +4524,29 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
+          code: { type: "string" },
           id: { type: "integer" },
           name: { type: "string" },
-          code: { type: "string" },
           store_list: {
             type: "array",
             items: {
               type: "object",
               properties: {
-                id: { type: "integer" },
-                name: { type: "string" },
                 address: { type: "string" },
                 country: { $ref: "#/components/schemas/Country" },
+                id: { type: "integer" },
+                name: { type: "string" },
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -4580,11 +4580,11 @@ export const mcpTools = [
     "user": "import { z } from "zod";
 // Type Definitions
 export type User = {
-  id?: number;
-  firstname?: string;
-  lastname?: string;
   email?: string;
+  firstname?: string;
   friends?: User[];
+  id?: number;
+  lastname?: string;
 };
 export type Pet = {
   id?: number;
@@ -4592,28 +4592,28 @@ export type Pet = {
   owner?: User;
 };
 export type Country = {
+  code?: string;
   id?: number;
   name?: string;
-  code?: string;
   store_list?: Store[];
 };
 export type Store = {
-  id?: number;
-  name?: string;
   address?: string;
   country?: Country;
+  id?: number;
+  name?: string;
   owner?: User;
 };
 // Zod Schemas
 export const User = z
   .object({
-    id: z.int().optional(),
-    firstname: z.string().optional(),
-    lastname: z.string().optional(),
     email: z.string().optional(),
+    firstname: z.string().optional(),
     get friends() {
       return z.array(User).optional();
     },
+    id: z.int().optional(),
+    lastname: z.string().optional(),
   })
   .strict();
 export const Pet = z
@@ -4627,9 +4627,9 @@ export const Pet = z
   .strict();
 export const Country = z
   .object({
+    code: z.string().optional(),
     id: z.int().optional(),
     name: z.string().optional(),
-    code: z.string().optional(),
     get store_list() {
       return z.array(Store).optional();
     },
@@ -4637,12 +4637,12 @@ export const Country = z
   .strict();
 export const Store = z
   .object({
-    id: z.int().optional(),
-    name: z.string().optional(),
     address: z.string().optional(),
     get country() {
       return Country.optional();
     },
+    id: z.int().optional(),
+    name: z.string().optional(),
     get owner() {
       return User.optional();
     },
@@ -4698,14 +4698,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4743,14 +4743,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4793,14 +4793,14 @@ export const mcpTools = [
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -4841,14 +4841,14 @@ export const mcpTools = [
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -4881,14 +4881,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -4918,14 +4918,14 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          firstname: { type: "string" },
-          lastname: { type: "string" },
           email: { type: "string" },
+          firstname: { type: "string" },
           friends: {
             type: "array",
             items: { $ref: "#/components/schemas/User" },
           },
+          id: { type: "integer" },
+          lastname: { type: "string" },
         },
         required: [],
       },
@@ -4955,15 +4955,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -4971,17 +4969,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -5014,15 +5014,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer" },
-          name: { type: "string" },
           address: { type: "string" },
           country: {
             type: "object",
             properties: {
+              code: { type: "string" },
               id: { type: "integer" },
               name: { type: "string" },
-              code: { type: "string" },
               store_list: {
                 type: "array",
                 items: { $ref: "#/components/schemas/Store" },
@@ -5030,17 +5028,19 @@ export const mcpTools = [
             },
             required: [],
           },
+          id: { type: "integer" },
+          name: { type: "string" },
           owner: {
             type: "object",
             properties: {
-              id: { type: "integer" },
-              firstname: { type: "string" },
-              lastname: { type: "string" },
               email: { type: "string" },
+              firstname: { type: "string" },
               friends: {
                 type: "array",
                 items: { $ref: "#/components/schemas/User" },
               },
+              id: { type: "integer" },
+              lastname: { type: "string" },
             },
             required: [],
           },
@@ -5073,29 +5073,29 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
+          code: { type: "string" },
           id: { type: "integer" },
           name: { type: "string" },
-          code: { type: "string" },
           store_list: {
             type: "array",
             items: {
               type: "object",
               properties: {
-                id: { type: "integer" },
-                name: { type: "string" },
                 address: { type: "string" },
                 country: { $ref: "#/components/schemas/Country" },
+                id: { type: "integer" },
+                name: { type: "string" },
                 owner: {
                   type: "object",
                   properties: {
-                    id: { type: "integer" },
-                    firstname: { type: "string" },
-                    lastname: { type: "string" },
                     email: { type: "string" },
+                    firstname: { type: "string" },
                     friends: {
                       type: "array",
                       items: { $ref: "#/components/schemas/User" },
                     },
+                    id: { type: "integer" },
+                    lastname: { type: "string" },
                   },
                   required: [],
                 },
@@ -5146,47 +5146,47 @@ export type Tag = {
   name?: string;
 };
 export type Pet = {
+  category?: Category;
   id?: number;
   name: string;
-  category?: Category;
   photoUrls: string[];
-  tags?: Tag[];
   /** pet status in the store */ status?: string;
+  tags?: Tag[];
 };
 export type Order = {
+  complete?: boolean;
   id?: number;
+  pet?: Pet;
   petId?: number;
   quantity?: number;
   shipDate?: string;
   /** Order Status */ status?: string;
-  complete?: boolean;
-  pet?: Pet;
 };
 export type Address = {
-  street?: string;
   city?: string;
   state?: string;
+  street?: string;
   zip?: string;
 };
 export type Customer = {
+  address?: Address[];
   id?: number;
   username?: string;
-  address?: Address[];
 };
 export type User = {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
   email?: string;
+  firstName?: string;
+  id?: number;
+  lastName?: string;
   password?: string;
   phone?: string;
+  username?: string;
   /** User Status */ userStatus?: number;
 };
 export type ApiResponse = {
   code?: number;
-  type?: string;
   message?: string;
+  type?: string;
 };
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
@@ -5212,32 +5212,34 @@ export const Tag = z
   .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
+    category: Category.optional(),
     id: z
       .int64()
       .optional()
       .meta({ examples: [10] }),
     name: z.string().meta({ examples: ["doggie"] }),
-    category: Category.optional(),
     photoUrls: z
       .array(z.string().meta({ xml: { name: "photoUrl" } }))
-      .meta({ xml: { wrapped: true } }),
-    tags: z
-      .array(Tag)
-      .optional()
       .meta({ xml: { wrapped: true } }),
     status: z
       .enum(["available", "pending", "sold"])
       .optional()
       .meta({ description: "pet status in the store" }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
   })
   .strict()
   .meta({ xml: { name: "pet" } });
 export const Order = z
   .object({
+    complete: z.boolean().optional(),
     id: z
       .int64()
       .optional()
       .meta({ examples: [10] }),
+    pet: Pet.optional(),
     petId: z
       .int64()
       .optional()
@@ -5251,17 +5253,11 @@ export const Order = z
       .enum(["placed", "approved", "delivered"])
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
-    complete: z.boolean().optional(),
-    pet: Pet.optional(),
   })
   .strict()
   .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z
-      .string()
-      .optional()
-      .meta({ examples: ["437 Lytton"] }),
     city: z
       .string()
       .optional()
@@ -5270,6 +5266,10 @@ export const Address = z
       .string()
       .optional()
       .meta({ examples: ["CA"] }),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
     zip: z
       .string()
       .optional()
@@ -5279,6 +5279,10 @@ export const Address = z
   .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
     id: z
       .int64()
       .optional()
@@ -5287,35 +5291,27 @@ export const Customer = z
       .string()
       .optional()
       .meta({ examples: ["fehguy"] }),
-    address: z
-      .array(Address)
-      .optional()
-      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
   .strict()
   .meta({ xml: { name: "customer" } });
 export const User = z
   .object({
-    id: z
-      .int64()
-      .optional()
-      .meta({ examples: [10] }),
-    username: z
-      .string()
-      .optional()
-      .meta({ examples: ["theUser"] }),
-    firstName: z
-      .string()
-      .optional()
-      .meta({ examples: ["John"] }),
-    lastName: z
-      .string()
-      .optional()
-      .meta({ examples: ["James"] }),
     email: z
       .string()
       .optional()
       .meta({ examples: ["john@email.com"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    id: z
+      .int64()
+      .optional()
+      .meta({ examples: [10] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
     password: z
       .string()
       .optional()
@@ -5324,6 +5320,10 @@ export const User = z
       .string()
       .optional()
       .meta({ examples: ["12345"] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
     userStatus: z
       .int32()
       .optional()
@@ -5334,8 +5334,8 @@ export const User = z
 export const ApiResponse = z
   .object({
     code: z.int32().optional(),
-    type: z.string().optional(),
     message: z.string().optional(),
+    type: z.string().optional(),
   })
   .strict()
   .meta({ xml: { name: "##default" } });
@@ -5716,8 +5716,6 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -5727,10 +5725,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -5745,11 +5750,6 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
@@ -5760,8 +5760,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -5771,10 +5769,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -5788,11 +5793,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -5849,8 +5849,6 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -5860,10 +5858,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -5878,11 +5883,6 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
@@ -5893,8 +5893,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -5904,10 +5902,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -5921,11 +5926,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -6000,8 +6000,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64", examples: [10] },
-                name: { type: "string", examples: ["doggie"] },
                 category: {
                   type: "object",
                   properties: {
@@ -6011,10 +6009,17 @@ export const mcpTools = [
                   required: [],
                   xml: { name: "category" },
                 },
+                id: { type: "integer", format: "int64", examples: [10] },
+                name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
                   items: { type: "string", xml: { name: "photoUrl" } },
                   xml: { wrapped: true },
+                },
+                status: {
+                  type: "string",
+                  description: "pet status in the store",
+                  enum: ["available", "pending", "sold"],
                 },
                 tags: {
                   type: "array",
@@ -6028,11 +6033,6 @@ export const mcpTools = [
                     xml: { name: "tag" },
                   },
                   xml: { wrapped: true },
-                },
-                status: {
-                  type: "string",
-                  description: "pet status in the store",
-                  enum: ["available", "pending", "sold"],
                 },
               },
               required: ["name", "photoUrls"],
@@ -6104,8 +6104,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64", examples: [10] },
-                name: { type: "string", examples: ["doggie"] },
                 category: {
                   type: "object",
                   properties: {
@@ -6115,10 +6113,17 @@ export const mcpTools = [
                   required: [],
                   xml: { name: "category" },
                 },
+                id: { type: "integer", format: "int64", examples: [10] },
+                name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
                   items: { type: "string", xml: { name: "photoUrl" } },
                   xml: { wrapped: true },
+                },
+                status: {
+                  type: "string",
+                  description: "pet status in the store",
+                  enum: ["available", "pending", "sold"],
                 },
                 tags: {
                   type: "array",
@@ -6132,11 +6137,6 @@ export const mcpTools = [
                     xml: { name: "tag" },
                   },
                   xml: { wrapped: true },
-                },
-                status: {
-                  type: "string",
-                  description: "pet status in the store",
-                  enum: ["available", "pending", "sold"],
                 },
               },
               required: ["name", "photoUrls"],
@@ -6204,8 +6204,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -6215,10 +6213,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -6232,11 +6237,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -6362,14 +6362,14 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
+          headers: {
+            type: "object",
+            properties: { api_key: { type: "string" } },
+          },
           path: {
             type: "object",
             properties: { petId: { type: "integer", format: "int64" } },
             required: ["petId"],
-          },
-          headers: {
-            type: "object",
-            properties: { api_key: { type: "string" } },
           },
         },
         required: ["path"],
@@ -6438,8 +6438,8 @@ export const mcpTools = [
         type: "object",
         properties: {
           code: { type: "integer", format: "int32" },
-          type: { type: "string" },
           message: { type: "string" },
+          type: { type: "string" },
         },
         required: [],
         xml: { name: "##default" },
@@ -6533,22 +6533,11 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              petId: { type: "integer", format: "int64", examples: [198772] },
-              quantity: { type: "integer", format: "int32", examples: [7] },
-              shipDate: { type: "string", format: "date-time" },
-              status: {
-                type: "string",
-                description: "Order Status",
-                examples: ["approved"],
-                enum: ["placed", "approved", "delivered"],
-              },
               complete: { type: "boolean" },
+              id: { type: "integer", format: "int64", examples: [10] },
               pet: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [10] },
-                  name: { type: "string", examples: ["doggie"] },
                   category: {
                     type: "object",
                     properties: {
@@ -6558,10 +6547,17 @@ export const mcpTools = [
                     required: [],
                     xml: { name: "category" },
                   },
+                  id: { type: "integer", format: "int64", examples: [10] },
+                  name: { type: "string", examples: ["doggie"] },
                   photoUrls: {
                     type: "array",
                     items: { type: "string", xml: { name: "photoUrl" } },
                     xml: { wrapped: true },
+                  },
+                  status: {
+                    type: "string",
+                    description: "pet status in the store",
+                    enum: ["available", "pending", "sold"],
                   },
                   tags: {
                     type: "array",
@@ -6576,14 +6572,18 @@ export const mcpTools = [
                     },
                     xml: { wrapped: true },
                   },
-                  status: {
-                    type: "string",
-                    description: "pet status in the store",
-                    enum: ["available", "pending", "sold"],
-                  },
                 },
                 required: ["name", "photoUrls"],
                 xml: { name: "pet" },
+              },
+              petId: { type: "integer", format: "int64", examples: [198772] },
+              quantity: { type: "integer", format: "int32", examples: [7] },
+              shipDate: { type: "string", format: "date-time" },
+              status: {
+                type: "string",
+                description: "Order Status",
+                examples: ["approved"],
+                enum: ["placed", "approved", "delivered"],
               },
             },
             required: [],
@@ -6594,22 +6594,11 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          petId: { type: "integer", format: "int64", examples: [198772] },
-          quantity: { type: "integer", format: "int32", examples: [7] },
-          shipDate: { type: "string", format: "date-time" },
-          status: {
-            type: "string",
-            description: "Order Status",
-            examples: ["approved"],
-            enum: ["placed", "approved", "delivered"],
-          },
           complete: { type: "boolean" },
+          id: { type: "integer", format: "int64", examples: [10] },
           pet: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -6619,10 +6608,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -6637,14 +6633,18 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
+          },
+          petId: { type: "integer", format: "int64", examples: [198772] },
+          quantity: { type: "integer", format: "int32", examples: [7] },
+          shipDate: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            description: "Order Status",
+            examples: ["approved"],
+            enum: ["placed", "approved", "delivered"],
           },
         },
         required: [],
@@ -6688,22 +6688,11 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          petId: { type: "integer", format: "int64", examples: [198772] },
-          quantity: { type: "integer", format: "int32", examples: [7] },
-          shipDate: { type: "string", format: "date-time" },
-          status: {
-            type: "string",
-            description: "Order Status",
-            examples: ["approved"],
-            enum: ["placed", "approved", "delivered"],
-          },
           complete: { type: "boolean" },
+          id: { type: "integer", format: "int64", examples: [10] },
           pet: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -6713,10 +6702,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -6731,14 +6727,18 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
+          },
+          petId: { type: "integer", format: "int64", examples: [198772] },
+          quantity: { type: "integer", format: "int32", examples: [7] },
+          shipDate: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            description: "Order Status",
+            examples: ["approved"],
+            enum: ["placed", "approved", "delivered"],
           },
         },
         required: [],
@@ -6808,13 +6808,13 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              username: { type: "string", examples: ["theUser"] },
-              firstName: { type: "string", examples: ["John"] },
-              lastName: { type: "string", examples: ["James"] },
               email: { type: "string", examples: ["john@email.com"] },
+              firstName: { type: "string", examples: ["John"] },
+              id: { type: "integer", format: "int64", examples: [10] },
+              lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
+              username: { type: "string", examples: ["theUser"] },
               userStatus: {
                 type: "integer",
                 format: "int32",
@@ -6861,13 +6861,13 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [10] },
-                    username: { type: "string", examples: ["theUser"] },
-                    firstName: { type: "string", examples: ["John"] },
-                    lastName: { type: "string", examples: ["James"] },
                     email: { type: "string", examples: ["john@email.com"] },
+                    firstName: { type: "string", examples: ["John"] },
+                    id: { type: "integer", format: "int64", examples: [10] },
+                    lastName: { type: "string", examples: ["James"] },
                     password: { type: "string", examples: ["12345"] },
                     phone: { type: "string", examples: ["12345"] },
+                    username: { type: "string", examples: ["theUser"] },
                     userStatus: {
                       type: "integer",
                       format: "int32",
@@ -6886,13 +6886,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          username: { type: "string", examples: ["theUser"] },
-          firstName: { type: "string", examples: ["John"] },
-          lastName: { type: "string", examples: ["James"] },
           email: { type: "string", examples: ["john@email.com"] },
+          firstName: { type: "string", examples: ["John"] },
+          id: { type: "integer", format: "int64", examples: [10] },
+          lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
+          username: { type: "string", examples: ["theUser"] },
           userStatus: {
             type: "integer",
             format: "int32",
@@ -6932,8 +6932,8 @@ export const mcpTools = [
           query: {
             type: "object",
             properties: {
-              username: { type: "string" },
               password: { type: "string" },
+              username: { type: "string" },
             },
           },
         },
@@ -7003,13 +7003,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          username: { type: "string", examples: ["theUser"] },
-          firstName: { type: "string", examples: ["John"] },
-          lastName: { type: "string", examples: ["James"] },
           email: { type: "string", examples: ["john@email.com"] },
+          firstName: { type: "string", examples: ["John"] },
+          id: { type: "integer", format: "int64", examples: [10] },
+          lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
+          username: { type: "string", examples: ["theUser"] },
           userStatus: {
             type: "integer",
             format: "int32",
@@ -7046,21 +7046,16 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              username: { type: "string", examples: ["theUser"] },
-              firstName: { type: "string", examples: ["John"] },
-              lastName: { type: "string", examples: ["James"] },
               email: { type: "string", examples: ["john@email.com"] },
+              firstName: { type: "string", examples: ["John"] },
+              id: { type: "integer", format: "int64", examples: [10] },
+              lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
+              username: { type: "string", examples: ["theUser"] },
               userStatus: {
                 type: "integer",
                 format: "int32",
@@ -7070,6 +7065,11 @@ export const mcpTools = [
             },
             required: [],
             xml: { name: "user" },
+          },
+          path: {
+            type: "object",
+            properties: { username: { type: "string" } },
+            required: ["username"],
           },
         },
         required: ["path"],
@@ -7139,47 +7139,47 @@ export type Tag = {
   name?: string;
 };
 export type Pet = {
+  category?: Category;
   id?: number;
   name: string;
-  category?: Category;
   photoUrls: string[];
-  tags?: Tag[];
   /** pet status in the store */ status?: string;
+  tags?: Tag[];
 };
 export type Order = {
+  complete?: boolean;
   id?: number;
+  pet?: Pet;
   petId?: number;
   quantity?: number;
   shipDate?: string;
   /** Order Status */ status?: string;
-  complete?: boolean;
-  pet?: Pet;
 };
 export type Address = {
-  street?: string;
   city?: string;
   state?: string;
+  street?: string;
   zip?: string;
 };
 export type Customer = {
+  address?: Address[];
   id?: number;
   username?: string;
-  address?: Address[];
 };
 export type User = {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
   email?: string;
+  firstName?: string;
+  id?: number;
+  lastName?: string;
   password?: string;
   phone?: string;
+  username?: string;
   /** User Status */ userStatus?: number;
 };
 export type ApiResponse = {
   code?: number;
-  type?: string;
   message?: string;
+  type?: string;
 };
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
@@ -7205,32 +7205,34 @@ export const Tag = z
   .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
+    category: Category.optional(),
     id: z
       .int64()
       .optional()
       .meta({ examples: [10] }),
     name: z.string().meta({ examples: ["doggie"] }),
-    category: Category.optional(),
     photoUrls: z
       .array(z.string().meta({ xml: { name: "photoUrl" } }))
-      .meta({ xml: { wrapped: true } }),
-    tags: z
-      .array(Tag)
-      .optional()
       .meta({ xml: { wrapped: true } }),
     status: z
       .enum(["available", "pending", "sold"])
       .optional()
       .meta({ description: "pet status in the store" }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
   })
   .strict()
   .meta({ xml: { name: "pet" } });
 export const Order = z
   .object({
+    complete: z.boolean().optional(),
     id: z
       .int64()
       .optional()
       .meta({ examples: [10] }),
+    pet: Pet.optional(),
     petId: z
       .int64()
       .optional()
@@ -7244,17 +7246,11 @@ export const Order = z
       .enum(["placed", "approved", "delivered"])
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
-    complete: z.boolean().optional(),
-    pet: Pet.optional(),
   })
   .strict()
   .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z
-      .string()
-      .optional()
-      .meta({ examples: ["437 Lytton"] }),
     city: z
       .string()
       .optional()
@@ -7263,6 +7259,10 @@ export const Address = z
       .string()
       .optional()
       .meta({ examples: ["CA"] }),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
     zip: z
       .string()
       .optional()
@@ -7272,6 +7272,10 @@ export const Address = z
   .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
     id: z
       .int64()
       .optional()
@@ -7280,35 +7284,27 @@ export const Customer = z
       .string()
       .optional()
       .meta({ examples: ["fehguy"] }),
-    address: z
-      .array(Address)
-      .optional()
-      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
   .strict()
   .meta({ xml: { name: "customer" } });
 export const User = z
   .object({
-    id: z
-      .int64()
-      .optional()
-      .meta({ examples: [10] }),
-    username: z
-      .string()
-      .optional()
-      .meta({ examples: ["theUser"] }),
-    firstName: z
-      .string()
-      .optional()
-      .meta({ examples: ["John"] }),
-    lastName: z
-      .string()
-      .optional()
-      .meta({ examples: ["James"] }),
     email: z
       .string()
       .optional()
       .meta({ examples: ["john@email.com"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    id: z
+      .int64()
+      .optional()
+      .meta({ examples: [10] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
     password: z
       .string()
       .optional()
@@ -7317,6 +7313,10 @@ export const User = z
       .string()
       .optional()
       .meta({ examples: ["12345"] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
     userStatus: z
       .int32()
       .optional()
@@ -7327,8 +7327,8 @@ export const User = z
 export const ApiResponse = z
   .object({
     code: z.int32().optional(),
-    type: z.string().optional(),
     message: z.string().optional(),
+    type: z.string().optional(),
   })
   .strict()
   .meta({ xml: { name: "##default" } });
@@ -7497,8 +7497,6 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -7508,10 +7506,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -7526,11 +7531,6 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
@@ -7541,8 +7541,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -7552,10 +7550,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -7569,11 +7574,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -7630,8 +7630,6 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -7641,10 +7639,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -7659,11 +7664,6 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
@@ -7674,8 +7674,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -7685,10 +7683,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -7702,11 +7707,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -7781,8 +7781,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64", examples: [10] },
-                name: { type: "string", examples: ["doggie"] },
                 category: {
                   type: "object",
                   properties: {
@@ -7792,10 +7790,17 @@ export const mcpTools = [
                   required: [],
                   xml: { name: "category" },
                 },
+                id: { type: "integer", format: "int64", examples: [10] },
+                name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
                   items: { type: "string", xml: { name: "photoUrl" } },
                   xml: { wrapped: true },
+                },
+                status: {
+                  type: "string",
+                  description: "pet status in the store",
+                  enum: ["available", "pending", "sold"],
                 },
                 tags: {
                   type: "array",
@@ -7809,11 +7814,6 @@ export const mcpTools = [
                     xml: { name: "tag" },
                   },
                   xml: { wrapped: true },
-                },
-                status: {
-                  type: "string",
-                  description: "pet status in the store",
-                  enum: ["available", "pending", "sold"],
                 },
               },
               required: ["name", "photoUrls"],
@@ -7885,8 +7885,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64", examples: [10] },
-                name: { type: "string", examples: ["doggie"] },
                 category: {
                   type: "object",
                   properties: {
@@ -7896,10 +7894,17 @@ export const mcpTools = [
                   required: [],
                   xml: { name: "category" },
                 },
+                id: { type: "integer", format: "int64", examples: [10] },
+                name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
                   items: { type: "string", xml: { name: "photoUrl" } },
                   xml: { wrapped: true },
+                },
+                status: {
+                  type: "string",
+                  description: "pet status in the store",
+                  enum: ["available", "pending", "sold"],
                 },
                 tags: {
                   type: "array",
@@ -7913,11 +7918,6 @@ export const mcpTools = [
                     xml: { name: "tag" },
                   },
                   xml: { wrapped: true },
-                },
-                status: {
-                  type: "string",
-                  description: "pet status in the store",
-                  enum: ["available", "pending", "sold"],
                 },
               },
               required: ["name", "photoUrls"],
@@ -7985,8 +7985,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -7996,10 +7994,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -8013,11 +8018,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -8143,14 +8143,14 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
+          headers: {
+            type: "object",
+            properties: { api_key: { type: "string" } },
+          },
           path: {
             type: "object",
             properties: { petId: { type: "integer", format: "int64" } },
             required: ["petId"],
-          },
-          headers: {
-            type: "object",
-            properties: { api_key: { type: "string" } },
           },
         },
         required: ["path"],
@@ -8219,8 +8219,8 @@ export const mcpTools = [
         type: "object",
         properties: {
           code: { type: "integer", format: "int32" },
-          type: { type: "string" },
           message: { type: "string" },
+          type: { type: "string" },
         },
         required: [],
         xml: { name: "##default" },
@@ -8314,22 +8314,11 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              petId: { type: "integer", format: "int64", examples: [198772] },
-              quantity: { type: "integer", format: "int32", examples: [7] },
-              shipDate: { type: "string", format: "date-time" },
-              status: {
-                type: "string",
-                description: "Order Status",
-                examples: ["approved"],
-                enum: ["placed", "approved", "delivered"],
-              },
               complete: { type: "boolean" },
+              id: { type: "integer", format: "int64", examples: [10] },
               pet: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [10] },
-                  name: { type: "string", examples: ["doggie"] },
                   category: {
                     type: "object",
                     properties: {
@@ -8339,10 +8328,17 @@ export const mcpTools = [
                     required: [],
                     xml: { name: "category" },
                   },
+                  id: { type: "integer", format: "int64", examples: [10] },
+                  name: { type: "string", examples: ["doggie"] },
                   photoUrls: {
                     type: "array",
                     items: { type: "string", xml: { name: "photoUrl" } },
                     xml: { wrapped: true },
+                  },
+                  status: {
+                    type: "string",
+                    description: "pet status in the store",
+                    enum: ["available", "pending", "sold"],
                   },
                   tags: {
                     type: "array",
@@ -8357,14 +8353,18 @@ export const mcpTools = [
                     },
                     xml: { wrapped: true },
                   },
-                  status: {
-                    type: "string",
-                    description: "pet status in the store",
-                    enum: ["available", "pending", "sold"],
-                  },
                 },
                 required: ["name", "photoUrls"],
                 xml: { name: "pet" },
+              },
+              petId: { type: "integer", format: "int64", examples: [198772] },
+              quantity: { type: "integer", format: "int32", examples: [7] },
+              shipDate: { type: "string", format: "date-time" },
+              status: {
+                type: "string",
+                description: "Order Status",
+                examples: ["approved"],
+                enum: ["placed", "approved", "delivered"],
               },
             },
             required: [],
@@ -8375,22 +8375,11 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          petId: { type: "integer", format: "int64", examples: [198772] },
-          quantity: { type: "integer", format: "int32", examples: [7] },
-          shipDate: { type: "string", format: "date-time" },
-          status: {
-            type: "string",
-            description: "Order Status",
-            examples: ["approved"],
-            enum: ["placed", "approved", "delivered"],
-          },
           complete: { type: "boolean" },
+          id: { type: "integer", format: "int64", examples: [10] },
           pet: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -8400,10 +8389,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -8418,14 +8414,18 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
+          },
+          petId: { type: "integer", format: "int64", examples: [198772] },
+          quantity: { type: "integer", format: "int32", examples: [7] },
+          shipDate: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            description: "Order Status",
+            examples: ["approved"],
+            enum: ["placed", "approved", "delivered"],
           },
         },
         required: [],
@@ -8469,22 +8469,11 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          petId: { type: "integer", format: "int64", examples: [198772] },
-          quantity: { type: "integer", format: "int32", examples: [7] },
-          shipDate: { type: "string", format: "date-time" },
-          status: {
-            type: "string",
-            description: "Order Status",
-            examples: ["approved"],
-            enum: ["placed", "approved", "delivered"],
-          },
           complete: { type: "boolean" },
+          id: { type: "integer", format: "int64", examples: [10] },
           pet: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -8494,10 +8483,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -8512,14 +8508,18 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
+          },
+          petId: { type: "integer", format: "int64", examples: [198772] },
+          quantity: { type: "integer", format: "int32", examples: [7] },
+          shipDate: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            description: "Order Status",
+            examples: ["approved"],
+            enum: ["placed", "approved", "delivered"],
           },
         },
         required: [],
@@ -8589,13 +8589,13 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              username: { type: "string", examples: ["theUser"] },
-              firstName: { type: "string", examples: ["John"] },
-              lastName: { type: "string", examples: ["James"] },
               email: { type: "string", examples: ["john@email.com"] },
+              firstName: { type: "string", examples: ["John"] },
+              id: { type: "integer", format: "int64", examples: [10] },
+              lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
+              username: { type: "string", examples: ["theUser"] },
               userStatus: {
                 type: "integer",
                 format: "int32",
@@ -8642,13 +8642,13 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [10] },
-                    username: { type: "string", examples: ["theUser"] },
-                    firstName: { type: "string", examples: ["John"] },
-                    lastName: { type: "string", examples: ["James"] },
                     email: { type: "string", examples: ["john@email.com"] },
+                    firstName: { type: "string", examples: ["John"] },
+                    id: { type: "integer", format: "int64", examples: [10] },
+                    lastName: { type: "string", examples: ["James"] },
                     password: { type: "string", examples: ["12345"] },
                     phone: { type: "string", examples: ["12345"] },
+                    username: { type: "string", examples: ["theUser"] },
                     userStatus: {
                       type: "integer",
                       format: "int32",
@@ -8667,13 +8667,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          username: { type: "string", examples: ["theUser"] },
-          firstName: { type: "string", examples: ["John"] },
-          lastName: { type: "string", examples: ["James"] },
           email: { type: "string", examples: ["john@email.com"] },
+          firstName: { type: "string", examples: ["John"] },
+          id: { type: "integer", format: "int64", examples: [10] },
+          lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
+          username: { type: "string", examples: ["theUser"] },
           userStatus: {
             type: "integer",
             format: "int32",
@@ -8713,8 +8713,8 @@ export const mcpTools = [
           query: {
             type: "object",
             properties: {
-              username: { type: "string" },
               password: { type: "string" },
+              username: { type: "string" },
             },
           },
         },
@@ -8784,13 +8784,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          username: { type: "string", examples: ["theUser"] },
-          firstName: { type: "string", examples: ["John"] },
-          lastName: { type: "string", examples: ["James"] },
           email: { type: "string", examples: ["john@email.com"] },
+          firstName: { type: "string", examples: ["John"] },
+          id: { type: "integer", format: "int64", examples: [10] },
+          lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
+          username: { type: "string", examples: ["theUser"] },
           userStatus: {
             type: "integer",
             format: "int32",
@@ -8827,21 +8827,16 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              username: { type: "string", examples: ["theUser"] },
-              firstName: { type: "string", examples: ["John"] },
-              lastName: { type: "string", examples: ["James"] },
               email: { type: "string", examples: ["john@email.com"] },
+              firstName: { type: "string", examples: ["John"] },
+              id: { type: "integer", format: "int64", examples: [10] },
+              lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
+              username: { type: "string", examples: ["theUser"] },
               userStatus: {
                 type: "integer",
                 format: "int32",
@@ -8851,6 +8846,11 @@ export const mcpTools = [
             },
             required: [],
             xml: { name: "user" },
+          },
+          path: {
+            type: "object",
+            properties: { username: { type: "string" } },
+            required: ["username"],
           },
         },
         required: ["path"],
@@ -8920,47 +8920,47 @@ export type Tag = {
   name?: string;
 };
 export type Pet = {
+  category?: Category;
   id?: number;
   name: string;
-  category?: Category;
   photoUrls: string[];
-  tags?: Tag[];
   /** pet status in the store */ status?: string;
+  tags?: Tag[];
 };
 export type Order = {
+  complete?: boolean;
   id?: number;
+  pet?: Pet;
   petId?: number;
   quantity?: number;
   shipDate?: string;
   /** Order Status */ status?: string;
-  complete?: boolean;
-  pet?: Pet;
 };
 export type Address = {
-  street?: string;
   city?: string;
   state?: string;
+  street?: string;
   zip?: string;
 };
 export type Customer = {
+  address?: Address[];
   id?: number;
   username?: string;
-  address?: Address[];
 };
 export type User = {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
   email?: string;
+  firstName?: string;
+  id?: number;
+  lastName?: string;
   password?: string;
   phone?: string;
+  username?: string;
   /** User Status */ userStatus?: number;
 };
 export type ApiResponse = {
   code?: number;
-  type?: string;
   message?: string;
+  type?: string;
 };
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
@@ -8986,32 +8986,34 @@ export const Tag = z
   .meta({ xml: { name: "tag" } });
 export const Pet = z
   .object({
+    category: Category.optional(),
     id: z
       .int64()
       .optional()
       .meta({ examples: [10] }),
     name: z.string().meta({ examples: ["doggie"] }),
-    category: Category.optional(),
     photoUrls: z
       .array(z.string().meta({ xml: { name: "photoUrl" } }))
-      .meta({ xml: { wrapped: true } }),
-    tags: z
-      .array(Tag)
-      .optional()
       .meta({ xml: { wrapped: true } }),
     status: z
       .enum(["available", "pending", "sold"])
       .optional()
       .meta({ description: "pet status in the store" }),
+    tags: z
+      .array(Tag)
+      .optional()
+      .meta({ xml: { wrapped: true } }),
   })
   .strict()
   .meta({ xml: { name: "pet" } });
 export const Order = z
   .object({
+    complete: z.boolean().optional(),
     id: z
       .int64()
       .optional()
       .meta({ examples: [10] }),
+    pet: Pet.optional(),
     petId: z
       .int64()
       .optional()
@@ -9025,17 +9027,11 @@ export const Order = z
       .enum(["placed", "approved", "delivered"])
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
-    complete: z.boolean().optional(),
-    pet: Pet.optional(),
   })
   .strict()
   .meta({ xml: { name: "order" } });
 export const Address = z
   .object({
-    street: z
-      .string()
-      .optional()
-      .meta({ examples: ["437 Lytton"] }),
     city: z
       .string()
       .optional()
@@ -9044,6 +9040,10 @@ export const Address = z
       .string()
       .optional()
       .meta({ examples: ["CA"] }),
+    street: z
+      .string()
+      .optional()
+      .meta({ examples: ["437 Lytton"] }),
     zip: z
       .string()
       .optional()
@@ -9053,6 +9053,10 @@ export const Address = z
   .meta({ xml: { name: "address" } });
 export const Customer = z
   .object({
+    address: z
+      .array(Address)
+      .optional()
+      .meta({ xml: { name: "addresses", wrapped: true } }),
     id: z
       .int64()
       .optional()
@@ -9061,35 +9065,27 @@ export const Customer = z
       .string()
       .optional()
       .meta({ examples: ["fehguy"] }),
-    address: z
-      .array(Address)
-      .optional()
-      .meta({ xml: { name: "addresses", wrapped: true } }),
   })
   .strict()
   .meta({ xml: { name: "customer" } });
 export const User = z
   .object({
-    id: z
-      .int64()
-      .optional()
-      .meta({ examples: [10] }),
-    username: z
-      .string()
-      .optional()
-      .meta({ examples: ["theUser"] }),
-    firstName: z
-      .string()
-      .optional()
-      .meta({ examples: ["John"] }),
-    lastName: z
-      .string()
-      .optional()
-      .meta({ examples: ["James"] }),
     email: z
       .string()
       .optional()
       .meta({ examples: ["john@email.com"] }),
+    firstName: z
+      .string()
+      .optional()
+      .meta({ examples: ["John"] }),
+    id: z
+      .int64()
+      .optional()
+      .meta({ examples: [10] }),
+    lastName: z
+      .string()
+      .optional()
+      .meta({ examples: ["James"] }),
     password: z
       .string()
       .optional()
@@ -9098,6 +9094,10 @@ export const User = z
       .string()
       .optional()
       .meta({ examples: ["12345"] }),
+    username: z
+      .string()
+      .optional()
+      .meta({ examples: ["theUser"] }),
     userStatus: z
       .int32()
       .optional()
@@ -9108,8 +9108,8 @@ export const User = z
 export const ApiResponse = z
   .object({
     code: z.int32().optional(),
-    type: z.string().optional(),
     message: z.string().optional(),
+    type: z.string().optional(),
   })
   .strict()
   .meta({ xml: { name: "##default" } });
@@ -9402,8 +9402,6 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -9413,10 +9411,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -9431,11 +9436,6 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
@@ -9446,8 +9446,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -9457,10 +9455,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -9474,11 +9479,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -9535,8 +9535,6 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -9546,10 +9544,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -9564,11 +9569,6 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
@@ -9579,8 +9579,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -9590,10 +9588,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -9607,11 +9612,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -9686,8 +9686,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64", examples: [10] },
-                name: { type: "string", examples: ["doggie"] },
                 category: {
                   type: "object",
                   properties: {
@@ -9697,10 +9695,17 @@ export const mcpTools = [
                   required: [],
                   xml: { name: "category" },
                 },
+                id: { type: "integer", format: "int64", examples: [10] },
+                name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
                   items: { type: "string", xml: { name: "photoUrl" } },
                   xml: { wrapped: true },
+                },
+                status: {
+                  type: "string",
+                  description: "pet status in the store",
+                  enum: ["available", "pending", "sold"],
                 },
                 tags: {
                   type: "array",
@@ -9714,11 +9719,6 @@ export const mcpTools = [
                     xml: { name: "tag" },
                   },
                   xml: { wrapped: true },
-                },
-                status: {
-                  type: "string",
-                  description: "pet status in the store",
-                  enum: ["available", "pending", "sold"],
                 },
               },
               required: ["name", "photoUrls"],
@@ -9790,8 +9790,6 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64", examples: [10] },
-                name: { type: "string", examples: ["doggie"] },
                 category: {
                   type: "object",
                   properties: {
@@ -9801,10 +9799,17 @@ export const mcpTools = [
                   required: [],
                   xml: { name: "category" },
                 },
+                id: { type: "integer", format: "int64", examples: [10] },
+                name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
                   items: { type: "string", xml: { name: "photoUrl" } },
                   xml: { wrapped: true },
+                },
+                status: {
+                  type: "string",
+                  description: "pet status in the store",
+                  enum: ["available", "pending", "sold"],
                 },
                 tags: {
                   type: "array",
@@ -9818,11 +9823,6 @@ export const mcpTools = [
                     xml: { name: "tag" },
                   },
                   xml: { wrapped: true },
-                },
-                status: {
-                  type: "string",
-                  description: "pet status in the store",
-                  enum: ["available", "pending", "sold"],
                 },
               },
               required: ["name", "photoUrls"],
@@ -9890,8 +9890,6 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          name: { type: "string", examples: ["doggie"] },
           category: {
             type: "object",
             properties: {
@@ -9901,10 +9899,17 @@ export const mcpTools = [
             required: [],
             xml: { name: "category" },
           },
+          id: { type: "integer", format: "int64", examples: [10] },
+          name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
             items: { type: "string", xml: { name: "photoUrl" } },
             xml: { wrapped: true },
+          },
+          status: {
+            type: "string",
+            description: "pet status in the store",
+            enum: ["available", "pending", "sold"],
           },
           tags: {
             type: "array",
@@ -9918,11 +9923,6 @@ export const mcpTools = [
               xml: { name: "tag" },
             },
             xml: { wrapped: true },
-          },
-          status: {
-            type: "string",
-            description: "pet status in the store",
-            enum: ["available", "pending", "sold"],
           },
         },
         required: ["name", "photoUrls"],
@@ -10048,14 +10048,14 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
+          headers: {
+            type: "object",
+            properties: { api_key: { type: "string" } },
+          },
           path: {
             type: "object",
             properties: { petId: { type: "integer", format: "int64" } },
             required: ["petId"],
-          },
-          headers: {
-            type: "object",
-            properties: { api_key: { type: "string" } },
           },
         },
         required: ["path"],
@@ -10124,8 +10124,8 @@ export const mcpTools = [
         type: "object",
         properties: {
           code: { type: "integer", format: "int32" },
-          type: { type: "string" },
           message: { type: "string" },
+          type: { type: "string" },
         },
         required: [],
         xml: { name: "##default" },
@@ -10219,22 +10219,11 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              petId: { type: "integer", format: "int64", examples: [198772] },
-              quantity: { type: "integer", format: "int32", examples: [7] },
-              shipDate: { type: "string", format: "date-time" },
-              status: {
-                type: "string",
-                description: "Order Status",
-                examples: ["approved"],
-                enum: ["placed", "approved", "delivered"],
-              },
               complete: { type: "boolean" },
+              id: { type: "integer", format: "int64", examples: [10] },
               pet: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [10] },
-                  name: { type: "string", examples: ["doggie"] },
                   category: {
                     type: "object",
                     properties: {
@@ -10244,10 +10233,17 @@ export const mcpTools = [
                     required: [],
                     xml: { name: "category" },
                   },
+                  id: { type: "integer", format: "int64", examples: [10] },
+                  name: { type: "string", examples: ["doggie"] },
                   photoUrls: {
                     type: "array",
                     items: { type: "string", xml: { name: "photoUrl" } },
                     xml: { wrapped: true },
+                  },
+                  status: {
+                    type: "string",
+                    description: "pet status in the store",
+                    enum: ["available", "pending", "sold"],
                   },
                   tags: {
                     type: "array",
@@ -10262,14 +10258,18 @@ export const mcpTools = [
                     },
                     xml: { wrapped: true },
                   },
-                  status: {
-                    type: "string",
-                    description: "pet status in the store",
-                    enum: ["available", "pending", "sold"],
-                  },
                 },
                 required: ["name", "photoUrls"],
                 xml: { name: "pet" },
+              },
+              petId: { type: "integer", format: "int64", examples: [198772] },
+              quantity: { type: "integer", format: "int32", examples: [7] },
+              shipDate: { type: "string", format: "date-time" },
+              status: {
+                type: "string",
+                description: "Order Status",
+                examples: ["approved"],
+                enum: ["placed", "approved", "delivered"],
               },
             },
             required: [],
@@ -10280,22 +10280,11 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          petId: { type: "integer", format: "int64", examples: [198772] },
-          quantity: { type: "integer", format: "int32", examples: [7] },
-          shipDate: { type: "string", format: "date-time" },
-          status: {
-            type: "string",
-            description: "Order Status",
-            examples: ["approved"],
-            enum: ["placed", "approved", "delivered"],
-          },
           complete: { type: "boolean" },
+          id: { type: "integer", format: "int64", examples: [10] },
           pet: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -10305,10 +10294,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -10323,14 +10319,18 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
+          },
+          petId: { type: "integer", format: "int64", examples: [198772] },
+          quantity: { type: "integer", format: "int32", examples: [7] },
+          shipDate: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            description: "Order Status",
+            examples: ["approved"],
+            enum: ["placed", "approved", "delivered"],
           },
         },
         required: [],
@@ -10374,22 +10374,11 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          petId: { type: "integer", format: "int64", examples: [198772] },
-          quantity: { type: "integer", format: "int32", examples: [7] },
-          shipDate: { type: "string", format: "date-time" },
-          status: {
-            type: "string",
-            description: "Order Status",
-            examples: ["approved"],
-            enum: ["placed", "approved", "delivered"],
-          },
           complete: { type: "boolean" },
+          id: { type: "integer", format: "int64", examples: [10] },
           pet: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              name: { type: "string", examples: ["doggie"] },
               category: {
                 type: "object",
                 properties: {
@@ -10399,10 +10388,17 @@ export const mcpTools = [
                 required: [],
                 xml: { name: "category" },
               },
+              id: { type: "integer", format: "int64", examples: [10] },
+              name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
                 items: { type: "string", xml: { name: "photoUrl" } },
                 xml: { wrapped: true },
+              },
+              status: {
+                type: "string",
+                description: "pet status in the store",
+                enum: ["available", "pending", "sold"],
               },
               tags: {
                 type: "array",
@@ -10417,14 +10413,18 @@ export const mcpTools = [
                 },
                 xml: { wrapped: true },
               },
-              status: {
-                type: "string",
-                description: "pet status in the store",
-                enum: ["available", "pending", "sold"],
-              },
             },
             required: ["name", "photoUrls"],
             xml: { name: "pet" },
+          },
+          petId: { type: "integer", format: "int64", examples: [198772] },
+          quantity: { type: "integer", format: "int32", examples: [7] },
+          shipDate: { type: "string", format: "date-time" },
+          status: {
+            type: "string",
+            description: "Order Status",
+            examples: ["approved"],
+            enum: ["placed", "approved", "delivered"],
           },
         },
         required: [],
@@ -10494,13 +10494,13 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              username: { type: "string", examples: ["theUser"] },
-              firstName: { type: "string", examples: ["John"] },
-              lastName: { type: "string", examples: ["James"] },
               email: { type: "string", examples: ["john@email.com"] },
+              firstName: { type: "string", examples: ["John"] },
+              id: { type: "integer", format: "int64", examples: [10] },
+              lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
+              username: { type: "string", examples: ["theUser"] },
               userStatus: {
                 type: "integer",
                 format: "int32",
@@ -10547,13 +10547,13 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [10] },
-                    username: { type: "string", examples: ["theUser"] },
-                    firstName: { type: "string", examples: ["John"] },
-                    lastName: { type: "string", examples: ["James"] },
                     email: { type: "string", examples: ["john@email.com"] },
+                    firstName: { type: "string", examples: ["John"] },
+                    id: { type: "integer", format: "int64", examples: [10] },
+                    lastName: { type: "string", examples: ["James"] },
                     password: { type: "string", examples: ["12345"] },
                     phone: { type: "string", examples: ["12345"] },
+                    username: { type: "string", examples: ["theUser"] },
                     userStatus: {
                       type: "integer",
                       format: "int32",
@@ -10572,13 +10572,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          username: { type: "string", examples: ["theUser"] },
-          firstName: { type: "string", examples: ["John"] },
-          lastName: { type: "string", examples: ["James"] },
           email: { type: "string", examples: ["john@email.com"] },
+          firstName: { type: "string", examples: ["John"] },
+          id: { type: "integer", format: "int64", examples: [10] },
+          lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
+          username: { type: "string", examples: ["theUser"] },
           userStatus: {
             type: "integer",
             format: "int32",
@@ -10618,8 +10618,8 @@ export const mcpTools = [
           query: {
             type: "object",
             properties: {
-              username: { type: "string" },
               password: { type: "string" },
+              username: { type: "string" },
             },
           },
         },
@@ -10689,13 +10689,13 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64", examples: [10] },
-          username: { type: "string", examples: ["theUser"] },
-          firstName: { type: "string", examples: ["John"] },
-          lastName: { type: "string", examples: ["James"] },
           email: { type: "string", examples: ["john@email.com"] },
+          firstName: { type: "string", examples: ["John"] },
+          id: { type: "integer", format: "int64", examples: [10] },
+          lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
+          username: { type: "string", examples: ["theUser"] },
           userStatus: {
             type: "integer",
             format: "int32",
@@ -10732,21 +10732,16 @@ export const mcpTools = [
       inputSchema: {
         type: "object",
         properties: {
-          path: {
-            type: "object",
-            properties: { username: { type: "string" } },
-            required: ["username"],
-          },
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [10] },
-              username: { type: "string", examples: ["theUser"] },
-              firstName: { type: "string", examples: ["John"] },
-              lastName: { type: "string", examples: ["James"] },
               email: { type: "string", examples: ["john@email.com"] },
+              firstName: { type: "string", examples: ["John"] },
+              id: { type: "integer", format: "int64", examples: [10] },
+              lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
+              username: { type: "string", examples: ["theUser"] },
               userStatus: {
                 type: "integer",
                 format: "int32",
@@ -10756,6 +10751,11 @@ export const mcpTools = [
             },
             required: [],
             xml: { name: "user" },
+          },
+          path: {
+            type: "object",
+            properties: { username: { type: "string" } },
+            required: ["username"],
           },
         },
         required: ["path"],

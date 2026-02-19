@@ -105,16 +105,16 @@ test('enum-min-max', async () => {
               query: {
                 type: "object",
                 properties: {
+                  bar: {
+                    type: "string",
+                    minLength: 4,
+                    enum: ["Dogs", "Cats", "Mice"],
+                  },
                   foo: {
                     type: "integer",
                     minimum: 4,
                     maximum: 10,
                     enum: [1, -2, 3],
-                  },
-                  bar: {
-                    type: "string",
-                    minLength: 4,
-                    enum: ["Dogs", "Cats", "Mice"],
                   },
                 },
               },

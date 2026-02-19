@@ -27,8 +27,8 @@ test('schema-refiner', () => {
     `
     {
         "code": "z.object({
-      name: z.string().optional(),
       email: z.string().optional(),
+      name: z.string().optional(),
     }).passthrough()",
         "schema": {
             "properties": {

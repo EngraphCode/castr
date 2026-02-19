@@ -145,13 +145,13 @@ test('same-schema-different-name - Generation Snapshot', async () => {
               query: {
                 type: "object",
                 properties: {
-                  differentNameSameSchema: {
-                    type: "string",
-                    enum: ["aaa", "bbb", "ccc"],
-                  },
                   anotherDifferentNameWithSlightlyDifferentSchema: {
                     type: "string",
                     default: "aaa",
+                    enum: ["aaa", "bbb", "ccc"],
+                  },
+                  differentNameSameSchema: {
+                    type: "string",
                     enum: ["aaa", "bbb", "ccc"],
                   },
                 },

@@ -144,12 +144,12 @@ test('inline-simple-schemas', async () => {
       str?: string;
     };
     export type ComplexObject = {
-      str?: string;
-      strRef?: BasicString;
-      num?: number;
       bool?: boolean;
+      num?: number;
       ref?: SimpleObject;
       refArray?: SimpleObject[];
+      str?: string;
+      strRef?: BasicString;
     };
     // Zod Schemas
     export const BasicString = z.string();
@@ -160,12 +160,12 @@ test('inline-simple-schemas', async () => {
       .strict();
     export const ComplexObject = z
       .object({
-        str: z.string().optional(),
-        strRef: BasicString.optional(),
-        num: z.number().optional(),
         bool: z.boolean().optional(),
+        num: z.number().optional(),
         ref: SimpleObject.optional(),
         refArray: z.array(SimpleObject).optional(),
+        str: z.string().optional(),
+        strRef: BasicString.optional(),
       })
       .strict();
     // Endpoints

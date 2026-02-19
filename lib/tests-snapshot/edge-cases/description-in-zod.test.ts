@@ -140,9 +140,9 @@ test('description-in-zod', async () => {
               query: {
                 type: "object",
                 properties: {
-                  foo: { type: "integer", enum: [1, -2, 3] },
                   bar: { type: "number", enum: [1.2, 34, -56.789] },
                   baz: { type: "number", enum: [1.3, 34.1, -57.89] },
+                  foo: { type: "integer", enum: [1, -2, 3] },
                   qux: { type: "string" },
                 },
               },

@@ -71,8 +71,8 @@ test('getSchemaAsTsString', () => {
     ),
   ).toMatchInlineSnapshot(`
     "export type BasicObject2 = {
-      str?: string;
       nb?: number;
+      str?: string;
     };"
   `);
 
@@ -87,8 +87,8 @@ test('getSchemaAsTsString', () => {
     ),
   ).toMatchInlineSnapshot(`
     "export type AllPropertiesRequired = {
-      str: string;
       nb: number;
+      str: string;
     };"
   `);
   expect(
@@ -102,8 +102,8 @@ test('getSchemaAsTsString', () => {
     ),
   ).toMatchInlineSnapshot(`
     "export type SomeOptionalProps = {
-      str: string;
       nb?: number;
+      str: string;
     };"
   `);
 
@@ -127,11 +127,11 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(
     `
     "export type ObjectWithNestedProp = {
-      str?: string;
       nb?: number;
       nested?: {
         nested_prop?: boolean;
       };
+      str?: string;
     };"
   `,
   );
@@ -355,9 +355,9 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(
     `
     "export type Category = {
+      propBoolean: unknown | null;
       propNumber: unknown | null;
       propString: unknown | null;
-      propBoolean: unknown | null;
     };"
   `,
   );
@@ -394,9 +394,9 @@ describe('getSchemaAsTsString with context', () => {
     ).toMatchInlineSnapshot(
       `
       "export type Root = {
-        str?: string;
         nb?: number;
         nested?: Nested;
+        str?: string;
       };"
     `,
     );
@@ -441,9 +441,9 @@ describe('getSchemaAsTsString with context', () => {
     ).toMatchInlineSnapshot(
       `
       "export type Root2 = {
-        str?: string;
         nb?: number;
         nested?: Nested2;
+        str?: string;
       };"
     `,
     );
@@ -481,10 +481,10 @@ describe('getSchemaAsTsString with context', () => {
     ).toMatchInlineSnapshot(
       `
       "export type Root3 = {
-        str?: string;
+        arrayOfNested?: Nested3[];
         nb?: number;
         nested?: Nested3;
-        arrayOfNested?: Nested3[];
+        str?: string;
       };"
     `,
     );
@@ -523,11 +523,11 @@ describe('getSchemaAsTsString with context', () => {
     expect(result).toMatchInlineSnapshot(
       `
       "export type Root4 = {
-        str?: string;
-        nb?: number;
-        self?: Root4;
-        nested?: Nested4;
         arrayOfSelf?: Root4[];
+        nb?: number;
+        nested?: Nested4;
+        self?: Root4;
+        str?: string;
       };"
     `,
     );
@@ -571,8 +571,8 @@ describe('getSchemaAsTsString with context', () => {
     expect(result).toMatchInlineSnapshot(
       `
       "export type Root = {
-        recursive?: User;
         basic?: number;
+        recursive?: User;
       };"
     `,
     );
@@ -624,9 +624,9 @@ describe('getSchemaAsTsString with context', () => {
     expect(result).toMatchInlineSnapshot(
       `
       "export type Root = {
+        basic?: number;
         user?: User | Member;
         users?: User | Member[];
-        basic?: number;
       };"
     `,
     );

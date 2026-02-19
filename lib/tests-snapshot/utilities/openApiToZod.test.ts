@@ -100,11 +100,11 @@ test('getSchemaAsZodString', () => {
     }),
   ).toMatchInlineSnapshot(`
     "z.object({
-      str: z.string().optional(),
       nb: z.number().optional(),
       nested: z.object({
         nested_prop: z.boolean().optional(),
       }).passthrough().optional(),
+      str: z.string().optional(),
     }).passthrough()"
   `);
 

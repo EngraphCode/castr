@@ -16,8 +16,8 @@ test('kebab-case-in-props', () => {
     `
     {
         "code": "z.object({
-      lowercase: z.string().optional(),
       'kebab-case': z.number().optional(),
+      lowercase: z.string().optional(),
     }).passthrough()",
         "schema": {
             "properties": {

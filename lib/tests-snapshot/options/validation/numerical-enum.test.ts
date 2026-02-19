@@ -98,8 +98,8 @@ test('numerical-enum-support', async () => {
               query: {
                 type: "object",
                 properties: {
-                  foo: { type: "integer", enum: [1, -2, 3] },
                   bar: { type: "number", enum: [1.2, 34, -56.789] },
+                  foo: { type: "integer", enum: [1, -2, 3] },
                 },
               },
             },

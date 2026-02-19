@@ -51,15 +51,15 @@ it('determines which one is-main-response', async () => {
     "import { z } from "zod";
     // Type Definitions
     export type Main = {
-      str: string;
       nb: number;
+      str: string;
     };
     export type AnotherSuccess = number;
     // Zod Schemas
     export const Main = z
       .object({
-        str: z.string(),
         nb: z.number(),
+        str: z.string(),
       })
       .strict();
     export const AnotherSuccess = z.number();
@@ -72,8 +72,8 @@ it('determines which one is-main-response', async () => {
         parameters: [],
         response: z
           .object({
-            str: z.string(),
             nb: z.number(),
+            str: z.string(),
           })
           .strict(),
         errors: [],
@@ -81,8 +81,8 @@ it('determines which one is-main-response', async () => {
           200: {
             schema: z
               .object({
-                str: z.string(),
                 nb: z.number(),
+                str: z.string(),
               })
               .strict(),
             description: "OK",
@@ -105,7 +105,7 @@ it('determines which one is-main-response', async () => {
           inputSchema: { type: "object", properties: {} },
           outputSchema: {
             type: "object",
-            properties: { str: { type: "string" }, nb: { type: "number" } },
+            properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
           },
           annotations: {
