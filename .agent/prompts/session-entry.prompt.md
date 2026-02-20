@@ -40,7 +40,7 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3b)
 
-**ACTIVE PLAN: [3.3b.05 — Validation-Parity Tests for Scenarios 2–4](../plans/active/3.3b-05-validation-parity-scenarios-2-4.md)** — open this file first.
+**ACTIVE PLAN: [3.3b.06 — Expand Zod Fixtures](../plans/active/3.3b-06-expand-zod-fixtures.md)** — open this file first.
 
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
@@ -78,8 +78,6 @@ Notes:
 - **Plan 08** — Prove Determinism — complete and moved to `.agent/plans/current/complete/`.
 - **Plan 3.3b.01** — Transform Sample Suite Strictness — **complete** and moved to `.agent/plans/current/complete/`.
 - **Plan 3.3b.02** — Scenario 3 Reference Composition — **complete** and moved to `.agent/plans/current/complete/`.
-
-
 
 ```bash
 # Open active plan
