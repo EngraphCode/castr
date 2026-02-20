@@ -141,6 +141,7 @@ const openApiDoc = writeOpenApi(ir);
 - Zod 4 syntax only (Zod 3 is rejected with actionable errors)
 - Static schemas (no dynamic/computed properties)
 - Getter-based recursion (not `z.lazy()`)
+- Standalone `z.undefined()` is rejected (use `.optional()` on the parent field/parameter)
 
 See [ADR-032](./docs/architectural_decision_records/ADR-032-zod-input-strategy.md) for details.
 

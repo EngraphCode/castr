@@ -103,6 +103,24 @@ describe('Zod Parser Integration', () => {
       expect(parseError?.location?.column).toBeGreaterThan(0);
     });
 
+    it('should reject z.undefined() declarations with location and guidance', () => {
+      const source = `
+        const UndefinedSchema = z.undefined();
+      `;
+      const result = parseZodSource(source);
+
+      expect(result.ir.components).toHaveLength(0);
+
+      const parseError = result.errors.find((e: { code: string }) => e.code === 'PARSE_ERROR');
+      expect(parseError).toBeDefined();
+      expect(parseError?.message).toContain('UndefinedSchema');
+      expect(parseError?.message).toContain('z.undefined() is not representable');
+      expect(parseError?.message).toContain('Use .optional() on the parent field or parameter');
+      expect(parseError?.location).toBeDefined();
+      expect(parseError?.location?.line).toBeGreaterThan(0);
+      expect(parseError?.location?.column).toBeGreaterThan(0);
+    });
+
     it('should return empty IR for invalid source', () => {
       const source = `
         not valid javascript

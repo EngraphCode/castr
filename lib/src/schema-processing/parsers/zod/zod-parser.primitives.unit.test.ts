@@ -45,12 +45,10 @@ describe('Primitive Zod Parsing', () => {
       expect(result?.metadata.nullable).toBe(true);
     });
 
-    it('should parse z.undefined() to empty schema metadata', () => {
-      const result = parsePrimitiveZod('z.undefined()');
-
-      // z.undefined() doesn't map cleanly to JSON Schema types
-      // We represent it with a special marker
-      expect(result).toBeDefined();
+    it('should reject z.undefined() with actionable guidance', () => {
+      expect(() => parsePrimitiveZod('z.undefined()')).toThrow(
+        'z.undefined() is not representable in OpenAPI/JSON Schema. Use .optional() on the parent field or parameter instead of a standalone undefined schema.',
+      );
     });
 
     it('should return undefined for non-primitive Zod calls', () => {

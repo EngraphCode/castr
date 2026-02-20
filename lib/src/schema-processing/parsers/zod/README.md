@@ -6,7 +6,7 @@ Parses Zod 4 schema source files into `CastrDocument` IR using ts-morph AST.
 
 - **Zod 4 only** — Strict rejection of Zod 3 syntax
 - **Static analysis** — Rejects dynamic/computed schemas
-- **Full schema support** — Primitives, objects, arrays, enums, unions, intersections
+- **Schema support (strict/lossless)** — Primitives, objects, arrays, enums, unions, intersections
 - **Endpoint parsing** — `defineEndpoint({...})` pattern → `CastrOperation`
 - **Reference resolution** — Variable refs, getter-based recursion, circular detection
 - **Writer lockstep** — Accepts writer-emitted identifier-rooted intersection declarations (for example `const Pet = NewPet.and(...)`) when root identifiers are known schema declarations
@@ -58,6 +58,7 @@ const result = parseZodSource(source);
 | Input           | Behavior          |
 | --------------- | ----------------- |
 | Valid Zod 4     | Parse to IR       |
+| `z.undefined()` | Reject with error |
 | Zod 3 syntax    | Reject with error |
 | Dynamic schemas | Reject with error |
 

@@ -73,23 +73,6 @@
         "circularReferences": []
       }
     },
-    "Undefined": {
-      "metadata": {
-        "required": false,
-        "nullable": false,
-        "zodChain": {
-          "presence": "",
-          "validations": [],
-          "defaults": []
-        },
-        "dependencyGraph": {
-          "references": [],
-          "referencedBy": [],
-          "depth": 0
-        },
-        "circularReferences": []
-      }
-    },
     "Int": {
       "type": "integer",
       "metadata": {

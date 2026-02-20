@@ -16,7 +16,6 @@ export const StringSchema = z.string();
 export const NumberSchema = z.number();
 export const BooleanSchema = z.boolean();
 export const NullSchema = z.null();
-export const UndefinedSchema = z.undefined();
 export const BigIntSchema = z.bigint();
 
 // =============================================================================

@@ -76,7 +76,7 @@ Full Transform Validation (Session 3.3) 🔄 IN PROGRESS
 |          | └ Eliminate fallbacks; fail fast and hard with helpful errors                | ✅          |
 | **3.3b** | **Strict Zod-Layer Transform Validation** (Strict, no weak assertions)       | 🔄 Active   |
 |          | └ Structural strictness closure for Scenarios 2-4                            | ✅ Complete |
-|          | └ Remaining strictness/parity blockers (`z.undefined()`, formats, parity)    | 🔄          |
+|          | └ Remaining strictness/parity blockers (formats, validation parity matrix)   | 🔄          |
 
 ---
 
@@ -122,7 +122,8 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - Plan 07 removed non-governed check-disabling directives and replaced escape-hatch usage with typed, rule-compliant implementations.
 - [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md) is complete and moved to `./current/complete/`.
 - [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md) is complete and moved to `./current/complete/`.
-- Current active plan is now [3.3b.03 — Reject `z.undefined()`](./active/3.3b-03-reject-z-undefined.md).
+- [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md) is complete and moved to `./current/complete/`.
+- Current active plan is now [3.3b.04 — Format Parity (hostname, float32/64)](./active/3.3b-04-format-parity-hostname-float.md).
 
 ---
 
@@ -146,7 +147,7 @@ Prove that the Zod layer participates in strict, lossless transform validation w
 
 **Success criteria (3.3b):**
 
-- `z.undefined()` is rejected with strict parser diagnostics and no permissive degradation path (3.3b.03).
+- `z.undefined()` strict rejection and no-degradation contract are complete (3.3b.03).
 - Writer format parity for hostname/float32/float64 is lossless or fail-fast with context (3.3b.04).
 - Validation-parity tests cover Scenarios 2–4 (data validates the same before/after transform execution).
 - Idempotency holds where required (byte-identical normalized outputs on second pass).
@@ -162,23 +163,23 @@ Prove that the Zod layer participates in strict, lossless transform validation w
 
 Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans under `./current/session-3.3a/` and `./current/session-3.3b/`.
 
-| Step | Plan                                                                                                             | Status      |
-| ---- | ---------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1    | [3.3a.01 — ADR-026 Scope Definition](./current/complete/3.3a-01-adr026-scope.md)                                 | ✅ Complete |
-| 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/complete/3.3a-02-eslint-enforcement-redesign.md)               | ✅ Complete |
-| 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/complete/3.3a-03-zod-parser-semantic-parsing.md)               | ✅ Complete |
-| 4    | [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md)          | ✅ Complete |
-| 5    | [3.3a.05 — Remove Permissive Fallback Outputs](./current/complete/3.3a-05-remove-permissive-fallbacks.md)        | ✅ Complete |
-| 6    | [3.3a.06 — Remove Swallowed Errors](./current/complete/3.3a-06-remove-swallowed-errors.md)                       | ✅ Complete |
-| 7    | [3.3a.07 — Remove Escape Hatches](./current/complete/3.3a-07-remove-escape-hatches.md)                           | ✅ Complete |
-| 8    | [3.3a.08 — Prove Determinism](./current/complete/3.3a-08-prove-determinism.md)                                   | ✅ Complete |
-| 9    | [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md)   | ✅ Complete |
-| 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md)      | ✅ Complete |
-| 11   | [3.3b.03 — Reject `z.undefined()`](./active/3.3b-03-reject-z-undefined.md)                                       | 🔄 Active   |
-| 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./current/session-3.3b/3.3b-04-format-parity-hostname-float.md) | 🔲          |
-| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md)   | 🔲          |
-| 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                           | 🔲          |
-| 15   | [3.3b.07 — Nullability Chain Normalization](./current/session-3.3b/3.3b-07-nullability-chain-normalization.md)   | 🔲          |
+| Step | Plan                                                                                                           | Status      |
+| ---- | -------------------------------------------------------------------------------------------------------------- | ----------- |
+| 1    | [3.3a.01 — ADR-026 Scope Definition](./current/complete/3.3a-01-adr026-scope.md)                               | ✅ Complete |
+| 2    | [3.3a.02 — ESLint Enforcement Redesign](./current/complete/3.3a-02-eslint-enforcement-redesign.md)             | ✅ Complete |
+| 3    | [3.3a.03 — Zod Parser Semantic Parsing](./current/complete/3.3a-03-zod-parser-semantic-parsing.md)             | ✅ Complete |
+| 4    | [3.3a.04 — Repo-Wide ADR-026 Remediation](./current/complete/3.3a-04-centralize-data-string-parsing.md)        | ✅ Complete |
+| 5    | [3.3a.05 — Remove Permissive Fallback Outputs](./current/complete/3.3a-05-remove-permissive-fallbacks.md)      | ✅ Complete |
+| 6    | [3.3a.06 — Remove Swallowed Errors](./current/complete/3.3a-06-remove-swallowed-errors.md)                     | ✅ Complete |
+| 7    | [3.3a.07 — Remove Escape Hatches](./current/complete/3.3a-07-remove-escape-hatches.md)                         | ✅ Complete |
+| 8    | [3.3a.08 — Prove Determinism](./current/complete/3.3a-08-prove-determinism.md)                                 | ✅ Complete |
+| 9    | [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md) | ✅ Complete |
+| 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md)    | ✅ Complete |
+| 11   | [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md)                           | ✅ Complete |
+| 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./active/3.3b-04-format-parity-hostname-float.md)             | 🔄 Active   |
+| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md) | 🔲          |
+| 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                         | 🔲          |
+| 15   | [3.3b.07 — Nullability Chain Normalization](./current/session-3.3b/3.3b-07-nullability-chain-normalization.md) | 🔲          |
 
 ---
 

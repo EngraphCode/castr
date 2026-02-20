@@ -30,6 +30,7 @@ This decision must align with:
 
 - Parsing uses **ts‑morph AST analysis only** (ADR‑026).
 - Dynamic patterns (computed keys, spreads, runtime indirection) are **rejected**.
+- Standalone `z.undefined()` is **rejected** (not representable losslessly in OpenAPI/JSON Schema); optionality must be modeled at the parent/field level via `.optional()`.
 - Unsupported patterns must **fail fast** with actionable diagnostics.
 
 ### 3. Metadata Ingestion
@@ -84,7 +85,7 @@ This decision must align with:
 
 ### Negative
 
-- Some Zod patterns remain unsupported (dynamic schemas, Zod 3, z.lazy).
+- Some Zod patterns remain unsupported (dynamic schemas, Zod 3, z.lazy, standalone `z.undefined()`).
 - Users must adapt input to idiomatic Zod 4 conventions.
 
 ---

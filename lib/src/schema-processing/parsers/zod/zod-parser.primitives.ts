@@ -60,6 +60,9 @@ interface ProcessedChain {
   description: string | undefined;
 }
 
+const UNSUPPORTED_ZOD_UNDEFINED_MESSAGE =
+  'z.undefined() is not representable in OpenAPI/JSON Schema. Use .optional() on the parent field or parameter instead of a standalone undefined schema.';
+
 /**
  * Process a single chain method, returning extracted info.
  * @internal
@@ -100,17 +103,6 @@ function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]
   }
 
   return state;
-}
-
-/**
- * Handle z.undefined() schema.
- * @internal
- */
-function handleUndefinedSchema(zodChain: IRZodChainInfo): CastrSchema {
-  return {
-    type: undefined,
-    metadata: createDefaultMetadata({ required: false, zodChain }),
-  };
 }
 
 /**
@@ -217,7 +209,7 @@ export function parsePrimitiveZodFromNode(
   const zodChain = buildZodChainInfo(chainedMethods, processed.optionality, processed.defaultValue);
 
   if (baseMethod === ZOD_BASE_METHOD_UNDEFINED) {
-    return applyMetaAndReturn(handleUndefinedSchema(zodChain), chainedMethods);
+    throw new Error(UNSUPPORTED_ZOD_UNDEFINED_MESSAGE);
   }
 
   if (baseMethod === ZOD_BASE_METHOD_LITERAL) {

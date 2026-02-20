@@ -384,6 +384,25 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
     });
   });
 
+  describe('Strictness: unsupported schema primitives fail fast', () => {
+    it('rejects standalone z.undefined() instead of degrading to permissive output', () => {
+      const source = `
+        const UndefinedSchema = z.undefined();
+      `;
+
+      const result = parseZodSource(source);
+
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.code).toBe('PARSE_ERROR');
+      expect(result.errors[0]?.message).toContain('z.undefined() is not representable');
+      expect(result.errors[0]?.message).toContain(
+        'Use .optional() on the parent field or parameter',
+      );
+      expect(result.errors[0]?.location).toBeDefined();
+    });
+  });
+
   describe('Idempotency: Normalized output is stable', () => {
     it.each(ZOD_FIXTURES)(
       '%s: normalized output is byte-identical on second pass',
