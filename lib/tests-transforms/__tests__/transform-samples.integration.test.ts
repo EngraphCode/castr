@@ -22,7 +22,7 @@
 
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { PathsObject } from 'openapi3-ts/oas31';
+import type { PathsObject, OpenAPIObject } from 'openapi3-ts/oas31';
 
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
@@ -400,6 +400,54 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
         'Use .optional() on the parent field or parameter',
       );
       expect(result.errors[0]?.location).toBeDefined();
+    });
+
+    it('preserves hostname, float32, and float64 formats completely through the pipeline', async () => {
+      const source = `
+        import { z } from 'zod';
+        export const TestSchema = z.object({
+          host: z.hostname(),
+          weight: z.float32(),
+          balance: z.float64(),
+        });
+      `;
+      // Zod -> IR
+      const result1 = parseZodSource(source);
+      expectNoParseErrors('inline formats test', 'arbitrary-input parse', result1);
+
+      // IR -> OpenAPI -> Zod
+      const openApiOutput = writeOpenApi(result1.ir);
+      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+
+      // The generated zod must include the specific format methods
+      expect(zodOutput).toContain('z.hostname()');
+      expect(zodOutput).toContain('z.float32()');
+      expect(zodOutput).toContain('z.float64()');
+    });
+
+    it('rejects un-emittable canonical formats explicitly during generation from IR', async () => {
+      // Create an OpenAPI doc with an unknown format 'password'
+      const openApiDoc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test', version: '1.0' },
+        components: {
+          schemas: {
+            PasswordInput: {
+              type: 'string',
+              format: 'password', // Zod 4 has no standard canonical helper for password
+            },
+          },
+        },
+      };
+
+      // OpenAPI -> IR works fine, parses format to IR
+      const ir = buildIR(openApiDoc);
+      const openApiOutput = writeOpenApi(ir); // writeOpenApi doesn't use the zod writer
+
+      // IR -> Zod generation should fail fast
+      await expect(generateZodFromOpenAPI(openApiOutput)).rejects.toThrow(
+        /Unsupported string format "password"/,
+      );
     });
   });
 

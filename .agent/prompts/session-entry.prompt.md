@@ -40,7 +40,7 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Session 3.3b)
 
-**ACTIVE PLAN: [3.3b.04 — Format Parity (hostname, float32/float64)](../plans/active/3.3b-04-format-parity-hostname-float.md)** — open this file first.
+**ACTIVE PLAN: [3.3b.05 — Validation-Parity Tests for Scenarios 2–4](../plans/active/3.3b-05-validation-parity-scenarios-2-4.md)** — open this file first.
 
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
@@ -65,7 +65,8 @@ Notes:
 - **3.3b.01** ✅ Complete (2026-02-19) — strict transform-sample suite hardening landed: no parse-error early-return branches in Scenarios 2/4, explicit parse-error assertions for Scenarios 2-4, and strict Scenario 3 schema-count equality.
 - **3.3b.02** ✅ Complete (2026-02-19) — parser now admits writer-emitted identifier-rooted composition declarations (for example `NewPet.and(z.object(...))`) when rooted in known declarations, with AST + integration regressions added.
 - **3.3b.03** ✅ Complete (2026-02-19) — parser now rejects standalone `z.undefined()` with actionable source-context diagnostics; strict unit/integration/transform coverage added and permissive degradation path removed.
-- **3.3b status checkpoint** (2026-02-19) — structural strictness for Scenarios 2-4 remains green; remaining blockers are writer format parity (active 3.3b.04) and validation parity matrix completion (3.3b.05).
+- **3.3b.04** ✅ Complete (2026-02-20) — writer parity achieved for `hostname`, `float32`, and `float64` formats, matching Zod 4 canonical syntax.
+- **3.3b.05** ✅ Complete (2026-02-20) — Parity Matrix hardening complete and standardized in **ADR-035**. Tests now dynamically evaluate generated Zod TS within a `new Function` sandbox against deterministic payload arrays `lib/tests-fixtures/zod-parser/happy-path/payloads.ts`. Proofs applied for losslessness and exact validation matching of numeric constraints (gt/lt/multipleOf) and string format resolution across permutations.
 
 #### Plan restructuring (2026-02-17)
 
@@ -78,31 +79,20 @@ Notes:
 - **Plan 3.3b.01** — Transform Sample Suite Strictness — **complete** and moved to `.agent/plans/current/complete/`.
 - **Plan 3.3b.02** — Scenario 3 Reference Composition — **complete** and moved to `.agent/plans/current/complete/`.
 
-#### 3.3b.04 Focus + Next Action
 
-Execution focus for the active plan:
-
-1. Implement writer parity for `format: hostname`, `format: float`, and `format: double`.
-2. Emit canonical Zod helpers where representable; fail fast with contextual guidance otherwise.
-3. Add/adjust strict writer + transform coverage to prove no silent format degradation.
-4. Keep scope tight to writer format parity; broader validation parity remains in successor plans.
-
-Immediate next action:
-
-1. Execute `3.3b.04` with strict Red → Green → Refactor in `lib/src/schema-processing/writers/zod/primitives.ts` with paired tests.
-
-#### Quick start
 
 ```bash
 # Open active plan
-sed -n '1,260p' .agent/plans/active/3.3b-04-format-parity-hostname-float.md
+sed -n '1,260p' .agent/plans/active/3.3b-05-validation-parity-scenarios-2-4.md
 
-# Immediate writer + parser parity inspection points
-sed -n '1,260p' lib/src/schema-processing/writers/zod/primitives.ts
-sed -n '1,260p' lib/src/schema-processing/parsers/zod/zod-parser.zod4-formats.ts
+# Inspect the failing parity validations
+sed -n '1,260p' lib/tests-transforms/__tests__/transform-samples.integration.test.ts
 
-# Red-first baseline for this plan (targeted tests)
-cd lib && pnpm vitest run src/schema-processing/writers/zod/primitives.unit.test.ts
+# Inspect the logic gap in the Zod chain builder
+sed -n '1,260p' lib/src/schema-processing/parsers/openapi/builder.zod-chain.ts
+
+# Run the strict parity matrix
+cd lib && pnpm vitest run --config vitest.transforms.config.ts tests-transforms/__tests__/transform-samples.integration.test.ts
 
 # Run full gates only after plan work is complete (one gate at a time)
 # See active plan Verification Protocol.

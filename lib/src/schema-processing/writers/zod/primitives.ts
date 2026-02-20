@@ -30,7 +30,7 @@ export function writePrimitiveSchema(schema: CastrSchema, writer: CodeBlockWrite
       writeStringSchema(schema, writer);
       return true;
     case 'number':
-      writer.write('z.number()');
+      writeNumberSchema(schema, writer);
       return true;
     case 'integer':
       writeIntegerSchema(schema, writer);
@@ -61,13 +61,45 @@ function writeIntegerSchema(schema: CastrSchema, writer: CodeBlockWriter): void 
       writer.write('z.int32()');
       break;
     case 'int64':
+    case 'bigint':
       // Warning: z.int64() returns bigint, not number
       // This may require downstream type handling
       writer.write('z.int64()');
       break;
-    default:
+    case undefined:
       writer.write('z.int()');
       break;
+    default:
+      throw new Error(
+        `Unsupported integer format "${schema.format}". Writer cannot guarantee lossless schema generation. Cannot proceed.`,
+      );
+  }
+}
+
+/**
+ * Write number schema with format-specific Zod 4 functions.
+ *
+ * - float → z.float32()
+ * - double → z.float64()
+ * - default → z.number()
+ *
+ * @internal
+ */
+function writeNumberSchema(schema: CastrSchema, writer: CodeBlockWriter): void {
+  switch (schema.format) {
+    case 'float':
+      writer.write('z.float32()');
+      break;
+    case 'double':
+      writer.write('z.float64()');
+      break;
+    case undefined:
+      writer.write('z.number()');
+      break;
+    default:
+      throw new Error(
+        `Unsupported number format "${schema.format}". Writer cannot guarantee lossless schema generation. Cannot proceed.`,
+      );
   }
 }
 
@@ -86,6 +118,8 @@ const STRING_FORMAT_TO_ZOD: Readonly<Record<string, string>> = {
   duration: 'z.iso.duration()',
   ipv4: 'z.ipv4()',
   ipv6: 'z.ipv6()',
+  hostname: 'z.hostname()',
+  uuidv7: 'z.uuidv7()',
 };
 
 /**
@@ -97,8 +131,18 @@ const STRING_FORMAT_TO_ZOD: Readonly<Record<string, string>> = {
  * @internal
  */
 function writeStringSchema(schema: CastrSchema, writer: CodeBlockWriter): void {
-  const zodCall = schema.format !== undefined ? STRING_FORMAT_TO_ZOD[schema.format] : undefined;
-  writer.write(zodCall ?? 'z.string()');
+  if (schema.format !== undefined) {
+    const zodCall = STRING_FORMAT_TO_ZOD[schema.format];
+    if (zodCall !== undefined) {
+      writer.write(zodCall);
+    } else {
+      throw new Error(
+        `Unsupported string format "${schema.format}". Writer cannot guarantee lossless schema generation. Cannot proceed.`,
+      );
+    }
+  } else {
+    writer.write('z.string()');
+  }
 }
 
 /**

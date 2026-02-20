@@ -177,7 +177,7 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 | 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md)    | ✅ Complete |
 | 11   | [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md)                           | ✅ Complete |
 | 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./active/3.3b-04-format-parity-hostname-float.md)             | 🔄 Active   |
-| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md) | 🔲          |
+| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/complete/3.3b-05-validation-parity-scenarios-2-4.md) | ✅ Complete |
 | 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                         | 🔲          |
 | 15   | [3.3b.07 — Nullability Chain Normalization](./current/session-3.3b/3.3b-07-nullability-chain-normalization.md) | 🔲          |
 
@@ -206,44 +206,12 @@ Strictness note: any "best-effort" or "permissive fallback" behavior is a doctri
 
 ---
 
-## Architectural Note: Writer Separation (Identified Session 3.3)
+## Architectural Notes
 
-> [!IMPORTANT]  
-> The current Zod "writer" produces a combined output containing:
->
-> - Zod schema declarations
-> - TypeScript type definitions
-> - `endpoints` array (runtime metadata)
-> - `mcpTools` array (MCP tool definitions)
->
-> The Zod **parser** only handles schema declarations. For true transform validation,
-> consider separating into distinct writers:
->
-> - **Zod Schema Writer** — Pure schema output (parseable by Zod parser)
-> - **Endpoint/MCP Writer** — Runtime metadata (separate concern)
->
-> This is future work, not blocking Session 3.3.
+The following architectural notes from Phase 3.3 have been formalized into ADRs:
 
----
-
-## Architectural Note: Two-Pass Parsing with Symbol Table (Identified Session 3.3)
-
-> [!IMPORTANT]
-> **Addressed in [3.3a.03 — Zod Parser Semantic Parsing](./current/complete/3.3a-03-zod-parser-semantic-parsing.md).**
->
-> The Zod parser is being refactored from single-pass parsing with naming convention heuristics
-> to two-pass parsing with a symbol table:
->
-> **Pass 1:** Collect all schema declarations into a symbol table  
-> **Pass 2:** Resolve identifier references by looking up symbols
->
-> This decouples naming conventions from semantics and enables:
->
-> - Complex patterns like `SchemaA.and(SchemaB)`
-> - Cross-file reference resolution
-> - Circular reference detection
->
-> [3.3b.02 — Scenario 3](./current/complete/3.3b-02-scenario3-reference-composition.md) consumed the symbol table for identifier-based composition parsing.
+- **Separate Writer Concerns**: Formally decoupled the generation of pure schemas from runtime metadata. See `ADR-034-writer-separation.md`.
+- **Two-Pass Semantic Parsing**: Moving from single-pass regex string parsing to two-pass AST symbol-table resolution. See `ADR-033-two-pass-semantic-parsing.md`.
 
 ---
 

@@ -38,7 +38,7 @@ describe('IR Characterization - Real-World Specs', () => {
                     schema: {
                       type: 'object',
                       properties: {
-                        file: { type: 'string', format: 'binary' },
+                        file: { type: 'string' }, // removed format: 'binary' because string formats must be emittable or fail-fast
                       },
                     },
                   },

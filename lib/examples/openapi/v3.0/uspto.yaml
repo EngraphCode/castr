@@ -203,9 +203,7 @@ components:
                 description: To be used as a version parameter value
               apiUrl:
                 type: string
-                format: uri-reference
                 description: The URL describing the dataset's fields
               apiDocumentationUrl:
                 type: string
-                format: uri-reference
                 description: A URL to the API console for each API

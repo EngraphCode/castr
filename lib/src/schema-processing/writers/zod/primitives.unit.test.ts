@@ -56,6 +56,33 @@ describe('ZodPrimitivesWriter', () => {
       const schema = createMockSchema({ type: 'integer', format: 'int64' });
       expect(generatePrimitive(schema)).toBe('z.int64()');
     });
+
+    it('throws error for unsupported integer format to prevent silent format loss', () => {
+      const schema = createMockSchema({ type: 'integer', format: 'int16' });
+      expect(() => generatePrimitive(schema)).toThrow(/Unsupported integer format "int16"/);
+    });
+  });
+
+  describe('Number formats', () => {
+    it('generates z.number() for number without format', () => {
+      const schema = createMockSchema({ type: 'number' });
+      expect(generatePrimitive(schema)).toBe('z.number()');
+    });
+
+    it('generates z.float32() for number format: float', () => {
+      const schema = createMockSchema({ type: 'number', format: 'float' });
+      expect(generatePrimitive(schema)).toBe('z.float32()');
+    });
+
+    it('generates z.float64() for number format: double', () => {
+      const schema = createMockSchema({ type: 'number', format: 'double' });
+      expect(generatePrimitive(schema)).toBe('z.float64()');
+    });
+
+    it('throws error for unsupported number format to prevent silent format loss', () => {
+      const schema = createMockSchema({ type: 'number', format: 'decimal' });
+      expect(() => generatePrimitive(schema)).toThrow(/Unsupported number format "decimal"/);
+    });
   });
 
   describe('String formats', () => {
@@ -107,6 +134,16 @@ describe('ZodPrimitivesWriter', () => {
     it('generates z.ipv6() for string format: ipv6', () => {
       const schema = createMockSchema({ type: 'string', format: 'ipv6' });
       expect(generatePrimitive(schema)).toBe('z.ipv6()');
+    });
+
+    it('generates z.hostname() for string format: hostname', () => {
+      const schema = createMockSchema({ type: 'string', format: 'hostname' });
+      expect(generatePrimitive(schema)).toBe('z.hostname()');
+    });
+
+    it('throws error for unsupported string format to prevent silent format loss', () => {
+      const schema = createMockSchema({ type: 'string', format: 'password' });
+      expect(() => generatePrimitive(schema)).toThrow(/Unsupported string format "password"/);
     });
 
     it('generates z.string() for string without format', () => {

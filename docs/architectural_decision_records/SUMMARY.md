@@ -96,13 +96,16 @@ This library implements an **Intermediate Representation (IR) architecture** for
 
 ### Library Philosophy (Current)
 
-| ADR                                                | Title                        | Status      |
-| -------------------------------------------------- | ---------------------------- | ----------- |
-| [022](./ADR-022-building-blocks-no-http-client.md) | Building-Blocks Architecture | ✅ Accepted |
-| [023](./ADR-023-ir-based-architecture.md)          | IR-Based Architecture        | ✅ Accepted |
-| [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment        | 📋 Proposed |
-| [031](./ADR-031-zod-output-strategy.md)            | Zod 4 Output Strategy        | ✅ Accepted |
-| [032](./ADR-032-zod-input-strategy.md)             | Zod 4 Input Strategy         | ✅ Accepted |
+| ADR                                                | Title                         | Status      |
+| -------------------------------------------------- | ----------------------------- | ----------- |
+| [022](./ADR-022-building-blocks-no-http-client.md) | Building-Blocks Architecture  | ✅ Accepted |
+| [023](./ADR-023-ir-based-architecture.md)          | IR-Based Architecture         | ✅ Accepted |
+| [024](./ADR-024-complete-ir-alignment.md)          | Complete IR Alignment         | 📋 Proposed |
+| [031](./ADR-031-zod-output-strategy.md)            | Zod 4 Output Strategy         | ✅ Accepted |
+| [032](./ADR-032-zod-input-strategy.md)             | Zod 4 Input Strategy          | ✅ Accepted |
+| [033](./ADR-033-two-pass-semantic-parsing.md)      | Two-Pass Semantic Parsing     | ✅ Accepted |
+| [034](./ADR-034-writer-separation.md)              | Separation of Writer Concerns | ✅ Accepted |
+| [035](./ADR-035-transform-validation-parity.md)    | Transform Validation Parity   | ✅ Accepted |
 
 ---
 
