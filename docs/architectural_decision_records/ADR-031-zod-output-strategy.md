@@ -41,8 +41,11 @@ Use Zod 4's format-specific functions instead of generic `.format()`:
 | `format: email`     | `z.email()`        |
 | `format: uuid`      | `z.uuid()`         |
 | `format: uri`       | `z.url()`          |
+| `format: hostname`  | `z.hostname()`     |
 | `format: int32`     | `z.int32()`        |
 | `format: int64`     | `z.int64()`        |
+| `format: float`     | `z.float32()`      |
+| `format: double`    | `z.float64()`      |
 
 **Rationale:** More precise validation and better TypeScript types.
 
@@ -90,7 +93,17 @@ Skip Zod validations that duplicate what the type already provides:
 
 **Rationale:** Cleaner output, no runtime overhead.
 
-### 7. Codecs (Deferred)
+### 7. Canonical Nullability Normalization
+
+Writer output must never emit redundant nullability chains (e.g., `z.null().nullable()`).
+
+- `type: 'null'` emits `z.null()` only.
+- `type: [T, 'null']` emits canonical `T` form with exactly one `.nullable()`.
+- `type: [T1, T2, 'null']` emits `z.union([T1, T2]).nullable()`.
+
+**Rationale:** Idempotency and determinism. Nullability chains like `.nullable().nullable()` alter AST meaning without semantically changing validation semantics.
+
+### 8. Codecs (Deferred)
 
 > [!NOTE]
 > Zod 4 provides **codec examples** in documentation (e.g., `isoDatetimeToDate`, `base64ToBytes`), but these are **not first-class APIs**. Per Zod docs: _"these are not included as first-class APIs in Zod itself."_

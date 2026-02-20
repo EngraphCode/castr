@@ -117,6 +117,43 @@ describe('ZodWriter', () => {
     expect(generate(context)).toBe('z.literal(true)');
   });
 
+  describe('canonical nullability emission', () => {
+    it('emits z.null() for single null type', () => {
+      const schema = createMockSchema('null');
+      // Ensure nullable=true metadata does not cause .nullable() wrapping
+      if (schema.metadata) {
+        schema.metadata.nullable = true;
+      }
+      const context = createComponentContext(schema);
+      expect(generate(context)).toBe('z.null()');
+    });
+
+    it('does not emit redundant .nullable() for [type, null] type arrays', () => {
+      const schema = createMockSchema(undefined);
+      // Simulating OAS 3.1 type array: ['string', 'null']
+      schema.type = ['string', 'null'] as SchemaObjectType[];
+      if (schema.metadata) {
+        schema.metadata.nullable = true;
+      }
+
+      const context = createComponentContext(schema);
+      // Valid output: z.string().nullable()
+      // Invalid output: z.string().nullable().nullable()
+      expect(generate(context)).toBe('z.string().nullable()');
+    });
+
+    it('does not emit z.null().nullable() for type array containing only null', () => {
+      const schema = createMockSchema(undefined);
+      schema.type = ['null'] as SchemaObjectType[];
+      if (schema.metadata) {
+        schema.metadata.nullable = true;
+      }
+
+      const context = createComponentContext(schema);
+      expect(generate(context)).toBe('z.null()');
+    });
+  });
+
   it('throws on unsupported schema type (fail-fast)', () => {
     const schema = createMockSchema('unsupported' as SchemaObjectType);
     const context = createComponentContext(schema);

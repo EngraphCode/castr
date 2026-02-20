@@ -219,7 +219,8 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
 
   // Nullability logic based on metadata
   // Skip if type is array - nullability is already handled in writeTypeArraySchema
-  if (schema.metadata.nullable && !Array.isArray(schema.type)) {
+  // Skip if type is 'null' - we never want z.null().nullable()
+  if (schema.metadata.nullable && !Array.isArray(schema.type) && schema.type !== SCHEMA_TYPE_NULL) {
     writer.write('.nullable()');
   }
 }

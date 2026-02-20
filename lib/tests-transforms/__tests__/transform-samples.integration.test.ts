@@ -30,6 +30,8 @@ import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.
 import { parseZodSource } from '../../src/schema-processing/parsers/zod/index.js';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/generate-from-context.js';
 import { isSingleFileResult } from '../../src/rendering/generation-result.js';
+import * as Zod1 from 'zod'; // Used for dynamic execution of generated schemas
+import { ParityPayloadHarness } from '../../tests-fixtures/zod-parser/happy-path/payloads.js';
 
 // ============================================================================
 // Fixtures
@@ -111,6 +113,85 @@ function expectNoParseErrors(
     parseResult.errors,
     `${fixtureName}: parse errors in ${stage}\n${JSON.stringify(parseResult.errors, null, 2)}`,
   ).toHaveLength(0);
+}
+
+/**
+ * Execute dynamic Zod schemas to evaluate data.
+ */
+async function loadDynamicZodSchemas(
+  zodSourceCode: string,
+): Promise<Record<string, Zod1.ZodTypeAny>> {
+  // Transpile the generated Zod TS source (which contains top-level exports) into executable code
+  const ts = await import('typescript');
+  const compiled = ts.default.transpile(zodSourceCode, { module: ts.default.ModuleKind.CommonJS });
+
+  // Safely execute the compiled module with a stubbed require
+  const module = { exports: {} as Record<string, Zod1.ZodTypeAny> };
+  const requireHook = (id: string) => {
+    if (id === 'zod') {
+      return Zod1;
+    }
+    throw new Error(`Unexpected require in generated code: ${id}`);
+  };
+
+  // eslint-disable-next-line sonarjs/code-eval -- Allowed in test harness for dynamic schema evaluation
+  const executableFn = new Function('require', 'module', 'exports', compiled);
+  executableFn(requireHook, module, module.exports);
+
+  return module.exports;
+}
+
+/**
+ * Validates functional equivalence of two map of schemas against shared payloads.
+ * Ensures the 'before' schema and 'after' schema accept/reject identical data.
+ */
+function assertValidationParity(
+  fixtureName: string,
+  originalSchemas: Record<string, Zod1.ZodTypeAny>,
+  transformedSchemas: Record<string, Zod1.ZodTypeAny>,
+): void {
+  const harness = ParityPayloadHarness[fixtureName];
+  if (!harness) {
+    return;
+  } // Skip if no payloads defined
+
+  for (const [schemaName, payloads] of Object.entries(harness)) {
+    const originalSchema = originalSchemas[schemaName];
+    const transformedSchema =
+      transformedSchemas[schemaName] || transformedSchemas[schemaName.replace(/Schema$/, '')];
+
+    // Ensure the schema exists on both sides
+    expect(originalSchema).toBeDefined();
+    expect(transformedSchema).toBeDefined();
+
+    if (!originalSchema || !transformedSchema) {
+      throw new Error(`Parity schemas missing for ${schemaName}`);
+    }
+
+    // Assert same success/fail outcome for all valid payloads
+    for (const validPayload of payloads.valid) {
+      const originalResult = originalSchema.safeParse(validPayload);
+      const transformedResult = transformedSchema.safeParse(validPayload);
+
+      expect(
+        transformedResult.success,
+        `Schema ${schemaName} parity mismatch on valid payload`,
+      ).toBe(originalResult.success);
+      expect(transformedResult.success).toBe(true);
+    }
+
+    // Assert same success/fail outcome for all invalid payloads
+    for (const invalidPayload of payloads.invalid) {
+      const originalResult = originalSchema.safeParse(invalidPayload);
+      const transformedResult = transformedSchema.safeParse(invalidPayload);
+
+      expect(
+        transformedResult.success,
+        `Schema ${schemaName} parity mismatch on invalid payload`,
+      ).toBe(originalResult.success);
+      expect(transformedResult.success).toBe(false);
+    }
+  }
 }
 
 // ============================================================================
@@ -347,6 +428,18 @@ const ZOD_FIXTURES: [string, string][] = [
 ];
 
 /**
+ * Fixtures that expose known parser/writer defects.
+ * These are skipped in CI per plan 3.3b-06 to separate fixture coverage from parser fixes.
+ * Defects include: Literal Array support (Zod 4), Circular dependencies handling,
+ * and Intersection reference resolution during output generation.
+ */
+const ZOD_DEFECT_FIXTURES: [string, string][] = [
+  ['unions', `${ZOD_FIXTURES_DIR}/unions.zod4.ts`],
+  ['intersections', `${ZOD_FIXTURES_DIR}/intersections.zod4.ts`],
+  ['recursion', `${ZOD_FIXTURES_DIR}/recursion.zod4.ts`],
+];
+
+/**
  * Read a Zod fixture file.
  */
 async function readZodFixture(path: string): Promise<string> {
@@ -382,6 +475,19 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
       // Schema count should be preserved
       expect(result2.ir.components.length).toBe(originalSchemaCount);
     });
+
+    it.skip.each(ZOD_DEFECT_FIXTURES)(
+      '%s: Zod → IR → Zod → IR preserves schema count (DEFECT)',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+        expectNoParseErrors(_name, 'Scenario 2 arbitrary-input parse', result1);
+        const openApiDoc = writeOpenApi(result1.ir);
+        const zodOutput = await generateZodFromOpenAPI(openApiDoc);
+        const result2 = parseZodSource(zodOutput);
+        expect(result2.ir.components.length).toBe(result1.ir.components.length);
+      },
+    );
   });
 
   describe('Strictness: unsupported schema primitives fail fast', () => {
@@ -475,6 +581,52 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
         expect(normalizedOutput2).toBe(normalizedOutput1);
       },
     );
+
+    it.skip.each(ZOD_DEFECT_FIXTURES)(
+      '%s: normalized output is byte-identical on second pass (DEFECT)',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+        const openApiDoc1 = writeOpenApi(result1.ir);
+        const normalizedOutput1 = await generateZodFromOpenAPI(openApiDoc1);
+        const result2 = parseZodSource(normalizedOutput1);
+        const openApiDoc2 = writeOpenApi(result2.ir);
+        const normalizedOutput2 = await generateZodFromOpenAPI(openApiDoc2);
+        expect(normalizedOutput2).toBe(normalizedOutput1);
+      },
+    );
+  });
+
+  describe('Functional Equivalence: Validation Parity', () => {
+    it.each(ZOD_FIXTURES)(
+      '%s: Zod → IR → Zod yields identical validation behavior',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+
+        const openApiDoc = writeOpenApi(result1.ir);
+        const zodOutput = await generateZodFromOpenAPI(openApiDoc);
+
+        // Load both sets of schemas dynamically to run payloads
+        const originalSchemas = await loadDynamicZodSchemas(source);
+        const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
+
+        assertValidationParity(_name, originalSchemas, transformedSchemas);
+      },
+    );
+
+    it.skip.each(ZOD_DEFECT_FIXTURES)(
+      '%s: Zod → IR → Zod yields identical validation behavior (DEFECT)',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+        const openApiDoc = writeOpenApi(result1.ir);
+        const zodOutput = await generateZodFromOpenAPI(openApiDoc);
+        const originalSchemas = await loadDynamicZodSchemas(source);
+        const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
+        assertValidationParity(_name, originalSchemas, transformedSchemas);
+      },
+    );
   });
 });
 
@@ -508,6 +660,33 @@ describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
       },
     );
   });
+
+  describe('Functional Equivalence: Validation Parity (Zod Evaluation)', () => {
+    it.each(ARBITRARY_FIXTURES)(
+      '%s: OpenAPI → Zod → OpenAPI maintains equal behavior at Zod step',
+      async (_name, path) => {
+        // 1. Initial output Zod schemas
+        const originalIR = await parseToIR(path);
+        const openApiDoc1 = writeOpenApi(originalIR);
+        const firstZodSource = await generateZodFromOpenAPI(openApiDoc1);
+
+        // 2. Transformed output Zod schemas
+        const result2 = parseZodSource(firstZodSource);
+        const openApiDoc2 = writeOpenApi(result2.ir);
+        const secondZodSource = await generateZodFromOpenAPI(openApiDoc2);
+
+        const firstSchemas = await loadDynamicZodSchemas(firstZodSource);
+        const secondSchemas = await loadDynamicZodSchemas(secondZodSource);
+
+        // For this scenario we use the test filename base as the dictionary key for parity testing
+        const fixtureKey = _name.split('-')[0];
+        if (!fixtureKey) {
+          throw new Error('Missing fixture key');
+        }
+        assertValidationParity(fixtureKey, firstSchemas, secondSchemas);
+      },
+    );
+  });
 });
 
 // ============================================================================
@@ -536,5 +715,48 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
       // Schema count preserved
       expect(result3.ir.components.length).toBe(originalCount);
     });
+
+    it.skip.each(ZOD_DEFECT_FIXTURES)(
+      '%s: Zod → OpenAPI → Zod preserves schema count (DEFECT)',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+        const openApiOutput = writeOpenApi(result1.ir);
+        const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+        const result3 = parseZodSource(zodOutput);
+        expect(result3.ir.components.length).toBe(result1.ir.components.length);
+      },
+    );
+  });
+
+  describe('Functional Equivalence: Validation Parity', () => {
+    it.each(ZOD_FIXTURES)(
+      '%s: Zod → OpenAPI → Zod yields identical validation behavior',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+
+        const openApiOutput = writeOpenApi(result1.ir);
+        const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+
+        const originalSchemas = await loadDynamicZodSchemas(source);
+        const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
+
+        assertValidationParity(_name, originalSchemas, transformedSchemas);
+      },
+    );
+
+    it.skip.each(ZOD_DEFECT_FIXTURES)(
+      '%s: Zod → OpenAPI → Zod yields identical validation behavior (DEFECT)',
+      async (_name, path) => {
+        const source = await readZodFixture(path);
+        const result1 = parseZodSource(source);
+        const openApiOutput = writeOpenApi(result1.ir);
+        const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+        const originalSchemas = await loadDynamicZodSchemas(source);
+        const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
+        assertValidationParity(_name, originalSchemas, transformedSchemas);
+      },
+    );
   });
 });

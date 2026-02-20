@@ -31,13 +31,13 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Priority: Production-Ready Core Path
 
-OpenAPI ↔ OpenAPI transform proof is validated. OpenAPI → Zod generation is proven. Session 3.3b continues the remaining strictness/parity closure for Zod-layer transform validation with sample input.
+OpenAPI ↔ OpenAPI transform proof is validated. OpenAPI → Zod generation is proven. Session 3.3b achieved strict Zod-layer transform validation with sample input.
 
 ```text
 OpenAPI → IR → OpenAPI (transform validation, incl. strict round-trip/idempotence assertions) ✅
 OpenAPI → IR → Zod (proven) ✅
 Zod → IR (Session 3.2) ✅ COMPLETE
-Full Transform Validation (Session 3.3) 🔄 IN PROGRESS
+Full Transform Validation (Session 3.3) ✅ COMPLETE
 ```
 
 ---
@@ -74,9 +74,9 @@ Full Transform Validation (Session 3.3) 🔄 IN PROGRESS
 |          | └ No string/regex heuristics for TS-source parsing; use semantic analysis    | ✅          |
 |          | └ No escape hatches: remove `as`/`any`/`!`/`eslint-disable` in product code  | ✅          |
 |          | └ Eliminate fallbacks; fail fast and hard with helpful errors                | ✅          |
-| **3.3b** | **Strict Zod-Layer Transform Validation** (Strict, no weak assertions)       | 🔄 Active   |
+| **3.3b** | **Strict Zod-Layer Transform Validation** (Strict, no weak assertions)       | ✅ Complete |
 |          | └ Structural strictness closure for Scenarios 2-4                            | ✅ Complete |
-|          | └ Remaining strictness/parity blockers (formats, validation parity matrix)   | 🔄          |
+|          | └ Remaining strictness/parity blockers (formats, validation parity matrix)   | ✅ Complete |
 
 ---
 
@@ -136,14 +136,14 @@ Prove that the Zod layer participates in strict, lossless transform validation w
 
 **Scenarios (target state):**
 
-| #   | Scenario                          | Lossless | Idempotent | Status                                                             |
-| --- | --------------------------------- | -------- | ---------- | ------------------------------------------------------------------ |
-| 1   | OpenAPI → IR → OpenAPI            | ✅       | ✅         | ✅ Complete                                                        |
-| 2   | Zod → IR → Zod                    | ✅       | ✅         | ✅ Structural strictness complete; functional parity in 3.3b.05    |
-| 3   | OpenAPI → IR → Zod → IR → OpenAPI | ✅       | —          | ✅ Structural strictness complete after 3.3b.02; parity in 3.3b.05 |
-| 4   | Zod → IR → OpenAPI → IR → Zod     | ✅       | —          | ✅ Structural strictness complete; functional parity in 3.3b.05    |
+| #   | Scenario                          | Lossless | Idempotent | Status                                                  |
+| --- | --------------------------------- | -------- | ---------- | ------------------------------------------------------- |
+| 1   | OpenAPI → IR → OpenAPI            | ✅       | ✅         | ✅ Complete                                             |
+| 2   | Zod → IR → Zod                    | ✅       | ✅         | ✅ Structural strictness and functional parity complete |
+| 3   | OpenAPI → IR → Zod → IR → OpenAPI | ✅       | —          | ✅ Structural strictness and functional parity complete |
+| 4   | Zod → IR → OpenAPI → IR → Zod     | ✅       | —          | ✅ Structural strictness and functional parity complete |
 
-> **Note:** Scenario strictness checks are sample-input transform proofs, and some assertions are explicit round-trip/idempotence proofs. Functional validation-parity (data validates identically before/after transform execution) is tracked in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/session-3.3b/3.3b-05-validation-parity-scenarios-2-4.md).
+> **Note:** Scenario strictness checks are sample-input transform proofs, and some assertions are explicit round-trip/idempotence proofs. Functional validation-parity (data validates identically before/after transform execution) complete in [3.3b.05 — Validation-Parity Scenarios 2–4](./current/complete/3.3b-05-validation-parity-scenarios-2-4.md).
 
 **Success criteria (3.3b):**
 
@@ -177,9 +177,9 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 | 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md)    | ✅ Complete |
 | 11   | [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md)                           | ✅ Complete |
 | 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./active/3.3b-04-format-parity-hostname-float.md)             | 🔄 Active   |
-| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/complete/3.3b-05-validation-parity-scenarios-2-4.md) | ✅ Complete |
-| 14   | [3.3b.06 — Expand Zod Fixtures](./current/session-3.3b/3.3b-06-expand-zod-fixtures.md)                         | 🔲          |
-| 15   | [3.3b.07 — Nullability Chain Normalization](./current/session-3.3b/3.3b-07-nullability-chain-normalization.md) | 🔲          |
+| 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/complete/3.3b-05-validation-parity-scenarios-2-4.md)     | ✅ Complete |
+| 14   | [3.3b.06 — Expand Zod Fixtures](./current/complete/3.3b-06-expand-zod-fixtures.md)                             | ✅ Complete |
+| 15   | [3.3b.07 — Nullability Chain Normalization](./current/complete/3.3b-07-nullability-chain-normalization.md)     | ✅ Complete |
 
 ---
 

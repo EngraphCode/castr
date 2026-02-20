@@ -87,13 +87,14 @@ function addExclusiveMinimum(schema: CastrSchema, validations: string[]): void {
 }
 
 function handleBooleanExclusiveMinimum(schema: CastrSchema, validations: string[]): void {
+  // If we already added .min() but exclusive is true, we need to swap it to .gt()
   if (schema.exclusiveMinimum === true && schema.minimum !== undefined) {
-    // Remove the last .min() and replace with .gt()
-    const lastValidation = validations[validations.length - 1];
-    if (lastValidation === `.min(${schema.minimum})`) {
-      validations.pop();
+    const minIndex = validations.findIndex((v) => v === `.min(${schema.minimum})`);
+    if (minIndex !== -1) {
+      validations[minIndex] = `.gt(${schema.minimum})`;
+    } else {
+      validations.push(`.gt(${schema.minimum})`);
     }
-    validations.push(`.gt(${schema.minimum})`);
   }
 }
 
@@ -110,13 +111,14 @@ function addExclusiveMaximum(schema: CastrSchema, validations: string[]): void {
 }
 
 function handleBooleanExclusiveMaximum(schema: CastrSchema, validations: string[]): void {
+  // If we already added .max() but exclusive is true, we need to swap it to .lt()
   if (schema.exclusiveMaximum === true && schema.maximum !== undefined) {
-    // Remove the last .max() and replace with .lt()
-    const lastValidation = validations[validations.length - 1];
-    if (lastValidation === `.max(${schema.maximum})`) {
-      validations.pop();
+    const maxIndex = validations.findIndex((v) => v === `.max(${schema.maximum})`);
+    if (maxIndex !== -1) {
+      validations[maxIndex] = `.lt(${schema.maximum})`;
+    } else {
+      validations.push(`.lt(${schema.maximum})`);
     }
-    validations.push(`.lt(${schema.maximum})`);
   }
 }
 

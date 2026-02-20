@@ -27,7 +27,7 @@ All integration tests for schema transformation must be categorized and proven a
 For Scenarios 2, 3, and 4 (which involve Zod code), structural equivalence is insufficient. We will enforce **Validation Parity**:
 
 1. **Dynamic Execution:** Generated Zod TypeScript must be transpiled and executed within the test environment (`new Function` sandbox).
-2. **Deterministic Payload Harness:** The tests must evaluate both the original source schemas and the generated target schemas against shared sets of *Valid* and *Invalid* payloads defined in `lib/tests-fixtures/zod-parser/happy-path/payloads.ts`.
+2. **Deterministic Payload Harness:** The tests must evaluate both the original source schemas and the generated target schemas against shared sets of _Valid_ and _Invalid_ payloads defined in `lib/tests-fixtures/zod-parser/happy-path/payloads.ts`.
 3. **Behavioral Equality Assertions:** A successful run requires `originalSchema.safeParse(payload).success === transformedSchema.safeParse(payload).success` for every payload in the matrix.
 
 ### 3. Zod 4 Canonical Output Policy

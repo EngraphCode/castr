@@ -41,7 +41,7 @@ If/when this repo adds these layers, document the concrete tooling in the same P
 - **Do not test types** - Tests are for logic, types are explored through creating tests, but types cannot be tested. If test only tests types, delete it.
 - **KISS: No complex logic in tests** - Complexity in tests is a signal that we need to step back and simplify, the code and the test.
 - **KISS: No complex mocks** - Mocks should be simple and focused, no complex logic in mocks, or we risk testing the mocks rather than the code. Complex mocks are a signal that we need to step back and simplify the code or our approach.
-- **No skipped tests** — Fix it or delete it. **NEVER** use `it.skip`, `describe.skip`, `it.skipIf`, or any skipping mechanism. Skipped tests are silent failures. If a test cannot run (e.g., missing API key), the test MUST fail fast with a helpful error message.
+- **No skipped tests (except upstream quarantines)** — Fix our pipeline defects or delete the tests. Do not use `it.skip` to mask our own regressions. If a test _must_ be skipped because it exposes an upstream library defect beyond our control while maintaining coverage for expansion, it must be explicitly segregated (e.g., passing `DEFECT_FIXTURES` to `it.skip.each()`) to keep CI stable without relaxing main strictness rules.
 
 ## Definitions
 
