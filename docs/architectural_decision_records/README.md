@@ -80,9 +80,10 @@ Each ADR follows this structure:
 
 ### Additional Architecture Records
 
-| ADR                                            | Title                      | Status   | Date       |
-| ---------------------------------------------- | -------------------------- | -------- | ---------- |
-| [036](./ADR-036-limit-directory-complexity.md) | Limit Directory Complexity | Accepted | 2026-02-21 |
+| ADR                                                        | Title                                  | Status   | Date       |
+| ---------------------------------------------------------- | -------------------------------------- | -------- | ---------- |
+| [036](./ADR-036-limit-directory-complexity.md)             | Limit Directory Complexity             | Accepted | 2026-02-21 |
+| [037](./ADR-037-strict-architectural-domain-boundaries.md) | Strict Architectural Domain Boundaries | Accepted | 2026-02-21 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
@@ -221,4 +222,4 @@ For questions about these decisions:
 ---
 
 **Last Updated:** 2026-02-21  
-**Next ADR:** 037
+**Next ADR:** 038

@@ -107,6 +107,13 @@ This library implements an **Intermediate Representation (IR) architecture** for
 | [034](./ADR-034-writer-separation.md)              | Separation of Writer Concerns | ✅ Accepted |
 | [035](./ADR-035-transform-validation-parity.md)    | Transform Validation Parity   | ✅ Accepted |
 
+### Additional Architecture Records
+
+| ADR                                                        | Title                                  | Status      |
+| ---------------------------------------------------------- | -------------------------------------- | ----------- |
+| [036](./ADR-036-limit-directory-complexity.md)             | Limit Directory Complexity             | ✅ Accepted |
+| [037](./ADR-037-strict-architectural-domain-boundaries.md) | Strict Architectural Domain Boundaries | ✅ Accepted |
+
 ---
 
 ## Key Principles

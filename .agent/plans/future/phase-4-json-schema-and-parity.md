@@ -9,7 +9,7 @@
 ## Exploration Goal: Determine the Desired Impact
 
 Before writing code for Phase 4, the **first objective** is to deeply explore what the desired impact of JSON Schema support and Parity alignment will be.
-Do not blindly implement; instead, define *rigorous*, *measurable*, and *impact-focused* acceptance criteria that surpass the quality of previous examples (e.g., those in `.agent/acceptance-criteria/`).
+Do not blindly implement; instead, define _rigorous_, _measurable_, and _impact-focused_ acceptance criteria that surpass the quality of previous examples (e.g., those in `.agent/acceptance-criteria/`).
 
 The exploration must answer:
 
