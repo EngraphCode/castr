@@ -49,6 +49,10 @@ const ARBITRARY_FIXTURES: [string, string][] = [
   ['petstore-3.0.yaml', `${ARBITRARY_FIXTURES_DIR}/petstore-3.0.yaml`],
   ['petstore-expanded-3.0.yaml', `${ARBITRARY_FIXTURES_DIR}/petstore-expanded-3.0.yaml`],
   ['callback-3.0.yaml', `${ARBITRARY_FIXTURES_DIR}/callback-3.0.yaml`],
+  [
+    'trading212.json',
+    resolve(__dirname, '../../tests-fixtures/openapi-samples/real-world/trading212.json'),
+  ],
 ];
 
 // ============================================================================
@@ -229,17 +233,21 @@ describe('Transform Samples: Losslessness (Round-Trip Proof)', () => {
         const { originalIR, transformedIR } = await runTransformPass(path);
 
         // Extract operation signatures for comparison
-        const originalOps = originalIR.operations.map((op) => ({
-          path: op.path,
-          method: op.method,
-          operationId: op.operationId,
-        }));
+        const originalOps = originalIR.operations
+          .map((op) => ({
+            path: op.path,
+            method: op.method,
+            operationId: op.operationId,
+          }))
+          .sort((a, b) => `${a.path}${a.method}`.localeCompare(`${b.path}${b.method}`));
 
-        const transformedOps = transformedIR.operations.map((op) => ({
-          path: op.path,
-          method: op.method,
-          operationId: op.operationId,
-        }));
+        const transformedOps = transformedIR.operations
+          .map((op) => ({
+            path: op.path,
+            method: op.method,
+            operationId: op.operationId,
+          }))
+          .sort((a, b) => `${a.path}${a.method}`.localeCompare(`${b.path}${b.method}`));
 
         expect(transformedOps).toEqual(originalOps);
       },

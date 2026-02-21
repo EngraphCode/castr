@@ -62,8 +62,8 @@ export async function loadOpenApiDocument(
 
     // STRICT VALIDATION: Validate against declared version BEFORE upgrade
     // Per RULES.md: "Fail fast, fail hard, be strict at all times"
-    // But also be HELPFUL - show users exactly what's wrong and how to fix it
     const validationResult = await validate(bundledDocument);
+
     if (!validationResult.valid) {
       const errorMessage = createValidationErrorMessage(validationResult.errors, bundledDocument);
       throw new Error(errorMessage);
