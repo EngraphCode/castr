@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { writeTypeScript, writeIndexFile, writeCommonFile } from './index.js';
 import type { TemplateContext } from '../../context/index.js';
-import type { CastrDocument, CastrSchema } from '../../ir/schema.js';
-import { CastrSchemaProperties } from '../../ir/schema-properties.js';
+import type { CastrSchema, CastrDocument } from '../../ir/index.js';
+import { CastrSchemaProperties } from '../../ir/index.js';
 import type { SchemaObjectType, InfoObject, ServerObject } from 'openapi3-ts/oas31';
 
 function createMockSchema(

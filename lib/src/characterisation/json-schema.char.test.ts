@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
 
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
-import { convertOpenApiSchemaToJsonSchema } from '../schema-processing/conversion/json-schema/convert-schema.js';
-import { resolveOperationSecurity } from '../schema-processing/conversion/json-schema/security/extract-operation-security.js';
+import {
+  convertOpenApiSchemaToJsonSchema,
+  resolveOperationSecurity,
+} from '../schema-processing/conversion/json-schema/index.js';
 
 describe('Characterisation: JSON Schema conversion & security extraction', () => {
   it('converts CreateUserInput schema from multi-auth example', async () => {

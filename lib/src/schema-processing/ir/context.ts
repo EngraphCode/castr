@@ -8,7 +8,7 @@
  * @module
  */
 
-import type { CastrSchema, CastrSchemaNode } from './schema.js';
+import type { CastrSchema, CastrSchemaNode } from './models/schema.js';
 
 /**
  * Schema usage context - determines how presence modifiers are applied.

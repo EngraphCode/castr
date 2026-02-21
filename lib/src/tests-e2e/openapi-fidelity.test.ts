@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { join } from 'path';
 import { buildIR } from '../schema-processing/parsers/openapi/index.js';
-import { writeOpenApi } from '../schema-processing/writers/openapi/index.js';
+import { writeOpenApi, validateOpenAPI } from '../schema-processing/writers/openapi/index.js';
 import { loadOpenApiDocument } from '../shared/load-openapi-document/orchestrator.js';
-import { validateOpenAPI } from '../schema-processing/writers/openapi/openapi-validator.js';
 
 describe('OpenAPI Fidelity', () => {
   it('should preserve semantics for TicTacToe spec', async () => {

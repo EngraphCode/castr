@@ -2,9 +2,8 @@ import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 import type { SchemaObjectType } from 'openapi3-ts/oas31';
 import { writeZodSchema } from './index.js';
-import type { CastrSchema } from '../../ir/schema.js';
-import { CastrSchemaProperties } from '../../ir/schema-properties.js';
-import type { CastrSchemaContext } from '../../ir/context.js';
+import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
+import { CastrSchemaProperties } from '../../ir/index.js';
 
 describe('ZodWriter', () => {
   const project = new Project({ useInMemoryFileSystem: true });

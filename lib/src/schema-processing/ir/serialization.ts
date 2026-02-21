@@ -1,10 +1,5 @@
-import {
-  CastrSchemaProperties,
-  type CastrDocument,
-  isCastrDocument,
-  type CastrSchema,
-} from './schema.js';
-import { isCastrSchema } from './validators.js';
+import { CastrSchemaProperties, type CastrSchema } from './models/schema.js';
+import { isCastrSchema } from './validation/validators.js';
 
 /**
  * Interface for a serialized Map.
@@ -14,7 +9,9 @@ interface SerializedMap {
   value: [unknown, unknown][];
 }
 
-import { type UnknownRecord, isRecord } from '../../shared/types.js';
+import { type UnknownRecord, isRecord } from '../../shared/type-utils/types.js';
+import { type CastrDocument, isCastrDocument } from './models/schema-document.js';
+
 const SERIALIZED_DATA_TYPE_MAP = 'Map' as const;
 const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties' as const;
 

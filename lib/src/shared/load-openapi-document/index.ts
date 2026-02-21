@@ -32,6 +32,6 @@
 export { loadOpenApiDocument } from './orchestrator.js';
 
 // Re-export types for convenience
-export type { OTTNormalizedInput } from './normalize-input.js';
-export type { OTTBundleInfrastructure } from './bundle-infrastructure.js';
-export type { OTTResolveNode } from './bundle-config.js';
+export { type OTTNormalizedInput } from './normalize-input.js';
+export { type OTTBundleInfrastructure } from './bundle/index.js';
+export { type OTTResolveNode } from './bundle/index.js';

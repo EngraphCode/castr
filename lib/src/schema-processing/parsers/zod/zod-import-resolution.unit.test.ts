@@ -8,8 +8,8 @@
 import { describe, it, expect } from 'vitest';
 import type { Identifier } from 'ts-morph';
 import { Node, Project, SyntaxKind } from 'ts-morph';
-import { createZodProject } from './zod-ast.js';
-import { ZodImportResolver } from './zod-import-resolver.js';
+import { createZodProject } from './ast/zod-ast.js';
+import { ZodImportResolver } from './registry/zod-import-resolver.js';
 
 /**
  * Asserts a value is defined and returns it with the narrowed type.

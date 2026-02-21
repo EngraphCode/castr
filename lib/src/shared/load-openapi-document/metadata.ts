@@ -9,7 +9,7 @@ import type {
   OTTBundleUrlEntry,
   OTTBundleWarning,
   OTTBundleMetadata,
-} from '../bundle-metadata.types.js';
+} from './bundle/bundle-metadata.types.js';
 
 /**
  * Format descriptor for error messages.

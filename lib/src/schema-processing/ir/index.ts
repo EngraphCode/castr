@@ -9,37 +9,70 @@
  * @see ADR-029 for canonical structure
  */
 
-// Core IR types (CastrSchemaProperties from schema.js also re-exports from schema-properties.js)
-export {
-  CastrSchemaProperties,
-  type IRHttpMethod,
-  type IRComponent,
-  type CastrSchemaComponent,
-  type IRSecuritySchemeComponent,
-  type CastrParameterComponent,
-  type CastrResponseComponent,
-  type IRRequestBodyComponent,
-  type CastrOperation,
-  type CastrParameter,
-  type IRRequestBody,
-  type IRMediaType,
-  type CastrResponse,
-  type IRSecurityRequirement,
-  type CastrSchema,
-  type CastrSchemaNode,
-  type CastrSchemaDependencyInfo,
-  type IRInheritanceInfo,
-  type IRZodChainInfo,
-  type CastrDocument,
-  type IRDependencyGraph,
-  type IRDependencyNode,
-} from './schema.js';
+// Core IR types (CastrSchemaProperties from schema.js also re-exports from schema.js)
+export { CastrSchemaProperties } from './models/index.js';
+export type {
+  IREnum,
+  IRHttpMethod,
+  IRComponent,
+  CastrSchemaComponent,
+  IRSecuritySchemeComponent,
+  CastrParameterComponent,
+  CastrResponseComponent,
+  IRRequestBodyComponent,
+  IRHeaderComponent,
+  IRLinkComponent,
+  IRCallbackComponent,
+  IRPathItemComponent,
+  IRExampleComponent,
+  CastrOperation,
+  CastrParameter,
+  IRRequestBody,
+  IRMediaType,
+  CastrResponse,
+  IRResponseHeader,
+  IRSecurityRequirement,
+  CastrSchema,
+  CastrSchemaNode,
+  CastrSchemaDependencyInfo,
+  IRInheritanceInfo,
+  IRZodChainInfo,
+  CastrDocument,
+  IRDependencyGraph,
+  IRDependencyNode,
+} from './models/index.js';
 
 // Serialization utilities
-export * from './serialization.js';
-
 // Validators and type guards
-export * from './validators.js';
-
 // Schema context utilities
-export * from './context.js';
+export { serializeIR, deserializeIR } from './serialization.js';
+export {
+  isCastrDocument,
+  isIRComponent,
+  isCastrOperation,
+  isCastrSchema,
+  isCastrSchemaNode,
+} from './validation/index.js';
+export type {
+  CastrSchemaContext,
+  IRComponentSchemaContext,
+  IRPropertySchemaContext,
+  IRCompositionMemberContext,
+  IRArrayItemsContext,
+  CastrParameterSchemaContext,
+} from './context.js';
+
+// Test Utilities
+export {
+  createMockCastrDocument,
+  createMockCastrSchemaNode,
+  createMockCastrSchema,
+  assertSchemaComponent,
+  getComponent,
+  getSchemaProperty,
+  assertPropertyRequired,
+  assertPropertyNullable,
+  assertPropertiesMetadata,
+  countCircularRefs,
+  assertHasCastrSchemaProperties,
+} from './test-helpers.js';

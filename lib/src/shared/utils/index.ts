@@ -6,5 +6,5 @@ export {
 } from './path-utils.js';
 export { asComponentSchema } from './component-refs.js';
 export { toBoolean } from './boolean-utils.js';
-export type { PrimitiveSchemaType } from './schema-types.js';
-export { isPrimitiveSchemaType } from './schema-types.js';
+export { type PrimitiveSchemaType } from './schema/index.js';
+export { isPrimitiveSchemaType } from './schema/index.js';

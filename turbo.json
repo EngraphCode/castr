@@ -49,6 +49,22 @@
       "cache": false,
       "outputs": []
     },
+    "madge:circular": {
+      "cache": false,
+      "outputs": []
+    },
+    "madge:orphans": {
+      "cache": false,
+      "outputs": []
+    },
+    "depcruise": {
+      "cache": false,
+      "outputs": []
+    },
+    "knip": {
+      "cache": false,
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true

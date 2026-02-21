@@ -1,4 +1,4 @@
-import type { CastrSchemaContext } from '../../ir/context.js';
+import type { CastrSchemaContext } from '../../ir/index.js';
 
 const CONTEXT_TYPE_PROPERTY = 'property' as const;
 const CONTEXT_TYPE_PARAMETER = 'parameter' as const;

@@ -1,8 +1,10 @@
 import { prepareOpenApiDocument } from '../../src/shared/prepare-openapi-document.js';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { expect, test } from 'vitest';
-import { getOpenApiDependencyGraph } from '../../src/shared/dependency-graph.js';
-import { topologicalSort } from '../../src/shared/topological-sort.js';
+import {
+  getOpenApiDependencyGraph,
+  topologicalSort,
+} from '../../src/shared/dependency-graph/index.js';
 import { asComponentSchema } from '../../src/shared/utils/index.js';
 
 /** Helper to wrap test schemas in OpenAPIObject */

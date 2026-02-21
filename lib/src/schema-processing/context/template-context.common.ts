@@ -1,8 +1,8 @@
-import { topologicalSort } from '../../shared/topological-sort.js';
+import { topologicalSort } from '../../shared/dependency-graph/index.js';
 import {
   sortSchemaNamesByDependencyOrder,
   sortSchemasByDependencyOrder,
-} from '../../shared/utils/schema-sorting.js';
+} from '../../shared/utils/schema/index.js';
 import { split } from 'lodash-es';
 
 // Re-export from centralized ref-resolution module

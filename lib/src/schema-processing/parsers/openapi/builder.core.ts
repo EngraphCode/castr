@@ -17,14 +17,18 @@
 
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
-import type { CastrSchema, CastrSchemaNode } from '../../ir/schema.js';
-import { CastrSchemaProperties } from '../../ir/schema.js';
+import type {
+  CastrSchema,
+  CastrSchemaNode,
+  IRPropertySchemaContext,
+  IRCompositionMemberContext,
+} from '../../ir/index.js';
+import { CastrSchemaProperties } from '../../ir/index.js';
 import type { IRBuildContext } from './builder.types.js';
-import type { IRPropertySchemaContext, IRCompositionMemberContext } from '../../ir/context.js';
-import { addConstraints } from './builder.constraints.js';
-import { addOpenAPIExtensions } from './builder.json-schema-2020-12.js';
+import { addConstraints } from './schemas/builder.constraints.js';
+import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
 
-import { updateZodChain } from './builder.zod-chain.js';
+import { updateZodChain } from './schemas/builder.zod-chain.js';
 
 const SCHEMA_TYPE_NULL = 'null' as const;
 

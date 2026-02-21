@@ -78,6 +78,12 @@ Each ADR follows this structure:
 | [031](./ADR-031-zod-output-strategy.md)                | Zod 4 Output Strategy                  | Accepted | 2026-01-21 |
 | [032](./ADR-032-zod-input-strategy.md)                 | Zod 4 Input Strategy                   | Accepted | 2026-01-23 |
 
+### Additional Architecture Records
+
+| ADR                                            | Title                      | Status   | Date       |
+| ---------------------------------------------- | -------------------------- | -------- | ---------- |
+| [036](./ADR-036-limit-directory-complexity.md) | Limit Directory Complexity | Accepted | 2026-02-21 |
+
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
 
@@ -214,5 +220,5 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** 2026-02-13  
-**Next ADR:** 033
+**Last Updated:** 2026-02-21  
+**Next ADR:** 037

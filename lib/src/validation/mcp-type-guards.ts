@@ -1,7 +1,24 @@
 import { ToolSchema, type Tool } from '@modelcontextprotocol/sdk/types.js';
-import AjvFactory, { type Schema as JsonSchema, type ValidateFunction } from 'ajv';
+import AjvFactory, {
+  type AnySchemaObject,
+  type Schema as JsonSchema,
+  type ValidateFunction,
+} from 'ajv';
 import addFormats from 'ajv-formats/dist/index.js';
-import draft07MetaSchema from 'ajv/dist/refs/json-schema-draft-07.json' with { type: 'json' };
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const _draft07MetaSchema: unknown = require('ajv/dist/refs/json-schema-draft-07.json');
+
+function isAnySchemaObject(value: unknown): value is AnySchemaObject {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+if (!isAnySchemaObject(_draft07MetaSchema)) {
+  throw new Error('Failed to load draft-07 meta schema: expected an object record.');
+}
+
+const draft07MetaSchema: AnySchemaObject = _draft07MetaSchema;
 
 type AjvConstructor = typeof AjvFactory.default;
 type AjvInstance = InstanceType<AjvConstructor>;

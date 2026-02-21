@@ -7,14 +7,10 @@
  * @module ir-test-helpers
  */
 
-import type {
-  CastrDocument,
-  IRComponent,
-  CastrSchema,
-  CastrSchemaComponent,
-  CastrSchemaNode,
-} from './schema.js';
-import { CastrSchemaProperties } from './schema.js';
+import type { CastrSchema, CastrSchemaNode } from './models/schema.js';
+import type { IRComponent, CastrSchemaComponent } from './models/schema.components.js';
+import { CastrSchemaProperties } from './models/schema.js';
+import type { CastrDocument } from './models/schema-document.js';
 
 // ============================================================================
 // Mock Factory Functions

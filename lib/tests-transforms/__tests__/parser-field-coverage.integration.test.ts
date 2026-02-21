@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
-import type { CastrDocument } from '../../src/schema-processing/ir/schema.js';
+import type { CastrDocument } from '../../src/schema-processing/ir/models/schema-document.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { parseZodSource } from './zod-parser.js';
-import type { CastrSchema } from '../../ir/schema.js';
+import type { CastrSchema } from '../../ir/index.js';
 import { AssertionError } from 'node:assert/strict';
 
 const FIXTURES_DIR = path.resolve(__dirname, '../../../../tests-fixtures/zod-parser/happy-path');

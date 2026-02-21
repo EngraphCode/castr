@@ -8,7 +8,7 @@ import type {
   TemplateContextOptions,
 } from '../schema-processing/context/index.js';
 import type { GenerationResult } from './generation-result.js';
-import { serializeIR } from '../schema-processing/ir/serialization.js';
+import { serializeIR } from '../schema-processing/ir/index.js';
 import { generateIndexFile, generateCommonFile, generateGroupFiles } from './templating-groups.js';
 import { writeTypeScript } from '../schema-processing/writers/typescript/index.js';
 

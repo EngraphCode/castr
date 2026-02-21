@@ -16,17 +16,17 @@
 
 import { describe, it, expect } from 'vitest';
 import type {
-  CastrDocument,
   CastrSchema,
   CastrSchemaNode,
-  CastrOperation,
-  CastrParameter,
-  CastrResponse,
   IRDependencyGraph,
   IRDependencyNode,
   IRZodChainInfo,
   CastrSchemaDependencyInfo,
-} from '../schema-processing/ir/schema.js';
+  CastrDocument,
+  CastrOperation,
+  CastrParameter,
+  CastrResponse,
+} from '../schema-processing/ir/index.js';
 
 describe('IR Completeness', () => {
   describe('CastrDocument', () => {

@@ -31,6 +31,10 @@ pnpm build
 pnpm format:check
 pnpm type-check
 pnpm lint
+pnpm madge:circular
+pnpm madge:orphans
+pnpm depcruise
+pnpm knip
 
 pnpm test
 pnpm character
@@ -51,6 +55,10 @@ pnpm test:transforms
 | Format          | `pnpm format:check`              | Enforce formatting (non-mutating)    |
 | Type-check      | `pnpm type-check`                | TypeScript strict mode               |
 | Lint            | `pnpm lint`                      | ESLint rules enforcement             |
+| Madge Circular  | `pnpm madge:circular`            | Check for circular dependencies      |
+| Madge Orphans   | `pnpm madge:orphans`             | Check for orphaned files (warnings)  |
+| Dep Cruiser     | `pnpm depcruise`                 | Architecture boundaries validation   |
+| Knip            | `pnpm knip`                      | Find unused exports/dead code        |
 | Unit tests      | `pnpm test`                      | Primary test suite                   |
 | Character tests | `pnpm character`                 | Public API behavior                  |
 | Snapshot tests  | `pnpm test:snapshot`             | Snapshot comparison                  |

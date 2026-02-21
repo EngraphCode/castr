@@ -9,7 +9,7 @@
  */
 
 import type { CodeBlockWriter } from 'ts-morph';
-import type { CastrSchema } from '../../ir/schema.js';
+import type { CastrSchema } from '../../ir/index.js';
 
 /**
  * Metadata object structure for Zod 4 .meta() calls.

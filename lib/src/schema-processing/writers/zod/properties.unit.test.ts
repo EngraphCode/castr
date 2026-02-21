@@ -9,7 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { createMockCastrSchema } from '../../ir/test-helpers.js';
+import { createMockCastrSchema } from '../../ir/index.js';
 import {
   buildPropertyContext,
   detectCircularReference,

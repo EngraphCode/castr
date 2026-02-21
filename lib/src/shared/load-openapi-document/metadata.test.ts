@@ -3,7 +3,7 @@ import type {
   OTTBundleFileEntry,
   OTTBundleUrlEntry,
   OTTBundleWarning,
-} from '../bundle-metadata.types.js';
+} from './bundle/bundle-metadata.types.js';
 import { formatDescriptor, createMetadata } from './metadata.js';
 
 describe('metadata', () => {

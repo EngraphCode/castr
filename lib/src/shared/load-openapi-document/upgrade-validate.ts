@@ -8,7 +8,7 @@ import { upgrade } from '@scalar/openapi-parser';
 import type { AnyObject, Filesystem } from '@scalar/openapi-parser';
 import { split } from 'lodash-es';
 import { isOpenAPIObject } from '../../validation/cli-type-guards.js';
-import type { BundledOpenApiDocument } from '../bundle-metadata.types.js';
+import type { BundledOpenApiDocument } from './bundle/bundle-metadata.types.js';
 
 const OPENAPI_VERSION_SEPARATOR = '.' as const;
 const OPENAPI_VERSION_MAJOR_3 = '3' as const;

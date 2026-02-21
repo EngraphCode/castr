@@ -16,16 +16,16 @@
  */
 
 import type { ComponentsObject, OpenAPIObject, PathItemObject } from 'openapi3-ts/oas31';
-import type { IRComponent, CastrDocument } from '../../ir/schema.js';
-import { buildCastrSchemas } from './builder.schemas.js';
-import { buildCastrOperations, buildIRSecurity } from './builder.operations.js';
-import { isRecord } from '../../../shared/types.js';
-import { buildDependencyGraph, extractOriginalSchemaKeys } from './builder.dependency-graph.js';
-import { extractEnums } from './builder.enums.js';
+import { buildCastrSchemas, extractEnums } from './schemas/index.js';
+import { buildCastrOperations, buildIRSecurity } from './operations/index.js';
+import { isRecord } from '../../../shared/type-utils/types.js';
+import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
+import type { CastrDocument, IRComponent } from '../../ir/index.js';
 
 // Re-export core functions for backwards compatibility
+export type { IRBuildContext } from './builder.types.js';
 export { buildCastrSchema, buildCastrSchemaNode } from './builder.core.js';
-export { buildCastrSchemas } from './builder.schemas.js';
+export { buildCastrSchemas } from './schemas/index.js';
 
 /**
  * Build optional document-level fields for the IR.

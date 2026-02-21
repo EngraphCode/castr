@@ -7,11 +7,9 @@
 
 import { validate } from '@scalar/openapi-parser';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import type { OTTLoadedOpenApiDocument } from '../bundle-metadata.types.js';
+import type { OTTLoadedOpenApiDocument } from './bundle/bundle-metadata.types.js';
 import { normalizeInput } from './normalize-input.js';
-import { setupBundleInfrastructure } from './bundle-infrastructure.js';
-import { createBundleConfig } from './bundle-config.js';
-import { bundleDocument } from './bundle-document.js';
+import { setupBundleInfrastructure, createBundleConfig, bundleDocument } from './bundle/index.js';
 import { upgradeAndValidate } from './upgrade-validate.js';
 import { createMetadata, formatDescriptor } from './metadata.js';
 import { createValidationErrorMessage } from './validation-errors.js';

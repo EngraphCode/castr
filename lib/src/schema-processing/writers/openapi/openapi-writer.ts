@@ -9,11 +9,9 @@
  */
 
 import type { OpenAPIObject, SecurityRequirementObject } from 'openapi3-ts/oas31';
-
-import type { CastrDocument, IRSecurityRequirement } from '../../ir/schema.js';
-
-import { writeOpenApiComponents } from './openapi-writer.components.js';
-import { writeOpenApiPaths } from './openapi-writer.operations.js';
+import { writeOpenApiComponents } from './components/openapi-writer.components.js';
+import { writeOpenApiPaths } from './operations/openapi-writer.operations.js';
+import type { CastrDocument, IRSecurityRequirement } from '../../ir/index.js';
 
 /**
  * Extended OpenAPI 3.1 object type that includes fields missing from the library types.

@@ -1,5 +1,5 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
-import type { CastrSchema } from '../../ir/schema.js';
+import type { CastrSchema } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
 

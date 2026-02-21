@@ -1,7 +1,7 @@
 import { ToolSchema } from '@modelcontextprotocol/sdk/types.js';
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import type { TemplateContextMcpTool } from '../../context/template-context.mcp.js';
+import type { TemplateContextMcpTool } from '../../context/index.js';
 import { createMcpToolWriter } from './mcp.js';
 
 function createMcpTool(propertyOrder: 'alpha-first' | 'zeta-first'): TemplateContextMcpTool {

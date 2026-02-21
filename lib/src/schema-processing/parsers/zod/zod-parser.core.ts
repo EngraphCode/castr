@@ -10,10 +10,10 @@
  * @module parsers/zod/core
  */
 
-import type { CastrSchema } from '../../ir/schema.js';
+import type { CastrSchema } from '../../ir/index.js';
 import { Node } from 'ts-morph';
 import type { ZodSchemaParser } from './zod-parser.types.js';
-import type { ZodImportResolver } from './zod-import-resolver.js';
+import type { ZodImportResolver } from './registry/zod-import-resolver.js';
 
 /**
  * Parser function type for registry.

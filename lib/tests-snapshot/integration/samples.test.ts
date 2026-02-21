@@ -6,7 +6,7 @@ import { maybePretty } from '../../src/shared/maybe-pretty.js';
 
 import { sync } from 'fast-glob';
 
-import * as path from 'node:path';
+import path from 'node:path';
 import { beforeAll, describe, expect, test } from 'vitest';
 
 let prettierConfig: Options | null;

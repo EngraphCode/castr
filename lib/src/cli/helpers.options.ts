@@ -1,6 +1,5 @@
 import { toBoolean } from '../shared/utils/index.js';
 import type { TemplateContextOptions } from '../schema-processing/context/index.js';
-import type { parseCliOptions } from './helpers.js';
 
 /**
  * CLI options interface matching commander option definitions.
@@ -32,6 +31,16 @@ export interface CliOptions {
   withValidationHelpers?: boolean;
   withSchemaRegistry?: boolean;
   emitMcpManifest?: string;
+}
+
+/**
+ * Parsed CLI options returned by parseCliOptions.
+ * @internal
+ */
+export interface ParsedCliOptions {
+  groupStrategy: TemplateContextOptions['groupStrategy'];
+  complexityThreshold: number | undefined;
+  defaultStatusBehavior: TemplateContextOptions['defaultStatusBehavior'];
 }
 
 /**
@@ -92,7 +101,7 @@ export function addBooleanOptions(
  * @internal
  */
 export function addParsedOptions(
-  parsedOptions: ReturnType<typeof parseCliOptions>,
+  parsedOptions: ParsedCliOptions,
   generationOptions: Partial<TemplateContextOptions>,
 ): void {
   const { groupStrategy, complexityThreshold, defaultStatusBehavior } = parsedOptions;
@@ -118,7 +127,7 @@ export function addParsedOptions(
  */
 export function buildGenerationOptions(
   options: CliOptions,
-  parsedOptions: ReturnType<typeof parseCliOptions>,
+  parsedOptions: ParsedCliOptions,
 ): Partial<TemplateContextOptions> {
   const withAlias = toBoolean(options.withAlias, true);
   const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);

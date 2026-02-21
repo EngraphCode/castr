@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import type { CastrDocument } from './schema.js';
 import { serializeIR, deserializeIR } from './serialization.js';
-import { CastrSchemaProperties } from './schema.js';
+import { CastrSchemaProperties } from './models/schema.js';
 import { assertSchemaComponent } from './test-helpers.js';
+import type { CastrDocument } from './models/schema-document.js';
 
 describe('IR Serialization', () => {
   const mockIR: CastrDocument = {

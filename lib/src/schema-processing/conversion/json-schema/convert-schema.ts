@@ -9,7 +9,7 @@ import {
   applyTypeInformation,
   type MutableJsonSchema,
 } from './keyword-appliers.js';
-import { assignIfDefined, readSchemaKeyword, setKeyword } from './keyword-helpers.js';
+import { assignIfDefined, readSchemaKeyword, setKeyword } from './keywords/keyword-helpers.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
 type OpenApiSchema = SchemaObject | ReferenceObject;

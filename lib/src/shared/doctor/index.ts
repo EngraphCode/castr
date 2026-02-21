@@ -11,7 +11,7 @@
 import { validate, upgrade } from '@scalar/openapi-parser';
 import { attemptNonStandardPropertyRescue } from './prefix-nonstandard.js';
 
-import type { UnknownRecord } from '../types.js';
+import type { UnknownRecord } from '../type-utils/types.js';
 
 export interface DoctorDiagnosis {
   readonly originalIsValid: boolean;

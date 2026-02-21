@@ -25,14 +25,14 @@
  */
 
 // Type exports
-export type {
-  ZodParseResult,
-  ZodParseError,
-  ZodParseErrorCode,
-  ZodParseRecommendation,
-  ZodRecommendationField,
-  ZodParseOptions,
-  ZodSchemaParser,
+export {
+  type ZodParseResult,
+  type ZodParseError,
+  type ZodParseErrorCode,
+  type ZodParseRecommendation,
+  type ZodRecommendationField,
+  type ZodParseOptions,
+  type ZodSchemaParser,
 } from './zod-parser.types.js';
 
 // Main parser exports
@@ -42,39 +42,39 @@ export { parseZodSource, extractSchemaName } from './zod-parser.js';
 export { detectZod3Syntax, detectDynamicSchemas, isZod3Method } from './zod-parser.detection.js';
 
 // Primitive parsing exports
-export { parsePrimitiveZod } from './zod-parser.primitives.js';
+export { parsePrimitiveZod } from './types/index.js';
 
 // Object parsing exports
-export { parseObjectZod } from './zod-parser.object.js';
+export { parseObjectZod } from './types/index.js';
 
 // Composition parsing exports (Session 2.3)
-export { parseCompositionZodFromNode } from './zod-parser.composition.js';
+export { parseCompositionZodFromNode } from './composition/index.js';
 
 // Union parsing exports (Session 2.3)
-export { parseUnionZodFromNode } from './zod-parser.union.js';
+export { parseUnionZodFromNode } from './composition/index.js';
 
 // Intersection parsing exports (Session 2.3)
 export {
   parseIntersectionZodFromNode,
   parseChainedIntersectionFromNode,
-} from './zod-parser.intersection.js';
+} from './composition/index.js';
 
 // Reference parsing exports (Session 2.3)
-export { parseReferenceZodFromNode } from './zod-parser.references.js';
+export { parseReferenceZodFromNode } from './registry/index.js';
 
 // Endpoint parsing exports (Session 2.4)
-export { parseEndpointDefinition, buildCastrOperationFromEndpoint } from './zod-parser.endpoint.js';
+export { parseEndpointDefinition, buildCastrOperationFromEndpoint } from './endpoints/index.js';
 
 // Endpoint type exports (Session 2.4)
-export type {
-  EndpointDefinition,
-  EndpointParameters,
-  EndpointResponses,
-  EndpointMethod,
-  ParameterLocation,
-  EndpointParseResult,
-  EndpointParseError,
-} from './zod-parser.endpoint.types.js';
+export {
+  type EndpointDefinition,
+  type EndpointParameters,
+  type EndpointResponses,
+  type EndpointMethod,
+  type ParameterLocation,
+  type EndpointParseResult,
+  type EndpointParseError,
+} from './endpoints/index.js';
 
 // AST utilities (Session 2.3 - ADR-026)
 export {
@@ -92,4 +92,4 @@ export {
   type ZodProjectResult,
   type ZodPrimitiveType,
   type ZodCompositionType,
-} from './zod-ast.js';
+} from './ast/index.js';

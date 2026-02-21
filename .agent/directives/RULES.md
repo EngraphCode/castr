@@ -20,13 +20,14 @@ Types are our friend - they reveal architectural problems that need solving, not
 
 **Key Principles:**
 
-1. **Types Are Our Friend** - Type errors show us where we've made mistakes, lost type information, or have architectural problems
-2. **Clean Breaks Over Hacks** - No compatibility layers, no temporary solutions, no "TODO: fix later"
-3. **Fix Root Causes, Not Symptoms** - If types don't match, fix the architecture, don't add type assertions
-4. **Library Types First** - Defer to `openapi3-ts/oas31` and other domain expert libraries before creating custom types
-5. **Test-Driven Development** - Write failing tests first, always, no exceptions
-6. **Comprehensive Documentation** - TSDoc for all public APIs enables professional self-service adoption
-7. **Quality Gates Are Absolute** - All gates defined in `.agent/directives/DEFINITION_OF_DONE.md` must pass GREEN, no exceptions, no workarounds
+1. **Maximize Signal** - The intent of all our tooling (types, linters, dependency-cruisers, madge) is to maximize the signal that reveals architectural truths. Hiding problems by loosening configurations is actively harmful to the repo's health and developer experience (both human and AI).
+2. **Types Are Our Friend** - Type errors show us where we've made mistakes, lost type information, or have architectural problems
+3. **Clean Breaks Over Hacks** - No compatibility layers, no temporary solutions, no "TODO: fix later"
+4. **Fix Root Causes, Not Symptoms** - If types don't match, fix the architecture, don't add type assertions
+5. **Library Types First** - Defer to `openapi3-ts/oas31` and other domain expert libraries before creating custom types
+6. **Test-Driven Development** - Write failing tests first, always, no exceptions
+7. **Comprehensive Documentation** - TSDoc for all public APIs enables professional self-service adoption
+8. **Quality Gates Are Absolute** - All gates defined in `.agent/directives/DEFINITION_OF_DONE.md` must pass GREEN, no exceptions, no workarounds
 
 **The Type Discipline:**
 

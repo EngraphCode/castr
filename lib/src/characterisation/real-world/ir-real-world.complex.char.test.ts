@@ -7,7 +7,7 @@
  */
 
 import { generateZodClientFromOpenAPI } from '../../index.js';
-import { getZodClientTemplateContext } from '../../schema-processing/context/template-context.js';
+import { getZodClientTemplateContext } from '../../schema-processing/context/index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import {
@@ -17,7 +17,7 @@ import {
   assertComponentExists,
   assertContentContains,
 } from '../ir-test-helpers.js';
-import { assertSchemaComponent } from '../../schema-processing/ir/test-helpers.js';
+import { assertSchemaComponent } from '../../schema-processing/ir/index.js';
 
 describe('IR Characterization - Real-World Specs', () => {
   describe('Complex Schema Patterns', () => {

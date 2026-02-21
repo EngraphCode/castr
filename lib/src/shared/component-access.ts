@@ -22,7 +22,7 @@ import type {
 } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import { parseComponentRef } from './ref-resolution.js';
-import { isRecord } from './types.js';
+import { isRecord } from './type-utils/types.js';
 
 const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
 const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters' as const;

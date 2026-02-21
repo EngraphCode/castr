@@ -6,3 +6,4 @@ export {
   type SecurityRequirementSet,
   type SecuritySchemeRequirement,
 } from './security/extract-operation-security.js';
+export { setKeyword, type MutableJsonSchema } from './keywords/keyword-helpers.js';

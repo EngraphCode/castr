@@ -7,7 +7,7 @@
 
 import path from 'node:path';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import type { OTTBundleMetadata } from '../bundle-metadata.types.js';
+import type { OTTBundleMetadata } from './bundle/bundle-metadata.types.js';
 
 /**
  * Normalized input ready for bundling.

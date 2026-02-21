@@ -11,7 +11,11 @@ import {
   isDefaultStatusBehavior,
 } from '../validation/cli-type-guards.js';
 import type { TemplateContextOptions } from '../schema-processing/context/index.js';
-import { buildGenerationOptions, type CliOptions } from './helpers.options.js';
+import {
+  buildGenerationOptions,
+  type CliOptions,
+  type ParsedCliOptions,
+} from './helpers.options.js';
 import { fileURLToPath } from 'node:url';
 
 // Re-export for use by cli.ts
@@ -46,11 +50,7 @@ export function getPackageVersion(): string {
  * @returns Parsed and validated options
  * @internal
  */
-export function parseCliOptions(options: CliOptions): {
-  groupStrategy: TemplateContextOptions['groupStrategy'];
-  complexityThreshold: number | undefined;
-  defaultStatusBehavior: TemplateContextOptions['defaultStatusBehavior'];
-} {
+export function parseCliOptions(options: CliOptions): ParsedCliOptions {
   const groupStrategy = isGroupStrategy(options.groupStrategy) ? options.groupStrategy : undefined;
   const complexityThreshold =
     options.complexityThreshold !== undefined

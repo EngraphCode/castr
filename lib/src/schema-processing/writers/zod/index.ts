@@ -1,21 +1,18 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
 import type { SchemaObjectType } from 'openapi3-ts/oas31';
-import type { CastrSchema } from '../../ir/schema.js';
-import type { TemplateContextOptions } from '../../context/template-context.js';
-import type { CastrSchemaContext, IRArrayItemsContext } from '../../ir/context.js';
+import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
+import type { TemplateContextOptions } from '../../context/index.js';
 
-import { writeAdditionalProperties } from './additional-properties.js';
-import { writeCompositionSchema } from './composition.js';
-import { writeEnumSchema } from './enums.js';
-import { writeConstSchema } from './literals.js';
-import { writeMetadata } from './metadata.js';
-import { writePrimitiveSchema, filterRedundantValidations } from './primitives.js';
 import {
-  formatPropertyKey,
-  buildPropertyContext,
-  shouldUseGetterSyntax,
-  getSortedPropertyEntries,
-} from './properties.js';
+  writeCompositionSchema,
+  writeEnumSchema,
+  writeConstSchema,
+  writePrimitiveSchema,
+  filterRedundantValidations,
+  writeArraySchema,
+  writeObjectSchema,
+} from './generators/index.js';
+import { writeMetadata } from './metadata.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { isOptionalSchemaContext } from './context-utils.js';
@@ -104,10 +101,10 @@ function writeComplexTypeSchema(
 ): void {
   switch (type) {
     case 'array':
-      writeArraySchema(context, writer, options);
+      writeArraySchema(context, writer, writeZodSchema, options);
       break;
     case 'object':
-      writeObjectSchema(context, writer, options);
+      writeObjectSchema(context, writer, writeZodSchema, options);
       break;
     case 'null':
       writer.write('z.null()');
@@ -222,71 +219,5 @@ function writeSchemaChain(context: CastrSchemaContext, writer: CodeBlockWriter):
   // Skip if type is 'null' - we never want z.null().nullable()
   if (schema.metadata.nullable && !Array.isArray(schema.type) && schema.type !== SCHEMA_TYPE_NULL) {
     writer.write('.nullable()');
-  }
-}
-
-function writeArraySchema(
-  context: CastrSchemaContext,
-  writer: CodeBlockWriter,
-  options?: TemplateContextOptions,
-): void {
-  const schema = context.schema;
-  writer.write('z.array(');
-  if (schema.items && !Array.isArray(schema.items)) {
-    const itemsContext: IRArrayItemsContext = {
-      contextType: 'arrayItems',
-      schema: schema.items,
-    };
-    writeZodSchema(itemsContext, options)(writer);
-  } else {
-    writer.write('z.unknown()');
-  }
-  writer.write(')');
-}
-
-function writeObjectSchema(
-  context: CastrSchemaContext,
-  writer: CodeBlockWriter,
-  options?: TemplateContextOptions,
-): void {
-  const schema = context.schema;
-  writer
-    .write('z.object(')
-    .inlineBlock(() => {
-      if (schema.properties) {
-        writeProperties(schema, writer, options);
-      }
-    })
-    .write(')');
-
-  writeAdditionalProperties(schema, writer, options, writeZodSchema);
-}
-
-function writeProperties(
-  schema: CastrSchema,
-  writer: CodeBlockWriter,
-  options?: TemplateContextOptions,
-): void {
-  if (!schema.properties) {
-    return;
-  }
-
-  for (const [key, prop] of getSortedPropertyEntries(schema)) {
-    const quotedKey = formatPropertyKey(key);
-    const isRequired = schema.required?.some((requiredName) => requiredName === key) ?? false;
-    const propContext = buildPropertyContext(key, prop, isRequired);
-    const useGetterSyntax = shouldUseGetterSyntax(prop, schema);
-
-    if (useGetterSyntax) {
-      // Zod 4 getter syntax for circular references
-      writer.write(`get ${quotedKey}() { return `);
-      writeSchemaBody(propContext, options)(writer);
-      writer.write('; },').newLine();
-    } else {
-      // Normal property assignment
-      writer.write(`${quotedKey}: `);
-      writeZodSchema(propContext, options)(writer);
-      writer.write(',').newLine();
-    }
   }
 }

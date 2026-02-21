@@ -7,8 +7,7 @@
  * @module writers/zod/properties
  */
 
-import type { CastrSchema } from '../../ir/schema.js';
-import type { IRPropertySchemaContext } from '../../ir/context.js';
+import type { CastrSchema, IRPropertySchemaContext } from '../../ir/index.js';
 import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
 
 /**

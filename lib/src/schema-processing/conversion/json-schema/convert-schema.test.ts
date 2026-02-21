@@ -3,7 +3,7 @@ import type { Schema as JsonSchema } from 'ajv';
 import type { SchemaObject } from 'openapi3-ts/oas31';
 
 import { convertOpenApiSchemaToJsonSchema } from './convert-schema.js';
-import * as keywordPrimitives from './keyword-primitives.js';
+import * as keywordPrimitives from './keywords/keyword-primitives.js';
 
 function expectSchemaObject(schema: JsonSchema): asserts schema is Extract<JsonSchema, object> {
   if (typeof schema === 'boolean') {

@@ -13,13 +13,13 @@ import {
 import {
   processEndpointGroupingAndCommonSchemas,
   type MinimalTemplateContext,
-} from './template-context.endpoints.js';
+} from './endpoints/index.js';
 import type { EndpointDefinition } from '../../endpoints/definition.types.js';
-import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './template-context.mcp.js';
+import { buildMcpToolsFromIR, type TemplateContextMcpTool } from './mcp/index.js';
 import { buildIR } from '../parsers/openapi/index.js';
-import type { CastrDocument } from '../ir/schema.js';
-import { getEndpointDefinitionsFromIR } from './template-context.endpoints.from-ir.js';
-import { extractInlineSchemas } from './inline-schemas.js';
+import { getEndpointDefinitionsFromIR } from './endpoints/template-context.endpoints.from-ir.js';
+import { extractInlineSchemas } from './schemas/inline-schemas.js';
+import type { CastrDocument } from '../ir/index.js';
 
 // Type definitions
 export interface TemplateContext {
@@ -175,8 +175,8 @@ export const getTemplateContext = (
 };
 
 // Re-export types and functions for external use
-export type { TemplateContextGroupStrategy } from './template-context.endpoints.js';
-export { extractSchemaNamesFromDoc } from './template-context.schemas.js';
+export { type TemplateContextGroupStrategy } from './endpoints/index.js';
+export { extractSchemaNamesFromDoc } from './schemas/template-context.schemas.js';
 
 /**
  * Get Zod client template context for code generation.

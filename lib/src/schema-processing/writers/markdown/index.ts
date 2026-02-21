@@ -1,4 +1,4 @@
-import type { CastrDocument, CastrOperation, CastrSchema } from '../../ir/schema.js';
+import type { CastrSchema, CastrDocument, CastrOperation } from '../../ir/index.js';
 import { toUpper } from 'lodash-es';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 

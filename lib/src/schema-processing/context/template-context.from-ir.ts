@@ -1,14 +1,4 @@
-/**
- * IR-Based Template Context Helpers
- *
- * Pure functions that operate ONLY on CastrDocument (IR), never on OpenAPIObject.
- * These functions support the architectural principle that after buildIR(), all
- * downstream code works exclusively with the IR.
- *
- * @module template-context.from-ir
- * @internal
- */
-import type { CastrDocument } from '../ir/schema.js';
+import type { CastrDocument } from '../ir/index.js';
 
 /**
  * Gets schema names sorted by dependency order from the IR.

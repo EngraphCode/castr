@@ -11,6 +11,8 @@ import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import { importX } from 'eslint-plugin-import-x';
 import globals from 'globals';
 import { noMagicStringComparison } from './eslint-rules/no-magic-string-comparison.js';
+import { maxFilesPerDir } from './eslint-rules/max-files-per-dir.js';
+import eslintPluginBoundaries from 'eslint-plugin-boundaries';
 
 const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -236,6 +238,16 @@ export default defineConfig(
       'no-restricted-syntax': [
         'error',
 
+        // --- Wildcards ---
+        {
+          selector: 'ExportAllDeclaration',
+          message: 'Wildcard exports (export *) are forbidden. Export explicitly instead.',
+        },
+        {
+          selector: 'ImportNamespaceSpecifier',
+          message: 'Wildcard imports (import * as) are forbidden. Import named imports instead.',
+        },
+
         // --- Regex ---
         {
           selector: 'Literal[regex]',
@@ -357,11 +369,57 @@ export default defineConfig(
       castr: {
         rules: {
           'no-magic-string-comparison': noMagicStringComparison,
+          'max-files-per-dir': maxFilesPerDir,
         },
       },
     },
     rules: {
       'castr/no-magic-string-comparison': 'error',
+      // Does not count test files. 6 on purpose, do not edit.
+      'castr/max-files-per-dir': ['error', { maxFiles: 6 }],
+    },
+  },
+
+  // ---------------------------------------------------------------------------
+  // ADR-036: Strict Architectural Domain Boundaries (eslint-plugin-boundaries)
+  // ---------------------------------------------------------------------------
+  {
+    files: ['src/**/*.ts'],
+    ignores: [...testGlobs],
+    plugins: {
+      boundaries: eslintPluginBoundaries,
+    },
+    settings: {
+      'boundaries/elements': [
+        { type: 'shared', pattern: 'src/shared/**/*' },
+        { type: 'cli', pattern: 'src/cli/**/*' },
+        { type: 'context', pattern: 'src/schema-processing/context/**/*' },
+        { type: 'conversion', pattern: 'src/schema-processing/conversion/**/*' },
+        { type: 'ir', pattern: 'src/schema-processing/ir/**/*' },
+        { type: 'parsers', pattern: 'src/schema-processing/parsers/**/*' },
+        { type: 'writers', pattern: 'src/schema-processing/writers/**/*' },
+      ],
+      'boundaries/include': ['src/**/*.ts'],
+    },
+    rules: {
+      'boundaries/element-types': [
+        'error',
+        {
+          default: 'disallow',
+          rules: [
+            { from: 'shared', allow: ['shared'] },
+            {
+              from: 'cli',
+              allow: ['cli', 'shared', 'context', 'parsers', 'writers', 'ir', 'conversion'],
+            },
+            { from: 'ir', allow: ['ir', 'shared'] },
+            { from: 'context', allow: ['context', 'shared', 'ir', 'conversion'] },
+            { from: 'conversion', allow: ['conversion', 'shared'] },
+            { from: 'parsers', allow: ['parsers', 'shared', 'ir', 'conversion'] },
+            { from: 'writers', allow: ['writers', 'shared', 'ir', 'conversion'] },
+          ],
+        },
+      ],
     },
   },
 

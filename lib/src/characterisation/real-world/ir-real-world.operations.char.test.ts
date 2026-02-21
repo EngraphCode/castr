@@ -7,7 +7,7 @@
  */
 
 import { generateZodClientFromOpenAPI } from '../../index.js';
-import { getZodClientTemplateContext } from '../../schema-processing/context/template-context.js';
+import { getZodClientTemplateContext } from '../../schema-processing/context/index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { assertAndGetSingleFileContent } from '../ir-test-helpers.js';

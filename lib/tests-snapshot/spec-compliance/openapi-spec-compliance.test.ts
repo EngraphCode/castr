@@ -16,7 +16,9 @@
  */
 
 import { expect, test, describe, beforeAll } from 'vitest';
+
 import * as Ajv04Module from 'ajv-draft-04';
+
 import * as addFormatsModule from 'ajv-formats';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';

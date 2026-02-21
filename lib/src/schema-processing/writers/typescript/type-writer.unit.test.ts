@@ -1,8 +1,8 @@
 import { Project } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 import { writeTypeDefinition } from './type-writer.js';
-import type { CastrSchema } from '../../ir/schema.js';
-import { CastrSchemaProperties } from '../../ir/schema-properties.js';
+import type { CastrSchema } from '../../ir/index.js';
+import { CastrSchemaProperties } from '../../ir/index.js';
 
 describe('TypeWriter', () => {
   const project = new Project({ useInMemoryFileSystem: true });

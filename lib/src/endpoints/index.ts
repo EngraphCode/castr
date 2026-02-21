@@ -2,15 +2,15 @@
 // export { getEndpointDefinitionList, type EndpointDefinitionListResult } from './definition-list.js';
 
 // Endpoint type definitions
-export type {
-  EndpointDefinition,
-  EndpointParameter,
-  EndpointError,
-  EndpointResponse,
-  HttpMethod,
-  RequestFormat,
-  ParameterType,
-  SchemaConstraints,
+export {
+  type EndpointDefinition,
+  type EndpointParameter,
+  type EndpointError,
+  type EndpointResponse,
+  type HttpMethod,
+  type RequestFormat,
+  type ParameterType,
+  type SchemaConstraints,
 } from './definition.types.js';
 
 // Parameter metadata extraction

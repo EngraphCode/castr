@@ -21,23 +21,23 @@
  * ```
  */
 
-import type { CastrDocument, CastrSchemaComponent, CastrSchemaNode } from '../../ir/schema.js';
+import type { CastrSchemaNode, CastrDocument, CastrSchemaComponent } from '../../ir/index.js';
 import type { ZodParseResult, ZodParseError, ZodParseRecommendation } from './zod-parser.types.js';
 import { detectZod3Syntax, detectDynamicSchemas } from './zod-parser.detection.js';
-import { createZodProject, findZodSchemaDeclarations } from './zod-ast.js';
+import { createZodProject, findZodSchemaDeclarations } from './ast/zod-ast.js';
 
 // Import parser modules to trigger their registerParser side-effects
 // These modules register themselves with the core dispatcher on import
-import './zod-parser.primitives.js';
-import './zod-parser.object.js';
-import './zod-parser.composition.js';
-import './zod-parser.union.js';
-import './zod-parser.intersection.js';
-import './zod-parser.references.js';
+import './types/zod-parser.primitives.js';
+import './types/zod-parser.object.js';
+import './composition/zod-parser.composition.js';
+import './composition/zod-parser.union.js';
+import './composition/zod-parser.intersection.js';
+import './registry/zod-parser.references.js';
 
 // Import core dispatcher for unified schema parsing
 import { parseZodSchemaFromNode } from './zod-parser.core.js';
-import { deriveComponentName } from './schema-name-registry.js';
+import { deriveComponentName } from './registry/schema-name-registry.js';
 
 /**
  * Extract schema name from a variable name.

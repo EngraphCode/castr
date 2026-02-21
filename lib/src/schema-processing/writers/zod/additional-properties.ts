@@ -8,9 +8,8 @@
  */
 
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
-import type { CastrSchema } from '../../ir/schema.js';
-import type { TemplateContextOptions } from '../../context/template-context.js';
-import type { IRArrayItemsContext } from '../../ir/context.js';
+import type { CastrSchema, IRArrayItemsContext } from '../../ir/index.js';
+import type { TemplateContextOptions } from '../../context/index.js';
 
 /**
  * Write additional properties handling for Zod objects.

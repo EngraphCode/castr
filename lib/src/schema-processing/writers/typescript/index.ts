@@ -5,10 +5,11 @@ import { createMcpToolWriter } from './mcp.js';
 import { addValidationHelpers, addSchemaRegistryHelper } from './helpers.js';
 import { writeZodSchema } from '../zod/index.js';
 import { writeTypeDefinition } from './type-writer.js';
-import type { CastrSchemaComponent } from '../../ir/schema.js';
-import type { CastrSchemaContext } from '../../ir/context.js';
+import type { CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
+
+export { writeTypeDefinition } from './type-writer.js';
 
 const COMPONENT_TYPE_SCHEMA = 'schema' as const;
 

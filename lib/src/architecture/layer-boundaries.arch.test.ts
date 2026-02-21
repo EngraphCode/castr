@@ -22,7 +22,7 @@
  *
  * **Protected Layers (no OpenAPIObject allowed):**
  * - `lib/src/writers/**` — Output generation layer (except writers/openapi)
- * - `lib/src/context/template-context.mcp*.ts` — MCP subsystem (excluding tests)
+ * - `lib/src/context/mcp/template-context.mcp*.ts` — MCP subsystem (excluding tests)
  * - `lib/src/ir/**` — IR layer (pure IR types only)
  *
  * **Allowed Layers:**
@@ -94,15 +94,16 @@ function getTypeScriptFiles(
  * Get MCP layer files (template-context.mcp*.ts excluding tests).
  */
 function getMcpLayerFiles(contextDir: string): string[] {
-  if (!fs.existsSync(contextDir)) {
+  const mcpDir = path.join(contextDir, 'mcp');
+  if (!fs.existsSync(mcpDir)) {
     return [];
   }
 
-  const entries = fs.readdirSync(contextDir);
+  const entries = fs.readdirSync(mcpDir);
   return entries
     .filter((name) => name.startsWith('template-context.mcp') && name.endsWith('.ts'))
     .filter((name) => !name.includes('.test.'))
-    .map((name) => path.join(contextDir, name));
+    .map((name) => path.join(mcpDir, name));
 }
 
 /**

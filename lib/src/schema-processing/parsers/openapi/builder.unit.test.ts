@@ -14,8 +14,8 @@ import type {
   SchemaObject,
 } from 'openapi3-ts/oas31';
 import { buildIR, buildCastrSchemas } from './index.js';
-import type { CastrDocument } from '../../ir/schema.js';
-import { assertSchemaComponent } from '../../ir/test-helpers.js';
+import { assertSchemaComponent } from '../../ir/index.js';
+import type { CastrDocument } from '../../ir/index.js';
 
 describe('buildCastrSchemas', () => {
   describe('primitive schemas', () => {

@@ -10,11 +10,11 @@
 import { describe, it, expect } from 'vitest';
 
 import type {
-  CastrDocument,
-  CastrSchemaComponent,
   CastrSchemaNode,
   IRDependencyGraph,
-} from '../../ir/schema.js';
+  CastrDocument,
+  CastrSchemaComponent,
+} from '../../ir/index.js';
 
 import { writeOpenApi } from './openapi-writer.js';
 

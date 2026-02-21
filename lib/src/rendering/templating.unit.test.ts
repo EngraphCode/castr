@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { TemplateContext } from '../schema-processing/context/index.js';
-import type { CastrDocument } from '../schema-processing/ir/schema.js';
-import { CastrSchemaProperties } from '../schema-processing/ir/schema-properties.js';
+import { CastrSchemaProperties } from '../schema-processing/ir/index.js';
 import { generateZodClientFromOpenAPI } from './generate-from-context.js';
 import { handleFileGrouping } from './templating.js';
 import { assertGroupedFileResult } from '../../tests-helpers/generation-result-assertions.js';
+import type { CastrDocument } from '../schema-processing/ir/index.js';
 
 function sortPaths(paths: string[]): string[] {
   return [...paths].sort((left, right) => left.localeCompare(right));

@@ -18,9 +18,9 @@
  * ```
  */
 
-import type { CastrDocument, CastrSchema } from '../../ir/schema.js';
+import type { CastrSchema, CastrDocument } from '../../ir/index.js';
 import type { Node } from 'ts-morph';
-import type { ZodImportResolver } from './zod-import-resolver.js';
+import type { ZodImportResolver } from './registry/zod-import-resolver.js';
 
 /**
  * Callback type for recursive schema parsing.

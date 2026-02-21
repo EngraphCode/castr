@@ -26,8 +26,13 @@
 import type { CallExpression, ObjectLiteralExpression, SourceFile } from 'ts-morph';
 import { Node } from 'ts-morph';
 import type { ZodParseError } from './zod-parser.types.js';
-import type { ZodImportResolver } from './zod-import-resolver.js';
-import { createZodProject, isZodCall, getZodMethodChain, ZOD_OBJECT_METHOD } from './zod-ast.js';
+import type { ZodImportResolver } from './registry/zod-import-resolver.js';
+import {
+  createZodProject,
+  isZodCall,
+  getZodMethodChain,
+  ZOD_OBJECT_METHOD,
+} from './ast/zod-ast.js';
 
 /**
  * Zod 3 methods that are not available in Zod 4.

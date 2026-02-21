@@ -16,6 +16,7 @@
  */
 
 export { writeOpenApi } from './openapi-writer.js';
-export { writeOpenApiSchema } from './openapi-writer.schema.js';
-export { writeOpenApiComponents } from './openapi-writer.components.js';
-export { writeOpenApiPaths } from './openapi-writer.operations.js';
+export { writeOpenApiSchema } from './schema/index.js';
+export { writeOpenApiComponents } from './components/index.js';
+export { writeOpenApiPaths } from './operations/index.js';
+export { validateOpenAPI } from './openapi-validator.js';
