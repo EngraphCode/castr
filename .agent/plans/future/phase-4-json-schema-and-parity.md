@@ -6,12 +6,27 @@
 
 ---
 
-## Goal
+## Exploration Goal: Determine the Desired Impact
+
+Before writing code for Phase 4, the **first objective** is to deeply explore what the desired impact of JSON Schema support and Parity alignment will be.
+Do not blindly implement; instead, define *rigorous*, *measurable*, and *impact-focused* acceptance criteria that surpass the quality of previous examples (e.g., those in `.agent/acceptance-criteria/`).
+
+The exploration must answer:
+
+1. **Lossless Translation**: How exactly do JSON Schema 2020-12 nuances diverge from Zod and OpenAPI 3.1.0, and what is the mapping strategy to the IR?
+2. **Feature Parity**: What are the high-value edge cases in the ecosystem alignment research that need test fixtures?
+3. **Outcome Definition**: What does "done" look like from the perspective of an external SDK depending on Castr?
+
+Once the exploration is complete, establish the Acceptance Criteria in a new or updated document in `.agent/acceptance-criteria/`. Only then should implementation begin.
+
+---
+
+## Phase 4 Objectives
 
 After Session 3.3 (strict Zod-layer transform validation with sample input) is complete, Phase 4 focuses on:
 
-- JSON Schema (Draft 2020-12) support as a first-class format, and
-- parity work that improves strict, lossless transforms without expanding scope prematurely.
+- JSON Schema (Draft 2020-12 / Draft 07) support as a first-class format.
+- Parity work that improves strict, lossless transforms without expanding scope prematurely.
 
 This phase must remain strict: no lossy normalization, no permissive fallbacks, fail fast with helpful errors.
 
