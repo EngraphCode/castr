@@ -17,90 +17,289 @@ This playbook reverses that pattern. We remove the exceptions, expose the drift,
 
 The system requires an interconnected suite of 4 tools alongside custom AI agent constraints:
 
-| Component / Tool                        | Responsibility                                                                     | Why it's Critical                                                                                                                                                 |
-| :-------------------------------------- | :--------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Custom ESLint (`max-files-per-dir`)** | **The Driver:** Enforces physical modularization.                                  | Prevents "God Folders". Forces logical subdivision when a directory grows past ~10 source files.                                                                  |
-| **`eslint-plugin-boundaries`**          | **The Director:** Enforces unidirectional data flow.                               | Prevents architectural cycles (e.g. Writers importing Parsers). It ensures the high-level layers of the application communicate in only one designated direction. |
-| **`dependency-cruiser`**                | **The Guardrail:** Enforces strict domain dependencies and barrel file boundaries. | Once folders are split by the ESLint rule, this prevents them from importing each other's internals haphazardly.                                                  |
-| **`knip`**                              | **The Optimizer:** Detects dead code, unused exports, and unlisted dependencies.   | Refactoring heavily leaves dead code behind. With strict barrel-file boundaries, `knip` proves internal functions are actually used.                              |
-| **`madge`**                             | **The Assessor:** Visualizes graphs and warns on circular dependencies/orphans.    | Essential fallback visualization when dependency-cruiser rejects a circular dependency and you need to untangle it.                                               |
+| Component / Tool | Responsibility | Why it's Critical |
+| :--- | :--- | :--- |
+| **Custom ESLint (`max-files-per-dir`)** | **The Driver:** Enforces physical modularization. | Prevents "God Folders". Forces logical subdivision when a directory grows past ~10 source files. |
+| **`eslint-plugin-boundaries`** | **The Director:** Enforces unidirectional data flow. | Prevents architectural cycles (e.g. Writers importing Parsers). It ensures the high-level layers of the application communicate in only one designated direction. |
+| **`dependency-cruiser`** | **The Guardrail:** Enforces strict domain dependencies and barrel file boundaries. | Once folders are split by the ESLint rule, this prevents them from importing each other's internals haphazardly. |
+| **`knip`** | **The Optimizer:** Detects dead code, unused exports, and unlisted dependencies. | Refactoring heavily leaves dead code behind. With strict barrel-file boundaries, `knip` proves internal functions are actually used. |
+| **`madge`** | **The Assessor:** Visualizes graphs and warns on circular dependencies/orphans. | Essential fallback visualization when dependency-cruiser rejects a circular dependency and you need to untangle it. |
 
 ---
 
-## 3. Implementation Playbook (Step-by-Step)
+## 3. Installation
+
+To set up the tools, install the following packages in your project:
+
+```bash
+pnpm add -D eslint @eslint/js typescript-eslint eslint-plugin-boundaries
+pnpm add -D dependency-cruiser
+pnpm add -D knip
+pnpm add -D madge
+```
+
+---
+
+## 4. Implementation Playbook (Step-by-Step)
 
 ### Phase 1: Applying the "Pain Provider" (File Count Limits)
 
-When introducing this to a new repo, start by turning on the physical constraints.
+When introducing this to a new repo, start by turning on the physical constraints. This uses a custom ESLint rule that forces developers to create modular directories instead of single massive folders.
 
-1. **Implement the Custom ESLint Rule:** Add the custom `no-max-files-per-dir` rule.
-2. **Threshold Setting:** Set the limit low (e.g., `maxFiles: 12`).
-3. **Crucial Caveats (The Exceptions that Prove the Rule):**
-   - **Exclude Test Files:** Do NOT penalize testing. `*.test.ts`, `*.spec.ts`, and `__tests__` folders should be completely ignored by the rule to encourage exhaustive testing.
-   - **Exclude Index Files:** `index.ts` is the architectural boundary (barrel), not domain logic. Exclude it from the count.
-   - **Exclude Documentation:** `*.md` files don't count towards the logic threshold.
+**1. Create the Custom ESLint Rule**
 
-_Result:_ The project will immediately fail linting on its largest directories. The AI agent (or developer) is now forced to analyze the folder, identify the implicit domains within it, and extract them into sub-directories.
+Create a file named `eslint-rules/max-files-per-dir.ts`:
+
+```typescript
+import type { TSESTree } from '@typescript-eslint/utils';
+import { ESLintUtils } from '@typescript-eslint/utils';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const dirFileCache = new Map<string, string[]>();
+const createRule = ESLintUtils.RuleCreator(() => `https://github.com/your-org/your-repo`);
+
+function getSortedFilesForDirectory(dirPath: string, ignoreSuffixes: string[]): string[] {
+  const cacheKey = `${dirPath}::${ignoreSuffixes.join(',')}`;
+  if (dirFileCache.has(cacheKey)) return dirFileCache.get(cacheKey) ?? [];
+
+  try {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    const files = entries
+      .filter((entry) => entry.isFile())
+      .filter((entry) => entry.name.match(/\.(ts|tsx|js)$/))
+      .filter((entry) => !ignoreSuffixes.some((suffix) => entry.name.endsWith(suffix)))
+      .map((entry) => entry.name)
+      .sort((a, b) => a.localeCompare(b));
+
+    dirFileCache.set(cacheKey, files);
+    return files;
+  } catch {
+    dirFileCache.set(cacheKey, []);
+    return [];
+  }
+}
+
+export const maxFilesPerDir = createRule({
+  name: 'max-files-per-dir',
+  meta: {
+    type: 'suggestion',
+    docs: { description: 'Enforce a maximum number of files per directory to encourage modularity.' },
+    messages: {
+      directoryComplexitySupportive: 'Directory "{{dirName}}" has grown to {{actual}} files (limit: {{max}}), indicating it might represent multiple sub-domains. Consider extracting cohesive modules into subdirectories.',
+    },
+    schema: [{
+      type: 'object',
+      properties: {
+        maxFiles: { type: 'number', minimum: 1 },
+        ignoreSuffixes: { type: 'array', items: { type: 'string' } },
+      },
+      additionalProperties: false,
+    }],
+  },
+  defaultOptions: [{ maxFiles: 8, ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', 'index.ts'] }],
+  create(context) {
+    const currentFilePath = context.filename || context.physicalFilename;
+    if (!currentFilePath || currentFilePath === '<input>') return {};
+
+    const dirPath = path.dirname(currentFilePath);
+    const fileName = path.basename(currentFilePath);
+    const options = context.options[0] ?? { maxFiles: 8, ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', 'index.ts'] };
+
+    return {
+      Program(node: TSESTree.Program): void {
+        const sortedFiles = getSortedFilesForDirectory(dirPath, options.ignoreSuffixes ?? []);
+        if (sortedFiles.length <= options.maxFiles) return;
+
+        // Anchor File Pattern: Only report the error on the very first file alphabetically.
+        if (sortedFiles.length > 0 && sortedFiles[0] === fileName) {
+          context.report({
+            node,
+            messageId: 'directoryComplexitySupportive',
+            data: { dirName: path.basename(dirPath), actual: sortedFiles.length, max: options.maxFiles },
+          });
+        }
+      },
+    };
+  },
+});
+```
+
+**2. Configure your `eslint.config.ts`**
+
+Register the custom plugin and set the threshold low (e.g., 8-12).
+
+```typescript
+import { maxFilesPerDir } from './eslint-rules/max-files-per-dir.js';
+
+export default [
+  // ... your other configs
+  {
+    files: ['src/**/*.ts'],
+    plugins: {
+      local: {
+        rules: {
+          'max-files-per-dir': maxFilesPerDir,
+        },
+      },
+    },
+    rules: {
+      'local/max-files-per-dir': ['error', { maxFiles: 10, ignoreSuffixes: ['.test.ts', '.spec.ts', 'index.ts'] }],
+    },
+  },
+];
+```
+
+_Result:_ The project will immediately fail linting on its largest directories. You are now forced to analyze the folder, identify the implicit domains within it, and extract them into sub-directories.
 
 ### Phase 2: Directing the Flow (`eslint-plugin-boundaries`)
 
 Once directories are split, you must define how they are allowed to interact at a high level.
 
-1. **Install and Configure `eslint-plugin-boundaries`:**
-2. **Define the Elements (Layers):** Map file paths to semantic architectural layers (e.g., `shared`, `ir`, `parsers`, `writers`).
-3. **Define the Flow:** Configure the `boundaries/element-types` rule to enforce unidirectional dependencies.
-   - Example: `parsers` can import `ir`, but `ir` cannot import `parsers`.
-   - Example: No domain can import `testing` utilities except other tests.
-4. **The Caveat:** This plugin operates at the _layer_ level, not the _file_ level. It ensures the architectural diagram is respected, but it won't stop a `writer` from bypassing an `ir` barrel file. That is where Phase 3 comes in.
+**1. Define the Flow in `eslint.config.ts`**
+
+Map file paths to semantic architectural layers (e.g., `shared`, `domain-a`, `domain-b`) and enforce unidirectional dependencies.
+
+```typescript
+import eslintPluginBoundaries from 'eslint-plugin-boundaries';
+
+export default [
+  // ...
+  {
+    files: ['src/**/*.ts'],
+    plugins: { boundaries: eslintPluginBoundaries },
+    settings: {
+      'boundaries/elements': [
+        { type: 'shared', pattern: 'src/shared/**/*' },
+        { type: 'parsers', pattern: 'src/parsers/**/*' },
+        { type: 'writers', pattern: 'src/writers/**/*' },
+        { type: 'core', pattern: 'src/core/**/*' },
+      ],
+      'boundaries/include': ['src/**/*.ts'],
+    },
+    rules: {
+      'boundaries/element-types': [
+        'error',
+        {
+          default: 'disallow',
+          rules: [
+            { from: 'shared', allow: ['shared'] },
+            { from: 'core', allow: ['core', 'shared'] },
+            { from: 'parsers', allow: ['parsers', 'core', 'shared'] },
+            { from: 'writers', allow: ['writers', 'core', 'shared'] },
+            // Notice: parsers cannot import writers, and writers cannot import parsers.
+          ],
+        },
+      ],
+    },
+  }
+];
+```
 
 ### Phase 3: Locking the Boundaries (Dependency-Cruiser)
 
-Breaking up a large directory into three smaller directories is useless if they all intimately import each other's internals (e.g., `moduleA/internal.ts` importing `moduleB/helper.ts`). This just creates a scattered monolith.
+Breaking up a large directory into three smaller directories is useless if they all intimately import each other's internals (e.g., `moduleA/internal.ts` importing `moduleB/helper.ts`).
 
 1. **Mandate Barrel Files:** Every sub-domain MUST have an `index.ts` file acting as its public API.
-2. **Configure `dependency-cruiser`:**
-   - **Rule 1: No Circular Dependencies.** Hard blocker (`severity: 'error'`).
-   - **Rule 2: Strict Barrels.** Sibling directories can ONLY import from a directory's `index.ts` file.
-   - **Rule 3: Unidirectional Flow.** Define the hierarchy. (e.g., `src/writers` can import `src/ir`, but `src/ir` cannot import `src/writers`).
-3. **Crucial Caveats (The Pitfalls We Discovered):**
-   - **Regex Precision:** Ensure barrel exclusions explicitly match root boundaries (e.g., `^src/domain/index\.ts$`). `pathNot: 'index.ts'` is too broad and allows nested indices to act as fake barrels.
-   - **No Test Loopholes:** Do not exclude `(*.test.ts)` files from dependency boundaries. A test in `parsers/` should be physically incapable of importing an internal helper from `writers/`. If a helper must be shared, it must be officially exported or moved to a shared testing domain.
+2. **Configure `.dependency-cruiser.cjs`:**
 
-_Result:_ The build will fail massively. 100+ violations will appear. This is the **Maximized Signal**. The AI agent must systematically route all internal cross-imports through their respective `index.ts` files, formally establishing the architectural contracts.
+```javascript
+/** @type {import('dependency-cruiser').IConfiguration} */
+module.exports = {
+  forbidden: [
+    {
+      name: 'encapsulate-parsers',
+      severity: 'error',
+      comment: 'Parser internals MUST only be accessed via their specific index.ts barrel files.',
+      from: { pathNot: '^src/parsers/' },
+      to: {
+        path: '^src/parsers/.+',
+        pathNot: '^src/parsers/[^/]+/index\\.(ts|js)$',
+      },
+    },
+    {
+      name: 'encapsulate-writers',
+      severity: 'error',
+      comment: 'Writer internals MUST only be accessed via their specific index.ts barrel files.',
+      from: { pathNot: '^src/writers/' },
+      to: {
+        path: '^src/writers/.+',
+        pathNot: '^src/writers/[^/]+/index\\.(ts|js)$',
+      },
+    },
+    {
+      name: 'no-circular',
+      severity: 'error',
+      comment: 'Circular dependencies are forbidden.',
+      from: {},
+      to: { circular: true },
+    }
+  ],
+  options: {
+    tsPreCompilationDeps: true,
+    tsConfig: { fileName: 'tsconfig.json' }
+  }
+};
+```
+
+_Result:_ The build will fail if any domain imports an internal file (`foo.ts`) of another domain instead of its public `index.ts`. All inter-domain traffic must formally traverse barrel files.
 
 ### Phase 4: The Cleanup (Knip & Madge)
 
-After massive restructuring, the codebase will be littered with abandoned implementations and over-exported functions.
+After massive restructuring, the codebase will be littered with abandoned implementations and over-exported functions. Because `dependency-cruiser` forced all inter-domain traffic through barrels, any function not exported by a barrel, and not used by a sibling inside the same folder, is easily identifiable as dead code.
 
-1. **Configure `knip`:**
-   - Set strict entry points (`index.ts`, `cli/index.ts`, and test files).
-   - Tell `knip` to run across the entire `src/` directory.
-   - Because `dependency-cruiser` forced all inter-domain traffic through barrels, any function not exported by a barrel, and not used by a sibling inside the same folder, will correctly flag as **dead code**.
-2. **Crucial Caveats:**
-   - Ensure `knip.ts` correctly ignores monorepo/root dependencies if they are provided natively.
-3. **Configure `madge`:**
-   - Integrate `pnpm madge:circular` and `pnpm madge:orphans` into the pipeline. Use the `--warning` flag so it doesn't fail the build (since `dependency-cruiser` already handles hard failures), but rather provides actionable STDOUT visualization to the developer.
+**1. Configure `knip.ts`**
+
+```typescript
+/** @type {import('knip').KnipConfig} */
+const config = {
+  entry: ['src/index.ts', 'src/cli.ts', 'tests/**/*.test.ts'],
+  project: ['src/**/*.ts'],
+  ignoreBinaries: ['eslint', 'madge', 'dependency-cruiser'],
+};
+
+export default config;
+```
+
+**2. Configure `package.json` Scripts**
+
+Bring the entire suite together into a Definition of Done script block:
+
+```json
+"scripts": {
+  "lint": "eslint .",
+  "type-check": "tsc --noEmit",
+  "test": "vitest run",
+  "knip": "knip",
+  "depcruise": "depcruise src --config .dependency-cruiser.cjs",
+  "madge:circular": "madge --circular --warning --extensions ts src/**/*",
+  "madge:orphans": "madge --orphans --warning --extensions ts src/**/*",
+  "qg": "pnpm type-check && pnpm lint && pnpm test && pnpm depcruise && pnpm knip && pnpm madge:circular"
+}
+```
 
 ---
 
-## 4. Agentic Guardrails (The AI Layer)
+## 5. Agentic Guardrails (The AI Layer)
 
 AI coding assistants are highly effective at implementation but naturally prone to architectural degradation if unguided. To make this playbook work autonomously, you must provide the agent with rigid, unavoidable system constraints.
 
-### 1. The Directives (`.agent/directives/`)
+### 1. The Directives
 
-You must instantiate explicit markdown directives that the agent reads automatically.
+You must instantiate explicit markdown directives that the agent reads automatically. Example: `.agent/directives/RULES.md`
 
-- **`RULES.md`**: Define the philosophy. State explicitly: _"Maximize signal. Do not disable linters. If a file is too large, use the 'Extract -> Test -> Compose' pattern to break it apart."_
-- **`architectural-file-system-structure.md`**: Since the file size limit forces the agent to extract code, it needs to know _where_ to put it. This document defines the exact hierarchy of domains (e.g., `parsers`, `ir`, `writers`, `shared`) so the agent never guesses where a new utility belongs.
+> **Rule:** Maximize signal. Do not disable linters. If a file is too large, use the 'Extract -> Test -> Compose' pattern to break it apart.
 
-### 2. The Definition of Done (`DEFINITION_OF_DONE.md`)
+Create `.agent/directives/architectural-file-system-structure.md`:
+
+> Define the exact hierarchy of domains (e.g., `parsers`, `ir`, `writers`, `shared`) so the agent never guesses where a new utility belongs.
+
+### 2. The Definition of Done
 
 The single most important agent mechanism is the synchronous Quality Gate.
 
-- Create a `pnpm qg` (Quality Gate) script that runs ALL of the above checks simultaneously: `pnpm type-check && pnpm test && pnpm lint && pnpm depcruise && pnpm knip && pnpm madge`.
-- Mandate in the `DEFINITION_OF_DONE.md` that the agent _must_ run `pnpm qg` and verify it exits with `0` before completing a task.
-- Because the quality gate contains the ESLint file limit and the dependency-cruiser boundary checks, **the agent cannot cheat**. If it writes a 16th file into a directory, `pnpm qg` fails, and the agent must autonomously refactor its own work.
+- Mandate in a `DEFINITION_OF_DONE.md` file that the agent _must_ run `pnpm qg` and verify it exits with `0` before completing a task.
+- Because the quality gate contains the ESLint file limit and the dependency-cruiser boundary checks, **the agent cannot cheat**. If it writes an 11th file into a directory, `pnpm qg` fails, and the agent must autonomously refactor its own work.
 
 ---
 

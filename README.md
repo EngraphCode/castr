@@ -45,15 +45,6 @@ pnpm add @engraph/castr
 **Does NOT provide:**
 
 - Complete HTTP client implementation (bring your own)
-- Opinionated SDK structure (you control the architecture)
-
-## Compatibility Goals
-
-Castr is intended to replace schema tooling dependencies in production pipelines, including:
-
-- **openapi-zod-client-style adapters** with native Zod v4 output
-- **trpc-to-openapi** and **zod-openapi** for OpenAPI generation from code-first schemas
-- **openapi-ts best practices** (plugin surface, DX) with ethical reuse and attribution when code is reused
 
 ## Programmatic API
 
@@ -234,6 +225,10 @@ pnpm test
 ```
 
 See `.agent/directives/RULES.md` for engineering standards.
+
+## Origins
+
+Castr was inspired by [openapi-zod-client](https://github.com/astahmer/openapi-zod-client) -- it started as a fork of that project, and has been completely rewritten since then.
 
 ## License
 
