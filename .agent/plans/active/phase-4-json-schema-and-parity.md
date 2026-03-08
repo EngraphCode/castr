@@ -40,9 +40,16 @@ Pure JSON Schema 2020-12 writer in `lib/src/schema-processing/writers/json-schem
 
 **Verification:** Build clean, ESLint clean, 48 new tests pass, all quality gates GREEN.
 
-### Component 3: JSON Schema Parser — 🔲 NEXT
+### Component 3: JSON Schema Parser — 🔄 IN PROGRESS (source files broken, tests exist)
 
 Parse JSON Schema input (Draft 07 and 2020-12) into the canonical CastrSchema IR.
+
+**Current state (as of 2026-03-08):**
+
+- Directory `parsers/json-schema/` has 6 untracked files (4 source + 2 test)
+- **Source files won't build or lint clean** — they were rewritten multiple times fighting the type system instead of working with it
+- **Test files are comprehensive** — 481-line core test + 278-line normalization test covering all IR keyword categories
+- **Recommendation:** delete all 4 source files and rewrite from scratch using the design below; adapt tests to match final types
 
 **Key requirements (from acceptance criteria):**
 
@@ -61,6 +68,14 @@ Parse JSON Schema input (Draft 07 and 2020-12) into the canonical CastrSchema IR
 - Parser lives in `lib/src/schema-processing/parsers/json-schema/`
 - ADR-036 directory limits apply (max 8 source files per directory)
 - Pure functions, no side effects, no I/O
+
+**Critical design constraints (lessons from this session):**
+
+1. **Use `SchemaObject` from `openapi3-ts/oas31`** — extend with 2020-12 keywords (`$defs`, `unevaluatedProperties`, etc.) as `JsonSchema2020`. This is the domain expert library type; don't reinvent it with index signatures or `Record<string, unknown>`
+2. **Normalization must be pure functional** — each step returns a new object via destructuring rest (e.g., `const { items, ...rest } = input; return { ...rest, prefixItems: items }`). Do NOT mutate and assign `undefined` — `exactOptionalPropertyTypes` will reject it, and the type system is right to do so
+3. **`Draft07Input` extends `JsonSchema2020`** — Draft 07 keys (`definitions`, `dependencies`) typed directly on the boundary interface. Stripped via destructuring at the end of normalization
+4. **`$ref` rewriting uses lodash-es `split`/`join`** — same pattern as `ref-resolution.ts`. These are not banned native string methods
+5. **No `as` casts** — use `isReferenceObject()` from openapi3-ts for type narrowing. If a cast is needed, the design is wrong
 
 ### Component 4: Multi-Cast Parity Rig — 🔲 PLANNED
 

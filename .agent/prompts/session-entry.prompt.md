@@ -49,37 +49,33 @@ Notes:
 
 - ✅ **Component 1: Shared JSON Schema field logic** — Extracted into `writers/shared/` (json-schema-object.ts, json-schema-fields.ts, json-schema-2020-12-fields.ts). OpenAPI writer refactored to compose these. All 422 tests pass, byte-for-byte identical output confirmed.
 - ✅ **Component 2: JSON Schema Writer** — Pure JSON Schema 2020-12 writer in `writers/json-schema/`. Three public functions: `writeJsonSchema()`, `writeJsonSchemaDocument()`, `writeJsonSchemaBundle()`. 48 new tests, all quality gates GREEN. Composes `writeAllJsonSchemaFields()` from shared module — does NOT emit OAS-only fields (xml, externalDocs, discriminator).
-- 🔲 **Component 3: JSON Schema Parser** — Next up. See detailed requirements in the active plan.
+- 🔄 **Component 3: JSON Schema Parser** — Source files broken (won't build/lint), tests exist. See design guidance below.
 - 🔲 **Component 4: Multi-Cast Parity Rig** — E2E multi-casting validation.
 
-#### What Component 3 Requires
+#### Component 3: What the Next Session Must Do
 
-The JSON Schema Parser converts JSON Schema input (Draft 07 + 2020-12) into the canonical `CastrSchema` IR.
+**State on disk:** `parsers/json-schema/` has 6 untracked files. Source files (4) won't build or lint — they were rewritten multiple times fighting the type system. Test files (2) are comprehensive (481-line core test, 278-line normalization test). **Delete source, keep tests, rewrite source from scratch.**
 
-**Draft 07 → 2020-12 normalizations:**
+**Why the source is broken:** The previous session used `Record<string, unknown>` / index signatures as a performative type and then tried to work around `exactOptionalPropertyTypes`, `consistent-type-assertions: never`, and the `Record<string, unknown>` ban with escape hatches (`as Partial<>`, `as Record<string, unknown>`). Every workaround introduced a new violation. The type system was teaching us the design was wrong; we weren't listening.
 
-- `definitions` → local references / `$defs`
-- `dependencies` → `dependentRequired` / `dependentSchemas`
-- Tuple `items` array → `prefixItems`
-- Boolean `exclusiveMinimum`/`exclusiveMaximum` → numeric values
+**Correct design (documented in the active plan):**
 
-**Architecture:**
-
-- Parser lives in `lib/src/schema-processing/parsers/json-schema/`
-- Follow patterns established by `parsers/openapi/` and `parsers/zod/`
-- ADR-036: max 8 source files per directory
-- Pure functions, no I/O, TDD first
+1. **`JsonSchema2020` extends `SchemaObject` from `openapi3-ts/oas31`** with 2020-12 keywords (`$defs`, `unevaluatedProperties`, `dependentSchemas`, `dependentRequired`, `unevaluatedItems`, `minContains`, `maxContains`). This is the domain expert library type for JSON Schema 2020-12.
+2. **`Draft07Input` extends `JsonSchema2020`** with Draft 07 keys (`definitions`, `dependencies`) typed directly. These are stripped at normalization exit via destructuring.
+3. **Normalization is pure functional** — each step returns a new object via destructuring rest. Example: `const { items, ...rest } = input; return { ...rest, prefixItems: items }`. Do NOT mutate and assign `undefined` (`exactOptionalPropertyTypes` forbids it, and immutability is the right pattern).
+4. **`$ref` rewriting uses `lodash-es` `split`/`join`** — same pattern as `shared/ref-resolution.ts`.
+5. **Core parser uses typed property access** — `input.type`, `input.properties`, `input.format`. No bracket notation. Use `isReferenceObject()` from `openapi3-ts/oas31` for narrowing. Zero `as` casts.
 
 **For the next session, you MUST:**
 
-1. Start by reviewing the active plan `phase-4-json-schema-and-parity.md` and the acceptance criteria `json-schema-and-parity-acceptance-criteria.md`.
-2. Plan and begin Component 3 (JSON Schema Parser) using TDD.
+1. Open the active plan `phase-4-json-schema-and-parity.md` — the "Critical design constraints" section has the architectural guidance.
+2. Delete the 4 source files, keep the 2 test files.
+3. Rewrite source files following the design above, adapting tests to match final types.
+4. Run quality gates after each file is complete — don't batch changes.
 
 #### Context
 
 Session 3.3 (Strict Zod-Layer Transform Validation) and ADR-026 strictness remediation have been successfully completed and archived. The core pipeline (OpenAPI ↔ IR ↔ Zod) is locked, deterministic, and proven lossless by the Parity Matrix tests and Directory Complexity boundaries (ADR-035, ADR-036, ADR-037).
-
-All atomic plans for 3.3a and 3.3b are stored in `.agent/plans/current/complete/`.
 
 Phase 4 introduced the shared JSON Schema field writers (Component 1) and the JSON Schema Writer (Component 2), establishing the output side. Component 3 completes the input side, enabling full JSON Schema ↔ IR ↔ any-format transform validation.
 

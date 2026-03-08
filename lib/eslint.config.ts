@@ -93,7 +93,12 @@ const baseRules: Linter.RulesRecord = {
 
 const untypedTsRules: Linter.RulesRecord = {
   'no-unused-vars': 'off',
-  '@typescript-eslint/no-unused-vars': ['error', {}],
+  '@typescript-eslint/no-unused-vars': [
+    'error',
+    { varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+  ],
+  // Disable sonarjs duplicate — @typescript-eslint/no-unused-vars handles this with varsIgnorePattern
+  'sonarjs/no-unused-vars': 'off',
   '@typescript-eslint/no-explicit-any': ['error', { fixToUnknown: true }],
   '@typescript-eslint/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
   '@typescript-eslint/consistent-type-imports': [
