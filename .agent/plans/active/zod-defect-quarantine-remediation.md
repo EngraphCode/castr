@@ -1,15 +1,26 @@
 # Plan (Active): Zod Transform Defect Quarantine Remediation
 
-**Status:** 🔲 Planned  
+**Status:** 🔄 Active  
 **Created:** 2026-03-08  
 **Last Updated:** 2026-03-08  
-**Predecessor:** Phase 4 (Component 4 blocked until this is resolved or confirmed non-blocking)
+**Predecessor:** Phase 4 — JSON Schema + Post-3.3 Parity (complete, archived)
 
 ---
 
 ## Problem Statement
 
-15 tests are skipped (`it.skip`) across transform scenarios 2-4 in `transform-samples.integration.test.ts`. These cover three Zod fixture files — **unions**, **intersections**, **recursion** — that exercise valid Zod 4 input patterns. Per project rules, skipped tests for internal defects are prohibited (`.agent/directives/testing-strategy.md` §"No skipped tests").
+15 tests are skipped (`it.skip`) across transform scenarios 2 and 4. These cover three Zod fixture files — **unions**, **intersections**, **recursion** — that exercise valid Zod 4 input patterns. Per project rules, skipped tests for internal defects are prohibited (`.agent/directives/testing-strategy.md` §"No skipped tests").
+
+### Current Test Layout
+
+Tests are distributed across per-scenario files in `lib/tests-transforms/__tests__/`:
+
+| File | Skipped |
+| ---- | ------- |
+| `scenario-2-zod-roundtrip.integration.test.ts` | 9 (3 fixtures × 3 test groups) |
+| `scenario-4-zod-via-openapi.integration.test.ts` | 6 (3 fixtures × 2 test groups) |
+
+Shared test infrastructure lives in `lib/tests-transforms/utils/transform-helpers.ts`.
 
 ---
 
@@ -44,16 +55,16 @@ Recursive schemas use `$ref` to reference themselves and each other (e.g., `Cate
 
 ## Remediation Strategy
 
-### Defect 1: Unskip Unions (Zero Code Changes)
+### Step 1: Unskip Unions (Zero Code Changes)
 
 Simply remove `it.skip` → `it` for the 5 union tests. Run quality gates to confirm GREEN.
 
 **Affected tests (5):**
 
-- Scenario 2: losslessness, idempotency, validation parity for `unions`
-- Scenario 4: losslessness, validation parity for `unions`
+- `scenario-2-zod-roundtrip.integration.test.ts`: losslessness, idempotency, validation parity for `unions`
+- `scenario-4-zod-via-openapi.integration.test.ts`: losslessness, validation parity for `unions`
 
-### Defect 2: Fix `$ref` Name Resolution for Intersections + Recursion
+### Step 2: Fix `$ref` Name Resolution for Intersections + Recursion
 
 The `$ref` values in the IR must use the same names as the IR component registry. This means when the Zod parser strips `Schema` suffix from a variable name to derive the component name, any `$ref` values pointing to that component must also use the stripped name.
 
@@ -81,12 +92,22 @@ After each remediation step:
 pnpm check:ci
 ```
 
-All 15 previously-skipped tests must pass. All quality gates must remain GREEN.
+All 15 previously-skipped tests must pass. All quality gates must remain GREEN. Final target: **0 skipped tests**.
 
 ---
+
+## Key Files
+
+| File | Purpose |
+| ---- | ------- |
+| `lib/tests-transforms/__tests__/scenario-2-zod-roundtrip.integration.test.ts` | Scenario 2 tests (9 skipped) |
+| `lib/tests-transforms/__tests__/scenario-4-zod-via-openapi.integration.test.ts` | Scenario 4 tests (6 skipped) |
+| `lib/tests-transforms/utils/transform-helpers.ts` | Shared test helpers and fixture constants |
+| `lib/src/schema-processing/parsers/zod/registry/schema-name-registry.ts` | Suffix stripping logic |
+| `lib/src/schema-processing/parsers/zod/` | Zod parser (where `$ref` values are set) |
 
 ## References
 
 - `.agent/directives/testing-strategy.md` — "No skipped tests" rule
-- `lib/tests-transforms/__tests__/transform-samples.integration.test.ts` — lines 445-449, 488-499, 594-606, 627-638, 728-738, 758-769
-- `lib/src/schema-processing/parsers/zod/registry/schema-name-registry.ts` — suffix stripping logic
+- `.agent/plans/current/complete/phase-4-json-schema-and-parity.md` — predecessor plan
+- `docs/architectural_decision_records/ADR-035-transform-validation-parity.md` — transform validation framework

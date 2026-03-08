@@ -3,10 +3,13 @@
 This directory contains integration tests that verify specifications survive complete transformation pipelines:
 
 ```text
-  OpenAPI → IR → OpenAPI (Scenario 1) ✅
-      Zod → IR → Zod     (Scenario 2) ✅
-OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) ✅
-    Zod → IR → OpenAPI → IR → Zod (Scenario 4) ✅
+          OpenAPI → IR → OpenAPI (Scenario 1) ✅
+              Zod → IR → Zod     (Scenario 2) ✅
+    OpenAPI → IR → Zod → IR → OpenAPI (Scenario 3) ✅
+        Zod → IR → OpenAPI → IR → Zod (Scenario 4) ✅
+  JSON Schema → IR → JSON Schema     (Scenario 5) ✅
+Zod → IR → JSON Schema → IR → Zod   (Scenario 6) ✅
+   Single IR → Zod + JSON Schema + OpenAPI (Scenario 7) ✅
 ```
 
 ---
@@ -40,24 +43,31 @@ Some transform tests are explicit round-trip proofs. Those round-trip assertions
 - For scenario strictness checks, parse-error expectations run before schema-count/idempotency assertions.
 - Structural strictness closure for Scenarios 2-4 is complete; functional validation parity is tracked in `validation-parity*.integration.test.ts`.
 
-This contract is governed by `.agent/directives/testing-strategy.md` and implemented in `__tests__/transform-samples.integration.test.ts`.
+This contract is governed by `.agent/directives/testing-strategy.md` and implemented in the per-scenario test files (`scenario-1-*.ts` through `scenario-7-*.ts`).
 
 ---
 
 ## Test Files
 
-| File / Pattern                                        | Purpose                                                                                |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `input-coverage.integration.test.ts`                  | Verifies OpenAPI syntax is parsed to IR                                                |
-| `output-coverage.integration.test.ts`                 | Verifies IR fields are written to OpenAPI                                              |
-| `__tests__/transform-samples.integration.test.ts`     | Transform-sample scenarios incl. strict round-trip/idempotency proofs where applicable |
-| `__tests__/validation-parity*.integration.test.ts`    | Functional validation-parity for transform scenarios                                   |
-| `__tests__/version-validation.integration.test.ts`    | Version-specific validation rules                                                      |
-| `__tests__/scalar-behavior.integration.test.ts`       | Documents Scalar validator behavior                                                    |
-| `__tests__/parser-field-coverage.integration.test.ts` | Parser field extraction verification                                                   |
-| `__tests__/writer-field-coverage.integration.test.ts` | Writer field output verification                                                       |
-| `__tests__/content-preservation.unit.test.ts`         | Regression checks for known content-loss bugs                                          |
-| `__tests__/zod-format-functions.integration.test.ts`  | Zod helper/function output coverage checks                                             |
+| File / Pattern                                                       | Purpose                                                    |
+| -------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `input-coverage.integration.test.ts`                                 | Verifies OpenAPI syntax is parsed to IR                    |
+| `output-coverage.integration.test.ts`                                | Verifies IR fields are written to OpenAPI                  |
+| `__tests__/scenario-1-openapi-roundtrip.integration.test.ts`         | Scenario 1: OpenAPI ↔ IR losslessness + idempotency        |
+| `__tests__/scenario-2-zod-roundtrip.integration.test.ts`             | Scenario 2: Zod → IR → Zod round-trip                     |
+| `__tests__/scenario-3-openapi-via-zod.integration.test.ts`           | Scenario 3: OpenAPI → Zod → OpenAPI                        |
+| `__tests__/scenario-4-zod-via-openapi.integration.test.ts`           | Scenario 4: Zod → OpenAPI → Zod                            |
+| `__tests__/scenario-5-json-schema-roundtrip.integration.test.ts`     | Scenario 5: JSON Schema ↔ IR idempotence + losslessness    |
+| `__tests__/scenario-6-zod-via-json-schema.integration.test.ts`       | Scenario 6: Zod → JSON Schema → Zod cross-format          |
+| `__tests__/scenario-7-multi-cast.integration.test.ts`                | Scenario 7: Single IR → Zod + JSON Schema + OpenAPI        |
+| `__tests__/validation-parity*.integration.test.ts`                   | Functional validation-parity for transform scenarios       |
+| `__tests__/version-validation.integration.test.ts`                   | Version-specific validation rules                          |
+| `__tests__/scalar-behavior.integration.test.ts`                      | Documents Scalar validator behavior                        |
+| `__tests__/parser-field-coverage.integration.test.ts`                | Parser field extraction verification                       |
+| `__tests__/writer-field-coverage.integration.test.ts`                | Writer field output verification                           |
+| `__tests__/content-preservation.unit.test.ts`                        | Regression checks for known content-loss bugs              |
+| `__tests__/zod-format-functions.integration.test.ts`                 | Zod helper/function output coverage checks                 |
+| `utils/transform-helpers.ts`                                         | Shared helpers and fixture constants for scenario tests    |
 
 ---
 
@@ -115,6 +125,20 @@ Located in `../tests-fixtures/zod-parser/happy-path/`:
 
 - Schema declaration fixtures for Zod → IR → Zod transform testing
 
+### JSON Schema Fixtures
+
+Located in `__fixtures__/json-schema/`:
+
+- `objects.json` — Objects with required/optional properties, nesting, additionalProperties
+- `constraints.json` — Numeric, string, and array constraints
+- `string-formats.json` — email, uri, uuid, date-time, ipv4, ipv6, hostname
+- `composition.json` — anyOf, oneOf, allOf, not
+- `nullable.json` — Type arrays with null
+- `2020-12-keywords.json` — prefixItems, const, dependentRequired/Schemas, unevaluatedProperties
+- `unions.json` — Simple unions, discriminated, enums
+- `intersections.json` — allOf with $ref composition
+- `recursion.json` — Self-referential $ref
+
 ---
 
 ## Running Tests
@@ -123,7 +147,7 @@ Located in `../tests-fixtures/zod-parser/happy-path/`:
 # Run all transform tests (sample input suite)
 pnpm test:transforms
 
-# Run specific test file
+# Run specific scenario
 cd lib && pnpm vitest run --config vitest.transforms.config.ts \
-  tests-transforms/__tests__/transform-samples.integration.test.ts
+  tests-transforms/__tests__/scenario-5-json-schema-roundtrip.integration.test.ts
 ```

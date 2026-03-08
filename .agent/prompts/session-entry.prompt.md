@@ -37,35 +37,26 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Phase 4 — JSON Schema + Post-3.3 Parity
+### Priority 1: Zod Defect Quarantine Remediation
 
-> **Plan of record:** [roadmap.md](../plans/roadmap.md) (Phase 4)
+> **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
-**ACTIVE PHASE: [Phase 4 — JSON Schema + Parity Track](../plans/active/phase-4-json-schema-and-parity.md)** — open this file first.
+**ACTIVE PLAN: [Zod Defect Quarantine Remediation](../plans/active/zod-defect-quarantine-remediation.md)** — open this file first.
 
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
-#### Current Progress
+#### Background
 
-- ✅ **Component 1: Shared JSON Schema field logic** — Extracted into `writers/shared/` (json-schema-object.ts, json-schema-fields.ts, json-schema-2020-12-fields.ts). OpenAPI writer refactored to compose these. All 422 tests pass, byte-for-byte identical output confirmed.
-- ✅ **Component 2: JSON Schema Writer** — Pure JSON Schema 2020-12 writer in `writers/json-schema/`. Three public functions: `writeJsonSchema()`, `writeJsonSchemaDocument()`, `writeJsonSchemaBundle()`. 48 new tests, all quality gates GREEN.
-- ✅ **Component 3: JSON Schema Parser** — Parse Draft 07 / 2020-12 → IR in `parsers/json-schema/`. Public API: `parseJsonSchema()` (accepts `Draft07Input`), `parseJsonSchemaDocument()` (extracts `$defs` as components). 84 tests (46 core + 28 normalization + 10 public API), all quality gates GREEN. Zero `as` casts in source.
-- ✅ **Component 4: Multi-Cast Parity Rig** — Test infrastructure refactored (split + shared helpers), 9 JSON Schema fixtures, 3 new scenario test files (scenarios 5–7: JSON Schema idempotence, Zod ↔ JSON Schema cross-format, multi-cast). 69 new tests, all quality gates GREEN.
+Phase 4 (JSON Schema + Post-3.3 Parity) is **complete and archived** — all 4 components delivered, 491 tests passing, all quality gates GREEN. The transform test suite now covers 7 scenarios across OpenAPI, Zod, and JSON Schema formats.
 
-#### Component 4: Complete ✅
+However, **15 tests remain skipped** (`it.skip`) in scenarios 2 and 4, covering three Zod fixtures: `unions`, `intersections`, `recursion`. Per project rules, skipped tests for internal defects are prohibited.
 
-All four Phase 4 components are implemented. The multi-cast parity rig proves JSON Schema ↔ IR idempotence, cross-format Zod ↔ JSON Schema round-trips, and simultaneous multi-cast from a single IR.
+#### What This Session Must Do
 
-#### Next Session: Zod Defect Remediation
-
-**Plan of record:** [zod-defect-quarantine-remediation.md](../plans/active/zod-defect-quarantine-remediation.md)
-
-15 tests remain skipped in scenarios 2 and 4 for three Zod fixtures: `unions`, `intersections`, `recursion`. Diagnostic results:
-
-- **Unions** — already passes; just unskip (0 code changes)
-- **Intersections + Recursion** — fail with `$ref` name resolution mismatch: Zod parser strips `Schema` suffix for component names but `$ref` values retain the original suffix
-
-After remediation, update `tests-transforms/README.md` with scenarios 5–7.
+1. **Unskip unions** (0 code changes needed — already passes)
+2. **Fix `$ref` name resolution mismatch** for intersections + recursion: The Zod parser strips `Schema` suffix for component names but `$ref` values retain the original suffix
+3. **Unskip intersections + recursion** (10 tests)
+4. **Run quality gates** — target: 0 skipped tests, all GREEN
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
