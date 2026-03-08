@@ -168,7 +168,7 @@ pnpm test:snapshot -- -u
 
 ## Examples
 
-See `/Users/jim/code/personal/@engraph/castr/lib/examples/` for:
+See `@./lib/examples/` for:
 
 - **`openapi/`** - Official OpenAPI 3.x examples
 - **`swagger/`** - Comprehensive Swagger petstore spec

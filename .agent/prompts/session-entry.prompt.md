@@ -16,6 +16,7 @@ Notes:
 
 - TypeScript + Zod code generation uses **ts-morph** writers (no string templates).
 - OpenAPI output is produced as a typed object model (not ts-morph), then serialized.
+- JSON Schema output is produced as plain JSON Schema 2020-12 objects.
 
 ---
 
@@ -40,20 +41,47 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md) (Phase 4)
 
-**ACTIVE PHASE: [Phase 4 — JSON Schema + Parity Track](../plans/future/phase-4-json-schema-and-parity.md)** — open this file first.
+**ACTIVE PHASE: [Phase 4 — JSON Schema + Parity Track](../plans/active/phase-4-json-schema-and-parity.md)** — open this file first.
 
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
-#### Exploration Mandate
+#### Current Progress
 
-Before executing implementation, you MUST conduct a comprehensive exploration of the JSON Schema 2020-12 / Draft 07 spec and Parity requirements to determine the **desired impact** of this phase.
-Use this session to establish rigorous, measurable acceptance criteria in `.agent/acceptance-criteria/` that prove exactly what "done" looks like for JSON Schema support.
+- ✅ **Component 1: Shared JSON Schema field logic** — Extracted into `writers/shared/` (json-schema-object.ts, json-schema-fields.ts, json-schema-2020-12-fields.ts). OpenAPI writer refactored to compose these. All 422 tests pass, byte-for-byte identical output confirmed.
+- ✅ **Component 2: JSON Schema Writer** — Pure JSON Schema 2020-12 writer in `writers/json-schema/`. Three public functions: `writeJsonSchema()`, `writeJsonSchemaDocument()`, `writeJsonSchemaBundle()`. 48 new tests, all quality gates GREEN. Composes `writeAllJsonSchemaFields()` from shared module — does NOT emit OAS-only fields (xml, externalDocs, discriminator).
+- 🔲 **Component 3: JSON Schema Parser** — Next up. See detailed requirements in the active plan.
+- 🔲 **Component 4: Multi-Cast Parity Rig** — E2E multi-casting validation.
 
-#### Context (Session 3.3 Summary)
+#### What Component 3 Requires
+
+The JSON Schema Parser converts JSON Schema input (Draft 07 + 2020-12) into the canonical `CastrSchema` IR.
+
+**Draft 07 → 2020-12 normalizations:**
+
+- `definitions` → local references / `$defs`
+- `dependencies` → `dependentRequired` / `dependentSchemas`
+- Tuple `items` array → `prefixItems`
+- Boolean `exclusiveMinimum`/`exclusiveMaximum` → numeric values
+
+**Architecture:**
+
+- Parser lives in `lib/src/schema-processing/parsers/json-schema/`
+- Follow patterns established by `parsers/openapi/` and `parsers/zod/`
+- ADR-036: max 8 source files per directory
+- Pure functions, no I/O, TDD first
+
+**For the next session, you MUST:**
+
+1. Start by reviewing the active plan `phase-4-json-schema-and-parity.md` and the acceptance criteria `json-schema-and-parity-acceptance-criteria.md`.
+2. Plan and begin Component 3 (JSON Schema Parser) using TDD.
+
+#### Context
 
 Session 3.3 (Strict Zod-Layer Transform Validation) and ADR-026 strictness remediation have been successfully completed and archived. The core pipeline (OpenAPI ↔ IR ↔ Zod) is locked, deterministic, and proven lossless by the Parity Matrix tests and Directory Complexity boundaries (ADR-035, ADR-036, ADR-037).
 
 All atomic plans for 3.3a and 3.3b are stored in `.agent/plans/current/complete/`.
+
+Phase 4 introduced the shared JSON Schema field writers (Component 1) and the JSON Schema Writer (Component 2), establishing the output side. Component 3 completes the input side, enabling full JSON Schema ↔ IR ↔ any-format transform validation.
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
@@ -63,10 +91,6 @@ All atomic plans for 3.3a and 3.3b are stored in `.agent/plans/current/complete/
 4. **ADR-026** — semantic analysis, not string heuristics. See ADR-026 § "Scope Definition"
 5. **CENTRALIZE OR FAIL** — one canonical parser per data format
 6. **NO TOLERANCE PATHS** — rules are enforced everywhere or they're not rules
-
-### Priority 2: Phase 4 Implementation Plan
-
-Once the acceptance criteria are rigorously defined, move the `phase-4-json-schema-and-parity.md` to `.agent/plans/active/` to begin iterative execution.
 
 ---
 
@@ -109,18 +133,20 @@ function handleStringFormatOrPattern(node: Node): void {
 
 ## 📂 Key Files
 
-| File                                                                                | Purpose                                                   |
-| ----------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `lib/src/schema-processing/`                                                        | Schema code (parsers, writers, IR, conversion)            |
-| `lib/eslint.config.ts`                                                              | ESLint rules (ADR-026 enforcement lives here)             |
-| `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md` | ADR-026 source of truth                                   |
-| `.agent/plans/roadmap.md`                                                           | Single plan truth                                         |
-| `.agent/plans/active/`                                                              | Single next atomic plan to execute                        |
-| `.agent/plans/current/`                                                             | Queued atomic plans (linear execution steps)              |
-| `.agent/plans/current/complete/`                                                    | Completed atomic plans (staged; archive later in batches) |
-| `.agent/directives/RULES.md`                                                        | Engineering standards                                     |
-| `.agent/directives/testing-strategy.md`                                             | Testing methodology                                       |
-| `.agent/directives/DEFINITION_OF_DONE.md`                                           | Quality gate script                                       |
+| File                                                                                | Purpose                                                                  |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `lib/src/schema-processing/`                                                        | Schema code (parsers, writers, IR, conversion)                           |
+| `lib/src/schema-processing/writers/shared/`                                         | Shared JSON Schema field writers (used by OpenAPI + JSON Schema writers) |
+| `lib/src/schema-processing/writers/json-schema/`                                    | JSON Schema 2020-12 writer (Component 2)                                 |
+| `lib/src/schema-processing/parsers/`                                                | OpenAPI and Zod parsers (JSON Schema parser will go here)                |
+| `lib/eslint.config.ts`                                                              | ESLint rules (ADR-026 enforcement lives here)                            |
+| `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md` | ADR-026 source of truth                                                  |
+| `.agent/plans/roadmap.md`                                                           | Single plan truth                                                        |
+| `.agent/plans/active/`                                                              | Single next atomic plan to execute                                       |
+| `.agent/plans/current/complete/`                                                    | Completed atomic plans (staged; archive later in batches)                |
+| `.agent/directives/RULES.md`                                                        | Engineering standards                                                    |
+| `.agent/directives/testing-strategy.md`                                             | Testing methodology                                                      |
+| `.agent/directives/DEFINITION_OF_DONE.md`                                           | Quality gate script                                                      |
 
 ---
 
@@ -128,7 +154,7 @@ function handleStringFormatOrPattern(node: Node): void {
 
 | Priority | Document                                                     | Purpose                                 |
 | -------- | ------------------------------------------------------------ | --------------------------------------- |
-| 1        | [roadmap.md](../plans/roadmap.md)                            | Single plan truth (Sessions 3.3a/3.3b)  |
+| 1        | [roadmap.md](../plans/roadmap.md)                            | Single plan truth                       |
 | 2        | [requirements.md](../directives/requirements.md)             | Strict requirements + decision guidance |
 | 3        | [RULES.md](../directives/RULES.md)                           | Engineering standards                   |
 | 4        | [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md) | Quality gates                           |

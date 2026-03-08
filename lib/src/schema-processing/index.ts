@@ -6,6 +6,11 @@ export { writeOpenApi } from './writers/openapi/index.js';
 export { writeZodSchema } from './writers/zod/index.js';
 export { writeTypeScript, writeIndexFile, writeCommonFile } from './writers/typescript/index.js';
 export { writeMarkdown } from './writers/markdown/index.js';
+export {
+  writeJsonSchema,
+  writeJsonSchemaDocument,
+  writeJsonSchemaBundle,
+} from './writers/json-schema/index.js';
 
 // Conversions
 export { convertOpenApiSchemaToJsonSchema } from './conversion/json-schema/index.js';

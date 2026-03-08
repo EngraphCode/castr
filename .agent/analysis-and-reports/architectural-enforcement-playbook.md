@@ -17,13 +17,13 @@ This playbook reverses that pattern. We remove the exceptions, expose the drift,
 
 The system requires an interconnected suite of 4 tools alongside custom AI agent constraints:
 
-| Component / Tool | Responsibility | Why it's Critical |
-| :--- | :--- | :--- |
-| **Custom ESLint (`max-files-per-dir`)** | **The Driver:** Enforces physical modularization. | Prevents "God Folders". Forces logical subdivision when a directory grows past ~10 source files. |
-| **`eslint-plugin-boundaries`** | **The Director:** Enforces unidirectional data flow. | Prevents architectural cycles (e.g. Writers importing Parsers). It ensures the high-level layers of the application communicate in only one designated direction. |
-| **`dependency-cruiser`** | **The Guardrail:** Enforces strict domain dependencies and barrel file boundaries. | Once folders are split by the ESLint rule, this prevents them from importing each other's internals haphazardly. |
-| **`knip`** | **The Optimizer:** Detects dead code, unused exports, and unlisted dependencies. | Refactoring heavily leaves dead code behind. With strict barrel-file boundaries, `knip` proves internal functions are actually used. |
-| **`madge`** | **The Assessor:** Visualizes graphs and warns on circular dependencies/orphans. | Essential fallback visualization when dependency-cruiser rejects a circular dependency and you need to untangle it. |
+| Component / Tool                        | Responsibility                                                                     | Why it's Critical                                                                                                                                                 |
+| :-------------------------------------- | :--------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Custom ESLint (`max-files-per-dir`)** | **The Driver:** Enforces physical modularization.                                  | Prevents "God Folders". Forces logical subdivision when a directory grows past ~10 source files.                                                                  |
+| **`eslint-plugin-boundaries`**          | **The Director:** Enforces unidirectional data flow.                               | Prevents architectural cycles (e.g. Writers importing Parsers). It ensures the high-level layers of the application communicate in only one designated direction. |
+| **`dependency-cruiser`**                | **The Guardrail:** Enforces strict domain dependencies and barrel file boundaries. | Once folders are split by the ESLint rule, this prevents them from importing each other's internals haphazardly.                                                  |
+| **`knip`**                              | **The Optimizer:** Detects dead code, unused exports, and unlisted dependencies.   | Refactoring heavily leaves dead code behind. With strict barrel-file boundaries, `knip` proves internal functions are actually used.                              |
+| **`madge`**                             | **The Assessor:** Visualizes graphs and warns on circular dependencies/orphans.    | Essential fallback visualization when dependency-cruiser rejects a circular dependency and you need to untangle it.                                               |
 
 ---
 
@@ -84,27 +84,37 @@ export const maxFilesPerDir = createRule({
   name: 'max-files-per-dir',
   meta: {
     type: 'suggestion',
-    docs: { description: 'Enforce a maximum number of files per directory to encourage modularity.' },
-    messages: {
-      directoryComplexitySupportive: 'Directory "{{dirName}}" has grown to {{actual}} files (limit: {{max}}), indicating it might represent multiple sub-domains. Consider extracting cohesive modules into subdirectories.',
+    docs: {
+      description: 'Enforce a maximum number of files per directory to encourage modularity.',
     },
-    schema: [{
-      type: 'object',
-      properties: {
-        maxFiles: { type: 'number', minimum: 1 },
-        ignoreSuffixes: { type: 'array', items: { type: 'string' } },
+    messages: {
+      directoryComplexitySupportive:
+        'Directory "{{dirName}}" has grown to {{actual}} files (limit: {{max}}), indicating it might represent multiple sub-domains. Consider extracting cohesive modules into subdirectories.',
+    },
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          maxFiles: { type: 'number', minimum: 1 },
+          ignoreSuffixes: { type: 'array', items: { type: 'string' } },
+        },
+        additionalProperties: false,
       },
-      additionalProperties: false,
-    }],
+    ],
   },
-  defaultOptions: [{ maxFiles: 8, ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', 'index.ts'] }],
+  defaultOptions: [
+    { maxFiles: 8, ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', 'index.ts'] },
+  ],
   create(context) {
     const currentFilePath = context.filename || context.physicalFilename;
     if (!currentFilePath || currentFilePath === '<input>') return {};
 
     const dirPath = path.dirname(currentFilePath);
     const fileName = path.basename(currentFilePath);
-    const options = context.options[0] ?? { maxFiles: 8, ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', 'index.ts'] };
+    const options = context.options[0] ?? {
+      maxFiles: 8,
+      ignoreSuffixes: ['.test.ts', '.spec.ts', '.d.ts', '.map', 'index.ts'],
+    };
 
     return {
       Program(node: TSESTree.Program): void {
@@ -116,7 +126,11 @@ export const maxFilesPerDir = createRule({
           context.report({
             node,
             messageId: 'directoryComplexitySupportive',
-            data: { dirName: path.basename(dirPath), actual: sortedFiles.length, max: options.maxFiles },
+            data: {
+              dirName: path.basename(dirPath),
+              actual: sortedFiles.length,
+              max: options.maxFiles,
+            },
           });
         }
       },
@@ -144,7 +158,10 @@ export default [
       },
     },
     rules: {
-      'local/max-files-per-dir': ['error', { maxFiles: 10, ignoreSuffixes: ['.test.ts', '.spec.ts', 'index.ts'] }],
+      'local/max-files-per-dir': [
+        'error',
+        { maxFiles: 10, ignoreSuffixes: ['.test.ts', '.spec.ts', 'index.ts'] },
+      ],
     },
   },
 ];
@@ -192,7 +209,7 @@ export default [
         },
       ],
     },
-  }
+  },
 ];
 ```
 
@@ -233,12 +250,12 @@ module.exports = {
       comment: 'Circular dependencies are forbidden.',
       from: {},
       to: { circular: true },
-    }
+    },
   ],
   options: {
     tsPreCompilationDeps: true,
-    tsConfig: { fileName: 'tsconfig.json' }
-  }
+    tsConfig: { fileName: 'tsconfig.json' },
+  },
 };
 ```
 

@@ -1,5 +1,5 @@
 export { writeOpenApiSchema } from './openapi-writer.schema.js';
 export {
-  writeExtensionFields,
+  writeOasOnlyExtensions,
   type ExtendedSchemaObject,
 } from './openapi-writer.schema.extensions.js';

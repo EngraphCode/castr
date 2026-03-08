@@ -54,7 +54,7 @@ Full Transform Validation (Session 3.3) ✅ COMPLETE
 
 ---
 
-## Phase 3: Zod Transform Validation (Active)
+## Phase 3: Zod Transform Validation (COMPLETE)
 
 | Session  | Focus                                                                        | Status      |
 | -------- | ---------------------------------------------------------------------------- | ----------- |
@@ -176,23 +176,30 @@ Session 3.3 is tracked and executed as a linear sequence of smaller atomic plans
 | 9    | [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md) | ✅ Complete |
 | 10   | [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md)    | ✅ Complete |
 | 11   | [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md)                           | ✅ Complete |
-| 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./active/3.3b-04-format-parity-hostname-float.md)             | 🔄 Active   |
+| 12   | [3.3b.04 — Format Parity (hostname, float32/64)](./current/complete/3.3b-04-format-parity-hostname-float.md)   | ✅ Complete |
 | 13   | [3.3b.05 — Validation-Parity Scenarios 2–4](./current/complete/3.3b-05-validation-parity-scenarios-2-4.md)     | ✅ Complete |
 | 14   | [3.3b.06 — Expand Zod Fixtures](./current/complete/3.3b-06-expand-zod-fixtures.md)                             | ✅ Complete |
 | 15   | [3.3b.07 — Nullability Chain Normalization](./current/complete/3.3b-07-nullability-chain-normalization.md)     | ✅ Complete |
 
 ---
 
-## Phase 4: JSON Schema + Parity Track (Planned)
+## Phase 4: JSON Schema + Parity Track (Active)
 
-After Session 3.3 completes, priority shifts to JSON Schema support and post-3.3 parity work.
+Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 parity work.
 
 - JSON Schema outputs where required (Draft 2020-12 semantics, strict, deterministic)
 - JSON Schema input support (Draft 2020-12)
 - Feature-parity alignment (tracked under `.agent/research/feature-parity/*`)
 - Multi-artefact output separation where it improves strict transform validation paths (Zod schema output vs metadata outputs)
 
-Plan: [phase-4-json-schema-and-parity.md](./future/phase-4-json-schema-and-parity.md)
+**Progress:**
+
+- ✅ Component 1: Shared JSON Schema field logic extracted from OpenAPI writer into `writers/shared/`
+- ✅ Component 2: JSON Schema Writer (`writers/json-schema/`) — standalone, document, and bundled modes
+- 🔲 Component 3: JSON Schema Parser (next)
+- 🔲 Component 4: Multi-Cast Parity Rig
+
+Plan: [phase-4-json-schema-and-parity.md](./active/phase-4-json-schema-and-parity.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)
 

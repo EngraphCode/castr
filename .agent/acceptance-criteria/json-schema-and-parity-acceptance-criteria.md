@@ -46,9 +46,10 @@ The test suite MUST include explicit test fixtures that prove idempotence and co
 
 ## 3. "Done" State: Downstream SDK & MCP Integration
 
-### Oak Curriculum API Enablement (Universal Validation Bundler)
+### The "Multi-Cast" Requirement (Universal Validation Bundler & MCP)
 
-- **Universal Endpoint:** The system MUST be capable of generating the required artifacts for a `/schemas` endpoint:
+- **Simultaneous Output:** The system MUST be capable of generating multiple output formats from a _single, canonical IR instance_. This "multi-cast" approach is critical.
+- **Universal Endpoint (Oak):** The system MUST be capable of generating the required artifacts for a `/schemas` endpoint simultaneously:
   - Stringified Zod source code (e.g. `export const schema = z.object(...)`)
   - Generative JSON Schema definitions (`{ "type": "object", ... }`)
   - TypeScript interfaces
@@ -56,7 +57,10 @@ The test suite MUST include explicit test fixtures that prove idempotence and co
 
 ### MCP (Model Context Protocol) Support
 
-- **Tool Definitions:** The system MUST be able to expose JSON Schema structures suitable for MCP tool input validators (which strictly require valid JSON Schema objects).
+- **Synchronized Tool Definitions:** For MCP tool generation, the system MUST be able to output correctly mapped, tandem representations of a tool's parameters:
+  - JSON Schema (for `inputSchema` sent to the LLM).
+  - Zod (for validating the LLM's raw response at runtime).
+  - TypeScript types (for the developer writing the tool handler).
 - **Stability:** Deterministic object key ordering MUST applied to ensure that generated JSON Schema representations hash consistently across builds.
 
 ---

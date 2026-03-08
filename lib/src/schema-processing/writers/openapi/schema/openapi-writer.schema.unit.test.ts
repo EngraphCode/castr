@@ -438,7 +438,7 @@ describe('composition schemas', () => {
 
     const result = writeOpenApiSchema(schema);
 
-    expect(result.discriminator).toEqual({ propertyName: 'petType' });
+    expect(result['discriminator']).toEqual({ propertyName: 'petType' });
   });
 });
 
@@ -539,7 +539,7 @@ describe('OpenAPI extensions', () => {
 
     const result = writeOpenApiSchema(schema);
 
-    expect(result.xml).toEqual({
+    expect(result['xml']).toEqual({
       name: 'Pet',
       namespace: 'http://example.com/pet',
       prefix: 'pet',
@@ -555,7 +555,7 @@ describe('OpenAPI extensions', () => {
 
     const result = writeOpenApiSchema(schema);
 
-    expect(result.externalDocs).toEqual({
+    expect(result['externalDocs']).toEqual({
       url: 'https://example.com/docs',
       description: 'More info',
     });
