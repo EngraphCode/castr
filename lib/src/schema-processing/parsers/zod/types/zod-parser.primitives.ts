@@ -109,6 +109,10 @@ function processChainMethods(baseMethod: string, chainedMethods: ZodMethodCall[]
 
 /**
  * Handle z.literal() schema.
+ *
+ * Supports both single values (`z.literal('hello')`) and Zod 4 multi-value
+ * literal syntax (`z.literal(['red', 'green', 'blue'])`).
+ *
  * @internal
  */
 function handleLiteralSchema(
@@ -118,11 +122,16 @@ function handleLiteralSchema(
   defaultValue: unknown,
 ): CastrSchema {
   const literalValue = chainInfo?.baseArgs[0];
-  const derivedType = deriveLiteralType(literalValue);
+
+  // Zod 4 multi-value literal: z.literal(['red', 'green', 'blue'])
+  // The value is already an array of literals — spread into enum directly
+  const enumValues: unknown[] = Array.isArray(literalValue) ? literalValue : [literalValue];
+  const typeSource: unknown = Array.isArray(literalValue) ? literalValue[0] : literalValue;
+  const derivedType = deriveLiteralType(typeSource);
 
   const schema: CastrSchema = {
     type: derivedType,
-    enum: [literalValue],
+    enum: enumValues,
     metadata: createDefaultMetadata({
       required: !optionality.optional,
       nullable: literalValue === null || optionality.nullable,

@@ -59,9 +59,10 @@ describe('Zod Object Parsing', () => {
       })
     `);
 
-    expect(result?.additionalProperties).toBeUndefined(); // or whatever default behavior we map to IR (usually open or specific?)
-    // OpenAPI default is open. Zod default is strip (which acts like explicit validation of allowed keys ONLY).
-    // IR usually leaves additionalProperties undefined for default objects.
+    // Default z.object() uses "strip" semantics: safeParse() succeeds with extra keys
+    // (they are stripped from output). For validation parity, this maps to
+    // additionalProperties: true — the schema accepts additional properties.
+    expect(result?.additionalProperties).toBe(true);
   });
 
   it('should handle optional and nullable properties correctly in required list', () => {

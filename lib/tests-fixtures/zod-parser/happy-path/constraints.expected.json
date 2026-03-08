@@ -399,7 +399,8 @@
           "depth": 0
         },
         "circularReferences": []
-      }
+      },
+      "minimum": 0
     },
     "IntMax": {
       "type": "integer",
@@ -417,7 +418,8 @@
           "depth": 0
         },
         "circularReferences": []
-      }
+      },
+      "maximum": 1000
     },
     "Int32MinMax": {
       "type": "integer",
@@ -436,6 +438,7 @@
         },
         "circularReferences": []
       },
+      "maximum": 100,
       "format": "int32"
     },
     "ArrayMin": {

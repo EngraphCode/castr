@@ -30,10 +30,20 @@ import {
 
 /**
  * Extract strictness/additionalProperties from chained methods.
+ *
+ * Maps Zod strictness semantics to OpenAPI additionalProperties:
+ * - `.strict()` → `false` (reject unknown keys)
+ * - `.passthrough()` → `true` (accept and preserve unknown keys)
+ * - `.strip()` / default → `true` (accept unknown keys; strip is validation-compatible)
+ *
+ * Default `z.object()` uses "strip" semantics: `safeParse` succeeds with extra keys
+ * (they are stripped from the output). For validation parity, this maps to
+ * `additionalProperties: true` — the schema accepts additional properties.
+ *
  * @internal
  */
-function extractStrictness(chainedMethods: { name: string }[]): boolean | undefined {
-  let additionalProperties: boolean | undefined = undefined;
+function extractStrictness(chainedMethods: { name: string }[]): boolean {
+  let additionalProperties = true;
 
   for (const method of chainedMethods) {
     if (method.name === ZOD_METHOD_STRICT) {
@@ -41,7 +51,7 @@ function extractStrictness(chainedMethods: { name: string }[]): boolean | undefi
     } else if (method.name === ZOD_METHOD_PASSTHROUGH) {
       additionalProperties = true;
     } else if (method.name === ZOD_METHOD_STRIP) {
-      additionalProperties = undefined;
+      additionalProperties = true;
     }
   }
 
@@ -116,12 +126,9 @@ export function parseObjectZodFromNode(
     type: ZOD_SCHEMA_TYPE_OBJECT,
     properties: new CastrSchemaProperties(properties),
     required,
+    additionalProperties,
     metadata: createDefaultMetadata(),
   };
-
-  if (additionalProperties !== undefined) {
-    schema.additionalProperties = additionalProperties;
-  }
 
   applyMetaToSchema(schema, extractMetaFromChain(chainedMethods));
 

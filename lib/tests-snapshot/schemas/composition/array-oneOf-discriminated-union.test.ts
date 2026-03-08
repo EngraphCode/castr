@@ -65,13 +65,9 @@ test('array-oneOf-discriminated-union', async () => {
   expect(output.content).toMatchInlineSnapshot(`
     "import { z } from "zod";
     // Type Definitions
-    export type ArrayRequest =
-      | {
-          type: string;
-        }
-      | {
-          type: string;
-        }[];
+    export type ArrayRequest = {
+      type: string;
+    }[];
     // Zod Schemas
     export const ArrayRequest = z.array(
       z.xor([

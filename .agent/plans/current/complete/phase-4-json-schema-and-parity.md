@@ -67,11 +67,11 @@ Parse JSON Schema input (Draft 07 and 2020-12) into the canonical CastrSchema IR
 
 Test infrastructure refactored and expanded with 3 new scenario test files:
 
-| File | Scenario | Tests |
-| ---- | -------- | ----- |
-| `scenario-5-json-schema-roundtrip.integration.test.ts` | JSON Schema → IR → JSON Schema (idempotence + losslessness) | 36 |
-| `scenario-6-zod-via-json-schema.integration.test.ts` | Zod → IR → JSON Schema → IR → Zod (cross-format round-trip) | 9 |
-| `scenario-7-multi-cast.integration.test.ts` | Single IR → Zod + JSON Schema + OpenAPI simultaneously | 24 |
+| File                                                   | Scenario                                                    | Tests |
+| ------------------------------------------------------ | ----------------------------------------------------------- | ----- |
+| `scenario-5-json-schema-roundtrip.integration.test.ts` | JSON Schema → IR → JSON Schema (idempotence + losslessness) | 36    |
+| `scenario-6-zod-via-json-schema.integration.test.ts`   | Zod → IR → JSON Schema → IR → Zod (cross-format round-trip) | 9     |
+| `scenario-7-multi-cast.integration.test.ts`            | Single IR → Zod + JSON Schema + OpenAPI simultaneously      | 24    |
 
 **Infrastructure changes:**
 

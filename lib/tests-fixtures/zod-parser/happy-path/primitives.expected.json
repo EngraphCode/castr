@@ -73,6 +73,25 @@
         "circularReferences": []
       }
     },
+    "BigInt": {
+      "type": "integer",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "format": "bigint"
+    },
     "Int": {
       "type": "integer",
       "metadata": {

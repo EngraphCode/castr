@@ -111,7 +111,7 @@ const STRING_FORMAT_TO_ZOD: Readonly<Record<string, string>> = {
   email: 'z.email()',
   uri: 'z.url()',
   url: 'z.url()',
-  uuid: 'z.uuidv4()',
+  uuid: 'z.uuid()',
   date: 'z.iso.date()',
   'date-time': 'z.iso.datetime()',
   time: 'z.iso.time()',

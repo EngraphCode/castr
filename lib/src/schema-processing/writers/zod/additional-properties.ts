@@ -12,11 +12,62 @@ import type { CastrSchema, IRArrayItemsContext } from '../../ir/index.js';
 import type { TemplateContextOptions } from '../../context/index.js';
 
 /**
+ * Check if a schema should be treated as strict (rejecting unknown keys).
+ * @internal
+ */
+function shouldBeStrict(schema: CastrSchema, options: TemplateContextOptions | undefined): boolean {
+  return (
+    schema.additionalProperties === false ||
+    (options?.strictObjects === true && schema.additionalProperties !== true)
+  );
+}
+
+/**
+ * Check if a schema should use passthrough (accepting & preserving unknown keys).
+ *
+ * Skips passthrough for schemas with circular references because `.passthrough()`
+ * eagerly reads the object shape, triggering `ReferenceError` on recursive getter
+ * properties before initialization completes.
+ *
+ * @internal
+ */
+function shouldPassthrough(schema: CastrSchema): boolean {
+  if (schema.additionalProperties !== true && schema.additionalProperties !== undefined) {
+    return false;
+  }
+  const hasCircularRef =
+    schema.metadata?.circularReferences && schema.metadata.circularReferences.length > 0;
+  return !hasCircularRef;
+}
+
+/**
+ * Write a `.catchall(schema)` modifier for typed additional properties.
+ * @internal
+ */
+function writeCatchall(
+  additionalSchema: CastrSchema,
+  writer: CodeBlockWriter,
+  options: TemplateContextOptions | undefined,
+  writeZodSchema: (
+    context: IRArrayItemsContext,
+    options?: TemplateContextOptions,
+  ) => WriterFunction,
+): void {
+  writer.write('.catchall(');
+  const additionalContext: IRArrayItemsContext = {
+    contextType: 'arrayItems',
+    schema: additionalSchema,
+  };
+  writeZodSchema(additionalContext, options)(writer);
+  writer.write(')');
+}
+
+/**
  * Write additional properties handling for Zod objects.
  *
  * Maps OpenAPI additionalProperties to Zod modifiers:
  * - `false` or strictObjects option → `.strict()`
- * - `true` or undefined → `.passthrough()`
+ * - `true` or undefined → `.passthrough()` (unless circular reference)
  * - Schema → `.catchall(schema)`
  *
  * @param schema - CastrSchema with additionalProperties
@@ -35,23 +86,11 @@ export function writeAdditionalProperties(
     options?: TemplateContextOptions,
   ) => WriterFunction,
 ): void {
-  // Handle strict objects
-  // If additionalProperties is explicitly false, OR if strictObjects option is true and additionalProperties is not true
-  if (
-    schema.additionalProperties === false ||
-    (options?.strictObjects && schema.additionalProperties !== true)
-  ) {
+  if (shouldBeStrict(schema, options)) {
     writer.write('.strict()');
-  } else if (schema.additionalProperties === true || schema.additionalProperties === undefined) {
+  } else if (shouldPassthrough(schema)) {
     writer.write('.passthrough()');
-  } else if (schema.additionalProperties) {
-    // Schema for additional properties
-    writer.write('.catchall(');
-    const additionalContext: IRArrayItemsContext = {
-      contextType: 'arrayItems',
-      schema: schema.additionalProperties,
-    };
-    writeZodSchema(additionalContext, options)(writer);
-    writer.write(')');
+  } else if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
+    writeCatchall(schema.additionalProperties, writer, options, writeZodSchema);
   }
 }

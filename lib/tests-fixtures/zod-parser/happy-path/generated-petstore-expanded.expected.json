@@ -45,6 +45,7 @@
         }
       },
       "required": ["name"],
+      "additionalProperties": false,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -59,8 +60,88 @@
           "depth": 0
         },
         "circularReferences": []
-      },
-      "additionalProperties": false
+      }
+    },
+    "Pet": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/NewPet",
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dataType": "CastrSchemaProperties",
+            "value": {
+              "id": {
+                "type": "integer",
+                "metadata": {
+                  "required": true,
+                  "nullable": false,
+                  "zodChain": {
+                    "presence": "",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "circularReferences": []
+                },
+                "format": "int64"
+              }
+            }
+          },
+          "required": ["id"],
+          "additionalProperties": false,
+          "metadata": {
+            "required": true,
+            "nullable": false,
+            "zodChain": {
+              "presence": "",
+              "validations": [],
+              "defaults": []
+            },
+            "dependencyGraph": {
+              "references": [],
+              "referencedBy": [],
+              "depth": 0
+            },
+            "circularReferences": []
+          }
+        }
+      ],
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      }
     },
     "Error": {
       "type": "object",
@@ -107,6 +188,7 @@
         }
       },
       "required": ["code", "message"],
+      "additionalProperties": false,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -121,8 +203,7 @@
           "depth": 0
         },
         "circularReferences": []
-      },
-      "additionalProperties": false
+      }
     }
   }
 }

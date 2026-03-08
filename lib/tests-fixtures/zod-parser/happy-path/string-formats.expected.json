@@ -77,6 +77,25 @@
       },
       "format": "uuid"
     },
+    "Uuidv7": {
+      "type": "string",
+      "metadata": {
+        "required": true,
+        "nullable": false,
+        "zodChain": {
+          "presence": "",
+          "validations": [],
+          "defaults": []
+        },
+        "dependencyGraph": {
+          "references": [],
+          "referencedBy": [],
+          "depth": 0
+        },
+        "circularReferences": []
+      },
+      "format": "uuidv7"
+    },
     "Base64": {
       "type": "string",
       "metadata": {

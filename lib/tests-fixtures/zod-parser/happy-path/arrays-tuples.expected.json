@@ -690,6 +690,7 @@
           }
         },
         "required": ["id", "name"],
+        "additionalProperties": false,
         "metadata": {
           "required": true,
           "nullable": false,
@@ -704,8 +705,7 @@
             "depth": 0
           },
           "circularReferences": []
-        },
-        "additionalProperties": false
+        }
       },
       "metadata": {
         "required": true,

@@ -54,13 +54,6 @@ export const ZOD_FIXTURES: [string, string][] = [
   ['objects', `${ZOD_FIXTURES_DIR}/objects.zod4.ts`],
   ['string-formats', `${ZOD_FIXTURES_DIR}/string-formats.zod4.ts`],
   ['constraints', `${ZOD_FIXTURES_DIR}/constraints.zod4.ts`],
-];
-
-/**
- * Fixtures that expose known parser/writer defects.
- * Skipped in CI per plan 3.3b-06 to separate fixture coverage from parser fixes.
- */
-export const ZOD_DEFECT_FIXTURES: [string, string][] = [
   ['unions', `${ZOD_FIXTURES_DIR}/unions.zod4.ts`],
   ['intersections', `${ZOD_FIXTURES_DIR}/intersections.zod4.ts`],
   ['recursion', `${ZOD_FIXTURES_DIR}/recursion.zod4.ts`],

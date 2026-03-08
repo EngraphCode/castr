@@ -208,6 +208,7 @@
         }
       },
       "required": ["id", "email", "createdAt"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,

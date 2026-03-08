@@ -63,6 +63,7 @@
         }
       },
       "required": ["name", "age", "active"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -123,6 +124,7 @@
         }
       },
       "required": ["id", "value"],
+      "additionalProperties": false,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -137,8 +139,7 @@
           "depth": 0
         },
         "circularReferences": []
-      },
-      "additionalProperties": false
+      }
     },
     "PassthroughObject": {
       "type": "object",
@@ -166,6 +167,7 @@
         }
       },
       "required": ["known"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -180,8 +182,7 @@
           "depth": 0
         },
         "circularReferences": []
-      },
-      "additionalProperties": true
+      }
     },
     "ObjectWithOptional": {
       "type": "object",
@@ -263,6 +264,7 @@
         }
       },
       "required": ["required", "nullable"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -329,6 +331,7 @@
               }
             },
             "required": ["name", "email"],
+            "additionalProperties": true,
             "metadata": {
               "required": true,
               "nullable": false,
@@ -390,6 +393,7 @@
               }
             },
             "required": ["createdAt", "version"],
+            "additionalProperties": true,
             "metadata": {
               "required": true,
               "nullable": false,
@@ -409,6 +413,7 @@
         }
       },
       "required": ["user", "metadata"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -528,6 +533,7 @@
         }
       },
       "required": ["id", "email", "website", "createdAt", "count"],
+      "additionalProperties": false,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -542,8 +548,7 @@
           "depth": 0
         },
         "circularReferences": []
-      },
-      "additionalProperties": false
+      }
     }
   }
 }

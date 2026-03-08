@@ -53,7 +53,7 @@ test('validations', () => {
       strWithMin: z.string().min(3).optional(),
       strWithPattern: z.string().regex(/^[a-z]+$/).optional(),
       url: z.url().optional(),
-      uuid: z.uuidv4().optional(),
+      uuid: z.uuid().optional(),
     }).passthrough()"
   `,
   );

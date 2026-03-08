@@ -55,7 +55,7 @@ export const endpoints = [
     ],
     response: z
       .object({
-        id: z.uuidv4().optional(),
+        id: z.uuid().optional(),
       })
       .passthrough(),
     errors: [],
@@ -63,7 +63,7 @@ export const endpoints = [
       201: {
         schema: z
           .object({
-            id: z.uuidv4().optional(),
+            id: z.uuid().optional(),
           })
           .passthrough(),
         description: "User created successfully",

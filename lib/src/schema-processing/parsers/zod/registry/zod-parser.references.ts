@@ -14,6 +14,7 @@ import type { ZodSchemaParser } from '../zod-parser.types.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
 import { ZOD_METHOD_LAZY } from '../zod-constants.js';
+import { deriveComponentName } from './schema-name-registry.js';
 
 const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/' as const;
 
@@ -31,8 +32,9 @@ function handleIdentifier(node: Identifier): CastrSchema | undefined {
     return undefined;
   }
 
+  const componentName = deriveComponentName(symbolName);
   return {
-    $ref: `${COMPONENT_SCHEMA_REF_PREFIX}${symbolName}`,
+    $ref: `${COMPONENT_SCHEMA_REF_PREFIX}${componentName}`,
     metadata: createDefaultMetadata(),
   };
 }

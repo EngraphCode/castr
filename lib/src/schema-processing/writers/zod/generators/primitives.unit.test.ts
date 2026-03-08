@@ -3,7 +3,7 @@
  *
  * Tests the generation of:
  * - Integer formats: z.int(), z.int32(), z.int64()
- * - String formats: z.email(), z.url(), z.uuidv4(), z.iso.*, z.ipv4(), z.ipv6()
+ * - String formats: z.email(), z.url(), z.uuid(), z.iso.*, z.ipv4(), z.ipv6()
  * - filterRedundantValidations()
  *
  * @module writers/zod/primitives.unit.test
@@ -101,9 +101,9 @@ describe('ZodPrimitivesWriter', () => {
       expect(generatePrimitive(schema)).toBe('z.url()');
     });
 
-    it('generates z.uuidv4() for string format: uuid', () => {
+    it('generates z.uuid() for string format: uuid', () => {
       const schema = createMockSchema({ type: 'string', format: 'uuid' });
-      expect(generatePrimitive(schema)).toBe('z.uuidv4()');
+      expect(generatePrimitive(schema)).toBe('z.uuid()');
     });
 
     it('generates z.iso.date() for string format: date', () => {

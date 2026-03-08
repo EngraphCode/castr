@@ -109,15 +109,123 @@ function writeIntersection(schemas: CastrSchema[], writer: CodeBlockWriter): voi
 }
 
 /**
+ * Resolve a $ref to its TypeScript type name.
+ * @internal
+ */
+function resolveRefTypeString(schema: CastrSchema): string | undefined {
+  if (!schema.$ref) {
+    return undefined;
+  }
+  const { componentName } = parseComponentRef(schema.$ref);
+  return componentName;
+}
+
+/**
+ * Resolve a composition schema (allOf/oneOf/anyOf) to its TypeScript type string.
+ * @internal
+ */
+function resolveCompositionTypeString(schema: CastrSchema): string | undefined {
+  if (schema.allOf) {
+    return schema.allOf.map((s) => resolveSchemaTypeString(s)).join(' & ');
+  }
+  const unionMembers = schema.oneOf ?? schema.anyOf;
+  if (unionMembers) {
+    return unionMembers.map((s) => resolveSchemaTypeString(s)).join(' | ');
+  }
+  return undefined;
+}
+
+/**
+ * Resolve a primitive or structured type to its TypeScript type string.
+ * @internal
+ */
+function resolvePrimitiveTypeString(schema: CastrSchema): string {
+  switch (schema.type) {
+    case 'string':
+      return 'string';
+    case 'number':
+    case 'integer':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    case 'null':
+      return 'null';
+    case 'array':
+      return resolveArrayTypeString(schema);
+    case 'object':
+      return resolveObjectTypeString(schema);
+    default:
+      return 'unknown';
+  }
+}
+
+/**
+ * Resolve an object type to a string that captures its shape.
+ * Includes sorted property keys so different object shapes produce distinct strings.
+ * @internal
+ */
+function resolveObjectTypeString(schema: CastrSchema): string {
+  if (!schema.properties) {
+    return 'object';
+  }
+  const keys = [...schema.properties.keys()].sort((a, b) => a.localeCompare(b));
+  return `{${keys.join(',')}}`;
+}
+
+/**
+ * Resolve an array type to its TypeScript type string.
+ * @internal
+ */
+function resolveArrayTypeString(schema: CastrSchema): string {
+  if (schema.items && !Array.isArray(schema.items)) {
+    return `${resolveSchemaTypeString(schema.items)}[]`;
+  }
+  return 'unknown[]';
+}
+
+/**
+ * Resolve a schema to its TypeScript type string, for deduplication purposes.
+ *
+ * Lightweight version of `writeTypeBody` that produces a string instead of
+ * writing to a CodeBlockWriter. Used to detect and remove duplicate types
+ * in unions (e.g., `number | number | number` → `number`).
+ *
+ * @internal
+ */
+function resolveSchemaTypeString(schema: CastrSchema): string {
+  return (
+    resolveRefTypeString(schema) ??
+    resolveCompositionTypeString(schema) ??
+    resolvePrimitiveTypeString(schema)
+  );
+}
+
+/**
  * Write union type for oneOf/anyOf composition.
  * oneOf/anyOf: [A, B] → A | B
+ *
+ * Deduplicates type strings to avoid `number | number | number` from
+ * numeric literal unions. Each unique TypeScript type appears only once.
  */
 function writeUnion(schemas: CastrSchema[], writer: CodeBlockWriter): void {
   if (schemas.length === 0) {
     writer.write('unknown');
     return;
   }
-  schemas.forEach((s, i) => {
+
+  // Deduplicate: keep only the first schema for each unique type string
+  const seen = new Set<string>();
+  const uniqueSchemas: CastrSchema[] = [];
+
+  for (const s of schemas) {
+    const typeStr = resolveSchemaTypeString(s);
+    if (!seen.has(typeStr)) {
+      seen.add(typeStr);
+      uniqueSchemas.push(s);
+    }
+  }
+
+  uniqueSchemas.forEach((s, i) => {
     if (i > 0) {
       writer.write(' | ');
     }

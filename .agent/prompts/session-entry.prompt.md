@@ -37,26 +37,25 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Zod Defect Quarantine Remediation
+### Priority 1: Decide Next Focus Area
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
-**ACTIVE PLAN: [Zod Defect Quarantine Remediation](../plans/active/zod-defect-quarantine-remediation.md)** — open this file first.
+**COMPLETED PLAN: [Zod Defect Quarantine Remediation](../plans/active/zod-defect-quarantine-remediation.md)** — all 10 failing tests fixed, full quality gate GREEN (1268 unit, 152 snapshot, 515 transform tests pass).
 
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
 #### Background
 
-Phase 4 (JSON Schema + Post-3.3 Parity) is **complete and archived** — all 4 components delivered, 491 tests passing, all quality gates GREEN. The transform test suite now covers 7 scenarios across OpenAPI, Zod, and JSON Schema formats.
+All Zod transform test failures are resolved. Five code defects were fixed (default object `additionalProperties`, union type dedup, numeric format constraints, UUID `z.uuid()`, recursive `.passthrough()` guard) and four test payloads were corrected. The remediation plan should be **archived** and a successor plan promoted.
 
-However, **15 tests remain skipped** (`it.skip`) in scenarios 2 and 4, covering three Zod fixtures: `unions`, `intersections`, `recursion`. Per project rules, skipped tests for internal defects are prohibited.
+**Known limitations** are documented in [zod-round-trip-limitations.md](../plans/active/zod-round-trip-limitations.md). The most significant is **optional/nullable recursive property loss** (medium-high severity) — these properties are dropped during round-trip because the IR's circular reference tracking doesn't preserve wrapper semantics (optional, nullable, etc.).
 
-#### What This Session Must Do
+#### What This Session Should Do
 
-1. **Unskip unions** (0 code changes needed — already passes)
-2. **Fix `$ref` name resolution mismatch** for intersections + recursion: The Zod parser strips `Schema` suffix for component names but `$ref` values retain the original suffix
-3. **Unskip intersections + recursion** (10 tests)
-4. **Run quality gates** — target: 0 skipped tests, all GREEN
+1. Archive the completed remediation plan
+2. Read the [limitations document](../plans/active/zod-round-trip-limitations.md) to decide which (if any) limitations to address
+3. Promote or create a successor plan based on the roadmap
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
@@ -115,6 +114,7 @@ function handleStringFormatOrPattern(node: Node): void {
 | `lib/src/schema-processing/writers/json-schema/`                                    | JSON Schema 2020-12 writer (Component 2)                                 |
 | `lib/src/schema-processing/parsers/json-schema/`                                    | JSON Schema parser: Draft 07 / 2020-12 → IR (Component 3)                |
 | `lib/src/schema-processing/parsers/`                                                | OpenAPI, Zod, and JSON Schema parsers                                    |
+| `lib/src/rendering/`                                                                | Zod code generation (writer) — **focus area for current defects**        |
 | `lib/eslint.config.ts`                                                              | ESLint rules (ADR-026 enforcement lives here)                            |
 | `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md` | ADR-026 source of truth                                                  |
 | `.agent/plans/roadmap.md`                                                           | Single plan truth                                                        |

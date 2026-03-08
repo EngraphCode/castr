@@ -27,7 +27,7 @@
           "subcategories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CategorySchema",
+              "$ref": "#/components/schemas/Category",
               "metadata": {
                 "required": true,
                 "nullable": false,
@@ -63,6 +63,7 @@
         }
       },
       "required": ["name", "subcategories"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -125,7 +126,7 @@
           "posts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PostSchema",
+              "$ref": "#/components/schemas/Post",
               "metadata": {
                 "required": true,
                 "nullable": false,
@@ -161,6 +162,7 @@
         }
       },
       "required": ["id", "email", "posts"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -238,7 +240,7 @@
             }
           },
           "author": {
-            "$ref": "#/components/schemas/UserSchema",
+            "$ref": "#/components/schemas/User",
             "metadata": {
               "required": true,
               "nullable": false,
@@ -258,6 +260,7 @@
         }
       },
       "required": ["id", "title", "content", "author"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -300,6 +303,7 @@
         }
       },
       "required": ["value"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,
@@ -342,6 +346,7 @@
         }
       },
       "required": ["data"],
+      "additionalProperties": true,
       "metadata": {
         "required": true,
         "nullable": false,

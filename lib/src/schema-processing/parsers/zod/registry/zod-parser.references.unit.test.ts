@@ -40,9 +40,10 @@ describe('Zod Reference Parsing', () => {
       if (resultNode) {
         // We need core dispatcher to delegate to reference parser for Identifier
         const result = parseZodSchemaFromNode(resultNode, resolver);
-        // Parser uses the identifier name directly for the $ref
+        // Parser must use the derived component name (suffix-stripped) for the $ref
+        // to match how components are registered in the IR
         expect(result).toMatchObject({
-          $ref: '#/components/schemas/MySchema',
+          $ref: '#/components/schemas/My',
         });
       }
     });
@@ -74,9 +75,9 @@ describe('Zod Reference Parsing', () => {
 
       if (node) {
         const result = parseZodSchemaFromNode(node, resolver);
-        // Parser uses the identifier name directly
+        // Parser must use the derived component name (suffix-stripped) for the $ref
         expect(result).toMatchObject({
-          $ref: '#/components/schemas/UserSchema',
+          $ref: '#/components/schemas/User',
         });
       }
     });

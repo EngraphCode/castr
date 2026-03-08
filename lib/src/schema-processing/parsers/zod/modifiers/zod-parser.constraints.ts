@@ -241,6 +241,23 @@ export function processOptionalityMethod(
 }
 
 /**
+ * Numeric base methods that accept number constraints (min, max, multipleOf, etc.).
+ *
+ * Includes both `z.number()` and Zod 4 format functions that produce integer/number types.
+ * These all support `.min()`, `.max()`, `.gte()`, `.gt()`, `.lt()`, `.lte()`, `.multipleOf()`.
+ *
+ * @internal
+ */
+const NUMERIC_BASE_METHODS = new Set([
+  ZOD_BASE_METHOD_NUMBER,
+  'int',
+  'int32',
+  'int64',
+  'float32',
+  'float64',
+]);
+
+/**
  * Handle type-based constraint methods.
  * @internal
  */
@@ -252,7 +269,7 @@ export function processTypeConstraints(
   if (baseMethod === ZOD_BASE_METHOD_STRING) {
     processStringMethod(method, constraints);
   }
-  if (baseMethod === ZOD_BASE_METHOD_NUMBER) {
+  if (NUMERIC_BASE_METHODS.has(baseMethod)) {
     processNumberMethod(method, constraints);
   }
 }

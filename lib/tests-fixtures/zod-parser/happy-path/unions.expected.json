@@ -264,6 +264,7 @@
             }
           },
           "required": ["type", "cardNumber"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -325,6 +326,7 @@
             }
           },
           "required": ["type", "accountNumber"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -390,6 +392,7 @@
             }
           },
           "required": ["type", "data"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -451,6 +454,7 @@
             }
           },
           "required": ["type", "message"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -534,6 +538,7 @@
             }
           },
           "required": ["kind", "valueA"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -595,6 +600,7 @@
             }
           },
           "required": ["kind", "valueB"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -656,6 +662,7 @@
             }
           },
           "required": ["kind", "valueC"],
+          "additionalProperties": true,
           "metadata": {
             "required": true,
             "nullable": false,
@@ -694,7 +701,7 @@
     },
     "LiteralArray": {
       "type": "string",
-      "enum": [["red", "green", "blue"]],
+      "enum": ["red", "green", "blue"],
       "metadata": {
         "required": true,
         "nullable": false,
@@ -712,8 +719,8 @@
       }
     },
     "NumericLiteral": {
-      "type": "string",
-      "enum": [[200, 201, 204, 404, 500]],
+      "type": "number",
+      "enum": [200, 201, 204, 404, 500],
       "metadata": {
         "required": true,
         "nullable": false,
