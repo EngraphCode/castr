@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "NumericConstraints": {
+      "type": "object",
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "rating": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 5 },
+        "step": { "type": "number", "multipleOf": 0.5 },
+        "count": { "type": "integer", "minimum": 1, "maximum": 1000 }
+      },
+      "required": ["score", "rating", "step", "count"],
+      "additionalProperties": false
+    },
+    "StringConstraints": {
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "minLength": 3, "maxLength": 50 },
+        "code": { "type": "string", "pattern": "^[A-Z]{3}-[0-9]{4}$" },
+        "bio": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["username", "code"],
+      "additionalProperties": false
+    },
+    "ArrayConstraints": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "uniqueIds": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "uniqueItems": true
+        }
+      },
+      "required": ["tags", "uniqueIds"],
+      "additionalProperties": false
+    }
+  }
+}

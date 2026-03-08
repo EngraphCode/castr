@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "SimpleObject": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "age": { "type": "integer" }
+      },
+      "required": ["name", "age"],
+      "additionalProperties": false
+    },
+    "ObjectWithOptionals": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "label": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["id"],
+      "additionalProperties": false
+    },
+    "NestedObject": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "zip": { "type": "string" }
+          },
+          "required": ["street", "city"],
+          "additionalProperties": false
+        },
+        "active": { "type": "boolean" }
+      },
+      "required": ["address", "active"],
+      "additionalProperties": false
+    },
+    "EmptyObject": {
+      "type": "object",
+      "additionalProperties": false
+    }
+  }
+}

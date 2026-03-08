@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "SimpleUnion": {
+      "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }]
+    },
+    "DiscriminatedPayment": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "card" },
+            "cardNumber": { "type": "string" }
+          },
+          "required": ["type", "cardNumber"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "bank" },
+            "accountNumber": { "type": "string" }
+          },
+          "required": ["type", "accountNumber"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "EnumColor": {
+      "type": "string",
+      "enum": ["red", "green", "blue"]
+    }
+  }
+}

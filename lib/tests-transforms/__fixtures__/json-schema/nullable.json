@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "NullableString": {
+      "type": ["string", "null"]
+    },
+    "NullableNumber": {
+      "type": ["number", "null"]
+    },
+    "ObjectWithNullableFields": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "nickname": { "type": ["string", "null"] },
+        "score": { "type": ["integer", "null"] }
+      },
+      "required": ["name", "nickname"],
+      "additionalProperties": false
+    }
+  }
+}

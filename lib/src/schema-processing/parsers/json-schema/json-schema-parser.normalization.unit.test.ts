@@ -273,4 +273,176 @@ describe('normalizeDraft07', () => {
       expect(input).toEqual(originalInput);
     });
   });
+
+  describe('$ref rewriting in nested schemas', () => {
+    it('rewrites $ref inside $defs values', () => {
+      const input = {
+        type: 'object',
+        definitions: {
+          Container: {
+            type: 'object',
+            properties: {
+              child: { $ref: '#/definitions/Child' },
+            },
+          },
+          Child: { type: 'string' },
+        },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      const container = result.$defs?.['Container'] as JsonSchema2020 | undefined;
+      const child = container?.properties?.['child'] as JsonSchema2020 | undefined;
+      expect(child?.$ref).toBe('#/$defs/Child');
+    });
+
+    it('rewrites $ref inside allOf members', () => {
+      const member = {
+        type: 'object',
+        properties: {
+          ref: { $ref: '#/definitions/Shared' },
+        },
+      } as Draft07Input;
+      const input = { allOf: [member] } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      const firstMember = (result.allOf as JsonSchema2020[] | undefined)?.[0];
+      const ref = firstMember?.properties?.['ref'] as JsonSchema2020 | undefined;
+      expect(ref?.$ref).toBe('#/$defs/Shared');
+    });
+
+    it('rewrites $ref inside dependentSchemas', () => {
+      const input = {
+        type: 'object',
+        dependencies: {
+          email: {
+            type: 'object',
+            properties: {
+              verification: { $ref: '#/definitions/VerifyEmail' },
+            },
+          },
+        },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      const emailSchema = result.dependentSchemas?.['email'] as JsonSchema2020 | undefined;
+      const verification = emailSchema?.properties?.['verification'] as JsonSchema2020 | undefined;
+      expect(verification?.$ref).toBe('#/$defs/VerifyEmail');
+    });
+
+    it('rewrites $ref inside additionalProperties schema', () => {
+      const input = {
+        type: 'object',
+        additionalProperties: { $ref: '#/definitions/Extra' },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      const ap = result.additionalProperties as JsonSchema2020 | undefined;
+      expect(ap?.$ref).toBe('#/$defs/Extra');
+    });
+
+    it('rewrites $ref inside not schema', () => {
+      const input = {
+        not: { $ref: '#/definitions/Forbidden' },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      expect(result.not?.$ref).toBe('#/$defs/Forbidden');
+    });
+
+    it('preserves non-definitions $ref paths unchanged', () => {
+      const input = {
+        type: 'object',
+        properties: {
+          external: { $ref: 'https://example.com/schema.json' },
+          local: { $ref: '#/$defs/AlreadyCorrect' },
+        },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      const external = result.properties?.['external'] as JsonSchema2020 | undefined;
+      expect(external?.$ref).toBe('https://example.com/schema.json');
+      const local = result.properties?.['local'] as JsonSchema2020 | undefined;
+      expect(local?.$ref).toBe('#/$defs/AlreadyCorrect');
+    });
+  });
+
+  describe('definitions + $defs coexistence', () => {
+    it('merges definitions into existing $defs', () => {
+      const input = {
+        type: 'object',
+        $defs: {
+          Existing: { type: 'string' },
+        },
+        definitions: {
+          FromDraft07: { type: 'number' },
+        },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      expect(result.$defs?.['Existing']).toEqual({ type: 'string' });
+      expect(result.$defs?.['FromDraft07']).toEqual({ type: 'number' });
+      expect(result).not.toHaveProperty('definitions');
+    });
+
+    it('definitions override $defs on name collision', () => {
+      const input = {
+        type: 'object',
+        $defs: {
+          Shared: { type: 'string' },
+        },
+        definitions: {
+          Shared: { type: 'number' },
+        },
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      expect(result.$defs?.['Shared']).toEqual({ type: 'number' });
+    });
+  });
+
+  describe('boolean exclusive bounds edge cases', () => {
+    it('ignores boolean exclusiveMinimum when no minimum is present', () => {
+      const input = {
+        type: 'number',
+        exclusiveMinimum: true,
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      // No minimum to promote — exclusive flag is inert
+      expect(result.exclusiveMinimum).toBeUndefined();
+      expect(result.minimum).toBeUndefined();
+    });
+
+    it('ignores boolean exclusiveMaximum when no maximum is present', () => {
+      const input = {
+        type: 'number',
+        exclusiveMaximum: true,
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      expect(result.exclusiveMaximum).toBeUndefined();
+      expect(result.maximum).toBeUndefined();
+    });
+
+    it('preserves numeric exclusiveMaximum (already 2020-12)', () => {
+      const input = {
+        type: 'number',
+        exclusiveMaximum: 100,
+      } as Draft07Input;
+
+      const result = normalizeDraft07(input);
+
+      expect(result.exclusiveMaximum).toBe(100);
+    });
+  });
 });

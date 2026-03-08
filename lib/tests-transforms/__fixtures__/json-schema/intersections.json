@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" }
+      },
+      "required": ["id"]
+    },
+    "WithName": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "Combined": {
+      "allOf": [{ "$ref": "#/$defs/Base" }, { "$ref": "#/$defs/WithName" }]
+    },
+    "WithTimestamps": {
+      "type": "object",
+      "properties": {
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["createdAt", "updatedAt"]
+    },
+    "FullEntity": {
+      "allOf": [
+        { "$ref": "#/$defs/Base" },
+        { "$ref": "#/$defs/WithName" },
+        { "$ref": "#/$defs/WithTimestamps" }
+      ]
+    }
+  }
+}

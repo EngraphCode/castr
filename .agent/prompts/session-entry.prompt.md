@@ -48,36 +48,24 @@ Notes:
 #### Current Progress
 
 - ✅ **Component 1: Shared JSON Schema field logic** — Extracted into `writers/shared/` (json-schema-object.ts, json-schema-fields.ts, json-schema-2020-12-fields.ts). OpenAPI writer refactored to compose these. All 422 tests pass, byte-for-byte identical output confirmed.
-- ✅ **Component 2: JSON Schema Writer** — Pure JSON Schema 2020-12 writer in `writers/json-schema/`. Three public functions: `writeJsonSchema()`, `writeJsonSchemaDocument()`, `writeJsonSchemaBundle()`. 48 new tests, all quality gates GREEN. Composes `writeAllJsonSchemaFields()` from shared module — does NOT emit OAS-only fields (xml, externalDocs, discriminator).
-- 🔄 **Component 3: JSON Schema Parser** — Source files broken (won't build/lint), tests exist. See design guidance below.
-- 🔲 **Component 4: Multi-Cast Parity Rig** — E2E multi-casting validation.
+- ✅ **Component 2: JSON Schema Writer** — Pure JSON Schema 2020-12 writer in `writers/json-schema/`. Three public functions: `writeJsonSchema()`, `writeJsonSchemaDocument()`, `writeJsonSchemaBundle()`. 48 new tests, all quality gates GREEN.
+- ✅ **Component 3: JSON Schema Parser** — Parse Draft 07 / 2020-12 → IR in `parsers/json-schema/`. Public API: `parseJsonSchema()` (accepts `Draft07Input`), `parseJsonSchemaDocument()` (extracts `$defs` as components). 84 tests (46 core + 28 normalization + 10 public API), all quality gates GREEN. Zero `as` casts in source.
+- ✅ **Component 4: Multi-Cast Parity Rig** — Test infrastructure refactored (split + shared helpers), 9 JSON Schema fixtures, 3 new scenario test files (scenarios 5–7: JSON Schema idempotence, Zod ↔ JSON Schema cross-format, multi-cast). 69 new tests, all quality gates GREEN.
 
-#### Component 3: What the Next Session Must Do
+#### Component 4: Complete ✅
 
-**State on disk:** `parsers/json-schema/` has 6 untracked files. Source files (4) won't build or lint — they were rewritten multiple times fighting the type system. Test files (2) are comprehensive (481-line core test, 278-line normalization test). **Delete source, keep tests, rewrite source from scratch.**
+All four Phase 4 components are implemented. The multi-cast parity rig proves JSON Schema ↔ IR idempotence, cross-format Zod ↔ JSON Schema round-trips, and simultaneous multi-cast from a single IR.
 
-**Why the source is broken:** The previous session used `Record<string, unknown>` / index signatures as a performative type and then tried to work around `exactOptionalPropertyTypes`, `consistent-type-assertions: never`, and the `Record<string, unknown>` ban with escape hatches (`as Partial<>`, `as Record<string, unknown>`). Every workaround introduced a new violation. The type system was teaching us the design was wrong; we weren't listening.
+#### Next Session: Zod Defect Remediation
 
-**Correct design (documented in the active plan):**
+**Plan of record:** [zod-defect-quarantine-remediation.md](../plans/active/zod-defect-quarantine-remediation.md)
 
-1. **`JsonSchema2020` extends `SchemaObject` from `openapi3-ts/oas31`** with 2020-12 keywords (`$defs`, `unevaluatedProperties`, `dependentSchemas`, `dependentRequired`, `unevaluatedItems`, `minContains`, `maxContains`). This is the domain expert library type for JSON Schema 2020-12.
-2. **`Draft07Input` extends `JsonSchema2020`** with Draft 07 keys (`definitions`, `dependencies`) typed directly. These are stripped at normalization exit via destructuring.
-3. **Normalization is pure functional** — each step returns a new object via destructuring rest. Example: `const { items, ...rest } = input; return { ...rest, prefixItems: items }`. Do NOT mutate and assign `undefined` (`exactOptionalPropertyTypes` forbids it, and immutability is the right pattern).
-4. **`$ref` rewriting uses `lodash-es` `split`/`join`** — same pattern as `shared/ref-resolution.ts`.
-5. **Core parser uses typed property access** — `input.type`, `input.properties`, `input.format`. No bracket notation. Use `isReferenceObject()` from `openapi3-ts/oas31` for narrowing. Zero `as` casts.
+15 tests remain skipped in scenarios 2 and 4 for three Zod fixtures: `unions`, `intersections`, `recursion`. Diagnostic results:
 
-**For the next session, you MUST:**
+- **Unions** — already passes; just unskip (0 code changes)
+- **Intersections + Recursion** — fail with `$ref` name resolution mismatch: Zod parser strips `Schema` suffix for component names but `$ref` values retain the original suffix
 
-1. Open the active plan `phase-4-json-schema-and-parity.md` — the "Critical design constraints" section has the architectural guidance.
-2. Delete the 4 source files, keep the 2 test files.
-3. Rewrite source files following the design above, adapting tests to match final types.
-4. Run quality gates after each file is complete — don't batch changes.
-
-#### Context
-
-Session 3.3 (Strict Zod-Layer Transform Validation) and ADR-026 strictness remediation have been successfully completed and archived. The core pipeline (OpenAPI ↔ IR ↔ Zod) is locked, deterministic, and proven lossless by the Parity Matrix tests and Directory Complexity boundaries (ADR-035, ADR-036, ADR-037).
-
-Phase 4 introduced the shared JSON Schema field writers (Component 1) and the JSON Schema Writer (Component 2), establishing the output side. Component 3 completes the input side, enabling full JSON Schema ↔ IR ↔ any-format transform validation.
+After remediation, update `tests-transforms/README.md` with scenarios 5–7.
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
@@ -134,7 +122,8 @@ function handleStringFormatOrPattern(node: Node): void {
 | `lib/src/schema-processing/`                                                        | Schema code (parsers, writers, IR, conversion)                           |
 | `lib/src/schema-processing/writers/shared/`                                         | Shared JSON Schema field writers (used by OpenAPI + JSON Schema writers) |
 | `lib/src/schema-processing/writers/json-schema/`                                    | JSON Schema 2020-12 writer (Component 2)                                 |
-| `lib/src/schema-processing/parsers/`                                                | OpenAPI and Zod parsers (JSON Schema parser will go here)                |
+| `lib/src/schema-processing/parsers/json-schema/`                                    | JSON Schema parser: Draft 07 / 2020-12 → IR (Component 3)                |
+| `lib/src/schema-processing/parsers/`                                                | OpenAPI, Zod, and JSON Schema parsers                                    |
 | `lib/eslint.config.ts`                                                              | ESLint rules (ADR-026 enforcement lives here)                            |
 | `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md` | ADR-026 source of truth                                                  |
 | `.agent/plans/roadmap.md`                                                           | Single plan truth                                                        |

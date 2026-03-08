@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "ContactInfo": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "website": { "type": "string", "format": "uri" },
+        "userId": { "type": "string", "format": "uuid" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "userId"],
+      "additionalProperties": false
+    },
+    "NetworkInfo": {
+      "type": "object",
+      "properties": {
+        "ipv4": { "type": "string", "format": "ipv4" },
+        "ipv6": { "type": "string", "format": "ipv6" },
+        "hostname": { "type": "string", "format": "hostname" }
+      },
+      "required": ["ipv4", "hostname"],
+      "additionalProperties": false
+    }
+  }
+}

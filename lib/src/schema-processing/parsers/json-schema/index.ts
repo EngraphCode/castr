@@ -17,12 +17,14 @@
 export type { JsonSchema2020 } from './json-schema-parser.core.js';
 export { parseJsonSchemaObject } from './json-schema-parser.core.js';
 export { normalizeDraft07 } from './json-schema-parser.normalization.js';
+export type { Draft07Input } from './json-schema-parser.normalization.js';
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
 import { normalizeDraft07 } from './json-schema-parser.normalization.js';
+import type { Draft07Input } from './json-schema-parser.normalization.js';
 
 /**
  * Parse a JSON Schema (Draft 07 or 2020-12) into CastrSchema IR.
@@ -33,7 +35,7 @@ import { normalizeDraft07 } from './json-schema-parser.normalization.js';
  * @returns CastrSchema IR node
  * @public
  */
-export function parseJsonSchema(input: JsonSchema2020): CastrSchema {
+export function parseJsonSchema(input: Draft07Input): CastrSchema {
   const normalized = normalizeDraft07(input);
   return parseJsonSchemaObject(normalized);
 }
@@ -45,7 +47,7 @@ export function parseJsonSchema(input: JsonSchema2020): CastrSchema {
  * @returns Array of IR schema components
  * @public
  */
-export function parseJsonSchemaDocument(input: JsonSchema2020): CastrSchemaComponent[] {
+export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
   const normalized = normalizeDraft07(input);
   return extractDefsAsComponents(normalized);
 }

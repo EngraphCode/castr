@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "TupleSchema": {
+      "type": "array",
+      "prefixItems": [{ "type": "string" }, { "type": "integer" }, { "type": "boolean" }]
+    },
+    "ConstValue": {
+      "const": "fixed-value"
+    },
+    "DependentRequiredSchema": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "creditCard": { "type": "string" },
+        "billingAddress": { "type": "string" }
+      },
+      "dependentRequired": {
+        "creditCard": ["billingAddress"]
+      }
+    },
+    "DependentSchemasExample": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" }
+      },
+      "dependentSchemas": {
+        "role": {
+          "properties": {
+            "department": { "type": "string" }
+          },
+          "required": ["department"]
+        }
+      }
+    },
+    "StrictObject": {
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

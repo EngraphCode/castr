@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "AnyOfShape": {
+      "anyOf": [{ "type": "string" }, { "type": "number" }]
+    },
+    "OneOfShape": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "type": "string", "const": "circle" },
+            "radius": { "type": "number" }
+          },
+          "required": ["kind", "radius"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "type": "string", "const": "square" },
+            "side": { "type": "number" }
+          },
+          "required": ["kind", "side"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "AllOfMerge": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": { "type": "integer" }
+          },
+          "required": ["id"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" }
+          },
+          "required": ["name"]
+        }
+      ]
+    },
+    "NotString": {
+      "not": { "type": "string" }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Plan (Active): Phase 4 — JSON Schema + Post‑3.3 Parity
 
-**Status:** 🔄 Active — Components 1–2 complete, Components 3–4 planned  
+**Status:** ✅ Components 1–4 complete (see Remaining Work)  
 **Created:** 2026-02-13  
 **Last Updated:** 2026-03-08
 
@@ -40,49 +40,53 @@ Pure JSON Schema 2020-12 writer in `lib/src/schema-processing/writers/json-schem
 
 **Verification:** Build clean, ESLint clean, 48 new tests pass, all quality gates GREEN.
 
-### Component 3: JSON Schema Parser — 🔄 IN PROGRESS (source files broken, tests exist)
+### Component 3: JSON Schema Parser — ✅ COMPLETE
 
-Parse JSON Schema input (Draft 07 and 2020-12) into the canonical CastrSchema IR.
+Parse JSON Schema input (Draft 07 and 2020-12) into the canonical CastrSchema IR. Located in `lib/src/schema-processing/parsers/json-schema/`.
 
-**Current state (as of 2026-03-08):**
+| File                                  | Purpose                                                                |
+| ------------------------------------- | ---------------------------------------------------------------------- |
+| `json-schema-parser.types.ts`         | `JsonSchema2020` interface (extends `SchemaObject` + 2020-12 keywords) |
+| `json-schema-parser.normalization.ts` | Draft 07 → 2020-12 normalization (6-step pure functional pipeline)     |
+| `json-schema-parser.helpers.ts`       | Field extraction helpers (type, constraints, composition)              |
+| `json-schema-parser.2020-keywords.ts` | 2020-12 applicator/validation keyword parsing                          |
+| `json-schema-parser.core.ts`          | Core parser: `parseJsonSchemaObject()` → `CastrSchema`                 |
+| `index.ts`                            | Public API: `parseJsonSchema()`, `parseJsonSchemaDocument()`           |
 
-- Directory `parsers/json-schema/` has 6 untracked files (4 source + 2 test)
-- **Source files won't build or lint clean** — they were rewritten multiple times fighting the type system instead of working with it
-- **Test files are comprehensive** — 481-line core test + 278-line normalization test covering all IR keyword categories
-- **Recommendation:** delete all 4 source files and rewrite from scratch using the design below; adapt tests to match final types
+**Architecture:**
 
-**Key requirements (from acceptance criteria):**
+- `Draft07Input` uses `Omit<JsonSchema2020, widened_keys> & { wider_declarations }` — TypeScript doesn't allow widening via `interface extends`, so Draft 07's wider types are expressed by omitting base keys and re-declaring
+- `stripDraft07Keys` narrows back to `JsonSchema2020` at normalization exit with compile-time guards
+- `JsonSchema2020` extracted to `types.ts` to break circular dependencies between core/helpers/2020-keywords
+- `rewriteRefPath` consolidated helper rewrites `$ref` paths in all recursive locations
+- Zero `as` casts in source files; tests use `as Draft07Input` (allowed by ESLint test rules)
 
-- Accept Draft 07 and Draft 2020-12 input
-- Normalize Draft 07 → 2020-12 during parse:
-  - `definitions` → local references / `$defs`
-  - `dependencies` → `dependentRequired` / `dependentSchemas`
-  - Tuple `items` array → `prefixItems`
-  - Boolean `exclusiveMinimum`/`exclusiveMaximum` → numeric values
-- Unsupported keywords or extensions MUST throw explicit, actionable errors (no silent bypassing)
-- TDD test suite covering all keyword categories
+**Verification:** Build clean, ESLint clean, 0 circular dependencies, 84 tests pass (46 core + 28 normalization + 10 public API), all quality gates GREEN.
 
-**Architecture guidance:**
+### Component 4: Multi-Cast Parity Rig — ✅ COMPLETE
 
-- Follow the pattern established by the OpenAPI parser (`parsers/openapi/`) and Zod parser (`parsers/zod/`)
-- Parser lives in `lib/src/schema-processing/parsers/json-schema/`
-- ADR-036 directory limits apply (max 8 source files per directory)
-- Pure functions, no side effects, no I/O
+Test infrastructure refactored and expanded with 3 new scenario test files:
 
-**Critical design constraints (lessons from this session):**
+| File | Scenario | Tests |
+| ---- | -------- | ----- |
+| `scenario-5-json-schema-roundtrip.integration.test.ts` | JSON Schema → IR → JSON Schema (idempotence + losslessness) | 36 |
+| `scenario-6-zod-via-json-schema.integration.test.ts` | Zod → IR → JSON Schema → IR → Zod (cross-format round-trip) | 9 |
+| `scenario-7-multi-cast.integration.test.ts` | Single IR → Zod + JSON Schema + OpenAPI simultaneously | 24 |
 
-1. **Use `SchemaObject` from `openapi3-ts/oas31`** — extend with 2020-12 keywords (`$defs`, `unevaluatedProperties`, etc.) as `JsonSchema2020`. This is the domain expert library type; don't reinvent it with index signatures or `Record<string, unknown>`
-2. **Normalization must be pure functional** — each step returns a new object via destructuring rest (e.g., `const { items, ...rest } = input; return { ...rest, prefixItems: items }`). Do NOT mutate and assign `undefined` — `exactOptionalPropertyTypes` will reject it, and the type system is right to do so
-3. **`Draft07Input` extends `JsonSchema2020`** — Draft 07 keys (`definitions`, `dependencies`) typed directly on the boundary interface. Stripped via destructuring at the end of normalization
-4. **`$ref` rewriting uses lodash-es `split`/`join`** — same pattern as `ref-resolution.ts`. These are not banned native string methods
-5. **No `as` casts** — use `isReferenceObject()` from openapi3-ts for type narrowing. If a cast is needed, the design is wrong
+**Infrastructure changes:**
 
-### Component 4: Multi-Cast Parity Rig — 🔲 PLANNED
+- Extracted shared helpers to `tests-transforms/utils/transform-helpers.ts`
+- Split 772-line `transform-samples.integration.test.ts` into 4 scenario-specific files (scenarios 1–4)
+- Created 9 comprehensive JSON Schema 2020-12 fixtures in `tests-transforms/__fixtures__/json-schema/`
 
-- E2E multi-casting tests: Zod + JSON Schema + TypeScript interfaces from single IR
-- Transform validation proofs across all output formats
-- Idempotence proofs: JSON Schema → IR → JSON Schema = byte-for-byte identical to normalized baseline
-- Round-trip proofs: Zod → IR → JSON Schema → IR → Zod preserves `.strict()` constraints and literal metadata
+**Verification:** Build clean, ESLint clean, 491 tests pass (15 skipped — see Remaining Work), all quality gates GREEN.
+
+---
+
+## Remaining Work
+
+- **Zod defect remediation:** 15 tests remain skipped in scenarios 2 and 4 (unions, intersections, recursion). See `.agent/plans/active/zod-defect-quarantine-remediation.md`.
+- **Documentation:** Update `tests-transforms/README.md` with scenarios 5–7.
 
 ---
 

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Category": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "subcategories": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Category" }
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "TreeNode": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "number" },
+        "left": { "$ref": "#/$defs/TreeNode" },
+        "right": { "$ref": "#/$defs/TreeNode" }
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    }
+  }
+}
