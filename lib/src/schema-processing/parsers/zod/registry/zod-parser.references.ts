@@ -7,7 +7,13 @@
  */
 
 import type { CastrSchema } from '../../../ir/index.js';
-import { type ArrowFunction, type FunctionExpression, type Identifier, Node } from 'ts-morph';
+import {
+  type ArrowFunction,
+  type CallExpression,
+  type FunctionExpression,
+  type Identifier,
+  Node,
+} from 'ts-morph';
 import { createZodProject, getZodMethodChain } from '../ast/zod-ast.js';
 import type { ZodImportResolver } from './zod-import-resolver.js';
 import type { ZodSchemaParser } from '../zod-parser.types.js';
@@ -15,6 +21,11 @@ import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
 import { ZOD_METHOD_LAZY } from '../zod-constants.js';
 import { deriveComponentName } from './schema-name-registry.js';
+import {
+  buildWrappedReferenceSchema,
+  classifyReferenceWrapper,
+  type ReferenceWrapperMethod,
+} from './zod-parser.reference-wrappers.js';
 
 const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/' as const;
 
@@ -23,20 +34,115 @@ const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/' as const;
 // ============================================================================
 
 /**
- * Handle identifier references to other schemas.
+ * Resolve an identifier node to its canonical component $ref.
  * @internal
  */
-function handleIdentifier(node: Identifier): CastrSchema | undefined {
+function getIdentifierRef(node: Identifier): string | undefined {
   const symbolName = node.getSymbol()?.getName();
   if (!symbolName) {
     return undefined;
   }
 
   const componentName = deriveComponentName(symbolName);
+  return `${COMPONENT_SCHEMA_REF_PREFIX}${componentName}`;
+}
+
+/**
+ * Handle identifier references to other schemas.
+ * @internal
+ */
+function handleIdentifier(node: Identifier): CastrSchema | undefined {
+  const ref = getIdentifierRef(node);
+  if (!ref) {
+    return undefined;
+  }
+
   return {
-    $ref: `${COMPONENT_SCHEMA_REF_PREFIX}${componentName}`,
+    $ref: ref,
     metadata: createDefaultMetadata(),
   };
+}
+
+interface ReferenceWrapperChain {
+  identifier: Identifier;
+  wrapperMethods: ReferenceWrapperMethod[];
+}
+
+function extractReferenceWrapperCall(
+  node: Node,
+): { innerExpression: Node; wrapperMethod: ReferenceWrapperMethod } | undefined {
+  if (!Node.isCallExpression(node) || node.getArguments().length > 0) {
+    return undefined;
+  }
+
+  const expression = node.getExpression();
+  if (!Node.isPropertyAccessExpression(expression)) {
+    return undefined;
+  }
+
+  const wrapperMethod = classifyReferenceWrapper(expression.getName());
+  if (!wrapperMethod) {
+    return undefined;
+  }
+
+  return {
+    innerExpression: expression.getExpression(),
+    wrapperMethod,
+  };
+}
+
+function extractReferenceWrapperTarget(node: Node): ReferenceWrapperChain | undefined {
+  if (Node.isIdentifier(node)) {
+    return {
+      identifier: node,
+      wrapperMethods: [],
+    };
+  }
+
+  if (Node.isCallExpression(node)) {
+    return extractReferenceWrapperChain(node);
+  }
+
+  return undefined;
+}
+
+function extractReferenceWrapperChain(node: CallExpression): ReferenceWrapperChain | undefined {
+  const wrapperCall = extractReferenceWrapperCall(node);
+  if (!wrapperCall) {
+    return undefined;
+  }
+
+  const target = extractReferenceWrapperTarget(wrapperCall.innerExpression);
+  if (!target) {
+    return undefined;
+  }
+
+  return {
+    identifier: target.identifier,
+    wrapperMethods: [...target.wrapperMethods, wrapperCall.wrapperMethod],
+  };
+}
+
+/**
+ * Handle identifier-rooted wrapper calls like `TreeNodeSchema.optional()`.
+ * @internal
+ */
+function handleWrappedIdentifierCall(node: Node): CastrSchema | undefined {
+  if (!Node.isCallExpression(node)) {
+    return undefined;
+  }
+
+  const wrappedReference = extractReferenceWrapperChain(node);
+  if (!wrappedReference) {
+    return undefined;
+  }
+
+  const ref = getIdentifierRef(wrappedReference.identifier);
+  if (!ref) {
+    return undefined;
+  }
+
+  return buildWrappedReferenceSchema(ref, wrappedReference.wrapperMethods);
 }
 
 /**
@@ -139,6 +245,11 @@ export function parseReferenceZodFromNode(
   // Handle Identifiers (References to other schemas)
   if (Node.isIdentifier(node)) {
     return handleIdentifier(node);
+  }
+
+  const wrappedIdentifierReference = handleWrappedIdentifierCall(node);
+  if (wrappedIdentifierReference) {
+    return wrappedIdentifierReference;
   }
 
   // Handle z.lazy(() => Schema)

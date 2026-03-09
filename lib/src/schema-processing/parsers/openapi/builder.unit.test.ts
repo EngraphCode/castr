@@ -328,6 +328,35 @@ describe('buildCastrSchemas', () => {
       expect(schema.anyOf).toBeDefined();
       expect(schema.anyOf).toHaveLength(2);
     });
+
+    it('should preserve nullable reference compositions on object properties', () => {
+      const components: ComponentsObject = {
+        schemas: {
+          LinkedListNode: {
+            type: 'object',
+            properties: {
+              data: { type: 'string' } as SchemaObject,
+              next: {
+                anyOf: [
+                  { $ref: '#/components/schemas/LinkedListNode' },
+                  { type: 'null' } as SchemaObject,
+                ],
+              } as SchemaObject,
+            },
+            required: ['data', 'next'],
+          } as SchemaObject,
+        },
+      };
+
+      const result = buildCastrSchemas(components);
+      const schema = assertSchemaComponent(result[0]).schema;
+      const nextSchema = schema.properties?.get('next');
+
+      expect(nextSchema?.metadata.required).toBe(true);
+      expect(nextSchema?.anyOf).toHaveLength(2);
+      expect(nextSchema?.anyOf?.[0]?.$ref).toBe('#/components/schemas/LinkedListNode');
+      expect(nextSchema?.anyOf?.[1]?.type).toBe('null');
+    });
   });
 
   describe('reference ($ref) schemas', () => {

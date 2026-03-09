@@ -103,7 +103,22 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null
 
 **Rationale:** Idempotency and determinism. Nullability chains like `.nullable().nullable()` alter AST meaning without semantically changing validation semantics.
 
-### 8. Codecs (Deferred)
+### 8. Recursive Getter Wrapper Canonicalization
+
+Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form; writer output must not regress to `z.lazy()`.
+
+- Direct recursive refs emit direct getter returns (for example `get children() { return z.array(Category); }`).
+- Optional recursive refs represented in IR as a direct `$ref` plus parent optionality emit canonical getter wrappers such as `get left() { return TreeNode.optional(); }`.
+- Nullable recursive refs represented in IR as `anyOf: [{$ref}, {type: 'null'}]` emit canonical getter wrappers such as `get next() { return LinkedListNode.nullable(); }`.
+- Optional nullable recursive refs emit `.nullish()` when the parent property is optional.
+
+Writer output must treat these as **canonical recursive wrappers**, not as generic nullable compositions, so Scenario 2 / 4 / 6 round-trips remain lossless and idempotent.
+
+Recursive object schemas must also avoid appending `.passthrough()` today. In Zod 4, `.passthrough()` eagerly evaluates getter-backed shapes and can trigger temporal-dead-zone failures during recursive schema initialization. Until Zod offers a safe lazy passthrough mechanism, strip-mode emission remains the canonical safe fallback for recursive objects.
+
+**Rationale:** Getter-wrapper canonicalization preserves recursion semantics without inventing new IR fields, and it keeps writer output aligned with parser expectations and transform parity proofs.
+
+### 9. Codecs (Deferred)
 
 > [!NOTE]
 > Zod 4 provides **codec examples** in documentation (e.g., `isoDatetimeToDate`, `base64ToBytes`), but these are **not first-class APIs**. Per Zod docs: _"these are not included as first-class APIs in Zod itself."_
@@ -111,6 +126,26 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null
 **Current approach:** Use validation-only format functions (`z.iso.datetime()`, `z.url()`).
 
 **Future consideration:** If runtime transformation becomes a requirement, we could bundle codec implementations in output or wait for Zod to promote them to first-class APIs.
+
+### 10. UUID Canonicalization Uses `z.uuid()`, Not `z.uuidv4()`
+
+OpenAPI / JSON Schema `format: 'uuid'` emits canonical `z.uuid()`.
+
+- `z.uuid()` accepts any RFC 9562-compliant UUID version.
+- `z.uuidv4()` is more specific and cannot be represented losslessly by standard OpenAPI / JSON Schema `format: 'uuid'`.
+- Writers must not emit `z.uuidv4()` from plain `format: 'uuid'`.
+
+**Rationale:** Version-4 specificity is not representable without non-standard extensions, so canonical output must choose the lossless standard target.
+
+### 11. `int64` Canonicalization Uses `z.int64()` and Therefore `bigint`
+
+OpenAPI / JSON Schema `type: 'integer', format: 'int64'` emits canonical `z.int64()`.
+
+- In Zod 4, `z.int64()` validates `bigint`, not JavaScript `number`.
+- This is internally round-trip consistent, but it means parity fixtures and contributor examples must use `BigInt(...)` / `100n`, not JSON numbers.
+- This behavior is accepted as a Zod 4 runtime trade-off, not treated as a Castr defect.
+
+**Rationale:** Preserving the canonical Zod 4 helper is preferred over silently weakening the range/typing semantics to plain `number`.
 
 ## Consequences
 

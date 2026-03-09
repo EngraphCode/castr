@@ -248,6 +248,29 @@ describe('nullable handling', () => {
 
     expect(result.type).toBe('string');
   });
+
+  it('preserves nullable reference compositions without collapsing them to direct $ref', () => {
+    const schema: CastrSchema = {
+      anyOf: [
+        {
+          $ref: '#/components/schemas/LinkedListNode',
+          metadata: createMetadata(),
+        },
+        {
+          type: 'null',
+          metadata: createMetadata(),
+        },
+      ],
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result.anyOf).toEqual([
+      { $ref: '#/components/schemas/LinkedListNode' },
+      { type: 'null' },
+    ]);
+  });
 });
 
 describe('object schemas', () => {

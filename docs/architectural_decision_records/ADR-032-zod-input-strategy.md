@@ -40,18 +40,31 @@ This decision must align with:
 - If both `.describe()` and `.meta({ description })` exist, **`.meta()` takes precedence**.
 - Output MUST always use `.meta()`, never `.describe()`.
 
-### 4. Recursion: Getter‑Based Only
+### 4. Recursion: Getter‑Based Output, Statically Analyzable Input
 
-- **Getter‑based recursion** is the only supported recursive pattern.
-- `z.lazy()` is **not supported** and must be rejected.
+- **Getter‑based recursion** is the canonical recursive form and the only recursive form emitted by the writer.
+- The parser supports statically analyzable recursive getter returns of:
+  - a direct identifier
+  - identifier-rooted wrapper chains such as `.optional()`, `.nullable()`, `.nullish()`, and chained optional + nullable forms
+- Optional recursive refs map losslessly to a direct `$ref` with parent-level optionality.
+- Nullable and nullish recursive refs map losslessly to existing composition IR: `anyOf: [{$ref}, {type: 'null'}]`, with parent requiredness carrying optionality.
+- `z.lazy(() => ...)` is accepted for compatibility when the callback is statically analyzable. It is never emitted by the writer, and dynamic / non-analyzable lazy patterns must still fail fast.
 
-### 5. Union Semantics Must Be Preserved
+### 5. Object Unknown-Key Semantics Are Parsed by Validation Acceptance
+
+- `.strict()` maps to `additionalProperties: false`.
+- `.passthrough()` maps to `additionalProperties: true`.
+- Default `z.object()` and explicit `.strip()` also map to `additionalProperties: true`.
+
+This is intentional: the IR models whether unknown keys are **accepted at validation time**, not whether they are preserved in parsed output. `strip` and `passthrough` differ in output-shape behavior, but both accept unknown keys during validation and therefore share the same IR acceptance semantics.
+
+### 6. Union Semantics Must Be Preserved
 
 - `anyOf` vs `oneOf` semantics are preserved exactly.
 - `z.union(...)` defaults to `anyOf` unless disjointness is provable or explicit metadata requests `oneOf`.
 - If `oneOf` is requested but disjointness cannot be proven, **fail fast** with a clear error.
 
-### 6. Parser Naming and Endpoint Optionality Must Be Semantic
+### 7. Parser Naming and Endpoint Optionality Must Be Semantic
 
 - Component naming from schema declarations is centralized via
   `parsers/zod/schema-name-registry.ts` (`deriveComponentName` with typed suffix constants),
@@ -62,7 +75,7 @@ This decision must align with:
 - Status-code semantics used by IR endpoint mapping are centralized in
   `context/template-context.status-codes.ts` and referenced via typed constants/predicates.
 
-### 7. Declaration Discovery Must Stay Compatible with Writer Emission
+### 8. Declaration Discovery Must Stay Compatible with Writer Emission
 
 - The parser must accept writer-emitted identifier-rooted composition declarations
   when the root identifier resolves to a known schema declaration in scope
@@ -82,11 +95,12 @@ This decision must align with:
 - Lossless round‑trip validation becomes feasible and reliable.
 - Metadata handling is consistent and unambiguous.
 - Writer/parser lockstep includes identifier-rooted `allOf` composition output.
+- Writer/parser lockstep also includes recursive wrapper chains for optional, nullable, and nullish getter-based recursion.
 
 ### Negative
 
-- Some Zod patterns remain unsupported (dynamic schemas, Zod 3, z.lazy, standalone `z.undefined()`).
-- Users must adapt input to idiomatic Zod 4 conventions.
+- Some Zod patterns remain unsupported (dynamic schemas, Zod 3, non-statically-analyzable lazy patterns, standalone `z.undefined()`).
+- Users must adapt input to idiomatic Zod 4 conventions for lossless ingestion.
 
 ---
 
@@ -95,8 +109,9 @@ This decision must align with:
 1. **Support Zod 3 and Zod 4 simultaneously**
    - Rejected: complicates parsing and weakens type/semantic guarantees.
 
-2. **Allow `z.lazy()`**
-   - Rejected: conflicts with the getter‑based recursion strategy and complicates static analysis.
+2. **Reject all `z.lazy()` input**
+   - Rejected: statically analyzable `z.lazy(() => ...)` remains useful compatibility input, even though getter syntax is the canonical emitted output.
+   - Non-analyzable lazy patterns are still rejected.
 
 3. **Reject `.describe()` entirely**
    - Rejected: would break backward compatibility with many existing Zod schemas.

@@ -47,6 +47,82 @@ describe('Zod Reference Parsing', () => {
         });
       }
     });
+
+    it('parses identifier-rooted .optional() wrappers as optional refs', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const TreeNodeSchema = z.object({ value: z.number() });
+        const Result = TreeNodeSchema.optional();
+      `);
+      const resultNode = sourceFile.getVariableDeclaration('Result')?.getInitializer();
+
+      expect(resultNode).toBeDefined();
+      if (resultNode) {
+        const result = parseZodSchemaFromNode(resultNode, resolver);
+
+        expect(result).toMatchObject({
+          $ref: '#/components/schemas/TreeNode',
+        });
+        expect(result?.metadata.required).toBe(false);
+      }
+    });
+
+    it('parses identifier-rooted .nullable() wrappers as nullable ref compositions', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const LinkedListNodeSchema = z.object({ data: z.string() });
+        const Result = LinkedListNodeSchema.nullable();
+      `);
+      const resultNode = sourceFile.getVariableDeclaration('Result')?.getInitializer();
+
+      expect(resultNode).toBeDefined();
+      if (resultNode) {
+        const result = parseZodSchemaFromNode(resultNode, resolver);
+
+        expect(result?.anyOf).toHaveLength(2);
+        expect(result?.anyOf?.[0]?.$ref).toBe('#/components/schemas/LinkedListNode');
+        expect(result?.anyOf?.[1]?.type).toBe('null');
+        expect(result?.metadata.required).toBe(true);
+      }
+    });
+
+    it('parses identifier-rooted .nullish() wrappers as optional nullable ref compositions', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const LinkedListNodeSchema = z.object({ data: z.string() });
+        const Result = LinkedListNodeSchema.nullish();
+      `);
+      const resultNode = sourceFile.getVariableDeclaration('Result')?.getInitializer();
+
+      expect(resultNode).toBeDefined();
+      if (resultNode) {
+        const result = parseZodSchemaFromNode(resultNode, resolver);
+
+        expect(result?.anyOf).toHaveLength(2);
+        expect(result?.anyOf?.[0]?.$ref).toBe('#/components/schemas/LinkedListNode');
+        expect(result?.anyOf?.[1]?.type).toBe('null');
+        expect(result?.metadata.required).toBe(false);
+      }
+    });
+
+    it('parses chained identifier-rooted wrapper calls accepted from canonical writer output', () => {
+      const { sourceFile, resolver } = createZodProject(`
+        import { z } from 'zod';
+        const TreeNodeSchema = z.object({ value: z.number() });
+        const Result = TreeNodeSchema.optional().nullable();
+      `);
+      const resultNode = sourceFile.getVariableDeclaration('Result')?.getInitializer();
+
+      expect(resultNode).toBeDefined();
+      if (resultNode) {
+        const result = parseZodSchemaFromNode(resultNode, resolver);
+
+        expect(result?.anyOf).toHaveLength(2);
+        expect(result?.anyOf?.[0]?.$ref).toBe('#/components/schemas/TreeNode');
+        expect(result?.anyOf?.[1]?.type).toBe('null');
+        expect(result?.metadata.required).toBe(false);
+      }
+    });
   });
 
   describe('Recursion (z.lazy)', () => {

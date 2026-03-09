@@ -107,9 +107,9 @@ Two parser defects fixed before this session:
 
 Key limitations:
 
-1. Optional/nullable recursive properties dropped during round-trip
-2. `.passthrough()` suppressed on recursive schemas (strip mode used instead)
-3. `z.uuidv4()` and `z.uuid()` both map to `format: 'uuid'` (v4 specificity lost)
+1. `.passthrough()` suppressed on recursive schemas (strip mode used instead)
+2. `z.uuidv4()` and `z.uuid()` both map to `format: 'uuid'` (v4 specificity lost)
+3. Recursive wrapper preservation is tracked and resolved by `recursive-wrapper-remediation.md`
 
 ---
 

@@ -299,6 +299,42 @@
               },
               "circularReferences": []
             }
+          },
+          "left": {
+            "$ref": "#/components/schemas/TreeNode",
+            "metadata": {
+              "required": false,
+              "nullable": false,
+              "zodChain": {
+                "presence": ".optional()",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
+          },
+          "right": {
+            "$ref": "#/components/schemas/TreeNode",
+            "metadata": {
+              "required": false,
+              "nullable": false,
+              "zodChain": {
+                "presence": ".optional()",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
           }
         }
       },
@@ -342,10 +378,65 @@
               },
               "circularReferences": []
             }
+          },
+          "next": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LinkedListNode",
+                "metadata": {
+                  "required": true,
+                  "nullable": false,
+                  "zodChain": {
+                    "presence": "",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "circularReferences": []
+                }
+              },
+              {
+                "type": "null",
+                "metadata": {
+                  "required": true,
+                  "nullable": false,
+                  "zodChain": {
+                    "presence": "",
+                    "validations": [],
+                    "defaults": []
+                  },
+                  "dependencyGraph": {
+                    "references": [],
+                    "referencedBy": [],
+                    "depth": 0
+                  },
+                  "circularReferences": []
+                }
+              }
+            ],
+            "metadata": {
+              "required": true,
+              "nullable": false,
+              "zodChain": {
+                "presence": ".nullable()",
+                "validations": [],
+                "defaults": []
+              },
+              "dependencyGraph": {
+                "references": [],
+                "referencedBy": [],
+                "depth": 0
+              },
+              "circularReferences": []
+            }
           }
         }
       },
-      "required": ["data"],
+      "required": ["data", "next"],
       "additionalProperties": true,
       "metadata": {
         "required": true,

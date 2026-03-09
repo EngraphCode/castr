@@ -9,6 +9,7 @@ Parses Zod 4 schema source files into `CastrDocument` IR using ts-morph AST.
 - **Schema support (strict/lossless)** — Primitives, objects, arrays, enums, unions, intersections
 - **Endpoint parsing** — `defineEndpoint({...})` pattern → `CastrOperation`
 - **Reference resolution** — Variable refs, getter-based recursion, circular detection
+- **Recursive wrapper support** — Identifier-rooted `.optional()`, `.nullable()`, `.nullish()` getter returns
 - **Writer lockstep** — Accepts writer-emitted identifier-rooted intersection declarations (for example `const Pet = NewPet.and(...)`) when root identifiers are known schema declarations
 
 ## Architecture
@@ -61,6 +62,22 @@ const result = parseZodSource(source);
 | `z.undefined()` | Reject with error |
 | Zod 3 syntax    | Reject with error |
 | Dynamic schemas | Reject with error |
+
+## Recursion Semantics
+
+- Getter-based recursion is the canonical writer-emitted form.
+- The parser accepts statically analyzable recursive getter returns:
+  - direct identifiers
+  - identifier-rooted wrapper chains like `.optional()`, `.nullable()`, `.nullish()`
+  - statically analyzable `z.lazy(() => ...)` compatibility input
+- Optional recursion is represented as a direct `$ref` plus parent requiredness.
+- Nullable / nullish recursion is represented as `anyOf: [{$ref}, {type: 'null'}]`.
+
+## Object Unknown-Key Semantics
+
+- `.strict()` parses as `additionalProperties: false`.
+- `.passthrough()`, explicit `.strip()`, and default `z.object()` parse as `additionalProperties: true`.
+- This reflects **validation acceptance semantics** in the IR: strip and passthrough differ in parsed output shape, but both accept unknown keys during validation.
 
 ## See Also
 

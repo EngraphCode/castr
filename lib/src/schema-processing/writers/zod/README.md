@@ -31,7 +31,7 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 | `integer format: int64`    | `z.int64()` → `bigint` |
 | `string format: email`     | `z.email()`            |
 | `string format: uri`       | `z.url()`              |
-| `string format: uuid`      | `z.uuidv4()`           |
+| `string format: uuid`      | `z.uuid()`             |
 | `string format: date`      | `z.iso.date()`         |
 | `string format: date-time` | `z.iso.datetime()`     |
 
@@ -42,6 +42,21 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 
 - **Objects use `.strict()`** unless `additionalProperties: true` is explicit
 - **Inline endpoint objects** (queryParams, pathParams, headers) are always `.strict()`
+
+## Recursive Schemas
+
+- **Getter syntax is canonical** for recursive output.
+- Recursive wrappers are emitted canonically when representable:
+  - direct recursion → getter returning the direct schema expression
+  - optional recursion → `.optional()`
+  - nullable recursion → `.nullable()`
+  - optional nullable recursion → `.nullish()`
+- Recursive objects currently **skip `.passthrough()`** even when `additionalProperties: true`, because Zod 4 eagerly evaluates getter-backed shapes during `.passthrough()` and can trigger temporal-dead-zone failures.
+
+## Important Semantics
+
+- `format: uuid` canonicalizes to `z.uuid()`, not `z.uuidv4()`, because UUID version specificity is not representable losslessly in standard OpenAPI / JSON Schema.
+- `format: int64` canonicalizes to `z.int64()`, which means runtime validation expects `bigint` payloads.
 
 ## Fail-Fast
 

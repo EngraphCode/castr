@@ -41,21 +41,25 @@ Notes:
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
-**COMPLETED PLAN: [Zod Defect Quarantine Remediation](../plans/active/zod-defect-quarantine-remediation.md)** — all 10 failing tests fixed, full quality gate GREEN (1268 unit, 152 snapshot, 515 transform tests pass).
-
 > **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
 
 #### Background
 
-All Zod transform test failures are resolved. Five code defects were fixed (default object `additionalProperties`, union type dedup, numeric format constraints, UUID `z.uuid()`, recursive `.passthrough()` guard) and four test payloads were corrected. The remediation plan should be **archived** and a successor plan promoted.
+Recent Zod round-trip behavior and trade-offs have been promoted into permanent documentation:
 
-**Known limitations** are documented in [zod-round-trip-limitations.md](../plans/active/zod-round-trip-limitations.md). The most significant is **optional/nullable recursive property loss** (medium-high severity) — these properties are dropped during round-trip because the IR's circular reference tracking doesn't preserve wrapper semantics (optional, nullable, etc.).
+- [docs/architecture/zod-round-trip-limitations.md](../../docs/architecture/zod-round-trip-limitations.md)
+- [ADR-031: Zod 4 Output Strategy](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
+- [ADR-032: Zod 4 Input Strategy](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)
+- [ADR-035: Transform Validation Parity & Scenario Matrix](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
+
+Use plans only for the next atomic slice of work. Do not treat active or archived plans as the durable source of truth for Zod round-trip architecture or limitations.
 
 #### What This Session Should Do
 
-1. Archive the completed remediation plan
-2. Read the [limitations document](../plans/active/zod-round-trip-limitations.md) to decide which (if any) limitations to address
-3. Promote or create a successor plan based on the roadmap
+1. Read the permanent Zod round-trip reference in [docs/architecture/zod-round-trip-limitations.md](../../docs/architecture/zod-round-trip-limitations.md)
+2. Read [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md), and [ADR-035](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md) before changing Zod parser/writer behavior
+3. Check the roadmap / active Phase 4 work only to choose the next highest-value execution slice
+4. Keep recursive wrapper behavior green as a regression-sensitive area
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 

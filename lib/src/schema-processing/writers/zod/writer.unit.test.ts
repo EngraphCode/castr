@@ -245,6 +245,74 @@ describe('ZodWriter', () => {
     expect(result).not.toContain('z.lazy');
   });
 
+  it('generates getter syntax with .optional() for optional recursive refs', () => {
+    const leftSchema = createMockSchema(
+      undefined,
+      { required: false },
+      '#/components/schemas/TreeNode',
+    );
+    const schema = createMockSchema('object', {
+      circularReferences: ['#/components/schemas/TreeNode'],
+    });
+    schema.properties = new CastrSchemaProperties({
+      value: createMockSchema('number'),
+      left: leftSchema,
+    });
+    schema.required = ['value'];
+
+    const context = createComponentContext(schema);
+    const result = generate(context);
+
+    expect(result).toContain('get left()');
+    expect(result).toContain('return TreeNode.optional()');
+  });
+
+  it('generates getter syntax with .nullable() for nullable recursive refs', () => {
+    const nextSchema = createMockSchema(undefined);
+    nextSchema.anyOf = [
+      createMockSchema(undefined, {}, '#/components/schemas/LinkedListNode'),
+      createMockSchema('null'),
+    ];
+
+    const schema = createMockSchema('object', {
+      circularReferences: ['#/components/schemas/LinkedListNode'],
+    });
+    schema.properties = new CastrSchemaProperties({
+      data: createMockSchema('string'),
+      next: nextSchema,
+    });
+    schema.required = ['data', 'next'];
+
+    const context = createComponentContext(schema);
+    const result = generate(context);
+
+    expect(result).toContain('get next()');
+    expect(result).toContain('return LinkedListNode.nullable()');
+  });
+
+  it('generates getter syntax with .nullish() for optional nullable recursive refs', () => {
+    const nextSchema = createMockSchema(undefined, { required: false });
+    nextSchema.anyOf = [
+      createMockSchema(undefined, {}, '#/components/schemas/MaybeLinkedListNode'),
+      createMockSchema('null'),
+    ];
+
+    const schema = createMockSchema('object', {
+      circularReferences: ['#/components/schemas/MaybeLinkedListNode'],
+    });
+    schema.properties = new CastrSchemaProperties({
+      data: createMockSchema('string'),
+      next: nextSchema,
+    });
+    schema.required = ['data'];
+
+    const context = createComponentContext(schema);
+    const result = generate(context);
+
+    expect(result).toContain('get next()');
+    expect(result).toContain('return MaybeLinkedListNode.nullish()');
+  });
+
   // ========== Metadata via .meta() tests (Zod 4) ==========
 
   describe('metadata via .meta()', () => {

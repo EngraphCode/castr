@@ -264,23 +264,81 @@ export const RecursionPayloads = {
   TreeNodeSchema: {
     valid: [
       { value: 1 },
-      // NOTE: payloads with `left`/`right` omitted — optional recursive properties
-      // are dropped during the Zod→OpenAPI→Zod round-trip (known limitation).
-      // The generated schema only validates `value`.
+      {
+        value: 1,
+        left: {
+          value: 2,
+        },
+      },
+      {
+        value: 1,
+        left: {
+          value: 2,
+          right: {
+            value: 3,
+          },
+        },
+      },
     ],
     invalid: [
       { value: '1' }, // wrong type
+      {
+        value: 1,
+        left: {
+          value: '2',
+        },
+      },
+      {
+        value: 1,
+        right: {
+          value: 2,
+          left: {
+            value: '3',
+          },
+        },
+      },
     ],
   },
   LinkedListNodeSchema: {
     valid: [
       { data: 'first', next: null },
-      // NOTE: payloads with nested `next` omitted — nullable recursive properties
-      // are dropped during the Zod→OpenAPI→Zod round-trip (known limitation).
-      // The generated schema only validates `data`.
+      {
+        data: 'first',
+        next: {
+          data: 'second',
+          next: null,
+        },
+      },
+      {
+        data: 'first',
+        next: {
+          data: 'second',
+          next: {
+            data: 'third',
+            next: null,
+          },
+        },
+      },
     ],
     invalid: [
       { data: 123 }, // wrong type for data
+      {
+        data: 'first',
+        next: {
+          data: 123,
+          next: null,
+        },
+      },
+      {
+        data: 'first',
+        next: {
+          data: 'second',
+          next: {
+            data: 123,
+            next: null,
+          },
+        },
+      },
     ],
   },
 };

@@ -78,6 +78,14 @@ Each ADR follows this structure:
 | [031](./ADR-031-zod-output-strategy.md)                | Zod 4 Output Strategy                  | Accepted | 2026-01-21 |
 | [032](./ADR-032-zod-input-strategy.md)                 | Zod 4 Input Strategy                   | Accepted | 2026-01-23 |
 
+### Phase 3: Zod Round-Trip Strictness & Parity
+
+| ADR                                             | Title                                         | Status   | Date       |
+| ----------------------------------------------- | --------------------------------------------- | -------- | ---------- |
+| [033](./ADR-033-two-pass-semantic-parsing.md)   | Two-Pass Semantic Parsing                     | Accepted | 2026-02-20 |
+| [034](./ADR-034-writer-separation.md)           | Separation of Writer Concerns                 | Accepted | 2026-02-20 |
+| [035](./ADR-035-transform-validation-parity.md) | Transform Validation Parity & Scenario Matrix | Accepted | 2026-02-20 |
+
 ### Additional Architecture Records
 
 | ADR                                                        | Title                                  | Status   | Date       |
@@ -178,7 +186,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 033)
+2. **Number sequentially** (next is 038)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry

@@ -309,6 +309,16 @@ describe('parseJsonSchemaObject', () => {
       expect(result.anyOf).toHaveLength(2);
     });
 
+    it('parses nullable reference compositions without collapsing the ref', () => {
+      const result = parseJsonSchemaObject({
+        anyOf: [{ $ref: '#/$defs/LinkedListNode' }, { type: 'null' }],
+      });
+
+      expect(result.anyOf).toHaveLength(2);
+      expect(result.anyOf?.[0]?.$ref).toBe('#/$defs/LinkedListNode');
+      expect(result.anyOf?.[1]?.type).toBe('null');
+    });
+
     it('parses not', () => {
       const result = parseJsonSchemaObject({
         not: { type: 'string' },

@@ -16,6 +16,7 @@ import { writeMetadata } from './metadata.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { isOptionalSchemaContext } from './context-utils.js';
+import { getNullableReferenceCompositionBaseSchema } from './properties.js';
 
 const SCHEMA_TYPE_NULL = 'null' as const;
 
@@ -34,6 +35,23 @@ function writeSchemaBody(
 ): WriterFunction {
   return (writer) => {
     const schema = context.schema;
+
+    const nullableReferenceBaseSchema = getNullableReferenceCompositionBaseSchema(schema);
+    if (nullableReferenceBaseSchema) {
+      const baseContext: CastrSchemaContext = {
+        ...context,
+        schema: nullableReferenceBaseSchema,
+      };
+
+      writeSchemaType(baseContext, writer, options);
+      if (isOptionalSchemaContext(context)) {
+        writer.write('.nullish()');
+      } else {
+        writer.write('.nullable()');
+      }
+      writeMetadata(schema, writer);
+      return;
+    }
 
     // Check for enums
     if (schema.enum && schema.enum.length > 0) {

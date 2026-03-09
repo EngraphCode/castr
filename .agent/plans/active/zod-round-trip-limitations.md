@@ -3,77 +3,109 @@
 **Status:** 📋 Active reference document  
 **Created:** 2026-03-08  
 **Last Updated:** 2026-03-08  
-**Related:** [Zod Defect Quarantine Remediation](./zod-defect-quarantine-remediation.md)
+**Related:** [Recursive Wrapper Remediation](./recursive-wrapper-remediation.md), [Zod Defect Quarantine Remediation](../current/complete/zod-defect-quarantine-remediation.md)
 
 ---
 
 ## Purpose
 
-This document catalogs structural limitations in the Zod → IR → OpenAPI/JSON Schema → IR → Zod round-trip pipeline. These are not bugs — they are inherent to the semantic gap between Zod's runtime type system and the static schema formats (OpenAPI / JSON Schema) that serve as the IR's interchange format.
+This document catalogs the remaining structural limitations in the Zod → IR → OpenAPI/JSON Schema → IR → Zod round-trip pipeline, and records the resolved recursive-wrapper work so the diagnosis history stays technically accurate.
 
-Each limitation is documented with: what is lost, why it is lost, where in the pipeline the loss occurs, and what would be required to resolve it.
+Each entry is documented with: what was or is lost, where the loss occurs, why it occurs, and whether it has now been resolved.
 
 ---
 
-## Limitation 1: Optional/Nullable Recursive Properties Dropped
+## Resolved 1: Optional Recursive Properties Were Previously Dropped
 
-### What Is Lost
+### Historical Failure
 
-Recursive properties with `.optional()` or `.nullable()` modifiers are silently dropped from generated code.
+Optional recursive properties were previously dropped from the first IR produced by the Zod parser.
 
-| Original Zod (input)                                     | Generated Zod (output) |
-| -------------------------------------------------------- | ---------------------- |
-| `get left() { return TreeNodeSchema.optional(); }`       | _(property absent)_    |
-| `get right() { return TreeNodeSchema.optional(); }`      | _(property absent)_    |
-| `get next() { return LinkedListNodeSchema.nullable(); }` | _(property absent)_    |
+| Original Zod (input)                                | Previous generated Zod |
+| --------------------------------------------------- | ---------------------- |
+| `get left() { return TreeNodeSchema.optional(); }`  | _(property absent)_    |
+| `get right() { return TreeNodeSchema.optional(); }` | _(property absent)_    |
 
 Required recursive properties without wrappers (`get subcategories() { return z.array(CategorySchema); }`) survive correctly.
 
-### Where the Loss Occurs
+### Proven Loss Point
 
 **Stage:** Zod Parser → IR construction
 
-The Zod parser identifies getter properties with `$ref` values (e.g., `CategorySchema` → `#/components/schemas/Category`). When the getter returns a direct schema reference or `z.array(ref)`, the `$ref` targets a top-level component and is preserved.
+The previous diagnosis overstated how late the loss occurred. The first proven loss point was the Zod parser itself:
 
-However, when the getter returns something like `TreeNodeSchema.optional()`, the AST shows a **method call chain** (`TreeNodeSchema → .optional()`), not a direct identifier reference. The parser treats the `.optional()` call as a modifier on a schema expression, and the resulting IR property gets a `$ref` wrapped in an optional context. During OpenAPI serialization, the `$ref` with optional/nullable wrapper uses a different schema structure that doesn't match the parent component's circular reference registry. The OpenAPI writer sees the property's `$ref` target but can't resolve it within the `allOf`/`oneOf` envelope it would need for `nullable`/`optional` semantics, so the property is omitted.
+- Direct identifier refs like `CategorySchema` were already parsed as `$ref`.
+- Identifier-rooted wrapper calls like `TreeNodeSchema.optional()` were not recognized by the parser dispatch.
+- The property therefore never entered the first IR, so later OpenAPI / JSON Schema stages had nothing to preserve.
 
-### Underlying Cause
+### Implemented Resolution
 
-The IR's circular reference tracking (`metadata.circularReferences: string[]`) only records **which component names** are involved in cycles. It does **not** record how those references are wrapped (optional, nullable, in-array, etc.). When the OpenAPI writer encounters a `$ref` to a component that's in the circular reference list, it must decide how to serialize it. Direct references and array-wrapped references produce valid `$ref` or `items.$ref` in OpenAPI. But `optional` and `nullable` require wrapping the `$ref` in structural constructs:
+Optional recursive refs are now represented with the existing IR only:
 
-```yaml
-# Optional circular $ref requires:
-oneOf:
-  - $ref: '#/components/schemas/TreeNode'
-  - not: {} # or: type: 'null' for nullable
+- Property schema: direct `$ref`
+- Property optionality: parent `required` omission only
+- Generated Zod: canonical getter form `get left() { return TreeNode.optional(); }`
 
+This did **not** require new IR fields.
 
-# But this creates a composition construct that bloats the schema
-# and may not parse back into the same Zod structure.
-```
+### Current Status
 
-The pipeline currently has no mechanism to:
+Resolved. Optional recursive properties now survive:
 
-1. Detect that a property's `$ref` uses optional/nullable wrapping
-2. Serialize that wrapping into OpenAPI while preserving the `$ref` identity
-3. Re-parse the wrapped `$ref` back into a Zod getter with `.optional()` / `.nullable()`
-
-### Impact on Validation Parity
-
-Valid payloads for the original schema that include deeply-nested data for these properties succeed in both original and generated schemas (the generated schema treats extra properties as unknown keys, which are stripped/passed through). **Invalid** payloads that rely on type-checking the recursive field itself cannot be tested since the field doesn't exist in the generated schema.
-
-### What Would Be Required to Fix
-
-1. **IR enhancement:** Extend `circularReferences` metadata to record the wrapping mode of each circular reference (direct, optional, nullable, array, etc.)
-2. **OpenAPI writer:** Emit `oneOf` / `anyOf` envelopes for optional/nullable circular `$ref`s
-3. **Zod writer:** Detect these envelopes during generation and reconstruct getter properties with the appropriate modifier
-4. **OpenAPI parser:** Successfully parse `oneOf: [{$ref}, {type: null}]` as a nullable `$ref` (this partially exists but may not handle the circular case)
-
-**Estimated complexity:** Medium-high. The fix spans 4 pipeline stages and requires new IR metadata fields.
+- the first Zod parse
+- OpenAPI and JSON Schema detours
+- Zod regeneration with canonical getter syntax
 
 ---
 
-## Limitation 2: `.passthrough()` Suppressed on Recursive Schemas
+## Resolved 2: Nullable / Nullish Recursive Properties Were Previously Dropped
+
+### Historical Failure
+
+Nullable and nullish recursive properties were also previously absent from generated code.
+
+| Original Zod (input)                                     | Previous generated Zod |
+| -------------------------------------------------------- | ---------------------- |
+| `get next() { return LinkedListNodeSchema.nullable(); }` | _(property absent)_    |
+| `get next() { return LinkedListNodeSchema.nullish(); }`  | _(property absent)_    |
+
+### Proven Design Constraint
+
+Unlike optional recursion, nullable recursion cannot be expressed as a direct `$ref` plus parent optionality. Nullability must survive the interchange formats structurally.
+
+### Implemented Resolution
+
+Nullable and nullish recursive refs now use the existing composition IR:
+
+```yaml
+anyOf:
+  - $ref: '#/components/schemas/LinkedListNode'
+  - type: 'null'
+```
+
+The distinction is:
+
+1. **Nullable:** property remains in the parent `required` list and regenerates as `.nullable()`
+2. **Nullish:** property is omitted from the parent `required` list and regenerates as canonical nullable+optional output (`.nullish()`)
+
+This required:
+
+1. Zod parser support for identifier-rooted wrapper chains (`.nullable()`, `.nullish()`, `.optional().nullable()`)
+2. Writer-side detection of nullable reference compositions as recursive getter candidates
+3. Canonical Zod emission for nullable reference compositions in recursive getter context
+4. OpenAPI / JSON Schema parse-write proofs that preserve the `anyOf: [$ref, null]` structure
+
+### Current Status
+
+Resolved. Nullable and nullish recursive properties now survive:
+
+- the first Zod parse
+- OpenAPI and JSON Schema detours
+- Zod regeneration with canonical recursive getter syntax
+
+---
+
+## Limitation 3: `.passthrough()` Suppressed on Recursive Schemas
 
 ### What Is Lost
 
@@ -127,7 +159,7 @@ This is a Zod 4 runtime limitation. Possible approaches:
 
 ---
 
-## Limitation 3: UUID Version Specificity Lost
+## Limitation 4: UUID Version Specificity Lost
 
 ### What Is Lost
 
@@ -172,7 +204,7 @@ In practice, most UUID usage does not distinguish versions, and the v4 constrain
 
 ---
 
-## Limitation 4: `z.int64()` Maps to `bigint` at Runtime, `integer/int64` in IR
+## Limitation 5: `z.int64()` Maps to `bigint` at Runtime, `integer/int64` in IR
 
 ### What Is Observed
 
@@ -205,11 +237,12 @@ This is a Zod 4 design decision, not a castr bug. Options:
 
 ---
 
-## Summary Matrix
+## Status Matrix
 
-| #   | Limitation                                       | Severity | Parity Impact                    | Fix Complexity          |
-| --- | ------------------------------------------------ | -------- | -------------------------------- | ----------------------- |
-| 1   | Optional/nullable recursive properties dropped   | **High** | Invalid payloads not testable    | Medium-high             |
-| 2   | `.passthrough()` suppressed on recursive schemas | **Low**  | None (safeParse agrees)          | Blocked on Zod upstream |
-| 3   | UUID version specificity lost                    | **Low**  | Generated schema more permissive | Low (needs custom ext)  |
-| 4   | `z.int64()` → BigInt vs JSON number              | **Low**  | None (round-trip consistent)     | Accept / by design      |
+| #   | Topic                                            | Status     | Parity Impact                    | Notes                                |
+| --- | ------------------------------------------------ | ---------- | -------------------------------- | ------------------------------------ |
+| 1   | Optional recursive properties                    | Resolved   | None after remediation           | Direct `$ref` + parent optionality   |
+| 2   | Nullable / nullish recursive properties          | Resolved   | None after remediation           | `anyOf: [$ref, null]` representation |
+| 3   | `.passthrough()` suppressed on recursive schemas | Limitation | None for `safeParse` parity      | Blocked on Zod upstream/runtime      |
+| 4   | UUID version specificity lost                    | Limitation | Generated schema more permissive | Low complexity, non-standard fix     |
+| 5   | `z.int64()` → BigInt vs JSON number              | Limitation | None (round-trip consistent)     | Accepted Zod 4 design trade-off      |

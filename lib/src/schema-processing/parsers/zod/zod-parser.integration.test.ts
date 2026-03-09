@@ -8,6 +8,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { parseZodSource, extractSchemaName } from './zod-parser.js';
+import { assertSchemaComponent } from '../../ir/index.js';
 
 describe('Zod Parser Integration', () => {
   describe('extractSchemaName', () => {
@@ -165,6 +166,67 @@ describe('Zod Parser Integration', () => {
 
       expect(petComponent.schema.allOf).toHaveLength(2);
       expect(petComponent.schema.allOf?.[0]?.$ref).toBe('#/components/schemas/NewPet');
+    });
+
+    it('preserves recursive optional, nullable, and nullish getter wrappers in the first IR', () => {
+      const source = `
+        import { z } from 'zod';
+
+        export const TreeNodeSchema = z.object({
+          value: z.number(),
+          get left() {
+            return TreeNodeSchema.optional();
+          },
+          get right() {
+            return TreeNodeSchema.optional();
+          },
+        });
+
+        export const LinkedListNodeSchema = z.object({
+          data: z.string(),
+          get next() {
+            return LinkedListNodeSchema.nullable();
+          },
+        });
+
+        export const MaybeLinkedListNodeSchema = z.object({
+          data: z.string(),
+          get next() {
+            return MaybeLinkedListNodeSchema.nullish();
+          },
+        });
+      `;
+
+      const result = parseZodSource(source);
+
+      expect(result.errors).toHaveLength(0);
+
+      const treeComponent = result.ir.components.find((component) => component.name === 'TreeNode');
+      const treeSchema = assertSchemaComponent(treeComponent).schema;
+      expect(treeSchema.properties?.get('left')?.$ref).toBe('#/components/schemas/TreeNode');
+      expect(treeSchema.properties?.get('left')?.metadata.required).toBe(false);
+      expect(treeSchema.properties?.get('right')?.$ref).toBe('#/components/schemas/TreeNode');
+      expect(treeSchema.properties?.get('right')?.metadata.required).toBe(false);
+
+      const listComponent = result.ir.components.find(
+        (component) => component.name === 'LinkedListNode',
+      );
+      const listSchema = assertSchemaComponent(listComponent).schema;
+      const nextSchema = listSchema.properties?.get('next');
+      expect(nextSchema?.metadata.required).toBe(true);
+      expect(nextSchema?.anyOf).toHaveLength(2);
+      expect(nextSchema?.anyOf?.[0]?.$ref).toBe('#/components/schemas/LinkedListNode');
+      expect(nextSchema?.anyOf?.[1]?.type).toBe('null');
+
+      const maybeListComponent = result.ir.components.find(
+        (component) => component.name === 'MaybeLinkedListNode',
+      );
+      const maybeListSchema = assertSchemaComponent(maybeListComponent).schema;
+      const maybeNextSchema = maybeListSchema.properties?.get('next');
+      expect(maybeNextSchema?.metadata.required).toBe(false);
+      expect(maybeNextSchema?.anyOf).toHaveLength(2);
+      expect(maybeNextSchema?.anyOf?.[0]?.$ref).toBe('#/components/schemas/MaybeLinkedListNode');
+      expect(maybeNextSchema?.anyOf?.[1]?.type).toBe('null');
     });
   });
 });

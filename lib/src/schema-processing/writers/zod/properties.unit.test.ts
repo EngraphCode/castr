@@ -15,6 +15,7 @@ import {
   detectCircularReference,
   shouldUseGetterSyntax,
   formatPropertyKey,
+  getNullableReferenceCompositionBaseSchema,
 } from './properties.js';
 
 describe('Property Writing Helpers', () => {
@@ -135,6 +136,50 @@ describe('Property Writing Helpers', () => {
       });
 
       expect(detectCircularReference(propSchema, parentSchema)).toBe(true);
+    });
+
+    it('returns true when nullable reference compositions appear on a circular property', () => {
+      const propSchema = createMockCastrSchema({
+        anyOf: [
+          createMockCastrSchema({ $ref: '#/components/schemas/LinkedListNode' }),
+          createMockCastrSchema({ type: 'null' }),
+        ],
+      });
+      const parentSchema = createMockCastrSchema({
+        type: 'object',
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['LinkedListNode'],
+        },
+      });
+
+      expect(detectCircularReference(propSchema, parentSchema)).toBe(true);
+    });
+  });
+
+  describe('getNullableReferenceCompositionBaseSchema', () => {
+    it('returns the non-null ref member for nullable reference compositions', () => {
+      const schema = createMockCastrSchema({
+        anyOf: [
+          createMockCastrSchema({ $ref: '#/components/schemas/LinkedListNode' }),
+          createMockCastrSchema({ type: 'null' }),
+        ],
+      });
+
+      const result = getNullableReferenceCompositionBaseSchema(schema);
+
+      expect(result?.$ref).toBe('#/components/schemas/LinkedListNode');
+    });
+
+    it('returns undefined for non-reference nullable compositions', () => {
+      const schema = createMockCastrSchema({
+        anyOf: [createMockCastrSchema({ type: 'string' }), createMockCastrSchema({ type: 'null' })],
+      });
+
+      expect(getNullableReferenceCompositionBaseSchema(schema)).toBeUndefined();
     });
   });
 

@@ -91,6 +91,16 @@ describe('writeJsonSchema', () => {
 
       expect(result.type).toEqual(['string', 'null']);
     });
+
+    it('preserves nullable reference compositions as anyOf', () => {
+      const schema = createSchema({
+        anyOf: [createSchema({ $ref: '#/$defs/LinkedListNode' }), createSchema({ type: 'null' })],
+      });
+
+      const result = writeJsonSchema(schema);
+
+      expect(result.anyOf).toEqual([{ $ref: '#/$defs/LinkedListNode' }, { type: 'null' }]);
+    });
   });
 
   describe('$ref passthrough', () => {
