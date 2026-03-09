@@ -24,7 +24,8 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 - **Session X.Y**: A unit of execution within a phase (work tracking). Historical sessions are archived under `./archive/`.
 - **Session 3.3a / 3.3b**: Two parallel sub-tracks within Session 3.3 (strictness remediation vs strict Zod-layer transform validation with sample input).
 - **Atomic plans**: Small, linear steps stored under `./current/` and linked below.
-- **Active atomic plan**: The single next atomic plan lives under `./active/`.
+- **Primary active atomic plan**: The primary next atomic plan lives under `./active/`.
+- **Parked-in-place exception**: A user may explicitly keep non-primary unfinished plans physically in `./active/`; if so, they must be labelled as parked-in-place context rather than companions.
 - **Paused workstreams**: Incomplete but non-primary workstreams live under `./current/paused/` until they become the next atomic slice again.
 - **Completed atomic plans (staged)**: Completed atomic plans are moved to `./current/complete/` and only archived in batches when a group of work is complete.
 
@@ -32,7 +33,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The practice integration slice is complete. The operational entrypoint now returns to the Zod round-trip limitations workstream.
+The Practice integration slice and core agent-system installation slice are complete. The repo now returns to the Zod round-trip limitations workstream.
 
 Primary active atomic plan:
 
@@ -42,11 +43,9 @@ Active companion investigation:
 
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
-Queued active remediation already established in the workstream:
+Queued active remediation in the same workstream:
 
 - [recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
-
-These plans are intentionally co-located in `active/` because they are tightly coupled parts of the same Phase 4 Zod architecture workstream.
 
 ## Operational Practice Integration (Complete)
 
@@ -54,7 +53,15 @@ Completed plan:
 
 - [practice-core-integration-and-practice-restructuring.md](./current/complete/practice-core-integration-and-practice-restructuring.md)
 
-This completed slice integrated the portable Practice Core into Castr's local practice, renamed the legacy doctrine file to `.agent/directives/principles.md`, installed the canonical-first command / skill / rule model, and documented future Gemini / Antigravity platform support.
+This completed slice integrated the portable Practice Core into Castr's local Practice, renamed the legacy doctrine file to `.agent/directives/principles.md`, installed the canonical-first command / skill / rule model, and documented future Gemini / Antigravity platform support.
+
+## Core Agent System And Codex Adapters (Complete)
+
+Completed plan:
+
+- [core-agent-system-and-codex-agent-adapters.md](./current/complete/core-agent-system-and-codex-agent-adapters.md)
+
+This completed slice installed the canonical reviewer/domain-expert layer under `.agent/sub-agents/`, added the reviewer invocation contract in `.agent/rules/invoke-reviewers.md`, and registered the first Codex reviewer/domain-expert project agents under `.codex/config.toml` and `.codex/agents/`.
 
 ---
 
@@ -231,7 +238,7 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 
 Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
 
-Current operational Zod workstream:
+Current parked Zod workstream context:
 
 - [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)

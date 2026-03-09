@@ -37,7 +37,7 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Resume The Zod Round-Trip Limitations Workstream
+### Priority 1: Resume The Zod Limitations Architecture Investigation
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
@@ -45,44 +45,45 @@ Notes:
 
 #### Background
 
-The practice integration slice completed on 2026-03-09. Castr now has the local-practice spine, canonical-first command/skill/rule model, thin platform wrappers, and future Gemini / Antigravity planning installed.
+The Practice integration slice and the core agent-system installation slice both completed on 2026-03-09. Castr now has the local Practice spine, the canonical reviewer/domain-expert layer under `.agent/sub-agents/`, the invocation contract in `.agent/rules/invoke-reviewers.md`, and Codex project-agent registration under `.codex/config.toml` and `.codex/agents/`.
 
-With that restructuring complete, the operational entrypoint returns to the product architecture workstream.
+The repo now returns to the Zod product workstream.
 
 The primary active atomic plan is:
 
 - [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
 
-The active companion investigation is:
+Closely related active context inside the same workstream:
 
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- Companion investigation: [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- Queued remediation: [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md)
 
-The queued active remediation already established in this workstream is:
+Recent completed operational context:
 
-- [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md)
-
-The completed practice integration slice remains relevant as recent operational context:
-
+- [core-agent-system-and-codex-agent-adapters.md](../plans/current/complete/core-agent-system-and-codex-agent-adapters.md)
 - [practice-core-integration-and-practice-restructuring.md](../plans/current/complete/practice-core-integration-and-practice-restructuring.md)
 
 #### What This Session Should Do
 
 1. Read the active primary plan in [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
-2. Read the companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md) whenever limitation analysis touches proof runtime, scheduling, or doctor behavior
-3. Treat [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md) as queued active execution context rather than speculative future work
-4. Use these durable docs as the architecture source of truth:
+2. Read the companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md) whenever limitation analysis touches proof runtime, doctor cost, or transform-suite architecture
+3. Read the queued remediation plan in [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md) before planning or implementing unknown-key fixes
+4. Use these durable docs as the architecture source of truth for the active product workstream:
    - `docs/architecture/zod-round-trip-limitations.md`
    - `docs/architecture/recursive-unknown-key-semantics.md`
    - `ADR-031`
    - `ADR-032`
    - `ADR-035`
    - `ADR-038`
-5. Keep the current local-practice system in use:
+5. Keep the current local Practice system in use:
    - `AGENT.md`
    - `practice-index.md`
    - canonical `.agent/commands/`, `.agent/skills/`, and `.agent/rules/`
-6. Do not move known Zod remediation out to `future/` while the active limitation set is still being mapped and ordered
-7. Promote durable investigation outcomes into ADRs or architecture docs before ending the session
+   - canonical `.agent/sub-agents/`
+   - `.codex/config.toml`
+   - `.codex/agents/`
+6. Invoke the installed reviewers and domain experts through `.agent/rules/invoke-reviewers.md` when changes cross their trigger boundaries
+7. Do not move known Zod remediation out to `future/` while the active limitation set is still being mapped and ordered
 8. Leave the next session with one obvious primary entrypoint and no stranded context
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
@@ -146,7 +147,7 @@ function handleStringFormatOrPattern(node: Node): void {
 | `lib/eslint.config.ts`                                                              | ESLint rules (ADR-026 enforcement lives here)                            |
 | `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md` | ADR-026 source of truth                                                  |
 | `.agent/plans/roadmap.md`                                                           | Single plan truth                                                        |
-| `.agent/plans/active/`                                                              | Single next atomic plan to execute                                       |
+| `.agent/plans/active/`                                                              | Primary active plan plus any explicit parked-in-place exception          |
 | `.agent/plans/current/paused/`                                                      | Incomplete but non-primary workstreams that are expected to resume       |
 | `.agent/plans/current/complete/`                                                    | Completed atomic plans (staged; archive later in batches)                |
 | `.agent/directives/principles.md`                                                   | Engineering standards                                                    |

@@ -35,13 +35,15 @@ Then use:
 
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Primary Active Work:** Zod round-trip limitations architecture investigation
+- **Primary Active Work:** Zod limitations architecture investigation
   - Plan of record: `.agent/plans/roadmap.md`
   - Primary active plan: `.agent/plans/active/zod-limitations-architecture-investigation.md`
-  - Active companions: `.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `.agent/plans/active/recursive-unknown-key-semantics-remediation.md`
-- **Recent Completed Operational Slice:** Practice Core integration and canonical-first restructuring
-  - Completion record: `.agent/plans/current/complete/practice-core-integration-and-practice-restructuring.md`
-  - Outcome: local-practice spine, canonical wrappers, and future Gemini / Antigravity planning are now installed
+  - Active companion investigation: `.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md`
+  - Queued active remediation: `.agent/plans/active/recursive-unknown-key-semantics-remediation.md`
+- **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
+- **Recent Completed Operational Slices:**
+  - `.agent/plans/current/complete/core-agent-system-and-codex-agent-adapters.md`
+  - `.agent/plans/current/complete/practice-core-integration-and-practice-restructuring.md`
 
 ---
 
@@ -67,6 +69,7 @@ Then use:
 │
 ├── commands/               ← Canonical command workflows
 ├── skills/                 ← Canonical skills
+├── sub-agents/             ← Canonical reviewer and domain-expert templates
 ├── practice-core/          ← Portable Practice Core package
 ├── practice-context/       ← Optional exchange support context
 ├── memory/                 ← Napkin, distilled learnings, code patterns
@@ -74,7 +77,7 @@ Then use:
 │
 ├── plans/
 │   ├── roadmap.md               ← Ties all plans together (plan-of-record)
-│   ├── active/                  ← Single next atomic plan to execute
+│   ├── active/                  ← Primary active plan plus any explicit parked-in-place exception
 │   ├── current/                 ← Current plan state containers
 │   │   ├── paused/              ← Incomplete but non-primary workstreams
 │   │   └── complete/            ← Completed atomic plans (staged; archive in batches)
@@ -108,6 +111,9 @@ pnpm check:ci
 
 # Local verification (may mutate to fix formatting / safe lint autofixes)
 pnpm check
+
+# Structural Practice and adapter validation
+pnpm portability:check
 ```
 
 ---

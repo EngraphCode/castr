@@ -35,6 +35,7 @@ pnpm madge:circular
 pnpm madge:orphans
 pnpm depcruise
 pnpm knip
+pnpm portability:check
 
 pnpm test
 pnpm character
@@ -47,23 +48,24 @@ pnpm test:transforms
 
 ## Quick Reference
 
-| Gate            | Command                          | Purpose                              |
-| --------------- | -------------------------------- | ------------------------------------ |
-| Clean           | `pnpm clean`                     | Remove build artifacts               |
-| Install         | `pnpm install --frozen-lockfile` | Install deps without lockfile drift  |
-| Build           | `pnpm build`                     | Build all packages                   |
-| Format          | `pnpm format:check`              | Enforce formatting (non-mutating)    |
-| Type-check      | `pnpm type-check`                | TypeScript strict mode               |
-| Lint            | `pnpm lint`                      | ESLint rules enforcement             |
-| Madge Circular  | `pnpm madge:circular`            | Check for circular dependencies      |
-| Madge Orphans   | `pnpm madge:orphans`             | Check for orphaned files (warnings)  |
-| Dep Cruiser     | `pnpm depcruise`                 | Architecture boundaries validation   |
-| Knip            | `pnpm knip`                      | Find unused exports/dead code        |
-| Unit tests      | `pnpm test`                      | Primary test suite                   |
-| Character tests | `pnpm character`                 | Public API behavior                  |
-| Snapshot tests  | `pnpm test:snapshot`             | Snapshot comparison                  |
-| Generated tests | `pnpm test:gen`                  | Tests on generated code              |
-| Transform tests | `pnpm test:transforms`           | End-to-end transform pipeline proofs |
+| Gate            | Command                          | Purpose                                   |
+| --------------- | -------------------------------- | ----------------------------------------- |
+| Clean           | `pnpm clean`                     | Remove build artifacts                    |
+| Install         | `pnpm install --frozen-lockfile` | Install deps without lockfile drift       |
+| Build           | `pnpm build`                     | Build all packages                        |
+| Format          | `pnpm format:check`              | Enforce formatting (non-mutating)         |
+| Type-check      | `pnpm type-check`                | TypeScript strict mode                    |
+| Lint            | `pnpm lint`                      | ESLint rules enforcement                  |
+| Madge Circular  | `pnpm madge:circular`            | Check for circular dependencies           |
+| Madge Orphans   | `pnpm madge:orphans`             | Check for orphaned files (warnings)       |
+| Dep Cruiser     | `pnpm depcruise`                 | Architecture boundaries validation        |
+| Knip            | `pnpm knip`                      | Find unused exports/dead code             |
+| Portability     | `pnpm portability:check`         | Validate canonical agent/adapter cohesion |
+| Unit tests      | `pnpm test`                      | Primary test suite                        |
+| Character tests | `pnpm character`                 | Public API behavior                       |
+| Snapshot tests  | `pnpm test:snapshot`             | Snapshot comparison                       |
+| Generated tests | `pnpm test:gen`                  | Tests on generated code                   |
+| Transform tests | `pnpm test:transforms`           | End-to-end transform pipeline proofs      |
 
 ---
 

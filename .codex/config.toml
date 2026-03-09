@@ -1,0 +1,26 @@
+[features]
+multi_agent = true
+
+[agents."code-reviewer"]
+description = "Gateway reviewer for non-trivial changes."
+config_file = ".codex/agents/code-reviewer.toml"
+
+[agents."test-reviewer"]
+description = "Test quality and TDD compliance reviewer."
+config_file = ".codex/agents/test-reviewer.toml"
+
+[agents."type-reviewer"]
+description = "Type flow and strictness reviewer."
+config_file = ".codex/agents/type-reviewer.toml"
+
+[agents."openapi-expert"]
+description = "OpenAPI 3.0/3.1 semantics and IR fidelity expert."
+config_file = ".codex/agents/openapi-expert.toml"
+
+[agents."zod-expert"]
+description = "Zod parser/writer lockstep and ts-morph expert."
+config_file = ".codex/agents/zod-expert.toml"
+
+[agents."json-schema-expert"]
+description = "Draft 07 and 2020-12 JSON Schema fidelity expert."
+config_file = ".codex/agents/json-schema-expert.toml"

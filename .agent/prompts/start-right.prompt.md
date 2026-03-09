@@ -24,12 +24,14 @@ The standing question is:
 4. [requirements.md](../directives/requirements.md)
 5. [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md)
 6. [practice-index.md](../practice-index.md)
-7. [session-entry.prompt.md](./session-entry.prompt.md)
-8. [active/README.md](../plans/active/README.md)
-9. [roadmap.md](../plans/roadmap.md)
-10. the primary active plan named by `session-entry.prompt.md`
-11. any companion or paused workstream explicitly linked from the primary plan or session-entry prompt
-12. the ADRs and durable architecture docs named by that active plan
+7. [sub-agents/README.md](../sub-agents/README.md)
+8. [invoke-reviewers.md](../rules/invoke-reviewers.md)
+9. [session-entry.prompt.md](./session-entry.prompt.md)
+10. [active/README.md](../plans/active/README.md)
+11. [roadmap.md](../plans/roadmap.md)
+12. the primary active plan named by `session-entry.prompt.md`
+13. any companion or paused workstream explicitly linked from the primary plan or session-entry prompt
+14. the ADRs and durable architecture docs named by that active plan
 
 Do not treat archived plans or stale prompt fragments as the source of truth when a durable doc or current active plan says otherwise.
 
@@ -128,6 +130,7 @@ pnpm madge:circular
 pnpm madge:orphans
 pnpm depcruise
 pnpm knip
+pnpm portability:check
 
 pnpm test
 pnpm character

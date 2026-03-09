@@ -38,24 +38,28 @@ For the portable Core, see [practice-core/index.md](practice-core/index.md).
 | [castr-start-right](skills/castr-start-right/SKILL.md)  | Repo-specific start-right bootstrap skill                               |
 | [napkin](skills/napkin/SKILL.md)                        | Continuous capture stage of the knowledge flow                          |
 | [distillation](skills/distillation/SKILL.md)            | Distill the napkin into durable high-signal learnings                   |
+| [invoke-reviewers](rules/invoke-reviewers.md)           | Installed reviewer and domain-expert invocation contract                |
 | [quality-gate-failures](rules/quality-gate-failures.md) | All gate failures are blocking                                          |
 | [tdd](rules/tdd.md)                                     | TDD applies at all levels                                               |
 | [napkin](rules/napkin.md)                               | Keep the learning loop's capture stage active                           |
+| [`.codex/config.toml`](../.codex/config.toml)           | Codex project-agent registration for installed reviewers and experts    |
 
 ## Artefact Directories
 
-| Location                                        | What lives there                                          |
-| ----------------------------------------------- | --------------------------------------------------------- |
-| [`.agent/directives/`](directives/)             | Doctrine and operational entrypoints                      |
-| [`.agent/prompts/`](prompts/)                   | Reusable playbooks                                        |
-| [`.agent/commands/`](commands/)                 | Canonical command workflows                               |
-| [`.agent/skills/`](skills/)                     | Canonical skills                                          |
-| [`.agent/rules/`](rules/)                       | Operationalized doctrine                                  |
-| [`.agent/plans/`](plans/)                       | Active, paused, completed, archived, and future plans     |
-| [`.agent/memory/`](memory/)                     | Napkin, distilled learnings, and code-pattern scaffolding |
-| [`.agent/experience/`](experience/)             | Experience records                                        |
-| [`.agent/practice-core/`](practice-core/)       | Portable Practice Core package                            |
-| [`.agent/practice-context/`](practice-context/) | Optional exchange support context                         |
-| [`.agents/skills/`](../.agents/skills/)         | Cross-platform skill wrappers                             |
-| [`.cursor/`](../.cursor/)                       | Cursor-specific wrappers and settings                     |
-| [`.codex/`](../.codex/)                         | Codex project metadata and agent config                   |
+| Location                                        | What lives there                                                       |
+| ----------------------------------------------- | ---------------------------------------------------------------------- |
+| [`.agent/directives/`](directives/)             | Doctrine and operational entrypoints                                   |
+| [`.agent/prompts/`](prompts/)                   | Reusable playbooks                                                     |
+| [`.agent/commands/`](commands/)                 | Canonical command workflows                                            |
+| [`.agent/skills/`](skills/)                     | Canonical skills                                                       |
+| [`.agent/rules/`](rules/)                       | Operationalized doctrine                                               |
+| [`.agent/sub-agents/`](sub-agents/)             | Canonical reviewer and domain-expert prompt architecture               |
+| [`.agent/plans/`](plans/)                       | Active, paused, completed, archived, and future plans                  |
+| [`.agent/memory/`](memory/)                     | Napkin, distilled learnings, and code-pattern scaffolding              |
+| [`.agent/experience/`](experience/)             | Experience records                                                     |
+| [`.agent/practice-core/`](practice-core/)       | Portable Practice Core package                                         |
+| [`.agent/practice-context/`](practice-context/) | Optional exchange support context                                      |
+| [`.agents/skills/`](../.agents/skills/)         | Codex skill wrappers for skills and `jc-*` workflows                   |
+| [`.cursor/`](../.cursor/)                       | Cursor-specific wrappers and settings                                  |
+| [`.codex/`](../.codex/)                         | Codex project-agent registration and thin reviewer/expert adapters     |
+| [`.codex/agents/`](../.codex/agents/)           | Thin Codex project-agent adapters pointing back to canonical templates |

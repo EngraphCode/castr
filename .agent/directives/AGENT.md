@@ -41,6 +41,7 @@
 - Commands: [`commands/`](../commands/)
 - Skills: [`skills/`](../skills/)
 - Rules: [`rules/`](../rules/)
+- Sub-agents: [`sub-agents/`](../sub-agents/)
 - Prompts: [`prompts/`](../prompts/)
 - Plans: [`plans/`](../plans/)
 - Memory: [`memory/`](../memory/)
@@ -48,13 +49,22 @@
 
 ## Sub-agents
 
-The full reviewer/sub-agent system is not yet fully installed in this repo's canonical-first model.
+The reviewer and domain-expert layer is installed canonically under `.agent/sub-agents/`.
 
-Current expectation:
+Invocation contract:
 
-- use the repo doctrine directly
-- use the command/skill/rule chain consistently
-- expand reviewer infrastructure in a later dedicated slice rather than improvising local one-offs
+- read and apply `.agent/rules/invoke-reviewers.md`
+- use `.codex/config.toml` and `.codex/agents/*.toml` for Codex reviewer/domain-expert roles
+- keep `.agents/skills/` for skills and `jc-*` command workflows only
+
+Installed roster:
+
+- `code-reviewer` — gateway reviewer for non-trivial changes
+- `test-reviewer` — TDD and test-quality specialist
+- `type-reviewer` — type-flow and strictness specialist
+- `openapi-expert` — OpenAPI 3.0/3.1 semantics and IR fidelity specialist
+- `zod-expert` — Zod parser/writer lockstep and ts-morph specialist
+- `json-schema-expert` — Draft 07 / 2020-12 fidelity and IR mapping specialist
 
 ## Development Commands
 
@@ -69,6 +79,7 @@ Current expectation:
 - `pnpm madge:orphans`
 - `pnpm depcruise`
 - `pnpm knip`
+- `pnpm portability:check`
 - `pnpm test`
 - `pnpm character`
 - `pnpm test:snapshot`
@@ -84,8 +95,12 @@ Current expectation:
 - `.agent/commands/` — canonical command workflows
 - `.agent/skills/` — canonical skills
 - `.agent/rules/` — operationalized doctrine
+- `.agent/sub-agents/` — canonical reviewer and domain-expert templates
 - `.agent/practice-core/` — portable Core package
 - `.agent/practice-context/` — optional exchange support context
-- `.agent/plans/active/` — single next atomic plan
+- `.agent/plans/active/` — primary active plan plus any explicit parked-in-place exception
 - `.agent/plans/current/paused/` — incomplete but non-primary resumable workstreams
 - `.agent/plans/current/complete/` — completed atomic plans staged before archive
+- `.agents/skills/` — Codex skill and workflow wrappers
+- `.codex/` — Codex project-agent registration and thin adapters
+- `scripts/` — repo-local validation and tooling support

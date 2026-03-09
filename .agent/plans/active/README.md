@@ -152,6 +152,17 @@ At the time of writing, this repo allows:
 
 This is stricter than an open-ended “many active plans” model, but more realistic than insisting the directory be literally empty except for one file at all times.
 
+## Explicit User-Directed Parking Exception
+
+If a user explicitly instructs that a non-primary unfinished workstream remain physically in `active/` while a different plan becomes the next slice, do not silently treat that as normal companion-plan usage.
+
+Instead:
+
+- still name exactly one **primary** active plan in `session-entry.prompt.md` and `roadmap.md`
+- explicitly label the other plans as **parked-in-place non-primary context**
+- do not describe parked plans as tightly coupled companions if they are not
+- return to the normal lifecycle model once the exception is no longer needed
+
 ## Paused Workstreams
 
 If an unfinished workstream is still important but no longer the next atomic slice, move it out of `active/` into `.agent/plans/current/paused/`.
