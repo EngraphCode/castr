@@ -133,6 +133,6 @@ This library implements an **Intermediate Representation (IR) architecture** for
 | --------------------------------------- | ------------------------------- |
 | `.agent/directives/VISION.md`           | Strategic direction and roadmap |
 | `.agent/directives/requirements.md`     | Agent decision-making guide     |
-| `.agent/directives/RULES.md`            | Engineering standards           |
+| `.agent/directives/principles.md`       | Engineering standards           |
 | `.agent/directives/testing-strategy.md` | Test methodology                |
 | `./README.md`                           | ADR guide and template          |

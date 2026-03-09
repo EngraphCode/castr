@@ -172,7 +172,7 @@ These ADRs establish the following principles:
 
 **Engineering Standards:**
 
-- **Rules:** `.agent/directives/RULES.md` - Engineering excellence standards
+- **Rules:** `.agent/directives/principles.md` - Engineering excellence standards
 - **Summary:** `./SUMMARY.md` - Phase 2 architectural decisions summary
 - **Roadmap:** `.agent/plans/roadmap.md`
 
@@ -180,7 +180,7 @@ These ADRs establish the following principles:
 
 - **Vision:** `.agent/directives/VISION.md`
 - **Requirements:** `.agent/directives/requirements.md`
-- **Rules:** `.agent/directives/RULES.md`
+- **Rules:** `.agent/directives/principles.md`
 
 ## Creating New ADRs
 

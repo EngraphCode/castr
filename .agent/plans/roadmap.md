@@ -25,7 +25,36 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 - **Session 3.3a / 3.3b**: Two parallel sub-tracks within Session 3.3 (strictness remediation vs strict Zod-layer transform validation with sample input).
 - **Atomic plans**: Small, linear steps stored under `./current/` and linked below.
 - **Active atomic plan**: The single next atomic plan lives under `./active/`.
+- **Paused workstreams**: Incomplete but non-primary workstreams live under `./current/paused/` until they become the next atomic slice again.
 - **Completed atomic plans (staged)**: Completed atomic plans are moved to `./current/complete/` and only archived in batches when a group of work is complete.
+
+---
+
+## Current Active Workstream
+
+The practice integration slice is complete. The operational entrypoint now returns to the Zod round-trip limitations workstream.
+
+Primary active atomic plan:
+
+- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+
+Active companion investigation:
+
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+
+Queued active remediation already established in the workstream:
+
+- [recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
+
+These plans are intentionally co-located in `active/` because they are tightly coupled parts of the same Phase 4 Zod architecture workstream.
+
+## Operational Practice Integration (Complete)
+
+Completed plan:
+
+- [practice-core-integration-and-practice-restructuring.md](./current/complete/practice-core-integration-and-practice-restructuring.md)
+
+This completed slice integrated the portable Practice Core into Castr's local practice, renamed the legacy doctrine file to `.agent/directives/principles.md`, installed the canonical-first command / skill / rule model, and documented future Gemini / Antigravity platform support.
 
 ---
 
@@ -103,10 +132,10 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - No swallowed errors exist in strict pipeline code paths.
 - No product-code escape hatches exist (`as` except `as const`, `any`, `!`, `eslint-disable`).
 - Determinism is proven by tests (stable ordering, byte-identical outputs where required).
-- TDD is mandatory for all work (see `RULES.md` § Testing Standards).
+- TDD is mandatory for all work (see `principles.md` § Testing Standards).
 - Quality gates pass (canonical: `.agent/directives/DEFINITION_OF_DONE.md`).
 
-**Governing docs:** `.agent/directives/VISION.md`, `.agent/directives/RULES.md`, `.agent/directives/testing-strategy.md`, `.agent/directives/requirements.md`, `.agent/directives/DEFINITION_OF_DONE.md`.
+**Governing docs:** `.agent/directives/VISION.md`, `.agent/directives/principles.md`, `.agent/directives/testing-strategy.md`, `.agent/directives/requirements.md`, `.agent/directives/DEFINITION_OF_DONE.md`.
 
 **References:** `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md`, `lib/eslint.config.ts`.
 
@@ -202,12 +231,11 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 
 Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
 
-Primary active atomic plan: [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+Current operational Zod workstream:
 
-Companion active investigation plan: [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
-
-Queued active remediation plan for the first limitation tranche:
-[recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
+- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)
 
@@ -216,6 +244,10 @@ Queued active remediation plan for the first limitation tranche:
 - SDK workspace/reference implementation to demonstrate end-to-end integration (separate from the core library)
 
 Plan: [phase-5-ecosystem-expansion.md](./future/phase-5-ecosystem-expansion.md)
+
+Agentic infrastructure platform expansion is tracked separately in:
+
+- [gemini-antigravity-agentic-platform-support.md](./future/gemini-antigravity-agentic-platform-support.md)
 
 Strictness note: any "best-effort" or "permissive fallback" behavior is a doctrine violation. If a feature cannot be represented losslessly, it must be rejected with a helpful error (or the IR/writers must be extended).
 

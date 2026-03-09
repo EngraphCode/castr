@@ -235,8 +235,8 @@ lib/src/zodiosEndpoint.helpers.test.ts         # 20 unit tests
 
 ## References
 
-- RULES.md Section: "Core Principles" → "Prefer pure functions"
-- RULES.md Section: "Single Responsibility Principle"
+- principles.md Section: "Core Principles" → "Prefer pure functions"
+- principles.md Section: "Single Responsibility Principle"
 - `.agent/PHASE1_COMPLETE.md` - Detailed metrics
 - Implementation: `lib/src/zodiosEndpoint.*.helpers.ts`
 - Tests: `lib/src/zodiosEndpoint.helpers.test.ts`

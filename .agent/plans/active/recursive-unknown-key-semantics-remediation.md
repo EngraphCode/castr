@@ -25,7 +25,7 @@ This plan stays in `active/` intentionally. It is queued for execution as part o
 ## Before You Start (Required)
 
 1. Re-read:
-   - `.agent/directives/RULES.md`
+   - `.agent/directives/principles.md`
    - `.agent/directives/testing-strategy.md`
    - `.agent/directives/requirements.md`
    - `.agent/directives/DEFINITION_OF_DONE.md`

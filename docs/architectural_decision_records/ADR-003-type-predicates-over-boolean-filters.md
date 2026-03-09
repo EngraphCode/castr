@@ -151,7 +151,7 @@ function isString(value: string | number): value is string {
 
 ### Mitigation
 
-- **Document pattern** in RULES.md
+- **Document pattern** in principles.md
 - **Provide examples** in ADRs
 - **Code reviews** catch boolean filters
 - **Lint rules** can help detect missing type predicates
@@ -233,7 +233,7 @@ if (isPrimitiveSchemaType(schema.type)) {
 
 ## References
 
-- RULES.md Section: "Type Guards Over Assertions"
+- principles.md Section: "Type Guards Over Assertions"
 - Implementation: `lib/src/utils.ts:60-76`
 - Tests: `lib/src/utils.test.ts:12-49`
 - TypeScript Handbook: [Narrowing - Type Predicates](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates)

@@ -8,7 +8,7 @@ import type { GenerationResult } from '../rendering/generation-result.js';
  * Type Guard: Assert value is a string
  *
  * Used in tests to narrow the type of generated code from `string | undefined` to `string`.
- * Follows fail-fast principle from RULES.md.
+ * Follows fail-fast principle from principles.md.
  *
  * @param value - The value to check
  * @param context - Optional context for error message

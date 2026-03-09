@@ -37,52 +37,53 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Decide Next Focus Area
+### Priority 1: Resume The Zod Round-Trip Limitations Workstream
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
-> **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, and archival behavior.
+> **Plan execution contract:** Canonical-source and lifecycle rules are permanently documented in [`.agent/plans/active/README.md`](../plans/active/README.md). Follow that document for activation, successor promotion, paused-workstream parking, and archival behavior.
 
 #### Background
 
-Recent Zod round-trip behavior and trade-offs have been promoted into permanent documentation:
+The practice integration slice completed on 2026-03-09. Castr now has the local-practice spine, canonical-first command/skill/rule model, thin platform wrappers, and future Gemini / Antigravity planning installed.
 
-- [docs/architecture/zod-round-trip-limitations.md](../../docs/architecture/zod-round-trip-limitations.md)
-- [ADR-031: Zod 4 Output Strategy](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
-- [ADR-032: Zod 4 Input Strategy](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)
-- [ADR-035: Transform Validation Parity & Scenario Matrix](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
-
-Use plans only for the next atomic slice of work. Do not treat active or archived plans as the durable source of truth for Zod round-trip architecture or limitations.
+With that restructuring complete, the operational entrypoint returns to the product architecture workstream.
 
 The primary active atomic plan is:
 
 - [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
 
-There is also a companion active investigation plan:
+The active companion investigation is:
 
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
-These plans are intentionally **investigation-first**. The Zod limitations plan is the primary semantic workstream. The transform-proof / runtime plan should be consulted whenever limitation investigation touches doctor behavior, transform-suite runtime, proof budgeting, or possible non-test performance architecture debt.
-
-Proven remediation work for this workstream should remain in `active/` while the remaining limitations are still being mapped. Do not park established fixes for this Zod workstream in `future/`.
-
-The current queued active remediation plan is:
+The queued active remediation already established in this workstream is:
 
 - [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md)
 
-The strategic goal for this investigation is **zero legitimate data structures that Castr cannot handle**. If the next session discovers additional legitimate gaps, it should explicitly decide whether to include them now, add them to the active execution queue, or record them durably as later-scope work only if they are genuinely outside the current workstream.
+The completed practice integration slice remains relevant as recent operational context:
+
+- [practice-core-integration-and-practice-restructuring.md](../plans/current/complete/practice-core-integration-and-practice-restructuring.md)
 
 #### What This Session Should Do
 
-1. Read the permanent Zod round-trip reference in [docs/architecture/zod-round-trip-limitations.md](../../docs/architecture/zod-round-trip-limitations.md)
-2. Read the primary active investigation plan in [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
-3. Read the companion investigation plan in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
-4. Read [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md), and [ADR-035](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md) before changing Zod parser/writer behavior
-5. Investigate the remaining limitations one by one and identify whether each is fundamentally a standards gap, IR gap, canonicalization choice, parser/writer issue, or upstream-runtime issue
-6. If you discover additional legitimate unhandled structures, classify and triage them explicitly instead of leaving them as incidental findings
-7. If runtime cost, doctor behavior, or transform-proof scheduling becomes part of the diagnosis, switch to the companion investigation plan rather than treating that as an incidental side note
-8. Do not start product-code implementation until the current known Zod limitation set has explicit outcomes and any required remediation plans have been created in `active/`
-9. Once the current known limitation set is fully mapped, begin execution from the active plan queue instead of creating `future/` plans for this workstream
+1. Read the active primary plan in [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
+2. Read the companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md) whenever limitation analysis touches proof runtime, scheduling, or doctor behavior
+3. Treat [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md) as queued active execution context rather than speculative future work
+4. Use these durable docs as the architecture source of truth:
+   - `docs/architecture/zod-round-trip-limitations.md`
+   - `docs/architecture/recursive-unknown-key-semantics.md`
+   - `ADR-031`
+   - `ADR-032`
+   - `ADR-035`
+   - `ADR-038`
+5. Keep the current local-practice system in use:
+   - `AGENT.md`
+   - `practice-index.md`
+   - canonical `.agent/commands/`, `.agent/skills/`, and `.agent/rules/`
+6. Do not move known Zod remediation out to `future/` while the active limitation set is still being mapped and ordered
+7. Promote durable investigation outcomes into ADRs or architecture docs before ending the session
+8. Leave the next session with one obvious primary entrypoint and no stranded context
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
@@ -146,8 +147,9 @@ function handleStringFormatOrPattern(node: Node): void {
 | `docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md` | ADR-026 source of truth                                                  |
 | `.agent/plans/roadmap.md`                                                           | Single plan truth                                                        |
 | `.agent/plans/active/`                                                              | Single next atomic plan to execute                                       |
+| `.agent/plans/current/paused/`                                                      | Incomplete but non-primary workstreams that are expected to resume       |
 | `.agent/plans/current/complete/`                                                    | Completed atomic plans (staged; archive later in batches)                |
-| `.agent/directives/RULES.md`                                                        | Engineering standards                                                    |
+| `.agent/directives/principles.md`                                                   | Engineering standards                                                    |
 | `.agent/directives/testing-strategy.md`                                             | Testing methodology                                                      |
 | `.agent/directives/DEFINITION_OF_DONE.md`                                           | Quality gate script                                                      |
 
@@ -159,6 +161,6 @@ function handleStringFormatOrPattern(node: Node): void {
 | -------- | ------------------------------------------------------------ | --------------------------------------- |
 | 1        | [roadmap.md](../plans/roadmap.md)                            | Single plan truth                       |
 | 2        | [requirements.md](../directives/requirements.md)             | Strict requirements + decision guidance |
-| 3        | [RULES.md](../directives/RULES.md)                           | Engineering standards                   |
+| 3        | [principles.md](../directives/principles.md)                 | Engineering standards                   |
 | 4        | [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md) | Quality gates                           |
 | 5        | [testing-strategy.md](../directives/testing-strategy.md)     | TDD approach                            |

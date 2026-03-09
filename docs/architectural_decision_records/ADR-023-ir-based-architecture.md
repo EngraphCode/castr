@@ -118,13 +118,13 @@ See `VISION.md` for full rationale.
 This decision aligns with:
 
 - **VISION.md**: Implements the N×M conversion architecture
-- **RULES.md**: Follows type safety, engineering excellence principles
+- **principles.md**: Follows type safety, engineering excellence principles
 - **Cardinal Rule**: The canonical IR is the single source of truth
 
 ## References
 
 - `.agent/directives/VISION.md` - Strategic vision and roadmap
-- `.agent/directives/RULES.md` - Engineering standards (Cardinal Rule section)
+- `.agent/directives/principles.md` - Engineering standards (Cardinal Rule section)
 - `lib/src/schema-processing/ir/schema.ts` - IR type definitions
 - `lib/src/schema-processing/context/template-context.ts` - IR-derived template context
 - [ADR-018](./ADR-018-openapi-3.1-first-architecture.md) - OpenAPI 3.1-first decision

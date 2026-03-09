@@ -1,0 +1,6 @@
+---
+description: TDD is mandatory
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/tdd.md`.

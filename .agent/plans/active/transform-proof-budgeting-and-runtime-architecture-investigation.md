@@ -19,7 +19,7 @@ The goal is to help the next session determine:
 3. which performance and runtime costs belong to the opt-in doctor pipeline, which belong to the main transform path, and which are accidental setup churn
 4. what durable architectural response should be promoted into ADRs, permanent docs, or a follow-on implementation plan
 
-This is intentionally a **companion investigation** to [zod-limitations-architecture-investigation.md](/Users/jim/code/personal/castr/.agent/plans/active/zod-limitations-architecture-investigation.md). The two plans should inform each other:
+This is intentionally a **companion investigation** to [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md). The two plans should inform each other:
 
 - the Zod limitations work may surface legitimate structures that require heavier transform proofs
 - heavy transform-proof runtime may obscure whether a limitation is architectural or merely expensive to prove
@@ -61,7 +61,7 @@ Out of scope:
 
 ## Non-Negotiable Investigation Rules
 
-1. Re-read `RULES.md`, `testing-strategy.md`, `requirements.md`, and `DEFINITION_OF_DONE.md` before starting the investigation.
+1. Re-read `principles.md`, `testing-strategy.md`, `requirements.md`, and `DEFINITION_OF_DONE.md` before starting the investigation.
 2. Treat strict proof quality as non-negotiable. Do not solve runtime pressure by deleting or weakening proofs.
 3. Do not assume a timeout failure implies global-state leakage.
 4. Do not assume an expensive path is acceptable merely because it is opt-in.
@@ -118,7 +118,7 @@ Before proposing any architectural answer, do the following:
    - `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`
    - `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`
    - `docs/architectural_decision_records/ADR-035-transform-validation-parity.md`
-   - [zod-limitations-architecture-investigation.md](/Users/jim/code/personal/castr/.agent/plans/active/zod-limitations-architecture-investigation.md)
+   - [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md)
 2. Baseline the current transform suite:
    - isolated heavy-test runtime
    - full-suite runtime
@@ -250,7 +250,7 @@ At the end of each tranche, explicitly ask:
 2. Does this finding reveal that a current Zod limitation is partly a proof-budget problem rather than only a semantic one?
 3. Does any newly discovered legitimate unhandled structure belong in the Zod limitations workstream now, or only in a future session?
 
-Any yes-answer must be written back into [zod-limitations-architecture-investigation.md](/Users/jim/code/personal/castr/.agent/plans/active/zod-limitations-architecture-investigation.md) before the session ends.
+Any yes-answer must be written back into [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md) before the session ends.
 
 ---
 

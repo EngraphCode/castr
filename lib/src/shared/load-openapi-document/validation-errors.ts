@@ -1,7 +1,7 @@
 /**
  * Validation error formatting utilities for friendly, helpful error messages.
  *
- * Per RULES.md: "Fail fast, fail hard, be strict at all times"
+ * Per principles.md: "Fail fast, fail hard, be strict at all times"
  * But also be HELPFUL - show users exactly what's wrong and how to fix it.
  *
  * @module

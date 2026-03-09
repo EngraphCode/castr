@@ -159,7 +159,7 @@ graph TD
     end
 
     subgraph "What Excellence Looks Like"
-        RULES[RULES.md<br/>Engineering Standards]
+        RULES[principles.md<br/>Engineering Standards]
         TEST[testing-strategy.md<br/>TDD & Test Types]
     end
 
@@ -184,7 +184,7 @@ graph TD
 | ---------------------------------------------- | ----------------------- | --------------------------------- |
 | [VISION.md](VISION.md)                         | Strategic direction     | _Where are we going?_             |
 | [requirements.md](requirements.md)             | Agent decision guidance | _How should I decide?_            |
-| [RULES.md](RULES.md)                           | Engineering standards   | _What does excellence look like?_ |
+| [principles.md](principles.md)                 | Engineering standards   | _What does excellence look like?_ |
 | [testing-strategy.md](testing-strategy.md)     | TDD & test types        | _How do we prove correctness?_    |
 | [DEFINITION_OF_DONE.md](DEFINITION_OF_DONE.md) | Quality gates           | _How do we verify we're done?_    |
 

@@ -1,7 +1,7 @@
 # Testing and Development Strategy
 
 > [!NOTE]
-> This document focuses on **testing methodology**. For broader engineering standards, see [RULES.md](RULES.md).
+> This document focuses on **testing methodology**. For broader engineering standards, see [principles.md](principles.md).
 
 ## Tooling
 
@@ -437,7 +437,7 @@ These layers define the structured acceptance criteria for the Castr pipeline. E
 | Document                                                            | Purpose                                     |
 | ------------------------------------------------------------------- | ------------------------------------------- |
 | `.agent/directives/requirements.md`                                 | Strict validation and OpenAPI 3.0/3.1 rules |
-| `.agent/directives/RULES.md`                                        | Strictness, fail-fast, TDD discipline       |
+| `.agent/directives/principles.md`                                   | Strictness, fail-fast, TDD discipline       |
 | `research/oak-open-curriculum-sdk/castr-requests/README.md`         | Oak contract shape                          |
 | `research/oak-open-curriculum-sdk/castr-requests/oak-principles.md` | Type discipline                             |
 | `research/feature-parity/*`                                         | Parity gaps and integration targets         |

@@ -255,5 +255,5 @@ class MyHandler implements Handler {
 
 ## References
 
-- RULES.md Section: "Code Organization" → "No unused vars"
+- principles.md Section: "Code Organization" → "No unused vars"
 - ESLint rule: `@typescript-eslint/no-unused-vars`

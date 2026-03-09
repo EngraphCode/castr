@@ -9,7 +9,7 @@ import { generateZodClientFromOpenAPI } from '../../../src/index.js';
  * (like 'Integer' instead of 'integer') are now rejected at
  * the validation stage rather than being gracefully degraded.
  *
- * Per RULES.md: "Fail fast, fail hard, be strict at all times"
+ * Per principles.md: "Fail fast, fail hard, be strict at all times"
  */
 describe('schema-type-wrong-case', () => {
   test('invalid type case is rejected by strict validation', async () => {

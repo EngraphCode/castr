@@ -152,6 +152,19 @@ At the time of writing, this repo allows:
 
 This is stricter than an open-ended “many active plans” model, but more realistic than insisting the directory be literally empty except for one file at all times.
 
+## Paused Workstreams
+
+If an unfinished workstream is still important but no longer the next atomic slice, move it out of `active/` into `.agent/plans/current/paused/`.
+
+Use paused workstreams when:
+
+- the work is incomplete
+- the work is still expected to resume
+- moving it to `future/` would misrepresent it as later-scope backlog
+- leaving it in `active/` would dilute the single obvious entrypoint for the next session
+
+See [`.agent/plans/current/paused/README.md`](../current/paused/README.md) for the paused-workstream lifecycle contract.
+
 ---
 
 ## Session Entry Expectation

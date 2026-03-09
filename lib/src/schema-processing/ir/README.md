@@ -36,5 +36,5 @@ After parsing, the input document is **conceptually discarded**—only the IR ma
 
 ## Related
 
-- [RULES.md](../../../../.agent/directives/RULES.md) — Engineering standards
+- [principles.md](../../../../.agent/directives/principles.md) — Engineering standards
 - [requirements.md](../../../../.agent/directives/requirements.md) — IR completeness requirements

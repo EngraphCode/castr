@@ -8,7 +8,7 @@
 
 ## ⚡ Quick Start (New Session)
 
-1. **Read foundational docs:** [RULES.md](../../directives/RULES.md), [testing-strategy.md](../../directives/testing-strategy.md), [DEFINITION_OF_DONE.md](../../directives/DEFINITION_OF_DONE.md)
+1. **Read foundational docs:** [principles.md](../../directives/principles.md), [testing-strategy.md](../../directives/testing-strategy.md), [DEFINITION_OF_DONE.md](../../directives/DEFINITION_OF_DONE.md)
 2. **Run quality gates** to verify clean state
 3. **Work through remaining tasks** below using TDD
 4. **Run quality gates** after each task

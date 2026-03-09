@@ -103,5 +103,5 @@ Test infrastructure refactored and expanded with 3 new scenario test files:
 - `.agent/acceptance-criteria/json-schema-and-parity-acceptance-criteria.md`
 - `.agent/directives/VISION.md`
 - `.agent/directives/requirements.md`
-- `.agent/directives/RULES.md`
+- `.agent/directives/principles.md`
 - `.agent/directives/testing-strategy.md`

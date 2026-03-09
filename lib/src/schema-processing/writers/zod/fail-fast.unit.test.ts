@@ -2,7 +2,7 @@
  * Fail-Fast Behavior Tests - Zod Writer
  *
  * PROVES that the Zod writer fails fast on unsupported patterns.
- * Per RULES.md: "Unsupported patterns MUST throw—Never fall back to z.unknown()"
+ * Per principles.md: "Unsupported patterns MUST throw—Never fall back to z.unknown()"
  *
  * These tests verify the fail-fast principle is enforced.
  *

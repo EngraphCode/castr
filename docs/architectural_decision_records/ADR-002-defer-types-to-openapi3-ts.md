@@ -160,7 +160,7 @@ function isPrimitive(type: SchemaObject['type']): boolean {
 ### Mitigation
 
 - **Use type guards** (`isReferenceObject`, `isSchemaObject`) to narrow unions
-- **Document patterns** in RULES.md for team reference
+- **Document patterns** in principles.md for team reference
 - **Report issues** to upstream libraries when types are incorrect
 - **Helper functions** can wrap complex type handling
 
@@ -219,7 +219,7 @@ function resolveAdditionalPropertiesType(
 
 ## References
 
-- RULES.md Section: "Defer Type Definitions to Source Libraries"
+- principles.md Section: "Defer Type Definitions to Source Libraries"
 - Implementation: `lib/src/utils.ts:60-76`
 - Implementation: `lib/src/openApiToTypescript.helpers.ts`
 - Tests: `lib/src/utils.test.ts`

@@ -59,7 +59,7 @@ export async function loadOpenApiDocument(
     const bundledDocument = await bundleDocument(bundleInput, bundleConfig);
 
     // STRICT VALIDATION: Validate against declared version BEFORE upgrade
-    // Per RULES.md: "Fail fast, fail hard, be strict at all times"
+    // Per principles.md: "Fail fast, fail hard, be strict at all times"
     const validationResult = await validate(bundledDocument);
 
     if (!validationResult.valid) {

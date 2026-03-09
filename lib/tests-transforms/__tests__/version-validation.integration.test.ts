@@ -5,7 +5,7 @@
  * - Valid 3.0.x and 3.1.x specs MUST be accepted
  * - Invalid specs (wrong version features, missing required fields) MUST be rejected
  *
- * Per RULES.md: "Fail fast, fail hard, be strict at all times"
+ * Per principles.md: "Fail fast, fail hard, be strict at all times"
  *
  * @module
  */

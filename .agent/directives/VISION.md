@@ -201,7 +201,7 @@ One tool that speaks all schema languages fluently.
 | Document                                                               | Purpose                                |
 | ---------------------------------------------------------------------- | -------------------------------------- |
 | `requirements.md`                                                      | Decision-making guidance for agents    |
-| `RULES.md`                                                             | Engineering standards and code quality |
+| `principles.md`                                                        | Engineering standards and code quality |
 | `testing-strategy.md`                                                  | How we verify correctness              |
 | `DEFINITION_OF_DONE.md`                                                | Quality gates and completion criteria  |
 | `docs/architectural_decision_records/ADR-023-ir-based-architecture.md` | IR architecture decision record        |

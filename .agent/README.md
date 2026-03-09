@@ -1,15 +1,19 @@
 # .agent Directory - Navigation Guide
 
 **Purpose:** Documentation and planning for @engraph/castr  
-**Last Updated:** February 2026
+**Last Updated:** March 2026
 
 ---
 
 ## 🚀 Getting Started
 
-**New to this project?** Start with the session entry prompt:
+**New to this project?** Start with the local agent entrypoint:
 
-→ **[prompts/session-entry.prompt.md](prompts/session-entry.prompt.md)** — Exhaustive context for new sessions
+→ **[directives/AGENT.md](directives/AGENT.md)** — Stable operational index for agents
+
+Then use:
+
+→ **[prompts/session-entry.prompt.md](prompts/session-entry.prompt.md)** — Current session entrypoint and active workstream
 
 ---
 
@@ -19,21 +23,25 @@
 | --------------------------------------------------------- | ---------------------- | --------------------------------- |
 | [VISION.md](directives/VISION.md)                         | Strategic direction    | _Where are we going?_             |
 | [requirements.md](directives/requirements.md)             | Decision guidance      | _How should I decide?_            |
-| [RULES.md](directives/RULES.md)                           | Engineering standards  | _What does excellence look like?_ |
+| [principles.md](directives/principles.md)                 | Engineering standards  | _What does excellence look like?_ |
 | [testing-strategy.md](directives/testing-strategy.md)     | TDD & test methodology | _How do we prove correctness?_    |
 | [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md) | Quality gates          | _How do we verify we're done?_    |
 
-**Read `RULES.md` first** — it contains the Cardinal Rule and engineering principles.
+**Read `principles.md` first** — it contains the Cardinal Rule and engineering principles.
 
 ---
 
-## 🎯 Current State (February 2026)
+## 🎯 Current State (March 2026)
 
-- **Quality Gates:** 10/10 passing (1,010+ tests)
-- **Architecture:** IR-based with canonical structure
-- **Active Work:** Session 3.3 (strictness remediation + strict Zod-layer transform tests with sample input)
+- **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
+- **Architecture:** IR-based product architecture plus canonical-first local Practice structure
+- **Primary Active Work:** Zod round-trip limitations architecture investigation
   - Plan of record: `.agent/plans/roadmap.md`
-  - Atomic plans (execute): `.agent/plans/current/*`
+  - Primary active plan: `.agent/plans/active/zod-limitations-architecture-investigation.md`
+  - Active companions: `.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `.agent/plans/active/recursive-unknown-key-semantics-remediation.md`
+- **Recent Completed Operational Slice:** Practice Core integration and canonical-first restructuring
+  - Completion record: `.agent/plans/current/complete/practice-core-integration-and-practice-restructuring.md`
+  - Outcome: local-practice spine, canonical wrappers, and future Gemini / Antigravity planning are now installed
 
 ---
 
@@ -43,7 +51,7 @@
 .agent/
 ├── directives/            ← Foundation documents
 │   ├── VISION.md              ← Strategic direction
-│   ├── RULES.md               ← Engineering standards (extensive)
+│   ├── principles.md               ← Engineering standards (extensive)
 │   ├── requirements.md        ← Decision-making guide
 │   ├── testing-strategy.md    ← Test methodology
 │   └── DEFINITION_OF_DONE.md  ← Quality gates
@@ -54,20 +62,29 @@
 │   └── zod-parser-acceptance-criteria.md
 │
 ├── prompts/
-│   ├── session-entry.prompt.md  ← Start here for new sessions
-│   └── start-right.prompt.md    ← Quick reference
+│   ├── session-entry.prompt.md  ← Current session entrypoint
+│   └── start-right.prompt.md    ← Re-anchor on doctrine and architecture
+│
+├── commands/               ← Canonical command workflows
+├── skills/                 ← Canonical skills
+├── practice-core/          ← Portable Practice Core package
+├── practice-context/       ← Optional exchange support context
+├── memory/                 ← Napkin, distilled learnings, code patterns
+├── experience/             ← Qualitative experience records
 │
 ├── plans/
 │   ├── roadmap.md               ← Ties all plans together (plan-of-record)
 │   ├── active/                  ← Single next atomic plan to execute
-│   ├── current/                 ← Queued atomic plans (linear execution steps)
+│   ├── current/                 ← Current plan state containers
+│   │   ├── paused/              ← Incomplete but non-primary workstreams
 │   │   └── complete/            ← Completed atomic plans (staged; archive in batches)
 │   ├── future/                  ← Planned future work (Roadmap Phase 4+)
 │   └── archive/                 ← Archived plan groups (completed)
 │
 ├── reference/                   ← Permanent reference material
 ├── research/                    ← Historical research documents
-└── rules/                       ← Cursor/IDE rules
+├── rules/                       ← Canonical operationalized doctrine
+└── practice-index.md            ← Bridge from portable Core to local artefacts
 ```
 
 ---

@@ -335,7 +335,7 @@ if (data) {
 **Testing Philosophy:**
 
 - `.agent/directives/testing-strategy.md` - Tests prove behavior, not implementation
-- `.agent/directives/RULES.md` - Engineering excellence principles
+- `.agent/directives/principles.md` - Engineering excellence principles
 
 ## Timeline
 

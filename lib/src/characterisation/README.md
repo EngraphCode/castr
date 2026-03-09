@@ -158,13 +158,13 @@ async function bundleSpec(spec: OpenAPIObject): Promise<OpenAPIObject> {
 1. ✅ Runtime validation ensures structural compatibility
 2. ✅ Fails fast with helpful error if types diverge
 3. ✅ Follows existing codebase patterns (see `cli.ts`)
-4. ✅ No `as` type assertions (forbidden in RULES.md)
+4. ✅ No `as` type assertions (forbidden in principles.md)
 5. ✅ Type guard (`isOpenAPIObject`) provides type narrowing
 
 **Alternative considered:** Cast directly with `as OpenAPIObject`
 
 - ❌ Bypasses type safety
-- ❌ Violates RULES.md (no type assertions)
+- ❌ Violates principles.md (no type assertions)
 - ❌ Could hide bugs if types diverge
 
 ## Public API Coverage Summary

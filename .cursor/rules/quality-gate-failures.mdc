@@ -1,0 +1,6 @@
+---
+description: Quality gate failures are always blocking
+alwaysApply: true
+---
+
+Read and follow `.agent/rules/quality-gate-failures.md`.

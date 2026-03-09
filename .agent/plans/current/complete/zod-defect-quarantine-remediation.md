@@ -116,6 +116,6 @@ Key limitations:
 ## References
 
 - `.agent/directives/testing-strategy.md` — "No skipped tests" rule
-- `.agent/directives/RULES.md` — strict-by-default, fail-fast, no escape hatches
+- `.agent/directives/principles.md` — strict-by-default, fail-fast, no escape hatches
 - `.agent/plans/current/complete/phase-4-json-schema-and-parity.md` — predecessor plan
 - `docs/architectural_decision_records/ADR-035-transform-validation-parity.md` — transform validation framework

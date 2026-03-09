@@ -108,7 +108,7 @@ Session 2.8 core work:
 - [x] `z.literal()` for const values
 - [x] OAS 3.1 type arrays handled correctly
 - [x] Fail-fast on unsupported patterns (no `z.unknown()`)
-- [x] Strict-by-default documented in RULES.md
+- [x] Strict-by-default documented in principles.md
 - [x] Validation parity tests using `.parse()` (throws on failure)
 
 Session 2.8.x remediation:
@@ -157,5 +157,5 @@ pnpm test:gen && pnpm character
 - [zod-output-acceptance-criteria.md](../acceptance-criteria/zod-output-acceptance-criteria.md) — Success criteria
 - [lib/tests-transforms/README.md](../../lib/tests-transforms/README.md) — Test infrastructure
 - [Zod 4 Metadata Docs](https://zod.dev/metadata) — `.meta()` API
-- [RULES.md](../RULES.md) — Strict-By-Default section
+- [principles.md](../principles.md) — Strict-By-Default section
 - [testing-strategy.md](../testing-strategy.md) — TDD methodology

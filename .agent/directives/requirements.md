@@ -2,7 +2,7 @@
 
 > **Purpose**: This document helps AI agents make implementation decisions.  
 > **For strategic vision**, see `VISION.md`.  
-> **For engineering standards**, see [RULES.md](RULES.md).
+> **For engineering standards**, see [principles.md](principles.md).
 
 ---
 
@@ -383,7 +383,7 @@ All test fixtures must have documented provenance:
 | Document                           | Purpose                                 |
 | ---------------------------------- | --------------------------------------- |
 | `directives/VISION.md`             | Strategic direction and roadmap         |
-| `directives/RULES.md`              | Engineering standards                   |
+| `directives/principles.md`         | Engineering standards                   |
 | `directives/testing-strategy.md`   | Test methodology                        |
 | `directives/DEFINITION_OF_DONE.md` | Quality gates                           |
 | `.agent/research/feature-parity/*` | Parity research and integration targets |

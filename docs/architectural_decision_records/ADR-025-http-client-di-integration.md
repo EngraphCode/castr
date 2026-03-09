@@ -126,7 +126,7 @@ Separate packages, not bundled in core:
 - **Type inference** flows through automatically
 - **Validation built-in** (optional, configurable)
 
-### 3. Testability (from RULES.md)
+### 3. Testability (from principles.md)
 
 ```typescript
 // Easy to mock for testing
@@ -180,7 +180,7 @@ const api = createTypedClient({
 ## Related Decisions
 
 - [ADR-022](./ADR-022-building-blocks-no-http-client.md) - Foundation: no bundled HTTP client
-- [RULES.md](../../.agent/directives/RULES.md) - Dependency Injection for Testability
+- [principles.md](../../.agent/directives/principles.md) - Dependency Injection for Testability
 
 ## Success Criteria
 

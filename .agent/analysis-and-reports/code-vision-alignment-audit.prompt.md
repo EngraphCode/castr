@@ -171,7 +171,7 @@ For each issue found, document:
 | Document            | Location                                           |
 | ------------------- | -------------------------------------------------- |
 | Vision              | `.agent/directives/VISION.md`                      |
-| Rules               | `.agent/directives/RULES.md`                       |
+| Rules               | `.agent/directives/principles.md`                  |
 | IR Architecture ADR | `docs/architectural_decision_records/ADR-023-*.md` |
 | Testing Strategy    | `.agent/directives/testing-strategy.md`            |
 | Requirements        | `.agent/directives/requirements.md`                |

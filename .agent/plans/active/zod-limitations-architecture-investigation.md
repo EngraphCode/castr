@@ -37,11 +37,11 @@ The current limitations to investigate are:
 
 Companion investigation:
 
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](/Users/jim/code/personal/castr/.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
 
 Known queued remediation already established in this workstream:
 
-- [recursive-unknown-key-semantics-remediation.md](/Users/jim/code/personal/castr/.agent/plans/active/recursive-unknown-key-semantics-remediation.md)
+- [recursive-unknown-key-semantics-remediation.md](./recursive-unknown-key-semantics-remediation.md)
 
 Do not create `future/` plans for this Zod workstream. Keep established fixes active until the current known limitation set is fully mapped and ordered for execution.
 
@@ -81,7 +81,7 @@ Out of scope:
 
 ## Non-Negotiable Investigation Rules
 
-1. Re-read `RULES.md`, `testing-strategy.md`, `requirements.md`, and `DEFINITION_OF_DONE.md` before starting the investigation.
+1. Re-read `principles.md`, `testing-strategy.md`, `requirements.md`, and `DEFINITION_OF_DONE.md` before starting the investigation.
 2. Treat the IR and generator architecture as the source of truth.
 3. Do not assume the current limitation write-up already reflects the deepest root cause.
 4. Prefer standards-compliant and architecturally general answers over narrow special cases.
@@ -183,7 +183,7 @@ Before investigating individual limitations, do the following:
    - `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`
    - `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`
    - `docs/architectural_decision_records/ADR-035-transform-validation-parity.md`
-   - [transform-proof-budgeting-and-runtime-architecture-investigation.md](/Users/jim/code/personal/castr/.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+   - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md)
 2. Execute the companion plan's Tranche 0 cost-baseline step before deep semantic analysis:
    - capture isolated heavy-proof runtime
    - capture full-suite transform runtime

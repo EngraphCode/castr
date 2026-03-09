@@ -303,7 +303,7 @@ AI coding assistants are highly effective at implementation but naturally prone 
 
 ### 1. The Directives
 
-You must instantiate explicit markdown directives that the agent reads automatically. Example: `.agent/directives/RULES.md`
+You must instantiate explicit markdown directives that the agent reads automatically. Example: `.agent/directives/principles.md`
 
 > **Rule:** Maximize signal. Do not disable linters. If a file is too large, use the 'Extract -> Test -> Compose' pattern to break it apart.
 

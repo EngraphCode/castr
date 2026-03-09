@@ -224,7 +224,7 @@ pnpm install
 pnpm test
 ```
 
-See `.agent/directives/RULES.md` for engineering standards.
+See `.agent/directives/principles.md` for engineering standards.
 
 ## Origins
 
