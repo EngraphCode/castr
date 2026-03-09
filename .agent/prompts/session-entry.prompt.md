@@ -54,12 +54,28 @@ Recent Zod round-trip behavior and trade-offs have been promoted into permanent 
 
 Use plans only for the next atomic slice of work. Do not treat active or archived plans as the durable source of truth for Zod round-trip architecture or limitations.
 
+The primary active atomic plan is:
+
+- [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
+
+There is also a companion active investigation plan:
+
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+
+These plans are intentionally **investigation-first**. The Zod limitations plan is the primary semantic workstream. The transform-proof / runtime plan should be consulted whenever limitation investigation touches doctor behavior, transform-suite runtime, proof budgeting, or possible non-test performance architecture debt.
+
+The strategic goal for this investigation is **zero legitimate data structures that Castr cannot handle**. If the next session discovers additional legitimate gaps, it should explicitly decide whether to include them in the current workstream or record them durably for the next session.
+
 #### What This Session Should Do
 
 1. Read the permanent Zod round-trip reference in [docs/architecture/zod-round-trip-limitations.md](../../docs/architecture/zod-round-trip-limitations.md)
-2. Read [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md), and [ADR-035](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md) before changing Zod parser/writer behavior
-3. Check the roadmap / active Phase 4 work only to choose the next highest-value execution slice
-4. Keep recursive wrapper behavior green as a regression-sensitive area
+2. Read the primary active investigation plan in [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
+3. Read the companion investigation plan in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+4. Read [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md), and [ADR-035](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md) before changing Zod parser/writer behavior
+5. Investigate the remaining limitations one by one and identify whether each is fundamentally a standards gap, IR gap, canonicalization choice, parser/writer issue, or upstream-runtime issue
+6. If you discover additional legitimate unhandled structures, classify and triage them explicitly instead of leaving them as incidental findings
+7. If runtime cost, doctor behavior, or transform-proof scheduling becomes part of the diagnosis, switch to the companion investigation plan rather than treating that as an incidental side note
+8. Do not start implementation until the architecture investigation produces a clear recommendation or follow-on remediation plan
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 

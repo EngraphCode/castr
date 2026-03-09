@@ -36,6 +36,11 @@ Durable rule:
 
 - No new IR field is required for optional recursive refs.
 
+Historical diagnosis note:
+
+- Direct recursive refs were never the broken case. The parser already handled patterns like `get subcategories() { return z.array(Category); }`.
+- The actual parser-stage defect was specific to identifier-rooted wrapper chains such as `TreeNode.optional()`, which were previously not recognized as recursive refs.
+
 See:
 
 - [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md)

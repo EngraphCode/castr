@@ -191,6 +191,7 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 - JSON Schema input support (Draft 2020-12)
 - Feature-parity alignment (tracked under `.agent/research/feature-parity/*`)
 - Multi-artefact output separation where it improves strict transform validation paths (Zod schema output vs metadata outputs)
+- Investigation of the remaining Zod round-trip limitations before further remediation work
 
 **Progress:**
 
@@ -199,7 +200,11 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 - 🔲 Component 3: JSON Schema Parser (next)
 - 🔲 Component 4: Multi-Cast Parity Rig
 
-Plan: [phase-4-json-schema-and-parity.md](./active/phase-4-json-schema-and-parity.md)
+Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
+
+Primary active atomic plan: [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+
+Companion active investigation plan: [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)
 

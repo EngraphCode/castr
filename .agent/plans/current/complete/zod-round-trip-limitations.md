@@ -1,15 +1,17 @@
-# Zod Round-Trip Pipeline — Known Structural Limitations
+# Plan (Complete): Zod Round-Trip Pipeline — Known Structural Limitations
 
-**Status:** 📋 Active reference document  
+**Status:** ✅ Complete (historical working record; superseded by permanent docs)  
 **Created:** 2026-03-08  
-**Last Updated:** 2026-03-08  
-**Related:** [Recursive Wrapper Remediation](./recursive-wrapper-remediation.md), [Zod Defect Quarantine Remediation](../current/complete/zod-defect-quarantine-remediation.md)
+**Last Updated:** 2026-03-09  
+**Related:** [Recursive Wrapper Remediation](./recursive-wrapper-remediation.md), [Zod Defect Quarantine Remediation](./zod-defect-quarantine-remediation.md), [Permanent Reference](../../../docs/architecture/zod-round-trip-limitations.md)
 
 ---
 
 ## Purpose
 
 This document catalogs the remaining structural limitations in the Zod → IR → OpenAPI/JSON Schema → IR → Zod round-trip pipeline, and records the resolved recursive-wrapper work so the diagnosis history stays technically accurate.
+
+This file is retained as historical execution context only. The permanent source of truth is [docs/architecture/zod-round-trip-limitations.md](../../../docs/architecture/zod-round-trip-limitations.md).
 
 Each entry is documented with: what was or is lost, where the loss occurs, why it occurs, and whether it has now been resolved.
 

@@ -103,7 +103,7 @@ Two parser defects fixed before this session:
 
 ## Known Remaining Limitations
 
-> **See:** [zod-round-trip-limitations.md](./zod-round-trip-limitations.md) for detailed analysis of structural limitations in the Zod round-trip pipeline that cannot be resolved without architectural changes.
+> **See:** [docs/architecture/zod-round-trip-limitations.md](../../../docs/architecture/zod-round-trip-limitations.md) for the permanent analysis of structural limitations in the Zod round-trip pipeline that cannot be resolved without architectural changes.
 
 Key limitations:
 

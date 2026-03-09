@@ -1,4 +1,4 @@
-# Plan (Active): Recursive Wrapper Remediation
+# Plan (Complete): Recursive Wrapper Remediation
 
 **Status:** ✅ Complete
 **Created:** 2026-03-08
@@ -6,6 +6,13 @@
 **Predecessor:** Zod Transform Defect Quarantine Remediation (complete)
 
 ---
+
+> Durable architecture and limitation outcomes from this completed plan now live in:
+>
+> - [`docs/architecture/zod-round-trip-limitations.md`](../../../docs/architecture/zod-round-trip-limitations.md)
+> - [`ADR-031`](../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
+> - [`ADR-032`](../../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)
+> - [`ADR-035`](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
 
 ## Problem Statement
 
