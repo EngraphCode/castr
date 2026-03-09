@@ -105,6 +105,10 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null
 
 ### 8. Recursive Getter Wrapper Canonicalization
 
+> [!IMPORTANT]
+> [ADR-038](./ADR-038-object-unknown-key-semantics.md) partially amends this section.
+> Current product code still suppresses recursive `.passthrough()`, but that is no longer an accepted end-state. Unknown-key-preserving recursive output must either be reconstructed safely or fail fast; silent degradation to strip-mode behavior is architecture debt slated for remediation.
+
 Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form; writer output must not regress to `z.lazy()`.
 
 - Direct recursive refs emit direct getter returns (for example `get children() { return z.array(Category); }`).
@@ -114,7 +118,11 @@ Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form
 
 Writer output must treat these as **canonical recursive wrappers**, not as generic nullable compositions, so Scenario 2 / 4 / 6 round-trips remain lossless and idempotent.
 
-Recursive object schemas must also avoid appending `.passthrough()` today. In Zod 4, `.passthrough()` eagerly evaluates getter-backed shapes and can trigger temporal-dead-zone failures during recursive schema initialization. Until Zod offers a safe lazy passthrough mechanism, strip-mode emission remains the canonical safe fallback for recursive objects.
+Recursive object schemas cannot safely append `.passthrough()` or `.catchall()` today. In Zod 4, both eagerly evaluate getter-backed shapes and can trigger temporal-dead-zone failures during recursive schema initialization. Per ADR-038, the durable direction is:
+
+- preserve the semantics in IR and portable artifacts
+- emit a clear fail-fast error for recursive unknown-key-preserving output until a safe construction strategy exists
+- never silently rewrite the behavior to strip-mode output as a long-term policy
 
 **Rationale:** Getter-wrapper canonicalization preserves recursion semantics without inventing new IR fields, and it keeps writer output aligned with parser expectations and transform parity proofs.
 

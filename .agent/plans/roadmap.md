@@ -206,6 +206,9 @@ Primary active atomic plan: [zod-limitations-architecture-investigation.md](./ac
 
 Companion active investigation plan: [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
+Queued active remediation plan for the first limitation tranche:
+[recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
+
 ## Phase 5: Ecosystem Expansion (Planned)
 
 - tRPC ↔ IR parsing/writing (extract Zod from routers; emit OpenAPI and helpers)

@@ -92,6 +92,7 @@ Each ADR follows this structure:
 | ---------------------------------------------------------- | -------------------------------------- | -------- | ---------- |
 | [036](./ADR-036-limit-directory-complexity.md)             | Limit Directory Complexity             | Accepted | 2026-02-21 |
 | [037](./ADR-037-strict-architectural-domain-boundaries.md) | Strict Architectural Domain Boundaries | Accepted | 2026-02-21 |
+| [038](./ADR-038-object-unknown-key-semantics.md)           | Object Unknown-Key Semantics           | Accepted | 2026-03-09 |
 
 > **Phase 2 Complete** — OpenAPI → Zod pipeline is production-ready.
 > See: [roadmap.md](../../.agent/plans/roadmap.md)
@@ -186,7 +187,7 @@ These ADRs establish the following principles:
 When making significant architectural decisions:
 
 1. **Copy template** from an existing ADR
-2. **Number sequentially** (next is 038)
+2. **Number sequentially** (next is 039)
 3. **Fill all sections** (Context, Decision, Consequences, Alternatives)
 4. **Link related ADRs** in the "Related" field
 5. **Update this README** with the new entry
@@ -229,5 +230,5 @@ For questions about these decisions:
 
 ---
 
-**Last Updated:** 2026-02-21  
-**Next ADR:** 038
+**Last Updated:** 2026-03-09  
+**Next ADR:** 039

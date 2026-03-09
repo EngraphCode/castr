@@ -1,6 +1,6 @@
 # Architectural Decision Records - Summary
 
-**Last Updated:** 2026-02-13  
+**Last Updated:** 2026-03-09  
 **Project:** @engraph/castr  
 **Status:** Stable - All quality gates passing
 
@@ -106,6 +106,7 @@ This library implements an **Intermediate Representation (IR) architecture** for
 | [033](./ADR-033-two-pass-semantic-parsing.md)      | Two-Pass Semantic Parsing     | ✅ Accepted |
 | [034](./ADR-034-writer-separation.md)              | Separation of Writer Concerns | ✅ Accepted |
 | [035](./ADR-035-transform-validation-parity.md)    | Transform Validation Parity   | ✅ Accepted |
+| [038](./ADR-038-object-unknown-key-semantics.md)   | Object Unknown-Key Semantics  | ✅ Accepted |
 
 ### Additional Architecture Records
 

@@ -2,7 +2,7 @@
 
 **Status:** Permanent reference  
 **Last Updated:** 2026-03-09  
-**Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md)
+**Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 
 ---
 
@@ -88,6 +88,13 @@ Recursive object schemas currently cannot safely emit `.passthrough()` in canoni
 - This preserves `safeParse(...).success` parity because both strip and passthrough accept unknown keys at validation time.
 - It does **not** preserve parsed-output retention of unknown keys.
 
+Architecture status:
+
+- This limitation is now classified as a **cross-layer semantic loss**, not a writer-only runtime quirk.
+- The first confirmed loss point is the Zod object parser, which currently collapses strip and passthrough to the same IR acceptance shape.
+- Typed unknown-key behavior via `.catchall(schema)` is part of the same seam.
+- Durable investigation and policy now live in [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md) and [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md).
+
 ### Impact
 
 - Scenario 2 / 4 / 6 validation parity remains green, so this does not currently appear as a failing transform.
@@ -96,9 +103,11 @@ Recursive object schemas currently cannot safely emit `.passthrough()` in canoni
 
 ### Underlying Cause
 
-- In Zod 4, `.passthrough()` eagerly evaluates getter-backed object shapes.
+- The parser currently collapses default `strip`, explicit `.strip()`, and `.passthrough()` into `additionalProperties: true`, so output-retention semantics are already lost at first parse.
+- `.catchall(schema)` currently degrades to the same acceptance-only shape, losing typed unknown-key behavior.
+- In Zod 4, `.passthrough()` and `.catchall()` eagerly evaluate getter-backed object shapes.
 - Recursive getters therefore read the schema identifier before initialization completes.
-- This can trigger temporal-dead-zone `ReferenceError` failures.
+- That runtime behavior blocks safe canonical recursive reconstruction today.
 
 ### Example
 
@@ -138,18 +147,22 @@ Category.parse({ name: 'root', extra: true }).extra; // undefined
 
 ### What A Fundamental Answer Must Solve
 
-- A Zod upstream lazy passthrough mechanism, or
-- A safe two-phase recursive object construction strategy.
+- first-class IR semantics for object unknown-key behavior
+- parsed-output parity proofs, not only validation parity
+- either a safe recursive reconstruction strategy or a clear fail-fast error for unsupported recursive unknown-key-preserving output
+- explicit cross-format preservation policy for strip vs passthrough semantics
 
-Any durable fix has to preserve all three at once:
+Current architectural direction:
 
-- recursive initialization safety
-- canonical getter-based recursion
-- parsed-output retention of unknown keys
+- preserve semantics in IR
+- preserve strip vs passthrough through OpenAPI / JSON Schema with governed extension where needed
+- fail fast instead of silently stripping unknown keys when recursive Zod output cannot be reconstructed safely yet
 
 See:
 
 - [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md)
+- [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
+- [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md)
 
 ---
 
@@ -255,10 +268,10 @@ See:
 
 ## Status Matrix
 
-| Topic                                   | Status   | Durable Representation / Decision      |
-| --------------------------------------- | -------- | -------------------------------------- |
-| Optional recursive properties           | Resolved | Direct `$ref` + parent optionality     |
-| Nullable / nullish recursive properties | Resolved | `anyOf: [$ref, null]`                  |
-| Recursive `.passthrough()`              | Limited  | Suppressed for runtime safety          |
-| UUID v4 specificity                     | Limited  | Canonicalize to `z.uuid()`             |
-| `int64` runtime type                    | Limited  | Canonicalize to `z.int64()` / `bigint` |
+| Topic                                   | Status   | Durable Representation / Decision              |
+| --------------------------------------- | -------- | ---------------------------------------------- |
+| Optional recursive properties           | Resolved | Direct `$ref` + parent optionality             |
+| Nullable / nullish recursive properties | Resolved | `anyOf: [$ref, null]`                          |
+| Recursive `.passthrough()`              | Limited  | Cross-layer semantic loss; remediation planned |
+| UUID v4 specificity                     | Limited  | Canonicalize to `z.uuid()`                     |
+| `int64` runtime type                    | Limited  | Canonicalize to `z.int64()` / `bigint`         |

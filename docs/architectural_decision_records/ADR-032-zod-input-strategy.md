@@ -50,13 +50,21 @@ This decision must align with:
 - Nullable and nullish recursive refs map losslessly to existing composition IR: `anyOf: [{$ref}, {type: 'null'}]`, with parent requiredness carrying optionality.
 - `z.lazy(() => ...)` is accepted for compatibility when the callback is statically analyzable. It is never emitted by the writer, and dynamic / non-analyzable lazy patterns must still fail fast.
 
-### 5. Object Unknown-Key Semantics Are Parsed by Validation Acceptance
+### 5. Object Unknown-Key Parsing Was Initially Modeled by Validation Acceptance (Superseded in Part by ADR-038)
 
 - `.strict()` maps to `additionalProperties: false`.
 - `.passthrough()` maps to `additionalProperties: true`.
 - Default `z.object()` and explicit `.strip()` also map to `additionalProperties: true`.
 
-This is intentional: the IR models whether unknown keys are **accepted at validation time**, not whether they are preserved in parsed output. `strip` and `passthrough` differ in output-shape behavior, but both accept unknown keys during validation and therefore share the same IR acceptance semantics.
+This is the current implementation behavior, but it is no longer the accepted architectural target.
+
+[ADR-038](./ADR-038-object-unknown-key-semantics.md) records the follow-on direction:
+
+- object unknown-key runtime behavior must become first-class IR semantics
+- `additionalProperties` remains the portable acceptance/interchange view
+- `.catchall(schema)` must not silently degrade to plain `additionalProperties: true`
+
+Until that remediation lands, this section should be read as "current product behavior" rather than "desired end-state".
 
 ### 6. Union Semantics Must Be Preserved
 

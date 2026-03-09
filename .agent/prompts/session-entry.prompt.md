@@ -64,7 +64,13 @@ There is also a companion active investigation plan:
 
 These plans are intentionally **investigation-first**. The Zod limitations plan is the primary semantic workstream. The transform-proof / runtime plan should be consulted whenever limitation investigation touches doctor behavior, transform-suite runtime, proof budgeting, or possible non-test performance architecture debt.
 
-The strategic goal for this investigation is **zero legitimate data structures that Castr cannot handle**. If the next session discovers additional legitimate gaps, it should explicitly decide whether to include them in the current workstream or record them durably for the next session.
+Proven remediation work for this workstream should remain in `active/` while the remaining limitations are still being mapped. Do not park established fixes for this Zod workstream in `future/`.
+
+The current queued active remediation plan is:
+
+- [recursive-unknown-key-semantics-remediation.md](../plans/active/recursive-unknown-key-semantics-remediation.md)
+
+The strategic goal for this investigation is **zero legitimate data structures that Castr cannot handle**. If the next session discovers additional legitimate gaps, it should explicitly decide whether to include them now, add them to the active execution queue, or record them durably as later-scope work only if they are genuinely outside the current workstream.
 
 #### What This Session Should Do
 
@@ -75,7 +81,8 @@ The strategic goal for this investigation is **zero legitimate data structures t
 5. Investigate the remaining limitations one by one and identify whether each is fundamentally a standards gap, IR gap, canonicalization choice, parser/writer issue, or upstream-runtime issue
 6. If you discover additional legitimate unhandled structures, classify and triage them explicitly instead of leaving them as incidental findings
 7. If runtime cost, doctor behavior, or transform-proof scheduling becomes part of the diagnosis, switch to the companion investigation plan rather than treating that as an incidental side note
-8. Do not start implementation until the architecture investigation produces a clear recommendation or follow-on remediation plan
+8. Do not start product-code implementation until the current known Zod limitation set has explicit outcomes and any required remediation plans have been created in `active/`
+9. Once the current known limitation set is fully mapped, begin execution from the active plan queue instead of creating `future/` plans for this workstream
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 

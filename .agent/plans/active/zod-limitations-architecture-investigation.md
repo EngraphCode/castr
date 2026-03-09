@@ -10,22 +10,24 @@
 
 ## Summary
 
-This plan is for **investigation and architectural decision-making only**. Do **not** start product-code remediation in this plan unless a later user explicitly asks for implementation after the investigation is complete.
+This plan is **investigation-first**, but it is not a deferral plan. Its job is to establish the full set of currently known Zod limitation fixes, turn any proven remediation into an active companion plan under `./`, and then start execution once the current limitation set is fully mapped.
+
+Do **not** start product-code remediation until the current known limitation set below has explicit outcomes and any required remediation plans exist in `active/`.
 
 The goal is to help the next session deeply investigate each remaining Zod round-trip limitation, identify its true architectural origin, and determine the most architecturally excellent response:
 
 1. a lossless remediation path
 2. an explicit accepted limitation with a stronger permanent rationale
 3. an upstream dependency strategy
-4. a follow-on ADR and implementation plan
+4. an ADR and active remediation plan
 
 Strategic goal:
 
 - move the system toward **zero legitimate data structures that Castr cannot handle**
 - if the investigation discovers additional legitimate unhandled structures, explicitly decide whether they should be:
   - fixed as part of the current workstream
-  - deferred into a follow-on implementation plan
-  - recorded for the next session with durable documentation and rationale
+  - added to the active execution queue
+  - recorded durably as later-scope work only if they are genuinely outside the current workstream
 
 The current limitations to investigate are:
 
@@ -37,6 +39,12 @@ Companion investigation:
 
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](/Users/jim/code/personal/castr/.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
 
+Known queued remediation already established in this workstream:
+
+- [recursive-unknown-key-semantics-remediation.md](/Users/jim/code/personal/castr/.agent/plans/active/recursive-unknown-key-semantics-remediation.md)
+
+Do not create `future/` plans for this Zod workstream. Keep established fixes active until the current known limitation set is fully mapped and ordered for execution.
+
 ---
 
 ## Intended Impact
@@ -46,7 +54,8 @@ The next session should leave the repo with:
 - a precise architecture map for each limitation
 - explicit evidence about where each loss or trade-off originates
 - a comparison of the plausible fix families at the right layer
-- a recommendation for each limitation that is good enough to promote into ADRs or into a follow-on implementation plan
+- a recommendation for each limitation that is good enough to promote into ADRs or into an active remediation plan
+- any proven remediation captured as an active execution plan instead of being deferred to `future/`
 - an explicit triage outcome for any newly discovered legitimate unhandled structures
 
 We are optimizing for **solving the right problem at the right layer**, not for shipping the fastest local patch.
@@ -64,7 +73,7 @@ In scope:
 
 Out of scope:
 
-- product-code implementation of a fix
+- product-code implementation of a fix before the execution trigger in this plan is satisfied
 - speculative fallback behavior or permissive degradation
 - unrelated Phase 4 feature work
 
@@ -111,14 +120,57 @@ The investigation is successful only if all of the following are true:
    - canonicalization choice
    - upstream dependency/runtime behavior
 4. The next session produces a recommendation for each limitation:
-   - remediate now
-   - remediate later with a follow-on plan
+   - queue for execution in an active remediation plan
    - accept permanently with stronger rationale
    - escalate upstream
 5. Any newly discovered legitimate unhandled data structure is explicitly triaged:
    - in-scope for the current workstream
-   - out-of-scope but recorded in durable docs for the next session
+   - out-of-scope but recorded durably without hiding an actionable fix in `future/`
 6. Any new permanent knowledge is promoted to ADRs or stable docs rather than left only in a plan.
+
+---
+
+## Progress Update (2026-03-09)
+
+### Tranche 0 Baseline Captured
+
+| Metric                                      | Value   | Interpretation                                  |
+| ------------------------------------------- | ------- | ----------------------------------------------- |
+| Available worker parallelism                | `14`    | Healthy default concurrency available           |
+| Isolated doctor proof wall time             | `16.7s` | Heavy but stable                                |
+| Full `test:transforms`, default concurrency | `18.9s` | Current suite is not obviously contention-bound |
+| Full `test:transforms`, single worker       | `51.3s` | Serialization makes the suite materially worse  |
+
+Conclusion:
+
+- current recursive unknown-key decisions should not be driven by a transform-runtime contention narrative on this machine
+
+### Tranche 1 Outcome: Recursive Unknown-Key Semantics
+
+Confirmed findings:
+
+- earliest loss point is the Zod parser, not the writer
+- current object parsing collapses strip and passthrough to the same acceptance-only IR shape
+- `.catchall(schema)` is currently degraded during the first parse as well
+- recursive `.passthrough()` and recursive `.catchall()` share the same Zod 4 eager-evaluation runtime failure
+- validation-only parity is insufficient; parsed-output parity is required for this seam
+
+Durable outputs created from this tranche:
+
+- [ADR-038](../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
+- [recursive-unknown-key-semantics.md](../../../docs/architecture/recursive-unknown-key-semantics.md)
+- [recursive-unknown-key-semantics-remediation.md](./recursive-unknown-key-semantics-remediation.md)
+
+Recommended direction locked by ADR-038:
+
+- preserve object unknown-key behavior explicitly in IR
+- preserve strip vs passthrough through OpenAPI / JSON Schema with a governed extension when standard fields are insufficient
+- fail fast instead of silently stripping unknown keys when recursive Zod output cannot yet be reconstructed safely
+
+### Discovery Ledger
+
+- **In scope for queued active remediation:** `.catchall(schema)` currently degrades to plain `additionalProperties: true`
+- **Recorded for later tranche:** `z.bigint()` currently emits `format: "bigint"` through OpenAPI / JSON Schema artifacts
 
 ---
 
@@ -178,11 +230,11 @@ For each newly discovered gap:
    - upstream dependency/runtime issue
 4. Decide whether it belongs in the current workstream:
    - **include now** if it is architecturally adjacent and necessary to achieve a coherent answer
-   - **record for next session** if it is real but would distract from the current tranche or broaden scope too far
+   - **record durably but do not queue for immediate execution** if it is real but would distract from the current tranche or broaden scope too far
 5. Promote the finding to a durable location before ending the session:
    - permanent limitations doc
    - ADR update
-   - follow-on active plan
+   - active remediation plan if execution work is required
 
 The default should be: investigate enough to understand and classify the new gap, then make an explicit scope decision rather than silently growing or shrinking scope.
 
@@ -234,7 +286,7 @@ The next session must decide whether the fundamental blocker is:
 - partially self-inflicted by current IR semantics,
 - or fixable within Castr without doctrine compromise.
 
-If a clean remediation exists, produce a separate follow-on implementation plan with TDD order and acceptance criteria.
+If a clean remediation exists, produce or update a separate active remediation plan with TDD order and acceptance criteria.
 
 ---
 
@@ -346,16 +398,32 @@ By the end of the investigation session, produce one of the following for each l
 1. an ADR update
 2. a new ADR
 3. an update to `docs/architecture/zod-round-trip-limitations.md`
-4. a dedicated follow-on implementation plan with explicit TDD order
+4. a dedicated active remediation plan with explicit TDD order
 5. an explicit permanent-acceptance note with rationale
 
 No valuable outcome should remain trapped only in ephemeral session notes.
 
 ---
 
-## TDD Guidance For Any Follow-On Plan
+## Execution Trigger
 
-This plan does not implement changes, but if the investigation proves a remediation path, the follow-on plan must specify TDD order:
+Begin product-code execution for this workstream once all of the following are true:
+
+1. recursive unknown-key semantics, UUID v4 specificity, and `int64` / `bigint` each have an explicit outcome
+2. every limitation that requires code changes has a linked active remediation plan in `active/`
+3. the cross-cutting synthesis has established execution order and any adjacent must-fix gaps have been triaged explicitly
+
+When those conditions are met:
+
+- execute from the active plan queue
+- do not create new `future/` plans for this Zod workstream
+- start with the highest-leverage remediation, unless the synthesis proves a different order than the current recursive unknown-key lead
+
+---
+
+## TDD Guidance For Any Active Remediation Plan
+
+This plan does not implement changes yet, but any active remediation plan created from it must specify TDD order:
 
 1. characterization tests proving current behavior
 2. pure helper unit tests wherever possible

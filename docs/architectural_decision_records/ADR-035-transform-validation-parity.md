@@ -33,6 +33,16 @@ For scenarios that execute Zod code, structural equivalence is insufficient. We 
 2. **Deterministic Payload Harness:** The tests must evaluate both the original source schemas and the generated target schemas against shared sets of _Valid_ and _Invalid_ payloads defined in `lib/tests-fixtures/zod-parser/happy-path/payloads.ts`.
 3. **Behavioral Equality Assertions:** A successful run requires `originalSchema.safeParse(payload).success === transformedSchema.safeParse(payload).success` for every payload in the matrix.
 
+### 2a. Object Unknown-Key Semantics Also Require Parsed-Output Parity
+
+When a fixture exercises object unknown-key behavior (`strip`, `passthrough`, `catchall`), validation parity alone is insufficient.
+
+Those fixtures must also prove:
+
+1. `originalSchema.parse(payload)` and `transformedSchema.parse(payload)` produce equivalent parsed outputs for successful payloads.
+2. Root-level and nested recursive unknown-key retention are covered explicitly where relevant.
+3. A transform is not considered semantically correct if it keeps `safeParse(...).success` parity while changing parsed-output retention.
+
 ### 3. Recursive Round-Trip Durability Is a First-Class Proof Obligation
 
 Recursive fixtures are not edge coverage; they are required correctness proofs.
@@ -41,6 +51,7 @@ Recursive fixtures are not edge coverage; they are required correctness proofs.
 - Nullable and nullish recursive refs must survive as `anyOf: [{$ref}, {type: 'null'}]` through interchange formats.
 - Generated Zod must reconstruct canonical recursive getter wrappers such as `.optional()`, `.nullable()`, and `.nullish()`.
 - Nested recursion payloads in `payloads.ts` must remain part of the parity harness so recursive behavior is proven dynamically, not only structurally.
+- Recursive unknown-key-preserving schemas must never be marked "parity green" solely on validation acceptance; if they cannot be emitted safely, generation must fail fast rather than silently strip unknown keys.
 
 This durability is explicitly proven in the recursion fixture across Scenario 2 (Zod → IR → Zod), Scenario 4 (Zod → OpenAPI → Zod), and Scenario 6 (Zod → JSON Schema → Zod).
 
