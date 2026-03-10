@@ -2,14 +2,12 @@
 const config = {
   entry: ['tests-transforms/**/*.test.ts', 'tests-snapshot/**/*.test.ts'],
   project: ['src/**/*.ts'],
-  ignoreBinaries: ['rimraf', 'eslint', 'madge', 'tsx'],
+  ignoreBinaries: ['madge', 'tsx'],
   ignoreDependencies: [
     'ajv-draft-04',
     '@typescript-eslint/rule-tester',
     '@types/degit',
     'degit',
-    'eslint-plugin-boundaries',
-    'globals',
     'type-fest',
   ],
   // Knip catches dead code, unused files, and unused exports.

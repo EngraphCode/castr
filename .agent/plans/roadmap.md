@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated)  
+**Date:** January 24, 2026 (Updated March 10, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -33,19 +33,39 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice and core agent-system installation slice are complete. The repo now returns to the Zod round-trip limitations workstream.
+The Practice integration slice and core agent-system installation slice are complete. The repo's active next-work track remains type-safety remediation before the paused Zod workstream resumes.
+
+Current status of that track:
+
+- doctrinal alignment is complete
+- lint-policy repair is complete
+- the first meaningful remediation tranche is complete
+- the Characterisation boundary cluster is complete
+- the MCP from-IR test cluster is complete
+- `pnpm type-check` is green
+- `pnpm format:check` is green
+- `pnpm lint` is green
+- `pnpm test` is green
+- `pnpm check:ci` is green again after the normalization-cycle, Knip, and default-suite runtime repair slice
+- the residual `49` test, fixture, and harness assertion sites are temporarily surfaced as warnings while remediation continues
+- the next residual execution slice is the Shared loader and utility cluster captured in the active follow-up handoff
 
 Primary active atomic plan:
 
-- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+- [type-safety-remediation.md](./active/type-safety-remediation.md)
 
-Active companion investigation:
+Residual execution handoff for the remaining lint-only tranche:
 
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [type-safety-remediation-follow-up.md](./active/type-safety-remediation-follow-up.md)
 
-Queued active remediation in the same workstream:
+Paused non-primary context that remains important:
 
-- [recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
+- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+
+Recently completed adjacent remediation:
+
+- [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
 
 ## Operational Practice Integration (Complete)
 
@@ -137,7 +157,7 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - Data-string parsing is centralized and strictly validated (no scattered ad-hoc `$ref` parsing).
 - No permissive fallbacks exist anywhere in product code.
 - No swallowed errors exist in strict pipeline code paths.
-- No product-code escape hatches exist (`as` except `as const`, `any`, `!`, `eslint-disable`).
+- No product-code escape hatches exist (non-const type assertions, `any`, `!`, `eslint-disable`). `as const` remains governed literal-preservation infrastructure.
 - Determinism is proven by tests (stable ordering, byte-identical outputs where required).
 - TDD is mandatory for all work (see `principles.md` § Testing Standards).
 - Quality gates pass (canonical: `.agent/directives/DEFINITION_OF_DONE.md`).
@@ -159,7 +179,7 @@ Bring the repository into strict alignment by completing two things in lockstep:
 - [3.3b.01 — Transform Sample Suite Strictness](./current/complete/3.3b-01-transform-sample-suite-strictness.md) is complete and moved to `./current/complete/`.
 - [3.3b.02 — Scenario 3 Reference Composition](./current/complete/3.3b-02-scenario3-reference-composition.md) is complete and moved to `./current/complete/`.
 - [3.3b.03 — Reject `z.undefined()`](./current/complete/3.3b-03-reject-z-undefined.md) is complete and moved to `./current/complete/`.
-- Current active plan is now [3.3b.04 — Format Parity (hostname, float32/64)](./active/3.3b-04-format-parity-hostname-float.md).
+- Subsequent active work moved on from the historical 3.3b sequence; see **Current Active Workstream** above for the live active plan and follow-up handoff.
 
 ---
 
@@ -240,9 +260,9 @@ Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/pha
 
 Current parked Zod workstream context:
 
-- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./active/transform-proof-budgeting-and-runtime-architecture-investigation.md)
-- [recursive-unknown-key-semantics-remediation.md](./active/recursive-unknown-key-semantics-remediation.md)
+- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)
 
@@ -298,7 +318,7 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 - **Zod 4 Only:** No Zod 3 support — reject with clear errors
 - **Strict-by-Default:** `.strict()`, throw on unknown
 - **Fail-Fast:** Informative errors, never silent fallbacks
-- **No Escape Hatches:** No `as`, `any`, `!`, or `eslint-disable` workarounds in product code
+- **No Escape Hatches:** No non-const type assertions, `any`, `!`, or `eslint-disable` workarounds in product code. `as const` remains allowed infrastructure.
 - **TDD:** Failing tests first
 - **Quality Gates:** Canonical definition is `.agent/directives/DEFINITION_OF_DONE.md`
 

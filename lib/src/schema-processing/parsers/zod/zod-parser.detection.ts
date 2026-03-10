@@ -32,6 +32,7 @@ import {
   isZodCall,
   getZodMethodChain,
   ZOD_OBJECT_METHOD,
+  type ZodProjectResult,
 } from './ast/zod-ast.js';
 
 /**
@@ -113,8 +114,12 @@ function checkMethodForIssues(
  * @public
  */
 export function detectZod3Syntax(source: string): ZodParseError[] {
+  return detectZod3SyntaxInProject(createZodProject(source));
+}
+
+export function detectZod3SyntaxInProject(analysis: ZodProjectResult): ZodParseError[] {
   const errors: ZodParseError[] = [];
-  const { sourceFile, resolver } = createZodProject(source);
+  const { sourceFile, resolver } = analysis;
 
   sourceFile.forEachDescendant((node) => {
     if (!Node.isCallExpression(node) || !isZodCall(node, resolver) || isInnerChainCall(node)) {
@@ -249,8 +254,12 @@ function checkForSpreadAssignments(
  * @public
  */
 export function detectDynamicSchemas(source: string): ZodParseError[] {
+  return detectDynamicSchemasInProject(createZodProject(source));
+}
+
+export function detectDynamicSchemasInProject(analysis: ZodProjectResult): ZodParseError[] {
   const errors: ZodParseError[] = [];
-  const { sourceFile, resolver } = createZodProject(source);
+  const { sourceFile, resolver } = analysis;
 
   sourceFile.forEachDescendant((node) => {
     if (!Node.isCallExpression(node) || !isZodCall(node, resolver)) {

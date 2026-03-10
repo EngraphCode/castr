@@ -23,8 +23,15 @@
 
 import type { CastrSchemaNode, CastrDocument, CastrSchemaComponent } from '../../ir/index.js';
 import type { ZodParseResult, ZodParseError, ZodParseRecommendation } from './zod-parser.types.js';
-import { detectZod3Syntax, detectDynamicSchemas } from './zod-parser.detection.js';
-import { createZodProject, findZodSchemaDeclarations } from './ast/zod-ast.js';
+import {
+  detectZod3SyntaxInProject,
+  detectDynamicSchemasInProject,
+} from './zod-parser.detection.js';
+import {
+  createZodProject,
+  findZodSchemaDeclarations,
+  type ZodProjectResult,
+} from './ast/zod-ast.js';
 
 // Import parser modules to trigger their registerParser side-effects
 // These modules register themselves with the core dispatcher on import
@@ -150,7 +157,7 @@ function createParsedDeclaration(
 }
 
 function buildDeclarationParseError(
-  sourceFile: ReturnType<typeof createZodProject>['sourceFile'],
+  sourceFile: ZodProjectResult['sourceFile'],
   declaration: ZodDeclaration,
   detail: string,
 ): ZodParseError {
@@ -173,10 +180,10 @@ function buildDeclarationParseError(
  *
  * @internal
  */
-function parseSchemaDeclarations(source: string): ParsedDeclarationsResult {
+function parseSchemaDeclarations(analysis: ZodProjectResult): ParsedDeclarationsResult {
   const declarationsList: ParsedDeclaration[] = [];
   const errors: ZodParseError[] = [];
-  const { sourceFile, resolver } = createZodProject(source);
+  const { sourceFile, resolver } = analysis;
 
   const declarations = findZodSchemaDeclarations(sourceFile, resolver);
 
@@ -234,11 +241,16 @@ function parseSchemaDeclarations(source: string): ParsedDeclarationsResult {
  * @public
  */
 export function parseZodSource(source: string): ZodParseResult {
+  const analysis = createZodProject(source);
+
   // Detect Zod 3 syntax and dynamic schemas
-  const errors: ZodParseError[] = [...detectZod3Syntax(source), ...detectDynamicSchemas(source)];
+  const errors: ZodParseError[] = [
+    ...detectZod3SyntaxInProject(analysis),
+    ...detectDynamicSchemasInProject(analysis),
+  ];
 
   // Parse all schema declarations
-  const parsedDeclarations = parseSchemaDeclarations(source);
+  const parsedDeclarations = parseSchemaDeclarations(analysis);
   errors.push(...parsedDeclarations.errors);
   const components = parsedDeclarations.declarations.map((d) => d.component);
   const recommendations = parsedDeclarations.declarations.map((d) => d.recommendation);
