@@ -19,13 +19,14 @@ For the portable Core, see [practice-core/index.md](practice-core/index.md).
 
 ## Architectural Decisions
 
-| ADR                                                                                             | Subject                            |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------- |
-| [ADR-026](../docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md) | No string manipulation for parsing |
-| [ADR-031](../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)                | Zod 4 output strategy              |
-| [ADR-032](../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)                 | Zod 4 input strategy               |
-| [ADR-035](../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)        | Transform validation parity        |
-| [ADR-038](../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)       | Object unknown-key semantics       |
+| ADR                                                                                                          | Subject                            |
+| ------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| [ADR-026](../docs/architectural_decision_records/ADR-026-no-string-manipulation-for-parsing.md)              | No string manipulation for parsing |
+| [ADR-031](../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)                             | Zod 4 output strategy              |
+| [ADR-032](../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)                              | Zod 4 input strategy               |
+| [ADR-035](../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)                     | Transform validation parity        |
+| [ADR-038](../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)                    | Object unknown-key semantics       |
+| [ADR-039](../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md) | UUID subtype semantics             |
 
 ## Tools and Workflows
 

@@ -38,8 +38,8 @@ Then use:
 - **Primary Active Work:** Zod limitations architecture investigation
   - Plan of record: `.agent/plans/roadmap.md`
   - Primary active plan: `.agent/plans/active/zod-limitations-architecture-investigation.md`
-  - Active companion investigation: `.agent/plans/active/transform-proof-budgeting-and-runtime-architecture-investigation.md`
-  - Queued active remediation: `.agent/plans/active/recursive-unknown-key-semantics-remediation.md`
+  - Paused supporting investigation: `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
+  - Completed adjacent remediation: `.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md`
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 - **Recent Completed Operational Slices:**
   - `.agent/plans/current/complete/core-agent-system-and-codex-agent-adapters.md`

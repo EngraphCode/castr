@@ -2,7 +2,7 @@
 
 **Status:** Permanent reference  
 **Last Updated:** 2026-03-09  
-**Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
+**Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 
 ---
 
@@ -144,6 +144,7 @@ Current architectural direction:
 
 - keep preserving semantics in IR and portable artifacts
 - keep failing fast for unsupported recursive preserving output until a safe construction strategy exists
+- determine whether getter syntax remains a universal canonical recursion form or whether recursive preserving modes require one tightly-scoped second canonical strategy
 
 See:
 
@@ -153,52 +154,51 @@ See:
 
 ---
 
-## Limitation: UUID v4 Specificity Is Not Preserved
+## Limitation: UUID Subtype Semantics Widen Across Portable Detours
 
-`z.uuidv4()` and `z.uuid()` both normalize to standard `format: 'uuid'`.
+UUID subtype semantics are now preserved in IR, but standard portable detours still widen when the target cannot carry subtype natively.
 
 ### Current Accepted Behavior
 
-- Canonical generated Zod uses `z.uuid()`.
-- Version-4 specificity is not preserved because standard OpenAPI / JSON Schema has no portable way to encode it.
+- Direct native Zod generation preserves supported subtype helpers:
+  - `uuidVersion: 4` -> `z.uuidv4()`
+  - `uuidVersion: 7` -> `z.uuidv7()`
+- Standard OpenAPI / JSON Schema output remains plain `format: 'uuid'`.
+- Writers preserve an existing `pattern` if IR already carries it, but they do not synthesize subtype-preserving regex.
+- Detours through standard OpenAPI / JSON Schema may therefore widen subtype semantics back to plain UUID.
 
 ### Impact
 
-- Generated schemas may be more permissive than a UUID-v4-specific original.
-- IR, OpenAPI, and JSON Schema artifacts cannot distinguish "any UUID" from "UUID v4 only".
-- A caller who relied on `z.uuidv4()` for a domain constraint loses that stricter intent after round-trip.
+- Direct IR -> Zod is more expressive than before.
+- Standard portable artifacts still cannot natively distinguish "any UUID" from subtype-specific UUID semantics.
+- A caller who detours subtype-specific UUID schemas through OpenAPI / JSON Schema may receive broader generated Zod on the far side of that detour.
 
 ### Underlying Cause
 
-- Standard `format: 'uuid'` captures UUID validity, not UUID version specificity.
-- There is no portable standards-based field for "UUID version must be 4".
-- Preserving the distinction would require Castr-specific representation beyond the current interchange standards.
+- UUID subtype is now first-class IR truth via `uuidVersion`.
+- Standard OpenAPI / JSON Schema still only natively carries `format: 'uuid'`.
+- This slice deliberately rejects non-native UUID subtype extensions and synthesized subtype regex as durable portable output.
 
 ### Example
 
 ```ts
-const original = z.uuidv4();
-const generated = z.uuid();
-
-original.safeParse('6ba7b810-9dad-11d1-80b4-00c04fd430c8').success; // false
-generated.safeParse('6ba7b810-9dad-11d1-80b4-00c04fd430c8').success; // true
+const direct = z.uuidv4(); // IR carried uuidVersion: 4
+const viaPortableDetour = z.uuid(); // standard portable detour only carried format: 'uuid'
 ```
 
-The round-tripped schema is broader than the source schema.
+The widening is now an accepted target-capacity limitation, not an IR modeling gap.
 
 ### What A Fundamental Answer Must Solve
 
-- A non-standard extension such as `x-uuid-version`, plus IR/parser/writer support.
-
-Any future solution needs to answer:
-
-- whether Castr is willing to use non-standard extensions for portable formats
-- whether UUID versioning is a one-off exception or part of a broader "format refinement" design
-- whether the standards-compliant loss should remain the accepted behavior
+- A future change would need to justify one of:
+  - a native portable standard for UUID subtype/version semantics
+  - a newly accepted custom portable extension
+  - a broader project-level policy shift away from native-only portable emission
 
 See:
 
 - [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md)
+- [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 
 ---
 
@@ -259,6 +259,6 @@ See:
 | --------------------------------------- | -------- | ---------------------------------------------- |
 | Optional recursive properties           | Resolved | Direct `$ref` + parent optionality             |
 | Nullable / nullish recursive properties | Resolved | `anyOf: [$ref, null]`                          |
-| Recursive `.passthrough()`              | Limited  | Cross-layer semantic loss; remediation planned |
-| UUID v4 specificity                     | Limited  | Canonicalize to `z.uuid()`                     |
+| Recursive `.passthrough()`              | Limited  | Writer/runtime reconstruction boundary remains |
+| UUID subtype widening                   | Limited  | `uuidVersion` in IR; native-only emission      |
 | `int64` runtime type                    | Limited  | Canonicalize to `z.int64()` / `bigint`         |

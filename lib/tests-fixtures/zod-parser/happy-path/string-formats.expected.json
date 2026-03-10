@@ -75,7 +75,8 @@
         },
         "circularReferences": []
       },
-      "format": "uuid"
+      "format": "uuid",
+      "uuidVersion": 4
     },
     "Uuidv7": {
       "type": "string",
@@ -94,7 +95,8 @@
         },
         "circularReferences": []
       },
-      "format": "uuidv7"
+      "format": "uuid",
+      "uuidVersion": 7
     },
     "Base64": {
       "type": "string",

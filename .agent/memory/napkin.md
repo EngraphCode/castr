@@ -30,3 +30,19 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
 - No additional Practice evolution cleared the bar in this pass; the useful learning was procedural: historical status markers inside roadmap sections can drift even after the top-level active-workstream block is corrected, so consolidation should explicitly scan for old “current active plan” statements, not just the primary entrypoint.
+- A follow-up consolidation pass after the shared-loader and snapshot remediation found the current plan stack coherent:
+  - `roadmap.md`, `type-safety-remediation.md`, `type-safety-remediation-follow-up.md`, and `session-entry.prompt.md` all agree that `6` residual non-const assertion warnings remain
+  - the next execution slice is the remaining parser/writer low-count cluster
+  - that cluster's mixed default-suite plus transforms-suite proof obligation is now stated explicitly in the follow-up handoff and session-entry prompt
+- No further durable-doc extraction or Practice evolution cleared the bar in that pass; the remaining work is execution, not doctrine consolidation.
+- A later consolidation pass after ADR-039 and the recursive-writer reframe found three useful cohesion drifts:
+  - `.agent/practice-index.md` needed ADR-039 added so the local Practice spine matched the durable ADR set
+  - `.agent/README.md` still described the transform-proof budgeting investigation and recursive unknown-key remediation as if they lived in `active/`, even though they had moved to `current/paused/` and `current/complete/`
+  - `docs/architecture/recursive-unknown-key-semantics.md` still linked its implementation record to the old `active/` remediation path
+- The recursive unknown-key tranche produced one durable framing insight that was worth promoting out of the active plan:
+  - the remaining seam is not just "find a way to emit `.passthrough()`"; it is to determine whether getter recursion is universally canonical or only canonical for strip-compatible recursion, with preserving modes potentially requiring one tightly-scoped second canonical strategy
+- Practice box check in this pass:
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- No portable-core evolution cleared the bar in this pass; the value was local cohesion and promoting one architectural framing insight from plan-only status into durable docs.

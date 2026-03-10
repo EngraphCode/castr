@@ -79,6 +79,16 @@ export type IRUnknownKeyBehavior =
   | { mode: 'catchall'; schema: CastrSchema };
 
 /**
+ * Supported UUID subtype/version semantics for UUID string schemas.
+ *
+ * Stored separately from `format` so portable formats can keep `format: 'uuid'`
+ * while native writers decide whether they can emit a more specific subtype.
+ *
+ * @public
+ */
+export type IRUuidVersion = 1 | 3 | 4 | 5 | 6 | 7 | 8;
+
+/**
  * Canonical runtime unknown-key behavior for object schemas.
  *
  * This is distinct from `additionalProperties`, which models portable
@@ -101,6 +111,18 @@ export interface CastrSchema {
    * @example 'date-time', 'email', 'uuid', 'int32'
    */
   format?: string;
+
+  /**
+   * UUID subtype/version semantics for UUID string schemas.
+   *
+   * Valid only when:
+   * - `type === 'string'`
+   * - `format === 'uuid'`
+   *
+   * Portable writers may widen to plain `uuid` when the target cannot express
+   * subtype/version semantics natively.
+   */
+  uuidVersion?: IRUuidVersion;
 
   /**
    * Schema description for documentation.

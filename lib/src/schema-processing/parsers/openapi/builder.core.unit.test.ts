@@ -2,6 +2,7 @@ import { describe, test, expect } from 'vitest';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { buildPropertySchema, buildCompositionMember, buildCastrSchema } from './builder.core.js';
 import type { IRBuildContext } from './builder.types.js';
+import { UUID_V4_PATTERN } from '../../ir/index.js';
 
 /**
  * Extended SchemaObject for test fixtures.
@@ -119,6 +120,22 @@ describe('buildCastrSchema - OpenAPI extension fields', () => {
       expect(result.xml?.name).toBe('Pet');
       expect(result.xml?.namespace).toBe('http://example.com/schema/pet');
       expect(result.xml?.prefix).toBe('pet');
+    });
+  });
+
+  describe('UUID subtype inference', () => {
+    test('infers UUID v4 semantics from canonical pattern without synthesizing new fields', () => {
+      const schema: SchemaObject = {
+        type: 'string',
+        pattern: UUID_V4_PATTERN,
+      };
+
+      const result = buildCastrSchema(schema, createContext());
+
+      expect(result.type).toBe('string');
+      expect(result.format).toBe('uuid');
+      expect(result.uuidVersion).toBe(4);
+      expect(result.pattern).toBe(UUID_V4_PATTERN);
     });
   });
 

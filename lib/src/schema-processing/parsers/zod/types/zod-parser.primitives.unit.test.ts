@@ -7,6 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { UUID_V4_PATTERN, UUID_V7_PATTERN } from '../../../ir/index.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 
 describe('Primitive Zod Parsing', () => {
@@ -158,6 +159,27 @@ describe('Primitive Zod Parsing', () => {
       const result = parsePrimitiveZod('z.string().datetime()');
 
       expect(result?.format).toBe('date-time');
+    });
+
+    it('should preserve top-level string helper constraints structurally', () => {
+      const result = parsePrimitiveZod('z.email().min(5)');
+
+      expect(result?.format).toBe('email');
+      expect(result?.minLength).toBe(5);
+    });
+
+    it('should infer UUID subtype from canonical regex on z.uuid()', () => {
+      const result = parsePrimitiveZod(`z.uuid().regex(/${UUID_V4_PATTERN}/)`);
+
+      expect(result?.format).toBe('uuid');
+      expect(result?.uuidVersion).toBe(4);
+      expect(result?.pattern).toBe(UUID_V4_PATTERN);
+    });
+
+    it('should reject contradictory explicit and inferred UUID subtype semantics', () => {
+      expect(() => parsePrimitiveZod(`z.uuidv4().regex(/${UUID_V7_PATTERN}/)`)).toThrow(
+        /Pattern-implied UUID v7 conflicts with existing UUID v4 semantics/,
+      );
     });
   });
 

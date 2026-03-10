@@ -44,6 +44,7 @@ import {
 } from '../modifiers/zod-parser.constraints.apply.js';
 import { applyZod4Formats } from './zod-parser.zod4-formats.js';
 import { buildZodChainInfo } from './zod-parser.primitives.chain.js';
+import { applyUuidSemanticsFromZodChain } from './zod-parser.primitives.uuid.js';
 import {
   ZOD_BASE_METHOD_LITERAL,
   ZOD_BASE_METHOD_NULL,
@@ -156,6 +157,7 @@ function handleStandardPrimitive(
   zodChain: IRZodChainInfo,
   defaultValue: unknown,
   description: string | undefined,
+  chainedMethods: ZodMethodCall[],
 ): CastrSchema {
   const schema: CastrSchema = {
     type: schemaType,
@@ -170,6 +172,7 @@ function handleStandardPrimitive(
   applyConstraints(schema, constraints);
   applyOptionalFields(schema, defaultValue, description);
   applyZod4Formats(schema, baseMethod);
+  applyUuidSemanticsFromZodChain(schema, baseMethod, chainedMethods);
 
   return schema;
 }
@@ -239,6 +242,7 @@ export function parsePrimitiveZodFromNode(
       zodChain,
       processed.defaultValue,
       processed.description,
+      chainedMethods,
     ),
     chainedMethods,
   );

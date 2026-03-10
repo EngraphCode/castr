@@ -2,6 +2,7 @@ export {
   type IRHttpMethod,
   type CastrSchema,
   type IRUnknownKeyBehavior,
+  type IRUuidVersion,
   type CastrSchemaNode,
   type CastrSchemaDependencyInfo,
   type IRInheritanceInfo,

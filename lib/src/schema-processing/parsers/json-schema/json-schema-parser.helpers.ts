@@ -13,6 +13,7 @@
 import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { CastrSchema } from '../../ir/index.js';
+import { applyInferredUuidVersionFromPattern } from '../../ir/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE: SchemaObjectType = 'null';
@@ -72,6 +73,8 @@ export function parseStringConstraints(input: JsonSchema2020, result: CastrSchem
   if (input.contentEncoding !== undefined) {
     result.contentEncoding = input.contentEncoding;
   }
+
+  applyInferredUuidVersionFromPattern(result);
 }
 
 /** @internal */

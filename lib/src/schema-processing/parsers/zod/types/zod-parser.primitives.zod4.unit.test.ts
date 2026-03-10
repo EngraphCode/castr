@@ -7,6 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { UUID_V4_PATTERN, UUID_V7_PATTERN } from '../../../ir/index.js';
 import { parsePrimitiveZod } from './zod-parser.primitives.js';
 
 describe('Zod 4 Primitive Parsing', () => {
@@ -82,12 +83,32 @@ describe('Zod 4 Primitive Parsing', () => {
       const result = parsePrimitiveZod('z.uuidv4()');
       expect(result?.type).toBe('string');
       expect(result?.format).toBe('uuid');
+      expect(result?.uuidVersion).toBe(4);
     });
 
-    it('should parse z.uuidv7() as string uuidv7', () => {
+    it('should parse z.uuidv7() as string uuid with subtype semantics', () => {
       const result = parsePrimitiveZod('z.uuidv7()');
       expect(result?.type).toBe('string');
-      expect(result?.format).toBe('uuidv7');
+      expect(result?.format).toBe('uuid');
+      expect(result?.uuidVersion).toBe(7);
+    });
+
+    it('infers UUID v4 semantics from canonical regex on a plain string schema', () => {
+      const result = parsePrimitiveZod(`z.string().regex(/${UUID_V4_PATTERN}/)`);
+
+      expect(result?.type).toBe('string');
+      expect(result?.format).toBe('uuid');
+      expect(result?.uuidVersion).toBe(4);
+      expect(result?.pattern).toBe(UUID_V4_PATTERN);
+    });
+
+    it('infers UUID v7 semantics from canonical regex on a plain string schema', () => {
+      const result = parsePrimitiveZod(`z.string().regex(/${UUID_V7_PATTERN}/)`);
+
+      expect(result?.type).toBe('string');
+      expect(result?.format).toBe('uuid');
+      expect(result?.uuidVersion).toBe(7);
+      expect(result?.pattern).toBe(UUID_V7_PATTERN);
     });
 
     it('should parse z.base64() as string with contentEncoding', () => {

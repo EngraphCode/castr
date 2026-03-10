@@ -24,7 +24,7 @@ const FORMAT_MAP: Readonly<Record<string, string>> = {
   'iso.time': 'time',
   'iso.duration': 'duration',
   uuidv4: 'uuid',
-  uuidv7: 'uuidv7',
+  uuidv7: 'uuid',
   email: 'email',
   url: 'uri',
   uuid: 'uuid',

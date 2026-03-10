@@ -100,6 +100,17 @@ Invalid combinations or unsupported extension values must fail fast.
 - Support for non-emitted composition APIs remains opt-in and requires explicit
   failing-first evidence and plan scope.
 
+### 9. UUID Subtype Semantics Are First-Class IR Truth With A Narrow Regex Inference Exception
+
+- `z.uuid()` parses to `type: 'string', format: 'uuid'`
+- `z.uuidv4()` parses to `type: 'string', format: 'uuid', uuidVersion: 4`
+- `z.uuidv7()` parses to `type: 'string', format: 'uuid', uuidVersion: 7`
+- governed canonical regex patterns may infer UUID subtype semantics only when the incoming structure does not already express subtype explicitly
+- explicit subtype plus contradictory governed regex must fail fast
+- the parser preserves existing `pattern` content even when subtype is also inferred from it
+
+Portable detours may later widen subtype semantics when the target format cannot carry them natively; see ADR-039.
+
 ---
 
 ## Consequences

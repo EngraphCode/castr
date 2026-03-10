@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../../ir/index.js';
-import { CastrSchemaProperties } from '../../../ir/index.js';
+import { CastrSchemaProperties, UUID_V7_PATTERN } from '../../../ir/index.js';
 
 import { writeOpenApiSchema } from './openapi-writer.schema.js';
 
@@ -98,6 +98,22 @@ describe('string formats', () => {
     const result = writeOpenApiSchema(schema);
 
     expect(result.format).toBe('uuid');
+  });
+
+  it('keeps portable UUID output plain while preserving existing pattern content', () => {
+    const schema: CastrSchema = {
+      type: 'string',
+      format: 'uuid',
+      uuidVersion: 7,
+      pattern: UUID_V7_PATTERN,
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result.format).toBe('uuid');
+    expect(result.pattern).toBe(UUID_V7_PATTERN);
+    expect('uuidVersion' in result).toBe(false);
   });
 
   it('preserves date-time format', () => {

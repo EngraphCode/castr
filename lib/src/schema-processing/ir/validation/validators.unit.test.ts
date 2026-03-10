@@ -495,6 +495,23 @@ describe('isCastrSchema', () => {
     expect(isCastrSchema(schema)).toBe(true);
   });
 
+  it('should return true for UUID subtype semantics on UUID string schemas', () => {
+    const schema: CastrSchema = {
+      type: 'string',
+      format: 'uuid',
+      uuidVersion: 4,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
   it('should return false for null and undefined', () => {
     expect(isCastrSchema(null)).toBe(false);
     expect(isCastrSchema(undefined)).toBe(false);
@@ -518,6 +535,23 @@ describe('isCastrSchema', () => {
     const schema = {
       type: 'string',
       unknownKeyBehavior: { mode: 'strip' },
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(false);
+  });
+
+  it('should return false when uuidVersion appears on a non-UUID string schema', () => {
+    const schema = {
+      type: 'string',
+      format: 'email',
+      uuidVersion: 4,
       metadata: {
         required: false,
         nullable: false,

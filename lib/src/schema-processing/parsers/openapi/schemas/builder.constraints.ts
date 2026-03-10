@@ -9,6 +9,7 @@
 
 import type { SchemaObject } from 'openapi3-ts/oas31';
 import type { CastrSchema } from '../../../ir/index.js';
+import { applyInferredUuidVersionFromPattern } from '../../../ir/index.js';
 
 /** @internal */
 export function addConstraints(schema: SchemaObject, irSchema: CastrSchema): void {
@@ -52,6 +53,8 @@ function addStringConstraints(schema: SchemaObject, irSchema: CastrSchema): void
   if (schema.pattern !== undefined) {
     irSchema.pattern = schema.pattern;
   }
+
+  applyInferredUuidVersionFromPattern(irSchema);
 }
 
 /** @internal */

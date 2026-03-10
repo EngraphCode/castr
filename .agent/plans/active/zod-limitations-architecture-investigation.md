@@ -4,7 +4,7 @@
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-10  
 **Predecessor:** [type-safety-remediation.md](../current/complete/type-safety-remediation.md)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../current/complete/type-safety-remediation-follow-up.md`
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../current/complete/type-safety-remediation-follow-up.md`
 
 ---
 
@@ -21,9 +21,7 @@ The paused transform-proof budgeting investigation remains important supporting 
 
 ## Summary
 
-This plan is **investigation-first**, but it is not a deferral plan. Its job is to establish the full set of currently known Zod limitation fixes, turn any proven remediation into an active companion plan under `./`, and then start execution once the current limitation set is fully mapped.
-
-Do **not** start product-code remediation until the current known limitation set below has explicit outcomes and any required remediation plans exist in `active/`.
+This plan started investigation-first, but it now also serves as the durable execution map for the remaining open Zod limitation work after UUID subtype semantics were decided and implemented.
 
 The goal is to help the next session deeply investigate each remaining Zod round-trip limitation, identify its true architectural origin, and determine the most architecturally excellent response:
 
@@ -40,11 +38,13 @@ Strategic goal:
   - added to the active execution queue
   - recorded durably as later-scope work only if they are genuinely outside the current workstream
 
-The current limitations to investigate are:
+Current repo truth:
 
-1. recursive `.passthrough()` remains unsafe
-2. UUID v4 specificity is not preserved
-3. `int64` maps to `bigint` in Zod 4
+1. recursive unknown-key-preserving Zod generation remains the primary must-fix defect
+2. UUID subtype semantics are now preserved in IR and native Zod output via [ADR-039](../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
+3. portable OpenAPI / JSON Schema detours still widen UUID subtype semantics to plain `uuid`, and that widening is now accepted target-capacity behavior
+4. `int64` / `bigint` remains the next open architecture investigation
+5. the next recursive-unknown-key tranche must explicitly test whether getter syntax is truly the only canonical recursion form, or only canonical for strip-compatible recursion
 
 Companion investigation:
 
@@ -77,7 +77,8 @@ We are optimizing for **solving the right problem at the right layer**, not for 
 
 In scope:
 
-- deep investigation of the three remaining limitations in `docs/architecture/zod-round-trip-limitations.md`
+- deep investigation of the remaining open limitations in `docs/architecture/zod-round-trip-limitations.md`
+- durable recording of already-decided UUID subtype semantics and their implications for later work
 - architectural-origin analysis across parser, IR, interchange formats, writers, and runtime behavior
 - design-option comparison for standards-only, IR-level, writer-level, parser-level, configuration-level, and upstream-library-level answers
 - creation of durable decision outputs when the investigation proves something conclusive
@@ -115,12 +116,13 @@ Read and apply `.agent/rules/invoke-reviewers.md` throughout this workstream.
 
 ## Working Assumptions To Validate First
 
-These assumptions are intentionally not locked in. The next session should validate or reject them explicitly.
+These assumptions remain active only where they are not already locked by durable records.
 
-1. The recursive `.passthrough()` limitation is not only a Zod runtime problem; it may also expose an IR-modeling gap around unknown-key retention semantics.
-2. UUID v4 specificity may be representable without a custom OpenAPI extension if a standards-compliant `pattern` strategy exists, but that must be proven rather than assumed.
-3. The `int64`/`bigint` issue may be less a parser/writer bug than a missing architectural decision about what Castr optimizes for: JSON transport ergonomics, exact numeric domain semantics, or canonical Zod 4 APIs.
-4. At least one of the remaining limitations may benefit from a **general architectural mechanism** rather than a one-off patch.
+1. The recursive unknown-key-preserving limitation is now a writer/runtime construction problem, not a parser/IR/cross-format preservation problem.
+2. Getter syntax may remain canonical for recursive strip-compatible output without being the only honest recursive output form for preserving modes; that assumption must be tested explicitly.
+3. UUID subtype semantics are locked by ADR-039: first-class IR truth, native-only emission, and accepted widening across portable detours.
+4. The `int64`/`bigint` issue is less a parser bug than a missing numeric-semantics policy at the IR/writer boundary.
+5. `z.bigint()` remains architecturally adjacent and should be investigated alongside `int64`, not as an unrelated side note.
 
 ---
 
@@ -185,11 +187,12 @@ Conclusion:
 
 Confirmed findings:
 
-- earliest loss point is the Zod parser, not the writer
-- current object parsing collapses strip and passthrough to the same acceptance-only IR shape
-- `.catchall(schema)` is currently degraded during the first parse as well
+- the original earliest loss point was the Zod parser, not the writer
+- that parser/IR/cross-format loss is now remediated and locked by ADR-038
+- the remaining open gap is recursive `.passthrough()` / `.catchall()` writer/runtime reconstruction
 - recursive `.passthrough()` and recursive `.catchall()` share the same Zod 4 eager-evaluation runtime failure
 - validation-only parity is insufficient; parsed-output parity is required for this seam
+- the next architectural decision in this seam is whether getter recursion is universally canonical, or whether preserving unknown-key modes require a second tightly-scoped canonical recursion strategy
 
 Durable outputs created from this tranche:
 
@@ -203,9 +206,31 @@ Recommended direction locked by ADR-038:
 - preserve strip vs passthrough through OpenAPI / JSON Schema with a governed extension when standard fields are insufficient
 - fail fast instead of silently stripping unknown keys when recursive Zod output cannot yet be reconstructed safely
 
+### Tranche 2 Outcome: UUID Subtype Semantics
+
+Confirmed findings:
+
+- UUID subtype is first-class IR truth, not source provenance or metadata-only hinting
+- `format: 'uuidv7'` was a repo-owned pseudo-format and has been removed from portable truth
+- native Zod output now preserves supported subtype helpers (`z.uuidv4()`, `z.uuidv7()`)
+- portable OpenAPI / JSON Schema detours still widen to plain `uuid`
+- a narrow regex-based subtype inference exception is allowed only at parse time and only through the centralized governed utility
+
+Durable outputs created from this tranche:
+
+- [ADR-039](../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
+- updated [zod-round-trip-limitations.md](../../../docs/architecture/zod-round-trip-limitations.md)
+
+Recommended direction locked by ADR-039:
+
+- preserve UUID subtype in IR via `uuidVersion`
+- emit subtype only when the target has a native construct
+- preserve existing `pattern` content when present, but never synthesize subtype-preserving regex for portable output
+- accept widening across standard portable detours as target-capacity behavior rather than an IR defect
+
 ### Discovery Ledger
 
-- **In scope for queued active remediation:** `.catchall(schema)` currently degrades to plain `additionalProperties: true`
+- **In scope for queued active remediation:** recursive `.passthrough()` / `.catchall()` Zod emission remains unresolved
 - **Recorded for later tranche:** `z.bigint()` currently emits `format: "bigint"` through OpenAPI / JSON Schema artifacts
 
 ---
@@ -280,86 +305,55 @@ The default should be: investigate enough to understand and classify the new gap
 
 ### Primary Question
 
-Is this limitation fundamentally:
-
-1. a Zod 4 eager-evaluation runtime issue,
-2. an IR modeling issue around unknown-key semantics,
-3. a writer construction issue for recursive objects,
-4. or a combination of the above?
+What construction strategy can safely regenerate recursive unknown-key-preserving Zod output, and is getter syntax truly a universal canonical recursion form or only canonical for strip-compatible recursion?
 
 ### Architectural Questions
 
-1. Can the current IR distinguish:
-   - reject unknown keys
-   - accept and strip unknown keys
-   - accept and preserve unknown keys
-2. If it cannot, is the limitation already partly baked in by the current ADR-032 decision to model validation acceptance rather than output preservation?
-3. Can recursive `.passthrough()` be emitted safely with a two-phase or identity-preserving construction strategy without regressing canonical getter recursion?
-4. If a fix exists at the writer layer, would it still round-trip losslessly through the parser and interchange formats?
-5. If a fix exists only with a new IR distinction, what is the smallest architecturally clean representation?
+1. Is "getter syntax is canonical" a universal rule, or a best default that needs a narrow exception for recursive preserving modes?
+2. Can recursive `.passthrough()` or `.catchall()` be emitted safely with getter syntax, or does preserving behavior require a second tightly-scoped canonical recursion strategy?
+3. If a fix exists at the writer layer, does it preserve parsed-output behavior and recursive initialization safety as well as validation behavior?
+4. If no safe local construction exists, what is the precise upstream/runtime blocker?
+5. What proof shape is required to call the seam remediated rather than merely less broken?
 
 ### Code Surfaces To Inspect
 
-- `lib/src/schema-processing/parsers/zod/types/zod-parser.object.ts`
 - `lib/src/schema-processing/writers/zod/additional-properties.ts`
 - `lib/src/schema-processing/writers/zod/properties.ts`
 - `lib/src/schema-processing/writers/zod/index.ts`
-- `lib/src/schema-processing/ir/models/schema.ts`
 - object / recursion fixtures and parity payloads
 
 ### Fix Families To Compare
 
-1. **Upstream-first:** treat this as a Zod runtime limitation and escalate upstream.
-2. **Writer-only construction:** a safe two-phase recursive object builder that preserves schema identity.
-3. **IR expansion:** introduce explicit unknown-key policy semantics (`strict` / `strip` / `passthrough` / `catchall` style modeling).
-4. **Accepted limitation:** keep the current behavior but strengthen permanent rationale and scope.
+1. **Getter-only construction:** prove that canonical getter recursion can safely support preserving modes.
+2. **Dual canonical recursion strategy:** keep getter syntax canonical for strip-compatible recursion while allowing one narrowly-scoped second canonical strategy for preserving modes.
+3. **Upstream-first:** treat this as a Zod runtime limitation and escalate upstream while keeping a local strategy plan.
+4. **Canonical-safe alternative construction:** any approach that preserves parsed-output retention and recursive initialization safety without mutating meaning.
 
 ### Exit Criteria
 
-The next session must decide whether the fundamental blocker is:
+The next session must not close this tranche as a permanent accepted limitation.
 
-- runtime only,
-- partially self-inflicted by current IR semantics,
-- or fixable within Castr without doctrine compromise.
+It must instead produce one of:
 
-If a clean remediation exists, produce or update a separate active remediation plan with TDD order and acceptance criteria.
+- a clean remediation plan with TDD order and acceptance criteria
+- or a precise upstream/runtime blocker plus a concrete local strategy plan
+
+The tranche must also make one explicit doctrine decision:
+
+- getter recursion remains universally canonical
+- or getter recursion is narrowed to the cases it can represent honestly, with one tightly-scoped second canonical preserving-mode strategy
 
 ---
 
-## Tranche 2: Investigate UUID v4 Specificity
+## Tranche 2: UUID Subtype Work Is Complete
 
-### Primary Question
+No further architecture investigation is required in this tranche unless one of the following changes:
 
-Can UUID v4 specificity be preserved losslessly in an architecturally acceptable way without violating portability or no-escape-hatch principles?
+1. OpenAPI / JSON Schema gain a native UUID subtype/version carrier
+2. the project decides to adopt a custom portable UUID subtype extension
+3. Zod gains additional native subtype helpers beyond the currently supported set
 
-### Architectural Questions
-
-1. Is there a standards-compliant representation using `pattern` plus `format: uuid`, rather than a custom `x-uuid-version` extension?
-2. If a `pattern`-based strategy exists, can parser and writer recognition stay centralized and deterministic rather than devolving into string-heuristic sprawl?
-3. If non-standard extensions are the only lossless route, does project doctrine allow them for standards gaps of this kind?
-4. Should UUID version specificity be treated as a one-off special case or as part of a broader **format refinement** architecture?
-5. If the repo rejects non-standard extensions, is the current accepted loss the correct permanent stance, or should the system fail fast on round-trip claims it cannot keep?
-
-### Code Surfaces To Inspect
-
-- `lib/src/schema-processing/parsers/zod/types/zod-parser.zod4-formats.ts`
-- `lib/src/schema-processing/writers/zod/generators/primitives.ts`
-- OpenAPI / JSON Schema conversion and writer layers that carry `format` and `pattern`
-- existing UUID tests and fixtures
-
-### Fix Families To Compare
-
-1. **Standards-only refinement:** `format: uuid` plus `pattern`.
-2. **Generic IR refinement model:** preserve format refinements as first-class internal semantics.
-3. **Non-standard extension:** `x-uuid-version` or equivalent.
-4. **Fail-fast doctrine:** reject round-trip claims for UUID-version-specific input if no lossless portable representation exists.
-5. **Accepted limitation:** keep canonicalization to `z.uuid()`.
-
-### Exit Criteria
-
-The next session must determine whether a lossless, architecturally excellent representation exists and whether it generalizes beyond UUID v4.
-
-If the answer changes permanent policy, capture it in an ADR instead of leaving it in session notes.
+Until then, ADR-039 governs the UUID seam.
 
 ---
 

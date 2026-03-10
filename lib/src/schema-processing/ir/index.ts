@@ -34,6 +34,7 @@ export type {
   IRSecurityRequirement,
   CastrSchema,
   IRUnknownKeyBehavior,
+  IRUuidVersion,
   CastrSchemaNode,
   CastrSchemaDependencyInfo,
   IRInheritanceInfo,
@@ -54,6 +55,16 @@ export {
   resolvePortableUnknownKeyBehavior,
 } from './unknown-key-behavior.js';
 export type { PortableUnknownKeyBehaviorMode } from './unknown-key-behavior.js';
+export {
+  UUID_SCHEMA_TYPE,
+  UUID_SCHEMA_FORMAT,
+  UUID_V4_PATTERN,
+  UUID_V7_PATTERN,
+  isIRUuidVersion,
+  inferUuidVersionFromPattern,
+  applyExplicitUuidVersion,
+  applyInferredUuidVersionFromPattern,
+} from './uuid-version.js';
 
 // Serialization utilities
 // Validators and type guards

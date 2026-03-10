@@ -116,6 +116,7 @@ export const ZOD_METHOD_MIN = 'min';
 export const ZOD_METHOD_MAX = 'max';
 export const ZOD_METHOD_LENGTH = 'length';
 export const ZOD_METHOD_BASE64 = 'base64';
+export const ZOD_METHOD_REGEX = 'regex';
 export const ZOD_METHOD_INT = 'int';
 export const ZOD_METHOD_OPTIONAL = 'optional';
 export const ZOD_METHOD_NULLABLE = 'nullable';
@@ -144,6 +145,8 @@ export const ZOD_BASE_METHOD_NUMBER = 'number';
 export const ZOD_BASE_METHOD_NULL = 'null';
 export const ZOD_BASE_METHOD_UNDEFINED = 'undefined';
 export const ZOD_BASE_METHOD_LITERAL = 'literal';
+export const ZOD_BASE_METHOD_UUID_V4 = 'uuidv4';
+export const ZOD_BASE_METHOD_UUID_V7 = 'uuidv7';
 
 export const ZOD_SCHEMA_TYPE_ARRAY = 'array';
 export const ZOD_SCHEMA_TYPE_STRING = 'string';

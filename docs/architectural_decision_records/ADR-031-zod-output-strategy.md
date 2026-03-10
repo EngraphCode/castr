@@ -142,15 +142,22 @@ Recursive object schemas cannot safely append `.passthrough()` or `.catchall()` 
 
 **Future consideration:** If runtime transformation becomes a requirement, we could bundle codec implementations in output or wait for Zod to promote them to first-class APIs.
 
-### 10. UUID Canonicalization Uses `z.uuid()`, Not `z.uuidv4()`
+### 10. UUID Subtype Emission Is Native-Only
 
-OpenAPI / JSON Schema `format: 'uuid'` emits canonical `z.uuid()`.
+> [!IMPORTANT]
+> [ADR-039](./ADR-039-uuid-subtype-semantics-and-native-only-emission.md) amends this section.
 
-- `z.uuid()` accepts any RFC 9562-compliant UUID version.
-- `z.uuidv4()` is more specific and cannot be represented losslessly by standard OpenAPI / JSON Schema `format: 'uuid'`.
-- Writers must not emit `z.uuidv4()` from plain `format: 'uuid'`.
+UUID output is governed by first-class IR subtype semantics when present:
 
-**Rationale:** Version-4 specificity is not representable without non-standard extensions, so canonical output must choose the lossless standard target.
+- plain `format: 'uuid'` emits `z.uuid()`
+- `format: 'uuid'` + `uuidVersion: 4` emits `z.uuidv4()`
+- `format: 'uuid'` + `uuidVersion: 7` emits `z.uuidv7()`
+
+Writers must not emit subtype helpers from plain `format: 'uuid'` alone.
+
+Portable OpenAPI / JSON Schema detours remain plain `format: 'uuid'`, so subtype widening is accepted when those targets cannot carry subtype natively.
+
+**Rationale:** UUID subtype is first-class IR truth, but native-only emission keeps portable targets honest instead of inventing non-native output.
 
 ### 11. `int64` Canonicalization Uses `z.int64()` and Therefore `bigint`
 

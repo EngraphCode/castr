@@ -58,9 +58,10 @@ Current status of that track:
 - the Shared loader and utility cluster is complete
 - the Snapshot regression cluster is complete
 - the remaining parser/writer low-count cluster is complete
-- the next primary slice is investigation-first across the remaining Zod limitations:
-  - recursive `.passthrough()` remains unsafe
-  - UUID v4 specificity is not preserved
+- the next primary slice remains investigation-first across the remaining open Zod limitations:
+  - recursive unknown-key-preserving Zod generation remains unresolved
+  - the immediate recursive unknown-key question is whether getter syntax is universally canonical or only canonical for strip-compatible recursion
+  - UUID subtype semantics are now preserved in IR/native Zod output and widen only across standard portable detours
   - `int64` maps to `bigint` in Zod 4
 
 Primary active atomic plan:

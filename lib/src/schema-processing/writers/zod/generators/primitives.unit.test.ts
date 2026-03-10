@@ -106,6 +106,21 @@ describe('ZodPrimitivesWriter', () => {
       expect(generatePrimitive(schema)).toBe('z.uuid()');
     });
 
+    it('generates z.uuidv4() for UUID v4 subtype semantics', () => {
+      const schema = createMockSchema({ type: 'string', format: 'uuid', uuidVersion: 4 });
+      expect(generatePrimitive(schema)).toBe('z.uuidv4()');
+    });
+
+    it('generates z.uuidv7() for UUID v7 subtype semantics', () => {
+      const schema = createMockSchema({ type: 'string', format: 'uuid', uuidVersion: 7 });
+      expect(generatePrimitive(schema)).toBe('z.uuidv7()');
+    });
+
+    it('widens unsupported UUID subtype semantics to z.uuid()', () => {
+      const schema = createMockSchema({ type: 'string', format: 'uuid', uuidVersion: 1 });
+      expect(generatePrimitive(schema)).toBe('z.uuid()');
+    });
+
     it('generates z.iso.date() for string format: date', () => {
       const schema = createMockSchema({ type: 'string', format: 'date' });
       expect(generatePrimitive(schema)).toBe('z.iso.date()');

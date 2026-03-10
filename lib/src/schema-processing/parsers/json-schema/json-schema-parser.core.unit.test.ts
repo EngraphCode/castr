@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { parseJsonSchemaObject } from './json-schema-parser.core.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
+import { CastrSchemaProperties, UUID_V7_PATTERN } from '../../ir/index.js';
 
 describe('parseJsonSchemaObject', () => {
   // =========================================================================
@@ -129,6 +129,14 @@ describe('parseJsonSchemaObject', () => {
       const result = parseJsonSchemaObject({ type: 'string', pattern: '^[a-z]+$' });
 
       expect(result.pattern).toBe('^[a-z]+$');
+    });
+
+    it('infers UUID v7 semantics from canonical pattern', () => {
+      const result = parseJsonSchemaObject({ type: 'string', pattern: UUID_V7_PATTERN });
+
+      expect(result.pattern).toBe(UUID_V7_PATTERN);
+      expect(result.format).toBe('uuid');
+      expect(result.uuidVersion).toBe(7);
     });
 
     it('parses contentEncoding', () => {

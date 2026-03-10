@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
+import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
 /**
@@ -123,6 +123,21 @@ describe('writeJsonSchema', () => {
       const result = writeJsonSchema(schema);
 
       expect(result.format).toBe('email');
+    });
+
+    it('keeps JSON Schema UUID output plain while preserving existing pattern content', () => {
+      const schema = createSchema({
+        type: 'string',
+        format: 'uuid',
+        uuidVersion: 4,
+        pattern: UUID_V4_PATTERN,
+      });
+
+      const result = writeJsonSchema(schema);
+
+      expect(result.format).toBe('uuid');
+      expect(result.pattern).toBe(UUID_V4_PATTERN);
+      expect('uuidVersion' in result).toBe(false);
     });
 
     it('writes minLength and maxLength', () => {

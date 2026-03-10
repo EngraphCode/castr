@@ -10,6 +10,7 @@
 
 import type { CodeBlockWriter } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
+import { UUID_SCHEMA_FORMAT } from '../../../ir/index.js';
 
 const SCHEMA_TYPE_STRING = 'string';
 const SCHEMA_TYPE_INTEGER = 'integer';
@@ -119,8 +120,17 @@ const STRING_FORMAT_TO_ZOD: Readonly<Record<string, string>> = {
   ipv4: 'z.ipv4()',
   ipv6: 'z.ipv6()',
   hostname: 'z.hostname()',
-  uuidv7: 'z.uuidv7()',
 };
+
+function getUuidStringCall(schema: CastrSchema): string {
+  if (schema.uuidVersion === 4) {
+    return 'z.uuidv4()';
+  }
+  if (schema.uuidVersion === 7) {
+    return 'z.uuidv7()';
+  }
+  return 'z.uuid()';
+}
 
 /**
  * Write string schema with format-specific Zod 4 functions.
@@ -132,6 +142,11 @@ const STRING_FORMAT_TO_ZOD: Readonly<Record<string, string>> = {
  */
 function writeStringSchema(schema: CastrSchema, writer: CodeBlockWriter): void {
   if (schema.format !== undefined) {
+    if (schema.format === UUID_SCHEMA_FORMAT) {
+      writer.write(getUuidStringCall(schema));
+      return;
+    }
+
     const zodCall = STRING_FORMAT_TO_ZOD[schema.format];
     if (zodCall !== undefined) {
       writer.write(zodCall);

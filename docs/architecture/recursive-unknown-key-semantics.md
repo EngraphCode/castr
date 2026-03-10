@@ -100,12 +100,13 @@ The architecture captured here is now implemented:
 The remaining unsolved boundary is narrow and explicit:
 
 - safe recursive preserving emission for `.passthrough()` and `.catchall()` still does not exist in Zod output
+- the next design question is whether getter syntax is universally canonical for recursion or only canonical for strip-compatible recursion, with preserving modes potentially requiring one tightly-scoped second canonical strategy
 
 ## Implementation Record
 
 The remediation plan that carried this architecture into product code lives in:
 
-- [recursive-unknown-key-semantics-remediation.md](../../.agent/plans/active/recursive-unknown-key-semantics-remediation.md)
+- [recursive-unknown-key-semantics-remediation.md](../../.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md)
 
 ## Discovery Ledger
 

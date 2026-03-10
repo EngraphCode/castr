@@ -69,7 +69,9 @@ Current repo truth for the next workstream:
 - the Characterisation boundary, MCP from-IR, Shared loader and utility, Snapshot regression, and remaining parser/writer low-count clusters are complete
 - the JSON Schema parser directory-complexity blocker is resolved via the `json-schema/normalization/` bounded context
 - the next primary slice is investigation-first, not execution-first
-- the active investigation must map the remaining Zod round-trip limitations before choosing a remediation plan
+- UUID subtype semantics are now locked by ADR-039 and implemented at the IR/parser/writer boundary
+- the active investigation must now focus on the remaining open Zod limitation seams before choosing the next remediation plan
+- the immediate recursive unknown-key question is no longer parser/IR truth; it is whether getter syntax is truly the only canonical recursion form or only canonical for strip-compatible recursion
 
 The active primary plan is:
 
@@ -100,25 +102,30 @@ Recent completed operational context:
    - `ADR-032`
    - `ADR-035`
    - `ADR-038`
+   - `ADR-039`
 3. Read the paused companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or setup-cost questions
 4. Start by mapping the current known limitation set and identifying the earliest confirmed loss point for each:
-   - recursive `.passthrough()` remains unsafe
-   - UUID v4 specificity is not preserved
+   - recursive unknown-key-preserving Zod generation remains unresolved at the writer/runtime construction boundary
+   - UUID subtype semantics are preserved in IR/native Zod output but widen across standard portable detours
    - `int64` maps to `bigint` in Zod 4
-5. Treat this as an investigation-first slice. Do not jump into product-code remediation until the active plan's execution trigger is satisfied.
-6. Preserve the strict type-safety doctrine while investigating:
+5. Treat the recursive unknown-key seam as a focused writer/runtime investigation first:
+   - do not reopen parser/IR/portable-format layers unless new evidence forces it
+   - explicitly test whether getter syntax is universally canonical or whether preserving modes require a second tightly-scoped canonical recursion strategy
+   - compare construction families on recursive initialization safety, parsed-output parity, and design simplicity
+6. Treat this as an investigation-first slice. Do not jump into product-code remediation until the active plan's execution trigger is satisfied.
+7. Preserve the strict type-safety doctrine while investigating:
    - validate `unknown` only at incoming external boundaries
    - from that point on, keep types strict
    - never discard information and recover meaning later with casts or loose helper types
-7. Keep the current local Practice system in use:
+8. Keep the current local Practice system in use:
    - `AGENT.md`
    - `practice-index.md`
    - canonical `.agent/commands/`, `.agent/skills/`, and `.agent/rules/`
    - canonical `.agent/sub-agents/`
    - `.codex/config.toml`
    - `.codex/agents/`
-8. Invoke the installed reviewers and domain experts through `.agent/rules/invoke-reviewers.md` when changes cross their trigger boundaries
-9. Leave the next session with one obvious primary entrypoint and no stranded context
+9. Invoke the installed reviewers and domain experts through `.agent/rules/invoke-reviewers.md` when changes cross their trigger boundaries
+10. Leave the next session with one obvious primary entrypoint and no stranded context
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 

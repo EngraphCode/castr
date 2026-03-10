@@ -9,9 +9,10 @@
  */
 
 import type { ZodMethodCall } from '../ast/zod-ast.js';
+import { ZOD_PRIMITIVE_TYPES } from './zod-parser.defaults.js';
 import {
   ZOD_BASE_METHOD_NUMBER,
-  ZOD_BASE_METHOD_STRING,
+  ZOD_SCHEMA_TYPE_STRING,
   ZOD_METHOD_BASE64,
   ZOD_METHOD_INT,
   ZOD_METHOD_LENGTH,
@@ -257,6 +258,10 @@ const NUMERIC_BASE_METHODS = new Set([
   'float64',
 ]);
 
+function isStringConstraintBaseMethod(baseMethod: string): boolean {
+  return ZOD_PRIMITIVE_TYPES.get(baseMethod) === ZOD_SCHEMA_TYPE_STRING;
+}
+
 /**
  * Handle type-based constraint methods.
  * @internal
@@ -266,7 +271,7 @@ export function processTypeConstraints(
   method: ZodMethodCall,
   constraints: ParsedConstraints,
 ): void {
-  if (baseMethod === ZOD_BASE_METHOD_STRING) {
+  if (isStringConstraintBaseMethod(baseMethod)) {
     processStringMethod(method, constraints);
   }
   if (NUMERIC_BASE_METHODS.has(baseMethod)) {

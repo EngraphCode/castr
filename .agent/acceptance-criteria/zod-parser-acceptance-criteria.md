@@ -44,22 +44,22 @@ reconstruct IR for lossless transform validation with sample input.
 
 ### 1.3 String Formats (Top-Level Functions)
 
-| Zod 4 Expression | Target IR                            |
-| ---------------- | ------------------------------------ |
-| `z.email()`      | `type: 'string', format: 'email'`    |
-| `z.url()`        | `type: 'string', format: 'uri'`      |
-| `z.uuid()`       | `type: 'string', format: 'uuid'`     |
-| `z.uuidv4()`     | `type: 'string', format: 'uuid'`     |
-| `z.uuidv7()`     | `type: 'string', format: 'uuid'`     |
-| `z.base64()`     | `type: 'string', format: 'byte'`     |
-| `z.base64url()`  | `type: 'string', format: 'byte'`     |
-| `z.ipv4()`       | `type: 'string', format: 'ipv4'`     |
-| `z.ipv6()`       | `type: 'string', format: 'ipv6'`     |
-| `z.cidrv4()`     | `type: 'string'`                     |
-| `z.cidrv6()`     | `type: 'string'`                     |
-| `z.jwt()`        | `type: 'string'`                     |
-| `z.e164()`       | `type: 'string'`                     |
-| `z.hostname()`   | `type: 'string', format: 'hostname'` |
+| Zod 4 Expression | Target IR                                        |
+| ---------------- | ------------------------------------------------ |
+| `z.email()`      | `type: 'string', format: 'email'`                |
+| `z.url()`        | `type: 'string', format: 'uri'`                  |
+| `z.uuid()`       | `type: 'string', format: 'uuid'`                 |
+| `z.uuidv4()`     | `type: 'string', format: 'uuid', uuidVersion: 4` |
+| `z.uuidv7()`     | `type: 'string', format: 'uuid', uuidVersion: 7` |
+| `z.base64()`     | `type: 'string', format: 'byte'`                 |
+| `z.base64url()`  | `type: 'string', format: 'byte'`                 |
+| `z.ipv4()`       | `type: 'string', format: 'ipv4'`                 |
+| `z.ipv6()`       | `type: 'string', format: 'ipv6'`                 |
+| `z.cidrv4()`     | `type: 'string'`                                 |
+| `z.cidrv6()`     | `type: 'string'`                                 |
+| `z.jwt()`        | `type: 'string'`                                 |
+| `z.e164()`       | `type: 'string'`                                 |
+| `z.hostname()`   | `type: 'string', format: 'hostname'`             |
 
 ### 1.4 ISO Date/Time Formats
 

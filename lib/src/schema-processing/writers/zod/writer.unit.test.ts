@@ -2,7 +2,7 @@ import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 import { writeZodSchema } from './index.js';
 import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
+import { CastrSchemaProperties, UUID_V4_PATTERN } from '../../ir/index.js';
 
 describe('ZodWriter', () => {
   const project = new Project({ useInMemoryFileSystem: true });
@@ -173,6 +173,21 @@ describe('ZodWriter', () => {
     const context = createComponentContext(schema);
     // Component context is never optional
     expect(generate(context)).toBe('z.string().min(1).email().default("test")');
+  });
+
+  it('generates UUID subtype helpers while preserving explicit regex content', () => {
+    const schema = createMockSchema('string', {
+      zodChain: {
+        presence: '',
+        validations: [`.uuid()`, `.regex(/${UUID_V4_PATTERN}/)`],
+        defaults: [],
+      },
+    });
+    schema.format = 'uuid';
+    schema.uuidVersion = 4;
+
+    const context = createComponentContext(schema);
+    expect(generate(context)).toBe(`z.uuidv4().regex(/${UUID_V4_PATTERN}/)`);
   });
 
   it('generates optional property with chains', () => {

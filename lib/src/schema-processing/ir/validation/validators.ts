@@ -36,6 +36,7 @@ import {
   UNKNOWN_KEY_MODE_STRIP,
   isObjectSchemaType,
 } from '../unknown-key-behavior.js';
+import { hasValidSchemaUuidVersion } from './validators.uuid.js';
 
 const HTTP_METHOD_GET = 'get';
 const HTTP_METHOD_POST = 'post';
@@ -220,6 +221,7 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
     hasValidSchemaAdditionalProperties(value) &&
     hasValidSchemaProperties(value) &&
     hasValidSchemaUnknownKeyBehavior(value) &&
+    hasValidSchemaUuidVersion(value) &&
     isRecord(value['metadata'])
   );
 }

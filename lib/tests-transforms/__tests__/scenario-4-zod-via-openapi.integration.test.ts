@@ -54,6 +54,51 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
     });
   });
 
+  describe('Portable UUID subtype widening', () => {
+    it('widens UUID subtype helpers to plain uuid when detouring through OpenAPI', async () => {
+      const source = `
+        import { z } from 'zod';
+
+        export const UuidV4Schema = z.uuidv4();
+        export const UuidV7Schema = z.uuidv7();
+      `;
+
+      const result = parseZodSource(source);
+      expectNoParseErrors('inline uuid subtype test', 'Scenario 4 arbitrary-input parse', result);
+
+      const uuidV4Component = result.ir.components.find(
+        (component) => component.type === 'schema' && component.name === 'UuidV4',
+      );
+      const uuidV7Component = result.ir.components.find(
+        (component) => component.type === 'schema' && component.name === 'UuidV7',
+      );
+
+      expect(uuidV4Component?.type).toBe('schema');
+      expect(uuidV7Component?.type).toBe('schema');
+      if (uuidV4Component?.type !== 'schema' || uuidV7Component?.type !== 'schema') {
+        throw new Error('Expected UUID subtype components to be present in IR');
+      }
+
+      expect(uuidV4Component.schema.format).toBe('uuid');
+      expect(uuidV4Component.schema.uuidVersion).toBe(4);
+      expect(uuidV7Component.schema.format).toBe('uuid');
+      expect(uuidV7Component.schema.uuidVersion).toBe(7);
+
+      const openApiOutput = writeOpenApi(result.ir);
+      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+      const regenerated = parseZodSource(zodOutput);
+
+      expectNoParseErrors(
+        'inline uuid subtype test',
+        'Scenario 4 generated-output parse',
+        regenerated,
+      );
+      expect(zodOutput).toContain('z.uuid()');
+      expect(zodOutput).not.toContain('z.uuidv4()');
+      expect(zodOutput).not.toContain('z.uuidv7()');
+    });
+  });
+
   describe('Strictness: unsupported recursive unknown-key modes fail fast', () => {
     it.each(ZOD_GENERATION_FAILURE_FIXTURES)(
       '$fixtureName: $label',
