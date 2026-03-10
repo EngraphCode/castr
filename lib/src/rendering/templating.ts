@@ -12,10 +12,10 @@ import { serializeIR } from '../schema-processing/ir/index.js';
 import { generateIndexFile, generateCommonFile, generateGroupFiles } from './templating-groups.js';
 import { writeTypeScript } from '../schema-processing/writers/typescript/index.js';
 
-const GROUP_STRATEGY_TAG_FILE = 'tag-file' as const;
-const GROUP_STRATEGY_METHOD_FILE = 'method-file' as const;
-const TYPESCRIPT_FILE_EXTENSION = '.ts' as const;
-const IR_JSON_FILE_SUFFIX = '.ir.json' as const;
+const GROUP_STRATEGY_TAG_FILE = 'tag-file';
+const GROUP_STRATEGY_METHOD_FILE = 'method-file';
+const TYPESCRIPT_FILE_EXTENSION = '.ts';
+const IR_JSON_FILE_SUFFIX = '.ir.json';
 
 function getSortedFilePaths(files: Record<string, string>): string[] {
   return Object.keys(files).sort((left, right) => left.localeCompare(right));

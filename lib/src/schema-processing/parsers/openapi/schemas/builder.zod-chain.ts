@@ -11,10 +11,10 @@
 import type { CastrSchema } from '../../../ir/index.js';
 import { join, split } from 'lodash-es';
 
-const SCHEMA_TYPE_NUMBER = 'number' as const;
-const SCHEMA_TYPE_INTEGER = 'integer' as const;
-const SCHEMA_TYPE_STRING = 'string' as const;
-const SCHEMA_TYPE_ARRAY = 'array' as const;
+const SCHEMA_TYPE_NUMBER = 'number';
+const SCHEMA_TYPE_INTEGER = 'integer';
+const SCHEMA_TYPE_STRING = 'string';
+const SCHEMA_TYPE_ARRAY = 'array';
 
 /**
  * Update Zod chain validations based on schema constraints.

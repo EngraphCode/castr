@@ -22,13 +22,13 @@ export type ComplexityFn = (args: {
   schema: SchemaObject | ReferenceObject | undefined;
 }) => number;
 
-const SCHEMA_TYPE_STRING = 'string' as const;
-const SCHEMA_TYPE_NUMBER = 'number' as const;
-const SCHEMA_TYPE_INTEGER = 'integer' as const;
-const SCHEMA_TYPE_BOOLEAN = 'boolean' as const;
-const SCHEMA_TYPE_NULL = 'null' as const;
-const SCHEMA_TYPE_ARRAY = 'array' as const;
-const SCHEMA_TYPE_OBJECT = 'object' as const;
+const SCHEMA_TYPE_STRING = 'string';
+const SCHEMA_TYPE_NUMBER = 'number';
+const SCHEMA_TYPE_INTEGER = 'integer';
+const SCHEMA_TYPE_BOOLEAN = 'boolean';
+const SCHEMA_TYPE_NULL = 'null';
+const SCHEMA_TYPE_ARRAY = 'array';
+const SCHEMA_TYPE_OBJECT = 'object';
 
 const PRIMITIVE_COMPLEXITY_TYPES = new Set<PrimitiveSchemaType>([
   SCHEMA_TYPE_STRING,

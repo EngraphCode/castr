@@ -8,13 +8,12 @@
  * **Type Safety:**
  * - All guards use `value is Type` syntax for proper type narrowing
  * - Record<string, unknown> is necessary for validating unknown values
- * - Type assertions are carefully controlled and necessary for runtime validation
+ * - Unknown data is narrowed through runtime validation before use
  * - Validates required fields and their types
  *
  * **ESLint Exceptions:**
  * Type guards require patterns that ESLint normally forbids:
  * - Record<string, unknown> for validating unknown object shapes
- * - Type assertions for narrowing to Record for property access
  * - Higher complexity for thorough validation logic
  *
  * @module ir-validators
@@ -24,19 +23,36 @@
 
 import type { CastrSchema, CastrSchemaNode } from '../models/schema.js';
 import { CastrSchemaProperties } from '../models/schema.js';
+import { isEqual } from 'lodash-es';
 
 import { type UnknownRecord, isRecord } from '../../../shared/type-utils/types.js';
 import type { CastrDocument } from '../models/schema-document.js';
 import type { IRComponent } from '../models/schema.components.js';
 import type { CastrOperation } from '../models/schema.operations.js';
+import {
+  UNKNOWN_KEY_MODE_CATCHALL,
+  UNKNOWN_KEY_MODE_PASSTHROUGH,
+  UNKNOWN_KEY_MODE_STRICT,
+  UNKNOWN_KEY_MODE_STRIP,
+  isObjectSchemaType,
+} from '../unknown-key-behavior.js';
 
-const HTTP_METHOD_GET = 'get' as const;
-const HTTP_METHOD_POST = 'post' as const;
-const HTTP_METHOD_PUT = 'put' as const;
-const HTTP_METHOD_PATCH = 'patch' as const;
-const HTTP_METHOD_DELETE = 'delete' as const;
-const HTTP_METHOD_HEAD = 'head' as const;
-const HTTP_METHOD_OPTIONS = 'options' as const;
+const HTTP_METHOD_GET = 'get';
+const HTTP_METHOD_POST = 'post';
+const HTTP_METHOD_PUT = 'put';
+const HTTP_METHOD_PATCH = 'patch';
+const HTTP_METHOD_DELETE = 'delete';
+const HTTP_METHOD_HEAD = 'head';
+const HTTP_METHOD_OPTIONS = 'options';
+const VALID_SCHEMA_TYPES: readonly NonNullable<Extract<CastrSchema['type'], string>>[] = [
+  'string',
+  'number',
+  'integer',
+  'boolean',
+  'array',
+  'object',
+  'null',
+];
 const VALID_HTTP_METHODS = new Set<string>([
   HTTP_METHOD_GET,
   HTTP_METHOD_POST,
@@ -200,16 +216,114 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
     return false;
   }
 
-  // Validate properties if present
-  if ('properties' in value && value['properties'] !== undefined) {
-    if (!(value['properties'] instanceof CastrSchemaProperties)) {
+  return (
+    hasValidSchemaAdditionalProperties(value) &&
+    hasValidSchemaProperties(value) &&
+    hasValidSchemaUnknownKeyBehavior(value) &&
+    isRecord(value['metadata'])
+  );
+}
+
+function hasValidSchemaAdditionalProperties(value: UnknownRecord): boolean {
+  if (!('additionalProperties' in value) || value['additionalProperties'] === undefined) {
+    return true;
+  }
+
+  return isValidAdditionalProperties(value, value['additionalProperties']);
+}
+
+function hasValidSchemaProperties(value: UnknownRecord): boolean {
+  if (!('properties' in value) || value['properties'] === undefined) {
+    return true;
+  }
+
+  return value['properties'] instanceof CastrSchemaProperties;
+}
+
+function hasValidSchemaUnknownKeyBehavior(value: UnknownRecord): boolean {
+  if (!('unknownKeyBehavior' in value) || value['unknownKeyBehavior'] === undefined) {
+    return true;
+  }
+
+  return isValidUnknownKeyBehavior(value, value['unknownKeyBehavior']);
+}
+
+function isValidAdditionalProperties(schema: UnknownRecord, value: unknown): boolean {
+  if (!isObjectSchemaRecord(schema)) {
+    return false;
+  }
+
+  return typeof value === 'boolean' || isCastrSchema(value);
+}
+
+function isValidUnknownKeyBehavior(schema: UnknownRecord, value: unknown): boolean {
+  if (!isObjectSchemaRecord(schema) || !isRecord(value)) {
+    return false;
+  }
+
+  const additionalProperties = schema['additionalProperties'];
+
+  switch (value['mode']) {
+    case UNKNOWN_KEY_MODE_STRICT:
+      return additionalProperties === false;
+    case UNKNOWN_KEY_MODE_STRIP:
+    case UNKNOWN_KEY_MODE_PASSTHROUGH:
+      return additionalProperties === true;
+    case UNKNOWN_KEY_MODE_CATCHALL:
+      return hasMatchingCatchallSchema(additionalProperties, value['schema']);
+    default:
       return false;
+  }
+}
+
+function hasMatchingCatchallSchema(
+  additionalProperties: unknown,
+  catchallSchema: unknown,
+): boolean {
+  return (
+    isCastrSchema(catchallSchema) &&
+    isCastrSchema(additionalProperties) &&
+    isEqual(additionalProperties, catchallSchema)
+  );
+}
+
+function isSchemaTypeEntry(
+  value: unknown,
+): value is NonNullable<Extract<CastrSchema['type'], string>> {
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  for (const schemaType of VALID_SCHEMA_TYPES) {
+    if (value === schemaType) {
+      return true;
     }
   }
 
-  // The only required field in CastrSchema is metadata
-  // All other fields (type, properties, items, etc.) are optional
-  return isRecord(value['metadata']);
+  return false;
+}
+
+function isSchemaTypeValue(value: unknown): value is CastrSchema['type'] | undefined {
+  return value === undefined || isSchemaTypeEntry(value) || isSchemaTypeArray(value);
+}
+
+function isSchemaTypeArray(
+  value: unknown,
+): value is NonNullable<Extract<CastrSchema['type'], unknown[]>> {
+  if (!Array.isArray(value)) {
+    return false;
+  }
+
+  return value.every(isSchemaTypeEntry);
+}
+
+function isObjectSchemaRecord(schema: UnknownRecord): boolean {
+  const schemaType = schema['type'];
+  if (isSchemaTypeValue(schemaType) && isObjectSchemaType(schemaType)) {
+    return true;
+  }
+
+  return schema['properties'] instanceof CastrSchemaProperties;
 }
 
 /**

@@ -11,7 +11,7 @@ import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 
 export { writeTypeDefinition } from './type-writer.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+const COMPONENT_TYPE_SCHEMA = 'schema';
 
 function getSortedGroupEntries(groupNames: Record<string, string>): [string, string][] {
   return Object.entries(groupNames).sort(([leftApiName], [rightApiName]) =>

@@ -68,5 +68,5 @@ The test suite MUST include explicit test fixtures that prove idempotence and co
 ## 4. Quality Gates
 
 - **Tests First:** All new parsing logic for Draft 07/2020-12 MUST have TDD proofs.
-- **No Hacks:** No `as`, `any`, or `eslint-disable` in the implementation of the new parsers.
+- **No Hacks:** No non-const type assertions, `any`, or `eslint-disable` in the implementation of the new parsers.
 - **Zero Parse Errors:** Transform validation suites MUST assert zero parse errors before checking downstream structural integrity.

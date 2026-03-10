@@ -22,8 +22,8 @@ export interface OTTNormalizedInput {
 }
 
 const IN_MEMORY_DESCRIPTOR = '[in-memory document]';
-const HTTP_PROTOCOL = 'http:' as const;
-const HTTPS_PROTOCOL = 'https:' as const;
+const HTTP_PROTOCOL = 'http:';
+const HTTPS_PROTOCOL = 'https:';
 
 /**
  * Check if string is a remote URL (http/https)

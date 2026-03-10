@@ -72,6 +72,20 @@ export type IRHttpMethod =
  *
  * @public
  */
+export type IRUnknownKeyBehavior =
+  | { mode: 'strict' }
+  | { mode: 'strip' }
+  | { mode: 'passthrough' }
+  | { mode: 'catchall'; schema: CastrSchema };
+
+/**
+ * Canonical runtime unknown-key behavior for object schemas.
+ *
+ * This is distinct from `additionalProperties`, which models portable
+ * validation/interchange semantics rather than Zod parsed-output behavior.
+ *
+ * @public
+ */
 export interface CastrSchema {
   /**
    * Schema type from OpenAPI.
@@ -148,6 +162,14 @@ export interface CastrSchema {
    * - schema: additional properties must match schema
    */
   additionalProperties?: boolean | CastrSchema;
+
+  /**
+   * Runtime unknown-key behavior for object schemas.
+   *
+   * This preserves distinctions that `additionalProperties` alone cannot
+   * represent, such as strip versus passthrough behavior.
+   */
+  unknownKeyBehavior?: IRUnknownKeyBehavior;
 
   // Array properties
   /**

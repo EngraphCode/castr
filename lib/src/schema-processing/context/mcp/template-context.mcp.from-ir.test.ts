@@ -21,9 +21,9 @@ import { buildMcpToolsFromIR } from './template-context.mcp.js';
 /**
  * Create a mock CastrSchema for testing.
  */
-function createMockSchema(type = 'object'): CastrSchema {
+function createMockSchema(type: CastrSchema['type'] = 'object'): CastrSchema {
   return {
-    type: type as CastrSchema['type'],
+    type,
     metadata: createMockCastrSchemaNode(),
   };
 }
@@ -45,7 +45,7 @@ function createMockOperation(overrides: Partial<CastrOperation> = {}): CastrOper
     },
     responses: [],
     ...overrides,
-  } as CastrOperation;
+  };
 }
 
 /**

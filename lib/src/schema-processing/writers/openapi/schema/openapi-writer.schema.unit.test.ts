@@ -335,16 +335,47 @@ describe('object schemas', () => {
     expect(result.additionalProperties).toBe(false);
   });
 
+  it('writes strip unknown-key behavior with the governed extension', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      unknownKeyBehavior: { mode: 'strip' },
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result.additionalProperties).toBe(true);
+    expect(result['x-castr-unknownKeyBehavior']).toBe('strip');
+  });
+
+  it('writes passthrough unknown-key behavior with the governed extension', () => {
+    const schema: CastrSchema = {
+      type: 'object',
+      unknownKeyBehavior: { mode: 'passthrough' },
+      metadata: createMetadata(),
+    };
+
+    const result = writeOpenApiSchema(schema);
+
+    expect(result.additionalProperties).toBe(true);
+    expect(result['x-castr-unknownKeyBehavior']).toBe('passthrough');
+  });
+
   it('handles additionalProperties with schema', () => {
     const schema: CastrSchema = {
       type: 'object',
       additionalProperties: { type: 'string', metadata: createMetadata() },
+      unknownKeyBehavior: {
+        mode: 'catchall',
+        schema: { type: 'string', metadata: createMetadata() },
+      },
       metadata: createMetadata(),
     };
 
     const result = writeOpenApiSchema(schema);
 
     expect(result.additionalProperties).toEqual({ type: 'string' });
+    expect(result['x-castr-unknownKeyBehavior']).toBeUndefined();
   });
 });
 

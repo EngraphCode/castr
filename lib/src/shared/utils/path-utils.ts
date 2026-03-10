@@ -1,15 +1,15 @@
 import { camelCase, join, split, startCase, startsWith } from 'lodash-es';
 
-const COLON_PREFIX = ':' as const;
-const UNDERSCORE_TOKEN = '_' as const;
-const HASH_PLACEHOLDER = '#' as const;
-const HYPHEN_TOKEN = '-' as const;
-const SPACE_TOKEN = ' ' as const;
-const EMPTY_TEXT = '' as const;
-const OPEN_BRACE = '{' as const;
-const CLOSE_BRACE = '}' as const;
-const TOKEN_LITERAL = 'literal' as const;
-const TOKEN_PARAM = 'param' as const;
+const COLON_PREFIX = ':';
+const UNDERSCORE_TOKEN = '_';
+const HASH_PLACEHOLDER = '#';
+const HYPHEN_TOKEN = '-';
+const SPACE_TOKEN = ' ';
+const EMPTY_TEXT = '';
+const OPEN_BRACE = '{';
+const CLOSE_BRACE = '}';
+const TOKEN_LITERAL = 'literal';
+const TOKEN_PARAM = 'param';
 
 interface PathToken {
   kind: typeof TOKEN_LITERAL | typeof TOKEN_PARAM;

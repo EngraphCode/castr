@@ -30,8 +30,8 @@ import { renderOutput, handleDebugIR } from './templating.js';
 import type { GenerationResult } from './generation-result.js';
 
 type TemplateName = 'schemas-only' | 'schemas-with-metadata';
-const TEMPLATE_SCHEMAS_ONLY = 'schemas-only' as const;
-const TEMPLATE_SCHEMAS_WITH_METADATA = 'schemas-with-metadata' as const;
+const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
+const TEMPLATE_SCHEMAS_WITH_METADATA = 'schemas-with-metadata';
 
 export type GenerateZodClientFromOpenApiArgs<
   TOptions extends TemplateContext['options'] = TemplateContext['options'],

@@ -14,16 +14,16 @@
 
 import { drop, join, split, startsWith } from 'lodash-es';
 
-const STANDARD_PREFIX = '#/components/' as const;
-const X_EXT_PREFIX = '#/x-ext/' as const;
-const LEGACY_PREFIX = '#components/' as const;
-const HASH_PREFIX = '#' as const;
-const COMPONENTS_SEGMENT = 'components' as const;
+const STANDARD_PREFIX = '#/components/';
+const X_EXT_PREFIX = '#/x-ext/';
+const LEGACY_PREFIX = '#components/';
+const HASH_PREFIX = '#';
+const COMPONENTS_SEGMENT = 'components';
 const STANDARD_LEADING_SEGMENT = '#';
-const LEGACY_LEADING_SEGMENT = '#components' as const;
-const X_EXT_SEGMENT = 'x-ext' as const;
-const STANDARD_BARE_COMPONENT_TYPE = 'schemas' as const;
-const SLASH_TOKEN = '/' as const;
+const LEGACY_LEADING_SEGMENT = '#components';
+const X_EXT_SEGMENT = 'x-ext';
+const STANDARD_BARE_COMPONENT_TYPE = 'schemas';
+const SLASH_TOKEN = '/';
 const STANDARD_MIN_SEGMENT_COUNT = 4;
 const X_EXT_MIN_SEGMENT_COUNT = 6;
 const LEGACY_MIN_SEGMENT_COUNT = 3;

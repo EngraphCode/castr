@@ -26,13 +26,13 @@ import { drop, join, split, startsWith } from 'lodash-es';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 
 const INLINE_REF_PREFIX = '#/definitions/';
-const REF_HASH_PREFIX = '#' as const;
-const REF_PATH_SEPARATOR = '/' as const;
+const REF_HASH_PREFIX = '#';
+const REF_PATH_SEPARATOR = '/';
 const INLINE_DEFINITIONS_PREFIX_SEGMENT_COUNT = 2;
-const COMPONENT_TYPE_SCHEMA = 'schema' as const;
-const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
-const METADATA_KEY = 'metadata' as const;
-const DEFINITIONS_KEY = 'definitions' as const;
+const COMPONENT_TYPE_SCHEMA = 'schema';
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas';
+const METADATA_KEY = 'metadata';
+const DEFINITIONS_KEY = 'definitions';
 
 /**
  * Context for IR-based schema ref resolution.

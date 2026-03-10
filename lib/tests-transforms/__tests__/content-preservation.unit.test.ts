@@ -12,11 +12,11 @@
 
 import { describe, expect, it } from 'vitest';
 import { resolve } from 'node:path';
-import type { HeaderObject, PathsObject } from 'openapi3-ts/oas31';
 
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.js';
+import { assertNotReference } from '../../src/shared/component-access.js';
 
 // ============================================================================
 // Bug #1: Header Description Loss
@@ -33,8 +33,7 @@ describe('Content Preservation: Header Description', () => {
     const output = writeOpenApi(ir);
 
     // The x-next header should preserve its description
-    const paths = output.paths as PathsObject;
-    const petsPath = paths['/pets'];
+    const petsPath = output.paths?.['/pets'];
     const getOp = petsPath?.get;
     const response200 = getOp?.responses?.['200'];
 
@@ -46,8 +45,9 @@ describe('Content Preservation: Header Description', () => {
     const headers = response200.headers;
     expect(headers).toBeDefined();
 
-    const xNextHeader = headers?.['x-next'] as HeaderObject | undefined;
+    const xNextHeader = headers?.['x-next'];
     expect(xNextHeader).toBeDefined();
+    assertNotReference(xNextHeader, 'response.headers["x-next"]');
 
     // BUG: header description is currently lost
     expect(xNextHeader?.description).toBe('A link to the next page of responses');
@@ -72,8 +72,7 @@ describe('Content Preservation: Path-Level Parameter Refs', () => {
     const output = writeOpenApi(ir);
 
     // Check that path-level parameters are preserved as refs
-    const paths = output.paths as PathsObject;
-    const boardPath = paths['/board/{row}/{column}'];
+    const boardPath = output.paths?.['/board/{row}/{column}'];
 
     // Path-level parameters should exist and be refs
     expect(boardPath?.parameters).toBeDefined();

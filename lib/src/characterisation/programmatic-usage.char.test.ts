@@ -23,8 +23,8 @@ import type { GenerationResult } from '../rendering/generation-result.js';
  * This helper makes our assumption explicit and fails fast with a clear message
  * if it's wrong, then extracts and returns the content.
  */
-function assertAndExtractResult(value: unknown, context: string): string {
-  return assertAndExtractContent(value as GenerationResult, context);
+function assertAndExtractResult(result: GenerationResult, context: string): string {
+  return assertAndExtractContent(result, context);
 }
 
 /**

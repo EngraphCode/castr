@@ -2,7 +2,7 @@
  * Pure functions for handling OpenAPI enum value conversions to Zod
  * These functions are extracted for testability and clarity
  */
-const SCHEMA_TYPE_STRING = 'string' as const;
+const SCHEMA_TYPE_STRING = 'string';
 
 /**
  * Safely converts an enum value to a string representation for code generation

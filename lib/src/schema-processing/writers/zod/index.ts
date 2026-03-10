@@ -18,7 +18,7 @@ import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
 import { isOptionalSchemaContext } from './context-utils.js';
 import { getNullableReferenceCompositionBaseSchema } from './properties.js';
 
-const SCHEMA_TYPE_NULL = 'null' as const;
+const SCHEMA_TYPE_NULL = 'null';
 
 export function writeZodSchema(
   context: CastrSchemaContext,

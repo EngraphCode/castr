@@ -3,13 +3,9 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
 
-// Note: Test fixtures use partial OpenAPI objects for brevity
-// They contain enough structure for the generator to work correctly
-// Type assertions as OpenAPIObject are used for test fixtures only
-
 describe('schemas-with-metadata template - Core Template Functionality', () => {
   it('should generate schemas with Zod', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -55,7 +51,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });
@@ -85,7 +81,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
   });
 
   it('should export schemas object with all schemas', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -127,7 +123,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });
@@ -143,7 +139,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
   });
 
   it('should export endpoints array directly without makeApi', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -203,7 +199,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });
@@ -223,7 +219,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
   });
 
   it('should generate MCP-compatible tool definitions', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -260,7 +256,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });
@@ -279,7 +275,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
 
 describe('schemas-with-metadata template - CLI Flag Integration', () => {
   it('should work with --no-client CLI flag', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -302,7 +298,7 @@ describe('schemas-with-metadata template - CLI Flag Integration', () => {
 
     // Test that noClient option uses schemas-with-metadata template
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       noClient: true,
       disableWriteToFile: true,
     });
@@ -317,7 +313,7 @@ describe('schemas-with-metadata template - CLI Flag Integration', () => {
 
 describe('schemas-with-metadata template - Engraph Use Case: Full Request Validation', () => {
   it('should generate full request validation schemas for all parameter types', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -359,7 +355,7 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });
@@ -382,7 +378,7 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
   });
 
   it('should generate full response validation including all error responses', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -431,7 +427,7 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });
@@ -458,7 +454,7 @@ describe('schemas-with-metadata template - Engraph Use Case: Full Request Valida
 
 describe('schemas-with-metadata template - Optional Validation Helpers', () => {
   it('should generate validation helpers when flag is enabled', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -487,7 +483,7 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       withValidationHelpers: true,
       disableWriteToFile: true,
@@ -512,7 +508,7 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
   });
 
   it('should NOT generate validation helpers when flag is disabled', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -534,7 +530,7 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       withValidationHelpers: false,
       disableWriteToFile: true,
@@ -548,7 +544,7 @@ describe('schemas-with-metadata template - Optional Validation Helpers', () => {
 
 describe('schemas-with-metadata template - Optional Schema Registry', () => {
   it('should generate schema registry builder when flag is enabled', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -570,7 +566,7 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       withSchemaRegistry: true,
       disableWriteToFile: true,
@@ -589,7 +585,7 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
   });
 
   it('should NOT generate schema registry builder when flag is disabled', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -611,7 +607,7 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       withSchemaRegistry: false,
       disableWriteToFile: true,
@@ -624,7 +620,7 @@ describe('schemas-with-metadata template - Optional Schema Registry', () => {
 
 describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation', () => {
   it("should generate STRICT types with NO 'any' in validation helpers", async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -653,7 +649,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       withValidationHelpers: true,
       disableWriteToFile: true,
@@ -671,7 +667,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
   });
 
   it('should generate FAIL-FAST validation using .parse() not .safeParse()', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       paths: {
@@ -700,7 +696,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       withValidationHelpers: true,
       disableWriteToFile: true,
@@ -719,7 +715,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
   });
 
   it('should generate STRICT schemas with .strict() by default', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
       components: {
@@ -754,7 +750,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
     };
 
     const result = await generateZodClientFromOpenAPI({
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
+      openApiDoc,
       template: 'schemas-with-metadata',
       disableWriteToFile: true,
     });

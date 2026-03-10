@@ -13,7 +13,14 @@ import {
   findZodSchemaDeclarations,
   extractObjectProperties,
 } from './zod-ast.js';
-import { Node } from 'ts-morph';
+import { Node, type CallExpression } from 'ts-morph';
+
+function expectCallExpression(node: Node | undefined, context: string): CallExpression {
+  if (!node || !Node.isCallExpression(node)) {
+    throw new Error(`Expected call expression for ${context}`);
+  }
+  return node;
+}
 
 describe('Zod AST Utilities', () => {
   describe('createZodProject', () => {
@@ -73,7 +80,7 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const baseMethod = getZodBaseMethod(init as Parameters<typeof getZodBaseMethod>[0], resolver);
+      const baseMethod = getZodBaseMethod(expectCallExpression(init, 'z.string()'), resolver);
       expect(baseMethod).toBe('string');
     });
 
@@ -84,7 +91,10 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const baseMethod = getZodBaseMethod(init as Parameters<typeof getZodBaseMethod>[0], resolver);
+      const baseMethod = getZodBaseMethod(
+        expectCallExpression(init, 'z.string().min(1)'),
+        resolver,
+      );
       expect(baseMethod).toBe('string');
     });
 
@@ -95,7 +105,7 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const baseMethod = getZodBaseMethod(init as Parameters<typeof getZodBaseMethod>[0], resolver);
+      const baseMethod = getZodBaseMethod(expectCallExpression(init, 'z.object()'), resolver);
       expect(baseMethod).toBe('object');
     });
   });
@@ -108,7 +118,7 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const chain = getZodMethodChain(init as Parameters<typeof getZodMethodChain>[0], resolver);
+      const chain = getZodMethodChain(expectCallExpression(init, 'z.string()'), resolver);
 
       expect(chain?.baseMethod).toBe('string');
       expect(chain?.chainedMethods).toHaveLength(0);
@@ -121,7 +131,7 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const chain = getZodMethodChain(init as Parameters<typeof getZodMethodChain>[0], resolver);
+      const chain = getZodMethodChain(expectCallExpression(init, 'z.string().min(1)'), resolver);
 
       expect(chain?.baseMethod).toBe('string');
       expect(chain?.chainedMethods).toHaveLength(1);
@@ -136,7 +146,10 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const chain = getZodMethodChain(init as Parameters<typeof getZodMethodChain>[0], resolver);
+      const chain = getZodMethodChain(
+        expectCallExpression(init, 'z.string().min(1).max(100).email()'),
+        resolver,
+      );
 
       expect(chain?.baseMethod).toBe('string');
       expect(chain?.chainedMethods).toHaveLength(3);
@@ -152,7 +165,10 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const chain = getZodMethodChain(init as Parameters<typeof getZodMethodChain>[0], resolver);
+      const chain = getZodMethodChain(
+        expectCallExpression(init, 'z.string().optional()'),
+        resolver,
+      );
 
       expect(chain?.chainedMethods).toHaveLength(1);
       expect(chain?.chainedMethods[0]?.name).toBe('optional');
@@ -206,7 +222,7 @@ describe('Zod AST Utilities', () => {
       const init = varDecl?.getInitializer();
 
       const props = extractObjectProperties(
-        init as Parameters<typeof extractObjectProperties>[0],
+        expectCallExpression(init, 'z.object({ name, age })'),
         resolver,
       );
 
@@ -222,10 +238,7 @@ describe('Zod AST Utilities', () => {
       const varDecl = sourceFile.getVariableDeclarations()[0];
       const init = varDecl?.getInitializer();
 
-      const props = extractObjectProperties(
-        init as Parameters<typeof extractObjectProperties>[0],
-        resolver,
-      );
+      const props = extractObjectProperties(expectCallExpression(init, 'z.string()'), resolver);
 
       expect(props).toBeUndefined();
     });

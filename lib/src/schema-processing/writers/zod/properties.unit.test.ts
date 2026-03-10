@@ -9,11 +9,12 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { createMockCastrSchema } from '../../ir/index.js';
+import { CastrSchemaProperties, createMockCastrSchema } from '../../ir/index.js';
 import {
   buildPropertyContext,
   detectCircularReference,
   shouldUseGetterSyntax,
+  isRecursiveObjectSchema,
   formatPropertyKey,
   getNullableReferenceCompositionBaseSchema,
 } from './properties.js';
@@ -205,6 +206,105 @@ describe('Property Writing Helpers', () => {
       const parentSchema = createMockCastrSchema({ type: 'object' });
 
       expect(shouldUseGetterSyntax(propSchema, parentSchema)).toBe(true);
+    });
+  });
+
+  describe('isRecursiveObjectSchema', () => {
+    it('returns false for non-recursive object schemas', () => {
+      const schema = createMockCastrSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          value: createMockCastrSchema({ type: 'string' }),
+        }),
+      });
+
+      expect(isRecursiveObjectSchema(schema)).toBe(false);
+    });
+
+    it('returns true when the object surface references one of its circular targets', () => {
+      const schema = createMockCastrSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          next: createMockCastrSchema({
+            $ref: '#/components/schemas/Node',
+          }),
+        }),
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['#/components/schemas/Node'],
+        },
+      });
+
+      expect(isRecursiveObjectSchema(schema)).toBe(true);
+    });
+
+    it('returns false when a child schema is recursive but the parent is not part of the cycle', () => {
+      const childSchema = createMockCastrSchema({
+        type: 'array',
+        items: createMockCastrSchema({ $ref: '#/components/schemas/Node' }),
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['Node'],
+        },
+      });
+      const schema = createMockCastrSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          children: childSchema,
+        }),
+      });
+
+      expect(isRecursiveObjectSchema(schema)).toBe(false);
+      expect(isRecursiveObjectSchema(schema, '#/components/schemas/Wrapper')).toBe(false);
+    });
+
+    it('returns true when child-marked recursion targets the current component', () => {
+      const childSchema = createMockCastrSchema({
+        type: 'array',
+        items: createMockCastrSchema({ $ref: '#/components/schemas/Node' }),
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['#/components/schemas/Node'],
+        },
+      });
+      const schema = createMockCastrSchema({
+        type: 'object',
+        properties: new CastrSchemaProperties({
+          children: childSchema,
+        }),
+      });
+
+      expect(isRecursiveObjectSchema(schema, '#/components/schemas/Node')).toBe(true);
+    });
+
+    it('returns true when catchall references one of the object circular targets', () => {
+      const schema = createMockCastrSchema({
+        type: 'object',
+        unknownKeyBehavior: {
+          mode: 'catchall',
+          schema: createMockCastrSchema({
+            $ref: '#/components/schemas/Node',
+          }),
+        },
+        metadata: {
+          required: false,
+          nullable: false,
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          zodChain: { presence: '', validations: [], defaults: [] },
+          circularReferences: ['#/components/schemas/Node'],
+        },
+      });
+
+      expect(isRecursiveObjectSchema(schema)).toBe(true);
     });
   });
 });

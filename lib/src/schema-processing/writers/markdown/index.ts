@@ -2,8 +2,8 @@ import type { CastrSchema, CastrDocument, CastrOperation } from '../../ir/index.
 import { toUpper } from 'lodash-es';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
-const SCHEMA_TYPE_ARRAY = 'array' as const;
-const FALLBACK_REF_NAME = 'Ref' as const;
+const SCHEMA_TYPE_ARRAY = 'array';
+const FALLBACK_REF_NAME = 'Ref';
 
 /**
  * Generate Markdown documentation from IR.

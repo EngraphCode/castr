@@ -1,7 +1,7 @@
 import type { CastrSchemaContext } from '../../ir/index.js';
 
-const CONTEXT_TYPE_PROPERTY = 'property' as const;
-const CONTEXT_TYPE_PARAMETER = 'parameter' as const;
+const CONTEXT_TYPE_PROPERTY = 'property';
+const CONTEXT_TYPE_PARAMETER = 'parameter';
 
 export function isOptionalSchemaContext(context: CastrSchemaContext): boolean {
   return (

@@ -315,7 +315,7 @@ describe('assertNotReference', () => {
 
 describe('x-ext support (multi-file specs)', () => {
   it('should return schema from x-ext location when xExtKey provided', () => {
-    const doc = {
+    const doc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -334,7 +334,7 @@ describe('x-ext support (multi-file specs)', () => {
           },
         },
       },
-    } as OpenAPIObject;
+    };
 
     const result = getSchemaFromComponents(doc, 'Pet', '425563c');
 
@@ -344,7 +344,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should fallback to standard location when schema not in x-ext', () => {
-    const doc = {
+    const doc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -372,7 +372,7 @@ describe('x-ext support (multi-file specs)', () => {
           },
         },
       },
-    } as OpenAPIObject;
+    };
 
     const result = getSchemaFromComponents(doc, 'User', '425563c');
 
@@ -382,7 +382,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should throw error when schema not found in x-ext or standard location', () => {
-    const doc = {
+    const doc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -403,7 +403,7 @@ describe('x-ext support (multi-file specs)', () => {
           },
         },
       },
-    } as OpenAPIObject;
+    };
 
     expect(() => getSchemaFromComponents(doc, 'NonExistent', '425563c')).toThrow(
       "Schema 'NonExistent' not found in x-ext.425563c.components.schemas or components.schemas",
@@ -411,7 +411,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should handle x-ext location without schemas', () => {
-    const doc = {
+    const doc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -430,7 +430,7 @@ describe('x-ext support (multi-file specs)', () => {
           components: {},
         },
       },
-    } as OpenAPIObject;
+    };
 
     // Should fallback to standard location
     const result = getSchemaFromComponents(doc, 'User', '425563c');
@@ -462,7 +462,7 @@ describe('x-ext support (multi-file specs)', () => {
   });
 
   it('should return ReferenceObject from x-ext when present', () => {
-    const doc = {
+    const doc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test', version: '1.0.0' },
       paths: {},
@@ -477,7 +477,7 @@ describe('x-ext support (multi-file specs)', () => {
           },
         },
       },
-    } as OpenAPIObject;
+    };
 
     const result = getSchemaFromComponents(doc, 'PetRef', 'abc123');
 

@@ -37,6 +37,7 @@ describe('Zod Object Parsing', () => {
 
     expect(result?.type).toBe('object');
     expect(result?.additionalProperties).toBe(false);
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'strict' });
     expect(result?.properties?.get('id')?.type).toBe('string');
   });
 
@@ -49,6 +50,7 @@ describe('Zod Object Parsing', () => {
 
     expect(result?.type).toBe('object');
     expect(result?.additionalProperties).toBe(true);
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'passthrough' });
     expect(result?.properties?.get('id')?.type).toBe('string');
   });
 
@@ -63,6 +65,60 @@ describe('Zod Object Parsing', () => {
     // (they are stripped from output). For validation parity, this maps to
     // additionalProperties: true — the schema accepts additional properties.
     expect(result?.additionalProperties).toBe(true);
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
+  });
+
+  it('should parse an explicit strip object', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).strip()
+    `);
+
+    expect(result?.type).toBe('object');
+    expect(result?.additionalProperties).toBe(true);
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
+  });
+
+  it('should parse a catchall object with typed additional properties', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).catchall(z.string())
+    `);
+
+    expect(result?.type).toBe('object');
+    expect(result?.unknownKeyBehavior).toBeDefined();
+    expect(result?.unknownKeyBehavior?.mode).toBe('catchall');
+    expect(typeof result?.additionalProperties).toBe('object');
+    if (
+      result?.unknownKeyBehavior?.mode === 'catchall' &&
+      typeof result.additionalProperties === 'object'
+    ) {
+      expect(result.unknownKeyBehavior.schema.type).toBe('string');
+      expect(result.additionalProperties.type).toBe('string');
+    }
+  });
+
+  it('should fail fast when a catchall schema cannot be parsed', () => {
+    expect(() =>
+      parseObjectZod(`
+        z.object({
+          id: z.string()
+        }).catchall(UnknownSchema)
+      `),
+    ).toThrow(/Unsupported or unparseable Zod \.catchall\(\) schema/);
+  });
+
+  it('should let the last unknown-key modifier win', () => {
+    const result = parseObjectZod(`
+      z.object({
+        id: z.string()
+      }).passthrough().strict().strip()
+    `);
+
+    expect(result?.additionalProperties).toBe(true);
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
   });
 
   it('should handle optional and nullable properties correctly in required list', () => {

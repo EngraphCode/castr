@@ -22,10 +22,10 @@ import { extractContent } from './test-utils.js';
 describe('Characterisation: Error Handling', () => {
   describe('Invalid OpenAPI Specs', () => {
     it('should handle spec without openapi version', async () => {
-      const invalidSpec = {
+      const invalidSpec: unknown = {
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
-      } as unknown;
+      };
 
       // Test behavior (rejection), not implementation (specific error message)
       await expect(
@@ -38,10 +38,10 @@ describe('Characterisation: Error Handling', () => {
     });
 
     it('should handle spec without info object', async () => {
-      const invalidSpec = {
+      const invalidSpec: unknown = {
         openapi: '3.0.0',
         paths: {},
-      } as unknown;
+      };
 
       // Fail fast: reject invalid specs at the boundary
       // Test behavior (rejection), not implementation (specific error message)
@@ -55,10 +55,10 @@ describe('Characterisation: Error Handling', () => {
     });
 
     it('should handle spec without paths object', async () => {
-      const invalidSpec = {
+      const invalidSpec: unknown = {
         openapi: '3.0.0',
         info: { title: 'Test', version: '1.0.0' },
-      } as unknown;
+      };
 
       // Fail fast: reject invalid specs at the boundary
       // Test behavior (rejection), not implementation (specific error message)
@@ -153,17 +153,16 @@ describe('Characterisation: Error Handling', () => {
 
   describe('Unsupported Features', () => {
     it('should handle schemas without type property', async () => {
-      const spec: OpenAPIObject = {
+      const spec: unknown = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         components: {
           schemas: {
-            // @ts-expect-error TS2322 - Testing invalid schema (missing type property) to verify error handling
             NoType: {
               properties: {
                 name: { type: 'string' },
               },
-            } as unknown,
+            },
           },
         },
         paths: {
@@ -189,6 +188,7 @@ describe('Characterisation: Error Handling', () => {
 
       // Should not throw, infer type from properties
       const result = await generateZodClientFromOpenAPI({
+        // @ts-expect-error TS2322 - Testing external schema input that omits type
         openApiDoc: spec,
         disableWriteToFile: true,
       });
@@ -269,19 +269,18 @@ describe('Characterisation: Error Handling', () => {
   // can never execute provides no value. See: testing-strategy.md
 
   describe('Schema Validation Errors', () => {
-    it('should handle schemas with conflicting properties', async () => {
-      const spec: OpenAPIObject = {
+    it('should reject schemas with conflicting properties', async () => {
+      const spec: unknown = {
         openapi: '3.0.0',
         info: { title: 'Test API', version: '1.0.0' },
         components: {
           schemas: {
             Conflicting: {
               type: 'string',
-              // @ts-expect-error TS2322 - Testing conflicting properties on string type to verify error handling
               properties: {
                 // Properties on string type (conflicting)
                 name: { type: 'string' },
-              } as unknown,
+              },
             },
           },
         },
@@ -304,15 +303,15 @@ describe('Characterisation: Error Handling', () => {
         },
       };
 
-      // Bundling not needed for in-memory specs with internal refs
-
-      // Should handle gracefully
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: spec,
-        disableWriteToFile: true,
-      });
-
-      expect(result).toBeTruthy();
+      await expect(
+        generateZodClientFromOpenAPI({
+          // @ts-expect-error TS2322 - Testing external schema input with conflicting object-only keywords
+          openApiDoc: spec,
+          disableWriteToFile: true,
+        }),
+      ).rejects.toThrow(
+        /Object-only keywords properties, required, additionalProperties, and x-castr-unknownKeyBehavior require an object schema type/,
+      );
     });
   });
 });

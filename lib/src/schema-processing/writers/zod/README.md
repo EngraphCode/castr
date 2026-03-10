@@ -38,10 +38,16 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 > [!NOTE]
 > `z.iso.datetime()` only accepts UTC (`Z` suffix). Timezone offsets like `+05:00` are rejected.
 
-## Strictness
+## Object Unknown-Key Modes
 
-- **Objects use `.strict()`** unless `additionalProperties: true` is explicit
-- **Inline endpoint objects** (queryParams, pathParams, headers) are always `.strict()`
+- When IR carries `unknownKeyBehavior`, the writer emits the exact runtime mode:
+  - `strict` -> `.strict()`
+  - non-recursive `strip` -> `.strip()`
+  - recursive `strip` -> bare `z.object({...})`
+  - non-recursive `passthrough` -> `.passthrough()`
+  - non-recursive `catchall` -> `.catchall(schema)`
+- Recursive `.passthrough()` and recursive `.catchall()` fail fast with explicit generation errors.
+- Inline endpoint objects (queryParams, pathParams, headers) are always `.strict()`.
 
 ## Recursive Schemas
 
@@ -51,7 +57,8 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
   - optional recursion → `.optional()`
   - nullable recursion → `.nullable()`
   - optional nullable recursion → `.nullish()`
-- Recursive objects currently **skip `.passthrough()`** even when `additionalProperties: true`, because Zod 4 eagerly evaluates getter-backed shapes during `.passthrough()` and can trigger temporal-dead-zone failures.
+- Recursive strip objects emit bare `z.object({...})`, because explicit `.strip()` eagerly evaluates getter-backed shapes.
+- Recursive `.passthrough()` and `.catchall()` fail fast because Zod 4 eagerly evaluates getter-backed shapes during those calls and can trigger temporal-dead-zone failures.
 
 ## Important Semantics
 

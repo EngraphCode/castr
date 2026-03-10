@@ -11,12 +11,12 @@ import type { CastrSchema, IRComponent } from '../../../ir/index.js';
 import { split } from 'lodash-es';
 import { parseComponentNameForType } from './builder.component-ref-resolution.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema' as const;
-const COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
-const COMPONENT_NAME_SEPARATOR = '/' as const;
-const COMPONENTS_PATH_PREFIX = '#/components/schemas/' as const;
+const COMPONENT_TYPE_SCHEMA = 'schema';
+const COMPONENT_TYPE_SCHEMAS = 'schemas';
+const COMPONENT_NAME_SEPARATOR = '/';
+const COMPONENTS_PATH_PREFIX = '#/components/schemas/';
 const EXPECTED_SCHEMA_REF_PATTERN =
-  '#/components/schemas/{name} or #/x-ext/{hash}/components/schemas/{name}' as const;
+  '#/components/schemas/{name} or #/x-ext/{hash}/components/schemas/{name}';
 
 /**
  * Detect circular references in schemas using depth-first search.
@@ -81,6 +81,13 @@ function extractSchemaReferences(irSchema: CastrSchema, location: string): Set<s
   const itemRefs = extractItemsReferences(irSchema.items, `${location}/items`);
   itemRefs.forEach((ref) => refs.add(ref));
 
+  // Check additionalProperties / catchall schemas
+  const additionalPropertyRefs = extractAdditionalPropertiesReferences(
+    irSchema.additionalProperties,
+    `${location}/additionalProperties`,
+  );
+  additionalPropertyRefs.forEach((ref) => refs.add(ref));
+
   // Check composition schemas (allOf, oneOf, anyOf)
   const compositionRefs = extractCompositionReferences(irSchema, location);
   compositionRefs.forEach((ref) => refs.add(ref));
@@ -143,6 +150,17 @@ function extractItemsReferences(items: CastrSchema['items'], location: string): 
   }
 
   return refs;
+}
+
+function extractAdditionalPropertiesReferences(
+  additionalProperties: CastrSchema['additionalProperties'],
+  location: string,
+): Set<string> {
+  if (!additionalProperties || typeof additionalProperties === 'boolean') {
+    return new Set<string>();
+  }
+
+  return extractSchemaReferences(additionalProperties, location);
 }
 
 /**

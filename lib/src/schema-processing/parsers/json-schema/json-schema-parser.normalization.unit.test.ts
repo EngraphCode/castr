@@ -3,24 +3,74 @@
  *
  * TDD: These tests are written FIRST, before the implementation.
  *
- * @module parsers/json-schema/json-schema-parser.normalization.unit.test
+ * @module parsers/json-schema/normalization/json-schema-parser.normalization.unit.test
  */
 
+import { isReferenceObject } from 'openapi3-ts/oas31';
 import { describe, it, expect } from 'vitest';
 
-import { normalizeDraft07 } from './json-schema-parser.normalization.js';
-import type { Draft07Input } from './json-schema-parser.normalization.js';
+import { normalizeDraft07 } from './normalization/index.js';
+import type { Draft07Input } from './normalization/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
+
+function draft07<T extends Draft07Input>(input: T): T {
+  return input;
+}
+
+function isJsonSchemaObject(value: unknown): value is JsonSchema2020 {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    !Array.isArray(value) &&
+    !isReferenceObject(value)
+  );
+}
+
+function getSchemaObject(value: unknown, context: string): JsonSchema2020 | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!isJsonSchemaObject(value)) {
+    throw new Error(`Expected schema object in ${context}`);
+  }
+  return value;
+}
+
+function getSchemaObjects(value: unknown, context: string): JsonSchema2020[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!Array.isArray(value)) {
+    throw new Error(`Expected schema array in ${context}`);
+  }
+  return value.map((item, index) => {
+    const schema = getSchemaObject(item, `${context}[${index}]`);
+    if (!schema) {
+      throw new Error(`Expected schema object in ${context}[${index}]`);
+    }
+    return schema;
+  });
+}
+
+function getSchemaRef(value: unknown, context: string): string | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!isReferenceObject(value)) {
+    throw new Error(`Expected schema reference in ${context}`);
+  }
+  return value.$ref;
+}
 
 describe('normalizeDraft07', () => {
   describe('definitions → $defs', () => {
     it('converts top-level definitions to $defs', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         definitions: {
           Address: { type: 'object' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -29,7 +79,7 @@ describe('normalizeDraft07', () => {
     });
 
     it('converts $ref paths from #/definitions/ to #/$defs/', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         properties: {
           address: { $ref: '#/definitions/Address' },
@@ -37,21 +87,22 @@ describe('normalizeDraft07', () => {
         definitions: {
           Address: { type: 'object' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
-      const address = result.properties?.['address'] as JsonSchema2020 | undefined;
-      expect(address?.$ref).toBe('#/$defs/Address');
+      expect(getSchemaRef(result.properties?.['address'], 'properties.address')).toBe(
+        '#/$defs/Address',
+      );
     });
 
     it('preserves existing $defs (already 2020-12)', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         $defs: {
           Address: { type: 'object' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -61,12 +112,12 @@ describe('normalizeDraft07', () => {
 
   describe('dependencies → dependentRequired / dependentSchemas', () => {
     it('converts array dependencies to dependentRequired', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         dependencies: {
           email: ['emailVerified'],
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -75,7 +126,7 @@ describe('normalizeDraft07', () => {
     });
 
     it('converts schema dependencies to dependentSchemas', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         dependencies: {
           creditCard: {
@@ -83,7 +134,7 @@ describe('normalizeDraft07', () => {
             properties: { billing: { type: 'string' } },
           },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -97,13 +148,13 @@ describe('normalizeDraft07', () => {
     });
 
     it('splits mixed dependencies correctly', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         dependencies: {
           email: ['emailVerified'],
           creditCard: { type: 'object' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -115,10 +166,10 @@ describe('normalizeDraft07', () => {
 
   describe('tuple items → prefixItems', () => {
     it('converts array items to prefixItems', () => {
-      const input = {
+      const input = draft07({
         type: 'array',
         items: [{ type: 'string' }, { type: 'number' }],
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -127,10 +178,10 @@ describe('normalizeDraft07', () => {
     });
 
     it('preserves single-schema items', () => {
-      const input = {
+      const input = draft07({
         type: 'array',
         items: { type: 'string' },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -141,11 +192,11 @@ describe('normalizeDraft07', () => {
 
   describe('boolean exclusiveMinimum/exclusiveMaximum → numeric', () => {
     it('converts boolean exclusiveMinimum with minimum to numeric', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         minimum: 10,
         exclusiveMinimum: true,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -154,11 +205,11 @@ describe('normalizeDraft07', () => {
     });
 
     it('converts boolean exclusiveMaximum with maximum to numeric', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         maximum: 100,
         exclusiveMaximum: true,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -167,11 +218,11 @@ describe('normalizeDraft07', () => {
     });
 
     it('keeps minimum when exclusiveMinimum is false', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         minimum: 10,
         exclusiveMinimum: false,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -180,11 +231,11 @@ describe('normalizeDraft07', () => {
     });
 
     it('keeps maximum when exclusiveMaximum is false', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         maximum: 100,
         exclusiveMaximum: false,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -193,10 +244,10 @@ describe('normalizeDraft07', () => {
     });
 
     it('preserves numeric exclusiveMinimum (already 2020-12)', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         exclusiveMinimum: 10,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -206,7 +257,7 @@ describe('normalizeDraft07', () => {
 
   describe('recursive normalization', () => {
     it('normalizes nested properties', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         properties: {
           nested: {
@@ -216,27 +267,27 @@ describe('normalizeDraft07', () => {
             },
           },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
-      const nested = result.properties?.['nested'] as JsonSchema2020 | undefined;
+      const nested = getSchemaObject(result.properties?.['nested'], 'properties.nested');
       expect(nested).toBeDefined();
       expect(nested?.$defs).toEqual({ Inner: { type: 'string' } });
-      expect(nested?.['definitions' as keyof typeof nested]).toBeUndefined();
+      expect(nested && 'definitions' in nested).toBe(false);
     });
 
     it('normalizes allOf/oneOf/anyOf members', () => {
-      const member = {
+      const member = draft07({
         type: 'number',
         minimum: 0,
         exclusiveMinimum: true,
-      } as Draft07Input;
-      const input = { allOf: [member] } as Draft07Input;
+      });
+      const input = draft07({ allOf: [member] });
 
       const result = normalizeDraft07(input);
 
-      const members = result.allOf as JsonSchema2020[] | undefined;
+      const members = getSchemaObjects(result.allOf, 'allOf');
       const firstMember = members?.[0];
       expect(firstMember).toBeDefined();
       expect(firstMember?.exclusiveMinimum).toBe(0);
@@ -246,13 +297,13 @@ describe('normalizeDraft07', () => {
 
   describe('passthrough for already-2020-12 schemas', () => {
     it('returns equivalent schema when no Draft 07 constructs present', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         properties: {
           name: { type: 'string', minLength: 1 },
         },
         required: ['name'],
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -262,11 +313,11 @@ describe('normalizeDraft07', () => {
 
   describe('does not mutate input', () => {
     it('returns a new object, not the original', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         definitions: { A: { type: 'string' } },
-      } as Draft07Input;
-      const originalInput = JSON.parse(JSON.stringify(input)) as Draft07Input;
+      });
+      const originalInput: Draft07Input = JSON.parse(JSON.stringify(input));
 
       normalizeDraft07(input);
 
@@ -276,7 +327,7 @@ describe('normalizeDraft07', () => {
 
   describe('$ref rewriting in nested schemas', () => {
     it('rewrites $ref inside $defs values', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         definitions: {
           Container: {
@@ -287,33 +338,35 @@ describe('normalizeDraft07', () => {
           },
           Child: { type: 'string' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
-      const container = result.$defs?.['Container'] as JsonSchema2020 | undefined;
-      const child = container?.properties?.['child'] as JsonSchema2020 | undefined;
-      expect(child?.$ref).toBe('#/$defs/Child');
+      const container = getSchemaObject(result.$defs?.['Container'], '$defs.Container');
+      expect(
+        getSchemaRef(container?.properties?.['child'], '$defs.Container.properties.child'),
+      ).toBe('#/$defs/Child');
     });
 
     it('rewrites $ref inside allOf members', () => {
-      const member = {
+      const member = draft07({
         type: 'object',
         properties: {
           ref: { $ref: '#/definitions/Shared' },
         },
-      } as Draft07Input;
-      const input = { allOf: [member] } as Draft07Input;
+      });
+      const input = draft07({ allOf: [member] });
 
       const result = normalizeDraft07(input);
 
-      const firstMember = (result.allOf as JsonSchema2020[] | undefined)?.[0];
-      const ref = firstMember?.properties?.['ref'] as JsonSchema2020 | undefined;
-      expect(ref?.$ref).toBe('#/$defs/Shared');
+      const firstMember = getSchemaObjects(result.allOf, 'allOf')?.[0];
+      expect(getSchemaRef(firstMember?.properties?.['ref'], 'allOf[0].properties.ref')).toBe(
+        '#/$defs/Shared',
+      );
     });
 
     it('rewrites $ref inside dependentSchemas', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         dependencies: {
           email: {
@@ -323,31 +376,39 @@ describe('normalizeDraft07', () => {
             },
           },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
-      const emailSchema = result.dependentSchemas?.['email'] as JsonSchema2020 | undefined;
-      const verification = emailSchema?.properties?.['verification'] as JsonSchema2020 | undefined;
-      expect(verification?.$ref).toBe('#/$defs/VerifyEmail');
+      const emailSchema = getSchemaObject(
+        result.dependentSchemas?.['email'],
+        'dependentSchemas.email',
+      );
+      expect(
+        getSchemaRef(
+          emailSchema?.properties?.['verification'],
+          'dependentSchemas.email.properties.verification',
+        ),
+      ).toBe('#/$defs/VerifyEmail');
     });
 
     it('rewrites $ref inside additionalProperties schema', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         additionalProperties: { $ref: '#/definitions/Extra' },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
-      const ap = result.additionalProperties as JsonSchema2020 | undefined;
-      expect(ap?.$ref).toBe('#/$defs/Extra');
+      expect(getSchemaRef(result.additionalProperties, 'additionalProperties')).toBe(
+        '#/$defs/Extra',
+      );
     });
 
     it('rewrites $ref inside not schema', () => {
-      const input = {
+      const input = draft07({
         not: { $ref: '#/definitions/Forbidden' },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -355,26 +416,28 @@ describe('normalizeDraft07', () => {
     });
 
     it('preserves non-definitions $ref paths unchanged', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         properties: {
           external: { $ref: 'https://example.com/schema.json' },
           local: { $ref: '#/$defs/AlreadyCorrect' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
-      const external = result.properties?.['external'] as JsonSchema2020 | undefined;
-      expect(external?.$ref).toBe('https://example.com/schema.json');
-      const local = result.properties?.['local'] as JsonSchema2020 | undefined;
-      expect(local?.$ref).toBe('#/$defs/AlreadyCorrect');
+      expect(getSchemaRef(result.properties?.['external'], 'properties.external')).toBe(
+        'https://example.com/schema.json',
+      );
+      expect(getSchemaRef(result.properties?.['local'], 'properties.local')).toBe(
+        '#/$defs/AlreadyCorrect',
+      );
     });
   });
 
   describe('definitions + $defs coexistence', () => {
     it('merges definitions into existing $defs', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         $defs: {
           Existing: { type: 'string' },
@@ -382,7 +445,7 @@ describe('normalizeDraft07', () => {
         definitions: {
           FromDraft07: { type: 'number' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -392,7 +455,7 @@ describe('normalizeDraft07', () => {
     });
 
     it('definitions override $defs on name collision', () => {
-      const input = {
+      const input = draft07({
         type: 'object',
         $defs: {
           Shared: { type: 'string' },
@@ -400,7 +463,7 @@ describe('normalizeDraft07', () => {
         definitions: {
           Shared: { type: 'number' },
         },
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -410,10 +473,10 @@ describe('normalizeDraft07', () => {
 
   describe('boolean exclusive bounds edge cases', () => {
     it('ignores boolean exclusiveMinimum when no minimum is present', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         exclusiveMinimum: true,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -423,10 +486,10 @@ describe('normalizeDraft07', () => {
     });
 
     it('ignores boolean exclusiveMaximum when no maximum is present', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         exclusiveMaximum: true,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 
@@ -435,10 +498,10 @@ describe('normalizeDraft07', () => {
     });
 
     it('preserves numeric exclusiveMaximum (already 2020-12)', () => {
-      const input = {
+      const input = draft07({
         type: 'number',
         exclusiveMaximum: 100,
-      } as Draft07Input;
+      });
 
       const result = normalizeDraft07(input);
 

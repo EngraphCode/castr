@@ -19,6 +19,8 @@ import { buildIR } from '../src/schema-processing/parsers/openapi/index.js';
 import { writeOpenApi } from '../src/schema-processing/writers/openapi/index.js';
 import { loadOpenApiDocument } from '../src/shared/load-openapi-document/index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
+import { assertOpenApiObject, assertSchemaObject } from '../tests-helpers/openapi-assertions.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -43,6 +45,10 @@ async function runTransformPass(fixturePath: string): Promise<OpenAPIObject> {
   return writeOpenApi(ir);
 }
 
+function getComponentSchema(output: OpenAPIObject, name: string) {
+  return assertSchemaObject(output.components?.schemas?.[name], `components.schemas.${name}`);
+}
+
 // ============================================================================
 // Tests: Output Format
 // ============================================================================
@@ -62,7 +68,8 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
       expect(jsonString).toBeTruthy();
 
       // Should parse back to identical object
-      const parsed = JSON.parse(jsonString) as OpenAPIObject;
+      const parsed = JSON.parse(jsonString);
+      assertOpenApiObject(parsed, 'serialized OpenAPI output');
       expect(parsed.openapi).toMatch(/^3\.1\./);
     });
   });
@@ -233,57 +240,54 @@ describe('Output Coverage: IR → OpenAPI 3.1', () => {
     it('writes string type and constraints', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      const errorMessage = output.components?.schemas?.['errorMessage'];
-      expect(errorMessage).toBeDefined();
-      expect((errorMessage as { type?: string })?.type).toBe('string');
-      expect((errorMessage as { maxLength?: number })?.maxLength).toBe(256);
+      const errorMessage = getComponentSchema(output, 'errorMessage');
+      expect(errorMessage.type).toBe('string');
+      expect(errorMessage.maxLength).toBe(256);
     });
 
     it('writes number type and constraints', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      const coordinate = output.components?.schemas?.['coordinate'];
-      expect(coordinate).toBeDefined();
-      expect((coordinate as { type?: string })?.type).toBe('integer');
-      expect((coordinate as { minimum?: number })?.minimum).toBe(1);
-      expect((coordinate as { maximum?: number })?.maximum).toBe(3);
+      const coordinate = getComponentSchema(output, 'coordinate');
+      expect(coordinate.type).toBe('integer');
+      expect(coordinate.minimum).toBe(1);
+      expect(coordinate.maximum).toBe(3);
     });
 
     it('writes enum values', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      const mark = output.components?.schemas?.['mark'];
-      expect(mark).toBeDefined();
-      expect((mark as { enum?: unknown[] })?.enum).toEqual(['.', 'X', 'O']);
+      const mark = getComponentSchema(output, 'mark');
+      expect(mark.enum).toEqual(['.', 'X', 'O']);
     });
 
     it('writes array schemas', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      const board = output.components?.schemas?.['board'];
-      expect(board).toBeDefined();
-      expect((board as { type?: string })?.type).toBe('array');
-      expect((board as { minItems?: number })?.minItems).toBe(3);
-      expect((board as { maxItems?: number })?.maxItems).toBe(3);
+      const board = getComponentSchema(output, 'board');
+      expect(board.type).toBe('array');
+      expect(board.minItems).toBe(3);
+      expect(board.maxItems).toBe(3);
     });
 
     it('writes object schemas with properties', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      const status = output.components?.schemas?.['status'];
-      expect(status).toBeDefined();
-      expect((status as { type?: string })?.type).toBe('object');
-      expect((status as { properties?: object })?.properties).toBeDefined();
+      const status = getComponentSchema(output, 'status');
+      expect(status.type).toBe('object');
+      expect(status.properties).toBeDefined();
     });
 
     it('writes $ref references', async () => {
       const output = await runTransformPass(`${EXAMPLES_DIR}/v3.1/tictactoe.yaml`);
 
-      const status = output.components?.schemas?.['status'] as
-        | { properties?: { winner?: { $ref?: string }; board?: { $ref?: string } } }
-        | undefined;
-      expect(status?.properties?.winner?.$ref).toBe('#/components/schemas/winner');
-      expect(status?.properties?.board?.$ref).toBe('#/components/schemas/board');
+      const status = getComponentSchema(output, 'status');
+      const winner = status.properties?.['winner'];
+      const board = status.properties?.['board'];
+      expect(isReferenceObject(winner) ? winner.$ref : undefined).toBe(
+        '#/components/schemas/winner',
+      );
+      expect(isReferenceObject(board) ? board.$ref : undefined).toBe('#/components/schemas/board');
     });
   });
 

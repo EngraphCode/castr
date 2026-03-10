@@ -55,16 +55,16 @@ Conclusion:
 
 ## Stage Map
 
-| Layer                        | Current behavior                                                                                                     | Confirmed issue                                            |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Zod source syntax            | Distinguishes `strict`, `strip`, `passthrough`, and `catchall`                                                       | Source semantics are richer than current IR preserves      |
-| Zod parser                   | Collapses strip and passthrough; drops typed catchall behavior                                                       | First proven semantic loss point                           |
-| IR                           | Has `additionalProperties`, but no first-class runtime unknown-key behavior                                          | IR cannot currently be the full source of truth here       |
-| OpenAPI / JSON Schema writer | Can express reject and typed additional keys, but not strip vs passthrough                                           | Standard formats cannot carry the full runtime distinction |
-| OpenAPI / JSON Schema parser | Can recover validation acceptance, not parsed-output retention                                                       | Round-trip ambiguity remains unless governed explicitly    |
-| Zod writer                   | Emits `.strict()`, `.passthrough()`, `.catchall()` for non-recursive objects; suppresses recursive passthrough today | Silent degradation hides unsupported recursive output      |
-| Runtime execution            | Recursive getter + `.passthrough()` / `.catchall()` eagerly evaluates shape                                          | Safe recursive reconstruction is still unsolved            |
-| Transform proof harness      | Proves acceptance parity only                                                                                        | Output-shape regressions are under-proven                  |
+| Layer                        | Current behavior                                                                                                                                             | Confirmed issue                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| Zod source syntax            | Distinguishes `strict`, `strip`, `passthrough`, and `catchall`                                                                                               | Source semantics are richer than current IR preserves           |
+| Zod parser                   | Collapses strip and passthrough; drops typed catchall behavior                                                                                               | First proven semantic loss point                                |
+| IR                           | Has `additionalProperties`, but no first-class runtime unknown-key behavior                                                                                  | IR cannot currently be the full source of truth here            |
+| OpenAPI / JSON Schema writer | Can express reject and typed additional keys, but not strip vs passthrough                                                                                   | Standard formats cannot carry the full runtime distinction      |
+| OpenAPI / JSON Schema parser | Can recover validation acceptance, not parsed-output retention                                                                                               | Round-trip ambiguity remains unless governed explicitly         |
+| Zod writer                   | Emits exact non-recursive modes, emits bare recursive `z.object({...})` for strip semantics, and fails fast for recursive passthrough / catchall             | Unsupported preserving modes are now explicit instead of silent |
+| Runtime execution            | Recursive getter + `.passthrough()` / `.catchall()` eagerly evaluates shape                                                                                  | Safe recursive preserving reconstruction is still unsolved      |
+| Transform proof harness      | Proves validation parity broadly, parsed-output parity for object unknown-key fixtures, and explicit failure for unsupported recursive preserving generation | Output-shape regressions are now covered where they matter      |
 
 ## Option Comparison
 
@@ -86,36 +86,37 @@ The durable direction is defined by [ADR-038](../architectural_decision_records/
 4. Expand transform proofs to include parsed-output parity for object unknown-key fixtures.
 5. Replace silent recursive writer degradation with fail-fast errors until a safe recursive construction strategy exists.
 
-## What This Means For Current Behavior
+## Implemented Behavior
 
-Current product behavior is still:
+The architecture captured here is now implemented:
 
-- recursive `.passthrough()` is silently emitted as strip-mode output
-- recursive `.catchall()` is not preserved from Zod input
-- transform parity can remain green while parsed outputs drift
+- Zod parsing preserves `strict`, `strip`, `passthrough`, and `catchall` distinctly in IR via `unknownKeyBehavior`
+- OpenAPI / JSON Schema preserve strip vs passthrough with `x-castr-unknownKeyBehavior`
+- non-recursive Zod output emits the exact unknown-key method for all four modes
+- recursive strip output remains supported via bare `z.object({...})`, which is semantically strip-mode in Zod
+- recursive `passthrough` and recursive `catchall` now fail fast with explicit generation errors instead of silently degrading
+- Scenario 2 / 4 / 6 now prove parsed-output parity for the supported unknown-key cases
 
-That behavior is now treated as a defect and an under-proved gap, not as the desired end-state.
+The remaining unsolved boundary is narrow and explicit:
 
-## Active Remediation Scope
+- safe recursive preserving emission for `.passthrough()` and `.catchall()` still does not exist in Zod output
 
-The queued active remediation plan for this architecture decision lives in:
+## Implementation Record
+
+The remediation plan that carried this architecture into product code lives in:
 
 - [recursive-unknown-key-semantics-remediation.md](../../.agent/plans/active/recursive-unknown-key-semantics-remediation.md)
 
-That plan owns:
-
-- parser support for `unknownKeyBehavior`
-- IR updates
-- governed extension wiring
-- parsed-output parity fixtures and helpers
-- fail-fast Zod writer behavior for unsupported recursive passthrough / catchall emission
-
 ## Discovery Ledger
 
-### In Scope For The Follow-On Remediation
+### Resolved In This Slice
 
-- `.catchall(schema)` currently degrades to plain `additionalProperties: true`
-- recursive `.catchall()` has the same runtime construction problem as recursive `.passthrough()`
+- `.catchall(schema)` no longer degrades to plain `additionalProperties: true`
+- strip vs passthrough are now preserved distinctly in IR and portable artifacts
+
+### Remaining Explicit Limitation
+
+- recursive `.catchall()` still has the same runtime construction problem as recursive `.passthrough()`
 
 ### Recorded But Out Of Scope For This Slice
 

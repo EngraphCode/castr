@@ -1,12 +1,15 @@
-# Plan (Active): Transform Proof Budgeting and Runtime Architecture Investigation
+# Plan (Paused): Transform Proof Budgeting and Runtime Architecture Investigation
 
-**Status:** Active  
+**Status:** Paused  
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-09  
 **Predecessor:** Emerged from Zod limitations architecture investigation  
-**Related:** `./zod-limitations-architecture-investigation.md`, `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`
+**Related:** `./zod-limitations-architecture-investigation.md`, `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `../../active/type-safety-remediation.md`
 
 ---
+
+**Paused On:** 2026-03-09  
+**Pause Reason:** This companion investigation is paused while the new primary active plan restores doctrinally correct type-safety enforcement and session guidance. Resume after [type-safety-remediation.md](../../active/type-safety-remediation.md) if transform-proof runtime questions are still the highest-leverage next slice.
 
 ## Summary
 

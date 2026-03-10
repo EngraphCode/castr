@@ -3,7 +3,7 @@
  * Extracted to reduce complexity and enable reuse across test cases
  */
 
-import type { OpenAPIObject, OperationObject, PathItemObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
 /**
@@ -20,22 +20,25 @@ export function isOperationObject(value: unknown): value is OperationObject {
 export function extractAllOperations(spec: OpenAPIObject): OperationObject[] {
   const operations: OperationObject[] = [];
 
-  const paths = spec.paths || {};
+  const paths = spec.paths;
+  if (!paths) {
+    return operations;
+  }
+
   for (const pathItem of Object.values(paths)) {
-    if (!pathItem) {
+    if (!pathItem || isReferenceObject(pathItem)) {
       continue;
     }
 
-    const pathItemObj = pathItem as PathItemObject;
     const operationsInPath = [
-      pathItemObj.get,
-      pathItemObj.post,
-      pathItemObj.put,
-      pathItemObj.patch,
-      pathItemObj.delete,
-      pathItemObj.options,
-      pathItemObj.head,
-      pathItemObj.trace,
+      pathItem.get,
+      pathItem.post,
+      pathItem.put,
+      pathItem.patch,
+      pathItem.delete,
+      pathItem.options,
+      pathItem.head,
+      pathItem.trace,
     ];
 
     for (const operation of operationsInPath) {

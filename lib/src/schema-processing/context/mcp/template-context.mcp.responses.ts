@@ -15,17 +15,17 @@
 import { includes, split, toLower, trim } from 'lodash-es';
 import type { CastrSchema, CastrOperation, CastrResponse } from '../../ir/index.js';
 
-const MEDIA_TYPE_WILDCARD_TYPE = '*' as const;
-const MEDIA_TYPE_WILDCARD_SUBTYPE = '*' as const;
-const MEDIA_TYPE_SEPARATOR = '/' as const;
-const MEDIA_TYPE_PARAMETER_SEPARATOR = ';' as const;
-const MEDIA_TYPE_TEXT_TYPE = 'text' as const;
-const MEDIA_TYPE_APPLICATION_TYPE = 'application' as const;
-const MEDIA_TYPE_MULTIPART_TYPE = 'multipart' as const;
-const JSON_SUBTYPE_TOKEN = 'json' as const;
-const SUBTYPE_FORM_URLENCODED = 'x-www-form-urlencoded' as const;
-const SUBTYPE_FORM_DATA = 'form-data' as const;
-const SUBTYPE_OCTET_STREAM = 'octet-stream' as const;
+const MEDIA_TYPE_WILDCARD_TYPE = '*';
+const MEDIA_TYPE_WILDCARD_SUBTYPE = '*';
+const MEDIA_TYPE_SEPARATOR = '/';
+const MEDIA_TYPE_PARAMETER_SEPARATOR = ';';
+const MEDIA_TYPE_TEXT_TYPE = 'text';
+const MEDIA_TYPE_APPLICATION_TYPE = 'application';
+const MEDIA_TYPE_MULTIPART_TYPE = 'multipart';
+const JSON_SUBTYPE_TOKEN = 'json';
+const SUBTYPE_FORM_URLENCODED = 'x-www-form-urlencoded';
+const SUBTYPE_FORM_DATA = 'form-data';
+const SUBTYPE_OCTET_STREAM = 'octet-stream';
 
 interface ParsedMediaType {
   type: string;

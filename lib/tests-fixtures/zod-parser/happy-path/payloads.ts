@@ -5,11 +5,19 @@
  * - objects.zod4.ts
  * - constraints.zod4.ts
  * - string-formats.zod4.ts
+ * - unknown-key-semantics.zod4.ts
  *
  * It provides a deterministic set of `valid` and `invalid` payloads
  * used to dynamically assert that Scenarios 2, 3, and 4 preserve validation
- * behavior exactly (functional equivalence).
+ * behavior exactly, plus `parsedOutput` payloads for seams where parse output
+ * must stay equivalent as well as acceptance.
  */
+
+export interface SchemaParityPayloads {
+  valid: unknown[];
+  invalid: unknown[];
+  parsedOutput?: unknown[];
+}
 
 // ============================================================================
 // 1. Objects (objects.zod4.ts)
@@ -344,17 +352,139 @@ export const RecursionPayloads = {
 };
 
 // ============================================================================
+// 7. Unknown-Key Semantics (unknown-key-semantics.zod4.ts)
+// ============================================================================
+
+export const UnknownKeySemanticsPayloads: Record<string, SchemaParityPayloads> = {
+  StripObjectSchema: {
+    valid: [
+      { known: 'root', nested: { inner: 'value' } },
+      {
+        known: 'root',
+        extraRoot: 'drop me',
+        nested: {
+          inner: 'value',
+          extraNested: 123,
+        },
+      },
+    ],
+    invalid: [
+      { nested: { inner: 'value' } }, // missing known
+      { known: 'root', nested: { inner: 123 } }, // wrong nested type
+    ],
+    parsedOutput: [
+      {
+        known: 'root',
+        extraRoot: 'drop me',
+        nested: {
+          inner: 'value',
+          extraNested: 123,
+        },
+      },
+    ],
+  },
+  PassthroughObjectSchema: {
+    valid: [
+      { known: 'root', nested: { inner: 'value' } },
+      {
+        known: 'root',
+        extraRoot: 'keep me',
+        nested: {
+          inner: 'value',
+          extraNested: 123,
+        },
+      },
+    ],
+    invalid: [
+      { nested: { inner: 'value' } }, // missing known
+      { known: 'root', nested: { inner: 123 } }, // wrong nested type
+    ],
+    parsedOutput: [
+      {
+        known: 'root',
+        extraRoot: 'keep me',
+        nested: {
+          inner: 'value',
+          extraNested: 123,
+        },
+      },
+    ],
+  },
+  CatchallObjectSchema: {
+    valid: [
+      { known: 'root', nested: { inner: 'value' } },
+      {
+        known: 'root',
+        extraRoot: 'validated',
+        nested: {
+          inner: 'value',
+          extraNested: 123,
+        },
+      },
+    ],
+    invalid: [
+      { known: 'root', extraRoot: 123, nested: { inner: 'value' } }, // root catchall must be string
+      { known: 'root', nested: { inner: 'value', extraNested: 'wrong' } }, // nested catchall must be number
+    ],
+    parsedOutput: [
+      {
+        known: 'root',
+        extraRoot: 'validated',
+        nested: {
+          inner: 'value',
+          extraNested: 123,
+        },
+      },
+    ],
+  },
+  RecursiveStripCategorySchema: {
+    valid: [
+      { name: 'root', children: [] },
+      {
+        name: 'root',
+        extraRoot: 'drop me',
+        children: [
+          {
+            name: 'child',
+            extraChild: 'drop me',
+            children: [],
+          },
+        ],
+      },
+    ],
+    invalid: [
+      { children: [] }, // missing name
+      {
+        name: 'root',
+        children: [{ name: 123, children: [] }],
+      }, // wrong nested type
+    ],
+    parsedOutput: [
+      {
+        name: 'root',
+        extraRoot: 'drop me',
+        children: [
+          {
+            name: 'child',
+            extraChild: 'drop me',
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+};
+
+// ============================================================================
 // Utility Harness Mapping
 // ============================================================================
 
-export const ParityPayloadHarness: Record<
-  string,
-  Record<string, { valid: unknown[]; invalid: unknown[] }>
-> = {
+export const ParityPayloadHarness: Record<string, Record<string, SchemaParityPayloads>> = {
   objects: ObjectPayloads,
   constraints: ConstraintPayloads,
   'string-formats': StringFormatPayloads,
   unions: UnionPayloads,
   intersections: IntersectionPayloads,
   recursion: RecursionPayloads,
+  'unknown-key-semantics': UnknownKeySemanticsPayloads,
 };

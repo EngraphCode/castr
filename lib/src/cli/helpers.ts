@@ -23,8 +23,8 @@ export type { CliOptions };
 export { buildGenerationOptions };
 
 const packageJsonPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../package.json');
-const TEMPLATE_SCHEMAS_ONLY = 'schemas-only' as const;
-const TEMPLATE_SCHEMAS_WITH_METADATA = 'schemas-with-metadata' as const;
+const TEMPLATE_SCHEMAS_ONLY = 'schemas-only';
+const TEMPLATE_SCHEMAS_WITH_METADATA = 'schemas-with-metadata';
 
 /**
  * Get package version from package.json.

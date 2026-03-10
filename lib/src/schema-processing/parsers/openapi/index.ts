@@ -255,6 +255,6 @@ function extractWebhooks(doc: OpenAPIObject): Map<string, PathItemObject> | unde
  * @internal
  */
 function buildSchemaNames(components: IRComponent[]): string[] {
-  const COMPONENT_TYPE_SCHEMA = 'schema' as const;
+  const COMPONENT_TYPE_SCHEMA = 'schema';
   return components.filter((c) => c.type === COMPONENT_TYPE_SCHEMA).map((c) => c.name);
 }

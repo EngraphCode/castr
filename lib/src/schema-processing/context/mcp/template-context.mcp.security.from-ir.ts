@@ -14,9 +14,9 @@ import type {
 } from '../../conversion/json-schema/index.js';
 import type { CastrDocument, CastrOperation, IRSecurityRequirement } from '../../ir/index.js';
 
-const SECURITY_COMPONENT_TYPE = 'securityScheme' as const;
-const SECURITY_SELECTION_PUBLIC = 'public' as const;
-const SECURITY_SELECTION_REQUIREMENTS = 'requirements' as const;
+const SECURITY_COMPONENT_TYPE = 'securityScheme';
+const SECURITY_SELECTION_PUBLIC = 'public';
+const SECURITY_SELECTION_REQUIREMENTS = 'requirements';
 
 /**
  * Resolve the security requirements for an operation from the IR.

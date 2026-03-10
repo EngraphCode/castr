@@ -75,11 +75,12 @@ describe('Unified OpenAPI Input Pipeline - Programmatic API Integration', () => 
   it('should reject when both input and openApiDoc are provided', async () => {
     const spec = createMinimalSpec();
     await expect(
+      // @ts-expect-error TS2345 - Testing runtime validation when both mutually exclusive inputs are provided
       generateZodClientFromOpenAPI({
         input: './examples/openapi/v3.0/petstore.yaml',
         openApiDoc: spec,
         disableWriteToFile: true,
-      } as Parameters<typeof generateZodClientFromOpenAPI>[0]),
+      }),
     ).rejects.toThrow(/cannot.*both.*input.*openApiDoc/i);
   });
 
@@ -131,11 +132,11 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
     });
 
     it('should accept OpenAPI 3.1.0 in helper', async () => {
-      const spec31 = {
+      const spec31: OpenAPIObject = {
         openapi: '3.1.0',
         info: { title: 'Test', version: '1.0.0' },
         paths: {},
-      } as unknown as OpenAPIObject;
+      };
 
       // OpenAPI 3.1.x is now supported
       const result = await prepareOpenApiDocument(spec31);
@@ -147,9 +148,10 @@ describe('Unified OpenAPI Input Pipeline - prepareOpenApiDocument Helper', () =>
       const malformed = {
         openapi: '3.0.0',
         // Missing required 'info' and 'paths'
-      } as unknown as OpenAPIObject;
+      };
 
       // Test behavior (rejection), not implementation (specific error message)
+      // @ts-expect-error TS2345 - Testing invalid spec boundary validation in prepareOpenApiDocument
       await expect(prepareOpenApiDocument(malformed)).rejects.toThrow();
     });
   });

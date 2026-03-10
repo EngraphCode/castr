@@ -6,6 +6,7 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { fileURLToPath } from 'node:url';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { getZodClientTemplateContext } from '../schema-processing/context/index.js';
+import { assertOpenApiObject } from '../../tests-helpers/openapi-assertions.js';
 
 /**
  * Characterisation Tests: CLI Behavior
@@ -291,7 +292,8 @@ describe('Characterisation: CLI Behavior', () => {
       const manifestRaw = readFileSync(manifestPath, 'utf8');
       const manifest = JSON.parse(manifestRaw);
 
-      const sourceDoc = JSON.parse(readFileSync(inputPath, 'utf8')) as OpenAPIObject;
+      const sourceDoc = JSON.parse(readFileSync(inputPath, 'utf8'));
+      assertOpenApiObject(sourceDoc, 'CLI manifest source fixture');
       const preparedDoc = await prepareOpenApiDocument(sourceDoc);
       const expectedContext = getZodClientTemplateContext(preparedDoc);
       const expectedManifest = expectedContext.mcpTools.map(
@@ -379,10 +381,9 @@ describe('Characterisation: CLI Behavior', () => {
             },
           },
         },
-      };
+      } satisfies Partial<OpenAPIObject>;
 
-      // @ts-expect-error TS2345 - Testing partial spec (missing required properties) to verify error handling
-      const inputPath = createTestSpec('complex-test.json', complexSpec as unknown);
+      const inputPath = createTestSpec('complex-test.json', complexSpec);
       const outputPath = join(TEST_OUTPUT_DIR, 'complex-output.ts');
 
       runCli([inputPath, '-o', outputPath]);

@@ -27,7 +27,7 @@ import {
   type ReferenceWrapperMethod,
 } from './zod-parser.reference-wrappers.js';
 
-const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/' as const;
+const COMPONENT_SCHEMA_REF_PREFIX = '#/components/schemas/';
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity and nesting

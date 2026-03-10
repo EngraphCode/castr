@@ -1,6 +1,5 @@
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import type { SchemaObjectType } from 'openapi3-ts/oas31';
 import { writeZodSchema } from './index.js';
 import type { CastrSchema, CastrSchemaContext } from '../../ir/index.js';
 import { CastrSchemaProperties } from '../../ir/index.js';
@@ -53,10 +52,10 @@ describe('ZodWriter', () => {
     return schema;
   }
 
-  function createComponentContext(schema: CastrSchema): CastrSchemaContext {
+  function createComponentContext(schema: CastrSchema, name = 'TestComponent'): CastrSchemaContext {
     return {
       contextType: 'component',
-      name: 'TestComponent',
+      name,
       schema,
       metadata: schema.metadata,
     };
@@ -130,7 +129,7 @@ describe('ZodWriter', () => {
     it('does not emit redundant .nullable() for [type, null] type arrays', () => {
       const schema = createMockSchema(undefined);
       // Simulating OAS 3.1 type array: ['string', 'null']
-      schema.type = ['string', 'null'] as SchemaObjectType[];
+      schema.type = ['string', 'null'];
       if (schema.metadata) {
         schema.metadata.nullable = true;
       }
@@ -143,7 +142,7 @@ describe('ZodWriter', () => {
 
     it('does not emit z.null().nullable() for type array containing only null', () => {
       const schema = createMockSchema(undefined);
-      schema.type = ['null'] as SchemaObjectType[];
+      schema.type = ['null'];
       if (schema.metadata) {
         schema.metadata.nullable = true;
       }
@@ -153,12 +152,6 @@ describe('ZodWriter', () => {
     });
   });
 
-  it('throws on unsupported schema type (fail-fast)', () => {
-    const schema = createMockSchema('unsupported' as SchemaObjectType);
-    const context = createComponentContext(schema);
-    expect(() => generate(context)).toThrow(/Unsupported schema type/);
-  });
-
   it('generates array schema', () => {
     const itemsSchema = createMockSchema('string');
     const schema = createMockSchema('array');
@@ -166,30 +159,6 @@ describe('ZodWriter', () => {
 
     const context = createComponentContext(schema);
     expect(generate(context)).toBe('z.array(z.string())');
-  });
-
-  it('generates object schema', () => {
-    const propSchema = createMockSchema('string');
-    const schema = createMockSchema('object');
-    schema.properties = new CastrSchemaProperties({
-      prop1: propSchema,
-    });
-    schema.required = ['prop1']; // prop1 is required
-
-    const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.object({ prop1: z.string() }).passthrough()');
-  });
-
-  it('generates object schema with optional property', () => {
-    const propSchema = createMockSchema('string');
-    const schema = createMockSchema('object');
-    schema.properties = new CastrSchemaProperties({
-      prop1: propSchema,
-    });
-    schema.required = []; // prop1 is optional
-
-    const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.object({ prop1: z.string().optional() }).passthrough()');
   });
 
   it('generates schema with chains', () => {
@@ -218,99 +187,6 @@ describe('ZodWriter', () => {
     const context = createPropertyContext(schema, true);
     // Property context with optional=true should have .optional()
     expect(generate(context)).toBe('z.string().min(1).optional()');
-  });
-
-  it('generates getter syntax for circular reference properties', () => {
-    // Arrange: Schema with a circular reference in a property
-    // The circularReferences metadata indicates this property references the parent
-    const childSchema = createMockSchema('array', {
-      circularReferences: ['#/components/schemas/Node'],
-    });
-    // Create items schema with $ref using the helper (no type cast needed)
-    childSchema.items = createMockSchema(undefined, {}, '#/components/schemas/Node');
-
-    const schema = createMockSchema('object');
-    schema.properties = new CastrSchemaProperties({
-      value: createMockSchema('string'),
-      children: childSchema,
-    });
-    schema.required = ['value'];
-
-    const context = createComponentContext(schema);
-    const result = generate(context);
-
-    // Assert: Uses getter syntax, not z.lazy()
-    expect(result).toContain('get children()');
-    expect(result).toContain('return z.array(Node)');
-    expect(result).not.toContain('z.lazy');
-  });
-
-  it('generates getter syntax with .optional() for optional recursive refs', () => {
-    const leftSchema = createMockSchema(
-      undefined,
-      { required: false },
-      '#/components/schemas/TreeNode',
-    );
-    const schema = createMockSchema('object', {
-      circularReferences: ['#/components/schemas/TreeNode'],
-    });
-    schema.properties = new CastrSchemaProperties({
-      value: createMockSchema('number'),
-      left: leftSchema,
-    });
-    schema.required = ['value'];
-
-    const context = createComponentContext(schema);
-    const result = generate(context);
-
-    expect(result).toContain('get left()');
-    expect(result).toContain('return TreeNode.optional()');
-  });
-
-  it('generates getter syntax with .nullable() for nullable recursive refs', () => {
-    const nextSchema = createMockSchema(undefined);
-    nextSchema.anyOf = [
-      createMockSchema(undefined, {}, '#/components/schemas/LinkedListNode'),
-      createMockSchema('null'),
-    ];
-
-    const schema = createMockSchema('object', {
-      circularReferences: ['#/components/schemas/LinkedListNode'],
-    });
-    schema.properties = new CastrSchemaProperties({
-      data: createMockSchema('string'),
-      next: nextSchema,
-    });
-    schema.required = ['data', 'next'];
-
-    const context = createComponentContext(schema);
-    const result = generate(context);
-
-    expect(result).toContain('get next()');
-    expect(result).toContain('return LinkedListNode.nullable()');
-  });
-
-  it('generates getter syntax with .nullish() for optional nullable recursive refs', () => {
-    const nextSchema = createMockSchema(undefined, { required: false });
-    nextSchema.anyOf = [
-      createMockSchema(undefined, {}, '#/components/schemas/MaybeLinkedListNode'),
-      createMockSchema('null'),
-    ];
-
-    const schema = createMockSchema('object', {
-      circularReferences: ['#/components/schemas/MaybeLinkedListNode'],
-    });
-    schema.properties = new CastrSchemaProperties({
-      data: createMockSchema('string'),
-      next: nextSchema,
-    });
-    schema.required = ['data'];
-
-    const context = createComponentContext(schema);
-    const result = generate(context);
-
-    expect(result).toContain('get next()');
-    expect(result).toContain('return MaybeLinkedListNode.nullish()');
   });
 
   // ========== Metadata via .meta() tests (Zod 4) ==========

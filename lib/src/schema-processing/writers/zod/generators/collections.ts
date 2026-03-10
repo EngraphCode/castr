@@ -51,7 +51,7 @@ export function writeObjectSchema(
     })
     .write(')');
 
-  writeAdditionalProperties(schema, writer, options, writeZodSchemaFn);
+  writeAdditionalProperties(context, writer, options, writeZodSchemaFn);
 }
 
 export function writeProperties(

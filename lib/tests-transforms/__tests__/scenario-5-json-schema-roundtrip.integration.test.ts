@@ -41,12 +41,20 @@ const JSON_SCHEMA_FIXTURES: [string, string][] = [
   ['recursion', `${JSON_SCHEMA_FIXTURES_DIR}/recursion.json`],
 ];
 
+function assertDraft07Input(value: unknown, context: string): asserts value is Draft07Input {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    throw new Error(`Expected JSON Schema object in ${context}`);
+  }
+}
+
 /**
  * Load and parse a JSON Schema fixture file.
  */
 async function loadJsonSchemaFixture(path: string): Promise<Draft07Input> {
   const content = await readFile(path, 'utf-8');
-  return JSON.parse(content) as Draft07Input;
+  const parsed = JSON.parse(content);
+  assertDraft07Input(parsed, `JSON Schema fixture ${path}`);
+  return parsed;
 }
 
 /**

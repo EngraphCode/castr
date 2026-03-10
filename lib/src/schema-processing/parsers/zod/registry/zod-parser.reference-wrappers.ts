@@ -2,10 +2,10 @@ import type { CastrSchema, IRZodChainInfo } from '../../../ir/index.js';
 import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
 import { ZOD_METHOD_NULLABLE, ZOD_METHOD_NULLISH, ZOD_METHOD_OPTIONAL } from '../zod-constants.js';
 
-const ZOD_CHAIN_OPTIONAL_PRESENCE = '.optional()' as const;
-const ZOD_CHAIN_NULLABLE_PRESENCE = '.nullable()' as const;
-const ZOD_CHAIN_NULLISH_PRESENCE = '.nullish()' as const;
-const SCHEMA_TYPE_NULL = 'null' as const;
+const ZOD_CHAIN_OPTIONAL_PRESENCE = '.optional()';
+const ZOD_CHAIN_NULLABLE_PRESENCE = '.nullable()';
+const ZOD_CHAIN_NULLISH_PRESENCE = '.nullish()';
+const SCHEMA_TYPE_NULL = 'null';
 
 export type ReferenceWrapperMethod =
   | typeof ZOD_METHOD_OPTIONAL

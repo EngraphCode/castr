@@ -13,12 +13,12 @@ import { assignIfDefined, readSchemaKeyword, setKeyword } from './keywords/keywo
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 
 type OpenApiSchema = SchemaObject | ReferenceObject;
-const SCHEMA_TYPE_NULL = 'null' as const;
-const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
-const JSON_SCHEMA_DEFINITIONS_PREFIX = '#/definitions/' as const;
-const REF_HASH_PREFIX = '#' as const;
-const REF_FIELD_SCHEMA = '$ref' as const;
-const REF_FIELD_DYNAMIC = '$dynamicRef' as const;
+const SCHEMA_TYPE_NULL = 'null';
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas';
+const JSON_SCHEMA_DEFINITIONS_PREFIX = '#/definitions/';
+const REF_HASH_PREFIX = '#';
+const REF_FIELD_SCHEMA = '$ref';
+const REF_FIELD_DYNAMIC = '$dynamicRef';
 
 /**
  * Convert an OpenAPI 3.1 schema object (Scalar-upgraded) into a JSON Schema Draft 07 representation.

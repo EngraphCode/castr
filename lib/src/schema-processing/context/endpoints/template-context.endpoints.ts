@@ -19,11 +19,11 @@ import { processCommonSchemasForGroups } from '../template-context.common.js';
 export type { TemplateContextGroupStrategy, MinimalTemplateContext };
 export { processCommonSchemasForGroups };
 
-const GROUP_STRATEGY_NONE = 'none' as const;
-const GROUP_STRATEGY_TAG = 'tag' as const;
-const GROUP_STRATEGY_METHOD = 'method' as const;
-const GROUP_STRATEGY_TAG_FILE = 'tag-file' as const;
-const GROUP_STRATEGY_METHOD_FILE = 'method-file' as const;
+const GROUP_STRATEGY_NONE = 'none';
+const GROUP_STRATEGY_TAG = 'tag';
+const GROUP_STRATEGY_METHOD = 'method';
+const GROUP_STRATEGY_TAG_FILE = 'tag-file';
+const GROUP_STRATEGY_METHOD_FILE = 'method-file';
 
 const VALID_GROUP_STRATEGY_SET = new Set<string>([
   GROUP_STRATEGY_NONE,

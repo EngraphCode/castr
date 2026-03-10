@@ -9,6 +9,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
+import type { Schema as JsonSchema } from 'ajv';
 import type { CastrSchema, CastrSchemaComponent, CastrOperation } from '../../../ir/index.js';
 import {
   CastrSchemaProperties,
@@ -21,9 +22,9 @@ import type { MutableJsonSchema } from '../../../conversion/json-schema/index.js
 /**
  * Create a mock CastrSchema for testing.
  */
-function createMockSchema(type = 'object'): CastrSchema {
+function createMockSchema(type: CastrSchema['type'] = 'object'): CastrSchema {
   return {
-    type: type as CastrSchema['type'],
+    type,
     metadata: createMockCastrSchemaNode(),
   };
 }
@@ -47,6 +48,7 @@ function createMockOperation(overrides: Partial<CastrOperation> = {}): CastrOper
   return {
     method: 'get',
     path: '/test',
+    parameters: [],
     parametersByLocation: {
       path: [],
       query: [],
@@ -56,17 +58,19 @@ function createMockOperation(overrides: Partial<CastrOperation> = {}): CastrOper
     responses: [],
     security: [],
     ...overrides,
-  } as CastrOperation;
+  };
 }
 
 /**
  * Type guard for JsonSchema that is an object (not boolean).
  */
-function asSchemaObject(schema: unknown): MutableJsonSchema {
+function assertSchemaObject(schema: JsonSchema | undefined): asserts schema is MutableJsonSchema {
+  if (schema === undefined) {
+    throw new Error('Expected schema object, got undefined');
+  }
   if (typeof schema === 'boolean') {
     throw new Error('Expected schema object, got boolean');
   }
-  return schema as MutableJsonSchema;
 }
 
 describe('buildMcpToolSchemasFromIR', () => {
@@ -82,7 +86,8 @@ describe('buildMcpToolSchemasFromIR', () => {
     });
 
     const result = buildMcpToolSchemasFromIR(ir, operation);
-    const inputSchema = asSchemaObject(result.inputSchema);
+    const inputSchema = result.inputSchema;
+    assertSchemaObject(inputSchema);
 
     expect(inputSchema).toBeDefined();
     expect(inputSchema['type']).toBe('object');
@@ -103,7 +108,8 @@ describe('buildMcpToolSchemasFromIR', () => {
     });
 
     const result = buildMcpToolSchemasFromIR(ir, operation);
-    const inputSchema = asSchemaObject(result.inputSchema);
+    const inputSchema = result.inputSchema;
+    assertSchemaObject(inputSchema);
 
     expect(inputSchema['properties']).toHaveProperty('query');
   });
@@ -122,7 +128,8 @@ describe('buildMcpToolSchemasFromIR', () => {
     });
 
     const result = buildMcpToolSchemasFromIR(ir, operation);
-    const inputSchema = asSchemaObject(result.inputSchema);
+    const inputSchema = result.inputSchema;
+    assertSchemaObject(inputSchema);
 
     expect(inputSchema['properties']).toHaveProperty('body');
     expect(inputSchema['required']).toContain('body');
@@ -143,7 +150,8 @@ describe('buildMcpToolSchemasFromIR', () => {
     const result = buildMcpToolSchemasFromIR(ir, operation);
 
     expect(result.outputSchema).toBeDefined();
-    const outputSchema = asSchemaObject(result.outputSchema);
+    const outputSchema = result.outputSchema;
+    assertSchemaObject(outputSchema);
     expect(outputSchema['type']).toBe('object');
   });
 
@@ -213,7 +221,8 @@ describe('buildMcpToolSchemasFromIR', () => {
     });
 
     const result = buildMcpToolSchemasFromIR(ir, operation);
-    const inputSchema = asSchemaObject(result.inputSchema);
+    const inputSchema = result.inputSchema;
+    assertSchemaObject(inputSchema);
 
     expect(inputSchema['properties']).toHaveProperty('path');
     expect(inputSchema['properties']).toHaveProperty('query');

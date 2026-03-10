@@ -34,7 +34,7 @@ import {
 } from '../rendering/generate-from-context.js';
 
 const program = new Command();
-const CURRENT_DIR_DOT = '.' as const;
+const CURRENT_DIR_DOT = '.';
 
 function writeCliMessage(message: string): void {
   process.stdout.write(`${message}\n`);

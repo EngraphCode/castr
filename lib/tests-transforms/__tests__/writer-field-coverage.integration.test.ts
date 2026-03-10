@@ -13,12 +13,18 @@ import { fileURLToPath } from 'node:url';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
+import type { JsonSchema2020 } from '../../src/schema-processing/parsers/json-schema/index.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/openapi-writer.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
+import { assertSchemaObject } from '../../tests-helpers/openapi-assertions.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURES_DIR = resolve(__dirname, '../__fixtures__');
+
+function getSchema(context: OpenAPIObject, name: string): JsonSchema2020 {
+  return assertSchemaObject(context.components?.schemas?.[name], `components.schemas.${name}`);
+}
 
 describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
   let output: OpenAPIObject;
@@ -62,10 +68,9 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
     });
 
     it('writes jsonSchemaDialect', () => {
-      // jsonSchemaDialect is a 3.1.x field not in base type
-      expect((output as unknown as { jsonSchemaDialect?: string }).jsonSchemaDialect).toBe(
-        'https://json-schema.org/draft/2020-12/schema',
-      );
+      const jsonSchemaDialect =
+        'jsonSchemaDialect' in output ? output.jsonSchemaDialect : undefined;
+      expect(jsonSchemaDialect).toBe('https://json-schema.org/draft/2020-12/schema');
     });
 
     it('writes servers', () => {
@@ -253,67 +258,56 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
 
   describe('JSON Schema 2020-12 Keywords', () => {
     it('writes prefixItems for tuple schemas', () => {
-      const coordinate = output.components?.schemas?.['Coordinate'];
-      expect(coordinate).toBeDefined();
-      expect((coordinate as { prefixItems?: unknown[] })?.prefixItems).toHaveLength(3);
+      const coordinate = getSchema(output, 'Coordinate');
+      expect(coordinate.prefixItems).toHaveLength(3);
     });
 
     it('writes unevaluatedProperties', () => {
-      const config = output.components?.schemas?.['StrictConfig'];
-      expect(config).toBeDefined();
-      expect((config as { unevaluatedProperties?: boolean })?.unevaluatedProperties).toBe(false);
+      const config = getSchema(output, 'StrictConfig');
+      expect(config.unevaluatedProperties).toBe(false);
     });
 
     it('writes unevaluatedItems', () => {
-      const arr = output.components?.schemas?.['StrictArray'];
-      expect(arr).toBeDefined();
-      expect((arr as { unevaluatedItems?: { type: string } })?.unevaluatedItems).toEqual({
+      const arr = getSchema(output, 'StrictArray');
+      expect(arr.unevaluatedItems).toEqual({
         type: 'string',
       });
     });
 
     it('writes dependentSchemas', () => {
-      const payment = output.components?.schemas?.['PaymentMethod'];
-      expect(payment).toBeDefined();
-      const deps = (payment as { dependentSchemas?: { cardNumber?: object } })?.dependentSchemas;
+      const payment = getSchema(output, 'PaymentMethod');
+      const deps = payment.dependentSchemas;
       expect(deps).toBeDefined();
-      expect(deps?.cardNumber).toBeDefined();
+      expect(deps?.['cardNumber']).toBeDefined();
     });
 
     it('writes dependentRequired', () => {
-      const user = output.components?.schemas?.['User'];
-      expect(user).toBeDefined();
-      const deps = (user as { dependentRequired?: Record<string, string[]> })?.dependentRequired;
+      const user = getSchema(output, 'User');
+      const deps = user.dependentRequired;
       expect(deps).toBeDefined();
       expect(deps?.['callbackUrl']).toEqual(['name']);
     });
 
     it('writes minContains', () => {
-      const tagged = output.components?.schemas?.['TaggedArray'];
-      expect(tagged).toBeDefined();
-      expect((tagged as { minContains?: number })?.minContains).toBe(1);
+      const tagged = getSchema(output, 'TaggedArray');
+      expect(tagged.minContains).toBe(1);
     });
 
     it('writes maxContains', () => {
-      const tagged = output.components?.schemas?.['TaggedArray'];
-      expect(tagged).toBeDefined();
-      expect((tagged as { maxContains?: number })?.maxContains).toBe(3);
+      const tagged = getSchema(output, 'TaggedArray');
+      expect(tagged.maxContains).toBe(3);
     });
   });
 
   describe('OpenAPI Schema Extensions', () => {
     it('writes xml object on schema', () => {
-      const pet = output.components?.schemas?.['Pet'];
-      expect(pet).toBeDefined();
-      expect((pet as { xml?: { name: string } })?.xml?.name).toBe('Pet');
+      const pet = getSchema(output, 'Pet');
+      expect(pet.xml?.name).toBe('Pet');
     });
 
     it('writes externalDocs on schema', () => {
-      const pet = output.components?.schemas?.['Pet'];
-      expect(pet).toBeDefined();
-      expect((pet as { externalDocs?: { url: string } })?.externalDocs?.url).toBe(
-        'https://example.com/docs/pet',
-      );
+      const pet = getSchema(output, 'Pet');
+      expect(pet.externalDocs?.url).toBe('https://example.com/docs/pet');
     });
   });
 

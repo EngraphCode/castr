@@ -104,6 +104,7 @@ export const mcpTools = [
               },
               required: ["username", "email"],
               additionalProperties: false,
+              unknownKeyBehavior: { mode: "strict" },
             },
           },
         },
@@ -150,6 +151,7 @@ export const mcpTools = [
             },
             required: ["username", "email"],
             additionalProperties: false,
+            unknownKeyBehavior: { mode: "strict" },
           },
         },
         required: ["body"],
@@ -2130,7 +2132,31 @@ export const mcpTools = [
         properties: {
           value: {
             type: "array",
-            items: { type: "object", additionalProperties: { type: "object" } },
+            items: {
+              type: "object",
+              additionalProperties: { type: "object" },
+              unknownKeyBehavior: {
+                mode: "catchall",
+                schema: {
+                  metadata: {
+                    required: false,
+                    nullable: false,
+                    dependencyGraph: {
+                      references: [],
+                      referencedBy: [],
+                      depth: 0,
+                    },
+                    zodChain: {
+                      presence: ".optional()",
+                      validations: [],
+                      defaults: [],
+                    },
+                    circularReferences: [],
+                  },
+                  type: "object",
+                },
+              },
+            },
           },
         },
       },

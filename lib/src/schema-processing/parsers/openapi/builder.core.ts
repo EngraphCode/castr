@@ -23,14 +23,14 @@ import type {
   IRPropertySchemaContext,
   IRCompositionMemberContext,
 } from '../../ir/index.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
+import { CastrSchemaProperties, ensureObjectTypeForObjectKeywords } from '../../ir/index.js';
 import type { IRBuildContext } from './builder.types.js';
 import { addConstraints } from './schemas/builder.constraints.js';
 import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
 
 import { updateZodChain } from './schemas/builder.zod-chain.js';
 
-const SCHEMA_TYPE_NULL = 'null' as const;
+const SCHEMA_TYPE_NULL = 'null';
 
 /**
  * Build IR schema from OpenAPI SchemaObject or ReferenceObject.
@@ -132,10 +132,15 @@ function buildBaseCastrSchema(schema: SchemaObject, metadata: CastrSchemaNode): 
 
 /** @internal */
 function addTypeInfo(schema: SchemaObject, irSchema: CastrSchema): void {
-  if (schema.type !== undefined) {
-    irSchema.type = schema.type;
-  } else if (schema.properties || schema.additionalProperties) {
-    irSchema.type = 'object';
+  const inferredType = ensureObjectTypeForObjectKeywords(schema.type, {
+    hasProperties: schema.properties !== undefined,
+    hasRequired: Array.isArray(schema.required) && schema.required.length > 0,
+    hasAdditionalProperties: schema.additionalProperties !== undefined,
+    hasUnknownKeyBehaviorExtension: false,
+  });
+
+  if (inferredType !== undefined) {
+    irSchema.type = inferredType;
   }
   if (schema.format !== undefined) {
     irSchema.format = schema.format;

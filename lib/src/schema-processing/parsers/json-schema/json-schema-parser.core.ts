@@ -12,6 +12,7 @@
 
 import type { CastrSchema, CastrSchemaNode } from '../../ir/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
+import { parseObjectFields } from './json-schema-parser.object-fields.js';
 import {
   parseType,
   parseStringConstraints,
@@ -19,7 +20,6 @@ import {
   parseEnumConst,
   parseCoreMetadata,
   parseAccessMetadata,
-  parseObjectFields,
   parseArrayFields,
   parseComposition,
 } from './json-schema-parser.helpers.js';
@@ -28,7 +28,7 @@ import { parse2020Keywords } from './json-schema-parser.2020-keywords.js';
 // Re-export for public API compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
 
-const NULL_TYPE = 'null' as const;
+const NULL_TYPE = 'null';
 
 // ---------------------------------------------------------------------------
 // Public API

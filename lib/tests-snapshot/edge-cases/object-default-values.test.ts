@@ -114,7 +114,7 @@ test('object-default-values', async () => {
           {
             name: "ref-object",
             type: "Query",
-            schema: z.object({}).strict().optional(),
+            schema: z.object({}).catchall(MyComponent).optional(),
           },
         ],
         response: z.object({}).strict(),
@@ -140,7 +140,7 @@ test('object-default-values', async () => {
                 })
                 .strict()
                 .optional(),
-              "ref-object": z.object({}).strict().optional(),
+              "ref-object": z.object({}).catchall(MyComponent).optional(),
             })
             .strict(),
         },
@@ -180,6 +180,17 @@ test('object-default-values', async () => {
                         name: { type: "string" },
                       },
                       required: [],
+                    },
+                    unknownKeyBehavior: {
+                      mode: "catchall",
+                      schema: {
+                        type: "object",
+                        properties: {
+                          id: { type: "number" },
+                          name: { type: "string" },
+                        },
+                        required: [],
+                      },
                     },
                   },
                 },

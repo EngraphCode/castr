@@ -571,11 +571,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strict(),
+    response: z.object({}).catchall(z.int32()),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.object({}).catchall(z.int32()),
         description: "successful operation",
       },
     },
@@ -1777,6 +1777,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -3648,6 +3666,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -4733,11 +4769,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strict(),
+    response: z.object({}).catchall(z.int32()),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.object({}).catchall(z.int32()),
         description: "successful operation",
       },
     },
@@ -5939,6 +5975,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -7024,11 +7078,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strict(),
+    response: z.object({}).catchall(z.int32()),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.object({}).catchall(z.int32()),
         description: "successful operation",
       },
     },
@@ -8230,6 +8284,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -9315,11 +9387,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strict(),
+    response: z.object({}).catchall(z.int32()),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.object({}).catchall(z.int32()),
         description: "successful operation",
       },
     },
@@ -10521,6 +10593,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -11606,11 +11696,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strict(),
+    response: z.object({}).catchall(z.int32()),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.object({}).catchall(z.int32()),
         description: "successful operation",
       },
     },
@@ -12812,6 +12902,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -13897,11 +14005,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strict(),
+    response: z.object({}).catchall(z.int32()),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.object({}).catchall(z.int32()),
         description: "successful operation",
       },
     },
@@ -15103,6 +15211,24 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         additionalProperties: { type: "integer", format: "int32" },
+        unknownKeyBehavior: {
+          mode: "catchall",
+          schema: {
+            metadata: {
+              required: false,
+              nullable: false,
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              zodChain: {
+                presence: ".optional()",
+                validations: [".int()"],
+                defaults: [],
+              },
+              circularReferences: [],
+            },
+            type: "integer",
+            format: "int32",
+          },
+        },
       },
       annotations: {
         readOnlyHint: true,
@@ -18783,6 +18909,30 @@ Some useful links:
                                         },
                                     },
                                     "type": "object",
+                                    "unknownKeyBehavior": {
+                                        "mode": "catchall",
+                                        "schema": {
+                                            "format": "int32",
+                                            "metadata": {
+                                                "circularReferences": [],
+                                                "dependencyGraph": {
+                                                    "depth": 0,
+                                                    "referencedBy": [],
+                                                    "references": [],
+                                                },
+                                                "nullable": false,
+                                                "required": false,
+                                                "zodChain": {
+                                                    "defaults": [],
+                                                    "presence": ".optional()",
+                                                    "validations": [
+                                                        ".int()",
+                                                    ],
+                                                },
+                                            },
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -21496,6 +21646,30 @@ Some useful links:
                     },
                 },
                 "type": "object",
+                "unknownKeyBehavior": {
+                    "mode": "catchall",
+                    "schema": {
+                        "format": "int32",
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": ".optional()",
+                                "validations": [
+                                    ".int()",
+                                ],
+                            },
+                        },
+                        "type": "integer",
+                    },
+                },
             },
             "responses": [
                 {
@@ -21538,6 +21712,30 @@ Some useful links:
                             },
                         },
                         "type": "object",
+                        "unknownKeyBehavior": {
+                            "mode": "catchall",
+                            "schema": {
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [
+                                            ".int()",
+                                        ],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
                     },
                     "statusCode": "200",
                 },
@@ -24184,6 +24382,30 @@ Some useful links:
                         "type": "integer",
                     },
                     "type": "object",
+                    "unknownKeyBehavior": {
+                        "mode": "catchall",
+                        "schema": {
+                            "format": "int32",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": ".optional()",
+                                    "validations": [
+                                        ".int()",
+                                    ],
+                                },
+                            },
+                            "type": "integer",
+                        },
+                    },
                 },
                 "title": "Returns pet inventories by status",
             },
@@ -28238,6 +28460,30 @@ Some useful links:
                                         },
                                     },
                                     "type": "object",
+                                    "unknownKeyBehavior": {
+                                        "mode": "catchall",
+                                        "schema": {
+                                            "format": "int32",
+                                            "metadata": {
+                                                "circularReferences": [],
+                                                "dependencyGraph": {
+                                                    "depth": 0,
+                                                    "referencedBy": [],
+                                                    "references": [],
+                                                },
+                                                "nullable": false,
+                                                "required": false,
+                                                "zodChain": {
+                                                    "defaults": [],
+                                                    "presence": ".optional()",
+                                                    "validations": [
+                                                        ".int()",
+                                                    ],
+                                                },
+                                            },
+                                            "type": "integer",
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -30951,6 +31197,30 @@ Some useful links:
                     },
                 },
                 "type": "object",
+                "unknownKeyBehavior": {
+                    "mode": "catchall",
+                    "schema": {
+                        "format": "int32",
+                        "metadata": {
+                            "circularReferences": [],
+                            "dependencyGraph": {
+                                "depth": 0,
+                                "referencedBy": [],
+                                "references": [],
+                            },
+                            "nullable": false,
+                            "required": false,
+                            "zodChain": {
+                                "defaults": [],
+                                "presence": ".optional()",
+                                "validations": [
+                                    ".int()",
+                                ],
+                            },
+                        },
+                        "type": "integer",
+                    },
+                },
             },
             "responses": [
                 {
@@ -30993,6 +31263,30 @@ Some useful links:
                             },
                         },
                         "type": "object",
+                        "unknownKeyBehavior": {
+                            "mode": "catchall",
+                            "schema": {
+                                "format": "int32",
+                                "metadata": {
+                                    "circularReferences": [],
+                                    "dependencyGraph": {
+                                        "depth": 0,
+                                        "referencedBy": [],
+                                        "references": [],
+                                    },
+                                    "nullable": false,
+                                    "required": false,
+                                    "zodChain": {
+                                        "defaults": [],
+                                        "presence": ".optional()",
+                                        "validations": [
+                                            ".int()",
+                                        ],
+                                    },
+                                },
+                                "type": "integer",
+                            },
+                        },
                     },
                     "statusCode": "200",
                 },
@@ -33639,6 +33933,30 @@ Some useful links:
                         "type": "integer",
                     },
                     "type": "object",
+                    "unknownKeyBehavior": {
+                        "mode": "catchall",
+                        "schema": {
+                            "format": "int32",
+                            "metadata": {
+                                "circularReferences": [],
+                                "dependencyGraph": {
+                                    "depth": 0,
+                                    "referencedBy": [],
+                                    "references": [],
+                                },
+                                "nullable": false,
+                                "required": false,
+                                "zodChain": {
+                                    "defaults": [],
+                                    "presence": ".optional()",
+                                    "validations": [
+                                        ".int()",
+                                    ],
+                                },
+                            },
+                            "type": "integer",
+                        },
+                    },
                 },
                 "title": "Returns pet inventories by status",
             },

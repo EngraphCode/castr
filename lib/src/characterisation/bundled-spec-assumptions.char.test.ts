@@ -22,7 +22,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import type { OpenAPIObject, OperationObject } from 'openapi3-ts/oas31';
+import { isReferenceObject, type OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
@@ -119,7 +119,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
     };
 
     const bundled = await dereferenceSpec(spec);
-    const operation = bundled.paths?.['/users/{userId}']?.get as OperationObject;
+    const operation = getOperation(bundled, '/users/{userId}', 'get');
 
     // Scalar pipeline preserves internal $refs - our code handles them via makeSchemaResolver
     expect(operation.parameters).toBeDefined();
@@ -162,7 +162,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
     };
 
     const bundled = await dereferenceSpec(spec);
-    const operation = bundled.paths?.['/users']?.post as OperationObject;
+    const operation = getOperation(bundled, '/users', 'post');
 
     // Scalar pipeline preserves internal $refs
     expect(operation.requestBody).toBeDefined();
@@ -202,7 +202,7 @@ describe('Bundled Spec: Operation-Level $ref Preservation', () => {
     };
 
     const bundled = await dereferenceSpec(spec);
-    const operation = bundled.paths?.['/users']?.get as OperationObject;
+    const operation = getOperation(bundled, '/users', 'get');
 
     // Scalar pipeline preserves internal $refs
     expect(operation.responses?.['200']).toBeDefined();
@@ -393,15 +393,19 @@ describe('Dereferenced Spec: Component Schema $ref Preservation', () => {
     // Component schemas SHOULD preserve $refs (for topological sorting)
     const userSchema = bundled.components?.schemas?.['User'];
     expect(userSchema).toBeDefined();
+    if (!userSchema || isReferenceObject(userSchema)) {
+      throw new Error('User schema should remain inline for this fixture');
+    }
+
     expect(userSchema).toHaveProperty('properties');
 
     // The $ref might still exist in properties.address
     // (This is GOOD - we need it for dependency resolution)
-    const userSchemaObj = userSchema as { properties?: { address?: { $ref?: string } } };
-    if (userSchemaObj.properties?.address) {
+    const addressProperty = userSchema.properties?.['address'];
+    if (addressProperty) {
       // Ref may or may not be preserved - both are OK for dependency tracking
       // What matters is our code can handle both cases
-      expect(userSchemaObj.properties.address).toBeDefined();
+      expect(addressProperty).toBeDefined();
     }
   });
 
@@ -523,7 +527,7 @@ describe('Bundled Spec: Code Generation Integration', () => {
     const bundled = await dereferenceSpec(spec);
 
     // Verify operation exists and component is defined
-    const operation = bundled.paths?.['/users/{userId}']?.get as OperationObject;
+    const operation = getOperation(bundled, '/users/{userId}', 'get');
     expect(operation.parameters).toBeDefined();
     expect(bundled.components?.parameters?.['UserId']).toBeDefined();
 

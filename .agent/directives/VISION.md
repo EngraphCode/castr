@@ -5,7 +5,7 @@
 Castr is **strict by default** and **fails fast and hard**.
 
 - No silent information loss, no partial success, no swallowed errors, no permissive fallback output.
-- No type-system escape hatches in product code (`as`, `any`, `!`, `eslint-disable`); fix architecture or fix the rule.
+- No type-system escape hatches in product code (non-const type assertions, `any`, `!`, `eslint-disable`); fix architecture or fix the rule.
 - Normalization/canonicalization is allowed only when it is **lossless** and **deterministic**, and the rule is explicit (example: documented OpenAPI 3.0 → 3.1 upgrade semantics in requirements).
 
 If something is wrong, the pipeline stops and reports exactly what happened and where.

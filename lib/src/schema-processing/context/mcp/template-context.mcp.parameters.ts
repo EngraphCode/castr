@@ -20,11 +20,11 @@ import type { MutableJsonSchema } from '../../conversion/json-schema/index.js';
 
 export type SupportedParameterLocation = 'path' | 'query' | 'header';
 
-const PARAM_LOCATION_PATH = 'path' as const;
-const PARAM_LOCATION_QUERY = 'query' as const;
-const PARAM_LOCATION_HEADER = 'header' as const;
-const SCHEMA_TYPE_OBJECT = 'object' as const;
-const SCHEMA_KEY_METADATA = 'metadata' as const;
+const PARAM_LOCATION_PATH = 'path';
+const PARAM_LOCATION_QUERY = 'query';
+const PARAM_LOCATION_HEADER = 'header';
+const SCHEMA_TYPE_OBJECT = 'object';
+const SCHEMA_KEY_METADATA = 'metadata';
 
 /**
  * Accumulator for OpenAPI-based parameter extraction.

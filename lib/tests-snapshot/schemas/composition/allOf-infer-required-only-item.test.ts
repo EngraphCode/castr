@@ -79,7 +79,7 @@ test('allOf-infer-required-only-item', async () => {
       name?: string;
     };
     export type userResponse = {
-      user?: user & unknown;
+      user?: user & {};
     };
     // Zod Schemas
     export const user = z
@@ -90,7 +90,7 @@ test('allOf-infer-required-only-item', async () => {
       .strict();
     export const userResponse = z
       .object({
-        user: user.and(z.unknown()).optional(),
+        user: user.and(z.object({}).strict()).optional(),
       })
       .strict();
     // Endpoints
@@ -131,7 +131,7 @@ test('allOf-infer-required-only-item', async () => {
                     },
                     required: [],
                   },
-                  {},
+                  { type: "object" },
                 ],
               },
             },

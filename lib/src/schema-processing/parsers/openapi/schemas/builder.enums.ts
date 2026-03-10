@@ -17,10 +17,10 @@ import type {
   CastrResponse,
 } from '../../../ir/index.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema' as const;
-const COMPONENT_TYPE_PARAMETER = 'parameter' as const;
-const COMPONENT_TYPE_RESPONSE = 'response' as const;
-const COMPONENT_TYPE_REQUEST_BODY = 'requestBody' as const;
+const COMPONENT_TYPE_SCHEMA = 'schema';
+const COMPONENT_TYPE_PARAMETER = 'parameter';
+const COMPONENT_TYPE_RESPONSE = 'response';
+const COMPONENT_TYPE_REQUEST_BODY = 'requestBody';
 
 /**
  * Extract all enums from components and operations.

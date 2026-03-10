@@ -1,5 +1,9 @@
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { expect, test, describe } from 'vitest';
-import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { OpenAPIObject as OpenAPI30Object } from 'openapi3-ts/oas30';
+import type { OpenAPIObject as OpenAPI31Object } from 'openapi3-ts/oas31';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
@@ -15,15 +19,30 @@ import { assertSingleFileResult } from '../../tests-helpers/generation-result-as
  * 2. OpenAPI 3.1.x: supported, generates code with 3.1-specific features
  * 3. Both versions produce valid Zod schemas
  *
- * Note: Type assertions as OpenAPIObject are used for test fixtures only
- *
- * Note: Test fixtures use partial OpenAPI objects for brevity.
- * Type warnings are expected but don't affect runtime behavior.
+ * Note: Fixtures go through the public input pipeline so version-specific specs can
+ * stay statically typed while mixed-version compatibility cases still exercise the
+ * real loading boundary.
  */
+
+async function generateFromFixture(openApiDoc: object) {
+  const tempDir = await mkdtemp(path.join(tmpdir(), 'castr-oas-parity-'));
+  const input = path.join(tempDir, 'openapi.json');
+
+  await writeFile(input, JSON.stringify(openApiDoc, null, 2));
+
+  try {
+    return await generateZodClientFromOpenAPI({
+      disableWriteToFile: true,
+      input,
+    });
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+}
 
 describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   test('OAS 3.0: exclusiveMinimum as boolean + minimum', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPI30Object = {
       openapi: '3.0.3',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -63,10 +82,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate gt() for exclusive minimum with boolean
@@ -76,7 +92,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: exclusiveMinimum as number (standalone)', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPI31Object = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -115,10 +131,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
     };
 
     // OpenAPI 3.1.x is now supported - should generate code successfully
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate gt() for exclusive minimum
@@ -128,7 +141,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.0: nullable property', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPI30Object = {
       openapi: '3.0.3',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -163,10 +176,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
       },
     };
 
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate .nullable() for nullable property
@@ -174,7 +184,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: type array with null', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPI31Object = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -209,10 +219,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
     };
 
     // OpenAPI 3.1.x is now supported - should generate code successfully
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate valid Zod schema
@@ -221,7 +228,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: standalone type null', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPI31Object = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -250,10 +257,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
     };
 
     // OpenAPI 3.1.x is now supported - should generate code successfully
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate valid Zod schema
@@ -262,7 +266,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
   });
 
   test('OAS 3.1: multiple types in array', async () => {
-    const openApiDoc = {
+    const openApiDoc: OpenAPI31Object = {
       openapi: '3.1.0',
       info: { title: 'Test', version: '1.0' },
       paths: {
@@ -291,10 +295,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
     };
 
     // OpenAPI 3.1.x is now supported - should generate code successfully
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate valid Zod schema
@@ -349,10 +350,7 @@ describe('OAS 3.0 vs 3.1 Feature Parity', () => {
     };
 
     // OpenAPI 3.1.x is now supported - should generate code successfully
-    const output = await generateZodClientFromOpenAPI({
-      disableWriteToFile: true,
-      openApiDoc: openApiDoc as unknown as OpenAPIObject,
-    });
+    const output = await generateFromFixture(openApiDoc);
     assertSingleFileResult(output);
 
     // Should generate valid Zod schema

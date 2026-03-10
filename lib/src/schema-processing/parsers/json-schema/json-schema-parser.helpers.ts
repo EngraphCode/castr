@@ -13,7 +13,6 @@
 import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { CastrSchema } from '../../ir/index.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE: SchemaObjectType = 'null';
@@ -138,58 +137,6 @@ export function parseAccessMetadata(input: JsonSchema2020, result: CastrSchema):
   }
 }
 
-// ── Object fields ─────────────────────────────────────────────────────────
-
-/** @internal */
-export function parseObjectFields(
-  input: JsonSchema2020,
-  result: CastrSchema,
-  parseSchema: ParseSchemaFn,
-): void {
-  if (input.properties !== undefined) {
-    parseProperties(input, result, parseSchema);
-  }
-  if (input.required !== undefined && input.required.length > 0) {
-    result.required = input.required;
-  }
-  parseAdditionalProps(input, result, parseSchema);
-}
-
-function parseProperties(
-  input: JsonSchema2020,
-  result: CastrSchema,
-  parseSchema: ParseSchemaFn,
-): void {
-  const props = input.properties;
-  if (props === undefined) {
-    return;
-  }
-  const req = input.required ?? [];
-  const parsed: Record<string, CastrSchema> = {};
-  for (const [key, value] of Object.entries(props)) {
-    const schema = parseSingleSchemaOrRef(value, parseSchema);
-    schema.metadata.required = isInArray(req, key);
-    parsed[key] = schema;
-  }
-  result.properties = new CastrSchemaProperties(parsed);
-}
-
-function parseAdditionalProps(
-  input: JsonSchema2020,
-  result: CastrSchema,
-  parseSchema: ParseSchemaFn,
-): void {
-  const ap = input.additionalProperties;
-  if (ap === undefined) {
-    return;
-  }
-  if (typeof ap === 'boolean') {
-    result.additionalProperties = ap;
-    return;
-  }
-  result.additionalProperties = parseSingleSchemaOrRef(ap, parseSchema);
-}
-
 // ── Array fields ──────────────────────────────────────────────────────────
 
 /** @internal */
@@ -249,13 +196,4 @@ function parseSingleSchemaOrRef(
     return parseSchema({ $ref: value.$ref });
   }
   return parseSchema(value);
-}
-
-function isInArray(arr: readonly string[], value: string): boolean {
-  for (const item of arr) {
-    if (item === value) {
-      return true;
-    }
-  }
-  return false;
 }

@@ -25,8 +25,8 @@ import { getSchemaFromComponents } from '../component-access.js';
 import { parseComponentRef } from '../ref-resolution.js';
 
 type VisitFn = (schema: SchemaObject | ReferenceObject, fromRef: string) => void;
-const SCHEMA_TYPE_ARRAY = 'array' as const;
-const SCHEMA_TYPE_OBJECT = 'object' as const;
+const SCHEMA_TYPE_ARRAY = 'array';
+const SCHEMA_TYPE_OBJECT = 'object';
 
 /**
  * Handle reference object in dependency graph

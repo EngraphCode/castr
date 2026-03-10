@@ -2,7 +2,7 @@ import { Writers, type WriterFunction } from 'ts-morph';
 import type { TemplateContextMcpTool } from '../../context/index.js';
 import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
 
-const OBJECT_MAP_KEY_PROPERTIES = 'properties' as const;
+const OBJECT_MAP_KEY_PROPERTIES = 'properties';
 
 export function createMcpToolWriter(tool: TemplateContextMcpTool): WriterFunction {
   const httpOpProps: Record<string, string> = {

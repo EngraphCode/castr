@@ -12,8 +12,8 @@ interface SerializedMap {
 import { type UnknownRecord, isRecord } from '../../shared/type-utils/types.js';
 import { type CastrDocument, isCastrDocument } from './models/schema-document.js';
 
-const SERIALIZED_DATA_TYPE_MAP = 'Map' as const;
-const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties' as const;
+const SERIALIZED_DATA_TYPE_MAP = 'Map';
+const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties';
 
 /**
  * Interface for a serialized CastrSchemaProperties.

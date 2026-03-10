@@ -27,7 +27,7 @@ All integration tests for schema transformation must be categorized and proven a
 
 ### 2. Validation Parity Functional Testing
 
-For scenarios that execute Zod code, structural equivalence is insufficient. We will enforce **Validation Parity** wherever the scenario includes shared executable payload fixtures, especially for Scenarios 2, 4, and 6:
+For scenarios that execute Zod code, structural equivalence is insufficient. We enforce **Validation Parity** wherever the scenario includes shared executable payload fixtures, especially for Scenarios 2, 4, and 6:
 
 1. **Dynamic Execution:** Generated Zod TypeScript must be transpiled and executed within the test environment (`new Function` sandbox).
 2. **Deterministic Payload Harness:** The tests must evaluate both the original source schemas and the generated target schemas against shared sets of _Valid_ and _Invalid_ payloads defined in `lib/tests-fixtures/zod-parser/happy-path/payloads.ts`.
@@ -37,11 +37,13 @@ For scenarios that execute Zod code, structural equivalence is insufficient. We 
 
 When a fixture exercises object unknown-key behavior (`strip`, `passthrough`, `catchall`), validation parity alone is insufficient.
 
-Those fixtures must also prove:
+Those fixtures now also prove:
 
 1. `originalSchema.parse(payload)` and `transformedSchema.parse(payload)` produce equivalent parsed outputs for successful payloads.
-2. Root-level and nested recursive unknown-key retention are covered explicitly where relevant.
-3. A transform is not considered semantically correct if it keeps `safeParse(...).success` parity while changing parsed-output retention.
+2. Root-level and nested unknown-key retention are covered explicitly where relevant.
+3. Recursive strip round-trips are covered where generation is supported.
+4. Recursive unknown-key-preserving schemas that cannot be emitted safely are proved by explicit fail-fast generation assertions instead of being counted as parity-success cases.
+5. A transform is not considered semantically correct if it keeps `safeParse(...).success` parity while changing parsed-output retention.
 
 ### 3. Recursive Round-Trip Durability Is a First-Class Proof Obligation
 

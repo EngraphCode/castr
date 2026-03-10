@@ -4,13 +4,13 @@ import { writeZodSchema } from '../zod/index.js';
 import type { TemplateContextOptions } from '../../context/index.js';
 import type { CastrSchemaContext, IRPropertySchemaContext } from '../../ir/index.js';
 
-const PARAM_TYPE_BODY = 'Body' as const;
-const PARAM_TYPE_PATH = 'Path' as const;
-const PARAM_TYPE_QUERY = 'Query' as const;
-const PARAM_TYPE_HEADER = 'Header' as const;
-const PARAM_LOCATION_PATH = 'path' as const;
-const PARAM_LOCATION_QUERY = 'query' as const;
-const PARAM_LOCATION_HEADER = 'header' as const;
+const PARAM_TYPE_BODY = 'Body';
+const PARAM_TYPE_PATH = 'Path';
+const PARAM_TYPE_QUERY = 'Query';
+const PARAM_TYPE_HEADER = 'Header';
+const PARAM_LOCATION_PATH = 'path';
+const PARAM_LOCATION_QUERY = 'query';
+const PARAM_LOCATION_HEADER = 'header';
 
 export function createEndpointWriter(
   endpoint: EndpointDefinition,

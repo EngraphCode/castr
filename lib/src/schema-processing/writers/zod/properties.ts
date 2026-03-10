@@ -10,9 +10,6 @@
 import type { CastrSchema, IRPropertySchemaContext } from '../../ir/index.js';
 import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
 
-const COMPOSITION_KEYS = ['allOf', 'oneOf', 'anyOf'] as const;
-const SCHEMA_TYPE_NULL = 'null' as const;
-
 /**
  * Format a property key for JavaScript output.
  * Quotes keys that aren't valid JS identifiers.
@@ -71,148 +68,9 @@ export function getSortedPropertyEntries(schema: CastrSchema): [string, CastrSch
   );
 }
 
-/**
- * Check if a schema contains a $ref (directly or in array items).
- *
- * @param schema - Schema to check
- * @returns true if schema has a reference
- *
- * @internal
- */
-function hasSchemaReference(schema: CastrSchema): boolean {
-  if (schema.$ref) {
-    return true;
-  }
-
-  if (schema.items && !Array.isArray(schema.items) && hasSchemaReference(schema.items)) {
-    return true;
-  }
-
-  for (const key of COMPOSITION_KEYS) {
-    const members = schema[key];
-    if (members && members.some((member) => hasSchemaReference(member))) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function isNullSchema(schema: CastrSchema): boolean {
-  return schema.type === SCHEMA_TYPE_NULL;
-}
-
-function getNullableReferenceCompositionMembers(schema: CastrSchema): CastrSchema[] | undefined {
-  const members = schema.anyOf ?? schema.oneOf;
-
-  if (!members || members.length !== 2) {
-    return undefined;
-  }
-
-  return members;
-}
-
-function getSingleReferenceMember(members: CastrSchema[]): CastrSchema | undefined {
-  const referenceMembers = members.filter((member) => member.$ref);
-
-  if (referenceMembers.length !== 1) {
-    return undefined;
-  }
-
-  return referenceMembers[0];
-}
-
-function hasSingleNullMember(members: CastrSchema[], referenceMember: CastrSchema): boolean {
-  const nonReferenceMembers = members.filter((member) => member !== referenceMember);
-  const nullableMember = nonReferenceMembers[0];
-  return (
-    nullableMember !== undefined && nonReferenceMembers.length === 1 && isNullSchema(nullableMember)
-  );
-}
-
-/**
- * Extract the referenced member from a nullable reference composition.
- *
- * Recognizes compositions shaped like:
- * `anyOf: [{ $ref: ... }, { type: 'null' }]`
- *
- * @param schema - Candidate schema
- * @returns Referenced member when the composition is a nullable reference, otherwise undefined
- *
- * @public
- */
-export function getNullableReferenceCompositionBaseSchema(
-  schema: CastrSchema,
-): CastrSchema | undefined {
-  const members = getNullableReferenceCompositionMembers(schema);
-  if (!members) {
-    return undefined;
-  }
-
-  const referenceMember = getSingleReferenceMember(members);
-  if (!referenceMember) {
-    return undefined;
-  }
-
-  return hasSingleNullMember(members, referenceMember) ? referenceMember : undefined;
-}
-
-/**
- * Detect if a property triggers circular reference handling.
- *
- * Circular references require special Zod 4 getter syntax to avoid
- * runtime initialization errors.
- *
- * Two cases trigger circular reference handling:
- * 1. Property schema directly has circularReferences metadata
- * 2. Parent schema has circularReferences AND property has a $ref
- *
- * @param propSchema - The property's schema
- * @param parentSchema - The containing object's schema
- * @returns true if circular reference handling is needed
- *
- * @public
- */
-export function detectCircularReference(
-  propSchema: CastrSchema,
-  parentSchema: CastrSchema,
-): boolean {
-  // Case 1: Property directly marks circular references
-  const propHasCircularRef =
-    propSchema.metadata?.circularReferences && propSchema.metadata.circularReferences.length > 0;
-
-  if (propHasCircularRef) {
-    return true;
-  }
-
-  // Case 2: Parent has circular refs AND property has a reference
-  const parentHasCircularRef =
-    parentSchema.metadata?.circularReferences &&
-    parentSchema.metadata.circularReferences.length > 0;
-
-  if (parentHasCircularRef && hasSchemaReference(propSchema)) {
-    return true;
-  }
-
-  return false;
-}
-
-/**
- * Determine if getter syntax should be used for a property.
- *
- * Getter syntax is required for circular references in Zod 4:
- * ```typescript
- * const Category = z.object({
- *   get children() { return z.array(Category); }
- * });
- * ```
- *
- * @param propSchema - The property's schema
- * @param parentSchema - The containing object's schema
- * @returns true if getter syntax should be used
- *
- * @public
- */
-export function shouldUseGetterSyntax(propSchema: CastrSchema, parentSchema: CastrSchema): boolean {
-  return detectCircularReference(propSchema, parentSchema);
-}
+export {
+  detectCircularReference,
+  getNullableReferenceCompositionBaseSchema,
+  isRecursiveObjectSchema,
+  shouldUseGetterSyntax,
+} from './properties.recursion.js';

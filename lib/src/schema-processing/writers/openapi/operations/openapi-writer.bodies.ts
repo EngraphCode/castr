@@ -21,7 +21,7 @@ import type {
   IRResponseHeader,
 } from '../../../ir/index.js';
 
-const STATUS_DEFAULT = 'default' as const;
+const STATUS_DEFAULT = 'default';
 
 function getSortedRecordEntries<T>(record: Record<string, T>): [string, T][] {
   const sortedKeys = Object.keys(record).sort((left, right) => left.localeCompare(right));

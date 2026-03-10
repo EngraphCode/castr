@@ -83,8 +83,7 @@ function createMockResponseWithContent(
 
 describe('resolveRequestBodySchemaFromIR', () => {
   test('returns undefined when operation has no request body', () => {
-    // Use empty object cast to simulate missing optional property
-    const operation = {} as Pick<CastrOperation, 'requestBody'>;
+    const operation: Pick<CastrOperation, 'requestBody'> = {};
 
     const result = resolveRequestBodySchemaFromIR(operation);
 

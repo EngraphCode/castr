@@ -73,16 +73,22 @@ z.xor(schemaA, schemaB);
 
 **Rationale:** `z.xor()` enforces exactly-one semantics that matches `oneOf`.
 
-### 5. Strict Objects by Default
+### 5. Object Unknown-Key Emission Is Driven By IR Semantics First
 
-Objects use `.strict()` unless `additionalProperties: true`:
+Object output is governed first by explicit IR unknown-key semantics:
 
 ```typescript
-z.object({ ... }).strict(); // default
-z.object({ ... }).passthrough(); // additionalProperties: true
+z.object({ ... }).strict();
+z.object({ ... }).strip();
+z.object({ ... }).passthrough();
+z.object({ ... }).catchall(z.string());
 ```
 
-**Rationale:** Matches OpenAPI's default behavior and fail-fast principles.
+Recursive strip objects are emitted as bare `z.object({ ... })`, because strip is Zod's default object mode and explicit `.strip()` eagerly evaluates recursive getter-backed shapes.
+
+When IR does not carry explicit runtime unknown-key semantics, writers still use the existing portable-policy fallback based on `additionalProperties` and `strictObjects`.
+
+**Rationale:** Preserve runtime semantics when the IR knows them, preserve existing portable-policy behaviour when it does not, and keep recursive strip output safe.
 
 ### 6. Redundant Validation Filtering
 
@@ -106,8 +112,8 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null
 ### 8. Recursive Getter Wrapper Canonicalization
 
 > [!IMPORTANT]
-> [ADR-038](./ADR-038-object-unknown-key-semantics.md) partially amends this section.
-> Current product code still suppresses recursive `.passthrough()`, but that is no longer an accepted end-state. Unknown-key-preserving recursive output must either be reconstructed safely or fail fast; silent degradation to strip-mode behavior is architecture debt slated for remediation.
+> [ADR-038](./ADR-038-object-unknown-key-semantics.md) amends this section for unknown-key behavior.
+> Recursive strip is supported via bare `z.object({...})`. Recursive `.passthrough()` and `.catchall()` now fail fast instead of degrading silently.
 
 Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form; writer output must not regress to `z.lazy()`.
 
@@ -118,11 +124,12 @@ Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form
 
 Writer output must treat these as **canonical recursive wrappers**, not as generic nullable compositions, so Scenario 2 / 4 / 6 round-trips remain lossless and idempotent.
 
-Recursive object schemas cannot safely append `.passthrough()` or `.catchall()` today. In Zod 4, both eagerly evaluate getter-backed shapes and can trigger temporal-dead-zone failures during recursive schema initialization. Per ADR-038, the durable direction is:
+Recursive object schemas cannot safely append `.passthrough()` or `.catchall()` today. In Zod 4, both eagerly evaluate getter-backed shapes and can trigger temporal-dead-zone failures during recursive schema initialization. Per ADR-038, the implemented policy is:
 
 - preserve the semantics in IR and portable artifacts
+- emit bare `z.object({...})` for recursive strip semantics
 - emit a clear fail-fast error for recursive unknown-key-preserving output until a safe construction strategy exists
-- never silently rewrite the behavior to strip-mode output as a long-term policy
+- never silently rewrite the behavior to strip-mode output
 
 **Rationale:** Getter-wrapper canonicalization preserves recursion semantics without inventing new IR fields, and it keeps writer output aligned with parser expectations and transform parity proofs.
 

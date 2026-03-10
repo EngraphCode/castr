@@ -18,15 +18,15 @@ import type {
   CastrResponseComponent,
 } from '../../../ir/index.js';
 
-const COMPONENT_TYPE_SCHEMA = 'schema' as const;
-const COMPONENT_TYPE_SECURITY_SCHEME = 'securityScheme' as const;
-const COMPONENT_TYPE_PARAMETER = 'parameter' as const;
-const COMPONENT_TYPE_RESPONSE = 'response' as const;
-const COMPONENT_TYPE_HEADER = 'header' as const;
-const COMPONENT_TYPE_LINK = 'link' as const;
-const COMPONENT_TYPE_CALLBACK = 'callback' as const;
-const COMPONENT_TYPE_PATH_ITEM = 'pathItem' as const;
-const COMPONENT_TYPE_EXAMPLE = 'example' as const;
+const COMPONENT_TYPE_SCHEMA = 'schema';
+const COMPONENT_TYPE_SECURITY_SCHEME = 'securityScheme';
+const COMPONENT_TYPE_PARAMETER = 'parameter';
+const COMPONENT_TYPE_RESPONSE = 'response';
+const COMPONENT_TYPE_HEADER = 'header';
+const COMPONENT_TYPE_LINK = 'link';
+const COMPONENT_TYPE_CALLBACK = 'callback';
+const COMPONENT_TYPE_PATH_ITEM = 'pathItem';
+const COMPONENT_TYPE_EXAMPLE = 'example';
 
 /**
  * Type guard for schema components.

@@ -29,7 +29,7 @@ async function validateInlineDoc(doc: AnyObject): Promise<{
     valid: result.valid,
     errors:
       result.errors?.map((e) => {
-        const path = (e as unknown as { path?: string }).path;
+        const path = 'path' in e && typeof e.path === 'string' ? e.path : undefined;
         return path !== undefined ? { message: e.message, path } : { message: e.message };
       }) ?? [],
   };

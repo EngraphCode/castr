@@ -1,12 +1,15 @@
-# Plan (Active): Zod Limitations Architecture Investigation
+# Plan (Paused): Zod Limitations Architecture Investigation
 
-**Status:** Active  
+**Status:** Paused  
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-09  
 **Predecessor:** Recursive Wrapper Remediation (complete)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/type-safety-remediation.md`
 
 ---
+
+**Paused On:** 2026-03-09  
+**Pause Reason:** A repo-wide type-safety remediation slice became the next atomic priority after correcting doctrine drift: `as const` remains allowed infrastructure, while non-const assertions remain banned. Resume this investigation after [type-safety-remediation.md](../../active/type-safety-remediation.md).
 
 ## Summary
 
@@ -39,9 +42,9 @@ Companion investigation:
 
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
 
-Known queued remediation already established in this workstream:
+Known completed remediation already established in this workstream:
 
-- [recursive-unknown-key-semantics-remediation.md](./recursive-unknown-key-semantics-remediation.md)
+- [recursive-unknown-key-semantics-remediation.md](../complete/recursive-unknown-key-semantics-remediation.md)
 
 Do not create `future/` plans for this Zod workstream. Keep established fixes active until the current known limitation set is fully mapped and ordered for execution.
 
@@ -87,6 +90,18 @@ Out of scope:
 4. Prefer standards-compliant and architecturally general answers over narrow special cases.
 5. Do not invent permissive escape hatches just to preserve output shape.
 6. If an answer would require doctrine changes, surface that explicitly rather than smuggling it in as an implementation detail.
+
+---
+
+## Reviewer And Specialist Invocation
+
+Read and apply `.agent/rules/invoke-reviewers.md` throughout this workstream.
+
+- After any non-trivial change made during investigation or remediation planning, invoke `code-reviewer` first.
+- Invoke `test-reviewer` when tests, fixtures, harnesses, or TDD evidence are added or changed.
+- Invoke `type-reviewer` when types, generics, schema flow, or parser/writer contracts are involved.
+- Invoke `zod-expert`, `openapi-expert`, or `json-schema-expert` whenever the investigation or remediation touches those semantic surfaces.
+- Do not close a tranche with non-trivial changed artefacts unless the required reviewer and specialist coverage has been applied and reflected in the session outcome.
 
 ---
 
@@ -159,7 +174,7 @@ Durable outputs created from this tranche:
 
 - [ADR-038](../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 - [recursive-unknown-key-semantics.md](../../../docs/architecture/recursive-unknown-key-semantics.md)
-- [recursive-unknown-key-semantics-remediation.md](./recursive-unknown-key-semantics-remediation.md)
+- [recursive-unknown-key-semantics-remediation.md](../complete/recursive-unknown-key-semantics-remediation.md)
 
 Recommended direction locked by ADR-038:
 

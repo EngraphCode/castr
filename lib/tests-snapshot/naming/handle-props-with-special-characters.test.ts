@@ -5,12 +5,34 @@ import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 
 test('handle-props-with-special-characters', async () => {
-  const schemaWithSpecialCharacters = {
+  const schemaWithSpecialCharacters: SchemaObject = {
     properties: {
       '@id': { type: 'string' },
       id: { type: 'number' },
     },
-  } as SchemaObject;
+  };
+
+  const openApiDoc: OpenAPIObject = {
+    openapi: '3.0.3',
+    info: { version: '1', title: 'Example API' },
+    paths: {
+      '/something': {
+        get: {
+          operationId: 'getSomething',
+          responses: {
+            '200': {
+              description: 'OK',
+              content: {
+                'application/json': {
+                  schema: schemaWithSpecialCharacters,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
 
   expect(getZodSchema({ schema: schemaWithSpecialCharacters })).toMatchInlineSnapshot(
     `
@@ -34,27 +56,7 @@ test('handle-props-with-special-characters', async () => {
   );
 
   const output = await generateZodClientFromOpenAPI({
-    openApiDoc: {
-      openapi: '3.0.3',
-      info: { version: '1', title: 'Example API' },
-      paths: {
-        '/something': {
-          get: {
-            operationId: 'getSomething',
-            responses: {
-              '200': {
-                description: 'OK',
-                content: {
-                  'application/json': {
-                    schema: schemaWithSpecialCharacters,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    } as OpenAPIObject,
+    openApiDoc,
     disableWriteToFile: true,
   });
   assertSingleFileResult(output);

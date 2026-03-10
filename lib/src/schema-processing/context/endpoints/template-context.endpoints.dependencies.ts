@@ -15,7 +15,7 @@ import type { MinimalTemplateContext } from './template-context.endpoints.types.
 
 export type { MinimalTemplateContext };
 
-const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas';
 const HASH_CHAR_CODE = 35;
 const SLASH_CHAR_CODE = 47;
 const EXPECTED_SCHEMA_REF_PATTERN =

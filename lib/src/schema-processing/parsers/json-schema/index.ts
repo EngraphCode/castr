@@ -16,15 +16,15 @@
 
 export type { JsonSchema2020 } from './json-schema-parser.core.js';
 export { parseJsonSchemaObject } from './json-schema-parser.core.js';
-export { normalizeDraft07 } from './json-schema-parser.normalization.js';
-export type { Draft07Input } from './json-schema-parser.normalization.js';
+export { normalizeDraft07 } from './normalization/index.js';
+export type { Draft07Input } from './normalization/index.js';
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
-import { normalizeDraft07 } from './json-schema-parser.normalization.js';
-import type { Draft07Input } from './json-schema-parser.normalization.js';
+import { normalizeDraft07 } from './normalization/index.js';
+import type { Draft07Input } from './normalization/index.js';
 
 /**
  * Parse a JSON Schema (Draft 07 or 2020-12) into CastrSchema IR.

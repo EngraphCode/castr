@@ -5,13 +5,13 @@
  * @internal
  */
 
-const PROPERTY_PREFIX = 'Property ' as const;
-const IS_NOT_EXPECTED_SUFFIX = ' is not expected to be here' as const;
-const SLASH = '/' as const;
-const TILDE = '~' as const;
-const STR_ONE = '1' as const;
-const STR_ZERO = '0' as const;
-const EMPTY_STRING = '' as const;
+const PROPERTY_PREFIX = 'Property ';
+const IS_NOT_EXPECTED_SUFFIX = ' is not expected to be here';
+const SLASH = '/';
+const TILDE = '~';
+const STR_ONE = '1';
+const STR_ZERO = '0';
+const EMPTY_STRING = '';
 
 function hasExactPrefix(message: string): boolean {
   for (let i = 0; i < PROPERTY_PREFIX.length; i++) {

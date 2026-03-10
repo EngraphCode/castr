@@ -216,27 +216,6 @@ describe('parseJsonSchemaObject', () => {
       expect(result.properties?.get('name')?.metadata.required).toBe(true);
       expect(result.properties?.get('age')?.metadata.required).toBe(false);
     });
-
-    it('parses additionalProperties as boolean', () => {
-      const result = parseJsonSchemaObject({
-        type: 'object',
-        additionalProperties: false,
-      });
-
-      expect(result.additionalProperties).toBe(false);
-    });
-
-    it('parses additionalProperties as schema', () => {
-      const result = parseJsonSchemaObject({
-        type: 'object',
-        additionalProperties: { type: 'string' },
-      });
-
-      expect(typeof result.additionalProperties).toBe('object');
-      if (typeof result.additionalProperties === 'object') {
-        expect(result.additionalProperties.type).toBe('string');
-      }
-    });
   });
 
   // =========================================================================

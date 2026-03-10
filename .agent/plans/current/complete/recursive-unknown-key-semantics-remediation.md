@@ -1,6 +1,6 @@
 # Plan: Recursive Unknown-Key Semantics Remediation
 
-**Status:** 🔲 Queued In Active Workstream  
+**Status:** ✅ Implemented  
 **Priority:** High  
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-09  
@@ -14,7 +14,18 @@ Remediate object unknown-key semantics so Zod-origin `strict`, `strip`, `passthr
 
 This slice does **not** solve safe recursive passthrough / catchall Zod emission. Instead, it must make unsupported recursive output fail fast rather than silently degrading to strip-mode behavior.
 
-This plan stays in `active/` intentionally. It is queued for execution as part of the current Zod limitations workstream and should not be moved to `future/` while the remaining limitation set is still being mapped.
+This plan stays in `active/` intentionally as the completed execution record for this limitation slice while the remaining Zod limitation set is still being mapped and ordered.
+
+## Implementation Outcome
+
+Completed on 2026-03-09 with the following delivered:
+
+- `unknownKeyBehavior` added to IR object schemas and validated
+- Zod parser support for `strict`, `strip`, `passthrough`, and `catchall`
+- OpenAPI / JSON Schema preservation via `x-castr-unknownKeyBehavior`
+- Zod writer honesty for all four modes, including fail-fast recursive passthrough / catchall
+- recursive strip output kept safe via bare `z.object({...})`
+- new unknown-key fixture coverage plus parsed-output parity in Scenario 2 / 4 / 6
 
 ## Intent + Scope Lock
 

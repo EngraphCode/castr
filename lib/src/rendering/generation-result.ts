@@ -41,8 +41,8 @@
  *
  * @public
  */
-const GENERATION_RESULT_TYPE_SINGLE = 'single' as const;
-const GENERATION_RESULT_TYPE_GROUPED = 'grouped' as const;
+const GENERATION_RESULT_TYPE_SINGLE = 'single';
+const GENERATION_RESULT_TYPE_GROUPED = 'grouped';
 
 export type GenerationResult =
   | {

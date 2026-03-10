@@ -12,7 +12,7 @@
 
 import type { SchemaObjectType } from 'openapi3-ts/oas31';
 
-import type { CastrSchema } from '../../ir/index.js';
+import type { CastrSchema, PortableUnknownKeyBehaviorMode } from '../../ir/index.js';
 
 /**
  * Recursive write callback supplied by each concrete writer.
@@ -60,6 +60,7 @@ export interface JsonSchemaObject {
   properties?: Record<string, JsonSchemaObject>;
   required?: string[];
   additionalProperties?: boolean | JsonSchemaObject;
+  'x-castr-unknownKeyBehavior'?: PortableUnknownKeyBehaviorMode;
 
   // Array
   items?: JsonSchemaObject;
@@ -112,7 +113,7 @@ const VALID_SCHEMA_TYPES: readonly SchemaObjectType[] = [
   'array',
   'object',
   'null',
-] as const;
+];
 
 /**
  * Type guard: is the value a recognised schema type string?

@@ -16,7 +16,7 @@ import {
 } from '../components/builder.component-ref-resolution.js';
 import type { IRRequestBody, IRMediaType } from '../../../ir/index.js';
 
-const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies' as const;
+const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies';
 
 /**
  * Build IR request body from OpenAPI request body object.

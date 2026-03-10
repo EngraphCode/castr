@@ -15,15 +15,22 @@ import type { OpenAPIObject } from 'openapi3-ts/oas31';
 
 import {
   ZOD_FIXTURES,
+  ZOD_GENERATION_FAILURE_FIXTURES,
   readZodFixture,
   expectNoParseErrors,
   generateZodFromOpenAPI,
   loadDynamicZodSchemas,
   assertValidationParity,
+  assertParsedOutputParity,
+  selectFixtureRoundTripDocument,
+  selectSchemaComponents,
   buildIR,
   writeOpenApi,
   parseZodSource,
 } from '../utils/transform-helpers.js';
+
+const RECURSIVE_UNKNOWN_KEY_FAILURE =
+  /Recursive object schemas with unknown-key behavior "(passthrough|catchall)" cannot yet be emitted safely in Zod\./;
 
 // ============================================================================
 // Scenario 2: Zod → IR → Zod Transform Path
@@ -40,19 +47,21 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
    */
 
   describe('Losslessness: Schema count preserved through transform path', () => {
-    it.each(ZOD_FIXTURES)('%s: Zod → IR → Zod → IR preserves schema count', async (_name, path) => {
+    it.each(ZOD_FIXTURES)('$name: Zod → IR → Zod → IR preserves schema count', async (fixture) => {
       // Parse arbitrary Zod
-      const source = await readZodFixture(path);
+      const source = await readZodFixture(fixture.path);
       const result1 = parseZodSource(source);
-      expectNoParseErrors(_name, 'Scenario 2 arbitrary-input parse', result1);
+      expectNoParseErrors(fixture.name, 'Scenario 2 arbitrary-input parse', result1);
 
-      const originalSchemaCount = result1.ir.components.length;
+      const roundTripIR = selectFixtureRoundTripDocument(fixture, result1.ir);
+
+      const originalSchemaCount = roundTripIR.components.length;
 
       // IR → OpenAPI → Zod (REAL generator) → IR
-      const openApiDoc = writeOpenApi(result1.ir);
+      const openApiDoc = writeOpenApi(roundTripIR);
       const zodOutput = await generateZodFromOpenAPI(openApiDoc);
       const result2 = parseZodSource(zodOutput);
-      expectNoParseErrors(_name, 'Scenario 2 generated-output parse', result2);
+      expectNoParseErrors(fixture.name, 'Scenario 2 generated-output parse', result2);
 
       // Schema count should be preserved
       expect(result2.ir.components.length).toBe(originalSchemaCount);
@@ -124,24 +133,91 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
         /Unsupported string format "password"/,
       );
     });
+
+    it('normalizes explicit recursive .strip() source to safe bare-object output', async () => {
+      const source = `
+        import { z } from 'zod';
+
+        export const RecursiveStripCategorySchema = z
+          .object({
+            name: z.string(),
+            get children() {
+              return z.array(RecursiveStripCategorySchema);
+            },
+          })
+          .strip();
+      `;
+
+      const result = parseZodSource(source);
+      expectNoParseErrors(
+        'inline recursive strip test',
+        'Scenario 2 arbitrary-input parse',
+        result,
+      );
+
+      const openApiOutput = writeOpenApi(result.ir);
+      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
+      const regenerated = parseZodSource(zodOutput);
+
+      expectNoParseErrors(
+        'inline recursive strip test',
+        'Scenario 2 generated-output parse',
+        regenerated,
+      );
+      expect(zodOutput).toContain('export const RecursiveStripCategory = z.object({');
+      expect(zodOutput).not.toContain('.strip()');
+    });
+
+    it.each(ZOD_GENERATION_FAILURE_FIXTURES)(
+      '$fixtureName: $label',
+      async ({ fixtureName, fixturePath, schemaNames, expectedError }) => {
+        const source = await readZodFixture(fixturePath);
+        const result = parseZodSource(source);
+        expectNoParseErrors(fixtureName, 'Scenario 2 arbitrary-input parse', result);
+
+        const failingIR = selectSchemaComponents(result.ir, schemaNames);
+        const openApiDoc = writeOpenApi(failingIR);
+
+        await expect(generateZodFromOpenAPI(openApiDoc)).rejects.toThrow(expectedError);
+      },
+    );
+
+    it('rejects the full mixed unknown-key fixture instead of partially generating it', async () => {
+      const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
+      if (!fixture) {
+        throw new Error('Expected unknown-key-semantics fixture');
+      }
+
+      const source = await readZodFixture(fixture.path);
+      const result = parseZodSource(source);
+      expectNoParseErrors(fixture.name, 'Scenario 2 arbitrary-input parse', result);
+
+      const openApiDoc = writeOpenApi(result.ir);
+
+      await expect(generateZodFromOpenAPI(openApiDoc)).rejects.toThrow(
+        RECURSIVE_UNKNOWN_KEY_FAILURE,
+      );
+    });
   });
 
   describe('Idempotency: Normalized output is stable', () => {
     it.each(ZOD_FIXTURES)(
-      '%s: normalized output is byte-identical on second pass',
-      async (_name, path) => {
+      '$name: normalized output is byte-identical on second pass',
+      async (fixture) => {
         // First pass: arbitrary Zod → normalized Zod
-        const source = await readZodFixture(path);
+        const source = await readZodFixture(fixture.path);
         const result1 = parseZodSource(source);
-        expectNoParseErrors(_name, 'Scenario 2 arbitrary-input parse', result1);
+        expectNoParseErrors(fixture.name, 'Scenario 2 arbitrary-input parse', result1);
+
+        const roundTripIR = selectFixtureRoundTripDocument(fixture, result1.ir);
 
         // Generate first normalized output
-        const openApiDoc1 = writeOpenApi(result1.ir);
+        const openApiDoc1 = writeOpenApi(roundTripIR);
         const normalizedOutput1 = await generateZodFromOpenAPI(openApiDoc1);
 
         // Second pass: normalized Zod → IR → normalized Zod
         const result2 = parseZodSource(normalizedOutput1);
-        expectNoParseErrors(_name, 'Scenario 2 normalized-output parse', result2);
+        expectNoParseErrors(fixture.name, 'Scenario 2 normalized-output parse', result2);
         const openApiDoc2 = writeOpenApi(result2.ir);
         const normalizedOutput2 = await generateZodFromOpenAPI(openApiDoc2);
 
@@ -154,19 +230,21 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
 
   describe('Functional Equivalence: Validation Parity', () => {
     it.each(ZOD_FIXTURES)(
-      '%s: Zod → IR → Zod yields identical validation behavior',
-      async (_name, path) => {
-        const source = await readZodFixture(path);
+      '$name: Zod → IR → Zod yields identical validation behavior',
+      async (fixture) => {
+        const source = await readZodFixture(fixture.path);
         const result1 = parseZodSource(source);
+        expectNoParseErrors(fixture.name, 'Scenario 2 arbitrary-input parse', result1);
 
-        const openApiDoc = writeOpenApi(result1.ir);
+        const openApiDoc = writeOpenApi(selectFixtureRoundTripDocument(fixture, result1.ir));
         const zodOutput = await generateZodFromOpenAPI(openApiDoc);
 
         // Load both sets of schemas dynamically to run payloads
         const originalSchemas = await loadDynamicZodSchemas(source);
         const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
 
-        assertValidationParity(_name, originalSchemas, transformedSchemas);
+        assertValidationParity(fixture.name, originalSchemas, transformedSchemas);
+        assertParsedOutputParity(fixture.name, originalSchemas, transformedSchemas);
       },
     );
   });

@@ -11,9 +11,9 @@
 import type { CodeBlockWriter } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
 
-const SCHEMA_TYPE_STRING = 'string' as const;
-const SCHEMA_TYPE_INTEGER = 'integer' as const;
-const VALIDATION_INT = '.int()' as const;
+const SCHEMA_TYPE_STRING = 'string';
+const SCHEMA_TYPE_INTEGER = 'integer';
+const VALIDATION_INT = '.int()';
 
 /**
  * Write Zod schema for primitive types.

@@ -11,6 +11,12 @@
  * @internal
  */
 
+import {
+  UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY,
+  UNKNOWN_KEY_MODE_CATCHALL,
+  UNKNOWN_KEY_MODE_STRICT,
+  getPortableUnknownKeyBehaviorExtension,
+} from '../../ir/index.js';
 import type { CastrSchema } from '../../ir/index.js';
 import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
 import { isSchemaObjectType } from './json-schema-object.js';
@@ -105,6 +111,25 @@ function writeAdditionalProperties(
   result: JsonSchemaObject,
   writeSchema: WriteSchemaFn,
 ): void {
+  if (schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_STRICT) {
+    result.additionalProperties = false;
+    return;
+  }
+
+  if (schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_CATCHALL) {
+    result.additionalProperties = writeSchema(schema.unknownKeyBehavior.schema);
+    return;
+  }
+
+  const portableUnknownKeyBehavior = getPortableUnknownKeyBehaviorExtension(
+    schema.unknownKeyBehavior,
+  );
+  if (portableUnknownKeyBehavior !== undefined) {
+    result.additionalProperties = true;
+    result[UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY] = portableUnknownKeyBehavior;
+    return;
+  }
+
   if (schema.additionalProperties === undefined) {
     return;
   }

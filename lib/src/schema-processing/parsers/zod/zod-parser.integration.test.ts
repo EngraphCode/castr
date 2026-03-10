@@ -122,6 +122,23 @@ describe('Zod Parser Integration', () => {
       expect(parseError?.location?.column).toBeGreaterThan(0);
     });
 
+    it('should reject unparseable catchall schemas with source context instead of degrading', () => {
+      const source = `
+        const BrokenCatchallSchema = z.object({
+          id: z.string(),
+        }).catchall(UnknownSchema);
+      `;
+      const result = parseZodSource(source);
+
+      expect(result.ir.components).toHaveLength(0);
+
+      const parseError = result.errors.find((e: { code: string }) => e.code === 'PARSE_ERROR');
+      expect(parseError).toBeDefined();
+      expect(parseError?.message).toContain('BrokenCatchallSchema');
+      expect(parseError?.message).toContain('Unsupported or unparseable Zod .catchall() schema');
+      expect(parseError?.location).toBeDefined();
+    });
+
     it('should return empty IR for invalid source', () => {
       const source = `
         not valid javascript

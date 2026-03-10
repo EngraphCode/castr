@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isReferenceObject, type SchemaObject } from 'openapi3-ts/oas31';
+import { isReferenceObject } from 'openapi3-ts/oas31';
 
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import {
@@ -17,7 +17,7 @@ describe('Characterisation: JSON Schema conversion & security extraction', () =>
       throw new Error('CreateUserInput schema should be inline for this fixture');
     }
 
-    const jsonSchema = convertOpenApiSchemaToJsonSchema(schema as SchemaObject);
+    const jsonSchema = convertOpenApiSchemaToJsonSchema(schema);
 
     expect(jsonSchema).toMatchSnapshot();
   });

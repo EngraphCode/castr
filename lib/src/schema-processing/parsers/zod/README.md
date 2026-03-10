@@ -75,9 +75,11 @@ const result = parseZodSource(source);
 
 ## Object Unknown-Key Semantics
 
-- `.strict()` parses as `additionalProperties: false`.
-- `.passthrough()`, explicit `.strip()`, and default `z.object()` parse as `additionalProperties: true`.
-- This reflects **validation acceptance semantics** in the IR: strip and passthrough differ in parsed output shape, but both accept unknown keys during validation.
+- `.strict()` parses as `unknownKeyBehavior: { mode: 'strict' }` and `additionalProperties: false`.
+- Default `z.object()` and explicit `.strip()` parse as `unknownKeyBehavior: { mode: 'strip' }` and `additionalProperties: true`.
+- `.passthrough()` parses as `unknownKeyBehavior: { mode: 'passthrough' }` and `additionalProperties: true`.
+- `.catchall(schema)` parses as `unknownKeyBehavior: { mode: 'catchall', schema }` and schema-valued `additionalProperties`.
+- `additionalProperties` remains the portable acceptance view; `unknownKeyBehavior` is the runtime-behaviour field.
 
 ## See Also
 

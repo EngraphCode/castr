@@ -5,15 +5,15 @@ import type { HttpMethod } from '../../../endpoints/definition.types.js';
 type McpToolHints = Pick<ToolAnnotations, 'readOnlyHint' | 'destructiveHint' | 'idempotentHint'>;
 
 const READ_ONLY_METHODS = new Set<HttpMethod>(['get', 'head', 'options']);
-const UNDERSCORE_TOKEN = '_' as const;
-const PATH_SEPARATOR = '/' as const;
-const ROOT_SEGMENT = 'root' as const;
-const BRACE_SEGMENT_CHARS = '{}' as const;
-const OPEN_BRACE = '{' as const;
-const CLOSE_BRACE = '}' as const;
-const COLON_PREFIX = ':' as const;
-const METHOD_DELETE = 'delete' as const;
-const METHOD_PUT = 'put' as const;
+const UNDERSCORE_TOKEN = '_';
+const PATH_SEPARATOR = '/';
+const ROOT_SEGMENT = 'root';
+const BRACE_SEGMENT_CHARS = '{}';
+const OPEN_BRACE = '{';
+const CLOSE_BRACE = '}';
+const COLON_PREFIX = ':';
+const METHOD_DELETE = 'delete';
+const METHOD_PUT = 'put';
 
 const normalizeSeparators = (value: string): string => {
   const segments = split(value, UNDERSCORE_TOKEN);

@@ -12,6 +12,7 @@
  */
 
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
+import type { PortableUnknownKeyBehaviorMode } from '../../ir/index.js';
 
 /**
  * JSON Schema 2020-12 with keywords not modelled by openapi3-ts.
@@ -29,4 +30,5 @@ export interface JsonSchema2020 extends SchemaObject {
   dependentRequired?: Record<string, string[]>;
   minContains?: number;
   maxContains?: number;
+  'x-castr-unknownKeyBehavior'?: PortableUnknownKeyBehaviorMode;
 }

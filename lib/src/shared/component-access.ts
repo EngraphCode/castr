@@ -24,10 +24,10 @@ import { isReferenceObject } from 'openapi3-ts/oas31';
 import { parseComponentRef } from './ref-resolution.js';
 import { isRecord } from './type-utils/types.js';
 
-const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas' as const;
-const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters' as const;
-const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses' as const;
-const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies' as const;
+const OPENAPI_COMPONENT_TYPE_SCHEMAS = 'schemas';
+const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters';
+const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses';
+const OPENAPI_COMPONENT_TYPE_REQUEST_BODIES = 'requestBodies';
 
 function isSchemaObjectOrRef(value: unknown): value is SchemaObject | ReferenceObject {
   return isRecord(value) && (isReferenceObject(value) || true);

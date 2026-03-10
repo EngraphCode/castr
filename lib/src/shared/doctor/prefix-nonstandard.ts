@@ -12,10 +12,10 @@ type ScalarValidationResult = Awaited<ReturnType<typeof validate>>;
 
 import { extractPropertyName, unescapePointerSegment } from './pointer-utils.js';
 
-const X_NONSTANDARD_PREFIX = 'x-nonstandard-' as const;
-const SLASH = '/' as const;
-const EMPTY_STRING = '' as const;
-const UNKNOWN_ERROR = 'Unknown error' as const;
+const X_NONSTANDARD_PREFIX = 'x-nonstandard-';
+const SLASH = '/';
+const EMPTY_STRING = '';
+const UNKNOWN_ERROR = 'Unknown error';
 
 function extractSafeErrors(validationResult: ScalarValidationResult): readonly ValidationError[] {
   const rawErrors = validationResult.valid ? [] : (validationResult.errors ?? []);

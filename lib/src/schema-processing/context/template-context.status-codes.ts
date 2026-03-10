@@ -6,13 +6,13 @@
  * @module context/template-context.status-codes
  */
 
-export const STATUS_DEFAULT = 'default' as const;
-export const STATUS_200 = '200' as const;
-export const STATUS_201 = '201' as const;
-export const STATUS_202 = '202' as const;
-export const STATUS_203 = '203' as const;
-export const STATUS_204 = '204' as const;
-export const STATUS_2XX = '2XX' as const;
+export const STATUS_DEFAULT = 'default';
+export const STATUS_200 = '200';
+export const STATUS_201 = '201';
+export const STATUS_202 = '202';
+export const STATUS_203 = '203';
+export const STATUS_204 = '204';
+export const STATUS_2XX = '2XX';
 
 const SUCCESS_STATUS_CODES = new Set<string>([
   STATUS_200,

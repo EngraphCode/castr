@@ -1,7 +1,7 @@
 import { sortBy, snakeCase, startsWith } from 'lodash-es';
 import { getSchemaNameFromRef as getSchemaName } from '../../ref-resolution.js';
 
-const LOCAL_REF_PREFIX = '#/' as const;
+const LOCAL_REF_PREFIX = '#/';
 
 /**
  * Extract and normalize schema name from a component schema $ref

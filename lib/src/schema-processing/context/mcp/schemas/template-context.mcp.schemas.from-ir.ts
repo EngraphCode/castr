@@ -24,13 +24,13 @@ import {
 import { inlineJsonSchemaRefsFromIR } from './template-context.mcp.inline-json-schema.js';
 import type { McpToolSchemaResult } from './template-context.mcp.schemas.js';
 
-const SCHEMA_TYPE_OBJECT = 'object' as const;
-const SCHEMA_KEY_METADATA = 'metadata' as const;
-const SCHEMA_KEY_REF = '$ref' as const;
-const INPUT_SECTION_PATH = 'path' as const;
-const INPUT_SECTION_QUERY = 'query' as const;
-const INPUT_SECTION_HEADERS = 'headers' as const;
-const INPUT_SECTION_BODY = 'body' as const;
+const SCHEMA_TYPE_OBJECT = 'object';
+const SCHEMA_KEY_METADATA = 'metadata';
+const SCHEMA_KEY_REF = '$ref';
+const INPUT_SECTION_PATH = 'path';
+const INPUT_SECTION_QUERY = 'query';
+const INPUT_SECTION_HEADERS = 'headers';
+const INPUT_SECTION_BODY = 'body';
 
 /**
  * Check if a schema is or could be an object type.

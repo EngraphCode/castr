@@ -20,8 +20,8 @@ import {
   ZOD_METHOD_XOR,
 } from '../zod-constants.js';
 
-const UNION_OUTPUT_KEY_ANY_OF = 'anyOf' as const;
-const UNION_OUTPUT_KEY_ONE_OF = 'oneOf' as const;
+const UNION_OUTPUT_KEY_ANY_OF = 'anyOf';
+const UNION_OUTPUT_KEY_ONE_OF = 'oneOf';
 
 // ============================================================================
 // Helper functions

@@ -78,36 +78,37 @@ See:
 
 ---
 
-## Limitation: Recursive `.passthrough()` Remains Unsafe
+## Limitation: Recursive Unknown-Key-Preserving Output Still Fails Fast
 
-Recursive object schemas currently cannot safely emit `.passthrough()` in canonical generated Zod.
+Recursive object schemas still cannot safely emit unknown-key-preserving output (`.passthrough()` or `.catchall(...)`) in canonical generated Zod.
 
 ### Current Accepted Behavior
 
-- Recursive objects fall back to getter-based schemas without `.passthrough()`.
-- This preserves `safeParse(...).success` parity because both strip and passthrough accept unknown keys at validation time.
-- It does **not** preserve parsed-output retention of unknown keys.
+- Zod parsing preserves `strict`, `strip`, `passthrough`, and `catchall` distinctly in IR.
+- OpenAPI / JSON Schema preserve strip vs passthrough through `x-castr-unknownKeyBehavior` when required.
+- Non-recursive Zod generation emits the exact unknown-key method for all four modes.
+- Recursive strip remains supported via bare `z.object({...})`, which is strip-mode by default in Zod.
+- Recursive `.passthrough()` and recursive `.catchall()` fail fast with explicit generation errors.
 
 Architecture status:
 
-- This limitation is now classified as a **cross-layer semantic loss**, not a writer-only runtime quirk.
-- The first confirmed loss point is the Zod object parser, which currently collapses strip and passthrough to the same IR acceptance shape.
-- Typed unknown-key behavior via `.catchall(schema)` is part of the same seam.
-- Durable investigation and policy now live in [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md) and [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md).
+- The parser/IR/cross-format loss has been remediated.
+- The remaining limitation is now a narrow **writer/runtime construction boundary**.
+- Durable investigation and policy live in [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md) and [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md).
 
 ### Impact
 
-- Scenario 2 / 4 / 6 validation parity remains green, so this does not currently appear as a failing transform.
-- Parsed output can differ from the original runtime behavior because unknown keys are stripped instead of preserved.
-- Any downstream code that relies on recursive schemas preserving unknown keys after parsing will see a real behavioral regression.
+- There is no longer any silent semantic downgrade for recursive preserving modes.
+- Callers now receive an explicit generation error instead of an apparently green transform with altered parsed output.
+- Parsed-output parity is now proven for supported unknown-key cases in Scenario 2 / 4 / 6.
+- A caller who needs recursive preserving output in generated Zod must currently stop at IR / OpenAPI / JSON Schema or accept the explicit generation failure.
 
 ### Underlying Cause
 
-- The parser currently collapses default `strip`, explicit `.strip()`, and `.passthrough()` into `additionalProperties: true`, so output-retention semantics are already lost at first parse.
-- `.catchall(schema)` currently degrades to the same acceptance-only shape, losing typed unknown-key behavior.
 - In Zod 4, `.passthrough()` and `.catchall()` eagerly evaluate getter-backed object shapes.
 - Recursive getters therefore read the schema identifier before initialization completes.
-- That runtime behavior blocks safe canonical recursive reconstruction today.
+- That runtime behavior blocks safe canonical recursive preserving reconstruction today.
+- Recursive strip does not share this limitation if emitted as bare `z.object({...})`, because strip is Zod's default object mode.
 
 ### Example
 
@@ -124,39 +125,25 @@ export const Category = z
   .passthrough();
 ```
 
-Current safe canonical output:
+Current behavior:
 
 ```ts
-export const Category = z.object({
-  name: z.string(),
-  get subcategories() {
-    return z.array(Category);
-  },
-});
-```
-
-Behavioral difference:
-
-```ts
-// Original passthrough schema
-Category.parse({ name: 'root', extra: true }).extra; // true
-
-// Current generated recursive schema
-Category.parse({ name: 'root', extra: true }).extra; // undefined
+// generation throws:
+// Recursive object schemas with unknown-key behavior "passthrough"
+// cannot yet be emitted safely in Zod.
 ```
 
 ### What A Fundamental Answer Must Solve
 
-- first-class IR semantics for object unknown-key behavior
-- parsed-output parity proofs, not only validation parity
-- either a safe recursive reconstruction strategy or a clear fail-fast error for unsupported recursive unknown-key-preserving output
-- explicit cross-format preservation policy for strip vs passthrough semantics
+- recursive initialization safety
+- canonical getter-based output
+- parsed-output retention of unknown keys
+- typed catchall validation where applicable
 
 Current architectural direction:
 
-- preserve semantics in IR
-- preserve strip vs passthrough through OpenAPI / JSON Schema with governed extension where needed
-- fail fast instead of silently stripping unknown keys when recursive Zod output cannot be reconstructed safely yet
+- keep preserving semantics in IR and portable artifacts
+- keep failing fast for unsupported recursive preserving output until a safe construction strategy exists
 
 See:
 

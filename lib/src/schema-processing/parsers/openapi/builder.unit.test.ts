@@ -6,13 +6,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type {
-  ComponentsObject,
-  OpenAPIObject,
-  OperationObject,
-  PathsObject,
-  SchemaObject,
-} from 'openapi3-ts/oas31';
+import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
 import { buildIR, buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
 import type { CastrDocument } from '../../ir/index.js';
@@ -25,7 +19,7 @@ describe('buildCastrSchemas', () => {
           Username: {
             type: 'string',
             description: 'User name',
-          } as SchemaObject,
+          },
         },
       };
 
@@ -53,7 +47,7 @@ describe('buildCastrSchemas', () => {
             description: 'User age',
             minimum: 0,
             maximum: 150,
-          } as SchemaObject,
+          },
         },
       };
 
@@ -70,7 +64,7 @@ describe('buildCastrSchemas', () => {
           IsActive: {
             type: 'boolean',
             description: 'Active status',
-          } as SchemaObject,
+          },
         },
       };
 
@@ -87,7 +81,7 @@ describe('buildCastrSchemas', () => {
           Count: {
             type: 'integer',
             format: 'int32',
-          } as SchemaObject,
+          },
         },
       };
 
@@ -103,7 +97,7 @@ describe('buildCastrSchemas', () => {
           NullableString: {
             type: ['string', 'null'],
             description: 'Optional string',
-          } as SchemaObject,
+          },
         },
       };
 
@@ -116,9 +110,9 @@ describe('buildCastrSchemas', () => {
     it('should handle multiple primitive schemas', () => {
       const components: ComponentsObject = {
         schemas: {
-          Name: { type: 'string' } as SchemaObject,
-          Age: { type: 'number' } as SchemaObject,
-          Active: { type: 'boolean' } as SchemaObject,
+          Name: { type: 'string' },
+          Age: { type: 'number' },
+          Active: { type: 'boolean' },
         },
       };
 
@@ -136,11 +130,11 @@ describe('buildCastrSchemas', () => {
           User: {
             type: 'object',
             properties: {
-              name: { type: 'string' } as SchemaObject,
-              age: { type: 'number' } as SchemaObject,
+              name: { type: 'string' },
+              age: { type: 'number' },
             },
             required: ['name'],
-          } as SchemaObject,
+          },
         },
       };
 
@@ -160,11 +154,11 @@ describe('buildCastrSchemas', () => {
           Pet: {
             type: 'object',
             properties: {
-              name: { type: 'string' } as SchemaObject,
-              tag: { type: 'string' } as SchemaObject,
+              name: { type: 'string' },
+              tag: { type: 'string' },
             },
             required: ['name'],
-          } as SchemaObject,
+          },
         },
       };
 
@@ -181,23 +175,23 @@ describe('buildCastrSchemas', () => {
           Address: {
             type: 'object',
             properties: {
-              street: { type: 'string' } as SchemaObject,
-              city: { type: 'string' } as SchemaObject,
+              street: { type: 'string' },
+              city: { type: 'string' },
             },
-          } as SchemaObject,
+          },
           Person: {
             type: 'object',
             properties: {
-              name: { type: 'string' } as SchemaObject,
+              name: { type: 'string' },
               address: {
                 type: 'object',
                 properties: {
-                  street: { type: 'string' } as SchemaObject,
-                  city: { type: 'string' } as SchemaObject,
+                  street: { type: 'string' },
+                  city: { type: 'string' },
                 },
-              } as SchemaObject,
+              },
             },
-          } as SchemaObject,
+          },
         },
       };
 
@@ -215,7 +209,7 @@ describe('buildCastrSchemas', () => {
         schemas: {
           EmptyObject: {
             type: 'object',
-          } as SchemaObject,
+          },
         },
       };
 
@@ -232,8 +226,8 @@ describe('buildCastrSchemas', () => {
         schemas: {
           StringArray: {
             type: 'array',
-            items: { type: 'string' } as SchemaObject,
-          } as SchemaObject,
+            items: { type: 'string' },
+          },
         },
       };
 
@@ -256,10 +250,10 @@ describe('buildCastrSchemas', () => {
             items: {
               type: 'object',
               properties: {
-                id: { type: 'number' } as SchemaObject,
+                id: { type: 'number' },
               },
-            } as SchemaObject,
-          } as SchemaObject,
+            },
+          },
         },
       };
 
@@ -279,10 +273,10 @@ describe('buildCastrSchemas', () => {
         schemas: {
           Dog: {
             allOf: [
-              { type: 'object', properties: { name: { type: 'string' } } } as SchemaObject,
-              { type: 'object', properties: { breed: { type: 'string' } } } as SchemaObject,
+              { type: 'object', properties: { name: { type: 'string' } } },
+              { type: 'object', properties: { breed: { type: 'string' } } },
             ],
-          } as SchemaObject,
+          },
         },
       };
 
@@ -299,10 +293,10 @@ describe('buildCastrSchemas', () => {
         schemas: {
           Pet: {
             oneOf: [
-              { type: 'object', properties: { bark: { type: 'boolean' } } } as SchemaObject,
-              { type: 'object', properties: { meow: { type: 'boolean' } } } as SchemaObject,
+              { type: 'object', properties: { bark: { type: 'boolean' } } },
+              { type: 'object', properties: { meow: { type: 'boolean' } } },
             ],
-          } as SchemaObject,
+          },
         },
       };
 
@@ -317,8 +311,8 @@ describe('buildCastrSchemas', () => {
       const components: ComponentsObject = {
         schemas: {
           Value: {
-            anyOf: [{ type: 'string' } as SchemaObject, { type: 'number' } as SchemaObject],
-          } as SchemaObject,
+            anyOf: [{ type: 'string' }, { type: 'number' }],
+          },
         },
       };
 
@@ -335,16 +329,13 @@ describe('buildCastrSchemas', () => {
           LinkedListNode: {
             type: 'object',
             properties: {
-              data: { type: 'string' } as SchemaObject,
+              data: { type: 'string' },
               next: {
-                anyOf: [
-                  { $ref: '#/components/schemas/LinkedListNode' },
-                  { type: 'null' } as SchemaObject,
-                ],
-              } as SchemaObject,
+                anyOf: [{ $ref: '#/components/schemas/LinkedListNode' }, { type: 'null' }],
+              },
             },
             required: ['data', 'next'],
-          } as SchemaObject,
+          },
         },
       };
 
@@ -368,13 +359,13 @@ describe('buildCastrSchemas', () => {
             properties: {
               address: { $ref: '#/components/schemas/Address' },
             },
-          } as SchemaObject,
+          },
           Address: {
             type: 'object',
             properties: {
-              street: { type: 'string' } as SchemaObject,
+              street: { type: 'string' },
             },
-          } as SchemaObject,
+          },
         },
       };
 
@@ -428,7 +419,7 @@ describe('buildIR', () => {
             properties: {
               name: { type: 'string' },
             },
-          } as SchemaObject,
+          },
         },
       },
     };
@@ -459,9 +450,9 @@ describe('buildCastrOperations', () => {
                   description: 'Success',
                 },
               },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -492,9 +483,9 @@ describe('buildCastrOperations', () => {
                   description: 'Success',
                 },
               },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -521,15 +512,15 @@ describe('buildCastrOperations', () => {
             get: {
               operationId: 'getUsers',
               responses: { '200': { description: 'Success' } },
-            } as OperationObject,
+            },
           },
           '/pets': {
             get: {
               operationId: 'getPets',
               responses: { '200': { description: 'Success' } },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -551,13 +542,13 @@ describe('buildCastrOperations', () => {
             get: {
               operationId: 'getUsers',
               responses: { '200': { description: 'Success' } },
-            } as OperationObject,
+            },
             post: {
               operationId: 'createUser',
               responses: { '201': { description: 'Created' } },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -590,13 +581,13 @@ describe('buildCastrOperations', () => {
                   name: 'userId',
                   in: 'path',
                   required: true,
-                  schema: { type: 'string' } as SchemaObject,
+                  schema: { type: 'string' },
                 },
                 {
                   name: 'include',
                   in: 'query',
                   required: false,
-                  schema: { type: 'string' } as SchemaObject,
+                  schema: { type: 'string' },
                 },
               ],
               responses: {
@@ -604,9 +595,9 @@ describe('buildCastrOperations', () => {
                   description: 'Success',
                 },
               },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -647,7 +638,7 @@ describe('buildCastrOperations', () => {
                         email: { type: 'string' },
                       },
                       required: ['name', 'email'],
-                    } as SchemaObject,
+                    },
                   },
                 },
               },
@@ -656,9 +647,9 @@ describe('buildCastrOperations', () => {
                   description: 'Created',
                 },
               },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -687,8 +678,8 @@ describe('buildCastrOperations', () => {
                     'application/json': {
                       schema: {
                         type: 'array',
-                        items: { type: 'object' } as SchemaObject,
-                      } as SchemaObject,
+                        items: { type: 'object' },
+                      },
                     },
                   },
                 },
@@ -699,9 +690,9 @@ describe('buildCastrOperations', () => {
                   description: 'Internal Server Error',
                 },
               },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -737,9 +728,9 @@ describe('buildCastrOperations', () => {
                   description: 'Created',
                 },
               },
-            } as OperationObject,
+            },
           },
-        } as PathsObject,
+        },
       };
 
       const result = buildIR(doc);
@@ -764,9 +755,9 @@ describe('buildIR - IR-1 enhancements', () => {
         paths: {},
         components: {
           schemas: {
-            User: { type: 'object' } as SchemaObject,
-            Address: { type: 'object' } as SchemaObject,
-            Pet: { type: 'object' } as SchemaObject,
+            User: { type: 'object' },
+            Address: { type: 'object' },
+            Pet: { type: 'object' },
           },
         },
       };
@@ -796,7 +787,7 @@ describe('buildIR - IR-1 enhancements', () => {
         paths: {},
         components: {
           schemas: {
-            User: { type: 'object' } as SchemaObject,
+            User: { type: 'object' },
           },
         },
         'x-ext': {
@@ -830,8 +821,8 @@ describe('buildIR - IR-1 enhancements', () => {
               properties: {
                 address: { $ref: '#/components/schemas/Address' },
               },
-            } as SchemaObject,
-            Address: { type: 'object' } as SchemaObject,
+            },
+            Address: { type: 'object' },
           },
         },
       };
@@ -856,8 +847,8 @@ describe('buildIR - IR-1 enhancements', () => {
               properties: {
                 address: { $ref: '#/components/schemas/Address' },
               },
-            } as SchemaObject,
-            Address: { type: 'object' } as SchemaObject,
+            },
+            Address: { type: 'object' },
           },
         },
       };
@@ -884,7 +875,7 @@ describe('buildIR - IR-1 enhancements', () => {
               properties: {
                 child: { $ref: '#/components/schemas/Node' },
               },
-            } as SchemaObject,
+            },
           },
         },
       };
@@ -893,6 +884,35 @@ describe('buildIR - IR-1 enhancements', () => {
 
       // Should detect the self-referential cycle
       expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
+    });
+
+    it('should detect circular references through additionalProperties', () => {
+      const doc: OpenAPIObject = {
+        openapi: '3.1.0',
+        info: { title: 'Test API', version: '1.0.0' },
+        paths: {},
+        components: {
+          schemas: {
+            Node: {
+              type: 'object',
+              additionalProperties: { $ref: '#/components/schemas/Node' },
+            },
+          },
+        },
+      };
+
+      const result = buildIR(doc);
+      const nodeComponent = result.components.find(
+        (component) => component.type === 'schema' && component.name === 'Node',
+      );
+
+      expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
+      if (!nodeComponent || nodeComponent.type !== 'schema') {
+        throw new Error('Expected Node schema component');
+      }
+      expect(nodeComponent.schema.metadata.circularReferences).toContain(
+        '#/components/schemas/Node',
+      );
     });
 
     it('should throw on malformed schema refs during circular reference extraction', () => {
@@ -941,8 +961,8 @@ describe('buildIR - IR-1 enhancements', () => {
               properties: {
                 address: { $ref: '#/components/schemas/Address' },
               },
-            } as SchemaObject,
-            Address: { type: 'object' } as SchemaObject,
+            },
+            Address: { type: 'object' },
           },
         },
       };

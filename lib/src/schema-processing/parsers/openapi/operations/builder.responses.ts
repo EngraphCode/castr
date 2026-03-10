@@ -22,7 +22,7 @@ import {
 } from '../components/builder.component-ref-resolution.js';
 import type { CastrResponse, IRMediaType, IRResponseHeader } from '../../../ir/index.js';
 
-const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses' as const;
+const OPENAPI_COMPONENT_TYPE_RESPONSES = 'responses';
 
 /**
  * Type guard to check if a value is a ResponseObject or ReferenceObject.

@@ -16,8 +16,8 @@ import {
   parseComponentNameForType,
 } from '../components/builder.component-ref-resolution.js';
 
-const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters' as const;
-const PARAMETER_LOCATION_PATH = 'path' as const;
+const OPENAPI_COMPONENT_TYPE_PARAMETERS = 'parameters';
+const PARAMETER_LOCATION_PATH = 'path';
 
 /**
  * Safely convert OpenAPI example value (typed as 'any') to unknown.

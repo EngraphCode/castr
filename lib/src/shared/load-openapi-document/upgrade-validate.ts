@@ -10,9 +10,9 @@ import { split } from 'lodash-es';
 import { isOpenAPIObject } from '../../validation/cli-type-guards.js';
 import type { BundledOpenApiDocument } from './bundle/bundle-metadata.types.js';
 
-const OPENAPI_VERSION_SEPARATOR = '.' as const;
-const OPENAPI_VERSION_MAJOR_3 = '3' as const;
-const OPENAPI_VERSION_MINOR_1 = '1' as const;
+const OPENAPI_VERSION_SEPARATOR = '.';
+const OPENAPI_VERSION_MAJOR_3 = '3';
+const OPENAPI_VERSION_MINOR_1 = '1';
 
 /**
  * Type guard for BundledOpenApiDocument (intersection type).

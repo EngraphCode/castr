@@ -140,6 +140,7 @@ test('array-body-with-chains-tag-group-strategy', async () => {
                       properties: { testItem: { type: "string" } },
                       required: [],
                       additionalProperties: false,
+                      unknownKeyBehavior: { mode: "strict" },
                     },
                   },
                 },

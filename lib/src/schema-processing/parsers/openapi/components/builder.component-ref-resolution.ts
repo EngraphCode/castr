@@ -1,7 +1,7 @@
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
 
-const STANDARD_COMPONENT_REF_PREFIX = '#/components/' as const;
-const X_EXT_COMPONENT_REF_PREFIX = '#/x-ext/' as const;
+const STANDARD_COMPONENT_REF_PREFIX = '#/components/';
+const X_EXT_COMPONENT_REF_PREFIX = '#/x-ext/';
 const EXPECTED_COMPONENT_REF_FORMAT =
   'Expected format: #/components/{type}/{name} or #/x-ext/{hash}/components/{type}/{name}.' as const;
 

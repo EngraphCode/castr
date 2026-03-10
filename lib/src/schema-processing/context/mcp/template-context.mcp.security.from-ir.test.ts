@@ -25,8 +25,7 @@ function createMockOperationWithSecurity(
   security: IRSecurityRequirement[] | 'omit',
 ): Pick<CastrOperation, 'security'> {
   if (security === 'omit') {
-    // Use object without security property to simulate undefined
-    return {} as Pick<CastrOperation, 'security'>;
+    return {};
   }
   return { security };
 }
