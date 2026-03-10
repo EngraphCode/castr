@@ -13,7 +13,7 @@ it('use main-description-as-fallback', async () => {
       },
       required: ['str', 'nb'],
     },
-  } as SchemasObject;
+  } satisfies SchemasObject;
 
   const openApiDoc = {
     openapi: '3.0.3',

@@ -4,7 +4,7 @@
 **Priority:** High  
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-09  
-**Parent:** [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md)
+**Parent:** [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md)
 
 ---
 

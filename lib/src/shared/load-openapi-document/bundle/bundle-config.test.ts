@@ -131,8 +131,10 @@ describe('bundle-config', () => {
         message: 'Test error',
       };
 
-      // Cast needed as Scalar's hook expects unknown object structure
-      config.hooks?.onResolveError?.(mockNode as never);
+      config.hooks?.onResolveError?.({
+        $ref: '#/components/schemas/Test',
+        ...mockNode,
+      });
 
       expect(warnings).toHaveLength(1);
       expect(warnings[0]).toEqual({
@@ -146,9 +148,16 @@ describe('bundle-config', () => {
       const warnings: OTTBundleWarning[] = [];
       const config = createBundleConfig(mockFilePlugin, mockUrlPlugin, undefined, warnings);
 
-      // Cast needed as Scalar's hook expects unknown object structure
-      config.hooks?.onResolveError?.({ pointer: '/error1', message: 'Error 1' } as never);
-      config.hooks?.onResolveError?.({ pointer: '/error2', message: 'Error 2' } as never);
+      config.hooks?.onResolveError?.({
+        $ref: '#/components/schemas/ErrorOne',
+        pointer: '/error1',
+        message: 'Error 1',
+      });
+      config.hooks?.onResolveError?.({
+        $ref: '#/components/schemas/ErrorTwo',
+        pointer: '/error2',
+        message: 'Error 2',
+      });
 
       expect(warnings).toHaveLength(2);
       expect(warnings[0]?.message).toBe('Error 1');

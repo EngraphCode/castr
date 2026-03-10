@@ -44,7 +44,7 @@ test('deps-graph-with-additionalProperties', () => {
         $ref: 'ResponseItem',
       },
     },
-  } as SchemasObject;
+  } satisfies SchemasObject;
   const openApiDoc = makeOpenApiDoc(schemas, { $ref: 'ResponsesMap' });
   expect(
     getOpenApiDependencyGraph(

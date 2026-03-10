@@ -14,7 +14,7 @@ it('determines which one is-main-response', async () => {
       required: ['str', 'nb'],
     },
     AnotherSuccess: { type: 'number' },
-  } as SchemasObject;
+  } satisfies SchemasObject;
 
   const openApiDoc = {
     openapi: '3.0.3',

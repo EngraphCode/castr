@@ -149,7 +149,7 @@ test('with optional, partial, all required objects', async () => {
       type: 'string',
       enum: ['aaa', 'bbb', 'ccc'],
     },
-  } as SchemasObject;
+  } satisfies SchemasObject;
   const openApiDoc = {
     openapi: '3.0.3',
     info: { title: 'Swagger Petstore - OpenAPI 3.0', version: '1.0.11' },

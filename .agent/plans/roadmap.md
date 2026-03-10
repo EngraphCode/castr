@@ -33,38 +33,48 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice and core agent-system installation slice are complete. The repo's active next-work track remains type-safety remediation before the paused Zod workstream resumes.
+The Practice integration slice, core agent-system installation slice, and type-safety remediation workstream are complete. The repo's active next-work track now resumes the Zod limitations architecture investigation.
 
 Current status of that track:
 
-- doctrinal alignment is complete
-- lint-policy repair is complete
-- the first meaningful remediation tranche is complete
-- the Characterisation boundary cluster is complete
-- the MCP from-IR test cluster is complete
+- doctrinal alignment remains locked in
+- `as const` remains allowed literal-preservation infrastructure
+- `unknown` is valid only at incoming external boundaries and must be validated immediately
+- after validation, all types remain strict and no type information may be discarded or widened away
 - `pnpm type-check` is green
 - `pnpm format:check` is green
-- `pnpm lint` is green
+- `pnpm lint` is fully clean again
+- `@typescript-eslint/consistent-type-assertions` is restored to `error`
 - `pnpm test` is green
 - `pnpm check:ci` is green again after the normalization-cycle, Knip, and default-suite runtime repair slice
-- the residual `49` test, fixture, and harness assertion sites are temporarily surfaced as warnings while remediation continues
-- the next residual execution slice is the Shared loader and utility cluster captured in the active follow-up handoff
+- warning-producing gate cleanup is complete:
+  - `pnpm madge:circular` and `pnpm madge:orphans` are clean of the known external skipped-module warnings
+  - `pnpm knip` is clean of the stale `type-fest` configuration hint
+  - `pnpm character` is clean of the expected Scalar unreachable-URL stderr noise
+  - `pnpm test:transforms` is clean of the custom doctor/scalar diagnostic logging noise
+- all quality-gate issues, including warning-producing gate noise, are blocking at all times
+- the Characterisation boundary cluster is complete
+- the MCP from-IR test cluster is complete
+- the Shared loader and utility cluster is complete
+- the Snapshot regression cluster is complete
+- the remaining parser/writer low-count cluster is complete
+- the next primary slice is investigation-first across the remaining Zod limitations:
+  - recursive `.passthrough()` remains unsafe
+  - UUID v4 specificity is not preserved
+  - `int64` maps to `bigint` in Zod 4
 
 Primary active atomic plan:
 
-- [type-safety-remediation.md](./active/type-safety-remediation.md)
+- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
 
-Residual execution handoff for the remaining lint-only tranche:
+Paused supporting context that remains important:
 
-- [type-safety-remediation-follow-up.md](./active/type-safety-remediation-follow-up.md)
-
-Paused non-primary context that remains important:
-
-- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
 Recently completed adjacent remediation:
 
+- [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
+- [type-safety-remediation-follow-up.md](./current/complete/type-safety-remediation-follow-up.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
 
 ## Operational Practice Integration (Complete)
@@ -258,9 +268,9 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 
 Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
 
-Current parked Zod workstream context:
+Current Zod workstream context:
 
-- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
+- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
 

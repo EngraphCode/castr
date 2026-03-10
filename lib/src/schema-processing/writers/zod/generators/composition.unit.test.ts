@@ -11,7 +11,11 @@
 
 import { Project, VariableDeclarationKind } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
-import type { CastrSchema, CastrSchemaContext } from '../../../ir/index.js';
+import {
+  createMockCastrSchema,
+  type CastrSchema,
+  type CastrSchemaContext,
+} from '../../../ir/index.js';
 import { writeZodSchema } from '../index.js';
 
 describe('ZodCompositionWriter', () => {
@@ -37,7 +41,7 @@ describe('ZodCompositionWriter', () => {
   }
 
   function createMockSchema(overrides: Partial<CastrSchema> = {}): CastrSchema {
-    return {
+    return createMockCastrSchema({
       type: 'object',
       metadata: {
         required: true,
@@ -47,7 +51,7 @@ describe('ZodCompositionWriter', () => {
         zodChain: { presence: '', validations: [], defaults: [] },
       },
       ...overrides,
-    } as CastrSchema;
+    });
   }
 
   function createComponentContext(schema: CastrSchema): CastrSchemaContext {

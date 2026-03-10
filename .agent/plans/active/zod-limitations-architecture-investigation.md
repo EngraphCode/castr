@@ -1,15 +1,23 @@
-# Plan (Paused): Zod Limitations Architecture Investigation
+# Plan (Active): Zod Limitations Architecture Investigation
 
-**Status:** Paused  
+**Status:** Active  
 **Created:** 2026-03-09  
-**Last Updated:** 2026-03-09  
-**Predecessor:** Recursive Wrapper Remediation (complete)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/type-safety-remediation.md`
+**Last Updated:** 2026-03-10  
+**Predecessor:** [type-safety-remediation.md](../current/complete/type-safety-remediation.md)  
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../current/complete/type-safety-remediation-follow-up.md`
 
 ---
 
-**Paused On:** 2026-03-09  
-**Pause Reason:** A repo-wide type-safety remediation slice became the next atomic priority after correcting doctrine drift: `as const` remains allowed infrastructure, while non-const assertions remain banned. Resume this investigation after [type-safety-remediation.md](../../active/type-safety-remediation.md).
+This plan is now the **primary active atomic slice**.
+
+The type-safety remediation workstream is complete:
+
+- `pnpm lint` is fully clean again
+- `@typescript-eslint/consistent-type-assertions` is restored to `error`
+- `unknown` remains valid only at incoming external boundaries and must be validated immediately
+- after validation, types remain strict and no type information may be discarded or widened away
+
+The paused transform-proof budgeting investigation remains important supporting context, but it is **not** the next primary slice.
 
 ## Summary
 
@@ -40,11 +48,11 @@ The current limitations to investigate are:
 
 Companion investigation:
 
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
 
 Known completed remediation already established in this workstream:
 
-- [recursive-unknown-key-semantics-remediation.md](../complete/recursive-unknown-key-semantics-remediation.md)
+- [recursive-unknown-key-semantics-remediation.md](../current/complete/recursive-unknown-key-semantics-remediation.md)
 
 Do not create `future/` plans for this Zod workstream. Keep established fixes active until the current known limitation set is fully mapped and ordered for execution.
 
@@ -147,6 +155,19 @@ The investigation is successful only if all of the following are true:
 
 ## Progress Update (2026-03-09)
 
+### Activation Update (2026-03-10)
+
+- this investigation is promoted back into `active/` as the primary workstream
+- the completed type-safety remediation restored strict lint enforcement and removed the last residual assertion warnings
+- the companion transform-proof budgeting investigation remains paused and should only be pulled forward if runtime-cost questions become the highest-leverage blocker again
+- the quality-gate warning cleanup slice is complete:
+  - `pnpm madge:circular` and `pnpm madge:orphans` no longer emit the known external skipped-module warnings
+  - `pnpm knip` no longer emits the stale `type-fest` configuration hint
+  - `pnpm character` no longer emits the expected unreachable-URL stderr noise from Scalar
+  - `pnpm test:transforms` no longer prints custom doctor/scalar diagnostic logs
+- all quality-gate issues, including warning-producing gate noise, are blocking at all times
+- investigation should therefore start from a warning-clean gate surface, not from historic noisy output
+
 ### Tranche 0 Baseline Captured
 
 | Metric                                      | Value   | Interpretation                                  |
@@ -198,7 +219,7 @@ Before investigating individual limitations, do the following:
    - `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`
    - `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`
    - `docs/architectural_decision_records/ADR-035-transform-validation-parity.md`
-   - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md)
+   - [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 2. Execute the companion plan's Tranche 0 cost-baseline step before deep semantic analysis:
    - capture isolated heavy-proof runtime
    - capture full-suite transform runtime

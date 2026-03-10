@@ -12,7 +12,7 @@
 import { Project } from 'ts-morph';
 import { describe, expect, it } from 'vitest';
 import { writePrimitiveSchema, filterRedundantValidations } from './primitives.js';
-import type { CastrSchema } from '../../../ir/index.js';
+import { createMockCastrSchema, type CastrSchema } from '../../../ir/index.js';
 
 describe('ZodPrimitivesWriter', () => {
   const project = new Project({ useInMemoryFileSystem: true });
@@ -28,7 +28,7 @@ describe('ZodPrimitivesWriter', () => {
   }
 
   function createMockSchema(overrides: Partial<CastrSchema> = {}): CastrSchema {
-    return {
+    return createMockCastrSchema({
       type: 'string',
       metadata: {
         required: true,
@@ -38,7 +38,7 @@ describe('ZodPrimitivesWriter', () => {
         zodChain: { presence: '', validations: [], defaults: [] },
       },
       ...overrides,
-    } as CastrSchema;
+    });
   }
 
   describe('Integer formats', () => {

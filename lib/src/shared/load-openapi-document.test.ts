@@ -63,6 +63,17 @@ const expectBundleConfig = (config: Parameters<typeof bundle>[1]): void => {
   expect(Array.isArray(config.plugins)).toBe(true);
 };
 
+const getLoaderPlugin = (
+  plugin: Parameters<typeof bundle>[1]['plugins'][number] | undefined,
+  pluginName: string,
+): LoaderPlugin => {
+  if (plugin?.type !== 'loader') {
+    throw new Error(`${pluginName} plugin is required`);
+  }
+
+  return plugin;
+};
+
 beforeEach(() => {
   bundleMock.mockReset();
   vi.clearAllMocks();
@@ -85,11 +96,8 @@ describe('loadOpenApiDocument', () => {
       expect(String(input)).toBe(absoluteEntrypoint);
       expectBundleConfig(config);
 
-      const [filePlugin] = config.plugins;
-      if (!filePlugin) {
-        throw new Error('File plugin is required');
-      }
-      await (filePlugin as LoaderPlugin).exec(absoluteEntrypoint);
+      const filePlugin = getLoaderPlugin(config.plugins[0], 'File');
+      await filePlugin.exec(absoluteEntrypoint);
 
       return scalarDocument;
     });
@@ -122,13 +130,10 @@ describe('loadOpenApiDocument', () => {
     });
 
     bundleMock.mockImplementation(async (_input: unknown, config: Parameters<typeof bundle>[1]) => {
-      const [filePlugin] = config.plugins;
-      if (!filePlugin) {
-        throw new Error('File plugin is required');
-      }
-      await (filePlugin as LoaderPlugin).exec(referencedFile);
-      await (filePlugin as LoaderPlugin).exec(referencedFile);
-      await (filePlugin as LoaderPlugin).exec(anotherFile);
+      const filePlugin = getLoaderPlugin(config.plugins[0], 'File');
+      await filePlugin.exec(referencedFile);
+      await filePlugin.exec(referencedFile);
+      await filePlugin.exec(anotherFile);
       return scalarDocument;
     });
 
@@ -157,11 +162,8 @@ describe('loadOpenApiDocument', () => {
     bundleMock.mockImplementation(async (input: unknown, config: Parameters<typeof bundle>[1]) => {
       expect(String(input)).toBe(entrypoint.toString());
       expectBundleConfig(config);
-      const [, urlPlugin] = config.plugins;
-      if (!urlPlugin) {
-        throw new Error('URL plugin is required');
-      }
-      await (urlPlugin as LoaderPlugin).exec(entrypoint.toString());
+      const urlPlugin = getLoaderPlugin(config.plugins[1], 'URL');
+      await urlPlugin.exec(entrypoint.toString());
       return scalarDocument;
     });
 

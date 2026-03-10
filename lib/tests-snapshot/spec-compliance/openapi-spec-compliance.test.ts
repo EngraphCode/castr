@@ -17,20 +17,13 @@
 
 import { expect, test, describe, beforeAll } from 'vitest';
 
-import * as Ajv04Module from 'ajv-draft-04';
-
-import * as addFormatsModule from 'ajv-formats';
+import Ajv04Factory from 'ajv-draft-04/dist/index.js';
+import addFormats from 'ajv-formats/dist/index.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import type { ValidateFunction } from 'ajv';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
-
-// Handle CJS/ESM interop for default exports
-// @ts-expect-error TS2571 - Ajv04Module may have default export (CJS) or be direct export (ESM)
-const Ajv04 = (Ajv04Module as unknown).default || Ajv04Module;
-// @ts-expect-error TS2571 - addFormatsModule may have default export (CJS) or be direct export (ESM)
-const addFormats = (addFormatsModule as unknown).default || addFormatsModule;
 
 // Load official OpenAPI schemas
 const SCHEMA_DIR = join(process.cwd(), '../.agent/reference/openapi_schema');
@@ -40,20 +33,26 @@ const oas30Schema = JSON.parse(
 
 // Note: OAS 3.1 uses JSON Schema 2020-12 which requires different handling
 // For now, focus on 3.0.x which is more widely used
+type AjvDraft04Constructor = typeof Ajv04Factory.default;
+type AjvDraft04Instance = InstanceType<AjvDraft04Constructor>;
+
+function createDraft04Ajv(): AjvDraft04Instance {
+  const ajv = new Ajv04Factory.default({
+    strict: false,
+    validateFormats: true,
+    allErrors: true,
+  });
+  addFormats.default(ajv);
+  return ajv;
+}
 
 describe('openapi-spec-compliance', () => {
-  let ajv: InstanceType<typeof Ajv04>;
+  let ajv: ReturnType<typeof createDraft04Ajv>;
   let validateOAS30: ValidateFunction;
 
   beforeAll(() => {
     // OpenAPI 3.0 uses JSON Schema draft-04
-    ajv = new Ajv04({
-      strict: false,
-      validateFormats: true,
-      allErrors: true,
-    });
-    addFormats(ajv);
-
+    ajv = createDraft04Ajv();
     validateOAS30 = ajv.compile(oas30Schema);
   });
 

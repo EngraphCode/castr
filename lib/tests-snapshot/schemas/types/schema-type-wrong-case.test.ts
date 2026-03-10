@@ -31,8 +31,13 @@ describe('schema-type-wrong-case', () => {
       },
       components: {
         schemas: {
-          // @ts-expect-error TS2322 - Invalid schema type ('Integer' instead of 'integer')
-          test1: { type: 'object', properties: { text1: { type: 'Integer' as unknown } } },
+          test1: {
+            type: 'object',
+            properties: {
+              // @ts-expect-error TS2322 - Invalid schema type ('Integer' instead of 'integer')
+              text1: { type: 'Integer' },
+            },
+          },
         },
       },
     };

@@ -1,8 +1,9 @@
-import { type OpenAPIObject, type SchemaObject } from 'openapi3-ts/oas31';
+import { type OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../../../src/shared/prepare-openapi-document.js';
 import { expect, test } from 'vitest';
 
 import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../../../src/index.js';
+import { assertSchemaObject } from '../../../tests-helpers/openapi-assertions.js';
 import {
   assertSingleFileResult,
   assertGroupedFileResult,
@@ -181,7 +182,7 @@ test('group-strategy: tag-file with modified petstore schema', async () => {
     throw new Error("Expected 'Order' schema to exist in components.schemas");
   }
 
-  const orderObject = orderSchema as SchemaObject;
+  const orderObject = assertSchemaObject(orderSchema, 'components.schemas.Order');
   if (!orderObject.properties) {
     orderObject.properties = {};
   }

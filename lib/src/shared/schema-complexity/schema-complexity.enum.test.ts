@@ -161,8 +161,8 @@ describe('schema-complexity: enum calculations', () => {
 
     test('enum with mixed types (string and number)', () => {
       // Note: This might not be valid OpenAPI, but we should handle it
-      const invalidSchema = { enum: ['a', 1, 'b', 2] as unknown };
-      // @ts-expect-error TS2322 - Testing invalid enum input (mixed types as unknown) to verify error handling
+      const invalidSchema: unknown = { enum: ['a', 1, 'b', 2] };
+      // @ts-expect-error TS2345 - Testing invalid enum input from an unknown boundary to verify error handling
       expect(getComplexity(invalidSchema)).toBe(2);
     });
   });

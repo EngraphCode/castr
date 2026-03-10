@@ -23,14 +23,5 @@ describe('Doctor Reparation Pipeline', () => {
     // we still expect the doctor to successfully execute and provide a final diagnosis,
     // rather than throwing an unhandled exception.
     expect(diagnosis.finalErrors).toBeDefined();
-
-    console.log(
-      `[Doctor Diagnosis] Original Valid: ${diagnosis.originalIsValid}, Repaired Valid: ${diagnosis.repairedIsValid}`,
-    );
-    console.log(`[Doctor Diagnosis] Warnings generated: ${diagnosis.warnings.length}`);
-    if (!diagnosis.repairedIsValid) {
-      console.log(`[Doctor Diagnosis] Remaining Errors: ${diagnosis.finalErrors.length}`);
-      console.log(`[Doctor Diagnosis] First Error:`, diagnosis.finalErrors[0]);
-    }
   }, 30000); // 30s timeout since problematic specs can be massive
 });

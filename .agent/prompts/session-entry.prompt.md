@@ -29,7 +29,7 @@ Notes:
 5. **Zod 4 Output Policy:** Writers must emit canonical Zod 4 helpers where representable (`z.email()`, `z.url()`, `z.int()`, `z.iso.*`). Parsers must accept all canonical writer output. Non-canonical Zod 4 input may be accepted only if it maps losslessly; otherwise fail fast with a helpful error.
 6. **ts-morph for TS/Zod Code Gen:** No string templates for code generation.
 7. **ADR-026 (Scoped — see ADR-026 § "Scope Definition"):** No string/regex heuristics for parsing TypeScript source code. Use ts-morph + semantic APIs (symbol resolution), not node-text matching. Data-string parsing (OpenAPI `$ref`, media types) allowed when centralized, validated, tested, fail-fast.
-8. **No Escape Hatches:** No non-const type assertions, `any`, `!`, or `eslint-disable` workarounds in product code. Fix architecture or fix the rule. `as const` is governed literal-preservation infrastructure and is allowed. **One additional governed exception:** `Identifier.getText()` — see ADR-026 § "Amendment — Identifier.getText()".
+8. **No Escape Hatches:** No non-const type assertions, `any`, `!`, or `eslint-disable` workarounds in product code. Fix architecture or fix the rule. `as const` is governed literal-preservation infrastructure and is allowed. Validate `unknown` only at genuine external boundaries; after validation, keep types strict and never throw away type information. **One additional governed exception:** `Identifier.getText()` — see ADR-026 § "Amendment — Identifier.getText()".
 9. **TDD at ALL Levels:** Write failing tests FIRST.
 10. **Quality Gates:** All gates must pass before merge.
 
@@ -37,7 +37,7 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Resume Type-Safety Remediation
+### Priority 1: Resume Zod Limitations Architecture Investigation
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
@@ -45,45 +45,44 @@ Notes:
 
 #### Background
 
-The current workstream has already completed the doctrinal and lint-policy repair around the real rule, plus the Characterisation boundary and MCP from-IR remediation clusters:
+The completed type-safety remediation workstream restored the repo's actual type-safety doctrine and finished the residual assertion cleanup:
 
 - `as const` is allowed literal-preservation infrastructure
 - non-const type assertions remain banned
-- `unknown` is allowed only at external boundaries and must be validated immediately
-- type information must remain precise after validation
+- `unknown` is allowed only at incoming external boundaries and must be validated immediately
+- after validation, all types remain strict and type information must never be widened away or discarded
 
-Current repo truth for this workstream:
+Current repo truth for the next workstream:
 
 - `pnpm type-check` is green
 - `pnpm format:check` is green
-- `pnpm lint` is green
+- `pnpm lint` is fully clean
 - `pnpm test` is green
 - `pnpm check:ci` is green again
-- `49` non-const assertion sites in tests, fixtures, and harness code are temporarily surfaced as warnings while the remediation backlog is being cleared, then the rule should return to `error`
-- the Characterisation boundary cluster is complete
-- the MCP from-IR test cluster is complete
+- warning-producing quality-gate cleanup is complete:
+  - `pnpm madge:circular` and `pnpm madge:orphans` are clean of the known external skipped-module warnings
+  - `pnpm knip` is clean of the stale `type-fest` configuration hint
+  - `pnpm character` is clean of the expected Scalar unreachable-URL stderr noise
+  - `pnpm test:transforms` is clean of the custom doctor/scalar diagnostic logging noise
+- all quality-gate issues, including warning-producing gate noise, are blocking at all times
+- `@typescript-eslint/consistent-type-assertions` is back on `error`
+- the Characterisation boundary, MCP from-IR, Shared loader and utility, Snapshot regression, and remaining parser/writer low-count clusters are complete
 - the JSON Schema parser directory-complexity blocker is resolved via the `json-schema/normalization/` bounded context
-- the post-refactor full-gate repair slice is complete:
-  - the normalization helper/refs cycle is gone
-  - Knip truth is restored for the ESLint policy surface
-  - the default Vitest suite is back under the existing timeout budget
-- the next execution slice is the Shared loader and utility cluster
+- the next primary slice is investigation-first, not execution-first
+- the active investigation must map the remaining Zod round-trip limitations before choosing a remediation plan
 
-The active parent plan remains:
+The active primary plan is:
 
-- [type-safety-remediation.md](../plans/active/type-safety-remediation.md)
+- [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
 
-The immediate residual execution handoff is:
+Paused supporting context that still matters:
 
-- [type-safety-remediation-follow-up.md](../plans/active/type-safety-remediation-follow-up.md)
-
-Paused context that still matters, but is not the next atomic slice:
-
-- Paused investigation: [zod-limitations-architecture-investigation.md](../plans/current/paused/zod-limitations-architecture-investigation.md)
-- Paused companion investigation: [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
 Recently completed adjacent context:
 
+- [type-safety-remediation.md](../plans/current/complete/type-safety-remediation.md)
+- [type-safety-remediation-follow-up.md](../plans/current/complete/type-safety-remediation-follow-up.md)
 - [recursive-unknown-key-semantics-remediation.md](../plans/current/complete/recursive-unknown-key-semantics-remediation.md)
 
 Recent completed operational context:
@@ -93,34 +92,33 @@ Recent completed operational context:
 
 #### What This Session Should Do
 
-1. Read the active primary plan in [type-safety-remediation.md](../plans/active/type-safety-remediation.md)
-2. Read the residual execution handoff in [type-safety-remediation-follow-up.md](../plans/active/type-safety-remediation-follow-up.md)
-3. Start with the first remaining cluster in the follow-up plan: the Shared loader and utility cluster
-4. Use the matching test command or Vitest config for the current cluster instead of relying on guesswork:
-   - `pnpm test` or a targeted default `vitest run` invocation for the Shared loader and utility cluster
-   - `vitest.characterisation.config.ts` for characterisation clusters
-   - `vitest.snapshot.config.ts` for snapshot clusters
-   - `vitest.transforms.config.ts` for transforms clusters
-5. Re-anchor on [3.3a-07-remove-escape-hatches.md](../plans/current/complete/3.3a-07-remove-escape-hatches.md) only if a change would alter doctrine, lint policy, or the governed allowed-vs-banned matrix
-6. Read the paused Zod investigation in [zod-limitations-architecture-investigation.md](../plans/current/paused/zod-limitations-architecture-investigation.md) only when type-safety remediation touches that parked workstream
-7. Read the paused companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) only when remediation touches transform-proof runtime or doctor-cost questions
-8. Use these durable docs as the architecture source of truth for the active product workstream:
+1. Read the active primary plan in [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
+2. Re-read the durable architecture sources named by that plan before choosing any implementation path:
    - `docs/architecture/zod-round-trip-limitations.md`
    - `docs/architecture/recursive-unknown-key-semantics.md`
    - `ADR-031`
    - `ADR-032`
    - `ADR-035`
    - `ADR-038`
-9. Keep the current local Practice system in use:
+3. Read the paused companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or setup-cost questions
+4. Start by mapping the current known limitation set and identifying the earliest confirmed loss point for each:
+   - recursive `.passthrough()` remains unsafe
+   - UUID v4 specificity is not preserved
+   - `int64` maps to `bigint` in Zod 4
+5. Treat this as an investigation-first slice. Do not jump into product-code remediation until the active plan's execution trigger is satisfied.
+6. Preserve the strict type-safety doctrine while investigating:
+   - validate `unknown` only at incoming external boundaries
+   - from that point on, keep types strict
+   - never discard information and recover meaning later with casts or loose helper types
+7. Keep the current local Practice system in use:
    - `AGENT.md`
    - `practice-index.md`
    - canonical `.agent/commands/`, `.agent/skills/`, and `.agent/rules/`
    - canonical `.agent/sub-agents/`
    - `.codex/config.toml`
    - `.codex/agents/`
-10. Invoke the installed reviewers and domain experts through `.agent/rules/invoke-reviewers.md` when changes cross their trigger boundaries
-11. Do not resume the paused Zod workstream until the residual lint backlog is cleared or the type-safety plan explicitly yields a successor plan
-12. Leave the next session with one obvious primary entrypoint and no stranded context
+8. Invoke the installed reviewers and domain experts through `.agent/rules/invoke-reviewers.md` when changes cross their trigger boundaries
+9. Leave the next session with one obvious primary entrypoint and no stranded context
 
 #### Absolute strictness principles (from `start-right.prompt.md`)
 
@@ -141,7 +139,9 @@ Notes:
 
 - `pnpm test:transforms` exists and should stay green (it is included by `pnpm test:all` / `pnpm qg` / `pnpm check:ci` / `pnpm check`).
 - Use `pnpm check:ci` for a non-mutating verification run. `pnpm check` may write formatting and apply safe lint autofixes.
-- Current gate truth for this workstream: `pnpm type-check`, `pnpm format:check`, `pnpm lint`, `pnpm test`, and `pnpm check:ci` are green; `pnpm lint` still reports `49` type-assertion warnings while the remediation backlog is being removed.
+- Treat any quality-gate issue as blocking, including warning-producing output that indicates stale gate noise.
+- Normal reporter and inventory output is still expected; the current warning-producing gates are clean apart from ordinary test reporters and the intentional orphan inventory listing from `pnpm madge:orphans`.
+- Current gate truth for this workstream: `pnpm type-check`, `pnpm format:check`, `pnpm lint`, `pnpm test`, and `pnpm check:ci` are green; `pnpm lint` is fully clean again.
 
 ---
 

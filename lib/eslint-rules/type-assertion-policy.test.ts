@@ -78,7 +78,7 @@ describe('type assertion policy', () => {
         (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
       ),
     ).toBe(true);
-    expect(messages.every((message) => message.severity === 1)).toBe(true);
+    expect(messages.every((message) => message.severity === 2)).toBe(true);
   });
 
   it('rejects non-const as assertions in tests', async () => {
@@ -93,7 +93,7 @@ describe('type assertion policy', () => {
         (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
       ),
     ).toBe(true);
-    expect(messages.every((message) => message.severity === 1)).toBe(true);
+    expect(messages.every((message) => message.severity === 2)).toBe(true);
   });
 
   it('rejects chained casts in product code', async () => {
@@ -108,7 +108,7 @@ describe('type assertion policy', () => {
         (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
       ),
     ).toBe(true);
-    expect(messages.every((message) => message.severity === 1)).toBe(true);
+    expect(messages.every((message) => message.severity === 2)).toBe(true);
   });
 
   it('rejects angle-bracket assertions in product code', async () => {
@@ -123,6 +123,6 @@ describe('type assertion policy', () => {
         (message) => message.ruleId === '@typescript-eslint/consistent-type-assertions',
       ),
     ).toBe(true);
-    expect(messages.every((message) => message.severity === 1)).toBe(true);
+    expect(messages.every((message) => message.severity === 2)).toBe(true);
   });
 });

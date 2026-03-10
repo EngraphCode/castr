@@ -19,13 +19,13 @@ describe('param-invalid-spec', () => {
           put: {
             operationId: 'updatePet',
             parameters: [
-              // @ts-expect-error TS2322 - Testing invalid parameter (missing schema/content)
               {
                 name: 'invalid-param',
                 description: 'This parameter is invalid per OpenAPI spec',
                 in: 'query',
-                // Missing both 'schema' and 'content' - violates SchemaXORContent constraint
-              } as unknown,
+                // Missing both 'schema' and 'content' violates the OpenAPI spec,
+                // even though openapi3-ts does not encode that XOR at compile time.
+              },
             ],
             responses: {
               '200': { description: 'Success' },

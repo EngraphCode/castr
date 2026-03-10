@@ -116,7 +116,7 @@ test('complex relations', () => {
         differentPropSameRef: { $ref: 'Basic' },
       },
     },
-  } as Record<string, SchemaObject>;
+  } satisfies Record<string, SchemaObject>;
 
   const openApiDoc = makeTestDoc(schemas);
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
@@ -182,7 +182,7 @@ test('complex relations', () => {
 });
 
 test('recursive relations', () => {
-  const UserWithFriends = {
+  const UserWithFriends: SchemaObject = {
     type: 'object',
     properties: {
       name: { type: 'string' },
@@ -190,17 +190,17 @@ test('recursive relations', () => {
       friends: { type: 'array', items: { $ref: 'Friend' } },
       bestFriend: { $ref: 'Friend' },
     },
-  } as SchemaObject;
+  };
 
-  const Friend = {
+  const Friend: SchemaObject = {
     type: 'object',
     properties: {
       nickname: { type: 'string' },
       user: { $ref: 'UserWithFriends' },
       circle: { type: 'array', items: { $ref: 'Friend' } },
     },
-  } as SchemaObject;
-  const schemas = { UserWithFriends, Friend } as Record<string, SchemaObject>;
+  };
+  const schemas: Record<string, SchemaObject> = { UserWithFriends, Friend };
 
   const openApiDoc = makeTestDoc(schemas);
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(
@@ -299,7 +299,7 @@ test('recursive relations along with some basics schemas', () => {
         differentPropSameRef: { $ref: 'Basic' },
       },
     },
-  } as Record<string, SchemaObject>;
+  } satisfies Record<string, SchemaObject>;
 
   const openApiDoc = makeTestDoc(schemas);
   const { refsDependencyGraph: result, deepDependencyGraph } = getOpenApiDependencyGraph(

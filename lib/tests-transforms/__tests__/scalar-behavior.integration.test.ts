@@ -70,9 +70,6 @@ describe('Scalar Validator Behavior Verification', () => {
       const result = await validateInlineDoc(doc);
 
       // ACTUAL BEHAVIOR - document what Scalar actually does
-      console.log('nullable in 3.1.x:', result.valid ? 'PASSES (limitation)' : 'REJECTS (correct)');
-      console.log('Errors:', result.errors);
-
       // This assertion documents ACTUAL behavior, not desired behavior
       // If this test fails, Scalar has been updated to correctly reject
       expect(result.valid).toBe(true); // LIMITATION: Scalar allows this
@@ -142,12 +139,6 @@ describe('Scalar Validator Behavior Verification', () => {
 
       const result = await validateInlineDoc(doc);
 
-      console.log(
-        'boolean exclusiveMinimum in 3.1.x:',
-        result.valid ? 'PASSES (limitation)' : 'REJECTS (correct)',
-      );
-      console.log('Errors:', result.errors);
-
       // ACTUAL BEHAVIOR - document what Scalar actually does
       expect(result.valid).toBe(true); // LIMITATION: Scalar allows this
     });
@@ -203,7 +194,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log('examples component:', result.valid ? 'PASSES' : 'REJECTS');
       expect(result.valid).toBe(true);
     });
 
@@ -223,10 +213,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log(
-        'invalid examples component:',
-        result.valid ? 'PASSES (limitation?)' : 'REJECTS (correct)',
-      );
       // Example objects don't require value - summary alone is valid
       expect(result.valid).toBe(true);
     });
@@ -247,7 +233,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log('links component:', result.valid ? 'PASSES' : 'REJECTS');
       expect(result.valid).toBe(true);
     });
 
@@ -281,7 +266,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log('callbacks component:', result.valid ? 'PASSES' : 'REJECTS');
       expect(result.valid).toBe(true);
     });
 
@@ -305,7 +289,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log('pathItems component (3.1.x):', result.valid ? 'PASSES' : 'REJECTS');
       expect(result.valid).toBe(true);
     });
   });
@@ -374,7 +357,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log('unresolvable $ref:', result.valid ? 'PASSES (limitation)' : 'REJECTS (correct)');
       // Scalar correctly rejects unresolvable $ref references
       expect(result.valid).toBe(false);
     });
@@ -401,7 +383,6 @@ describe('Scalar Validator Behavior Verification', () => {
       };
 
       const result = await validateInlineDoc(doc);
-      console.log('circular $ref:', result.valid ? 'PASSES' : 'REJECTS');
       expect(result.valid).toBe(true); // Circular refs are valid
     });
   });

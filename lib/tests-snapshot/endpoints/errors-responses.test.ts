@@ -21,7 +21,7 @@ it('includes errors-responses', async () => {
       },
     },
     Error500: { type: 'string' },
-  } as SchemasObject;
+  } satisfies SchemasObject;
 
   const openApiDoc = {
     openapi: '3.0.3',
@@ -217,7 +217,7 @@ it('determines which status are considered errors-responses', async () => {
       type: 'string',
       enum: ['aaa', 'bbb', 'ccc'],
     },
-  } as SchemasObject;
+  } satisfies SchemasObject;
 
   const openApiDoc = {
     openapi: '3.1.0',

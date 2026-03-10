@@ -92,8 +92,13 @@ describe('loadOpenApiDocument error formatting (integration)', () => {
     try {
       await loadOpenApiDocument(invalidSpec);
       expect.fail('Expected to throw');
-    } catch (error) {
-      const message = (error as Error).message;
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(Error);
+      if (!(error instanceof Error)) {
+        throw error;
+      }
+
+      const { message } = error;
       // Verify structured error message format
       expect(message).toContain('Location:');
       expect(message).toContain('Issue:');

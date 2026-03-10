@@ -31,7 +31,7 @@ describe('openapi-examples', () => {
     .sort();
 
   const examplesRoot = path.resolve(pkgRoot, './examples');
-  const resultByFile = {} as Record<string, string>;
+  const resultByFile: Record<string, string> = {};
 
   for (const docPath of list) {
     test(docPath, async () => {

@@ -88,13 +88,17 @@ describe('IR Serialization', () => {
   });
 
   it('should handle undefined fields correctly', () => {
+    const infoWithUndefinedDescription = { ...mockIR.info };
+    Object.defineProperty(infoWithUndefinedDescription, 'description', {
+      value: undefined,
+      enumerable: true,
+      writable: true,
+      configurable: true,
+    });
+
     const irWithUndefined: CastrDocument = {
       ...mockIR,
-      info: {
-        title: 'Test API',
-        version: '1.0.0',
-        description: undefined as unknown as string,
-      },
+      info: infoWithUndefinedDescription,
     };
     const serialized = serializeIR(irWithUndefined);
     const deserialized = deserializeIR(serialized);

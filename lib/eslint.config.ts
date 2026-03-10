@@ -80,7 +80,7 @@ const tsUntypedPresets = [
 // Temporary during the active type-assertion remediation tranche: keep surfacing
 // non-const assertions while we eliminate the remaining backlog, then restore
 // `@typescript-eslint/consistent-type-assertions` below to `error`.
-const typeAssertionRuleSeverity = 'warn' as const;
+const typeAssertionRuleSeverity = 'error' as const;
 
 /* -------------------------------------------------------------------------- */
 /* Rules                                                                      */

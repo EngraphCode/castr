@@ -31,10 +31,10 @@ describe('prefix-nonstandard', () => {
 
     // validate() runs on the mutated doc, which is now valid OpenAPI 3.1.0
     expect(result.valid).toBe(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((doc as any)['x-nonstandard-extraDocs']).toBe('This should be x-nonstandard-extraDocs');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((doc as any).extraDocs).toBeUndefined();
+    expect(Reflect.get(doc, 'x-nonstandard-extraDocs')).toBe(
+      'This should be x-nonstandard-extraDocs',
+    );
+    expect(Reflect.get(doc, 'extraDocs')).toBeUndefined();
     expect(warnings).toHaveLength(1);
     expect(warnings[0]?.message).toMatch(/Auto-prefixed non-standard property 'extraDocs'/);
   });
@@ -71,10 +71,9 @@ describe('prefix-nonstandard', () => {
     const result = await attemptNonStandardPropertyRescue(doc, initialResult, warnings);
 
     expect(result.valid).toBe(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const responseObj = (doc as any).paths['/my~path/with~1slashes'].get.responses['200'];
-    expect(responseObj['x-nonstandard-customFlag']).toBe(true);
-    expect(responseObj.customFlag).toBeUndefined();
+    const responseObject = doc.paths['/my~path/with~1slashes'].get.responses['200'];
+    expect(Reflect.get(responseObject, 'x-nonstandard-customFlag')).toBe(true);
+    expect(Reflect.get(responseObject, 'customFlag')).toBeUndefined();
     expect(warnings).toHaveLength(1);
   });
 

@@ -47,8 +47,8 @@
     "character": "vitest run --config vitest.characterisation.config.ts",
     "character:watch": "vitest --config vitest.characterisation.config.ts",
     "test:transforms": "vitest run --config vitest.transforms.config.ts",
-    "madge:circular": "pnpm exec madge --circular --warning --extensions ts src/**/*",
-    "madge:orphans": "pnpm exec madge --orphans --warning --extensions ts src/**/*",
+    "madge:circular": "node ./scripts/run-madge.mjs circular",
+    "madge:orphans": "node ./scripts/run-madge.mjs orphans",
     "depcruise": "pnpm exec depcruise src --config .dependency-cruiser.cjs",
     "knip": "pnpm exec knip",
     "fetch:examples": "tsx ./examples-fetcher.mts"

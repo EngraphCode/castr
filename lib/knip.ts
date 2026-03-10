@@ -2,13 +2,13 @@
 const config = {
   entry: ['tests-transforms/**/*.test.ts', 'tests-snapshot/**/*.test.ts'],
   project: ['src/**/*.ts'],
-  ignoreBinaries: ['madge', 'tsx'],
+  ignoreBinaries: ['tsx'],
   ignoreDependencies: [
     'ajv-draft-04',
     '@typescript-eslint/rule-tester',
     '@types/degit',
     'degit',
-    'type-fest',
+    'madge',
   ],
   // Knip catches dead code, unused files, and unused exports.
   // We want strict barrel-files, so if an internal util isn't exported in index.ts

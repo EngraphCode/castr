@@ -49,11 +49,11 @@ describe('maybePretty', () => {
   test('handles prettier config with undefined plugins gracefully', async () => {
     const input = `const x: string = "hello";`;
     // Simulate a prettier config that might have plugins: undefined
-    const invalidOptions = {
-      plugins: undefined as unknown,
+    const invalidOptions: unknown = {
+      plugins: undefined,
       printWidth: 80,
     };
-    // @ts-expect-error TS2345 - Testing invalid plugins input (undefined as unknown) to verify graceful handling
+    // @ts-expect-error TS2345 - Testing invalid plugins input from an unknown boundary to verify graceful handling
     const result = await maybePretty(input, invalidOptions);
 
     expect(result).toContain('const x: string');
@@ -62,11 +62,11 @@ describe('maybePretty', () => {
 
   test('handles prettier config with empty plugins array', async () => {
     const input = `const x: string = "hello";`;
-    const invalidOptions = {
-      plugins: [] as unknown,
+    const invalidOptions: unknown = {
+      plugins: [],
       printWidth: 80,
     };
-    // @ts-expect-error TS2345 - Testing invalid plugins input (empty array as unknown) to verify graceful handling
+    // @ts-expect-error TS2345 - Testing invalid plugins input from an unknown boundary to verify graceful handling
     const result = await maybePretty(input, invalidOptions);
 
     expect(result).toContain('const x: string');
@@ -75,11 +75,11 @@ describe('maybePretty', () => {
 
   test('handles prettier config with invalid plugins gracefully', async () => {
     const input = `const x: string = "hello";`;
-    const invalidOptions = {
-      plugins: [null, undefined] as unknown,
+    const invalidOptions: unknown = {
+      plugins: [null, undefined],
       printWidth: 80,
     };
-    // @ts-expect-error TS2345 - Testing invalid plugins input (array with null/undefined as unknown) to verify graceful handling
+    // @ts-expect-error TS2345 - Testing invalid plugins input from an unknown boundary to verify graceful handling
     const result = await maybePretty(input, invalidOptions);
 
     expect(result).toContain('const x: string');

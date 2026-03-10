@@ -27,31 +27,31 @@ const makeOpenApiDoc = (schemas: SchemasObject, responseSchema: SchemaObject) =>
  */
 describe('export-all-types', () => {
   test('shouldExportAllTypes option, non-circular types are exported', async () => {
-    const Author = {
+    const Author: SchemaObject = {
       type: 'object',
       properties: {
         name: { type: 'string' },
         email: { type: 'string' },
       },
-    } as SchemaObject;
+    };
 
-    const Song = {
+    const Song: SchemaObject = {
       type: 'object',
       properties: {
         title: { type: 'string' },
         duration: { type: 'number' },
       },
-    } as SchemaObject;
+    };
 
     const schemas = { Author, Song };
 
-    const RootSchema = {
+    const RootSchema: SchemaObject = {
       type: 'object',
       properties: {
         author: { $ref: '#/components/schemas/Author' },
         song: { $ref: '#/components/schemas/Song' },
       },
-    } as SchemaObject;
+    };
 
     const openApiDoc = makeOpenApiDoc(schemas, RootSchema);
 

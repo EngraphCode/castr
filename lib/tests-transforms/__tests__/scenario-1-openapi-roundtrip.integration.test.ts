@@ -10,7 +10,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { PathsObject } from 'openapi3-ts/oas31';
 
 import {
   ARBITRARY_FIXTURES,
@@ -19,6 +18,10 @@ import {
   loadOpenApiDocument,
   writeOpenApi,
 } from '../utils/transform-helpers.js';
+
+type LoadedOpenApiPaths = Awaited<ReturnType<typeof loadOpenApiDocument>>['document']['paths'];
+type WrittenOpenApiPaths = ReturnType<typeof writeOpenApi>['paths'];
+type OpenApiPaths = LoadedOpenApiPaths | WrittenOpenApiPaths;
 
 // ============================================================================
 // Tests: Losslessness (IR Comparison)
@@ -160,7 +163,7 @@ describe('OpenAPI Document: Information Preservation', () => {
       const { input, output } = await normalizeSpec(path);
 
       // Extract all operation signatures from input
-      const getOperations = (paths: PathsObject | undefined): string[] => {
+      const getOperations = (paths: OpenApiPaths): string[] => {
         if (!paths) {
           return [];
         }
@@ -177,7 +180,7 @@ describe('OpenAPI Document: Information Preservation', () => {
         return operations.sort();
       };
 
-      const inputOps = getOperations(input.paths as PathsObject | undefined);
+      const inputOps = getOperations(input.paths);
       const outputOps = getOperations(output.paths);
 
       expect(outputOps).toEqual(inputOps);

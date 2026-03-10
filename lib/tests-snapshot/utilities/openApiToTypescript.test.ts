@@ -380,7 +380,7 @@ describe('getSchemaAsTsString with context', () => {
           nested_prop: { type: 'boolean' },
         },
       },
-    } as SchemasObject;
+    } satisfies SchemasObject;
 
     const rootSchema = schemas['Root'];
     if (!rootSchema) {
@@ -427,7 +427,7 @@ describe('getSchemaAsTsString with context', () => {
         type: 'string',
         enum: ['aaa', 'bbb', 'ccc'],
       },
-    } as SchemasObject;
+    } satisfies SchemasObject;
 
     const root2Schema = schemas['Root2'];
     if (!root2Schema) {
@@ -467,7 +467,7 @@ describe('getSchemaAsTsString with context', () => {
           backToRoot: { $ref: '#/components/schemas/Root3' },
         },
       },
-    } as SchemasObject;
+    } satisfies SchemasObject;
 
     const root3Schema = schemas['Root3'];
     if (!root3Schema) {
@@ -509,7 +509,7 @@ describe('getSchemaAsTsString with context', () => {
           backToRoot: { $ref: '#/components/schemas/Root4' },
         },
       },
-    } as SchemasObject;
+    } satisfies SchemasObject;
 
     const root4Schema = schemas['Root4'];
     if (!root4Schema) {
@@ -557,7 +557,7 @@ describe('getSchemaAsTsString with context', () => {
           basic: { type: 'number' },
         },
       },
-    } as SchemasObject;
+    } satisfies SchemasObject;
 
     const rootSchema = schemas['Root'];
     if (!rootSchema) {
@@ -610,7 +610,7 @@ describe('getSchemaAsTsString with context', () => {
           basic: { type: 'number' },
         },
       },
-    } as SchemasObject;
+    } satisfies SchemasObject;
 
     const rootSchema = schemas['Root'];
     if (!rootSchema) {
