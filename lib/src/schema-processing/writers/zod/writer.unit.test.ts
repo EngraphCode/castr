@@ -247,7 +247,7 @@ describe('ZodWriter', () => {
       schema.title = 'UserSchema';
 
       const context = createComponentContext(schema);
-      const expected = 'z.object({ }).passthrough().meta({"title":"UserSchema"})';
+      const expected = 'z.strictObject({ }).meta({"title":"UserSchema"})';
       expect(generate(context)).toBe(expected);
     });
 
@@ -319,9 +319,7 @@ describe('ZodWriter', () => {
       const outputWithAlphaFirst = generate(createComponentContext(schemaWithAlphaFirst));
 
       expect(outputWithZebraFirst).toBe(outputWithAlphaFirst);
-      expect(outputWithZebraFirst).toBe(
-        'z.object({ alpha: z.number(), zebra: z.string() }).passthrough()',
-      );
+      expect(outputWithZebraFirst).toBe('z.strictObject({ alpha: z.number(), zebra: z.string() })');
     });
 
     it('keeps mixed getter and normal properties in stable key order', () => {

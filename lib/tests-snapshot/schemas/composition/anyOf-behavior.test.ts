@@ -46,10 +46,10 @@ describe('anyOf behavior', () => {
           "code": "z.union([z.object({
         age: z.int(),
         nickname: z.string().optional(),
-      }).passthrough(), z.object({
+      }).strip(), z.object({
         hunts: z.boolean().optional(),
         pet_type: z.enum(["Cat", "Dog"]),
-      }).passthrough()])",
+      }).strip()])",
           "schema": {
               "anyOf": [
                   {
@@ -131,10 +131,10 @@ describe('anyOf behavior', () => {
           "code": "z.union([z.object({
         age: z.int(),
         nickname: z.string().optional(),
-      }).passthrough(), z.object({
+      }).strip(), z.object({
         hunts: z.boolean().optional(),
         pet_type: z.enum(["Cat", "Dog"]),
-      }).passthrough(), z.number()])",
+      }).strip(), z.number()])",
           "schema": {
               "anyOf": [
                   {
@@ -222,10 +222,10 @@ describe('anyOf behavior', () => {
           "code": "z.union([z.union([z.number(), z.boolean()]), z.object({
         age: z.int(),
         nickname: z.string().optional(),
-      }).passthrough(), z.object({
+      }).strip(), z.object({
         hunts: z.boolean().optional(),
         pet_type: z.enum(["Cat", "Dog"]),
-      }).passthrough(), z.string()])",
+      }).strip(), z.string()])",
           "schema": {
               "anyOf": [
                   {
@@ -354,13 +354,13 @@ describe('anyOf behavior', () => {
           age: z.int(),
           nickname: z.string().optional(),
         })
-        .strict();
+        .strip();
       export const PetByType = z
         .object({
           hunts: z.boolean().optional(),
           pet_type: z.enum(["Cat", "Dog"]),
         })
-        .strict();
+        .strip();
       // Endpoints
       export const endpoints = [
         {
@@ -374,11 +374,11 @@ describe('anyOf behavior', () => {
               schema: z.union([PetByAge, PetByType]).optional(),
             },
           ],
-          response: z.object({}).strict(),
+          response: z.strictObject({}),
           errors: [],
           responses: {
             200: {
-              schema: z.object({}).strict(),
+              schema: z.strictObject({}),
               description: "Success",
             },
           },
@@ -412,6 +412,8 @@ describe('anyOf behavior', () => {
                             nickname: { type: "string" },
                           },
                           required: ["age"],
+                          additionalProperties: true,
+                          unknownKeyBehavior: { mode: "strip" },
                         },
                         {
                           type: "object",
@@ -420,6 +422,8 @@ describe('anyOf behavior', () => {
                             pet_type: { type: "string", enum: ["Cat", "Dog"] },
                           },
                           required: ["pet_type"],
+                          additionalProperties: true,
+                          unknownKeyBehavior: { mode: "strip" },
                         },
                       ],
                     },

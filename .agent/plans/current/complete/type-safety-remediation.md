@@ -4,7 +4,7 @@
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-10  
 **Predecessor:** [3.3a-07-remove-escape-hatches.md](./3.3a-07-remove-escape-hatches.md)  
-**Successor:** [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md)  
+**Successor:** [strict-object-semantics-enforcement.md](./strict-object-semantics-enforcement.md)  
 **Related:** `../../../directives/principles.md`, `../../../directives/testing-strategy.md`, `../../../directives/requirements.md`, `../../../directives/DEFINITION_OF_DONE.md`, `../paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `./type-safety-remediation-follow-up.md`
 
 ---
@@ -107,4 +107,4 @@ Delivered outputs:
 
 This plan is complete and no longer belongs in `active/`.
 
-The next primary workstream is [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md), with [transform-proof-budgeting-and-runtime-architecture-investigation.md](../paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) remaining paused supporting context.
+The next primary workstream after this slice was [strict-object-semantics-enforcement.md](./strict-object-semantics-enforcement.md), with [recursive-unknown-key-preserving-zod-emission-investigation.md](../paused/recursive-unknown-key-preserving-zod-emission-investigation.md), [zod-limitations-architecture-investigation.md](../paused/zod-limitations-architecture-investigation.md), and [transform-proof-budgeting-and-runtime-architecture-investigation.md](../paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) remaining supporting context.

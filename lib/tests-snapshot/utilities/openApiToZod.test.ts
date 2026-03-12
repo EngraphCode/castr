@@ -29,21 +29,21 @@ test('getSchemaAsZodString', () => {
   expect(getSchemaAsZodString({ type: 'object' })).toMatchInlineSnapshot(
     `
     "z.object({
-    }).passthrough()"
+    }).strip()"
   `,
   );
   expect(getSchemaAsZodString({ type: 'object', properties: { str: { type: 'string' } } }))
     .toMatchInlineSnapshot(`
       "z.object({
         str: z.string().optional(),
-      }).passthrough()"
+      }).strip()"
     `);
 
   expect(getSchemaAsZodString({ type: 'object', properties: { nb: { type: 'integer' } } }))
     .toMatchInlineSnapshot(`
       "z.object({
         nb: z.int().optional(),
-      }).passthrough()"
+      }).strip()"
     `);
 
   expect(
@@ -51,7 +51,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       pa: z.number().min(0).optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -62,7 +62,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       pa: z.number().min(0).max(100).optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -70,7 +70,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       ml: z.string().min(0).optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -81,7 +81,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       dt: z.iso.datetime().optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -103,9 +103,9 @@ test('getSchemaAsZodString', () => {
       nb: z.number().optional(),
       nested: z.object({
         nested_prop: z.boolean().optional(),
-      }).passthrough().optional(),
+      }).strip().optional(),
       str: z.string().optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -121,7 +121,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.array(z.object({
       str: z.string().optional(),
-    }).passthrough())"
+    }).strip())"
   `);
 
   expect(
@@ -146,7 +146,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       union: z.xor([z.string(), z.number()]).optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -159,7 +159,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       anyOfExample: z.union([z.string(), z.number()]).optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(
@@ -172,7 +172,7 @@ test('getSchemaAsZodString', () => {
   ).toMatchInlineSnapshot(`
     "z.object({
       intersection: z.string().and(z.number()).optional(),
-    }).passthrough()"
+    }).strip()"
   `);
 
   expect(

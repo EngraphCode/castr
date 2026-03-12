@@ -7,9 +7,15 @@
 
 import { describe, expect, it } from 'vitest';
 import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
-import { buildIR, buildCastrSchemas } from './index.js';
+import { buildIR as buildIRBase, buildCastrSchemas as buildCastrSchemasBase } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
 import type { CastrDocument } from '../../ir/index.js';
+
+const TEST_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
+const buildIR = (doc: OpenAPIObject): CastrDocument =>
+  buildIRBase(doc, TEST_NON_STRICT_OBJECT_POLICY);
+const buildCastrSchemas = (components: ComponentsObject) =>
+  buildCastrSchemasBase(components, TEST_NON_STRICT_OBJECT_POLICY);
 
 describe('buildCastrSchemas', () => {
   describe('primitive schemas', () => {
@@ -886,7 +892,7 @@ describe('buildIR - IR-1 enhancements', () => {
       expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
     });
 
-    it('should detect circular references through additionalProperties', () => {
+    it('normalizes circular additionalProperties references to strip in compatibility mode', () => {
       const doc: OpenAPIObject = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -906,13 +912,12 @@ describe('buildIR - IR-1 enhancements', () => {
         (component) => component.type === 'schema' && component.name === 'Node',
       );
 
-      expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
       if (!nodeComponent || nodeComponent.type !== 'schema') {
         throw new Error('Expected Node schema component');
       }
-      expect(nodeComponent.schema.metadata.circularReferences).toContain(
-        '#/components/schemas/Node',
-      );
+      expect(nodeComponent.schema.additionalProperties).toBe(true);
+      expect(nodeComponent.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+      expect(nodeComponent.schema.metadata.circularReferences).toEqual([]);
     });
 
     it('should throw on malformed schema refs during circular reference extraction', () => {

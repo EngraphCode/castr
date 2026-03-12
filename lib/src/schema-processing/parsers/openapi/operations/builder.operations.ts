@@ -21,6 +21,8 @@ import { buildCastrParameters } from './builder.parameters.js';
 import { buildIRRequestBody } from './builder.request-body.js';
 import { buildCastrResponses } from './builder.responses.js';
 import type { CastrOperation, IRSecurityRequirement } from '../../../ir/index.js';
+import type { NonStrictObjectPolicyOptions } from '../../../non-strict-object-policy.js';
+import { resolveNonStrictObjectPolicy } from '../../../non-strict-object-policy.js';
 
 /**
  * Build IR operations from OpenAPI paths object.
@@ -46,16 +48,20 @@ import type { CastrOperation, IRSecurityRequirement } from '../../../ir/index.js
  *
  * @internal
  */
-export function buildCastrOperations(doc: OpenAPIObject): CastrOperation[] {
+export function buildCastrOperations(
+  doc: OpenAPIObject,
+  options?: NonStrictObjectPolicyOptions,
+): CastrOperation[] {
   if (!doc.paths) {
     return [];
   }
 
   const operations: CastrOperation[] = [];
+  const nonStrictObjectPolicy = resolveNonStrictObjectPolicy(options);
 
   for (const [path, pathItem] of Object.entries(doc.paths)) {
     if (pathItem) {
-      const pathOperations = extractPathOperations(path, pathItem, doc);
+      const pathOperations = extractPathOperations(path, pathItem, doc, nonStrictObjectPolicy);
       operations.push(...pathOperations);
     }
   }
@@ -71,6 +77,7 @@ function extractPathOperations(
   path: string,
   pathItem: PathItemObject,
   doc: OpenAPIObject,
+  nonStrictObjectPolicy: ReturnType<typeof resolveNonStrictObjectPolicy>,
 ): CastrOperation[] {
   const operations: CastrOperation[] = [];
   const httpMethods: HttpMethod[] = [
@@ -107,7 +114,14 @@ function extractPathOperations(
       ...(mergedParameters.length > 0 ? { parameters: mergedParameters } : {}),
     };
 
-    const irOperation = buildCastrOperation(method, path, operationWithParams, pathItem, doc);
+    const irOperation = buildCastrOperation(
+      method,
+      path,
+      operationWithParams,
+      pathItem,
+      doc,
+      nonStrictObjectPolicy,
+    );
     operations.push(irOperation);
   }
 
@@ -135,12 +149,14 @@ function buildCastrOperation(
   operation: OperationObject,
   pathItem: PathItemObject,
   doc: OpenAPIObject,
+  nonStrictObjectPolicy: ReturnType<typeof resolveNonStrictObjectPolicy>,
 ): CastrOperation {
   // Build minimal context for schema resolution
   const context: IRBuildContext = {
     doc,
     path: [path, method],
     required: false,
+    nonStrictObjectPolicy,
   };
 
   // Build core operation structure

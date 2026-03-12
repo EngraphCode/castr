@@ -86,12 +86,12 @@ describe('Endpoint Zod Parsing', () => {
       const result = parseEndpointDefinition(`defineEndpoint({
         method: 'post',
         path: '/users',
-        body: 'z.object({ name: z.string(), email: z.string().email() })',
+        body: 'z.strictObject({ name: z.string(), email: z.string().email() })',
         response: { 201: 'UserSchema' },
       })`);
 
       expect(result?.method).toBe('post');
-      expect(result?.body).toBe('z.object({ name: z.string(), email: z.string().email() })');
+      expect(result?.body).toBe('z.strictObject({ name: z.string(), email: z.string().email() })');
     });
 
     it('should parse defineEndpoint with multiple responses', () => {
@@ -100,13 +100,13 @@ describe('Endpoint Zod Parsing', () => {
         path: '/users/{id}',
         response: {
           200: 'UserSchema',
-          404: 'z.object({ error: z.literal("not_found") })',
+          404: 'z.strictObject({ error: z.literal("not_found") })',
           500: 'ErrorSchema',
         },
       })`);
 
       expect(result?.responses['200']).toBe('UserSchema');
-      expect(result?.responses['404']).toBe('z.object({ error: z.literal("not_found") })');
+      expect(result?.responses['404']).toBe('z.strictObject({ error: z.literal("not_found") })');
       expect(result?.responses['500']).toBe('ErrorSchema');
     });
 
@@ -190,7 +190,7 @@ describe('Endpoint Zod Parsing', () => {
       const definition: EndpointDefinition = {
         method: 'post',
         path: '/users',
-        body: 'z.object({ name: z.string() })',
+        body: 'z.strictObject({ name: z.string() })',
         responses: { '201': 'UserSchema' },
       };
 
@@ -216,6 +216,36 @@ describe('Endpoint Zod Parsing', () => {
       expect(result.responses).toHaveLength(2);
       expect(result.responses.find((r: CastrResponse) => r.statusCode === '200')).toBeDefined();
       expect(result.responses.find((r: CastrResponse) => r.statusCode === '500')).toBeDefined();
+    });
+
+    it('rejects non-strict endpoint body schemas by default', () => {
+      const definition: EndpointDefinition = {
+        method: 'post',
+        path: '/users',
+        body: 'z.object({ name: z.string() }).passthrough()',
+        responses: { '201': 'UserSchema' },
+      };
+
+      expect(() => buildCastrOperationFromEndpoint(definition)).toThrow(
+        /strict object ingest is the default/,
+      );
+    });
+
+    it('normalizes non-strict endpoint body schemas in compatibility mode', () => {
+      const definition: EndpointDefinition = {
+        method: 'post',
+        path: '/users',
+        body: 'z.object({ name: z.string() }).passthrough()',
+        responses: { '201': 'UserSchema' },
+      };
+
+      const result = buildCastrOperationFromEndpoint(definition, {
+        nonStrictObjectPolicy: 'strip',
+      });
+
+      const bodySchema = result.requestBody?.content['application/json']?.schema;
+      expect(bodySchema?.additionalProperties).toBe(true);
+      expect(bodySchema?.unknownKeyBehavior).toEqual({ mode: 'strip' });
     });
 
     it('should include tags and deprecated status', () => {

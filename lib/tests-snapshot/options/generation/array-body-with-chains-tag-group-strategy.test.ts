@@ -65,11 +65,9 @@ test('array-body-with-chains-tag-group-strategy', async () => {
     // Zod Schemas
     export const put_test_Body = z
       .array(
-        z
-          .object({
-            testItem: z.string().optional(),
-          })
-          .strict(),
+        z.strictObject({
+          testItem: z.string().optional(),
+        }),
       )
       .min(1)
       .max(10);
@@ -85,32 +83,28 @@ test('array-body-with-chains-tag-group-strategy', async () => {
             type: "Body",
             schema: z
               .array(
-                z
-                  .object({
-                    testItem: z.string().optional(),
-                  })
-                  .strict(),
+                z.strictObject({
+                  testItem: z.string().optional(),
+                }),
               )
               .min(1)
               .max(10),
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "Success",
           },
         },
         request: {
           body: z
             .array(
-              z
-                .object({
-                  testItem: z.string().optional(),
-                })
-                .strict(),
+              z.strictObject({
+                testItem: z.string().optional(),
+              }),
             )
             .min(1)
             .max(10),

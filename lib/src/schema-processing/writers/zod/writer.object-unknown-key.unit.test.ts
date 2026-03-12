@@ -71,7 +71,7 @@ describe('ZodWriter object unknown-key behaviour', () => {
     schema.required = ['prop1'];
 
     const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.object({ prop1: z.string() }).passthrough()');
+    expect(generate(context)).toBe('z.strictObject({ prop1: z.string() })');
   });
 
   it('generates object schema with optional property', () => {
@@ -83,7 +83,7 @@ describe('ZodWriter object unknown-key behaviour', () => {
     schema.required = [];
 
     const context = createComponentContext(schema);
-    expect(generate(context)).toBe('z.object({ prop1: z.string().optional() }).passthrough()');
+    expect(generate(context)).toBe('z.strictObject({ prop1: z.string().optional() })');
   });
 
   it('generates explicit strip object schema from unknownKeyBehavior', () => {
@@ -98,6 +98,20 @@ describe('ZodWriter object unknown-key behaviour', () => {
 
     const context = createComponentContext(schema);
     expect(generate(context)).toBe('z.object({ prop1: z.string() }).strip()');
+  });
+
+  it('generates explicit strict object schema from unknownKeyBehavior using z.strictObject()', () => {
+    const propSchema = createMockSchema('string');
+    const schema = createMockSchema('object');
+    schema.properties = new CastrSchemaProperties({
+      prop1: propSchema,
+    });
+    schema.required = ['prop1'];
+    schema.additionalProperties = false;
+    schema.unknownKeyBehavior = { mode: 'strict' };
+
+    const context = createComponentContext(schema);
+    expect(generate(context)).toBe('z.strictObject({ prop1: z.string() })');
   });
 
   it('generates explicit passthrough object schema from unknownKeyBehavior', () => {
@@ -266,6 +280,30 @@ describe('ZodWriter object unknown-key behaviour', () => {
 
     expect(generate(context)).toBe(
       'z.object({ get children() { return z.array(Node); }, value: z.string() })',
+    );
+  });
+
+  it('uses z.strictObject() for recursive strict object schemas', () => {
+    const childSchema = createMockSchema('array', {
+      circularReferences: ['#/components/schemas/Node'],
+    });
+    childSchema.items = createMockSchema(undefined, {}, '#/components/schemas/Node');
+
+    const schema = createMockSchema('object', {
+      circularReferences: ['#/components/schemas/Node'],
+    });
+    schema.properties = new CastrSchemaProperties({
+      value: createMockSchema('string'),
+      children: childSchema,
+    });
+    schema.required = ['value', 'children'];
+    schema.additionalProperties = false;
+    schema.unknownKeyBehavior = { mode: 'strict' };
+
+    const context = createComponentContext(schema, 'Node');
+
+    expect(generate(context)).toBe(
+      'z.strictObject({ get children() { return z.array(Node); }, value: z.string() })',
     );
   });
 

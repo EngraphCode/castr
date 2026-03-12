@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
 import { extractContent } from '../../tests-helpers/generation-result-assertions.js';
+import { generateZodClientFromOpenAPI } from './test-utils.js';
 
 /**
  * Characterisation Tests: Full Generation Pipeline

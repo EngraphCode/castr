@@ -130,7 +130,7 @@ test('enum-null', async () => {
       .object({
         field: z.xor([Null1, Null2, Null3, Null4, z.string()]).optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {

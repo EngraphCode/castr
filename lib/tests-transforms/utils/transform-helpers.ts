@@ -16,7 +16,8 @@ import { buildIR } from '../../src/schema-processing/parsers/openapi/index.js';
 import type { CastrDocument } from '../../src/schema-processing/ir/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.js';
-import type { parseZodSource } from '../../src/schema-processing/parsers/zod/index.js';
+import { parseZodSource } from '../../src/schema-processing/parsers/zod/index.js';
+import type { ZodParseOptions } from '../../src/schema-processing/parsers/zod/zod-parser.types.js';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/generate-from-context.js';
 import { isSingleFileResult } from '../../src/rendering/generation-result.js';
 import { parseComponentRef } from '../../src/shared/ref-resolution.js';
@@ -55,6 +56,7 @@ export interface ZodFixtureDefinition {
   name: string;
   path: string;
   roundTripSchemaNames?: readonly string[];
+  zodParseOptions?: ZodParseOptions;
   generationFailures?: readonly ZodFixtureGenerationFailure[];
 }
 
@@ -79,25 +81,12 @@ export const ZOD_FIXTURES: readonly ZodFixtureDefinition[] = [
   {
     name: 'unknown-key-semantics',
     path: `${ZOD_FIXTURES_DIR}/unknown-key-semantics.zod4.ts`,
+    zodParseOptions: { nonStrictObjectPolicy: 'strip' },
     roundTripSchemaNames: [
       'StripObjectSchema',
       'PassthroughObjectSchema',
       'CatchallObjectSchema',
       'RecursiveStripCategorySchema',
-    ],
-    generationFailures: [
-      {
-        label: 'recursive passthrough fails fast',
-        schemaNames: ['RecursivePassthroughCategorySchema'],
-        expectedError:
-          /Recursive object schemas with unknown-key behavior "passthrough" cannot yet be emitted safely in Zod\./,
-      },
-      {
-        label: 'recursive catchall fails fast',
-        schemaNames: ['RecursiveCatchallCategorySchema'],
-        expectedError:
-          /Recursive object schemas with unknown-key behavior "catchall" cannot yet be emitted safely in Zod\./,
-      },
     ],
   },
 ];
@@ -120,7 +109,7 @@ export const ZOD_GENERATION_FAILURE_FIXTURES: readonly ZodFixtureGenerationFailu
  */
 export async function parseToIR(specPath: string): Promise<ReturnType<typeof buildIR>> {
   const result = await loadOpenApiDocument(specPath);
-  return buildIR(result.document);
+  return buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
 }
 
 /**
@@ -137,7 +126,7 @@ export async function runTransformPass(
   const openApiOutput = writeOpenApi(originalIR);
 
   // Parse the output back to IR (using in-memory document)
-  const transformedIR = buildIR(openApiOutput);
+  const transformedIR = buildIR(openApiOutput, { nonStrictObjectPolicy: 'strip' });
 
   return { originalIR, transformedIR };
 }
@@ -152,6 +141,7 @@ export async function generateZodFromOpenAPI(
   const result = await generateZodClientFromOpenAPI({
     openApiDoc,
     disableWriteToFile: true,
+    options: { nonStrictObjectPolicy: 'strip' },
   });
 
   if (!isSingleFileResult(result)) {
@@ -209,6 +199,7 @@ export function assertValidationParity(
   fixtureName: string,
   originalSchemas: Record<string, Zod1.ZodTypeAny>,
   transformedSchemas: Record<string, Zod1.ZodTypeAny>,
+  schemaNames?: readonly string[],
 ): void {
   const harness = ParityPayloadHarness[fixtureName];
   if (!harness) {
@@ -216,6 +207,10 @@ export function assertValidationParity(
   } // Skip if no payloads defined
 
   for (const [schemaName, payloads] of Object.entries(harness)) {
+    if (schemaNames && !schemaNames.includes(schemaName)) {
+      continue;
+    }
+
     const originalSchema = originalSchemas[schemaName];
     const transformedSchema =
       transformedSchemas[schemaName] || transformedSchemas[schemaName.replace(/Schema$/, '')];
@@ -262,6 +257,7 @@ export function assertParsedOutputParity(
   fixtureName: string,
   originalSchemas: Record<string, Zod1.ZodTypeAny>,
   transformedSchemas: Record<string, Zod1.ZodTypeAny>,
+  schemaNames?: readonly string[],
 ): void {
   const harness = ParityPayloadHarness[fixtureName];
   if (!harness) {
@@ -269,6 +265,10 @@ export function assertParsedOutputParity(
   }
 
   for (const [schemaName, payloads] of Object.entries(harness)) {
+    if (schemaNames && !schemaNames.includes(schemaName)) {
+      continue;
+    }
+
     if (!payloads.parsedOutput) {
       continue;
     }
@@ -390,6 +390,13 @@ export function selectFixtureRoundTripDocument(
  */
 export async function readZodFixture(path: string): Promise<string> {
   return readFile(path, 'utf-8');
+}
+
+export function parseFixtureZodSource(
+  fixture: ZodFixtureDefinition,
+  source: string,
+): ReturnType<typeof parseZodSource> {
+  return parseZodSource(source, fixture.zodParseOptions);
 }
 
 // Re-export dependencies for test files

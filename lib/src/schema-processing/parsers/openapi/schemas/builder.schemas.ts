@@ -18,6 +18,8 @@ import type { IRBuildContext } from '../builder.types.js';
 import type { IRComponentSchemaContext, IRComponent } from '../../../ir/index.js';
 import { buildCastrSchema } from '../builder.core.js';
 import { detectCircularReferences } from '../components/builder.circular.js';
+import type { NonStrictObjectPolicyOptions } from '../../../non-strict-object-policy.js';
+import { resolveNonStrictObjectPolicy } from '../../../non-strict-object-policy.js';
 
 /**
  * Build IR components from OpenAPI components object.
@@ -44,15 +46,19 @@ import { detectCircularReferences } from '../components/builder.circular.js';
  *
  * @public
  */
-export function buildCastrSchemas(components: ComponentsObject | undefined): IRComponent[] {
+export function buildCastrSchemas(
+  components: ComponentsObject | undefined,
+  options?: NonStrictObjectPolicyOptions,
+): IRComponent[] {
   if (!components) {
     return [];
   }
 
   const irComponents: IRComponent[] = [];
+  const nonStrictObjectPolicy = resolveNonStrictObjectPolicy(options);
 
   if (components.schemas) {
-    irComponents.push(...buildSchemaComponents(components.schemas));
+    irComponents.push(...buildSchemaComponents(components.schemas, nonStrictObjectPolicy));
   }
 
   if (components.securitySchemes) {
@@ -60,15 +66,17 @@ export function buildCastrSchemas(components: ComponentsObject | undefined): IRC
   }
 
   if (components.parameters) {
-    irComponents.push(...buildParameterComponents(components.parameters));
+    irComponents.push(...buildParameterComponents(components.parameters, nonStrictObjectPolicy));
   }
 
   if (components.responses) {
-    irComponents.push(...buildResponseComponents(components.responses));
+    irComponents.push(...buildResponseComponents(components.responses, nonStrictObjectPolicy));
   }
 
   if (components.requestBodies) {
-    irComponents.push(...buildRequestBodyComponents(components.requestBodies));
+    irComponents.push(
+      ...buildRequestBodyComponents(components.requestBodies, nonStrictObjectPolicy),
+    );
   }
 
   // Detect and populate circular references (only for schema components)
@@ -93,11 +101,13 @@ export function buildComponentSchema(
   name: string,
   schema: SchemaObject | ReferenceObject,
   doc: OpenAPIObject,
+  options?: NonStrictObjectPolicyOptions,
 ): IRComponentSchemaContext {
   const context: IRBuildContext = {
     doc,
     path: ['#', 'components', 'schemas', name],
     required: true, // Component schemas are always "required" (never .optional())
+    nonStrictObjectPolicy: resolveNonStrictObjectPolicy(options),
   };
 
   const irSchema = buildCastrSchema(schema, context);
@@ -112,6 +122,7 @@ export function buildComponentSchema(
 
 function buildSchemaComponents(
   schemas: Record<string, SchemaObject | ReferenceObject>,
+  nonStrictObjectPolicy: ReturnType<typeof resolveNonStrictObjectPolicy>,
 ): IRComponent[] {
   // We need a dummy doc for now as buildSchemaComponents signature doesn't include it.
   // In a real scenario, we should pass the doc down.
@@ -126,7 +137,9 @@ function buildSchemaComponents(
   };
 
   return Object.entries(schemas).map(([name, schema]) => {
-    const componentContext = buildComponentSchema(name, schema, dummyDoc);
+    const componentContext = buildComponentSchema(name, schema, dummyDoc, {
+      nonStrictObjectPolicy,
+    });
 
     return {
       type: 'schema',

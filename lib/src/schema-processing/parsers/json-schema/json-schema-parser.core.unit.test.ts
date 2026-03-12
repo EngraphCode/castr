@@ -9,8 +9,12 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { parseJsonSchemaObject } from './json-schema-parser.core.js';
+import { parseJsonSchemaObject as parseJsonSchemaObjectBase } from './json-schema-parser.core.js';
 import { CastrSchemaProperties, UUID_V7_PATTERN } from '../../ir/index.js';
+
+const TEST_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
+const parseJsonSchemaObject = (input: Parameters<typeof parseJsonSchemaObjectBase>[0]) =>
+  parseJsonSchemaObjectBase(input, TEST_NON_STRICT_OBJECT_POLICY);
 
 describe('parseJsonSchemaObject', () => {
   // =========================================================================

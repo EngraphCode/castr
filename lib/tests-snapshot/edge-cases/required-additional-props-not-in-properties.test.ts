@@ -21,7 +21,7 @@ test('required-additional-props-not-in-properties', () => {
         "code": "z.object({
       email: z.string(),
       name: z.string(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "email": {

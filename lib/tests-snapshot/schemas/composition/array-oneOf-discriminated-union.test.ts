@@ -75,12 +75,12 @@ test('array-oneOf-discriminated-union', async () => {
           .object({
             type: z.literal("a"),
           })
-          .strict(),
+          .strip(),
         z
           .object({
             type: z.literal("b"),
           })
-          .strict(),
+          .strip(),
       ]),
     );
     // Endpoints
@@ -96,11 +96,11 @@ test('array-oneOf-discriminated-union', async () => {
             schema: ArrayRequest,
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "Success",
           },
         },
@@ -126,11 +126,15 @@ test('array-oneOf-discriminated-union', async () => {
                       type: "object",
                       properties: { type: { type: "string", enum: ["a"] } },
                       required: ["type", "a"],
+                      additionalProperties: true,
+                      unknownKeyBehavior: { mode: "strip" },
                     },
                     {
                       type: "object",
                       properties: { type: { type: "string", enum: ["b"] } },
                       required: ["type", "b"],
+                      additionalProperties: true,
+                      unknownKeyBehavior: { mode: "strip" },
                     },
                   ],
                 },

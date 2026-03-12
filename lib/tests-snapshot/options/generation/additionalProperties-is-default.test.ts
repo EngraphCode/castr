@@ -13,7 +13,7 @@ describe('additional-properties', () => {
     expect(schema).toMatchInlineSnapshot(`
       {
           "code": "z.object({
-      }).passthrough()",
+      }).strip()",
           "schema": {
               "type": "object",
           },
@@ -32,7 +32,7 @@ describe('additional-properties', () => {
     expect(schema).toMatchInlineSnapshot(`
       {
           "code": "z.object({
-      }).passthrough()",
+      }).strip()",
           "schema": {
               "additionalProperties": true,
               "type": "object",
@@ -53,7 +53,7 @@ describe('additional-properties', () => {
     expect(schema).toMatchInlineSnapshot(`
       {
           "code": "z.object({
-      }).catchall(z.unknown())",
+      }).strip()",
           "schema": {
               "additionalProperties": {},
               "type": "object",
@@ -72,8 +72,8 @@ describe('additional-properties', () => {
 
     expect(additionalPropertiesOptOut).toMatchInlineSnapshot(`
       {
-          "code": "z.object({
-      }).strict()",
+          "code": "z.strictObject({
+      })",
           "schema": {
               "additionalProperties": false,
               "type": "object",
@@ -99,7 +99,7 @@ describe('additional-properties', () => {
           "code": "z.object({
         bar: z.number().optional(),
         foo: z.string().optional(),
-      }).passthrough()",
+      }).strip()",
           "schema": {
               "properties": {
                   "bar": {

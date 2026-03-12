@@ -11,11 +11,11 @@ import { z } from 'zod';
 // Basic Intersections (z.intersection)
 // =============================================================================
 
-const PersonBase = z.object({
+const PersonBase = z.strictObject({
   name: z.string(),
 });
 
-const HasEmail = z.object({
+const HasEmail = z.strictObject({
   email: z.email(),
 });
 
@@ -33,7 +33,7 @@ export const AndMethodSchema = PersonBase.and(HasEmail);
 // Multiple Intersections
 // =============================================================================
 
-const HasTimestamps = z.object({
+const HasTimestamps = z.strictObject({
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });
@@ -45,11 +45,11 @@ export const TripleIntersectionSchema = PersonBase.and(HasEmail).and(HasTimestam
 // Intersection with Constraints
 // =============================================================================
 
-const WithId = z.object({
+const WithId = z.strictObject({
   id: z.uuid(),
 });
 
-const WithVersion = z.object({
+const WithVersion = z.strictObject({
   version: z.int32().min(0),
 });
 

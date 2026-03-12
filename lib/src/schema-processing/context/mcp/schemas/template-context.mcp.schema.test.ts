@@ -1,11 +1,20 @@
 import { describe, expect, test } from 'vitest';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { buildInputSchemaObject, buildOutputSchemaObject } from './template-context.mcp.schemas.js';
-import { getTemplateContext } from '../../template-context.js';
+import { getTemplateContext as getTemplateContextBase } from '../../template-context.js';
 import {
   createParameterSectionSchema,
   type ParameterAccumulator,
 } from '../template-context.mcp.parameters.js';
+
+const getTemplateContext = (
+  doc: OpenAPIObject,
+  options?: Parameters<typeof getTemplateContextBase>[1],
+) =>
+  getTemplateContextBase(doc, {
+    nonStrictObjectPolicy: 'strip',
+    ...options,
+  });
 
 const baseSchema: SchemaObject = {
   type: 'object',

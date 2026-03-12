@@ -18,9 +18,9 @@ test('infer-as-object-when-only-properties-set', () => {
     {
         "code": "z.object({
       nested: z.object({
-      }).catchall(z.number()).optional(),
+      }).strip().optional(),
       str: z.string().optional(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "nested": {

@@ -24,7 +24,7 @@ describe('Parser Field Coverage - OpenAPI 3.1.x', () => {
 
   beforeAll(async () => {
     const result = await loadOpenApiDocument(`${FIXTURES_DIR}/complete-fields-3.1.yaml`);
-    ir = buildIR(result.document);
+    ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
   });
 
   // ==========================================================================
@@ -294,7 +294,7 @@ describe('Parser Field Coverage - OpenAPI 3.0.x', () => {
 
   beforeAll(async () => {
     const result = await loadOpenApiDocument(`${FIXTURES_DIR}/complete-fields-3.0.yaml`);
-    ir = buildIR(result.document);
+    ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
   });
 
   describe('3.0.x Specific Behavior', () => {

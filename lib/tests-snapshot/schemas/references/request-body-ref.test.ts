@@ -63,7 +63,7 @@ test('request-body-ref', async () => {
       .object({
         id: z.string().optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -77,11 +77,11 @@ test('request-body-ref', async () => {
             schema: PostPetsRequest,
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "OK",
           },
         },
@@ -105,6 +105,8 @@ test('request-body-ref', async () => {
                 type: "object",
                 properties: { id: { type: "string" } },
                 required: [],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             },
           },

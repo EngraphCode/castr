@@ -36,6 +36,7 @@ const ARBITRARY_FIXTURES_DIR = resolve(
   '../tests-transforms/__fixtures__/arbitrary',
 );
 const OUTPUT_DIR = resolve(import.meta.dirname, '../tests-transforms/__fixtures__/normalized');
+const STRIP_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
 
 const FIXTURES = [
   'tictactoe-3.1.yaml',
@@ -97,9 +98,9 @@ async function processFixture(fixtureName: string): Promise<void> {
 
   // Load and transform
   const result = await loadOpenApiDocument(inputPath);
-  const ir = buildIR(result.document);
+  const ir = buildIR(result.document, STRIP_NON_STRICT_OBJECT_POLICY);
   const normalized = writeOpenApi(ir);
-  const ir2 = buildIR(normalized);
+  const ir2 = buildIR(normalized, STRIP_NON_STRICT_OBJECT_POLICY);
   const reprocessed = writeOpenApi(ir2);
 
   // Write OpenAPI outputs
@@ -125,6 +126,7 @@ async function writeZodOutput(inputPath: string, outputDir: string): Promise<voi
   const zodResult = await generateZodClientFromOpenAPI({
     input: inputPath,
     disableWriteToFile: true,
+    options: STRIP_NON_STRICT_OBJECT_POLICY,
   });
   if (isSingleFileResult(zodResult)) {
     writeText(resolve(outputDir, 'zod.ts'), zodResult.content);

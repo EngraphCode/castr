@@ -89,15 +89,15 @@ test('missing-zod-chains', async () => {
         num: z.int().min(10),
         text: z.string().min(5),
       })
-      .strict();
-    export const nulltype = z.union([z.object({}).strict(), z.null()]);
+      .strip();
+    export const nulltype = z.union([z.object({}).strip(), z.null()]);
     export const anyOfType = z.union([
-      z.object({}).strict(),
+      z.object({}).strip(),
       z
         .object({
           foo: z.string().optional(),
         })
-        .strict(),
+        .strip(),
       z.null(),
     ]);
     // Endpoints

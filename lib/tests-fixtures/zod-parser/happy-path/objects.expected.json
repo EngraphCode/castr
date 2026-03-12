@@ -63,7 +63,10 @@
         }
       },
       "required": ["name", "age", "active"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -125,6 +128,9 @@
       },
       "required": ["id", "value"],
       "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -141,7 +147,7 @@
         "circularReferences": []
       }
     },
-    "PassthroughObject": {
+    "SecondaryStrictObject": {
       "type": "object",
       "properties": {
         "dataType": "CastrSchemaProperties",
@@ -167,7 +173,10 @@
         }
       },
       "required": ["known"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -264,7 +273,10 @@
         }
       },
       "required": ["required", "nullable"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -331,7 +343,10 @@
               }
             },
             "required": ["name", "email"],
-            "additionalProperties": true,
+            "additionalProperties": false,
+            "unknownKeyBehavior": {
+              "mode": "strict"
+            },
             "metadata": {
               "required": true,
               "nullable": false,
@@ -393,7 +408,10 @@
               }
             },
             "required": ["createdAt", "version"],
-            "additionalProperties": true,
+            "additionalProperties": false,
+            "unknownKeyBehavior": {
+              "mode": "strict"
+            },
             "metadata": {
               "required": true,
               "nullable": false,
@@ -413,7 +431,10 @@
         }
       },
       "required": ["user", "metadata"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -534,6 +555,9 @@
       },
       "required": ["id", "email", "website", "createdAt", "count"],
       "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,

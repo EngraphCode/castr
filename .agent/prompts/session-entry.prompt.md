@@ -23,7 +23,7 @@ Notes:
 ## 🔴 Critical Rules (Non-Negotiable)
 
 1. **Cardinal Rule:** After parsing, input is discarded. Only the IR matters.
-2. **NO CONTENT LOSS:** Format can change, content cannot.
+2. **NO CONTENT LOSS BY DEFAULT:** Format can change, content cannot, unless the caller has explicitly opted into a documented lossy compatibility mode.
 3. **Strict + Fail-Fast:** Unsupported/invalid patterns throw immediately with helpful error messages.
 4. **Deterministic Output:** Identical input must produce byte-for-byte identical output.
 5. **Zod 4 Output Policy:** Writers must emit canonical Zod 4 helpers where representable (`z.email()`, `z.url()`, `z.int()`, `z.iso.*`). Parsers must accept all canonical writer output. Non-canonical Zod 4 input may be accepted only if it maps losslessly; otherwise fail fast with a helpful error.
@@ -37,7 +37,7 @@ Notes:
 
 ## 🚀 Next Session: Start Here
 
-### Priority 1: Resume Zod Limitations Architecture Investigation
+### Priority 1: Investigate `int64` / `bigint` Semantics
 
 > **Plan of record:** [roadmap.md](../plans/roadmap.md)
 
@@ -58,7 +58,7 @@ Current repo truth for the next workstream:
 - `pnpm format:check` is green
 - `pnpm lint` is fully clean
 - `pnpm test` is green
-- `pnpm check:ci` is green again
+- `pnpm check:ci` is green
 - warning-producing quality-gate cleanup is complete:
   - `pnpm madge:circular` and `pnpm madge:orphans` are clean of the known external skipped-module warnings
   - `pnpm knip` is clean of the stale `type-fest` configuration hint
@@ -68,21 +68,37 @@ Current repo truth for the next workstream:
 - `@typescript-eslint/consistent-type-assertions` is back on `error`
 - the Characterisation boundary, MCP from-IR, Shared loader and utility, Snapshot regression, and remaining parser/writer low-count clusters are complete
 - the JSON Schema parser directory-complexity blocker is resolved via the `json-schema/normalization/` bounded context
-- the next primary slice is investigation-first, not execution-first
+- on 2026-03-12, the strict object semantics enforcement slice completed:
+  - non-strict object inputs now reject by default across Zod / OpenAPI / JSON Schema
+  - one shared opt-in ingest surface exists for compatibility normalization:
+    - `nonStrictObjectPolicy: 'reject' | 'strip'`
+  - compatibility normalization is strip-only and deliberately lossy
+  - default-path generated object outputs are explicit about strictness where the target can represent it honestly
+  - recursive strict Zod parser/writer lockstep is closed around `z.strictObject({...})`
 - UUID subtype semantics are now locked by ADR-039 and implemented at the IR/parser/writer boundary
-- the active investigation must now focus on the remaining open Zod limitation seams before choosing the next remediation plan
-- the immediate recursive unknown-key question is no longer parser/IR truth; it is whether getter syntax is truly the only canonical recursion form or only canonical for strip-compatible recursion
+- the next primary slice is now investigation-first:
+  - decide the permanent doctrine for OpenAPI / JSON Schema `int64`
+  - decide the permanent doctrine for direct `z.bigint()`
+  - determine whether portable detours reveal a transport/runtime semantic split that the current model cannot express honestly
+  - avoid introducing a user-facing strategy flag unless investigation proves no single canonical policy can satisfy doctrine
+- current local evidence for this seam shows:
+  - `format: int64` currently maps to `z.int64()` and validates `bigint`
+  - direct `z.bigint()` currently parses as `type: integer`, `format: "bigint"`
+  - portable detours remain internally consistent but ergonomically awkward at JSON transport boundaries
 
 The active primary plan is:
 
-- [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
+- [int64-bigint-semantics-investigation.md](../plans/active/int64-bigint-semantics-investigation.md)
 
 Paused supporting context that still matters:
 
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [zod-limitations-architecture-investigation.md](../plans/current/paused/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
 Recently completed adjacent context:
 
+- [strict-object-semantics-enforcement.md](../plans/current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](../plans/current/complete/type-safety-remediation.md)
 - [type-safety-remediation-follow-up.md](../plans/current/complete/type-safety-remediation-follow-up.md)
 - [recursive-unknown-key-semantics-remediation.md](../plans/current/complete/recursive-unknown-key-semantics-remediation.md)
@@ -94,36 +110,47 @@ Recent completed operational context:
 
 #### What This Session Should Do
 
-1. Read the active primary plan in [zod-limitations-architecture-investigation.md](../plans/active/zod-limitations-architecture-investigation.md)
+1. Read the active primary plan in [int64-bigint-semantics-investigation.md](../plans/active/int64-bigint-semantics-investigation.md)
 2. Re-read the durable architecture sources named by that plan before choosing any implementation path:
    - `docs/architecture/zod-round-trip-limitations.md`
-   - `docs/architecture/recursive-unknown-key-semantics.md`
    - `ADR-031`
    - `ADR-032`
    - `ADR-035`
-   - `ADR-038`
    - `ADR-039`
-3. Read the paused companion investigation in [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or setup-cost questions
-4. Start by mapping the current known limitation set and identifying the earliest confirmed loss point for each:
-   - recursive unknown-key-preserving Zod generation remains unresolved at the writer/runtime construction boundary
-   - UUID subtype semantics are preserved in IR/native Zod output but widen across standard portable detours
-   - `int64` maps to `bigint` in Zod 4
-5. Treat the recursive unknown-key seam as a focused writer/runtime investigation first:
-   - do not reopen parser/IR/portable-format layers unless new evidence forces it
-   - explicitly test whether getter syntax is universally canonical or whether preserving modes require a second tightly-scoped canonical recursion strategy
-   - compare construction families on recursive initialization safety, parsed-output parity, and design simplicity
-6. Treat this as an investigation-first slice. Do not jump into product-code remediation until the active plan's execution trigger is satisfied.
-7. Preserve the strict type-safety doctrine while investigating:
+   - [strict-object-semantics-enforcement.md](../plans/current/complete/strict-object-semantics-enforcement.md) as the immediate predecessor execution record
+3. Treat this slice as investigation-first:
+   - determine the most honest permanent doctrine before changing parser or writer behaviour
+   - do not introduce a user-facing `int64` strategy flag unless the investigation proves a single canonical policy cannot satisfy doctrine
+4. Start from the real code seams before changing behaviour:
+   - `lib/src/schema-processing/parsers/zod/types/zod-parser.zod4-formats.ts`
+   - `lib/src/schema-processing/parsers/zod/types/zod-parser.primitives.ts`
+   - `lib/src/schema-processing/writers/zod/generators/primitives.ts`
+   - `lib/tests-fixtures/zod-parser/happy-path/primitives.zod4.ts`
+   - `lib/tests-fixtures/zod-parser/happy-path/primitives.expected.json`
+   - `lib/tests-transforms/__tests__/zod-format-functions.integration.test.ts`
+   - Scenario 2 / 4 / 6 transform proofs where numeric fixtures are relevant
+5. Treat these architecture decisions as already locked unless new code evidence disproves them:
+   - strict object semantics enforcement is complete and is not the thing to reopen here
+   - do not weaken numeric semantics merely to make portable detours look more familiar
+   - do not add a public strategy flag by default
+   - if a transport/runtime split is required, prove that at the architecture level before changing API surface
+6. Use this TDD order:
+   - add or tighten failing characterization tests for current `int64` / `bigint` parser and writer behaviour
+   - add failing transform proofs for the chosen doctrine candidates
+   - only implement once one doctrine path clearly satisfies strictness, determinism, and losslessness better than the alternatives
+7. Keep the current local Practice system in use:
+
+- `AGENT.md`
+- `practice-index.md`
+- canonical `.agent/commands/`, `.agent/skills/`, and `.agent/rules/`
+- canonical `.agent/sub-agents/`
+- `.codex/config.toml`
+- `.codex/agents/`
+
+8. Preserve the strict type-safety doctrine while implementing:
    - validate `unknown` only at incoming external boundaries
    - from that point on, keep types strict
    - never discard information and recover meaning later with casts or loose helper types
-8. Keep the current local Practice system in use:
-   - `AGENT.md`
-   - `practice-index.md`
-   - canonical `.agent/commands/`, `.agent/skills/`, and `.agent/rules/`
-   - canonical `.agent/sub-agents/`
-   - `.codex/config.toml`
-   - `.codex/agents/`
 9. Invoke the installed reviewers and domain experts through `.agent/rules/invoke-reviewers.md` when changes cross their trigger boundaries
 10. Leave the next session with one obvious primary entrypoint and no stranded context
 

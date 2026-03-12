@@ -6,17 +6,18 @@
  * @module ir-real-world.petstore.char.test
  */
 
-import { generateZodClientFromOpenAPI } from '../../index.js';
 import { describe, expect, test } from 'vitest';
 import { assertAndGetSingleFileContent } from '../ir-test-helpers.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { generateZodClientFromOpenAPI } from '../test-utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PETSTORE_PATH = path.resolve(
   __dirname,
   '../../../examples/openapi/v3.0/petstore-expanded.yaml',
 );
+const ZOD_OBJECT_OUTPUT_PATTERN = /z(?:\.strictObject|\s*\.\s*object)\(\{/;
 
 describe('IR Characterization - Real-World Specs', () => {
   describe('Petstore Expanded Spec', () => {
@@ -33,7 +34,7 @@ describe('IR Characterization - Real-World Specs', () => {
       expect(content.length).toBeGreaterThan(0);
       expect(content.toLowerCase()).toContain('pet');
       expect(content.toLowerCase()).toContain('error');
-      expect(content).toContain('z.object(');
+      expect(content).toMatch(ZOD_OBJECT_OUTPUT_PATTERN);
     });
 
     test('petstore schemas have correct metadata', async () => {
@@ -47,7 +48,7 @@ describe('IR Characterization - Real-World Specs', () => {
       // PROVE: Code generation succeeds with correct schema definitions
       expect(content).toBeDefined();
       expect(content.length).toBeGreaterThan(0);
-      expect(content).toContain('z.object(');
+      expect(content).toMatch(ZOD_OBJECT_OUTPUT_PATTERN);
       expect(content.toLowerCase()).toContain('pet');
     });
 
@@ -79,7 +80,7 @@ describe('IR Characterization - Real-World Specs', () => {
       expect(content.length).toBeGreaterThan(0);
       expect(content.toLowerCase()).toContain('pet');
       expect(content.toLowerCase()).toContain('error');
-      expect(content).toContain('z.object(');
+      expect(content).toMatch(ZOD_OBJECT_OUTPUT_PATTERN);
     });
   });
 });

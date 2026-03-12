@@ -24,11 +24,17 @@ import {
   parseComposition,
 } from './json-schema-parser.helpers.js';
 import { parse2020Keywords } from './json-schema-parser.2020-keywords.js';
+import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
+import { resolveNonStrictObjectPolicy } from '../../non-strict-object-policy.js';
 
 // Re-export for public API compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE = 'null';
+
+interface JsonSchemaParseContext {
+  nonStrictObjectPolicy: ReturnType<typeof resolveNonStrictObjectPolicy>;
+}
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -38,7 +44,21 @@ const NULL_TYPE = 'null';
  * Parse a normalized JSON Schema 2020-12 object into CastrSchema IR.
  * @public
  */
-export function parseJsonSchemaObject(input: JsonSchema2020): CastrSchema {
+export function parseJsonSchemaObject(
+  input: JsonSchema2020,
+  options?: NonStrictObjectPolicyOptions,
+): CastrSchema {
+  const context: JsonSchemaParseContext = {
+    nonStrictObjectPolicy: resolveNonStrictObjectPolicy(options),
+  };
+
+  return parseJsonSchemaObjectWithContext(input, context);
+}
+
+function parseJsonSchemaObjectWithContext(
+  input: JsonSchema2020,
+  context: JsonSchemaParseContext,
+): CastrSchema {
   if (input.$ref !== undefined) {
     return { $ref: input.$ref, metadata: createDefaultMetadata() };
   }
@@ -50,12 +70,15 @@ export function parseJsonSchemaObject(input: JsonSchema2020): CastrSchema {
   parseStringConstraints(input, result);
   parseNumberConstraints(input, result);
   parseEnumConst(input, result);
-  parseObjectFields(input, result, parseJsonSchemaObject);
-  parseArrayFields(input, result, parseJsonSchemaObject);
-  parseComposition(input, result, parseJsonSchemaObject);
+  const parseSchema = (schemaInput: JsonSchema2020): CastrSchema =>
+    parseJsonSchemaObjectWithContext(schemaInput, context);
+
+  parseObjectFields(input, result, parseSchema, context);
+  parseArrayFields(input, result, parseSchema);
+  parseComposition(input, result, parseSchema);
   parseCoreMetadata(input, result);
   parseAccessMetadata(input, result);
-  parse2020Keywords(input, result, parseJsonSchemaObject);
+  parse2020Keywords(input, result, parseSchema);
 
   return result;
 }

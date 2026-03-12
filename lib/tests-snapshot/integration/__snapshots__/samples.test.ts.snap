@@ -10,20 +10,18 @@ export type CreateUserInput = {
   /** Unique handle for the user */ username: unknown;
 };
 // Zod Schemas
-export const CreateUserInput = z
-  .object({
-    age: z
-      .int()
-      .nullable()
-      .optional()
-      .meta({ description: "Optional age in years" }),
-    email: z.email(),
-    username: z
-      .string()
-      .nullable()
-      .meta({ description: "Unique handle for the user" }),
-  })
-  .strict();
+export const CreateUserInput = z.strictObject({
+  age: z
+    .int()
+    .nullable()
+    .optional()
+    .meta({ description: "Optional age in years" }),
+  email: z.email(),
+  username: z
+    .string()
+    .nullable()
+    .meta({ description: "Unique handle for the user" }),
+});
 // Endpoints
 export const endpoints = [
   {
@@ -57,7 +55,7 @@ export const endpoints = [
       .object({
         id: z.uuid().optional(),
       })
-      .passthrough(),
+      .strip(),
     errors: [],
     responses: {
       201: {
@@ -65,7 +63,7 @@ export const endpoints = [
           .object({
             id: z.uuid().optional(),
           })
-          .passthrough(),
+          .strip(),
         description: "User created successfully",
       },
     },
@@ -160,6 +158,8 @@ export const mcpTools = [
         type: "object",
         properties: { id: { type: "string", format: "uuid" } },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -262,21 +262,21 @@ export const endpoints = [
     path: "/",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).passthrough(),
+    response: z.strictObject({}),
     errors: [
       {
         status: 300,
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "300 response",
       },
     ],
     responses: {
       200: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "200 response",
       },
       300: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "300 response",
       },
     },
@@ -288,15 +288,15 @@ export const endpoints = [
     path: "/v2",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).passthrough(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "200 response",
       },
       203: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "203 response",
       },
     },
@@ -382,7 +382,7 @@ export const endpoints = [
             examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
           }),
       })
-      .passthrough()
+      .strip()
       .meta({ description: "subscription information" }),
     errors: [],
     responses: {
@@ -397,7 +397,7 @@ export const endpoints = [
                 examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
               }),
           })
-          .passthrough()
+          .strip()
           .meta({ description: "subscription information" }),
         description: "subscription successfully created",
       },
@@ -447,6 +447,8 @@ export const mcpTools = [
         },
         required: ["subscriptionId"],
         description: "subscription information",
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -489,13 +491,13 @@ export const user = z
     username: z.string().optional(),
     uuid: z.string().optional(),
   })
-  .passthrough();
+  .strip();
 export const repository = z
   .object({
     owner: user.optional(),
     slug: z.string().optional(),
   })
-  .passthrough();
+  .strip();
 export const pullrequest = z
   .object({
     author: user.optional(),
@@ -503,7 +505,7 @@ export const pullrequest = z
     repository: repository.optional(),
     title: z.string().optional(),
   })
-  .passthrough();
+  .strip();
 // Endpoints
 export const endpoints = [
   {
@@ -673,11 +675,11 @@ export const endpoints = [
         schema: z.string(),
       },
     ],
-    response: z.object({}).passthrough(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       204: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "the PR was successfully merged",
       },
     },
@@ -742,6 +744,8 @@ export const mcpTools = [
         type: "object",
         properties: { username: { type: "string" }, uuid: { type: "string" } },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -791,10 +795,14 @@ export const mcpTools = [
                     uuid: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: true,
+                  unknownKeyBehavior: { mode: "strip" },
                 },
                 slug: { type: "string" },
               },
               required: [],
+              additionalProperties: true,
+              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -845,10 +853,14 @@ export const mcpTools = [
               uuid: { type: "string" },
             },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           slug: { type: "string" },
         },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -907,6 +919,8 @@ export const mcpTools = [
                     uuid: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: true,
+                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: { type: "integer" },
                 repository: {
@@ -919,14 +933,20 @@ export const mcpTools = [
                         uuid: { type: "string" },
                       },
                       required: [],
+                      additionalProperties: true,
+                      unknownKeyBehavior: { mode: "strip" },
                     },
                     slug: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: true,
+                  unknownKeyBehavior: { mode: "strip" },
                 },
                 title: { type: "string" },
               },
               required: [],
+              additionalProperties: true,
+              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -978,6 +998,8 @@ export const mcpTools = [
               uuid: { type: "string" },
             },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           id: { type: "integer" },
           repository: {
@@ -990,14 +1012,20 @@ export const mcpTools = [
                   uuid: { type: "string" },
                 },
                 required: [],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
               slug: { type: "string" },
             },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           title: { type: "string" },
         },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -1077,14 +1105,14 @@ export const Pet = z
     name: z.string(),
     tag: z.string().optional(),
   })
-  .passthrough();
+  .strip();
 export const Pets = z.array(Pet).max(100);
 export const ErrorSchema = z
   .object({
     code: z.int32(),
     message: z.string(),
   })
-  .passthrough();
+  .strip();
 // Endpoints
 export const endpoints = [
   {
@@ -1137,7 +1165,7 @@ export const endpoints = [
         schema: Pet,
       },
     ],
-    response: z.object({}).passthrough(),
+    response: z.strictObject({}),
     errors: [
       {
         status: "default",
@@ -1147,7 +1175,7 @@ export const endpoints = [
     ],
     responses: {
       201: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "Null response",
       },
       default: {
@@ -1232,6 +1260,8 @@ export const mcpTools = [
                 tag: { type: "string" },
               },
               required: ["id", "name"],
+              additionalProperties: true,
+              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -1270,6 +1300,8 @@ export const mcpTools = [
               tag: { type: "string" },
             },
             required: ["id", "name"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -1316,6 +1348,8 @@ export const mcpTools = [
           tag: { type: "string" },
         },
         required: ["id", "name"],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -1356,20 +1390,20 @@ export const NewPet = z
     name: z.string(),
     tag: z.string().optional(),
   })
-  .passthrough();
+  .strip();
 export const Pet = NewPet.and(
   z
     .object({
       id: z.int64(),
     })
-    .passthrough(),
+    .strip(),
 );
 export const ErrorSchema = z
   .object({
     code: z.int32(),
     message: z.string(),
   })
-  .passthrough();
+  .strip();
 // Endpoints
 export const endpoints = [
   {
@@ -1509,7 +1543,7 @@ export const endpoints = [
         description: "ID of pet to delete",
       },
     ],
-    response: z.object({}).passthrough(),
+    response: z.strictObject({}),
     errors: [
       {
         status: "default",
@@ -1519,7 +1553,7 @@ export const endpoints = [
     ],
     responses: {
       204: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "pet deleted",
       },
       default: {
@@ -1571,11 +1605,15 @@ export const mcpTools = [
                     tag: { type: "string" },
                   },
                   required: ["name"],
+                  additionalProperties: true,
+                  unknownKeyBehavior: { mode: "strip" },
                 },
                 {
                   type: "object",
                   properties: { id: { type: "integer", format: "int64" } },
                   required: ["id"],
+                  additionalProperties: true,
+                  unknownKeyBehavior: { mode: "strip" },
                 },
               ],
             },
@@ -1611,6 +1649,8 @@ export const mcpTools = [
             type: "object",
             properties: { name: { type: "string" }, tag: { type: "string" } },
             required: ["name"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -1627,11 +1667,15 @@ export const mcpTools = [
                   tag: { type: "string" },
                 },
                 required: ["name"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
               {
                 type: "object",
                 properties: { id: { type: "integer", format: "int64" } },
                 required: ["id"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             ],
           },
@@ -1683,11 +1727,15 @@ export const mcpTools = [
                   tag: { type: "string" },
                 },
                 required: ["name"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
               {
                 type: "object",
                 properties: { id: { type: "integer", format: "int64" } },
                 required: ["id"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             ],
           },
@@ -1786,12 +1834,12 @@ export const dataSetList = z
               .optional()
               .meta({ description: "To be used as a version parameter value" }),
           })
-          .passthrough(),
+          .strip(),
       )
       .optional(),
     total: z.int().optional(),
   })
-  .passthrough();
+  .strip();
 export const perform_search_Body = z
   .object({
     criteria: z
@@ -1812,7 +1860,7 @@ export const perform_search_Body = z
       .optional()
       .meta({ description: "Starting record number. Default value is 0." }),
   })
-  .passthrough();
+  .strip();
 // Endpoints
 export const endpoints = [
   {
@@ -1925,24 +1973,24 @@ export const endpoints = [
                 description: "Starting record number. Default value is 0.",
               }),
           })
-          .passthrough(),
+          .strip(),
       },
     ],
-    response: z.array(z.object({}).catchall(z.object({}).passthrough())),
+    response: z.array(z.object({}).strip()),
     errors: [
       {
         status: 404,
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "No matching record found for the given criteria.",
       },
     ],
     responses: {
       200: {
-        schema: z.array(z.object({}).catchall(z.object({}).passthrough())),
+        schema: z.array(z.object({}).strip()),
         description: "successful operation",
       },
       404: {
-        schema: z.object({}).passthrough(),
+        schema: z.strictObject({}),
         description: "No matching record found for the given criteria.",
       },
     },
@@ -1975,7 +2023,7 @@ export const endpoints = [
               description: "Starting record number. Default value is 0.",
             }),
         })
-        .passthrough(),
+        .strip(),
     },
     alias: "perform-search",
     description:
@@ -2016,11 +2064,15 @@ export const mcpTools = [
                 },
               },
               required: [],
+              additionalProperties: true,
+              unknownKeyBehavior: { mode: "strip" },
             },
           },
           total: { type: "integer" },
         },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -2115,6 +2167,8 @@ export const mcpTools = [
               },
             },
             required: ["criteria"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -2134,28 +2188,8 @@ export const mcpTools = [
             type: "array",
             items: {
               type: "object",
-              additionalProperties: { type: "object" },
-              unknownKeyBehavior: {
-                mode: "catchall",
-                schema: {
-                  metadata: {
-                    required: false,
-                    nullable: false,
-                    dependencyGraph: {
-                      references: [],
-                      referencedBy: [],
-                      depth: 0,
-                    },
-                    zodChain: {
-                      presence: ".optional()",
-                      validations: [],
-                      defaults: [],
-                    },
-                    circularReferences: [],
-                  },
-                  type: "object",
-                },
-              },
+              additionalProperties: true,
+              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -2188,7 +2222,7 @@ export const endpoints = [
     path: "/users",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).passthrough(),
+    response: z.strictObject({}),
     errors: [],
     responses: {},
     request: {},
@@ -2275,7 +2309,7 @@ export const status = z
     board: board.optional(),
     winner: winner.optional(),
   })
-  .passthrough();
+  .strip();
 // Endpoints
 export const endpoints = [
   {
@@ -2395,6 +2429,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -2566,6 +2602,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: true,
+        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,

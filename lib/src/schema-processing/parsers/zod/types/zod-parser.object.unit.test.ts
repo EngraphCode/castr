@@ -12,9 +12,9 @@ import { parseObjectZod } from './zod-parser.object.js';
 import './zod-parser.primitives.js';
 
 describe('Zod Object Parsing', () => {
-  it('should parse a basic object with primitive properties', () => {
+  it('should parse a basic strict object with primitive properties', () => {
     const result = parseObjectZod(`
-      z.object({
+      z.strictObject({
         name: z.string(),
         age: z.number(),
         active: z.boolean()
@@ -30,9 +30,9 @@ describe('Zod Object Parsing', () => {
 
   it('should parse a strict object (additionalProperties: false)', () => {
     const result = parseObjectZod(`
-      z.object({
+      z.strictObject({
         id: z.string()
-      }).strict()
+      })
     `);
 
     expect(result?.type).toBe('object');
@@ -41,63 +41,84 @@ describe('Zod Object Parsing', () => {
     expect(result?.properties?.get('id')?.type).toBe('string');
   });
 
-  it('should parse a passthrough object (additionalProperties: true)', () => {
-    const result = parseObjectZod(`
-      z.object({
-        id: z.string()
-      }).passthrough()
-    `);
+  it('rejects passthrough objects by default', () => {
+    expect(() =>
+      parseObjectZod(`
+        z.object({
+          id: z.string()
+        }).passthrough()
+      `),
+    ).toThrow(/strict object ingest is the default/);
+  });
+
+  it('normalizes passthrough objects to strip in compatibility mode', () => {
+    const result = parseObjectZod(
+      `
+        z.object({
+          id: z.string()
+        }).passthrough()
+      `,
+      { nonStrictObjectPolicy: 'strip' },
+    );
 
     expect(result?.type).toBe('object');
     expect(result?.additionalProperties).toBe(true);
-    expect(result?.unknownKeyBehavior).toEqual({ mode: 'passthrough' });
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
     expect(result?.properties?.get('id')?.type).toBe('string');
   });
 
-  it('should parse a generic object (strip unknown - default)', () => {
-    const result = parseObjectZod(`
-      z.object({
-        id: z.string()
-      })
-    `);
+  it('rejects a generic object (strip unknown - default)', () => {
+    expect(() =>
+      parseObjectZod(`
+        z.object({
+          id: z.string()
+        })
+      `),
+    ).toThrow(/strict object ingest is the default/);
+  });
 
-    // Default z.object() uses "strip" semantics: safeParse() succeeds with extra keys
-    // (they are stripped from output). For validation parity, this maps to
-    // additionalProperties: true — the schema accepts additional properties.
+  it('normalizes a generic object to strip in compatibility mode', () => {
+    const result = parseObjectZod(
+      `
+        z.object({
+          id: z.string()
+        })
+      `,
+      { nonStrictObjectPolicy: 'strip' },
+    );
+
     expect(result?.additionalProperties).toBe(true);
     expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
   });
 
-  it('should parse an explicit strip object', () => {
-    const result = parseObjectZod(`
-      z.object({
-        id: z.string()
-      }).strip()
-    `);
+  it('normalizes an explicit strip object in compatibility mode', () => {
+    const result = parseObjectZod(
+      `
+        z.object({
+          id: z.string()
+        }).strip()
+      `,
+      { nonStrictObjectPolicy: 'strip' },
+    );
 
     expect(result?.type).toBe('object');
     expect(result?.additionalProperties).toBe(true);
     expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
   });
 
-  it('should parse a catchall object with typed additional properties', () => {
-    const result = parseObjectZod(`
-      z.object({
-        id: z.string()
-      }).catchall(z.string())
-    `);
+  it('normalizes a catchall object to strip in compatibility mode', () => {
+    const result = parseObjectZod(
+      `
+        z.object({
+          id: z.string()
+        }).catchall(z.string())
+      `,
+      { nonStrictObjectPolicy: 'strip' },
+    );
 
     expect(result?.type).toBe('object');
-    expect(result?.unknownKeyBehavior).toBeDefined();
-    expect(result?.unknownKeyBehavior?.mode).toBe('catchall');
-    expect(typeof result?.additionalProperties).toBe('object');
-    if (
-      result?.unknownKeyBehavior?.mode === 'catchall' &&
-      typeof result.additionalProperties === 'object'
-    ) {
-      expect(result.unknownKeyBehavior.schema.type).toBe('string');
-      expect(result.additionalProperties.type).toBe('string');
-    }
+    expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
+    expect(result?.additionalProperties).toBe(true);
   });
 
   it('should fail fast when a catchall schema cannot be parsed', () => {
@@ -110,12 +131,15 @@ describe('Zod Object Parsing', () => {
     ).toThrow(/Unsupported or unparseable Zod \.catchall\(\) schema/);
   });
 
-  it('should let the last unknown-key modifier win', () => {
-    const result = parseObjectZod(`
-      z.object({
-        id: z.string()
-      }).passthrough().strict().strip()
-    `);
+  it('should let the last unknown-key modifier win before compatibility normalization', () => {
+    const result = parseObjectZod(
+      `
+        z.object({
+          id: z.string()
+        }).passthrough().strict().strip()
+      `,
+      { nonStrictObjectPolicy: 'strip' },
+    );
 
     expect(result?.additionalProperties).toBe(true);
     expect(result?.unknownKeyBehavior).toEqual({ mode: 'strip' });
@@ -123,7 +147,7 @@ describe('Zod Object Parsing', () => {
 
   it('should handle optional and nullable properties correctly in required list', () => {
     const result = parseObjectZod(`
-      z.object({
+      z.strictObject({
         req: z.string(),
         opt: z.string().optional(),
         nullable: z.string().nullable(),
@@ -132,15 +156,15 @@ describe('Zod Object Parsing', () => {
     `);
 
     expect(result?.required).toContain('req');
-    expect(result?.required).toContain('nullable'); // nullable is still required key, value can be null
+    expect(result?.required).toContain('nullable');
     expect(result?.required).not.toContain('opt');
     expect(result?.required).not.toContain('nullish');
   });
 
-  it('should parse nested objects', () => {
+  it('should parse nested strict objects', () => {
     const result = parseObjectZod(`
-      z.object({
-        user: z.object({
+      z.strictObject({
+        user: z.strictObject({
           name: z.string()
         })
       })
@@ -151,7 +175,21 @@ describe('Zod Object Parsing', () => {
     expect(userSchema?.properties?.get('name')?.type).toBe('string');
   });
 
-  // Note: z.object({...}).extend({...}) is composition/inheritance.
-  // We might test it here if parseObjectZod supports it, or later.
-  // For basic parser, focus on z.object() definition.
+  it('normalizes nested non-strict objects in compatibility mode', () => {
+    const result = parseObjectZod(
+      `
+        z.strictObject({
+          user: z.object({
+            name: z.string()
+          }).passthrough()
+        })
+      `,
+      { nonStrictObjectPolicy: 'strip' },
+    );
+
+    const userSchema = result?.properties?.get('user');
+    expect(userSchema?.type).toBe('object');
+    expect(userSchema?.additionalProperties).toBe(true);
+    expect(userSchema?.unknownKeyBehavior).toEqual({ mode: 'strip' });
+  });
 });

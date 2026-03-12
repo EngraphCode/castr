@@ -31,6 +31,7 @@ export interface CliOptions {
   withValidationHelpers?: boolean;
   withSchemaRegistry?: boolean;
   emitMcpManifest?: string;
+  nonStrictObjectPolicy?: string;
 }
 
 /**
@@ -41,6 +42,7 @@ export interface ParsedCliOptions {
   groupStrategy: TemplateContextOptions['groupStrategy'];
   complexityThreshold: number | undefined;
   defaultStatusBehavior: TemplateContextOptions['defaultStatusBehavior'];
+  nonStrictObjectPolicy: TemplateContextOptions['nonStrictObjectPolicy'];
 }
 
 /**
@@ -104,7 +106,8 @@ export function addParsedOptions(
   parsedOptions: ParsedCliOptions,
   generationOptions: Partial<TemplateContextOptions>,
 ): void {
-  const { groupStrategy, complexityThreshold, defaultStatusBehavior } = parsedOptions;
+  const { groupStrategy, complexityThreshold, defaultStatusBehavior, nonStrictObjectPolicy } =
+    parsedOptions;
   if (groupStrategy) {
     generationOptions.groupStrategy = groupStrategy;
   }
@@ -113,6 +116,9 @@ export function addParsedOptions(
   }
   if (defaultStatusBehavior) {
     generationOptions.defaultStatusBehavior = defaultStatusBehavior;
+  }
+  if (nonStrictObjectPolicy !== undefined) {
+    generationOptions.nonStrictObjectPolicy = nonStrictObjectPolicy;
   }
 }
 

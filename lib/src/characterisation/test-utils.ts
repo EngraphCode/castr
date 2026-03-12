@@ -1,8 +1,20 @@
+import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import {
   extractContent,
   assertSingleFileResult,
 } from '../../tests-helpers/generation-result-assertions.js';
+import {
+  generateZodClientFromOpenAPI as generateZodClientFromOpenAPIBase,
+  type GenerateZodClientFromOpenApiArgs,
+} from '../rendering/index.js';
 import type { GenerationResult } from '../rendering/generation-result.js';
+import {
+  getZodClientTemplateContext as getZodClientTemplateContextBase,
+  type TemplateContext,
+  type TemplateContextOptions,
+} from '../schema-processing/context/index.js';
+
+const STRIP_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
 
 /**
  * Type Guard: Assert value is a string
@@ -39,6 +51,36 @@ export function assertAndExtractContent(result: GenerationResult, context?: stri
   } catch (error) {
     throw new Error(`Expected single file GenerationResult${contextPart}: ${error}`);
   }
+}
+
+/**
+ * Characterisation helper: keep legacy non-strict OpenAPI fixtures on the explicit
+ * compatibility path instead of silently relying on default permissive ingest.
+ */
+export function generateZodClientFromOpenAPI(
+  args: GenerateZodClientFromOpenApiArgs,
+): Promise<GenerationResult> {
+  return generateZodClientFromOpenAPIBase({
+    ...args,
+    options: {
+      ...STRIP_COMPATIBILITY_OPTIONS,
+      ...args.options,
+    },
+  });
+}
+
+/**
+ * Characterisation helper: parse legacy non-strict OpenAPI fixtures via explicit
+ * strip compatibility mode.
+ */
+export function getZodClientTemplateContext(
+  doc: OpenAPIObject,
+  options?: TemplateContextOptions,
+): TemplateContext {
+  return getZodClientTemplateContextBase(doc, {
+    ...STRIP_COMPATIBILITY_OPTIONS,
+    ...options,
+  });
 }
 
 // Re-export for convenience

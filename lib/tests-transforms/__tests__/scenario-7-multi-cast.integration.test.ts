@@ -27,6 +27,8 @@ import {
   parseZodSource,
 } from '../utils/transform-helpers.js';
 
+const ZOD_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
+
 // ============================================================================
 // Scenario 7: Multi-Cast
 // ============================================================================
@@ -53,7 +55,7 @@ describe('Transform Scenario 7: Multi-Cast (Single IR → Multiple Outputs)', ()
 
         // Output 3: Zod (via OpenAPI generator)
         const zodSource = await generateZodFromOpenAPI(openApiOutput);
-        const zodResult = parseZodSource(zodSource);
+        const zodResult = parseZodSource(zodSource, ZOD_COMPATIBILITY_OPTIONS);
         expectNoParseErrors(_name, 'Scenario 7 Zod parse', zodResult);
         const zodSchemaNames = zodResult.ir.components.map((c) => c.name).sort();
 
@@ -87,7 +89,7 @@ describe('Transform Scenario 7: Multi-Cast (Single IR → Multiple Outputs)', ()
 
         // Zod
         const zodSource = await generateZodFromOpenAPI(openApiOutput);
-        const zodResult = parseZodSource(zodSource);
+        const zodResult = parseZodSource(zodSource, ZOD_COMPATIBILITY_OPTIONS);
         expectNoParseErrors(_name, 'Scenario 7 Zod parse', zodResult);
         expect(zodResult.ir.components.length).toBe(expectedCount);
       },
@@ -101,7 +103,7 @@ describe('Transform Scenario 7: Multi-Cast (Single IR → Multiple Outputs)', ()
         const ir = await parseToIR(path);
         const openApiOutput = writeOpenApi(ir);
         const zodSource = await generateZodFromOpenAPI(openApiOutput);
-        const zodResult = parseZodSource(zodSource);
+        const zodResult = parseZodSource(zodSource, ZOD_COMPATIBILITY_OPTIONS);
 
         expectNoParseErrors(_name, 'Scenario 7 Zod output', zodResult);
       },

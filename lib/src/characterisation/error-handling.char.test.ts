@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { extractContent } from './test-utils.js';
+import { extractContent, generateZodClientFromOpenAPI } from './test-utils.js';
 
 /**
  * Characterisation Tests: Error Handling

@@ -97,7 +97,7 @@ describe('writers/typescript', () => {
       expect(output).toContain('// Type Definitions');
       expect(output).toContain('export type User =');
       expect(output).toContain('// Zod Schemas');
-      expect(output).toContain('export const User = z.object(');
+      expect(output).toContain('export const User = z.strictObject(');
       expect(output).toContain('name: z.string()');
     });
 
@@ -432,7 +432,7 @@ describe('writers/typescript', () => {
       expect(output).toContain('// Type Definitions');
       expect(output).toContain('export type ErrorSchema =');
       expect(output).toContain('// Zod Schemas');
-      expect(output).toContain('export const ErrorSchema = z.object(');
+      expect(output).toContain('export const ErrorSchema = z.strictObject(');
       expect(output).toContain('message: z.string()');
     });
   });

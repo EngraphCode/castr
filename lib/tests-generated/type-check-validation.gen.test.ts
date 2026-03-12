@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { generateZodClientFromOpenAPI } from '../src/rendering/generate-from-context.js';
+import { generateZodClientFromOpenAPI } from './test-utils.js';
 import { isSingleFileResult } from '../src/rendering/generation-result.js';
 import { join } from 'path';
 import { validateTypeCheck } from './validation-harness.js';

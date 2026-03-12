@@ -41,9 +41,10 @@ export const ObjectPayloads = {
       { value: 42 }, // missing id
     ],
   },
-  PassthroughObjectSchema: {
-    valid: [{ known: 'x' }, { known: 'x', unknown: 'y' }],
+  SecondaryStrictObjectSchema: {
+    valid: [{ known: 'x' }],
     invalid: [
+      { known: 'x', unknown: 'y' }, // strict
       { unknown: 'y' }, // missing known
     ],
   },
@@ -129,9 +130,9 @@ export const UnionPayloads = {
     valid: [
       { type: 'card', cardNumber: '1234' },
       { type: 'bank', accountNumber: '5678' },
-      { type: 'card', cardNumber: '1234', accountNumber: '5678' }, // xor strips extra keys, matches card branch
     ],
     invalid: [
+      { type: 'card', cardNumber: '1234', accountNumber: '5678' }, // strict object branches reject extras
       { type: 'other' }, // no branch matches
       { cardNumber: '1234' }, // missing type discriminant
     ],

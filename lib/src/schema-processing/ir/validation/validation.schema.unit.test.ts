@@ -8,7 +8,7 @@
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
-import { getZodClientTemplateContext } from '../../context/index.js';
+import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../../context/index.js';
 import { isCastrDocument, isCastrSchemaNode } from './validators.js';
 import {
   getComponent,
@@ -17,6 +17,15 @@ import {
   assertHasCastrSchemaProperties,
   assertSchemaComponent,
 } from '../test-helpers.js';
+
+const getZodClientTemplateContext = (
+  doc: OpenAPIObject,
+  options?: Parameters<typeof getZodClientTemplateContextBase>[1],
+) =>
+  getZodClientTemplateContextBase(doc, {
+    nonStrictObjectPolicy: 'strip',
+    ...options,
+  });
 
 describe('IR Validation - Schema Representation', () => {
   describe('Basic Schema Representation', () => {

@@ -63,7 +63,10 @@
         }
       },
       "required": ["name", "subcategories"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -162,7 +165,10 @@
         }
       },
       "required": ["id", "email", "posts"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -260,7 +266,10 @@
         }
       },
       "required": ["id", "title", "content", "author"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -339,7 +348,10 @@
         }
       },
       "required": ["value"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -437,7 +449,10 @@
         }
       },
       "required": ["data", "next"],
-      "additionalProperties": true,
+      "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,

@@ -17,7 +17,7 @@ import { z } from 'zod';
  *
  * Uses Zod 4 getter syntax for native recursion.
  */
-export const CategorySchema = z.object({
+export const CategorySchema = z.strictObject({
   name: z.string(),
   get subcategories() {
     return z.array(CategorySchema);
@@ -31,7 +31,7 @@ export const CategorySchema = z.object({
 /**
  * User references Post, Post references User.
  */
-export const UserSchema = z.object({
+export const UserSchema = z.strictObject({
   id: z.uuid(),
   email: z.email(),
   get posts() {
@@ -39,7 +39,7 @@ export const UserSchema = z.object({
   },
 });
 
-export const PostSchema = z.object({
+export const PostSchema = z.strictObject({
   id: z.uuid(),
   title: z.string(),
   content: z.string(),
@@ -52,7 +52,7 @@ export const PostSchema = z.object({
 // Tree Structure
 // =============================================================================
 
-export const TreeNodeSchema = z.object({
+export const TreeNodeSchema = z.strictObject({
   value: z.number(),
   get left() {
     return TreeNodeSchema.optional();
@@ -66,7 +66,7 @@ export const TreeNodeSchema = z.object({
 // Linked List
 // =============================================================================
 
-export const LinkedListNodeSchema = z.object({
+export const LinkedListNodeSchema = z.strictObject({
   data: z.string(),
   get next() {
     return LinkedListNodeSchema.nullable();

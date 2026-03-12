@@ -87,6 +87,8 @@ export type ZodPrimitiveType = (typeof ZOD_PRIMITIVES)[number];
  */
 export const ZOD_COMPOSITIONS = [
   'object',
+  'strictObject',
+  'looseObject',
   'array',
   'union',
   'intersection',
@@ -104,6 +106,8 @@ export type ZodCompositionType = (typeof ZOD_COMPOSITIONS)[number];
  * @internal
  */
 export const ZOD_OBJECT_METHOD: ZodCompositionType = 'object';
+export const ZOD_STRICT_OBJECT_METHOD: ZodCompositionType = 'strictObject';
+export const ZOD_LOOSE_OBJECT_METHOD: ZodCompositionType = 'looseObject';
 
 /**
  * Named constant for the `defineEndpoint` function identifier.
@@ -151,3 +155,13 @@ export const ZOD_BASE_METHOD_UUID_V7 = 'uuidv7';
 export const ZOD_SCHEMA_TYPE_ARRAY = 'array';
 export const ZOD_SCHEMA_TYPE_STRING = 'string';
 export const ZOD_SCHEMA_TYPE_OBJECT = 'object';
+
+export const ZOD_OBJECT_BASE_METHODS = [
+  ZOD_OBJECT_METHOD,
+  ZOD_STRICT_OBJECT_METHOD,
+  ZOD_LOOSE_OBJECT_METHOD,
+] as const;
+
+export function isZodObjectBaseMethod(methodName: string): boolean {
+  return ZOD_OBJECT_BASE_METHODS.some((candidate) => candidate === methodName);
+}

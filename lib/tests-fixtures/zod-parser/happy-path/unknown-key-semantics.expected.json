@@ -144,7 +144,7 @@
             "required": ["inner"],
             "additionalProperties": true,
             "unknownKeyBehavior": {
-              "mode": "passthrough"
+              "mode": "strip"
             },
             "metadata": {
               "required": true,
@@ -167,7 +167,7 @@
       "required": ["known", "nested"],
       "additionalProperties": true,
       "unknownKeyBehavior": {
-        "mode": "passthrough"
+        "mode": "strip"
       },
       "metadata": {
         "required": true,
@@ -234,44 +234,9 @@
               }
             },
             "required": ["inner"],
-            "additionalProperties": {
-              "type": "number",
-              "metadata": {
-                "required": true,
-                "nullable": false,
-                "zodChain": {
-                  "presence": "",
-                  "validations": [],
-                  "defaults": []
-                },
-                "dependencyGraph": {
-                  "references": [],
-                  "referencedBy": [],
-                  "depth": 0
-                },
-                "circularReferences": []
-              }
-            },
+            "additionalProperties": true,
             "unknownKeyBehavior": {
-              "mode": "catchall",
-              "schema": {
-                "type": "number",
-                "metadata": {
-                  "required": true,
-                  "nullable": false,
-                  "zodChain": {
-                    "presence": "",
-                    "validations": [],
-                    "defaults": []
-                  },
-                  "dependencyGraph": {
-                    "references": [],
-                    "referencedBy": [],
-                    "depth": 0
-                  },
-                  "circularReferences": []
-                }
-              }
+              "mode": "strip"
             },
             "metadata": {
               "required": true,
@@ -292,44 +257,9 @@
         }
       },
       "required": ["known", "nested"],
-      "additionalProperties": {
-        "type": "string",
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "zodChain": {
-            "presence": "",
-            "validations": [],
-            "defaults": []
-          },
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "circularReferences": []
-        }
-      },
+      "additionalProperties": true,
       "unknownKeyBehavior": {
-        "mode": "catchall",
-        "schema": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          }
-        }
+        "mode": "strip"
       },
       "metadata": {
         "required": true,
@@ -493,7 +423,7 @@
       "required": ["name", "children"],
       "additionalProperties": true,
       "unknownKeyBehavior": {
-        "mode": "passthrough"
+        "mode": "strip"
       },
       "metadata": {
         "required": true,
@@ -573,44 +503,9 @@
         }
       },
       "required": ["name", "children"],
-      "additionalProperties": {
-        "type": "string",
-        "metadata": {
-          "required": true,
-          "nullable": false,
-          "zodChain": {
-            "presence": "",
-            "validations": [],
-            "defaults": []
-          },
-          "dependencyGraph": {
-            "references": [],
-            "referencedBy": [],
-            "depth": 0
-          },
-          "circularReferences": []
-        }
-      },
+      "additionalProperties": true,
       "unknownKeyBehavior": {
-        "mode": "catchall",
-        "schema": {
-          "type": "string",
-          "metadata": {
-            "required": true,
-            "nullable": false,
-            "zodChain": {
-              "presence": "",
-              "validations": [],
-              "defaults": []
-            },
-            "dependencyGraph": {
-              "references": [],
-              "referencedBy": [],
-              "depth": 0
-            },
-            "circularReferences": []
-          }
-        }
+        "mode": "strip"
       },
       "metadata": {
         "required": true,

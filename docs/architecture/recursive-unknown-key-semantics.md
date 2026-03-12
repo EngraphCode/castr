@@ -1,10 +1,15 @@
 # Recursive Unknown-Key Semantics
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-03-09  
+**Last Updated:** 2026-03-11  
 **Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 
 ---
+
+> [!IMPORTANT]
+> On 2026-03-11, [ADR-040](../architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) changed the forward product direction to default strict object generation, reject-by-default ingest, and one explicit lossy strip-normalization compatibility mode.
+>
+> This document is now primarily historical diagnosis and evidence for why preserving-mode remediation was investigated. The live product rule is simpler: default strict output, reject-by-default ingest, and strip-only compatibility normalization.
 
 ## Purpose
 
@@ -76,9 +81,9 @@ Conclusion:
 | Fail fast for all non-portable cases | Yes                    | Yes      | Compatible                 | Strong                                                | Valid fallback, not primary direction |
 | Accept current loss                  | No                     | No       | Superficially convenient   | Strong                                                | Rejected                              |
 
-## Chosen Direction
+## Historical Direction Before ADR-040
 
-The durable direction is defined by [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md):
+Before ADR-040, the durable direction was defined by [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md):
 
 1. Preserve object unknown-key runtime behavior as explicit IR semantics via `unknownKeyBehavior`.
 2. Keep `additionalProperties` as the portable validation/interchange view.
@@ -86,21 +91,34 @@ The durable direction is defined by [ADR-038](../architectural_decision_records/
 4. Expand transform proofs to include parsed-output parity for object unknown-key fixtures.
 5. Replace silent recursive writer degradation with fail-fast errors until a safe recursive construction strategy exists.
 
-## Implemented Behavior
+## Current Doctrine Supersession
 
-The architecture captured here is now implemented:
+ADR-040 changed the forward target:
 
-- Zod parsing preserves `strict`, `strip`, `passthrough`, and `catchall` distinctly in IR via `unknownKeyBehavior`
-- OpenAPI / JSON Schema preserve strip vs passthrough with `x-castr-unknownKeyBehavior`
-- non-recursive Zod output emits the exact unknown-key method for all four modes
-- recursive strip output remains supported via bare `z.object({...})`, which is semantically strip-mode in Zod
-- recursive `passthrough` and recursive `catchall` now fail fast with explicit generation errors instead of silently degrading
-- Scenario 2 / 4 / 6 now prove parsed-output parity for the supported unknown-key cases
+1. default ingest should reject non-strict object features with helpful errors
+2. one explicit compatibility mode may normalize non-strict object inputs to strip semantics
+3. default generated object output remains strict rather than preserving strip / passthrough / catchall as first-class product targets
+4. preserving-mode recursive emission is no longer the forward remediation goal
+
+This document therefore explains why the earlier preservation architecture existed and why the compatibility mode must now be documented as deliberately lossy.
+
+## Historical Implementation Record Under The Superseded Preservation Doctrine
+
+The architecture captured here was implemented before ADR-040 changed direction:
+
+- Zod parsing preserved `strict`, `strip`, `passthrough`, and `catchall` distinctly in IR via `unknownKeyBehavior`
+- OpenAPI / JSON Schema preserved strip vs passthrough with `x-castr-unknownKeyBehavior`
+- non-recursive Zod output emitted the exact unknown-key method for all four modes
+- recursive strip output remained supported via bare `z.object({...})`, which is semantically strip-mode in Zod
+- recursive `passthrough` and recursive `catchall` failed fast with explicit generation errors instead of silently degrading
+- Scenario 2 / 4 / 6 proved parsed-output parity for the supported unknown-key cases
 
 The remaining unsolved boundary is narrow and explicit:
 
 - safe recursive preserving emission for `.passthrough()` and `.catchall()` still does not exist in Zod output
 - the next design question is whether getter syntax is universally canonical for recursion or only canonical for strip-compatible recursion, with preserving modes potentially requiring one tightly-scoped second canonical strategy
+
+Under ADR-040 and the 2026-03-11 enforcement slice, that remaining seam is now historical evidence and implementation context rather than the primary product goal. The only live compatibility output rule is strip normalization, with recursive strip still using bare `z.object({...})` for runtime safety.
 
 ## Implementation Record
 

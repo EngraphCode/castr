@@ -76,17 +76,17 @@ test('param-with-content', async () => {
       .object({
         text1: z.string().optional(),
       })
-      .strict();
+      .strip();
     export const test2 = z
       .object({
         text2: z.number().optional(),
       })
-      .strict();
+      .strip();
     export const test3 = z
       .object({
         text3: z.boolean().optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -172,11 +172,15 @@ test('param-with-content', async () => {
                     type: "object",
                     properties: { text1: { type: "string" } },
                     required: [],
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
                   },
                   "wrong param": {
                     type: "object",
                     properties: { text2: { type: "number" } },
                     required: [],
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
                   },
                 },
               },
@@ -187,6 +191,8 @@ test('param-with-content', async () => {
             type: "object",
             properties: { text3: { type: "boolean" } },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: false,

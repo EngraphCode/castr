@@ -22,7 +22,12 @@
  */
 
 import type { CastrSchemaNode, CastrDocument, CastrSchemaComponent } from '../../ir/index.js';
-import type { ZodParseResult, ZodParseError, ZodParseRecommendation } from './zod-parser.types.js';
+import type {
+  ZodParseResult,
+  ZodParseError,
+  ZodParseRecommendation,
+  ZodParseOptions,
+} from './zod-parser.types.js';
 import {
   detectZod3SyntaxInProject,
   detectDynamicSchemasInProject,
@@ -180,7 +185,10 @@ function buildDeclarationParseError(
  *
  * @internal
  */
-function parseSchemaDeclarations(analysis: ZodProjectResult): ParsedDeclarationsResult {
+function parseSchemaDeclarations(
+  analysis: ZodProjectResult,
+  options?: ZodParseOptions,
+): ParsedDeclarationsResult {
   const declarationsList: ParsedDeclaration[] = [];
   const errors: ZodParseError[] = [];
   const { sourceFile, resolver } = analysis;
@@ -190,7 +198,7 @@ function parseSchemaDeclarations(analysis: ZodProjectResult): ParsedDeclarations
   for (const decl of declarations) {
     let schema: CastrSchemaComponent['schema'] | undefined;
     try {
-      schema = parseZodSchemaFromNode(decl.initializer, resolver);
+      schema = parseZodSchemaFromNode(decl.initializer, resolver, options);
     } catch (error) {
       errors.push(buildDeclarationParseError(sourceFile, decl, describeUnknownError(error)));
       continue;
@@ -240,7 +248,7 @@ function parseSchemaDeclarations(analysis: ZodProjectResult): ParsedDeclarations
  *
  * @public
  */
-export function parseZodSource(source: string): ZodParseResult {
+export function parseZodSource(source: string, options?: ZodParseOptions): ZodParseResult {
   const analysis = createZodProject(source);
 
   // Detect Zod 3 syntax and dynamic schemas
@@ -250,7 +258,7 @@ export function parseZodSource(source: string): ZodParseResult {
   ];
 
   // Parse all schema declarations
-  const parsedDeclarations = parseSchemaDeclarations(analysis);
+  const parsedDeclarations = parseSchemaDeclarations(analysis, options);
   errors.push(...parsedDeclarations.errors);
   const components = parsedDeclarations.declarations.map((d) => d.component);
   const recommendations = parsedDeclarations.declarations.map((d) => d.recommendation);

@@ -21,6 +21,7 @@
 import type { CastrSchema, CastrDocument } from '../../ir/index.js';
 import type { Node } from 'ts-morph';
 import type { ZodImportResolver } from './registry/zod-import-resolver.js';
+import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
 
 /**
  * Callback type for recursive schema parsing.
@@ -203,7 +204,7 @@ export interface ZodParseResult {
  *
  * @public
  */
-export interface ZodParseOptions {
+export interface ZodParseOptions extends NonStrictObjectPolicyOptions {
   /**
    * Whether to generate recommendations for missing metadata.
    *

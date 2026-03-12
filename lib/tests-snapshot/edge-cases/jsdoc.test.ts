@@ -123,7 +123,7 @@ test('jsdoc', async () => {
       .object({
         str: z.string().optional(),
       })
-      .strict();
+      .strip();
     export const ComplexObject = z
       .object({
         bool: z.boolean().optional().meta({ description: "A boolean" }),
@@ -174,7 +174,7 @@ test('jsdoc', async () => {
           .optional()
           .meta({ description: "An array of SimpleObject" }),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -246,6 +246,8 @@ test('jsdoc', async () => {
                 type: "object",
                 properties: { str: { type: "string" } },
                 required: [],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
               refArray: {
                 type: "array",
@@ -254,10 +256,14 @@ test('jsdoc', async () => {
                   type: "object",
                   properties: { str: { type: "string" } },
                   required: [],
+                  additionalProperties: true,
+                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,

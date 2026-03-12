@@ -264,7 +264,10 @@
             }
           },
           "required": ["type", "cardNumber"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -326,7 +329,10 @@
             }
           },
           "required": ["type", "accountNumber"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -392,7 +398,10 @@
             }
           },
           "required": ["type", "data"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -454,7 +463,10 @@
             }
           },
           "required": ["type", "message"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -538,7 +550,10 @@
             }
           },
           "required": ["kind", "valueA"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -600,7 +615,10 @@
             }
           },
           "required": ["kind", "valueB"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -662,7 +680,10 @@
             }
           },
           "required": ["kind", "valueC"],
-          "additionalProperties": true,
+          "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,

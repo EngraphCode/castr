@@ -1,7 +1,18 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../generate-from-context.js';
+import { generateZodClientFromOpenAPI as generateZodClientFromOpenAPIBase } from '../generate-from-context.js';
 import { assertSingleFileResult } from '../../../tests-helpers/generation-result-assertions.js';
+
+const generateZodClientFromOpenAPI = (
+  args: Parameters<typeof generateZodClientFromOpenAPIBase>[0],
+) =>
+  generateZodClientFromOpenAPIBase({
+    ...args,
+    options: {
+      nonStrictObjectPolicy: 'strip',
+      ...(args.options ?? {}),
+    },
+  });
 
 describe('schemas-with-metadata template - Core Template Functionality', () => {
   it('should generate schemas with Zod', async () => {
@@ -93,6 +104,7 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
               name: { type: 'string' as const },
             },
             required: ['id', 'name'],
+            additionalProperties: false,
           },
         },
       },
@@ -133,9 +145,8 @@ describe('schemas-with-metadata template - Core Template Functionality', () => {
     // MUST have individual schema exports (not grouped)
     expect(result.content).toContain('export const User');
 
-    // MUST include schema definitions with zod (flexible formatting)
-    expect(result.content).toContain('.object('); // Will match z.object( or z\n  .object(
-    expect(result.content).toContain('.strict()'); // Schemas-with-metadata uses strict by default
+    // MUST include strict schema definitions with Zod.
+    expect(result.content).toContain('z.strictObject(');
   });
 
   it('should export endpoints array directly without makeApi', async () => {
@@ -714,7 +725,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
     expect(result.content).toMatch(/@throws/i);
   });
 
-  it('should generate STRICT schemas with .strict() by default', async () => {
+  it('should generate strict schemas with z.strictObject(...) by default', async () => {
     const openApiDoc: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
@@ -727,7 +738,7 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
               name: { type: 'string' as const },
             },
             required: ['id'],
-            // No additionalProperties: true
+            additionalProperties: false,
           },
         },
       },
@@ -757,11 +768,10 @@ describe('schemas-with-metadata template - Strict Types & Fail-Fast Validation',
 
     assertSingleFileResult(result);
 
-    // ✅ MUST use .strict() for objects (reject unknown keys)
-    expect(result.content).toMatch(/\.strict\(\)/);
+    // MUST use z.strictObject(...) for strict objects (reject unknown keys).
+    expect(result.content).toContain('z.strictObject(');
 
-    // ❌ MUST NOT use .passthrough() by default (unless additionalProperties: true)
-    // Note: This test assumes default behavior; passthrough is valid if spec says so
+    // MUST NOT use passthrough by default when the schema is explicitly strict.
     const resultString = result.content;
     if (!resultString.includes('additionalProperties')) {
       expect(result.content).not.toMatch(/\.passthrough\(\)/);

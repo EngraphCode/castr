@@ -115,7 +115,7 @@ test('array-default-values', async () => {
         id: z.number().optional(),
         name: z.string().optional(),
       })
-      .strict();
+      .strip();
     export const MyEnum = z.enum(["one", "two", "three"]);
     // Endpoints
     export const endpoints = [
@@ -148,7 +148,7 @@ test('array-default-values', async () => {
                   .object({
                     foo: z.string().optional(),
                   })
-                  .strict(),
+                  .strip(),
               )
               .optional(),
           },
@@ -163,11 +163,11 @@ test('array-default-values', async () => {
             schema: z.array(MyEnum).optional(),
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "resoponse",
           },
         },
@@ -183,7 +183,7 @@ test('array-default-values', async () => {
                     .object({
                       foo: z.string().optional(),
                     })
-                    .strict(),
+                    .strip(),
                 )
                 .optional(),
               "array-ref-object": z.array(MyComponent).optional(),
@@ -222,6 +222,8 @@ test('array-default-values', async () => {
                       type: "object",
                       properties: { foo: { type: "string" } },
                       required: [],
+                      additionalProperties: true,
+                      unknownKeyBehavior: { mode: "strip" },
                     },
                   },
                   "array-ref-enum": {
@@ -239,6 +241,8 @@ test('array-default-values', async () => {
                         name: { type: "string" },
                       },
                       required: [],
+                      additionalProperties: true,
+                      unknownKeyBehavior: { mode: "strip" },
                     },
                   },
                   "array-string": {

@@ -12,8 +12,8 @@
 
 import type { CastrSchema } from '../../ir/index.js';
 import { Node } from 'ts-morph';
-import type { ZodSchemaParser } from './zod-parser.types.js';
 import type { ZodImportResolver } from './registry/zod-import-resolver.js';
+import type { ZodParseOptions, ZodSchemaParser } from './zod-parser.types.js';
 
 /**
  * Parser function type for registry.
@@ -23,6 +23,7 @@ type ParserFn = (
   node: Node,
   parseSchema: ZodSchemaParser,
   resolver?: ZodImportResolver,
+  options?: ZodParseOptions,
 ) => CastrSchema | undefined;
 
 /**
@@ -57,6 +58,7 @@ function tryParser(
   name: keyof typeof parserRegistry,
   node: Node,
   resolver?: ZodImportResolver,
+  options?: ZodParseOptions,
 ): CastrSchema | undefined {
   const parser = parserRegistry[name];
   if (!parser) {
@@ -66,16 +68,23 @@ function tryParser(
   // recursive calls (e.g. parseSchema(innerNode) in composition parsers)
   // carry the resolver automatically without requiring every caller
   // to thread it explicitly.
-  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver);
-  return parser(node, boundParseSchema, resolver);
+  const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver, options);
+  return parser(node, boundParseSchema, resolver, options);
 }
 
 /**
  * Parse an identifier node as either a reference or direct identifier.
  * @internal
  */
-function parseIdentifierSchema(node: Node, resolver?: ZodImportResolver): CastrSchema | undefined {
-  return tryParser('identifier', node, resolver) ?? tryParser('reference', node, resolver);
+function parseIdentifierSchema(
+  node: Node,
+  resolver?: ZodImportResolver,
+  options?: ZodParseOptions,
+): CastrSchema | undefined {
+  return (
+    tryParser('identifier', node, resolver, options) ??
+    tryParser('reference', node, resolver, options)
+  );
 }
 
 /**
@@ -85,15 +94,16 @@ function parseIdentifierSchema(node: Node, resolver?: ZodImportResolver): CastrS
 function parseCallExpressionSchema(
   node: Node,
   resolver?: ZodImportResolver,
+  options?: ZodParseOptions,
 ): CastrSchema | undefined {
   return (
-    tryParser('intersection', node, resolver) ??
-    tryParser('chainedIntersection', node, resolver) ??
-    tryParser('reference', node, resolver) ??
-    tryParser('primitive', node, resolver) ??
-    tryParser('object', node, resolver) ??
-    tryParser('composition', node, resolver) ??
-    tryParser('union', node, resolver)
+    tryParser('intersection', node, resolver, options) ??
+    tryParser('chainedIntersection', node, resolver, options) ??
+    tryParser('reference', node, resolver, options) ??
+    tryParser('primitive', node, resolver, options) ??
+    tryParser('object', node, resolver, options) ??
+    tryParser('composition', node, resolver, options) ??
+    tryParser('union', node, resolver, options)
   );
 }
 
@@ -106,14 +116,15 @@ function parseCallExpressionSchema(
 export function parseZodSchemaFromNode(
   node: Node,
   resolver?: ZodImportResolver,
+  options?: ZodParseOptions,
 ): CastrSchema | undefined {
   if (Node.isIdentifier(node)) {
-    return parseIdentifierSchema(node, resolver);
+    return parseIdentifierSchema(node, resolver, options);
   }
 
   if (!Node.isCallExpression(node)) {
     return undefined;
   }
 
-  return parseCallExpressionSchema(node, resolver);
+  return parseCallExpressionSchema(node, resolver, options);
 }

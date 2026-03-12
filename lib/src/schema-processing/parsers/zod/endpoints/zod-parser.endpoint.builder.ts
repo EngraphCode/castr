@@ -18,6 +18,7 @@ import { parsePrimitiveZod } from '../types/zod-parser.primitives.js';
 import { parseObjectZod } from '../types/zod-parser.object.js';
 import { deriveComponentName } from '../registry/schema-name-registry.js';
 import type { EndpointDefinition, ParameterLocation } from './zod-parser.endpoint.types.js';
+import type { ZodParseOptions } from '../zod-parser.types.js';
 
 const PATH_PARAMETER_LOCATION: ParameterLocation = 'path';
 
@@ -47,13 +48,13 @@ function createDefaultMetadata(): CastrSchema['metadata'] {
  * Parse a schema expression into a CastrSchema.
  * @internal
  */
-function parseSchemaExpression(expression: string): CastrSchema {
+function parseSchemaExpression(expression: string, options?: ZodParseOptions): CastrSchema {
   const primitive = parsePrimitiveZod(expression);
   if (primitive) {
     return primitive;
   }
 
-  const object = parseObjectZod(expression);
+  const object = parseObjectZod(expression, options);
   if (object) {
     return object;
   }
@@ -73,8 +74,9 @@ function buildParameter(
   name: string,
   schemaExpression: string,
   location: ParameterLocation,
+  options?: ZodParseOptions,
 ): CastrParameter {
-  const schema = parseSchemaExpression(schemaExpression);
+  const schema = parseSchemaExpression(schemaExpression, options);
   const required = location === PATH_PARAMETER_LOCATION ? true : schema.metadata.required;
 
   return {
@@ -89,8 +91,12 @@ function buildParameter(
  * Build CastrResponse from a response definition.
  * @internal
  */
-function buildResponse(statusCode: string, schemaExpression: string): CastrResponse {
-  const schema = parseSchemaExpression(schemaExpression);
+function buildResponse(
+  statusCode: string,
+  schemaExpression: string,
+  options?: ZodParseOptions,
+): CastrResponse {
+  const schema = parseSchemaExpression(schemaExpression, options);
 
   return {
     statusCode,
@@ -102,7 +108,10 @@ function buildResponse(statusCode: string, schemaExpression: string): CastrRespo
  * Build all parameters from a definition.
  * @internal
  */
-function buildAllParameters(definition: EndpointDefinition): {
+function buildAllParameters(
+  definition: EndpointDefinition,
+  options?: ZodParseOptions,
+): {
   parameters: CastrParameter[];
   parametersByLocation: CastrOperation['parametersByLocation'];
 } {
@@ -127,7 +136,7 @@ function buildAllParameters(definition: EndpointDefinition): {
     }
 
     for (const [name, schemaExpr] of Object.entries(locationParams)) {
-      const param = buildParameter(name, schemaExpr, location);
+      const param = buildParameter(name, schemaExpr, location, options);
       parameters.push(param);
       parametersByLocation[location].push(param);
     }
@@ -140,12 +149,15 @@ function buildAllParameters(definition: EndpointDefinition): {
  * Build request body from a definition.
  * @internal
  */
-function buildRequestBody(definition: EndpointDefinition): IRRequestBody | undefined {
+function buildRequestBody(
+  definition: EndpointDefinition,
+  options?: ZodParseOptions,
+): IRRequestBody | undefined {
   if (!definition.body) {
     return undefined;
   }
 
-  const bodySchema = parseSchemaExpression(definition.body);
+  const bodySchema = parseSchemaExpression(definition.body, options);
   return {
     required: true,
     content: {
@@ -203,12 +215,15 @@ function addOptionalProperties(
  *
  * @public
  */
-export function buildCastrOperationFromEndpoint(definition: EndpointDefinition): CastrOperation {
-  const { parameters, parametersByLocation } = buildAllParameters(definition);
-  const requestBody = buildRequestBody(definition);
+export function buildCastrOperationFromEndpoint(
+  definition: EndpointDefinition,
+  options?: ZodParseOptions,
+): CastrOperation {
+  const { parameters, parametersByLocation } = buildAllParameters(definition, options);
+  const requestBody = buildRequestBody(definition, options);
 
   const responses: CastrResponse[] = Object.entries(definition.responses).map(
-    ([statusCode, schemaExpr]) => buildResponse(statusCode, schemaExpr),
+    ([statusCode, schemaExpr]) => buildResponse(statusCode, schemaExpr, options),
   );
 
   const operation: CastrOperation = {

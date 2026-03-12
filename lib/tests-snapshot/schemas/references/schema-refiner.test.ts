@@ -29,7 +29,7 @@ test('schema-refiner', () => {
         "code": "z.object({
       email: z.string().optional(),
       name: z.string().optional(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "email": {

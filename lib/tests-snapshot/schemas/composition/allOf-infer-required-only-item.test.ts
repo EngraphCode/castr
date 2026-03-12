@@ -87,12 +87,12 @@ test('allOf-infer-required-only-item', async () => {
         email: z.string().optional(),
         name: z.string().optional(),
       })
-      .strict();
+      .strip();
     export const userResponse = z
       .object({
-        user: user.and(z.object({}).strict()).optional(),
+        user: user.and(z.object({}).strip()).optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -130,12 +130,20 @@ test('allOf-infer-required-only-item', async () => {
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
                   },
-                  { type: "object" },
+                  {
+                    type: "object",
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
+                  },
                 ],
               },
             },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,

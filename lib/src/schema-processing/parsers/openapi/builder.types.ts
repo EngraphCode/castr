@@ -7,6 +7,7 @@
  */
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { NonStrictObjectPolicy } from '../../non-strict-object-policy.js';
 
 /**
  * Context passed through IR building process for schema resolution and metadata.
@@ -31,4 +32,12 @@ export interface IRBuildContext {
    * Whether the current schema is required by its parent.
    */
   required: boolean;
+
+  /**
+   * Shared ingest policy for non-strict object input.
+   *
+   * Optional in the context type for backward compatibility with
+   * helper callers that rely on the default reject behavior.
+   */
+  nonStrictObjectPolicy?: NonStrictObjectPolicy | undefined;
 }

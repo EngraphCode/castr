@@ -43,7 +43,7 @@ test('allOf-missing-and', async () => {
       .object({
         text2: z.string().min(5).max(10).optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -73,6 +73,8 @@ test('allOf-missing-and', async () => {
             type: "object",
             properties: { text2: { type: "string", minLength: 5, maxLength: 10 } },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: false,

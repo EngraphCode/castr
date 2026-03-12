@@ -18,6 +18,7 @@ describe('buildIRRequestBody - encoding extraction', () => {
     },
     path: [],
     required: true,
+    nonStrictObjectPolicy: 'strip',
   });
 
   test('extracts encoding from multipart/form-data request body', () => {

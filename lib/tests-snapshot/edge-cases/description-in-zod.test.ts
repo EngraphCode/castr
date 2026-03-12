@@ -104,11 +104,11 @@ test('description-in-zod', async () => {
             description: "      ",
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "resoponse",
           },
         },

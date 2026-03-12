@@ -4,12 +4,12 @@
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-10  
 **Predecessor:** Emerged from Zod limitations architecture investigation  
-**Related:** `../../active/zod-limitations-architecture-investigation.md`, `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `../complete/type-safety-remediation.md`
+**Related:** `../complete/strict-object-semantics-enforcement.md`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./zod-limitations-architecture-investigation.md`, `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-040`, `../complete/type-safety-remediation.md`
 
 ---
 
 **Paused On:** 2026-03-09  
-**Pause Reason:** This companion investigation remains paused while [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md) is the primary active plan. Pull this companion work forward only if transform-proof runtime questions become the highest-leverage blocker again.
+**Pause Reason:** This companion investigation remains paused while [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md) is the primary active plan. Pull this companion work forward only if transform-proof runtime questions become the highest-leverage blocker again.
 
 ## Baseline Hygiene Update (2026-03-10)
 
@@ -32,11 +32,11 @@ The goal is to help the next session determine:
 3. which performance and runtime costs belong to the opt-in doctor pipeline, which belong to the main transform path, and which are accidental setup churn
 4. what durable architectural response should be promoted into ADRs, permanent docs, or a follow-on implementation plan
 
-This is intentionally a **companion investigation** to [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md). The two plans should inform each other:
+This remains a **companion investigation** to the broader Zod limitations workstream and the completed [strict-object-semantics-enforcement.md](../complete/strict-object-semantics-enforcement.md) slice. The plans should still inform each other:
 
 - the Zod limitations work may surface legitimate structures that require heavier transform proofs
 - heavy transform-proof runtime may obscure whether a limitation is architectural or merely expensive to prove
-- the recursive `.passthrough()` investigation may overlap with runtime-construction and validation-cost questions
+- the strict recursive Zod output work may overlap with runtime-construction and validation-cost questions
 
 ---
 
@@ -131,7 +131,7 @@ Before proposing any architectural answer, do the following:
    - `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`
    - `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`
    - `docs/architectural_decision_records/ADR-035-transform-validation-parity.md`
-   - [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md)
+   - [strict-object-semantics-enforcement.md](../complete/strict-object-semantics-enforcement.md)
 2. Baseline the current transform suite:
    - isolated heavy-test runtime
    - full-suite runtime
@@ -263,7 +263,7 @@ At the end of each tranche, explicitly ask:
 2. Does this finding reveal that a current Zod limitation is partly a proof-budget problem rather than only a semantic one?
 3. Does any newly discovered legitimate unhandled structure belong in the Zod limitations workstream now, or only in a future session?
 
-Any yes-answer must be written back into [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md) before the session ends.
+Any yes-answer must be written back into the current active plan and, when relevant, the completed [strict-object-semantics-enforcement.md](../complete/strict-object-semantics-enforcement.md) record before the session ends.
 
 ---
 

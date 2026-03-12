@@ -31,7 +31,7 @@ import {
   createZodProject,
   isZodCall,
   getZodMethodChain,
-  ZOD_OBJECT_METHOD,
+  isZodObjectBaseMethod,
   type ZodProjectResult,
 } from './ast/zod-ast.js';
 
@@ -179,7 +179,7 @@ function findObjectCallInChain(
     if (
       Node.isIdentifier(obj) &&
       resolver.resolveToZodImport(obj) &&
-      expr.getName() === ZOD_OBJECT_METHOD
+      isZodObjectBaseMethod(expr.getName())
     ) {
       return current;
     }
@@ -267,7 +267,7 @@ export function detectDynamicSchemasInProject(analysis: ZodProjectResult): ZodPa
     }
 
     const chain = getZodMethodChain(node, resolver);
-    if (!chain || chain.baseMethod !== ZOD_OBJECT_METHOD) {
+    if (!chain || !isZodObjectBaseMethod(chain.baseMethod)) {
       return;
     }
 

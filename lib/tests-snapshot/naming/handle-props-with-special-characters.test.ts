@@ -40,7 +40,7 @@ test('handle-props-with-special-characters', async () => {
         "code": "z.object({
       '@id': z.string().optional(),
       id: z.number().optional(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "@id": {
@@ -74,7 +74,7 @@ test('handle-props-with-special-characters', async () => {
             "@id": z.string().optional(),
             id: z.number().optional(),
           })
-          .strict(),
+          .strip(),
         errors: [],
         responses: {
           200: {
@@ -83,7 +83,7 @@ test('handle-props-with-special-characters', async () => {
                 "@id": z.string().optional(),
                 id: z.number().optional(),
               })
-              .strict(),
+              .strip(),
             description: "OK",
           },
         },
@@ -102,6 +102,8 @@ test('handle-props-with-special-characters', async () => {
             type: "object",
             properties: { "@id": { type: "string" }, id: { type: "number" } },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,

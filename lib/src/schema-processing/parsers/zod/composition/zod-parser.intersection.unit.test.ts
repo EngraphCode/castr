@@ -42,7 +42,9 @@ describe('Zod Intersection Parsing', () => {
 
   describe('A.and(B)', () => {
     it('should parse object.and(object)', () => {
-      const result = parseCode('z.object({ a: z.string() }).and(z.object({ b: z.number() }))');
+      const result = parseCode(
+        'z.strictObject({ a: z.string() }).and(z.strictObject({ b: z.number() }))',
+      );
 
       expect(result?.allOf).toHaveLength(2);
 

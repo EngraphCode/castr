@@ -29,7 +29,7 @@ describe('Content Preservation: Header Description', () => {
 
     // Load and transform
     const result = await loadOpenApiDocument(fixturePath);
-    const ir = buildIR(result.document);
+    const ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
     const output = writeOpenApi(ir);
 
     // The x-next header should preserve its description
@@ -68,7 +68,7 @@ describe('Content Preservation: Path-Level Parameter Refs', () => {
 
     // Load and transform
     const result = await loadOpenApiDocument(fixturePath);
-    const ir = buildIR(result.document);
+    const ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
     const output = writeOpenApi(ir);
 
     // Check that path-level parameters are preserved as refs

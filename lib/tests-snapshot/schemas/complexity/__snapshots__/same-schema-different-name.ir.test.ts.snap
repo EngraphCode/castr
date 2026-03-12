@@ -789,6 +789,7 @@ exports[`same-schema-different-name - IR Snapshot 1`] = `
     "options": {
         "baseUrl": "",
         "complexityThreshold": 2,
+        "nonStrictObjectPolicy": "strip",
         "withAlias": false,
     },
     "sortedSchemaNames": [],

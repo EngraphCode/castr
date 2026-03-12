@@ -79,12 +79,12 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
         email: Email,
         password: Password,
       })
-      .strict();
+      .strip();
     export const PasswordReminder = z
       .object({
         email: Email,
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -98,11 +98,11 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
             schema: AddUser,
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "foo",
           },
         },
@@ -121,11 +121,11 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
             schema: PasswordReminder,
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "bar",
           },
         },
@@ -160,6 +160,8 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
                   },
                 },
                 required: ["email", "password"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             },
             required: ["body"],
@@ -199,6 +201,8 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
                   },
                 },
                 required: ["email"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             },
             required: ["body"],

@@ -691,6 +691,9 @@
         },
         "required": ["id", "name"],
         "additionalProperties": false,
+        "unknownKeyBehavior": {
+          "mode": "strict"
+        },
         "metadata": {
           "required": true,
           "nullable": false,

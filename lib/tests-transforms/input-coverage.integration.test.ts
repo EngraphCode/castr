@@ -82,7 +82,7 @@ const ALL_FIXTURES: [string, string][] = [
  */
 async function loadAndBuildIR(fixturePath: string): Promise<CastrDocument> {
   const result = await loadOpenApiDocument(fixturePath);
-  return buildIR(result.document);
+  return buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
 }
 
 // ============================================================================

@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../rendering/index.js';
-import { assertAndExtractContent, extractContent } from './test-utils.js';
+import {
+  assertAndExtractContent,
+  extractContent,
+  generateZodClientFromOpenAPI,
+} from './test-utils.js';
 
 /**
  * Characterisation Tests: Schema Dependencies
@@ -445,8 +448,9 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
 });
 
 describe('Characterisation: Schema Dependency Resolution - Additional Dependency Scenarios', () => {
-  it('should handle dependencies through additionalProperties', async () => {
-    // Arrange: Schema with additionalProperties referencing another schema
+  it('should discard schema dependencies through additionalProperties in strip compatibility mode', async () => {
+    // Arrange: Schema with schema-valued additionalProperties referencing another schema.
+    // Under explicit strip compatibility mode, that catchall schema is discarded.
     const spec: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
@@ -490,13 +494,14 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
       disableWriteToFile: true,
     });
 
-    // Assert: Value appears before Dictionary
+    // Assert: Dictionary no longer depends on Value after strip normalisation
     const content = assertAndExtractContent(result, 'generated code');
-    const valueIndex = content.indexOf('Value');
-    const dictionaryIndex = content.indexOf('Dictionary');
-
-    expect(valueIndex).toBeLessThan(dictionaryIndex);
-    expect(extractContent(result)).not.toContain('as unknown as');
+    expect(content).toContain('export type Dictionary = {};');
+    expect(content).toContain('export const Dictionary = z.object({}).strip();');
+    expect(content).not.toContain('Value: z');
+    expect(content).not.toContain('Dictionary = z.record(Value)');
+    expect(content).not.toContain('Dictionary = z.object({ Value');
+    expect(content).not.toContain('as unknown as');
   });
 
   it('should handle dependencies in oneOf/anyOf union members', async () => {

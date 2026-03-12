@@ -27,6 +27,9 @@ export {
   ZOD_PRIMITIVES,
   ZOD_COMPOSITIONS,
   ZOD_OBJECT_METHOD,
+  ZOD_STRICT_OBJECT_METHOD,
+  ZOD_LOOSE_OBJECT_METHOD,
+  isZodObjectBaseMethod,
   type ZodPrimitiveType,
   type ZodCompositionType,
 } from '../zod-constants.js';

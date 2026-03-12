@@ -165,6 +165,7 @@ describe('rendering/templating grouped determinism', () => {
       disableWriteToFile: true,
       options: {
         groupStrategy: 'tag-file',
+        nonStrictObjectPolicy: 'strip',
       },
     });
     const secondRunResult = await generateZodClientFromOpenAPI({
@@ -172,6 +173,7 @@ describe('rendering/templating grouped determinism', () => {
       disableWriteToFile: true,
       options: {
         groupStrategy: 'tag-file',
+        nonStrictObjectPolicy: 'strip',
       },
     });
 

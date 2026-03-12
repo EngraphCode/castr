@@ -4,6 +4,7 @@ import type {
   SchemaObject,
   OperationObject,
 } from 'openapi3-ts/oas31';
+import type { NonStrictObjectPolicyOptions } from '../non-strict-object-policy.js';
 
 // Import helpers from modules
 import {
@@ -45,7 +46,7 @@ export interface TemplateContext {
   _ir?: CastrDocument;
 }
 
-export interface TemplateContextOptions {
+export interface TemplateContextOptions extends NonStrictObjectPolicyOptions {
   groupStrategy?: 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
   shouldExportAllTypes?: boolean;
   /**
@@ -120,7 +121,9 @@ export const getTemplateContext = (
   options?: TemplateContextOptions,
 ): TemplateContext => {
   // Build IR document - Source of Truth (Cardinal Rule: after this, only IR matters)
-  const irDocument = buildIR(doc);
+  const irDocument = buildIR(doc, {
+    nonStrictObjectPolicy: options?.nonStrictObjectPolicy,
+  });
 
   // Use IR for schema names and dependency graph (no raw doc access)
   const deepDependencyGraph = getDeepDependencyGraphFromIR(irDocument);

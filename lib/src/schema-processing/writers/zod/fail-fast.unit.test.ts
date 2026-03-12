@@ -157,7 +157,7 @@ describe('Zod Writer Fail-Fast Behavior', () => {
       const context = createComponentContext(schema);
 
       expect(() => generate(context)).not.toThrow();
-      expect(generate(context)).toContain('z.object(');
+      expect(generate(context)).toContain('z.strictObject(');
     });
   });
 

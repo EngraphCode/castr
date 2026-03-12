@@ -28,7 +28,7 @@ test('use-union-only-when-multiple-choices', () => {
       singleAllOf: z.string().optional(),
       singleAnyOf: z.string().optional(),
       singleOneOf: z.string().optional(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "multipleAllOf": {

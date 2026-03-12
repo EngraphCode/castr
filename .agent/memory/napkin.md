@@ -46,3 +46,29 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
 - No portable-core evolution cleared the bar in this pass; the value was local cohesion and promoting one architectural framing insight from plan-only status into durable docs.
+
+## 2026-03-11
+
+- The installed reviewer layer needed one more durable operational note: some Codex surfaces do not expose direct project-agent fan-out even when `.codex/config.toml` and `.codex/agents/*.toml` are installed and valid.
+- The working fallback is to run a nested `codex exec --sandbox read-only -C /absolute/path/to/repo "..."` command, tell it to read the relevant `.codex/agents/<agent>.toml` adapter first, then the matching `.agent/sub-agents/templates/<agent>.md` template, and scope the run as review-only.
+- The first draft of that note exposed a real trap during live testing: if the nested reviewer interprets the fallback rule as part of its own workflow, it can recursively spawn another nested reviewer run.
+- The durable rule is therefore stricter: the fallback is for the parent session only, with one nesting level maximum; once inside the nested reviewer or expert run, read the adapter and canonical template directly and do the review.
+- The object-semantics doctrine needed one more important distinction to stay honest: "strict by default" and "lossless by default" do not forbid a deliberately lossy compatibility mode, but that mode must be opt-in, strip-only, and documented as a caller-chosen exception rather than a relaxed default.
+- The acceptance-criteria audit exposed a predictable cohesion trap: when doctrine changes at the ADR level, the object sections in parser/writer acceptance criteria can keep quietly asserting the old contract unless they are updated in the same pass.
+- A later architecture-fit pass exposed a second cohesion trap in the strict-object workstream: deciding "reject by default, strip on explicit compatibility opt-in" is not enough unless the plan also locks where that option lives and what generation does afterwards.
+- The durable rule is now explicit in both the active plan and the session-entry prompt: compatibility belongs on one shared ingest-option surface, not on legacy writer knobs, and compatibility-normalized schemas must remain strip-canonical on output rather than being silently re-tightened to strict.
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+
+## 2026-03-12
+
+- Strict object semantics enforcement is now complete and has been moved out of `active/` into `.agent/plans/current/complete/strict-object-semantics-enforcement.md`.
+- The next cold-start entrypoint is now the numeric-semantics slice in `.agent/plans/active/int64-bigint-semantics-investigation.md`, and `session-entry.prompt.md`, `roadmap.md`, and `.agent/README.md` were repointed to match.
+- Completing an active plan by moving it out of `active/` creates a predictable cohesion task: repair any obvious historical links that still point at the old `active/` path, especially in prompts, roadmap sections, and nearby paused-plan handoffs.
+- The fallback reviewer invocation rule now explicitly says nested read-only reviewer or expert runs must be started sequentially, not in parallel.
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration

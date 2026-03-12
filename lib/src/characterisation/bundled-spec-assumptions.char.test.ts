@@ -24,10 +24,10 @@
 import { describe, it, expect } from 'vitest';
 import { isReferenceObject, type OpenAPIObject } from 'openapi3-ts/oas31';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
-import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { isSingleFileResult } from '../rendering/generation-result.js';
 import { extractContent } from '../../tests-helpers/generation-result-assertions.js';
 import { extractAllOperations, getOperation } from './__fixtures__/bundled-spec-helpers.js';
+import { generateZodClientFromOpenAPI } from './test-utils.js';
 
 /**
  * Wrapper around prepareOpenApiDocument that handles both file paths and objects.

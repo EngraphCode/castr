@@ -20,14 +20,14 @@ export const endpoints = [
             prop1: z.int32(),
             prop2: z.int32(),
           })
-          .strict(),
+          .strip(),
       },
     ],
-    response: z.object({}).strict(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.strictObject({}),
         description: "OK",
       },
     },
@@ -39,7 +39,7 @@ export const endpoints = [
               prop1: z.int32(),
               prop2: z.int32(),
             })
-            .strict(),
+            .strip(),
         })
         .strict(),
     },
@@ -64,6 +64,8 @@ export const mcpTools = [
                   prop2: { type: "integer", format: "int32" },
                 },
                 required: ["prop1", "prop2"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             },
             required: ["req"],
@@ -113,14 +115,14 @@ export const endpoints = [
             prop1: z.int32(),
             prop2: z.int32(),
           })
-          .strict(),
+          .strip(),
       },
     ],
-    response: z.object({}).strict(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strict(),
+        schema: z.strictObject({}),
         description: "OK",
       },
     },
@@ -132,7 +134,7 @@ export const endpoints = [
               prop1: z.int32(),
               prop2: z.int32(),
             })
-            .strict(),
+            .strip(),
         })
         .strict(),
     },
@@ -157,6 +159,8 @@ export const mcpTools = [
                   prop2: { type: "integer", format: "int32" },
                 },
                 required: ["prop1", "prop2"],
+                additionalProperties: true,
+                unknownKeyBehavior: { mode: "strip" },
               },
             },
             required: ["req"],

@@ -21,6 +21,8 @@ import { buildCastrOperations, buildIRSecurity } from './operations/index.js';
 import { isRecord } from '../../../shared/type-utils/types.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';
+import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
+import { cloneAndApplyOpenApiDocumentNonStrictObjectPolicy } from './openapi-document.non-strict-object-policy.js';
 
 // Re-export core functions for backwards compatibility
 export type { IRBuildContext } from './builder.types.js';
@@ -76,28 +78,29 @@ function buildOptionalDocumentFields(doc: OpenAPIObject): Partial<CastrDocument>
  *
  * @public
  */
-export function buildIR(doc: OpenAPIObject): CastrDocument {
-  const components = buildCastrSchemas(doc.components);
-  components.push(...extractXExtSchemas(doc));
-  components.push(...extractAdditionalComponents(doc));
+export function buildIR(doc: OpenAPIObject, options?: NonStrictObjectPolicyOptions): CastrDocument {
+  const document = cloneAndApplyOpenApiDocumentNonStrictObjectPolicy(doc, options);
+  const components = buildCastrSchemas(document.components, options);
+  components.push(...extractXExtSchemas(document, options));
+  components.push(...extractAdditionalComponents(document));
 
   const schemaNames = buildSchemaNames(components);
-  const originalSchemaKeys = extractOriginalSchemaKeys(doc);
-  const operations = buildCastrOperations(doc);
-  const dependencyGraph = buildDependencyGraph(originalSchemaKeys, doc);
+  const originalSchemaKeys = extractOriginalSchemaKeys(document);
+  const operations = buildCastrOperations(document, options);
+  const dependencyGraph = buildDependencyGraph(originalSchemaKeys, document);
   const enums = extractEnums(components, operations);
 
   return {
     version: '1.0.0',
-    openApiVersion: doc.openapi,
-    info: doc.info,
-    servers: doc.servers ?? [],
+    openApiVersion: document.openapi,
+    info: document.info,
+    servers: document.servers ?? [],
     components,
     operations,
     dependencyGraph,
     schemaNames,
     enums,
-    ...buildOptionalDocumentFields(doc),
+    ...buildOptionalDocumentFields(document),
   };
 }
 
@@ -112,7 +115,10 @@ export function buildIR(doc: OpenAPIObject): CastrDocument {
  *
  * @internal
  */
-function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
+function extractXExtSchemas(
+  doc: OpenAPIObject,
+  options?: NonStrictObjectPolicyOptions,
+): IRComponent[] {
   const xExt: unknown = doc['x-ext'];
   if (!isRecord(xExt)) {
     return [];
@@ -131,7 +137,7 @@ function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
     }
 
     // Build components from this x-ext location
-    const irComponents = buildCastrSchemas(extComponents);
+    const irComponents = buildCastrSchemas(extComponents, options);
     allXExtComponents.push(...irComponents);
   }
 

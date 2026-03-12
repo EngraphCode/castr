@@ -12,6 +12,9 @@ With the OpenAPI → Zod pipeline production-ready, we need to formalize decisio
 > [!NOTE]
 > **Round-trip (OpenAPI → Zod → OpenAPI) is a validation mechanism**, not a fundamental library requirement. It proves the pipeline works correctly. The Zod → IR parser exists (Session 3.2) and must remain in lockstep with writer output; doc-level Zod ingestion beyond schema declarations is a separate future scope.
 
+> [!IMPORTANT]
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) supersedes the earlier multi-mode object direction in this ADR. Default-path object output remains strict-only product scope. ADR-040's opt-in strip-normalization compatibility mode is ingest-side doctrine and does not, by itself, widen the default generated-output contract in this ADR.
+
 ## Decisions
 
 ### 1. Metadata Preservation via `.meta()`
@@ -73,22 +76,24 @@ z.xor(schemaA, schemaB);
 
 **Rationale:** `z.xor()` enforces exactly-one semantics that matches `oneOf`.
 
-### 5. Object Unknown-Key Emission Is Driven By IR Semantics First
+### 5. Object Output Is Strict-Only
 
-Object output is governed first by explicit IR unknown-key semantics:
+Object output must be explicitly strict where Zod can represent that honestly and safely:
 
 ```typescript
-z.object({ ... }).strict();
-z.object({ ... }).strip();
-z.object({ ... }).passthrough();
-z.object({ ... }).catchall(z.string());
+z.strictObject({ ... });
 ```
 
-Recursive strip objects are emitted as bare `z.object({ ... })`, because strip is Zod's default object mode and explicit `.strip()` eagerly evaluates recursive getter-backed shapes.
+Bare `z.object({ ... })` is not an acceptable generated stand-in for strict object semantics because bare `z.object()` is strip-mode at runtime.
 
-When IR does not carry explicit runtime unknown-key semantics, writers still use the existing portable-policy fallback based on `additionalProperties` and `strictObjects`.
+Compatibility-normalized strip output is allowed only on the explicit compatibility path:
 
-**Rationale:** Preserve runtime semantics when the IR knows them, preserve existing portable-policy behaviour when it does not, and keep recursive strip output safe.
+- non-recursive strip IR emits `z.object({ ... }).strip()`
+- recursive strip IR emits bare getter-safe `z.object({ ... })`
+
+`.passthrough()` and `.catchall(...)` are no longer generated-object targets.
+
+**Rationale:** Generated object definitions are now strict-only product scope, so output should state strictness directly instead of preserving non-strict runtime modes.
 
 ### 6. Redundant Validation Filtering
 
@@ -112,8 +117,7 @@ Writer output must never emit redundant nullability chains (e.g., `z.null().null
 ### 8. Recursive Getter Wrapper Canonicalization
 
 > [!IMPORTANT]
-> [ADR-038](./ADR-038-object-unknown-key-semantics.md) amends this section for unknown-key behavior.
-> Recursive strip is supported via bare `z.object({...})`. Recursive `.passthrough()` and `.catchall()` now fail fast instead of degrading silently.
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) amends this section for object strictness.
 
 Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form; writer output must not regress to `z.lazy()`.
 
@@ -124,14 +128,17 @@ Recursive schemas must emit **Zod 4 getter syntax** as the canonical output form
 
 Writer output must treat these as **canonical recursive wrappers**, not as generic nullable compositions, so Scenario 2 / 4 / 6 round-trips remain lossless and idempotent.
 
-Recursive object schemas cannot safely append `.passthrough()` or `.catchall()` today. In Zod 4, both eagerly evaluate getter-backed shapes and can trigger temporal-dead-zone failures during recursive schema initialization. Per ADR-038, the implemented policy is:
+Recursive object schemas on the default path must also remain explicitly strict.
 
-- preserve the semantics in IR and portable artifacts
-- emit bare `z.object({...})` for recursive strip semantics
-- emit a clear fail-fast error for recursive unknown-key-preserving output until a safe construction strategy exists
-- never silently rewrite the behavior to strip-mode output
+The chosen recursive strict construction must therefore satisfy all of:
 
-**Rationale:** Getter-wrapper canonicalization preserves recursion semantics without inventing new IR fields, and it keeps writer output aligned with parser expectations and transform parity proofs.
+- getter-based recursion semantics
+- runtime initialization safety
+- parser/writer lockstep
+
+Current local evidence shows that chained `.strict()` on getter-based `z.object({...})` is runtime-unsafe, so recursive strict output must use `z.strictObject({...})` and must not rely on chained `.strict()`.
+
+**Rationale:** Getter-wrapper canonicalization still matters, but it must now operate inside a strict-only object doctrine.
 
 ### 9. Codecs (Deferred)
 

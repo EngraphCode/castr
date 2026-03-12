@@ -101,6 +101,7 @@ describe('buildCastrSchema - OpenAPI extension fields', () => {
     },
     path: [],
     required: true,
+    nonStrictObjectPolicy: 'strip',
   });
 
   describe('xml extraction', () => {

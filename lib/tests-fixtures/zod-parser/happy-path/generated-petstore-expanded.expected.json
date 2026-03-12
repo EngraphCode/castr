@@ -46,6 +46,9 @@
       },
       "required": ["name"],
       "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -110,6 +113,9 @@
           },
           "required": ["id"],
           "additionalProperties": false,
+          "unknownKeyBehavior": {
+            "mode": "strict"
+          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -189,6 +195,9 @@
       },
       "required": ["code", "message"],
       "additionalProperties": false,
+      "unknownKeyBehavior": {
+        "mode": "strict"
+      },
       "metadata": {
         "required": true,
         "nullable": false,

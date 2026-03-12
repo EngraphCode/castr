@@ -71,11 +71,11 @@ test('enum-min-max', async () => {
             schema: z.enum(["Dogs", "Cats", "Mice"]).min(4).optional(),
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "resoponse",
           },
         },

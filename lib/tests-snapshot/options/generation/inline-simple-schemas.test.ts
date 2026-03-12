@@ -157,7 +157,7 @@ test('inline-simple-schemas', async () => {
       .object({
         str: z.string().optional(),
       })
-      .strict();
+      .strip();
     export const ComplexObject = z
       .object({
         bool: z.boolean().optional(),
@@ -167,7 +167,7 @@ test('inline-simple-schemas', async () => {
         str: z.string().optional(),
         strRef: BasicString.optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -198,7 +198,7 @@ test('inline-simple-schemas', async () => {
               .object({
                 str: z.string().optional(),
               })
-              .strict(),
+              .strip(),
             description: "Forbidden",
           },
           {
@@ -218,7 +218,7 @@ test('inline-simple-schemas', async () => {
                 .object({
                   str: z.string().optional(),
                 })
-                .strict(),
+                .strip(),
             ),
             description: "Not Acceptable",
           },
@@ -250,7 +250,7 @@ test('inline-simple-schemas', async () => {
               .object({
                 str: z.string().optional(),
               })
-              .strict(),
+              .strip(),
             description: "Forbidden",
           },
           404: {
@@ -267,7 +267,7 @@ test('inline-simple-schemas', async () => {
                 .object({
                   str: z.string().optional(),
                 })
-                .strict(),
+                .strip(),
             ),
             description: "Not Acceptable",
           },

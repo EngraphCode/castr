@@ -1,14 +1,24 @@
-# Plan (Active): Zod Limitations Architecture Investigation
+# Plan (Paused Umbrella): Zod Limitations Architecture Investigation
 
-**Status:** Active  
+**Status:** Paused  
 **Created:** 2026-03-09  
-**Last Updated:** 2026-03-10  
-**Predecessor:** [type-safety-remediation.md](../current/complete/type-safety-remediation.md)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../current/complete/type-safety-remediation-follow-up.md`
+**Last Updated:** 2026-03-11  
+**Predecessor:** [type-safety-remediation.md](../complete/type-safety-remediation.md)  
+**Successor Active Slice:** [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md)  
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `ADR-040`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/int64-bigint-semantics-investigation.md`, `../complete/type-safety-remediation-follow-up.md`
 
 ---
 
-This plan is now the **primary active atomic slice**.
+This plan is no longer the repo's primary active entrypoint.
+
+It now serves as the **paused umbrella context** for the broader Zod limitations workstream while the next atomic correctness slices execute independently:
+
+- [strict-object-semantics-enforcement.md](../complete/strict-object-semantics-enforcement.md) is the completed object-semantics execution record.
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](./recursive-unknown-key-preserving-zod-emission-investigation.md) remains paused historical evidence after ADR-040 changed product direction.
+- [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md) is the current primary active slice.
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) remains paused supporting runtime context.
+
+Keep this file as cross-cutting workstream context, not as the next session's default execution plan.
 
 The type-safety remediation workstream is complete:
 
@@ -40,19 +50,23 @@ Strategic goal:
 
 Current repo truth:
 
-1. recursive unknown-key-preserving Zod generation remains the primary must-fix defect
-2. UUID subtype semantics are now preserved in IR and native Zod output via [ADR-039](../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
+1. strict object semantics enforcement is complete after ADR-040
+2. UUID subtype semantics are now preserved in IR and native Zod output via [ADR-039](../../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 3. portable OpenAPI / JSON Schema detours still widen UUID subtype semantics to plain `uuid`, and that widening is now accepted target-capacity behavior
 4. `int64` / `bigint` remains the next open architecture investigation
-5. the next recursive-unknown-key tranche must explicitly test whether getter syntax is truly the only canonical recursion form, or only canonical for strip-compatible recursion
+5. the preserving-mode recursive investigation remains useful background evidence, but it is no longer the forward product direction
 
-Companion investigation:
+Paused supporting investigation:
 
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
+
+Queued follow-on investigation:
+
+- [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md) now owns the next numeric-semantics investigation slice
 
 Known completed remediation already established in this workstream:
 
-- [recursive-unknown-key-semantics-remediation.md](../current/complete/recursive-unknown-key-semantics-remediation.md)
+- [recursive-unknown-key-semantics-remediation.md](../complete/recursive-unknown-key-semantics-remediation.md)
 
 Do not create `future/` plans for this Zod workstream. Keep established fixes active until the current known limitation set is fully mapped and ordered for execution.
 
@@ -196,8 +210,8 @@ Confirmed findings:
 
 Durable outputs created from this tranche:
 
-- [ADR-038](../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
-- [recursive-unknown-key-semantics.md](../../../docs/architecture/recursive-unknown-key-semantics.md)
+- [ADR-038](../../../../docs/architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
+- [recursive-unknown-key-semantics.md](../../../../docs/architecture/recursive-unknown-key-semantics.md)
 - [recursive-unknown-key-semantics-remediation.md](../complete/recursive-unknown-key-semantics-remediation.md)
 
 Recommended direction locked by ADR-038:
@@ -218,8 +232,8 @@ Confirmed findings:
 
 Durable outputs created from this tranche:
 
-- [ADR-039](../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
-- updated [zod-round-trip-limitations.md](../../../docs/architecture/zod-round-trip-limitations.md)
+- [ADR-039](../../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
+- updated [zod-round-trip-limitations.md](../../../../docs/architecture/zod-round-trip-limitations.md)
 
 Recommended direction locked by ADR-039:
 
@@ -244,7 +258,7 @@ Before investigating individual limitations, do the following:
    - `docs/architectural_decision_records/ADR-031-zod-output-strategy.md`
    - `docs/architectural_decision_records/ADR-032-zod-input-strategy.md`
    - `docs/architectural_decision_records/ADR-035-transform-validation-parity.md`
-   - [transform-proof-budgeting-and-runtime-architecture-investigation.md](../current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+   - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md)
 2. Execute the companion plan's Tranche 0 cost-baseline step before deep semantic analysis:
    - capture isolated heavy-proof runtime
    - capture full-suite transform runtime

@@ -6,8 +6,6 @@
  * @module ir-real-world.complex.char.test
  */
 
-import { generateZodClientFromOpenAPI } from '../../index.js';
-import { getZodClientTemplateContext } from '../../schema-processing/context/index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import {
@@ -18,6 +16,7 @@ import {
   assertContentContains,
 } from '../ir-test-helpers.js';
 import { assertSchemaComponent } from '../../schema-processing/ir/index.js';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../test-utils.js';
 
 describe('IR Characterization - Real-World Specs', () => {
   describe('Complex Schema Patterns', () => {

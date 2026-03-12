@@ -55,7 +55,7 @@ it('use main-description-as-fallback', async () => {
         nb: z.number(),
         str: z.string(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -68,7 +68,7 @@ it('use main-description-as-fallback', async () => {
             nb: z.number(),
             str: z.string(),
           })
-          .strict(),
+          .strip(),
         errors: [],
         responses: {
           200: {
@@ -77,7 +77,7 @@ it('use main-description-as-fallback', async () => {
                 nb: z.number(),
                 str: z.string(),
               })
-              .strict(),
+              .strip(),
             description: "get example",
           },
         },
@@ -96,6 +96,8 @@ it('use main-description-as-fallback', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,

@@ -39,8 +39,8 @@ describe('Zod Union Parsing', () => {
     it('should parse z.discriminatedUnion', () => {
       const result = parseUnionZod(`
         z.discriminatedUnion("type", [
-          z.object({ type: z.literal("a"), val: z.string() }),
-          z.object({ type: z.literal("b"), val: z.number() })
+          z.strictObject({ type: z.literal("a"), val: z.string() }),
+          z.strictObject({ type: z.literal("b"), val: z.number() })
         ])
       `);
 

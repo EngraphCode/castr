@@ -52,7 +52,7 @@ export const FullMetadataSchema = z.email().meta({
 // =============================================================================
 
 export const ObjectWithMetadataSchema = z
-  .object({
+  .strictObject({
     id: z.uuid().meta({ title: 'User ID', description: 'Unique identifier' }),
     email: z.email().meta({ examples: ['test@example.com'] }),
     createdAt: z.iso.datetime().meta({ title: 'Creation Timestamp' }),

@@ -29,11 +29,14 @@ import {
   selectFixtureRoundTripDocument,
   selectSchemaComponents,
   writeOpenApi,
+  parseFixtureZodSource,
   parseZodSource,
 } from '../utils/transform-helpers.js';
 
-const RECURSIVE_UNKNOWN_KEY_FAILURE =
-  /Recursive object schemas with unknown-key behavior "(passthrough|catchall)" cannot yet be emitted safely in Zod\./;
+const UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES = [
+  'StripObjectSchema',
+  'RecursiveStripCategorySchema',
+] as const;
 
 // ============================================================================
 // Helpers
@@ -53,7 +56,9 @@ function roundTripSchemasViaJsonSchema(ir: CastrDocument): CastrDocument {
 
   // IR → JSON Schema Bundle → IR
   const jsonSchemaBundle = writeJsonSchemaBundle(schemaComponents);
-  const roundTrippedComponents = parseJsonSchemaDocument(jsonSchemaBundle);
+  const roundTrippedComponents = parseJsonSchemaDocument(jsonSchemaBundle, {
+    nonStrictObjectPolicy: 'strip',
+  });
 
   // Replace schema components in the original IR
   const nonSchemaComponents = ir.components.filter((c) => c.type !== 'schema');
@@ -75,7 +80,7 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
       async (fixture) => {
         // Zod → IR
         const source = await readZodFixture(fixture.path);
-        const result1 = parseZodSource(source);
+        const result1 = parseFixtureZodSource(fixture, source);
         expectNoParseErrors(fixture.name, 'Scenario 6 Zod parse', result1);
         const roundTripIR = selectFixtureRoundTripDocument(fixture, result1.ir);
         const originalCount = roundTripIR.components.length;
@@ -84,7 +89,7 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
         const modifiedIR = roundTripSchemasViaJsonSchema(roundTripIR);
         const openApiDoc = writeOpenApi(modifiedIR);
         const zodOutput = await generateZodFromOpenAPI(openApiDoc);
-        const result3 = parseZodSource(zodOutput);
+        const result3 = parseFixtureZodSource(fixture, zodOutput);
         expectNoParseErrors(fixture.name, 'Scenario 6 round-tripped Zod parse', result3);
 
         // Schema count preserved through full cross-format trip
@@ -99,7 +104,7 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
       async (fixture) => {
         // Zod → IR
         const source = await readZodFixture(fixture.path);
-        const result1 = parseZodSource(source);
+        const result1 = parseFixtureZodSource(fixture, source);
         expectNoParseErrors(fixture.name, 'Scenario 6 Zod parse', result1);
 
         const roundTripIR = selectFixtureRoundTripDocument(fixture, result1.ir);
@@ -110,7 +115,9 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
 
         // IR → JSON Schema Bundle → IR
         const jsonSchemaBundle = writeJsonSchemaBundle(originalSchemaComponents);
-        const roundTrippedComponents = parseJsonSchemaDocument(jsonSchemaBundle);
+        const roundTrippedComponents = parseJsonSchemaDocument(jsonSchemaBundle, {
+          nonStrictObjectPolicy: 'strip',
+        });
 
         // Compare schema names
         const originalNames = originalSchemaComponents.map((c) => c.name).sort();
@@ -121,12 +128,12 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
   });
 
   describe('Functional Equivalence: Validation Parity', () => {
-    it.each(ZOD_FIXTURES)(
+    it.each(ZOD_FIXTURES.filter((fixture) => fixture.name !== 'unknown-key-semantics'))(
       '$name: Zod → JSON Schema → Zod yields identical validation behavior',
       async (fixture) => {
         // Original Zod schemas
         const source = await readZodFixture(fixture.path);
-        const result1 = parseZodSource(source);
+        const result1 = parseFixtureZodSource(fixture, source);
         expectNoParseErrors(fixture.name, 'Scenario 6 Zod parse', result1);
 
         // Cross-format round-trip: IR → JSON Schema → IR → OpenAPI → Zod
@@ -144,6 +151,41 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
         assertParsedOutputParity(fixture.name, originalSchemas, transformedSchemas);
       },
     );
+
+    it('unknown-key-semantics: compatibility mode preserves strip behavior where strip semantics are the target', async () => {
+      expect.hasAssertions();
+
+      const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
+      if (!fixture) {
+        throw new Error('Expected unknown-key-semantics fixture');
+      }
+
+      const source = await readZodFixture(fixture.path);
+      const result1 = parseFixtureZodSource(fixture, source);
+      expectNoParseErrors(fixture.name, 'Scenario 6 Zod parse', result1);
+
+      const modifiedIR = roundTripSchemasViaJsonSchema(
+        selectFixtureRoundTripDocument(fixture, result1.ir),
+      );
+      const openApiDoc = writeOpenApi(modifiedIR);
+      const zodOutput = await generateZodFromOpenAPI(openApiDoc);
+
+      const originalSchemas = await loadDynamicZodSchemas(source);
+      const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
+
+      assertValidationParity(
+        fixture.name,
+        originalSchemas,
+        transformedSchemas,
+        UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES,
+      );
+      assertParsedOutputParity(
+        fixture.name,
+        originalSchemas,
+        transformedSchemas,
+        UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES,
+      );
+    });
   });
 
   describe('Strictness: unsupported recursive unknown-key modes fail fast', () => {
@@ -163,21 +205,54 @@ describe('Transform Scenario 6: Zod → IR → JSON Schema → IR → Zod', () =
       },
     );
 
-    it('rejects the full mixed unknown-key fixture instead of partially generating it', async () => {
+    it('rejects the full mixed unknown-key fixture by default and supports explicit strip normalization', async () => {
       const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
       if (!fixture) {
         throw new Error('Expected unknown-key-semantics fixture');
       }
 
       const source = await readZodFixture(fixture.path);
-      const result = parseZodSource(source);
-      expectNoParseErrors(fixture.name, 'Scenario 6 Zod parse', result);
+      const defaultResult = parseZodSource(source);
+      expect(defaultResult.errors.length).toBeGreaterThan(0);
+      expect(defaultResult.errors[0]?.message).toContain('strict object ingest is the default');
+      expect(defaultResult.errors[0]?.message).toContain("nonStrictObjectPolicy: 'strip'");
 
-      const openApiDoc = writeOpenApi(roundTripSchemasViaJsonSchema(result.ir));
-
-      await expect(generateZodFromOpenAPI(openApiDoc)).rejects.toThrow(
-        RECURSIVE_UNKNOWN_KEY_FAILURE,
+      const compatibilityResult = parseFixtureZodSource(fixture, source);
+      expectNoParseErrors(
+        fixture.name,
+        'Scenario 6 Zod parse with compatibility mode',
+        compatibilityResult,
       );
+
+      const openApiDoc = writeOpenApi(
+        roundTripSchemasViaJsonSchema(
+          selectFixtureRoundTripDocument(fixture, compatibilityResult.ir),
+        ),
+      );
+      const zodOutput = await generateZodFromOpenAPI(openApiDoc);
+      const regenerated = parseFixtureZodSource(fixture, zodOutput);
+
+      expectNoParseErrors(
+        fixture.name,
+        'Scenario 6 round-tripped Zod parse with compatibility mode',
+        regenerated,
+      );
+
+      const regeneratedSchemas = selectSchemaComponents(regenerated.ir, [
+        'StripObjectSchema',
+        'PassthroughObjectSchema',
+        'CatchallObjectSchema',
+        'RecursiveStripCategorySchema',
+      ]).components;
+
+      for (const component of regeneratedSchemas) {
+        if (component.type !== 'schema') {
+          continue;
+        }
+
+        expect(component.schema.additionalProperties).toBe(true);
+        expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+      }
     });
   });
 });

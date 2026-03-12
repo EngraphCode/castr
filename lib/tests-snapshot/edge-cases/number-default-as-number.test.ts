@@ -50,7 +50,7 @@ test('number-default-cast', async () => {
         shouldBeFixed: z.number().optional(),
         text1: z.string().optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -84,6 +84,8 @@ test('number-default-cast', async () => {
               text1: { type: "string", default: "aaa" },
             },
             required: [],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: false,

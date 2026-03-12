@@ -35,11 +35,16 @@ Then use:
 
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Primary Active Work:** Zod limitations architecture investigation
+- **Primary Active Work:** `int64` / `bigint` semantics investigation
   - Plan of record: `.agent/plans/roadmap.md`
-  - Primary active plan: `.agent/plans/active/zod-limitations-architecture-investigation.md`
-  - Paused supporting investigation: `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
-  - Completed adjacent remediation: `.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md`
+  - Primary active plan: `.agent/plans/active/int64-bigint-semantics-investigation.md`
+  - Paused umbrella context: `.agent/plans/current/paused/zod-limitations-architecture-investigation.md`
+  - Paused supporting investigations:
+    - `.agent/plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md`
+    - `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
+  - Completed adjacent remediation:
+    - `.agent/plans/current/complete/strict-object-semantics-enforcement.md`
+    - `.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md`
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
 - **Recent Completed Operational Slices:**
   - `.agent/plans/current/complete/core-agent-system-and-codex-agent-adapters.md`

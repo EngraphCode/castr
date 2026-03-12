@@ -6,11 +6,10 @@
  * @module ir-real-world.operations.char.test
  */
 
-import { generateZodClientFromOpenAPI } from '../../index.js';
-import { getZodClientTemplateContext } from '../../schema-processing/context/index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
 import { assertAndGetSingleFileContent } from '../ir-test-helpers.js';
+import { generateZodClientFromOpenAPI, getZodClientTemplateContext } from '../test-utils.js';
 
 describe('IR Characterization - Real-World Specs', () => {
   describe('Operation Complexity', () => {

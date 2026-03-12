@@ -27,6 +27,8 @@ import { CastrSchemaProperties, ensureObjectTypeForObjectKeywords } from '../../
 import type { IRBuildContext } from './builder.types.js';
 import { addConstraints } from './schemas/builder.constraints.js';
 import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
+import { applyOpenApiNonStrictObjectPolicy } from './builder.non-strict-object-policy.js';
+import { shouldNormalizeNonStrictObjectInput } from '../../non-strict-object-policy.js';
 
 import { updateZodChain } from './schemas/builder.zod-chain.js';
 
@@ -72,6 +74,8 @@ export function buildCastrSchema(
 
   // Add OpenAPI extensions and JSON Schema 2020-12 keywords
   addOpenAPIExtensions(schema, context, irSchema, buildCastrSchema);
+
+  applyOpenApiNonStrictObjectPolicy(schema, context, irSchema);
 
   // Update Zod chain with validations from constraints
   updateZodChain(irSchema);
@@ -276,6 +280,14 @@ function addAdditionalProperties(
   if (typeof schema.additionalProperties === 'boolean') {
     irSchema.additionalProperties = schema.additionalProperties;
   } else {
+    if (
+      shouldNormalizeNonStrictObjectInput({
+        nonStrictObjectPolicy: context.nonStrictObjectPolicy,
+      })
+    ) {
+      return;
+    }
+
     const additionalContext: IRBuildContext = {
       ...context,
       path: [...context.path, 'additionalProperties'],

@@ -22,8 +22,8 @@ export const MultiTypeUnionSchema = z.union([z.string(), z.number(), z.boolean()
 export const ExclusiveUnionSchema = z.xor([z.string(), z.number()]);
 
 export const ObjectXorSchema = z.xor([
-  z.object({ type: z.literal('card'), cardNumber: z.string() }),
-  z.object({ type: z.literal('bank'), accountNumber: z.string() }),
+  z.strictObject({ type: z.literal('card'), cardNumber: z.string() }),
+  z.strictObject({ type: z.literal('bank'), accountNumber: z.string() }),
 ]);
 
 // =============================================================================
@@ -31,14 +31,14 @@ export const ObjectXorSchema = z.xor([
 // =============================================================================
 
 export const DiscriminatedUnionSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('success'), data: z.string() }),
-  z.object({ type: z.literal('error'), message: z.string() }),
+  z.strictObject({ type: z.literal('success'), data: z.string() }),
+  z.strictObject({ type: z.literal('error'), message: z.string() }),
 ]);
 
 export const MultiOptionDiscriminatedSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('a'), valueA: z.number() }),
-  z.object({ kind: z.literal('b'), valueB: z.boolean() }),
-  z.object({ kind: z.literal('c'), valueC: z.string() }),
+  z.strictObject({ kind: z.literal('a'), valueA: z.number() }),
+  z.strictObject({ kind: z.literal('b'), valueB: z.boolean() }),
+  z.strictObject({ kind: z.literal('c'), valueC: z.string() }),
 ]);
 
 // =============================================================================

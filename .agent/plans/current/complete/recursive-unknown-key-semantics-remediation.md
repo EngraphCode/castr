@@ -4,7 +4,8 @@
 **Priority:** High  
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-09  
-**Parent:** [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md)
+**Parent:** [zod-limitations-architecture-investigation.md](../paused/zod-limitations-architecture-investigation.md)
+**Successor Active Slice:** [strict-object-semantics-enforcement.md](./strict-object-semantics-enforcement.md)
 
 ---
 

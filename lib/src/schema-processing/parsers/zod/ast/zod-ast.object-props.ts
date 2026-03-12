@@ -7,11 +7,11 @@
  * @module parsers/zod/zod-ast.object-props
  */
 
-import type { CallExpression, ReturnStatement } from 'ts-morph';
+import type { CallExpression, ObjectLiteralExpression, ReturnStatement } from 'ts-morph';
 import { Node } from 'ts-morph';
 import type { ZodImportResolver } from '../registry/zod-import-resolver.js';
 import { getZodBaseMethod, getInnerCall } from './zod-ast.helpers.js';
-import { ZOD_OBJECT_METHOD } from '../zod-constants.js';
+import { isZodObjectBaseMethod } from '../zod-constants.js';
 
 function findObjectCallInChain(
   call: CallExpression,
@@ -21,7 +21,7 @@ function findObjectCallInChain(
 
   while (objectCall) {
     const method = getZodBaseMethod(objectCall, resolver);
-    if (method === ZOD_OBJECT_METHOD) {
+    if (method && isZodObjectBaseMethod(method)) {
       return objectCall;
     }
 
@@ -86,6 +86,17 @@ function extractPropertyEntry(prop: Node): [string, Node] | undefined {
   return extractFromPropertyAssignment(prop) ?? extractFromGetAccessor(prop);
 }
 
+function getObjectLiteralArgument(
+  call: CallExpression,
+): Map<string, Node> | ObjectLiteralExpression | undefined {
+  const objectLiteral = call.getArguments()[0];
+  if (!objectLiteral) {
+    return new Map<string, Node>();
+  }
+
+  return Node.isObjectLiteralExpression(objectLiteral) ? objectLiteral : undefined;
+}
+
 /**
  * Extract properties from a z.object() call.
  *
@@ -99,23 +110,16 @@ export function extractObjectProperties(
   call: CallExpression,
   resolver: ZodImportResolver,
 ): Map<string, Node> | undefined {
-  const baseMethod = getZodBaseMethod(call, resolver);
-  if (baseMethod !== ZOD_OBJECT_METHOD) {
-    return undefined;
-  }
-
   const objectCall = findObjectCallInChain(call, resolver);
   if (!objectCall) {
     return undefined;
   }
 
-  const objectArgs = objectCall.getArguments();
-  if (objectArgs.length === 0) {
-    return new Map();
+  const objectLiteral = getObjectLiteralArgument(objectCall);
+  if (objectLiteral instanceof Map) {
+    return objectLiteral;
   }
-
-  const objectLiteral = objectArgs[0];
-  if (!objectLiteral || !Node.isObjectLiteralExpression(objectLiteral)) {
+  if (!objectLiteral) {
     return undefined;
   }
 

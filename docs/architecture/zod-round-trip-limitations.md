@@ -1,10 +1,15 @@
 # Zod Round-Trip Limitations
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-03-09  
+**Last Updated:** 2026-03-11  
 **Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 
 ---
+
+> [!IMPORTANT]
+> On 2026-03-11, [ADR-040](../architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) changed the forward product direction for object schemas to default strict generation, reject-by-default ingest, and one explicit lossy strip-normalization compatibility mode.
+>
+> That enforcement is now in place. This document keeps only the remaining durable limitations plus the historical context needed to explain why the compatibility path is deliberately lossy.
 
 ## Purpose
 
@@ -19,6 +24,19 @@ Each unresolved limitation below is documented with:
 - the underlying cause
 - a minimal example
 - the shape of a possible fundamental answer
+
+---
+
+## Resolved: Strict-By-Default Object Enforcement
+
+Current object doctrine is now implemented:
+
+- non-strict object inputs reject by default across Zod, OpenAPI, and JSON Schema ingest
+- one explicit compatibility mode may normalize non-strict object inputs to strip semantics
+- default generated strict objects emit `z.strictObject({...})`
+- compatibility-normalized recursive strip output remains bare `z.object({...})` for runtime safety
+
+The remaining object-related material below is historical context explaining why the compatibility path is intentionally lossy and why preserving recursive passthrough / catchall is no longer the active product target.
 
 ---
 
@@ -78,22 +96,22 @@ See:
 
 ---
 
-## Limitation: Recursive Unknown-Key-Preserving Output Still Fails Fast
+## Historical Seam: Recursive Unknown-Key-Preserving Output Still Fails Fast
 
 Recursive object schemas still cannot safely emit unknown-key-preserving output (`.passthrough()` or `.catchall(...)`) in canonical generated Zod.
 
 ### Current Accepted Behavior
 
-- Zod parsing preserves `strict`, `strip`, `passthrough`, and `catchall` distinctly in IR.
-- OpenAPI / JSON Schema preserve strip vs passthrough through `x-castr-unknownKeyBehavior` when required.
-- Non-recursive Zod generation emits the exact unknown-key method for all four modes.
-- Recursive strip remains supported via bare `z.object({...})`, which is strip-mode by default in Zod.
-- Recursive `.passthrough()` and recursive `.catchall()` fail fast with explicit generation errors.
+Current forward behavior under ADR-040 is:
+
+- default ingest rejects non-strict object input with an explicit `nonStrictObjectPolicy: 'strip'` hint
+- compatibility-mode ingest normalizes strip / passthrough / catchall input to strip IR only
+- default strict Zod output uses `z.strictObject({...})`
+- compatibility-mode recursive strip output remains supported via bare `z.object({...})`, which is strip-mode by default in Zod
 
 Architecture status:
 
-- The parser/IR/cross-format loss has been remediated.
-- The remaining limitation is now a narrow **writer/runtime construction boundary**.
+- The remaining preserving-mode limitation is now historical rather than a forward product gap.
 - Durable investigation and policy live in [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md) and [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md).
 
 ### Impact
@@ -140,11 +158,17 @@ Current behavior:
 - parsed-output retention of unknown keys
 - typed catchall validation where applicable
 
-Current architectural direction:
+Historical architectural direction:
 
 - keep preserving semantics in IR and portable artifacts
 - keep failing fast for unsupported recursive preserving output until a safe construction strategy exists
 - determine whether getter syntax remains a universal canonical recursion form or whether recursive preserving modes require one tightly-scoped second canonical strategy
+
+Current forward doctrine under ADR-040 is different:
+
+- default ingest rejects non-strict object behavior
+- one explicit compatibility mode may normalize non-strict object inputs to strip semantics
+- preserving-mode remediation is no longer the primary product target
 
 See:
 

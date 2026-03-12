@@ -61,7 +61,7 @@ it('determines which one is-main-response', async () => {
         nb: z.number(),
         str: z.string(),
       })
-      .strict();
+      .strip();
     export const AnotherSuccess = z.number();
     // Endpoints
     export const endpoints = [
@@ -75,7 +75,7 @@ it('determines which one is-main-response', async () => {
             nb: z.number(),
             str: z.string(),
           })
-          .strict(),
+          .strip(),
         errors: [],
         responses: {
           200: {
@@ -84,7 +84,7 @@ it('determines which one is-main-response', async () => {
                 nb: z.number(),
                 str: z.string(),
               })
-              .strict(),
+              .strip(),
             description: "OK",
           },
           201: {
@@ -107,6 +107,8 @@ it('determines which one is-main-response', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,

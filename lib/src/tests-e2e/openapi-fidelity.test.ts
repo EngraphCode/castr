@@ -10,7 +10,7 @@ describe('OpenAPI Fidelity', () => {
     const loaded = await loadOpenApiDocument(specPath);
     const originalDoc = loaded.document;
 
-    const ir = buildIR(originalDoc);
+    const ir = buildIR(originalDoc, { nonStrictObjectPolicy: 'strip' });
     const generatedDoc = writeOpenApi(ir);
 
     await validateOpenAPI(generatedDoc);

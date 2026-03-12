@@ -3,6 +3,9 @@
 > Detailed view of `.agent/directives/requirements.md` (Output Generation + Union Semantics)
 > and ADR-031. If any conflict exists, requirements win.
 
+> [!IMPORTANT]
+> [ADR-040](../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) adds an ingest-side strip-normalization compatibility mode, but it does not widen the default generated-object contract in this document.
+
 ---
 
 ## Scope
@@ -25,20 +28,20 @@
 
 Every IR schema type must map to a valid Zod 4 construct:
 
-| IR Type             | Zod Output                       | Notes                  |
-| ------------------- | -------------------------------- | ---------------------- |
-| `string`            | `z.string()`                     | Default when no format |
-| `number`            | `z.number()`                     |                        |
-| `integer`           | `z.int()`                        | Default integer        |
-| `integer+format`    | `z.int32()` / `z.int64()`        | `int32` / `int64`      |
-| `boolean`           | `z.boolean()`                    |                        |
-| `null`              | `z.null()`                       |                        |
-| `array`             | `z.array(...)`                   |                        |
-| `object`            | `z.object({...})`                |                        |
-| `enum` (single)     | `z.literal(value)`               | Any type               |
-| `enum` (all string) | `z.enum([...])`                  | String enums           |
-| `enum` (mixed)      | `z.union([z.literal(...), ...])` | Mixed literals         |
-| `const`             | `z.literal(value)`               |                        |
+| IR Type             | Zod Output                       | Notes                       |
+| ------------------- | -------------------------------- | --------------------------- |
+| `string`            | `z.string()`                     | Default when no format      |
+| `number`            | `z.number()`                     |                             |
+| `integer`           | `z.int()`                        | Default integer             |
+| `integer+format`    | `z.int32()` / `z.int64()`        | `int32` / `int64`           |
+| `boolean`           | `z.boolean()`                    |                             |
+| `null`              | `z.null()`                       |                             |
+| `array`             | `z.array(...)`                   |                             |
+| `object`            | `z.strictObject({...})`          | Explicit strict object form |
+| `enum` (single)     | `z.literal(value)`               | Any type                    |
+| `enum` (all string) | `z.enum([...])`                  | String enums                |
+| `enum` (mixed)      | `z.union([z.literal(...), ...])` | Mixed literals              |
+| `const`             | `z.literal(value)`               |                             |
 
 ---
 
@@ -46,17 +49,19 @@ Every IR schema type must map to a valid Zod 4 construct:
 
 Zod 4 top-level format functions MUST be used where possible:
 
-| IR Format     | Zod Output         |
-| ------------- | ------------------ |
-| `email`       | `z.email()`        |
-| `uri` / `url` | `z.url()`          |
-| `uuid`        | `z.uuidv4()`       |
-| `date`        | `z.iso.date()`     |
-| `date-time`   | `z.iso.datetime()` |
-| `time`        | `z.iso.time()`     |
-| `duration`    | `z.iso.duration()` |
-| `ipv4`        | `z.ipv4()`         |
-| `ipv6`        | `z.ipv6()`         |
+| IR Format                 | Zod Output         |
+| ------------------------- | ------------------ |
+| `email`                   | `z.email()`        |
+| `uri` / `url`             | `z.url()`          |
+| `uuid`                    | `z.uuid()`         |
+| `uuid` + `uuidVersion: 4` | `z.uuidv4()`       |
+| `uuid` + `uuidVersion: 7` | `z.uuidv7()`       |
+| `date`                    | `z.iso.date()`     |
+| `date-time`               | `z.iso.datetime()` |
+| `time`                    | `z.iso.time()`     |
+| `duration`                | `z.iso.duration()` |
+| `ipv4`                    | `z.ipv4()`         |
+| `ipv6`                    | `z.ipv6()`         |
 
 Integer formats:
 
@@ -132,9 +137,11 @@ If no metadata is present, no `.meta()` call should be emitted.
 
 ## 7. Strictness Rules
 
-- Objects are strict by default unless `additionalProperties: true`
-- `additionalProperties: true` -> `.passthrough()`
-- `additionalProperties: schema` -> `.catchall(schema)`
+- Objects are emitted as explicit strict objects on the default output path
+- Bare `z.object({...})` is not an acceptable stand-in for strict object semantics
+- Compatibility-normalized strip IR emits `z.object({...}).strip()` for non-recursive objects and bare `z.object({...})` only for recursive getter-safe strip output
+- `.passthrough()` and `.catchall(schema)` are not default generated-object targets
+- Recursive strict output must use `z.strictObject({...})`, the runtime-safe canonical strict form accepted by parser/writer lockstep
 - No implicit coercion unless explicitly requested
 
 ---

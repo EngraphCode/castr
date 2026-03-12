@@ -83,7 +83,7 @@ test('object-default-values', async () => {
         id: z.number().optional(),
         name: z.string().optional(),
       })
-      .strict();
+      .strip();
     // Endpoints
     export const endpoints = [
       {
@@ -98,7 +98,7 @@ test('object-default-values', async () => {
               .object({
                 foo: z.string().optional(),
               })
-              .strict()
+              .strip()
               .optional(),
           },
           {
@@ -108,20 +108,20 @@ test('object-default-values', async () => {
               .object({
                 foo: z.string().optional(),
               })
-              .strict()
+              .strip()
               .optional(),
           },
           {
             name: "ref-object",
             type: "Query",
-            schema: z.object({}).catchall(MyComponent).optional(),
+            schema: z.object({}).strip().optional(),
           },
         ],
-        response: z.object({}).strict(),
+        response: z.strictObject({}),
         errors: [],
         responses: {
           200: {
-            schema: z.object({}).strict(),
+            schema: z.strictObject({}),
             description: "resoponse",
           },
         },
@@ -132,15 +132,15 @@ test('object-default-values', async () => {
                 .object({
                   foo: z.string().optional(),
                 })
-                .strict()
+                .strip()
                 .optional(),
               "default-object": z
                 .object({
                   foo: z.string().optional(),
                 })
-                .strict()
+                .strip()
                 .optional(),
-              "ref-object": z.object({}).catchall(MyComponent).optional(),
+              "ref-object": z.object({}).strip().optional(),
             })
             .strict(),
         },
@@ -163,35 +163,22 @@ test('object-default-values', async () => {
                     default: { foo: "bar" },
                     properties: { foo: { type: "string" } },
                     required: [],
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
                   },
                   "empty-object": {
                     type: "object",
                     default: {},
                     properties: { foo: { type: "string" } },
                     required: [],
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
                   },
                   "ref-object": {
                     type: "object",
                     default: { id: 1, name: "foo" },
-                    additionalProperties: {
-                      type: "object",
-                      properties: {
-                        id: { type: "number" },
-                        name: { type: "string" },
-                      },
-                      required: [],
-                    },
-                    unknownKeyBehavior: {
-                      mode: "catchall",
-                      schema: {
-                        type: "object",
-                        properties: {
-                          id: { type: "number" },
-                          name: { type: "string" },
-                        },
-                        required: [],
-                      },
-                    },
+                    additionalProperties: true,
+                    unknownKeyBehavior: { mode: "strip" },
                   },
                 },
               },

@@ -11,9 +11,12 @@
 
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { prepareOpenApiDocument } from '../shared/prepare-openapi-document.js';
-import { extractContent, assertAndExtractContent } from './test-utils.js';
+import {
+  extractContent,
+  assertAndExtractContent,
+  generateZodClientFromOpenAPI,
+} from './test-utils.js';
 import type { GenerationResult } from '../rendering/generation-result.js';
 
 /**

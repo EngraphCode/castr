@@ -3,7 +3,7 @@
 **Status:** Complete
 **Created:** 2026-03-09
 **Last Updated:** 2026-03-09
-**Related:** `.agent/practice-core/practice.md`, `.agent/practice-core/practice-bootstrap.md`, `.agent/practice-context/outgoing/platform-adapter-reference.md`, `.agent/practice-context/outgoing/reviewer-system-guide.md`, `.agent/practice-context/outgoing/starter-templates.md`, `.agent/plans/future/gemini-antigravity-agentic-platform-support.md`, `.agent/plans/active/zod-limitations-architecture-investigation.md`
+**Related:** `.agent/practice-core/practice.md`, `.agent/practice-core/practice-bootstrap.md`, `.agent/practice-context/outgoing/platform-adapter-reference.md`, `.agent/practice-context/outgoing/reviewer-system-guide.md`, `.agent/practice-context/outgoing/starter-templates.md`, `.agent/plans/future/gemini-antigravity-agentic-platform-support.md`, `.agent/plans/current/complete/strict-object-semantics-enforcement.md`
 
 ---
 

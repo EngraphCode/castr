@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 10, 2026)  
+**Date:** January 24, 2026 (Updated March 12, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -33,7 +33,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, and type-safety remediation workstream are complete. The repo's active next-work track now resumes the Zod limitations architecture investigation.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, and strict object semantics enforcement slice are complete. The repo's active next-work track is now `int64` / `bigint` semantics investigation.
 
 Current status of that track:
 
@@ -58,22 +58,39 @@ Current status of that track:
 - the Shared loader and utility cluster is complete
 - the Snapshot regression cluster is complete
 - the remaining parser/writer low-count cluster is complete
-- the next primary slice remains investigation-first across the remaining open Zod limitations:
-  - recursive unknown-key-preserving Zod generation remains unresolved
-  - the immediate recursive unknown-key question is whether getter syntax is universally canonical or only canonical for strip-compatible recursion
-  - UUID subtype semantics are now preserved in IR/native Zod output and widen only across standard portable detours
-  - `int64` maps to `bigint` in Zod 4
+- strict object semantics enforcement is complete:
+  - non-strict object inputs now reject by default across Zod / OpenAPI / JSON Schema
+  - one shared opt-in ingest surface now exists:
+    - `nonStrictObjectPolicy: 'reject' | 'strip'`
+  - compatibility normalization is strip-only and deliberately lossy
+  - default-path generated object outputs are explicit about strictness where the target can represent it honestly
+  - recursive strict Zod parser/writer lockstep is closed around `z.strictObject({...})`
+- the broader Zod limitations investigation and recursive preserving-mode investigation remain paused as context rather than the primary `active/` plan
+- the next primary slice is investigation-first:
+  - decide the permanent doctrine for portable `int64`
+  - decide the permanent doctrine for direct `z.bigint()`
+  - determine whether a transport/runtime semantic split is required or avoidable
+  - avoid introducing a user-facing strategy flag unless investigation proves no single canonical policy satisfies doctrine
+- current local numeric evidence shows:
+  - `format: int64` currently maps to `z.int64()` and validates `bigint`
+  - direct `z.bigint()` currently parses as `type: integer`, `format: "bigint"`
+  - portable detours remain internally consistent but ergonomically awkward at JSON transport boundaries
+- UUID subtype semantics are now preserved in IR/native Zod output and widen only across standard portable detours
+- `int64` / `bigint` is now the primary follow-on investigation after the completed strict-object slice
 
 Primary active atomic plan:
 
-- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+- [int64-bigint-semantics-investigation.md](./active/int64-bigint-semantics-investigation.md)
 
 Paused supporting context that remains important:
 
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 
 Recently completed adjacent remediation:
 
+- [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
 - [type-safety-remediation-follow-up.md](./current/complete/type-safety-remediation-follow-up.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
@@ -271,8 +288,11 @@ Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/pha
 
 Current Zod workstream context:
 
-- [zod-limitations-architecture-investigation.md](./active/zod-limitations-architecture-investigation.md)
+- [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [int64-bigint-semantics-investigation.md](./active/int64-bigint-semantics-investigation.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)

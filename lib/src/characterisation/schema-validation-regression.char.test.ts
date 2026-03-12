@@ -9,8 +9,8 @@
 
 import { describe, it, expect } from 'vitest';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { generateZodClientFromOpenAPI } from '../rendering/index.js';
 import { isSingleFileResult, type GenerationResult } from '../rendering/generation-result.js';
+import { generateZodClientFromOpenAPI } from './test-utils.js';
 
 function assertSingleFileContent(result: GenerationResult): string {
   if (!isSingleFileResult(result)) {

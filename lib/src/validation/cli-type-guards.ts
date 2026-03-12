@@ -6,6 +6,7 @@
  */
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
+import type { NonStrictObjectPolicy } from '../schema-processing/non-strict-object-policy.js';
 
 /**
  * Valid group strategy values per CLI documentation
@@ -37,6 +38,8 @@ export function isGroupStrategy(value: unknown): value is GroupStrategy {
 const DEFAULT_STATUS_BEHAVIORS = ['spec-compliant', 'auto-correct'] as const;
 type DefaultStatusBehavior = (typeof DEFAULT_STATUS_BEHAVIORS)[number];
 
+const NON_STRICT_OBJECT_POLICIES = ['reject', 'strip'] as const;
+
 /**
  * Type guard to check if a value is a valid default status behavior
  *
@@ -49,6 +52,18 @@ export function isDefaultStatusBehavior(value: unknown): value is DefaultStatusB
   }
   for (const behavior of DEFAULT_STATUS_BEHAVIORS) {
     if (value === behavior) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function isNonStrictObjectPolicy(value: unknown): value is NonStrictObjectPolicy {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  for (const policy of NON_STRICT_OBJECT_POLICIES) {
+    if (value === policy) {
       return true;
     }
   }

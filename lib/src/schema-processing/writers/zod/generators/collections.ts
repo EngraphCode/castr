@@ -1,7 +1,10 @@
 import type { CodeBlockWriter } from 'ts-morph';
 import type { CastrSchema, CastrSchemaContext, IRArrayItemsContext } from '../../../ir/index.js';
 import type { TemplateContextOptions } from '../../../context/index.js';
-import { writeAdditionalProperties } from '../additional-properties.js';
+import {
+  shouldUseStrictObjectConstructor,
+  writeAdditionalProperties,
+} from '../additional-properties.js';
 import {
   formatPropertyKey,
   buildPropertyContext,
@@ -42,8 +45,11 @@ export function writeObjectSchema(
   options?: TemplateContextOptions,
 ): void {
   const schema = context.schema;
+  const objectConstructor = shouldUseStrictObjectConstructor(schema, options)
+    ? 'z.strictObject('
+    : 'z.object(';
   writer
-    .write('z.object(')
+    .write(objectConstructor)
     .inlineBlock(() => {
       if (schema.properties) {
         writeProperties(schema, writer, writeZodSchemaFn, options);

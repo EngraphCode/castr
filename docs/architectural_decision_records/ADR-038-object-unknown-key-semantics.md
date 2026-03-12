@@ -1,9 +1,20 @@
 # ADR-038: Object Unknown-Key Semantics and Parsed-Output Parity
 
 **Date:** 2026-03-09  
-**Status:** Accepted
+**Status:** Superseded by ADR-040 on 2026-03-11
 
 ---
+
+> [!IMPORTANT]
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) supersedes the forward-looking preservation direction in this ADR.
+>
+> This document remains useful as historical diagnosis:
+>
+> - why multi-mode object preservation was investigated
+> - why recursive preserving-mode Zod reconstruction was difficult
+> - why parsed-output parity mattered
+>
+> It is no longer the active product direction. The active direction is default strict object generation, reject-by-default ingest, and one explicit lossy strip-normalization compatibility mode for callers who deliberately opt in.
 
 ## Context
 

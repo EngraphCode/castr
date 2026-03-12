@@ -21,7 +21,7 @@ test('regex-with-unnecessary-escape fails', () => {
     {
         "code": "z.object({
       str: z.string().regex(/^\\\\/$/).optional(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "str": {

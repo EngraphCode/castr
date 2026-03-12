@@ -76,13 +76,13 @@ it('includes errors-responses', async () => {
         nb: z.number(),
         str: z.string(),
       })
-      .strict();
+      .strip();
     export const AnotherSuccess = z.number();
     export const Error400 = z
       .object({
         is400: z.boolean().optional(),
       })
-      .strict();
+      .strip();
     export const Error500 = z.string();
     // Endpoints
     export const endpoints = [
@@ -96,7 +96,7 @@ it('includes errors-responses', async () => {
             nb: z.number(),
             str: z.string(),
           })
-          .strict(),
+          .strip(),
         errors: [
           {
             status: 400,
@@ -104,7 +104,7 @@ it('includes errors-responses', async () => {
               .object({
                 is400: z.boolean().optional(),
               })
-              .strict(),
+              .strip(),
             description: "Bad request",
           },
           {
@@ -120,7 +120,7 @@ it('includes errors-responses', async () => {
                 nb: z.number(),
                 str: z.string(),
               })
-              .strict(),
+              .strip(),
             description: "OK",
           },
           201: {
@@ -132,7 +132,7 @@ it('includes errors-responses', async () => {
               .object({
                 is400: z.boolean().optional(),
               })
-              .strict(),
+              .strip(),
             description: "Bad request",
           },
           500: {
@@ -155,6 +155,8 @@ it('includes errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,
@@ -292,7 +294,7 @@ it('determines which status are considered errors-responses', async () => {
         nb: z.number(),
         str: z.string(),
       })
-      .strict();
+      .strip();
     export const AnotherSuccess = z.number();
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
     export const DeeplyNested = z.array(VeryDeeplyNested);
@@ -303,13 +305,13 @@ it('determines which status are considered errors-responses', async () => {
         nested_prop: z.boolean().optional(),
         requiredProp: z.string(),
       })
-      .strict();
+      .strip();
     export const Error400 = z
       .object({
         is400: z.boolean().optional(),
         nested: Nested.optional(),
       })
-      .strict();
+      .strip();
     export const Error404 = z.null();
     export const Error500 = z.string();
     // Endpoints
@@ -324,7 +326,7 @@ it('determines which status are considered errors-responses', async () => {
             nb: z.number(),
             str: z.string(),
           })
-          .strict(),
+          .strip(),
         errors: [
           {
             status: 400,
@@ -333,7 +335,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Bad request",
           },
           {
@@ -343,7 +345,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Not found",
           },
           {
@@ -359,7 +361,7 @@ it('determines which status are considered errors-responses', async () => {
                 nb: z.number(),
                 str: z.string(),
               })
-              .strict(),
+              .strip(),
             description: "OK",
           },
           201: {
@@ -372,7 +374,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Bad request",
           },
           404: {
@@ -381,7 +383,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Not found",
           },
           500: {
@@ -404,6 +406,8 @@ it('determines which status are considered errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,
@@ -463,7 +467,7 @@ it('determines which status are considered errors-responses', async () => {
         nb: z.number(),
         str: z.string(),
       })
-      .strict();
+      .strip();
     export const AnotherSuccess = z.number();
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
     export const DeeplyNested = z.array(VeryDeeplyNested);
@@ -474,13 +478,13 @@ it('determines which status are considered errors-responses', async () => {
         nested_prop: z.boolean().optional(),
         requiredProp: z.string(),
       })
-      .strict();
+      .strip();
     export const Error400 = z
       .object({
         is400: z.boolean().optional(),
         nested: Nested.optional(),
       })
-      .strict();
+      .strip();
     export const Error404 = z.null();
     export const Error500 = z.string();
     // Endpoints
@@ -495,7 +499,7 @@ it('determines which status are considered errors-responses', async () => {
             nb: z.number(),
             str: z.string(),
           })
-          .strict(),
+          .strip(),
         errors: [
           {
             status: 400,
@@ -504,7 +508,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Bad request",
           },
           {
@@ -514,7 +518,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Not found",
           },
           {
@@ -530,7 +534,7 @@ it('determines which status are considered errors-responses', async () => {
                 nb: z.number(),
                 str: z.string(),
               })
-              .strict(),
+              .strip(),
             description: "OK",
           },
           201: {
@@ -543,7 +547,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Bad request",
           },
           404: {
@@ -552,7 +556,7 @@ it('determines which status are considered errors-responses', async () => {
                 is400: z.boolean().optional(),
                 nested: Nested.optional(),
               })
-              .strict(),
+              .strip(),
             description: "Not found",
           },
           500: {
@@ -575,6 +579,8 @@ it('determines which status are considered errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
+            additionalProperties: true,
+            unknownKeyBehavior: { mode: "strip" },
           },
           annotations: {
             readOnlyHint: true,

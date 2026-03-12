@@ -109,6 +109,10 @@ program
     false,
   )
   .option(
+    '--non-strict-object-policy <policy>',
+    "Control non-strict object ingest: 'reject' (default) or 'strip' for deliberate compatibility normalisation.",
+  )
+  .option(
     '--no-client',
     'Generate schemas and metadata without HTTP client (auto-switches to schemas-with-metadata template). Perfect for using your own HTTP client (fetch, axios, etc.) while maintaining full Zod validation.',
   )

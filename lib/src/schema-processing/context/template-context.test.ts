@@ -1,11 +1,23 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
-import { getZodClientTemplateContext, extractSchemaNamesFromDoc } from './template-context.js';
+import {
+  getZodClientTemplateContext as getZodClientTemplateContextBase,
+  extractSchemaNamesFromDoc,
+} from './template-context.js';
 import {
   createMinimalDoc,
   createDocWithSchemaRef,
   createDocWithTags,
 } from './template-context-fixtures.js';
+
+const getZodClientTemplateContext = (
+  doc: OpenAPIObject,
+  options?: Parameters<typeof getZodClientTemplateContextBase>[1],
+) =>
+  getZodClientTemplateContextBase(doc, {
+    nonStrictObjectPolicy: 'strip',
+    ...options,
+  });
 
 /**
  * Tests for extracted helper functions from template-context.ts

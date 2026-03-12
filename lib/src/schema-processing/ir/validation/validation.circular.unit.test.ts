@@ -8,8 +8,17 @@
 
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { describe, expect, test } from 'vitest';
-import { getZodClientTemplateContext } from '../../context/index.js';
+import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../../context/index.js';
 import { assertSchemaComponent } from '../test-helpers.js';
+
+const getZodClientTemplateContext = (
+  doc: OpenAPIObject,
+  options?: Parameters<typeof getZodClientTemplateContextBase>[1],
+) =>
+  getZodClientTemplateContextBase(doc, {
+    nonStrictObjectPolicy: 'strip',
+    ...options,
+  });
 
 describe('IR Validation - Circular Reference Detection', () => {
   test('detects self-referencing schemas', () => {

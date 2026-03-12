@@ -11,7 +11,7 @@ import { z } from 'zod';
 // Basic Object
 // =============================================================================
 
-export const BasicObjectSchema = z.object({
+export const BasicObjectSchema = z.strictObject({
   name: z.string(),
   age: z.number(),
   active: z.boolean(),
@@ -32,17 +32,15 @@ export const StrictObjectSchema = z
 // Object with Passthrough (additionalProperties: true)
 // =============================================================================
 
-export const PassthroughObjectSchema = z
-  .object({
-    known: z.string(),
-  })
-  .passthrough();
+export const SecondaryStrictObjectSchema = z.strictObject({
+  known: z.string(),
+});
 
 // =============================================================================
 // Object with Optional/Nullable Properties
 // =============================================================================
 
-export const ObjectWithOptionalSchema = z.object({
+export const ObjectWithOptionalSchema = z.strictObject({
   required: z.string(),
   optional: z.string().optional(),
   nullable: z.string().nullable(),
@@ -53,12 +51,12 @@ export const ObjectWithOptionalSchema = z.object({
 // Nested Objects
 // =============================================================================
 
-export const NestedObjectSchema = z.object({
-  user: z.object({
+export const NestedObjectSchema = z.strictObject({
+  user: z.strictObject({
     name: z.string(),
     email: z.email(),
   }),
-  metadata: z.object({
+  metadata: z.strictObject({
     createdAt: z.iso.datetime(),
     version: z.int(),
   }),

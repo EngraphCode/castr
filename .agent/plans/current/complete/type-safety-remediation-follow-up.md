@@ -2,7 +2,7 @@
 
 **Status:** Complete  
 **Completed:** 2026-03-10  
-**Successor:** [zod-limitations-architecture-investigation.md](../../active/zod-limitations-architecture-investigation.md)
+**Successor:** [strict-object-semantics-enforcement.md](./strict-object-semantics-enforcement.md)
 
 ## Final Gate State
 

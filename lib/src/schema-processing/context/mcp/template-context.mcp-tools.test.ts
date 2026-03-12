@@ -1,7 +1,16 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
 import { beforeAll, describe, expect, test } from 'vitest';
 
-import { getZodClientTemplateContext } from '../template-context.js';
+import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '../template-context.js';
+
+const getZodClientTemplateContext = (
+  doc: OpenAPIObject,
+  options?: Parameters<typeof getZodClientTemplateContextBase>[1],
+) =>
+  getZodClientTemplateContextBase(doc, {
+    nonStrictObjectPolicy: 'strip',
+    ...options,
+  });
 
 const mcpToolsDoc: OpenAPIObject = {
   openapi: '3.1.0',

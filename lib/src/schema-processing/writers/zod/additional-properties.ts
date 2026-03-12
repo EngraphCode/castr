@@ -14,6 +14,7 @@ import {
   UNKNOWN_KEY_MODE_PASSTHROUGH,
   UNKNOWN_KEY_MODE_STRICT,
   UNKNOWN_KEY_MODE_STRIP,
+  isObjectSchemaType,
 } from '../../ir/index.js';
 import type { TemplateContextOptions } from '../../context/index.js';
 import { isRecursiveObjectSchema } from './properties.js';
@@ -37,6 +38,21 @@ type WriteZodSchemaFn = (
   options?: TemplateContextOptions,
 ) => WriterFunction;
 
+function hasImplicitStrictObjectDefaults(schema: CastrSchema): boolean {
+  return (
+    schema.additionalProperties === undefined &&
+    schema.unknownKeyBehavior === undefined &&
+    isObjectSchemaType(schema.type)
+  );
+}
+
+function hasStrictObjectOptionOverride(
+  schema: CastrSchema,
+  options: TemplateContextOptions | undefined,
+): boolean {
+  return options?.strictObjects === true && schema.additionalProperties !== true;
+}
+
 /**
  * Check if a schema should be treated as strict (rejecting unknown keys).
  * @internal
@@ -44,24 +60,17 @@ type WriteZodSchemaFn = (
 function shouldBeStrict(schema: CastrSchema, options: TemplateContextOptions | undefined): boolean {
   return (
     schema.additionalProperties === false ||
-    (options?.strictObjects === true && schema.additionalProperties !== true)
+    schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_STRICT ||
+    hasImplicitStrictObjectDefaults(schema) ||
+    hasStrictObjectOptionOverride(schema, options)
   );
 }
 
-/**
- * Check if a schema should use passthrough (accepting & preserving unknown keys).
- *
- * Skips passthrough for schemas with circular references because `.passthrough()`
- * eagerly reads the object shape, triggering `ReferenceError` on recursive getter
- * properties before initialization completes.
- *
- * @internal
- */
-function shouldPassthrough(schema: CastrSchema): boolean {
-  if (schema.additionalProperties !== true && schema.additionalProperties !== undefined) {
-    return false;
-  }
-  return !isRecursiveObjectSchema(schema);
+export function shouldUseStrictObjectConstructor(
+  schema: CastrSchema,
+  options: TemplateContextOptions | undefined,
+): boolean {
+  return shouldBeStrict(schema, options);
 }
 
 /**
@@ -117,10 +126,6 @@ export function writeAdditionalProperties(
   ) {
     return;
   }
-
-  if (shouldPassthrough(schema)) {
-    writer.write('.passthrough()');
-  }
 }
 
 function getComponentRef(context: CastrSchemaContext): string | undefined {
@@ -138,7 +143,6 @@ function writeExplicitUnknownKeyBehavior(
 ): boolean {
   switch (schema.unknownKeyBehavior?.mode) {
     case UNKNOWN_KEY_MODE_STRICT:
-      writer.write('.strict()');
       return true;
     case UNKNOWN_KEY_MODE_STRIP:
       if (!isRecursive) {
@@ -166,7 +170,6 @@ function writePortableAdditionalPropertiesBehavior(
   writeZodSchema: WriteZodSchemaFn,
 ): boolean {
   if (shouldBeStrict(schema, options)) {
-    writer.write('.strict()');
     return true;
   }
 

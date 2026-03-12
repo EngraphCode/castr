@@ -54,7 +54,7 @@ test('validations', () => {
       strWithPattern: z.string().regex(/^[a-z]+$/).optional(),
       url: z.url().optional(),
       uuid: z.uuid().optional(),
-    }).passthrough()"
+    }).strip()"
   `,
   );
 });

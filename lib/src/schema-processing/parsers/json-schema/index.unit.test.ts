@@ -16,6 +16,7 @@ describe('parseJsonSchema', () => {
   it('normalizes Draft 07 and parses to IR in one call', () => {
     const result = parseJsonSchema({
       type: 'object',
+      additionalProperties: false,
       properties: {
         name: { type: 'string' },
       },
@@ -43,11 +44,12 @@ describe('parseJsonSchema', () => {
   it('rewrites nested $ref from #/definitions/ to #/$defs/', () => {
     const result = parseJsonSchema({
       type: 'object',
+      additionalProperties: false,
       properties: {
         address: { $ref: '#/definitions/Address' },
       },
       definitions: {
-        Address: { type: 'object' },
+        Address: { type: 'object', additionalProperties: false },
       },
     });
 
@@ -66,6 +68,41 @@ describe('parseJsonSchema', () => {
     expect(result.minLength).toBe(1);
     expect(result.format).toBe('email');
   });
+
+  it('rejects non-strict object schemas by default with the compatibility hint', () => {
+    expect(() =>
+      parseJsonSchema({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+    ).toThrow(/strict object ingest is the default/);
+
+    expect(() =>
+      parseJsonSchema({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+    ).toThrow(/nonStrictObjectPolicy: 'strip'/);
+  });
+
+  it('normalizes non-strict object schemas to strip when nonStrictObjectPolicy is strip', () => {
+    const result = parseJsonSchema(
+      {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      },
+      { nonStrictObjectPolicy: 'strip' },
+    );
+
+    expect(result.additionalProperties).toBe(true);
+    expect(result.unknownKeyBehavior).toEqual({ mode: 'strip' });
+  });
 });
 
 describe('parseJsonSchemaDocument', () => {
@@ -74,6 +111,7 @@ describe('parseJsonSchemaDocument', () => {
       $defs: {
         Address: {
           type: 'object',
+          additionalProperties: false,
           properties: {
             street: { type: 'string' },
           },
@@ -102,6 +140,7 @@ describe('parseJsonSchemaDocument', () => {
   it('returns empty array when no $defs present', () => {
     const components = parseJsonSchemaDocument({
       type: 'object',
+      additionalProperties: false,
     });
 
     expect(components).toEqual([]);
@@ -110,7 +149,7 @@ describe('parseJsonSchemaDocument', () => {
   it('skips $ref entries in $defs', () => {
     const components = parseJsonSchemaDocument({
       $defs: {
-        Address: { type: 'object' },
+        Address: { type: 'object', additionalProperties: false },
         AliasedAddress: { $ref: '#/$defs/Address' },
       },
     });
@@ -154,5 +193,25 @@ describe('parseJsonSchemaDocument', () => {
 
     expect(components).toHaveLength(1);
     expect(components[0]?.description).toBe('A described schema');
+  });
+
+  it('normalizes non-strict $defs object schemas to strip when nonStrictObjectPolicy is strip', () => {
+    const components = parseJsonSchemaDocument(
+      {
+        $defs: {
+          LooseObject: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+            },
+          },
+        },
+      },
+      { nonStrictObjectPolicy: 'strip' },
+    );
+
+    expect(components).toHaveLength(1);
+    expect(components[0]?.schema.additionalProperties).toBe(true);
+    expect(components[0]?.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
   });
 });

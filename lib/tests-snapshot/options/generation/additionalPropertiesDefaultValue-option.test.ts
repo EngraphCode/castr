@@ -22,7 +22,7 @@ test('additionalPropertiesDefaultValue-option', () => {
     {
         "code": "z.object({
       str: z.string().optional(),
-    }).passthrough()",
+    }).strip()",
         "schema": {
             "properties": {
                 "str": {

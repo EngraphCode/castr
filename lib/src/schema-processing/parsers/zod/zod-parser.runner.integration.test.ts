@@ -23,6 +23,14 @@ interface ExpectedFixtureEnvelope {
   schemas: JsonObject;
 }
 
+function getFixtureParseOptions(baseName: string): { nonStrictObjectPolicy?: 'strip' } | undefined {
+  if (baseName === 'unknown-key-semantics') {
+    return { nonStrictObjectPolicy: 'strip' };
+  }
+
+  return undefined;
+}
+
 function isPlainObject(value: unknown): value is object {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -98,7 +106,7 @@ describe('Zod Parser Integration Runner', async () => {
 
       const expectedJson: unknown = JSON.parse(expectedContent);
 
-      const result = parseZodSource(sourceContent);
+      const result = parseZodSource(sourceContent, getFixtureParseOptions(baseName));
 
       // Verify no errors (unless expected file says otherwise? Happy path implies success)
       if (result.errors.length > 0) {

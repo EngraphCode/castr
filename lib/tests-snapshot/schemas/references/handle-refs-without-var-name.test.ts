@@ -50,6 +50,7 @@ test('handle-refs-without-var-name', () => {
                     },
                     "name": "Basic",
                     "schema": {
+                        "additionalProperties": true,
                         "metadata": {
                             "circularReferences": [],
                             "dependencyGraph": {
@@ -66,6 +67,9 @@ test('handle-refs-without-var-name', () => {
                             },
                         },
                         "type": "object",
+                        "unknownKeyBehavior": {
+                            "mode": "strip",
+                        },
                     },
                     "type": "schema",
                 },
@@ -277,7 +281,11 @@ test('handle-refs-without-var-name', () => {
                         "properties": {
                             "value": {
                                 "items": {
+                                    "additionalProperties": true,
                                     "type": "object",
+                                    "unknownKeyBehavior": {
+                                        "mode": "strip",
+                                    },
                                 },
                                 "type": "array",
                             },
@@ -289,6 +297,7 @@ test('handle-refs-without-var-name', () => {
         ],
         "options": {
             "baseUrl": "",
+            "nonStrictObjectPolicy": "strip",
             "withAlias": false,
         },
         "sortedSchemaNames": [

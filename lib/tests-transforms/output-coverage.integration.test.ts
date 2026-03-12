@@ -41,7 +41,7 @@ const SWAGGER_DIR = resolve(__dirname, '../examples/swagger');
  */
 async function runTransformPass(fixturePath: string): Promise<OpenAPIObject> {
   const result = await loadOpenApiDocument(fixturePath);
-  const ir = buildIR(result.document);
+  const ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
   return writeOpenApi(ir);
 }
 

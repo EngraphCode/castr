@@ -16,6 +16,9 @@ This decision must align with:
 - **Static parsing**: ADR‑026 requires ts‑morph; no regex or runtime execution.
 - **Consistency with output**: Zod output strategy (ADR‑031) and input strategy must be compatible to enable round‑trip validation.
 
+> [!IMPORTANT]
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) supersedes the earlier multi-mode object-ingest direction in this ADR. Non-strict object inputs now reject by default, with one explicit opt-in strip-normalization compatibility mode.
+
 ---
 
 ## Decisions
@@ -50,28 +53,38 @@ This decision must align with:
 - Nullable and nullish recursive refs map losslessly to existing composition IR: `anyOf: [{$ref}, {type: 'null'}]`, with parent requiredness carrying optionality.
 - `z.lazy(() => ...)` is accepted for compatibility when the callback is statically analyzable. It is never emitted by the writer, and dynamic / non-analyzable lazy patterns must still fail fast.
 
-### 5. Object Unknown-Key Parsing Is Split Between Runtime Semantics and Portable Acceptance
+### 5. Object Parsing Is Reject-By-Default, With One Explicit Strip-Normalization Compatibility Mode
 
-Zod object unknown-key behavior is parsed into two complementary IR surfaces:
+Public option surface:
 
-- `unknownKeyBehavior` captures runtime behaviour:
-  - `.strict()` -> `{ mode: 'strict' }`
-  - default `z.object()` and `.strip()` -> `{ mode: 'strip' }`
-  - `.passthrough()` -> `{ mode: 'passthrough' }`
-  - `.catchall(schema)` -> `{ mode: 'catchall', schema }`
-- `additionalProperties` remains the portable OpenAPI / JSON Schema acceptance view:
-  - `false` for strict
-  - `true` for strip / passthrough
-  - schema-valued for catchall
+- `nonStrictObjectPolicy?: 'reject' | 'strip'`
+- default: `'reject'`
 
-When parsing OpenAPI / JSON Schema back into IR:
+Default supported direction:
 
-- `additionalProperties: false` implies `strict`
-- schema-valued `additionalProperties` implies `catchall`
-- `additionalProperties: true` remains ambiguous unless paired with `x-castr-unknownKeyBehavior`
-- `x-castr-unknownKeyBehavior` is accepted only for `strip` and `passthrough`
+- `z.strictObject({...})`
+- `z.object({...}).strict()` when statically analyzable
+- OpenAPI / JSON Schema object schemas that explicitly reject unknown keys
 
-Invalid combinations or unsupported extension values must fail fast.
+Default rejected direction:
+
+- bare `z.object({...})`
+- `z.looseObject({...})`
+- `.strip()`
+- `.passthrough()`
+- `.catchall(...)`
+- OpenAPI / JSON Schema object schemas that permit unknown keys
+- non-strict preservation extensions
+
+Compatibility-mode direction:
+
+- when the caller explicitly opts into strip-normalization mode, the parser may accept the rejected non-strict object forms above
+- those forms must normalize to strip semantics only
+- normalization target is `additionalProperties: true` plus `unknownKeyBehavior: { mode: 'strip' }`
+- passthrough and catchall behavior must not survive this mode as preserved semantics
+- the mode must be documented as deliberate and lossy
+
+Invalid or non-strict object combinations must fail fast with actionable diagnostics when the compatibility mode is not enabled.
 
 ### 6. Union Semantics Must Be Preserved
 
@@ -127,6 +140,7 @@ Portable detours may later widen subtype semantics when the target format cannot
 
 - Some Zod patterns remain unsupported (dynamic schemas, Zod 3, non-statically-analyzable lazy patterns, standalone `z.undefined()`).
 - Users must adapt input to idiomatic Zod 4 conventions for lossless ingestion.
+- Callers who choose strip-normalization compatibility mode are explicitly accepting a lossy ingest path for non-strict object behavior.
 
 ---
 

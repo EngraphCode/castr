@@ -25,6 +25,7 @@ import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
 import { normalizeDraft07 } from './normalization/index.js';
 import type { Draft07Input } from './normalization/index.js';
+import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
 
 /**
  * Parse a JSON Schema (Draft 07 or 2020-12) into CastrSchema IR.
@@ -35,9 +36,12 @@ import type { Draft07Input } from './normalization/index.js';
  * @returns CastrSchema IR node
  * @public
  */
-export function parseJsonSchema(input: Draft07Input): CastrSchema {
+export function parseJsonSchema(
+  input: Draft07Input,
+  options?: NonStrictObjectPolicyOptions,
+): CastrSchema {
   const normalized = normalizeDraft07(input);
-  return parseJsonSchemaObject(normalized);
+  return parseJsonSchemaObject(normalized, options);
 }
 
 /**
@@ -47,12 +51,18 @@ export function parseJsonSchema(input: Draft07Input): CastrSchema {
  * @returns Array of IR schema components
  * @public
  */
-export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
+export function parseJsonSchemaDocument(
+  input: Draft07Input,
+  options?: NonStrictObjectPolicyOptions,
+): CastrSchemaComponent[] {
   const normalized = normalizeDraft07(input);
-  return extractDefsAsComponents(normalized);
+  return extractDefsAsComponents(normalized, options);
 }
 
-function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaComponent[] {
+function extractDefsAsComponents(
+  normalized: JsonSchema2020,
+  options?: NonStrictObjectPolicyOptions,
+): CastrSchemaComponent[] {
   const components: CastrSchemaComponent[] = [];
   const defs = normalized.$defs;
   if (defs === undefined) {
@@ -63,7 +73,7 @@ function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaCompone
     if (isReferenceObject(defSchema)) {
       continue;
     }
-    const schema = parseJsonSchemaObject(defSchema);
+    const schema = parseJsonSchemaObject(defSchema, options);
     components.push(buildComponent(name, schema));
   }
 
