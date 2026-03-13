@@ -15,7 +15,7 @@
  * @internal
  */
 
-import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
+import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type {
   CastrSchema,
@@ -29,10 +29,13 @@ import { addConstraints } from './schemas/builder.constraints.js';
 import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
 import { applyOpenApiNonStrictObjectPolicy } from './builder.non-strict-object-policy.js';
 import { shouldNormalizeNonStrictObjectInput } from '../../non-strict-object-policy.js';
-
 import { updateZodChain } from './schemas/builder.zod-chain.js';
-
-const SCHEMA_TYPE_NULL = 'null';
+import { addSchemaDocumentation } from './builder/builder.documentation.js';
+import { applySchemaFormat } from './builder/builder.integer-semantics.js';
+import {
+  getNormalizedNullableTypeEntries,
+  SCHEMA_TYPE_NULL,
+} from './builder/builder.nullability.js';
 
 /**
  * Build IR schema from OpenAPI SchemaObject or ReferenceObject.
@@ -129,48 +132,39 @@ export function buildCastrSchemaNode(
 function buildBaseCastrSchema(schema: SchemaObject, metadata: CastrSchemaNode): CastrSchema {
   const irSchema: CastrSchema = { metadata };
   addTypeInfo(schema, irSchema);
-  addDocumentation(schema, irSchema);
+  addSchemaDocumentation(schema, irSchema);
   addConstraints(schema, irSchema);
   return irSchema;
 }
 
 /** @internal */
 function addTypeInfo(schema: SchemaObject, irSchema: CastrSchema): void {
-  const inferredType = ensureObjectTypeForObjectKeywords(schema.type, {
-    hasProperties: schema.properties !== undefined,
-    hasRequired: Array.isArray(schema.required) && schema.required.length > 0,
-    hasAdditionalProperties: schema.additionalProperties !== undefined,
-    hasUnknownKeyBehaviorExtension: false,
-  });
+  const inferredTypeEntries = getNormalizedNullableTypeEntries(
+    ensureObjectTypeForObjectKeywords(schema.type, {
+      hasProperties: schema.properties !== undefined,
+      hasRequired: Array.isArray(schema.required) && schema.required.length > 0,
+      hasAdditionalProperties: schema.additionalProperties !== undefined,
+      hasUnknownKeyBehaviorExtension: false,
+    }),
+    irSchema.metadata.nullable,
+  );
+  let inferredType: CastrSchema['type'] | undefined;
+  if (inferredTypeEntries === undefined) {
+    inferredType = undefined;
+  } else if (inferredTypeEntries.length === 0) {
+    inferredType = SCHEMA_TYPE_NULL;
+  } else if (inferredTypeEntries.length === 1) {
+    inferredType = inferredTypeEntries[0];
+  } else {
+    inferredType = inferredTypeEntries;
+  }
 
   if (inferredType !== undefined) {
     irSchema.type = inferredType;
   }
-  if (schema.format !== undefined) {
-    irSchema.format = schema.format;
-  }
+  applySchemaFormat(schema, inferredType, irSchema);
 }
 
-/** @internal */
-function addDocumentation(schema: SchemaObject, irSchema: CastrSchema): void {
-  if (schema.title !== undefined) {
-    irSchema.title = schema.title;
-  }
-  if (schema.description !== undefined) {
-    irSchema.description = schema.description;
-  }
-  if (schema.default !== undefined) {
-    irSchema.default = schema.default;
-  }
-  if (schema.example !== undefined) {
-    irSchema.example = schema.example;
-  }
-  if (schema.examples !== undefined) {
-    irSchema.examples = schema.examples;
-  }
-}
-
-/** @internal */
 /** @internal */
 
 /**

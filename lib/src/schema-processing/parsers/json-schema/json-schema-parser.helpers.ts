@@ -14,11 +14,22 @@ import type { SchemaObject, ReferenceObject, SchemaObjectType } from 'openapi3-t
 import { isReferenceObject } from 'openapi3-ts/oas31';
 import type { CastrSchema } from '../../ir/index.js';
 import { applyInferredUuidVersionFromPattern } from '../../ir/index.js';
+import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
 import type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE: SchemaObjectType = 'null';
 
 type ParseSchemaFn = (input: JsonSchema2020) => CastrSchema;
+
+/** @internal */
+export function parseFormat(input: JsonSchema2020, result: CastrSchema): void {
+  if (input.format === undefined) {
+    return;
+  }
+
+  assertPortableIntegerInputSemanticsSupported('JSON Schema 2020-12', result.type, input.format);
+  result.format = input.format;
+}
 
 // ── Type parsing ──────────────────────────────────────────────────────────
 
@@ -58,9 +69,6 @@ function parseTypeArray(types: SchemaObjectType[], result: CastrSchema, nullable
 
 /** @internal */
 export function parseStringConstraints(input: JsonSchema2020, result: CastrSchema): void {
-  if (input.format !== undefined) {
-    result.format = input.format;
-  }
   if (input.minLength !== undefined) {
     result.minLength = input.minLength;
   }

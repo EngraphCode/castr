@@ -118,6 +118,21 @@ Invalid or non-strict object combinations must fail fast with actionable diagnos
 - `z.uuid()` parses to `type: 'string', format: 'uuid'`
 - `z.uuidv4()` parses to `type: 'string', format: 'uuid', uuidVersion: 4`
 - `z.uuidv7()` parses to `type: 'string', format: 'uuid', uuidVersion: 7`
+
+### 10. Integer Semantics Are First-Class IR Truth
+
+- `z.int64()` parses to `type: 'integer', format: 'int64', integerSemantics: 'int64'`
+- `z.bigint()` parses to `type: 'integer', integerSemantics: 'bigint'`
+- portable `format` strings are not the sole keeper of integer semantic truth
+
+Portable input formats must also remain honest:
+
+- OpenAPI 3.1 `type: 'integer', format: 'int64'` is accepted and maps to IR `int64` semantics
+- OpenAPI 3.1 custom `format: 'bigint'` is rejected
+- JSON Schema 2020-12 custom `format: 'int64'` and `format: 'bigint'` are rejected
+
+**Rationale:** `int64` is a bounded integer semantic; `bigint` is an arbitrary-precision runtime semantic. They are not the same type and must not collapse into one portable `format` string.
+
 - governed canonical regex patterns may infer UUID subtype semantics only when the incoming structure does not already express subtype explicitly
 - explicit subtype plus contradictory governed regex must fail fast
 - the parser preserves existing `pattern` content even when subtype is also inferred from it

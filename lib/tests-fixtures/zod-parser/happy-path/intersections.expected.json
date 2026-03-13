@@ -618,7 +618,8 @@
                   },
                   "circularReferences": []
                 },
-                "format": "int64"
+                "format": "int64",
+                "integerSemantics": "int64"
               }
             }
           },

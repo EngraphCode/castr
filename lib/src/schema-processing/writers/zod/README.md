@@ -24,16 +24,17 @@ Generates **Zod 4 schemas** from the IR. See [ADR-031](../../../../docs/architec
 
 Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 
-| OpenAPI                    | Zod 4                                    |
-| -------------------------- | ---------------------------------------- |
-| `integer`                  | `z.int()`                                |
-| `integer format: int32`    | `z.int32()`                              |
-| `integer format: int64`    | `z.int64()` → `bigint`                   |
-| `string format: email`     | `z.email()`                              |
-| `string format: uri`       | `z.url()`                                |
-| `string format: uuid`      | `z.uuid()` / `z.uuidv4()` / `z.uuidv7()` |
-| `string format: date`      | `z.iso.date()`                           |
-| `string format: date-time` | `z.iso.datetime()`                       |
+| OpenAPI                       | Zod 4                                    |
+| ----------------------------- | ---------------------------------------- |
+| `integer`                     | `z.int()`                                |
+| `integer format: int32`       | `z.int32()`                              |
+| `integer format: int64`       | `z.int64()` → `bigint`                   |
+| `IR integerSemantics: bigint` | `z.bigint()`                             |
+| `string format: email`        | `z.email()`                              |
+| `string format: uri`          | `z.url()`                                |
+| `string format: uuid`         | `z.uuid()` / `z.uuidv4()` / `z.uuidv7()` |
+| `string format: date`         | `z.iso.date()`                           |
+| `string format: date-time`    | `z.iso.datetime()`                       |
 
 > [!NOTE]
 > `z.iso.datetime()` only accepts UTC (`Z` suffix). Timezone offsets like `+05:00` are rejected.
@@ -64,7 +65,8 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 
 - `format: uuid` emits native subtype helpers only when IR also carries `uuidVersion`.
 - Portable detours through standard OpenAPI / JSON Schema widen UUID subtype semantics back to plain `uuid`, because those targets do not natively carry subtype/version.
-- `format: int64` canonicalizes to `z.int64()`, which means runtime validation expects `bigint` payloads.
+- `int64` semantics canonicalize to `z.int64()`, which means runtime validation expects `bigint` payloads.
+- direct IR `bigint` semantics emit `z.bigint()`.
 
 ## Fail-Fast
 

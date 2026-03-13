@@ -90,7 +90,7 @@
         },
         "circularReferences": []
       },
-      "format": "bigint"
+      "integerSemantics": "bigint"
     },
     "Int": {
       "type": "integer",
@@ -146,7 +146,8 @@
         },
         "circularReferences": []
       },
-      "format": "int64"
+      "format": "int64",
+      "integerSemantics": "int64"
     },
     "Float32": {
       "type": "number",

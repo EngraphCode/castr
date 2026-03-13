@@ -148,7 +148,7 @@ The knowledge flow is itself part of the Practice, and the Practice travels via 
 
 ## The Review System
 
-Specialist sub-agents provide targeted review after non-trivial changes. When a repo has installed its reviewer layer, the `invoke-reviewers` rule (canonically `.agent/rules/invoke-reviewers.md`) is the authoritative source for the roster, invocation matrix, timing tiers, and triage checklist. The local `AGENT.md` should either list the installed reviewer/domain-expert roles or explicitly say that the agent layer is not yet installed. In Codex, reviewer roles should be registered through project-agent support in `.codex/` rather than modelled as skills.
+Specialist sub-agents provide targeted review after non-trivial changes. When a repo has installed its reviewer layer, the `invoke-reviewers` rule (canonically `.agent/rules/invoke-reviewers.md`) is the authoritative source for the roster, invocation matrix, timing tiers, and triage checklist. The local `AGENT.md` should either list the installed reviewer/domain-expert roles or explicitly say that the agent layer is not yet installed. In Codex, reviewer roles should be registered through project-agent support in `.codex/` rather than modelled as skills. If direct project-agent fan-out is unavailable or unreliable on the current surface, the parent session should apply the installed reviewer template directly in-session rather than defaulting to nested subprocess review.
 
 Sub-agent prompts, when installed, follow a three-layer composition architecture: components, templates, and wrappers.
 

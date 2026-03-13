@@ -1,4 +1,5 @@
 import type { SchemaObject, XmlObject, ExternalDocumentationObject } from 'openapi3-ts/oas31';
+import type { IRIntegerSemantics } from '../integer-semantics/core.js';
 
 // ... existing imports ...
 
@@ -111,6 +112,17 @@ export interface CastrSchema {
    * @example 'date-time', 'email', 'uuid', 'int32'
    */
   format?: string;
+
+  /**
+   * Integer subtype semantics that cannot be captured honestly by portable
+   * formats alone.
+   *
+   * Valid only when:
+   * - `type` includes `'integer'`
+   *
+   * Portable targets may reject these semantics when no native carrier exists.
+   */
+  integerSemantics?: IRIntegerSemantics;
 
   /**
    * UUID subtype/version semantics for UUID string schemas.

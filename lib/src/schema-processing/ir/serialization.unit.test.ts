@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { serializeIR, deserializeIR } from './serialization.js';
 import { CastrSchemaProperties } from './models/schema.js';
-import { assertSchemaComponent } from './test-helpers.js';
+import { assertSchemaComponent, createMockRawOpenApiComponents } from './test-helpers.js';
 import type { CastrDocument } from './models/schema-document.js';
 
 describe('IR Serialization', () => {
@@ -135,5 +135,95 @@ describe('IR Serialization', () => {
     const serialized = serializeIR(complexIR);
     const deserialized = deserializeIR(serialized);
     expect(deserialized).toEqual(complexIR);
+  });
+
+  it('should deserialize valid documents containing preserved raw OpenAPI components', () => {
+    const rawComponentIR: CastrDocument = {
+      ...mockIR,
+      components: createMockRawOpenApiComponents(),
+    };
+
+    const deserialized = deserializeIR(serializeIR(rawComponentIR));
+
+    expect(deserialized).toEqual(rawComponentIR);
+  });
+
+  it('should reject contradictory integer semantics during deserialization', () => {
+    const invalidIR = {
+      ...mockIR,
+      components: [
+        {
+          type: 'schema',
+          name: 'Signed64ButInt32',
+          schema: {
+            type: 'integer',
+            format: 'int32',
+            integerSemantics: 'int64',
+            metadata: {
+              required: false,
+              nullable: false,
+              zodChain: { presence: '', validations: [], defaults: [] },
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              circularReferences: [],
+            },
+          },
+          metadata: {
+            required: false,
+            nullable: false,
+            zodChain: { presence: 'optional', validations: [], defaults: [] },
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            circularReferences: [],
+          },
+        },
+      ],
+    };
+
+    expect(() => deserializeIR(JSON.stringify(invalidIR))).toThrow(
+      'Invalid CastrDocument structure',
+    );
+  });
+
+  it('should reject contradictory integer semantics inside request body schemas during deserialization', () => {
+    const invalidIR = {
+      ...mockIR,
+      operations: [
+        {
+          operationId: 'createTest',
+          method: 'post',
+          path: '/test',
+          parameters: [],
+          parametersByLocation: {
+            query: [],
+            path: [],
+            header: [],
+            cookie: [],
+          },
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'integer',
+                  format: 'int32',
+                  integerSemantics: 'int64',
+                  metadata: {
+                    required: true,
+                    nullable: false,
+                    zodChain: { presence: '', validations: [], defaults: [] },
+                    dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                    circularReferences: [],
+                  },
+                },
+              },
+            },
+          },
+          responses: [],
+        },
+      ],
+    };
+
+    expect(() => deserializeIR(JSON.stringify(invalidIR))).toThrow(
+      'Invalid CastrDocument structure',
+    );
   });
 });

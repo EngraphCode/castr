@@ -137,8 +137,9 @@ The remediation plan that carried this architecture into product code lives in:
 
 - recursive `.catchall()` still has the same runtime construction problem as recursive `.passthrough()`
 
-### Recorded But Out Of Scope For This Slice
+### Adjacent Slice Now Resolved Elsewhere
 
-- `z.bigint()` currently emits `format: "bigint"` through OpenAPI / JSON Schema artifacts
+- the `int64` / `bigint` native-capability slice now carries `z.bigint()` as first-class IR bigint semantics
+- portable OpenAPI / JSON Schema writers reject unsupported bigint emission early instead of inventing `format: "bigint"` artifacts
 
-This adjacent finding should be revisited during the remaining `int64` / `bigint` investigation rather than folded into the object-semantics remediation by accident.
+This is no longer an open question inside the object-semantics workstream.

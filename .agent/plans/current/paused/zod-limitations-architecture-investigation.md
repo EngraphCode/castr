@@ -4,8 +4,8 @@
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-11  
 **Predecessor:** [type-safety-remediation.md](../complete/type-safety-remediation.md)  
-**Successor Active Slice:** [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `ADR-040`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/int64-bigint-semantics-investigation.md`, `../complete/type-safety-remediation-follow-up.md`
+**Successor Active Slice:** [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md)  
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `ADR-040`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/zod-limitations-next-atomic-slice-planning.md`, `../complete/int64-bigint-semantics-investigation.md`, `../complete/type-safety-remediation-follow-up.md`
 
 ---
 
@@ -15,7 +15,8 @@ It now serves as the **paused umbrella context** for the broader Zod limitations
 
 - [strict-object-semantics-enforcement.md](../complete/strict-object-semantics-enforcement.md) is the completed object-semantics execution record.
 - [recursive-unknown-key-preserving-zod-emission-investigation.md](./recursive-unknown-key-preserving-zod-emission-investigation.md) remains paused historical evidence after ADR-040 changed product direction.
-- [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md) is the current primary active slice.
+- [int64-bigint-semantics-investigation.md](../complete/int64-bigint-semantics-investigation.md) is complete.
+- [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md) is the current primary active entrypoint.
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) remains paused supporting runtime context.
 
 Keep this file as cross-cutting workstream context, not as the next session's default execution plan.
@@ -53,16 +54,16 @@ Current repo truth:
 1. strict object semantics enforcement is complete after ADR-040
 2. UUID subtype semantics are now preserved in IR and native Zod output via [ADR-039](../../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 3. portable OpenAPI / JSON Schema detours still widen UUID subtype semantics to plain `uuid`, and that widening is now accepted target-capacity behavior
-4. `int64` / `bigint` remains the next open architecture investigation
+4. the `int64` / `bigint` slice is complete and recorded under `current/complete/`
 5. the preserving-mode recursive investigation remains useful background evidence, but it is no longer the forward product direction
 
 Paused supporting investigation:
 
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
 
-Queued follow-on investigation:
+Completed adjacent slice:
 
-- [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md) now owns the next numeric-semantics investigation slice
+- [int64-bigint-semantics-investigation.md](../complete/int64-bigint-semantics-investigation.md)
 
 Known completed remediation already established in this workstream:
 

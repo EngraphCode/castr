@@ -355,9 +355,9 @@ test('getSchemaAsTsString', () => {
   ).toMatchInlineSnapshot(
     `
     "export type Category = {
-      propBoolean: unknown | null;
-      propNumber: unknown | null;
-      propString: unknown | null;
+      propBoolean: boolean | null;
+      propNumber: number | null;
+      propString: string | null;
     };"
   `,
   );

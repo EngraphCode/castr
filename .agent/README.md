@@ -34,15 +34,22 @@ Then use:
 ## 🎯 Current State (March 2026)
 
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
+  - Last reproduced full repo-root sweep and `pnpm check:ci`: green on Friday, 13 March 2026
+  - The completed `int64` / `bigint` closure slice also reran the full Definition of Done chain green on Friday, 13 March 2026
+  - Immediate priority in a fresh session is to reproduce any user-reported failures first, then choose the next atomic Zod limitations slice from the active planning stub
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Primary Active Work:** `int64` / `bigint` semantics investigation
+- **Primary Active Work:** planning the next Zod limitations atomic slice
   - Plan of record: `.agent/plans/roadmap.md`
-  - Primary active plan: `.agent/plans/active/int64-bigint-semantics-investigation.md`
+  - Primary active plan: `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md`
+  - The completed immediate predecessor is `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`
+  - That completed slice closed the deserialisation regression, the raw OpenAPI `$ref`-sibling capability bypass, and the JSON Schema `$ref`-sibling parser bypass
+  - Review closure for that slice was completed manually in-session using the reviewer templates, not nested reviewer runs
   - Paused umbrella context: `.agent/plans/current/paused/zod-limitations-architecture-investigation.md`
   - Paused supporting investigations:
     - `.agent/plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md`
     - `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
   - Completed adjacent remediation:
+    - `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`
     - `.agent/plans/current/complete/strict-object-semantics-enforcement.md`
     - `.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md`
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`

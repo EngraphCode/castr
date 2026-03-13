@@ -1,10 +1,13 @@
 import type { CodeBlockWriter, WriterFunction } from 'ts-morph';
 import type { CastrSchema } from '../../ir/index.js';
+import { getIntegerSemantics } from '../../ir/index.js';
+import { assertSchemaSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { isValidJsIdentifier } from '../../../shared/utils/identifier-utils.js';
 
 export function writeTypeDefinition(schema: CastrSchema): WriterFunction {
   return (writer) => {
+    assertSchemaSupportsIntegerTargetCapabilities(schema, 'TypeScript');
     writeTypeBody(schema)(writer);
     if (schema.metadata?.nullable) {
       writer.write(' | null');
@@ -41,30 +44,43 @@ function writeCompositionType(schema: CastrSchema, writer: CodeBlockWriter): boo
   return false;
 }
 
+function resolveScalarTypeToken(schema: CastrSchema): string | undefined {
+  if (getIntegerSemantics(schema) !== undefined) {
+    return 'bigint';
+  }
+
+  switch (schema.type) {
+    case 'string':
+      return 'string';
+    case 'number':
+    case 'integer':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    case 'null':
+      return 'null';
+    default:
+      return undefined;
+  }
+}
+
 /**
  * Write a primitive/structured type from the schema type field.
  * @internal
  */
 function writePrimitiveType(schema: CastrSchema, writer: CodeBlockWriter): void {
+  const scalarTypeToken = resolveScalarTypeToken(schema);
+  if (scalarTypeToken !== undefined) {
+    writer.write(scalarTypeToken);
+    return;
+  }
+
   switch (schema.type) {
-    case 'string':
-      writer.write('string');
-      break;
-    case 'number':
-    case 'integer':
-      writer.write('number');
-      break;
-    case 'boolean':
-      writer.write('boolean');
-      break;
     case 'array':
       writeArrayType(schema, writer);
       break;
     case 'object':
       writeObjectType(schema, writer);
-      break;
-    case 'null':
-      writer.write('null');
       break;
     default:
       writer.write('unknown');
@@ -140,16 +156,12 @@ function resolveCompositionTypeString(schema: CastrSchema): string | undefined {
  * @internal
  */
 function resolvePrimitiveTypeString(schema: CastrSchema): string {
+  const scalarTypeToken = resolveScalarTypeToken(schema);
+  if (scalarTypeToken !== undefined) {
+    return scalarTypeToken;
+  }
+
   switch (schema.type) {
-    case 'string':
-      return 'string';
-    case 'number':
-    case 'integer':
-      return 'number';
-    case 'boolean':
-      return 'boolean';
-    case 'null':
-      return 'null';
     case 'array':
       return resolveArrayTypeString(schema);
     case 'object':

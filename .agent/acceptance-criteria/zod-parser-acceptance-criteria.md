@@ -37,17 +37,17 @@ reconstruct IR for lossless transform validation with sample input.
 | `z.boolean()`    | `type: 'boolean'`                                                                                                    |
 | `z.null()`       | `type: 'null'`                                                                                                       |
 | `z.undefined()`  | **MUST reject** (undefined is not representable in OpenAPI/JSON Schema; use `.optional()` at the parent/field level) |
-| `z.bigint()`     | `type: 'integer', format: 'int64'`                                                                                   |
+| `z.bigint()`     | `type: 'integer', integerSemantics: 'bigint'`                                                                        |
 
 ### 1.2 Integer and Float Formats
 
-| Zod 4 Expression | Target IR                          |
-| ---------------- | ---------------------------------- |
-| `z.int()`        | `type: 'integer'`                  |
-| `z.int32()`      | `type: 'integer', format: 'int32'` |
-| `z.int64()`      | `type: 'integer', format: 'int64'` |
-| `z.float32()`    | `type: 'number', format: 'float'`  |
-| `z.float64()`    | `type: 'number', format: 'double'` |
+| Zod 4 Expression | Target IR                                                     |
+| ---------------- | ------------------------------------------------------------- |
+| `z.int()`        | `type: 'integer'`                                             |
+| `z.int32()`      | `type: 'integer', format: 'int32'`                            |
+| `z.int64()`      | `type: 'integer', format: 'int64', integerSemantics: 'int64'` |
+| `z.float32()`    | `type: 'number', format: 'float'`                             |
+| `z.float64()`    | `type: 'number', format: 'double'`                            |
 
 ### 1.3 String Formats (Top-Level Functions)
 

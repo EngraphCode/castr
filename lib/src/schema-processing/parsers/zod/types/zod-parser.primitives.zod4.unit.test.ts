@@ -29,12 +29,14 @@ describe('Zod 4 Primitive Parsing', () => {
       const result = parsePrimitiveZod('z.int64()');
       expect(result?.type).toBe('integer');
       expect(result?.format).toBe('int64');
+      expect(result?.integerSemantics).toBe('int64');
     });
 
     it('should parse z.bigint() as integer bigint', () => {
       const result = parsePrimitiveZod('z.bigint()');
       expect(result?.type).toBe('integer');
-      expect(result?.format).toBe('bigint');
+      expect(result?.format).toBeUndefined();
+      expect(result?.integerSemantics).toBe('bigint');
     });
   });
 

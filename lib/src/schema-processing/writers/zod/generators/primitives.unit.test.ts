@@ -53,8 +53,17 @@ describe('ZodPrimitivesWriter', () => {
     });
 
     it('generates z.int64() for integer format: int64', () => {
-      const schema = createMockSchema({ type: 'integer', format: 'int64' });
+      const schema = createMockSchema({
+        type: 'integer',
+        format: 'int64',
+        integerSemantics: 'int64',
+      });
       expect(generatePrimitive(schema)).toBe('z.int64()');
+    });
+
+    it('generates z.bigint() for integer semantic bigint', () => {
+      const schema = createMockSchema({ type: 'integer', integerSemantics: 'bigint' });
+      expect(generatePrimitive(schema)).toBe('z.bigint()');
     });
 
     it('throws error for unsupported integer format to prevent silent format loss', () => {

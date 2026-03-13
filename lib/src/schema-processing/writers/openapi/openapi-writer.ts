@@ -12,6 +12,7 @@ import type { OpenAPIObject, SecurityRequirementObject } from 'openapi3-ts/oas31
 import { writeOpenApiComponents } from './components/openapi-writer.components.js';
 import { writeOpenApiPaths } from './operations/openapi-writer.operations.js';
 import type { CastrDocument, IRSecurityRequirement } from '../../ir/index.js';
+import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 
 /**
  * Extended OpenAPI 3.1 object type that includes fields missing from the library types.
@@ -76,6 +77,8 @@ function writeDocumentSecurity(security: IRSecurityRequirement[]): SecurityRequi
  * @public
  */
 export function writeOpenApi(ir: CastrDocument): OpenAPIObjectExtended {
+  assertDocumentSupportsIntegerTargetCapabilities(ir, 'OpenAPI 3.1');
+
   const result: OpenAPIObjectExtended = {
     openapi: ir.openApiVersion,
     info: ir.info,

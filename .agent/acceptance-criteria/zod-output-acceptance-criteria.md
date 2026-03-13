@@ -34,6 +34,7 @@ Every IR schema type must map to a valid Zod 4 construct:
 | `number`            | `z.number()`                     |                             |
 | `integer`           | `z.int()`                        | Default integer             |
 | `integer+format`    | `z.int32()` / `z.int64()`        | `int32` / `int64`           |
+| `integer+semantic`  | `z.bigint()`                     | `bigint`                    |
 | `boolean`           | `z.boolean()`                    |                             |
 | `null`              | `z.null()`                       |                             |
 | `array`             | `z.array(...)`                   |                             |
@@ -67,6 +68,7 @@ Integer formats:
 
 - `int32` -> `z.int32()`
 - `int64` -> `z.int64()` (returns bigint)
+- `bigint` semantics -> `z.bigint()`
 - no format -> `z.int()`
 
 Redundant validations MUST be filtered when a format function already provides

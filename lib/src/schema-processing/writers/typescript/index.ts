@@ -8,6 +8,7 @@ import { writeTypeDefinition } from './type-writer.js';
 import type { CastrSchemaContext, CastrSchemaComponent } from '../../ir/index.js';
 import { parseComponentRef } from '../../../shared/ref-resolution.js';
 import { safeSchemaName } from '../../../shared/utils/identifier-utils.js';
+import { assertDocumentSupportsIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 
 export { writeTypeDefinition } from './type-writer.js';
 
@@ -24,6 +25,10 @@ function getSortedGroupEntries(groupNames: Record<string, string>): [string, str
  * Replaces the legacy Handlebars templates.
  */
 export function writeTypeScript(context: TemplateContext): string {
+  if (context._ir) {
+    assertDocumentSupportsIntegerTargetCapabilities(context._ir, 'TypeScript');
+  }
+
   const project = new Project({ useInMemoryFileSystem: true });
   const sourceFile = project.createSourceFile('generated.ts', '', { overwrite: true });
 

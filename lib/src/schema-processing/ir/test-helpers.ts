@@ -44,6 +44,69 @@ export function createMockCastrDocument(overrides: Partial<CastrDocument> = {}):
   };
 }
 
+export function createMockRawOpenApiComponents(): IRComponent[] {
+  return [
+    {
+      type: 'header',
+      name: 'X-Count',
+      header: {
+        description: 'Count header',
+        schema: { type: 'string' },
+      },
+    },
+    {
+      type: 'link',
+      name: 'NextPage',
+      link: {
+        operationId: 'listThings',
+      },
+    },
+    {
+      type: 'callback',
+      name: 'OnThingChanged',
+      callback: {
+        '{$request.body#/callbackUrl}': {
+          post: {
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': {
+                  schema: { type: 'string' },
+                },
+              },
+            },
+            responses: {
+              '204': {
+                description: 'Accepted',
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      type: 'pathItem',
+      name: 'ThingPath',
+      pathItem: {
+        get: {
+          responses: {
+            '200': {
+              description: 'OK',
+            },
+          },
+        },
+      },
+    },
+    {
+      type: 'example',
+      name: 'ThingExample',
+      example: {
+        value: { name: 'demo' },
+      },
+    },
+  ];
+}
+
 // ============================================================================
 // Mock Factory Functions
 // ============================================================================

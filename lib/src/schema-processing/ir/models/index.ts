@@ -10,6 +10,7 @@ export {
   type IRDependencyGraph,
   type IRDependencyNode,
 } from './schema.js';
+export type { IRIntegerSemantics } from '../integer-semantics/core.js';
 
 export { isCastrDocument, type IREnum, type CastrDocument } from './schema-document.js';
 

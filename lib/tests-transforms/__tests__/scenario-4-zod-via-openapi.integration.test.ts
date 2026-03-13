@@ -103,6 +103,19 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
   });
 
   describe('Strictness: unsupported recursive unknown-key modes fail fast', () => {
+    it('rejects z.bigint() before OpenAPI emission because OpenAPI has no native bigint type', () => {
+      const result = parseZodSource(`
+        import { z } from 'zod';
+        export const HugeCounterSchema = z.bigint();
+      `);
+
+      expectNoParseErrors('inline bigint test', 'Scenario 4 arbitrary-input parse', result);
+
+      expect(() => writeOpenApi(result.ir)).toThrow(
+        /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+      );
+    });
+
     it.each(ZOD_GENERATION_FAILURE_FIXTURES)(
       '$fixtureName: $label',
       async ({ fixtureName, fixturePath, schemaNames, expectedError }) => {

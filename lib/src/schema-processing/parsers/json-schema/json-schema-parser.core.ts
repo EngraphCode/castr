@@ -15,6 +15,7 @@ import type { JsonSchema2020 } from './json-schema-parser.types.js';
 import { parseObjectFields } from './json-schema-parser.object-fields.js';
 import {
   parseType,
+  parseFormat,
   parseStringConstraints,
   parseNumberConstraints,
   parseEnumConst,
@@ -26,6 +27,7 @@ import {
 import { parse2020Keywords } from './json-schema-parser.2020-keywords.js';
 import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
 import { resolveNonStrictObjectPolicy } from '../../non-strict-object-policy.js';
+import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
 
 // Re-export for public API compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
@@ -60,6 +62,7 @@ function parseJsonSchemaObjectWithContext(
   context: JsonSchemaParseContext,
 ): CastrSchema {
   if (input.$ref !== undefined) {
+    assertPortableIntegerInputSemanticsSupported('JSON Schema 2020-12', input.type, input.format);
     return { $ref: input.$ref, metadata: createDefaultMetadata() };
   }
 
@@ -67,6 +70,7 @@ function parseJsonSchemaObjectWithContext(
   const result: CastrSchema = { metadata: createDefaultMetadata({ nullable }) };
 
   parseType(input, result, nullable);
+  parseFormat(input, result);
   parseStringConstraints(input, result);
   parseNumberConstraints(input, result);
   parseEnumConst(input, result);

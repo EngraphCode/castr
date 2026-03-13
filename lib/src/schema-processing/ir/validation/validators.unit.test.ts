@@ -8,6 +8,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CastrSchema, CastrSchemaNode } from '../models/schema.js';
 import { CastrSchemaProperties } from '../models/schema.js';
+import { createMockRawOpenApiComponents } from '../test-helpers.js';
 import {
   isIRComponent,
   isCastrDocument,
@@ -80,6 +81,73 @@ describe('isCastrDocument', () => {
     };
 
     expect(isCastrDocument(invalidDoc)).toBe(false);
+  });
+
+  it('should return false when a schema component carries contradictory integer semantics', () => {
+    const invalidDoc = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: { title: 'Test', version: '1.0.0' },
+      servers: [],
+      components: [
+        {
+          type: 'schema',
+          name: 'Signed64ButInt32',
+          schema: {
+            type: 'integer',
+            format: 'int32',
+            integerSemantics: 'int64',
+            metadata: {
+              required: false,
+              nullable: false,
+              zodChain: { presence: '', validations: [], defaults: [] },
+              dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+              circularReferences: [],
+            },
+          },
+          metadata: {
+            required: false,
+            nullable: false,
+            zodChain: { presence: '', validations: [], defaults: [] },
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            circularReferences: [],
+          },
+        },
+      ],
+      operations: [],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+      enums: new Map(),
+    };
+
+    expect(isCastrDocument(invalidDoc)).toBe(false);
+  });
+
+  it('should return true for valid documents containing preserved raw OpenAPI components', () => {
+    const validDoc: CastrDocument = {
+      version: '1.0.0',
+      openApiVersion: '3.1.0',
+      info: {
+        title: 'Test API',
+        version: '1.0.0',
+      },
+      servers: [],
+      components: createMockRawOpenApiComponents(),
+      operations: [],
+      dependencyGraph: {
+        nodes: new Map(),
+        topologicalOrder: [],
+        circularReferences: [],
+      },
+      schemaNames: [],
+      enums: new Map(),
+    };
+
+    expect(isCastrDocument(validDoc)).toBe(true);
   });
 });
 
@@ -167,6 +235,13 @@ describe('isIRComponent', () => {
     expect(isIRComponent(requestBodyComponent)).toBe(true);
   });
 
+  it.each(createMockRawOpenApiComponents())(
+    'should return true for preserved raw OpenAPI component $type',
+    (component) => {
+      expect(isIRComponent(component)).toBe(true);
+    },
+  );
+
   it('should return false for null and undefined', () => {
     expect(isIRComponent(null)).toBe(false);
     expect(isIRComponent(undefined)).toBe(false);
@@ -190,6 +265,69 @@ describe('isIRComponent', () => {
       name: 'User',
       schema: {},
       metadata: {},
+    };
+
+    expect(isIRComponent(invalidComponent)).toBe(false);
+  });
+
+  it('should return false for inherited object keys masquerading as component types', () => {
+    const invalidComponent = {
+      type: 'toString',
+      name: 'User',
+    };
+
+    expect(isIRComponent(invalidComponent)).toBe(false);
+  });
+
+  it('should return false for schema components with invalid schemas', () => {
+    const invalidComponent = {
+      type: 'schema',
+      name: 'Signed64ButInt32',
+      schema: {
+        type: 'integer',
+        format: 'int32',
+        integerSemantics: 'int64',
+        metadata: {
+          required: false,
+          nullable: false,
+          zodChain: { presence: '', validations: [], defaults: [] },
+          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+          circularReferences: [],
+        },
+      },
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isIRComponent(invalidComponent)).toBe(false);
+  });
+
+  it('should return false for parameter components with invalid schemas', () => {
+    const invalidComponent = {
+      type: 'parameter',
+      name: 'Signed64ButInt32Param',
+      parameter: {
+        name: 'count',
+        in: 'query',
+        required: false,
+        schema: {
+          type: 'integer',
+          format: 'int32',
+          integerSemantics: 'int64',
+          metadata: {
+            required: false,
+            nullable: false,
+            zodChain: { presence: '', validations: [], defaults: [] },
+            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+            circularReferences: [],
+          },
+        },
+      },
     };
 
     expect(isIRComponent(invalidComponent)).toBe(false);
@@ -335,6 +473,43 @@ describe('isCastrOperation', () => {
       method: 'invalid',
       path: '/users',
       parameters: [],
+      responses: [],
+    };
+
+    expect(isCastrOperation(invalidOperation)).toBe(false);
+  });
+
+  it('should return false when a request body carries contradictory integer semantics', () => {
+    const invalidOperation = {
+      operationId: 'createThing',
+      method: 'post',
+      path: '/things',
+      parameters: [],
+      parametersByLocation: {
+        query: [],
+        path: [],
+        header: [],
+        cookie: [],
+      },
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'integer',
+              format: 'int32',
+              integerSemantics: 'int64',
+              metadata: {
+                required: true,
+                nullable: false,
+                zodChain: { presence: '', validations: [], defaults: [] },
+                dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+                circularReferences: [],
+              },
+            },
+          },
+        },
+      },
       responses: [],
     };
 
@@ -512,6 +687,57 @@ describe('isCastrSchema', () => {
     expect(isCastrSchema(schema)).toBe(true);
   });
 
+  it('should return true for int64 semantics on integer schemas', () => {
+    const schema: CastrSchema = {
+      type: 'integer',
+      format: 'int64',
+      integerSemantics: 'int64',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(true);
+  });
+
+  it('should return false when int64 semantics does not carry format int64', () => {
+    const schema = {
+      type: 'integer',
+      format: 'int32',
+      integerSemantics: 'int64',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(false);
+  });
+
+  it('should return false when bigint semantics carries a conflicting integer format', () => {
+    const schema = {
+      type: 'integer',
+      format: 'int64',
+      integerSemantics: 'bigint',
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(false);
+  });
+
   it('should return false for null and undefined', () => {
     expect(isCastrSchema(null)).toBe(false);
     expect(isCastrSchema(undefined)).toBe(false);
@@ -552,6 +778,22 @@ describe('isCastrSchema', () => {
       type: 'string',
       format: 'email',
       uuidVersion: 4,
+      metadata: {
+        required: false,
+        nullable: false,
+        zodChain: { presence: '', validations: [], defaults: [] },
+        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
+        circularReferences: [],
+      },
+    };
+
+    expect(isCastrSchema(schema)).toBe(false);
+  });
+
+  it('should return false when integerSemantics appears on a non-integer schema', () => {
+    const schema = {
+      type: 'string',
+      integerSemantics: 'bigint',
       metadata: {
         required: false,
         nullable: false,

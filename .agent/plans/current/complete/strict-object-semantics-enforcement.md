@@ -4,8 +4,8 @@
 **Created:** 2026-03-11  
 **Last Updated:** 2026-03-12  
 **Predecessor:** [recursive-unknown-key-preserving-zod-emission-investigation.md](../paused/recursive-unknown-key-preserving-zod-emission-investigation.md)  
-**Successor Active Slice:** [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md)  
-**Related:** `docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md`, `ADR-031`, `ADR-032`, `ADR-038`, `../../active/int64-bigint-semantics-investigation.md`
+**Successor Active Slice:** [int64-bigint-semantics-investigation.md](./int64-bigint-semantics-investigation.md)  
+**Related:** `docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md`, `ADR-031`, `ADR-032`, `ADR-038`, `./int64-bigint-semantics-investigation.md`
 
 ---
 
@@ -21,7 +21,7 @@ Implemented on 2026-03-12:
 - recursive strict Zod parser/writer lockstep around `z.strictObject({...})`
 - updated transform proofs, acceptance criteria, ADRs, and durable architecture docs
 
-The next primary active slice is the remaining `int64` / `bigint` numeric-semantics investigation.
+The next completed successor slice is the `int64` / `bigint` numeric-semantics remediation closure.
 
 On 2026-03-11, product direction changed:
 

@@ -85,6 +85,29 @@ describe('writeJsonSchemaDocument', () => {
     expect(result.$schema).toBe(JSON_SCHEMA_2020_12_DIALECT);
     expect(result.$ref).toBe('#/$defs/User');
   });
+
+  it('rejects int64 semantics because JSON Schema 2020-12 has no native int64 type', () => {
+    const schema = createSchema({
+      type: 'integer',
+      format: 'int64',
+      integerSemantics: 'int64',
+    });
+
+    expect(() => writeJsonSchemaDocument(schema)).toThrow(
+      /JSON Schema 2020-12 cannot represent signed 64-bit integer semantics natively/,
+    );
+  });
+
+  it('rejects bigint semantics because JSON Schema 2020-12 has no native bigint type', () => {
+    const schema = createSchema({
+      type: 'integer',
+      integerSemantics: 'bigint',
+    });
+
+    expect(() => writeJsonSchemaDocument(schema)).toThrow(
+      /JSON Schema 2020-12 cannot represent arbitrary-precision bigint natively/,
+    );
+  });
 });
 
 describe('writeJsonSchemaBundle', () => {

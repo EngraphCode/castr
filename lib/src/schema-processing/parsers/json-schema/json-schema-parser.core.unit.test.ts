@@ -110,6 +110,28 @@ describe('parseJsonSchemaObject', () => {
       expect(result.metadata.required).toBe(false);
       expect(result.metadata.nullable).toBe(false);
     });
+
+    it('rejects int64 siblings on $ref because JSON Schema 2020-12 has no native int64 type', () => {
+      expect(() =>
+        parseJsonSchemaObject({ $ref: '#/$defs/Count', type: 'integer', format: 'int64' }),
+      ).toThrow(/JSON Schema 2020-12 cannot represent signed 64-bit integer semantics natively/);
+    });
+
+    it('rejects bigint siblings on $ref because JSON Schema 2020-12 has no native bigint type', () => {
+      expect(() =>
+        parseJsonSchemaObject({ $ref: '#/$defs/Count', type: 'integer', format: 'bigint' }),
+      ).toThrow(/JSON Schema 2020-12 cannot represent arbitrary-precision bigint natively/);
+    });
+
+    it('rejects bigint siblings on $ref when integer is part of a nullable type array', () => {
+      expect(() =>
+        parseJsonSchemaObject({
+          $ref: '#/$defs/Count',
+          type: ['integer', 'null'],
+          format: 'bigint',
+        }),
+      ).toThrow(/JSON Schema 2020-12 cannot represent arbitrary-precision bigint natively/);
+    });
   });
 
   // =========================================================================
@@ -176,6 +198,20 @@ describe('parseJsonSchemaObject', () => {
       const result = parseJsonSchemaObject({ type: 'number', multipleOf: 5 });
 
       expect(result.multipleOf).toBe(5);
+    });
+  });
+
+  describe('unsupported native integer semantics', () => {
+    it('rejects int64 because JSON Schema 2020-12 has no native int64 type', () => {
+      expect(() => parseJsonSchemaObject({ type: 'integer', format: 'int64' })).toThrow(
+        /JSON Schema 2020-12 cannot represent signed 64-bit integer semantics natively/,
+      );
+    });
+
+    it('rejects bigint because JSON Schema 2020-12 has no native bigint type', () => {
+      expect(() => parseJsonSchemaObject({ type: 'integer', format: 'bigint' })).toThrow(
+        /JSON Schema 2020-12 cannot represent arbitrary-precision bigint natively/,
+      );
     });
   });
 

@@ -10,6 +10,7 @@
  */
 
 import type { CastrSchema, CastrSchemaComponent } from '../../ir/index.js';
+import { assertSchemaComponentsSupportIntegerTargetCapabilities } from '../../compatibility/integer-target-capabilities.js';
 import type { JsonSchemaObject } from '../shared/json-schema-fields.js';
 import { writeJsonSchema } from './json-schema-writer.schema.js';
 
@@ -77,6 +78,8 @@ export function writeJsonSchemaDocument(schema: CastrSchema): JsonSchemaObject {
  * @public
  */
 export function writeJsonSchemaBundle(components: CastrSchemaComponent[]): JsonSchemaObject {
+  assertSchemaComponentsSupportIntegerTargetCapabilities(components, 'JSON Schema 2020-12');
+
   const result: JsonSchemaObject = {
     $schema: JSON_SCHEMA_2020_12_DIALECT,
   };

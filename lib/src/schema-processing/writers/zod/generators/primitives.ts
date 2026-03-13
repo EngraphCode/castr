@@ -10,7 +10,12 @@
 
 import type { CodeBlockWriter } from 'ts-morph';
 import type { CastrSchema } from '../../../ir/index.js';
-import { UUID_SCHEMA_FORMAT } from '../../../ir/index.js';
+import {
+  UUID_SCHEMA_FORMAT,
+  getIntegerSemantics,
+  INTEGER_SEMANTICS_BIGINT,
+  INTEGER_SEMANTICS_INT64,
+} from '../../../ir/index.js';
 
 const SCHEMA_TYPE_STRING = 'string';
 const SCHEMA_TYPE_INTEGER = 'integer';
@@ -57,12 +62,23 @@ export function writePrimitiveSchema(schema: CastrSchema, writer: CodeBlockWrite
  * @internal
  */
 function writeIntegerSchema(schema: CastrSchema, writer: CodeBlockWriter): void {
+  const integerSemantics = getIntegerSemantics(schema);
+
+  if (integerSemantics === INTEGER_SEMANTICS_BIGINT) {
+    writer.write('z.bigint()');
+    return;
+  }
+
+  if (integerSemantics === INTEGER_SEMANTICS_INT64) {
+    writer.write('z.int64()');
+    return;
+  }
+
   switch (schema.format) {
     case 'int32':
       writer.write('z.int32()');
       break;
     case 'int64':
-    case 'bigint':
       // Warning: z.int64() returns bigint, not number
       // This may require downstream type handling
       writer.write('z.int64()');

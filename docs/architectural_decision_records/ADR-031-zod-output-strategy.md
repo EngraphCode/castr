@@ -166,15 +166,21 @@ Portable OpenAPI / JSON Schema detours remain plain `format: 'uuid'`, so subtype
 
 **Rationale:** UUID subtype is first-class IR truth, but native-only emission keeps portable targets honest instead of inventing non-native output.
 
-### 11. `int64` Canonicalization Uses `z.int64()` and Therefore `bigint`
+### 11. Integer Semantics Are Native-Only Where Necessary
 
-OpenAPI / JSON Schema `type: 'integer', format: 'int64'` emits canonical `z.int64()`.
+Integer output is now governed by first-class IR semantics:
 
-- In Zod 4, `z.int64()` validates `bigint`, not JavaScript `number`.
-- This is internally round-trip consistent, but it means parity fixtures and contributor examples must use `BigInt(...)` / `100n`, not JSON numbers.
-- This behavior is accepted as a Zod 4 runtime trade-off, not treated as a Castr defect.
+- IR `integerSemantics: 'int64'` emits canonical `z.int64()`
+- IR `integerSemantics: 'bigint'` emits canonical `z.bigint()`
+- plain IR `type: 'integer'` with no stronger semantic marker emits `z.int()`
 
-**Rationale:** Preserving the canonical Zod 4 helper is preferred over silently weakening the range/typing semantics to plain `number`.
+Portable targets do not control this decision. The IR does.
+
+- OpenAPI 3.1 can carry native `int64`, so that portable path remains valid.
+- JSON Schema 2020-12 cannot carry native `int64` or `bigint`, so those target pairs fail fast rather than inventing custom portable numeric types.
+- In Zod 4, `z.int64()` validates `bigint`, not JavaScript `number`, so generated TypeScript must use `bigint` for honest carrier parity.
+
+**Rationale:** Preserve semantic truth in IR, emit native Zod helpers where supported, and reject non-native portable output instead of silently narrowing or inventing custom numeric types.
 
 ## Consequences
 

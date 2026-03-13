@@ -25,6 +25,8 @@ All integration tests for schema transformation must be categorized and proven a
 - **Scenario 6 (Zod → JSON Schema → Zod):** Cross-format durability through the JSON Schema path.
 - **Scenario 7 (Multi-cast):** Cross-output consistency across the generated artifacts that share the same IR source.
 
+Unsupported target pairs are not counted as parity candidates. They must instead be proven by explicit fail-fast assertions at the earliest writer boundary.
+
 ### 2. Validation Parity Functional Testing
 
 For scenarios that execute Zod code, structural equivalence is insufficient. We enforce **Validation Parity** wherever the scenario includes shared executable payload fixtures, especially for Scenarios 2, 4, and 6:
@@ -60,6 +62,16 @@ This durability is explicitly proven in the recursion fixture across Scenario 2 
 ### 4. Zod 4 Canonical Output Policy
 
 As formalized under this matrix, Writers must emit **Canonical Zod 4 Helpers** where representable (e.g., `z.email()`, `z.url()`, `z.uuid()`). Parsers must strictly accept this canonical output. Non-canonical variants in input (like `z.string().uuid()`) are acceptable during parsing, provided they map losslessly, but generated parity endpoints must enforce the canonical targets (e.g. `z.uuid()`).
+
+### 5. Native-Capability Rejection Is Also A Required Proof
+
+Where a target format cannot represent the source semantic natively, the correct proof is early rejection, not degraded parity.
+
+Current mandatory examples:
+
+- Scenario 4 must prove `z.bigint()` rejects before OpenAPI emission.
+- Scenario 6 must prove `z.bigint()` rejects before JSON Schema emission.
+- Scenario 6 must prove `z.int64()` rejects before JSON Schema emission.
 
 ## Consequences
 

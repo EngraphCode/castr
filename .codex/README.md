@@ -10,15 +10,15 @@ This directory holds Codex-specific project configuration.
 
 ## Fallback Reviewer Invocation
 
-If the current Codex surface does not expose direct project-agent fan-out, the parent session can invoke reviewers and domain experts through one nested `codex exec` run that loads the installed adapter and then the canonical template.
+If the current Codex surface does not expose direct project-agent fan-out, or if direct fan-out is not producing useful review signal, the parent session should apply the installed reviewer workflow directly in-session.
 
-Example:
+Use this order:
 
-```bash
-codex exec --sandbox read-only -C /absolute/path/to/repo \
-  "Review the current uncommitted changes. First read .codex/agents/code-reviewer.toml and then .agent/sub-agents/templates/code-reviewer.md. Follow the installed code-reviewer workflow exactly. Scope the review to the changed files under .agent/. Review only; do not modify code."
-```
+1. Read `.codex/agents/<agent>.toml`.
+2. Read `.agent/sub-agents/templates/<agent>.md`.
+3. Perform the scoped review in the current session.
+4. Record the outcome in the active artefacts.
 
-For other roles, replace `code-reviewer` with the required agent name and adjust the scope sentence to match the change surface under review.
+For other roles, replace `<agent>` with the required reviewer or expert name.
 
-Use one nesting level only. Once inside the fallback reviewer or expert session, do not launch another reviewer of the same role; read the adapter and template directly and complete the scoped review.
+Nested `codex exec` reviewer fallback is deliberately not the standard path in this repo because it can spend its budget on re-anchoring and diff gathering before reaching substantive findings.

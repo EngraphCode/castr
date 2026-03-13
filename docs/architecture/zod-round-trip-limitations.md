@@ -1,8 +1,8 @@
 # Zod Round-Trip Limitations
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-03-11  
-**Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
+**Last Updated:** 2026-03-12  
+**Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md), [ADR-039](../architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md), [ADR-041](../architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md), [native-capability-matrix.md](./native-capability-matrix.md)
 
 ---
 
@@ -226,28 +226,34 @@ See:
 
 ---
 
-## Limitation: `int64` Means `bigint` in Zod 4
+## Native Integer Capability Boundary
 
-Zod 4 `z.int64()` validates `bigint`, not JavaScript `number`.
+Zod 4 and the portable schema formats do not share the same native integer carriers, so Castr now treats `int64` and `bigint` as distinct IR semantics and rejects unsupported target pairs early.
+
+This is now one instance of the broader native-capability seam doctrine in ADR-041.
 
 ### Current Accepted Behavior
 
-- Canonical generated Zod uses `z.int64()`.
-- Round-trip behavior stays internally consistent.
-- Payload fixtures and runtime callers need `BigInt(...)` / `100n`, not JSON numbers.
+- OpenAPI 3.1 `type: integer, format: int64` parses to first-class IR `integerSemantics: 'int64'`.
+- direct `z.int64()` parses to the same IR semantics and emits canonical `z.int64()`.
+- direct `z.bigint()` parses to first-class IR `integerSemantics: 'bigint'` and emits canonical `z.bigint()`.
+- OpenAPI 3.1 output rejects arbitrary-precision `bigint`.
+- JSON Schema 2020-12 output rejects both `int64` and `bigint`.
+- TypeScript output emits `bigint` for both `int64` and `bigint` semantics.
 
 ### Impact
 
-- This is surprising for JSON-oriented workflows, but it is treated as a Zod 4 runtime trade-off rather than a Castr defect.
-- JSON payload examples cannot literally encode `bigint`, so fixtures, docs, and transport boundaries need special handling.
-- API consumers may expect `integer/int64` to validate ordinary JavaScript numbers and instead hit runtime failures.
-- Cross-format parity is preserved inside Castr, but ergonomics degrade at the edge where JSON payloads meet generated Zod.
+- JSON-oriented workflows no longer receive invented portable `bigint` artefacts.
+- Unsupported target pairs fail before writer work proceeds.
+- Generated TypeScript is now honest about runtime carrier requirements for `int64`.
+- JSON payload examples still cannot literally encode `bigint`, so transport boundaries require explicit caller handling.
 
 ### Underlying Cause
 
 - Zod 4 intentionally maps `z.int64()` to `bigint` to preserve the full signed 64-bit domain safely.
 - JavaScript `number` cannot safely represent the full int64 range.
-- OpenAPI / JSON Schema conventions and Zod runtime semantics therefore diverge here.
+- OpenAPI 3.1 has native `int64` support, but not native arbitrary-precision `bigint`.
+- JSON Schema 2020-12 has neither native `int64` nor native `bigint`.
 
 ### Example
 
@@ -265,15 +271,21 @@ type: integer
 format: int64
 ```
 
-### What A Fundamental Answer Must Solve
+Direct arbitrary-precision `z.bigint()` is now explicitly different:
 
-- preserve full int64 safety with `bigint`, or
-- prefer JSON ergonomics by weakening to `number`, or
-- introduce an explicit configurable `int64` strategy
+```ts
+const schema = z.bigint();
+
+schema.safeParse(10n ** 100n).success; // true
+```
+
+That semantic has no native OpenAPI or JSON Schema carrier in Castr's current doctrine, so those output targets reject it early instead of emitting custom portable extensions.
 
 See:
 
 - [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md)
+- [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md)
+- [native-capability-matrix.md](./native-capability-matrix.md)
 
 ---
 
@@ -285,4 +297,4 @@ See:
 | Nullable / nullish recursive properties | Resolved | `anyOf: [$ref, null]`                          |
 | Recursive `.passthrough()`              | Limited  | Writer/runtime reconstruction boundary remains |
 | UUID subtype widening                   | Limited  | `uuidVersion` in IR; native-only emission      |
-| `int64` runtime type                    | Limited  | Canonicalize to `z.int64()` / `bigint`         |
+| Native integer capability boundaries    | Resolved | Distinct IR `int64` / `bigint` + early reject  |

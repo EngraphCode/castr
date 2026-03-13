@@ -9,7 +9,7 @@
 ---
 
 **Paused On:** 2026-03-09  
-**Pause Reason:** This companion investigation remains paused while [int64-bigint-semantics-investigation.md](../../active/int64-bigint-semantics-investigation.md) is the primary active plan. Pull this companion work forward only if transform-proof runtime questions become the highest-leverage blocker again.
+**Pause Reason:** This companion investigation remains paused while [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md) is the primary active plan. Pull this companion work forward only if transform-proof runtime questions become the highest-leverage blocker again.
 
 ## Baseline Hygiene Update (2026-03-10)
 

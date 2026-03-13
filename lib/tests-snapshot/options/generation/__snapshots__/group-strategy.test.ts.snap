@@ -5258,16 +5258,16 @@ export * as UserApi from "./user";
     "pet": "import { z } from "zod";
 // Type Definitions
 export type Category = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 export type Tag = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 export type Pet = {
   category?: Category;
-  id?: number;
+  id?: bigint;
   name: string;
   photoUrls: string[];
   /** pet status in the store */ status?: string;
@@ -5275,9 +5275,9 @@ export type Pet = {
 };
 export type Order = {
   complete?: boolean;
-  id?: number;
+  id?: bigint;
   pet?: Pet;
-  petId?: number;
+  petId?: bigint;
   quantity?: number;
   shipDate?: string;
   /** Order Status */ status?: string;
@@ -5290,13 +5290,13 @@ export type Address = {
 };
 export type Customer = {
   address?: Address[];
-  id?: number;
+  id?: bigint;
   username?: string;
 };
 export type User = {
   email?: string;
   firstName?: string;
-  id?: number;
+  id?: bigint;
   lastName?: string;
   password?: string;
   phone?: string;
@@ -5839,7 +5839,12 @@ export const mcpTools = [
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -5847,7 +5852,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -5864,7 +5874,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -5889,7 +5903,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -5897,7 +5916,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -5914,7 +5938,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -5984,7 +6012,12 @@ export const mcpTools = [
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -5992,7 +6025,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -6009,7 +6047,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -6034,7 +6076,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -6042,7 +6089,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -6059,7 +6111,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -6147,7 +6203,12 @@ export const mcpTools = [
                 category: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [1] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [1],
+                    },
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
@@ -6155,7 +6216,12 @@ export const mcpTools = [
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
                 },
-                id: { type: "integer", format: "int64", examples: [10] },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                  examples: [10],
+                },
                 name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
@@ -6172,7 +6238,11 @@ export const mcpTools = [
                   items: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64" },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                      },
                       name: { type: "string" },
                     },
                     required: [],
@@ -6257,7 +6327,12 @@ export const mcpTools = [
                 category: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [1] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [1],
+                    },
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
@@ -6265,7 +6340,12 @@ export const mcpTools = [
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
                 },
-                id: { type: "integer", format: "int64", examples: [10] },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                  examples: [10],
+                },
                 name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
@@ -6282,7 +6362,11 @@ export const mcpTools = [
                   items: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64" },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                      },
                       name: { type: "string" },
                     },
                     required: [],
@@ -6351,7 +6435,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
         },
@@ -6363,7 +6453,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -6371,7 +6466,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -6388,7 +6488,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -6463,7 +6567,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
           query: {
@@ -6530,7 +6640,13 @@ export const mcpTools = [
           },
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
         },
@@ -6586,7 +6702,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
           query: {
@@ -6699,14 +6821,24 @@ export const mcpTools = [
             type: "object",
             properties: {
               complete: { type: "boolean" },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               pet: {
                 type: "object",
                 properties: {
                   category: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64", examples: [1] },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                        examples: [1],
+                      },
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
@@ -6714,7 +6846,12 @@ export const mcpTools = [
                     additionalProperties: true,
                     unknownKeyBehavior: { mode: "strip" },
                   },
-                  id: { type: "integer", format: "int64", examples: [10] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [10],
+                  },
                   name: { type: "string", examples: ["doggie"] },
                   photoUrls: {
                     type: "array",
@@ -6731,7 +6868,11 @@ export const mcpTools = [
                     items: {
                       type: "object",
                       properties: {
-                        id: { type: "integer", format: "int64" },
+                        id: {
+                          type: "integer",
+                          format: "int64",
+                          integerSemantics: "int64",
+                        },
                         name: { type: "string" },
                       },
                       required: [],
@@ -6747,7 +6888,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              petId: { type: "integer", format: "int64", examples: [198772] },
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [198772],
+              },
               quantity: { type: "integer", format: "int32", examples: [7] },
               shipDate: { type: "string", format: "date-time" },
               status: {
@@ -6768,14 +6914,24 @@ export const mcpTools = [
         type: "object",
         properties: {
           complete: { type: "boolean" },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           pet: {
             type: "object",
             properties: {
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -6783,7 +6939,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -6800,7 +6961,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -6816,7 +6981,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          petId: { type: "integer", format: "int64", examples: [198772] },
+          petId: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [198772],
+          },
           quantity: { type: "integer", format: "int32", examples: [7] },
           shipDate: { type: "string", format: "date-time" },
           status: {
@@ -6860,7 +7030,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { orderId: { type: "integer", format: "int64" } },
+            properties: {
+              orderId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["orderId"],
           },
         },
@@ -6870,14 +7046,24 @@ export const mcpTools = [
         type: "object",
         properties: {
           complete: { type: "boolean" },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           pet: {
             type: "object",
             properties: {
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -6885,7 +7071,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -6902,7 +7093,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -6918,7 +7113,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          petId: { type: "integer", format: "int64", examples: [198772] },
+          petId: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [198772],
+          },
           quantity: { type: "integer", format: "int32", examples: [7] },
           shipDate: { type: "string", format: "date-time" },
           status: {
@@ -6962,7 +7162,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { orderId: { type: "integer", format: "int64" } },
+            properties: {
+              orderId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["orderId"],
           },
         },
@@ -6999,7 +7205,12 @@ export const mcpTools = [
             properties: {
               email: { type: "string", examples: ["john@email.com"] },
               firstName: { type: "string", examples: ["John"] },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
@@ -7054,7 +7265,12 @@ export const mcpTools = [
                   properties: {
                     email: { type: "string", examples: ["john@email.com"] },
                     firstName: { type: "string", examples: ["John"] },
-                    id: { type: "integer", format: "int64", examples: [10] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [10],
+                    },
                     lastName: { type: "string", examples: ["James"] },
                     password: { type: "string", examples: ["12345"] },
                     phone: { type: "string", examples: ["12345"] },
@@ -7081,7 +7297,12 @@ export const mcpTools = [
         properties: {
           email: { type: "string", examples: ["john@email.com"] },
           firstName: { type: "string", examples: ["John"] },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
@@ -7200,7 +7421,12 @@ export const mcpTools = [
         properties: {
           email: { type: "string", examples: ["john@email.com"] },
           firstName: { type: "string", examples: ["John"] },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
@@ -7248,7 +7474,12 @@ export const mcpTools = [
             properties: {
               email: { type: "string", examples: ["john@email.com"] },
               firstName: { type: "string", examples: ["John"] },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
@@ -7330,16 +7561,16 @@ export const mcpTools = [
     "store": "import { z } from "zod";
 // Type Definitions
 export type Category = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 export type Tag = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 export type Pet = {
   category?: Category;
-  id?: number;
+  id?: bigint;
   name: string;
   photoUrls: string[];
   /** pet status in the store */ status?: string;
@@ -7347,9 +7578,9 @@ export type Pet = {
 };
 export type Order = {
   complete?: boolean;
-  id?: number;
+  id?: bigint;
   pet?: Pet;
-  petId?: number;
+  petId?: bigint;
   quantity?: number;
   shipDate?: string;
   /** Order Status */ status?: string;
@@ -7362,13 +7593,13 @@ export type Address = {
 };
 export type Customer = {
   address?: Address[];
-  id?: number;
+  id?: bigint;
   username?: string;
 };
 export type User = {
   email?: string;
   firstName?: string;
-  id?: number;
+  id?: bigint;
   lastName?: string;
   password?: string;
   phone?: string;
@@ -7699,7 +7930,12 @@ export const mcpTools = [
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -7707,7 +7943,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -7724,7 +7965,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -7749,7 +7994,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -7757,7 +8007,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -7774,7 +8029,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -7844,7 +8103,12 @@ export const mcpTools = [
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -7852,7 +8116,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -7869,7 +8138,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -7894,7 +8167,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -7902,7 +8180,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -7919,7 +8202,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -8007,7 +8294,12 @@ export const mcpTools = [
                 category: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [1] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [1],
+                    },
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
@@ -8015,7 +8307,12 @@ export const mcpTools = [
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
                 },
-                id: { type: "integer", format: "int64", examples: [10] },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                  examples: [10],
+                },
                 name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
@@ -8032,7 +8329,11 @@ export const mcpTools = [
                   items: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64" },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                      },
                       name: { type: "string" },
                     },
                     required: [],
@@ -8117,7 +8418,12 @@ export const mcpTools = [
                 category: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [1] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [1],
+                    },
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
@@ -8125,7 +8431,12 @@ export const mcpTools = [
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
                 },
-                id: { type: "integer", format: "int64", examples: [10] },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                  examples: [10],
+                },
                 name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
@@ -8142,7 +8453,11 @@ export const mcpTools = [
                   items: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64" },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                      },
                       name: { type: "string" },
                     },
                     required: [],
@@ -8211,7 +8526,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
         },
@@ -8223,7 +8544,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -8231,7 +8557,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -8248,7 +8579,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -8323,7 +8658,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
           query: {
@@ -8390,7 +8731,13 @@ export const mcpTools = [
           },
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
         },
@@ -8446,7 +8793,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
           query: {
@@ -8559,14 +8912,24 @@ export const mcpTools = [
             type: "object",
             properties: {
               complete: { type: "boolean" },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               pet: {
                 type: "object",
                 properties: {
                   category: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64", examples: [1] },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                        examples: [1],
+                      },
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
@@ -8574,7 +8937,12 @@ export const mcpTools = [
                     additionalProperties: true,
                     unknownKeyBehavior: { mode: "strip" },
                   },
-                  id: { type: "integer", format: "int64", examples: [10] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [10],
+                  },
                   name: { type: "string", examples: ["doggie"] },
                   photoUrls: {
                     type: "array",
@@ -8591,7 +8959,11 @@ export const mcpTools = [
                     items: {
                       type: "object",
                       properties: {
-                        id: { type: "integer", format: "int64" },
+                        id: {
+                          type: "integer",
+                          format: "int64",
+                          integerSemantics: "int64",
+                        },
                         name: { type: "string" },
                       },
                       required: [],
@@ -8607,7 +8979,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              petId: { type: "integer", format: "int64", examples: [198772] },
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [198772],
+              },
               quantity: { type: "integer", format: "int32", examples: [7] },
               shipDate: { type: "string", format: "date-time" },
               status: {
@@ -8628,14 +9005,24 @@ export const mcpTools = [
         type: "object",
         properties: {
           complete: { type: "boolean" },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           pet: {
             type: "object",
             properties: {
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -8643,7 +9030,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -8660,7 +9052,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -8676,7 +9072,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          petId: { type: "integer", format: "int64", examples: [198772] },
+          petId: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [198772],
+          },
           quantity: { type: "integer", format: "int32", examples: [7] },
           shipDate: { type: "string", format: "date-time" },
           status: {
@@ -8720,7 +9121,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { orderId: { type: "integer", format: "int64" } },
+            properties: {
+              orderId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["orderId"],
           },
         },
@@ -8730,14 +9137,24 @@ export const mcpTools = [
         type: "object",
         properties: {
           complete: { type: "boolean" },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           pet: {
             type: "object",
             properties: {
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -8745,7 +9162,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -8762,7 +9184,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -8778,7 +9204,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          petId: { type: "integer", format: "int64", examples: [198772] },
+          petId: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [198772],
+          },
           quantity: { type: "integer", format: "int32", examples: [7] },
           shipDate: { type: "string", format: "date-time" },
           status: {
@@ -8822,7 +9253,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { orderId: { type: "integer", format: "int64" } },
+            properties: {
+              orderId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["orderId"],
           },
         },
@@ -8859,7 +9296,12 @@ export const mcpTools = [
             properties: {
               email: { type: "string", examples: ["john@email.com"] },
               firstName: { type: "string", examples: ["John"] },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
@@ -8914,7 +9356,12 @@ export const mcpTools = [
                   properties: {
                     email: { type: "string", examples: ["john@email.com"] },
                     firstName: { type: "string", examples: ["John"] },
-                    id: { type: "integer", format: "int64", examples: [10] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [10],
+                    },
                     lastName: { type: "string", examples: ["James"] },
                     password: { type: "string", examples: ["12345"] },
                     phone: { type: "string", examples: ["12345"] },
@@ -8941,7 +9388,12 @@ export const mcpTools = [
         properties: {
           email: { type: "string", examples: ["john@email.com"] },
           firstName: { type: "string", examples: ["John"] },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
@@ -9060,7 +9512,12 @@ export const mcpTools = [
         properties: {
           email: { type: "string", examples: ["john@email.com"] },
           firstName: { type: "string", examples: ["John"] },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
@@ -9108,7 +9565,12 @@ export const mcpTools = [
             properties: {
               email: { type: "string", examples: ["john@email.com"] },
               firstName: { type: "string", examples: ["John"] },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
@@ -9190,16 +9652,16 @@ export const mcpTools = [
     "user": "import { z } from "zod";
 // Type Definitions
 export type Category = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 export type Tag = {
-  id?: number;
+  id?: bigint;
   name?: string;
 };
 export type Pet = {
   category?: Category;
-  id?: number;
+  id?: bigint;
   name: string;
   photoUrls: string[];
   /** pet status in the store */ status?: string;
@@ -9207,9 +9669,9 @@ export type Pet = {
 };
 export type Order = {
   complete?: boolean;
-  id?: number;
+  id?: bigint;
   pet?: Pet;
-  petId?: number;
+  petId?: bigint;
   quantity?: number;
   shipDate?: string;
   /** Order Status */ status?: string;
@@ -9222,13 +9684,13 @@ export type Address = {
 };
 export type Customer = {
   address?: Address[];
-  id?: number;
+  id?: bigint;
   username?: string;
 };
 export type User = {
   email?: string;
   firstName?: string;
-  id?: number;
+  id?: bigint;
   lastName?: string;
   password?: string;
   phone?: string;
@@ -9683,7 +10145,12 @@ export const mcpTools = [
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -9691,7 +10158,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -9708,7 +10180,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -9733,7 +10209,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -9741,7 +10222,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -9758,7 +10244,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -9828,7 +10318,12 @@ export const mcpTools = [
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -9836,7 +10331,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -9853,7 +10353,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -9878,7 +10382,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -9886,7 +10395,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -9903,7 +10417,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -9991,7 +10509,12 @@ export const mcpTools = [
                 category: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [1] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [1],
+                    },
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
@@ -9999,7 +10522,12 @@ export const mcpTools = [
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
                 },
-                id: { type: "integer", format: "int64", examples: [10] },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                  examples: [10],
+                },
                 name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
@@ -10016,7 +10544,11 @@ export const mcpTools = [
                   items: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64" },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                      },
                       name: { type: "string" },
                     },
                     required: [],
@@ -10101,7 +10633,12 @@ export const mcpTools = [
                 category: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64", examples: [1] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [1],
+                    },
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
@@ -10109,7 +10646,12 @@ export const mcpTools = [
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
                 },
-                id: { type: "integer", format: "int64", examples: [10] },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                  examples: [10],
+                },
                 name: { type: "string", examples: ["doggie"] },
                 photoUrls: {
                   type: "array",
@@ -10126,7 +10668,11 @@ export const mcpTools = [
                   items: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64" },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                      },
                       name: { type: "string" },
                     },
                     required: [],
@@ -10195,7 +10741,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
         },
@@ -10207,7 +10759,12 @@ export const mcpTools = [
           category: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64", examples: [1] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [1],
+              },
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
@@ -10215,7 +10772,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           name: { type: "string", examples: ["doggie"] },
           photoUrls: {
             type: "array",
@@ -10232,7 +10794,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
               },
               required: [],
@@ -10307,7 +10873,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
           query: {
@@ -10374,7 +10946,13 @@ export const mcpTools = [
           },
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
         },
@@ -10430,7 +11008,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { petId: { type: "integer", format: "int64" } },
+            properties: {
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["petId"],
           },
           query: {
@@ -10543,14 +11127,24 @@ export const mcpTools = [
             type: "object",
             properties: {
               complete: { type: "boolean" },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               pet: {
                 type: "object",
                 properties: {
                   category: {
                     type: "object",
                     properties: {
-                      id: { type: "integer", format: "int64", examples: [1] },
+                      id: {
+                        type: "integer",
+                        format: "int64",
+                        integerSemantics: "int64",
+                        examples: [1],
+                      },
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
@@ -10558,7 +11152,12 @@ export const mcpTools = [
                     additionalProperties: true,
                     unknownKeyBehavior: { mode: "strip" },
                   },
-                  id: { type: "integer", format: "int64", examples: [10] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [10],
+                  },
                   name: { type: "string", examples: ["doggie"] },
                   photoUrls: {
                     type: "array",
@@ -10575,7 +11174,11 @@ export const mcpTools = [
                     items: {
                       type: "object",
                       properties: {
-                        id: { type: "integer", format: "int64" },
+                        id: {
+                          type: "integer",
+                          format: "int64",
+                          integerSemantics: "int64",
+                        },
                         name: { type: "string" },
                       },
                       required: [],
@@ -10591,7 +11194,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              petId: { type: "integer", format: "int64", examples: [198772] },
+              petId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [198772],
+              },
               quantity: { type: "integer", format: "int32", examples: [7] },
               shipDate: { type: "string", format: "date-time" },
               status: {
@@ -10612,14 +11220,24 @@ export const mcpTools = [
         type: "object",
         properties: {
           complete: { type: "boolean" },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           pet: {
             type: "object",
             properties: {
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -10627,7 +11245,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -10644,7 +11267,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -10660,7 +11287,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          petId: { type: "integer", format: "int64", examples: [198772] },
+          petId: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [198772],
+          },
           quantity: { type: "integer", format: "int32", examples: [7] },
           shipDate: { type: "string", format: "date-time" },
           status: {
@@ -10704,7 +11336,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { orderId: { type: "integer", format: "int64" } },
+            properties: {
+              orderId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["orderId"],
           },
         },
@@ -10714,14 +11352,24 @@ export const mcpTools = [
         type: "object",
         properties: {
           complete: { type: "boolean" },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           pet: {
             type: "object",
             properties: {
               category: {
                 type: "object",
                 properties: {
-                  id: { type: "integer", format: "int64", examples: [1] },
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                    examples: [1],
+                  },
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
@@ -10729,7 +11377,12 @@ export const mcpTools = [
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
               },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               name: { type: "string", examples: ["doggie"] },
               photoUrls: {
                 type: "array",
@@ -10746,7 +11399,11 @@ export const mcpTools = [
                 items: {
                   type: "object",
                   properties: {
-                    id: { type: "integer", format: "int64" },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
                     name: { type: "string" },
                   },
                   required: [],
@@ -10762,7 +11419,12 @@ export const mcpTools = [
             additionalProperties: true,
             unknownKeyBehavior: { mode: "strip" },
           },
-          petId: { type: "integer", format: "int64", examples: [198772] },
+          petId: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [198772],
+          },
           quantity: { type: "integer", format: "int32", examples: [7] },
           shipDate: { type: "string", format: "date-time" },
           status: {
@@ -10806,7 +11468,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { orderId: { type: "integer", format: "int64" } },
+            properties: {
+              orderId: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["orderId"],
           },
         },
@@ -10843,7 +11511,12 @@ export const mcpTools = [
             properties: {
               email: { type: "string", examples: ["john@email.com"] },
               firstName: { type: "string", examples: ["John"] },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },
@@ -10898,7 +11571,12 @@ export const mcpTools = [
                   properties: {
                     email: { type: "string", examples: ["john@email.com"] },
                     firstName: { type: "string", examples: ["John"] },
-                    id: { type: "integer", format: "int64", examples: [10] },
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                      examples: [10],
+                    },
                     lastName: { type: "string", examples: ["James"] },
                     password: { type: "string", examples: ["12345"] },
                     phone: { type: "string", examples: ["12345"] },
@@ -10925,7 +11603,12 @@ export const mcpTools = [
         properties: {
           email: { type: "string", examples: ["john@email.com"] },
           firstName: { type: "string", examples: ["John"] },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
@@ -11044,7 +11727,12 @@ export const mcpTools = [
         properties: {
           email: { type: "string", examples: ["john@email.com"] },
           firstName: { type: "string", examples: ["John"] },
-          id: { type: "integer", format: "int64", examples: [10] },
+          id: {
+            type: "integer",
+            format: "int64",
+            integerSemantics: "int64",
+            examples: [10],
+          },
           lastName: { type: "string", examples: ["James"] },
           password: { type: "string", examples: ["12345"] },
           phone: { type: "string", examples: ["12345"] },
@@ -11092,7 +11780,12 @@ export const mcpTools = [
             properties: {
               email: { type: "string", examples: ["john@email.com"] },
               firstName: { type: "string", examples: ["John"] },
-              id: { type: "integer", format: "int64", examples: [10] },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+                examples: [10],
+              },
               lastName: { type: "string", examples: ["James"] },
               password: { type: "string", examples: ["12345"] },
               phone: { type: "string", examples: ["12345"] },

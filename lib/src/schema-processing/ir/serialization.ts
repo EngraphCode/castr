@@ -1,5 +1,5 @@
 import { CastrSchemaProperties, type CastrSchema } from './models/schema.js';
-import { isCastrSchema } from './validation/validators.js';
+import { isCastrDocument, isCastrSchema } from './validation/validators.js';
 
 /**
  * Interface for a serialized Map.
@@ -10,7 +10,7 @@ interface SerializedMap {
 }
 
 import { type UnknownRecord, isRecord } from '../../shared/type-utils/types.js';
-import { type CastrDocument, isCastrDocument } from './models/schema-document.js';
+import type { CastrDocument } from './models/schema-document.js';
 
 const SERIALIZED_DATA_TYPE_MAP = 'Map';
 const SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES = 'CastrSchemaProperties';
@@ -104,9 +104,11 @@ export function deserializeIR(json: string): CastrDocument {
     if (isSerializedCastrSchemaProperties(value)) {
       const props: Record<string, CastrSchema> = {};
       for (const [k, v] of Object.entries(value.value)) {
-        if (isCastrSchema(v)) {
-          props[k] = v;
+        if (!isCastrSchema(v)) {
+          throw new Error('Invalid CastrDocument structure');
         }
+
+        props[k] = v;
       }
       return new CastrSchemaProperties(props);
     }

@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 12, 2026)  
+**Date:** January 24, 2026 (Updated March 13, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -33,7 +33,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, and strict object semantics enforcement slice are complete. The repo's active next-work track is now `int64` / `bigint` semantics investigation.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, and `int64` / `bigint` remediation closure slice are complete. The repo's active next-work track is now a small planning stub for the next Zod limitations atomic slice.
 
 Current status of that track:
 
@@ -41,18 +41,20 @@ Current status of that track:
 - `as const` remains allowed literal-preservation infrastructure
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
-- `pnpm type-check` is green
-- `pnpm format:check` is green
-- `pnpm lint` is fully clean again
-- `@typescript-eslint/consistent-type-assertions` is restored to `error`
-- `pnpm test` is green
-- `pnpm check:ci` is green again after the normalization-cycle, Knip, and default-suite runtime repair slice
-- warning-producing gate cleanup is complete:
-  - `pnpm madge:circular` and `pnpm madge:orphans` are clean of the known external skipped-module warnings
-  - `pnpm knip` is clean of the stale `type-fest` configuration hint
-  - `pnpm character` is clean of the expected Scalar unreachable-URL stderr noise
-  - `pnpm test:transforms` is clean of the custom doctor/scalar diagnostic logging noise
+- the full repo-root gate sweep and `pnpm check:ci` were green on Friday, 13 March 2026
+- the completed `int64` / `bigint` closure slice fixed three real correctness gaps:
+  - preserved raw OpenAPI components now survive IR validation and deserialisation
+  - raw OpenAPI schema objects with `$ref` plus sibling integer-format fields now fail fast for OpenAPI 3.1 capability checks
+  - JSON Schema `$ref` plus sibling `int64` / `bigint` input now rejects before the plain-ref early return
+- the final manual in-session review, using the local reviewer templates rather than nested reviewer runs, surfaced one additional discriminator-validator hole:
+  - inherited object keys such as `toString` could masquerade as valid IR component types
+  - that issue was fixed and re-verified in the same closure session
+- current next-session priority is therefore:
+  - reproduce any user-reported issue first
+  - use the active planning stub to choose the next smallest honest atomic slice from the paused Zod limitations workstream
+  - replace the planning stub once that concrete slice is chosen
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
+- if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - the Characterisation boundary cluster is complete
 - the MCP from-IR test cluster is complete
 - the Shared loader and utility cluster is complete
@@ -66,21 +68,30 @@ Current status of that track:
   - default-path generated object outputs are explicit about strictness where the target can represent it honestly
   - recursive strict Zod parser/writer lockstep is closed around `z.strictObject({...})`
 - the broader Zod limitations investigation and recursive preserving-mode investigation remain paused as context rather than the primary `active/` plan
-- the next primary slice is investigation-first:
-  - decide the permanent doctrine for portable `int64`
-  - decide the permanent doctrine for direct `z.bigint()`
-  - determine whether a transport/runtime semantic split is required or avoidable
-  - avoid introducing a user-facing strategy flag unless investigation proves no single canonical policy satisfies doctrine
-- current local numeric evidence shows:
-  - `format: int64` currently maps to `z.int64()` and validates `bigint`
-  - direct `z.bigint()` currently parses as `type: integer`, `format: "bigint"`
-  - portable detours remain internally consistent but ergonomically awkward at JSON transport boundaries
+- the primary numeric doctrine is now implemented:
+  - IR carries first-class integer semantics for `int64` and `bigint`
+  - direct `z.bigint()` parses to `integerSemantics: 'bigint'`
+  - direct `z.int64()` and OpenAPI `format: int64` parse to `integerSemantics: 'int64'`
+  - OpenAPI 3.1 output rejects arbitrary-precision `bigint`
+  - JSON Schema 2020-12 output rejects both `int64` and `bigint`
+  - TypeScript output emits `bigint` for both `int64` and `bigint` semantics
+  - ADR-041 now records the reusable native-capability seam pattern for future type-specific format gaps
+- remaining closure / platform work now remains:
+  - reproduce any user-reported gate failures first
+  - choose and activate the next Zod limitations atomic slice
+  - keep the now-recorded standards-based native-capability matrix, roadmap, and prompts aligned
+  - keep ADR-041, the matrix, and seam-specific docs aligned when similar future seams appear
+  - keep the JS/TS Temporal-first date-time doctrine as a separate follow-on plan outside the active slice
+  - keep the "no custom portable types for now" stance explicit rather than implying planned future product work
 - UUID subtype semantics are now preserved in IR/native Zod output and widen only across standard portable detours
-- `int64` / `bigint` is now the primary follow-on investigation after the completed strict-object slice
+- `int64` / `bigint` is now a completed slice recorded under `current/complete/`
+- future follow-on plan now exists for:
+  - [temporal-first-js-ts-date-time-doctrine.md](./future/temporal-first-js-ts-date-time-doctrine.md)
+- custom portable types remain deliberately unsupported for now and are not currently planned work
 
 Primary active atomic plan:
 
-- [int64-bigint-semantics-investigation.md](./active/int64-bigint-semantics-investigation.md)
+- [zod-limitations-next-atomic-slice-planning.md](./active/zod-limitations-next-atomic-slice-planning.md)
 
 Paused supporting context that remains important:
 
@@ -90,6 +101,7 @@ Paused supporting context that remains important:
 
 Recently completed adjacent remediation:
 
+- [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
 - [type-safety-remediation-follow-up.md](./current/complete/type-safety-remediation-follow-up.md)
@@ -292,7 +304,7 @@ Current Zod workstream context:
 - [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
 - [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
-- [int64-bigint-semantics-investigation.md](./active/int64-bigint-semantics-investigation.md)
+- [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)

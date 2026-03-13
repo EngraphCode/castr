@@ -7,7 +7,12 @@
  * @module parsers/zod/zod4-formats
  */
 
-import type { CastrSchema } from '../../../ir/index.js';
+import {
+  applyExplicitIntegerSemantics,
+  INTEGER_SEMANTICS_BIGINT,
+  INTEGER_SEMANTICS_INT64,
+  type CastrSchema,
+} from '../../../ir/index.js';
 
 /**
  * Maps Zod 4 primitive names to their OpenAPI format strings.
@@ -15,8 +20,6 @@ import type { CastrSchema } from '../../../ir/index.js';
  */
 const FORMAT_MAP: Readonly<Record<string, string>> = {
   int32: 'int32',
-  int64: 'int64',
-  bigint: 'bigint',
   float32: 'float',
   float64: 'double',
   'iso.date': 'date',
@@ -47,6 +50,14 @@ const ENCODING_MAP: Readonly<Record<string, string>> = {
  * @internal
  */
 export function applyZod4Formats(schema: CastrSchema, baseMethod: string): void {
+  if (baseMethod === INTEGER_SEMANTICS_INT64) {
+    applyExplicitIntegerSemantics(schema, INTEGER_SEMANTICS_INT64);
+  }
+
+  if (baseMethod === INTEGER_SEMANTICS_BIGINT) {
+    applyExplicitIntegerSemantics(schema, INTEGER_SEMANTICS_BIGINT);
+  }
+
   const format = FORMAT_MAP[baseMethod];
   if (format) {
     schema.format = format;

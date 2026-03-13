@@ -4,7 +4,7 @@
 **Created:** 2026-03-11  
 **Last Updated:** 2026-03-12  
 **Predecessor:** [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `docs/architecture/recursive-unknown-key-semantics.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/int64-bigint-semantics-investigation.md`
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `docs/architecture/recursive-unknown-key-semantics.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/zod-limitations-next-atomic-slice-planning.md`, `../complete/int64-bigint-semantics-investigation.md`
 
 ---
 

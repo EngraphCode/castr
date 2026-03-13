@@ -33,6 +33,7 @@ export type {
   IRResponseHeader,
   IRSecurityRequirement,
   CastrSchema,
+  IRIntegerSemantics,
   IRUnknownKeyBehavior,
   IRUuidVersion,
   CastrSchemaNode,
@@ -65,6 +66,15 @@ export {
   applyExplicitUuidVersion,
   applyInferredUuidVersionFromPattern,
 } from './uuid-version.js';
+export {
+  INTEGER_SCHEMA_TYPE,
+  INTEGER_SEMANTICS_INT64,
+  INTEGER_SEMANTICS_BIGINT,
+  isIRIntegerSemantics,
+  getIntegerSemantics,
+  applyExplicitIntegerSemantics,
+  schemaTypeIncludesInteger,
+} from './integer-semantics/index.js';
 
 // Serialization utilities
 // Validators and type guards

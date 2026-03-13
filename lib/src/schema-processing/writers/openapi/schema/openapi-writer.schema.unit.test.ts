@@ -72,6 +72,30 @@ describe('primitive types', () => {
 
     expect(result.type).toBe('boolean');
   });
+
+  it('rejects arbitrary-precision bigint semantics because OpenAPI has no native bigint type', () => {
+    const schema: CastrSchema = {
+      type: 'integer',
+      integerSemantics: 'bigint',
+      metadata: createMetadata(),
+    };
+
+    expect(() => writeOpenApiSchema(schema)).toThrow(
+      /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+    );
+  });
+
+  it('rejects arbitrary-precision bigint semantics on nullable integer carriers', () => {
+    const schema: CastrSchema = {
+      type: ['integer', 'null'],
+      integerSemantics: 'bigint',
+      metadata: createMetadata({ nullable: true }),
+    };
+
+    expect(() => writeOpenApiSchema(schema)).toThrow(
+      /OpenAPI 3\.1 cannot represent arbitrary-precision bigint natively/,
+    );
+  });
 });
 
 describe('string formats', () => {

@@ -1089,7 +1089,7 @@ export const mcpTools = [
     "v3.0/petstore": "import { z } from "zod";
 // Type Definitions
 export type Pet = {
-  id: number;
+  id: bigint;
   name: string;
   tag?: string;
 };
@@ -1255,7 +1255,11 @@ export const mcpTools = [
             items: {
               type: "object",
               properties: {
-                id: { type: "integer", format: "int64" },
+                id: {
+                  type: "integer",
+                  format: "int64",
+                  integerSemantics: "int64",
+                },
                 name: { type: "string" },
                 tag: { type: "string" },
               },
@@ -1295,7 +1299,11 @@ export const mcpTools = [
           body: {
             type: "object",
             properties: {
-              id: { type: "integer", format: "int64" },
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
               name: { type: "string" },
               tag: { type: "string" },
             },
@@ -1343,7 +1351,7 @@ export const mcpTools = [
       outputSchema: {
         type: "object",
         properties: {
-          id: { type: "integer", format: "int64" },
+          id: { type: "integer", format: "int64", integerSemantics: "int64" },
           name: { type: "string" },
           tag: { type: "string" },
         },
@@ -1378,7 +1386,7 @@ export type NewPet = {
   tag?: string;
 };
 export type Pet = NewPet & {
-  id: number;
+  id: bigint;
 };
 export type ErrorSchema = {
   code: number;
@@ -1610,7 +1618,13 @@ export const mcpTools = [
                 },
                 {
                   type: "object",
-                  properties: { id: { type: "integer", format: "int64" } },
+                  properties: {
+                    id: {
+                      type: "integer",
+                      format: "int64",
+                      integerSemantics: "int64",
+                    },
+                  },
                   required: ["id"],
                   additionalProperties: true,
                   unknownKeyBehavior: { mode: "strip" },
@@ -1672,7 +1686,13 @@ export const mcpTools = [
               },
               {
                 type: "object",
-                properties: { id: { type: "integer", format: "int64" } },
+                properties: {
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                  },
+                },
                 required: ["id"],
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
@@ -1709,7 +1729,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { id: { type: "integer", format: "int64" } },
+            properties: {
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["id"],
           },
         },
@@ -1732,7 +1758,13 @@ export const mcpTools = [
               },
               {
                 type: "object",
-                properties: { id: { type: "integer", format: "int64" } },
+                properties: {
+                  id: {
+                    type: "integer",
+                    format: "int64",
+                    integerSemantics: "int64",
+                  },
+                },
                 required: ["id"],
                 additionalProperties: true,
                 unknownKeyBehavior: { mode: "strip" },
@@ -1768,7 +1800,13 @@ export const mcpTools = [
         properties: {
           path: {
             type: "object",
-            properties: { id: { type: "integer", format: "int64" } },
+            properties: {
+              id: {
+                type: "integer",
+                format: "int64",
+                integerSemantics: "int64",
+              },
+            },
             required: ["id"],
           },
         },
