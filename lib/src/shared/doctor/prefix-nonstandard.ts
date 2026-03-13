@@ -10,6 +10,10 @@ import type { ValidationError } from '../load-openapi-document/validation-errors
 
 type ScalarValidationResult = Awaited<ReturnType<typeof validate>>;
 
+export interface NonStandardPropertyRescueDiagnostics {
+  retryCount: number;
+}
+
 import { extractPropertyName, unescapePointerSegment } from './pointer-utils.js';
 
 const X_NONSTANDARD_PREFIX = 'x-nonstandard-';
@@ -202,7 +206,12 @@ export async function attemptNonStandardPropertyRescue(
   bundledDocument: unknown,
   initialValidationResult: ScalarValidationResult,
   warnings: { readonly message: string }[],
+  diagnostics?: NonStandardPropertyRescueDiagnostics,
 ): Promise<ScalarValidationResult> {
+  if (diagnostics) {
+    diagnostics.retryCount = 0;
+  }
+
   if (typeof bundledDocument !== 'object' || bundledDocument === null) {
     return initialValidationResult;
   }
@@ -221,6 +230,10 @@ export async function attemptNonStandardPropertyRescue(
 
     validationResult = await validate(bundledDocument);
     retryCount++;
+  }
+
+  if (diagnostics) {
+    diagnostics.retryCount = retryCount;
   }
 
   return validationResult;

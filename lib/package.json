@@ -47,6 +47,7 @@
     "character": "vitest run --config vitest.characterisation.config.ts",
     "character:watch": "vitest --config vitest.characterisation.config.ts",
     "test:transforms": "vitest run --config vitest.transforms.config.ts",
+    "doctor:profile": "pnpm exec tsx ./scripts/profile-doctor-runtime.mts",
     "madge:circular": "node ./scripts/run-madge.mjs circular",
     "madge:orphans": "node ./scripts/run-madge.mjs orphans",
     "depcruise": "pnpm exec depcruise src --config .dependency-cruiser.cjs",

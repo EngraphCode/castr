@@ -2,10 +2,10 @@
 
 **Status:** Paused  
 **Created:** 2026-03-09  
-**Last Updated:** 2026-03-11  
+**Last Updated:** 2026-03-13  
 **Predecessor:** [type-safety-remediation.md](../complete/type-safety-remediation.md)  
 **Successor Active Slice:** [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md)  
-**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `ADR-040`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/zod-limitations-next-atomic-slice-planning.md`, `../complete/int64-bigint-semantics-investigation.md`, `../complete/type-safety-remediation-follow-up.md`
+**Related:** `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-038`, `ADR-039`, `ADR-040`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./transform-proof-budgeting-and-runtime-architecture-investigation.md`, `../../active/zod-limitations-next-atomic-slice-planning.md`, `../complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`, `../complete/int64-bigint-semantics-investigation.md`, `../complete/type-safety-remediation-follow-up.md`
 
 ---
 
@@ -16,6 +16,7 @@ It now serves as the **paused umbrella context** for the broader Zod limitations
 - [strict-object-semantics-enforcement.md](../complete/strict-object-semantics-enforcement.md) is the completed object-semantics execution record.
 - [recursive-unknown-key-preserving-zod-emission-investigation.md](./recursive-unknown-key-preserving-zod-emission-investigation.md) remains paused historical evidence after ADR-040 changed product direction.
 - [int64-bigint-semantics-investigation.md](../complete/int64-bigint-semantics-investigation.md) is complete.
+- [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md) is complete and recorded the rescue-loop runtime diagnosis.
 - [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md) is the current primary active entrypoint.
 - [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) remains paused supporting runtime context.
 
@@ -55,14 +56,16 @@ Current repo truth:
 2. UUID subtype semantics are now preserved in IR and native Zod output via [ADR-039](../../../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
 3. portable OpenAPI / JSON Schema detours still widen UUID subtype semantics to plain `uuid`, and that widening is now accepted target-capacity behavior
 4. the `int64` / `bigint` slice is complete and recorded under `current/complete/`
-5. the preserving-mode recursive investigation remains useful background evidence, but it is no longer the forward product direction
+5. doctor runtime characterisation is complete and points the live workstream at rescue-loop redesign rather than harness changes
+6. the preserving-mode recursive investigation remains useful background evidence, but it is no longer the forward product direction
 
 Paused supporting investigation:
 
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./transform-proof-budgeting-and-runtime-architecture-investigation.md) should be consulted whenever limitation analysis touches transform-suite runtime, doctor behavior, proof budgeting, or possible non-test performance architecture debt beyond the already-characterised rescue-loop diagnosis
 
 Completed adjacent slice:
 
+- [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [int64-bigint-semantics-investigation.md](../complete/int64-bigint-semantics-investigation.md)
 
 Known completed remediation already established in this workstream:

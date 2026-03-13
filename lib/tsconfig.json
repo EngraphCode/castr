@@ -19,6 +19,11 @@
     "strictPropertyInitialization": false,
     "baseUrl": "./"
   },
-  "include": ["src/**/*", "eslint.config.ts", "examples-fetcher.mts"],
+  "include": [
+    "src/**/*",
+    "eslint.config.ts",
+    "examples-fetcher.mts",
+    "scripts/profile-doctor-runtime.mts"
+  ],
   "exclude": ["node_modules", "**/*.typegen.ts", "example", "tests", "dist"]
 }

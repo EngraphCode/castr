@@ -5,7 +5,7 @@
 **Last Updated:** 2026-03-13  
 **Predecessor Context:** [strict-object-semantics-enforcement.md](./strict-object-semantics-enforcement.md)  
 **Successor Active Slice:** [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md)  
-**Related:** [native-capability-matrix.md](../../../docs/architecture/native-capability-matrix.md), [ADR-031](../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md), [zod-limitations-architecture-investigation.md](../paused/zod-limitations-architecture-investigation.md)
+**Related:** [native-capability-matrix.md](../../../../docs/architecture/native-capability-matrix.md), [ADR-031](../../../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../../../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../../../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-041](../../../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md), [zod-limitations-architecture-investigation.md](../paused/zod-limitations-architecture-investigation.md)
 
 ---
 
@@ -79,8 +79,14 @@ That manual template-based pass surfaced one final real issue during closure: in
 
 ## Follow-On Context
 
-The next repo entrypoint is not a reactivated umbrella investigation. It is a small active planning stub:
+The next repo entrypoint after this slice was not a reactivated umbrella investigation.
+
+It first moved through the completed doctor runtime-characterisation slice:
+
+- [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
+
+The current live entrypoint is now the active rescue-loop redesign plan:
 
 - [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md)
 
-That stub points back to the paused Zod limitations umbrella and supporting paused investigations so the next session can choose the next smallest honest atomic slice.
+That active plan still points back to the paused Zod limitations umbrella and supporting paused investigations, but the repo no longer needs to rediscover whether doctor runtime or recursive preserving mode is the next slice.

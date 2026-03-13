@@ -71,6 +71,22 @@ This contract is governed by `.agent/directives/testing-strategy.md` and impleme
 
 ---
 
+## Pathological Repair Proof
+
+`__tests__/doctor.integration.test.ts` is the suite's current pathological/heavy repair proof.
+
+- It remains inside the canonical `pnpm test:transforms` gate rather than being split out or weakened.
+- Use `pnpm --dir lib doctor:profile` when you need phase-level runtime evidence for the problematic fixture.
+- Current Friday, 13 March 2026 baseline:
+  - isolated `doctor.integration.test.ts`: `23.76s real`
+  - full `pnpm test:transforms`: `25.88s real`
+  - full transform suite with `--maxWorkers=1`: `45.73s real`
+  - doctor profile: `20.77s` of `20.88s` total inside `nonStandardRescue`, with `1159` rescue retries
+- The test currently carries an explicit `60s` local timeout because the proof exceeds the default `30s` ceiling under full-suite contention.
+- The active fix family is doctor rescue-loop redesign, not harness lane splitting.
+
+---
+
 ## Scalar Validator Behavior
 
 The `scalar-behavior.integration.test.ts` documents the actual behavior of `@scalar/openapi-parser`'s `validate()` function. These are **behavior documentation tests**, not assertions of correctness.

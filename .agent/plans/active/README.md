@@ -90,6 +90,12 @@ When the atomic slice is complete:
 - update `session-entry.prompt.md` if the next session should start somewhere else
 - check whether any durable insight still trapped in the plan must be promoted first
 
+If an active planning stub or diagnostic scaffold is rewritten in place into the chosen implementation plan, do not let the bridge decision vanish.
+
+- create a completed record in `.agent/plans/current/complete/` for the finished planning, characterisation, or decision slice
+- repoint the rewritten active plan so that completed record is its explicit predecessor
+- update the prompt and roadmap so the predecessor chain remains visible to cold-start sessions
+
 ### 4. Archive In Batches
 
 Plans in `.agent/plans/current/complete/` are staged completions.

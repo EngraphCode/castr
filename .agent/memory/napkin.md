@@ -195,3 +195,44 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-core/incoming/` still contains only `.gitkeep`
   - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
+- A later runtime-planning pass replaced the old candidate-selection stub with a concrete doctor runtime diagnosis:
+  - the new `pnpm --dir lib doctor:profile` helper reports `20.77s` of `20.88s` total inside `nonStandardRescue`
+  - the problematic fixture currently requires `1159` rescue retries and produces `1159` warnings
+  - refreshed timings on Friday, 13 March 2026 were:
+    - isolated `doctor.integration.test.ts`: `23.76s real`
+    - full `pnpm test:transforms`: `25.88s real`
+    - full suite with `--maxWorkers=1`: `45.73s real`
+  - the canonical doctor transform proof now has a `60s` test-local timeout because full-suite contention currently pushes it past the previous `30s` ceiling
+  - default concurrency is still materially better than serialized execution, so harness splitting is not the next honest slice
+  - the next active entrypoint is now doctor rescue-loop runtime redesign, not recursive preserving-mode work and not another planning stub
+- The new internal doctor diagnostics seam is now in place:
+  - `repairOpenApiDocumentWithRuntimeDiagnostics()` preserves the existing `repairOpenApiDocument()` behavior while exposing timings, retry counts, and error-count summaries
+  - `prefix-nonstandard.ts` now records rescue retry counts for diagnostics consumers
+  - `lib/scripts/profile-doctor-runtime.mts` provides a stable JSON runtime snapshot without creating repo-tracked artefacts
+- The deferred follow-on remains explicit:
+  - stale public docs/options around `additionalPropertiesDefaultValue` and `strictObjects` are real cohesion drift, but they are not the next slice
+  - recursive preserving-mode emission remains historical context under ADR-040 and should not be reopened unless new evidence disproves that doctrine
+- Manual reviewer coverage for the runtime-characterisation slice was completed in-session on Friday, 13 March 2026:
+  - `code-reviewer`: no blocking correctness or maintainability findings in the final diff
+  - `test-reviewer`: no blocking test-quality findings; the doctor proof remains behaviour-focused and stays in the canonical gate with an explicit `60s` timeout
+  - `type-reviewer`: no blocking type-flow or strictness findings; the new diagnostics seam stayed internal and did not require assertions or widening escape hatches
+- A later deep documentation-consolidation pass repaired the remaining handoff drift around that slice:
+  - `.agent/plans/current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md` now exists as the durable completion record instead of leaving the slice recoverable only from napkin notes and the rewritten active plan
+  - `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md`, `.agent/prompts/session-entry.prompt.md`, `.agent/plans/roadmap.md`, `.agent/README.md`, and the adjacent paused/completed Zod workstream plans now agree on the predecessor chain:
+    - `int64` / `bigint` closure
+    - doctor runtime characterisation complete
+    - doctor rescue-loop redesign active
+  - `lib/tests-transforms/README.md` now records the pathological doctor proof and its measured runtime baseline
+  - `ADR-035` was re-checked during this pass but intentionally left unchanged because the repo still has not locked a final durable transform-proof scheduling policy beyond the current runtime diagnosis
+- Practice box check in the same consolidation pass:
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- An explicit `jc-consolidate-docs` pass immediately afterwards found one structural learning worth promoting:
+  - when an active planning stub or diagnostic scaffold is rewritten in place into the chosen implementation plan, the bridge decision can disappear unless a completed record is created for it
+  - that rule now lives both in `.agent/plans/active/README.md` and in portable form in `.agent/practice-core/practice.md`
+  - the session-entry prompt was also tightened to use direct present-tense wording for the active doctor rescue-loop slice
+- Practice box check in that explicit consolidation pass:
+  - `.agent/practice-core/incoming/` still contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` still contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration

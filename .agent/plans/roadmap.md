@@ -33,7 +33,7 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, and `int64` / `bigint` remediation closure slice are complete. The repo's active next-work track is now a small planning stub for the next Zod limitations atomic slice.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, and doctor runtime-characterisation slice are complete. The repo's active next-work track is now doctor rescue-loop runtime redesign.
 
 Current status of that track:
 
@@ -49,10 +49,18 @@ Current status of that track:
 - the final manual in-session review, using the local reviewer templates rather than nested reviewer runs, surfaced one additional discriminator-validator hole:
   - inherited object keys such as `toString` could masquerade as valid IR component types
   - that issue was fixed and re-verified in the same closure session
+- current runtime diagnosis is now explicit:
+  - `pnpm --dir lib doctor:profile` shows `20.77s` of `20.88s` total runtime inside `nonStandardRescue`
+  - the problematic doctor fixture currently requires `1159` rescue retries and produces `1159` warnings
+  - isolated `doctor.integration.test.ts` is `23.76s real`
+  - full `pnpm test:transforms` is `25.88s real`
+  - full suite with `--maxWorkers=1` is `45.73s real`
+  - the canonical doctor proof now carries a `60s` test-local timeout so the gate reflects measured runtime while redesign is pending
+  - the completed implementation record for that diagnosis now lives in `current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`
 - current next-session priority is therefore:
   - reproduce any user-reported issue first
-  - use the active planning stub to choose the next smallest honest atomic slice from the paused Zod limitations workstream
-  - replace the planning stub once that concrete slice is chosen
+  - implement doctor rescue-loop runtime redesign from the active plan
+  - leave transform harness scheduling unchanged unless new evidence disproves the rescue-loop diagnosis
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
 - the Characterisation boundary cluster is complete
@@ -68,6 +76,7 @@ Current status of that track:
   - default-path generated object outputs are explicit about strictness where the target can represent it honestly
   - recursive strict Zod parser/writer lockstep is closed around `z.strictObject({...})`
 - the broader Zod limitations investigation and recursive preserving-mode investigation remain paused as context rather than the primary `active/` plan
+- recursive preserving-mode emission is not the live candidate after ADR-040; it remains historical context only
 - the primary numeric doctrine is now implemented:
   - IR carries first-class integer semantics for `int64` and `bigint`
   - direct `z.bigint()` parses to `integerSemantics: 'bigint'`
@@ -78,7 +87,7 @@ Current status of that track:
   - ADR-041 now records the reusable native-capability seam pattern for future type-specific format gaps
 - remaining closure / platform work now remains:
   - reproduce any user-reported gate failures first
-  - choose and activate the next Zod limitations atomic slice
+  - redesign the doctor rescue loop so the transform gate cost reflects real proof value rather than one-error-per-pass repair churn
   - keep the now-recorded standards-based native-capability matrix, roadmap, and prompts aligned
   - keep ADR-041, the matrix, and seam-specific docs aligned when similar future seams appear
   - keep the JS/TS Temporal-first date-time doctrine as a separate follow-on plan outside the active slice
@@ -101,6 +110,7 @@ Paused supporting context that remains important:
 
 Recently completed adjacent remediation:
 
+- [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
@@ -300,6 +310,7 @@ Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/pha
 
 Current Zod workstream context:
 
+- [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
 - [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)

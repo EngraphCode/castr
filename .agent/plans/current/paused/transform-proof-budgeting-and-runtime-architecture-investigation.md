@@ -2,14 +2,36 @@
 
 **Status:** Paused  
 **Created:** 2026-03-09  
-**Last Updated:** 2026-03-10  
+**Last Updated:** 2026-03-13  
 **Predecessor:** Emerged from Zod limitations architecture investigation  
-**Related:** `../complete/strict-object-semantics-enforcement.md`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./zod-limitations-architecture-investigation.md`, `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-040`, `../complete/type-safety-remediation.md`
+**Related:** `../complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`, `../complete/strict-object-semantics-enforcement.md`, `./recursive-unknown-key-preserving-zod-emission-investigation.md`, `./zod-limitations-architecture-investigation.md`, `docs/architecture/zod-round-trip-limitations.md`, `ADR-031`, `ADR-032`, `ADR-035`, `ADR-040`, `../complete/type-safety-remediation.md`
 
 ---
 
 **Paused On:** 2026-03-09  
-**Pause Reason:** This companion investigation remains paused while [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md) is the primary active plan. Pull this companion work forward only if transform-proof runtime questions become the highest-leverage blocker again.
+**Pause Reason:** This companion investigation remains paused while [zod-limitations-next-atomic-slice-planning.md](../../active/zod-limitations-next-atomic-slice-planning.md) is the primary active plan. The tranche-zero cost map and doctor runtime decision are now recorded in [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md). Pull this companion work forward again only if scheduling, setup churn, or another non-doctor runtime question becomes the highest-leverage blocker.
+
+## Status Since Pause (2026-03-13)
+
+The repo no longer needs to restart this investigation from first principles.
+
+What is already answered:
+
+- `doctor.integration.test.ts` remains the dominant transform proof:
+  - isolated `23.76s real`
+  - full `pnpm test:transforms` `25.88s real`
+  - serialized full suite `45.73s real`
+- default concurrency is materially better than serialized execution
+- `pnpm --dir lib doctor:profile` shows `20.77s` of `20.88s` total inside `nonStandardRescue`
+- the problematic fixture currently requires `1159` rescue retries and produces `1159` warnings
+- the canonical doctor proof now carries a `60s` test-local timeout because full-suite contention currently pushes it past the old `30s` ceiling
+- the next honest slice is doctor rescue-loop redesign, not harness splitting
+
+What remains legitimately paused here:
+
+- whether future transform-proof scheduling needs a dedicated heavy-proof lane after rescue-loop redesign lands
+- whether repeated transform-adjacent setup churn, especially around Zod parsing/generation, becomes a first-order runtime concern
+- whether ADR-035 should later absorb a stronger durable proof-budget policy once redesign results exist
 
 ## Baseline Hygiene Update (2026-03-10)
 
@@ -23,9 +45,9 @@ Future runtime investigation should therefore treat current transform and charac
 
 ## Summary
 
-This plan is for **investigation and architectural decision-making only**. Do **not** start product-code remediation in this plan unless a later user explicitly asks for implementation after the investigation is complete.
+This plan remains for **investigation and architectural decision-making only**. Do **not** start product-code remediation from this paused file unless a later user explicitly reactivates it after new evidence changes the runtime priorities.
 
-The goal is to help the next session determine:
+The remaining goal of this paused companion is to help a later session determine, if rescue-loop redesign does not fully close the runtime issue:
 
 1. how heavy transform proofs should be scheduled and budgeted without weakening strictness
 2. whether current transform-suite instability is caused by test-harness contention, architectural cost in product code, or both
@@ -123,6 +145,8 @@ The investigation is successful only if all of the following are true:
 ---
 
 ## Tranche 0: Establish The Cost Map
+
+Historical note: this tranche is already complete. Use the measurement table in [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md) as the current default baseline unless new evidence contradicts it.
 
 Before proposing any architectural answer, do the following:
 

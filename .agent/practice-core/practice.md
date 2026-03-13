@@ -179,6 +179,7 @@ graph LR
   5. **Platform-specific plans** — e.g. `.cursor/plans/*.plan.md` (Cursor plans) supplement the lowest-level active plans with session-scoped implementation tasks, batch breakdowns, and review checkpoints. These are created per-session and track fine-grained progress that is too ephemeral for the active plan itself
   6. **Value traceability** — every non-trivial plan states the outcome sought, the impact it should create, and the mechanism by which that impact creates value; otherwise the work is still under-framed
   7. **Documentation propagation** — before phase closure, propagate settled outcomes from plans into permanent docs: relevant ADRs, `.agent/practice-core/practice.md`, and any additionally impacted docs/READMEs. Apply the consolidate-docs command
+  8. **Lineage preservation when rewriting active stubs** — if an active planning stub or diagnostic scaffold is rewritten in place into the chosen implementation plan, create a completed record for that bridge decision rather than letting it disappear into the rewritten file. The active successor should then point back to that completed record explicitly.
 - **Quality gates** — see `.agent/directives/principles.md` and the local quality-gate commands. All gates are always blocking.
 
 ## Artefact Map
