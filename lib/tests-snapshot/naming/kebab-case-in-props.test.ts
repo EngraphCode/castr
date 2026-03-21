@@ -15,10 +15,10 @@ test('kebab-case-in-props', () => {
   ).toMatchInlineSnapshot(
     `
     {
-        "code": "z.object({
+        "code": "z.strictObject({
       'kebab-case': z.number().optional(),
       lowercase: z.string().optional(),
-    }).strip()",
+    })",
         "schema": {
             "properties": {
                 "kebab-case": {

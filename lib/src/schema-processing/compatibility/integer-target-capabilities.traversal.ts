@@ -7,7 +7,6 @@ import type {
   IRMediaType,
   IRRequestBody,
 } from '../ir/index.js';
-import { UNKNOWN_KEY_MODE_CATCHALL } from '../ir/index.js';
 
 export type SchemaVisitor = (schema: CastrSchema, seen: Set<CastrSchema>) => void;
 
@@ -56,10 +55,6 @@ export function visitSchemaChildren(
 ): void {
   visitSchemaCollection(schema.properties?.values(), seen, visitSchema);
   visitSchemaVariant(schema.additionalProperties, seen, visitSchema);
-
-  if (schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_CATCHALL) {
-    visitSchemaValue(schema.unknownKeyBehavior.schema, seen, visitSchema);
-  }
 
   if (Array.isArray(schema.items)) {
     visitSchemaCollection(schema.items, seen, visitSchema);

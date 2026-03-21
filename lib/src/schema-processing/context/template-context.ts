@@ -4,7 +4,6 @@ import type {
   SchemaObject,
   OperationObject,
 } from 'openapi3-ts/oas31';
-import type { NonStrictObjectPolicyOptions } from '../non-strict-object-policy.js';
 
 // Import helpers from modules
 import {
@@ -46,7 +45,7 @@ export interface TemplateContext {
   _ir?: CastrDocument;
 }
 
-export interface TemplateContextOptions extends NonStrictObjectPolicyOptions {
+export interface TemplateContextOptions {
   groupStrategy?: 'none' | 'tag' | 'method' | 'tag-file' | 'method-file';
   shouldExportAllTypes?: boolean;
   /**
@@ -81,8 +80,6 @@ export interface TemplateContextOptions extends NonStrictObjectPolicyOptions {
     operation: OperationObject,
   ) => EndpointDefinition | undefined;
   allReadonly?: boolean;
-  strictObjects?: boolean;
-  additionalPropertiesDefaultValue?: boolean | SchemaObject;
   withAllResponses?: boolean;
   exportAllNamedSchemas?: boolean;
   schemaRefiner?: <T extends SchemaObject | ReferenceObject>(
@@ -121,9 +118,7 @@ export const getTemplateContext = (
   options?: TemplateContextOptions,
 ): TemplateContext => {
   // Build IR document - Source of Truth (Cardinal Rule: after this, only IR matters)
-  const irDocument = buildIR(doc, {
-    nonStrictObjectPolicy: options?.nonStrictObjectPolicy,
-  });
+  const irDocument = buildIR(doc);
 
   // Use IR for schema names and dependency graph (no raw doc access)
   const deepDependencyGraph = getDeepDependencyGraphFromIR(irDocument);
@@ -205,7 +200,7 @@ export { extractSchemaNamesFromDoc } from './schemas/template-context.schemas.js
  * const doc = await prepareOpenApiDocument('./api.yaml');
  * const context = getZodClientTemplateContext(doc, {
  *   withAlias: true,
- *   strictObjects: true,
+ *   withAlias: true,
  * });
  *
  * // Access generated schemas

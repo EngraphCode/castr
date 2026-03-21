@@ -26,10 +26,10 @@ test('schema-refiner', () => {
   ).toMatchInlineSnapshot(
     `
     {
-        "code": "z.object({
+        "code": "z.strictObject({
       email: z.string().optional(),
       name: z.string().optional(),
-    }).strip()",
+    })",
         "schema": {
             "properties": {
                 "email": {

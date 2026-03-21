@@ -7,9 +7,9 @@
 ---
 
 > [!IMPORTANT]
-> On 2026-03-11, [ADR-040](../architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) changed the forward product direction for object schemas to default strict generation, reject-by-default ingest, and one explicit lossy strip-normalization compatibility mode.
+> On 2026-03-21, [IDENTITY.md](../../.agent/IDENTITY.md) established that Castr has one object model: closed-world with explicit properties. The strip-normalization compatibility mode from [ADR-040](../architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) has been removed. `unknownKeyBehavior` has been removed from the IR entirely.
 >
-> That enforcement is now in place. This document keeps only the remaining durable limitations plus the historical context needed to explain why the compatibility path is deliberately lossy.
+> This document keeps only the remaining durable limitations plus the historical context needed to explain why non-strict object semantics were investigated and ultimately rejected.
 
 ## Purpose
 
@@ -27,16 +27,16 @@ Each unresolved limitation below is documented with:
 
 ---
 
-## Resolved: Strict-By-Default Object Enforcement
+## Resolved: Strict-Only Object Enforcement
 
-Current object doctrine is now implemented:
+Current object doctrine is now implemented per [IDENTITY.md](../../.agent/IDENTITY.md):
 
-- non-strict object inputs reject by default across Zod, OpenAPI, and JSON Schema ingest
-- one explicit compatibility mode may normalize non-strict object inputs to strip semantics
+- non-strict object inputs are rejected unconditionally across Zod, OpenAPI, and JSON Schema ingest
+- `unknownKeyBehavior` has been removed from the IR entirely
 - default generated strict objects emit `z.strictObject({...})`
-- compatibility-normalized recursive strip output remains bare `z.object({...})` for runtime safety
+- strip normalization belongs in the doctor (`repairOpenApiDocument`) only, not in the core pipeline
 
-The remaining object-related material below is historical context explaining why the compatibility path is intentionally lossy and why preserving recursive passthrough / catchall is no longer the active product target.
+The remaining object-related material below is historical context explaining why non-strict object semantics were investigated and why preserving recursive passthrough / catchall was rejected as a product direction.
 
 ---
 
@@ -104,10 +104,9 @@ Recursive object schemas still cannot safely emit unknown-key-preserving output 
 
 Current forward behavior under ADR-040 is:
 
-- default ingest rejects non-strict object input with an explicit `nonStrictObjectPolicy: 'strip'` hint
-- compatibility-mode ingest normalizes strip / passthrough / catchall input to strip IR only
+- default ingest rejects non-strict object input unconditionally
 - default strict Zod output uses `z.strictObject({...})`
-- compatibility-mode recursive strip output remains supported via bare `z.object({...})`, which is strip-mode by default in Zod
+- recursive unknown-key-preserving output is intentionally unsupported in canonical generation
 
 Architecture status:
 
@@ -175,6 +174,7 @@ See:
 - [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md)
 - [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 - [recursive-unknown-key-semantics.md](./recursive-unknown-key-semantics.md)
+- [zod-and-transform-future-investigations.md](../../.agent/plans/future/zod-and-transform-future-investigations.md) — consolidated reopen triggers and `z.looseObject()` candidate analysis
 
 ---
 

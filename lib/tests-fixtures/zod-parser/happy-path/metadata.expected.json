@@ -209,9 +209,6 @@
       },
       "required": ["id", "email", "createdAt"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,

@@ -50,12 +50,10 @@ it('use main-description-as-fallback', async () => {
       str: string;
     };
     // Zod Schemas
-    export const Main = z
-      .object({
-        nb: z.number(),
-        str: z.string(),
-      })
-      .strip();
+    export const Main = z.strictObject({
+      nb: z.number(),
+      str: z.string(),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -63,21 +61,17 @@ it('use main-description-as-fallback', async () => {
         path: "/example",
         requestFormat: "json",
         parameters: [],
-        response: z
-          .object({
-            nb: z.number(),
-            str: z.string(),
-          })
-          .strip(),
+        response: z.strictObject({
+          nb: z.number(),
+          str: z.string(),
+        }),
         errors: [],
         responses: {
           200: {
-            schema: z
-              .object({
-                nb: z.number(),
-                str: z.string(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              nb: z.number(),
+              str: z.string(),
+            }),
             description: "get example",
           },
         },
@@ -96,8 +90,7 @@ it('use main-description-as-fallback', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

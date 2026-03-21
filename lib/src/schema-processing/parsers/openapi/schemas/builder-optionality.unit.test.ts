@@ -1,9 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { buildIR as buildIRBase } from '../index.js';
+import { buildIR } from '../index.js';
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-
-const TEST_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
-const buildIR = (doc: OpenAPIObject) => buildIRBase(doc, TEST_NON_STRICT_OBJECT_POLICY);
 
 describe('IR Builder - Component Schema Optionality', () => {
   it('should mark component schemas as required by default', () => {

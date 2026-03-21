@@ -71,16 +71,12 @@ test('array-oneOf-discriminated-union', async () => {
     // Zod Schemas
     export const ArrayRequest = z.array(
       z.xor([
-        z
-          .object({
-            type: z.literal("a"),
-          })
-          .strip(),
-        z
-          .object({
-            type: z.literal("b"),
-          })
-          .strip(),
+        z.strictObject({
+          type: z.literal("a"),
+        }),
+        z.strictObject({
+          type: z.literal("b"),
+        }),
       ]),
     );
     // Endpoints
@@ -126,15 +122,13 @@ test('array-oneOf-discriminated-union', async () => {
                       type: "object",
                       properties: { type: { type: "string", enum: ["a"] } },
                       required: ["type", "a"],
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
+                      additionalProperties: false,
                     },
                     {
                       type: "object",
                       properties: { type: { type: "string", enum: ["b"] } },
                       required: ["type", "b"],
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
+                      additionalProperties: false,
                     },
                   ],
                 },

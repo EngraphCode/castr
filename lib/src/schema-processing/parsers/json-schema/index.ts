@@ -25,7 +25,6 @@ import type { JsonSchema2020 } from './json-schema-parser.core.js';
 import { parseJsonSchemaObject, createDefaultMetadata } from './json-schema-parser.core.js';
 import { normalizeDraft07 } from './normalization/index.js';
 import type { Draft07Input } from './normalization/index.js';
-import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
 
 /**
  * Parse a JSON Schema (Draft 07 or 2020-12) into CastrSchema IR.
@@ -36,12 +35,9 @@ import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-polic
  * @returns CastrSchema IR node
  * @public
  */
-export function parseJsonSchema(
-  input: Draft07Input,
-  options?: NonStrictObjectPolicyOptions,
-): CastrSchema {
+export function parseJsonSchema(input: Draft07Input): CastrSchema {
   const normalized = normalizeDraft07(input);
-  return parseJsonSchemaObject(normalized, options);
+  return parseJsonSchemaObject(normalized);
 }
 
 /**
@@ -51,18 +47,12 @@ export function parseJsonSchema(
  * @returns Array of IR schema components
  * @public
  */
-export function parseJsonSchemaDocument(
-  input: Draft07Input,
-  options?: NonStrictObjectPolicyOptions,
-): CastrSchemaComponent[] {
+export function parseJsonSchemaDocument(input: Draft07Input): CastrSchemaComponent[] {
   const normalized = normalizeDraft07(input);
-  return extractDefsAsComponents(normalized, options);
+  return extractDefsAsComponents(normalized);
 }
 
-function extractDefsAsComponents(
-  normalized: JsonSchema2020,
-  options?: NonStrictObjectPolicyOptions,
-): CastrSchemaComponent[] {
+function extractDefsAsComponents(normalized: JsonSchema2020): CastrSchemaComponent[] {
   const components: CastrSchemaComponent[] = [];
   const defs = normalized.$defs;
   if (defs === undefined) {
@@ -73,7 +63,7 @@ function extractDefsAsComponents(
     if (isReferenceObject(defSchema)) {
       continue;
     }
-    const schema = parseJsonSchemaObject(defSchema, options);
+    const schema = parseJsonSchemaObject(defSchema);
     components.push(buildComponent(name, schema));
   }
 

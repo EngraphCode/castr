@@ -1,6 +1,6 @@
 # Roadmap: @engraph/castr
 
-**Date:** January 24, 2026 (Updated March 20, 2026)  
+**Date:** January 24, 2026 (Updated March 21, 2026)  
 **Status:** Active  
 **Quality Gates:** Must be green at all times (see `.agent/directives/DEFINITION_OF_DONE.md`)
 
@@ -33,86 +33,43 @@ Any Input Format → Parser → IR (CastrDocument) → Writers → Any Output Fo
 
 ## Current Active Workstream
 
-The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, and doctor rescue-loop runtime redesign slice are complete. The repo's active next-work track is now selecting the next honest atomic slice.
+The Practice integration slice, core agent-system installation slice, type-safety remediation workstream, strict object semantics enforcement slice, `int64` / `bigint` remediation closure slice, doctor runtime-characterisation slice, doctor rescue-loop runtime redesign slice, and IDENTITY doctrine-alignment slice are complete.
 
-Current status of that track:
+The primary active work is now a bounded post-implementation architecture review sweep.
+
+Current status of that sweep:
 
 - doctrinal alignment remains locked in
 - `as const` remains allowed literal-preservation infrastructure
 - `unknown` is valid only at incoming external boundaries and must be validated immediately
 - after validation, all types remain strict and no type information may be discarded or widened away
-- the full repo-root gate sweep was green on Thursday, 20 March 2026
-- the completed `int64` / `bigint` closure slice fixed three real correctness gaps:
-  - preserved raw OpenAPI components now survive IR validation and deserialisation
-  - raw OpenAPI schema objects with `$ref` plus sibling integer-format fields now fail fast for OpenAPI 3.1 capability checks
-  - JSON Schema `$ref` plus sibling `int64` / `bigint` input now rejects before the plain-ref early return
-- the final manual in-session review, using the local reviewer templates rather than nested reviewer runs, surfaced one additional discriminator-validator hole:
-  - inherited object keys such as `toString` could masquerade as valid IR component types
-  - that issue was fixed and re-verified in the same closure session
-- doctor rescue-loop runtime redesign is complete (2026-03-20):
-  - Family 1 (All-Errors Preflight Batch Rescue) was implemented using a repo-local AJV `allErrors: true` validator
-  - `rescueRetryCount` reduced from `1,159` to `1`
-  - `nonStandardRescue` reduced from `20,770ms` to `31.79ms`
-  - isolated `doctor.integration.test.ts` reduced from `23.76s` to `0.53s` real
-  - full `pnpm test:transforms` reduced from `25.88s` to `6.92s` real
-  - the doctor-proof timeout has been reduced from `60s` to `10s`
-  - `warningCount` increased from `1,159` to `1,954` because the preflight finds more properties
-  - the completed plan is recorded in `active/zod-limitations-next-atomic-slice-planning.md`
-- current next-session priority is therefore:
-  - reproduce any user-reported issue first
-  - select the next honest atomic slice from the paused investigations
-  - the doctor-proof timeout has already been reduced from `60s` to `10s`
-  - leave transform harness scheduling unchanged unless new evidence disproves the current state
+- the full repo-root gate sweep was green on Saturday, 21 March 2026
+- IDENTITY doctrine alignment is complete:
+  - parser honesty restored for non-object `additionalProperties`
+  - public strictness/compatibility surfaces removed
+  - `CastrSchemaProperties` runtime detection hardened across realms
+- the next honest work is not new implementation; it is to validate the repo's architecture pack by pack against the code on disk
+- the paused JSON Schema parser plan must stay paused until the review sweep explicitly says it is fit to reactivate
 - all quality-gate issues, including warning-producing gate noise, are blocking at all times
 - if a user says there are gate or runtime issues, that report is active session truth and must be reproduced immediately
-- the Characterisation boundary cluster is complete
-- the MCP from-IR test cluster is complete
-- the Shared loader and utility cluster is complete
-- the Snapshot regression cluster is complete
-- the remaining parser/writer low-count cluster is complete
-- strict object semantics enforcement is complete:
-  - non-strict object inputs now reject by default across Zod / OpenAPI / JSON Schema
-  - one shared opt-in ingest surface now exists:
-    - `nonStrictObjectPolicy: 'reject' | 'strip'`
-  - compatibility normalization is strip-only and deliberately lossy
-  - default-path generated object outputs are explicit about strictness where the target can represent it honestly
-  - recursive strict Zod parser/writer lockstep is closed around `z.strictObject({...})`
-- the broader Zod limitations investigation and recursive preserving-mode investigation remain paused as context rather than the primary `active/` plan
-- recursive preserving-mode emission is not the live candidate after ADR-040; it remains historical context only
-- the primary numeric doctrine is now implemented:
-  - IR carries first-class integer semantics for `int64` and `bigint`
-  - direct `z.bigint()` parses to `integerSemantics: 'bigint'`
-  - direct `z.int64()` and OpenAPI `format: int64` parse to `integerSemantics: 'int64'`
-  - OpenAPI 3.1 output rejects arbitrary-precision `bigint`
-  - JSON Schema 2020-12 output rejects both `int64` and `bigint`
-  - TypeScript output emits `bigint` for both `int64` and `bigint` semantics
-  - ADR-041 now records the reusable native-capability seam pattern for future type-specific format gaps
-- remaining closure / platform work now remains:
-  - reproduce any user-reported gate failures first
-  - the doctor-proof timeout has been reduced from `60s` to `10s` since the rescue-loop redesign made the proof run in under 1s
-  - keep the now-recorded standards-based native-capability matrix, roadmap, and prompts aligned
-  - keep ADR-041, the matrix, and seam-specific docs aligned when similar future seams appear
-  - keep the JS/TS Temporal-first date-time doctrine as a separate follow-on plan outside the active slice
-  - keep the "no custom portable types for now" stance explicit rather than implying planned future product work
-- UUID subtype semantics are now preserved in IR/native Zod output and widen only across standard portable detours
-- `int64` / `bigint` is now a completed slice recorded under `current/complete/`
-- future follow-on plan now exists for:
-  - [temporal-first-js-ts-date-time-doctrine.md](./future/temporal-first-js-ts-date-time-doctrine.md)
 - custom portable types remain deliberately unsupported for now and are not currently planned work
 
 Primary active atomic plan:
 
-- [zod-limitations-next-atomic-slice-planning.md](./active/zod-limitations-next-atomic-slice-planning.md)
+- [architecture-review-packs.md](./active/architecture-review-packs.md) — post-IDENTITY bounded architecture review sweep
+
+Paused successor:
+
+- [json-schema-parser.md](./current/paused/json-schema-parser.md) — queued implementation context; blocked on review-pack verdicts
 
 Paused supporting context that remains important:
 
-- [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
-- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- None currently active
 
 Recently completed adjacent remediation:
 
 - [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
+- [identity-doctrine-alignment.md](./current/complete/identity-doctrine-alignment.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
 - [type-safety-remediation.md](./current/complete/type-safety-remediation.md)
@@ -305,20 +262,22 @@ Session 3.3 is complete. Phase 4 focuses on JSON Schema support and post-3.3 par
 
 - ✅ Component 1: Shared JSON Schema field logic extracted from OpenAPI writer into `writers/shared/`
 - ✅ Component 2: JSON Schema Writer (`writers/json-schema/`) — standalone, document, and bundled modes
-- 🔲 Component 3: JSON Schema Parser (next)
+- ✅ **IDENTITY Alignment: Strict-Only Object Semantics** — [complete plan](./current/complete/identity-doctrine-alignment.md)
+- ⏸️ Component 3: JSON Schema Parser — [paused plan](./current/paused/json-schema-parser.md) pending architecture review-pack verdicts
 - 🔲 Component 4: Multi-Cast Parity Rig
 
 Strategic phase plan: [phase-4-json-schema-and-parity.md](./current/complete/phase-4-json-schema-and-parity.md)
 
-Current Zod workstream context:
-
+- [doctor-rescue-loop-runtime-redesign.md](./current/complete/doctor-rescue-loop-runtime-redesign.md)
 - [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](./current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
 - [strict-object-semantics-enforcement.md](./current/complete/strict-object-semantics-enforcement.md)
-- [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
-- [zod-limitations-architecture-investigation.md](./current/paused/zod-limitations-architecture-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+- [zod-limitations-architecture-investigation.md](./current/complete/zod-limitations-architecture-investigation.md)
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](./current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](./current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md)
 - [int64-bigint-semantics-investigation.md](./current/complete/int64-bigint-semantics-investigation.md)
 - [recursive-unknown-key-semantics-remediation.md](./current/complete/recursive-unknown-key-semantics-remediation.md)
+
+Residual future threads: [zod-and-transform-future-investigations.md](./future/zod-and-transform-future-investigations.md)
 
 ## Phase 5: Ecosystem Expansion (Planned)
 
@@ -359,13 +318,13 @@ After Session 3.3 transform-validation closure, prioritize the parity workstream
 
 ## Supported Formats (Current)
 
-| Format          | Input | Output | Status / Notes                                     |
-| --------------- | :---: | :----: | -------------------------------------------------- |
-| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output (proven)    |
-| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4       |
-| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)                 |
-| **JSON Schema** |  🔲   |   🔲   | Deferred (internal conversions exist for MCP only) |
-| **tRPC**        |  🔲   |   🔲   | Planned                                            |
+| Format          | Input | Output | Status / Notes                                  |
+| --------------- | :---: | :----: | ----------------------------------------------- |
+| **OpenAPI**     |  ✅   |   ✅   | 2.0 input-only; 3.x input → 3.1 output (proven) |
+| **Zod**         |  ✅   |   ✅   | Input: Session 3.2 complete; output is Zod 4    |
+| **TypeScript**  |   —   |   ✅   | Writer available (types + helpers)              |
+| **JSON Schema** |  ✅   |   ✅   | Writer complete; Parser complete (2020-12)      |
+| **tRPC**        |  🔲   |   🔲   | Planned                                         |
 
 ---
 

@@ -74,17 +74,13 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
       .min(6)
       .max(255)
       .regex(/\\/(EmailRegex)\\//);
-    export const AddUser = z
-      .object({
-        email: Email,
-        password: Password,
-      })
-      .strip();
-    export const PasswordReminder = z
-      .object({
-        email: Email,
-      })
-      .strip();
+    export const AddUser = z.strictObject({
+      email: Email,
+      password: Password,
+    });
+    export const PasswordReminder = z.strictObject({
+      email: Email,
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -160,8 +156,7 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
                   },
                 },
                 required: ["email", "password"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
             },
             required: ["body"],
@@ -201,8 +196,7 @@ test('missing-zod-chains-on-z-object-with-refs-props', async () => {
                   },
                 },
                 required: ["email"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
             },
             required: ["body"],

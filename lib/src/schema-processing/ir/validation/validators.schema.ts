@@ -1,14 +1,7 @@
-import { isEqual } from 'lodash-es';
 import type { CastrSchema, CastrSchemaNode } from '../models/schema.js';
-import { CastrSchemaProperties } from '../models/schema.js';
+import { isCastrSchemaProperties } from '../../../shared/type-utils/type-guards.js';
 import { type UnknownRecord, isRecord } from '../../../shared/type-utils/types.js';
-import {
-  UNKNOWN_KEY_MODE_CATCHALL,
-  UNKNOWN_KEY_MODE_PASSTHROUGH,
-  UNKNOWN_KEY_MODE_STRICT,
-  UNKNOWN_KEY_MODE_STRIP,
-  isObjectSchemaType,
-} from '../unknown-key-behavior.js';
+import { isObjectSchemaType } from '../unknown-key-behavior.js';
 import { hasValidSchemaIntegerSemantics } from './validators.integer.js';
 import { hasValidSchemaUuidVersion } from './validators.uuid.js';
 
@@ -30,7 +23,6 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
   return (
     hasValidSchemaAdditionalProperties(value) &&
     hasValidSchemaProperties(value) &&
-    hasValidSchemaUnknownKeyBehavior(value) &&
     hasValidSchemaIntegerSemantics(value) &&
     hasValidSchemaUuidVersion(value) &&
     isRecord(value['metadata'])
@@ -50,15 +42,7 @@ function hasValidSchemaProperties(value: UnknownRecord): boolean {
     return true;
   }
 
-  return value['properties'] instanceof CastrSchemaProperties;
-}
-
-function hasValidSchemaUnknownKeyBehavior(value: UnknownRecord): boolean {
-  if (!('unknownKeyBehavior' in value) || value['unknownKeyBehavior'] === undefined) {
-    return true;
-  }
-
-  return isValidUnknownKeyBehavior(value, value['unknownKeyBehavior']);
+  return isCastrSchemaProperties(value['properties']);
 }
 
 function isValidAdditionalProperties(schema: UnknownRecord, value: unknown): boolean {
@@ -67,37 +51,6 @@ function isValidAdditionalProperties(schema: UnknownRecord, value: unknown): boo
   }
 
   return typeof value === 'boolean' || isCastrSchema(value);
-}
-
-function isValidUnknownKeyBehavior(schema: UnknownRecord, value: unknown): boolean {
-  if (!isObjectSchemaRecord(schema) || !isRecord(value)) {
-    return false;
-  }
-
-  const additionalProperties = schema['additionalProperties'];
-
-  switch (value['mode']) {
-    case UNKNOWN_KEY_MODE_STRICT:
-      return additionalProperties === false;
-    case UNKNOWN_KEY_MODE_STRIP:
-    case UNKNOWN_KEY_MODE_PASSTHROUGH:
-      return additionalProperties === true;
-    case UNKNOWN_KEY_MODE_CATCHALL:
-      return hasMatchingCatchallSchema(additionalProperties, value['schema']);
-    default:
-      return false;
-  }
-}
-
-function hasMatchingCatchallSchema(
-  additionalProperties: unknown,
-  catchallSchema: unknown,
-): boolean {
-  return (
-    isCastrSchema(catchallSchema) &&
-    isCastrSchema(additionalProperties) &&
-    isEqual(additionalProperties, catchallSchema)
-  );
 }
 
 function isSchemaTypeEntry(
@@ -136,7 +89,7 @@ function isObjectSchemaRecord(schema: UnknownRecord): boolean {
     return true;
   }
 
-  return schema['properties'] instanceof CastrSchemaProperties;
+  return isCastrSchemaProperties(schema['properties']);
 }
 
 export function isCastrSchemaNode(value: unknown): value is CastrSchemaNode {

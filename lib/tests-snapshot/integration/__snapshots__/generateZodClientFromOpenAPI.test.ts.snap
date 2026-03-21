@@ -56,7 +56,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -76,10 +76,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -97,10 +96,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -114,10 +112,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -127,10 +124,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -164,17 +160,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -193,15 +187,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -571,11 +563,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -1012,9 +1004,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -1046,17 +1037,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -1076,9 +1065,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -1110,17 +1098,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1185,9 +1171,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -1219,17 +1204,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -1249,9 +1232,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -1283,17 +1265,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1376,9 +1356,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -1410,17 +1389,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -1500,9 +1477,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -1534,17 +1510,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -1626,9 +1600,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -1660,17 +1633,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -1890,9 +1861,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -1940,11 +1910,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2007,9 +1973,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -2039,9 +2004,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -2110,9 +2074,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -2204,9 +2167,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -2264,9 +2226,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -2296,9 +2257,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -2420,9 +2380,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -2473,9 +2432,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -2597,7 +2555,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -2617,10 +2575,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -2638,10 +2595,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -2655,10 +2611,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -2668,10 +2623,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -2705,17 +2659,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -2734,15 +2686,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -3133,9 +3083,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -3167,17 +3116,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -3197,9 +3144,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -3231,17 +3177,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -3306,9 +3250,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -3340,17 +3283,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -3370,9 +3311,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -3404,17 +3344,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -3497,9 +3435,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -3531,17 +3468,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -3621,9 +3556,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -3655,17 +3589,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -3747,9 +3679,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -3781,17 +3712,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -4011,9 +3940,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -4061,11 +3989,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -4128,9 +4052,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -4160,9 +4083,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -4231,9 +4153,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -4325,9 +4246,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -4385,9 +4305,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -4417,9 +4336,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -4541,9 +4459,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -4594,9 +4511,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -4718,7 +4634,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -4738,10 +4654,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -4759,10 +4674,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -4776,10 +4690,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -4789,10 +4702,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -4826,17 +4738,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -4855,15 +4765,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -5233,11 +5141,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -5674,9 +5582,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -5708,17 +5615,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -5738,9 +5643,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -5772,17 +5676,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -5847,9 +5749,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -5881,17 +5782,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -5911,9 +5810,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -5945,17 +5843,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6038,9 +5934,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -6072,17 +5967,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -6162,9 +6055,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -6196,17 +6088,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -6288,9 +6178,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -6322,17 +6211,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -6552,9 +6439,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6602,11 +6488,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -6669,9 +6551,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -6701,9 +6582,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6772,9 +6652,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -6866,9 +6745,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -6926,9 +6804,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -6958,9 +6835,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7082,9 +6958,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7135,9 +7010,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -7259,7 +7133,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -7279,10 +7153,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -7300,10 +7173,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -7317,10 +7189,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -7330,10 +7201,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -7367,17 +7237,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -7396,15 +7264,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -7774,11 +7640,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -8215,9 +8081,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -8249,17 +8114,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -8279,9 +8142,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -8313,17 +8175,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8388,9 +8248,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -8422,17 +8281,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -8452,9 +8309,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -8486,17 +8342,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8579,9 +8433,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -8613,17 +8466,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -8703,9 +8554,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -8737,17 +8587,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -8829,9 +8677,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -8863,17 +8710,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9093,9 +8938,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9143,11 +8987,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -9210,9 +9050,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -9242,9 +9081,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9313,9 +9151,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9407,9 +9244,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -9467,9 +9303,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -9499,9 +9334,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9623,9 +9457,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9676,9 +9509,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -9800,7 +9632,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -9820,10 +9652,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -9841,10 +9672,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -9858,10 +9688,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -9871,10 +9700,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -9908,17 +9736,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -9937,15 +9763,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -10315,11 +10139,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -10756,9 +10580,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -10790,17 +10613,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -10820,9 +10641,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -10854,17 +10674,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -10929,9 +10747,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -10963,17 +10780,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -10993,9 +10808,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -11027,17 +10841,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11120,9 +10932,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -11154,17 +10965,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -11244,9 +11053,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -11278,17 +11086,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -11370,9 +11176,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -11404,17 +11209,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11634,9 +11437,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11684,11 +11486,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -11751,9 +11549,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -11783,9 +11580,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11854,9 +11650,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11948,9 +11743,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -12008,9 +11802,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -12040,9 +11833,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -12164,9 +11956,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -12217,9 +12008,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -12341,7 +12131,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -12361,10 +12151,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -12382,10 +12171,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -12399,10 +12187,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -12412,10 +12199,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -12449,17 +12235,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -12478,15 +12262,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -12856,11 +12638,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -13297,9 +13079,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -13331,17 +13112,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -13361,9 +13140,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -13395,17 +13173,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -13470,9 +13246,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -13504,17 +13279,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -13534,9 +13307,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -13568,17 +13340,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -13661,9 +13431,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -13695,17 +13464,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -13785,9 +13552,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -13819,17 +13585,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -13911,9 +13675,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -13945,17 +13708,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -14175,9 +13936,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -14225,11 +13985,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -14292,9 +14048,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -14324,9 +14079,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -14395,9 +14149,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -14489,9 +14242,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -14549,9 +14301,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -14581,9 +14332,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -14705,9 +14455,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -14758,9 +14507,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -14882,7 +14630,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -14902,10 +14650,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -14923,10 +14670,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -14940,10 +14686,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -14953,10 +14698,9 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -14990,17 +14734,15 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -15019,15 +14761,13 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -15397,11 +15137,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -15838,9 +15578,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -15872,17 +15611,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -15902,9 +15639,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -15936,17 +15672,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -16011,9 +15745,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -16045,17 +15778,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -16075,9 +15806,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -16109,17 +15839,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -16202,9 +15930,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -16236,17 +15963,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -16326,9 +16051,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -16360,17 +16084,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -16452,9 +16174,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -16486,17 +16207,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -16716,9 +16435,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -16766,11 +16484,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -16833,9 +16547,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -16865,9 +16578,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -16936,9 +16648,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -17030,9 +16741,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -17090,9 +16800,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -17122,9 +16831,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -17246,9 +16954,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -17299,9 +17006,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -17389,7 +17095,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "Order",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -17553,9 +17259,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "order",
                     },
@@ -17580,7 +17283,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "Customer",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -17689,9 +17392,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "customer",
                     },
@@ -17716,7 +17416,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "Address",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -17823,9 +17523,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "address",
                     },
@@ -17850,7 +17547,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "Category",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -17919,9 +17616,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "category",
                     },
@@ -17946,7 +17640,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "User",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -18146,9 +17840,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "user",
                     },
@@ -18173,7 +17864,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "Tag",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -18236,9 +17927,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "tag",
                     },
@@ -18263,7 +17951,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "Pet",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -18459,9 +18147,6 @@ exports[`getZodClientTemplateContext 1`] = `
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -18486,7 +18171,7 @@ exports[`getZodClientTemplateContext 1`] = `
                 },
                 "name": "ApiResponse",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -18566,9 +18251,6 @@ exports[`getZodClientTemplateContext 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "##default",
                     },
@@ -20543,7 +20225,7 @@ Some useful links:
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "metadata": {
                                         "circularReferences": [],
                                         "dependencyGraph": {
@@ -20560,9 +20242,6 @@ Some useful links:
                                         },
                                     },
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                             },
                         },
@@ -23247,7 +22926,7 @@ Some useful links:
             "path": "/store/inventory",
             "requestFormat": "json",
             "response": {
-                "additionalProperties": true,
+                "additionalProperties": false,
                 "metadata": {
                     "circularReferences": [],
                     "dependencyGraph": {
@@ -23264,15 +22943,12 @@ Some useful links:
                     },
                 },
                 "type": "object",
-                "unknownKeyBehavior": {
-                    "mode": "strip",
-                },
             },
             "responses": [
                 {
                     "description": "successful operation",
                     "schema": {
-                        "additionalProperties": true,
+                        "additionalProperties": false,
                         "metadata": {
                             "circularReferences": [],
                             "dependencyGraph": {
@@ -23289,9 +22965,6 @@ Some useful links:
                             },
                         },
                         "type": "object",
-                        "unknownKeyBehavior": {
-                            "mode": "strip",
-                        },
                     },
                     "statusCode": "200",
                 },
@@ -24698,10 +24371,10 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "category": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "id": {
                                             "examples": [
@@ -24720,9 +24393,6 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                     "xml": {
                                         "name": "category",
                                     },
@@ -24764,7 +24434,7 @@ Some useful links:
                                 },
                                 "tags": {
                                     "items": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "format": "int64",
@@ -24777,9 +24447,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "tag",
                                         },
@@ -24795,9 +24462,6 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "pet",
                             },
@@ -24810,10 +24474,10 @@ Some useful links:
                 },
                 "name": "add_pet",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "category": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "id": {
                                     "examples": [
@@ -24832,9 +24496,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "category",
                             },
@@ -24876,7 +24537,7 @@ Some useful links:
                         },
                         "tags": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "id": {
                                         "format": "int64",
@@ -24889,9 +24550,6 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "tag",
                                 },
@@ -24907,9 +24565,6 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -24967,10 +24622,10 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "category": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "id": {
                                             "examples": [
@@ -24989,9 +24644,6 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                     "xml": {
                                         "name": "category",
                                     },
@@ -25033,7 +24685,7 @@ Some useful links:
                                 },
                                 "tags": {
                                     "items": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "format": "int64",
@@ -25046,9 +24698,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "tag",
                                         },
@@ -25064,9 +24713,6 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "pet",
                             },
@@ -25079,10 +24725,10 @@ Some useful links:
                 },
                 "name": "update_pet",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "category": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "id": {
                                     "examples": [
@@ -25101,9 +24747,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "category",
                             },
@@ -25145,7 +24788,7 @@ Some useful links:
                         },
                         "tags": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "id": {
                                         "format": "int64",
@@ -25158,9 +24801,6 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "tag",
                                 },
@@ -25176,9 +24816,6 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -25257,10 +24894,10 @@ Some useful links:
                     "properties": {
                         "value": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "category": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "examples": [
@@ -25279,9 +24916,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "category",
                                         },
@@ -25323,7 +24957,7 @@ Some useful links:
                                     },
                                     "tags": {
                                         "items": {
-                                            "additionalProperties": true,
+                                            "additionalProperties": false,
                                             "properties": {
                                                 "id": {
                                                     "format": "int64",
@@ -25336,9 +24970,6 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
-                                            "unknownKeyBehavior": {
-                                                "mode": "strip",
-                                            },
                                             "xml": {
                                                 "name": "tag",
                                             },
@@ -25354,9 +24985,6 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "pet",
                                 },
@@ -25437,10 +25065,10 @@ Some useful links:
                     "properties": {
                         "value": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "category": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "examples": [
@@ -25459,9 +25087,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "category",
                                         },
@@ -25503,7 +25128,7 @@ Some useful links:
                                     },
                                     "tags": {
                                         "items": {
-                                            "additionalProperties": true,
+                                            "additionalProperties": false,
                                             "properties": {
                                                 "id": {
                                                     "format": "int64",
@@ -25516,9 +25141,6 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
-                                            "unknownKeyBehavior": {
-                                                "mode": "strip",
-                                            },
                                             "xml": {
                                                 "name": "tag",
                                             },
@@ -25534,9 +25156,6 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "pet",
                                 },
@@ -25632,10 +25251,10 @@ Some useful links:
                 },
                 "name": "get_pet_by_id",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "category": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "id": {
                                     "examples": [
@@ -25654,9 +25273,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "category",
                             },
@@ -25698,7 +25314,7 @@ Some useful links:
                         },
                         "tags": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "id": {
                                         "format": "int64",
@@ -25711,9 +25327,6 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "tag",
                                 },
@@ -25729,9 +25342,6 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -25980,7 +25590,7 @@ Some useful links:
                 },
                 "name": "upload_file",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "code": {
                             "format": "int32",
@@ -25995,9 +25605,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "##default",
                     },
@@ -26048,11 +25655,8 @@ Some useful links:
                 },
                 "name": "get_inventory",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
                 "title": "Returns pet inventories by status",
             },
@@ -26083,7 +25687,7 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "complete": {
                                     "type": "boolean",
@@ -26130,9 +25734,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "order",
                             },
@@ -26142,7 +25743,7 @@ Some useful links:
                 },
                 "name": "place_order",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "complete": {
                             "type": "boolean",
@@ -26189,9 +25790,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "order",
                     },
@@ -26245,7 +25843,7 @@ Some useful links:
                 },
                 "name": "get_order_by_id",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "complete": {
                             "type": "boolean",
@@ -26292,9 +25890,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "order",
                     },
@@ -26376,7 +25971,7 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "email": {
                                     "examples": [
@@ -26433,9 +26028,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "user",
                             },
@@ -26476,7 +26068,7 @@ Some useful links:
                             "properties": {
                                 "value": {
                                     "items": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "email": {
                                                 "examples": [
@@ -26533,9 +26125,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "user",
                                         },
@@ -26550,7 +26139,7 @@ Some useful links:
                 },
                 "name": "create_users_with_list_input",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "email": {
                             "examples": [
@@ -26607,9 +26196,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "user",
                     },
@@ -26743,7 +26329,7 @@ Some useful links:
                 },
                 "name": "get_user_by_name",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "email": {
                             "examples": [
@@ -26800,9 +26386,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "user",
                     },
@@ -26836,7 +26419,7 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "email": {
                                     "examples": [
@@ -26893,9 +26476,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "user",
                             },
@@ -26970,7 +26550,6 @@ Some useful links:
     ],
     "options": {
         "baseUrl": "",
-        "nonStrictObjectPolicy": "strip",
         "withAlias": false,
     },
     "sortedSchemaNames": [
@@ -27009,7 +26588,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "Order",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -27173,9 +26752,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "order",
                     },
@@ -27200,7 +26776,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "Customer",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -27309,9 +26885,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "customer",
                     },
@@ -27336,7 +26909,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "Address",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -27443,9 +27016,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "address",
                     },
@@ -27470,7 +27040,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "Category",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -27539,9 +27109,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "category",
                     },
@@ -27566,7 +27133,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "User",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -27766,9 +27333,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "user",
                     },
@@ -27793,7 +27357,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "Tag",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -27856,9 +27420,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "tag",
                     },
@@ -27883,7 +27444,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "Pet",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -28079,9 +27640,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -28106,7 +27664,7 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                 },
                 "name": "ApiResponse",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -28186,9 +27744,6 @@ exports[`getZodClientTemplateContext with allReadonly 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "##default",
                     },
@@ -30163,7 +29718,7 @@ Some useful links:
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "metadata": {
                                         "circularReferences": [],
                                         "dependencyGraph": {
@@ -30180,9 +29735,6 @@ Some useful links:
                                         },
                                     },
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                             },
                         },
@@ -32867,7 +32419,7 @@ Some useful links:
             "path": "/store/inventory",
             "requestFormat": "json",
             "response": {
-                "additionalProperties": true,
+                "additionalProperties": false,
                 "metadata": {
                     "circularReferences": [],
                     "dependencyGraph": {
@@ -32884,15 +32436,12 @@ Some useful links:
                     },
                 },
                 "type": "object",
-                "unknownKeyBehavior": {
-                    "mode": "strip",
-                },
             },
             "responses": [
                 {
                     "description": "successful operation",
                     "schema": {
-                        "additionalProperties": true,
+                        "additionalProperties": false,
                         "metadata": {
                             "circularReferences": [],
                             "dependencyGraph": {
@@ -32909,9 +32458,6 @@ Some useful links:
                             },
                         },
                         "type": "object",
-                        "unknownKeyBehavior": {
-                            "mode": "strip",
-                        },
                     },
                     "statusCode": "200",
                 },
@@ -34318,10 +33864,10 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "category": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "id": {
                                             "examples": [
@@ -34340,9 +33886,6 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                     "xml": {
                                         "name": "category",
                                     },
@@ -34384,7 +33927,7 @@ Some useful links:
                                 },
                                 "tags": {
                                     "items": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "format": "int64",
@@ -34397,9 +33940,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "tag",
                                         },
@@ -34415,9 +33955,6 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "pet",
                             },
@@ -34430,10 +33967,10 @@ Some useful links:
                 },
                 "name": "add_pet",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "category": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "id": {
                                     "examples": [
@@ -34452,9 +33989,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "category",
                             },
@@ -34496,7 +34030,7 @@ Some useful links:
                         },
                         "tags": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "id": {
                                         "format": "int64",
@@ -34509,9 +34043,6 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "tag",
                                 },
@@ -34527,9 +34058,6 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -34587,10 +34115,10 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "category": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "id": {
                                             "examples": [
@@ -34609,9 +34137,6 @@ Some useful links:
                                     },
                                     "required": [],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                     "xml": {
                                         "name": "category",
                                     },
@@ -34653,7 +34178,7 @@ Some useful links:
                                 },
                                 "tags": {
                                     "items": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "format": "int64",
@@ -34666,9 +34191,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "tag",
                                         },
@@ -34684,9 +34206,6 @@ Some useful links:
                                 "photoUrls",
                             ],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "pet",
                             },
@@ -34699,10 +34218,10 @@ Some useful links:
                 },
                 "name": "update_pet",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "category": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "id": {
                                     "examples": [
@@ -34721,9 +34240,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "category",
                             },
@@ -34765,7 +34281,7 @@ Some useful links:
                         },
                         "tags": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "id": {
                                         "format": "int64",
@@ -34778,9 +34294,6 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "tag",
                                 },
@@ -34796,9 +34309,6 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -34877,10 +34387,10 @@ Some useful links:
                     "properties": {
                         "value": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "category": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "examples": [
@@ -34899,9 +34409,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "category",
                                         },
@@ -34943,7 +34450,7 @@ Some useful links:
                                     },
                                     "tags": {
                                         "items": {
-                                            "additionalProperties": true,
+                                            "additionalProperties": false,
                                             "properties": {
                                                 "id": {
                                                     "format": "int64",
@@ -34956,9 +34463,6 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
-                                            "unknownKeyBehavior": {
-                                                "mode": "strip",
-                                            },
                                             "xml": {
                                                 "name": "tag",
                                             },
@@ -34974,9 +34478,6 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "pet",
                                 },
@@ -35057,10 +34558,10 @@ Some useful links:
                     "properties": {
                         "value": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "category": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "id": {
                                                 "examples": [
@@ -35079,9 +34580,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "category",
                                         },
@@ -35123,7 +34621,7 @@ Some useful links:
                                     },
                                     "tags": {
                                         "items": {
-                                            "additionalProperties": true,
+                                            "additionalProperties": false,
                                             "properties": {
                                                 "id": {
                                                     "format": "int64",
@@ -35136,9 +34634,6 @@ Some useful links:
                                             },
                                             "required": [],
                                             "type": "object",
-                                            "unknownKeyBehavior": {
-                                                "mode": "strip",
-                                            },
                                             "xml": {
                                                 "name": "tag",
                                             },
@@ -35154,9 +34649,6 @@ Some useful links:
                                     "photoUrls",
                                 ],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "pet",
                                 },
@@ -35252,10 +34744,10 @@ Some useful links:
                 },
                 "name": "get_pet_by_id",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "category": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "id": {
                                     "examples": [
@@ -35274,9 +34766,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "category",
                             },
@@ -35318,7 +34807,7 @@ Some useful links:
                         },
                         "tags": {
                             "items": {
-                                "additionalProperties": true,
+                                "additionalProperties": false,
                                 "properties": {
                                     "id": {
                                         "format": "int64",
@@ -35331,9 +34820,6 @@ Some useful links:
                                 },
                                 "required": [],
                                 "type": "object",
-                                "unknownKeyBehavior": {
-                                    "mode": "strip",
-                                },
                                 "xml": {
                                     "name": "tag",
                                 },
@@ -35349,9 +34835,6 @@ Some useful links:
                         "photoUrls",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "pet",
                     },
@@ -35600,7 +35083,7 @@ Some useful links:
                 },
                 "name": "upload_file",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "code": {
                             "format": "int32",
@@ -35615,9 +35098,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "##default",
                     },
@@ -35668,11 +35148,8 @@ Some useful links:
                 },
                 "name": "get_inventory",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
                 "title": "Returns pet inventories by status",
             },
@@ -35703,7 +35180,7 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "complete": {
                                     "type": "boolean",
@@ -35750,9 +35227,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "order",
                             },
@@ -35762,7 +35236,7 @@ Some useful links:
                 },
                 "name": "place_order",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "complete": {
                             "type": "boolean",
@@ -35809,9 +35283,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "order",
                     },
@@ -35865,7 +35336,7 @@ Some useful links:
                 },
                 "name": "get_order_by_id",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "complete": {
                             "type": "boolean",
@@ -35912,9 +35383,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "order",
                     },
@@ -35996,7 +35464,7 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "email": {
                                     "examples": [
@@ -36053,9 +35521,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "user",
                             },
@@ -36096,7 +35561,7 @@ Some useful links:
                             "properties": {
                                 "value": {
                                     "items": {
-                                        "additionalProperties": true,
+                                        "additionalProperties": false,
                                         "properties": {
                                             "email": {
                                                 "examples": [
@@ -36153,9 +35618,6 @@ Some useful links:
                                         },
                                         "required": [],
                                         "type": "object",
-                                        "unknownKeyBehavior": {
-                                            "mode": "strip",
-                                        },
                                         "xml": {
                                             "name": "user",
                                         },
@@ -36170,7 +35632,7 @@ Some useful links:
                 },
                 "name": "create_users_with_list_input",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "email": {
                             "examples": [
@@ -36227,9 +35689,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "user",
                     },
@@ -36363,7 +35822,7 @@ Some useful links:
                 },
                 "name": "get_user_by_name",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "email": {
                             "examples": [
@@ -36420,9 +35879,6 @@ Some useful links:
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                     "xml": {
                         "name": "user",
                     },
@@ -36456,7 +35912,7 @@ Some useful links:
                 "inputSchema": {
                     "properties": {
                         "body": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "email": {
                                     "examples": [
@@ -36513,9 +35969,6 @@ Some useful links:
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                             "xml": {
                                 "name": "user",
                             },
@@ -36591,7 +36044,6 @@ Some useful links:
     "options": {
         "allReadonly": true,
         "baseUrl": "",
-        "nonStrictObjectPolicy": "strip",
         "withAlias": false,
     },
     "sortedSchemaNames": [
@@ -36632,7 +36084,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "name": "Root2",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [
                             "#/components/schemas/Root2",
@@ -36751,9 +36203,6 @@ exports[`with optional, partial, all required objects 1`] = `
                         "nested",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
                 "type": "schema",
             },
@@ -36777,7 +36226,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "name": "Nested2",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [
                             "#/components/schemas/Nested2",
@@ -36876,9 +36325,6 @@ exports[`with optional, partial, all required objects 1`] = `
                         "requiredProp",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
                 "type": "schema",
             },
@@ -36900,7 +36346,7 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "name": "PartialObject",
                 "schema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "metadata": {
                         "circularReferences": [],
                         "dependencyGraph": {
@@ -36959,9 +36405,6 @@ exports[`with optional, partial, all required objects 1`] = `
                     },
                     "required": [],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
                 "type": "schema",
             },
@@ -37220,7 +36663,7 @@ exports[`with optional, partial, all required objects 1`] = `
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "metadata": {
                                         "circularReferences": [],
                                         "dependencyGraph": {
@@ -37337,9 +36780,6 @@ exports[`with optional, partial, all required objects 1`] = `
                                         "nested",
                                     ],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                             },
                         },
@@ -37364,7 +36804,7 @@ exports[`with optional, partial, all required objects 1`] = `
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "metadata": {
                                         "circularReferences": [],
                                         "dependencyGraph": {
@@ -37461,9 +36901,6 @@ exports[`with optional, partial, all required objects 1`] = `
                                         "requiredProp",
                                     ],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                             },
                         },
@@ -37681,7 +37118,7 @@ exports[`with optional, partial, all required objects 1`] = `
             "path": "/nested",
             "requestFormat": "json",
             "response": {
-                "additionalProperties": true,
+                "additionalProperties": false,
                 "metadata": {
                     "circularReferences": [],
                     "dependencyGraph": {
@@ -37778,15 +37215,12 @@ exports[`with optional, partial, all required objects 1`] = `
                     "requiredProp",
                 ],
                 "type": "object",
-                "unknownKeyBehavior": {
-                    "mode": "strip",
-                },
             },
             "responses": [
                 {
                     "description": "OK",
                     "schema": {
-                        "additionalProperties": true,
+                        "additionalProperties": false,
                         "metadata": {
                             "circularReferences": [],
                             "dependencyGraph": {
@@ -37883,9 +37317,6 @@ exports[`with optional, partial, all required objects 1`] = `
                             "requiredProp",
                         ],
                         "type": "object",
-                        "unknownKeyBehavior": {
-                            "mode": "strip",
-                        },
                     },
                     "statusCode": "200",
                 },
@@ -37899,7 +37330,7 @@ exports[`with optional, partial, all required objects 1`] = `
             "path": "/root",
             "requestFormat": "json",
             "response": {
-                "additionalProperties": true,
+                "additionalProperties": false,
                 "metadata": {
                     "circularReferences": [],
                     "dependencyGraph": {
@@ -38016,15 +37447,12 @@ exports[`with optional, partial, all required objects 1`] = `
                     "nested",
                 ],
                 "type": "object",
-                "unknownKeyBehavior": {
-                    "mode": "strip",
-                },
             },
             "responses": [
                 {
                     "description": "OK",
                     "schema": {
-                        "additionalProperties": true,
+                        "additionalProperties": false,
                         "metadata": {
                             "circularReferences": [],
                             "dependencyGraph": {
@@ -38141,9 +37569,6 @@ exports[`with optional, partial, all required objects 1`] = `
                             "nested",
                         ],
                         "type": "object",
-                        "unknownKeyBehavior": {
-                            "mode": "strip",
-                        },
                     },
                     "statusCode": "200",
                 },
@@ -38241,16 +37666,16 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "name": "get_root",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "nb": {
                             "type": "number",
                         },
                         "nested": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "circularToRoot": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "nb": {
                                             "type": "number",
@@ -38262,7 +37687,7 @@ exports[`with optional, partial, all required objects 1`] = `
                                             "type": "string",
                                         },
                                         "partial": {
-                                            "additionalProperties": true,
+                                            "additionalProperties": false,
                                             "properties": {
                                                 "another": {
                                                     "type": "number",
@@ -38273,9 +37698,6 @@ exports[`with optional, partial, all required objects 1`] = `
                                             },
                                             "required": [],
                                             "type": "object",
-                                            "unknownKeyBehavior": {
-                                                "mode": "strip",
-                                            },
                                         },
                                         "str": {
                                             "type": "string",
@@ -38287,9 +37709,6 @@ exports[`with optional, partial, all required objects 1`] = `
                                         "nested",
                                     ],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                                 "deeplyNested": {
                                     "items": {
@@ -38313,15 +37732,12 @@ exports[`with optional, partial, all required objects 1`] = `
                                 "requiredProp",
                             ],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                         },
                         "optionalProp": {
                             "type": "string",
                         },
                         "partial": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "another": {
                                     "type": "number",
@@ -38332,9 +37748,6 @@ exports[`with optional, partial, all required objects 1`] = `
                             },
                             "required": [],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                         },
                         "str": {
                             "type": "string",
@@ -38346,9 +37759,6 @@ exports[`with optional, partial, all required objects 1`] = `
                         "nested",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
             },
         },
@@ -38381,16 +37791,16 @@ exports[`with optional, partial, all required objects 1`] = `
                 },
                 "name": "get_nested",
                 "outputSchema": {
-                    "additionalProperties": true,
+                    "additionalProperties": false,
                     "properties": {
                         "circularToRoot": {
-                            "additionalProperties": true,
+                            "additionalProperties": false,
                             "properties": {
                                 "nb": {
                                     "type": "number",
                                 },
                                 "nested": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "circularToRoot": {
                                             "$ref": "#/components/schemas/Root2",
@@ -38417,15 +37827,12 @@ exports[`with optional, partial, all required objects 1`] = `
                                         "requiredProp",
                                     ],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                                 "optionalProp": {
                                     "type": "string",
                                 },
                                 "partial": {
-                                    "additionalProperties": true,
+                                    "additionalProperties": false,
                                     "properties": {
                                         "another": {
                                             "type": "number",
@@ -38436,9 +37843,6 @@ exports[`with optional, partial, all required objects 1`] = `
                                     },
                                     "required": [],
                                     "type": "object",
-                                    "unknownKeyBehavior": {
-                                        "mode": "strip",
-                                    },
                                 },
                                 "str": {
                                     "type": "string",
@@ -38450,9 +37854,6 @@ exports[`with optional, partial, all required objects 1`] = `
                                 "nested",
                             ],
                             "type": "object",
-                            "unknownKeyBehavior": {
-                                "mode": "strip",
-                            },
                         },
                         "deeplyNested": {
                             "items": {
@@ -38476,9 +37877,6 @@ exports[`with optional, partial, all required objects 1`] = `
                         "requiredProp",
                     ],
                     "type": "object",
-                    "unknownKeyBehavior": {
-                        "mode": "strip",
-                    },
                 },
             },
         },
@@ -38574,7 +37972,6 @@ exports[`with optional, partial, all required objects 1`] = `
     ],
     "options": {
         "baseUrl": "",
-        "nonStrictObjectPolicy": "strip",
         "withAlias": false,
     },
     "sortedSchemaNames": [
@@ -38612,13 +38009,11 @@ export type Root2 = {
 // Zod Schemas
 export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
 export const DeeplyNested = z.array(VeryDeeplyNested);
-export const PartialObject = z
-  .object({
-    another: z.number().optional(),
-    something: z.string().optional(),
-  })
-  .strip();
-export const Nested2 = z.object({
+export const PartialObject = z.strictObject({
+  another: z.number().optional(),
+  something: z.string().optional(),
+});
+export const Nested2 = z.strictObject({
   get circularToRoot() {
     return Root2.optional();
   },
@@ -38628,7 +38023,7 @@ export const Nested2 = z.object({
   nested_prop: z.boolean().optional(),
   requiredProp: z.string(),
 });
-export const Root2 = z.object({
+export const Root2 = z.strictObject({
   nb: z.number(),
   get nested() {
     return Nested2;
@@ -38662,25 +38057,21 @@ export const endpoints = [
     path: "/nested",
     requestFormat: "json",
     parameters: [],
-    response: z
-      .object({
-        circularToRoot: Root2.optional(),
-        deeplyNested: DeeplyNested.optional(),
-        nested_prop: z.boolean().optional(),
-        requiredProp: z.string(),
-      })
-      .strip(),
+    response: z.strictObject({
+      circularToRoot: Root2.optional(),
+      deeplyNested: DeeplyNested.optional(),
+      nested_prop: z.boolean().optional(),
+      requiredProp: z.string(),
+    }),
     errors: [],
     responses: {
       200: {
-        schema: z
-          .object({
-            circularToRoot: Root2.optional(),
-            deeplyNested: DeeplyNested.optional(),
-            nested_prop: z.boolean().optional(),
-            requiredProp: z.string(),
-          })
-          .strip(),
+        schema: z.strictObject({
+          circularToRoot: Root2.optional(),
+          deeplyNested: DeeplyNested.optional(),
+          nested_prop: z.boolean().optional(),
+          requiredProp: z.string(),
+        }),
         description: "OK",
       },
     },
@@ -38692,27 +38083,23 @@ export const endpoints = [
     path: "/root",
     requestFormat: "json",
     parameters: [],
-    response: z
-      .object({
-        nb: z.number(),
-        nested: Nested2,
-        optionalProp: z.string().optional(),
-        partial: PartialObject.optional(),
-        str: z.string(),
-      })
-      .strip(),
+    response: z.strictObject({
+      nb: z.number(),
+      nested: Nested2,
+      optionalProp: z.string().optional(),
+      partial: PartialObject.optional(),
+      str: z.string(),
+    }),
     errors: [],
     responses: {
       200: {
-        schema: z
-          .object({
-            nb: z.number(),
-            nested: Nested2,
-            optionalProp: z.string().optional(),
-            partial: PartialObject.optional(),
-            str: z.string(),
-          })
-          .strip(),
+        schema: z.strictObject({
+          nb: z.number(),
+          nested: Nested2,
+          optionalProp: z.string().optional(),
+          partial: PartialObject.optional(),
+          str: z.string(),
+        }),
         description: "OK",
       },
     },
@@ -38763,14 +38150,12 @@ export const mcpTools = [
                       something: { type: "string" },
                     },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
                   str: { type: "string" },
                 },
                 required: ["str", "nb", "nested"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               deeplyNested: {
                 type: "array",
@@ -38780,8 +38165,7 @@ export const mcpTools = [
               requiredProp: { type: "string" },
             },
             required: ["requiredProp"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           optionalProp: { type: "string" },
           partial: {
@@ -38791,14 +38175,12 @@ export const mcpTools = [
               something: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           str: { type: "string" },
         },
         required: ["str", "nb", "nested"],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -38842,8 +38224,7 @@ export const mcpTools = [
                   requiredProp: { type: "string" },
                 },
                 required: ["requiredProp"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               optionalProp: { type: "string" },
               partial: {
@@ -38853,14 +38234,12 @@ export const mcpTools = [
                   something: { type: "string" },
                 },
                 required: [],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               str: { type: "string" },
             },
             required: ["str", "nb", "nested"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           deeplyNested: {
             type: "array",
@@ -38870,8 +38249,7 @@ export const mcpTools = [
           requiredProp: { type: "string" },
         },
         required: ["requiredProp"],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,

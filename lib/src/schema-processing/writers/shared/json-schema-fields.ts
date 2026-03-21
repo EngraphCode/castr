@@ -11,13 +11,8 @@
  * @internal
  */
 
-import {
-  UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY,
-  UNKNOWN_KEY_MODE_CATCHALL,
-  UNKNOWN_KEY_MODE_STRICT,
-  getPortableUnknownKeyBehaviorExtension,
-} from '../../ir/index.js';
 import type { CastrSchema } from '../../ir/index.js';
+import { isObjectSchemaType } from '../../ir/index.js';
 import type { JsonSchemaObject, WriteSchemaFn } from './json-schema-object.js';
 import { isSchemaObjectType } from './json-schema-object.js';
 import {
@@ -104,39 +99,21 @@ export function writeNumberFields(schema: CastrSchema, result: JsonSchemaObject)
 
 /**
  * Write the `additionalProperties` field.
+ *
+ * Under IDENTITY doctrine, all objects are closed-world with explicit
+ * properties. Always emits `additionalProperties: false`.
+ *
  * @internal
  */
-function writeAdditionalProperties(
-  schema: CastrSchema,
-  result: JsonSchemaObject,
-  writeSchema: WriteSchemaFn,
-): void {
-  if (schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_STRICT) {
+function writeAdditionalProperties(schema: CastrSchema, result: JsonSchemaObject): void {
+  if (schema.additionalProperties === false) {
     result.additionalProperties = false;
     return;
   }
 
-  if (schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_CATCHALL) {
-    result.additionalProperties = writeSchema(schema.unknownKeyBehavior.schema);
-    return;
-  }
-
-  const portableUnknownKeyBehavior = getPortableUnknownKeyBehaviorExtension(
-    schema.unknownKeyBehavior,
-  );
-  if (portableUnknownKeyBehavior !== undefined) {
-    result.additionalProperties = true;
-    result[UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY] = portableUnknownKeyBehavior;
-    return;
-  }
-
-  if (schema.additionalProperties === undefined) {
-    return;
-  }
-  if (typeof schema.additionalProperties === 'boolean') {
-    result.additionalProperties = schema.additionalProperties;
-  } else {
-    result.additionalProperties = writeSchema(schema.additionalProperties);
+  // Closed-world default: all object schemas get additionalProperties: false
+  if (schema.properties !== undefined || isObjectSchemaType(schema.type)) {
+    result.additionalProperties = false;
   }
 }
 
@@ -159,7 +136,7 @@ export function writeObjectFields(
   if (schema.required !== undefined && schema.required.length > 0) {
     result.required = schema.required;
   }
-  writeAdditionalProperties(schema, result, writeSchema);
+  writeAdditionalProperties(schema, result);
 }
 
 /**

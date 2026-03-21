@@ -265,9 +265,6 @@
           },
           "required": ["type", "cardNumber"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -330,9 +327,6 @@
           },
           "required": ["type", "accountNumber"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -399,9 +393,6 @@
           },
           "required": ["type", "data"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -464,9 +455,6 @@
           },
           "required": ["type", "message"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -551,9 +539,6 @@
           },
           "required": ["kind", "valueA"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -616,9 +601,6 @@
           },
           "required": ["kind", "valueB"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,
@@ -681,9 +663,6 @@
           },
           "required": ["kind", "valueC"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,

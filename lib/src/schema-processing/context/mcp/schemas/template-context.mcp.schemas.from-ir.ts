@@ -9,9 +9,10 @@
 
 import type { Schema as JsonSchema } from 'ajv';
 import type { CastrSchema, CastrDocument, CastrOperation } from '../../../ir/index.js';
-import { CastrSchemaProperties } from '../../../ir/index.js';
 import type { MutableJsonSchema } from '../../../conversion/json-schema/index.js';
+import type { CastrSchemaPropertiesLike } from '../../../../shared/type-utils/castr-schema-properties.js';
 import { isRecord } from '../../../../shared/type-utils/types.js';
+import { isCastrSchemaProperties } from '../../../../shared/type-utils/type-guards.js';
 import {
   collectParameterGroupsFromIR,
   createParameterSectionSchemaFromIR,
@@ -133,10 +134,13 @@ const isCastrSchemaForMcp = (value: unknown): value is CastrSchema =>
  * Convert CastrSchemaProperties (Map) to plain object for JSON Schema.
  */
 const convertPropertiesToJsonSchema = (
-  properties: CastrSchemaProperties,
+  properties: CastrSchemaPropertiesLike,
 ): Record<string, MutableJsonSchema> => {
   const result: Record<string, MutableJsonSchema> = {};
   for (const [propName, propSchema] of properties.entries()) {
+    if (!isCastrSchemaForMcp(propSchema)) {
+      throw new Error('[mcp-schemas-from-ir] Expected CastrSchema property value.');
+    }
     result[propName] = castrSchemaToJsonSchemaForMcp(propSchema);
   }
   return result;
@@ -151,7 +155,7 @@ function convertArrayToJsonSchema(values: readonly unknown[]): unknown[] {
 }
 
 function convertSchemaFieldValue(value: unknown): unknown {
-  if (value instanceof CastrSchemaProperties) {
+  if (isCastrSchemaProperties(value)) {
     return convertPropertiesToJsonSchema(value);
   }
   if (isCastrSchemaForMcp(value)) {

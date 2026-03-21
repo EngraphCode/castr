@@ -14,8 +14,6 @@ import {
   type TemplateContextOptions,
 } from '../schema-processing/context/index.js';
 
-const STRIP_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
-
 /**
  * Type Guard: Assert value is a string
  *
@@ -54,33 +52,22 @@ export function assertAndExtractContent(result: GenerationResult, context?: stri
 }
 
 /**
- * Characterisation helper: keep legacy non-strict OpenAPI fixtures on the explicit
- * compatibility path instead of silently relying on default permissive ingest.
+ * Characterisation helper: invoke the public generator directly.
  */
 export function generateZodClientFromOpenAPI(
   args: GenerateZodClientFromOpenApiArgs,
 ): Promise<GenerationResult> {
-  return generateZodClientFromOpenAPIBase({
-    ...args,
-    options: {
-      ...STRIP_COMPATIBILITY_OPTIONS,
-      ...args.options,
-    },
-  });
+  return generateZodClientFromOpenAPIBase(args);
 }
 
 /**
- * Characterisation helper: parse legacy non-strict OpenAPI fixtures via explicit
- * strip compatibility mode.
+ * Characterisation helper: invoke template-context generation directly.
  */
 export function getZodClientTemplateContext(
   doc: OpenAPIObject,
   options?: TemplateContextOptions,
 ): TemplateContext {
-  return getZodClientTemplateContextBase(doc, {
-    ...STRIP_COMPATIBILITY_OPTIONS,
-    ...options,
-  });
+  return getZodClientTemplateContextBase(doc, options);
 }
 
 // Re-export for convenience

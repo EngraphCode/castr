@@ -75,11 +75,10 @@ const result = parseZodSource(source);
 
 ## Object Unknown-Key Semantics
 
-- `.strict()` parses as `unknownKeyBehavior: { mode: 'strict' }` and `additionalProperties: false`.
-- Default `z.object()` and explicit `.strip()` parse as `unknownKeyBehavior: { mode: 'strip' }` and `additionalProperties: true`.
-- `.passthrough()` parses as `unknownKeyBehavior: { mode: 'passthrough' }` and `additionalProperties: true`.
-- `.catchall(schema)` parses as `unknownKeyBehavior: { mode: 'catchall', schema }` and schema-valued `additionalProperties`.
-- `additionalProperties` remains the portable acceptance view; `unknownKeyBehavior` is the runtime-behaviour field.
+- `z.strictObject({...})` is the canonical accepted object form.
+- Statically analyzable `z.object({...}).strict()` is accepted and normalised to strict closed-world IR.
+- Bare `z.object({...})`, `.strip()`, `.passthrough()`, `.catchall(...)`, and `z.looseObject(...)` are rejected at ingest.
+- Portable IR object strictness is represented with `additionalProperties: false` only on object-capable schemas.
 
 ## See Also
 

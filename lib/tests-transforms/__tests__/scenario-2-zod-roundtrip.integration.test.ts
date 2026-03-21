@@ -30,11 +30,6 @@ import {
   parseZodSource,
 } from '../utils/transform-helpers.js';
 
-const UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES = [
-  'StripObjectSchema',
-  'RecursiveStripCategorySchema',
-] as const;
-
 // ============================================================================
 // Scenario 2: Zod → IR → Zod Transform Path
 // ============================================================================
@@ -137,7 +132,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
       );
     });
 
-    it('normalizes explicit recursive .strip() source to safe bare-object output', async () => {
+    it('rejects explicit recursive .strip() source instead of normalizing it', () => {
       const source = `
         import { z } from 'zod';
 
@@ -151,24 +146,12 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
           .strip();
       `;
 
-      const result = parseZodSource(source, { nonStrictObjectPolicy: 'strip' });
-      expectNoParseErrors(
-        'inline recursive strip test',
-        'Scenario 2 arbitrary-input parse',
-        result,
-      );
+      const result = parseZodSource(source);
 
-      const openApiOutput = writeOpenApi(result.ir);
-      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
-      const regenerated = parseZodSource(zodOutput, { nonStrictObjectPolicy: 'strip' });
-
-      expectNoParseErrors(
-        'inline recursive strip test',
-        'Scenario 2 generated-output parse',
-        regenerated,
-      );
-      expect(zodOutput).toContain('export const RecursiveStripCategory = z.object({');
-      expect(zodOutput).not.toContain('.strip()');
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.message).toContain('Non-strict object input');
+      expect(result.errors[0]?.message).toContain('closed-world object semantics');
     });
 
     it.each(ZOD_GENERATION_FAILURE_FIXTURES)(
@@ -184,54 +167,6 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
         await expect(generateZodFromOpenAPI(openApiDoc)).rejects.toThrow(expectedError);
       },
     );
-
-    it('rejects the full mixed unknown-key fixture by default and supports explicit strip normalization', async () => {
-      const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
-      if (!fixture) {
-        throw new Error('Expected unknown-key-semantics fixture');
-      }
-
-      const source = await readZodFixture(fixture.path);
-      const defaultResult = parseZodSource(source);
-      expect(defaultResult.errors.length).toBeGreaterThan(0);
-      expect(defaultResult.errors[0]?.message).toContain('strict object ingest is the default');
-      expect(defaultResult.errors[0]?.message).toContain("nonStrictObjectPolicy: 'strip'");
-
-      const compatibilityResult = parseFixtureZodSource(fixture, source);
-      expectNoParseErrors(
-        fixture.name,
-        'Scenario 2 arbitrary-input parse with compatibility mode',
-        compatibilityResult,
-      );
-
-      const openApiDoc = writeOpenApi(
-        selectFixtureRoundTripDocument(fixture, compatibilityResult.ir),
-      );
-      const zodOutput = await generateZodFromOpenAPI(openApiDoc);
-      const regenerated = parseFixtureZodSource(fixture, zodOutput);
-
-      expectNoParseErrors(
-        fixture.name,
-        'Scenario 2 generated-output parse with compatibility mode',
-        regenerated,
-      );
-
-      const regeneratedSchemas = selectSchemaComponents(regenerated.ir, [
-        'StripObjectSchema',
-        'PassthroughObjectSchema',
-        'CatchallObjectSchema',
-        'RecursiveStripCategorySchema',
-      ]).components;
-
-      for (const component of regeneratedSchemas) {
-        if (component.type !== 'schema') {
-          continue;
-        }
-
-        expect(component.schema.additionalProperties).toBe(true);
-        expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
-      }
-    });
   });
 
   describe('Idempotency: Normalized output is stable', () => {
@@ -263,7 +198,7 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
   });
 
   describe('Functional Equivalence: Validation Parity', () => {
-    it.each(ZOD_FIXTURES.filter((fixture) => fixture.name !== 'unknown-key-semantics'))(
+    it.each(ZOD_FIXTURES)(
       '$name: Zod → IR → Zod yields identical validation behavior',
       async (fixture) => {
         const source = await readZodFixture(fixture.path);
@@ -281,37 +216,5 @@ describe('Transform Sample Scenario 2: Zod → IR → Zod', () => {
         assertParsedOutputParity(fixture.name, originalSchemas, transformedSchemas);
       },
     );
-
-    it('unknown-key-semantics: compatibility mode preserves strip behavior where strip semantics are the target', async () => {
-      expect.hasAssertions();
-
-      const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
-      if (!fixture) {
-        throw new Error('Expected unknown-key-semantics fixture');
-      }
-
-      const source = await readZodFixture(fixture.path);
-      const result1 = parseFixtureZodSource(fixture, source);
-      expectNoParseErrors(fixture.name, 'Scenario 2 arbitrary-input parse', result1);
-
-      const openApiDoc = writeOpenApi(selectFixtureRoundTripDocument(fixture, result1.ir));
-      const zodOutput = await generateZodFromOpenAPI(openApiDoc);
-
-      const originalSchemas = await loadDynamicZodSchemas(source);
-      const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
-
-      assertValidationParity(
-        fixture.name,
-        originalSchemas,
-        transformedSchemas,
-        UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES,
-      );
-      assertParsedOutputParity(
-        fixture.name,
-        originalSchemas,
-        transformedSchemas,
-        UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES,
-      );
-    });
   });
 });

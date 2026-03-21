@@ -21,14 +21,14 @@ test('use-union-only-when-multiple-choices', () => {
   ).toMatchInlineSnapshot(
     `
     {
-        "code": "z.object({
+        "code": "z.strictObject({
       multipleAllOf: z.string().and(z.number()).optional(),
       multipleAnyOf: z.union([z.string(), z.number()]).optional(),
       multipleOneOf: z.xor([z.string(), z.number()]).optional(),
       singleAllOf: z.string().optional(),
       singleAnyOf: z.string().optional(),
       singleOneOf: z.string().optional(),
-    }).strip()",
+    })",
         "schema": {
             "properties": {
                 "multipleAllOf": {

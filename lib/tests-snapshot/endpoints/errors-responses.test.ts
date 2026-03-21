@@ -71,18 +71,14 @@ it('includes errors-responses', async () => {
     };
     export type Error500 = string;
     // Zod Schemas
-    export const Main = z
-      .object({
-        nb: z.number(),
-        str: z.string(),
-      })
-      .strip();
+    export const Main = z.strictObject({
+      nb: z.number(),
+      str: z.string(),
+    });
     export const AnotherSuccess = z.number();
-    export const Error400 = z
-      .object({
-        is400: z.boolean().optional(),
-      })
-      .strip();
+    export const Error400 = z.strictObject({
+      is400: z.boolean().optional(),
+    });
     export const Error500 = z.string();
     // Endpoints
     export const endpoints = [
@@ -91,20 +87,16 @@ it('includes errors-responses', async () => {
         path: "/example",
         requestFormat: "json",
         parameters: [],
-        response: z
-          .object({
-            nb: z.number(),
-            str: z.string(),
-          })
-          .strip(),
+        response: z.strictObject({
+          nb: z.number(),
+          str: z.string(),
+        }),
         errors: [
           {
             status: 400,
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+            }),
             description: "Bad request",
           },
           {
@@ -115,12 +107,10 @@ it('includes errors-responses', async () => {
         ],
         responses: {
           200: {
-            schema: z
-              .object({
-                nb: z.number(),
-                str: z.string(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              nb: z.number(),
+              str: z.string(),
+            }),
             description: "OK",
           },
           201: {
@@ -128,11 +118,9 @@ it('includes errors-responses', async () => {
             description: "Created",
           },
           400: {
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+            }),
             description: "Bad request",
           },
           500: {
@@ -155,8 +143,7 @@ it('includes errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,
@@ -289,29 +276,23 @@ it('determines which status are considered errors-responses', async () => {
     export type Error404 = null;
     export type Error500 = string;
     // Zod Schemas
-    export const Main = z
-      .object({
-        nb: z.number(),
-        str: z.string(),
-      })
-      .strip();
+    export const Main = z.strictObject({
+      nb: z.number(),
+      str: z.string(),
+    });
     export const AnotherSuccess = z.number();
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
     export const DeeplyNested = z.array(VeryDeeplyNested);
-    export const Nested = z
-      .object({
-        circularToMain: Main.optional(),
-        deeplyNested: DeeplyNested.optional(),
-        nested_prop: z.boolean().optional(),
-        requiredProp: z.string(),
-      })
-      .strip();
-    export const Error400 = z
-      .object({
-        is400: z.boolean().optional(),
-        nested: Nested.optional(),
-      })
-      .strip();
+    export const Nested = z.strictObject({
+      circularToMain: Main.optional(),
+      deeplyNested: DeeplyNested.optional(),
+      nested_prop: z.boolean().optional(),
+      requiredProp: z.string(),
+    });
+    export const Error400 = z.strictObject({
+      is400: z.boolean().optional(),
+      nested: Nested.optional(),
+    });
     export const Error404 = z.null();
     export const Error500 = z.string();
     // Endpoints
@@ -321,31 +302,25 @@ it('determines which status are considered errors-responses', async () => {
         path: "/example",
         requestFormat: "json",
         parameters: [],
-        response: z
-          .object({
-            nb: z.number(),
-            str: z.string(),
-          })
-          .strip(),
+        response: z.strictObject({
+          nb: z.number(),
+          str: z.string(),
+        }),
         errors: [
           {
             status: 400,
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Bad request",
           },
           {
             status: 404,
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Not found",
           },
           {
@@ -356,12 +331,10 @@ it('determines which status are considered errors-responses', async () => {
         ],
         responses: {
           200: {
-            schema: z
-              .object({
-                nb: z.number(),
-                str: z.string(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              nb: z.number(),
+              str: z.string(),
+            }),
             description: "OK",
           },
           201: {
@@ -369,21 +342,17 @@ it('determines which status are considered errors-responses', async () => {
             description: "Created",
           },
           400: {
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Bad request",
           },
           404: {
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Not found",
           },
           500: {
@@ -406,8 +375,7 @@ it('determines which status are considered errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,
@@ -462,29 +430,23 @@ it('determines which status are considered errors-responses', async () => {
     export type Error404 = null;
     export type Error500 = string;
     // Zod Schemas
-    export const Main = z
-      .object({
-        nb: z.number(),
-        str: z.string(),
-      })
-      .strip();
+    export const Main = z.strictObject({
+      nb: z.number(),
+      str: z.string(),
+    });
     export const AnotherSuccess = z.number();
     export const VeryDeeplyNested = z.enum(["aaa", "bbb", "ccc"]);
     export const DeeplyNested = z.array(VeryDeeplyNested);
-    export const Nested = z
-      .object({
-        circularToMain: Main.optional(),
-        deeplyNested: DeeplyNested.optional(),
-        nested_prop: z.boolean().optional(),
-        requiredProp: z.string(),
-      })
-      .strip();
-    export const Error400 = z
-      .object({
-        is400: z.boolean().optional(),
-        nested: Nested.optional(),
-      })
-      .strip();
+    export const Nested = z.strictObject({
+      circularToMain: Main.optional(),
+      deeplyNested: DeeplyNested.optional(),
+      nested_prop: z.boolean().optional(),
+      requiredProp: z.string(),
+    });
+    export const Error400 = z.strictObject({
+      is400: z.boolean().optional(),
+      nested: Nested.optional(),
+    });
     export const Error404 = z.null();
     export const Error500 = z.string();
     // Endpoints
@@ -494,31 +456,25 @@ it('determines which status are considered errors-responses', async () => {
         path: "/example",
         requestFormat: "json",
         parameters: [],
-        response: z
-          .object({
-            nb: z.number(),
-            str: z.string(),
-          })
-          .strip(),
+        response: z.strictObject({
+          nb: z.number(),
+          str: z.string(),
+        }),
         errors: [
           {
             status: 400,
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Bad request",
           },
           {
             status: 404,
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Not found",
           },
           {
@@ -529,12 +485,10 @@ it('determines which status are considered errors-responses', async () => {
         ],
         responses: {
           200: {
-            schema: z
-              .object({
-                nb: z.number(),
-                str: z.string(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              nb: z.number(),
+              str: z.string(),
+            }),
             description: "OK",
           },
           201: {
@@ -542,21 +496,17 @@ it('determines which status are considered errors-responses', async () => {
             description: "Created",
           },
           400: {
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Bad request",
           },
           404: {
-            schema: z
-              .object({
-                is400: z.boolean().optional(),
-                nested: Nested.optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              is400: z.boolean().optional(),
+              nested: Nested.optional(),
+            }),
             description: "Not found",
           },
           500: {
@@ -579,8 +529,7 @@ it('determines which status are considered errors-responses', async () => {
             type: "object",
             properties: { nb: { type: "number" }, str: { type: "string" } },
             required: ["str", "nb"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

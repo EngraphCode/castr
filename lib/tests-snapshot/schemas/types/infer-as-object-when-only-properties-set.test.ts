@@ -1,39 +1,51 @@
 import { getZodSchema } from '../../../src/schema-processing/conversion/zod/index.js';
-import { test, expect } from 'vitest';
+import { test, expect, describe } from 'vitest';
 
-test('infer-as-object-when-only-properties-set', () => {
-  expect(
-    getZodSchema({
-      schema: {
-        properties: {
-          str: { type: 'string' },
-          nested: {
-            additionalProperties: { type: 'number' },
+describe('infer-as-object-when-only-properties-set', () => {
+  test('object with only properties (no type) is inferred as strict object', () => {
+    expect(
+      getZodSchema({
+        schema: {
+          properties: {
+            str: { type: 'string' },
+            num: { type: 'number' },
           },
         },
-      },
-    }),
-  ).toMatchInlineSnapshot(
-    `
-    {
-        "code": "z.object({
-      nested: z.object({
-      }).strip().optional(),
-      str: z.string().optional(),
-    }).strip()",
-        "schema": {
-            "properties": {
-                "nested": {
-                    "additionalProperties": {
-                        "type": "number",
-                    },
-                },
-                "str": {
-                    "type": "string",
-                },
+      }),
+    ).toMatchInlineSnapshot(
+      `
+      {
+          "code": "z.strictObject({
+        num: z.number().optional(),
+        str: z.string().optional(),
+      })",
+          "schema": {
+              "properties": {
+                  "num": {
+                      "type": "number",
+                  },
+                  "str": {
+                      "type": "string",
+                  },
+              },
+          },
+      }
+    `,
+    );
+  });
+
+  test('nested schema-valued additionalProperties is rejected', () => {
+    expect(() =>
+      getZodSchema({
+        schema: {
+          properties: {
+            str: { type: 'string' },
+            nested: {
+              additionalProperties: { type: 'number' },
             },
+          },
         },
-    }
-  `,
-  );
+      }),
+    ).toThrow(/non-strict object input/i);
+  });
 });

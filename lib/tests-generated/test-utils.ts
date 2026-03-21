@@ -4,7 +4,7 @@ import {
 } from '../src/rendering/generate-from-context.js';
 import type { GenerationResult } from '../src/rendering/generation-result.js';
 
-const STRIP_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
+const STRIP_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'reject' } as const;
 
 /**
  * Generated-code validation helper: keep legacy OpenAPI fixtures on the explicit

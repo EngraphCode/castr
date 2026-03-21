@@ -1,12 +1,13 @@
 # ADR-038: Object Unknown-Key Semantics and Parsed-Output Parity
 
 **Date:** 2026-03-09  
-**Status:** Superseded by ADR-040 on 2026-03-11
+**Status:** Superseded by ADR-040 on 2026-03-11, then by [IDENTITY.md](../../.agent/IDENTITY.md) on 2026-03-21
 
 ---
 
 > [!IMPORTANT]
-> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) supersedes the forward-looking preservation direction in this ADR.
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) superseded the forward-looking preservation direction in this ADR.
+> [IDENTITY.md](../../.agent/IDENTITY.md) further supersedes both ADR-038 and ADR-040's strip-normalization compatibility mode.
 >
 > This document remains useful as historical diagnosis:
 >
@@ -14,7 +15,7 @@
 > - why recursive preserving-mode Zod reconstruction was difficult
 > - why parsed-output parity mattered
 >
-> It is no longer the active product direction. The active direction is default strict object generation, reject-by-default ingest, and one explicit lossy strip-normalization compatibility mode for callers who deliberately opt in.
+> It is no longer the active product direction. The active direction is strict-only object semantics with no `unknownKeyBehavior` in the IR. Strip normalization belongs in the doctor only, not in the core pipeline.
 
 ## Context
 

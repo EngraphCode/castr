@@ -1,47 +1,59 @@
 import { getZodSchema } from '../../../src/schema-processing/conversion/zod/index.js';
-import { test, expect } from 'vitest';
+import { test, expect, describe } from 'vitest';
 
 /**
  * Test: withImplicitRequired option behavior
  *
  * Note: The `options` parameter was removed from getZodSchema.
- * This test now verifies default behavior only.
  */
-test('withImplicitRequired-option', () => {
-  expect(
-    getZodSchema({
-      schema: {
-        type: 'object',
-        properties: {
-          str: { type: 'string' },
-          nested: {
-            additionalProperties: { type: 'number' },
+describe('withImplicitRequired-option', () => {
+  test('object with properties (no additionalProperties) produces strict output', () => {
+    expect(
+      getZodSchema({
+        schema: {
+          type: 'object',
+          properties: {
+            str: { type: 'string' },
+            num: { type: 'number' },
           },
         },
-      },
-    }),
-  ).toMatchInlineSnapshot(
-    `
-    {
-        "code": "z.object({
-      nested: z.object({
-      }).strip().optional(),
-      str: z.string().optional(),
-    }).strip()",
-        "schema": {
-            "properties": {
-                "nested": {
-                    "additionalProperties": {
-                        "type": "number",
-                    },
-                },
-                "str": {
-                    "type": "string",
-                },
+      }),
+    ).toMatchInlineSnapshot(
+      `
+      {
+          "code": "z.strictObject({
+        num: z.number().optional(),
+        str: z.string().optional(),
+      })",
+          "schema": {
+              "properties": {
+                  "num": {
+                      "type": "number",
+                  },
+                  "str": {
+                      "type": "string",
+                  },
+              },
+              "type": "object",
+          },
+      }
+    `,
+    );
+  });
+
+  test('nested schema-valued additionalProperties is rejected', () => {
+    expect(() =>
+      getZodSchema({
+        schema: {
+          type: 'object',
+          properties: {
+            str: { type: 'string' },
+            nested: {
+              additionalProperties: { type: 'number' },
             },
-            "type": "object",
+          },
         },
-    }
-  `,
-  );
+      }),
+    ).toThrow(/non-strict object input/i);
+  });
 });

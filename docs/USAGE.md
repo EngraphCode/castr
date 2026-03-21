@@ -261,7 +261,6 @@ console.log(pet.name); // Fully typed
 | `--template`       | Template to use (`schemas-only`, `schemas-with-metadata`, `schemas-with-client`) | `schemas-with-metadata` |
 | `--base-url`       | Base URL for API requests                                                        | `''`                    |
 | `--with-alias`     | Include operationId as alias                                                     | `false`                 |
-| `--strict-objects` | Use `.strict()` on all object schemas                                            | `false`                 |
 | `--export-schemas` | Export all schemas (not just referenced ones)                                    | `false`                 |
 
 ### Programmatic Options
@@ -288,14 +287,8 @@ export type GenerateZodClientFromOpenApiArgs = {
     /** Base URL for the API */
     baseUrl?: string;
 
-    /** Use `.strict()` on all object schemas */
-    strictObjects?: boolean;
-
     /** Export all schemas */
     exportSchemas?: boolean;
-
-    /** Additional properties behavior */
-    additionalPropertiesDefaultValue?: boolean | 'strip' | 'passthrough';
 
     /** Validation mode for generated client */
     validationMode?: 'strict' | 'loose' | 'none';
@@ -304,6 +297,8 @@ export type GenerateZodClientFromOpenApiArgs = {
   };
 };
 ```
+
+Object schemas are strict by default. There is no CLI or programmatic strictness toggle.
 
 ---
 

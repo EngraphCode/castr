@@ -153,21 +153,17 @@ test('inline-simple-schemas', async () => {
     };
     // Zod Schemas
     export const BasicString = z.string();
-    export const SimpleObject = z
-      .object({
-        str: z.string().optional(),
-      })
-      .strip();
-    export const ComplexObject = z
-      .object({
-        bool: z.boolean().optional(),
-        num: z.number().optional(),
-        ref: SimpleObject.optional(),
-        refArray: z.array(SimpleObject).optional(),
-        str: z.string().optional(),
-        strRef: BasicString.optional(),
-      })
-      .strip();
+    export const SimpleObject = z.strictObject({
+      str: z.string().optional(),
+    });
+    export const ComplexObject = z.strictObject({
+      bool: z.boolean().optional(),
+      num: z.number().optional(),
+      ref: SimpleObject.optional(),
+      refArray: z.array(SimpleObject).optional(),
+      str: z.string().optional(),
+      strRef: BasicString.optional(),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -194,11 +190,9 @@ test('inline-simple-schemas', async () => {
           },
           {
             status: 403,
-            schema: z
-              .object({
-                str: z.string().optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              str: z.string().optional(),
+            }),
             description: "Forbidden",
           },
           {
@@ -214,11 +208,9 @@ test('inline-simple-schemas', async () => {
           {
             status: 406,
             schema: z.array(
-              z
-                .object({
-                  str: z.string().optional(),
-                })
-                .strip(),
+              z.strictObject({
+                str: z.string().optional(),
+              }),
             ),
             description: "Not Acceptable",
           },
@@ -246,11 +238,9 @@ test('inline-simple-schemas', async () => {
             description: "Payment Required",
           },
           403: {
-            schema: z
-              .object({
-                str: z.string().optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              str: z.string().optional(),
+            }),
             description: "Forbidden",
           },
           404: {
@@ -263,11 +253,9 @@ test('inline-simple-schemas', async () => {
           },
           406: {
             schema: z.array(
-              z
-                .object({
-                  str: z.string().optional(),
-                })
-                .strip(),
+              z.strictObject({
+                str: z.string().optional(),
+              }),
             ),
             description: "Not Acceptable",
           },

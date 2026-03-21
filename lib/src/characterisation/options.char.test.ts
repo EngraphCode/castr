@@ -218,49 +218,14 @@ describe('Characterisation: Options & Configuration', () => {
   });
 
   describe('Validation Options', () => {
-    it('should handle additionalPropertiesDefaultValue: true', async () => {
+    it('emits strict object schemas by default without an option knob', async () => {
       const spec = createBasicSpec();
-      // Bundling not needed for in-memory specs with internal refs
       const result = await generateZodClientFromOpenAPI({
         openApiDoc: spec,
         disableWriteToFile: true,
-        options: {
-          additionalPropertiesDefaultValue: true,
-        },
       });
 
-      expect(extractContent(result)).toContain('User');
-      expect(extractContent(result)).not.toContain('as unknown as');
-    });
-
-    it('should handle additionalPropertiesDefaultValue: false', async () => {
-      const spec = createBasicSpec();
-      // Bundling not needed for in-memory specs with internal refs
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: spec,
-        disableWriteToFile: true,
-        options: {
-          additionalPropertiesDefaultValue: false,
-        },
-      });
-
-      expect(extractContent(result)).toContain('User');
-      expect(extractContent(result)).not.toContain('as unknown as');
-    });
-
-    it('should handle strictObjects: true', async () => {
-      const spec = createBasicSpec();
-      // Bundling not needed for in-memory specs with internal refs
-      const result = await generateZodClientFromOpenAPI({
-        openApiDoc: spec,
-        disableWriteToFile: true,
-        options: {
-          strictObjects: true,
-        },
-      });
-
-      expect(extractContent(result)).toContain('User');
-      // Note: strictObjects affects object validation, may use .passthrough() or similar
+      expect(extractContent(result)).toContain('z.strictObject({');
       expect(extractContent(result)).not.toContain('as unknown as');
     });
 

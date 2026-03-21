@@ -18,11 +18,12 @@ Primary goal: parse idiomatic Zod 4 schemas (including our output) and
 reconstruct IR for lossless transform validation with sample input.
 
 > [!IMPORTANT]
-> [ADR-040](../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) amends object-input expectations in this document:
+> [IDENTITY.md](../../.agent/IDENTITY.md) supersedes the earlier multi-mode object direction:
 >
-> - strict object forms are the default accepted path
-> - non-strict object forms reject by default
-> - one explicit compatibility mode may normalize non-strict object forms to strip semantics instead of rejecting them
+> - strict object forms are the only accepted path
+> - non-strict object forms are rejected unconditionally
+> - there is no strip-normalization compatibility mode in the core pipeline
+> - `unknownKeyBehavior` has been removed from the IR entirely
 
 ---
 
@@ -91,30 +92,20 @@ reconstruct IR for lossless transform validation with sample input.
 
 Default accepted object-input direction:
 
-| Zod 4 Expression                          | Target IR                                                                                                       |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `z.strictObject({ prop: z.string() })`    | `type: 'object', properties: {...}, additionalProperties: false, unknownKeyBehavior: { mode: 'strict' }`        |
-| `z.object({ prop: z.string() }).strict()` | same target IR when statically analyzable; recursive writer output must not rely on this form if runtime-unsafe |
+| Zod 4 Expression                          | Target IR                                                                         |
+| ----------------------------------------- | --------------------------------------------------------------------------------- |
+| `z.strictObject({ prop: z.string() })`    | `type: 'object', properties: {...}, additionalProperties: false`                  |
+| `z.object({ prop: z.string() }).strict()` | same target IR when statically analyzable; recursive output must not rely on this |
 
-Default rejected object-input direction:
+Rejected object-input direction (unconditional, no opt-out):
 
 - bare `z.object({ ... })`
 - `.strip()`
 - `.passthrough()`
 - `.catchall(schema)`
+- `z.looseObject({...})`
 
-Compatibility-mode normalization target:
-
-| Zod 4 Expression                      | Normalized IR target                                                       |
-| ------------------------------------- | -------------------------------------------------------------------------- |
-| `z.object({ prop: z.string() })`      | `type: 'object', properties: {...}, unknownKeyBehavior: { mode: 'strip' }` |
-| `z.looseObject({ prop: z.string() })` | `type: 'object', properties: {...}, unknownKeyBehavior: { mode: 'strip' }` |
-| `.strip()`                            | `unknownKeyBehavior: { mode: 'strip' }`                                    |
-| `.passthrough()`                      | `unknownKeyBehavior: { mode: 'strip' }`                                    |
-| `.catchall(schema)`                   | `unknownKeyBehavior: { mode: 'strip' }`                                    |
-
-Compatibility mode is explicit and lossy. It must never preserve passthrough or catchall behavior under a compatibility label.
-The public parser option surface is `nonStrictObjectPolicy?: 'reject' | 'strip'`, defaulting to `'reject'`.
+Non-strict object input must fail fast with actionable diagnostics. Callers who need to normalize non-strict input should use the doctor (`repairOpenApiDocument`) before feeding schemas into the core pipeline.
 
 ### 1.7 Array and Tuple Types
 

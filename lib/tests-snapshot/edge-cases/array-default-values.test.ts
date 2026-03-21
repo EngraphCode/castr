@@ -110,12 +110,10 @@ test('array-default-values', async () => {
     };
     export type MyEnum = string;
     // Zod Schemas
-    export const MyComponent = z
-      .object({
-        id: z.number().optional(),
-        name: z.string().optional(),
-      })
-      .strip();
+    export const MyComponent = z.strictObject({
+      id: z.number().optional(),
+      name: z.string().optional(),
+    });
     export const MyEnum = z.enum(["one", "two", "three"]);
     // Endpoints
     export const endpoints = [
@@ -144,11 +142,9 @@ test('array-default-values', async () => {
             type: "Query",
             schema: z
               .array(
-                z
-                  .object({
-                    foo: z.string().optional(),
-                  })
-                  .strip(),
+                z.strictObject({
+                  foo: z.string().optional(),
+                }),
               )
               .optional(),
           },
@@ -179,11 +175,9 @@ test('array-default-values', async () => {
               "array-number": z.array(z.number()).optional(),
               "array-object": z
                 .array(
-                  z
-                    .object({
-                      foo: z.string().optional(),
-                    })
-                    .strip(),
+                  z.strictObject({
+                    foo: z.string().optional(),
+                  }),
                 )
                 .optional(),
               "array-ref-object": z.array(MyComponent).optional(),
@@ -222,8 +216,7 @@ test('array-default-values', async () => {
                       type: "object",
                       properties: { foo: { type: "string" } },
                       required: [],
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
+                      additionalProperties: false,
                     },
                   },
                   "array-ref-enum": {
@@ -241,8 +234,7 @@ test('array-default-values', async () => {
                         name: { type: "string" },
                       },
                       required: [],
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
+                      additionalProperties: false,
                     },
                   },
                   "array-string": {

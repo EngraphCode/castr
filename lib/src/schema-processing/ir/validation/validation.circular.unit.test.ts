@@ -14,11 +14,7 @@ import { assertSchemaComponent } from '../test-helpers.js';
 const getZodClientTemplateContext = (
   doc: OpenAPIObject,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
-) =>
-  getZodClientTemplateContextBase(doc, {
-    nonStrictObjectPolicy: 'strip',
-    ...options,
-  });
+) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Circular Reference Detection', () => {
   test('detects self-referencing schemas', () => {

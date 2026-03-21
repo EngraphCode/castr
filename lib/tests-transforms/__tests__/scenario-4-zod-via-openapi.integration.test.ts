@@ -25,11 +25,6 @@ import {
   parseZodSource,
 } from '../utils/transform-helpers.js';
 
-const UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES = [
-  'StripObjectSchema',
-  'RecursiveStripCategorySchema',
-] as const;
-
 // ============================================================================
 // Scenario 4: Zod → IR → OpenAPI → IR → Zod
 // ============================================================================
@@ -129,58 +124,10 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
         await expect(generateZodFromOpenAPI(openApiOutput)).rejects.toThrow(expectedError);
       },
     );
-
-    it('rejects the full mixed unknown-key fixture by default and supports explicit strip normalization', async () => {
-      const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
-      if (!fixture) {
-        throw new Error('Expected unknown-key-semantics fixture');
-      }
-
-      const source = await readZodFixture(fixture.path);
-      const defaultResult = parseZodSource(source);
-      expect(defaultResult.errors.length).toBeGreaterThan(0);
-      expect(defaultResult.errors[0]?.message).toContain('strict object ingest is the default');
-      expect(defaultResult.errors[0]?.message).toContain("nonStrictObjectPolicy: 'strip'");
-
-      const compatibilityResult = parseFixtureZodSource(fixture, source);
-      expectNoParseErrors(
-        fixture.name,
-        'Scenario 4 arbitrary-input parse with compatibility mode',
-        compatibilityResult,
-      );
-
-      const openApiOutput = writeOpenApi(
-        selectFixtureRoundTripDocument(fixture, compatibilityResult.ir),
-      );
-      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
-      const regenerated = parseFixtureZodSource(fixture, zodOutput);
-
-      expectNoParseErrors(
-        fixture.name,
-        'Scenario 4 generated-output parse with compatibility mode',
-        regenerated,
-      );
-
-      const regeneratedSchemas = selectSchemaComponents(regenerated.ir, [
-        'StripObjectSchema',
-        'PassthroughObjectSchema',
-        'CatchallObjectSchema',
-        'RecursiveStripCategorySchema',
-      ]).components;
-
-      for (const component of regeneratedSchemas) {
-        if (component.type !== 'schema') {
-          continue;
-        }
-
-        expect(component.schema.additionalProperties).toBe(true);
-        expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
-      }
-    });
   });
 
   describe('Functional Equivalence: Validation Parity', () => {
-    it.each(ZOD_FIXTURES.filter((fixture) => fixture.name !== 'unknown-key-semantics'))(
+    it.each(ZOD_FIXTURES)(
       '$name: Zod → OpenAPI → Zod yields identical validation behavior',
       async (fixture) => {
         const source = await readZodFixture(fixture.path);
@@ -197,37 +144,5 @@ describe('Transform Sample Scenario 4: Zod → OpenAPI → Zod', () => {
         assertParsedOutputParity(fixture.name, originalSchemas, transformedSchemas);
       },
     );
-
-    it('unknown-key-semantics: compatibility mode preserves strip behavior where strip semantics are the target', async () => {
-      expect.hasAssertions();
-
-      const fixture = ZOD_FIXTURES.find((candidate) => candidate.name === 'unknown-key-semantics');
-      if (!fixture) {
-        throw new Error('Expected unknown-key-semantics fixture');
-      }
-
-      const source = await readZodFixture(fixture.path);
-      const result1 = parseFixtureZodSource(fixture, source);
-      expectNoParseErrors(fixture.name, 'Scenario 4 arbitrary-input parse', result1);
-
-      const openApiOutput = writeOpenApi(selectFixtureRoundTripDocument(fixture, result1.ir));
-      const zodOutput = await generateZodFromOpenAPI(openApiOutput);
-
-      const originalSchemas = await loadDynamicZodSchemas(source);
-      const transformedSchemas = await loadDynamicZodSchemas(zodOutput);
-
-      assertValidationParity(
-        fixture.name,
-        originalSchemas,
-        transformedSchemas,
-        UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES,
-      );
-      assertParsedOutputParity(
-        fixture.name,
-        originalSchemas,
-        transformedSchemas,
-        UNKNOWN_KEY_COMPATIBILITY_SCHEMA_NAMES,
-      );
-    });
   });
 });

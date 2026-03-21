@@ -19,7 +19,6 @@ import { buildSingleParameter } from '../operations/builder.parameters.js';
 import { buildSingleResponse } from '../operations/builder.responses.js';
 import { buildIRRequestBody } from '../operations/builder.request-body.js';
 import type { IRComponent, IRSecuritySchemeComponent } from '../../../ir/index.js';
-import type { NonStrictObjectPolicy } from '../../../non-strict-object-policy.js';
 
 export function buildSecurityComponents(
   securitySchemes: Record<string, SecuritySchemeObject | ReferenceObject>,
@@ -35,7 +34,6 @@ export function buildSecurityComponents(
 
 export function buildParameterComponents(
   parameters: Record<string, ParameterObject | ReferenceObject>,
-  nonStrictObjectPolicy?: NonStrictObjectPolicy,
 ): IRComponent[] {
   return Object.entries(parameters).map(([name, param]) => {
     // Create a temporary context for the parameter
@@ -43,7 +41,6 @@ export function buildParameterComponents(
       doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
       path: ['#', 'components', 'parameters', name],
       required: false,
-      nonStrictObjectPolicy,
     };
     return {
       type: 'parameter',
@@ -55,7 +52,6 @@ export function buildParameterComponents(
 
 export function buildResponseComponents(
   responses: Record<string, ResponseObject | ReferenceObject>,
-  nonStrictObjectPolicy?: NonStrictObjectPolicy,
 ): IRComponent[] {
   return Object.entries(responses).map(([name, response]) => {
     // Create a temporary context for the response
@@ -63,7 +59,6 @@ export function buildResponseComponents(
       doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
       path: ['#', 'components', 'responses', name],
       required: false,
-      nonStrictObjectPolicy,
     };
     // For responses, we need a status code, but components don't have one.
     // We use 'default' or a placeholder as it's a reusable component.
@@ -77,7 +72,6 @@ export function buildResponseComponents(
 
 export function buildRequestBodyComponents(
   requestBodies: Record<string, RequestBodyObject | ReferenceObject>,
-  nonStrictObjectPolicy?: NonStrictObjectPolicy,
 ): IRComponent[] {
   return Object.entries(requestBodies).map(([name, requestBody]) => {
     // Create a temporary context for the requestBody
@@ -85,7 +79,6 @@ export function buildRequestBodyComponents(
       doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
       path: ['#', 'components', 'requestBodies', name],
       required: false,
-      nonStrictObjectPolicy,
     };
     return {
       type: 'requestBody',

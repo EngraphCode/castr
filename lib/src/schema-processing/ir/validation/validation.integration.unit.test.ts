@@ -15,11 +15,7 @@ import { assertSchemaComponent } from '../test-helpers.js';
 const getZodClientTemplateContext = (
   doc: OpenAPIObject,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
-) =>
-  getZodClientTemplateContextBase(doc, {
-    nonStrictObjectPolicy: 'strip',
-    ...options,
-  });
+) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Real-World Integration', () => {
   test('handles a realistic API specification', () => {
@@ -49,6 +45,7 @@ describe('IR Validation - Real-World Integration', () => {
                   'application/json': {
                     schema: {
                       type: 'object',
+                      additionalProperties: false,
                       properties: {
                         users: {
                           type: 'array',
@@ -89,6 +86,7 @@ describe('IR Validation - Real-World Integration', () => {
         schemas: {
           User: {
             type: 'object',
+            additionalProperties: false,
             required: ['id', 'email'],
             properties: {
               id: { type: 'integer' },
@@ -99,6 +97,7 @@ describe('IR Validation - Real-World Integration', () => {
           },
           Profile: {
             type: 'object',
+            additionalProperties: false,
             properties: {
               bio: { type: 'string' },
               avatar: { type: 'string', format: 'uri' },
@@ -106,6 +105,7 @@ describe('IR Validation - Real-World Integration', () => {
           },
           CreateUserRequest: {
             type: 'object',
+            additionalProperties: false,
             required: ['email'],
             properties: {
               email: { type: 'string' },
@@ -120,6 +120,7 @@ describe('IR Validation - Real-World Integration', () => {
 
     // PROVE: Complete IR is generated
     expect(ctx._ir).toBeDefined();
+
     expect(isCastrDocument(ctx._ir)).toBe(true);
 
     // PROVE: All schemas are captured

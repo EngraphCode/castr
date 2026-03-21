@@ -218,7 +218,7 @@ describe('Endpoint Zod Parsing', () => {
       expect(result.responses.find((r: CastrResponse) => r.statusCode === '500')).toBeDefined();
     });
 
-    it('rejects non-strict endpoint body schemas by default', () => {
+    it('rejects non-strict endpoint body schemas', () => {
       const definition: EndpointDefinition = {
         method: 'post',
         path: '/users',
@@ -227,25 +227,8 @@ describe('Endpoint Zod Parsing', () => {
       };
 
       expect(() => buildCastrOperationFromEndpoint(definition)).toThrow(
-        /strict object ingest is the default/,
+        /closed-world object semantics/,
       );
-    });
-
-    it('normalizes non-strict endpoint body schemas in compatibility mode', () => {
-      const definition: EndpointDefinition = {
-        method: 'post',
-        path: '/users',
-        body: 'z.object({ name: z.string() }).passthrough()',
-        responses: { '201': 'UserSchema' },
-      };
-
-      const result = buildCastrOperationFromEndpoint(definition, {
-        nonStrictObjectPolicy: 'strip',
-      });
-
-      const bodySchema = result.requestBody?.content['application/json']?.schema;
-      expect(bodySchema?.additionalProperties).toBe(true);
-      expect(bodySchema?.unknownKeyBehavior).toEqual({ mode: 'strip' });
     });
 
     it('should include tags and deprecated status', () => {

@@ -241,52 +241,11 @@ describe('writeJsonSchema', () => {
       const schema = createSchema({
         type: 'object',
         additionalProperties: false,
-        unknownKeyBehavior: { mode: 'strict' },
       });
 
       const result = writeJsonSchema(schema);
 
       expect(result.additionalProperties).toBe(false);
-    });
-
-    it('writes strip unknown-key behavior with the governed extension', () => {
-      const schema = createSchema({
-        type: 'object',
-        unknownKeyBehavior: { mode: 'strip' },
-      });
-
-      const result = writeJsonSchema(schema);
-
-      expect(result.additionalProperties).toBe(true);
-      expect(result['x-castr-unknownKeyBehavior']).toBe('strip');
-    });
-
-    it('writes passthrough unknown-key behavior with the governed extension', () => {
-      const schema = createSchema({
-        type: 'object',
-        unknownKeyBehavior: { mode: 'passthrough' },
-      });
-
-      const result = writeJsonSchema(schema);
-
-      expect(result.additionalProperties).toBe(true);
-      expect(result['x-castr-unknownKeyBehavior']).toBe('passthrough');
-    });
-
-    it('writes additionalProperties as schema', () => {
-      const schema = createSchema({
-        type: 'object',
-        additionalProperties: createSchema({ type: 'string' }),
-        unknownKeyBehavior: {
-          mode: 'catchall',
-          schema: createSchema({ type: 'string' }),
-        },
-      });
-
-      const result = writeJsonSchema(schema);
-
-      expect(result.additionalProperties).toEqual({ type: 'string' });
-      expect(result['x-castr-unknownKeyBehavior']).toBeUndefined();
     });
   });
 
@@ -339,7 +298,7 @@ describe('writeJsonSchema', () => {
       const result = writeJsonSchema(schema);
 
       expect(result.allOf).toHaveLength(2);
-      expect(result.allOf?.[0]).toEqual({ type: 'object' });
+      expect(result.allOf?.[0]).toEqual({ type: 'object', additionalProperties: false });
     });
 
     it('writes oneOf', () => {
@@ -471,7 +430,10 @@ describe('writeJsonSchema', () => {
 
       const result = writeJsonSchema(schema);
 
-      expect(result.dependentSchemas?.['creditCard']).toEqual({ type: 'object' });
+      expect(result.dependentSchemas?.['creditCard']).toEqual({
+        type: 'object',
+        additionalProperties: false,
+      });
     });
 
     it('writes dependentRequired', () => {

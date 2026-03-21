@@ -12,8 +12,7 @@ import type {
 } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
 
-import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
-import { visitSchemaNode } from './openapi-document.non-strict-object-policy.schemas.js';
+import { visitSchemaNode } from './openapi-document.object-semantics.schemas.js';
 
 const HTTP_METHODS = [
   'get',
@@ -50,41 +49,37 @@ function visitMapValues<T>(
 
 function visitContent(
   content: Record<string, MediaTypeObject> | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
-  visitMapValues(content, (mediaType) => visitSchemaNode(mediaType.schema, options, seen));
+  visitMapValues(content, (mediaType) => visitSchemaNode(mediaType.schema, seen));
 }
 
 function visitHeaderNode(
   header: HeaderObject | ReferenceObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!header || isReferenceObject(header) || !markSeen(header, seen)) {
     return;
   }
 
-  visitSchemaNode(header.schema, options, seen);
-  visitContent(header.content, options, seen);
+  visitSchemaNode(header.schema, seen);
+  visitContent(header.content, seen);
 }
 
 function visitParameterNode(
   parameter: ParameterObject | ReferenceObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!parameter || isReferenceObject(parameter) || !markSeen(parameter, seen)) {
     return;
   }
 
-  visitSchemaNode(parameter.schema, options, seen);
-  visitContent(parameter.content, options, seen);
+  visitSchemaNode(parameter.schema, seen);
+  visitContent(parameter.content, seen);
 }
 
 function visitParameterList(
   parameters: readonly (ParameterObject | ReferenceObject)[] | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!parameters) {
@@ -92,38 +87,35 @@ function visitParameterList(
   }
 
   for (const parameter of parameters) {
-    visitParameterNode(parameter, options, seen);
+    visitParameterNode(parameter, seen);
   }
 }
 
 function visitRequestBodyNode(
   requestBody: RequestBodyObject | ReferenceObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!requestBody || isReferenceObject(requestBody) || !markSeen(requestBody, seen)) {
     return;
   }
 
-  visitContent(requestBody.content, options, seen);
+  visitContent(requestBody.content, seen);
 }
 
 function visitResponseNode(
   response: ResponseObject | ReferenceObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!response || isReferenceObject(response) || !markSeen(response, seen)) {
     return;
   }
 
-  visitMapValues(response.headers, (header) => visitHeaderNode(header, options, seen));
-  visitContent(response.content, options, seen);
+  visitMapValues(response.headers, (header) => visitHeaderNode(header, seen));
+  visitContent(response.content, seen);
 }
 
 function visitCallbackNode(
   callback: CallbackObject | ReferenceObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!callback || isReferenceObject(callback) || !markSeen(callback, seen)) {
@@ -131,59 +123,47 @@ function visitCallbackNode(
   }
 
   visitMapValues<PathItemObject | ReferenceObject>(callback, (pathItem) =>
-    visitPathItemNode(pathItem, options, seen),
+    visitPathItemNode(pathItem, seen),
   );
 }
 
-function visitOperationNode(
-  operation: OperationObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
-  seen: WeakSet<object>,
-): void {
+function visitOperationNode(operation: OperationObject | undefined, seen: WeakSet<object>): void {
   if (!operation || !markSeen(operation, seen)) {
     return;
   }
 
-  visitParameterList(operation.parameters, options, seen);
-  visitRequestBodyNode(operation.requestBody, options, seen);
+  visitParameterList(operation.parameters, seen);
+  visitRequestBodyNode(operation.requestBody, seen);
   visitMapValues<ResponseObject | ReferenceObject>(operation.responses, (response) =>
-    visitResponseNode(response, options, seen),
+    visitResponseNode(response, seen),
   );
   visitMapValues<CallbackObject | ReferenceObject>(operation.callbacks, (callback) =>
-    visitCallbackNode(callback, options, seen),
+    visitCallbackNode(callback, seen),
   );
 }
 
 function visitPathItemNode(
   pathItem: PathItemObject | ReferenceObject | undefined,
-  options: NonStrictObjectPolicyOptions | undefined,
   seen: WeakSet<object>,
 ): void {
   if (!pathItem || isReferenceObject(pathItem) || !markSeen(pathItem, seen)) {
     return;
   }
 
-  visitParameterList(pathItem.parameters, options, seen);
+  visitParameterList(pathItem.parameters, seen);
   for (const method of HTTP_METHODS) {
-    visitOperationNode(pathItem[method], options, seen);
+    visitOperationNode(pathItem[method], seen);
   }
 }
 
-export function cloneAndApplyOpenApiDocumentNonStrictObjectPolicy(
-  doc: OpenAPIObject,
-  options?: NonStrictObjectPolicyOptions,
-): OpenAPIObject {
+export function cloneAndValidateOpenApiDocumentObjectSemantics(doc: OpenAPIObject): OpenAPIObject {
   const clonedDoc = structuredClone(doc);
   const seen = new WeakSet<object>();
 
-  visitMapValues(clonedDoc.components?.headers, (header) => visitHeaderNode(header, options, seen));
-  visitMapValues(clonedDoc.components?.callbacks, (callback) =>
-    visitCallbackNode(callback, options, seen),
-  );
-  visitMapValues(clonedDoc.components?.pathItems, (pathItem) =>
-    visitPathItemNode(pathItem, options, seen),
-  );
-  visitMapValues(clonedDoc.webhooks, (pathItem) => visitPathItemNode(pathItem, options, seen));
+  visitMapValues(clonedDoc.components?.headers, (header) => visitHeaderNode(header, seen));
+  visitMapValues(clonedDoc.components?.callbacks, (callback) => visitCallbackNode(callback, seen));
+  visitMapValues(clonedDoc.components?.pathItems, (pathItem) => visitPathItemNode(pathItem, seen));
+  visitMapValues(clonedDoc.webhooks, (pathItem) => visitPathItemNode(pathItem, seen));
 
   return clonedDoc;
 }

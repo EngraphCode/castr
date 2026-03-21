@@ -82,17 +82,13 @@ test('allOf-infer-required-only-item', async () => {
       user?: user & {};
     };
     // Zod Schemas
-    export const user = z
-      .object({
-        email: z.string().optional(),
-        name: z.string().optional(),
-      })
-      .strip();
-    export const userResponse = z
-      .object({
-        user: user.and(z.object({}).strip()).optional(),
-      })
-      .strip();
+    export const user = z.strictObject({
+      email: z.string().optional(),
+      name: z.string().optional(),
+    });
+    export const userResponse = z.strictObject({
+      user: user.and(z.strictObject({})).optional(),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -130,20 +126,14 @@ test('allOf-infer-required-only-item', async () => {
                       name: { type: "string" },
                     },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
-                  {
-                    type: "object",
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
-                  },
+                  { type: "object", additionalProperties: false },
                 ],
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

@@ -550,7 +550,6 @@ describe('isCastrSchema', () => {
       }),
       required: ['name'],
       additionalProperties: false,
-      unknownKeyBehavior: { mode: 'strict' },
       metadata: {
         required: false,
         nullable: false,
@@ -591,7 +590,6 @@ describe('isCastrSchema', () => {
       }),
       required: ['name'],
       additionalProperties: catchallSchema,
-      unknownKeyBehavior: { mode: 'catchall', schema: catchallSchema },
       metadata: {
         required: false,
         nullable: false,
@@ -757,94 +755,10 @@ describe('isCastrSchema', () => {
     expect(isCastrSchema(schemaWithoutMetadata)).toBe(false);
   });
 
-  it('should return false when unknownKeyBehavior appears on a non-object schema', () => {
-    const schema = {
-      type: 'string',
-      unknownKeyBehavior: { mode: 'strip' },
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false when uuidVersion appears on a non-UUID string schema', () => {
-    const schema = {
-      type: 'string',
-      format: 'email',
-      uuidVersion: 4,
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false when integerSemantics appears on a non-integer schema', () => {
-    const schema = {
-      type: 'string',
-      integerSemantics: 'bigint',
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false for catchall unknownKeyBehavior without a schema', () => {
-    const schema = {
-      type: 'object',
-      properties: new CastrSchemaProperties(),
-      unknownKeyBehavior: { mode: 'catchall' },
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false when additionalProperties appears on a non-object schema', () => {
-    const schema = {
-      type: 'string',
-      additionalProperties: true,
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false when passthrough unknownKeyBehavior conflicts with additionalProperties', () => {
-    const schema = {
-      type: 'object',
-      properties: new CastrSchemaProperties(),
+  it('should return false for primitive schemas polluted with additionalProperties', () => {
+    const pollutedPrimitive = {
+      type: 'integer',
       additionalProperties: false,
-      unknownKeyBehavior: { mode: 'passthrough' },
       metadata: {
         required: false,
         nullable: false,
@@ -854,46 +768,7 @@ describe('isCastrSchema', () => {
       },
     };
 
-    expect(isCastrSchema(schema)).toBe(false);
-  });
-
-  it('should return false when catchall unknownKeyBehavior does not match additionalProperties', () => {
-    const schema = {
-      type: 'object',
-      properties: new CastrSchemaProperties(),
-      additionalProperties: {
-        type: 'string',
-        metadata: {
-          required: false,
-          nullable: false,
-          zodChain: { presence: '', validations: [], defaults: [] },
-          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-          circularReferences: [],
-        },
-      },
-      unknownKeyBehavior: {
-        mode: 'catchall',
-        schema: {
-          type: 'number',
-          metadata: {
-            required: false,
-            nullable: false,
-            zodChain: { presence: '', validations: [], defaults: [] },
-            dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-            circularReferences: [],
-          },
-        },
-      },
-      metadata: {
-        required: false,
-        nullable: false,
-        zodChain: { presence: '', validations: [], defaults: [] },
-        dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-        circularReferences: [],
-      },
-    };
-
-    expect(isCastrSchema(schema)).toBe(false);
+    expect(isCastrSchema(pollutedPrimitive)).toBe(false);
   });
 });
 

@@ -52,21 +52,15 @@ test('allOf-missing-and', async () => {
     };
     export type test4 = test1 & test2 & test3;
     // Zod Schemas
-    export const test1 = z
-      .object({
-        text1: z.string().optional(),
-      })
-      .strip();
-    export const test2 = z
-      .object({
-        text2: z.number().optional(),
-      })
-      .strip();
-    export const test3 = z
-      .object({
-        text3: z.boolean().optional(),
-      })
-      .strip();
+    export const test1 = z.strictObject({
+      text1: z.string().optional(),
+    });
+    export const test2 = z.strictObject({
+      text2: z.number().optional(),
+    });
+    export const test3 = z.strictObject({
+      text3: z.boolean().optional(),
+    });
     export const test4 = test1.and(test2).and(test3);
     // Endpoints
     export const endpoints = [
@@ -102,22 +96,19 @@ test('allOf-missing-and', async () => {
                     type: "object",
                     properties: { text1: { type: "string" } },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
                   {
                     type: "object",
                     properties: { text2: { type: "number" } },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
                   {
                     type: "object",
                     properties: { text3: { type: "boolean" } },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
                 ],
               },

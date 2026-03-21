@@ -84,20 +84,16 @@ test('missing-zod-chains', async () => {
     // Zod Schemas
     export const test1 = z.string().min(5);
     export const test2 = z.int().min(10);
-    export const test3 = z
-      .object({
-        num: z.int().min(10),
-        text: z.string().min(5),
-      })
-      .strip();
-    export const nulltype = z.union([z.object({}).strip(), z.null()]);
+    export const test3 = z.strictObject({
+      num: z.int().min(10),
+      text: z.string().min(5),
+    });
+    export const nulltype = z.union([z.strictObject({}), z.null()]);
     export const anyOfType = z.union([
-      z.object({}).strip(),
-      z
-        .object({
-          foo: z.string().optional(),
-        })
-        .strip(),
+      z.strictObject({}),
+      z.strictObject({
+        foo: z.string().optional(),
+      }),
       z.null(),
     ]);
     // Endpoints

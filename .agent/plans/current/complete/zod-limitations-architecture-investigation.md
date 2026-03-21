@@ -1,6 +1,6 @@
 # Plan (Paused Umbrella): Zod Limitations Architecture Investigation
 
-**Status:** Paused  
+**Status:** Complete (Closed Out 2026-03-21) — all findings promoted to ADRs and durable docs; residual threads consolidated in [zod-and-transform-future-investigations.md](../../future/zod-and-transform-future-investigations.md)  
 **Created:** 2026-03-09  
 **Last Updated:** 2026-03-13  
 **Predecessor:** [type-safety-remediation.md](../complete/type-safety-remediation.md)  

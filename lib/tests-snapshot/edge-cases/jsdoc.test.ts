@@ -119,62 +119,55 @@ test('jsdoc', async () => {
       /** An array of SimpleObject */ refArray?: SimpleObject[];
     };
     // Zod Schemas
-    export const SimpleObject = z
-      .object({
-        str: z.string().optional(),
-      })
-      .strip();
-    export const ComplexObject = z
-      .object({
-        bool: z.boolean().optional().meta({ description: "A boolean" }),
-        example: z
-          .string()
-          .optional()
-          .meta({
-            description: "A string with example tag",
-            examples: ["example"],
-          }),
-        examples: z
-          .string()
-          .optional()
-          .meta({
-            description: "A string with examples tag",
-            examples: ["example1", "example2"],
-          }),
-        manyTagsNum: z
-          .number()
-          .min(0)
-          .max(10)
-          .optional()
-          .meta({
-            description: "A number with many tags",
-            examples: [3],
-            externalDocs: { url: "https://example.com" },
-          }),
-        manyTagsStr: z
-          .enum(["a", "b", "c"])
-          .min(1)
-          .max(10)
-          .regex(/^[a-z]*$/)
-          .optional()
-          .meta({ description: "A string with many tags" }),
-        numMax: z
-          .number()
-          .max(10)
-          .optional()
-          .meta({ description: "A number with maximum tag" }),
-        numMin: z
-          .number()
-          .min(0)
-          .optional()
-          .meta({ description: "A number with minimum tag" }),
-        ref: SimpleObject.optional(),
-        refArray: z
-          .array(SimpleObject)
-          .optional()
-          .meta({ description: "An array of SimpleObject" }),
-      })
-      .strip();
+    export const SimpleObject = z.strictObject({
+      str: z.string().optional(),
+    });
+    export const ComplexObject = z.strictObject({
+      bool: z.boolean().optional().meta({ description: "A boolean" }),
+      example: z
+        .string()
+        .optional()
+        .meta({ description: "A string with example tag", examples: ["example"] }),
+      examples: z
+        .string()
+        .optional()
+        .meta({
+          description: "A string with examples tag",
+          examples: ["example1", "example2"],
+        }),
+      manyTagsNum: z
+        .number()
+        .min(0)
+        .max(10)
+        .optional()
+        .meta({
+          description: "A number with many tags",
+          examples: [3],
+          externalDocs: { url: "https://example.com" },
+        }),
+      manyTagsStr: z
+        .enum(["a", "b", "c"])
+        .min(1)
+        .max(10)
+        .regex(/^[a-z]*$/)
+        .optional()
+        .meta({ description: "A string with many tags" }),
+      numMax: z
+        .number()
+        .max(10)
+        .optional()
+        .meta({ description: "A number with maximum tag" }),
+      numMin: z
+        .number()
+        .min(0)
+        .optional()
+        .meta({ description: "A number with minimum tag" }),
+      ref: SimpleObject.optional(),
+      refArray: z
+        .array(SimpleObject)
+        .optional()
+        .meta({ description: "An array of SimpleObject" }),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -246,8 +239,7 @@ test('jsdoc', async () => {
                 type: "object",
                 properties: { str: { type: "string" } },
                 required: [],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               refArray: {
                 type: "array",
@@ -256,14 +248,12 @@ test('jsdoc', async () => {
                   type: "object",
                   properties: { str: { type: "string" } },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

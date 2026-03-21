@@ -2942,7 +2942,7 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.object({
+export const User = z.strictObject({
   email: z.string().optional(),
   firstname: z.string().optional(),
   get friends() {
@@ -2951,14 +2951,14 @@ export const User = z.object({
   id: z.int().optional(),
   lastname: z.string().optional(),
 });
-export const Pet = z.object({
+export const Pet = z.strictObject({
   id: z.int().optional(),
   nickname: z.string().optional(),
   get owner() {
     return User.optional();
   },
 });
-export const Country = z.object({
+export const Country = z.strictObject({
   code: z.string().optional(),
   id: z.int().optional(),
   name: z.string().optional(),
@@ -2966,7 +2966,7 @@ export const Country = z.object({
     return z.array(Store).optional();
   },
 });
-export const Store = z.object({
+export const Store = z.strictObject({
   address: z.string().optional(),
   get country() {
     return Country.optional();
@@ -3021,13 +3021,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3070,13 +3068,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3124,13 +3120,11 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -3176,13 +3170,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3220,8 +3212,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3259,8 +3250,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3301,8 +3291,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -3319,13 +3308,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3366,8 +3353,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -3384,13 +3370,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3443,19 +3427,16 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3505,7 +3486,7 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.object({
+export const User = z.strictObject({
   email: z.string().optional(),
   firstname: z.string().optional(),
   get friends() {
@@ -3514,14 +3495,14 @@ export const User = z.object({
   id: z.int().optional(),
   lastname: z.string().optional(),
 });
-export const Pet = z.object({
+export const Pet = z.strictObject({
   id: z.int().optional(),
   nickname: z.string().optional(),
   get owner() {
     return User.optional();
   },
 });
-export const Country = z.object({
+export const Country = z.strictObject({
   code: z.string().optional(),
   id: z.int().optional(),
   name: z.string().optional(),
@@ -3529,7 +3510,7 @@ export const Country = z.object({
     return z.array(Store).optional();
   },
 });
-export const Store = z.object({
+export const Store = z.strictObject({
   address: z.string().optional(),
   get country() {
     return Country.optional();
@@ -3632,13 +3613,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3681,13 +3660,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3735,13 +3712,11 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -3787,13 +3762,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3831,8 +3804,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3870,8 +3842,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -3912,8 +3883,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -3930,13 +3900,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -3977,8 +3945,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -3995,13 +3962,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4054,19 +4019,16 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -4116,7 +4078,7 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.object({
+export const User = z.strictObject({
   email: z.string().optional(),
   firstname: z.string().optional(),
   get friends() {
@@ -4125,14 +4087,14 @@ export const User = z.object({
   id: z.int().optional(),
   lastname: z.string().optional(),
 });
-export const Pet = z.object({
+export const Pet = z.strictObject({
   id: z.int().optional(),
   nickname: z.string().optional(),
   get owner() {
     return User.optional();
   },
 });
-export const Country = z.object({
+export const Country = z.strictObject({
   code: z.string().optional(),
   id: z.int().optional(),
   name: z.string().optional(),
@@ -4140,7 +4102,7 @@ export const Country = z.object({
     return z.array(Store).optional();
   },
 });
-export const Store = z.object({
+export const Store = z.strictObject({
   address: z.string().optional(),
   get country() {
     return Country.optional();
@@ -4211,13 +4173,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -4260,13 +4220,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4314,13 +4272,11 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -4366,13 +4322,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4410,8 +4364,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -4449,8 +4402,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4491,8 +4443,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -4509,13 +4460,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -4556,8 +4505,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -4574,13 +4522,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4633,19 +4579,16 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -4695,7 +4638,7 @@ export type Store = {
   owner?: User;
 };
 // Zod Schemas
-export const User = z.object({
+export const User = z.strictObject({
   email: z.string().optional(),
   firstname: z.string().optional(),
   get friends() {
@@ -4704,14 +4647,14 @@ export const User = z.object({
   id: z.int().optional(),
   lastname: z.string().optional(),
 });
-export const Pet = z.object({
+export const Pet = z.strictObject({
   id: z.int().optional(),
   nickname: z.string().optional(),
   get owner() {
     return User.optional();
   },
 });
-export const Country = z.object({
+export const Country = z.strictObject({
   code: z.string().optional(),
   id: z.int().optional(),
   name: z.string().optional(),
@@ -4719,7 +4662,7 @@ export const Country = z.object({
     return z.array(Store).optional();
   },
 });
-export const Store = z.object({
+export const Store = z.strictObject({
   address: z.string().optional(),
   get country() {
     return Country.optional();
@@ -4790,13 +4733,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -4839,13 +4780,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4893,13 +4832,11 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -4945,13 +4882,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -4989,8 +4924,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -5028,8 +4962,7 @@ export const mcpTools = [
           lastname: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -5070,8 +5003,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -5088,13 +5020,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -5135,8 +5065,7 @@ export const mcpTools = [
               },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           name: { type: "string" },
@@ -5153,13 +5082,11 @@ export const mcpTools = [
               lastname: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -5212,19 +5139,16 @@ export const mcpTools = [
                     lastname: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -5311,7 +5235,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -5321,17 +5245,15 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -5350,10 +5272,9 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -5374,10 +5295,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -5395,10 +5315,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -5412,10 +5331,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -5449,15 +5367,13 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -5848,9 +5764,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -5882,17 +5797,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -5912,9 +5825,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -5946,17 +5858,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6021,9 +5931,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -6055,17 +5964,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -6085,9 +5992,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -6119,17 +6025,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6212,9 +6116,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -6246,17 +6149,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -6336,9 +6237,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -6370,17 +6270,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -6462,9 +6360,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -6496,17 +6393,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -6726,9 +6621,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -6776,11 +6670,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -6842,9 +6732,8 @@ export const mcpTools = [
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "category" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   id: {
                     type: "integer",
@@ -6876,17 +6765,15 @@ export const mcpTools = [
                         name: { type: "string" },
                       },
                       required: [],
+                      additionalProperties: false,
                       xml: { name: "tag" },
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
                     },
                     xml: { wrapped: true },
                   },
                 },
                 required: ["name", "photoUrls"],
+                additionalProperties: false,
                 xml: { name: "pet" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               petId: {
                 type: "integer",
@@ -6904,9 +6791,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -6935,9 +6821,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -6969,17 +6854,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           petId: {
             type: "integer",
@@ -6997,9 +6880,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7067,9 +6949,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -7101,17 +6982,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           petId: {
             type: "integer",
@@ -7129,9 +7008,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7223,9 +7101,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -7283,9 +7160,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -7315,9 +7191,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -7439,9 +7314,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -7492,9 +7366,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -7614,7 +7487,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -7624,17 +7497,15 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -7653,10 +7524,9 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -7677,10 +7547,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -7698,10 +7567,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -7715,10 +7583,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -7752,15 +7619,13 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -7770,11 +7635,11 @@ export const endpoints = [
     path: "/store/inventory",
     requestFormat: "json",
     parameters: [],
-    response: z.object({}).strip(),
+    response: z.strictObject({}),
     errors: [],
     responses: {
       200: {
-        schema: z.object({}).strip(),
+        schema: z.strictObject({}),
         description: "successful operation",
       },
     },
@@ -7939,9 +7804,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -7973,17 +7837,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -8003,9 +7865,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -8037,17 +7898,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8112,9 +7971,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -8146,17 +8004,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -8176,9 +8032,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -8210,17 +8065,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8303,9 +8156,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -8337,17 +8189,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -8427,9 +8277,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -8461,17 +8310,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -8553,9 +8400,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -8587,17 +8433,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -8817,9 +8661,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -8867,11 +8710,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -8933,9 +8772,8 @@ export const mcpTools = [
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "category" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   id: {
                     type: "integer",
@@ -8967,17 +8805,15 @@ export const mcpTools = [
                         name: { type: "string" },
                       },
                       required: [],
+                      additionalProperties: false,
                       xml: { name: "tag" },
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
                     },
                     xml: { wrapped: true },
                   },
                 },
                 required: ["name", "photoUrls"],
+                additionalProperties: false,
                 xml: { name: "pet" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               petId: {
                 type: "integer",
@@ -8995,9 +8831,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -9026,9 +8861,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -9060,17 +8894,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           petId: {
             type: "integer",
@@ -9088,9 +8920,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9158,9 +8989,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -9192,17 +9022,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           petId: {
             type: "integer",
@@ -9220,9 +9048,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9314,9 +9141,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -9374,9 +9200,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -9406,9 +9231,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -9530,9 +9354,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -9583,9 +9406,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",
@@ -9705,7 +9527,7 @@ export type ApiResponse = {
 export type createUsersWithListInput_Body = User[];
 // Zod Schemas
 export const Category = z
-  .object({
+  .strictObject({
     id: z
       .int64()
       .optional()
@@ -9715,17 +9537,15 @@ export const Category = z
       .optional()
       .meta({ examples: ["Dogs"] }),
   })
-  .strip()
   .meta({ xml: { name: "category" } });
 export const Tag = z
-  .object({
+  .strictObject({
     id: z.int64().optional(),
     name: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "tag" } });
 export const Pet = z
-  .object({
+  .strictObject({
     category: Category.optional(),
     id: z
       .int64()
@@ -9744,10 +9564,9 @@ export const Pet = z
       .optional()
       .meta({ xml: { wrapped: true } }),
   })
-  .strip()
   .meta({ xml: { name: "pet" } });
 export const Order = z
-  .object({
+  .strictObject({
     complete: z.boolean().optional(),
     id: z
       .int64()
@@ -9768,10 +9587,9 @@ export const Order = z
       .optional()
       .meta({ description: "Order Status", examples: ["approved"] }),
   })
-  .strip()
   .meta({ xml: { name: "order" } });
 export const Address = z
-  .object({
+  .strictObject({
     city: z
       .string()
       .optional()
@@ -9789,10 +9607,9 @@ export const Address = z
       .optional()
       .meta({ examples: ["94301"] }),
   })
-  .strip()
   .meta({ xml: { name: "address" } });
 export const Customer = z
-  .object({
+  .strictObject({
     address: z
       .array(Address)
       .optional()
@@ -9806,10 +9623,9 @@ export const Customer = z
       .optional()
       .meta({ examples: ["fehguy"] }),
   })
-  .strip()
   .meta({ xml: { name: "customer" } });
 export const User = z
-  .object({
+  .strictObject({
     email: z
       .string()
       .optional()
@@ -9843,15 +9659,13 @@ export const User = z
       .optional()
       .meta({ description: "User Status", examples: [1] }),
   })
-  .strip()
   .meta({ xml: { name: "user" } });
 export const ApiResponse = z
-  .object({
+  .strictObject({
     code: z.int32().optional(),
     message: z.string().optional(),
     type: z.string().optional(),
   })
-  .strip()
   .meta({ xml: { name: "##default" } });
 export const createUsersWithListInput_Body = z.array(User);
 // Endpoints
@@ -10154,9 +9968,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -10188,17 +10001,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -10218,9 +10029,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -10252,17 +10062,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -10327,9 +10135,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -10361,17 +10168,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
         required: ["body"],
@@ -10391,9 +10196,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -10425,17 +10229,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -10518,9 +10320,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -10552,17 +10353,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -10642,9 +10441,8 @@ export const mcpTools = [
                     name: { type: "string", examples: ["Dogs"] },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "category" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 id: {
                   type: "integer",
@@ -10676,17 +10474,15 @@ export const mcpTools = [
                       name: { type: "string" },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "tag" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   xml: { wrapped: true },
                 },
               },
               required: ["name", "photoUrls"],
+              additionalProperties: false,
               xml: { name: "pet" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
           },
         },
@@ -10768,9 +10564,8 @@ export const mcpTools = [
               name: { type: "string", examples: ["Dogs"] },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "category" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           id: {
             type: "integer",
@@ -10802,17 +10597,15 @@ export const mcpTools = [
                 name: { type: "string" },
               },
               required: [],
+              additionalProperties: false,
               xml: { name: "tag" },
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
             },
             xml: { wrapped: true },
           },
         },
         required: ["name", "photoUrls"],
+        additionalProperties: false,
         xml: { name: "pet" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11032,9 +10825,8 @@ export const mcpTools = [
           type: { type: "string" },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "##default" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11082,11 +10874,7 @@ export const mcpTools = [
       title: "Returns pet inventories by status",
       description: "Returns a map of status codes to quantities",
       inputSchema: { type: "object", properties: {} },
-      outputSchema: {
-        type: "object",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
-      },
+      outputSchema: { type: "object", additionalProperties: false },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -11148,9 +10936,8 @@ export const mcpTools = [
                       name: { type: "string", examples: ["Dogs"] },
                     },
                     required: [],
+                    additionalProperties: false,
                     xml: { name: "category" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
                   },
                   id: {
                     type: "integer",
@@ -11182,17 +10969,15 @@ export const mcpTools = [
                         name: { type: "string" },
                       },
                       required: [],
+                      additionalProperties: false,
                       xml: { name: "tag" },
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
                     },
                     xml: { wrapped: true },
                   },
                 },
                 required: ["name", "photoUrls"],
+                additionalProperties: false,
                 xml: { name: "pet" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               petId: {
                 type: "integer",
@@ -11210,9 +10995,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "order" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -11241,9 +11025,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -11275,17 +11058,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           petId: {
             type: "integer",
@@ -11303,9 +11084,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11373,9 +11153,8 @@ export const mcpTools = [
                   name: { type: "string", examples: ["Dogs"] },
                 },
                 required: [],
+                additionalProperties: false,
                 xml: { name: "category" },
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
               },
               id: {
                 type: "integer",
@@ -11407,17 +11186,15 @@ export const mcpTools = [
                     name: { type: "string" },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "tag" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
                 xml: { wrapped: true },
               },
             },
             required: ["name", "photoUrls"],
+            additionalProperties: false,
             xml: { name: "pet" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           petId: {
             type: "integer",
@@ -11435,9 +11212,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "order" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11529,9 +11305,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
         },
       },
@@ -11589,9 +11364,8 @@ export const mcpTools = [
                     },
                   },
                   required: [],
+                  additionalProperties: false,
                   xml: { name: "user" },
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
                 },
               },
             },
@@ -11621,9 +11395,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: false,
@@ -11745,9 +11518,8 @@ export const mcpTools = [
           },
         },
         required: [],
+        additionalProperties: false,
         xml: { name: "user" },
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
       },
       annotations: {
         readOnlyHint: true,
@@ -11798,9 +11570,8 @@ export const mcpTools = [
               },
             },
             required: [],
+            additionalProperties: false,
             xml: { name: "user" },
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
           },
           path: {
             type: "object",

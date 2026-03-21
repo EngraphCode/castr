@@ -64,9 +64,6 @@
       },
       "required": ["name", "subcategories"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -166,9 +163,6 @@
       },
       "required": ["id", "email", "posts"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -267,9 +261,6 @@
       },
       "required": ["id", "title", "content", "author"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -349,9 +340,6 @@
       },
       "required": ["value"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -450,9 +438,6 @@
       },
       "required": ["data", "next"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,

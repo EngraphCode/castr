@@ -20,10 +20,11 @@ import type {
   CastrSchemaComponent,
   IRComponent,
 } from '../../../ir/index.js';
-import { CastrSchemaProperties } from '../../../ir/index.js';
+import type { CastrSchemaPropertiesLike } from '../../../../shared/type-utils/castr-schema-properties.js';
 import { toIdentifier } from '../../../../shared/utils/identifier-utils.js';
 import { drop, join, split, startsWith } from 'lodash-es';
 import { parseComponentRef } from '../../../../shared/ref-resolution.js';
+import { isCastrSchemaProperties } from '../../../../shared/type-utils/type-guards.js';
 
 const INLINE_REF_PREFIX = '#/definitions/';
 const REF_HASH_PREFIX = '#';
@@ -74,11 +75,14 @@ const isCastrSchema = (value: unknown): value is CastrSchema =>
  * Convert CastrSchemaProperties to plain object for JSON Schema.
  */
 const convertPropertiesToJsonSchema = (
-  properties: CastrSchemaProperties,
+  properties: CastrSchemaPropertiesLike,
   converter: (schema: CastrSchema) => MutableJsonSchema,
 ): Record<string, MutableJsonSchema> => {
   const result: Record<string, MutableJsonSchema> = {};
   for (const [propName, propSchema] of properties.entries()) {
+    if (!isCastrSchema(propSchema)) {
+      throw new Error('[mcp-inline-json-schema] Expected CastrSchema property value.');
+    }
     result[propName] = converter(propSchema);
   }
   return result;
@@ -98,7 +102,7 @@ const convertArrayValueToJsonSchema = (
  * Process a single schema entry, returning the converted value.
  */
 const processSchemaEntry = (value: unknown): MutableJsonSchema | unknown[] | unknown => {
-  if (value instanceof CastrSchemaProperties) {
+  if (isCastrSchemaProperties(value)) {
     return convertPropertiesToJsonSchema(value, castrSchemaToJsonSchema);
   }
   if (isCastrSchema(value)) {

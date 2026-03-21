@@ -15,8 +15,9 @@
 import type { SchemaObject } from 'openapi3-ts/oas31';
 import { pathParamToVariableName } from '../../../shared/utils/index.js';
 import type { CastrSchema, CastrOperation, CastrParameter } from '../../ir/index.js';
-import { CastrSchemaProperties } from '../../ir/index.js';
 import type { MutableJsonSchema } from '../../conversion/json-schema/index.js';
+import type { CastrSchemaPropertiesLike } from '../../../shared/type-utils/castr-schema-properties.js';
+import { isCastrSchemaProperties } from '../../../shared/type-utils/type-guards.js';
 
 export type SupportedParameterLocation = 'path' | 'query' | 'header';
 
@@ -170,11 +171,14 @@ const isCastrSchemaValue = (value: unknown): value is CastrSchema =>
  * Convert CastrSchemaProperties to plain object.
  */
 const convertPropertiesSimple = (
-  props: CastrSchemaProperties,
+  props: CastrSchemaPropertiesLike,
   converter: (s: CastrSchema) => MutableJsonSchema,
 ): Record<string, MutableJsonSchema> => {
   const result: Record<string, MutableJsonSchema> = {};
   for (const [name, schema] of props.entries()) {
+    if (!isCastrSchemaValue(schema)) {
+      throw new Error('[mcp-parameters] Expected CastrSchema property value.');
+    }
     result[name] = converter(schema);
   }
   return result;
@@ -192,7 +196,7 @@ const convertArraySimple = (
  * Process a single schema entry for JSON Schema output.
  */
 const processSchemaEntrySimple = (value: unknown): MutableJsonSchema | unknown[] | unknown => {
-  if (value instanceof CastrSchemaProperties) {
+  if (isCastrSchemaProperties(value)) {
     return convertPropertiesSimple(value, castrSchemaToJsonSchemaSimple);
   }
   if (isCastrSchemaValue(value)) {

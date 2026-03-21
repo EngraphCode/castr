@@ -44,13 +44,11 @@ test('number-default-cast', async () => {
       text1?: string;
     };
     // Zod Schemas
-    export const test1 = z
-      .object({
-        isFine: z.number().optional(),
-        shouldBeFixed: z.number().optional(),
-        text1: z.string().optional(),
-      })
-      .strip();
+    export const test1 = z.strictObject({
+      isFine: z.number().optional(),
+      shouldBeFixed: z.number().optional(),
+      text1: z.string().optional(),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -84,8 +82,7 @@ test('number-default-cast', async () => {
               text1: { type: "string", default: "aaa" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: false,

@@ -333,9 +333,7 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties:
-                  type: integer
-                  format: int32
+                additionalProperties: false
       security:
         - api_key: []
   /store/order:

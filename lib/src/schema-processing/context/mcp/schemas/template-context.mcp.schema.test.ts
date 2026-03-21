@@ -10,11 +10,7 @@ import {
 const getTemplateContext = (
   doc: OpenAPIObject,
   options?: Parameters<typeof getTemplateContextBase>[1],
-) =>
-  getTemplateContextBase(doc, {
-    nonStrictObjectPolicy: 'strip',
-    ...options,
-  });
+) => getTemplateContextBase(doc, options);
 
 const baseSchema: SchemaObject = {
   type: 'object',

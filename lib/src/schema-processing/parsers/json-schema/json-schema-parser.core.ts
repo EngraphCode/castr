@@ -25,18 +25,12 @@ import {
   parseComposition,
 } from './json-schema-parser.helpers.js';
 import { parse2020Keywords } from './json-schema-parser.2020-keywords.js';
-import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
-import { resolveNonStrictObjectPolicy } from '../../non-strict-object-policy.js';
 import { assertPortableIntegerInputSemanticsSupported } from '../../compatibility/integer-target-capabilities.js';
 
 // Re-export for public API compatibility
 export type { JsonSchema2020 } from './json-schema-parser.types.js';
 
 const NULL_TYPE = 'null';
-
-interface JsonSchemaParseContext {
-  nonStrictObjectPolicy: ReturnType<typeof resolveNonStrictObjectPolicy>;
-}
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -46,21 +40,11 @@ interface JsonSchemaParseContext {
  * Parse a normalized JSON Schema 2020-12 object into CastrSchema IR.
  * @public
  */
-export function parseJsonSchemaObject(
-  input: JsonSchema2020,
-  options?: NonStrictObjectPolicyOptions,
-): CastrSchema {
-  const context: JsonSchemaParseContext = {
-    nonStrictObjectPolicy: resolveNonStrictObjectPolicy(options),
-  };
-
-  return parseJsonSchemaObjectWithContext(input, context);
+export function parseJsonSchemaObject(input: JsonSchema2020): CastrSchema {
+  return parseJsonSchemaObjectInternal(input);
 }
 
-function parseJsonSchemaObjectWithContext(
-  input: JsonSchema2020,
-  context: JsonSchemaParseContext,
-): CastrSchema {
+function parseJsonSchemaObjectInternal(input: JsonSchema2020): CastrSchema {
   if (input.$ref !== undefined) {
     assertPortableIntegerInputSemanticsSupported('JSON Schema 2020-12', input.type, input.format);
     return { $ref: input.$ref, metadata: createDefaultMetadata() };
@@ -75,9 +59,9 @@ function parseJsonSchemaObjectWithContext(
   parseNumberConstraints(input, result);
   parseEnumConst(input, result);
   const parseSchema = (schemaInput: JsonSchema2020): CastrSchema =>
-    parseJsonSchemaObjectWithContext(schemaInput, context);
+    parseJsonSchemaObjectInternal(schemaInput);
 
-  parseObjectFields(input, result, parseSchema, context);
+  parseObjectFields(input, result, parseSchema);
   parseArrayFields(input, result, parseSchema);
   parseComposition(input, result, parseSchema);
   parseCoreMetadata(input, result);

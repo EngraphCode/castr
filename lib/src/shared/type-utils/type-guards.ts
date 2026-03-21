@@ -8,8 +8,8 @@
  * @public
  */
 
-import type { CastrSchema } from '../../schema-processing/ir/index.js';
-import { CastrSchemaProperties } from '../../schema-processing/ir/index.js';
+import type { CastrSchemaLike, CastrSchemaPropertiesLike } from './castr-schema-properties.js';
+import { hasCastrSchemaPropertiesBrand } from './castr-schema-properties.js';
 
 /**
  * Type guard for string values.
@@ -72,7 +72,7 @@ export function isRecord(value: unknown): value is object {
  *
  * @public
  */
-export function isCastrSchema(value: unknown): value is CastrSchema {
+export function isCastrSchema(value: unknown): value is CastrSchemaLike {
   return isRecord(value) && 'metadata' in value;
 }
 
@@ -94,6 +94,6 @@ export function isCastrSchema(value: unknown): value is CastrSchema {
  *
  * @public
  */
-export function isCastrSchemaProperties(value: unknown): value is CastrSchemaProperties {
-  return value instanceof CastrSchemaProperties;
+export function isCastrSchemaProperties(value: unknown): value is CastrSchemaPropertiesLike {
+  return hasCastrSchemaPropertiesBrand(value);
 }

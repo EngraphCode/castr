@@ -27,7 +27,6 @@ import {
   parseZodSource,
 } from '../utils/transform-helpers.js';
 
-const ZOD_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
 const JSON_SCHEMA_INT64_REJECTION =
   /JSON Schema 2020-12 cannot represent signed 64-bit integer semantics natively/;
 const JSON_SCHEMA_SUPPORTED_FIXTURE_NAMES = new Set(['tictactoe-3.1.yaml', 'callback-3.0.yaml']);
@@ -46,7 +45,7 @@ function getSchemaComponents(ir: Awaited<ReturnType<typeof parseToIR>>): CastrSc
 
 async function generateParsedZod(openApiOutput: ReturnType<typeof writeOpenApi>) {
   const zodSource = await generateZodFromOpenAPI(openApiOutput);
-  const zodResult = parseZodSource(zodSource, ZOD_COMPATIBILITY_OPTIONS);
+  const zodResult = parseZodSource(zodSource);
 
   return { zodSource, zodResult };
 }

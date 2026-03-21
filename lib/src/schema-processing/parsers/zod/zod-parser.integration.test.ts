@@ -48,7 +48,7 @@ describe('Zod Parser Integration', () => {
       expect(component?.name).toBe('User');
     });
 
-    it('rejects bare z.object() by default and points callers to nonStrictObjectPolicy', () => {
+    it('rejects bare z.object() by default with closed-world error', () => {
       const source = `
         const UserSchema = z.object({ name: z.string() });
       `;
@@ -58,9 +58,8 @@ describe('Zod Parser Integration', () => {
       expect(result.ir.components).toHaveLength(0);
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0]?.message).toContain('UserSchema');
-      expect(result.errors[0]?.message).toContain('Non-strict object input "z.object()"');
-      expect(result.errors[0]?.message).toContain('strict object ingest is the default');
-      expect(result.errors[0]?.message).toContain("nonStrictObjectPolicy: 'strip'");
+      expect(result.errors[0]?.message).toContain('Non-strict object input');
+      expect(result.errors[0]?.message).toContain('closed-world object semantics');
     });
 
     it('accepts z.strictObject() as the canonical strict object form', () => {
@@ -80,70 +79,41 @@ describe('Zod Parser Integration', () => {
 
       expect(component.schema.type).toBe('object');
       expect(component.schema.additionalProperties).toBe(false);
-      expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strict' });
     });
 
-    it('normalizes non-strict object input to strip semantics when nonStrictObjectPolicy is strip', () => {
+    it('rejects non-strict passthrough input always', () => {
       const source = `
         const UserSchema = z.object({ name: z.string() }).passthrough();
       `;
 
-      const result = parseZodSource(source, { nonStrictObjectPolicy: 'strip' });
+      const result = parseZodSource(source);
 
-      expect(result.errors).toHaveLength(0);
-      expect(result.ir.components).toHaveLength(1);
-      const component = result.ir.components.at(0);
-      expect(component?.type).toBe('schema');
-      if (!component || component.type !== 'schema') {
-        throw new Error('Expected strip-normalized schema component');
-      }
-
-      expect(component.schema.additionalProperties).toBe(true);
-      expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.message).toContain('closed-world object semantics');
     });
 
-    it('normalizes z.looseObject() to strip semantics only when nonStrictObjectPolicy is strip', () => {
+    it('rejects z.looseObject() always', () => {
       const source = `
         const UserSchema = z.looseObject({ name: z.string() });
       `;
 
-      const defaultResult = parseZodSource(source);
-      expect(defaultResult.ir.components).toHaveLength(0);
-      expect(defaultResult.errors).toHaveLength(1);
-      expect(defaultResult.errors[0]?.message).toContain(
-        'Non-strict object input "z.looseObject()"',
-      );
-
-      const stripResult = parseZodSource(source, { nonStrictObjectPolicy: 'strip' });
-      expect(stripResult.errors).toHaveLength(0);
-      expect(stripResult.ir.components).toHaveLength(1);
-      const component = stripResult.ir.components.at(0);
-      expect(component?.type).toBe('schema');
-      if (!component || component.type !== 'schema') {
-        throw new Error('Expected strip-normalized looseObject schema component');
-      }
-
-      expect(component.schema.additionalProperties).toBe(true);
-      expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+      const result = parseZodSource(source);
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.message).toContain('Non-strict object input');
+      expect(result.errors[0]?.message).toContain('looseObject()');
     });
 
-    it('normalizes catchall objects to strip without parsing discarded catchall schemas', () => {
+    it('rejects catchall objects always', () => {
       const source = `
-        const UserSchema = z.object({ name: z.string() }).catchall(z.custom(() => true));
+        const UserSchema = z.object({ name: z.string() }).catchall(z.string());
       `;
 
-      const result = parseZodSource(source, { nonStrictObjectPolicy: 'strip' });
-
-      expect(result.errors).toHaveLength(0);
-      expect(result.ir.components).toHaveLength(1);
-      const component = result.ir.components.at(0);
-      expect(component?.type).toBe('schema');
-      if (!component || component.type !== 'schema') {
-        throw new Error('Expected strip-normalized catchall schema component');
-      }
-
-      expect(component.schema.additionalProperties).toBe(true);
-      expect(component.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+      const result = parseZodSource(source);
+      expect(result.ir.components).toHaveLength(0);
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0]?.message).toContain('closed-world object semantics');
     });
 
     it('should parse source with multiple schemas', () => {
@@ -233,7 +203,8 @@ describe('Zod Parser Integration', () => {
       const parseError = result.errors.find((e: { code: string }) => e.code === 'PARSE_ERROR');
       expect(parseError).toBeDefined();
       expect(parseError?.message).toContain('BrokenCatchallSchema');
-      expect(parseError?.message).toContain('Unsupported or unparseable Zod .catchall() schema');
+      expect(parseError?.message).toContain('Non-strict object input');
+      expect(parseError?.message).toContain('closed-world object semantics');
       expect(parseError?.location).toBeDefined();
     });
 

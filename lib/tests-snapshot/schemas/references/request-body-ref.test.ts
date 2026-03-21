@@ -59,11 +59,9 @@ test('request-body-ref', async () => {
       id?: string;
     };
     // Zod Schemas
-    export const PostPetsRequest = z
-      .object({
-        id: z.string().optional(),
-      })
-      .strip();
+    export const PostPetsRequest = z.strictObject({
+      id: z.string().optional(),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -105,8 +103,7 @@ test('request-body-ref', async () => {
                 type: "object",
                 properties: { id: { type: "string" } },
                 required: [],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
             },
           },

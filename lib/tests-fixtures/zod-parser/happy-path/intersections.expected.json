@@ -28,9 +28,6 @@
       },
       "required": ["name"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -75,9 +72,6 @@
       },
       "required": ["email"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -251,9 +245,6 @@
       },
       "required": ["createdAt", "updatedAt"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -390,9 +381,6 @@
       },
       "required": ["id"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -438,9 +426,6 @@
       },
       "required": ["version"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -557,9 +542,6 @@
       },
       "required": ["name"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -625,9 +607,6 @@
           },
           "required": ["id"],
           "additionalProperties": false,
-          "unknownKeyBehavior": {
-            "mode": "strict"
-          },
           "metadata": {
             "required": true,
             "nullable": false,

@@ -13,7 +13,7 @@ With the OpenAPI → Zod pipeline production-ready, we need to formalize decisio
 > **Round-trip (OpenAPI → Zod → OpenAPI) is a validation mechanism**, not a fundamental library requirement. It proves the pipeline works correctly. The Zod → IR parser exists (Session 3.2) and must remain in lockstep with writer output; doc-level Zod ingestion beyond schema declarations is a separate future scope.
 
 > [!IMPORTANT]
-> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) supersedes the earlier multi-mode object direction in this ADR. Default-path object output remains strict-only product scope. ADR-040's opt-in strip-normalization compatibility mode is ingest-side doctrine and does not, by itself, widen the default generated-output contract in this ADR.
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) and [IDENTITY.md](../../.agent/IDENTITY.md) supersede the earlier multi-mode object direction in this ADR. Default-path object output is strict-only. The strip-normalization compatibility mode from ADR-040 has been removed per IDENTITY.md; strip normalization belongs in the doctor only.
 
 ## Decisions
 
@@ -86,14 +86,9 @@ z.strictObject({ ... });
 
 Bare `z.object({ ... })` is not an acceptable generated stand-in for strict object semantics because bare `z.object()` is strip-mode at runtime.
 
-Compatibility-normalized strip output is allowed only on the explicit compatibility path:
+`.strip()`, `.passthrough()`, and `.catchall(...)` are no longer generated-object targets.
 
-- non-recursive strip IR emits `z.object({ ... }).strip()`
-- recursive strip IR emits bare getter-safe `z.object({ ... })`
-
-`.passthrough()` and `.catchall(...)` are no longer generated-object targets.
-
-**Rationale:** Generated object definitions are now strict-only product scope, so output should state strictness directly instead of preserving non-strict runtime modes.
+**Rationale:** Generated object definitions are strict-only product scope, so output should state strictness directly instead of preserving non-strict runtime modes.
 
 ### 6. Redundant Validation Filtering
 

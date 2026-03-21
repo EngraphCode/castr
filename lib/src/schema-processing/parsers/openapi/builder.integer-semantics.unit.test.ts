@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ComponentsObject } from 'openapi3-ts/oas31';
-import { buildCastrSchemas as buildCastrSchemasBase } from './index.js';
+import { buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
-
-const TEST_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
-const buildCastrSchemas = (components: ComponentsObject) =>
-  buildCastrSchemasBase(components, TEST_NON_STRICT_OBJECT_POLICY);
 
 describe('buildCastrSchemas integer semantics', () => {
   it('preserves int64 semantics distinctly in IR', () => {

@@ -33,46 +33,60 @@ Notes:
 
 ---
 
-## This Session: Post Rescue-Loop Redesign — Next Slice Selection
+## This Session: Architecture Review Packs — Post-IDENTITY Audit
 
-### Plan Of Record (Completed 2026-03-20)
+### Active Plan
 
-- [zod-limitations-next-atomic-slice-planning.md](../plans/active/zod-limitations-next-atomic-slice-planning.md)
+- [architecture-review-packs.md](../plans/active/architecture-review-packs.md)
+
+### Dedicated Review Prompt
+
+- [architecture-review-packs.prompt.md](./architecture-review-packs.prompt.md)
+
+### Canonical Identity
+
+- [IDENTITY.md](../IDENTITY.md)
 
 ### Immediate Predecessor
 
-- [doctor-runtime-characterisation-and-transform-proof-budget-decision.md](../plans/current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md)
+- [identity-doctrine-alignment.md](../plans/current/complete/identity-doctrine-alignment.md)
+
+### Paused Successor
+
+- [json-schema-parser.md](../plans/current/paused/json-schema-parser.md)
 
 ### Durable Doctrine Sources To Re-Read First
 
 - [native-capability-matrix.md](../../docs/architecture/native-capability-matrix.md)
 - [zod-round-trip-limitations.md](../../docs/architecture/zod-round-trip-limitations.md)
-- [ADR-031](../../docs/architectural_decision_records/ADR-031-zod-output-strategy.md)
-- [ADR-032](../../docs/architectural_decision_records/ADR-032-zod-input-strategy.md)
 - [ADR-035](../../docs/architectural_decision_records/ADR-035-transform-validation-parity.md)
-- [ADR-039](../../docs/architectural_decision_records/ADR-039-uuid-subtype-semantics-and-native-only-emission.md)
+- [ADR-040](../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md)
 - [ADR-041](../../docs/architectural_decision_records/ADR-041-native-capability-seams-governed-widening-and-early-rejection.md)
 
-## Current Repo Truth (Thursday, 20 March 2026)
+## Current Repo Truth (Saturday, 21 March 2026)
 
-Recent completed slices:
+IDENTITY doctrine alignment is complete:
 
-- the doctor runtime-characterisation slice is complete:
-  - `repairOpenApiDocumentWithRuntimeDiagnostics()` now exposes clone / validate / rescue / upgrade timings without changing `repairOpenApiDocument()` behavior
-  - `pnpm --dir lib doctor:profile` now provides a stable JSON runtime snapshot for the pathological fixture
-  - the slice ended with one clear decision: doctor rescue-loop redesign is next; harness splitting is not
-  - the full repo-root Definition of Done chain completed green during that slice on Friday, 13 March 2026
-  - no repo changes have occurred between 13 March and 20 March 2026; working tree is clean
-  - manual `code-reviewer`, `test-reviewer`, and `type-reviewer` coverage for that slice is complete
-- the earlier `int64` / `bigint` remediation slice remains complete:
-  - IR keeps first-class `integerSemantics`
-  - `int64` and `bigint` remain distinct semantics
-  - valid serialised IR documents containing preserved raw OpenAPI components now deserialize cleanly
-  - raw OpenAPI `$ref` plus sibling integer-format schemas now fail fast for OpenAPI 3.1 capability checks
-  - JSON Schema `$ref` plus sibling `int64` / `bigint` schemas now reject before the plain-ref early return
-  - closure review for that slice was also completed manually in-session on Friday, 13 March 2026
+- `unknownKeyBehavior` is removed from IR, parsers, and writers
+- parser honesty is restored: non-object IR schemas no longer get `additionalProperties: false`
+- public strictness/compatibility knobs are removed (`nonStrictObjectPolicy`, `strictObjects`, `additionalPropertiesDefaultValue`)
+- non-strict object input is rejected at parser boundaries
+- writers emit strict-only object output (`additionalProperties: false`, `z.strictObject()`)
+- `CastrSchemaProperties` detection is now brand-based and cross-realm safe
+- the full repo-root Definition of Done chain was green on Saturday, 21 March 2026
 
-The current active entrypoint is next-slice selection after the completed doctor rescue-loop runtime redesign. The plan was completed, implemented, and verified on 2026-03-20.
+The next honest work is not new implementation. It is a bounded architecture review sweep:
+
+- the review packs must validate the repo's actual direction against code, not assumption
+- the paused JSON Schema parser plan must not reactivate until the review packs say it is architecturally fit
+- one review note per pack should be written under `.agent/research/architecture-review-packs/`
+
+Recent completed slices (all gates green, all reviews closed):
+
+- IDENTITY doctrine alignment (2026-03-21): parser honesty restored, dead strictness surfaces removed, cross-realm-safe runtime detection hardened
+- Doctor rescue-loop redesign (2026-03-20): `rescueRetryCount` 1,159 → 1, `nonStandardRescue` 20,770ms → 31ms, `pnpm test:transforms` 25.88s → 6.92s
+- Doctor runtime characterisation (2026-03-13): identified rescue loop as the cost centre
+- int64/bigint semantics remediation (2026-03-13): first-class `integerSemantics` in IR
 
 User-reported issue rule:
 
@@ -80,64 +94,32 @@ User-reported issue rule:
 - do not use an earlier local green run to dismiss a user-reported failure
 - record the difference honestly as "last reproduced locally" versus "currently user-reported"
 
-### Current runtime context
-
-Doctor rescue-loop redesign was completed in-session on Thursday, 20 March 2026. The implementation used Family 1 (All-Errors Preflight Batch Rescue) with a repo-local AJV `allErrors: true` validator.
-
-Post-implementation results:
-
-- `pnpm --dir lib doctor:profile` now shows `31.79ms` nonStandardRescue (was `20,770ms`)
-- `rescueRetryCount` is now `1` (was `1,159`)
-- `warningCount` is now `1,954` (was `1,159`) because the preflight finds more properties
-- refreshed timings now show:
-  - isolated `doctor.integration.test.ts`: `0.53s real` (was `23.76s`)
-  - full `pnpm test:transforms`: `6.92s real` (was `25.88s`)
-- the doctor-proof timeout has been reduced from `60s` to `10s` (the proof runs in ~0.5s)
-- harness splitting remains unnecessary
-- recursive preserving-mode emission remains historical under ADR-040 and is not the active candidate
-
-The paused umbrella and supporting investigations still matter:
-
-1. [zod-limitations-architecture-investigation.md](../plans/current/paused/zod-limitations-architecture-investigation.md)
-2. [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
-3. [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
-
 ## Immediate Priority
 
-The rescue-loop redesign is complete. The next session should select the next honest atomic slice from the paused investigations.
+Execute the architecture review packs in order. Start with Pack 1 and do not blend packs.
 
-Do this:
-
-1. reproduce any fresh user-reported issue immediately
-2. if no fresher issue supersedes, review the paused investigations and select the next slice
-3. the doctor-proof timeout has already been reduced from `60s` to `10s`
-4. keep the transform harness unchanged unless new evidence disproves the current state
+1. **Read the active plan and dedicated review prompt** — this sweep is review-first, not implementation-first.
+2. **Write one note per completed pack** — use `.agent/research/architecture-review-packs/pack-<n>-<slug>.md`.
+3. **Keep the JSON Schema parser paused** — Pack 4 must explicitly decide whether that plan is still architecturally sound.
+4. **Update handoff docs when review truth changes** — roadmap, session-entry, and the active plan must stay honest.
 
 ## What This Session Should Do
 
-1. Read the completed plan and the paused context.
-2. Re-read the durable doctrine sources named above.
-3. Do not reopen the completed `int64` / `bigint` or rescue-loop slices unless new evidence disproves their green closure state.
-4. If the user reports a fresh gate or runtime issue, reproduce it first.
-5. Otherwise:
-   1. review the paused investigations for the next honest atomic slice
-   2. plan and propose the next concrete entrypoint
-   3. keep this prompt and the roadmap aligned with the result
-6. Start from:
-   - `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md` (completed 2026-03-20)
-   - `.agent/plans/current/complete/doctor-runtime-characterisation-and-transform-proof-budget-decision.md`
-   - `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
-   - `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`
-   - `.agent/memory/napkin.md`
-7. Keep the handoff accurate:
-   - keep the active plan concrete and keep the completed predecessor chain explicit
-   - record planning and review state in `.agent/memory/napkin.md`
+1. Read:
+   - `.agent/plans/active/architecture-review-packs.md`
+   - `.agent/prompts/architecture-review-packs.prompt.md`
+   - `.agent/IDENTITY.md`
+   - `.agent/plans/current/paused/json-schema-parser.md`
+2. If the user reports a fresh gate or runtime issue, reproduce it first.
+3. Otherwise, start with Pack 1 and complete one pack note before moving to the next.
+4. Keep findings evidence-backed and file-referenced; do not fix product code mid-sweep unless the user redirects.
+5. Record review-state and consolidation outcomes in `.agent/memory/napkin.md`.
 
 ## Quality Gates
 
 Canonical definition: [DEFINITION_OF_DONE.md](../directives/DEFINITION_OF_DONE.md)
 
-Run from repo root in strict order:
+Canonical full chain, when code changes are made:
 
 - `pnpm clean`
 - `pnpm install --frozen-lockfile`
@@ -156,27 +138,38 @@ Run from repo root in strict order:
 - `pnpm test:gen`
 - `pnpm test:transforms`
 
+For review-only changes to plans, prompts, and notes:
+
+- `pnpm format:check`
+- `pnpm portability:check`
+
 Treat every failure as blocking.
 
 ## Review State
 
 Current honest state:
 
-- the doctor rescue-loop redesign slice is complete (implemented and verified 2026-03-20)
-- the full repo-root Definition of Done chain was verified green on 2026-03-20
-- the doctor runtime-characterisation slice review is complete
-- the earlier `int64` / `bigint` closure review is also complete
-- the next session does not owe reviewer closure before selecting the next slice
+- the full repo-root Definition of Done chain was green on Saturday, 21 March 2026
+- the architecture review-pack sweep has not started yet
+- the paused JSON Schema parser plan remains blocked on Pack 4's verdict
+- the next implementation slice must come from review findings rather than assumption
 
-## Paused Context That Still Matters
+## Closed-Out Context
 
-- [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md)
-- [zod-limitations-architecture-investigation.md](../plans/current/paused/zod-limitations-architecture-investigation.md)
-- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+All three Zod/transform investigations are now closed:
+
+- [zod-limitations-architecture-investigation.md](../plans/current/complete/zod-limitations-architecture-investigation.md)
+- [recursive-unknown-key-preserving-zod-emission-investigation.md](../plans/current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md)
+- [transform-proof-budgeting-and-runtime-architecture-investigation.md](../plans/current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md)
+
+Residual future threads consolidated in:
+
+- [zod-and-transform-future-investigations.md](../plans/future/zod-and-transform-future-investigations.md)
 
 ## Follow-On Work, Not A Blocker Here
 
 - [temporal-first-js-ts-date-time-doctrine.md](../plans/future/temporal-first-js-ts-date-time-doctrine.md)
+- [zod-and-transform-future-investigations.md](../plans/future/zod-and-transform-future-investigations.md)
 
 Custom portable types remain deliberately unsupported for now and are not a planned workstream.
 

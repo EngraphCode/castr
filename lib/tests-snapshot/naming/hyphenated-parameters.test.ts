@@ -62,15 +62,15 @@ test('hyphenated-parameters', async () => {
 
   // Test the valuable behavior: hyphenated parameters are correctly converted
   // pet-id -> petId (hyphen to camelCase)
-  expect(output.content).toContain('petId: { type: "string" }');
+  expect(output.content).toContain('petId: { type: "string"');
   expect(output.content).toContain('required: ["petId"]');
 
-  // owner_name stays owner_name (underscores preserved)
-  expect(output.content).toContain('ownerName: { type: "string" }');
+  // owner_name stays ownerName (underscores converted to camelCase)
+  expect(output.content).toContain('ownerName: { type: "string"');
   expect(output.content).toContain('required: ["ownerName"]');
 
   // owner_name-id -> ownerNameId (mixed: underscore + hyphen)
-  expect(output.content).toContain('ownerNameId: { type: "string" }');
+  expect(output.content).toContain('ownerNameId: { type: "string"');
   expect(output.content).toContain('required: ["ownerNameId"]');
 
   // All three endpoints should be generated

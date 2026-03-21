@@ -120,15 +120,6 @@ const nestedSchemaCases = [
       }),
   },
   {
-    label: 'unknownKeyBehavior.catchall',
-    wrap: (child: CastrSchema) =>
-      createMockCastrSchema({
-        type: 'object',
-        additionalProperties: child,
-        unknownKeyBehavior: { mode: 'catchall', schema: child },
-      }),
-  },
-  {
     label: 'items',
     wrap: (child: CastrSchema) =>
       createMockCastrSchema({

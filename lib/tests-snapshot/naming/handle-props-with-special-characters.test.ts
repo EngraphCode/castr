@@ -37,10 +37,10 @@ test('handle-props-with-special-characters', async () => {
   expect(getZodSchema({ schema: schemaWithSpecialCharacters })).toMatchInlineSnapshot(
     `
     {
-        "code": "z.object({
+        "code": "z.strictObject({
       '@id': z.string().optional(),
       id: z.number().optional(),
-    }).strip()",
+    })",
         "schema": {
             "properties": {
                 "@id": {
@@ -69,21 +69,17 @@ test('handle-props-with-special-characters', async () => {
         path: "/something",
         requestFormat: "json",
         parameters: [],
-        response: z
-          .object({
-            "@id": z.string().optional(),
-            id: z.number().optional(),
-          })
-          .strip(),
+        response: z.strictObject({
+          "@id": z.string().optional(),
+          id: z.number().optional(),
+        }),
         errors: [],
         responses: {
           200: {
-            schema: z
-              .object({
-                "@id": z.string().optional(),
-                id: z.number().optional(),
-              })
-              .strip(),
+            schema: z.strictObject({
+              "@id": z.string().optional(),
+              id: z.number().optional(),
+            }),
             description: "OK",
           },
         },
@@ -102,8 +98,7 @@ test('handle-props-with-special-characters', async () => {
             type: "object",
             properties: { "@id": { type: "string" }, id: { type: "number" } },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: true,

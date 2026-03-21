@@ -17,7 +17,7 @@ This decision must align with:
 - **Consistency with output**: Zod output strategy (ADR‑031) and input strategy must be compatible to enable round‑trip validation.
 
 > [!IMPORTANT]
-> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) supersedes the earlier multi-mode object-ingest direction in this ADR. Non-strict object inputs now reject by default, with one explicit opt-in strip-normalization compatibility mode.
+> [ADR-040](./ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) and [IDENTITY.md](../../.agent/IDENTITY.md) supersede the earlier multi-mode object-ingest direction in this ADR. Non-strict object inputs are rejected unconditionally, and `unknownKeyBehavior` has been removed from the IR entirely.
 
 ---
 
@@ -53,12 +53,10 @@ This decision must align with:
 - Nullable and nullish recursive refs map losslessly to existing composition IR: `anyOf: [{$ref}, {type: 'null'}]`, with parent requiredness carrying optionality.
 - `z.lazy(() => ...)` is accepted for compatibility when the callback is statically analyzable. It is never emitted by the writer, and dynamic / non-analyzable lazy patterns must still fail fast.
 
-### 5. Object Parsing Is Reject-By-Default, With One Explicit Strip-Normalization Compatibility Mode
+### 5. Object Parsing Is Reject-Only
 
-Public option surface:
-
-- `nonStrictObjectPolicy?: 'reject' | 'strip'`
-- default: `'reject'`
+> [!IMPORTANT]
+> Per [IDENTITY.md](../../.agent/IDENTITY.md), the strip-normalization compatibility mode described in the original version of this section has been removed. The core pipeline now exposes no compatibility knob for non-strict objects.
 
 Default supported direction:
 
@@ -66,7 +64,7 @@ Default supported direction:
 - `z.object({...}).strict()` when statically analyzable
 - OpenAPI / JSON Schema object schemas that explicitly reject unknown keys
 
-Default rejected direction:
+Rejected direction (no opt-out available):
 
 - bare `z.object({...})`
 - `z.looseObject({...})`
@@ -76,15 +74,7 @@ Default rejected direction:
 - OpenAPI / JSON Schema object schemas that permit unknown keys
 - non-strict preservation extensions
 
-Compatibility-mode direction:
-
-- when the caller explicitly opts into strip-normalization mode, the parser may accept the rejected non-strict object forms above
-- those forms must normalize to strip semantics only
-- normalization target is `additionalProperties: true` plus `unknownKeyBehavior: { mode: 'strip' }`
-- passthrough and catchall behavior must not survive this mode as preserved semantics
-- the mode must be documented as deliberate and lossy
-
-Invalid or non-strict object combinations must fail fast with actionable diagnostics when the compatibility mode is not enabled.
+Invalid or non-strict object combinations must fail fast with actionable diagnostics.
 
 ### 6. Union Semantics Must Be Preserved
 
@@ -155,7 +145,7 @@ Portable detours may later widen subtype semantics when the target format cannot
 
 - Some Zod patterns remain unsupported (dynamic schemas, Zod 3, non-statically-analyzable lazy patterns, standalone `z.undefined()`).
 - Users must adapt input to idiomatic Zod 4 conventions for lossless ingestion.
-- Callers who choose strip-normalization compatibility mode are explicitly accepting a lossy ingest path for non-strict object behavior.
+- Non-strict object behavior is rejected unconditionally; callers must pre-normalize using the doctor if they need non-strict input to pass through.
 
 ---
 

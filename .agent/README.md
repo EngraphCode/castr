@@ -19,47 +19,47 @@ Then use:
 
 ## 📚 Foundation Documents (Directives)
 
-| Document                                                  | Purpose                | Key Question                      |
-| --------------------------------------------------------- | ---------------------- | --------------------------------- |
-| [VISION.md](directives/VISION.md)                         | Strategic direction    | _Where are we going?_             |
-| [requirements.md](directives/requirements.md)             | Decision guidance      | _How should I decide?_            |
-| [principles.md](directives/principles.md)                 | Engineering standards  | _What does excellence look like?_ |
-| [testing-strategy.md](directives/testing-strategy.md)     | TDD & test methodology | _How do we prove correctness?_    |
-| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md) | Quality gates          | _How do we verify we're done?_    |
+| Document                                                  | Purpose                                   | Key Question                      |
+| --------------------------------------------------------- | ----------------------------------------- | --------------------------------- |
+| [IDENTITY.md](IDENTITY.md)                                | Canonical identity, semantics, and policy | _What is Castr?_                  |
+| [VISION.md](directives/VISION.md)                         | Strategic direction                       | _Where are we going?_             |
+| [requirements.md](directives/requirements.md)             | Decision guidance                         | _How should I decide?_            |
+| [principles.md](directives/principles.md)                 | Engineering standards                     | _What does excellence look like?_ |
+| [testing-strategy.md](directives/testing-strategy.md)     | TDD & test methodology                    | _How do we prove correctness?_    |
+| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md) | Quality gates                             | _How do we verify we're done?_    |
 
-**Read `principles.md` first** — it contains the Cardinal Rule and engineering principles.
+**Read `IDENTITY.md` first** — it defines what Castr is and what it is not. Then read `principles.md` for the Cardinal Rule and engineering principles.
 
 ---
 
 ## 🎯 Current State (March 2026)
 
+- **Identity:** [`IDENTITY.md`](IDENTITY.md) is the canonical identity document — Castr is a schema compiler with closed-world, strict-only object semantics
 - **Quality Gates:** canonical chain defined in `.agent/directives/DEFINITION_OF_DONE.md`
-  - Last reproduced full repo-root sweep: green on Thursday, 20 March 2026
-  - The completed doctor rescue-loop redesign slice reran the full Definition of Done chain green on Thursday, 20 March 2026
-  - Immediate priority in a fresh session is to reproduce any user-reported failures first, then select the next honest atomic slice from the paused investigations
+  - Last reproduced full repo-root sweep: green on Saturday, 21 March 2026
+  - Immediate priority in a fresh session is to reproduce any user-reported failures first
 - **Architecture:** IR-based product architecture plus canonical-first local Practice structure
-- **Primary Active Work:** next-slice selection (rescue-loop redesign complete)
-  - Plan of record: `.agent/plans/roadmap.md`
-  - Completed plan: `.agent/plans/active/zod-limitations-next-atomic-slice-planning.md`
-  - The rescue-loop redesign (All-Errors Preflight Batch Rescue) landed on Thursday, 20 March 2026:
-    - `rescueRetryCount` reduced from `1,159` to `1`
-    - `nonStandardRescue` reduced from `20,770ms` to `31.79ms`
-    - `pnpm test:transforms` reduced from `25.88s` to `6.92s` real
-    - doctor-proof timeout reduced from `60s` to `10s`
-  - The earlier adjacent predecessor `.agent/plans/current/complete/int64-bigint-semantics-investigation.md` remains complete and green
-  - Review closure for completed slices was performed manually in-session using the reviewer templates, not nested reviewer runs
-  - Paused umbrella context: `.agent/plans/current/paused/zod-limitations-architecture-investigation.md`
-  - Paused supporting investigations:
-    - `.agent/plans/current/paused/recursive-unknown-key-preserving-zod-emission-investigation.md`
-    - `.agent/plans/current/paused/transform-proof-budgeting-and-runtime-architecture-investigation.md`
-  - Completed adjacent remediation:
+- **Primary Active Work:** Architecture Review Packs — post-IDENTITY bounded audit before any new implementation
+  - Active plan: [`.agent/plans/active/architecture-review-packs.md`](plans/active/architecture-review-packs.md)
+  - Dedicated prompt: [`.agent/prompts/architecture-review-packs.prompt.md`](prompts/architecture-review-packs.prompt.md)
+  - Immediate predecessor: [`.agent/plans/current/complete/identity-doctrine-alignment.md`](plans/current/complete/identity-doctrine-alignment.md)
+  - Paused successor: [`.agent/plans/current/paused/json-schema-parser.md`](plans/current/paused/json-schema-parser.md)
+  - Plan of record: [`.agent/plans/roadmap.md`](plans/roadmap.md)
+- **Latest Completed Slice:** IDENTITY Doctrine Alignment (verified 2026-03-21)
+  - `unknownKeyBehavior` removed from IR, parsers, and writers
+  - parser-layer `additionalProperties` honesty restored for non-object schemas
+  - public strictness/compatibility surfaces removed
+  - `CastrSchemaProperties` runtime detection made brand-based and cross-realm safe
+  - full repo-root Definition of Done chain green
+  - Completed predecessor slices:
+    - `.agent/plans/current/complete/doctor-rescue-loop-runtime-redesign.md`
     - `.agent/plans/current/complete/int64-bigint-semantics-investigation.md`
     - `.agent/plans/current/complete/strict-object-semantics-enforcement.md`
     - `.agent/plans/current/complete/recursive-unknown-key-semantics-remediation.md`
+    - `.agent/plans/current/complete/zod-limitations-architecture-investigation.md`
+    - `.agent/plans/current/complete/recursive-unknown-key-preserving-zod-emission-investigation.md`
+    - `.agent/plans/current/complete/transform-proof-budgeting-and-runtime-architecture-investigation.md`
 - **Installed Agent Layer:** canonical templates in `.agent/sub-agents/` with Codex project agents in `.codex/config.toml` and `.codex/agents/`
-- **Recent Completed Operational Slices:**
-  - `.agent/plans/current/complete/core-agent-system-and-codex-agent-adapters.md`
-  - `.agent/plans/current/complete/practice-core-integration-and-practice-restructuring.md`
 
 ---
 

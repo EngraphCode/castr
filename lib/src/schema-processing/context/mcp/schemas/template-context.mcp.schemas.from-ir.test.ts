@@ -29,6 +29,28 @@ function createMockSchema(type: CastrSchema['type'] = 'object'): CastrSchema {
   };
 }
 
+function createCrossRealmLikeProperties(properties: Record<string, CastrSchema>): unknown {
+  const live = new CastrSchemaProperties(properties);
+  const crossRealmLike = {
+    get: live.get.bind(live),
+    has: live.has.bind(live),
+    entries: live.entries.bind(live),
+  };
+
+  Object.defineProperty(crossRealmLike, Symbol.for('@engraph/castr/CastrSchemaProperties'), {
+    value: true,
+    enumerable: false,
+    configurable: false,
+    writable: false,
+  });
+
+  return crossRealmLike;
+}
+
+function assignSchemaProperties(schema: CastrSchema, properties: unknown): void {
+  Reflect.set(schema, 'properties', properties);
+}
+
 /**
  * Create a mock schema component for the IR.
  */
@@ -198,6 +220,31 @@ describe('buildMcpToolSchemasFromIR', () => {
     expect(result.outputSchema).toBeDefined();
     // The inlined schema should not have $ref at top level
     expect(result.outputSchema).not.toHaveProperty('$ref');
+  });
+
+  test('accepts cross-realm-like CastrSchemaProperties when converting IR object schemas', () => {
+    const outputSchema = createMockSchema('object');
+    assignSchemaProperties(
+      outputSchema,
+      createCrossRealmLikeProperties({
+        city: createMockSchema('string'),
+      }),
+    );
+
+    const ir = createMockCastrDocument();
+    const operation = createMockOperation({
+      responses: [
+        {
+          statusCode: '200',
+          schema: outputSchema,
+        },
+      ],
+    });
+
+    const result = buildMcpToolSchemasFromIR(ir, operation);
+    assertSchemaObject(result.outputSchema);
+
+    expect(result.outputSchema['properties']).toHaveProperty('city');
   });
 
   test('combines parameters and request body in input schema', () => {

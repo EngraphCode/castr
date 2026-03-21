@@ -374,49 +374,6 @@ describe('object schemas', () => {
 
     expect(result.additionalProperties).toBe(false);
   });
-
-  it('writes strip unknown-key behavior with the governed extension', () => {
-    const schema: CastrSchema = {
-      type: 'object',
-      unknownKeyBehavior: { mode: 'strip' },
-      metadata: createMetadata(),
-    };
-
-    const result = writeOpenApiSchema(schema);
-
-    expect(result.additionalProperties).toBe(true);
-    expect(result['x-castr-unknownKeyBehavior']).toBe('strip');
-  });
-
-  it('writes passthrough unknown-key behavior with the governed extension', () => {
-    const schema: CastrSchema = {
-      type: 'object',
-      unknownKeyBehavior: { mode: 'passthrough' },
-      metadata: createMetadata(),
-    };
-
-    const result = writeOpenApiSchema(schema);
-
-    expect(result.additionalProperties).toBe(true);
-    expect(result['x-castr-unknownKeyBehavior']).toBe('passthrough');
-  });
-
-  it('handles additionalProperties with schema', () => {
-    const schema: CastrSchema = {
-      type: 'object',
-      additionalProperties: { type: 'string', metadata: createMetadata() },
-      unknownKeyBehavior: {
-        mode: 'catchall',
-        schema: { type: 'string', metadata: createMetadata() },
-      },
-      metadata: createMetadata(),
-    };
-
-    const result = writeOpenApiSchema(schema);
-
-    expect(result.additionalProperties).toEqual({ type: 'string' });
-    expect(result['x-castr-unknownKeyBehavior']).toBeUndefined();
-  });
 });
 
 describe('array schemas', () => {
@@ -486,7 +443,7 @@ describe('composition schemas', () => {
     const result = writeOpenApiSchema(schema);
 
     expect(result.allOf).toHaveLength(2);
-    expect(result.allOf?.[0]).toEqual({ type: 'object' });
+    expect(result.allOf?.[0]).toEqual({ type: 'object', additionalProperties: false });
     expect(result.allOf?.[1]).toEqual({ $ref: '#/components/schemas/Base' });
   });
 
@@ -764,6 +721,7 @@ describe('JSON Schema 2020-12 keywords', () => {
     expect(result.dependentSchemas).toEqual({
       creditCard: {
         type: 'object',
+        additionalProperties: false,
         properties: { billingAddress: { type: 'string' } },
       },
     });

@@ -79,7 +79,7 @@ Code generation configuration:
 - `export-*` - Export options (all types, named schemas, schemas only)
 - `group-strategy*` - File organization strategies
 - `additionalProperties-*` - Additional properties handling
-- `strictObjects-option`, `withImplicitRequired-option` - Type strictness
+- `withImplicitRequired-option` - Type strictness
 - `with-deprecated`, `inline-simple-schemas` - Generation tweaks
 
 #### Validation (9 files)

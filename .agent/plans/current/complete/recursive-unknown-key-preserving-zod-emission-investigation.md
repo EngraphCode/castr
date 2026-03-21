@@ -1,6 +1,6 @@
 # Plan (Paused): Recursive Unknown-Key-Preserving Zod Emission Investigation
 
-**Status:** Paused (Superseded by reject-by-default plus strip-normalization doctrine on 2026-03-11)  
+**Status:** Complete (Closed Out 2026-03-21) — superseded by ADR-040; residual thread consolidated in [zod-and-transform-future-investigations.md](../../future/zod-and-transform-future-investigations.md)  
 **Created:** 2026-03-11  
 **Last Updated:** 2026-03-12  
 **Predecessor:** [zod-limitations-architecture-investigation.md](./zod-limitations-architecture-investigation.md)  

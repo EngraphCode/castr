@@ -31,7 +31,7 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
 
   beforeAll(async () => {
     const result = await loadOpenApiDocument(`${FIXTURES_DIR}/complete-fields-3.1.yaml`);
-    const ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
+    const ir = buildIR(result.document);
     output = writeOpenApi(ir);
   });
 
@@ -331,7 +331,7 @@ describe('Writer Field Coverage - OpenAPI 3.1.x', () => {
 describe('Writer Output - Version Validation', () => {
   it('always outputs as OpenAPI 3.1.x (version flows from IR)', async () => {
     const result30 = await loadOpenApiDocument(`${FIXTURES_DIR}/complete-fields-3.0.yaml`);
-    const ir30 = buildIR(result30.document, { nonStrictObjectPolicy: 'strip' });
+    const ir30 = buildIR(result30.document);
     const output30 = writeOpenApi(ir30);
 
     // Version flows from IR (scalar parser upgrades 3.0.x to 3.1.x)
@@ -340,7 +340,7 @@ describe('Writer Output - Version Validation', () => {
 
   it('does NOT output 3.1.x-only fields from 3.0.x input', async () => {
     const result30 = await loadOpenApiDocument(`${FIXTURES_DIR}/complete-fields-3.0.yaml`);
-    const ir30 = buildIR(result30.document, { nonStrictObjectPolicy: 'strip' });
+    const ir30 = buildIR(result30.document);
     const output30 = writeOpenApi(ir30);
 
     // These fields should be undefined because they weren't in the 3.0.x input

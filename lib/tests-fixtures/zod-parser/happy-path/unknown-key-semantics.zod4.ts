@@ -1,91 +1,35 @@
 /**
- * Zod 4 Happy Path Fixtures — Unknown-Key Semantics
+ * Zod 4 Happy Path Fixtures — Strict Object Semantics
  *
- * Contains object schemas that exercise strip, passthrough, catchall,
- * and recursive unknown-key behavior.
+ * Under IDENTITY doctrine, all objects use strict (closed-world) semantics.
+ * Non-strict forms (strip, passthrough, catchall) are rejected at parse time.
+ * This fixture validates that strict objects with nested structures parse correctly.
  *
  * @module tests-fixtures/zod-parser/happy-path/unknown-key-semantics
  */
 import { z } from 'zod';
 
 // =============================================================================
-// Strip
+// Strict Object (canonical form)
 // =============================================================================
 
-export const StripObjectSchema = z
-  .object({
-    known: z.string(),
-    nested: z
-      .object({
-        inner: z.string(),
-      })
-      .strip(),
-  })
-  .strip();
-
-// =============================================================================
-// Passthrough
-// =============================================================================
-
-export const PassthroughObjectSchema = z
-  .object({
-    known: z.string(),
-    nested: z
-      .object({
-        inner: z.string(),
-      })
-      .passthrough(),
-  })
-  .passthrough();
-
-// =============================================================================
-// Catchall
-// =============================================================================
-
-export const CatchallObjectSchema = z
-  .object({
-    known: z.string(),
-    nested: z
-      .object({
-        inner: z.string(),
-      })
-      .catchall(z.number()),
-  })
-  .catchall(z.string());
-
-// =============================================================================
-// Recursive Strip
-// =============================================================================
-
-export const RecursiveStripCategorySchema = z.object({
-  name: z.string(),
-  get children() {
-    return z.array(RecursiveStripCategorySchema);
-  },
+export const StrictObjectSchema = z.strictObject({
+  known: z.string(),
+  nested: z.strictObject({
+    inner: z.string(),
+  }),
 });
 
 // =============================================================================
-// Recursive Passthrough
+// Recursive Strict Object
 // =============================================================================
 
-export const RecursivePassthroughCategorySchema = z
-  .object({
-    name: z.string(),
-    get children() {
-      return z.array(RecursivePassthroughCategorySchema);
-    },
-  })
-  .passthrough();
-
-// =============================================================================
-// Recursive Catchall
-// =============================================================================
-
-export const RecursiveCatchallCategorySchema = z
-  .object({
-    name: z.string(),
-    get children() {
-      return z.array(RecursiveCatchallCategorySchema);
-    },
-  })
-  .catchall(z.string());
+export const RecursiveStrictCategorySchema: z.ZodType<{
+  name: string;
+  children: { name: string; children: unknown[] }[];
+}> = z.strictObject({
+  name: z.string(),
+  get children() {
+    return z.array(RecursiveStrictCategorySchema);
+  },
+});

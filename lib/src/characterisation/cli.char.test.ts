@@ -21,7 +21,6 @@ import { getZodClientTemplateContext } from './test-utils.js';
 const thisDir = dirname(fileURLToPath(import.meta.url));
 const CLI_PATH = join(thisDir, '../../dist/cli/index.js');
 const TEST_OUTPUT_DIR = join(thisDir, 'test-output-cli');
-const STRIP_COMPATIBILITY_CLI_ARGS = ['--non-strict-object-policy', 'strip'] as const;
 
 /**
  * Helper: Create a test OpenAPI spec file
@@ -94,10 +93,6 @@ function runCli(args: string[]): { stdout: string; exitCode: number } {
   };
 }
 
-function runCliWithStripCompatibility(args: string[]): { stdout: string; exitCode: number } {
-  return runCli([...args, ...STRIP_COMPATIBILITY_CLI_ARGS]);
-}
-
 describe('Characterisation: CLI Behavior', () => {
   beforeAll(() => {
     // Create test output directory
@@ -138,7 +133,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('basic-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'basic-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath]);
+      runCli([inputPath, '-o', outputPath]);
 
       // Verify file was created
       expect(existsSync(outputPath)).toBe(true);
@@ -156,13 +151,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('base-url-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'base-url-output.ts');
 
-      runCliWithStripCompatibility([
-        inputPath,
-        '-o',
-        outputPath,
-        '--base-url',
-        'https://api.example.com',
-      ]);
+      runCli([inputPath, '-o', outputPath, '--base-url', 'https://api.example.com']);
 
       const content = readFileSync(outputPath, 'utf8');
       expect(content).toContain('User');
@@ -173,7 +162,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('export-schemas-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'export-schemas-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath, '--export-schemas']);
+      runCli([inputPath, '-o', outputPath, '--export-schemas']);
 
       const content = readFileSync(outputPath, 'utf8');
       expect(content).toContain('export');
@@ -184,7 +173,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('with-alias-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'with-alias-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath, '--with-alias']);
+      runCli([inputPath, '-o', outputPath, '--with-alias']);
 
       const content = readFileSync(outputPath, 'utf8');
       expect(content).toContain('User');
@@ -194,21 +183,39 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('no-alias-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'no-alias-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath, '--no-with-alias']);
+      runCli([inputPath, '-o', outputPath, '--no-with-alias']);
 
       const content = readFileSync(outputPath, 'utf8');
       expect(content).toContain('User');
     });
 
-    it('should respect --strict-objects option', () => {
+    it('should reject removed strictness compatibility flags', () => {
       const inputPath = createTestSpec('strict-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'strict-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath, '--strict-objects']);
+      const strictObjectsResult = runCli([inputPath, '-o', outputPath, '--strict-objects']);
+      expect(strictObjectsResult.exitCode).not.toBe(0);
+      expect(strictObjectsResult.stdout).toContain('unknown option');
 
-      const content = readFileSync(outputPath, 'utf8');
-      expect(content).toContain('User');
-      expect(content).not.toContain('as unknown as');
+      const additionalPropsResult = runCli([
+        inputPath,
+        '-o',
+        outputPath,
+        '--additional-props-default-value',
+        'false',
+      ]);
+      expect(additionalPropsResult.exitCode).not.toBe(0);
+      expect(additionalPropsResult.stdout).toContain('unknown option');
+
+      const nonStrictPolicyResult = runCli([
+        inputPath,
+        '-o',
+        outputPath,
+        '--non-strict-object-policy',
+        'reject',
+      ]);
+      expect(nonStrictPolicyResult.exitCode).not.toBe(0);
+      expect(nonStrictPolicyResult.stdout).toContain('unknown option');
     });
 
     it('should emit MCP manifest with --emit-mcp-manifest option', async () => {
@@ -296,13 +303,7 @@ describe('Characterisation: CLI Behavior', () => {
       const outputPath = join(TEST_OUTPUT_DIR, 'manifest-output.ts');
       const manifestPath = join(TEST_OUTPUT_DIR, 'manifest.json');
 
-      runCliWithStripCompatibility([
-        inputPath,
-        '-o',
-        outputPath,
-        '--emit-mcp-manifest',
-        manifestPath,
-      ]);
+      runCli([inputPath, '-o', outputPath, '--emit-mcp-manifest', manifestPath]);
 
       expect(existsSync(manifestPath)).toBe(true);
 
@@ -345,7 +346,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('quality-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'quality-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath]);
+      runCli([inputPath, '-o', outputPath]);
 
       const content = readFileSync(outputPath, 'utf8');
 
@@ -403,7 +404,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('complex-test.json', complexSpec);
       const outputPath = join(TEST_OUTPUT_DIR, 'complex-output.ts');
 
-      runCliWithStripCompatibility([inputPath, '-o', outputPath]);
+      runCli([inputPath, '-o', outputPath]);
 
       const content = readFileSync(outputPath, 'utf8');
 
@@ -412,7 +413,7 @@ describe('Characterisation: CLI Behavior', () => {
       expect(content).toContain('Person');
 
       // Dependencies should be resolved
-      expect(content).toContain('.object({');
+      expect(content).toContain('z.strictObject({');
     });
   });
 
@@ -421,7 +422,7 @@ describe('Characterisation: CLI Behavior', () => {
       const inputPath = createTestSpec('success-test.json');
       const outputPath = join(TEST_OUTPUT_DIR, 'success-output.ts');
 
-      const result = runCliWithStripCompatibility([inputPath, '-o', outputPath]);
+      const result = runCli([inputPath, '-o', outputPath]);
 
       expect(result.exitCode).toBe(0);
       expect(existsSync(outputPath)).toBe(true);

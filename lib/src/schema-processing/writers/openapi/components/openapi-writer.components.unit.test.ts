@@ -49,7 +49,7 @@ describe('writeOpenApiComponents', () => {
       const result = writeOpenApiComponents(components);
 
       expect(result.schemas).toBeDefined();
-      expect(result.schemas?.['User']).toEqual({ type: 'object' });
+      expect(result.schemas?.['User']).toEqual({ type: 'object', additionalProperties: false });
     });
 
     it('converts multiple schema components', () => {

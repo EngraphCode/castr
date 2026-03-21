@@ -39,16 +39,12 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
 > [!NOTE]
 > `z.iso.datetime()` only accepts UTC (`Z` suffix). Timezone offsets like `+05:00` are rejected.
 
-## Object Unknown-Key Modes
+## Object Strictness
 
-- When IR carries `unknownKeyBehavior`, the writer emits the exact runtime mode:
-  - `strict` -> `.strict()`
-  - non-recursive `strip` -> `.strip()`
-  - recursive `strip` -> bare `z.object({...})`
-  - non-recursive `passthrough` -> `.passthrough()`
-  - non-recursive `catchall` -> `.catchall(schema)`
-- Recursive `.passthrough()` and recursive `.catchall()` fail fast with explicit generation errors.
-- Inline endpoint objects (queryParams, pathParams, headers) are always `.strict()`.
+- Object output is strict-only.
+- Canonical object emission uses `z.strictObject({...})`.
+- Inline endpoint objects (queryParams, pathParams, headers) are also emitted as `z.strictObject({...})`.
+- Non-strict object modes are rejected during ingest rather than preserved for output.
 
 ## Recursive Schemas
 
@@ -58,8 +54,8 @@ Zod 4 top-level format functions are preferred (tree-shakable, future-proof):
   - optional recursion → `.optional()`
   - nullable recursion → `.nullable()`
   - optional nullable recursion → `.nullish()`
-- Recursive strip objects emit bare `z.object({...})`, because explicit `.strip()` eagerly evaluates getter-backed shapes.
-- Recursive `.passthrough()` and `.catchall()` fail fast because Zod 4 eagerly evaluates getter-backed shapes during those calls and can trigger temporal-dead-zone failures.
+- Recursive strict objects emit `z.strictObject({...})`.
+- Unknown-key-preserving recursive modes are intentionally unsupported and rejected upstream.
 
 ## Important Semantics
 

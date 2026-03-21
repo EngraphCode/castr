@@ -28,30 +28,30 @@ test('getSchemaAsZodString', () => {
   );
   expect(getSchemaAsZodString({ type: 'object' })).toMatchInlineSnapshot(
     `
-    "z.object({
-    }).strip()"
+    "z.strictObject({
+    })"
   `,
   );
   expect(getSchemaAsZodString({ type: 'object', properties: { str: { type: 'string' } } }))
     .toMatchInlineSnapshot(`
-      "z.object({
+      "z.strictObject({
         str: z.string().optional(),
-      }).strip()"
+      })"
     `);
 
   expect(getSchemaAsZodString({ type: 'object', properties: { nb: { type: 'integer' } } }))
     .toMatchInlineSnapshot(`
-      "z.object({
+      "z.strictObject({
         nb: z.int().optional(),
-      }).strip()"
+      })"
     `);
 
   expect(
     getSchemaAsZodString({ type: 'object', properties: { pa: { type: 'number', minimum: 0 } } }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       pa: z.number().min(0).optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
@@ -60,17 +60,17 @@ test('getSchemaAsZodString', () => {
       properties: { pa: { type: 'number', minimum: 0, maximum: 100 } },
     }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       pa: z.number().min(0).max(100).optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
     getSchemaAsZodString({ type: 'object', properties: { ml: { type: 'string', minLength: 0 } } }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       ml: z.string().min(0).optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
@@ -79,9 +79,9 @@ test('getSchemaAsZodString', () => {
       properties: { dt: { type: 'string', format: 'date-time' } },
     }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       dt: z.iso.datetime().optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
@@ -99,13 +99,13 @@ test('getSchemaAsZodString', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       nb: z.number().optional(),
-      nested: z.object({
+      nested: z.strictObject({
         nested_prop: z.boolean().optional(),
-      }).strip().optional(),
+      }).optional(),
       str: z.string().optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
@@ -119,9 +119,9 @@ test('getSchemaAsZodString', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-    "z.array(z.object({
+    "z.array(z.strictObject({
       str: z.string().optional(),
-    }).strip())"
+    }))"
   `);
 
   expect(
@@ -144,9 +144,9 @@ test('getSchemaAsZodString', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       union: z.xor([z.string(), z.number()]).optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
@@ -157,9 +157,9 @@ test('getSchemaAsZodString', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       anyOfExample: z.union([z.string(), z.number()]).optional(),
-    }).strip()"
+    })"
   `);
 
   expect(
@@ -170,9 +170,9 @@ test('getSchemaAsZodString', () => {
       },
     }),
   ).toMatchInlineSnapshot(`
-    "z.object({
+    "z.strictObject({
       intersection: z.string().and(z.number()).optional(),
-    }).strip()"
+    })"
   `);
 
   expect(

@@ -51,19 +51,15 @@ export const endpoints = [
         schema: CreateUserInput,
       },
     ],
-    response: z
-      .object({
-        id: z.uuid().optional(),
-      })
-      .strip(),
+    response: z.strictObject({
+      id: z.uuid().optional(),
+    }),
     errors: [],
     responses: {
       201: {
-        schema: z
-          .object({
-            id: z.uuid().optional(),
-          })
-          .strip(),
+        schema: z.strictObject({
+          id: z.uuid().optional(),
+        }),
         description: "User created successfully",
       },
     },
@@ -102,7 +98,6 @@ export const mcpTools = [
               },
               required: ["username", "email"],
               additionalProperties: false,
-              unknownKeyBehavior: { mode: "strict" },
             },
           },
         },
@@ -149,7 +144,6 @@ export const mcpTools = [
             },
             required: ["username", "email"],
             additionalProperties: false,
-            unknownKeyBehavior: { mode: "strict" },
           },
         },
         required: ["body"],
@@ -158,8 +152,7 @@ export const mcpTools = [
         type: "object",
         properties: { id: { type: "string", format: "uuid" } },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -373,7 +366,7 @@ export const endpoints = [
       },
     ],
     response: z
-      .object({
+      .strictObject({
         subscriptionId: z
           .string()
           .meta({
@@ -382,13 +375,12 @@ export const endpoints = [
             examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
           }),
       })
-      .strip()
       .meta({ description: "subscription information" }),
     errors: [],
     responses: {
       201: {
         schema: z
-          .object({
+          .strictObject({
             subscriptionId: z
               .string()
               .meta({
@@ -397,7 +389,6 @@ export const endpoints = [
                 examples: ["2531329f-fb09-4ef7-887e-84e648214436"],
               }),
           })
-          .strip()
           .meta({ description: "subscription information" }),
         description: "subscription successfully created",
       },
@@ -447,8 +438,7 @@ export const mcpTools = [
         },
         required: ["subscriptionId"],
         description: "subscription information",
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,
@@ -486,26 +476,20 @@ export type pullrequest = {
   title?: string;
 };
 // Zod Schemas
-export const user = z
-  .object({
-    username: z.string().optional(),
-    uuid: z.string().optional(),
-  })
-  .strip();
-export const repository = z
-  .object({
-    owner: user.optional(),
-    slug: z.string().optional(),
-  })
-  .strip();
-export const pullrequest = z
-  .object({
-    author: user.optional(),
-    id: z.int().optional(),
-    repository: repository.optional(),
-    title: z.string().optional(),
-  })
-  .strip();
+export const user = z.strictObject({
+  username: z.string().optional(),
+  uuid: z.string().optional(),
+});
+export const repository = z.strictObject({
+  owner: user.optional(),
+  slug: z.string().optional(),
+});
+export const pullrequest = z.strictObject({
+  author: user.optional(),
+  id: z.int().optional(),
+  repository: repository.optional(),
+  title: z.string().optional(),
+});
 // Endpoints
 export const endpoints = [
   {
@@ -744,8 +728,7 @@ export const mcpTools = [
         type: "object",
         properties: { username: { type: "string" }, uuid: { type: "string" } },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -795,14 +778,12 @@ export const mcpTools = [
                     uuid: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
                 slug: { type: "string" },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -853,14 +834,12 @@ export const mcpTools = [
               uuid: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           slug: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -919,8 +898,7 @@ export const mcpTools = [
                     uuid: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
                 id: { type: "integer" },
                 repository: {
@@ -933,20 +911,17 @@ export const mcpTools = [
                         uuid: { type: "string" },
                       },
                       required: [],
-                      additionalProperties: true,
-                      unknownKeyBehavior: { mode: "strip" },
+                      additionalProperties: false,
                     },
                     slug: { type: "string" },
                   },
                   required: [],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
                 title: { type: "string" },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -998,8 +973,7 @@ export const mcpTools = [
               uuid: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           id: { type: "integer" },
           repository: {
@@ -1012,20 +986,17 @@ export const mcpTools = [
                   uuid: { type: "string" },
                 },
                 required: [],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               slug: { type: "string" },
             },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           title: { type: "string" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -1099,20 +1070,16 @@ export type ErrorSchema = {
   message: string;
 };
 // Zod Schemas
-export const Pet = z
-  .object({
-    id: z.int64(),
-    name: z.string(),
-    tag: z.string().optional(),
-  })
-  .strip();
+export const Pet = z.strictObject({
+  id: z.int64(),
+  name: z.string(),
+  tag: z.string().optional(),
+});
 export const Pets = z.array(Pet).max(100);
-export const ErrorSchema = z
-  .object({
-    code: z.int32(),
-    message: z.string(),
-  })
-  .strip();
+export const ErrorSchema = z.strictObject({
+  code: z.int32(),
+  message: z.string(),
+});
 // Endpoints
 export const endpoints = [
   {
@@ -1264,8 +1231,7 @@ export const mcpTools = [
                 tag: { type: "string" },
               },
               required: ["id", "name"],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
         },
@@ -1308,8 +1274,7 @@ export const mcpTools = [
               tag: { type: "string" },
             },
             required: ["id", "name"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: ["body"],
@@ -1356,8 +1321,7 @@ export const mcpTools = [
           tag: { type: "string" },
         },
         required: ["id", "name"],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -1393,25 +1357,19 @@ export type ErrorSchema = {
   message: string;
 };
 // Zod Schemas
-export const NewPet = z
-  .object({
-    name: z.string(),
-    tag: z.string().optional(),
-  })
-  .strip();
+export const NewPet = z.strictObject({
+  name: z.string(),
+  tag: z.string().optional(),
+});
 export const Pet = NewPet.and(
-  z
-    .object({
-      id: z.int64(),
-    })
-    .strip(),
+  z.strictObject({
+    id: z.int64(),
+  }),
 );
-export const ErrorSchema = z
-  .object({
-    code: z.int32(),
-    message: z.string(),
-  })
-  .strip();
+export const ErrorSchema = z.strictObject({
+  code: z.int32(),
+  message: z.string(),
+});
 // Endpoints
 export const endpoints = [
   {
@@ -1613,8 +1571,7 @@ export const mcpTools = [
                     tag: { type: "string" },
                   },
                   required: ["name"],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
                 {
                   type: "object",
@@ -1626,8 +1583,7 @@ export const mcpTools = [
                     },
                   },
                   required: ["id"],
-                  additionalProperties: true,
-                  unknownKeyBehavior: { mode: "strip" },
+                  additionalProperties: false,
                 },
               ],
             },
@@ -1663,8 +1619,7 @@ export const mcpTools = [
             type: "object",
             properties: { name: { type: "string" }, tag: { type: "string" } },
             required: ["name"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
         },
         required: ["body"],
@@ -1681,8 +1636,7 @@ export const mcpTools = [
                   tag: { type: "string" },
                 },
                 required: ["name"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               {
                 type: "object",
@@ -1694,8 +1648,7 @@ export const mcpTools = [
                   },
                 },
                 required: ["id"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
             ],
           },
@@ -1753,8 +1706,7 @@ export const mcpTools = [
                   tag: { type: "string" },
                 },
                 required: ["name"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
               {
                 type: "object",
@@ -1766,8 +1718,7 @@ export const mcpTools = [
                   },
                 },
                 required: ["id"],
-                additionalProperties: true,
-                unknownKeyBehavior: { mode: "strip" },
+                additionalProperties: false,
               },
             ],
           },
@@ -1849,56 +1800,50 @@ export type perform_search_Body = {
   /** Starting record number. Default value is 0. */ start?: number;
 };
 // Zod Schemas
-export const dataSetList = z
-  .object({
-    apis: z
-      .array(
-        z
-          .object({
-            apiDocumentationUrl: z
-              .string()
-              .optional()
-              .meta({ description: "A URL to the API console for each API" }),
-            apiKey: z
-              .string()
-              .optional()
-              .meta({ description: "To be used as a dataset parameter value" }),
-            apiUrl: z
-              .string()
-              .optional()
-              .meta({ description: "The URL describing the dataset's fields" }),
-            apiVersionNumber: z
-              .string()
-              .optional()
-              .meta({ description: "To be used as a version parameter value" }),
-          })
-          .strip(),
-      )
-      .optional(),
-    total: z.int().optional(),
-  })
-  .strip();
-export const perform_search_Body = z
-  .object({
-    criteria: z
-      .string()
-      .meta({
-        description:
-          "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+export const dataSetList = z.strictObject({
+  apis: z
+    .array(
+      z.strictObject({
+        apiDocumentationUrl: z
+          .string()
+          .optional()
+          .meta({ description: "A URL to the API console for each API" }),
+        apiKey: z
+          .string()
+          .optional()
+          .meta({ description: "To be used as a dataset parameter value" }),
+        apiUrl: z
+          .string()
+          .optional()
+          .meta({ description: "The URL describing the dataset's fields" }),
+        apiVersionNumber: z
+          .string()
+          .optional()
+          .meta({ description: "To be used as a version parameter value" }),
       }),
-    rows: z
-      .int()
-      .optional()
-      .meta({
-        description:
-          "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
-      }),
-    start: z
-      .int()
-      .optional()
-      .meta({ description: "Starting record number. Default value is 0." }),
-  })
-  .strip();
+    )
+    .optional(),
+  total: z.int().optional(),
+});
+export const perform_search_Body = z.strictObject({
+  criteria: z
+    .string()
+    .meta({
+      description:
+        "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+    }),
+  rows: z
+    .int()
+    .optional()
+    .meta({
+      description:
+        "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+    }),
+  start: z
+    .int()
+    .optional()
+    .meta({ description: "Starting record number. Default value is 0." }),
+});
 // Endpoints
 export const endpoints = [
   {
@@ -1989,58 +1934,7 @@ export const endpoints = [
       {
         name: "body",
         type: "Body",
-        schema: z
-          .object({
-            criteria: z
-              .string()
-              .meta({
-                description:
-                  "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
-              }),
-            rows: z
-              .int()
-              .optional()
-              .meta({
-                description:
-                  "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
-              }),
-            start: z
-              .int()
-              .optional()
-              .meta({
-                description: "Starting record number. Default value is 0.",
-              }),
-          })
-          .strip(),
-      },
-    ],
-    response: z.array(z.object({}).strip()),
-    errors: [
-      {
-        status: 404,
-        schema: z.strictObject({}),
-        description: "No matching record found for the given criteria.",
-      },
-    ],
-    responses: {
-      200: {
-        schema: z.array(z.object({}).strip()),
-        description: "successful operation",
-      },
-      404: {
-        schema: z.strictObject({}),
-        description: "No matching record found for the given criteria.",
-      },
-    },
-    request: {
-      pathParams: z
-        .object({
-          version: z.string(),
-          dataset: z.string(),
-        })
-        .strict(),
-      body: z
-        .object({
+        schema: z.strictObject({
           criteria: z
             .string()
             .meta({
@@ -2060,8 +1954,53 @@ export const endpoints = [
             .meta({
               description: "Starting record number. Default value is 0.",
             }),
+        }),
+      },
+    ],
+    response: z.array(z.strictObject({})),
+    errors: [
+      {
+        status: 404,
+        schema: z.strictObject({}),
+        description: "No matching record found for the given criteria.",
+      },
+    ],
+    responses: {
+      200: {
+        schema: z.array(z.strictObject({})),
+        description: "successful operation",
+      },
+      404: {
+        schema: z.strictObject({}),
+        description: "No matching record found for the given criteria.",
+      },
+    },
+    request: {
+      pathParams: z
+        .object({
+          version: z.string(),
+          dataset: z.string(),
         })
-        .strip(),
+        .strict(),
+      body: z.strictObject({
+        criteria: z
+          .string()
+          .meta({
+            description:
+              "Uses Lucene Query Syntax in the format of propertyName:value, propertyName:[num1 TO num2] and date range format: propertyName:[yyyyMMdd TO yyyyMMdd]. In the response please see the 'docs' element which has the list of record objects. Each record structure would consist of all the fields and their corresponding values.",
+          }),
+        rows: z
+          .int()
+          .optional()
+          .meta({
+            description:
+              "Specify number of rows to be returned. If you run the search with default values, in the response you will see 'numFound' attribute which will tell the number of records available in the dataset.",
+          }),
+        start: z
+          .int()
+          .optional()
+          .meta({ description: "Starting record number. Default value is 0." }),
+      }),
     },
     alias: "perform-search",
     description:
@@ -2102,15 +2041,13 @@ export const mcpTools = [
                 },
               },
               required: [],
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
+              additionalProperties: false,
             },
           },
           total: { type: "integer" },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -2205,8 +2142,7 @@ export const mcpTools = [
               },
             },
             required: ["criteria"],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           path: {
             type: "object",
@@ -2224,11 +2160,7 @@ export const mcpTools = [
         properties: {
           value: {
             type: "array",
-            items: {
-              type: "object",
-              additionalProperties: true,
-              unknownKeyBehavior: { mode: "strip" },
-            },
+            items: { type: "object", additionalProperties: false },
           },
         },
       },
@@ -2342,12 +2274,10 @@ export const winner = z
     description: "Winner of the game. \`.\` means nobody has won yet.",
     examples: ["."],
   });
-export const status = z
-  .object({
-    board: board.optional(),
-    winner: winner.optional(),
-  })
-  .strip();
+export const status = z.strictObject({
+  board: board.optional(),
+  winner: winner.optional(),
+});
 // Endpoints
 export const endpoints = [
   {
@@ -2467,8 +2397,7 @@ export const mcpTools = [
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: true,
@@ -2640,8 +2569,7 @@ export const mcpTools = [
           },
         },
         required: [],
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: "strip" },
+        additionalProperties: false,
       },
       annotations: {
         readOnlyHint: false,

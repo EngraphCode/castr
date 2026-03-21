@@ -34,7 +34,7 @@ const CUSTOM_DIR = resolve(__dirname, '../examples/custom/openapi/v3.1');
  * All fixtures that MUST be supported with current implementation.
  * Format: [displayName, absolutePath]
  */
-const ALL_FIXTURES: [string, string][] = [
+const SUPPORTED_FIXTURES: [string, string][] = [
   // OpenAPI 3.0.x fixtures (YAML)
   ['v3.0/api-with-examples.yaml', `${EXAMPLES_DIR}/v3.0/api-with-examples.yaml`],
   ['v3.0/callback-example.yaml', `${EXAMPLES_DIR}/v3.0/callback-example.yaml`],
@@ -49,8 +49,6 @@ const ALL_FIXTURES: [string, string][] = [
   ['v3.0/link-example.json', `${EXAMPLES_DIR}/v3.0/link-example.json`],
   ['v3.0/petstore-expanded.json', `${EXAMPLES_DIR}/v3.0/petstore-expanded.json`],
   ['v3.0/petstore.json', `${EXAMPLES_DIR}/v3.0/petstore.json`],
-  ['v3.0/uspto.json', `${EXAMPLES_DIR}/v3.0/uspto.json`],
-
   // OpenAPI 3.1.x fixtures (YAML)
   ['v3.1/non-oauth-scopes.yaml', `${EXAMPLES_DIR}/v3.1/non-oauth-scopes.yaml`],
   ['v3.1/tictactoe.yaml', `${EXAMPLES_DIR}/v3.1/tictactoe.yaml`],
@@ -71,6 +69,10 @@ const ALL_FIXTURES: [string, string][] = [
   ['multi-file/main.yaml', `${EXAMPLES_DIR}/multi-file/main.yaml`],
 ];
 
+const REJECTED_NON_STRICT_FIXTURES: [string, string][] = [
+  ['v3.0/uspto.json', `${EXAMPLES_DIR}/v3.0/uspto.json`],
+];
+
 // All 21 fixtures now supported including webhook-example (Session 2.6 complete)
 
 // ============================================================================
@@ -82,7 +84,7 @@ const ALL_FIXTURES: [string, string][] = [
  */
 async function loadAndBuildIR(fixturePath: string): Promise<CastrDocument> {
   const result = await loadOpenApiDocument(fixturePath);
-  return buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
+  return buildIR(result.document);
 }
 
 // ============================================================================
@@ -91,7 +93,7 @@ async function loadAndBuildIR(fixturePath: string): Promise<CastrDocument> {
 
 describe('Input Coverage: OpenAPI → IR', () => {
   describe('All fixtures load successfully', () => {
-    it.each(ALL_FIXTURES)('parses %s without error', async (_name, path) => {
+    it.each(SUPPORTED_FIXTURES)('parses %s without error', async (_name, path) => {
       const ir = await loadAndBuildIR(path);
 
       // Basic structural assertions
@@ -100,6 +102,15 @@ describe('Input Coverage: OpenAPI → IR', () => {
       expect(ir.info).toBeDefined();
       expect(ir.info.title).toBeTruthy();
     });
+  });
+
+  describe('Rejected non-strict fixtures', () => {
+    it.each(REJECTED_NON_STRICT_FIXTURES)(
+      'rejects %s with a strict object error',
+      async (_name, path) => {
+        await expect(loadAndBuildIR(path)).rejects.toThrow(/Non-strict object input/);
+      },
+    );
   });
 
   // ==========================================================================

@@ -9,8 +9,8 @@
 
 import type { CastrSchema, CastrSchemaNode } from './models/schema.js';
 import type { IRComponent, CastrSchemaComponent } from './models/schema.components.js';
-import { CastrSchemaProperties } from './models/schema.js';
 import type { CastrDocument } from './models/schema-document.js';
+import { isCastrSchemaProperties } from '../../shared/type-utils/type-guards.js';
 
 // ============================================================================
 // Mock Factory Functions
@@ -319,7 +319,7 @@ export function countCircularRefs(components: IRComponent[]): number {
  * @throws Error if schema doesn't have CastrSchemaProperties
  */
 export function assertHasCastrSchemaProperties(schema: CastrSchema): void {
-  if (schema.type !== 'object' || !(schema.properties instanceof CastrSchemaProperties)) {
+  if (schema.type !== 'object' || !isCastrSchemaProperties(schema.properties)) {
     throw new Error('Expected schema to have CastrSchemaProperties');
   }
 }

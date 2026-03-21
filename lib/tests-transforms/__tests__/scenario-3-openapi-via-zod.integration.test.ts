@@ -21,8 +21,6 @@ import {
   parseZodSource,
 } from '../utils/transform-helpers.js';
 
-const ZOD_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
-
 // ============================================================================
 // Scenario 3: OpenAPI → IR → Zod → IR → OpenAPI
 // ============================================================================
@@ -41,7 +39,7 @@ describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
         const zodSource = await generateZodFromOpenAPI(openApiDoc);
 
         // Zod source → IR (only schema components)
-        const zodParsed = parseZodSource(zodSource, ZOD_COMPATIBILITY_OPTIONS);
+        const zodParsed = parseZodSource(zodSource);
         expectNoParseErrors(_name, 'Scenario 3 generated-output parse', zodParsed);
 
         // Schema count must be preserved exactly through the transform path.
@@ -60,7 +58,7 @@ describe('Transform Sample Scenario 3: OpenAPI → Zod → OpenAPI', () => {
         const firstZodSource = await generateZodFromOpenAPI(openApiDoc1);
 
         // 2. Transformed output Zod schemas
-        const result2 = parseZodSource(firstZodSource, ZOD_COMPATIBILITY_OPTIONS);
+        const result2 = parseZodSource(firstZodSource);
         const openApiDoc2 = writeOpenApi(result2.ir);
         const secondZodSource = await generateZodFromOpenAPI(openApiDoc2);
 

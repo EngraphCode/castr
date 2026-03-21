@@ -7,7 +7,7 @@
  * @module parsers/zod/object
  */
 
-import type { CastrSchema, IRUnknownKeyBehavior } from '../../../ir/index.js';
+import type { CastrSchema } from '../../../ir/index.js';
 import { CastrSchemaProperties } from '../../../ir/index.js';
 import { Node } from 'ts-morph';
 import { createZodProject, getZodMethodChain, extractObjectProperties } from '../ast/zod-ast.js';
@@ -17,145 +17,35 @@ import { createDefaultMetadata } from '../modifiers/zod-parser.defaults.js';
 import { registerParser, parseZodSchemaFromNode } from '../zod-parser.core.js';
 import { applyMetaToSchema, extractMetaFromChain } from '../modifiers/zod-parser.meta.js';
 import {
-  ZOD_METHOD_CATCHALL,
-  ZOD_LOOSE_OBJECT_METHOD,
-  ZOD_METHOD_PASSTHROUGH,
   ZOD_METHOD_STRICT,
-  ZOD_METHOD_STRIP,
   ZOD_STRICT_OBJECT_METHOD,
   ZOD_SCHEMA_TYPE_OBJECT,
   isZodObjectBaseMethod,
 } from '../zod-constants.js';
 import { enforceObjectPolicy } from '../policy/zod-parser.object-policy.js';
-import { shouldNormalizeNonStrictObjectInput } from '../../../non-strict-object-policy.js';
 
 // ============================================================================
 // Helper functions - extracted to reduce complexity
 // ============================================================================
 
 /**
- * Extract object unknown-key behavior from chained methods.
+ * Determine if an object schema is strict.
  *
- * Maps Zod object semantics to IR runtime behavior plus portable
- * `additionalProperties` semantics:
- * - `.strict()` → reject unknown keys
- * - `.passthrough()` → accept and preserve unknown keys
- * - `.strip()` / default → accept and strip unknown keys
- * - `.catchall(schema)` → accept, validate, and preserve unknown keys
+ * Under IDENTITY doctrine, only `z.strictObject()` or `z.object().strict()` produce
+ * strict schemas. Everything else is non-strict and will be rejected.
  *
  * @internal
  */
-function extractUnknownKeyConfiguration(
+function isStrictObjectSchema(
   baseMethod: string,
   chainedMethods: { name: string; argNodes: Node[] }[],
-  parseSchema: ZodSchemaParser,
-  options?: ZodParseOptions,
-): {
-  additionalProperties: boolean | CastrSchema;
-  unknownKeyBehavior: IRUnknownKeyBehavior;
-} {
-  let configuration: {
-    additionalProperties: boolean | CastrSchema;
-    unknownKeyBehavior: IRUnknownKeyBehavior;
-  } = getBaseUnknownKeyConfiguration(baseMethod);
-
-  for (const method of chainedMethods) {
-    configuration = applyUnknownKeyMethodConfiguration(configuration, method, parseSchema, options);
+): boolean {
+  if (baseMethod === ZOD_STRICT_OBJECT_METHOD) {
+    return true;
   }
 
-  return configuration;
-}
-
-function getBaseUnknownKeyConfiguration(baseMethod: string): {
-  additionalProperties: boolean | CastrSchema;
-  unknownKeyBehavior: IRUnknownKeyBehavior;
-} {
-  switch (baseMethod) {
-    case ZOD_STRICT_OBJECT_METHOD:
-      return {
-        additionalProperties: false,
-        unknownKeyBehavior: { mode: 'strict' },
-      };
-    case ZOD_LOOSE_OBJECT_METHOD:
-      return {
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: 'passthrough' },
-      };
-    default:
-      return {
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: 'strip' },
-      };
-  }
-}
-
-function applyUnknownKeyMethodConfiguration(
-  configuration: {
-    additionalProperties: boolean | CastrSchema;
-    unknownKeyBehavior: IRUnknownKeyBehavior;
-  },
-  method: { name: string; argNodes: Node[] },
-  parseSchema: ZodSchemaParser,
-  options?: ZodParseOptions,
-): {
-  additionalProperties: boolean | CastrSchema;
-  unknownKeyBehavior: IRUnknownKeyBehavior;
-} {
-  switch (method.name) {
-    case ZOD_METHOD_STRICT:
-      return {
-        additionalProperties: false,
-        unknownKeyBehavior: { mode: 'strict' },
-      };
-    case ZOD_METHOD_PASSTHROUGH:
-      return {
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: 'passthrough' },
-      };
-    case ZOD_METHOD_STRIP:
-      return {
-        additionalProperties: true,
-        unknownKeyBehavior: { mode: 'strip' },
-      };
-    case ZOD_METHOD_CATCHALL:
-      return parseCatchallUnknownKeyConfiguration(method.argNodes, parseSchema, options);
-    default:
-      return configuration;
-  }
-}
-
-function parseCatchallUnknownKeyConfiguration(
-  argNodes: Node[],
-  parseSchema: ZodSchemaParser,
-  options?: ZodParseOptions,
-): {
-  additionalProperties: boolean | CastrSchema;
-  unknownKeyBehavior: IRUnknownKeyBehavior;
-} {
-  const catchallNode = argNodes[0];
-  if (!catchallNode) {
-    throw new Error('z.object().catchall() requires a schema argument.');
-  }
-
-  if (shouldNormalizeNonStrictObjectInput(options)) {
-    return {
-      additionalProperties: true,
-      unknownKeyBehavior: { mode: 'strip' },
-    };
-  }
-
-  const catchallSchema = parseSchema(catchallNode);
-  if (!catchallSchema) {
-    throw new Error('Unsupported or unparseable Zod .catchall() schema.');
-  }
-
-  return {
-    additionalProperties: catchallSchema,
-    unknownKeyBehavior: {
-      mode: 'catchall',
-      schema: catchallSchema,
-    },
-  };
+  // A non-strict base with `.strict()` chained becomes strict
+  return chainedMethods.some((m) => m.name === ZOD_METHOD_STRICT);
 }
 
 /**
@@ -195,7 +85,6 @@ export function parseObjectZodFromNode(
   node: Node,
   parseSchema: ZodSchemaParser,
   resolver?: ZodImportResolver,
-  options?: ZodParseOptions,
 ): CastrSchema | undefined {
   if (!Node.isCallExpression(node)) {
     return undefined;
@@ -219,12 +108,7 @@ export function parseObjectZodFromNode(
     return undefined;
   }
 
-  const { additionalProperties, unknownKeyBehavior } = extractUnknownKeyConfiguration(
-    baseMethod,
-    chainedMethods,
-    parseSchema,
-    options,
-  );
+  const isStrict = isStrictObjectSchema(baseMethod, chainedMethods);
   const propertyNodes = extractObjectProperties(baseCallNode, resolver);
   const { properties, required } = extractPropertiesFromNode(propertyNodes, parseSchema);
 
@@ -232,13 +116,12 @@ export function parseObjectZodFromNode(
     type: ZOD_SCHEMA_TYPE_OBJECT,
     properties: new CastrSchemaProperties(properties),
     required,
-    additionalProperties,
-    unknownKeyBehavior,
+    additionalProperties: false,
     metadata: createDefaultMetadata(),
   };
 
   applyMetaToSchema(schema, extractMetaFromChain(chainedMethods));
-  enforceObjectPolicy(schema, baseMethod, options);
+  enforceObjectPolicy(schema, baseMethod, isStrict);
 
   return schema;
 }
@@ -266,5 +149,5 @@ export function parseObjectZod(
   }
 
   const boundParseSchema: ZodSchemaParser = (n) => parseZodSchemaFromNode(n, resolver, options);
-  return parseObjectZodFromNode(init, boundParseSchema, resolver, options);
+  return parseObjectZodFromNode(init, boundParseSchema, resolver);
 }

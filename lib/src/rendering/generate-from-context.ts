@@ -142,7 +142,6 @@ export function buildEffectiveOptions<TOptions extends TemplateContext['options'
       ...baseDefaults,
       ...options,
       withAllResponses: true,
-      strictObjects: true,
       withAlias: true,
       shouldExportAllSchemas: true,
     };

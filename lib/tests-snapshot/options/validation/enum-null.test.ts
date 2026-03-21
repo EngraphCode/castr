@@ -126,11 +126,9 @@ test('enum-null', async () => {
     export const Null2 = z.union([z.literal("a"), z.literal(null)]);
     export const Null3 = z.union([z.literal("a"), z.literal(null)]);
     export const Null4 = z.literal(null);
-    export const Compound = z
-      .object({
-        field: z.xor([Null1, Null2, Null3, Null4, z.string()]).optional(),
-      })
-      .strip();
+    export const Compound = z.strictObject({
+      field: z.xor([Null1, Null2, Null3, Null4, z.string()]).optional(),
+    });
     // Endpoints
     export const endpoints = [
       {

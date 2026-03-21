@@ -1,15 +1,15 @@
 # Recursive Unknown-Key Semantics
 
 **Status:** Permanent reference  
-**Last Updated:** 2026-03-11  
+**Last Updated:** 2026-03-21  
 **Related:** [ADR-031](../architectural_decision_records/ADR-031-zod-output-strategy.md), [ADR-032](../architectural_decision_records/ADR-032-zod-input-strategy.md), [ADR-035](../architectural_decision_records/ADR-035-transform-validation-parity.md), [ADR-038](../architectural_decision_records/ADR-038-object-unknown-key-semantics.md)
 
 ---
 
 > [!IMPORTANT]
-> On 2026-03-11, [ADR-040](../architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) changed the forward product direction to default strict object generation, reject-by-default ingest, and one explicit lossy strip-normalization compatibility mode.
+> On 2026-03-21, [IDENTITY.md](../../.agent/IDENTITY.md) established that Castr has one object model: closed-world with explicit properties. `unknownKeyBehavior` has been removed from the IR entirely. Non-strict object behavior is a rejected ontology, not a compatibility mode.
 >
-> This document is now primarily historical diagnosis and evidence for why preserving-mode remediation was investigated. The live product rule is simpler: default strict output, reject-by-default ingest, and strip-only compatibility normalization.
+> This document is now fully historical diagnosis and evidence for why preserving-mode remediation was investigated and ultimately rejected.
 
 ## Purpose
 
@@ -91,16 +91,17 @@ Before ADR-040, the durable direction was defined by [ADR-038](../architectural_
 4. Expand transform proofs to include parsed-output parity for object unknown-key fixtures.
 5. Replace silent recursive writer degradation with fail-fast errors until a safe recursive construction strategy exists.
 
-## Current Doctrine Supersession
+## Current Doctrine (IDENTITY.md)
 
-ADR-040 changed the forward target:
+[IDENTITY.md](../../.agent/IDENTITY.md) established the final direction:
 
-1. default ingest should reject non-strict object features with helpful errors
-2. one explicit compatibility mode may normalize non-strict object inputs to strip semantics
-3. default generated object output remains strict rather than preserving strip / passthrough / catchall as first-class product targets
-4. preserving-mode recursive emission is no longer the forward remediation goal
+1. Castr has **one object model**: closed-world with explicit properties
+2. strip, passthrough, and catchall are **rejected ontologies**, not deferred features
+3. the IR has **no dual semantics** — `unknownKeyBehavior` has been removed entirely
+4. strip normalization belongs in the **doctor only**, not in the core pipeline
+5. non-strict object input is rejected unconditionally — there is no opt-in compatibility mode
 
-This document therefore explains why the earlier preservation architecture existed and why the compatibility mode must now be documented as deliberately lossy.
+This document therefore explains why the earlier preservation architecture existed, why the compatibility mode was tried and then removed, and why rejection is the correct behavior.
 
 ## Historical Implementation Record Under The Superseded Preservation Doctrine
 
@@ -118,7 +119,7 @@ The remaining unsolved boundary is narrow and explicit:
 - safe recursive preserving emission for `.passthrough()` and `.catchall()` still does not exist in Zod output
 - the next design question is whether getter syntax is universally canonical for recursion or only canonical for strip-compatible recursion, with preserving modes potentially requiring one tightly-scoped second canonical strategy
 
-Under ADR-040 and the 2026-03-11 enforcement slice, that remaining seam is now historical evidence and implementation context rather than the primary product goal. The only live compatibility output rule is strip normalization, with recursive strip still using bare `z.object({...})` for runtime safety.
+Under IDENTITY.md and the 2026-03-21 alignment, all of this is now historical evidence and implementation context. The `unknownKeyBehavior` field and `x-castr-unknownKeyBehavior` extension no longer exist in the codebase.
 
 ## Implementation Record
 

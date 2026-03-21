@@ -14,11 +14,7 @@ import { getZodClientTemplateContext as getZodClientTemplateContextBase } from '
 const getZodClientTemplateContext = (
   doc: OpenAPIObject,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
-) =>
-  getZodClientTemplateContextBase(doc, {
-    nonStrictObjectPolicy: 'strip',
-    ...options,
-  });
+) => getZodClientTemplateContextBase(doc, options);
 
 /**
  * Test IR (Intermediate Representation) integration

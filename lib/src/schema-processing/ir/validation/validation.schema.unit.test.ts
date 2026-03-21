@@ -21,11 +21,7 @@ import {
 const getZodClientTemplateContext = (
   doc: OpenAPIObject,
   options?: Parameters<typeof getZodClientTemplateContextBase>[1],
-) =>
-  getZodClientTemplateContextBase(doc, {
-    nonStrictObjectPolicy: 'strip',
-    ...options,
-  });
+) => getZodClientTemplateContextBase(doc, options);
 
 describe('IR Validation - Schema Representation', () => {
   describe('Basic Schema Representation', () => {

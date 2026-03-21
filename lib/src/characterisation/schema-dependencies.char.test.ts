@@ -448,9 +448,8 @@ describe('Characterisation: Schema Dependency Resolution - Circular Dependencies
 });
 
 describe('Characterisation: Schema Dependency Resolution - Additional Dependency Scenarios', () => {
-  it('should discard schema dependencies through additionalProperties in strip compatibility mode', async () => {
-    // Arrange: Schema with schema-valued additionalProperties referencing another schema.
-    // Under explicit strip compatibility mode, that catchall schema is discarded.
+  it('should reject schema dependencies through schema-valued additionalProperties', async () => {
+    // Arrange: schema-valued additionalProperties encodes a non-strict catchall object.
     const spec: OpenAPIObject = {
       openapi: '3.0.0',
       info: { title: 'Test API', version: '1.0.0' },
@@ -487,21 +486,12 @@ describe('Characterisation: Schema Dependency Resolution - Additional Dependency
       },
     };
 
-    // Act
-    // Bundling not needed for in-memory specs with internal refs
-    const result = await generateZodClientFromOpenAPI({
-      openApiDoc: spec,
-      disableWriteToFile: true,
-    });
-
-    // Assert: Dictionary no longer depends on Value after strip normalisation
-    const content = assertAndExtractContent(result, 'generated code');
-    expect(content).toContain('export type Dictionary = {};');
-    expect(content).toContain('export const Dictionary = z.object({}).strip();');
-    expect(content).not.toContain('Value: z');
-    expect(content).not.toContain('Dictionary = z.record(Value)');
-    expect(content).not.toContain('Dictionary = z.object({ Value');
-    expect(content).not.toContain('as unknown as');
+    await expect(
+      generateZodClientFromOpenAPI({
+        openApiDoc: spec,
+        disableWriteToFile: true,
+      }),
+    ).rejects.toThrow(/schema-valued additionalProperties/);
   });
 
   it('should handle dependencies in oneOf/anyOf union members', async () => {

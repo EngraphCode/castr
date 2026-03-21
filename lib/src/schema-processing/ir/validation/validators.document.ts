@@ -15,6 +15,24 @@ const VALID_HTTP_METHODS = new Set<string>([
 ]);
 const VALID_PARAMETER_LOCATIONS = new Set<string>(['path', 'query', 'header', 'cookie']);
 
+/**
+ * Cross-realm-safe Map detection.
+ *
+ * `instanceof Map` fails in vitest ESM module isolation where Map instances
+ * may originate from a different realm boundary. This uses `Symbol.toStringTag`
+ * which is reliable across realms.
+ */
+const MAP_TO_STRING_TAG = '[object Map]';
+
+function isMapLike(value: unknown): boolean {
+  return (
+    value instanceof Map ||
+    (typeof value === 'object' &&
+      value !== null &&
+      Object.prototype.toString.call(value) === MAP_TO_STRING_TAG)
+  );
+}
+
 function isSupportedHttpMethod(method: unknown): boolean {
   return typeof method === 'string' && VALID_HTTP_METHODS.has(method);
 }
@@ -41,7 +59,7 @@ function hasValidDocumentCollections(value: UnknownRecord): boolean {
     isRecord(value['dependencyGraph']) &&
     Array.isArray(value['schemaNames']) &&
     value['schemaNames'].every((schemaName) => typeof schemaName === 'string') &&
-    value['enums'] instanceof Map
+    isMapLike(value['enums'])
   );
 }
 

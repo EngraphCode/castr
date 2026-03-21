@@ -2,8 +2,6 @@ import { describe, test, expect } from 'vitest';
 import type { OpenAPIObject, SchemaObject } from 'openapi3-ts/oas31';
 import { buildComponentSchema } from './builder.schemas.js';
 
-const TEST_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
-
 describe('buildComponentSchema', () => {
   test('buildComponentSchema returns component context', () => {
     const schema: SchemaObject = {
@@ -16,7 +14,7 @@ describe('buildComponentSchema', () => {
       paths: {},
     };
 
-    const result = buildComponentSchema('User', schema, doc, TEST_NON_STRICT_OBJECT_POLICY);
+    const result = buildComponentSchema('User', schema, doc);
 
     expect(result.contextType).toBe('component');
     expect(result.name).toBe('User');

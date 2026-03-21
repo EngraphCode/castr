@@ -9,11 +9,7 @@
  */
 
 import type { SchemaObject, ReferenceObject } from 'openapi3-ts/oas31';
-import {
-  UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY,
-  resolvePortableUnknownKeyBehavior,
-} from '../../../ir/index.js';
-import type { CastrSchema, PortableUnknownKeyBehaviorMode } from '../../../ir/index.js';
+import type { CastrSchema } from '../../../ir/index.js';
 import type { IRBuildContext } from '../builder.types.js';
 
 /**
@@ -30,7 +26,6 @@ export type ExtendedSchemaObject = SchemaObject & {
   dependentSchemas?: Record<string, SchemaObject | ReferenceObject>;
   minContains?: number;
   maxContains?: number;
-  [UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY]?: PortableUnknownKeyBehaviorMode;
 };
 
 /**
@@ -73,14 +68,6 @@ export function addOpenAPIExtensions(
   }
   if (schema.maxContains !== undefined) {
     irSchema.maxContains = schema.maxContains;
-  }
-
-  const unknownKeyBehavior = resolvePortableUnknownKeyBehavior(
-    irSchema.additionalProperties,
-    schema[UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY],
-  );
-  if (unknownKeyBehavior !== undefined) {
-    irSchema.unknownKeyBehavior = unknownKeyBehavior;
   }
 
   // Recursive fields (require buildCastrSchema calls)

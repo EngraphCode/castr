@@ -21,8 +21,7 @@ import { buildCastrOperations, buildIRSecurity } from './operations/index.js';
 import { isRecord } from '../../../shared/type-utils/types.js';
 import { buildDependencyGraph, extractOriginalSchemaKeys } from './components/index.js';
 import type { CastrDocument, IRComponent } from '../../ir/index.js';
-import type { NonStrictObjectPolicyOptions } from '../../non-strict-object-policy.js';
-import { cloneAndApplyOpenApiDocumentNonStrictObjectPolicy } from './openapi-document.non-strict-object-policy.js';
+import { cloneAndValidateOpenApiDocumentObjectSemantics } from './openapi-document.object-semantics.js';
 
 // Re-export core functions for backwards compatibility
 export type { IRBuildContext } from './builder.types.js';
@@ -78,15 +77,15 @@ function buildOptionalDocumentFields(doc: OpenAPIObject): Partial<CastrDocument>
  *
  * @public
  */
-export function buildIR(doc: OpenAPIObject, options?: NonStrictObjectPolicyOptions): CastrDocument {
-  const document = cloneAndApplyOpenApiDocumentNonStrictObjectPolicy(doc, options);
-  const components = buildCastrSchemas(document.components, options);
-  components.push(...extractXExtSchemas(document, options));
+export function buildIR(doc: OpenAPIObject): CastrDocument {
+  const document = cloneAndValidateOpenApiDocumentObjectSemantics(doc);
+  const components = buildCastrSchemas(document.components);
+  components.push(...extractXExtSchemas(document));
   components.push(...extractAdditionalComponents(document));
 
   const schemaNames = buildSchemaNames(components);
   const originalSchemaKeys = extractOriginalSchemaKeys(document);
-  const operations = buildCastrOperations(document, options);
+  const operations = buildCastrOperations(document);
   const dependencyGraph = buildDependencyGraph(originalSchemaKeys, document);
   const enums = extractEnums(components, operations);
 
@@ -115,10 +114,7 @@ export function buildIR(doc: OpenAPIObject, options?: NonStrictObjectPolicyOptio
  *
  * @internal
  */
-function extractXExtSchemas(
-  doc: OpenAPIObject,
-  options?: NonStrictObjectPolicyOptions,
-): IRComponent[] {
+function extractXExtSchemas(doc: OpenAPIObject): IRComponent[] {
   const xExt: unknown = doc['x-ext'];
   if (!isRecord(xExt)) {
     return [];
@@ -137,7 +133,7 @@ function extractXExtSchemas(
     }
 
     // Build components from this x-ext location
-    const irComponents = buildCastrSchemas(extComponents, options);
+    const irComponents = buildCastrSchemas(extComponents);
     allXExtComponents.push(...irComponents);
   }
 

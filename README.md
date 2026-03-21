@@ -94,10 +94,11 @@ const ctx = await getZodClientTemplateContext(openApiDoc, options);
 | `template`        | `string`  | Output template (see below)     |
 | `exportSchemas`   | `boolean` | Export all #/components/schemas |
 | `exportTypes`     | `boolean` | Generate TypeScript types       |
-| `strictObjects`   | `boolean` | Disallow unknown keys           |
 | `withDescription` | `boolean` | Add descriptions via .meta()    |
 | `withDocs`        | `boolean` | Add JSDoc comments              |
 | `allReadonly`     | `boolean` | Make objects/arrays readonly    |
+
+Object schemas are strict by default. Castr emits closed-world object output without a `strictObjects` option.
 
 ## Templates
 

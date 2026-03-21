@@ -119,7 +119,7 @@ describe('Characterisation: Full Generation Pipeline - Basic OpenAPI 3.0 Specs',
     expect(content).not.toContain('as unknown as');
 
     // Verify the schema structure was generated (flexible pattern)
-    expect(content).toContain('.object'); // Has object schema
+    expect(content).toContain('z.strictObject'); // Has strict object schema
   });
 
   it('should handle requestBody with $ref', async () => {
@@ -903,7 +903,7 @@ describe('Characterisation: Full Generation Pipeline - Additional Core Features'
     expect(extractContent(result)).toContain('/document');
     expect(extractContent(result)).not.toContain('as unknown as');
     // Should have generated schema (object is inlined)
-    expect(extractContent(result)).toContain('.object');
+    expect(extractContent(result)).toContain('z.strictObject');
   });
 });
 

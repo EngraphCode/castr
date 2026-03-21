@@ -7,15 +7,16 @@ For the portable Core, see [practice-core/index.md](practice-core/index.md).
 
 ## Directives
 
-| Directive                                                                                   | Purpose                                 |
-| ------------------------------------------------------------------------------------------- | --------------------------------------- |
-| [AGENT.md](directives/AGENT.md)                                                             | Operational entry point for agents      |
-| [principles.md](directives/principles.md)                                                   | Authoritative engineering doctrine      |
-| [testing-strategy.md](directives/testing-strategy.md)                                       | Test methodology and TDD rules          |
-| [requirements.md](directives/requirements.md)                                               | Decision guidance and semantic contract |
-| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md)                                   | Canonical quality-gate protocol         |
-| [metacognition.md](directives/metacognition.md)                                             | Reflection discipline before planning   |
-| [architectural-file-system-structure.md](directives/architectural-file-system-structure.md) | Structural repo architecture guidance   |
+| Directive                                                                                   | Purpose                                   |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| [IDENTITY.md](IDENTITY.md)                                                                  | Canonical identity, semantics, and policy |
+| [AGENT.md](directives/AGENT.md)                                                             | Operational entry point for agents        |
+| [principles.md](directives/principles.md)                                                   | Authoritative engineering doctrine        |
+| [testing-strategy.md](directives/testing-strategy.md)                                       | Test methodology and TDD rules            |
+| [requirements.md](directives/requirements.md)                                               | Decision guidance and semantic contract   |
+| [DEFINITION_OF_DONE.md](directives/DEFINITION_OF_DONE.md)                                   | Canonical quality-gate protocol           |
+| [metacognition.md](directives/metacognition.md)                                             | Reflection discipline before planning     |
+| [architectural-file-system-structure.md](directives/architectural-file-system-structure.md) | Structural repo architecture guidance     |
 
 ## Architectural Decisions
 

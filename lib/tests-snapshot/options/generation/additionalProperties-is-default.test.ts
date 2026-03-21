@@ -12,8 +12,8 @@ describe('additional-properties', () => {
 
     expect(schema).toMatchInlineSnapshot(`
       {
-          "code": "z.object({
-      }).strip()",
+          "code": "z.strictObject({
+      })",
           "schema": {
               "type": "object",
           },
@@ -21,45 +21,27 @@ describe('additional-properties', () => {
     `);
   });
 
-  test('additionalProperties is true', () => {
-    const schema = getZodSchema({
-      schema: {
-        type: 'object',
-        additionalProperties: true,
-      },
-    });
-
-    expect(schema).toMatchInlineSnapshot(`
-      {
-          "code": "z.object({
-      }).strip()",
-          "schema": {
-              "additionalProperties": true,
-              "type": "object",
-          },
-      }
-    `);
+  test('additionalProperties is true — rejected as non-strict', () => {
+    expect(() =>
+      getZodSchema({
+        schema: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      }),
+    ).toThrow(/non-strict object input/i);
   });
 
-  test('additionalProperties is empty object', () => {
-    const schema = getZodSchema({
-      schema: {
-        type: 'object',
-        // empty object is equivalent to true according to swagger docs above
-        additionalProperties: {},
-      },
-    });
-
-    expect(schema).toMatchInlineSnapshot(`
-      {
-          "code": "z.object({
-      }).strip()",
-          "schema": {
-              "additionalProperties": {},
-              "type": "object",
-          },
-      }
-    `);
+  test('additionalProperties is empty object — rejected as non-strict', () => {
+    expect(() =>
+      getZodSchema({
+        schema: {
+          type: 'object',
+          // empty object is equivalent to true according to swagger docs above
+          additionalProperties: {},
+        },
+      }),
+    ).toThrow(/non-strict object input/i);
   });
 
   test('additional properties opt-out', () => {
@@ -96,10 +78,10 @@ describe('additional-properties', () => {
     expect(schema).toMatchInlineSnapshot(
       `
       {
-          "code": "z.object({
+          "code": "z.strictObject({
         bar: z.number().optional(),
         foo: z.string().optional(),
-      }).strip()",
+      })",
           "schema": {
               "properties": {
                   "bar": {

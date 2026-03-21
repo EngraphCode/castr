@@ -9,7 +9,6 @@
  */
 
 import type { CastrSchema } from '../../ir/index.js';
-import { UNKNOWN_KEY_MODE_CATCHALL } from '../../ir/index.js';
 
 const COMPOSITION_KEYS: readonly ('allOf' | 'oneOf' | 'anyOf')[] = ['allOf', 'oneOf', 'anyOf'];
 const SCHEMA_TYPE_NULL = 'null';
@@ -59,18 +58,6 @@ function hasSchemaReferenceMembers(members: CastrSchema[] | undefined): boolean 
   }
 
   return false;
-}
-
-function getObjectUnknownKeySchema(schema: CastrSchema): CastrSchema | undefined {
-  if (schema.unknownKeyBehavior?.mode === UNKNOWN_KEY_MODE_CATCHALL) {
-    return schema.unknownKeyBehavior.schema;
-  }
-
-  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
-    return schema.additionalProperties;
-  }
-
-  return undefined;
 }
 
 function schemaTargetsComponentCycle(schema: CastrSchema, componentRef: string): boolean {
@@ -226,7 +213,7 @@ function hasParentMarkedRecursiveObjectCycle(schema: CastrSchema): boolean {
     return false;
   }
 
-  return objectPropertiesContainReferences(schema) || unknownKeySchemaContainsReference(schema);
+  return objectPropertiesContainReferences(schema);
 }
 
 function objectPropertiesContainReferences(schema: CastrSchema): boolean {
@@ -239,16 +226,8 @@ function objectPropertiesContainReferences(schema: CastrSchema): boolean {
   return false;
 }
 
-function unknownKeySchemaContainsReference(schema: CastrSchema): boolean {
-  const unknownKeySchema = getObjectUnknownKeySchema(schema);
-  return unknownKeySchema !== undefined && hasSchemaReference(unknownKeySchema);
-}
-
 function hasChildMarkedRecursiveObjectCycle(schema: CastrSchema, componentRef: string): boolean {
-  return (
-    objectPropertiesTargetComponentCycle(schema, componentRef) ||
-    unknownKeySchemaTargetsComponentCycle(schema, componentRef)
-  );
+  return objectPropertiesTargetComponentCycle(schema, componentRef);
 }
 
 function objectPropertiesTargetComponentCycle(schema: CastrSchema, componentRef: string): boolean {
@@ -259,13 +238,4 @@ function objectPropertiesTargetComponentCycle(schema: CastrSchema, componentRef:
   }
 
   return false;
-}
-
-function unknownKeySchemaTargetsComponentCycle(schema: CastrSchema, componentRef: string): boolean {
-  const unknownKeySchema = getObjectUnknownKeySchema(schema);
-  return (
-    unknownKeySchema !== undefined &&
-    hasSchemaReference(unknownKeySchema) &&
-    schemaTargetsComponentCycle(unknownKeySchema, componentRef)
-  );
 }

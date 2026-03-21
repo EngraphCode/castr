@@ -42,7 +42,6 @@ Generate TypeScript code from OpenAPI specifications.
 | `--base-url`       |       | `string`  | `''`                    | Base URL for API requests                                                        |
 | `--with-alias`     |       | `boolean` | `false`                 | Include operationId as alias                                                     |
 | `--no-with-alias`  |       | `boolean` |                         | Disable operationId aliases                                                      |
-| `--strict-objects` |       | `boolean` | `false`                 | Use `.strict()` on all object schemas                                            |
 | `--export-schemas` |       | `boolean` | `false`                 | Export all schemas (not just referenced)                                         |
 | `--help`           | `-h`  |           |                         | Show help                                                                        |
 | `--version`        | `-v`  |           |                         | Show version                                                                     |
@@ -62,8 +61,8 @@ Generate TypeScript code from OpenAPI specifications.
 # Include operationIds
 @engraph/castr ./openapi.yaml -o ./src/api.ts --with-alias
 
-# Strict object schemas
-@engraph/castr ./openapi.yaml -o ./src/api.ts --strict-objects
+# Object schemas are strict by default
+@engraph/castr ./openapi.yaml -o ./src/api.ts
 ```
 
 ---
@@ -285,26 +284,10 @@ export type TemplateContextOptions = {
   baseUrl?: string;
 
   /**
-   * Use `.strict()` on all object schemas
-   * @default false
-   */
-  strictObjects?: boolean;
-
-  /**
    * Export all schemas (not just referenced ones)
    * @default false
    */
   exportSchemas?: boolean;
-
-  /**
-   * Additional properties behavior
-   * - `true`: Allow any additional properties
-   * - `false`: Disallow additional properties
-   * - `'strip'`: Strip additional properties
-   * - `'passthrough'`: Allow but don't validate
-   * @default 'passthrough'
-   */
-  additionalPropertiesDefaultValue?: boolean | 'strip' | 'passthrough';
 
   /**
    * Validation mode for generated client
@@ -523,7 +506,6 @@ const result = await generateZodClientFromOpenAPI({
   disableWriteToFile: true,
   options: {
     withAlias: true,
-    strictObjects: true,
   },
 });
 

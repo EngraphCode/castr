@@ -136,7 +136,7 @@ test('getSchemaAsTsString', () => {
   `,
   );
 
-  expect(
+  expect(() =>
     getSchemaAsTsString(
       {
         type: 'object',
@@ -145,15 +145,9 @@ test('getSchemaAsTsString', () => {
       },
       { name: 'ObjectWithAdditionalPropsNb' },
     ),
-  ).toMatchInlineSnapshot(
-    `
-    "export type ObjectWithAdditionalPropsNb = {
-      str?: string;
-    };"
-  `,
-  );
+  ).toThrow(/non-strict object input/i);
 
-  expect(
+  expect(() =>
     getSchemaAsTsString(
       {
         type: 'object',
@@ -162,13 +156,7 @@ test('getSchemaAsTsString', () => {
       },
       { name: 'ObjectWithNestedRecordBoolean' },
     ),
-  ).toMatchInlineSnapshot(
-    `
-    "export type ObjectWithNestedRecordBoolean = {
-      str?: string;
-    };"
-  `,
-  );
+  ).toThrow(/non-strict object input/i);
 
   expect(
     getSchemaAsTsString({

@@ -1,29 +1,22 @@
 # ADR-040: Strict-By-Default Object Semantics With Optional Strip Normalization
 
 **Date:** 2026-03-11  
-**Status:** Accepted
+**Status:** Accepted — historical record, superseded in part by [IDENTITY.md](../../.agent/IDENTITY.md) on 2026-03-21
 
 ---
 
-## Context
-
-Castr previously treated multiple object unknown-key modes as legitimate product scope:
-
-- strict
-- strip
-- passthrough
-- catchall
-
-That direction forced the system to preserve, reconstruct, and prove behaviour for object semantics that are not equally representable across supported formats.
-
-It also created a growing amount of architecture and proof work around preserving-mode edge cases, especially on the recursive Zod seam.
+> [!IMPORTANT]
+> [IDENTITY.md](../../.agent/IDENTITY.md) supersedes the strip-normalization compatibility mode described in §4 of this ADR.
+> The core pipeline no longer offers any non-strict ingest option. `nonStrictObjectPolicy` has been removed from the public/core surface entirely.
+> `unknownKeyBehavior` has been entirely removed from the IR.
+> Strip normalization belongs in the doctor (`repairOpenApiDocument`) only, not in the core parser/writer pipeline.
 
 On 2026-03-11, product direction changed:
 
 1. all Castr-generated object definitions are considered strict
 2. where an output model can represent strict object semantics safely and natively, generated output must specify strictness explicitly
 3. non-strict object features are rejected by default with helpful errors
-4. an explicit compatibility option should exist for callers who deliberately want non-strict inputs normalized to strip semantics instead of rejected
+4. ~~an explicit compatibility option should exist for callers who deliberately want non-strict inputs normalized to strip semantics instead of rejected~~ — removed per IDENTITY.md on 2026-03-21
 
 This ADR records that decision.
 
@@ -57,7 +50,7 @@ If a target cannot express strictness natively, that limitation must remain expl
 
 ### 3. Ingest rejects non-strict object inputs by default across all supported formats
 
-During ingest, non-strict object features must fail fast with helpful error messages unless the caller has explicitly opted into strip normalization mode.
+During ingest, non-strict object features must fail fast with helpful error messages.
 
 Examples include:
 
@@ -67,22 +60,14 @@ Examples include:
 
 The repo must not silently parse non-strict object behaviour into IR and hope later stages constrain it.
 
-### 4. An explicit strip-normalization compatibility mode is allowed, but it is deliberate and lossy
+### 4. ~~Strip-normalization compatibility mode~~ — Removed
 
-For callers who deliberately want to move non-strict object schemas through the system anyway, Castr should provide one explicit compatibility mode:
+> [!CAUTION]
+> This section is superseded by [IDENTITY.md](../../.agent/IDENTITY.md). The core pipeline no longer offers strip normalization. Strip normalization belongs in the doctor only.
 
-- normalize non-strict object input to strip semantics instead of rejecting it
+~~For callers who deliberately want to move non-strict object schemas through the system anyway, Castr should provide one explicit compatibility mode: normalize non-strict object input to strip semantics instead of rejecting it.~~
 
-Rules for this mode:
-
-- it must be opt-in
-- it must never be the default
-- it must be documented as lossy normalization, not as faithful preservation
-- it must normalize to strip semantics only
-- it must not attempt to preserve passthrough or catchall behavior under a compatibility label
-- its output implications must be documented explicitly rather than assumed from the default strict-output doctrine
-
-This library is about correctness rather than flexibility. The compatibility mode exists as a deliberate escape valve for throughput-oriented callers, not as a change to the default doctrine.
+This option was removed because the IDENTITY doctrine established that the IR has no dual semantics. Non-strict object behavior is a rejected ontology, not a deferred feature.
 
 ### 5. Preserving-mode remediation is no longer the product direction
 
@@ -90,8 +75,7 @@ The previous workstream around preserving strip / passthrough / catchall distinc
 
 The forward target is:
 
-- reject-by-default ingest
-- explicit opt-in strip normalization for non-strict inputs
+- reject-only ingest
 - explicit strict generation
 - safe recursive strict Zod output with parser/writer lockstep
 
@@ -131,7 +115,6 @@ That implementation gap is tracked as follow-on active work, not as a reason to 
 - default ingest scope becomes materially narrower
 - existing non-strict fixtures and parser behaviour will need to change
 - some previously accepted object inputs will become explicit errors
-- a compatibility option still needs careful API design and implementation
 - recursive strict Zod output still needs lockstep implementation work before the doctrine is fully realized in code
 
 ## Alternatives Considered

@@ -113,7 +113,7 @@ describe('Transform Samples: Idempotency (Round-Trip Proof)', () => {
       const output1 = writeOpenApi(ir1);
 
       // Second transform pass
-      const ir2 = buildIR(output1, { nonStrictObjectPolicy: 'strip' });
+      const ir2 = buildIR(output1);
       const output2 = writeOpenApi(ir2);
 
       // The outputs should be identical (idempotency)
@@ -142,7 +142,7 @@ describe('OpenAPI Document: Information Preservation', () => {
     output: ReturnType<typeof writeOpenApi>;
   }> {
     const result = await loadOpenApiDocument(specPath);
-    const ir = buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
+    const ir = buildIR(result.document);
     const output = writeOpenApi(ir);
     return { input: result.document, output };
   }
@@ -230,11 +230,11 @@ describe('OpenAPI Document: Idempotency', () => {
       async (_name, path) => {
         // First pass: arbitrary → normalized
         const result1 = await loadOpenApiDocument(path);
-        const ir1 = buildIR(result1.document, { nonStrictObjectPolicy: 'strip' });
+        const ir1 = buildIR(result1.document);
         const normalized = writeOpenApi(ir1);
 
         // Second pass: normalized → output
-        const ir2 = buildIR(normalized, { nonStrictObjectPolicy: 'strip' });
+        const ir2 = buildIR(normalized);
         const reprocessed = writeOpenApi(ir2);
 
         // Byte-identical comparison

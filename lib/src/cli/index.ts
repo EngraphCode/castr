@@ -99,20 +99,6 @@ program
     'When true, will defined types for all object schemas in `#/components/schemas`',
   )
   .option(
-    '--additional-props-default-value [value]',
-    'Set default value when additionalProperties is not provided. Default to true.',
-    true,
-  )
-  .option(
-    '--strict-objects [value]',
-    "Use strict validation for objects so we don't allow unknown keys. Defaults to false.",
-    false,
-  )
-  .option(
-    '--non-strict-object-policy <policy>',
-    "Control non-strict object ingest: 'reject' (default) or 'strip' for deliberate compatibility normalisation.",
-  )
-  .option(
     '--no-client',
     'Generate schemas and metadata without HTTP client (auto-switches to schemas-with-metadata template). Perfect for using your own HTTP client (fetch, axios, etc.) while maintaining full Zod validation.',
   )

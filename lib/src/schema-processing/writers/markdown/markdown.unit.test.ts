@@ -11,9 +11,7 @@ describe('Markdown Writer', () => {
   it('should generate markdown from tictactoe spec', async () => {
     const specPath = path.resolve(__dirname, '../../../../examples/openapi/v3.1/tictactoe.yaml');
     const doc = await prepareOpenApiDocument(specPath);
-    const context = getZodClientTemplateContext(doc, {
-      nonStrictObjectPolicy: 'strip',
-    });
+    const context = getZodClientTemplateContext(doc);
     const ir = context._ir;
 
     if (!ir) {

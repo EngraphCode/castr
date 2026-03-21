@@ -69,39 +69,27 @@ describe('parseJsonSchema', () => {
     expect(result.format).toBe('email');
   });
 
-  it('rejects non-strict object schemas by default with the compatibility hint', () => {
+  it('rejects non-strict object schemas with additionalProperties: true', () => {
     expect(() =>
       parseJsonSchema({
         type: 'object',
         properties: {
           name: { type: 'string' },
         },
+        additionalProperties: true,
       }),
-    ).toThrow(/strict object ingest is the default/);
-
-    expect(() =>
-      parseJsonSchema({
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-        },
-      }),
-    ).toThrow(/nonStrictObjectPolicy: 'strip'/);
+    ).toThrow(/additionalProperties: true.*rejected/);
   });
 
-  it('normalizes non-strict object schemas to strip when nonStrictObjectPolicy is strip', () => {
-    const result = parseJsonSchema(
-      {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-        },
+  it('sets additionalProperties: false when omitted on object schemas', () => {
+    const result = parseJsonSchema({
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
       },
-      { nonStrictObjectPolicy: 'strip' },
-    );
+    });
 
-    expect(result.additionalProperties).toBe(true);
-    expect(result.unknownKeyBehavior).toEqual({ mode: 'strip' });
+    expect(result.additionalProperties).toBe(false);
   });
 });
 
@@ -195,23 +183,19 @@ describe('parseJsonSchemaDocument', () => {
     expect(components[0]?.description).toBe('A described schema');
   });
 
-  it('normalizes non-strict $defs object schemas to strip when nonStrictObjectPolicy is strip', () => {
-    const components = parseJsonSchemaDocument(
-      {
+  it('rejects non-strict $defs object schemas', () => {
+    expect(() =>
+      parseJsonSchemaDocument({
         $defs: {
           LooseObject: {
             type: 'object',
             properties: {
               name: { type: 'string' },
             },
+            additionalProperties: true,
           },
         },
-      },
-      { nonStrictObjectPolicy: 'strip' },
-    );
-
-    expect(components).toHaveLength(1);
-    expect(components[0]?.schema.additionalProperties).toBe(true);
-    expect(components[0]?.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+      }),
+    ).toThrow(/additionalProperties: true.*rejected/);
   });
 });

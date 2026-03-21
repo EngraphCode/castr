@@ -64,9 +64,6 @@
       },
       "required": ["name", "age", "active"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -128,9 +125,6 @@
       },
       "required": ["id", "value"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -174,9 +168,6 @@
       },
       "required": ["known"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -274,9 +265,6 @@
       },
       "required": ["required", "nullable"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -344,9 +332,6 @@
             },
             "required": ["name", "email"],
             "additionalProperties": false,
-            "unknownKeyBehavior": {
-              "mode": "strict"
-            },
             "metadata": {
               "required": true,
               "nullable": false,
@@ -409,9 +394,6 @@
             },
             "required": ["createdAt", "version"],
             "additionalProperties": false,
-            "unknownKeyBehavior": {
-              "mode": "strict"
-            },
             "metadata": {
               "required": true,
               "nullable": false,
@@ -432,9 +414,6 @@
       },
       "required": ["user", "metadata"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,
@@ -555,9 +534,6 @@
       },
       "required": ["id", "email", "website", "createdAt", "count"],
       "additionalProperties": false,
-      "unknownKeyBehavior": {
-        "mode": "strict"
-      },
       "metadata": {
         "required": true,
         "nullable": false,

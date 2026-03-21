@@ -72,21 +72,15 @@ test('param-with-content', async () => {
       text3?: boolean;
     };
     // Zod Schemas
-    export const test1 = z
-      .object({
-        text1: z.string().optional(),
-      })
-      .strip();
-    export const test2 = z
-      .object({
-        text2: z.number().optional(),
-      })
-      .strip();
-    export const test3 = z
-      .object({
-        text3: z.boolean().optional(),
-      })
-      .strip();
+    export const test1 = z.strictObject({
+      text1: z.string().optional(),
+    });
+    export const test2 = z.strictObject({
+      text2: z.number().optional(),
+    });
+    export const test3 = z.strictObject({
+      text3: z.boolean().optional(),
+    });
     // Endpoints
     export const endpoints = [
       {
@@ -172,15 +166,13 @@ test('param-with-content', async () => {
                     type: "object",
                     properties: { text1: { type: "string" } },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
                   "wrong param": {
                     type: "object",
                     properties: { text2: { type: "number" } },
                     required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
+                    additionalProperties: false,
                   },
                 },
               },
@@ -191,8 +183,7 @@ test('param-with-content', async () => {
             type: "object",
             properties: { text3: { type: "boolean" } },
             required: [],
-            additionalProperties: true,
-            unknownKeyBehavior: { mode: "strip" },
+            additionalProperties: false,
           },
           annotations: {
             readOnlyHint: false,

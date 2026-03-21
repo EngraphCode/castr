@@ -17,7 +17,6 @@ import type { CastrDocument } from '../../src/schema-processing/ir/index.js';
 import { loadOpenApiDocument } from '../../src/shared/load-openapi-document/index.js';
 import { writeOpenApi } from '../../src/schema-processing/writers/openapi/index.js';
 import { parseZodSource } from '../../src/schema-processing/parsers/zod/index.js';
-import type { ZodParseOptions } from '../../src/schema-processing/parsers/zod/zod-parser.types.js';
 import { generateZodClientFromOpenAPI } from '../../src/rendering/generate-from-context.js';
 import { isSingleFileResult } from '../../src/rendering/generation-result.js';
 import { parseComponentRef } from '../../src/shared/ref-resolution.js';
@@ -41,10 +40,6 @@ export const ARBITRARY_FIXTURES: [string, string][] = [
   ['petstore-3.0.yaml', `${ARBITRARY_FIXTURES_DIR}/petstore-3.0.yaml`],
   ['petstore-expanded-3.0.yaml', `${ARBITRARY_FIXTURES_DIR}/petstore-expanded-3.0.yaml`],
   ['callback-3.0.yaml', `${ARBITRARY_FIXTURES_DIR}/callback-3.0.yaml`],
-  [
-    'trading212.json',
-    resolve(__dirname, '../../tests-fixtures/openapi-samples/real-world/trading212.json'),
-  ],
 ];
 
 const ZOD_FIXTURES_DIR = resolve(__dirname, '../../tests-fixtures/zod-parser/happy-path');
@@ -56,7 +51,6 @@ export interface ZodFixtureDefinition {
   name: string;
   path: string;
   roundTripSchemaNames?: readonly string[];
-  zodParseOptions?: ZodParseOptions;
   generationFailures?: readonly ZodFixtureGenerationFailure[];
 }
 
@@ -78,17 +72,6 @@ export const ZOD_FIXTURES: readonly ZodFixtureDefinition[] = [
   { name: 'unions', path: `${ZOD_FIXTURES_DIR}/unions.zod4.ts` },
   { name: 'intersections', path: `${ZOD_FIXTURES_DIR}/intersections.zod4.ts` },
   { name: 'recursion', path: `${ZOD_FIXTURES_DIR}/recursion.zod4.ts` },
-  {
-    name: 'unknown-key-semantics',
-    path: `${ZOD_FIXTURES_DIR}/unknown-key-semantics.zod4.ts`,
-    zodParseOptions: { nonStrictObjectPolicy: 'strip' },
-    roundTripSchemaNames: [
-      'StripObjectSchema',
-      'PassthroughObjectSchema',
-      'CatchallObjectSchema',
-      'RecursiveStripCategorySchema',
-    ],
-  },
 ];
 
 export const ZOD_GENERATION_FAILURE_FIXTURES: readonly ZodFixtureGenerationFailureCase[] =
@@ -109,7 +92,7 @@ export const ZOD_GENERATION_FAILURE_FIXTURES: readonly ZodFixtureGenerationFailu
  */
 export async function parseToIR(specPath: string): Promise<ReturnType<typeof buildIR>> {
   const result = await loadOpenApiDocument(specPath);
-  return buildIR(result.document, { nonStrictObjectPolicy: 'strip' });
+  return buildIR(result.document);
 }
 
 /**
@@ -126,7 +109,7 @@ export async function runTransformPass(
   const openApiOutput = writeOpenApi(originalIR);
 
   // Parse the output back to IR (using in-memory document)
-  const transformedIR = buildIR(openApiOutput, { nonStrictObjectPolicy: 'strip' });
+  const transformedIR = buildIR(openApiOutput);
 
   return { originalIR, transformedIR };
 }
@@ -141,7 +124,6 @@ export async function generateZodFromOpenAPI(
   const result = await generateZodClientFromOpenAPI({
     openApiDoc,
     disableWriteToFile: true,
-    options: { nonStrictObjectPolicy: 'strip' },
   });
 
   if (!isSingleFileResult(result)) {
@@ -393,10 +375,10 @@ export async function readZodFixture(path: string): Promise<string> {
 }
 
 export function parseFixtureZodSource(
-  fixture: ZodFixtureDefinition,
+  _fixture: ZodFixtureDefinition,
   source: string,
 ): ReturnType<typeof parseZodSource> {
-  return parseZodSource(source, fixture.zodParseOptions);
+  return parseZodSource(source);
 }
 
 // Re-export dependencies for test files

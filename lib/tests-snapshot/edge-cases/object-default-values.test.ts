@@ -1,207 +1,103 @@
 import type { OpenAPIObject } from 'openapi3-ts/oas31';
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { assertSingleFileResult } from '../../tests-helpers/generation-result-assertions.js';
 import { generateZodClientFromOpenAPI } from '../../src/index.js';
 
 // https://github.com/astahmer/@engraph/castr/issues/61
-test('object-default-values', async () => {
-  const openApiDoc: OpenAPIObject = {
-    openapi: '3.0.0',
-    info: {
-      version: '1.0.0',
-      title: 'object default values',
-    },
-    paths: {
-      '/sample': {
-        get: {
-          parameters: [
-            {
-              in: 'query',
-              name: 'empty-object',
-              schema: {
-                type: 'object',
-                properties: { foo: { type: 'string' } },
-                default: {},
-              },
-            },
-            {
-              in: 'query',
-              name: 'default-object',
-              schema: {
-                type: 'object',
-                properties: { foo: { type: 'string' } },
-                default: { foo: 'bar' },
-              },
-            },
-            {
-              in: 'query',
-              name: 'ref-object',
-              schema: {
-                type: 'object',
-                additionalProperties: { $ref: '#/components/schemas/MyComponent' },
-                default: { id: 1, name: 'foo' },
-              },
-            },
-          ],
-          responses: {
-            '200': {
-              description: 'resoponse',
-            },
-          },
-        },
+describe('object-default-values', () => {
+  test('strict objects with default values are correctly generated', async () => {
+    const openApiDoc: OpenAPIObject = {
+      openapi: '3.0.0',
+      info: {
+        version: '1.0.0',
+        title: 'object default values',
       },
-    },
-    components: {
-      schemas: {
-        MyComponent: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'number',
-            },
-            name: {
-              type: 'string',
-            },
-          },
-        },
-      },
-    },
-  };
-
-  const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
-  assertSingleFileResult(output);
-  expect(output.content).toMatchInlineSnapshot(`
-    "import { z } from "zod";
-    // Type Definitions
-    export type MyComponent = {
-      id?: number;
-      name?: string;
-    };
-    // Zod Schemas
-    export const MyComponent = z
-      .object({
-        id: z.number().optional(),
-        name: z.string().optional(),
-      })
-      .strip();
-    // Endpoints
-    export const endpoints = [
-      {
-        method: "get",
-        path: "/sample",
-        requestFormat: "json",
-        parameters: [
-          {
-            name: "empty-object",
-            type: "Query",
-            schema: z
-              .object({
-                foo: z.string().optional(),
-              })
-              .strip()
-              .optional(),
-          },
-          {
-            name: "default-object",
-            type: "Query",
-            schema: z
-              .object({
-                foo: z.string().optional(),
-              })
-              .strip()
-              .optional(),
-          },
-          {
-            name: "ref-object",
-            type: "Query",
-            schema: z.object({}).strip().optional(),
-          },
-        ],
-        response: z.strictObject({}),
-        errors: [],
-        responses: {
-          200: {
-            schema: z.strictObject({}),
-            description: "resoponse",
-          },
-        },
-        request: {
-          queryParams: z
-            .object({
-              "empty-object": z
-                .object({
-                  foo: z.string().optional(),
-                })
-                .strip()
-                .optional(),
-              "default-object": z
-                .object({
-                  foo: z.string().optional(),
-                })
-                .strip()
-                .optional(),
-              "ref-object": z.object({}).strip().optional(),
-            })
-            .strict(),
-        },
-      },
-    ] as const;
-    // MCP Tools
-    export const mcpTools = [
-      {
-        tool: {
-          name: "get_sample",
-          description: "GET /sample",
-          inputSchema: {
-            type: "object",
-            properties: {
-              query: {
-                type: "object",
-                properties: {
-                  "default-object": {
-                    type: "object",
-                    default: { foo: "bar" },
-                    properties: { foo: { type: "string" } },
-                    required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
-                  },
-                  "empty-object": {
-                    type: "object",
-                    default: {},
-                    properties: { foo: { type: "string" } },
-                    required: [],
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
-                  },
-                  "ref-object": {
-                    type: "object",
-                    default: { id: 1, name: "foo" },
-                    additionalProperties: true,
-                    unknownKeyBehavior: { mode: "strip" },
-                  },
+      paths: {
+        '/sample': {
+          get: {
+            parameters: [
+              {
+                in: 'query',
+                name: 'empty-object',
+                schema: {
+                  type: 'object',
+                  properties: { foo: { type: 'string' } },
+                  additionalProperties: false,
+                  default: {},
                 },
               },
+              {
+                in: 'query',
+                name: 'default-object',
+                schema: {
+                  type: 'object',
+                  properties: { foo: { type: 'string' } },
+                  additionalProperties: false,
+                  default: { foo: 'bar' },
+                },
+              },
+            ],
+            responses: {
+              '200': {
+                description: 'response',
+              },
             },
           },
-          annotations: {
-            readOnlyHint: true,
-            destructiveHint: false,
-            idempotentHint: false,
-          },
-        },
-        httpOperation: {
-          method: "get",
-          path: "/sample",
-          originalPath: "/sample",
-        },
-        security: {
-          isPublic: true,
-          usesGlobalSecurity: false,
-          requirementSets: [],
         },
       },
-    ] as const;
-    "
-  `);
+    };
+
+    const output = await generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc });
+    assertSingleFileResult(output);
+    // Prove: strict objects with defaults are generated without error
+    expect(output.content).toContain('z.strictObject');
+    expect(output.content).toContain('foo: z.string().optional()');
+  });
+
+  test('schema-valued additionalProperties is rejected', async () => {
+    const openApiDoc: OpenAPIObject = {
+      openapi: '3.0.0',
+      info: {
+        version: '1.0.0',
+        title: 'rejected non-strict',
+      },
+      paths: {
+        '/sample': {
+          get: {
+            parameters: [
+              {
+                in: 'query',
+                name: 'ref-object',
+                schema: {
+                  type: 'object',
+                  additionalProperties: { $ref: '#/components/schemas/MyComponent' },
+                  default: { id: 1, name: 'foo' },
+                },
+              },
+            ],
+            responses: {
+              '200': {
+                description: 'response',
+              },
+            },
+          },
+        },
+      },
+      components: {
+        schemas: {
+          MyComponent: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              name: { type: 'string' },
+            },
+          },
+        },
+      },
+    };
+
+    await expect(
+      generateZodClientFromOpenAPI({ disableWriteToFile: true, openApiDoc }),
+    ).rejects.toThrow(/non-strict object input/i);
+  });
 });

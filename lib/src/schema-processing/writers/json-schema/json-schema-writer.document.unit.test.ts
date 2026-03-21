@@ -136,8 +136,8 @@ describe('writeJsonSchemaBundle', () => {
     const result = writeJsonSchemaBundle(components);
 
     expect(result.$defs).toBeDefined();
-    expect(result.$defs?.['User']).toEqual({ type: 'object' });
-    expect(result.$defs?.['Address']).toEqual({ type: 'object' });
+    expect(result.$defs?.['User']).toEqual({ type: 'object', additionalProperties: false });
+    expect(result.$defs?.['Address']).toEqual({ type: 'object', additionalProperties: false });
   });
 
   it('sorts $defs entries by name for determinism', () => {

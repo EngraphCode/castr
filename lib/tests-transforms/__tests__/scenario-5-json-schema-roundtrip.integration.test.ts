@@ -19,8 +19,6 @@ import { parseJsonSchemaDocument } from '../../src/schema-processing/parsers/jso
 import { writeJsonSchemaBundle } from '../../src/schema-processing/writers/json-schema/index.js';
 import type { Draft07Input } from '../../src/schema-processing/parsers/json-schema/index.js';
 
-const JSON_SCHEMA_COMPATIBILITY_OPTIONS = { nonStrictObjectPolicy: 'strip' } as const;
-
 // ============================================================================
 // Fixtures
 // ============================================================================
@@ -82,14 +80,14 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
         const fixture = await loadJsonSchemaFixture(path);
 
         // First pass: JSON Schema → IR
-        const components1 = parseJsonSchemaDocument(fixture, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const components1 = parseJsonSchemaDocument(fixture);
         expect(components1.length).toBeGreaterThan(0);
 
         // Write IR back to JSON Schema
         const output1 = writeJsonSchemaBundle(components1);
 
         // Second pass: re-parse the output
-        const components2 = parseJsonSchemaDocument(output1, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const components2 = parseJsonSchemaDocument(output1);
 
         // IR deep-equals: same schemas, same structure
         expect(components2.length).toBe(components1.length);
@@ -117,9 +115,9 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
       '%s: component count preserved through round-trip',
       async (_name, path) => {
         const fixture = await loadJsonSchemaFixture(path);
-        const components = parseJsonSchemaDocument(fixture, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const components = parseJsonSchemaDocument(fixture);
         const output = writeJsonSchemaBundle(components);
-        const roundTripped = parseJsonSchemaDocument(output, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const roundTripped = parseJsonSchemaDocument(output);
 
         expect(roundTripped.length).toBe(components.length);
       },
@@ -133,7 +131,7 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
         const fixture = await loadJsonSchemaFixture(path);
         const inputDefs = getDefsKeys(fixture);
 
-        const components = parseJsonSchemaDocument(fixture, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const components = parseJsonSchemaDocument(fixture);
         const output = writeJsonSchemaBundle(components);
         const outputDefs = getDefsKeys(output);
 
@@ -153,11 +151,11 @@ describe('Transform Scenario 5: JSON Schema → IR → JSON Schema', () => {
         const fixture = await loadJsonSchemaFixture(path);
 
         // First pass: fixture → IR → JSON Schema
-        const components1 = parseJsonSchemaDocument(fixture, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const components1 = parseJsonSchemaDocument(fixture);
         const output1 = writeJsonSchemaBundle(components1);
 
         // Second pass: output1 → IR → JSON Schema
-        const components2 = parseJsonSchemaDocument(output1, JSON_SCHEMA_COMPATIBILITY_OPTIONS);
+        const components2 = parseJsonSchemaDocument(output1);
         const output2 = writeJsonSchemaBundle(components2);
 
         // Byte-identical comparison

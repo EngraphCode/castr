@@ -355,7 +355,8 @@ await emitFilesTsMorph([file], { runPrettier: maybeRunPrettier });
 
 ## CLI shape & compatibility
 
-- Keep flags like `--output`, `--export-schemas`, `--group-strategy`, `--success-expr`, `--error-expr`, `--media-type-expr`, `--allReadonly`, `--strictObjects`, `--prettier`, `--disableWriteToFile`.
+- Keep flags like `--output`, `--export-schemas`, `--group-strategy`, `--success-expr`, `--error-expr`, `--media-type-expr`, `--allReadonly`, `--prettier`, `--disableWriteToFile`.
+- Do not resurrect removed strictness flags such as `--strict-objects`; strict object output is now the only supported product mode.
 - Interpret `--template` as either:
   - a **built-in strategy name** (e.g. `schemas-only`, `grouped`, `grouped-index`, `grouped-common`), or
   - a **path to an emitter plugin module** (see below).

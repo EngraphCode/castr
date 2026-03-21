@@ -25,13 +25,10 @@ export interface CliOptions {
   complexityThreshold?: string;
   defaultStatus?: string;
   allReadonly?: boolean;
-  strictObjects?: boolean;
-  additionalPropsDefaultValue?: boolean;
   noClient?: boolean;
   withValidationHelpers?: boolean;
   withSchemaRegistry?: boolean;
   emitMcpManifest?: string;
-  nonStrictObjectPolicy?: string;
 }
 
 /**
@@ -42,7 +39,6 @@ export interface ParsedCliOptions {
   groupStrategy: TemplateContextOptions['groupStrategy'];
   complexityThreshold: number | undefined;
   defaultStatusBehavior: TemplateContextOptions['defaultStatusBehavior'];
-  nonStrictObjectPolicy: TemplateContextOptions['nonStrictObjectPolicy'];
 }
 
 /**
@@ -106,8 +102,7 @@ export function addParsedOptions(
   parsedOptions: ParsedCliOptions,
   generationOptions: Partial<TemplateContextOptions>,
 ): void {
-  const { groupStrategy, complexityThreshold, defaultStatusBehavior, nonStrictObjectPolicy } =
-    parsedOptions;
+  const { groupStrategy, complexityThreshold, defaultStatusBehavior } = parsedOptions;
   if (groupStrategy) {
     generationOptions.groupStrategy = groupStrategy;
   }
@@ -116,9 +111,6 @@ export function addParsedOptions(
   }
   if (defaultStatusBehavior) {
     generationOptions.defaultStatusBehavior = defaultStatusBehavior;
-  }
-  if (nonStrictObjectPolicy !== undefined) {
-    generationOptions.nonStrictObjectPolicy = nonStrictObjectPolicy;
   }
 }
 
@@ -136,11 +128,9 @@ export function buildGenerationOptions(
   parsedOptions: ParsedCliOptions,
 ): Partial<TemplateContextOptions> {
   const withAlias = toBoolean(options.withAlias, true);
-  const additionalPropertiesDefaultValue = toBoolean(options.additionalPropsDefaultValue, true);
 
   const generationOptions: Partial<TemplateContextOptions> = {
     withAlias,
-    additionalPropertiesDefaultValue,
   };
 
   addStringOptions(options, generationOptions);
@@ -153,9 +143,6 @@ export function buildGenerationOptions(
   }
   if (options.allReadonly) {
     generationOptions.allReadonly = options.allReadonly;
-  }
-  if (options.strictObjects) {
-    generationOptions.strictObjects = options.strictObjects;
   }
   addParsedOptions(parsedOptions, generationOptions);
 

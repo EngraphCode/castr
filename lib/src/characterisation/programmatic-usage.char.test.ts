@@ -93,7 +93,7 @@ describe('E2E: Programmatic Usage - Internal Refs Only', () => {
 
     // Acceptance criteria:
     expect(extractContent(result)).toContain('export const User');
-    expect(extractContent(result)).toContain('.object({');
+    expect(extractContent(result)).toContain('z.strictObject({');
     expect(extractContent(result)).not.toContain('as unknown as');
     expect(extractContent(result)).not.toMatch(/ as (?!const\b)/); // No type assertions except 'as const'
   });
@@ -240,7 +240,7 @@ describe('E2E: Programmatic Usage - After prepareOpenApiDocument()', () => {
     // Acceptance criteria:
     // Even after dereference, component schemas should be extracted as named exports
     expect(extractContent(result)).toContain('export const User');
-    expect(extractContent(result)).toContain('.object({');
+    expect(extractContent(result)).toContain('z.strictObject({');
   });
 
   /**

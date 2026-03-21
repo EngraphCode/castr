@@ -43,13 +43,13 @@ describe('anyOf behavior', () => {
     expect(zodSchema).toMatchInlineSnapshot(
       `
       {
-          "code": "z.union([z.object({
+          "code": "z.union([z.strictObject({
         age: z.int(),
         nickname: z.string().optional(),
-      }).strip(), z.object({
+      }), z.strictObject({
         hunts: z.boolean().optional(),
         pet_type: z.enum(["Cat", "Dog"]),
-      }).strip()])",
+      })])",
           "schema": {
               "anyOf": [
                   {
@@ -128,13 +128,13 @@ describe('anyOf behavior', () => {
     expect(zodSchema).toMatchInlineSnapshot(
       `
       {
-          "code": "z.union([z.object({
+          "code": "z.union([z.strictObject({
         age: z.int(),
         nickname: z.string().optional(),
-      }).strip(), z.object({
+      }), z.strictObject({
         hunts: z.boolean().optional(),
         pet_type: z.enum(["Cat", "Dog"]),
-      }).strip(), z.number()])",
+      }), z.number()])",
           "schema": {
               "anyOf": [
                   {
@@ -219,13 +219,13 @@ describe('anyOf behavior', () => {
     expect(zodSchema).toMatchInlineSnapshot(
       `
       {
-          "code": "z.union([z.union([z.number(), z.boolean()]), z.object({
+          "code": "z.union([z.union([z.number(), z.boolean()]), z.strictObject({
         age: z.int(),
         nickname: z.string().optional(),
-      }).strip(), z.object({
+      }), z.strictObject({
         hunts: z.boolean().optional(),
         pet_type: z.enum(["Cat", "Dog"]),
-      }).strip(), z.string()])",
+      }), z.string()])",
           "schema": {
               "anyOf": [
                   {
@@ -349,18 +349,14 @@ describe('anyOf behavior', () => {
         pet_type: string;
       };
       // Zod Schemas
-      export const PetByAge = z
-        .object({
-          age: z.int(),
-          nickname: z.string().optional(),
-        })
-        .strip();
-      export const PetByType = z
-        .object({
-          hunts: z.boolean().optional(),
-          pet_type: z.enum(["Cat", "Dog"]),
-        })
-        .strip();
+      export const PetByAge = z.strictObject({
+        age: z.int(),
+        nickname: z.string().optional(),
+      });
+      export const PetByType = z.strictObject({
+        hunts: z.boolean().optional(),
+        pet_type: z.enum(["Cat", "Dog"]),
+      });
       // Endpoints
       export const endpoints = [
         {
@@ -412,8 +408,7 @@ describe('anyOf behavior', () => {
                             nickname: { type: "string" },
                           },
                           required: ["age"],
-                          additionalProperties: true,
-                          unknownKeyBehavior: { mode: "strip" },
+                          additionalProperties: false,
                         },
                         {
                           type: "object",
@@ -422,8 +417,7 @@ describe('anyOf behavior', () => {
                             pet_type: { type: "string", enum: ["Cat", "Dog"] },
                           },
                           required: ["pet_type"],
-                          additionalProperties: true,
-                          unknownKeyBehavior: { mode: "strip" },
+                          additionalProperties: false,
                         },
                       ],
                     },

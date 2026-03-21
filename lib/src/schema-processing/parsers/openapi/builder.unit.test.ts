@@ -7,15 +7,9 @@
 
 import { describe, expect, it } from 'vitest';
 import type { ComponentsObject, OpenAPIObject } from 'openapi3-ts/oas31';
-import { buildIR as buildIRBase, buildCastrSchemas as buildCastrSchemasBase } from './index.js';
+import { buildIR, buildCastrSchemas } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
 import type { CastrDocument } from '../../ir/index.js';
-
-const TEST_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
-const buildIR = (doc: OpenAPIObject): CastrDocument =>
-  buildIRBase(doc, TEST_NON_STRICT_OBJECT_POLICY);
-const buildCastrSchemas = (components: ComponentsObject) =>
-  buildCastrSchemasBase(components, TEST_NON_STRICT_OBJECT_POLICY);
 
 describe('buildCastrSchemas', () => {
   describe('primitive schemas', () => {
@@ -892,7 +886,7 @@ describe('buildIR - IR-1 enhancements', () => {
       expect(result.dependencyGraph.circularReferences.length).toBeGreaterThan(0);
     });
 
-    it('normalizes circular additionalProperties references to strip in compatibility mode', () => {
+    it('rejects circular additionalProperties references under strict doctrine', () => {
       const doc: OpenAPIObject = {
         openapi: '3.1.0',
         info: { title: 'Test API', version: '1.0.0' },
@@ -907,17 +901,7 @@ describe('buildIR - IR-1 enhancements', () => {
         },
       };
 
-      const result = buildIR(doc);
-      const nodeComponent = result.components.find(
-        (component) => component.type === 'schema' && component.name === 'Node',
-      );
-
-      if (!nodeComponent || nodeComponent.type !== 'schema') {
-        throw new Error('Expected Node schema component');
-      }
-      expect(nodeComponent.schema.additionalProperties).toBe(true);
-      expect(nodeComponent.schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
-      expect(nodeComponent.schema.metadata.circularReferences).toEqual([]);
+      expect(() => buildIR(doc)).toThrow(/schema-valued additionalProperties.*rejected/);
     });
 
     it('should throw on malformed schema refs during circular reference extraction', () => {

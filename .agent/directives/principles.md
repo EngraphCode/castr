@@ -98,7 +98,7 @@ Before any work, always ask:
 
 Every component must enforce the strictest possible validation:
 
-- **Objects**: Always use `.strict()` unless `additionalProperties: true` is explicitly set
+- **Objects**: Always strict — closed-world with explicit properties only (see [IDENTITY.md](../IDENTITY.md))
 - **Types**: Never allow unknown types to pass silently - validate everything
 - **Schemas**: Require all constraints to match exactly, not loosely
 - **No Coercion**: Never use implicit type coercion (`z.coerce`) unless explicitly requested

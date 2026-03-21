@@ -1,5 +1,10 @@
 import type { SchemaObject, XmlObject, ExternalDocumentationObject } from 'openapi3-ts/oas31';
 import type { IRIntegerSemantics } from '../integer-semantics/core.js';
+import {
+  SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES,
+  brandCastrSchemaProperties,
+  hasCastrSchemaPropertiesBrand,
+} from '../../../shared/type-utils/castr-schema-properties.js';
 
 // ... existing imports ...
 
@@ -73,12 +78,6 @@ export type IRHttpMethod =
  *
  * @public
  */
-export type IRUnknownKeyBehavior =
-  | { mode: 'strict' }
-  | { mode: 'strip' }
-  | { mode: 'passthrough' }
-  | { mode: 'catchall'; schema: CastrSchema };
-
 /**
  * Supported UUID subtype/version semantics for UUID string schemas.
  *
@@ -89,14 +88,6 @@ export type IRUnknownKeyBehavior =
  */
 export type IRUuidVersion = 1 | 3 | 4 | 5 | 6 | 7 | 8;
 
-/**
- * Canonical runtime unknown-key behavior for object schemas.
- *
- * This is distinct from `additionalProperties`, which models portable
- * validation/interchange semantics rather than Zod parsed-output behavior.
- *
- * @public
- */
 export interface CastrSchema {
   /**
    * Schema type from OpenAPI.
@@ -196,14 +187,6 @@ export interface CastrSchema {
    * - schema: additional properties must match schema
    */
   additionalProperties?: boolean | CastrSchema;
-
-  /**
-   * Runtime unknown-key behavior for object schemas.
-   *
-   * This preserves distinctions that `additionalProperties` alone cannot
-   * represent, such as strip versus passthrough behavior.
-   */
-  unknownKeyBehavior?: IRUnknownKeyBehavior;
 
   // Array properties
   /**
@@ -813,6 +796,11 @@ export class CastrSchemaProperties {
    */
   constructor(properties: Record<string, CastrSchema> = {}) {
     this.props = properties;
+    brandCastrSchemaProperties(this);
+  }
+
+  static hasBrand(value: unknown): value is CastrSchemaProperties {
+    return hasCastrSchemaPropertiesBrand(value);
   }
 
   /**
@@ -891,7 +879,7 @@ export class CastrSchemaProperties {
    */
   toJSON(): { dataType: 'CastrSchemaProperties'; value: Record<string, CastrSchema> } {
     return {
-      dataType: 'CastrSchemaProperties',
+      dataType: SERIALIZED_DATA_TYPE_SCHEMA_PROPERTIES,
       value: this.props,
     };
   }

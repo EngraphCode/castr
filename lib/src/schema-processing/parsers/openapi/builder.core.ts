@@ -17,21 +17,25 @@
 
 import type { ReferenceObject, SchemaObject } from 'openapi3-ts/oas31';
 import { isReferenceObject } from 'openapi3-ts/oas31';
-import type {
-  CastrSchema,
-  CastrSchemaNode,
-  IRPropertySchemaContext,
-  IRCompositionMemberContext,
+import {
+  CastrSchemaProperties,
+  ensureObjectTypeForObjectKeywords,
+  isObjectSchemaType,
+  type CastrSchema,
+  type CastrSchemaNode,
+  type IRPropertySchemaContext,
+  type IRCompositionMemberContext,
 } from '../../ir/index.js';
-import { CastrSchemaProperties, ensureObjectTypeForObjectKeywords } from '../../ir/index.js';
 import type { IRBuildContext } from './builder.types.js';
 import { addConstraints } from './schemas/builder.constraints.js';
 import { addOpenAPIExtensions } from './schemas/builder.json-schema-2020-12.js';
-import { applyOpenApiNonStrictObjectPolicy } from './builder.non-strict-object-policy.js';
-import { shouldNormalizeNonStrictObjectInput } from '../../non-strict-object-policy.js';
 import { updateZodChain } from './schemas/builder.zod-chain.js';
 import { addSchemaDocumentation } from './builder/builder.documentation.js';
 import { applySchemaFormat } from './builder/builder.integer-semantics.js';
+import {
+  buildNonStrictObjectRejectionMessage,
+  describePortableNonStrictObjectInput,
+} from '../../object-semantics.js';
 import {
   getNormalizedNullableTypeEntries,
   SCHEMA_TYPE_NULL,
@@ -77,8 +81,6 @@ export function buildCastrSchema(
 
   // Add OpenAPI extensions and JSON Schema 2020-12 keywords
   addOpenAPIExtensions(schema, context, irSchema, buildCastrSchema);
-
-  applyOpenApiNonStrictObjectPolicy(schema, context, irSchema);
 
   // Update Zod chain with validations from constraints
   updateZodChain(irSchema);
@@ -144,7 +146,6 @@ function addTypeInfo(schema: SchemaObject, irSchema: CastrSchema): void {
       hasProperties: schema.properties !== undefined,
       hasRequired: Array.isArray(schema.required) && schema.required.length > 0,
       hasAdditionalProperties: schema.additionalProperties !== undefined,
-      hasUnknownKeyBehaviorExtension: false,
     }),
     irSchema.metadata.nullable,
   );
@@ -264,34 +265,35 @@ function addObjectProperties(
  */
 function addAdditionalProperties(
   schema: SchemaObject,
-  context: IRBuildContext,
+  _context: IRBuildContext,
   irSchema: CastrSchema,
 ): void {
-  if (schema.additionalProperties === undefined) {
+  if (!isObjectKeywordCandidate(schema, irSchema)) {
     return;
   }
 
-  if (typeof schema.additionalProperties === 'boolean') {
-    irSchema.additionalProperties = schema.additionalProperties;
-  } else {
-    if (
-      shouldNormalizeNonStrictObjectInput({
-        nonStrictObjectPolicy: context.nonStrictObjectPolicy,
-      })
-    ) {
-      return;
-    }
-
-    const additionalContext: IRBuildContext = {
-      ...context,
-      path: [...context.path, 'additionalProperties'],
-      required: false,
-    };
-    irSchema.additionalProperties = buildCastrSchema(
-      schema.additionalProperties,
-      additionalContext,
-    );
+  if (schema.additionalProperties === false || schema.additionalProperties === undefined) {
+    irSchema.additionalProperties = false;
+    return;
   }
+
+  const inputDescription = describePortableNonStrictObjectInput({
+    additionalProperties: schema.additionalProperties,
+  });
+  if (inputDescription === undefined) {
+    return;
+  }
+
+  throw new Error(buildNonStrictObjectRejectionMessage(inputDescription));
+}
+
+function isObjectKeywordCandidate(schema: SchemaObject, irSchema: CastrSchema): boolean {
+  return (
+    isObjectSchemaType(irSchema.type) ||
+    schema.properties !== undefined ||
+    (Array.isArray(schema.required) && schema.required.length > 0) ||
+    schema.additionalProperties !== undefined
+  );
 }
 
 /**

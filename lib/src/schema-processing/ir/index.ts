@@ -34,7 +34,6 @@ export type {
   IRSecurityRequirement,
   CastrSchema,
   IRIntegerSemantics,
-  IRUnknownKeyBehavior,
   IRUuidVersion,
   CastrSchemaNode,
   CastrSchemaDependencyInfo,
@@ -44,18 +43,7 @@ export type {
   IRDependencyGraph,
   IRDependencyNode,
 } from './models/index.js';
-export {
-  ensureObjectTypeForObjectKeywords,
-  UNKNOWN_KEY_BEHAVIOR_EXTENSION_KEY,
-  UNKNOWN_KEY_MODE_STRICT,
-  UNKNOWN_KEY_MODE_STRIP,
-  UNKNOWN_KEY_MODE_PASSTHROUGH,
-  UNKNOWN_KEY_MODE_CATCHALL,
-  isObjectSchemaType,
-  getPortableUnknownKeyBehaviorExtension,
-  resolvePortableUnknownKeyBehavior,
-} from './unknown-key-behavior.js';
-export type { PortableUnknownKeyBehaviorMode } from './unknown-key-behavior.js';
+export { ensureObjectTypeForObjectKeywords, isObjectSchemaType } from './unknown-key-behavior.js';
 export {
   UUID_SCHEMA_TYPE,
   UUID_SCHEMA_FORMAT,

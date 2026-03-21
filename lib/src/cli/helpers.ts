@@ -9,7 +9,6 @@ import {
   hasVersionProperty,
   isGroupStrategy,
   isDefaultStatusBehavior,
-  isNonStrictObjectPolicy,
 } from '../validation/cli-type-guards.js';
 import type { TemplateContextOptions } from '../schema-processing/context/index.js';
 import {
@@ -60,15 +59,11 @@ export function parseCliOptions(options: CliOptions): ParsedCliOptions {
   const defaultStatusBehavior = isDefaultStatusBehavior(options.defaultStatus)
     ? options.defaultStatus
     : undefined;
-  const nonStrictObjectPolicy = isNonStrictObjectPolicy(options.nonStrictObjectPolicy)
-    ? options.nonStrictObjectPolicy
-    : undefined;
 
   return {
     groupStrategy,
     complexityThreshold,
     defaultStatusBehavior,
-    nonStrictObjectPolicy,
   };
 }
 

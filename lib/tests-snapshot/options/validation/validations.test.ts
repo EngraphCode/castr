@@ -36,7 +36,7 @@ test('validations', () => {
     }).code,
   ).toMatchInlineSnapshot(
     `
-    "z.object({
+    "z.strictObject({
       array: z.array(z.string()).optional(),
       arrayWithMax: z.array(z.string()).max(3).optional(),
       arrayWithMin: z.array(z.string()).min(3).optional(),
@@ -54,7 +54,7 @@ test('validations', () => {
       strWithPattern: z.string().regex(/^[a-z]+$/).optional(),
       url: z.url().optional(),
       uuid: z.uuid().optional(),
-    }).strip()"
+    })"
   `,
   );
 });

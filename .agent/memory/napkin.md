@@ -262,3 +262,81 @@ This file captures session-scoped discoveries, mistakes, corrections, and useful
   - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
   - no new incoming Practice material needed integration
 - No structural learning cleared the bar for Practice Core evolution in this pass; the batch-preflight AJV pattern is repo-specific rather than portable.
+
+## 2026-03-21
+
+- User created `IDENTITY.md` as the canonical identity, semantics, and policy document for Castr. This is the most significant doctrinal clarification to date:
+  - Castr is a **schema compiler** with closed-world-only object semantics
+  - strip, passthrough, and catchall are **rejected ontologies**, not deferred features
+  - the IR has **no dual semantics** — no `unknownKeyBehavior` field
+  - strip normalization belongs in the **doctor only**, not in the core pipeline
+  - `additionalProperties: false` is kept explicit — strict **and** explicit
+- Documentation consolidation pass completed:
+  - three paused investigations moved to `current/complete/` with status markers updated
+  - residual threads consolidated in `future/zod-and-transform-future-investigations.md`
+  - completed rescue-loop plan renamed and moved to `current/complete/doctor-rescue-loop-runtime-redesign.md`
+- IDENTITY alignment plan created at `active/identity-doctrine-alignment.md`:
+  - removes `unknownKeyBehavior` from IR, simplifies all parsers to reject non-strict, simplifies all writers to strict-only
+  - ~15–20 product code files, ~30+ test files, 3 modules deleted
+  - JSON Schema Parser plan queued behind this slice
+- Comprehensive doc sweep found all surfaces needing alignment: `principles.md`, ADR-031/032/038/040/041, `zod-round-trip-limitations.md`, `recursive-unknown-key-semantics.md`, `zod-parser-acceptance-criteria.md`, `zod-output-acceptance-criteria.md`, `gap-matrix.md`, `plans-review.md`, `enhancement-scope.md`, and the future investigations file
+- `jc-consolidate-docs` pass found cohesion drift:
+  - `.agent/README.md` still referenced paused plan paths (`current/paused/`) and the old active plan — updated
+  - `practice-index.md` did not reference `IDENTITY.md` — added
+  - napkin line 43 (preserving-mode investigation framing) is now historical context; the active IDENTITY alignment plan will reframe that as intentional during execution
+- Practice box check:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- IDENTITY.md clears the bar for a structural learning: the concept of a **canonical identity document** that gates all other doctrine is novel in this repo's Practice. However, this is a product-specific architectural decision rather than a portable Practice pattern, so it does not need to be promoted to `practice-core` at this time.
+- IDENTITY doctrine alignment **code implementation completed**:
+  - `unknownKeyBehavior` removed from `CastrSchema` type and all IR model exports
+  - `IRUnknownKeyBehavior` type removed; `unknown-key-behavior.ts` simplified to object-type helpers only
+  - `non-strict-object-policy.ts` rewritten as reject-only shim
+  - `zod-parser.object-policy.ts` rewritten as strict-only enforcer
+  - `zod-parser.object.ts` refactored: `extractUnknownKeyConfiguration` replaced with `isStrictObjectSchema`
+  - JSON Schema parser enforces `additionalProperties: false` and rejects non-strict input
+  - OpenAPI parser removes all `unknownKeyBehavior` resolution logic
+  - All writers emit strict-only: `z.strictObject()` for Zod, `additionalProperties: false` for JSON Schema/OpenAPI
+  - `nonStrictObjectPolicy` type narrowed to `'reject'` only across CLI, context, and all parsers
+  - 2 obsolete test files deleted: `writer.object-unknown-key.unit.test.ts`, `recursive-unknown-key.runtime.integration.test.ts`
+  - 20+ test files updated: all `nonStrictObjectPolicy: 'strip'` → `'reject'`, all `unknownKeyBehavior` fixtures/assertions removed, extra `parseJsonSchemaDocument` args removed
+  - `pnpm type-check` green (2/2 tasks)
+- Remaining work for IDENTITY alignment closure:
+  - regenerate snapshots (`pnpm test:snapshot -- -u`)
+  - documentation alignment (ADRs, architecture docs, acceptance criteria, research — see plan § Documentation Alignment)
+  - full gate chain
+- Plans and prompts updated to reflect code-complete state:
+  - `identity-doctrine-alignment.md` — TDD steps 1-6 marked complete
+  - `session-entry.prompt.md` — repointed to doc alignment + gate chain as next steps
+  - `roadmap.md` — updated strict-object-semantics section, Phase 4 progress, JSON Schema format status
+  - `.agent/README.md` — updated Current State section
+- **Documentation consolidation pass** (`jc-consolidate-docs`) completed:
+  - Updated 12 live documents: ADR-038, ADR-040, ADR-031, ADR-032, `principles.md`, `zod-round-trip-limitations.md`, `recursive-unknown-key-semantics.md`, `zod-parser-acceptance-criteria.md`, `zod-output-acceptance-criteria.md`, `zod-and-transform-future-investigations.md`, `session-entry.prompt.md`, `.agent/README.md`
+  - Removed all `unknownKeyBehavior` and strip-normalization compatibility mode references from live surfaces
+  - ADR-038: doubly superseded (ADR-040 + IDENTITY.md)
+  - ADR-040 §4: struck through, IDENTITY supersession note added
+  - ADR-031, ADR-032: important notes and object sections updated to strict-only
+  - `principles.md` line 101: objects rule updated to reference IDENTITY.md
+  - Architecture docs: both `zod-round-trip-limitations.md` and `recursive-unknown-key-semantics.md` updated with IDENTITY.md supersession
+  - Acceptance criteria: both `zod-parser-acceptance-criteria.md` and `zod-output-acceptance-criteria.md` updated to remove strip-normalization tables/references
+  - Future investigations: reopen triggers and evidence updated for deleted test files
+  - Practice audit: `practice-core/incoming/` and `practice-context/incoming/` are empty — no new incoming material
+  - Practice evolution: no structural learning clears the bar (IDENTITY.md is a product decision, not a portable Practice pattern)
+  - `current/complete/` plan files NOT edited — they are historical records
+- Latent Vitest ESM cross-realm isolation issue surfaced: checking `value instanceof UserDefinedClass` (like `CastrSchemaProperties` or even native `Map`) can fail in Vitest when the test environment and the code under test load the class from different module realms.
+  - Fix adopted for native classes: structural duck-typing or `Symbol.toStringTag` (`isMapLike`).
+  - Next session must apply a similar robust cross-realm check to `value['properties'] instanceof CastrSchemaProperties` in `validators.schema.ts`.
+- An explicit `jc-consolidate-docs` pass after IDENTITY closure found the remaining drift was handoff truth rather than product doctrine:
+  - `session-entry.prompt.md`, `.agent/README.md`, and `roadmap.md` still described IDENTITY alignment as incomplete even though the full repo-root Definition of Done chain was green on Saturday, 21 March 2026
+  - `active/` still held a finished plan plus a queued successor, which obscured the honest next entrypoint
+- Consolidation corrected that state:
+  - moved `identity-doctrine-alignment.md` to `current/complete/`
+  - created `active/architecture-review-packs.md` as the new primary active plan
+  - added `architecture-review-packs.prompt.md` plus `.agent/research/architecture-review-packs/README.md` to make the review-pack workflow concrete
+  - moved `json-schema-parser.md` to `current/paused/` as queued implementation context rather than pretending it is already the next active slice
+- Practice box check in this consolidation pass:
+  - `.agent/practice-core/incoming/` contains only `.gitkeep`
+  - `.agent/practice-context/incoming/` contains only the scaffold `README.md`
+  - no new incoming Practice material needed integration
+- The bounded review-pack pattern is useful here, but it does not yet clear the bar for Practice Core evolution. Keep it local until it is proven outside this repo.

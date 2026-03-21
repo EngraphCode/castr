@@ -109,9 +109,10 @@ This review covers all active plans under `.agent/plans` plus archival plans in 
    - Data-string parsing (OpenAPI `$ref`, media types, URL templates) is allowed but must be centralized, validated, tested, and fail-fast.
    - Mitigation: enforce ADR-026 only in TS-source parsing modules; centralize data-string parsing utilities; continue to avoid string templates for code generation (use ts-morph printers).
 
-2. **Strict-by-default in plans vs writer default behavior**
-   - Plans emphasize strict-by-default, but current Zod writer defaults to `.passthrough()` unless `strictObjects` is set.
-   - Mitigation: introduce a strict profile (or default true) for Oak outputs; ensure tests enforce it.
+2. **Historical strictness drift is now resolved, but must stay resolved**
+   - Plans used to emphasize strict-by-default while the Zod writer still defaulted to permissive object output.
+   - IDENTITY closure removed that mismatch: object emission now uses `z.strictObject(...)` and the `strictObjects` option surface is gone.
+   - Mitigation: future plans and Oak-oriented work must preserve unconditional strictness rather than reintroducing target-specific toggles.
 
 3. **Zod parser accept/reject patterns**
    - Parser plan has a strict accept list that must match the current Zod writer output.

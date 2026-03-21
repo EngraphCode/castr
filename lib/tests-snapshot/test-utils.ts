@@ -21,14 +21,11 @@ import {
 import { writeTypeDefinition } from '../src/schema-processing/writers/typescript/index.js';
 import { generateZodSchema } from '../src/test-helpers/generate-zod-schema.js';
 
-const STRIP_NON_STRICT_OBJECT_POLICY = { nonStrictObjectPolicy: 'strip' } as const;
-
 function createSnapshotBuildContext(): IRBuildContext {
   return {
     doc: { openapi: '3.1.0', info: { title: '', version: '' }, paths: {} },
     path: [],
     required: false,
-    nonStrictObjectPolicy: STRIP_NON_STRICT_OBJECT_POLICY.nonStrictObjectPolicy,
   };
 }
 
@@ -38,23 +35,14 @@ export type { TemplateContextGroupStrategy };
 export function generateZodClientFromOpenAPI(
   args: GenerateZodClientFromOpenApiArgs,
 ): Promise<GenerationResult> {
-  return generateZodClientFromOpenAPIBase({
-    ...args,
-    options: {
-      ...STRIP_NON_STRICT_OBJECT_POLICY,
-      ...args.options,
-    },
-  });
+  return generateZodClientFromOpenAPIBase(args);
 }
 
 export function getZodClientTemplateContext(
   doc: OpenAPIObject,
   options?: TemplateContextOptions,
 ): TemplateContext {
-  return getZodClientTemplateContextBase(doc, {
-    ...STRIP_NON_STRICT_OBJECT_POLICY,
-    ...options,
-  });
+  return getZodClientTemplateContextBase(doc, options);
 }
 
 export function getZodSchema({ schema }: { schema: SchemaObject }): {

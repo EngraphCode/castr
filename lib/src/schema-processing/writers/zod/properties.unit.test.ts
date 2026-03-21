@@ -285,26 +285,5 @@ describe('Property Writing Helpers', () => {
 
       expect(isRecursiveObjectSchema(schema, '#/components/schemas/Node')).toBe(true);
     });
-
-    it('returns true when catchall references one of the object circular targets', () => {
-      const schema = createMockCastrSchema({
-        type: 'object',
-        unknownKeyBehavior: {
-          mode: 'catchall',
-          schema: createMockCastrSchema({
-            $ref: '#/components/schemas/Node',
-          }),
-        },
-        metadata: {
-          required: false,
-          nullable: false,
-          dependencyGraph: { references: [], referencedBy: [], depth: 0 },
-          zodChain: { presence: '', validations: [], defaults: [] },
-          circularReferences: ['#/components/schemas/Node'],
-        },
-      });
-
-      expect(isRecursiveObjectSchema(schema)).toBe(true);
-    });
   });
 });

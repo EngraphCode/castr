@@ -5,14 +5,7 @@ import { assertSingleFileResult } from '../../../tests-helpers/generation-result
 
 const generateZodClientFromOpenAPI = (
   args: Parameters<typeof generateZodClientFromOpenAPIBase>[0],
-) =>
-  generateZodClientFromOpenAPIBase({
-    ...args,
-    options: {
-      nonStrictObjectPolicy: 'strip',
-      ...(args.options ?? {}),
-    },
-  });
+) => generateZodClientFromOpenAPIBase(args);
 
 describe('schemas-with-metadata template - Core Template Functionality', () => {
   it('should generate schemas with Zod', async () => {

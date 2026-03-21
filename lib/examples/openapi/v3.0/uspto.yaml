@@ -149,8 +149,7 @@ paths:
                 type: array
                 items:
                   type: object
-                  additionalProperties:
-                    type: object
+                  additionalProperties: false
         '404':
           description: No matching record found for the given criteria.
       requestBody:

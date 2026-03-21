@@ -73,8 +73,7 @@ characterisation/
 - ✅ withAlias (true, false, custom function)
 - ✅ exportSchemas option
 - ✅ exportTypes option
-- ✅ additionalPropertiesDefaultValue option
-- ✅ strictObjects option
+- ✅ strict-by-default object generation
 - ✅ withImplicitRequiredProps option
 - ✅ apiClientName option
 - ✅ baseUrl option
@@ -96,7 +95,7 @@ characterisation/
 - ✅ Export schemas option (--export-schemas)
 - ✅ With alias option (--with-alias)
 - ✅ No with alias option (--no-with-alias)
-- ✅ Strict objects option (--strict-objects)
+- ✅ Removed strictness compatibility flags now reject at the CLI boundary
 - ✅ Error handling for invalid files
 - ✅ Exit codes (success and failure)
 

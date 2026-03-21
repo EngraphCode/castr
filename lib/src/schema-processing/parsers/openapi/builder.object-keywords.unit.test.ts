@@ -3,10 +3,9 @@ import type { ComponentsObject, OpenAPIObject, SchemaObject } from 'openapi3-ts/
 
 import { buildCastrSchemas, buildIR } from './index.js';
 import { assertSchemaComponent } from '../../ir/index.js';
-import { isRecord } from '../../../shared/type-utils/types.js';
 
 describe('buildCastrSchemas object keyword preservation', () => {
-  it('should preserve strict unknown-key behavior from additionalProperties false', () => {
+  it('should preserve strict additionalProperties: false', () => {
     const components: ComponentsObject = {
       schemas: {
         StrictObject: {
@@ -20,35 +19,14 @@ describe('buildCastrSchemas object keyword preservation', () => {
     const schema = assertSchemaComponent(result[0]).schema;
 
     expect(schema.additionalProperties).toBe(false);
-    expect(schema.unknownKeyBehavior).toEqual({ mode: 'strict' });
   });
 
-  it('rejects omitted object strictness by default with the compatibility hint', () => {
-    const doc = {
-      openapi: '3.1.0',
-      info: { title: 'Test', version: '1.0.0' },
-      paths: {},
-      components: {
-        schemas: {
-          LooseObject: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-            },
-          },
-        },
-      },
-    } as const;
-
-    expect(() => buildIR(doc)).toThrow(/strict object ingest is the default/);
-    expect(() => buildIR(doc)).toThrow(/nonStrictObjectPolicy: 'strip'/);
-  });
-
-  it('normalizes omitted object strictness to strip when nonStrictObjectPolicy is strip', () => {
+  it('rejects additionalProperties: true', () => {
     const components: ComponentsObject = {
       schemas: {
         LooseObject: {
           type: 'object',
+          additionalProperties: true,
           properties: {
             name: { type: 'string' },
           },
@@ -56,14 +34,10 @@ describe('buildCastrSchemas object keyword preservation', () => {
       },
     };
 
-    const result = buildCastrSchemas(components, { nonStrictObjectPolicy: 'strip' });
-    const schema = assertSchemaComponent(result[0]).schema;
-
-    expect(schema.additionalProperties).toBe(true);
-    expect(schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+    expect(() => buildCastrSchemas(components)).toThrow(/additionalProperties: true.*rejected/);
   });
 
-  it('normalizes schema-valued additionalProperties to strip in compatibility mode', () => {
+  it('rejects schema-valued additionalProperties', () => {
     const components: ComponentsObject = {
       schemas: {
         CatchallObject: {
@@ -73,31 +47,27 @@ describe('buildCastrSchemas object keyword preservation', () => {
       },
     };
 
-    const result = buildCastrSchemas(components, { nonStrictObjectPolicy: 'strip' });
-    const schema = assertSchemaComponent(result[0]).schema;
-
-    expect(schema.additionalProperties).toBe(true);
-    expect(schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+    expect(() => buildCastrSchemas(components)).toThrow(
+      /schema-valued additionalProperties.*rejected/,
+    );
   });
 
-  it('discards schema-valued additionalProperties payloads before parsing them in compatibility mode', () => {
+  it('sets additionalProperties: false when omitted on object schemas', () => {
     const components: ComponentsObject = {
       schemas: {
-        CatchallObject: {
+        ImplicitObject: {
           type: 'object',
-          additionalProperties: {
-            type: 'string',
-            additionalProperties: true,
+          properties: {
+            name: { type: 'string' },
           },
         },
       },
     };
 
-    const result = buildCastrSchemas(components, { nonStrictObjectPolicy: 'strip' });
+    const result = buildCastrSchemas(components);
     const schema = assertSchemaComponent(result[0]).schema;
 
-    expect(schema.additionalProperties).toBe(true);
-    expect(schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
+    expect(schema.additionalProperties).toBe(false);
   });
 
   it('should infer object type from additionalProperties false without explicit type', () => {
@@ -114,121 +84,84 @@ describe('buildCastrSchemas object keyword preservation', () => {
 
     expect(schema.type).toBe('object');
     expect(schema.additionalProperties).toBe(false);
-    expect(schema.unknownKeyBehavior).toEqual({ mode: 'strict' });
   });
 
-  it('rejects strip extension input by default with the compatibility hint', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        StripObject: {
-          type: 'object',
-          additionalProperties: true,
-          'x-castr-unknownKeyBehavior': 'strip',
+  it('does not stamp additionalProperties onto primitive parameter schemas', () => {
+    const doc: OpenAPIObject = {
+      openapi: '3.1.0',
+      info: { title: 'Parameters', version: '1.0.0' },
+      paths: {
+        '/users': {
+          get: {
+            operationId: 'listUsers',
+            parameters: [
+              {
+                name: 'page',
+                in: 'query',
+                schema: { type: 'integer', minimum: 1 },
+              },
+            ],
+            responses: {
+              '200': { description: 'ok' },
+            },
+          },
         },
       },
     };
 
-    expect(() => buildCastrSchemas(components)).toThrow(/strict object ingest is the default/);
-    expect(() => buildCastrSchemas(components)).toThrow(/nonStrictObjectPolicy: 'strip'/);
+    const result = buildIR(doc);
+    const operation = result.operations.find((candidate) => candidate.operationId === 'listUsers');
+    const parameter = operation?.parameters.find((candidate) => candidate.name === 'page');
+
+    expect(parameter?.schema.type).toBe('integer');
+    expect(parameter?.schema.additionalProperties).toBeUndefined();
   });
 
-  it('rejects passthrough extension input by default with the compatibility hint', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        PassthroughObject: {
-          type: 'object',
-          additionalProperties: true,
-          'x-castr-unknownKeyBehavior': 'passthrough',
+  it('does not stamp additionalProperties onto array schemas or array items', () => {
+    const doc: OpenAPIObject = {
+      openapi: '3.1.0',
+      info: { title: 'Arrays', version: '1.0.0' },
+      paths: {
+        '/users': {
+          get: {
+            operationId: 'listUsers',
+            responses: {
+              '200': {
+                description: 'ok',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'array',
+                      items: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     };
 
-    expect(() => buildCastrSchemas(components)).toThrow(/strict object ingest is the default/);
-    expect(() => buildCastrSchemas(components)).toThrow(/nonStrictObjectPolicy: 'strip'/);
-  });
+    const result = buildIR(doc);
+    const operation = result.operations.find((candidate) => candidate.operationId === 'listUsers');
+    const responseSchema = operation?.responses.find((candidate) => candidate.statusCode === '200')
+      ?.content?.['application/json']?.schema;
 
-  it('normalizes passthrough extension input to strip in compatibility mode', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        PassthroughObject: {
-          type: 'object',
-          additionalProperties: true,
-          'x-castr-unknownKeyBehavior': 'passthrough',
-        },
-      },
-    };
-
-    const result = buildCastrSchemas(components, { nonStrictObjectPolicy: 'strip' });
-    const schema = assertSchemaComponent(result[0]).schema;
-
-    expect(schema.additionalProperties).toBe(true);
-    expect(schema.unknownKeyBehavior).toEqual({ mode: 'strip' });
-  });
-
-  it('rejects schema-valued additionalProperties by default with the compatibility hint', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        CatchallObject: {
-          type: 'object',
-          additionalProperties: { type: 'string' },
-        },
-      },
-    };
-
-    expect(() => buildCastrSchemas(components)).toThrow(/strict object ingest is the default/);
-    expect(() => buildCastrSchemas(components)).toThrow(/nonStrictObjectPolicy: 'strip'/);
-  });
-
-  it('should reject invalid x-castr-unknownKeyBehavior values', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        InvalidObject: {
-          type: 'object',
-          additionalProperties: true,
-          'x-castr-unknownKeyBehavior': 'strict',
-        },
-      },
-    };
-
-    expect(() => buildCastrSchemas(components)).toThrow(
-      /Invalid x-castr-unknownKeyBehavior value "strict"/,
-    );
-  });
-
-  it('should reject x-castr-unknownKeyBehavior without additionalProperties true', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        InvalidObject: {
-          type: 'object',
-          'x-castr-unknownKeyBehavior': 'passthrough',
-        },
-      },
-    };
-
-    expect(() => buildCastrSchemas(components)).toThrow(
-      /x-castr-unknownKeyBehavior requires additionalProperties: true/,
-    );
-  });
-
-  it('should reject object-only keywords on non-object schemas', () => {
-    const components: ComponentsObject = {
-      schemas: {
-        InvalidString: {
-          type: 'string',
-          additionalProperties: true,
-        },
-      },
-    };
-
-    expect(() => buildCastrSchemas(components)).toThrow(
-      /Object-only keywords properties, required, additionalProperties, and x-castr-unknownKeyBehavior require an object schema type/,
-    );
+    expect(responseSchema?.type).toBe('array');
+    expect(responseSchema?.additionalProperties).toBeUndefined();
+    expect(responseSchema?.items).toBeDefined();
+    if (Array.isArray(responseSchema?.items)) {
+      throw new Error('Expected array response to use a single items schema');
+    }
+    expect(responseSchema?.items?.additionalProperties).toBeUndefined();
   });
 });
 
 function createLooseRawSurfaceDoc(): OpenAPIObject {
   const looseObjectSchema = {
     type: 'object',
+    additionalProperties: true,
     properties: {
       name: { type: 'string' },
     },
@@ -342,95 +275,11 @@ function createStrictRawSurfaceDocWithExamplePayload(): OpenAPIObject {
   } satisfies OpenAPIObject;
 }
 
-function expectRawSchemaStripNormalized(schema: unknown): void {
-  expect(schema).toMatchObject({
-    type: 'object',
-    additionalProperties: true,
-    'x-castr-unknownKeyBehavior': 'strip',
-  });
-}
-
-function getNestedRecordProperty(value: unknown, key: string): unknown {
-  if (!isRecord(value)) {
-    return undefined;
-  }
-
-  return value[key];
-}
-
-function getHeaderSchema(header: unknown): unknown {
-  return getNestedRecordProperty(header, 'schema');
-}
-
-function getApplicationJsonSchema(container: unknown): unknown {
-  return getNestedRecordProperty(getNestedRecordProperty(container, 'application/json'), 'schema');
-}
-
-function getCallbackSchema(callback: unknown): unknown {
-  return getNestedRecordProperty(
-    getNestedRecordProperty(
-      getNestedRecordProperty(
-        getNestedRecordProperty(callback, '{$request.body#/callbackUrl}'),
-        'post',
-      ),
-      'requestBody',
-    ),
-    'content',
-  );
-}
-
-function getPathItemSchema(pathItem: unknown): unknown {
-  return getApplicationJsonSchema(
-    getNestedRecordProperty(
-      getNestedRecordProperty(
-        getNestedRecordProperty(getNestedRecordProperty(pathItem, 'get'), 'responses'),
-        '200',
-      ),
-      'content',
-    ),
-  );
-}
-
-function getWebhookSchema(webhook: unknown): unknown {
-  return getApplicationJsonSchema(
-    getNestedRecordProperty(
-      getNestedRecordProperty(getNestedRecordProperty(webhook, 'post'), 'requestBody'),
-      'content',
-    ),
-  );
-}
-
 describe('buildIR raw OpenAPI non-strict object enforcement', () => {
-  it('rejects non-strict object schemas on raw OpenAPI surfaces by default', () => {
+  it('rejects non-strict object schemas on raw OpenAPI surfaces', () => {
     expect(() => buildIR(createLooseRawSurfaceDoc())).toThrow(
-      /strict object ingest is the default/,
+      /additionalProperties: true.*rejected/,
     );
-  });
-
-  it('normalizes non-strict object schemas on raw OpenAPI surfaces in compatibility mode', () => {
-    const ir = buildIR(createLooseRawSurfaceDoc(), { nonStrictObjectPolicy: 'strip' });
-
-    const headerComponent = ir.components.find((component) => component.type === 'header');
-    if (!headerComponent || headerComponent.type !== 'header') {
-      throw new Error('Expected header component');
-    }
-    expectRawSchemaStripNormalized(getHeaderSchema(headerComponent.header));
-
-    const callbackComponent = ir.components.find((component) => component.type === 'callback');
-    if (!callbackComponent || callbackComponent.type !== 'callback') {
-      throw new Error('Expected callback component');
-    }
-    expectRawSchemaStripNormalized(
-      getApplicationJsonSchema(getCallbackSchema(callbackComponent.callback)),
-    );
-
-    const pathItemComponent = ir.components.find((component) => component.type === 'pathItem');
-    if (!pathItemComponent || pathItemComponent.type !== 'pathItem') {
-      throw new Error('Expected pathItem component');
-    }
-    expectRawSchemaStripNormalized(getPathItemSchema(pathItemComponent.pathItem));
-
-    expectRawSchemaStripNormalized(getWebhookSchema(ir.webhooks?.get('notify')));
   });
 
   it('ignores example payload objects when enforcing raw OpenAPI surface object policy', () => {

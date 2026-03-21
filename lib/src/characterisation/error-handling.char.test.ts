@@ -309,7 +309,7 @@ describe('Characterisation: Error Handling', () => {
           disableWriteToFile: true,
         }),
       ).rejects.toThrow(
-        /Object-only keywords properties, required, additionalProperties, and x-castr-unknownKeyBehavior require an object schema type/,
+        /Object-only keywords properties, required, and additionalProperties require an object schema type/,
       );
     });
   });

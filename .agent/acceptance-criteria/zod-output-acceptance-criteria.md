@@ -4,7 +4,7 @@
 > and ADR-031. If any conflict exists, requirements win.
 
 > [!IMPORTANT]
-> [ADR-040](../../docs/architectural_decision_records/ADR-040-strict-object-semantics-and-non-strict-ingest-rejection.md) adds an ingest-side strip-normalization compatibility mode, but it does not widen the default generated-object contract in this document.
+> [IDENTITY.md](../../.agent/IDENTITY.md) establishes strict-only object output. The strip-normalization compatibility mode from ADR-040 has been removed. Object output is always `z.strictObject({...})`.
 
 ---
 
@@ -139,10 +139,9 @@ If no metadata is present, no `.meta()` call should be emitted.
 
 ## 7. Strictness Rules
 
-- Objects are emitted as explicit strict objects on the default output path
+- Objects are always emitted as explicit strict objects: `z.strictObject({...})`
 - Bare `z.object({...})` is not an acceptable stand-in for strict object semantics
-- Compatibility-normalized strip IR emits `z.object({...}).strip()` for non-recursive objects and bare `z.object({...})` only for recursive getter-safe strip output
-- `.passthrough()` and `.catchall(schema)` are not default generated-object targets
+- `.strip()`, `.passthrough()`, and `.catchall(schema)` are not generated-object targets
 - Recursive strict output must use `z.strictObject({...})`, the runtime-safe canonical strict form accepted by parser/writer lockstep
 - No implicit coercion unless explicitly requested
 
